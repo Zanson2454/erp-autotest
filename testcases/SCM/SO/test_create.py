@@ -15,7 +15,7 @@ sys.path.insert(0, project_root)
 
 from common.login_manager import LoginManager
 from config.config import Config
-from testcases.scm_init import InitSQL
+from testcases.SCM.scm_init import InitSQL
 from utils.AssertUtil import AssertHelper
 from utils.LogUtil import Loggers
 from utils.MysqlUtil import DBManager
@@ -144,7 +144,7 @@ class TestSalesOrderCreate:
         self.sls_person_name = result['data']["slsPerson"]["name"]
         logger.debug(f"销售人员信息: {self.sls_person_obj}")
         self.logger.info("销售订单创建初始化测试通过")
-        return result
+
 
     @safe_api_call(error_message="查询客户信息失败")
     def test_02_query_customer_info(self):
@@ -161,7 +161,7 @@ class TestSalesOrderCreate:
         self.cust_person_name = result['data']["custPersonName"]
         self.cust_phone = result['data']["custPhone"]
         self.logger.info("客户信息查询测试通过")
-        return result
+
 
     @safe_api_call(error_message="查询相关方失败")
     def test_03_query_partner(self):
@@ -209,7 +209,7 @@ class TestSalesOrderCreate:
         self.sls_org_id = self.sls_org_obj['id']
         logger.info(f"销售组织列表查询测试通过: {self.sls_org_obj}")
         self.logger.info("销售组织列表查询测试通过")
-        return result
+
 
     @safe_api_call(error_message="查询物料列表失败")
     def test_05_query_materials(self):
@@ -342,7 +342,6 @@ class TestSalesOrderCreate:
         self.so_price_data = result
         logger.debug(f"自动定价响应数据: {json.dumps(self.so_price_data, cls=DecimalEncoder, indent=2)}")
         self.logger.info("自动定价测试通过")
-        return result
 
     @safe_api_call(error_message="保存销售订单失败")
     def test_08_save_sales_order(self):
@@ -368,7 +367,7 @@ class TestSalesOrderCreate:
         result = self._make_request(url, data, "保存销售订单")
         logger.debug(f"保存销售订单响应数据: {json.dumps(result, cls=DecimalEncoder, indent=2)}")
         self.logger.info("销售订单保存测试通过")
-        return result
+
 
 if __name__ == "__main__":
     # 使用 pytest 运行测试
