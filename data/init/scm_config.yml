@@ -1,5 +1,13 @@
 # SCM配置数据查询定义
 base_info:
+  # 用户信息配置
+  user_info:
+    sql: |
+      SELECT id,username,mobile,nickname from iam_test.iam_user where mobile='17376596912' and deleted_id=0
+    description: "查询用户信息"
+    validation:
+      min_records: 1
+      required_fields: ["id", "username", "mobile", "nickname"]
   # 基础配置数据
   # 国家信息
   country_info:

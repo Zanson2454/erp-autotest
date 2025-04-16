@@ -120,11 +120,22 @@ class InitSQL:
             
             # 初始化返回结果
             scm_init_data = {
+                "user_info": {},  # 用户信息
                 "base_info": {},  # 基础配置数据
                 "org_info": {},   # 组织信息
                 "partner_info": {},  # 合作伙伴信息
                 "material_info": {}  # 物料相关信息
             }
+            
+            # 获取用户信息
+            user_info = self.db.query_all(scm_config['base_info']['user_info']['sql'])
+            if not user_info:
+                raise ValueError("未找到用户信息")
+            
+            # 存储用户信息
+            scm_init_data['user_info'] = user_info[0]  # 直接存储第一条用户记录
+            
+            self.logger.info(f"成功初始化用户信息: {user_info[0]}")
             
             # 执行查询并格式化结果
             for query_key, query_config in scm_config['base_info'].items():

@@ -30,15 +30,22 @@ class TestOrderList(BaseTest):
         # 调用父类的 setup_method
         super().setup_method(method)
         
-        # 初始化测试数据
-        self.test_data = {
-            "so_code": None,
-            "so_type_id": None,
-            "so_status": None,
-            "sls_org_id": None,
-            "cust_id": None,
-            "created_by": None   
-        }
+        # 初始化测试数据，但保留已有的数据
+        if not hasattr(self, 'test_data') or not self.test_data:
+            # 如果类属性中有测试数据，使用类属性中的数据
+            if hasattr(TestOrderList, 'test_data') and TestOrderList.test_data:
+                self.test_data = TestOrderList.test_data
+                logger.info("使用类属性中的测试数据")
+            else:
+                self.test_data = {
+                    "so_code": None,
+                    "so_type_id": None,
+                    "so_status": None,
+                    "sls_org_id": None,
+                    "cust_id": None,
+                    "created_by": None   
+                }
+                logger.info("初始化新的测试数据")
         
         # 如果提供了 method 参数，记录方法名
         if method and hasattr(method, '__name__'):
@@ -110,15 +117,16 @@ class TestOrderList(BaseTest):
         # 如果有数据，验证返回的订单数据结构并提取测试数据
         if response["data"]['data']['data']:
             order = response["data"]["data"]["data"][0]
-            logger.info(f"\n获取到订单数据: {json.dumps(order, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
+            # logger.info(f"\n获取到订单数据: {json.dumps(order, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
             
             # 提取测试数据并验证
             self.test_data["so_code"] = order.get("soCode")
-            self.test_data["so_type_id"] = order.get("soTypeId")
+            self.test_data["so_type_id"] = order.get("soTypeId", {}).get("id") if order.get("soTypeId") else None
             self.test_data["so_status"] = order.get("soStatus")
-            self.test_data["cust_id"] = order.get("custId")
-            self.test_data["created_by"] = order.get("createdBy")
-            self.test_data["sls_org_id"] = order.get("slsOrgId")
+            self.test_data["cust_id"] = order.get("custId", {}).get("id") if order.get("custId") else None
+            self.test_data["created_by"] = order.get("createdBy", {}).get("id") if order.get("createdBy") else None
+            self.test_data["sls_org_id"] = order.get("slsOrgId", {}).get("id") if order.get("slsOrgId") else None
+            
             # 验证数据完整性
             assert self.test_data["so_code"], "未获取到订单编号"
             assert self.test_data["so_type_id"], "未获取到订单类型"
@@ -126,6 +134,13 @@ class TestOrderList(BaseTest):
             assert self.test_data["cust_id"], "未获取到客户ID"
             assert self.test_data["created_by"], "未获取到创建者"
             assert self.test_data["sls_org_id"], "未获取到销售组织ID"
+            
+            # 输出提取的测试数据
+            logger.info(f"\n提取的测试数据: {json.dumps(self.test_data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
+            
+            # 将测试数据保存到类属性，确保后续测试可以访问
+            TestOrderList.test_data = self.test_data
+            logger.info("\n已将测试数据保存到类属性")
         else:
             logger.warning("\n警告：未获取到订单数据，无法提取测试数据")
             logger.debug(f"响应数据结构: {json.dumps(response['data'], cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
@@ -357,20 +372,32 @@ class TestOrderList(BaseTest):
         logger.info("\n准备发送请求...")
         logger.info(f"查询条件: 订单类型ID = {self.test_data['so_type_id']}")
         
-        # 获取完整响应
-        full_response = self._make_request(url, data, "按单据类型查询销售订单列表")
-        # logger.info(f"\n收到完整响应: {json.dumps(full_response, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
-        
         # 获取提取后的嵌套数据
         nested_data = self._make_request(url, data, "按单据类型查询销售订单列表", extract_nested_data=True)
-        logger.info(f"\n提取的嵌套数据: {json.dumps(nested_data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
         
         # 验证查询结果
         assert nested_data, "未查询到匹配的订单数据"
         
         # 验证所有返回的订单都匹配查询条件
         for order in nested_data:
-            assert order.get("soTypeId") == self.test_data["so_type_id"], f"订单类型ID {order.get('soTypeId')} 不匹配查询条件 {self.test_data['so_type_id']}"
+            # 根据实际结构进行断言
+            if isinstance(order.get("soTypeId"), dict):
+                # 如果soTypeId是对象，获取其id属性
+                order_so_type_id = order.get("soTypeId", {}).get("id")
+            else:
+                # 如果soTypeId直接就是ID值
+                order_so_type_id = order.get("soTypeId")
+                
+            # 根据实际结构进行断言
+            if isinstance(self.test_data["so_type_id"], dict):
+                # 如果测试数据中的so_type_id也是对象
+                expected_id = self.test_data["so_type_id"].get("id")
+            else:
+                # 如果测试数据中的so_type_id直接就是ID值
+                expected_id = self.test_data["so_type_id"]
+                
+            # 进行断言
+            assert order_so_type_id == expected_id, f"订单类型ID {order_so_type_id} 不匹配查询条件 {expected_id}"
             
         logger.info(f"\n成功查询到 {len(nested_data)} 条匹配的订单数据")
 
@@ -439,27 +466,45 @@ class TestOrderList(BaseTest):
         # 执行测试
         logger.info("\n准备发送请求...")
         logger.info(f"查询条件: 客户ID = {self.test_data['cust_id']}")
+        
         # 获取提取后的嵌套数据
         nested_data = self._make_request(url, data, "按客户查询销售订单列表", extract_nested_data=True)
-
         
         # 验证查询结果
         assert nested_data, "未查询到匹配的订单数据"
         
         # 验证所有返回的订单都匹配查询条件
         for order in nested_data:
-            assert order.get("custId") == self.test_data["cust_id"], f"客户ID {order.get('custId')} 不匹配查询条件 {self.test_data['cust_id']}"
+            # 根据实际结构进行断言
+            if isinstance(order.get("custId"), dict):
+                # 如果custId是对象，获取其id属性
+                order_cust_id = order.get("custId", {}).get("id")
+            else:
+                # 如果custId直接就是ID值
+                order_cust_id = order.get("custId")
+                
+            # 根据实际结构进行断言
+            if isinstance(self.test_data["cust_id"], dict):
+                # 如果测试数据中的cust_id也是对象
+                expected_id = self.test_data["cust_id"].get("id")
+            else:
+                # 如果测试数据中的cust_id直接就是ID值
+                expected_id = self.test_data["cust_id"]
+                
+            # 进行断言
+            assert order_cust_id == expected_id, f"客户ID {order_cust_id} 不匹配查询条件 {expected_id}"
             
         logger.info(f"\n成功查询到 {len(nested_data)} 条匹配的订单数据")
 
 if __name__ == "__main__":
-    test = TestOrderList()
-    test.setup_method()
-    test.test_01_query_orders()
+    # test = TestOrderList()
+    # test.setup_method()
+    # test.test_01_query_orders()
     # test.test_02_query_orders_by_so_code()
     # test.test_03_query_orders_by_status("DRAFT")
     # test.test_03_query_orders_by_status("EFFECT")
     # test.test_03_query_orders_by_status("APPROVING")
     # test.test_03_query_orders_by_status("CANCELLED")
     # test.test_04_query_orders_by_so_type()
-    test.test_05_query_orders_by_customer()
+    # test.test_05_query_orders_by_customer()
+    pytest.main(["-v", __file__])

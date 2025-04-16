@@ -46,9 +46,12 @@ class BaseTest:
         # 初始化SQL工具并获取初始化数据（利用缓存机制）
         cls.init_sql = InitSQL()
         init_data = cls.init_sql.init_sql()
-        
+        logger.info(f"初始化数据: {init_data}")
         # 只获取需要的配置信息
         cls.init_data = {
+            "user_info": {
+                "user_info": init_data["base_info"]["user_info"]
+            },
             "base_info": {
                 "so_type_info": init_data["base_info"]["so_type_info"],
                 "sales_channel_info": init_data["base_info"]["sales_channel_info"],
@@ -86,6 +89,7 @@ class BaseTest:
     def _extract_ids(cls) -> None:
         """提取必要的ID并验证"""
         id_mappings = {
+            'user_id': ('user_info', 'user_info', 'id'),
             'cust_id': ('partner_info', 'cust_info', 'id'),
             'so_type_id': ('base_info', 'so_type_info', 'id'),
             'sls_org_id': ('org_info', 'sls_org_info', 'id'),
