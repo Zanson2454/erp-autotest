@@ -273,6 +273,31 @@ class TestOrderList(BaseTest):
                                             "constValue": so_status
                                         }
                                     ]
+                                },
+                                {
+                                    "key": "fa7hlBBPOhnPZZWIFeCvy",
+                                    "type": "ConditionLeaf",
+                                    "leftValue": {
+                                        "id": "i_p4wT0Gew5Xnx1AInwPH",
+                                        "key": "i_p4wT0Gew5Xnx1AInwPH",
+                                        "type": "VarValue",
+                                        "fieldType": "Object",
+                                        "valueType": "VAR",
+                                        "varValue": [
+                                            {
+                                                "valueKey": "createdBy",
+                                                "valueName": "createdBy"
+                                            }
+                                        ]
+                                    },
+                                    "operator": "EQ",
+                                    "rightValue": {
+                                        "key": "oDkbT7tIhBcvbHsvqzLHN",
+                                        "type": "ConstValue",
+                                        "fieldType": "Object",
+                                        "valueType": "CONST",
+                                        "constValue": self.user_id
+                                    }
                                 }
                             ]
                         }
@@ -289,7 +314,7 @@ class TestOrderList(BaseTest):
         
         # 获取完整响应
         full_response = self._make_request(url, data, f"按单据状态 {so_status} 查询销售订单列表")
-        # logger.info(f"\n收到完整响应: {json.dumps(full_response, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
+        logger.info(f"\n收到完整响应: {json.dumps(full_response, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
         
         # 获取提取后的嵌套数据
         nested_data = self._make_request(url, data, f"按单据状态 {so_status} 查询销售订单列表", extract_nested_data=True)

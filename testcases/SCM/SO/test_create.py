@@ -27,7 +27,7 @@ class DecimalEncoder(json.JSONEncoder):
     """自定义 JSON 编码器，用于处理 Decimal 类型"""
     def default(self, obj):
         if isinstance(obj, Decimal):
-            return float(obj)
+                return float(obj)
         if isinstance(obj, datetime):
             return obj.strftime('%Y-%m-%d %H:%M:%S')
         return super(DecimalEncoder, self).default(obj)
@@ -243,22 +243,7 @@ class TestSalesOrderCreate:
             }
         }
 
-    @safe_api_call(error_message="订单行渲染失败")
-    def test_06_render_order_line(self):
-        """测试订单行渲染"""
-        # 确保物料已查询
-        if not hasattr(self, 'mat_obj') or self.mat_obj is None:
-            self.test_05_query_materials()
-            
-        url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SLS_AFTER_MAT_SELECT_RENDER_EVENT_SERVICE"
-        data = self._build_order_line_data()
-        logger.debug(f"订单行渲染请求数据: {json.dumps(data, cls=DecimalEncoder, indent=2)}")
-        
-        result = self._make_request(url, data, "订单行渲染")
-        # 保存订单行渲染结果供后续使用
-        self.so_items = result['data']["soItems"]
-        self.logger.info("订单行渲染测试通过")
-
+    
     def _build_order_line_data(self) -> Dict[str, Any]:
         """构建订单行数据"""
         current_date = int(datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp() * 1000)
@@ -294,6 +279,23 @@ class TestSalesOrderCreate:
                 }
             }
         }
+
+    @safe_api_call(error_message="订单行渲染失败")
+    def test_06_render_order_line(self):
+        """测试订单行渲染"""
+        # 确保物料已查询
+        if not hasattr(self, 'mat_obj') or self.mat_obj is None:
+            self.test_05_query_materials()
+            
+        url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SLS_AFTER_MAT_SELECT_RENDER_EVENT_SERVICE"
+        data = self._build_order_line_data()
+        logger.debug(f"订单行渲染请求数据: {json.dumps(data, cls=DecimalEncoder, indent=2)}")
+        
+        result = self._make_request(url, data, "订单行渲染")
+        # 保存订单行渲染结果供后续使用
+        self.so_items = result['data']["soItems"]
+        self.logger.info("订单行渲染测试通过")
+
 
     @safe_api_call(error_message="自动定价失败")
     def test_07_calculate_pricing(self):
@@ -366,16 +368,86 @@ class TestSalesOrderCreate:
         logger.debug(f"保存销售订单请求数据: {json.dumps(data, cls=DecimalEncoder, indent=2)}")
         result = self._make_request(url, data, "保存销售订单")
         logger.debug(f"保存销售订单响应数据: {json.dumps(result, cls=DecimalEncoder, indent=2)}")
-        self.logger.info("销售订单保存测试通过")
+        assert result is not None, "销售订单保存失败"
+        self.order_id = result['data']['id']  # 保存订单ID
+        logger.info(f"销售订单保存成功，订单ID: {self.order_id}")
+
+    @pytest.mark.order(9)
+    @safe_api_call(error_message="销售订单保存并提交失败")
+    def test_09_submit_sales_order(self):
+        """测试销售订单保存并提交"""
+        
+         # 确保所有必要的信息都已获取
+        if not hasattr(self, 'so_price_data') or self.so_price_data is None:
+            self.test_07_calculate_pricing()
+            
+        # 确保订单行已渲染
+        if not hasattr(self, 'so_items') or self.so_items is None:
+            self.test_06_render_order_line()
+        
+        # 发送请求
+        url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SLS_SALES_MANUAL_SAVE_EVENT?tmodule=ERP_SCM" 
+        
+        data = {
+            "params": {
+                "request": {
+                    **self.so_price_data["data"],
+                    "soItems": self.so_items
+                }
+            }
+        }
+          
+        
+        # 打印请求信息
+        logger.info(f"\n请求数据: {json.dumps(data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
+        
+        # 发送请求
+        response = self.session.post(url, json=data)
+        
+        # 打印响应信息
+        logger.info(f"\n响应数据: {json.dumps(response.json(), cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
+        
+        # 验证响应
+        self.assert_util.assert_http_status(response)
+        response_data = response.json()
+        self.assert_util.assert_response_status(response_data)
+        result = response_data["data"]
+        
+        assert result is not None, "销售订单保存并提交失败"
+    
+
+    @pytest.mark.order(10)
+    @safe_api_call(error_message="销售订单列表提交失败")
+    def test_10_manual_submit_sales_order(self):
+        """测试销售订单列表提交"""
+        # 检查必要数据
+        if not hasattr(self, 'order_id') or self.order_id is None:
+            self.test_08_save_sales_order()
+        
+        # 发送请求
+        url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_MANUAL_SUBMIT?tmodule=ERP_SCM"
+        data = {
+            "params": {
+                "request": {
+                    "id": self.order_id
+                }
+            }
+        }
+        logger.debug(f"销售订单手动提交请求数据: {json.dumps(data, cls=DecimalEncoder, indent=2)}")
+        result = self._make_request(url, data, "销售订单手动提交")
+        logger.debug(f"销售订单手动提交响应数据: {json.dumps(result, cls=DecimalEncoder, indent=2)}")
+        # 验证响应
+        assert result is not None, "销售订单手动提交失败"
+        logger.info("销售订单手动提交成功")
 
 
 if __name__ == "__main__":
     # 使用 pytest 运行测试
-    pytest.main(["-v", __file__])
+    # pytest.main(["-v", __file__])
     
-    # 或者按顺序直接调用
-    # test = TestSalesOrderCreate()
-    # test.setup_class()
+    #或者按顺序直接调用
+    test = TestSalesOrderCreate()
+    test.setup_class()
     # test.test_01_init_sales_order()
     # test.test_02_query_customer_info()
     # test.test_03_query_partner()
@@ -384,3 +456,5 @@ if __name__ == "__main__":
     # test.test_06_render_order_line()
     # test.test_07_calculate_pricing()
     # test.test_08_save_sales_order()
+    test.test_09_submit_sales_order()
+    # test.test_10_manual_submit_sales_order()
