@@ -376,14 +376,12 @@ class TestSalesOrderCreate:
     @safe_api_call(error_message="销售订单保存并提交失败")
     def test_09_submit_sales_order(self):
         """测试销售订单保存并提交"""
-        
+        self.test_06_render_order_line()
          # 确保所有必要的信息都已获取
-        if not hasattr(self, 'so_price_data') or self.so_price_data is None:
-            self.test_07_calculate_pricing()
+        self.test_07_calculate_pricing()
             
-        # 确保订单行已渲染
-        if not hasattr(self, 'so_items') or self.so_items is None:
-            self.test_06_render_order_line()
+        
+        
         
         # 发送请求
         url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SLS_SALES_MANUAL_SAVE_EVENT?tmodule=ERP_SCM" 
@@ -392,7 +390,8 @@ class TestSalesOrderCreate:
             "params": {
                 "request": {
                     **self.so_price_data["data"],
-                    "soItems": self.so_items
+                    "soItems": self.so_items,
+                    "syncSubmit": True
                 }
             }
         }
@@ -448,13 +447,13 @@ if __name__ == "__main__":
     #或者按顺序直接调用
     test = TestSalesOrderCreate()
     test.setup_class()
-    # test.test_01_init_sales_order()
-    # test.test_02_query_customer_info()
-    # test.test_03_query_partner()
-    # test.test_04_query_sales_organization()
-    # test.test_05_query_materials()
-    # test.test_06_render_order_line()
-    # test.test_07_calculate_pricing()
-    # test.test_08_save_sales_order()
+    test.test_01_init_sales_order()
+    test.test_02_query_customer_info()
+    test.test_03_query_partner()
+    test.test_04_query_sales_organization()
+    test.test_05_query_materials()
+    test.test_06_render_order_line()
+    test.test_07_calculate_pricing()
+    test.test_08_save_sales_order()
     test.test_09_submit_sales_order()
     # test.test_10_manual_submit_sales_order()
