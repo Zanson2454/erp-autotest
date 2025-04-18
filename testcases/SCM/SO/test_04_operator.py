@@ -37,7 +37,7 @@ class TestSalesOrderOperator(BaseTest):
         cls.order_id = None
         cls.so_data = None
         cls.user_id = cls.init_data["user_info"]["user_info"]["id"]
-        
+        cls.so_type_id = cls.init_data["base_info"]["so_type_info"]["id"]
         # 初始化请求头
         cls.headers = {
             'Content-Type': 'application/json',
@@ -158,8 +158,9 @@ class TestSalesOrderOperator(BaseTest):
             SELECT id, so_code, so_status 
             FROM sls_so_head_tr 
             WHERE so_status = 'EFFECT' 
-            AND deleted = 0 order by created_at desc
-            LIMIT 1
+                and so_type_id = {self.so_type_id}
+                AND deleted = 0 order by created_at desc
+                LIMIT 1
             """
         logger.info(f"执行查询: {sql}")
         result = self.db.execute_query(sql)
@@ -189,16 +190,32 @@ class TestSalesOrderOperator(BaseTest):
     def test_04_cancel_submit_sales_order(self):
         """取消提交销售订单"""
         try:
-            # 1. 获取订单详情
-            if not hasattr(self, 'order_id') or self.order_id is None:
+            # 1. 从数据库查询已提交的订单
+            sql = f"""
+               SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = {self.so_type_id}
+            and  id not in (select doc_id from del_dn_item_tr  where deleted=0 and doc_id is not null)
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+        
+            """
+            logger.info(f"执行查询: {sql}")
+            result = self.db.execute_query(sql)
+            
+            if not result or len(result) == 0:
                 self.test_03_manual_submit_sales_order()
-            else:
-                so_status = self.db.execute_query(f"select id,so_code,so_status from sls_so_head_tr where id={self.order_id}")
+                
+            order = result[0]
+            order_id = order["id"]
+            logger.info(f"找到已提交订单: ID={order_id}, 订单号={order['so_code']}")
+           
             # 2. 构造请求数据
             request_data = {
                 "params": {
                     "request": {
-                        "id": self.order_id
+                        "id": order_id
                 }
                 }
             }
@@ -206,9 +223,7 @@ class TestSalesOrderOperator(BaseTest):
             # 3. 发送请求
             url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_CANNEL_COMMIT_EVENT_SERVICE?tmodule=ERP_SCM"
 
-            
-            logger.info(f"取消提交订单请求URL: {url}")
-            logger.info(f"取消提交订单请求数据: {json.dumps(request_data, ensure_ascii=False, indent=2)}")
+
             
             response = self.session.post(url, json=request_data, headers=self.headers)
             response_data = response.json()
@@ -220,7 +235,7 @@ class TestSalesOrderOperator(BaseTest):
             assert response_data.get("success"), f"取消提交订单失败: {response_data.get('message')}"
             
             # 5. 验证订单状态
-            so_status = self.db.execute_query(f"select id,so_code,so_status from sls_so_head_tr where id={self.order_id}")
+            so_status = self.db.execute_query(f"select id,so_code,so_status from sls_so_head_tr where id={order_id}")
             assert so_status[0]['so_status'] == 'DRAFT', "销售订单取消提交失败"
             
             logger.info(f"订单 {self.order_id} 取消提交成功")
@@ -239,6 +254,7 @@ class TestSalesOrderOperator(BaseTest):
             SELECT id, so_code, so_status 
             FROM sls_so_head_tr 
             WHERE so_status = 'EFFECT' 
+            and so_type_id = {self.so_type_id}
             AND deleted = 0 order by created_at desc
             LIMIT 1
             """
@@ -300,6 +316,7 @@ class TestSalesOrderOperator(BaseTest):
             SELECT id, so_code, so_status, freeze_type 
             FROM sls_so_head_tr 
             WHERE so_status = 'EFFECT' 
+            and so_type_id = {self.so_type_id}
             AND freeze_type = 'NU_FREEZE'
             AND deleted = 0 order by created_at desc
             LIMIT 1
@@ -367,6 +384,7 @@ class TestSalesOrderOperator(BaseTest):
             SELECT id, so_code, so_status 
             FROM sls_so_head_tr 
             WHERE so_status = 'EFFECT' 
+            and so_type_id = {self.so_type_id}
             AND deleted = 0 order by created_at desc
             LIMIT 1
             """
