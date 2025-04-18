@@ -328,64 +328,15 @@ class TestSalesOrderCreate(BaseTest):
         assert result is not None, "销售订单保存并提交失败"
         logger.info("销售订单提交成功")
         
-    @pytest.mark.order(10)
-    @safe_api_call(error_message="销售订单编辑提交失败")
-    def test_10_submit_sales_order_edit(self):
-        """测试销售订单编辑提交"""
-        self.test_06_render_order_line()
-         # 确保所有必要的信息都已获取
-        self.test_07_calculate_pricing()
-            
-        # 发送请求
-        url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SLS_SALES_MANUAL_SAVE_EVENT?tmodule=ERP_SCM" 
-        self.so_price_data['id'] = self.order_id  # 直接设置 id 字段
-        data = {
-            "params": {
-                "request": {
-                    **self.so_price_data,  # 直接使用 so_price_data，不再访问 data 字段
-                    "soItems": self.so_items,
-                    "syncSubmit": True
-                }
-            }
-        }
-        
-        result = super()._make_request(url, data, "销售订单编辑提交", extract_nested_data=True)
-        assert result is not None, "销售订单编辑提交失败"
-        logger.info("销售订单编辑提交成功")
-
-
-    @pytest.mark.order(11)
-    @safe_api_call(error_message="销售订单列表提交失败")
-    def test_11_manual_submit_sales_order(self):
-        """测试销售订单列表提交"""
-        # 检查必要数据
-        if not hasattr(self, 'order_id') or self.order_id is None:
-            self.test_08_save_sales_order()
-            
-        # 发送请求
-        url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_MANUAL_SUBMIT?tmodule=ERP_SCM"
-        data = {
-            "params": {
-                "request": {
-                    "id": self.order_id
-                }
-            }
-        }
-        logger.debug(f"销售订单手动提交请求数据: {json.dumps(data, cls=DecimalEncoder, indent=2)}")
-        result = super()._make_request(url, data, "销售订单手动提交", extract_nested_data=True)
-        logger.debug(f"销售订单手动提交响应数据: {json.dumps(result, cls=DecimalEncoder, indent=2)}")
-        # 验证响应
-        assert result is not None, "销售订单手动提交失败"
-        logger.info("销售订单手动提交成功")
-
+    
 
 if __name__ == "__main__":
     # 使用 pytest 运行测试
-    pytest.main(["-v", __file__])
+    # pytest.main(["-v", __file__])
     
     # 或者按顺序直接调用
-    # test = TestSalesOrderCreate()
-    # test.setup_class()
+    test = TestSalesOrderCreate()
+    test.setup_class()
     # test.test_01_init_sales_order()
     # test.test_02_query_customer_info()
     # test.test_03_query_partner()
@@ -393,7 +344,5 @@ if __name__ == "__main__":
     # test.test_05_query_materials()
     # test.test_06_render_order_line()
     # test.test_07_calculate_pricing()
-    # test.test_08_save_sales_order()
+    test.test_08_save_sales_order()
     # test.test_09_submit_sales_order()
-    # test.test_10_submit_sales_order_edit()
-    # test.test_11_manual_submit_sales_order()

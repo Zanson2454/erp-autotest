@@ -45,6 +45,12 @@ class MockData:
         """
         return self.fake.email()
 
+    def get_mock_user_agent(self):
+        """
+        获取用户代理
+        :return:
+        """
+        return self.fake.user_agent()
 
 if __name__ == '__main__':
     mock_data = MockData()

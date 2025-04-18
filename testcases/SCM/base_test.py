@@ -118,7 +118,7 @@ class BaseTest:
             logger.info("开始测试方法")
         self.test_data = {}
     
-    def _make_request(self, url: str, data: dict, description: str = "", extract_nested_data: bool = False) -> dict:
+    def _make_request(self, url: str, data: dict, description: str = "", extract_nested_data: bool = False, headers: dict = None) -> dict:
         """发送请求并处理响应
         
         Args:
@@ -133,7 +133,7 @@ class BaseTest:
         try:
             if description:
                 logger.info(f"发送请求: {description}")
-            response = self.session.post(url, json=data)
+            response = self.session.post(url, json=data, headers=headers)
             response.raise_for_status()
             response_data = response.json()
             

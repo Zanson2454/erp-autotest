@@ -105,11 +105,23 @@ class DBManager:
             查询结果列表
         """
         with allure.step(f"执行SQL查询: {sql}"):
-            with self.session() as session:
-                result = session.execute(text(sql), params or {})
-                results = [dict(row) for row in result]
-                logger.info(f"\n{'='*50}\n执行SQL查询:\n{sql}\n参数: {params}\n结果:\n{json.dumps(results, ensure_ascii=False, indent=2)}\n{'='*50}")
-                return results
+            try:
+                self.connect()
+                with self.connection.cursor(pymysql.cursors.DictCursor) as cursor:
+                    # 如果提供了参数，使用参数化查询
+                    if params:
+                        cursor.execute(sql, params)
+                    else:
+                        # 否则直接执行SQL语句
+                        cursor.execute(sql)
+                    results = cursor.fetchall()
+                    logger.info(f"\n{'='*50}\n执行SQL查询:\n{sql}\n参数: {params}\n结果:\n{json.dumps(results, ensure_ascii=False, indent=2, cls=DecimalEncoder)}\n{'='*50}")
+                    return results
+            except Exception as e:
+                logger.error(f"执行SQL查询失败: {str(e)}")
+                raise
+            finally:
+                self.disconnect()
     
     def execute_update(self, sql: str, params: Dict[str, Any] = None) -> int:
         """

@@ -13,6 +13,7 @@ sys.path.insert(0, project_root)
 
 from testcases.SCM.base_test import BaseTest, DecimalEncoder
 from utils.ExceptionUtil import safe_api_call
+from utils.YamlUtil import YamlReader
 
 class TestOrderList(BaseTest):
     """销售订单列表测试类"""
@@ -29,6 +30,13 @@ class TestOrderList(BaseTest):
             
         # 调用父类的 setup_method
         super().setup_method(method)
+        
+        # 读取通用查询参数
+        if not hasattr(TestOrderList, 'common_params'):
+            yaml_path = os.path.join(project_root, "testcases", "templates", "query_params.yml")
+            yaml_reader = YamlReader(yaml_path)
+            TestOrderList.common_params = yaml_reader.data()
+            logger.info("已加载通用查询参数")
         
         # 初始化测试数据，但保留已有的数据
         if not hasattr(self, 'test_data') or not self.test_data:
@@ -56,46 +64,34 @@ class TestOrderList(BaseTest):
         logger.info("初始化测试数据完成")
     
     
-    def _build_order_list_query_data(self,conditionGroup=None) -> Dict[str, Any]:
+    def _build_order_list_query_data(self, conditionGroup=None) -> Dict[str, Any]:
         """构建销售订单列表查询数据"""
-        return {
-            "params": {
-                "request": {
-                    "pageable": {
-                        "pageNo": 1,
-                        "pageSize": 20,
-                        "systemParams": {
-                            "viewCondition": {
-                                "conditionKey": "gYLG-UJ0RZbOCvMez5f7D",
-                                "rightValues": {
-                                    "jYJ-mOKGX5JJkeGr274TK": [
-                                        {
-                                            "constValue": "SALES",
-                                            "fieldType": "Enum",
-                                            "type": "ConstValue",
-                                            "valueType": "CONST"
-                                        },
-                                        {
-                                            "constValue": "ASS",
-                                            "fieldType": "Enum",
-                                            "type": "ConstValue",
-                                            "valueType": "CONST"
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        "conditionGroup": conditionGroup,
-                        "sortOrders": [
-                            {
-                                "fieldAlias": "createdBy",
-                                "sortType": "DESC"
-                            }
-                        ]
+        # 更新查询参数
+        query_data = TestOrderList.common_params["pagination_query"]
+        query_data["params"]["request"]["pageable"]["conditionGroup"] = conditionGroup
+        
+        # 设置视图条件
+        query_data["params"]["request"]["pageable"]["systemParams"]["viewCondition"] = {
+            "conditionKey": "gYLG-UJ0RZbOCvMez5f7D",
+            "rightValues": {
+                "jYJ-mOKGX5JJkeGr274TK": [
+                    {
+                        "constValue": "SALES",
+                        "fieldType": "Enum",
+                        "type": "ConstValue",
+                        "valueType": "CONST"
+                    },
+                    {
+                        "constValue": "ASS",
+                        "fieldType": "Enum",
+                        "type": "ConstValue",
+                        "valueType": "CONST"
                     }
-                }
+                ]
             }
         }
+        
+        return query_data
     
     @pytest.mark.order(1)
     @safe_api_call(error_message="查询销售订单列表失败")
@@ -205,11 +201,7 @@ class TestOrderList(BaseTest):
         # 执行测试
         logger.info("\n准备发送请求...")
         logger.info(f"查询条件: 订单编号 = {self.test_data['so_code']}")
-        
-        # 获取完整响应
-        full_response = self._make_request(url, data, "按订单编号查询销售订单列表")
-        # logger.info(f"\n收到完整响应: {json.dumps(full_response, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
-        
+
         # 获取提取后的嵌套数据
         nested_data = self._make_request(url, data, "按订单编号查询销售订单列表", extract_nested_data=True)
         logger.info(f"\n提取的嵌套数据: {json.dumps(nested_data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
