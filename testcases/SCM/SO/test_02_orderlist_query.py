@@ -512,10 +512,78 @@ class TestOrderList(BaseTest):
             assert order_cust_id == expected_id, f"客户ID {order_cust_id} 不匹配查询条件 {expected_id}"
             
         logger.info(f"\n成功查询到 {len(nested_data)} 条匹配的订单数据")
+        """测试按外部单号查询销售订单列表"""
+        
+        url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$sls_so_head_tr_PAGING_DATA_SERVICE"
+        
+        # 构建按外部单号筛选的查询条件
+        conditionGroup = {
+            "type": "ConditionGroup",
+            "logicOperator": "AND",
+            "conditions": [
+                {
+                    "type": "ConditionGroup",
+                    "logicOperator": "AND",
+                    "conditions": [
+                        {
+                            "type": "ConditionGroup",
+                            "logicOperator": "AND",
+                            "conditions": [
+                                {
+                                    "key": "z68NkIZCu_YRYaaatY4Yf",
+                                    "type": "ConditionLeaf",
+                                    "leftValue": {
+                                        "id": "fFG6FqbqpcnEJhu8L8lfS",
+                                        "key": "fFG6FqbqpcnEJhu8L8lfS",
+                                        "type": "VarValue",
+                                        "fieldType": "Text",
+                                        "valueType": "VAR",
+                                        "varValue": [
+                                            {
+                                                "valueKey": "soExtCode",
+                                                "valueName": "soExtCode"
+                                            }
+                                        ]
+                                    },
+                                    "operator": "CONTAINS",
+                                    "rightValue": {
+                                        "key": "ChqtGFNHzvn7Gp2OsjaVW",
+                                        "type": "VarValue",
+                                        "fieldType": "Text",
+                                        "valueType": "CONST",
+                                        "constValue": "123"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+        
+        data = self._build_order_list_query_data(conditionGroup)
+        
+        # 执行测试
+        logger.info("\n准备发送请求...")
+        logger.info("查询条件: 外部单号包含 '123'")
+        
+        # 获取提取后的嵌套数据
+        nested_data = self._make_request(url, data, "按外部单号查询销售订单列表", extract_nested_data=True)
+        
+        # 验证查询结果
+        if not nested_data:
+            logger.warning("\n警告：未查询到匹配的订单数据")
+            return
+            
+        # 验证所有返回的订单都匹配查询条件
+        for order in nested_data:
+            assert "123" in order.get("soExtCode", ""), f"外部单号 {order.get('soExtCode')} 不包含查询条件 '123'"
+            
+        logger.info(f"\n成功查询到 {len(nested_data)} 条匹配的订单数据")
 
 if __name__ == "__main__":
-    # test = TestOrderList()
-    # test.setup_method()
+    test = TestOrderList()
+    test.setup_method()
     # test.test_01_query_orders()
     # test.test_02_query_orders_by_so_code()
     # test.test_03_query_orders_by_status("DRAFT")
@@ -523,5 +591,5 @@ if __name__ == "__main__":
     # test.test_03_query_orders_by_status("APPROVING")
     # test.test_03_query_orders_by_status("CANCELLED")
     # test.test_04_query_orders_by_so_type()
-    # test.test_05_query_orders_by_customer()
+    # test.test_05_query_orders_by_cus
     pytest.main(["-v", __file__])

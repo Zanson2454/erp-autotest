@@ -23,7 +23,7 @@ from utils.HttpUtil import HttpUtil
 from utils.ExceptionUtil import handle_exception, safe_api_call, handle_class_method_exception
 from testcases.SCM.base_test import BaseTest, DecimalEncoder
 from utils.MockUtil import MockData
-
+from testcases.SCM.SO.test_01_create import TestSalesOrderCreate
 class TestSalesOrderOperator(BaseTest):
     """销售订单操作测试类"""
     
@@ -50,36 +50,59 @@ class TestSalesOrderOperator(BaseTest):
     
 
     def _query_draft_orders_from_db(self) -> Dict[str, Any]:
-        """从数据库查询草稿态订单"""
-        # SQL查询语句
-        sql = f"""
-         select id,so_code,so_status 
-        from sls_so_head_tr 
-        where created_by = {self.user_id}
-        and so_status = 'DRAFT'
-        and deleted=0 order by created_at desc
-        limit 1
+        """从数据库查询草稿态订单
+        
+        Steps:
+        1. 查询草稿态订单
+        2. 如果未找到订单，创建新订单
+        3. 处理查询结果
+        
+        Returns:
+            Dict[str, Any]: 订单数据，包含id、so_code和so_status
+        """
+        # 1. 查询草稿态订单
+        sql = """
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE created_by = %s
+                AND so_status = 'DRAFT'
+                AND deleted = 0 
+            ORDER BY created_at DESC
+            LIMIT 1
         """
         
         # 执行查询
         self.logger.info(f"执行查询: {sql}")
-        result = self.db.execute_query(sql)
+        result = self.db.execute_query(sql, (self.user_id,))
         
-        # 处理查询结果
-        if result and len(result) > 0:
-            order = result[0]
-            self.test_data = {
-                "so_id": str(order["id"]),  # 确保ID是字符串类型
-                "so_code": order["so_code"],
-                "so_status": order["so_status"]
-            }
-            
-            # 输出查询结果
-            self.logger.info(f"\n查询到的草稿态订单数据: {json.dumps(self.test_data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
-            return self.test_data
-        else:
-            self.logger.warning("未查询到草稿状态的订单数据")
-            return {}
+        # 2. 如果未找到订单，创建新订单
+        if not result or len(result) == 0:
+            self.logger.info("未找到草稿态订单，创建新订单")
+            try:
+                test_create = TestSalesOrderCreate()
+                test_create.setup_class()
+                test_create.test_08_save_sales_order()
+                self.logger.info("成功创建新订单")
+                # 重新查询订单
+                result = self.db.execute_query(sql, (self.user_id,))
+                if not result:
+                    self.logger.error("创建订单后仍然未找到草稿态订单")
+                    return {}
+            except Exception as e:
+                self.logger.error(f"创建新订单失败: {str(e)}")
+                return {}
+        
+        # 3. 处理查询结果
+        order = result[0]
+        self.test_data = {
+            "so_id": str(order["id"]),  # 确保ID是字符串类型
+            "so_code": order["so_code"],
+            "so_status": order["so_status"]
+        }
+        
+        # 输出查询结果
+        self.logger.info(f"\n查询到的草稿态订单数据: {json.dumps(self.test_data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
+        return self.test_data
 
     @pytest.mark.order(1)
     @safe_api_call(error_message="查询销售订单详情失败")

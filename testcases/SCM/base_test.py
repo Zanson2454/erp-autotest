@@ -20,6 +20,7 @@ from utils.MysqlUtil import DBManager
 from utils.HttpUtil import HttpUtil
 from utils.ExceptionUtil import handle_exception, safe_api_call, handle_class_method_exception
 from testcases.SCM.scm_init import InitSQL
+from utils.MockUtil import MockData
 
 class DecimalEncoder(json.JSONEncoder):
     """自定义 JSON 编码器，用于处理 Decimal 类型"""
@@ -46,7 +47,7 @@ class BaseTest:
         # 初始化SQL工具并获取初始化数据（利用缓存机制）
         cls.init_sql = InitSQL()
         init_data = cls.init_sql.init_sql()
-        logger.info(f"初始化数据: {init_data}")
+        # logger.info(f"初始化数据: {init_data}")
         # 只获取需要的配置信息
         cls.init_data = {
             "user_info": {
@@ -72,6 +73,9 @@ class BaseTest:
             }
         }
         
+       
+        
+        
         # 提取必要的ID
         cls._extract_ids()
         
@@ -79,6 +83,22 @@ class BaseTest:
         cls.login_manager = LoginManager()
         cls.session = cls.login_manager.login()
         cls.base_url = Config.get_api_base_url()
+        
+        # 初始化请求头
+        cls.headers = {
+            'Accept': 'application/json, text/plain, */*',
+            'Accept-Language': 'zh-CN',
+            'Cache-Control': 'no-cache',
+            'Connection': 'keep-alive',
+            'Content-Type': 'application/json',
+            'Origin': cls.base_url,
+            'Pragma': 'no-cache',
+            'Referer': f"{cls.base_url}/TERP_PORTAL-TERP",
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-origin',
+            'User-Agent': MockData().get_mock_user_agent()
+        }
         
         # 初始化测试数据
         cls.test_data = {}
@@ -133,7 +153,7 @@ class BaseTest:
         try:
             if description:
                 logger.info(f"发送请求: {description}")
-            response = self.session.post(url, json=data, headers=headers)
+            response = self.session.post(url, json=data, headers=self.headers)
             response.raise_for_status()
             response_data = response.json()
             

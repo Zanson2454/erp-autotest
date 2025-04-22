@@ -332,17 +332,17 @@ class TestSalesOrderCreate(BaseTest):
 
 if __name__ == "__main__":
     # 使用 pytest 运行测试
-    # pytest.main(["-v", __file__])
+    pytest.main(["-v", __file__])
     
-    # 或者按顺序直接调用
-    test = TestSalesOrderCreate()
-    test.setup_class()
-    # test.test_01_init_sales_order()
-    # test.test_02_query_customer_info()
-    # test.test_03_query_partner()
-    # test.test_04_query_sales_organization()
-    # test.test_05_query_materials()
-    # test.test_06_render_order_line()
-    # test.test_07_calculate_pricing()
-    test.test_08_save_sales_order()
-    # test.test_09_submit_sales_order()
+    # # 或者按顺序直接调用
+    # test = TestSalesOrderCreate()
+    # test.setup_class()
+    # # test.test_01_init_sales_order()
+    # # test.test_02_query_customer_info()
+    # # test.test_03_query_partner()
+    # # test.test_04_query_sales_organization()
+    # # test.test_05_query_materials()
+    # # test.test_06_render_order_line()
+    # # test.test_07_calculate_pricing()
+    # test.test_08_save_sales_order()
+    # # test.test_09_submit_sales_order()
