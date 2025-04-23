@@ -146,3 +146,15 @@ class ConfigManager:
         """
         config = self.load_env_config(env)
         return config.get("logging", {}) 
+
+    def get_trantor_version(self, env: str = "test") -> str:
+        """获取Trantor版本
+        
+        Args:
+            env: 环境名称，默认为 'test'
+
+        Returns:
+            Trantor版本
+        """
+        config = self.load_env_config(env)
+        return config.get("trantor_version", "")

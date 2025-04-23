@@ -1,21 +1,12 @@
-import pytest
-import allure
+"""Test-specific pytest configuration."""
 import os
 import json
+import pytest
+import allure
 from datetime import datetime
 from loguru import logger
 
-
-# 添加项目根目录到 Python 路径
-import os
-import sys
-current_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
-sys.path.insert(0, project_root)
-
 from testcases.SCM.base_test import DecimalEncoder
-
-
 
 @pytest.fixture(scope="session", autouse=True)
 def env_setup(request):
@@ -27,19 +18,6 @@ def env_setup(request):
     env = request.config.getoption("--env")
     logger.info(f"当前测试环境: {env}")
     return env
-
-def pytest_addoption(parser):
-    """添加命令行参数
-    作用：添加自定义命令行参数
-    参数：--env，用于指定测试环境
-    默认值：test
-    """
-    parser.addoption(
-        "--env",
-        action="store",
-        default="test",
-        help="测试环境：dev/test/prod"
-    )
 
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
@@ -120,7 +98,7 @@ def pytest_runtest_makereport(item, call):
     report.extra = extra
 
 @pytest.fixture(autouse=True)
-def allure_env_info(request):
+def allure_env_info(request, set_test_dir):
     """Allure环境信息
     作用：添加环境信息到Allure报告
     功能：
@@ -133,15 +111,15 @@ def allure_env_info(request):
     # 使用 allure.environment 的正确方式
     env_info = {
         "Environment": request.config.getoption("--env"),
-        "Python Version": os.popen("python3 --version").read().strip(),
-        "Pytest Version": pytest.__version__,
-        "Allure Version": "2.13.2"  # 使用已知的版本号
+        "Trantor Version": request.config.getoption("--trantor_version")
     }
     
-    # 确保目录存在
-    os.makedirs("allure-results", exist_ok=True)
+    # 确保 reports/allure-results 目录存在
+    reports_dir = os.path.join(set_test_dir, "reports", "allure-results")
+    os.makedirs(reports_dir, exist_ok=True)
     
     # 将环境信息写入文件
-    with open("allure-results/environment.properties", "w") as f:
+    env_file = os.path.join(reports_dir, "environment.properties")
+    with open(env_file, "w") as f:
         for key, value in env_info.items():
             f.write(f"{key}={value}\n") 

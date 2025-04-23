@@ -1,0 +1,4586 @@
+2025-04-23 18:02:23.853 | INFO     | testcases.SCM.base_test:setup_method:136 - 开始测试: test_03_query_orders_by_status
+2025-04-23 18:02:23.854 | INFO     | test_02_orderlist_query:setup_method:47 - 使用类属性中的测试数据
+2025-04-23 18:02:23.854 | INFO     | test_02_orderlist_query:setup_method:61 - 开始执行测试方法: test_03_query_orders_by_status
+2025-04-23 18:02:23.854 | INFO     | test_02_orderlist_query:setup_method:65 - 初始化测试数据完成
+2025-04-23 18:02:23.856 | INFO     | test_02_orderlist_query:test_03_query_orders_by_status:324 - 
+准备发送请求...
+2025-04-23 18:02:23.856 | INFO     | test_02_orderlist_query:test_03_query_orders_by_status:325 - 查询条件: 订单状态 = EFFECT
+2025-04-23 18:02:23.857 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 按单据状态 EFFECT 查询销售订单列表
+2025-04-23 18:02:24.136 | INFO     | test_02_orderlist_query:test_03_query_orders_by_status:329 - 
+收到完整响应: {
+  "requestId": "a4aef64c-1111875",
+  "success": true,
+  "data": {
+    "data": {
+      "data": [
+        {
+          "soCode": "SO002537",
+          "soDocDate": 1745337600000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 88880.0,
+          "netBaseAmt": 78654.867257,
+          "taxAmt": 10225.132743,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "id": 2101001
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": "李月汝",
+          "custPhone": "18378999655",
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "f041c94629cfd24fff6fbae870c676fa",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": "佛山市禅城区季华五路28号",
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1745402541000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": {
+            "id": 70002638
+          },
+          "totalAmt": 88880.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16379134,
+          "createdBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "updatedBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "createdAt": 1745402542000,
+          "updatedAt": 1745402542000,
+          "version": 2,
+          "deleted": 0,
+          "originOrgId": 0,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16379134
+              },
+              "id": 16223100
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16379134
+              },
+              "id": 16301137
+            }
+          ]
+        },
+        {
+          "soCode": "SO002533",
+          "soDocDate": 1745402393000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 728816.0,
+          "netBaseAmt": 644969.911504,
+          "taxAmt": 83846.088496,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "id": 2101001
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": "李月汝",
+          "custPhone": "18378999655",
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "b873b63cec5d385206156b61d48871fb",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": "佛山市禅城区季华五路28号",
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1745402374000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": {
+            "id": 70002638
+          },
+          "totalAmt": 728816.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16379132,
+          "createdBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "updatedBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "createdAt": 1745402393000,
+          "updatedAt": 1745402393000,
+          "version": 4,
+          "deleted": 0,
+          "originOrgId": 0,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16379132
+              },
+              "id": 16223098
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16379132
+              },
+              "id": 16301135
+            }
+          ]
+        },
+        {
+          "soCode": "SO002527",
+          "soDocDate": 1745337600000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 728816.0,
+          "netBaseAmt": 644969.911504,
+          "taxAmt": 83846.088496,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "id": 2101001
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": "李月汝",
+          "custPhone": "18378999655",
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "44720480c595d532d8fb37811e9ab76a",
+          "freezeType": "ALL_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": "佛山市禅城区季华五路28号",
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1745402374000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": {
+            "id": 70002638
+          },
+          "totalAmt": 728816.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16379129,
+          "createdBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "updatedBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "createdAt": 1745402374000,
+          "updatedAt": 1745402391000,
+          "version": 3,
+          "deleted": 0,
+          "originOrgId": 0,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16379129
+              },
+              "id": 16223095
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16379129
+              },
+              "id": 16301132
+            }
+          ]
+        },
+        {
+          "soCode": "SO002523",
+          "soDocDate": 1745337600000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 151096.0,
+          "netBaseAmt": 133713.274336,
+          "taxAmt": 17382.725664,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "id": 2101001
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": "李月汝",
+          "custPhone": "18378999655",
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "c2bd948b2c2654b6a7bdc1a036e0de78",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": "佛山市禅城区季华五路28号",
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1745402367000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": {
+            "id": 70002638
+          },
+          "totalAmt": 151096.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16379127,
+          "createdBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "updatedBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "createdAt": 1745402367000,
+          "updatedAt": 1745402368000,
+          "version": 2,
+          "deleted": 0,
+          "originOrgId": 0,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16379127
+              },
+              "id": 16223093
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16379127
+              },
+              "id": 16301130
+            }
+          ]
+        },
+        {
+          "soCode": "SO002519",
+          "soDocDate": 1745401508000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 355520.0,
+          "netBaseAmt": 314619.469027,
+          "taxAmt": 40900.530973,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "id": 2101001
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": "李月汝",
+          "custPhone": "18378999655",
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "d4a2bae459d11e7e95cdd78d25f8e35c",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": "佛山市禅城区季华五路28号",
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1745401476000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": {
+            "id": 70002638
+          },
+          "totalAmt": 355520.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16379125,
+          "createdBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "updatedBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "createdAt": 1745401508000,
+          "updatedAt": 1745401509000,
+          "version": 4,
+          "deleted": 0,
+          "originOrgId": 0,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16379125
+              },
+              "id": 16223091
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16379125
+              },
+              "id": 16301128
+            }
+          ]
+        },
+        {
+          "soCode": "SO002513",
+          "soDocDate": 1745337600000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 355520.0,
+          "netBaseAmt": 314619.469027,
+          "taxAmt": 40900.530973,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "id": 2101001
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": "李月汝",
+          "custPhone": "18378999655",
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "bdd1cb63923ffe1862bc5aac5a4c3a95",
+          "freezeType": "ALL_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": "佛山市禅城区季华五路28号",
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1745401476000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": {
+            "id": 70002638
+          },
+          "totalAmt": 355520.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16379122,
+          "createdBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "updatedBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "createdAt": 1745401477000,
+          "updatedAt": 1745401505000,
+          "version": 3,
+          "deleted": 0,
+          "originOrgId": 0,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16379122
+              },
+              "id": 16223088
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16379122
+              },
+              "id": 16301125
+            }
+          ]
+        },
+        {
+          "soCode": "SO002509",
+          "soDocDate": 1745337600000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 693264.0,
+          "netBaseAmt": 613507.964602,
+          "taxAmt": 79756.035398,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "id": 2101001
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": "李月汝",
+          "custPhone": "18378999655",
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "59d73eb3c3733149a3226737a58953b3",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": "佛山市禅城区季华五路28号",
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1745401464000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": {
+            "id": 70002638
+          },
+          "totalAmt": 693264.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16379120,
+          "createdBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "updatedBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "createdAt": 1745401465000,
+          "updatedAt": 1745401465000,
+          "version": 2,
+          "deleted": 0,
+          "originOrgId": 0,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16379120
+              },
+              "id": 16223086
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16379120
+              },
+              "id": 16301123
+            }
+          ]
+        },
+        {
+          "soCode": "SO002505",
+          "soDocDate": 1745401093000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 639936.0,
+          "netBaseAmt": 566315.044248,
+          "taxAmt": 73620.955752,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "id": 2101001
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": "李月汝",
+          "custPhone": "18378999655",
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "0b54857c86f92847cfb5ec4d585a4982",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": "佛山市禅城区季华五路28号",
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1745401070000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": {
+            "id": 70002638
+          },
+          "totalAmt": 639936.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16379118,
+          "createdBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "updatedBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "createdAt": 1745401093000,
+          "updatedAt": 1745401093000,
+          "version": 4,
+          "deleted": 0,
+          "originOrgId": 0,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16379118
+              },
+              "id": 16223084
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16379118
+              },
+              "id": 16301121
+            }
+          ]
+        },
+        {
+          "soCode": "SO002499",
+          "soDocDate": 1745337600000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 639936.0,
+          "netBaseAmt": 566315.044248,
+          "taxAmt": 73620.955752,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "id": 2101001
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": "李月汝",
+          "custPhone": "18378999655",
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "bee46b421a5c2250fb6ec86a9ad320f6",
+          "freezeType": "ALL_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": "佛山市禅城区季华五路28号",
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1745401070000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": {
+            "id": 70002638
+          },
+          "totalAmt": 639936.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16379115,
+          "createdBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "updatedBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "createdAt": 1745401071000,
+          "updatedAt": 1745401090000,
+          "version": 3,
+          "deleted": 0,
+          "originOrgId": 0,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16379115
+              },
+              "id": 16223081
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16379115
+              },
+              "id": 16301118
+            }
+          ]
+        },
+        {
+          "soCode": "SO002495",
+          "soDocDate": 1745337600000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 604384.0,
+          "netBaseAmt": 534853.097345,
+          "taxAmt": 69530.902655,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "id": 2101001
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": "李月汝",
+          "custPhone": "18378999655",
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "f4469c8bb9516d1f3bcb9c615ce27fa0",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": "佛山市禅城区季华五路28号",
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1745401062000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": {
+            "id": 70002638
+          },
+          "totalAmt": 604384.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16379113,
+          "createdBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "updatedBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "createdAt": 1745401062000,
+          "updatedAt": 1745401062000,
+          "version": 2,
+          "deleted": 0,
+          "originOrgId": 0,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16379113
+              },
+              "id": 16223079
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16379113
+              },
+              "id": 16301116
+            }
+          ]
+        },
+        {
+          "soCode": "SO002491",
+          "soDocDate": 1745400880000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 97768.0,
+          "netBaseAmt": 86520.353982,
+          "taxAmt": 11247.646018,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "id": 2101001
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": "李月汝",
+          "custPhone": "18378999655",
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "aeb177b4561179ab19d7b41d6a4a7d1e",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": "佛山市禅城区季华五路28号",
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1745400859000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": {
+            "id": 70002638
+          },
+          "totalAmt": 97768.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16379111,
+          "createdBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "updatedBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "createdAt": 1745400881000,
+          "updatedAt": 1745400881000,
+          "version": 4,
+          "deleted": 0,
+          "originOrgId": 0,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16379111
+              },
+              "id": 16223077
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16379111
+              },
+              "id": 16301114
+            }
+          ]
+        },
+        {
+          "soCode": "SO002485",
+          "soDocDate": 1745337600000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 97768.0,
+          "netBaseAmt": 86520.353982,
+          "taxAmt": 11247.646018,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "id": 2101001
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": "李月汝",
+          "custPhone": "18378999655",
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "2daa81cb3a1733eb9692367d4f267bdd",
+          "freezeType": "ALL_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": "佛山市禅城区季华五路28号",
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1745400859000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": {
+            "id": 70002638
+          },
+          "totalAmt": 97768.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16379108,
+          "createdBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "updatedBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "createdAt": 1745400859000,
+          "updatedAt": 1745400876000,
+          "version": 3,
+          "deleted": 0,
+          "originOrgId": 0,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16379108
+              },
+              "id": 16223074
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16379108
+              },
+              "id": 16301111
+            }
+          ]
+        },
+        {
+          "soCode": "SO002481",
+          "soDocDate": 1745337600000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 853248.0,
+          "netBaseAmt": 755086.725664,
+          "taxAmt": 98161.274336,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "id": 2101001
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": "李月汝",
+          "custPhone": "18378999655",
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "823b2c840db63497457f4e0573db92e1",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": "佛山市禅城区季华五路28号",
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1745400851000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": {
+            "id": 70002638
+          },
+          "totalAmt": 853248.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16379106,
+          "createdBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "updatedBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "createdAt": 1745400852000,
+          "updatedAt": 1745400852000,
+          "version": 2,
+          "deleted": 0,
+          "originOrgId": 0,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16379106
+              },
+              "id": 16223072
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16379106
+              },
+              "id": 16301109
+            }
+          ]
+        },
+        {
+          "soCode": "SO002477",
+          "soDocDate": 1745400533000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 826584.0,
+          "netBaseAmt": 731490.265487,
+          "taxAmt": 95093.734513,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "id": 2101001
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": "李月汝",
+          "custPhone": "18378999655",
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "7754104acb3816e54d9b2a984c4fb353",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": "佛山市禅城区季华五路28号",
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1745400511000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": {
+            "id": 70002638
+          },
+          "totalAmt": 826584.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16379104,
+          "createdBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "updatedBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "createdAt": 1745400534000,
+          "updatedAt": 1745400534000,
+          "version": 4,
+          "deleted": 0,
+          "originOrgId": 0,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16379104
+              },
+              "id": 16223070
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16379104
+              },
+              "id": 16301107
+            }
+          ]
+        },
+        {
+          "soCode": "SO002471",
+          "soDocDate": 1745337600000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 826584.0,
+          "netBaseAmt": 731490.265487,
+          "taxAmt": 95093.734513,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "id": 2101001
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": "李月汝",
+          "custPhone": "18378999655",
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "672e58ced021fb81d3b4c93e88104b7c",
+          "freezeType": "ALL_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": "佛山市禅城区季华五路28号",
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1745400511000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": {
+            "id": 70002638
+          },
+          "totalAmt": 826584.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16379101,
+          "createdBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "updatedBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "createdAt": 1745400511000,
+          "updatedAt": 1745400529000,
+          "version": 3,
+          "deleted": 0,
+          "originOrgId": 0,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16379101
+              },
+              "id": 16223067
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16379101
+              },
+              "id": 16301104
+            }
+          ]
+        },
+        {
+          "soCode": "SO002467",
+          "soDocDate": 1745337600000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 355520.0,
+          "netBaseAmt": 314619.469027,
+          "taxAmt": 40900.530973,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "id": 2101001
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": "李月汝",
+          "custPhone": "18378999655",
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "0192235d2bde225c813cbc5d44c3e85e",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": "佛山市禅城区季华五路28号",
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1745400503000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": {
+            "id": 70002638
+          },
+          "totalAmt": 355520.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16379099,
+          "createdBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "updatedBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "createdAt": 1745400504000,
+          "updatedAt": 1745400504000,
+          "version": 2,
+          "deleted": 0,
+          "originOrgId": 0,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16379099
+              },
+              "id": 16223065
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16379099
+              },
+              "id": 16301102
+            }
+          ]
+        },
+        {
+          "soCode": "SO002463",
+          "soDocDate": 1745337600000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 106656.0,
+          "netBaseAmt": 94385.840708,
+          "taxAmt": 12270.159292,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "id": 2101001
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": "李月汝",
+          "custPhone": "18378999655",
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "45a0ad8d3b8fe178d405f5b7d4ca7e32",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": "佛山市禅城区季华五路28号",
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1745400441000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": {
+            "id": 70002638
+          },
+          "totalAmt": 106656.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16379097,
+          "createdBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "updatedBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "createdAt": 1745400441000,
+          "updatedAt": 1745400441000,
+          "version": 2,
+          "deleted": 0,
+          "originOrgId": 0,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16379097
+              },
+              "id": 16223063
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16379097
+              },
+              "id": 16301100
+            }
+          ]
+        },
+        {
+          "soCode": "SO002459",
+          "soDocDate": 1745337600000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 284416.0,
+          "netBaseAmt": 251695.575221,
+          "taxAmt": 32720.424779,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "id": 2101001
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": "李月汝",
+          "custPhone": "18378999655",
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "14892ab89eeead039e41f0eeb49fa457",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": "佛山市禅城区季华五路28号",
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1745399154000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": {
+            "id": 70002638
+          },
+          "totalAmt": 284416.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16379095,
+          "createdBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "updatedBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "createdAt": 1745399154000,
+          "updatedAt": 1745399155000,
+          "version": 2,
+          "deleted": 0,
+          "originOrgId": 0,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16379095
+              },
+              "id": 16223061
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16379095
+              },
+              "id": 16301098
+            }
+          ]
+        },
+        {
+          "soCode": "SO002446",
+          "soDocDate": 1745382387000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 844360.0,
+          "netBaseAmt": 747221.238938,
+          "taxAmt": 97138.761062,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "id": 2101001
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": "李月汝",
+          "custPhone": "18378999655",
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "12cf75526b77307207f1d6f7d4f0def9",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": "佛山市禅城区季华五路28号",
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1745382085000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": {
+            "id": 70002638
+          },
+          "totalAmt": 844360.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16379091,
+          "createdBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "updatedBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "createdAt": 1745382388000,
+          "updatedAt": 1745382388000,
+          "version": 4,
+          "deleted": 0,
+          "originOrgId": 0,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16379091
+              },
+              "id": 16223057
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16379091
+              },
+              "id": 16301094
+            }
+          ]
+        },
+        {
+          "soCode": "SO002440",
+          "soDocDate": 1745337600000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 844360.0,
+          "netBaseAmt": 747221.238938,
+          "taxAmt": 97138.761062,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "id": 2101001
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": "李月汝",
+          "custPhone": "18378999655",
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "997249281bfa4340b121bc8683aa91c6",
+          "freezeType": "ALL_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": "佛山市禅城区季华五路28号",
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1745382085000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": {
+            "id": 70002638
+          },
+          "totalAmt": 844360.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16379088,
+          "createdBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "updatedBy": {
+            "id": 540175374525637,
+            "username": "zhangang",
+            "email": "z**********@163.com",
+            "mobile": "173****6912",
+            "nickname": "章昂",
+            "status": true,
+            "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+          },
+          "createdAt": 1745382086000,
+          "updatedAt": 1745382385000,
+          "version": 3,
+          "deleted": 0,
+          "originOrgId": 0,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16379088
+              },
+              "id": 16223054
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16379088
+              },
+              "id": 16301091
+            }
+          ]
+        }
+      ],
+      "total": 190
+    }
+  }
+}
+2025-04-23 18:02:24.137 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 按单据状态 EFFECT 查询销售订单列表
+2025-04-23 18:02:24.320 | INFO     | test_02_orderlist_query:test_03_query_orders_by_status:333 - 
+提取的嵌套数据: [
+  {
+    "soCode": "SO002537",
+    "soDocDate": 1745337600000,
+    "soExtCode": null,
+    "baseCurrId": {
+      "id": 2000001
+    },
+    "slsCurrId": {
+      "id": 2000001
+    },
+    "exchRate": 1.0,
+    "grossBaseAmt": 88880.0,
+    "netBaseAmt": 78654.867257,
+    "taxAmt": 10225.132743,
+    "soCreateSource": "TERP门户",
+    "slsOrgId": {
+      "id": 14579001
+    },
+    "slsTmId": null,
+    "soTypeId": {
+      "id": 2101001
+    },
+    "custId": {
+      "id": 2059001
+    },
+    "custPersonName": "李月汝",
+    "custPhone": "18378999655",
+    "slsPersonName": "章昂",
+    "slsPhone": "17376596912",
+    "soStatus": "EFFECT",
+    "approveStatus": null,
+    "soTitle": null,
+    "soDesc": null,
+    "soNotes": null,
+    "isFixedExchRate": false,
+    "slsComId": {
+      "id": 14373001
+    },
+    "priceIdempotent": "f041c94629cfd24fff6fbae870c676fa",
+    "freezeType": "NU_FREEZE",
+    "soAssociationCode": null,
+    "soBusinessStatus": null,
+    "bizRuleGroup": null,
+    "addrDetail": "佛山市禅城区季华五路28号",
+    "currExchangeRateType": {
+      "id": 2000001
+    },
+    "slsDcId": {
+      "id": 14378001
+    },
+    "btClass": "SALES",
+    "effectiveAt": null,
+    "slsPerson": {
+      "id": 14094003
+    },
+    "reCalculate": null,
+    "invOrg": null,
+    "invLoc": null,
+    "priceCalcDate": 1745402541000,
+    "deliveryInterceptFail": null,
+    "externalBuyerId": null,
+    "addrId": {
+      "id": 70002638
+    },
+    "totalAmt": 88880.0,
+    "discountAmt": 0.0,
+    "discountInfo": "",
+    "platformDiscountAmt": null,
+    "merchantDiscountAmt": null,
+    "actualPaidAmt": null,
+    "freightAmt": null,
+    "buyerRemark": null,
+    "sellerRemark": null,
+    "id": 16379134,
+    "createdBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "updatedBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "createdAt": 1745402542000,
+    "updatedAt": 1745402542000,
+    "version": 2,
+    "deleted": 0,
+    "originOrgId": 0,
+    "slsPartnerLinks": [
+      {
+        "soId": {
+          "id": 16379134
+        },
+        "id": 16223100
+      }
+    ],
+    "soItems": [
+      {
+        "soId": {
+          "id": 16379134
+        },
+        "id": 16301137
+      }
+    ]
+  },
+  {
+    "soCode": "SO002533",
+    "soDocDate": 1745402393000,
+    "soExtCode": null,
+    "baseCurrId": {
+      "id": 2000001
+    },
+    "slsCurrId": {
+      "id": 2000001
+    },
+    "exchRate": 1.0,
+    "grossBaseAmt": 728816.0,
+    "netBaseAmt": 644969.911504,
+    "taxAmt": 83846.088496,
+    "soCreateSource": "TERP门户",
+    "slsOrgId": {
+      "id": 14579001
+    },
+    "slsTmId": null,
+    "soTypeId": {
+      "id": 2101001
+    },
+    "custId": {
+      "id": 2059001
+    },
+    "custPersonName": "李月汝",
+    "custPhone": "18378999655",
+    "slsPersonName": "章昂",
+    "slsPhone": "17376596912",
+    "soStatus": "EFFECT",
+    "approveStatus": null,
+    "soTitle": null,
+    "soDesc": null,
+    "soNotes": null,
+    "isFixedExchRate": false,
+    "slsComId": {
+      "id": 14373001
+    },
+    "priceIdempotent": "b873b63cec5d385206156b61d48871fb",
+    "freezeType": "NU_FREEZE",
+    "soAssociationCode": null,
+    "soBusinessStatus": null,
+    "bizRuleGroup": null,
+    "addrDetail": "佛山市禅城区季华五路28号",
+    "currExchangeRateType": {
+      "id": 2000001
+    },
+    "slsDcId": {
+      "id": 14378001
+    },
+    "btClass": "SALES",
+    "effectiveAt": null,
+    "slsPerson": {
+      "id": 14094003
+    },
+    "reCalculate": null,
+    "invOrg": null,
+    "invLoc": null,
+    "priceCalcDate": 1745402374000,
+    "deliveryInterceptFail": null,
+    "externalBuyerId": null,
+    "addrId": {
+      "id": 70002638
+    },
+    "totalAmt": 728816.0,
+    "discountAmt": 0.0,
+    "discountInfo": "",
+    "platformDiscountAmt": null,
+    "merchantDiscountAmt": null,
+    "actualPaidAmt": null,
+    "freightAmt": null,
+    "buyerRemark": null,
+    "sellerRemark": null,
+    "id": 16379132,
+    "createdBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "updatedBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "createdAt": 1745402393000,
+    "updatedAt": 1745402393000,
+    "version": 4,
+    "deleted": 0,
+    "originOrgId": 0,
+    "slsPartnerLinks": [
+      {
+        "soId": {
+          "id": 16379132
+        },
+        "id": 16223098
+      }
+    ],
+    "soItems": [
+      {
+        "soId": {
+          "id": 16379132
+        },
+        "id": 16301135
+      }
+    ]
+  },
+  {
+    "soCode": "SO002527",
+    "soDocDate": 1745337600000,
+    "soExtCode": null,
+    "baseCurrId": {
+      "id": 2000001
+    },
+    "slsCurrId": {
+      "id": 2000001
+    },
+    "exchRate": 1.0,
+    "grossBaseAmt": 728816.0,
+    "netBaseAmt": 644969.911504,
+    "taxAmt": 83846.088496,
+    "soCreateSource": "TERP门户",
+    "slsOrgId": {
+      "id": 14579001
+    },
+    "slsTmId": null,
+    "soTypeId": {
+      "id": 2101001
+    },
+    "custId": {
+      "id": 2059001
+    },
+    "custPersonName": "李月汝",
+    "custPhone": "18378999655",
+    "slsPersonName": "章昂",
+    "slsPhone": "17376596912",
+    "soStatus": "EFFECT",
+    "approveStatus": null,
+    "soTitle": null,
+    "soDesc": null,
+    "soNotes": null,
+    "isFixedExchRate": false,
+    "slsComId": {
+      "id": 14373001
+    },
+    "priceIdempotent": "44720480c595d532d8fb37811e9ab76a",
+    "freezeType": "ALL_FREEZE",
+    "soAssociationCode": null,
+    "soBusinessStatus": null,
+    "bizRuleGroup": null,
+    "addrDetail": "佛山市禅城区季华五路28号",
+    "currExchangeRateType": {
+      "id": 2000001
+    },
+    "slsDcId": {
+      "id": 14378001
+    },
+    "btClass": "SALES",
+    "effectiveAt": null,
+    "slsPerson": {
+      "id": 14094003
+    },
+    "reCalculate": null,
+    "invOrg": null,
+    "invLoc": null,
+    "priceCalcDate": 1745402374000,
+    "deliveryInterceptFail": null,
+    "externalBuyerId": null,
+    "addrId": {
+      "id": 70002638
+    },
+    "totalAmt": 728816.0,
+    "discountAmt": 0.0,
+    "discountInfo": "",
+    "platformDiscountAmt": null,
+    "merchantDiscountAmt": null,
+    "actualPaidAmt": null,
+    "freightAmt": null,
+    "buyerRemark": null,
+    "sellerRemark": null,
+    "id": 16379129,
+    "createdBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "updatedBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "createdAt": 1745402374000,
+    "updatedAt": 1745402391000,
+    "version": 3,
+    "deleted": 0,
+    "originOrgId": 0,
+    "slsPartnerLinks": [
+      {
+        "soId": {
+          "id": 16379129
+        },
+        "id": 16223095
+      }
+    ],
+    "soItems": [
+      {
+        "soId": {
+          "id": 16379129
+        },
+        "id": 16301132
+      }
+    ]
+  },
+  {
+    "soCode": "SO002523",
+    "soDocDate": 1745337600000,
+    "soExtCode": null,
+    "baseCurrId": {
+      "id": 2000001
+    },
+    "slsCurrId": {
+      "id": 2000001
+    },
+    "exchRate": 1.0,
+    "grossBaseAmt": 151096.0,
+    "netBaseAmt": 133713.274336,
+    "taxAmt": 17382.725664,
+    "soCreateSource": "TERP门户",
+    "slsOrgId": {
+      "id": 14579001
+    },
+    "slsTmId": null,
+    "soTypeId": {
+      "id": 2101001
+    },
+    "custId": {
+      "id": 2059001
+    },
+    "custPersonName": "李月汝",
+    "custPhone": "18378999655",
+    "slsPersonName": "章昂",
+    "slsPhone": "17376596912",
+    "soStatus": "EFFECT",
+    "approveStatus": null,
+    "soTitle": null,
+    "soDesc": null,
+    "soNotes": null,
+    "isFixedExchRate": false,
+    "slsComId": {
+      "id": 14373001
+    },
+    "priceIdempotent": "c2bd948b2c2654b6a7bdc1a036e0de78",
+    "freezeType": "NU_FREEZE",
+    "soAssociationCode": null,
+    "soBusinessStatus": null,
+    "bizRuleGroup": null,
+    "addrDetail": "佛山市禅城区季华五路28号",
+    "currExchangeRateType": {
+      "id": 2000001
+    },
+    "slsDcId": {
+      "id": 14378001
+    },
+    "btClass": "SALES",
+    "effectiveAt": null,
+    "slsPerson": {
+      "id": 14094003
+    },
+    "reCalculate": null,
+    "invOrg": null,
+    "invLoc": null,
+    "priceCalcDate": 1745402367000,
+    "deliveryInterceptFail": null,
+    "externalBuyerId": null,
+    "addrId": {
+      "id": 70002638
+    },
+    "totalAmt": 151096.0,
+    "discountAmt": 0.0,
+    "discountInfo": "",
+    "platformDiscountAmt": null,
+    "merchantDiscountAmt": null,
+    "actualPaidAmt": null,
+    "freightAmt": null,
+    "buyerRemark": null,
+    "sellerRemark": null,
+    "id": 16379127,
+    "createdBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "updatedBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "createdAt": 1745402367000,
+    "updatedAt": 1745402368000,
+    "version": 2,
+    "deleted": 0,
+    "originOrgId": 0,
+    "slsPartnerLinks": [
+      {
+        "soId": {
+          "id": 16379127
+        },
+        "id": 16223093
+      }
+    ],
+    "soItems": [
+      {
+        "soId": {
+          "id": 16379127
+        },
+        "id": 16301130
+      }
+    ]
+  },
+  {
+    "soCode": "SO002519",
+    "soDocDate": 1745401508000,
+    "soExtCode": null,
+    "baseCurrId": {
+      "id": 2000001
+    },
+    "slsCurrId": {
+      "id": 2000001
+    },
+    "exchRate": 1.0,
+    "grossBaseAmt": 355520.0,
+    "netBaseAmt": 314619.469027,
+    "taxAmt": 40900.530973,
+    "soCreateSource": "TERP门户",
+    "slsOrgId": {
+      "id": 14579001
+    },
+    "slsTmId": null,
+    "soTypeId": {
+      "id": 2101001
+    },
+    "custId": {
+      "id": 2059001
+    },
+    "custPersonName": "李月汝",
+    "custPhone": "18378999655",
+    "slsPersonName": "章昂",
+    "slsPhone": "17376596912",
+    "soStatus": "EFFECT",
+    "approveStatus": null,
+    "soTitle": null,
+    "soDesc": null,
+    "soNotes": null,
+    "isFixedExchRate": false,
+    "slsComId": {
+      "id": 14373001
+    },
+    "priceIdempotent": "d4a2bae459d11e7e95cdd78d25f8e35c",
+    "freezeType": "NU_FREEZE",
+    "soAssociationCode": null,
+    "soBusinessStatus": null,
+    "bizRuleGroup": null,
+    "addrDetail": "佛山市禅城区季华五路28号",
+    "currExchangeRateType": {
+      "id": 2000001
+    },
+    "slsDcId": {
+      "id": 14378001
+    },
+    "btClass": "SALES",
+    "effectiveAt": null,
+    "slsPerson": {
+      "id": 14094003
+    },
+    "reCalculate": null,
+    "invOrg": null,
+    "invLoc": null,
+    "priceCalcDate": 1745401476000,
+    "deliveryInterceptFail": null,
+    "externalBuyerId": null,
+    "addrId": {
+      "id": 70002638
+    },
+    "totalAmt": 355520.0,
+    "discountAmt": 0.0,
+    "discountInfo": "",
+    "platformDiscountAmt": null,
+    "merchantDiscountAmt": null,
+    "actualPaidAmt": null,
+    "freightAmt": null,
+    "buyerRemark": null,
+    "sellerRemark": null,
+    "id": 16379125,
+    "createdBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "updatedBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "createdAt": 1745401508000,
+    "updatedAt": 1745401509000,
+    "version": 4,
+    "deleted": 0,
+    "originOrgId": 0,
+    "slsPartnerLinks": [
+      {
+        "soId": {
+          "id": 16379125
+        },
+        "id": 16223091
+      }
+    ],
+    "soItems": [
+      {
+        "soId": {
+          "id": 16379125
+        },
+        "id": 16301128
+      }
+    ]
+  },
+  {
+    "soCode": "SO002513",
+    "soDocDate": 1745337600000,
+    "soExtCode": null,
+    "baseCurrId": {
+      "id": 2000001
+    },
+    "slsCurrId": {
+      "id": 2000001
+    },
+    "exchRate": 1.0,
+    "grossBaseAmt": 355520.0,
+    "netBaseAmt": 314619.469027,
+    "taxAmt": 40900.530973,
+    "soCreateSource": "TERP门户",
+    "slsOrgId": {
+      "id": 14579001
+    },
+    "slsTmId": null,
+    "soTypeId": {
+      "id": 2101001
+    },
+    "custId": {
+      "id": 2059001
+    },
+    "custPersonName": "李月汝",
+    "custPhone": "18378999655",
+    "slsPersonName": "章昂",
+    "slsPhone": "17376596912",
+    "soStatus": "EFFECT",
+    "approveStatus": null,
+    "soTitle": null,
+    "soDesc": null,
+    "soNotes": null,
+    "isFixedExchRate": false,
+    "slsComId": {
+      "id": 14373001
+    },
+    "priceIdempotent": "bdd1cb63923ffe1862bc5aac5a4c3a95",
+    "freezeType": "ALL_FREEZE",
+    "soAssociationCode": null,
+    "soBusinessStatus": null,
+    "bizRuleGroup": null,
+    "addrDetail": "佛山市禅城区季华五路28号",
+    "currExchangeRateType": {
+      "id": 2000001
+    },
+    "slsDcId": {
+      "id": 14378001
+    },
+    "btClass": "SALES",
+    "effectiveAt": null,
+    "slsPerson": {
+      "id": 14094003
+    },
+    "reCalculate": null,
+    "invOrg": null,
+    "invLoc": null,
+    "priceCalcDate": 1745401476000,
+    "deliveryInterceptFail": null,
+    "externalBuyerId": null,
+    "addrId": {
+      "id": 70002638
+    },
+    "totalAmt": 355520.0,
+    "discountAmt": 0.0,
+    "discountInfo": "",
+    "platformDiscountAmt": null,
+    "merchantDiscountAmt": null,
+    "actualPaidAmt": null,
+    "freightAmt": null,
+    "buyerRemark": null,
+    "sellerRemark": null,
+    "id": 16379122,
+    "createdBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "updatedBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "createdAt": 1745401477000,
+    "updatedAt": 1745401505000,
+    "version": 3,
+    "deleted": 0,
+    "originOrgId": 0,
+    "slsPartnerLinks": [
+      {
+        "soId": {
+          "id": 16379122
+        },
+        "id": 16223088
+      }
+    ],
+    "soItems": [
+      {
+        "soId": {
+          "id": 16379122
+        },
+        "id": 16301125
+      }
+    ]
+  },
+  {
+    "soCode": "SO002509",
+    "soDocDate": 1745337600000,
+    "soExtCode": null,
+    "baseCurrId": {
+      "id": 2000001
+    },
+    "slsCurrId": {
+      "id": 2000001
+    },
+    "exchRate": 1.0,
+    "grossBaseAmt": 693264.0,
+    "netBaseAmt": 613507.964602,
+    "taxAmt": 79756.035398,
+    "soCreateSource": "TERP门户",
+    "slsOrgId": {
+      "id": 14579001
+    },
+    "slsTmId": null,
+    "soTypeId": {
+      "id": 2101001
+    },
+    "custId": {
+      "id": 2059001
+    },
+    "custPersonName": "李月汝",
+    "custPhone": "18378999655",
+    "slsPersonName": "章昂",
+    "slsPhone": "17376596912",
+    "soStatus": "EFFECT",
+    "approveStatus": null,
+    "soTitle": null,
+    "soDesc": null,
+    "soNotes": null,
+    "isFixedExchRate": false,
+    "slsComId": {
+      "id": 14373001
+    },
+    "priceIdempotent": "59d73eb3c3733149a3226737a58953b3",
+    "freezeType": "NU_FREEZE",
+    "soAssociationCode": null,
+    "soBusinessStatus": null,
+    "bizRuleGroup": null,
+    "addrDetail": "佛山市禅城区季华五路28号",
+    "currExchangeRateType": {
+      "id": 2000001
+    },
+    "slsDcId": {
+      "id": 14378001
+    },
+    "btClass": "SALES",
+    "effectiveAt": null,
+    "slsPerson": {
+      "id": 14094003
+    },
+    "reCalculate": null,
+    "invOrg": null,
+    "invLoc": null,
+    "priceCalcDate": 1745401464000,
+    "deliveryInterceptFail": null,
+    "externalBuyerId": null,
+    "addrId": {
+      "id": 70002638
+    },
+    "totalAmt": 693264.0,
+    "discountAmt": 0.0,
+    "discountInfo": "",
+    "platformDiscountAmt": null,
+    "merchantDiscountAmt": null,
+    "actualPaidAmt": null,
+    "freightAmt": null,
+    "buyerRemark": null,
+    "sellerRemark": null,
+    "id": 16379120,
+    "createdBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "updatedBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "createdAt": 1745401465000,
+    "updatedAt": 1745401465000,
+    "version": 2,
+    "deleted": 0,
+    "originOrgId": 0,
+    "slsPartnerLinks": [
+      {
+        "soId": {
+          "id": 16379120
+        },
+        "id": 16223086
+      }
+    ],
+    "soItems": [
+      {
+        "soId": {
+          "id": 16379120
+        },
+        "id": 16301123
+      }
+    ]
+  },
+  {
+    "soCode": "SO002505",
+    "soDocDate": 1745401093000,
+    "soExtCode": null,
+    "baseCurrId": {
+      "id": 2000001
+    },
+    "slsCurrId": {
+      "id": 2000001
+    },
+    "exchRate": 1.0,
+    "grossBaseAmt": 639936.0,
+    "netBaseAmt": 566315.044248,
+    "taxAmt": 73620.955752,
+    "soCreateSource": "TERP门户",
+    "slsOrgId": {
+      "id": 14579001
+    },
+    "slsTmId": null,
+    "soTypeId": {
+      "id": 2101001
+    },
+    "custId": {
+      "id": 2059001
+    },
+    "custPersonName": "李月汝",
+    "custPhone": "18378999655",
+    "slsPersonName": "章昂",
+    "slsPhone": "17376596912",
+    "soStatus": "EFFECT",
+    "approveStatus": null,
+    "soTitle": null,
+    "soDesc": null,
+    "soNotes": null,
+    "isFixedExchRate": false,
+    "slsComId": {
+      "id": 14373001
+    },
+    "priceIdempotent": "0b54857c86f92847cfb5ec4d585a4982",
+    "freezeType": "NU_FREEZE",
+    "soAssociationCode": null,
+    "soBusinessStatus": null,
+    "bizRuleGroup": null,
+    "addrDetail": "佛山市禅城区季华五路28号",
+    "currExchangeRateType": {
+      "id": 2000001
+    },
+    "slsDcId": {
+      "id": 14378001
+    },
+    "btClass": "SALES",
+    "effectiveAt": null,
+    "slsPerson": {
+      "id": 14094003
+    },
+    "reCalculate": null,
+    "invOrg": null,
+    "invLoc": null,
+    "priceCalcDate": 1745401070000,
+    "deliveryInterceptFail": null,
+    "externalBuyerId": null,
+    "addrId": {
+      "id": 70002638
+    },
+    "totalAmt": 639936.0,
+    "discountAmt": 0.0,
+    "discountInfo": "",
+    "platformDiscountAmt": null,
+    "merchantDiscountAmt": null,
+    "actualPaidAmt": null,
+    "freightAmt": null,
+    "buyerRemark": null,
+    "sellerRemark": null,
+    "id": 16379118,
+    "createdBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "updatedBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "createdAt": 1745401093000,
+    "updatedAt": 1745401093000,
+    "version": 4,
+    "deleted": 0,
+    "originOrgId": 0,
+    "slsPartnerLinks": [
+      {
+        "soId": {
+          "id": 16379118
+        },
+        "id": 16223084
+      }
+    ],
+    "soItems": [
+      {
+        "soId": {
+          "id": 16379118
+        },
+        "id": 16301121
+      }
+    ]
+  },
+  {
+    "soCode": "SO002499",
+    "soDocDate": 1745337600000,
+    "soExtCode": null,
+    "baseCurrId": {
+      "id": 2000001
+    },
+    "slsCurrId": {
+      "id": 2000001
+    },
+    "exchRate": 1.0,
+    "grossBaseAmt": 639936.0,
+    "netBaseAmt": 566315.044248,
+    "taxAmt": 73620.955752,
+    "soCreateSource": "TERP门户",
+    "slsOrgId": {
+      "id": 14579001
+    },
+    "slsTmId": null,
+    "soTypeId": {
+      "id": 2101001
+    },
+    "custId": {
+      "id": 2059001
+    },
+    "custPersonName": "李月汝",
+    "custPhone": "18378999655",
+    "slsPersonName": "章昂",
+    "slsPhone": "17376596912",
+    "soStatus": "EFFECT",
+    "approveStatus": null,
+    "soTitle": null,
+    "soDesc": null,
+    "soNotes": null,
+    "isFixedExchRate": false,
+    "slsComId": {
+      "id": 14373001
+    },
+    "priceIdempotent": "bee46b421a5c2250fb6ec86a9ad320f6",
+    "freezeType": "ALL_FREEZE",
+    "soAssociationCode": null,
+    "soBusinessStatus": null,
+    "bizRuleGroup": null,
+    "addrDetail": "佛山市禅城区季华五路28号",
+    "currExchangeRateType": {
+      "id": 2000001
+    },
+    "slsDcId": {
+      "id": 14378001
+    },
+    "btClass": "SALES",
+    "effectiveAt": null,
+    "slsPerson": {
+      "id": 14094003
+    },
+    "reCalculate": null,
+    "invOrg": null,
+    "invLoc": null,
+    "priceCalcDate": 1745401070000,
+    "deliveryInterceptFail": null,
+    "externalBuyerId": null,
+    "addrId": {
+      "id": 70002638
+    },
+    "totalAmt": 639936.0,
+    "discountAmt": 0.0,
+    "discountInfo": "",
+    "platformDiscountAmt": null,
+    "merchantDiscountAmt": null,
+    "actualPaidAmt": null,
+    "freightAmt": null,
+    "buyerRemark": null,
+    "sellerRemark": null,
+    "id": 16379115,
+    "createdBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "updatedBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "createdAt": 1745401071000,
+    "updatedAt": 1745401090000,
+    "version": 3,
+    "deleted": 0,
+    "originOrgId": 0,
+    "slsPartnerLinks": [
+      {
+        "soId": {
+          "id": 16379115
+        },
+        "id": 16223081
+      }
+    ],
+    "soItems": [
+      {
+        "soId": {
+          "id": 16379115
+        },
+        "id": 16301118
+      }
+    ]
+  },
+  {
+    "soCode": "SO002495",
+    "soDocDate": 1745337600000,
+    "soExtCode": null,
+    "baseCurrId": {
+      "id": 2000001
+    },
+    "slsCurrId": {
+      "id": 2000001
+    },
+    "exchRate": 1.0,
+    "grossBaseAmt": 604384.0,
+    "netBaseAmt": 534853.097345,
+    "taxAmt": 69530.902655,
+    "soCreateSource": "TERP门户",
+    "slsOrgId": {
+      "id": 14579001
+    },
+    "slsTmId": null,
+    "soTypeId": {
+      "id": 2101001
+    },
+    "custId": {
+      "id": 2059001
+    },
+    "custPersonName": "李月汝",
+    "custPhone": "18378999655",
+    "slsPersonName": "章昂",
+    "slsPhone": "17376596912",
+    "soStatus": "EFFECT",
+    "approveStatus": null,
+    "soTitle": null,
+    "soDesc": null,
+    "soNotes": null,
+    "isFixedExchRate": false,
+    "slsComId": {
+      "id": 14373001
+    },
+    "priceIdempotent": "f4469c8bb9516d1f3bcb9c615ce27fa0",
+    "freezeType": "NU_FREEZE",
+    "soAssociationCode": null,
+    "soBusinessStatus": null,
+    "bizRuleGroup": null,
+    "addrDetail": "佛山市禅城区季华五路28号",
+    "currExchangeRateType": {
+      "id": 2000001
+    },
+    "slsDcId": {
+      "id": 14378001
+    },
+    "btClass": "SALES",
+    "effectiveAt": null,
+    "slsPerson": {
+      "id": 14094003
+    },
+    "reCalculate": null,
+    "invOrg": null,
+    "invLoc": null,
+    "priceCalcDate": 1745401062000,
+    "deliveryInterceptFail": null,
+    "externalBuyerId": null,
+    "addrId": {
+      "id": 70002638
+    },
+    "totalAmt": 604384.0,
+    "discountAmt": 0.0,
+    "discountInfo": "",
+    "platformDiscountAmt": null,
+    "merchantDiscountAmt": null,
+    "actualPaidAmt": null,
+    "freightAmt": null,
+    "buyerRemark": null,
+    "sellerRemark": null,
+    "id": 16379113,
+    "createdBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "updatedBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "createdAt": 1745401062000,
+    "updatedAt": 1745401062000,
+    "version": 2,
+    "deleted": 0,
+    "originOrgId": 0,
+    "slsPartnerLinks": [
+      {
+        "soId": {
+          "id": 16379113
+        },
+        "id": 16223079
+      }
+    ],
+    "soItems": [
+      {
+        "soId": {
+          "id": 16379113
+        },
+        "id": 16301116
+      }
+    ]
+  },
+  {
+    "soCode": "SO002491",
+    "soDocDate": 1745400880000,
+    "soExtCode": null,
+    "baseCurrId": {
+      "id": 2000001
+    },
+    "slsCurrId": {
+      "id": 2000001
+    },
+    "exchRate": 1.0,
+    "grossBaseAmt": 97768.0,
+    "netBaseAmt": 86520.353982,
+    "taxAmt": 11247.646018,
+    "soCreateSource": "TERP门户",
+    "slsOrgId": {
+      "id": 14579001
+    },
+    "slsTmId": null,
+    "soTypeId": {
+      "id": 2101001
+    },
+    "custId": {
+      "id": 2059001
+    },
+    "custPersonName": "李月汝",
+    "custPhone": "18378999655",
+    "slsPersonName": "章昂",
+    "slsPhone": "17376596912",
+    "soStatus": "EFFECT",
+    "approveStatus": null,
+    "soTitle": null,
+    "soDesc": null,
+    "soNotes": null,
+    "isFixedExchRate": false,
+    "slsComId": {
+      "id": 14373001
+    },
+    "priceIdempotent": "aeb177b4561179ab19d7b41d6a4a7d1e",
+    "freezeType": "NU_FREEZE",
+    "soAssociationCode": null,
+    "soBusinessStatus": null,
+    "bizRuleGroup": null,
+    "addrDetail": "佛山市禅城区季华五路28号",
+    "currExchangeRateType": {
+      "id": 2000001
+    },
+    "slsDcId": {
+      "id": 14378001
+    },
+    "btClass": "SALES",
+    "effectiveAt": null,
+    "slsPerson": {
+      "id": 14094003
+    },
+    "reCalculate": null,
+    "invOrg": null,
+    "invLoc": null,
+    "priceCalcDate": 1745400859000,
+    "deliveryInterceptFail": null,
+    "externalBuyerId": null,
+    "addrId": {
+      "id": 70002638
+    },
+    "totalAmt": 97768.0,
+    "discountAmt": 0.0,
+    "discountInfo": "",
+    "platformDiscountAmt": null,
+    "merchantDiscountAmt": null,
+    "actualPaidAmt": null,
+    "freightAmt": null,
+    "buyerRemark": null,
+    "sellerRemark": null,
+    "id": 16379111,
+    "createdBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "updatedBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "createdAt": 1745400881000,
+    "updatedAt": 1745400881000,
+    "version": 4,
+    "deleted": 0,
+    "originOrgId": 0,
+    "slsPartnerLinks": [
+      {
+        "soId": {
+          "id": 16379111
+        },
+        "id": 16223077
+      }
+    ],
+    "soItems": [
+      {
+        "soId": {
+          "id": 16379111
+        },
+        "id": 16301114
+      }
+    ]
+  },
+  {
+    "soCode": "SO002485",
+    "soDocDate": 1745337600000,
+    "soExtCode": null,
+    "baseCurrId": {
+      "id": 2000001
+    },
+    "slsCurrId": {
+      "id": 2000001
+    },
+    "exchRate": 1.0,
+    "grossBaseAmt": 97768.0,
+    "netBaseAmt": 86520.353982,
+    "taxAmt": 11247.646018,
+    "soCreateSource": "TERP门户",
+    "slsOrgId": {
+      "id": 14579001
+    },
+    "slsTmId": null,
+    "soTypeId": {
+      "id": 2101001
+    },
+    "custId": {
+      "id": 2059001
+    },
+    "custPersonName": "李月汝",
+    "custPhone": "18378999655",
+    "slsPersonName": "章昂",
+    "slsPhone": "17376596912",
+    "soStatus": "EFFECT",
+    "approveStatus": null,
+    "soTitle": null,
+    "soDesc": null,
+    "soNotes": null,
+    "isFixedExchRate": false,
+    "slsComId": {
+      "id": 14373001
+    },
+    "priceIdempotent": "2daa81cb3a1733eb9692367d4f267bdd",
+    "freezeType": "ALL_FREEZE",
+    "soAssociationCode": null,
+    "soBusinessStatus": null,
+    "bizRuleGroup": null,
+    "addrDetail": "佛山市禅城区季华五路28号",
+    "currExchangeRateType": {
+      "id": 2000001
+    },
+    "slsDcId": {
+      "id": 14378001
+    },
+    "btClass": "SALES",
+    "effectiveAt": null,
+    "slsPerson": {
+      "id": 14094003
+    },
+    "reCalculate": null,
+    "invOrg": null,
+    "invLoc": null,
+    "priceCalcDate": 1745400859000,
+    "deliveryInterceptFail": null,
+    "externalBuyerId": null,
+    "addrId": {
+      "id": 70002638
+    },
+    "totalAmt": 97768.0,
+    "discountAmt": 0.0,
+    "discountInfo": "",
+    "platformDiscountAmt": null,
+    "merchantDiscountAmt": null,
+    "actualPaidAmt": null,
+    "freightAmt": null,
+    "buyerRemark": null,
+    "sellerRemark": null,
+    "id": 16379108,
+    "createdBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "updatedBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "createdAt": 1745400859000,
+    "updatedAt": 1745400876000,
+    "version": 3,
+    "deleted": 0,
+    "originOrgId": 0,
+    "slsPartnerLinks": [
+      {
+        "soId": {
+          "id": 16379108
+        },
+        "id": 16223074
+      }
+    ],
+    "soItems": [
+      {
+        "soId": {
+          "id": 16379108
+        },
+        "id": 16301111
+      }
+    ]
+  },
+  {
+    "soCode": "SO002481",
+    "soDocDate": 1745337600000,
+    "soExtCode": null,
+    "baseCurrId": {
+      "id": 2000001
+    },
+    "slsCurrId": {
+      "id": 2000001
+    },
+    "exchRate": 1.0,
+    "grossBaseAmt": 853248.0,
+    "netBaseAmt": 755086.725664,
+    "taxAmt": 98161.274336,
+    "soCreateSource": "TERP门户",
+    "slsOrgId": {
+      "id": 14579001
+    },
+    "slsTmId": null,
+    "soTypeId": {
+      "id": 2101001
+    },
+    "custId": {
+      "id": 2059001
+    },
+    "custPersonName": "李月汝",
+    "custPhone": "18378999655",
+    "slsPersonName": "章昂",
+    "slsPhone": "17376596912",
+    "soStatus": "EFFECT",
+    "approveStatus": null,
+    "soTitle": null,
+    "soDesc": null,
+    "soNotes": null,
+    "isFixedExchRate": false,
+    "slsComId": {
+      "id": 14373001
+    },
+    "priceIdempotent": "823b2c840db63497457f4e0573db92e1",
+    "freezeType": "NU_FREEZE",
+    "soAssociationCode": null,
+    "soBusinessStatus": null,
+    "bizRuleGroup": null,
+    "addrDetail": "佛山市禅城区季华五路28号",
+    "currExchangeRateType": {
+      "id": 2000001
+    },
+    "slsDcId": {
+      "id": 14378001
+    },
+    "btClass": "SALES",
+    "effectiveAt": null,
+    "slsPerson": {
+      "id": 14094003
+    },
+    "reCalculate": null,
+    "invOrg": null,
+    "invLoc": null,
+    "priceCalcDate": 1745400851000,
+    "deliveryInterceptFail": null,
+    "externalBuyerId": null,
+    "addrId": {
+      "id": 70002638
+    },
+    "totalAmt": 853248.0,
+    "discountAmt": 0.0,
+    "discountInfo": "",
+    "platformDiscountAmt": null,
+    "merchantDiscountAmt": null,
+    "actualPaidAmt": null,
+    "freightAmt": null,
+    "buyerRemark": null,
+    "sellerRemark": null,
+    "id": 16379106,
+    "createdBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "updatedBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "createdAt": 1745400852000,
+    "updatedAt": 1745400852000,
+    "version": 2,
+    "deleted": 0,
+    "originOrgId": 0,
+    "slsPartnerLinks": [
+      {
+        "soId": {
+          "id": 16379106
+        },
+        "id": 16223072
+      }
+    ],
+    "soItems": [
+      {
+        "soId": {
+          "id": 16379106
+        },
+        "id": 16301109
+      }
+    ]
+  },
+  {
+    "soCode": "SO002477",
+    "soDocDate": 1745400533000,
+    "soExtCode": null,
+    "baseCurrId": {
+      "id": 2000001
+    },
+    "slsCurrId": {
+      "id": 2000001
+    },
+    "exchRate": 1.0,
+    "grossBaseAmt": 826584.0,
+    "netBaseAmt": 731490.265487,
+    "taxAmt": 95093.734513,
+    "soCreateSource": "TERP门户",
+    "slsOrgId": {
+      "id": 14579001
+    },
+    "slsTmId": null,
+    "soTypeId": {
+      "id": 2101001
+    },
+    "custId": {
+      "id": 2059001
+    },
+    "custPersonName": "李月汝",
+    "custPhone": "18378999655",
+    "slsPersonName": "章昂",
+    "slsPhone": "17376596912",
+    "soStatus": "EFFECT",
+    "approveStatus": null,
+    "soTitle": null,
+    "soDesc": null,
+    "soNotes": null,
+    "isFixedExchRate": false,
+    "slsComId": {
+      "id": 14373001
+    },
+    "priceIdempotent": "7754104acb3816e54d9b2a984c4fb353",
+    "freezeType": "NU_FREEZE",
+    "soAssociationCode": null,
+    "soBusinessStatus": null,
+    "bizRuleGroup": null,
+    "addrDetail": "佛山市禅城区季华五路28号",
+    "currExchangeRateType": {
+      "id": 2000001
+    },
+    "slsDcId": {
+      "id": 14378001
+    },
+    "btClass": "SALES",
+    "effectiveAt": null,
+    "slsPerson": {
+      "id": 14094003
+    },
+    "reCalculate": null,
+    "invOrg": null,
+    "invLoc": null,
+    "priceCalcDate": 1745400511000,
+    "deliveryInterceptFail": null,
+    "externalBuyerId": null,
+    "addrId": {
+      "id": 70002638
+    },
+    "totalAmt": 826584.0,
+    "discountAmt": 0.0,
+    "discountInfo": "",
+    "platformDiscountAmt": null,
+    "merchantDiscountAmt": null,
+    "actualPaidAmt": null,
+    "freightAmt": null,
+    "buyerRemark": null,
+    "sellerRemark": null,
+    "id": 16379104,
+    "createdBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "updatedBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "createdAt": 1745400534000,
+    "updatedAt": 1745400534000,
+    "version": 4,
+    "deleted": 0,
+    "originOrgId": 0,
+    "slsPartnerLinks": [
+      {
+        "soId": {
+          "id": 16379104
+        },
+        "id": 16223070
+      }
+    ],
+    "soItems": [
+      {
+        "soId": {
+          "id": 16379104
+        },
+        "id": 16301107
+      }
+    ]
+  },
+  {
+    "soCode": "SO002471",
+    "soDocDate": 1745337600000,
+    "soExtCode": null,
+    "baseCurrId": {
+      "id": 2000001
+    },
+    "slsCurrId": {
+      "id": 2000001
+    },
+    "exchRate": 1.0,
+    "grossBaseAmt": 826584.0,
+    "netBaseAmt": 731490.265487,
+    "taxAmt": 95093.734513,
+    "soCreateSource": "TERP门户",
+    "slsOrgId": {
+      "id": 14579001
+    },
+    "slsTmId": null,
+    "soTypeId": {
+      "id": 2101001
+    },
+    "custId": {
+      "id": 2059001
+    },
+    "custPersonName": "李月汝",
+    "custPhone": "18378999655",
+    "slsPersonName": "章昂",
+    "slsPhone": "17376596912",
+    "soStatus": "EFFECT",
+    "approveStatus": null,
+    "soTitle": null,
+    "soDesc": null,
+    "soNotes": null,
+    "isFixedExchRate": false,
+    "slsComId": {
+      "id": 14373001
+    },
+    "priceIdempotent": "672e58ced021fb81d3b4c93e88104b7c",
+    "freezeType": "ALL_FREEZE",
+    "soAssociationCode": null,
+    "soBusinessStatus": null,
+    "bizRuleGroup": null,
+    "addrDetail": "佛山市禅城区季华五路28号",
+    "currExchangeRateType": {
+      "id": 2000001
+    },
+    "slsDcId": {
+      "id": 14378001
+    },
+    "btClass": "SALES",
+    "effectiveAt": null,
+    "slsPerson": {
+      "id": 14094003
+    },
+    "reCalculate": null,
+    "invOrg": null,
+    "invLoc": null,
+    "priceCalcDate": 1745400511000,
+    "deliveryInterceptFail": null,
+    "externalBuyerId": null,
+    "addrId": {
+      "id": 70002638
+    },
+    "totalAmt": 826584.0,
+    "discountAmt": 0.0,
+    "discountInfo": "",
+    "platformDiscountAmt": null,
+    "merchantDiscountAmt": null,
+    "actualPaidAmt": null,
+    "freightAmt": null,
+    "buyerRemark": null,
+    "sellerRemark": null,
+    "id": 16379101,
+    "createdBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "updatedBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "createdAt": 1745400511000,
+    "updatedAt": 1745400529000,
+    "version": 3,
+    "deleted": 0,
+    "originOrgId": 0,
+    "slsPartnerLinks": [
+      {
+        "soId": {
+          "id": 16379101
+        },
+        "id": 16223067
+      }
+    ],
+    "soItems": [
+      {
+        "soId": {
+          "id": 16379101
+        },
+        "id": 16301104
+      }
+    ]
+  },
+  {
+    "soCode": "SO002467",
+    "soDocDate": 1745337600000,
+    "soExtCode": null,
+    "baseCurrId": {
+      "id": 2000001
+    },
+    "slsCurrId": {
+      "id": 2000001
+    },
+    "exchRate": 1.0,
+    "grossBaseAmt": 355520.0,
+    "netBaseAmt": 314619.469027,
+    "taxAmt": 40900.530973,
+    "soCreateSource": "TERP门户",
+    "slsOrgId": {
+      "id": 14579001
+    },
+    "slsTmId": null,
+    "soTypeId": {
+      "id": 2101001
+    },
+    "custId": {
+      "id": 2059001
+    },
+    "custPersonName": "李月汝",
+    "custPhone": "18378999655",
+    "slsPersonName": "章昂",
+    "slsPhone": "17376596912",
+    "soStatus": "EFFECT",
+    "approveStatus": null,
+    "soTitle": null,
+    "soDesc": null,
+    "soNotes": null,
+    "isFixedExchRate": false,
+    "slsComId": {
+      "id": 14373001
+    },
+    "priceIdempotent": "0192235d2bde225c813cbc5d44c3e85e",
+    "freezeType": "NU_FREEZE",
+    "soAssociationCode": null,
+    "soBusinessStatus": null,
+    "bizRuleGroup": null,
+    "addrDetail": "佛山市禅城区季华五路28号",
+    "currExchangeRateType": {
+      "id": 2000001
+    },
+    "slsDcId": {
+      "id": 14378001
+    },
+    "btClass": "SALES",
+    "effectiveAt": null,
+    "slsPerson": {
+      "id": 14094003
+    },
+    "reCalculate": null,
+    "invOrg": null,
+    "invLoc": null,
+    "priceCalcDate": 1745400503000,
+    "deliveryInterceptFail": null,
+    "externalBuyerId": null,
+    "addrId": {
+      "id": 70002638
+    },
+    "totalAmt": 355520.0,
+    "discountAmt": 0.0,
+    "discountInfo": "",
+    "platformDiscountAmt": null,
+    "merchantDiscountAmt": null,
+    "actualPaidAmt": null,
+    "freightAmt": null,
+    "buyerRemark": null,
+    "sellerRemark": null,
+    "id": 16379099,
+    "createdBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "updatedBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "createdAt": 1745400504000,
+    "updatedAt": 1745400504000,
+    "version": 2,
+    "deleted": 0,
+    "originOrgId": 0,
+    "slsPartnerLinks": [
+      {
+        "soId": {
+          "id": 16379099
+        },
+        "id": 16223065
+      }
+    ],
+    "soItems": [
+      {
+        "soId": {
+          "id": 16379099
+        },
+        "id": 16301102
+      }
+    ]
+  },
+  {
+    "soCode": "SO002463",
+    "soDocDate": 1745337600000,
+    "soExtCode": null,
+    "baseCurrId": {
+      "id": 2000001
+    },
+    "slsCurrId": {
+      "id": 2000001
+    },
+    "exchRate": 1.0,
+    "grossBaseAmt": 106656.0,
+    "netBaseAmt": 94385.840708,
+    "taxAmt": 12270.159292,
+    "soCreateSource": "TERP门户",
+    "slsOrgId": {
+      "id": 14579001
+    },
+    "slsTmId": null,
+    "soTypeId": {
+      "id": 2101001
+    },
+    "custId": {
+      "id": 2059001
+    },
+    "custPersonName": "李月汝",
+    "custPhone": "18378999655",
+    "slsPersonName": "章昂",
+    "slsPhone": "17376596912",
+    "soStatus": "EFFECT",
+    "approveStatus": null,
+    "soTitle": null,
+    "soDesc": null,
+    "soNotes": null,
+    "isFixedExchRate": false,
+    "slsComId": {
+      "id": 14373001
+    },
+    "priceIdempotent": "45a0ad8d3b8fe178d405f5b7d4ca7e32",
+    "freezeType": "NU_FREEZE",
+    "soAssociationCode": null,
+    "soBusinessStatus": null,
+    "bizRuleGroup": null,
+    "addrDetail": "佛山市禅城区季华五路28号",
+    "currExchangeRateType": {
+      "id": 2000001
+    },
+    "slsDcId": {
+      "id": 14378001
+    },
+    "btClass": "SALES",
+    "effectiveAt": null,
+    "slsPerson": {
+      "id": 14094003
+    },
+    "reCalculate": null,
+    "invOrg": null,
+    "invLoc": null,
+    "priceCalcDate": 1745400441000,
+    "deliveryInterceptFail": null,
+    "externalBuyerId": null,
+    "addrId": {
+      "id": 70002638
+    },
+    "totalAmt": 106656.0,
+    "discountAmt": 0.0,
+    "discountInfo": "",
+    "platformDiscountAmt": null,
+    "merchantDiscountAmt": null,
+    "actualPaidAmt": null,
+    "freightAmt": null,
+    "buyerRemark": null,
+    "sellerRemark": null,
+    "id": 16379097,
+    "createdBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "updatedBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "createdAt": 1745400441000,
+    "updatedAt": 1745400441000,
+    "version": 2,
+    "deleted": 0,
+    "originOrgId": 0,
+    "slsPartnerLinks": [
+      {
+        "soId": {
+          "id": 16379097
+        },
+        "id": 16223063
+      }
+    ],
+    "soItems": [
+      {
+        "soId": {
+          "id": 16379097
+        },
+        "id": 16301100
+      }
+    ]
+  },
+  {
+    "soCode": "SO002459",
+    "soDocDate": 1745337600000,
+    "soExtCode": null,
+    "baseCurrId": {
+      "id": 2000001
+    },
+    "slsCurrId": {
+      "id": 2000001
+    },
+    "exchRate": 1.0,
+    "grossBaseAmt": 284416.0,
+    "netBaseAmt": 251695.575221,
+    "taxAmt": 32720.424779,
+    "soCreateSource": "TERP门户",
+    "slsOrgId": {
+      "id": 14579001
+    },
+    "slsTmId": null,
+    "soTypeId": {
+      "id": 2101001
+    },
+    "custId": {
+      "id": 2059001
+    },
+    "custPersonName": "李月汝",
+    "custPhone": "18378999655",
+    "slsPersonName": "章昂",
+    "slsPhone": "17376596912",
+    "soStatus": "EFFECT",
+    "approveStatus": null,
+    "soTitle": null,
+    "soDesc": null,
+    "soNotes": null,
+    "isFixedExchRate": false,
+    "slsComId": {
+      "id": 14373001
+    },
+    "priceIdempotent": "14892ab89eeead039e41f0eeb49fa457",
+    "freezeType": "NU_FREEZE",
+    "soAssociationCode": null,
+    "soBusinessStatus": null,
+    "bizRuleGroup": null,
+    "addrDetail": "佛山市禅城区季华五路28号",
+    "currExchangeRateType": {
+      "id": 2000001
+    },
+    "slsDcId": {
+      "id": 14378001
+    },
+    "btClass": "SALES",
+    "effectiveAt": null,
+    "slsPerson": {
+      "id": 14094003
+    },
+    "reCalculate": null,
+    "invOrg": null,
+    "invLoc": null,
+    "priceCalcDate": 1745399154000,
+    "deliveryInterceptFail": null,
+    "externalBuyerId": null,
+    "addrId": {
+      "id": 70002638
+    },
+    "totalAmt": 284416.0,
+    "discountAmt": 0.0,
+    "discountInfo": "",
+    "platformDiscountAmt": null,
+    "merchantDiscountAmt": null,
+    "actualPaidAmt": null,
+    "freightAmt": null,
+    "buyerRemark": null,
+    "sellerRemark": null,
+    "id": 16379095,
+    "createdBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "updatedBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "createdAt": 1745399154000,
+    "updatedAt": 1745399155000,
+    "version": 2,
+    "deleted": 0,
+    "originOrgId": 0,
+    "slsPartnerLinks": [
+      {
+        "soId": {
+          "id": 16379095
+        },
+        "id": 16223061
+      }
+    ],
+    "soItems": [
+      {
+        "soId": {
+          "id": 16379095
+        },
+        "id": 16301098
+      }
+    ]
+  },
+  {
+    "soCode": "SO002446",
+    "soDocDate": 1745382387000,
+    "soExtCode": null,
+    "baseCurrId": {
+      "id": 2000001
+    },
+    "slsCurrId": {
+      "id": 2000001
+    },
+    "exchRate": 1.0,
+    "grossBaseAmt": 844360.0,
+    "netBaseAmt": 747221.238938,
+    "taxAmt": 97138.761062,
+    "soCreateSource": "TERP门户",
+    "slsOrgId": {
+      "id": 14579001
+    },
+    "slsTmId": null,
+    "soTypeId": {
+      "id": 2101001
+    },
+    "custId": {
+      "id": 2059001
+    },
+    "custPersonName": "李月汝",
+    "custPhone": "18378999655",
+    "slsPersonName": "章昂",
+    "slsPhone": "17376596912",
+    "soStatus": "EFFECT",
+    "approveStatus": null,
+    "soTitle": null,
+    "soDesc": null,
+    "soNotes": null,
+    "isFixedExchRate": false,
+    "slsComId": {
+      "id": 14373001
+    },
+    "priceIdempotent": "12cf75526b77307207f1d6f7d4f0def9",
+    "freezeType": "NU_FREEZE",
+    "soAssociationCode": null,
+    "soBusinessStatus": null,
+    "bizRuleGroup": null,
+    "addrDetail": "佛山市禅城区季华五路28号",
+    "currExchangeRateType": {
+      "id": 2000001
+    },
+    "slsDcId": {
+      "id": 14378001
+    },
+    "btClass": "SALES",
+    "effectiveAt": null,
+    "slsPerson": {
+      "id": 14094003
+    },
+    "reCalculate": null,
+    "invOrg": null,
+    "invLoc": null,
+    "priceCalcDate": 1745382085000,
+    "deliveryInterceptFail": null,
+    "externalBuyerId": null,
+    "addrId": {
+      "id": 70002638
+    },
+    "totalAmt": 844360.0,
+    "discountAmt": 0.0,
+    "discountInfo": "",
+    "platformDiscountAmt": null,
+    "merchantDiscountAmt": null,
+    "actualPaidAmt": null,
+    "freightAmt": null,
+    "buyerRemark": null,
+    "sellerRemark": null,
+    "id": 16379091,
+    "createdBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "updatedBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "createdAt": 1745382388000,
+    "updatedAt": 1745382388000,
+    "version": 4,
+    "deleted": 0,
+    "originOrgId": 0,
+    "slsPartnerLinks": [
+      {
+        "soId": {
+          "id": 16379091
+        },
+        "id": 16223057
+      }
+    ],
+    "soItems": [
+      {
+        "soId": {
+          "id": 16379091
+        },
+        "id": 16301094
+      }
+    ]
+  },
+  {
+    "soCode": "SO002440",
+    "soDocDate": 1745337600000,
+    "soExtCode": null,
+    "baseCurrId": {
+      "id": 2000001
+    },
+    "slsCurrId": {
+      "id": 2000001
+    },
+    "exchRate": 1.0,
+    "grossBaseAmt": 844360.0,
+    "netBaseAmt": 747221.238938,
+    "taxAmt": 97138.761062,
+    "soCreateSource": "TERP门户",
+    "slsOrgId": {
+      "id": 14579001
+    },
+    "slsTmId": null,
+    "soTypeId": {
+      "id": 2101001
+    },
+    "custId": {
+      "id": 2059001
+    },
+    "custPersonName": "李月汝",
+    "custPhone": "18378999655",
+    "slsPersonName": "章昂",
+    "slsPhone": "17376596912",
+    "soStatus": "EFFECT",
+    "approveStatus": null,
+    "soTitle": null,
+    "soDesc": null,
+    "soNotes": null,
+    "isFixedExchRate": false,
+    "slsComId": {
+      "id": 14373001
+    },
+    "priceIdempotent": "997249281bfa4340b121bc8683aa91c6",
+    "freezeType": "ALL_FREEZE",
+    "soAssociationCode": null,
+    "soBusinessStatus": null,
+    "bizRuleGroup": null,
+    "addrDetail": "佛山市禅城区季华五路28号",
+    "currExchangeRateType": {
+      "id": 2000001
+    },
+    "slsDcId": {
+      "id": 14378001
+    },
+    "btClass": "SALES",
+    "effectiveAt": null,
+    "slsPerson": {
+      "id": 14094003
+    },
+    "reCalculate": null,
+    "invOrg": null,
+    "invLoc": null,
+    "priceCalcDate": 1745382085000,
+    "deliveryInterceptFail": null,
+    "externalBuyerId": null,
+    "addrId": {
+      "id": 70002638
+    },
+    "totalAmt": 844360.0,
+    "discountAmt": 0.0,
+    "discountInfo": "",
+    "platformDiscountAmt": null,
+    "merchantDiscountAmt": null,
+    "actualPaidAmt": null,
+    "freightAmt": null,
+    "buyerRemark": null,
+    "sellerRemark": null,
+    "id": 16379088,
+    "createdBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "updatedBy": {
+      "id": 540175374525637,
+      "username": "zhangang",
+      "email": "z**********@163.com",
+      "mobile": "173****6912",
+      "nickname": "章昂",
+      "status": true,
+      "avatar": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png"
+    },
+    "createdAt": 1745382086000,
+    "updatedAt": 1745382385000,
+    "version": 3,
+    "deleted": 0,
+    "originOrgId": 0,
+    "slsPartnerLinks": [
+      {
+        "soId": {
+          "id": 16379088
+        },
+        "id": 16223054
+      }
+    ],
+    "soItems": [
+      {
+        "soId": {
+          "id": 16379088
+        },
+        "id": 16301091
+      }
+    ]
+  }
+]
+2025-04-23 18:02:24.321 | INFO     | test_02_orderlist_query:test_03_query_orders_by_status:344 - 
+成功查询到 20 条状态为 EFFECT 的订单数据

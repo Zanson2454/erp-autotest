@@ -1,0 +1,72 @@
+2025-04-23 18:02:43.898 | INFO     | testcases.SCM.base_test:setup_method:136 - 开始测试: test_04_cancel_submit_sales_order
+2025-04-23 18:02:43.900 | INFO     | test_04_operator:test_04_cancel_submit_sales_order:247 - 执行查询: 
+               SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            and  id not in (select doc_id from del_dn_item_tr  where deleted=0 and doc_id is not null)
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+        
+            
+2025-04-23 18:02:44.659 | INFO     | utils.MysqlUtil:connect:60 - 数据库连接成功: rm-bp1f14585v00oh99t.mysql.rds.aliyuncs.com:3306/terp_test
+2025-04-23 18:02:44.803 | INFO     | utils.MysqlUtil:execute_query:108 - 
+==================================================
+执行SQL查询:
+
+               SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            and  id not in (select doc_id from del_dn_item_tr  where deleted=0 and doc_id is not null)
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+        
+            
+参数: None
+结果:
+[
+  {
+    "id": 16379138,
+    "so_code": "SO002545",
+    "so_status": "EFFECT"
+  }
+]
+==================================================
+2025-04-23 18:02:44.833 | DEBUG    | utils.MysqlUtil:cursor:83 - 数据库事务已提交
+2025-04-23 18:02:44.834 | INFO     | utils.MysqlUtil:disconnect:67 - 数据库连接已关闭
+2025-04-23 18:02:44.834 | DEBUG    | utils.MysqlUtil:cursor:91 - 数据库游标已关闭
+2025-04-23 18:02:44.835 | INFO     | test_04_operator:test_04_cancel_submit_sales_order:255 - 找到已提交订单: ID=16379138, 订单号=SO002545
+2025-04-23 18:02:44.962 | INFO     | test_04_operator:test_04_cancel_submit_sales_order:274 - 取消提交订单响应数据: {
+  "requestId": "33b745f8-1111937",
+  "success": true,
+  "data": {
+    "data": {
+      "id": 16379138,
+      "context": {},
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false,
+      "syncSubmit": false
+    }
+  }
+}
+2025-04-23 18:02:45.294 | INFO     | utils.MysqlUtil:connect:60 - 数据库连接成功: rm-bp1f14585v00oh99t.mysql.rds.aliyuncs.com:3306/terp_test
+2025-04-23 18:02:45.333 | INFO     | utils.MysqlUtil:execute_query:108 - 
+==================================================
+执行SQL查询:
+select id,so_code,so_status from sls_so_head_tr where id=16379138
+参数: None
+结果:
+[
+  {
+    "id": 16379138,
+    "so_code": "SO002545",
+    "so_status": "DRAFT"
+  }
+]
+==================================================
+2025-04-23 18:02:45.435 | DEBUG    | utils.MysqlUtil:cursor:83 - 数据库事务已提交
+2025-04-23 18:02:45.436 | INFO     | utils.MysqlUtil:disconnect:67 - 数据库连接已关闭
+2025-04-23 18:02:45.436 | DEBUG    | utils.MysqlUtil:cursor:91 - 数据库游标已关闭
+2025-04-23 18:02:45.436 | INFO     | test_04_operator:test_04_cancel_submit_sales_order:284 - 订单 None 取消提交成功
