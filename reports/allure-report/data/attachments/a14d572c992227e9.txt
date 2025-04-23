@@ -1,0 +1,38 @@
+2025-04-22 17:43:37.482 | INFO     | testcases.SCM.base_test:setup_method:136 - 开始测试: test_05_repeal_sales_order
+2025-04-22 17:43:37.486 | INFO     | test_04_operator:test_05_repeal_sales_order:397 - 执行查询: 
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+            
+2025-04-22 17:43:37.893 | INFO     | utils.MysqlUtil:connect:60 - 数据库连接成功: rm-bp1f14585v00oh99t.mysql.rds.aliyuncs.com:3306/terp_test
+2025-04-22 17:43:37.977 | INFO     | utils.MysqlUtil:execute_query:108 - 
+==================================================
+执行SQL查询:
+
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+            
+参数: None
+结果:
+[
+  {
+    "id": 16379028,
+    "so_code": "SO002267",
+    "so_status": "EFFECT"
+  }
+]
+==================================================
+2025-04-22 17:43:38.092 | DEBUG    | utils.MysqlUtil:cursor:83 - 数据库事务已提交
+2025-04-22 17:43:38.111 | INFO     | utils.MysqlUtil:disconnect:67 - 数据库连接已关闭
+2025-04-22 17:43:38.113 | DEBUG    | utils.MysqlUtil:cursor:91 - 数据库游标已关闭
+2025-04-22 17:43:38.118 | INFO     | test_04_operator:test_05_repeal_sales_order:405 - 找到已提交订单: ID=16379028, 订单号=SO002267
+2025-04-22 17:43:38.122 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 撤销订单
+2025-04-22 17:43:38.399 | ERROR    | test_04_operator:test_05_repeal_sales_order:455 - 作废订单失败: 响应数据为空
+assert None is not None

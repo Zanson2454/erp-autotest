@@ -1,0 +1,1138 @@
+2025-04-23 09:49:36|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 09:49:36|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 09:49:36|LogUtil.info line:33| 文件缓存命中：使用缓存的SCM初始化数据
+2025-04-23 09:49:37|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 09:49:37|LogUtil.info line:33| 初始化渲染数量: 37
+2025-04-23 09:49:37|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 09:49:38|base_test._make_request line:155| 发送请求: 查询物料列表
+2025-04-23 09:49:38|LogUtil.info line:33| 物料列表查询完成
+2025-04-23 09:49:38|base_test._make_request line:155| 发送请求: 订单行渲染
+2025-04-23 09:49:38|base_test._make_request line:171| 请求失败: 500 Server Error: Internal Server Error for url: https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SLS_AFTER_MAT_SELECT_RENDER_EVENT_SERVICE
+2025-04-23 09:49:38|LogUtil.error line:42| 销售订单保存失败: 500 Server Error: Internal Server Error for url: https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SLS_AFTER_MAT_SELECT_RENDER_EVENT_SERVICE
+2025-04-23 09:49:38|LogUtil.error line:42| 响应状态码: 500
+2025-04-23 09:49:38|LogUtil.error line:42| 响应内容: {"requestId":"9da8d789-1079843","success":false,"data":null,"err":{"code":"V0311","msg":"扩展服务'SO_AFTER_MAT_SELECT_RENDER_ITEM_ACTION'执行异常","suggest":null},"info":{"msg":"扩展服务[SO_AFTER_MAT_SELECT_RENDER_ITEM_ACTION]执行异常","innerMsg":"[SO_AFTER_MAT_SELECT_RENDER_ITEM_ACTION](io.terminus.erp.sd.adapter.admin.so.SoRenderAction#soAfterMatSelectRenderItemAction)发生异常：Caused by: java.lang.NullPointerException at io.terminus.erp.sd.app.service.SoRenderService.renderAfterMatSelect(SoRenderService.java:142)","level":"ERROR"}}
+2025-04-23 09:54:06|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 09:54:06|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 09:54:06|LogUtil.info line:33| 文件缓存命中：使用缓存的SCM初始化数据
+2025-04-23 09:54:07|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 09:54:07|LogUtil.info line:33| 初始化渲染数量: 13
+2025-04-23 09:54:07|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 09:54:07|base_test._make_request line:155| 发送请求: 销售订单创建初始化
+2025-04-23 09:54:07|LogUtil.info line:33| 销售订单创建初始化完成
+2025-04-23 09:54:07|base_test._make_request line:155| 发送请求: 查询客户信息
+2025-04-23 09:54:07|LogUtil.info line:33| 客户信息查询完成
+2025-04-23 09:54:07|base_test._make_request line:155| 发送请求: 查询相关方
+2025-04-23 09:54:08|LogUtil.error line:42| 销售订单保存失败: 'slsPartnerLinks'
+2025-04-23 10:01:24|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:01:24|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:01:24|LogUtil.info line:33| 文件缓存命中：使用缓存的SCM初始化数据
+2025-04-23 10:01:25|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:01:25|LogUtil.info line:33| 初始化渲染数量: 77
+2025-04-23 10:01:25|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:01:25|base_test._make_request line:155| 发送请求: 销售订单创建初始化
+2025-04-23 10:01:25|LogUtil.info line:33| 销售订单创建初始化完成
+2025-04-23 10:01:25|base_test._make_request line:155| 发送请求: 查询客户信息
+2025-04-23 10:01:25|LogUtil.info line:33| 客户信息查询完成
+2025-04-23 10:01:25|base_test._make_request line:155| 发送请求: 查询相关方
+2025-04-23 10:01:25|LogUtil.error line:42| 销售订单保存失败: 'slsPartnerLinks'
+2025-04-23 10:01:28|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:01:28|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:01:28|LogUtil.info line:33| 文件缓存命中：使用缓存的SCM初始化数据
+2025-04-23 10:01:29|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:01:29|LogUtil.info line:33| 初始化渲染数量: 75
+2025-04-23 10:01:29|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:01:29|base_test._make_request line:155| 发送请求: 销售订单创建初始化
+2025-04-23 10:01:30|LogUtil.info line:33| 销售订单创建初始化完成
+2025-04-23 10:01:30|base_test._make_request line:155| 发送请求: 查询客户信息
+2025-04-23 10:01:30|LogUtil.info line:33| 客户信息查询完成
+2025-04-23 10:01:30|base_test._make_request line:155| 发送请求: 查询相关方
+2025-04-23 10:01:30|LogUtil.error line:42| 销售订单保存失败: 'slsPartnerLinks'
+2025-04-23 10:02:50|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:02:50|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:02:50|LogUtil.info line:33| 文件缓存命中：使用缓存的SCM初始化数据
+2025-04-23 10:02:51|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:02:51|LogUtil.info line:33| 初始化渲染数量: 8
+2025-04-23 10:02:51|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:02:51|base_test._make_request line:155| 发送请求: 销售订单创建初始化
+2025-04-23 10:02:51|LogUtil.info line:33| 销售订单创建初始化完成
+2025-04-23 10:02:51|base_test._make_request line:155| 发送请求: 查询客户信息
+2025-04-23 10:02:51|LogUtil.info line:33| 客户信息查询完成
+2025-04-23 10:02:51|base_test._make_request line:155| 发送请求: 查询相关方
+2025-04-23 10:02:51|LogUtil.error line:42| 销售订单保存失败: 'slsPartnerLinks'
+2025-04-23 10:03:40|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:03:40|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:03:40|LogUtil.info line:33| 文件缓存命中：使用缓存的SCM初始化数据
+2025-04-23 10:03:41|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:03:41|LogUtil.info line:33| 初始化渲染数量: 29
+2025-04-23 10:03:41|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:03:41|base_test._make_request line:155| 发送请求: 销售订单创建初始化
+2025-04-23 10:03:41|LogUtil.info line:33| 销售订单创建初始化完成
+2025-04-23 10:03:41|base_test._make_request line:155| 发送请求: 查询客户信息
+2025-04-23 10:03:41|LogUtil.info line:33| 客户信息查询完成
+2025-04-23 10:03:41|base_test._make_request line:155| 发送请求: 查询相关方
+2025-04-23 10:03:41|LogUtil.error line:42| 销售订单保存失败: 'slsPartnerLinks'
+2025-04-23 10:06:12|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:06:12|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:06:12|LogUtil.info line:33| 文件缓存命中：使用缓存的SCM初始化数据
+2025-04-23 10:06:13|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:06:13|LogUtil.info line:33| 初始化渲染数量: 46
+2025-04-23 10:06:13|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:06:13|base_test._make_request line:155| 发送请求: 销售订单创建初始化
+2025-04-23 10:06:13|LogUtil.info line:33| 销售订单创建初始化完成
+2025-04-23 10:06:13|base_test._make_request line:155| 发送请求: 查询客户信息
+2025-04-23 10:06:13|LogUtil.info line:33| 客户信息查询完成
+2025-04-23 10:06:14|base_test._make_request line:155| 发送请求: 查询相关方
+2025-04-23 10:06:14|LogUtil.error line:42| 销售订单保存失败: 'slsPartnerLinks'
+2025-04-23 10:06:55|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:06:55|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:06:55|LogUtil.info line:33| 文件缓存命中：使用缓存的SCM初始化数据
+2025-04-23 10:06:56|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:06:56|LogUtil.info line:33| 初始化渲染数量: 11
+2025-04-23 10:06:56|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:06:56|base_test._make_request line:155| 发送请求: 销售订单创建初始化
+2025-04-23 10:06:56|LogUtil.info line:33| 销售订单创建初始化完成
+2025-04-23 10:06:56|base_test._make_request line:155| 发送请求: 查询客户信息
+2025-04-23 10:06:56|LogUtil.info line:33| 客户信息查询完成
+2025-04-23 10:06:56|base_test._make_request line:155| 发送请求: 查询相关方
+2025-04-23 10:06:56|LogUtil.info line:33| 相关方查询完成
+2025-04-23 10:06:56|base_test._make_request line:155| 发送请求: 查询销售组织列表
+2025-04-23 10:06:56|test_01_create._query_sales_organization line:121| 销售组织列表查询完成: {'orgCode': 'AUTOTEST_SLS_ORG', 'orgName': '销售组织(自动化)', 'orgStatus': 'ENABLED', 'orgBusinessTypeCode': None, 'comOrgId': {'id': 14507001}, 'id': 14579001}
+2025-04-23 10:06:56|LogUtil.info line:33| 销售组织列表查询完成
+2025-04-23 10:06:56|base_test._make_request line:155| 发送请求: 查询物料列表
+2025-04-23 10:06:57|LogUtil.info line:33| 物料列表查询完成
+2025-04-23 10:06:57|LogUtil.error line:42| 销售订单保存失败: 'TestSalesOrderCreate' object has no attribute 'tax_rate_id'
+2025-04-23 10:11:34|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:11:34|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:11:34|LogUtil.info line:33| 文件缓存命中：使用缓存的SCM初始化数据
+2025-04-23 10:11:37|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:11:37|LogUtil.info line:33| 初始化渲染数量: 38
+2025-04-23 10:11:37|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:11:37|base_test._make_request line:155| 发送请求: 销售订单创建初始化
+2025-04-23 10:11:37|LogUtil.info line:33| 销售订单创建初始化完成
+2025-04-23 10:11:37|base_test._make_request line:155| 发送请求: 查询客户信息
+2025-04-23 10:11:38|LogUtil.info line:33| 客户信息查询完成
+2025-04-23 10:11:38|base_test._make_request line:155| 发送请求: 查询相关方
+2025-04-23 10:11:38|LogUtil.info line:33| 相关方查询完成
+2025-04-23 10:11:38|base_test._make_request line:155| 发送请求: 查询销售组织列表
+2025-04-23 10:11:38|test_01_create._query_sales_organization line:121| 销售组织列表查询完成: {'orgCode': 'AUTOTEST_SLS_ORG', 'orgName': '销售组织(自动化)', 'orgStatus': 'ENABLED', 'orgBusinessTypeCode': None, 'comOrgId': {'id': 14507001}, 'id': 14579001}
+2025-04-23 10:11:38|LogUtil.info line:33| 销售组织列表查询完成
+2025-04-23 10:11:38|base_test._make_request line:155| 发送请求: 查询物料列表
+2025-04-23 10:11:38|LogUtil.info line:33| 物料列表查询完成
+2025-04-23 10:11:38|base_test._make_request line:155| 发送请求: 订单行渲染
+2025-04-23 10:11:38|base_test._make_request line:171| 请求失败: 500 Server Error: Internal Server Error for url: https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SLS_AFTER_MAT_SELECT_RENDER_EVENT_SERVICE
+2025-04-23 10:11:38|LogUtil.error line:42| 销售订单保存失败: 500 Server Error: Internal Server Error for url: https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SLS_AFTER_MAT_SELECT_RENDER_EVENT_SERVICE
+2025-04-23 10:11:38|LogUtil.error line:42| 响应状态码: 500
+2025-04-23 10:11:38|LogUtil.error line:42| 响应内容: {"requestId":"808a7618-1082581","success":false,"data":null,"err":{"code":"O0003","msg":"服务器异常","suggest":null},"info":{"msg":"syntax error, expect {, actual int, pos 0, fieldName slsOrgId, fastjson-version 1.2.83","innerMsg":"[ERP_SCM$SLS_AFTER_MAT_SELECT_RENDER_EVENT_SERVICE][销售订单物料选择后渲染处理(node_69b9941ff4)]发生异常：syntax error, expect {, actual int, pos 0, fieldName slsOrgId, fastjson-version 1.2.83","level":"ERROR"}}
+2025-04-23 10:12:58|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:12:58|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:12:58|LogUtil.info line:33| 文件缓存命中：使用缓存的SCM初始化数据
+2025-04-23 10:13:00|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:13:00|LogUtil.info line:33| 初始化渲染数量: 5
+2025-04-23 10:13:00|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:13:00|base_test._make_request line:155| 发送请求: 销售订单创建初始化
+2025-04-23 10:13:00|LogUtil.info line:33| 销售订单创建初始化完成
+2025-04-23 10:13:00|base_test._make_request line:155| 发送请求: 查询客户信息
+2025-04-23 10:13:00|LogUtil.info line:33| 客户信息查询完成
+2025-04-23 10:13:00|base_test._make_request line:155| 发送请求: 查询相关方
+2025-04-23 10:13:00|LogUtil.info line:33| 相关方查询完成
+2025-04-23 10:13:00|base_test._make_request line:155| 发送请求: 查询销售组织列表
+2025-04-23 10:13:00|test_01_create._query_sales_organization line:121| 销售组织列表查询完成: {'orgCode': 'AUTOTEST_SLS_ORG', 'orgName': '销售组织(自动化)', 'orgStatus': 'ENABLED', 'orgBusinessTypeCode': None, 'comOrgId': {'id': 14507001}, 'id': 14579001}
+2025-04-23 10:13:00|LogUtil.info line:33| 销售组织列表查询完成
+2025-04-23 10:13:00|base_test._make_request line:155| 发送请求: 查询物料列表
+2025-04-23 10:13:00|LogUtil.info line:33| 物料列表查询完成
+2025-04-23 10:13:00|base_test._make_request line:155| 发送请求: 订单行渲染
+2025-04-23 10:13:00|base_test._make_request line:171| 请求失败: 500 Server Error: Internal Server Error for url: https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SLS_AFTER_MAT_SELECT_RENDER_EVENT_SERVICE
+2025-04-23 10:13:00|LogUtil.error line:42| 销售订单保存失败: 500 Server Error: Internal Server Error for url: https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SLS_AFTER_MAT_SELECT_RENDER_EVENT_SERVICE
+2025-04-23 10:13:00|LogUtil.error line:42| 响应状态码: 500
+2025-04-23 10:13:00|LogUtil.error line:42| 响应内容: {"requestId":"68264221-1082703","success":false,"data":null,"err":{"code":"O0003","msg":"服务器异常","suggest":null},"info":{"msg":"syntax error, expect {, actual int, pos 0, fieldName slsCurrId, fastjson-version 1.2.83","innerMsg":"[ERP_SCM$SLS_AFTER_MAT_SELECT_RENDER_EVENT_SERVICE][销售订单物料选择后渲染处理(node_69b9941ff4)]发生异常：syntax error, expect {, actual int, pos 0, fieldName slsCurrId, fastjson-version 1.2.83","level":"ERROR"}}
+2025-04-23 10:13:30|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:13:30|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:13:30|LogUtil.info line:33| 文件缓存命中：使用缓存的SCM初始化数据
+2025-04-23 10:13:31|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:13:31|LogUtil.info line:33| 初始化渲染数量: 35
+2025-04-23 10:13:31|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:13:31|base_test._make_request line:155| 发送请求: 销售订单创建初始化
+2025-04-23 10:13:31|LogUtil.info line:33| 销售订单创建初始化完成
+2025-04-23 10:13:31|base_test._make_request line:155| 发送请求: 查询客户信息
+2025-04-23 10:13:31|LogUtil.info line:33| 客户信息查询完成
+2025-04-23 10:13:31|base_test._make_request line:155| 发送请求: 查询相关方
+2025-04-23 10:13:31|LogUtil.info line:33| 相关方查询完成
+2025-04-23 10:13:31|base_test._make_request line:155| 发送请求: 查询销售组织列表
+2025-04-23 10:13:31|test_01_create._query_sales_organization line:121| 销售组织列表查询完成: {'orgCode': 'AUTOTEST_SLS_ORG', 'orgName': '销售组织(自动化)', 'orgStatus': 'ENABLED', 'orgBusinessTypeCode': None, 'comOrgId': {'id': 14507001}, 'id': 14579001}
+2025-04-23 10:13:31|LogUtil.info line:33| 销售组织列表查询完成
+2025-04-23 10:13:31|base_test._make_request line:155| 发送请求: 查询物料列表
+2025-04-23 10:13:31|LogUtil.info line:33| 物料列表查询完成
+2025-04-23 10:13:31|base_test._make_request line:155| 发送请求: 订单行渲染
+2025-04-23 10:13:31|base_test._make_request line:171| 请求失败: 500 Server Error: Internal Server Error for url: https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SLS_AFTER_MAT_SELECT_RENDER_EVENT_SERVICE
+2025-04-23 10:13:31|LogUtil.error line:42| 销售订单保存失败: 500 Server Error: Internal Server Error for url: https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SLS_AFTER_MAT_SELECT_RENDER_EVENT_SERVICE
+2025-04-23 10:13:31|LogUtil.error line:42| 响应状态码: 500
+2025-04-23 10:13:31|LogUtil.error line:42| 响应内容: {"requestId":"cdf5153d-1082880","success":false,"data":null,"err":{"code":"V0311","msg":"扩展服务'SO_AFTER_MAT_SELECT_RENDER_ITEM_ACTION'执行异常","suggest":null},"info":{"msg":"扩展服务[SO_AFTER_MAT_SELECT_RENDER_ITEM_ACTION]执行异常","innerMsg":"[SO_AFTER_MAT_SELECT_RENDER_ITEM_ACTION](io.terminus.erp.sd.adapter.admin.so.SoRenderAction#soAfterMatSelectRenderItemAction)发生异常：Caused by: java.lang.NullPointerException at io.terminus.erp.sd.app.service.SoRenderService.renderAfterMatSelect(SoRenderService.java:142)","level":"ERROR"}}
+2025-04-23 10:16:56|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:16:56|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:16:56|LogUtil.info line:33| 文件缓存命中：使用缓存的SCM初始化数据
+2025-04-23 10:16:57|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:16:57|LogUtil.info line:33| 初始化渲染数量: 32
+2025-04-23 10:16:57|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:16:57|base_test._make_request line:155| 发送请求: 销售订单创建初始化
+2025-04-23 10:16:57|LogUtil.info line:33| 销售订单创建初始化完成
+2025-04-23 10:16:57|base_test._make_request line:155| 发送请求: 查询客户信息
+2025-04-23 10:16:57|LogUtil.info line:33| 客户信息查询完成
+2025-04-23 10:16:57|base_test._make_request line:155| 发送请求: 查询相关方
+2025-04-23 10:16:57|LogUtil.info line:33| 相关方查询完成
+2025-04-23 10:16:57|base_test._make_request line:155| 发送请求: 查询销售组织列表
+2025-04-23 10:16:58|test_01_create._query_sales_organization line:121| 销售组织列表查询完成: {'orgCode': 'AUTOTEST_SLS_ORG', 'orgName': '销售组织(自动化)', 'orgStatus': 'ENABLED', 'orgBusinessTypeCode': None, 'comOrgId': {'id': 14507001}, 'id': 14579001}
+2025-04-23 10:16:58|LogUtil.info line:33| 销售组织列表查询完成
+2025-04-23 10:16:58|base_test._make_request line:155| 发送请求: 查询物料列表
+2025-04-23 10:16:58|LogUtil.info line:33| 物料列表查询完成
+2025-04-23 10:16:58|base_test._make_request line:155| 发送请求: 订单行渲染
+2025-04-23 10:16:58|LogUtil.info line:33| 订单行渲染完成
+2025-04-23 10:16:58|LogUtil.info line:33| 自动定价请求参数: {
+  "params": {
+    "request": {
+      "id": null,
+      "priceIdempotent": null,
+      "reCalculate": false,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "soDocDate": 1745337600000,
+      "priceCalcDate": 1745374618521,
+      "custId": {
+        "id": 2059001
+      },
+      "addrId": {
+        "id": 70002638
+      },
+      "addrDetail": "佛山市禅城区季华五路28号",
+      "custPersonName": "李月汝",
+      "custPhone": "18378999655",
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPhone": "17376596912",
+      "slsPersonName": "章昂",
+      "slsOrgId": {
+        "orgCode": "AUTOTEST_SLS_ORG",
+        "orgName": "销售组织(自动化)",
+        "orgStatus": "ENABLED",
+        "orgBusinessTypeCode": null,
+        "comOrgId": {
+          "id": 14507001
+        },
+        "id": 14579001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "isFixedExchRate": false,
+      "currExchangeRateType": 2000001,
+      "exchRate": 1,
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250423100007",
+          "matId": {
+            "id": 900000001,
+            "context": {},
+            "matCode": "TESTMAT1",
+            "matName": "测试物料1",
+            "imageUrl": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/trantor2/portal/TERP/cdf606cc-03ec-4340-a09e-69d35a7f3cbe/网页logo.png",
+            "genMatTypeCfId": {
+              "id": 2000001
+            },
+            "baseUomId": 2004001,
+            "weightUomId": 2002011,
+            "grossWeight": 1.11,
+            "netWeight": 1.11,
+            "volumUomId": 14049001,
+            "matVolum": 1.0,
+            "batchDetermination": false,
+            "atpGroupId": 2000001,
+            "customMat": false,
+            "isKitSls": false,
+            "isCompleteSetDel": false,
+            "slsSoItemTypeGroupId": 2002001,
+            "invOrgId": {
+              "id": 14375002
+            },
+            "invLovId": {
+              "id": 14376002
+            },
+            "slsOrgId": {
+              "id": 14579001
+            },
+            "slsDcId": {
+              "id": 14378001
+            },
+            "slsUomId": {
+              "id": 2004001
+            },
+            "slsBasePrice": 5999.0,
+            "specModel": "TM01"
+          },
+          "matCode": "TESTMAT1",
+          "matName": "测试物料1",
+          "matBasePrice": 5999.0,
+          "soItemSlsQty": 32,
+          "soItemGrossPrice": 8888.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 32720.424778761062,
+          "grossTradeAmt": 284416.0,
+          "soSchlDelDate": 1745337600000,
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {}
+          },
+          "uomSlsId": {
+            "id": 2004001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 2004001,
+            "context": {}
+          },
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "weightUomId": {
+            "id": 2002011,
+            "context": {}
+          },
+          "grossWeight": 1.11,
+          "netWeight": 1.11,
+          "volumUomId": {
+            "id": 14049001,
+            "context": {}
+          },
+          "matVolum": 1.0,
+          "delAddrId": {
+            "id": 70002638,
+            "context": {}
+          },
+          "delPersonName": "李月汝",
+          "delPhone": "18378999655",
+          "itemNumber": 1,
+          "atpCheck": true,
+          "salesPrice": 8888.0,
+          "children": null,
+          "matTypeId": 2000001,
+          "delAddrDetail": "佛山市禅城区季华五路28号",
+          "soItemTypeGroupId": 2002001,
+          "isCompleteSet": false,
+          "salesAmt": 284416.0
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ]
+    }
+  }
+}
+2025-04-23 10:16:58|base_test._make_request line:155| 发送请求: 自动定价
+2025-04-23 10:16:58|LogUtil.info line:33| 自动定价完成
+2025-04-23 10:16:58|base_test._make_request line:155| 发送请求: 销售订单保存
+2025-04-23 10:16:59|test_01_create._save_or_submit_order line:317| 销售订单保存成功，订单ID: 16379048
+2025-04-23 10:21:01|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:21:01|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:21:01|LogUtil.info line:33| 文件缓存命中：使用缓存的SCM初始化数据
+2025-04-23 10:21:03|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:21:03|LogUtil.info line:33| 初始化渲染数量: 60
+2025-04-23 10:21:03|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:21:03|base_test._make_request line:155| 发送请求: 销售订单创建初始化
+2025-04-23 10:21:03|LogUtil.info line:33| 销售订单创建初始化完成
+2025-04-23 10:21:03|base_test._make_request line:155| 发送请求: 查询客户信息
+2025-04-23 10:21:03|LogUtil.info line:33| 客户信息查询完成
+2025-04-23 10:21:03|base_test._make_request line:155| 发送请求: 查询相关方
+2025-04-23 10:21:03|LogUtil.info line:33| 相关方查询完成
+2025-04-23 10:21:03|base_test._make_request line:155| 发送请求: 查询销售组织列表
+2025-04-23 10:21:03|test_01_create._query_sales_organization line:140| 销售组织列表查询完成: {'orgCode': 'AUTOTEST_SLS_ORG', 'orgName': '销售组织(自动化)', 'orgStatus': 'ENABLED', 'orgBusinessTypeCode': None, 'comOrgId': {'id': 14507001}, 'id': 14579001}
+2025-04-23 10:21:03|LogUtil.info line:33| 销售组织列表查询完成
+2025-04-23 10:21:03|base_test._make_request line:155| 发送请求: 查询物料列表
+2025-04-23 10:21:03|LogUtil.info line:33| 物料列表查询完成
+2025-04-23 10:21:03|base_test._make_request line:155| 发送请求: 订单行渲染
+2025-04-23 10:21:04|LogUtil.info line:33| 订单行渲染完成
+2025-04-23 10:21:04|LogUtil.info line:33| 自动定价请求参数: {
+  "params": {
+    "request": {
+      "id": null,
+      "priceIdempotent": null,
+      "reCalculate": false,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "soDocDate": 1745337600000,
+      "priceCalcDate": 1745374864205,
+      "custId": {
+        "id": 2059001
+      },
+      "addrId": {
+        "id": 70002638
+      },
+      "addrDetail": "佛山市禅城区季华五路28号",
+      "custPersonName": "李月汝",
+      "custPhone": "18378999655",
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPhone": "17376596912",
+      "slsPersonName": "章昂",
+      "slsOrgId": {
+        "orgCode": "AUTOTEST_SLS_ORG",
+        "orgName": "销售组织(自动化)",
+        "orgStatus": "ENABLED",
+        "orgBusinessTypeCode": null,
+        "comOrgId": {
+          "id": 14507001
+        },
+        "id": 14579001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "isFixedExchRate": false,
+      "currExchangeRateType": 2000001,
+      "exchRate": 1,
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250423100010",
+          "matId": {
+            "id": 900000001,
+            "context": {},
+            "matCode": "TESTMAT1",
+            "matName": "测试物料1",
+            "imageUrl": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/trantor2/portal/TERP/cdf606cc-03ec-4340-a09e-69d35a7f3cbe/网页logo.png",
+            "genMatTypeCfId": {
+              "id": 2000001
+            },
+            "baseUomId": 2004001,
+            "weightUomId": 2002011,
+            "grossWeight": 1.11,
+            "netWeight": 1.11,
+            "volumUomId": 14049001,
+            "matVolum": 1.0,
+            "batchDetermination": false,
+            "atpGroupId": 2000001,
+            "customMat": false,
+            "isKitSls": false,
+            "isCompleteSetDel": false,
+            "slsSoItemTypeGroupId": 2002001,
+            "invOrgId": {
+              "id": 14375002
+            },
+            "invLovId": {
+              "id": 14376002
+            },
+            "slsOrgId": {
+              "id": 14579001
+            },
+            "slsDcId": {
+              "id": 14378001
+            },
+            "slsUomId": {
+              "id": 2004001
+            },
+            "slsBasePrice": 5999.0,
+            "specModel": "TM01"
+          },
+          "matCode": "TESTMAT1",
+          "matName": "测试物料1",
+          "matBasePrice": 5999.0,
+          "soItemSlsQty": 60,
+          "soItemGrossPrice": 8888.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 61350.79646017699,
+          "grossTradeAmt": 533280.0,
+          "soSchlDelDate": 1745337600000,
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {}
+          },
+          "uomSlsId": {
+            "id": 2004001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 2004001,
+            "context": {}
+          },
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "weightUomId": {
+            "id": 2002011,
+            "context": {}
+          },
+          "grossWeight": 1.11,
+          "netWeight": 1.11,
+          "volumUomId": {
+            "id": 14049001,
+            "context": {}
+          },
+          "matVolum": 1.0,
+          "delAddrId": {
+            "id": 70002638,
+            "context": {}
+          },
+          "delPersonName": "李月汝",
+          "delPhone": "18378999655",
+          "itemNumber": 1,
+          "atpCheck": true,
+          "salesPrice": 8888.0,
+          "children": null,
+          "matTypeId": 2000001,
+          "delAddrDetail": "佛山市禅城区季华五路28号",
+          "soItemTypeGroupId": 2002001,
+          "isCompleteSet": false,
+          "salesAmt": 533280.0
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ]
+    }
+  }
+}
+2025-04-23 10:21:04|base_test._make_request line:155| 发送请求: 自动定价
+2025-04-23 10:21:04|LogUtil.info line:33| 自动定价完成
+2025-04-23 10:21:04|base_test._make_request line:155| 发送请求: 销售订单保存
+2025-04-23 10:21:04|test_01_create._save_or_submit_order line:352| 销售订单保存成功，订单ID: 16379050
+2025-04-23 10:21:59|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:21:59|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:21:59|LogUtil.info line:33| 文件缓存命中：使用缓存的SCM初始化数据
+2025-04-23 10:22:02|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:22:02|LogUtil.info line:33| 初始化渲染数量: 52
+2025-04-23 10:22:02|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:22:02|base_test._make_request line:155| 发送请求: 销售订单创建初始化
+2025-04-23 10:22:02|LogUtil.info line:33| 销售订单创建初始化完成
+2025-04-23 10:22:02|base_test._make_request line:155| 发送请求: 查询客户信息
+2025-04-23 10:22:02|LogUtil.info line:33| 客户信息查询完成
+2025-04-23 10:22:02|base_test._make_request line:155| 发送请求: 查询相关方
+2025-04-23 10:22:02|LogUtil.info line:33| 相关方查询完成
+2025-04-23 10:22:02|base_test._make_request line:155| 发送请求: 查询销售组织列表
+2025-04-23 10:22:03|test_01_create._query_sales_organization line:140| 销售组织列表查询完成: {'orgCode': 'AUTOTEST_SLS_ORG', 'orgName': '销售组织(自动化)', 'orgStatus': 'ENABLED', 'orgBusinessTypeCode': None, 'comOrgId': {'id': 14507001}, 'id': 14579001}
+2025-04-23 10:22:03|LogUtil.info line:33| 销售组织列表查询完成
+2025-04-23 10:22:03|base_test._make_request line:155| 发送请求: 查询物料列表
+2025-04-23 10:22:03|LogUtil.info line:33| 物料列表查询完成
+2025-04-23 10:22:03|base_test._make_request line:155| 发送请求: 订单行渲染
+2025-04-23 10:22:03|LogUtil.info line:33| 订单行渲染完成
+2025-04-23 10:22:03|LogUtil.info line:33| 自动定价请求参数: {
+  "params": {
+    "request": {
+      "id": null,
+      "priceIdempotent": null,
+      "reCalculate": false,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "soDocDate": 1745337600000,
+      "priceCalcDate": 1745374923691,
+      "custId": {
+        "id": 2059001
+      },
+      "addrId": {
+        "id": 70002638
+      },
+      "addrDetail": "佛山市禅城区季华五路28号",
+      "custPersonName": "李月汝",
+      "custPhone": "18378999655",
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPhone": "17376596912",
+      "slsPersonName": "章昂",
+      "slsOrgId": {
+        "orgCode": "AUTOTEST_SLS_ORG",
+        "orgName": "销售组织(自动化)",
+        "orgStatus": "ENABLED",
+        "orgBusinessTypeCode": null,
+        "comOrgId": {
+          "id": 14507001
+        },
+        "id": 14579001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "isFixedExchRate": false,
+      "currExchangeRateType": 2000001,
+      "exchRate": 1,
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250423100013",
+          "matId": {
+            "id": 900000001,
+            "context": {},
+            "matCode": "TESTMAT1",
+            "matName": "测试物料1",
+            "imageUrl": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/trantor2/portal/TERP/cdf606cc-03ec-4340-a09e-69d35a7f3cbe/网页logo.png",
+            "genMatTypeCfId": {
+              "id": 2000001
+            },
+            "baseUomId": 2004001,
+            "weightUomId": 2002011,
+            "grossWeight": 1.11,
+            "netWeight": 1.11,
+            "volumUomId": 14049001,
+            "matVolum": 1.0,
+            "batchDetermination": false,
+            "atpGroupId": 2000001,
+            "customMat": false,
+            "isKitSls": false,
+            "isCompleteSetDel": false,
+            "slsSoItemTypeGroupId": 2002001,
+            "invOrgId": {
+              "id": 14375002
+            },
+            "invLovId": {
+              "id": 14376002
+            },
+            "slsOrgId": {
+              "id": 14579001
+            },
+            "slsDcId": {
+              "id": 14378001
+            },
+            "slsUomId": {
+              "id": 2004001
+            },
+            "slsBasePrice": 5999.0,
+            "specModel": "TM01"
+          },
+          "matCode": "TESTMAT1",
+          "matName": "测试物料1",
+          "matBasePrice": 5999.0,
+          "soItemSlsQty": 52,
+          "soItemGrossPrice": 8888.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 53170.69026548672,
+          "grossTradeAmt": 462176.0,
+          "soSchlDelDate": 1745337600000,
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {}
+          },
+          "uomSlsId": {
+            "id": 2004001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 2004001,
+            "context": {}
+          },
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "weightUomId": {
+            "id": 2002011,
+            "context": {}
+          },
+          "grossWeight": 1.11,
+          "netWeight": 1.11,
+          "volumUomId": {
+            "id": 14049001,
+            "context": {}
+          },
+          "matVolum": 1.0,
+          "delAddrId": {
+            "id": 70002638,
+            "context": {}
+          },
+          "delPersonName": "李月汝",
+          "delPhone": "18378999655",
+          "itemNumber": 1,
+          "atpCheck": true,
+          "salesPrice": 8888.0,
+          "children": null,
+          "matTypeId": 2000001,
+          "delAddrDetail": "佛山市禅城区季华五路28号",
+          "soItemTypeGroupId": 2002001,
+          "isCompleteSet": false,
+          "salesAmt": 462176.0
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ]
+    }
+  }
+}
+2025-04-23 10:22:03|base_test._make_request line:155| 发送请求: 自动定价
+2025-04-23 10:22:04|LogUtil.info line:33| 自动定价完成
+2025-04-23 10:22:04|base_test._make_request line:155| 发送请求: 销售订单保存
+2025-04-23 10:22:05|test_01_create._save_or_submit_order line:387| 销售订单保存成功，订单ID: 16379052
+2025-04-23 10:22:14|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:22:14|MysqlUtil.__init__ line:36| 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:22:14|LogUtil.info line:33| 文件缓存命中：使用缓存的SCM初始化数据
+2025-04-23 10:22:16|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:22:16|LogUtil.info line:33| 初始化渲染数量: 23
+2025-04-23 10:22:16|LogUtil.info line:33| 测试类初始化完成
+2025-04-23 10:22:16|base_test._make_request line:155| 发送请求: 销售订单创建初始化
+2025-04-23 10:22:16|LogUtil.info line:33| 销售订单创建初始化完成
+2025-04-23 10:22:16|base_test._make_request line:155| 发送请求: 查询客户信息
+2025-04-23 10:22:16|LogUtil.info line:33| 客户信息查询完成
+2025-04-23 10:22:16|base_test._make_request line:155| 发送请求: 查询相关方
+2025-04-23 10:22:16|LogUtil.info line:33| 相关方查询完成
+2025-04-23 10:22:16|base_test._make_request line:155| 发送请求: 查询销售组织列表
+2025-04-23 10:22:16|test_01_create._query_sales_organization line:140| 销售组织列表查询完成: {'orgCode': 'AUTOTEST_SLS_ORG', 'orgName': '销售组织(自动化)', 'orgStatus': 'ENABLED', 'orgBusinessTypeCode': None, 'comOrgId': {'id': 14507001}, 'id': 14579001}
+2025-04-23 10:22:16|LogUtil.info line:33| 销售组织列表查询完成
+2025-04-23 10:22:16|base_test._make_request line:155| 发送请求: 查询物料列表
+2025-04-23 10:22:16|LogUtil.info line:33| 物料列表查询完成
+2025-04-23 10:22:16|base_test._make_request line:155| 发送请求: 订单行渲染
+2025-04-23 10:22:16|LogUtil.info line:33| 订单行渲染完成
+2025-04-23 10:22:16|LogUtil.info line:33| 自动定价请求参数: {
+  "params": {
+    "request": {
+      "id": null,
+      "priceIdempotent": null,
+      "reCalculate": false,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "soDocDate": 1745337600000,
+      "priceCalcDate": 1745374936796,
+      "custId": {
+        "id": 2059001
+      },
+      "addrId": {
+        "id": 70002638
+      },
+      "addrDetail": "佛山市禅城区季华五路28号",
+      "custPersonName": "李月汝",
+      "custPhone": "18378999655",
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPhone": "17376596912",
+      "slsPersonName": "章昂",
+      "slsOrgId": {
+        "orgCode": "AUTOTEST_SLS_ORG",
+        "orgName": "销售组织(自动化)",
+        "orgStatus": "ENABLED",
+        "orgBusinessTypeCode": null,
+        "comOrgId": {
+          "id": 14507001
+        },
+        "id": 14579001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "isFixedExchRate": false,
+      "currExchangeRateType": 2000001,
+      "exchRate": 1,
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250423100014",
+          "matId": {
+            "id": 900000001,
+            "context": {},
+            "matCode": "TESTMAT1",
+            "matName": "测试物料1",
+            "imageUrl": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/trantor2/portal/TERP/cdf606cc-03ec-4340-a09e-69d35a7f3cbe/网页logo.png",
+            "genMatTypeCfId": {
+              "id": 2000001
+            },
+            "baseUomId": 2004001,
+            "weightUomId": 2002011,
+            "grossWeight": 1.11,
+            "netWeight": 1.11,
+            "volumUomId": 14049001,
+            "matVolum": 1.0,
+            "batchDetermination": false,
+            "atpGroupId": 2000001,
+            "customMat": false,
+            "isKitSls": false,
+            "isCompleteSetDel": false,
+            "slsSoItemTypeGroupId": 2002001,
+            "invOrgId": {
+              "id": 14375002
+            },
+            "invLovId": {
+              "id": 14376002
+            },
+            "slsOrgId": {
+              "id": 14579001
+            },
+            "slsDcId": {
+              "id": 14378001
+            },
+            "slsUomId": {
+              "id": 2004001
+            },
+            "slsBasePrice": 5999.0,
+            "specModel": "TM01"
+          },
+          "matCode": "TESTMAT1",
+          "matName": "测试物料1",
+          "matBasePrice": 5999.0,
+          "soItemSlsQty": 23,
+          "soItemGrossPrice": 8888.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 23517.805309734515,
+          "grossTradeAmt": 204424.0,
+          "soSchlDelDate": 1745337600000,
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {}
+          },
+          "uomSlsId": {
+            "id": 2004001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 2004001,
+            "context": {}
+          },
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "weightUomId": {
+            "id": 2002011,
+            "context": {}
+          },
+          "grossWeight": 1.11,
+          "netWeight": 1.11,
+          "volumUomId": {
+            "id": 14049001,
+            "context": {}
+          },
+          "matVolum": 1.0,
+          "delAddrId": {
+            "id": 70002638,
+            "context": {}
+          },
+          "delPersonName": "李月汝",
+          "delPhone": "18378999655",
+          "itemNumber": 1,
+          "atpCheck": true,
+          "salesPrice": 8888.0,
+          "children": null,
+          "matTypeId": 2000001,
+          "delAddrDetail": "佛山市禅城区季华五路28号",
+          "soItemTypeGroupId": 2002001,
+          "isCompleteSet": false,
+          "salesAmt": 204424.0
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ]
+    }
+  }
+}
+2025-04-23 10:22:16|base_test._make_request line:155| 发送请求: 自动定价
+2025-04-23 10:22:16|LogUtil.info line:33| 自动定价完成
+2025-04-23 10:22:16|base_test._make_request line:155| 发送请求: 销售订单保存
+2025-04-23 10:22:17|test_01_create._save_or_submit_order line:387| 销售订单保存成功，订单ID: 16379053
+2025-04-23 10:22:17|base_test._make_request line:155| 发送请求: 销售订单创建初始化
+2025-04-23 10:22:17|LogUtil.info line:33| 销售订单创建初始化完成
+2025-04-23 10:22:17|base_test._make_request line:155| 发送请求: 查询客户信息
+2025-04-23 10:22:17|LogUtil.info line:33| 客户信息查询完成
+2025-04-23 10:22:17|base_test._make_request line:155| 发送请求: 查询相关方
+2025-04-23 10:22:17|LogUtil.info line:33| 相关方查询完成
+2025-04-23 10:22:17|base_test._make_request line:155| 发送请求: 查询销售组织列表
+2025-04-23 10:22:17|test_01_create._query_sales_organization line:140| 销售组织列表查询完成: {'orgCode': 'AUTOTEST_SLS_ORG', 'orgName': '销售组织(自动化)', 'orgStatus': 'ENABLED', 'orgBusinessTypeCode': None, 'comOrgId': {'id': 14507001}, 'id': 14579001}
+2025-04-23 10:22:17|LogUtil.info line:33| 销售组织列表查询完成
+2025-04-23 10:22:17|base_test._make_request line:155| 发送请求: 查询物料列表
+2025-04-23 10:22:17|LogUtil.info line:33| 物料列表查询完成
+2025-04-23 10:22:17|base_test._make_request line:155| 发送请求: 订单行渲染
+2025-04-23 10:22:18|LogUtil.info line:33| 订单行渲染完成
+2025-04-23 10:22:18|LogUtil.info line:33| 自动定价请求参数: {
+  "params": {
+    "request": {
+      "id": null,
+      "priceIdempotent": null,
+      "reCalculate": false,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "soDocDate": 1745337600000,
+      "priceCalcDate": 1745374938194,
+      "custId": {
+        "id": 2059001
+      },
+      "addrId": {
+        "id": 70002638
+      },
+      "addrDetail": "佛山市禅城区季华五路28号",
+      "custPersonName": "李月汝",
+      "custPhone": "18378999655",
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPhone": "17376596912",
+      "slsPersonName": "章昂",
+      "slsOrgId": {
+        "orgCode": "AUTOTEST_SLS_ORG",
+        "orgName": "销售组织(自动化)",
+        "orgStatus": "ENABLED",
+        "orgBusinessTypeCode": null,
+        "comOrgId": {
+          "id": 14507001
+        },
+        "id": 14579001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "isFixedExchRate": false,
+      "currExchangeRateType": 2000001,
+      "exchRate": 1,
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250423100015",
+          "matId": {
+            "id": 900000001,
+            "context": {},
+            "matCode": "TESTMAT1",
+            "matName": "测试物料1",
+            "imageUrl": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/trantor2/portal/TERP/cdf606cc-03ec-4340-a09e-69d35a7f3cbe/网页logo.png",
+            "genMatTypeCfId": {
+              "id": 2000001
+            },
+            "baseUomId": 2004001,
+            "weightUomId": 2002011,
+            "grossWeight": 1.11,
+            "netWeight": 1.11,
+            "volumUomId": 14049001,
+            "matVolum": 1.0,
+            "batchDetermination": false,
+            "atpGroupId": 2000001,
+            "customMat": false,
+            "isKitSls": false,
+            "isCompleteSetDel": false,
+            "slsSoItemTypeGroupId": 2002001,
+            "invOrgId": {
+              "id": 14375002
+            },
+            "invLovId": {
+              "id": 14376002
+            },
+            "slsOrgId": {
+              "id": 14579001
+            },
+            "slsDcId": {
+              "id": 14378001
+            },
+            "slsUomId": {
+              "id": 2004001
+            },
+            "slsBasePrice": 5999.0,
+            "specModel": "TM01"
+          },
+          "matCode": "TESTMAT1",
+          "matName": "测试物料1",
+          "matBasePrice": 5999.0,
+          "soItemSlsQty": 23,
+          "soItemGrossPrice": 8888.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 23517.805309734515,
+          "grossTradeAmt": 204424.0,
+          "soSchlDelDate": 1745337600000,
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {}
+          },
+          "uomSlsId": {
+            "id": 2004001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 2004001,
+            "context": {}
+          },
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "weightUomId": {
+            "id": 2002011,
+            "context": {}
+          },
+          "grossWeight": 1.11,
+          "netWeight": 1.11,
+          "volumUomId": {
+            "id": 14049001,
+            "context": {}
+          },
+          "matVolum": 1.0,
+          "delAddrId": {
+            "id": 70002638,
+            "context": {}
+          },
+          "delPersonName": "李月汝",
+          "delPhone": "18378999655",
+          "itemNumber": 1,
+          "atpCheck": true,
+          "salesPrice": 8888.0,
+          "children": null,
+          "matTypeId": 2000001,
+          "delAddrDetail": "佛山市禅城区季华五路28号",
+          "soItemTypeGroupId": 2002001,
+          "isCompleteSet": false,
+          "salesAmt": 204424.0
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ]
+    }
+  }
+}
+2025-04-23 10:22:18|base_test._make_request line:155| 发送请求: 自动定价
+2025-04-23 10:22:18|LogUtil.info line:33| 自动定价完成
+2025-04-23 10:22:18|base_test._make_request line:155| 发送请求: 销售订单提交
+2025-04-23 10:22:18|test_01_create._save_or_submit_order line:389| 销售订单提交成功

@@ -1,0 +1,6 @@
+2025-04-22 17:31:30.239 | INFO     | testcases.SCM.base_test:setup_method:136 - 开始测试: test_02_query_order_type_detail
+2025-04-22 17:31:30.246 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 查询订单类型
+2025-04-22 17:31:30.476 | INFO     | test_00_so_config_check:test_01_query_order_type:87 - 找到STND记录, ID: 2101001
+2025-04-22 17:31:30.480 | INFO     | test_00_so_config_check:test_02_query_order_type_detail:109 - self.so_stnd_id: 2101001
+2025-04-22 17:31:30.485 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 查询订单类型详情
+2025-04-22 17:31:30.729 | INFO     | test_00_so_config_check:test_02_query_order_type_detail:131 - response: {'soTypeCode': 'STND', 'soTypeName': '标准销售', 'partnerProcedureHeadRef': {'id': 14005002}, 'attachmentProcedureHeadRef': None, 'status': 'ENABLED', 'soTypeDesc': '标准销售', 'genTextTypeRef': None, 'isRev': False, 'isSubmitApproval': True, 'isModifyApproval': False, 'currExchangeRateType': {'id': 2000001}, 'btClass': 'SALES', 'effectiveDays': None, 'syncPrice': False, 'isDefault': False, 'id': 2101001, 'createdBy': {'id': 27}, 'updatedBy': {'id': 618373053188357}, 'createdAt': 1685108645000, 'updatedAt': 1744178454000, 'version': 65, 'deleted': 0, 'originOrgId': 0}

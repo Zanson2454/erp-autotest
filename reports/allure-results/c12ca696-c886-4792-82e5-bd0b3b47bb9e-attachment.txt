@@ -1,0 +1,54 @@
+[32m2025-04-22 20:51:01.272[0m | [1mINFO    [0m | [36mtestcases.SCM.base_test[0m:[36msetup_method[0m:[36m136[0m - [1m开始测试: test_submit_sales_order[0m
+[32m2025-04-22 20:51:01.276[0m | [34m[1mDEBUG   [0m | [36mtest_01_create[0m:[36m_query_materials[0m:[36m126[0m - [34m[1m物料列表查询请求数据: {
+  "params": {
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "conditionGroup": {
+          "type": "ConditionGroup",
+          "logicOperator": "AND",
+          "conditions": [
+            {
+              "type": "ConditionGroup",
+              "logicOperator": "AND",
+              "conditions": [
+                {
+                  "key": "nr_nqTvXmIyHnHxKfmn3S",
+                  "type": "ConditionLeaf",
+                  "leftValue": {
+                    "id": "iJlX7JIkAyn7AIr9omqK-",
+                    "key": "iJlX7JIkAyn7AIr9omqK-",
+                    "type": "VarValue",
+                    "fieldType": "Text",
+                    "valueType": "VAR",
+                    "varValue": [
+                      {
+                        "valueKey": "matCode",
+                        "valueName": "matCode"
+                      }
+                    ]
+                  },
+                  "operator": "CONTAINS",
+                  "rightValue": {
+                    "key": "ggwEgoMfFc91CYI1zUwzb",
+                    "type": "VarValue",
+                    "fieldType": "Text",
+                    "valueType": "CONST",
+                    "constValue": "TESTMAT"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "sortOrders": null,
+        "keyword": null
+      }
+    }
+  }
+}[0m
+[32m2025-04-22 20:51:01.277[0m | [1mINFO    [0m | [36mtestcases.SCM.base_test[0m:[36m_make_request[0m:[36m155[0m - [1m发送请求: 查询物料列表[0m
+[32m2025-04-22 20:51:01.438[0m | [34m[1mDEBUG   [0m | [36mtest_01_create[0m:[36m_query_materials[0m:[36m134[0m - [34m[1m物料列表查询响应: {'matCode': 'TESTMAT1', 'matName': '测试物料1', 'genMatTypeCfId': {'matTypeName': '成品', 'id': 2000001}, 'baseUomId': {'uomDesc': '件', 'id': 2004001}, 'cateId': {'matCateName': '类目(自动化)', 'id': 14082001}, 'brandId': {'brandName': '品牌(自动化)', 'id': 2605004}, 'status': 'ENABLED', 'bizStatus': 'SALE', 'id': 900000001, 'updatedAt': 1744789403000, 'matBasePrice': 100.0}[0m
+[32m2025-04-22 20:51:01.438[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m物料列表查询完成[0m
+[32m2025-04-22 20:51:01.442[0m | [31m[1mERROR   [0m | [36mutils.LogUtil[0m:[36merror[0m:[36m42[0m - [31m[1m销售订单提交失败: 'TestSalesOrderCreate' object has no attribute 'so_item_type_id'[0m

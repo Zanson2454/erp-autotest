@@ -1,0 +1,90 @@
+[32m2025-04-22 17:55:43.174[0m | [1mINFO    [0m | [36mtestcases.SCM.base_test[0m:[36msetup_method[0m:[36m136[0m - [1m开始测试: test_06_render_order_line[0m
+[32m2025-04-22 17:55:43.177[0m | [34m[1mDEBUG   [0m | [36mtest_01_create[0m:[36mtest_05_query_materials[0m:[36m147[0m - [34m[1m物料列表查询请求数据: {
+  "params": {
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "sortOrders": [
+          {
+            "fieldAlias": "matCode",
+            "id": "matCode-0",
+            "sortType": "ASC"
+          },
+          {
+            "fieldAlias": "matName",
+            "id": "matName-1",
+            "sortType": "ASC"
+          }
+        ],
+        "keyword": "TESTMAT1"
+      },
+      "slsOrgId": 14377001,
+      "slsDcId": 14378001
+    }
+  }
+}[0m
+[32m2025-04-22 17:55:43.177[0m | [1mINFO    [0m | [36mtestcases.SCM.base_test[0m:[36m_make_request[0m:[36m155[0m - [1m发送请求: 查询物料列表[0m
+[32m2025-04-22 17:55:43.371[0m | [34m[1mDEBUG   [0m | [36mtest_01_create[0m:[36mtest_05_query_materials[0m:[36m152[0m - [34m[1m物料列表查询响应: {'matCode': 'TESTMAT1', 'matName': '测试物料1', 'genMatTypeCfId': {'matTypeName': '成品', 'id': 2000001}, 'baseUomId': {'uomDesc': '件', 'id': 2004001}, 'cateId': {'matCateName': '类目(自动化)', 'id': 14082001}, 'brandId': {'brandName': '品牌(自动化)', 'id': 2605004}, 'status': 'ENABLED', 'bizStatus': 'SALE', 'id': 900000001, 'updatedAt': 1744789403000}[0m
+[32m2025-04-22 17:55:43.371[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m物料列表查询测试通过[0m
+[32m2025-04-22 17:55:43.372[0m | [34m[1mDEBUG   [0m | [36mtest_01_create[0m:[36mtest_06_render_order_line[0m:[36m225[0m - [34m[1m订单行渲染请求数据: {
+  "params": {
+    "request": {
+      "addrId": {
+        "id": null
+      },
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "custId": {
+        "id": 2059001
+      },
+      "invLoc": null,
+      "invOrg": null,
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "slsOrgId": {
+        "id": 14377001
+      },
+      "soDocDate": 1745251200000,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "currExchangeRateType": 2000001,
+      "slsPartnerLinks": null,
+      "slsPerson": null,
+      "slsPhone": null,
+      "slsPersonName": null,
+      "soItems": [
+        {
+          "matId": {
+            "id": 900000001
+          },
+          "taxRateId": null,
+          "invOrgId": {
+            "id": 14375002
+          },
+          "invLocId": {
+            "id": 14376002
+          },
+          "soItemSlsQty": 11,
+          "delAddrDetail": null,
+          "delAddrId": {
+            "id": null
+          },
+          "delPersonName": null,
+          "delPhone": null
+        }
+      ]
+    }
+  }
+}[0m
+[32m2025-04-22 17:55:43.372[0m | [1mINFO    [0m | [36mtestcases.SCM.base_test[0m:[36m_make_request[0m:[36m155[0m - [1m发送请求: 订单行渲染[0m
+[32m2025-04-22 17:55:43.628[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m订单行渲染测试通过[0m

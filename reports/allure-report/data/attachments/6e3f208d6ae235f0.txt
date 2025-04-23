@@ -1,0 +1,78 @@
+2025-04-22 17:31:55.561 | INFO     | testcases.SCM.base_test:setup_method:136 - 开始测试: test_02_batch_delete_orders
+2025-04-22 17:31:55.563 | INFO     | test_03_delete:setup_method:45 - 初始化新的测试数据
+2025-04-22 17:31:55.564 | INFO     | test_03_delete:setup_method:49 - 开始执行测试方法: test_02_batch_delete_orders
+2025-04-22 17:31:55.566 | INFO     | test_03_delete:setup_method:53 - 初始化测试数据完成
+2025-04-22 17:31:55.572 | INFO     | test_03_delete:test_02_batch_delete_orders:171 - 执行查询: 
+            SELECT id, so_code, so_status, deleted
+            FROM sls_so_head_tr 
+            WHERE so_status = 'DRAFT' 
+                AND so_type_id = %s
+                AND created_by = %s
+                AND deleted = 0 
+            ORDER BY created_at DESC
+            LIMIT 2
+        
+2025-04-22 17:31:55.981 | INFO     | utils.MysqlUtil:connect:60 - 数据库连接成功: rm-bp1f14585v00oh99t.mysql.rds.aliyuncs.com:3306/terp_test
+2025-04-22 17:31:56.078 | INFO     | utils.MysqlUtil:execute_query:108 - 
+==================================================
+执行SQL查询:
+
+            SELECT id, so_code, so_status, deleted
+            FROM sls_so_head_tr 
+            WHERE so_status = 'DRAFT' 
+                AND so_type_id = %s
+                AND created_by = %s
+                AND deleted = 0 
+            ORDER BY created_at DESC
+            LIMIT 2
+        
+参数: (2101001, 540175374525637)
+结果:
+[
+  {
+    "id": 16379011,
+    "so_code": "SO002225",
+    "so_status": "DRAFT",
+    "deleted": 0
+  },
+  {
+    "id": 16379009,
+    "so_code": "SO002221",
+    "so_status": "DRAFT",
+    "deleted": 0
+  }
+]
+==================================================
+2025-04-22 17:31:56.185 | DEBUG    | utils.MysqlUtil:cursor:83 - 数据库事务已提交
+2025-04-22 17:31:56.186 | INFO     | utils.MysqlUtil:disconnect:67 - 数据库连接已关闭
+2025-04-22 17:31:56.188 | DEBUG    | utils.MysqlUtil:cursor:91 - 数据库游标已关闭
+2025-04-22 17:31:56.189 | INFO     | test_03_delete:test_02_batch_delete_orders:194 - 准备删除的订单ID: [16379011, 16379009]
+2025-04-22 17:31:56.190 | INFO     | test_03_delete:test_02_batch_delete_orders:206 - 开始批量删除订单
+2025-04-22 17:31:56.191 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 批量删除销售订单
+2025-04-22 17:31:56.341 | INFO     | test_03_delete:test_02_batch_delete_orders:211 - 成功批量删除订单，订单ID: [16379011, 16379009]
+2025-04-22 17:31:56.741 | INFO     | utils.MysqlUtil:connect:60 - 数据库连接成功: rm-bp1f14585v00oh99t.mysql.rds.aliyuncs.com:3306/terp_test
+2025-04-22 17:31:56.866 | INFO     | utils.MysqlUtil:execute_query:108 - 
+==================================================
+执行SQL查询:
+
+            SELECT id, deleted
+            FROM sls_so_head_tr
+            WHERE id IN %s
+        
+参数: ((16379011, 16379009),)
+结果:
+[
+  {
+    "id": 16379009,
+    "deleted": 1745314316379
+  },
+  {
+    "id": 16379011,
+    "deleted": 1745314316379
+  }
+]
+==================================================
+2025-04-22 17:31:56.941 | DEBUG    | utils.MysqlUtil:cursor:83 - 数据库事务已提交
+2025-04-22 17:31:56.943 | INFO     | utils.MysqlUtil:disconnect:67 - 数据库连接已关闭
+2025-04-22 17:31:56.944 | DEBUG    | utils.MysqlUtil:cursor:91 - 数据库游标已关闭
+2025-04-22 17:31:56.944 | INFO     | test_03_delete:test_02_batch_delete_orders:221 - 所有订单在数据库中已标记为删除状态

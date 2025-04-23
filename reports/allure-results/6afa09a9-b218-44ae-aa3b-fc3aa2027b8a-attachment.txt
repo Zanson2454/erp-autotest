@@ -1,0 +1,10 @@
+2025-04-22 17:31:42.023 | INFO     | testcases.SCM.base_test:setup_method:136 - 开始测试: test_04_query_orders_by_so_type
+2025-04-22 17:31:42.025 | INFO     | test_02_orderlist_query:setup_method:46 - 使用类属性中的测试数据
+2025-04-22 17:31:42.027 | INFO     | test_02_orderlist_query:setup_method:60 - 开始执行测试方法: test_04_query_orders_by_so_type
+2025-04-22 17:31:42.028 | INFO     | test_02_orderlist_query:setup_method:64 - 初始化测试数据完成
+2025-04-22 17:31:42.033 | INFO     | test_02_orderlist_query:test_04_query_orders_by_so_type:389 - 
+准备发送请求...
+2025-04-22 17:31:42.035 | INFO     | test_02_orderlist_query:test_04_query_orders_by_so_type:390 - 查询条件: 订单类型ID = 2101001
+2025-04-22 17:31:42.035 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 按单据类型查询销售订单列表
+2025-04-22 17:31:42.273 | INFO     | test_02_orderlist_query:test_04_query_orders_by_so_type:419 - 
+成功查询到 20 条匹配的订单数据

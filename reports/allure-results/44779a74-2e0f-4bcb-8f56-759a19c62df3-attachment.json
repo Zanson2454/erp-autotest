@@ -1,0 +1,26 @@
+[
+  {
+    "matCode": "TESTMAT1",
+    "matName": "测试物料1",
+    "genMatTypeCfId": {
+      "matTypeName": "成品",
+      "id": 2000001
+    },
+    "baseUomId": {
+      "uomDesc": "件",
+      "id": 2004001
+    },
+    "cateId": {
+      "matCateName": "类目(自动化)",
+      "id": 14082001
+    },
+    "brandId": {
+      "brandName": "品牌(自动化)",
+      "id": 2605004
+    },
+    "status": "ENABLED",
+    "bizStatus": "SALE",
+    "id": 900000001,
+    "updatedAt": 1744789403000
+  }
+]

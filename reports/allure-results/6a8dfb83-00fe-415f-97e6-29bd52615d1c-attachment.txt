@@ -1,0 +1,16 @@
+2025-04-22 17:31:42.404 | INFO     | testcases.SCM.base_test:setup_method:136 - 开始测试: test_05_query_orders_by_customer
+2025-04-22 17:31:42.405 | INFO     | test_02_orderlist_query:setup_method:46 - 使用类属性中的测试数据
+2025-04-22 17:31:42.406 | INFO     | test_02_orderlist_query:setup_method:60 - 开始执行测试方法: test_05_query_orders_by_customer
+2025-04-22 17:31:42.407 | INFO     | test_02_orderlist_query:setup_method:64 - 初始化测试数据完成
+2025-04-22 17:31:42.412 | INFO     | test_02_orderlist_query:test_05_query_orders_by_customer:484 - 
+准备发送请求...
+2025-04-22 17:31:42.413 | INFO     | test_02_orderlist_query:test_05_query_orders_by_customer:485 - 查询条件: 客户ID = 2059001
+2025-04-22 17:31:42.415 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 按客户查询销售订单列表
+2025-04-22 17:31:42.631 | INFO     | test_02_orderlist_query:test_05_query_orders_by_customer:514 - 
+成功查询到 20 条匹配的订单数据
+2025-04-22 17:31:42.632 | INFO     | test_02_orderlist_query:test_05_query_orders_by_customer:567 - 
+准备发送请求...
+2025-04-22 17:31:42.633 | INFO     | test_02_orderlist_query:test_05_query_orders_by_customer:568 - 查询条件: 外部单号包含 '123'
+2025-04-22 17:31:42.634 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 按外部单号查询销售订单列表
+2025-04-22 17:31:42.718 | WARNING  | test_02_orderlist_query:test_05_query_orders_by_customer:575 - 
+警告：未查询到匹配的订单数据

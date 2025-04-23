@@ -1,0 +1,24 @@
+2025-04-22 17:31:41.119 | INFO     | testcases.SCM.base_test:setup_method:136 - 开始测试: test_03_query_orders_by_status
+2025-04-22 17:31:41.121 | INFO     | test_02_orderlist_query:setup_method:46 - 使用类属性中的测试数据
+2025-04-22 17:31:41.122 | INFO     | test_02_orderlist_query:setup_method:60 - 开始执行测试方法: test_03_query_orders_by_status
+2025-04-22 17:31:41.123 | INFO     | test_02_orderlist_query:setup_method:64 - 初始化测试数据完成
+2025-04-22 17:31:41.130 | INFO     | test_02_orderlist_query:test_03_query_orders_by_status:304 - 
+准备发送请求...
+2025-04-22 17:31:41.131 | INFO     | test_02_orderlist_query:test_03_query_orders_by_status:305 - 查询条件: 订单状态 = APPROVING
+2025-04-22 17:31:41.131 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 按单据状态 APPROVING 查询销售订单列表
+2025-04-22 17:31:41.223 | INFO     | test_02_orderlist_query:test_03_query_orders_by_status:309 - 
+收到完整响应: {
+  "requestId": "95e98d0d-1060874",
+  "success": true,
+  "data": {
+    "data": {
+      "data": null,
+      "total": 0
+    }
+  }
+}
+2025-04-22 17:31:41.226 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 按单据状态 APPROVING 查询销售订单列表
+2025-04-22 17:31:41.326 | INFO     | test_02_orderlist_query:test_03_query_orders_by_status:313 - 
+提取的嵌套数据: null
+2025-04-22 17:31:41.328 | WARNING  | test_02_orderlist_query:test_03_query_orders_by_status:317 - 
+警告：未查询到状态为 APPROVING 的订单数据

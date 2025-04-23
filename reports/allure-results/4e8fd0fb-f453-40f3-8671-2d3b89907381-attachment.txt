@@ -1,0 +1,3 @@
+2025-04-22 17:31:59.270 | INFO     | testcases.SCM.base_test:setup_method:136 - 开始测试: test_03_query_partner
+2025-04-22 17:31:59.276 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 查询相关方
+2025-04-22 17:31:59.394 | INFO     | utils.LogUtil:info:33 - 相关方查询测试通过

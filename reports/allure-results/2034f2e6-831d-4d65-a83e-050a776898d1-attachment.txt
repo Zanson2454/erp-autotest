@@ -1,0 +1,6 @@
+[32m2025-04-22 20:35:15.660[0m | [1mINFO    [0m | [36mtestcases.SCM.base_test[0m:[36msetup_method[0m:[36m136[0m - [1m开始测试: test_03_query_partner[0m
+[32m2025-04-22 20:35:15.663[0m | [1mINFO    [0m | [36mtestcases.SCM.base_test[0m:[36m_make_request[0m:[36m155[0m - [1m发送请求: 销售订单创建初始化[0m
+[32m2025-04-22 20:35:15.730[0m | [34m[1mDEBUG   [0m | [36mtest_01_create[0m:[36mtest_01_init_sales_order[0m:[36m76[0m - [34m[1m销售人员信息: {'id': 14094003, 'context': {}, 'name': '章昂'}[0m
+[32m2025-04-22 20:35:15.730[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m销售订单创建初始化测试通过[0m
+[32m2025-04-22 20:35:15.730[0m | [1mINFO    [0m | [36mtestcases.SCM.base_test[0m:[36m_make_request[0m:[36m155[0m - [1m发送请求: 查询相关方[0m
+[32m2025-04-22 20:35:15.809[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m相关方查询测试通过[0m

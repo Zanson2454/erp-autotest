@@ -1,0 +1,1 @@
+2025-04-22 17:43:20.769 | INFO     | testcases.SCM.base_test:setup_method:136 - 开始测试: test_05_query_orders_by_customer

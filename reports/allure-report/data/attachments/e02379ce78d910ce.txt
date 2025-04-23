@@ -1,0 +1,41 @@
+2025-04-22 17:43:38.526 | INFO     | testcases.SCM.base_test:setup_method:136 - 开始测试: test_06_freeze_sales_order
+2025-04-22 17:43:38.531 | INFO     | test_04_operator:test_06_freeze_sales_order:480 - 执行查询: 
+            SELECT id, so_code, so_status, freeze_type 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            AND freeze_type = 'NU_FREEZE'
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+            
+2025-04-22 17:43:38.833 | INFO     | utils.MysqlUtil:connect:60 - 数据库连接成功: rm-bp1f14585v00oh99t.mysql.rds.aliyuncs.com:3306/terp_test
+2025-04-22 17:43:38.953 | INFO     | utils.MysqlUtil:execute_query:108 - 
+==================================================
+执行SQL查询:
+
+            SELECT id, so_code, so_status, freeze_type 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            AND freeze_type = 'NU_FREEZE'
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+            
+参数: None
+结果:
+[
+  {
+    "id": 16379026,
+    "so_code": "SO002262",
+    "so_status": "EFFECT",
+    "freeze_type": "NU_FREEZE"
+  }
+]
+==================================================
+2025-04-22 17:43:39.010 | DEBUG    | utils.MysqlUtil:cursor:83 - 数据库事务已提交
+2025-04-22 17:43:39.011 | INFO     | utils.MysqlUtil:disconnect:67 - 数据库连接已关闭
+2025-04-22 17:43:39.012 | DEBUG    | utils.MysqlUtil:cursor:91 - 数据库游标已关闭
+2025-04-22 17:43:39.013 | INFO     | test_04_operator:test_06_freeze_sales_order:491 - 找到可冻结订单: ID=16379026, 订单号=SO002262
+2025-04-22 17:43:39.014 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 冻结订单
+2025-04-22 17:43:39.107 | ERROR    | test_04_operator:test_06_freeze_sales_order:542 - 冻结订单失败: 响应数据为空
+assert None is not None

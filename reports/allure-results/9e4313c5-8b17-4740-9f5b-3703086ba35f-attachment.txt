@@ -1,0 +1,13 @@
+[32m2025-04-22 20:35:13.967[0m | [1mINFO    [0m | [36mtestcases.conftest[0m:[36menv_setup[0m:[36m24[0m - [1m当前测试环境: dev[0m
+[32m2025-04-22 20:35:13.969[0m | [1mINFO    [0m | [36mutils.MysqlUtil[0m:[36m__init__[0m:[36m36[0m - [1m数据库管理器初始化完成，运行时模式: False[0m
+[32m2025-04-22 20:35:13.970[0m | [1mINFO    [0m | [36mutils.MysqlUtil[0m:[36m__init__[0m:[36m36[0m - [1m数据库管理器初始化完成，运行时模式: False[0m
+[32m2025-04-22 20:35:13.972[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m文件缓存命中：使用缓存的SCM初始化数据[0m
+[32m2025-04-22 20:35:13.973[0m | [34m[1mDEBUG   [0m | [36mcommon.login_manager[0m:[36mlogin[0m:[36m47[0m - [34m[1m使用默认账号: 17376596912[0m
+[32m2025-04-22 20:35:14.831[0m | [34m[1mDEBUG   [0m | [36mcommon.login_manager[0m:[36mlogin[0m:[36m70[0m - [34m[1m登录成功[0m
+[32m2025-04-22 20:35:15.173[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m测试类初始化完成[0m
+[32m2025-04-22 20:35:15.174[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m初始化渲染数量: 60[0m
+[32m2025-04-22 20:35:15.174[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m测试类初始化完成[0m
+[32m2025-04-22 20:35:15.217[0m | [1mINFO    [0m | [36mtestcases.SCM.base_test[0m:[36msetup_method[0m:[36m136[0m - [1m开始测试: test_01_init_sales_order[0m
+[32m2025-04-22 20:35:15.220[0m | [1mINFO    [0m | [36mtestcases.SCM.base_test[0m:[36m_make_request[0m:[36m155[0m - [1m发送请求: 销售订单创建初始化[0m
+[32m2025-04-22 20:35:15.471[0m | [34m[1mDEBUG   [0m | [36mtest_01_create[0m:[36mtest_01_init_sales_order[0m:[36m76[0m - [34m[1m销售人员信息: {'id': 14094003, 'context': {}, 'name': '章昂'}[0m
+[32m2025-04-22 20:35:15.472[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m销售订单创建初始化测试通过[0m

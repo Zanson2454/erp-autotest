@@ -1,0 +1,40 @@
+2025-04-22 17:43:39.215 | INFO     | testcases.SCM.base_test:setup_method:136 - 开始测试: test_07_copy_sales_order
+2025-04-22 17:43:39.223 | INFO     | test_04_operator:test_07_copy_sales_order:566 - 执行查询: 
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+            
+2025-04-22 17:43:39.683 | INFO     | utils.MysqlUtil:connect:60 - 数据库连接成功: rm-bp1f14585v00oh99t.mysql.rds.aliyuncs.com:3306/terp_test
+2025-04-22 17:43:39.803 | INFO     | utils.MysqlUtil:execute_query:108 - 
+==================================================
+执行SQL查询:
+
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+            
+参数: None
+结果:
+[
+  {
+    "id": 16379026,
+    "so_code": "SO002262",
+    "so_status": "EFFECT"
+  }
+]
+==================================================
+2025-04-22 17:43:39.973 | DEBUG    | utils.MysqlUtil:cursor:83 - 数据库事务已提交
+2025-04-22 17:43:39.974 | INFO     | utils.MysqlUtil:disconnect:67 - 数据库连接已关闭
+2025-04-22 17:43:39.974 | DEBUG    | utils.MysqlUtil:cursor:91 - 数据库游标已关闭
+2025-04-22 17:43:39.975 | INFO     | test_04_operator:test_07_copy_sales_order:578 - 找到可复制订单: ID=16379026, 订单号=SO002262
+2025-04-22 17:43:40.003 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 复制订单
+2025-04-22 17:43:40.153 | ERROR    | test_04_operator:test_07_copy_sales_order:629 - 复制订单失败: 复制订单失败
+assert False
+ +  where False = <built-in method get of dict object at 0x1043ec240>('success', False)
+ +    where <built-in method get of dict object at 0x1043ec240> = {'addrDetail': '佛山市禅城区季华五路28号', 'addrId': {'context': {}, 'id': 70002638}, 'baseCurrId': {'context': {}, 'id': 2000001}, 'btClass': 'SALES', ...}.get

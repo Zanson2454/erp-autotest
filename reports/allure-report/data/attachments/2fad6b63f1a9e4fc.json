@@ -1,0 +1,18 @@
+{
+  "params": {
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "conditionItems": [
+          {
+            "fieldName": "soCode",
+            "value": "SO",
+            "operator": "LIKE"
+          }
+        ]
+      }
+    },
+    "modelKey": "ERP_SCM$sls_so_head_tr"
+  }
+}

@@ -1,0 +1,5 @@
+2025-04-22 17:43:27.803 | INFO     | testcases.SCM.base_test:setup_method:136 - 开始测试: test_02_batch_delete_orders
+2025-04-22 17:43:27.804 | INFO     | test_03_delete:setup_method:56 - 初始化新的测试数据
+2025-04-22 17:43:27.805 | INFO     | test_03_delete:setup_method:60 - 开始执行测试方法: test_02_batch_delete_orders
+2025-04-22 17:43:27.807 | INFO     | test_03_delete:setup_method:64 - 初始化测试数据完成
+2025-04-22 17:43:27.814 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 批量删除订单

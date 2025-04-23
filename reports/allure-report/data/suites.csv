@@ -1,0 +1,148 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"测试自动定价","436","test_07_calculate_pricing","testcases.SCM.SO","Tue Apr 22 17:43:13 CST 2025","passed","Tue Apr 22 17:43:14 CST 2025","TestSalesOrderCreate","test_01_create","",""
+"测试查询客户信息","76","test_02_query_customer_info","testcases.SCM.SO","Tue Apr 22 17:43:11 CST 2025","passed","Tue Apr 22 17:43:11 CST 2025","TestSalesOrderCreate","test_01_create","",""
+"测试查询相关方","116","test_03_query_partner","testcases.SCM.SO","Tue Apr 22 17:43:28 CST 2025","passed","Tue Apr 22 17:43:29 CST 2025","TestSalesOrderCreate","test_04_operator","",""
+"测试查询客户信息","136","test_02_query_customer_info","testcases.SCM.SO","Tue Apr 22 17:43:21 CST 2025","passed","Tue Apr 22 17:43:22 CST 2025","TestSalesOrderCreate","test_03_delete","",""
+"
+    测试步骤：
+    1. 准备查询参数（包含状态）
+    2. 发送查询请求
+    3. 验证响应数据
+    ","116","按状态查询 - EFFECT","testcases.SCM.SO","Tue Apr 22 17:43:19 CST 2025","broken","Tue Apr 22 17:43:19 CST 2025","TestOrderList","test_02_orderlist_query","",""
+"
+    测试步骤：
+    1. 准备冻结参数
+    2. 发送冻结请求
+    3. 验证响应数据
+    ","577","冻结订单","testcases.SCM.SO","Tue Apr 22 17:43:38 CST 2025","failed","Tue Apr 22 17:43:39 CST 2025","TestSalesOrderOperator","test_04_operator","",""
+"测试订单行渲染","758","test_06_render_order_line","testcases.SCM.SO","Tue Apr 22 17:43:13 CST 2025","passed","Tue Apr 22 17:43:13 CST 2025","TestSalesOrderCreate","test_01_create","",""
+"
+    测试步骤：
+    1. 准备批量删除参数
+    2. 发送批量删除请求
+    3. 验证响应数据
+    ","109","批量删除订单","testcases.SCM.SO","Tue Apr 22 17:43:27 CST 2025","failed","Tue Apr 22 17:43:27 CST 2025","TestOrderDelete","test_03_delete","",""
+"测试销售订单创建初始化","85","test_01_init_sales_order","testcases.SCM.SO","Tue Apr 22 17:43:28 CST 2025","passed","Tue Apr 22 17:43:28 CST 2025","TestSalesOrderCreate","test_04_operator","",""
+"测试查询物料列表","414","test_05_query_materials","testcases.SCM.SO","Tue Apr 22 17:43:12 CST 2025","passed","Tue Apr 22 17:43:12 CST 2025","TestSalesOrderCreate","test_01_create","",""
+"测试查询销售组织列表","141","test_04_query_sales_organization","testcases.SCM.SO","Tue Apr 22 17:43:22 CST 2025","passed","Tue Apr 22 17:43:22 CST 2025","TestSalesOrderCreate","test_03_delete","",""
+"测试销售订单保存并提交","1488","test_09_submit_sales_order","testcases.SCM.SO","Tue Apr 22 17:43:25 CST 2025","passed","Tue Apr 22 17:43:26 CST 2025","TestSalesOrderCreate","test_03_delete","",""
+"
+    测试步骤：
+    1. 准备撤销参数
+    2. 发送撤销请求
+    3. 验证响应数据
+    ","915","撤销订单","testcases.SCM.SO","Tue Apr 22 17:43:37 CST 2025","failed","Tue Apr 22 17:43:38 CST 2025","TestSalesOrderOperator","test_04_operator","",""
+"
+    测试步骤：
+    1. 准备查询参数
+    2. 发送查询请求
+    3. 验证响应数据
+    ","218","查询订单列表","testcases.SCM.SO","Tue Apr 22 17:43:18 CST 2025","failed","Tue Apr 22 17:43:19 CST 2025","TestOrderList","test_02_orderlist_query","",""
+"
+    测试步骤：
+    1. 准备查询参数（包含订单类型）
+    2. 发送查询请求
+    3. 验证响应数据
+    ","1","按订单类型查询","testcases.SCM.SO","Tue Apr 22 17:43:20 CST 2025","broken","Tue Apr 22 17:43:20 CST 2025","TestOrderList","test_02_orderlist_query","",""
+"
+    测试步骤：
+    1. 准备取消参数
+    2. 发送取消请求
+    3. 验证响应数据
+    ","1187","取消提交订单","testcases.SCM.SO","Tue Apr 22 17:43:36 CST 2025","failed","Tue Apr 22 17:43:37 CST 2025","TestSalesOrderOperator","test_04_operator","",""
+"
+    测试步骤：
+    1. 准备复制参数
+    2. 发送复制请求
+    3. 验证响应数据
+    ","933","复制订单","testcases.SCM.SO","Tue Apr 22 17:43:39 CST 2025","failed","Tue Apr 22 17:43:40 CST 2025","TestSalesOrderOperator","test_04_operator","",""
+"测试销售订单创建初始化","175","test_01_init_sales_order","testcases.SCM.SO","Tue Apr 22 17:43:21 CST 2025","passed","Tue Apr 22 17:43:21 CST 2025","TestSalesOrderCreate","test_03_delete","",""
+"
+    测试步骤：
+    1. 发送查询订单类型详情请求
+    2. 验证响应数据
+    3. 检查标准订单类型配置
+    ","208","查询订单类型详情","testcases.SCM.SO","Tue Apr 22 17:43:09 CST 2025","passed","Tue Apr 22 17:43:09 CST 2025","TestOrderTypeConfig","test_00_so_config_check","",""
+"测试保存销售订单","1681","test_08_save_sales_order","testcases.SCM.SO","Tue Apr 22 17:43:23 CST 2025","passed","Tue Apr 22 17:43:25 CST 2025","TestSalesOrderCreate","test_03_delete","",""
+"
+    测试步骤：
+    1. 准备提交参数
+    2. 发送提交请求
+    3. 验证响应数据
+    ","781","提交复制的订单","testcases.SCM.SO","Tue Apr 22 17:43:40 CST 2025","failed","Tue Apr 22 17:43:41 CST 2025","TestSalesOrderOperator","test_04_operator","",""
+"测试销售订单保存并提交","1300","test_09_submit_sales_order","testcases.SCM.SO","Tue Apr 22 17:43:16 CST 2025","passed","Tue Apr 22 17:43:17 CST 2025","TestSalesOrderCreate","test_01_create","",""
+"测试查询销售组织列表","90","test_04_query_sales_organization","testcases.SCM.SO","Tue Apr 22 17:43:29 CST 2025","passed","Tue Apr 22 17:43:29 CST 2025","TestSalesOrderCreate","test_04_operator","",""
+"测试查询物料列表","165","test_05_query_materials","testcases.SCM.SO","Tue Apr 22 17:43:29 CST 2025","passed","Tue Apr 22 17:43:29 CST 2025","TestSalesOrderCreate","test_04_operator","",""
+"测试销售订单创建初始化","373","test_01_init_sales_order","testcases.SCM.SO","Tue Apr 22 17:43:11 CST 2025","passed","Tue Apr 22 17:43:11 CST 2025","TestSalesOrderCreate","test_01_create","",""
+"测试订单行渲染","410","test_06_render_order_line","testcases.SCM.SO","Tue Apr 22 17:43:22 CST 2025","passed","Tue Apr 22 17:43:23 CST 2025","TestSalesOrderCreate","test_03_delete","",""
+"
+    测试步骤：
+    1. 准备提交参数
+    2. 发送提交请求
+    3. 验证响应数据
+    ","936","手动提交订单","testcases.SCM.SO","Tue Apr 22 17:43:35 CST 2025","failed","Tue Apr 22 17:43:36 CST 2025","TestSalesOrderOperator","test_04_operator","",""
+"测试查询客户信息","91","test_02_query_customer_info","testcases.SCM.SO","Tue Apr 22 17:43:28 CST 2025","passed","Tue Apr 22 17:43:28 CST 2025","TestSalesOrderCreate","test_04_operator","",""
+"测试自动定价","310","test_07_calculate_pricing","testcases.SCM.SO","Tue Apr 22 17:43:30 CST 2025","passed","Tue Apr 22 17:43:30 CST 2025","TestSalesOrderCreate","test_04_operator","",""
+"
+    测试步骤：
+    1. 准备删除参数
+    2. 发送删除请求
+    3. 验证响应数据
+    ","107","删除单个订单","testcases.SCM.SO","Tue Apr 22 17:43:27 CST 2025","broken","Tue Apr 22 17:43:27 CST 2025","TestOrderDelete","test_03_delete","",""
+"
+    测试步骤：
+    1. 准备查询参数
+    2. 发送查询请求
+    3. 验证响应数据
+    ","668","查询订单详情","testcases.SCM.SO","Tue Apr 22 17:43:34 CST 2025","failed","Tue Apr 22 17:43:34 CST 2025","TestSalesOrderOperator","test_04_operator","",""
+"
+    测试步骤：
+    1. 准备查询参数（包含状态）
+    2. 发送查询请求
+    3. 验证响应数据
+    ","74","按状态查询 - CANCELLED","testcases.SCM.SO","Tue Apr 22 17:43:20 CST 2025","broken","Tue Apr 22 17:43:20 CST 2025","TestOrderList","test_02_orderlist_query","",""
+"测试查询相关方","110","test_03_query_partner","testcases.SCM.SO","Tue Apr 22 17:43:22 CST 2025","passed","Tue Apr 22 17:43:22 CST 2025","TestSalesOrderCreate","test_03_delete","",""
+"测试自动定价","331","test_07_calculate_pricing","testcases.SCM.SO","Tue Apr 22 17:43:23 CST 2025","passed","Tue Apr 22 17:43:23 CST 2025","TestSalesOrderCreate","test_03_delete","",""
+"测试查询销售组织列表","167","test_04_query_sales_organization","testcases.SCM.SO","Tue Apr 22 17:43:12 CST 2025","passed","Tue Apr 22 17:43:12 CST 2025","TestSalesOrderCreate","test_01_create","",""
+"测试销售订单保存并提交","1319","test_09_submit_sales_order","testcases.SCM.SO","Tue Apr 22 17:43:31 CST 2025","passed","Tue Apr 22 17:43:33 CST 2025","TestSalesOrderCreate","test_04_operator","",""
+"测试保存销售订单","1406","test_08_save_sales_order","testcases.SCM.SO","Tue Apr 22 17:43:14 CST 2025","passed","Tue Apr 22 17:43:16 CST 2025","TestSalesOrderCreate","test_01_create","",""
+"
+    测试步骤：
+    1. 准备查询参数（包含状态）
+    2. 发送查询请求
+    3. 验证响应数据
+    ","58","按状态查询 - DRAFT","testcases.SCM.SO","Tue Apr 22 17:43:19 CST 2025","broken","Tue Apr 22 17:43:19 CST 2025","TestOrderList","test_02_orderlist_query","",""
+"
+    测试步骤：
+    1. 准备查询参数（包含客户信息）
+    2. 发送查询请求
+    3. 验证响应数据
+    ","2","按客户查询","testcases.SCM.SO","Tue Apr 22 17:43:20 CST 2025","broken","Tue Apr 22 17:43:20 CST 2025","TestOrderList","test_02_orderlist_query","",""
+"
+    测试步骤：
+    1. 准备提交参数
+    2. 发送提交请求
+    3. 验证响应数据
+    ","240","提交订单编辑","testcases.SCM.SO","Tue Apr 22 17:43:34 CST 2025","failed","Tue Apr 22 17:43:35 CST 2025","TestSalesOrderOperator","test_04_operator","",""
+"测试保存销售订单","991","test_08_save_sales_order","testcases.SCM.SO","Tue Apr 22 17:43:30 CST 2025","passed","Tue Apr 22 17:43:31 CST 2025","TestSalesOrderCreate","test_04_operator","",""
+"测试订单行渲染","592","test_06_render_order_line","testcases.SCM.SO","Tue Apr 22 17:43:29 CST 2025","passed","Tue Apr 22 17:43:30 CST 2025","TestSalesOrderCreate","test_04_operator","",""
+"
+    测试步骤：
+    1. 准备查询参数（包含订单编号）
+    2. 发送查询请求
+    3. 验证响应数据
+    ","75","按订单编号查询","testcases.SCM.SO","Tue Apr 22 17:43:19 CST 2025","broken","Tue Apr 22 17:43:19 CST 2025","TestOrderList","test_02_orderlist_query","",""
+"
+    测试步骤：
+    1. 准备查询参数（包含状态）
+    2. 发送查询请求
+    3. 验证响应数据
+    ","98","按状态查询 - APPROVING","testcases.SCM.SO","Tue Apr 22 17:43:20 CST 2025","broken","Tue Apr 22 17:43:20 CST 2025","TestOrderList","test_02_orderlist_query","",""
+"测试查询物料列表","135","test_05_query_materials","testcases.SCM.SO","Tue Apr 22 17:43:22 CST 2025","passed","Tue Apr 22 17:43:22 CST 2025","TestSalesOrderCreate","test_03_delete","",""
+"
+    测试步骤：
+    1. 发送查询订单类型请求
+    2. 验证响应数据
+    3. 检查标准订单类型是否存在
+    ","168","查询订单类型","testcases.SCM.SO","Tue Apr 22 17:43:09 CST 2025","passed","Tue Apr 22 17:43:09 CST 2025","TestOrderTypeConfig","test_00_so_config_check","",""
+"测试查询相关方","240","test_03_query_partner","testcases.SCM.SO","Tue Apr 22 17:43:11 CST 2025","passed","Tue Apr 22 17:43:12 CST 2025","TestSalesOrderCreate","test_01_create","",""

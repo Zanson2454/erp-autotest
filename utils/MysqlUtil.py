@@ -3,10 +3,6 @@ import sys
 from contextlib import contextmanager
 from typing import Generator, List, Dict, Any, Optional
 import allure
-from sqlalchemy import create_engine, text
-from sqlalchemy.engine import Engine
-from sqlalchemy.orm import sessionmaker, Session
-
 import pymysql
 from loguru import logger
 import json
@@ -36,8 +32,6 @@ class DBManager:
             is_runtime: 是否连接运行时数据库
         """
         self.is_runtime = is_runtime
-        self.engine: Engine = create_engine(Config.get_connection_url(is_runtime))
-        self.Session = sessionmaker(bind=self.engine)
         self.connection = None
         logger.info(f"数据库管理器初始化完成，运行时模式: {is_runtime}")
         
@@ -60,7 +54,8 @@ class DBManager:
                 user=db_config['user'],
                 password=db_config['password'],
                 database=db_config['database'],
-                charset='utf8mb4'
+                charset='utf8mb4',
+                cursorclass=pymysql.cursors.DictCursor
             )
             logger.info(f"数据库连接成功: {db_config['host']}:{db_config['port']}/{db_config['database']}")
     
@@ -72,26 +67,28 @@ class DBManager:
             logger.info("数据库连接已关闭")
     
     @contextmanager
-    def session(self) -> Generator[Session, None, None]:
+    def cursor(self):
         """
-        创建数据库会话的上下文管理器
+        创建数据库游标的上下文管理器
         
         用法:
-            with db_manager.session() as session:
-                session.execute(...)
+            with db_manager.cursor() as cursor:
+                cursor.execute(...)
         """
-        session = self.Session()
+        self.connect()
+        cursor = self.connection.cursor()
         try:
-            yield session
-            session.commit()
-            logger.debug("数据库会话已提交")
+            yield cursor
+            self.connection.commit()
+            logger.debug("数据库事务已提交")
         except Exception as e:
-            session.rollback()
-            logger.error(f"数据库会话回滚: {str(e)}")
+            self.connection.rollback()
+            logger.error(f"数据库事务回滚: {str(e)}")
             raise e
         finally:
-            session.close()
-            logger.debug("数据库会话已关闭")
+            cursor.close()
+            self.disconnect()
+            logger.debug("数据库游标已关闭")
     
     def execute_query(self, sql: str, params: Dict[str, Any] = None) -> List[Dict[str, Any]]:
         """
@@ -105,23 +102,11 @@ class DBManager:
             查询结果列表
         """
         with allure.step(f"执行SQL查询: {sql}"):
-            try:
-                self.connect()
-                with self.connection.cursor(pymysql.cursors.DictCursor) as cursor:
-                    # 如果提供了参数，使用参数化查询
-                    if params:
-                        cursor.execute(sql, params)
-                    else:
-                        # 否则直接执行SQL语句
-                        cursor.execute(sql)
-                    results = cursor.fetchall()
-                    logger.info(f"\n{'='*50}\n执行SQL查询:\n{sql}\n参数: {params}\n结果:\n{json.dumps(results, ensure_ascii=False, indent=2, cls=DecimalEncoder)}\n{'='*50}")
-                    return results
-            except Exception as e:
-                logger.error(f"执行SQL查询失败: {str(e)}")
-                raise
-            finally:
-                self.disconnect()
+            with self.cursor() as cursor:
+                cursor.execute(sql, params or {})
+                results = cursor.fetchall()
+                logger.info(f"\n{'='*50}\n执行SQL查询:\n{sql}\n参数: {params}\n结果:\n{json.dumps(results, ensure_ascii=False, indent=2, cls=DecimalEncoder)}\n{'='*50}")
+                return results
     
     def execute_update(self, sql: str, params: Dict[str, Any] = None) -> int:
         """
@@ -135,9 +120,8 @@ class DBManager:
             受影响的行数
         """
         with allure.step(f"执行SQL更新: {sql}"):
-            with self.session() as session:
-                result = session.execute(text(sql), params or {})
-                affected_rows = result.rowcount
+            with self.cursor() as cursor:
+                affected_rows = cursor.execute(sql, params or {})
                 logger.info(f"\n{'='*50}\n执行SQL更新:\n{sql}\n参数: {params}\n影响行数: {affected_rows}\n{'='*50}")
                 return affected_rows
     
@@ -153,13 +137,14 @@ class DBManager:
             插入的ID
         """
         columns = ", ".join(data.keys())
-        values = ", ".join([f":{k}" for k in data.keys()])
-        sql = f"INSERT INTO {table} ({columns}) VALUES ({values})"
+        placeholders = ", ".join(["%s" for _ in data])
+        sql = f"INSERT INTO {table} ({columns}) VALUES ({placeholders})"
+        values = tuple(data.values())
         
         with allure.step(f"插入数据到表 {table}"):
-            with self.session() as session:
-                result = session.execute(text(sql), data)
-                inserted_id = result.lastrowid
+            with self.cursor() as cursor:
+                cursor.execute(sql, values)
+                inserted_id = cursor.lastrowid
                 logger.info(f"\n{'='*50}\n插入数据:\n表名: {table}\n数据: {json.dumps(data, ensure_ascii=False, indent=2)}\n插入ID: {inserted_id}\n{'='*50}")
                 return inserted_id
     
@@ -211,7 +196,7 @@ class DBManager:
         返回:
             表结构信息列表
         """
-        sql = f"""
+        sql = """
         SELECT 
             COLUMN_NAME, 
             DATA_TYPE, 
@@ -221,8 +206,8 @@ class DBManager:
         FROM 
             INFORMATION_SCHEMA.COLUMNS 
         WHERE 
-            TABLE_SCHEMA = :database 
-            AND TABLE_NAME = :table
+            TABLE_SCHEMA = %(database)s 
+            AND TABLE_NAME = %(table)s
         ORDER BY 
             ORDINAL_POSITION
         """
@@ -251,182 +236,18 @@ class DBManager:
         FROM 
             INFORMATION_SCHEMA.TABLES 
         WHERE 
-            TABLE_SCHEMA = :database 
-            AND TABLE_NAME = :table
+            TABLE_SCHEMA = %(database)s 
+            AND TABLE_NAME = %(table)s
         """
         
         config = Config.get_db_config(self.is_runtime)
         result = self.execute_query(sql, {
             "database": config["database"],
             "table": table
-        })
-        
-        exists = result[0]["count"] > 0
+        })[0]
+        exists = result["count"] > 0
         logger.info(f"\n{'='*50}\n检查表是否存在:\n表名: {table}\n结果: {exists}\n{'='*50}")
         return exists
-
-    def execute(self, sql: str, params: tuple = None) -> int:
-        """
-        执行SQL语句
-        
-        参数:
-            sql: SQL语句
-            params: SQL参数
-            
-        返回:
-            影响的行数
-        """
-        try:
-            self.connect()
-            with self.connection.cursor() as cursor:
-                affected_rows = cursor.execute(sql, params)
-                self.connection.commit()
-                logger.info(f"\n{'='*50}\n执行SQL:\n{sql}\n参数: {params}\n影响行数: {affected_rows}\n{'='*50}")
-                return affected_rows
-        finally:
-            self.disconnect()
-    
-    def _format_result(self, result: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
-        """
-        格式化查询结果
-        
-        参数:
-            result: 查询结果
-            
-        返回:
-            格式化后的结果
-        """
-        if not result:
-            return None
-            
-        formatted = {}
-        for key, value in result.items():
-            if isinstance(value, datetime):
-                formatted[key] = value.strftime('%Y-%m-%d %H:%M:%S')
-            else:
-                formatted[key] = value
-        return formatted
-    
-    def query_one(self, sql: str, params: tuple = None) -> Optional[Dict[str, Any]]:
-        """
-        查询单条记录
-        
-        参数:
-            sql: SQL查询语句
-            params: 查询参数
-            
-        返回:
-            查询结果
-        """
-        try:
-            self.connect()
-            with self.connection.cursor() as cursor:
-                cursor.execute(sql, params)
-                result = cursor.fetchone()
-                if result:
-                    result = dict(zip([col[0] for col in cursor.description], result))
-                    result = self._format_result(result)
-                    logger.info(f"\n{'='*50}\n查询单条记录:\nSQL: {sql}\n参数: {params}\n结果:\n{json.dumps(result, ensure_ascii=False, indent=2)}\n{'='*50}")
-                return result
-        finally:
-            self.disconnect()
-    
-    def query_all(self, sql: str, params: Optional[Dict] = None) -> List[Dict]:
-        """
-        执行查询并返回多条记录
-        
-        Args:
-            sql: SQL查询语句
-            params: 查询参数
-            
-        Returns:
-            List[Dict]: 查询结果列表
-        """
-        try:
-            self.connect()
-            with self.connection.cursor(pymysql.cursors.DictCursor) as cursor:
-                # 如果提供了参数，使用参数化查询
-                if params:
-                    cursor.execute(sql, params)
-                else:
-                    # 否则直接执行SQL语句，不使用格式化
-                    cursor.execute(sql)
-                results = cursor.fetchall()
-                logger.info(f"\n{'='*50}\n查询多条记录:\nSQL: {sql}\n参数: {params}\n结果:\n{json.dumps(results, ensure_ascii=False, indent=2, cls=DecimalEncoder)}\n{'='*50}")
-                return results
-        except Exception as e:
-            logger.error(f"查询失败: {str(e)}")
-            raise
-        finally:
-            self.disconnect()
-    
-    def update(self, table: str, data: Dict[str, Any], 
-               where: str, params: tuple = None) -> int:
-        """
-        更新数据
-        
-        参数:
-            table: 表名
-            data: 要更新的数据
-            where: WHERE条件
-            params: 条件参数
-            
-        返回:
-            影响的行数
-        """
-        set_clause = ", ".join([f"{k} = %s" for k in data.keys()])
-        sql = f"UPDATE {table} SET {set_clause} WHERE {where}"
-        
-        try:
-            self.connect()
-            with self.connection.cursor() as cursor:
-                # 合并数据值和条件参数
-                all_params = tuple(data.values()) + (params or ())
-                affected_rows = cursor.execute(sql, all_params)
-                self.connection.commit()
-                logger.info(f"\n{'='*50}\n更新数据:\n表名: {table}\n数据: {json.dumps(data, ensure_ascii=False, indent=2)}\n条件: {where}\n参数: {params}\n影响行数: {affected_rows}\n{'='*50}")
-                return affected_rows
-        finally:
-            self.disconnect()
-    
-    def execute_sql(self, sql: str) -> None:
-        """
-        执行SQL语句
-        
-        参数:
-            sql: SQL语句
-        """
-        try:
-            self.connect()
-            with self.connection.cursor() as cursor:
-                cursor.execute(sql)
-                self.connection.commit()
-                logger.info(f"\n{'='*50}\n执行SQL:\n{sql}\n{'='*50}")
-        finally:
-            self.disconnect()
-    
-    def execute_sql_file(self, file_path: str) -> None:
-        """
-        执行SQL文件
-        
-        参数:
-            file_path: SQL文件路径
-        """
-        try:
-            self.connect()
-            with open(file_path, 'r', encoding='utf-8') as f:
-                sql_content = f.read()
-                logger.info(f"\n{'='*50}\n执行SQL文件:\n{file_path}\n内容:\n{sql_content}\n{'='*50}")
-                
-                with self.connection.cursor() as cursor:
-                    for statement in sql_content.split(';'):
-                        statement = statement.strip()
-                        if statement and not statement.startswith('--'):
-                            cursor.execute(statement)
-                    self.connection.commit()
-                    logger.info("SQL文件执行完成")
-        finally:
-            self.disconnect()
 
 if __name__ == "__main__":
     from loguru import logger
@@ -435,4 +256,4 @@ if __name__ == "__main__":
     # 查询客户信息
     sql = "SELECT * FROM gen_cust_info_md WHERE cust_name = %s"
     params = ("北京智创科技有限公司",)
-    result = db.query_one(sql, params)
+    result = db.execute_query(sql, params)

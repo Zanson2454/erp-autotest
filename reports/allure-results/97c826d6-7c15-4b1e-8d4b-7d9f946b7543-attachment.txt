@@ -1,0 +1,11 @@
+[32m2025-04-22 20:45:36.212[0m | [1mINFO    [0m | [36mtestcases.conftest[0m:[36menv_setup[0m:[36m24[0m - [1m当前测试环境: dev[0m
+[32m2025-04-22 20:45:36.214[0m | [1mINFO    [0m | [36mutils.MysqlUtil[0m:[36m__init__[0m:[36m36[0m - [1m数据库管理器初始化完成，运行时模式: False[0m
+[32m2025-04-22 20:45:36.216[0m | [1mINFO    [0m | [36mutils.MysqlUtil[0m:[36m__init__[0m:[36m36[0m - [1m数据库管理器初始化完成，运行时模式: False[0m
+[32m2025-04-22 20:45:36.220[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m文件缓存命中：使用缓存的SCM初始化数据[0m
+[32m2025-04-22 20:45:36.221[0m | [34m[1mDEBUG   [0m | [36mcommon.login_manager[0m:[36mlogin[0m:[36m47[0m - [34m[1m使用默认账号: 17376596912[0m
+[32m2025-04-22 20:45:36.943[0m | [34m[1mDEBUG   [0m | [36mcommon.login_manager[0m:[36mlogin[0m:[36m70[0m - [34m[1m登录成功[0m
+[32m2025-04-22 20:45:37.393[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m测试类初始化完成[0m
+[32m2025-04-22 20:45:37.394[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m初始化渲染数量: 25[0m
+[32m2025-04-22 20:45:37.394[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m测试类初始化完成[0m
+[32m2025-04-22 20:45:37.450[0m | [1mINFO    [0m | [36mtestcases.SCM.base_test[0m:[36msetup_method[0m:[36m136[0m - [1m开始测试: test_save_sales_order[0m
+[32m2025-04-22 20:45:37.458[0m | [31m[1mERROR   [0m | [36mutils.LogUtil[0m:[36merror[0m:[36m42[0m - [31m[1m销售订单保存失败: 'TestSalesOrderCreate' object has no attribute '_build_material_query_data'[0m

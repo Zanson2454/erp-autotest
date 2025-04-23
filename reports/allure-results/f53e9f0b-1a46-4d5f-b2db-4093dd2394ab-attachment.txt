@@ -1,0 +1,12 @@
+2025-04-22 17:43:26.936 | INFO     | utils.MysqlUtil:__init__:36 - 数据库管理器初始化完成，运行时模式: False
+2025-04-22 17:43:26.936 | INFO     | utils.MysqlUtil:__init__:36 - 数据库管理器初始化完成，运行时模式: False
+2025-04-22 17:43:26.937 | INFO     | utils.LogUtil:info:33 - 内存缓存命中：使用缓存的SCM初始化数据
+2025-04-22 17:43:26.937 | DEBUG    | common.login_manager:login:47 - 使用默认账号: 17376596912
+2025-04-22 17:43:27.307 | DEBUG    | common.login_manager:login:70 - 登录成功
+2025-04-22 17:43:27.535 | INFO     | utils.LogUtil:info:33 - 测试类初始化完成
+2025-04-22 17:43:27.590 | INFO     | testcases.SCM.base_test:setup_method:136 - 开始测试: test_01_delete_order
+2025-04-22 17:43:27.591 | INFO     | test_03_delete:setup_method:56 - 初始化新的测试数据
+2025-04-22 17:43:27.592 | INFO     | test_03_delete:setup_method:60 - 开始执行测试方法: test_01_delete_order
+2025-04-22 17:43:27.592 | INFO     | test_03_delete:setup_method:64 - 初始化测试数据完成
+2025-04-22 17:43:27.596 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 删除订单
+2025-04-22 17:43:27.698 | ERROR    | testcases.SCM.base_test:_make_request:171 - 请求失败: 400 Client Error: Bad Request for url: https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SYS_DeleteDataByIdService?tmodule=ERP_SCM&modelKey=ERP_SCM%24sls_so_head_tr

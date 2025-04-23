@@ -1,0 +1,5 @@
+2025-04-22 17:31:32.848 | INFO     | testcases.SCM.base_test:setup_method:136 - 开始测试: test_04_query_sales_organization
+2025-04-22 17:31:32.853 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 查询销售组织列表
+2025-04-22 17:31:32.955 | DEBUG    | test_01_create:test_04_query_sales_organization:135 - 销售组织列表查询响应: [{'orgCode': 'AUTOTEST_SLS_ORG', 'orgName': '销售组织(自动化)', 'orgStatus': 'ENABLED', 'orgBusinessTypeCode': None, 'comOrgId': {'id': 14507001}, 'id': 14579001}]
+2025-04-22 17:31:32.956 | INFO     | test_01_create:test_04_query_sales_organization:139 - 销售组织列表查询测试通过: {'orgCode': 'AUTOTEST_SLS_ORG', 'orgName': '销售组织(自动化)', 'orgStatus': 'ENABLED', 'orgBusinessTypeCode': None, 'comOrgId': {'id': 14507001}, 'id': 14579001}
+2025-04-22 17:31:32.962 | INFO     | utils.LogUtil:info:33 - 销售组织列表查询测试通过

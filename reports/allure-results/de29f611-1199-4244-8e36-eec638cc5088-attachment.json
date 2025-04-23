@@ -1,0 +1,128 @@
+{
+  "params": {
+    "request": {
+      "id": null,
+      "priceIdempotent": null,
+      "reCalculate": false,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "soDocDate": 1745251200000,
+      "priceCalcDate": 1745315854604,
+      "custId": {
+        "id": 2059001
+      },
+      "addrId": {
+        "id": null
+      },
+      "addrDetail": null,
+      "custPersonName": null,
+      "custPhone": null,
+      "slsPerson": null,
+      "slsPhone": null,
+      "slsPersonName": null,
+      "slsOrgId": null,
+      "slsDcId": {
+        "id": 14378001
+      },
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "isFixedExchRate": false,
+      "currExchangeRateType": 2000001,
+      "exchRate": 1,
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250422100158",
+          "matId": {
+            "id": 900000001,
+            "context": {},
+            "matCode": "TESTMAT1",
+            "matName": "测试物料1",
+            "imageUrl": "https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/trantor2/portal/TERP/cdf606cc-03ec-4340-a09e-69d35a7f3cbe/网页logo.png",
+            "genMatTypeCfId": {
+              "id": 2000001
+            },
+            "baseUomId": 2004001,
+            "weightUomId": 2002011,
+            "grossWeight": 1.11,
+            "netWeight": 1.11,
+            "volumUomId": 14049001,
+            "matVolum": 1.0,
+            "batchDetermination": false,
+            "atpGroupId": 2000001,
+            "customMat": false,
+            "isKitSls": false,
+            "isCompleteSetDel": false,
+            "slsUomId": {
+              "id": 2004001
+            },
+            "specModel": "TM01"
+          },
+          "matCode": "TESTMAT1",
+          "matName": "测试物料1",
+          "soItemSlsQty": 36,
+          "soItemGrossPrice": 8888.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 36810.4778761062,
+          "grossTradeAmt": 319968.0,
+          "soSchlDelDate": 1745251200000,
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {}
+          },
+          "uomSlsId": {
+            "id": 2004001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 2004001,
+            "context": {}
+          },
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "weightUomId": {
+            "id": 2002011,
+            "context": {}
+          },
+          "grossWeight": 1.11,
+          "netWeight": 1.11,
+          "volumUomId": {
+            "id": 14049001,
+            "context": {}
+          },
+          "matVolum": 1.0,
+          "delAddrId": {
+            "context": {}
+          },
+          "itemNumber": 1,
+          "atpCheck": true,
+          "salesPrice": 8888.0,
+          "children": null,
+          "matTypeId": 2000001,
+          "isCompleteSet": false,
+          "salesAmt": 319968.0
+        }
+      ],
+      "slsPartnerLinks": null
+    }
+  }
+}

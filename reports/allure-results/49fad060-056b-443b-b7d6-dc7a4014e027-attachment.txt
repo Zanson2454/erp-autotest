@@ -1,0 +1,12 @@
+2025-04-22 17:31:56.977 | INFO     | utils.MysqlUtil:__init__:36 - 数据库管理器初始化完成，运行时模式: False
+2025-04-22 17:31:56.979 | INFO     | utils.MysqlUtil:__init__:36 - 数据库管理器初始化完成，运行时模式: False
+2025-04-22 17:31:56.980 | INFO     | utils.LogUtil:info:33 - 内存缓存命中：使用缓存的SCM初始化数据
+2025-04-22 17:31:56.981 | DEBUG    | common.login_manager:login:47 - 使用默认账号: 17376596912
+2025-04-22 17:31:57.642 | DEBUG    | common.login_manager:login:70 - 登录成功
+2025-04-22 17:31:58.325 | INFO     | utils.LogUtil:info:33 - 测试类初始化完成
+2025-04-22 17:31:58.326 | INFO     | utils.LogUtil:info:33 - 初始化渲染数量: 66
+2025-04-22 17:31:58.329 | INFO     | utils.LogUtil:info:33 - 测试类初始化完成
+2025-04-22 17:31:58.464 | INFO     | testcases.SCM.base_test:setup_method:136 - 开始测试: test_01_init_sales_order
+2025-04-22 17:31:58.471 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 销售订单创建初始化
+2025-04-22 17:31:58.671 | DEBUG    | testcases.SCM.SO.test_01_create:test_01_init_sales_order:75 - 销售人员信息: {'id': 14094003, 'context': {}, 'name': '章昂'}
+2025-04-22 17:31:58.673 | INFO     | utils.LogUtil:info:33 - 销售订单创建初始化测试通过

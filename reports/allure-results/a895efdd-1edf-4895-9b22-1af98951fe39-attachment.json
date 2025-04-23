@@ -1,0 +1,21 @@
+{
+  "sls_partner_links": [
+    {
+      "context": {},
+      "partnerTypeId": {
+        "id": 2000001
+      },
+      "partnerClass": "CUSTOMER",
+      "partnerId": {
+        "id": 2059001
+      }
+    }
+  ],
+  "so_items": [
+    {
+      "context": {},
+      "soSchlDelDate": 1745251200000,
+      "bomWhether": false
+    }
+  ]
+}

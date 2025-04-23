@@ -1,0 +1,12 @@
+[
+  {
+    "orgCode": "AUTOTEST_SLS_ORG",
+    "orgName": "销售组织(自动化)",
+    "orgStatus": "ENABLED",
+    "orgBusinessTypeCode": null,
+    "comOrgId": {
+      "id": 14507001
+    },
+    "id": 14579001
+  }
+]

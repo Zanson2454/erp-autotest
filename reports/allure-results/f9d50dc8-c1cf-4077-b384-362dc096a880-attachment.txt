@@ -1,0 +1,5 @@
+[32m2025-04-22 20:35:15.870[0m | [1mINFO    [0m | [36mtestcases.SCM.base_test[0m:[36msetup_method[0m:[36m136[0m - [1m开始测试: test_04_query_sales_organization[0m
+[32m2025-04-22 20:35:15.872[0m | [1mINFO    [0m | [36mtestcases.SCM.base_test[0m:[36m_make_request[0m:[36m155[0m - [1m发送请求: 查询销售组织列表[0m
+[32m2025-04-22 20:35:15.948[0m | [34m[1mDEBUG   [0m | [36mtest_01_create[0m:[36mtest_04_query_sales_organization[0m:[36m143[0m - [34m[1m销售组织列表查询响应: [{'orgCode': 'AUTOTEST_SLS_ORG', 'orgName': '销售组织(自动化)', 'orgStatus': 'ENABLED', 'orgBusinessTypeCode': None, 'comOrgId': {'id': 14507001}, 'id': 14579001}][0m
+[32m2025-04-22 20:35:15.948[0m | [1mINFO    [0m | [36mtest_01_create[0m:[36mtest_04_query_sales_organization[0m:[36m147[0m - [1m销售组织列表查询测试通过: {'orgCode': 'AUTOTEST_SLS_ORG', 'orgName': '销售组织(自动化)', 'orgStatus': 'ENABLED', 'orgBusinessTypeCode': None, 'comOrgId': {'id': 14507001}, 'id': 14579001}[0m
+[32m2025-04-22 20:35:15.948[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m销售组织列表查询测试通过[0m

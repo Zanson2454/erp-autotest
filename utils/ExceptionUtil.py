@@ -185,6 +185,7 @@ def handle_class_method_exception(exception_types: Union[Type[Exception], Tuple[
         re_raise: 是否重新抛出异常，默认为True
     """
     def decorator(func):
+        @wraps(func)
         def wrapper(cls, *args, **kwargs):
             try:
                 return func(cls, *args, **kwargs)
@@ -200,5 +201,5 @@ def handle_class_method_exception(exception_types: Union[Type[Exception], Tuple[
                 if re_raise:
                     raise
                 return None
-        return classmethod(wrapper)
+        return wrapper
     return decorator 

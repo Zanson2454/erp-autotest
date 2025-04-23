@@ -1,0 +1,116 @@
+[32m2025-04-22 20:54:49.800[0m | [1mINFO    [0m | [36mtestcases.SCM.base_test[0m:[36msetup_method[0m:[36m136[0m - [1m开始测试: test_submit_sales_order[0m
+[32m2025-04-22 20:54:49.803[0m | [34m[1mDEBUG   [0m | [36mtest_01_create[0m:[36m_query_materials[0m:[36m137[0m - [34m[1m物料列表查询请求数据: {
+  "params": {
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "conditionGroup": {
+          "type": "ConditionGroup",
+          "logicOperator": "AND",
+          "conditions": [
+            {
+              "type": "ConditionGroup",
+              "logicOperator": "AND",
+              "conditions": [
+                {
+                  "key": "nr_nqTvXmIyHnHxKfmn3S",
+                  "type": "ConditionLeaf",
+                  "leftValue": {
+                    "id": "iJlX7JIkAyn7AIr9omqK-",
+                    "key": "iJlX7JIkAyn7AIr9omqK-",
+                    "type": "VarValue",
+                    "fieldType": "Text",
+                    "valueType": "VAR",
+                    "varValue": [
+                      {
+                        "valueKey": "matCode",
+                        "valueName": "matCode"
+                      }
+                    ]
+                  },
+                  "operator": "CONTAINS",
+                  "rightValue": {
+                    "key": "ggwEgoMfFc91CYI1zUwzb",
+                    "type": "VarValue",
+                    "fieldType": "Text",
+                    "valueType": "CONST",
+                    "constValue": "TESTMAT"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "sortOrders": null,
+        "keyword": null
+      }
+    }
+  }
+}[0m
+[32m2025-04-22 20:54:49.803[0m | [1mINFO    [0m | [36mtestcases.SCM.base_test[0m:[36m_make_request[0m:[36m155[0m - [1m发送请求: 查询物料列表[0m
+[32m2025-04-22 20:54:49.900[0m | [34m[1mDEBUG   [0m | [36mtest_01_create[0m:[36m_query_materials[0m:[36m145[0m - [34m[1m物料列表查询响应: {'matCode': 'TESTMAT1', 'matName': '测试物料1', 'genMatTypeCfId': {'matTypeName': '成品', 'id': 2000001}, 'baseUomId': {'uomDesc': '件', 'id': 2004001}, 'cateId': {'matCateName': '类目(自动化)', 'id': 14082001}, 'brandId': {'brandName': '品牌(自动化)', 'id': 2605004}, 'status': 'ENABLED', 'bizStatus': 'SALE', 'id': 900000001, 'updatedAt': 1744789403000, 'matBasePrice': 100.0}[0m
+[32m2025-04-22 20:54:49.901[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m物料列表查询完成[0m
+[32m2025-04-22 20:54:49.902[0m | [34m[1mDEBUG   [0m | [36mtest_01_create[0m:[36m_render_order_line[0m:[36m157[0m - [34m[1m订单行渲染请求数据: {
+  "params": {
+    "request": {
+      "matId": {
+        "id": 900000001
+      },
+      "matCode": "TESTMAT1",
+      "matName": "\u6d4b\u8bd5\u7269\u65991",
+      "matBasePrice": 100.0,
+      "soItemSlsQty": 15,
+      "soItemGrossPrice": 100.0,
+      "taxRateId": {
+        "id": "iJlX7JIkAyn7AIr9omqK-"
+      },
+      "taxRate": 0.13,
+      "soSchlDelDate": 1745251200000,
+      "soItemTypeId": {
+        "id": "iJlX7JIkAyn7AIr9omqK-"
+      },
+      "uomSlsId": {
+        "id": "iJlX7JIkAyn7AIr9omqK-"
+      },
+      "uomBaseId": {
+        "id": "iJlX7JIkAyn7AIr9omqK-"
+      },
+      "invOrgId": {
+        "id": 14375002
+      },
+      "invLocId": {
+        "id": 14376002
+      },
+      "bomWhether": false,
+      "weightUomId": {
+        "id": "iJlX7JIkAyn7AIr9omqK-"
+      },
+      "grossWeight": 1.11,
+      "netWeight": 1.11,
+      "volumUomId": {
+        "id": "iJlX7JIkAyn7AIr9omqK-"
+      },
+      "matVolum": 1.0,
+      "delAddrId": {
+        "id": null
+      },
+      "delPersonName": null,
+      "delPhone": null,
+      "itemNumber": 1,
+      "atpCheck": true,
+      "salesPrice": 100.0,
+      "children": null,
+      "matTypeId": "iJlX7JIkAyn7AIr9omqK-",
+      "delAddrDetail": null,
+      "soItemTypeGroupId": "iJlX7JIkAyn7AIr9omqK-",
+      "isCompleteSet": false,
+      "salesAmt": 1500.0
+    }
+  }
+}[0m
+[32m2025-04-22 20:54:49.902[0m | [1mINFO    [0m | [36mtestcases.SCM.base_test[0m:[36m_make_request[0m:[36m155[0m - [1m发送请求: 订单行渲染[0m
+[32m2025-04-22 20:54:49.936[0m | [31m[1mERROR   [0m | [36mtestcases.SCM.base_test[0m:[36m_make_request[0m:[36m171[0m - [31m[1m请求失败: 500 Server Error: Internal Server Error for url: https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SLS_AFTER_MAT_SELECT_RENDER_EVENT_SERVICE[0m
+[32m2025-04-22 20:54:49.939[0m | [31m[1mERROR   [0m | [36mutils.LogUtil[0m:[36merror[0m:[36m42[0m - [31m[1m销售订单提交失败: 500 Server Error: Internal Server Error for url: https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SLS_AFTER_MAT_SELECT_RENDER_EVENT_SERVICE[0m
+[32m2025-04-22 20:54:49.940[0m | [31m[1mERROR   [0m | [36mutils.LogUtil[0m:[36merror[0m:[36m42[0m - [31m[1m响应状态码: 500[0m
+[32m2025-04-22 20:54:49.941[0m | [31m[1mERROR   [0m | [36mutils.LogUtil[0m:[36merror[0m:[36m42[0m - [31m[1m响应内容: {"requestId":"05600b8a-1067877","success":false,"data":null,"err":{"code":"V0311","msg":"扩展服务'SO_AFTER_MAT_SELECT_RENDER_ITEM_ACTION'执行异常","suggest":null},"info":{"msg":"扩展服务[SO_AFTER_MAT_SELECT_RENDER_ITEM_ACTION]执行异常","innerMsg":"[SO_AFTER_MAT_SELECT_RENDER_ITEM_ACTION](io.terminus.erp.sd.adapter.admin.so.SoRenderAction#soAfterMatSelectRenderItemAction)发生异常：Caused by: java.lang.NullPointerException at io.terminus.erp.sd.app.service.SoRenderService.renderAfterMatSelect(SoRenderService.java:142)","level":"ERROR"}}[0m

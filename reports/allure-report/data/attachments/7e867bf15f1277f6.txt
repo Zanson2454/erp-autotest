@@ -1,0 +1,58 @@
+2025-04-22 17:32:00.763 | INFO     | testcases.SCM.base_test:setup_method:136 - 开始测试: test_07_calculate_pricing
+2025-04-22 17:32:00.768 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 销售订单创建初始化
+2025-04-22 17:32:00.897 | DEBUG    | testcases.SCM.SO.test_01_create:test_01_init_sales_order:75 - 销售人员信息: {'id': 14094003, 'context': {}, 'name': '章昂'}
+2025-04-22 17:32:00.898 | INFO     | utils.LogUtil:info:33 - 销售订单创建初始化测试通过
+2025-04-22 17:32:00.902 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 查询客户信息
+2025-04-22 17:32:01.014 | DEBUG    | testcases.SCM.SO.test_01_create:test_02_query_customer_info:86 - 客户信息查询响应: {'custPersonName': '李月汝', 'addrDetail': '佛山市禅城区季华五路28号', 'addrId': {'id': 70002638}, 'custPhone': '18378999655'}
+2025-04-22 17:32:01.015 | INFO     | utils.LogUtil:info:33 - 客户信息查询测试通过
+2025-04-22 17:32:01.016 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 查询销售组织列表
+2025-04-22 17:32:01.136 | DEBUG    | testcases.SCM.SO.test_01_create:test_04_query_sales_organization:135 - 销售组织列表查询响应: [{'orgCode': 'AUTOTEST_SLS_ORG', 'orgName': '销售组织(自动化)', 'orgStatus': 'ENABLED', 'orgBusinessTypeCode': None, 'comOrgId': {'id': 14507001}, 'id': 14579001}]
+2025-04-22 17:32:01.137 | INFO     | testcases.SCM.SO.test_01_create:test_04_query_sales_organization:139 - 销售组织列表查询测试通过: {'orgCode': 'AUTOTEST_SLS_ORG', 'orgName': '销售组织(自动化)', 'orgStatus': 'ENABLED', 'orgBusinessTypeCode': None, 'comOrgId': {'id': 14507001}, 'id': 14579001}
+2025-04-22 17:32:01.138 | INFO     | utils.LogUtil:info:33 - 销售组织列表查询测试通过
+2025-04-22 17:32:01.139 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 自动定价
+2025-04-22 17:32:01.229 | DEBUG    | testcases.SCM.SO.test_01_create:test_07_calculate_pricing:278 - 自动定价响应数据: {
+  "context": {},
+  "soDocDate": 1745251200000,
+  "baseCurrId": {
+    "id": 2000001
+  },
+  "slsCurrId": {
+    "id": 2000001
+  },
+  "exchRate": 1,
+  "slsOrgId": {
+    "id": 14579001
+  },
+  "slsComId": {
+    "id": 14373001
+  },
+  "slsDcId": {
+    "id": 14378001
+  },
+  "soTypeId": {
+    "id": 2101001
+  },
+  "custId": {
+    "id": 2059001
+  },
+  "addrId": {
+    "id": 70002638
+  },
+  "custPersonName": "\u674e\u6708\u6c5d",
+  "custPhone": "18378999655",
+  "slsPerson": {
+    "id": 14094003
+  },
+  "slsPersonName": "\u7ae0\u6602",
+  "slsPhone": "17376596912",
+  "currExchangeRateType": 2000001,
+  "priceCalcDate": 1745314321139,
+  "reCalculate": false,
+  "addrDetail": "\u4f5b\u5c71\u5e02\u7985\u57ce\u533a\u5b63\u534e\u4e94\u8def28\u53f7",
+  "partnerCheck": false,
+  "matQualificationCheck": false,
+  "whetherPrice": false,
+  "syncSubmit": false,
+  "isFixedExchRate": false
+}
+2025-04-22 17:32:01.230 | INFO     | utils.LogUtil:info:33 - 自动定价测试通过
