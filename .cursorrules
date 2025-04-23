@@ -16,10 +16,14 @@ project_structure:
   - config/                # 配置文件目录
   - docs/                  # 文档目录
   - reports/              # 测试报告目录
-  - requirements/         # 依赖管理目录
-    - requirements.txt    # 生产环境依赖
-    - requirements-dev.txt # 开发环境依赖
-    - requirements-test.txt # 测试环境依赖
+  - requirements.txt    # 环境依赖
+  - README.md           # 项目说明
+  - .cursorrules       # 项目规则
+  - .gitignore        # git忽略文件
+  - .env              # 环境变量
+  - .pytest.ini       # pytest 配置
+  - run_test.sh       # 测试执行脚本
+
 
 # 2. Code Style
 code_style:

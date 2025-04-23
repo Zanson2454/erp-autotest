@@ -16,7 +16,7 @@ project_root = os.path.abspath(os.path.join(current_dir, "..", "..", ".."))
 sys.path.insert(0, project_root)
 
 from common.login_manager import LoginManager
-from config.config import Config
+from config.config_deleted import Config
 from testcases.SCM.scm_init import InitSQL
 from utils.AssertUtil import AssertHelper
 from utils.LogUtil import Loggers

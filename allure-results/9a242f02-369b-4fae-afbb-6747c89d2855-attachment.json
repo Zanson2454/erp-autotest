@@ -1,0 +1,33 @@
+{
+  "soTypeCode": "STND",
+  "soTypeName": "标准销售",
+  "partnerProcedureHeadRef": {
+    "id": 14005002
+  },
+  "attachmentProcedureHeadRef": null,
+  "status": "ENABLED",
+  "soTypeDesc": "标准销售",
+  "genTextTypeRef": null,
+  "isRev": false,
+  "isSubmitApproval": true,
+  "isModifyApproval": false,
+  "currExchangeRateType": {
+    "id": 2000001
+  },
+  "btClass": "SALES",
+  "effectiveDays": null,
+  "syncPrice": false,
+  "isDefault": false,
+  "id": 2101001,
+  "createdBy": {
+    "id": 27
+  },
+  "updatedBy": {
+    "id": 618373053188357
+  },
+  "createdAt": 1685108645000,
+  "updatedAt": 1744178454000,
+  "version": 65,
+  "deleted": 0,
+  "originOrgId": 0
+}

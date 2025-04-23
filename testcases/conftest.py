@@ -19,24 +19,39 @@ from testcases.SCM.base_test import DecimalEncoder
 
 @pytest.fixture(scope="session", autouse=True)
 def env_setup(request):
-    """测试环境设置"""
+    """测试环境设置
+    作用：设置测试环境（dev/test/prod）
+    范围：session级别，整个测试会话只执行一次
+    自动执行：autouse=True，无需显式调用
+    """
     env = request.config.getoption("--env")
     logger.info(f"当前测试环境: {env}")
     return env
 
 def pytest_addoption(parser):
-    """添加命令行参数"""
+    """添加命令行参数
+    作用：添加自定义命令行参数
+    参数：--env，用于指定测试环境
+    默认值：test
+    """
     parser.addoption(
         "--env",
         action="store",
-        default="dev",
+        default="test",
         help="测试环境：dev/test/prod"
     )
 
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     """
-    用于向测试用例中添加用例的开始时间、内部注释，和失败截图等
+    测试报告钩子函数
+    作用：增强测试报告，添加额外信息
+    功能：
+    1. 添加测试用例注释
+    2. 记录失败信息
+    3. 记录请求和响应信息
+    4. 记录异常堆栈
+    5. 记录测试执行时间
     """
     outcome = yield
     report = outcome.get_result()
@@ -106,7 +121,15 @@ def pytest_runtest_makereport(item, call):
 
 @pytest.fixture(autouse=True)
 def allure_env_info(request):
-    """添加环境信息到Allure报告"""
+    """Allure环境信息
+    作用：添加环境信息到Allure报告
+    功能：
+    1. 记录测试环境
+    2. 记录Python版本
+    3. 记录Pytest版本
+    4. 记录Allure版本
+    自动执行：autouse=True，无需显式调用
+    """
     # 使用 allure.environment 的正确方式
     env_info = {
         "Environment": request.config.getoption("--env"),

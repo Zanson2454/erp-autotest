@@ -7,9 +7,9 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(current_dir)
 sys.path.insert(0, project_root)
     
-from config.config import Config
+from common.config_manager import ConfigManager
 
-log_path = Config.get_log_dir()  # 获取日志路径
+log_path = ConfigManager().get_logging_config()["path"]  # 获取日志路径
 t = time.strftime("%Y_%m_%d")  # 获取当前时间作为文件名
 log_extension = ".log"  # 默认日志文件扩展名
 log_level = "INFO"  # 默认日志等级

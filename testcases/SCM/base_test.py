@@ -13,7 +13,7 @@ project_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
 sys.path.insert(0, project_root)
 
 from common.login_manager import LoginManager
-from config.config import Config
+from common.config_manager import ConfigManager
 from utils.AssertUtil import AssertHelper
 from utils.LogUtil import Loggers
 from utils.MysqlUtil import DBManager
@@ -82,7 +82,7 @@ class BaseTest:
         # 初始化登录和API配置
         cls.login_manager = LoginManager()
         cls.session = cls.login_manager.login()
-        cls.base_url = Config.get_api_base_url()
+        cls.base_url = ConfigManager().get_base_url()
         
         # 初始化请求头
         cls.headers = {

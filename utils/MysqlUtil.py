@@ -13,7 +13,7 @@ from decimal import Decimal
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(BASE_DIR)
 
-from config.config import Config
+from common.config_manager import ConfigManager
 
 class DecimalEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -47,17 +47,17 @@ class DBManager:
     def connect(self):
         """建立数据库连接"""
         if not self.connection:
-            db_config = Config.get_db_config()
+            db_config = ConfigManager().get_db_config()
             self.connection = pymysql.connect(
                 host=db_config['host'],
                 port=db_config['port'],
                 user=db_config['user'],
                 password=db_config['password'],
-                database=db_config['database'],
+                database=db_config['name'],
                 charset='utf8mb4',
                 cursorclass=pymysql.cursors.DictCursor
             )
-            logger.info(f"数据库连接成功: {db_config['host']}:{db_config['port']}/{db_config['database']}")
+            logger.info(f"数据库连接成功: {db_config['host']}:{db_config['port']}/{db_config['name']}")
     
     def disconnect(self):
         """关闭数据库连接"""

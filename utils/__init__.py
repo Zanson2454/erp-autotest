@@ -1,1 +1,3 @@
-"""Utils package for ERP Auto Test Project""" 
+"""
+Utilities package for ERP Auto Test
+""" 
