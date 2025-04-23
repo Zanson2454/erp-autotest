@@ -1,7 +1,8 @@
 import os
 import sys
 import json
-import pytest
+import allure
+import pytest   
 from datetime import datetime
 from loguru import logger
 from typing import Dict, Any, Optional
@@ -93,6 +94,12 @@ class TestOrderList(BaseTest):
         
         return query_data
     
+    @allure.title("查询销售订单列表")
+    @allure.description("""
+    测试步骤：
+    1. 查询销售订单列表
+    """)
+    @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.order(1)
     @safe_api_call(error_message="查询销售订单列表失败")
     def test_01_query_orders(self):
@@ -141,6 +148,13 @@ class TestOrderList(BaseTest):
             logger.warning("\n警告：未获取到订单数据，无法提取测试数据")
             logger.debug(f"响应数据结构: {json.dumps(response['data'], cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
 
+    
+    @allure.title("按订单编号查询销售订单列表")
+    @allure.description("""
+    测试步骤：
+    1. 按订单编号查询销售订单列表
+    """)
+    @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.order(2)
     @safe_api_call(error_message="按订单编号查询销售订单列表失败")
     def test_02_query_orders_by_so_code(self):
@@ -215,6 +229,12 @@ class TestOrderList(BaseTest):
             
         logger.info(f"\n成功查询到 {len(nested_data)} 条匹配的订单数据")
 
+    @allure.title("按单据状态查询销售订单列表")
+    @allure.description("""
+    测试步骤：
+    1. 按单据状态查询销售订单列表
+    """)
+    @allure.severity(allure.severity_level.CRITICAL)    
     @pytest.mark.order(3)
     @pytest.mark.parametrize("so_status", ["DRAFT", "EFFECT", "APPROVING", "CANCELLED"])
     @safe_api_call(error_message="按单据状态查询销售订单列表失败")
@@ -323,6 +343,13 @@ class TestOrderList(BaseTest):
             
         logger.info(f"\n成功查询到 {len(nested_data)} 条状态为 {so_status} 的订单数据")
 
+
+    @allure.title("按单据类型查询销售订单列表")
+    @allure.description("""
+    测试步骤：
+    1. 按单据类型查询销售订单列表
+    """)
+    @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.order(4)
     @safe_api_call(error_message="按单据类型查询销售订单列表失败")
     def test_04_query_orders_by_so_type(self):
@@ -418,6 +445,13 @@ class TestOrderList(BaseTest):
             
         logger.info(f"\n成功查询到 {len(nested_data)} 条匹配的订单数据")
 
+
+    @allure.title("按客户查询销售订单列表")
+    @allure.description("""
+    测试步骤：
+    1. 按客户查询销售订单列表
+    """)
+    @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.order(5)
     @safe_api_call(error_message="按客户查询销售订单列表失败")
     def test_05_query_orders_by_customer(self):

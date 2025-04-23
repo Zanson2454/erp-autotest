@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import pytest
+import allure
 from decimal import Decimal
 from datetime import datetime
 from loguru import logger
@@ -104,6 +105,12 @@ class TestSalesOrderOperator(BaseTest):
         self.logger.info(f"\n查询到的草稿态订单数据: {json.dumps(self.test_data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
         return self.test_data
 
+    @allure.title("查询销售订单详情")
+    @allure.description("""
+    测试步骤：
+    1. 查询销售订单详情
+    """)
+    @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.order(1)
     @safe_api_call(error_message="查询销售订单详情失败")
     def test_01_query_order_detail(self):
@@ -143,6 +150,12 @@ class TestSalesOrderOperator(BaseTest):
         except Exception as e:
             raise e
 
+    @allure.title("销售订单编辑提交")
+    @allure.description("""
+    测试步骤：
+    1. 销售订单编辑提交
+    """)
+    @allure.severity(allure.severity_level.CRITICAL)    
     @pytest.mark.order(2)
     @safe_api_call(error_message="销售订单编辑提交失败")
     def test_02_submit_sales_order_edit(self):
@@ -173,6 +186,13 @@ class TestSalesOrderOperator(BaseTest):
         logger.info("销售订单编辑提交成功")
 
 
+
+    @allure.title("销售订单列表提交")
+    @allure.description("""
+    测试步骤：
+    1. 销售订单列表提交
+    """)
+    @allure.severity(allure.severity_level.CRITICAL)    
     @pytest.mark.order(3)
     @safe_api_call(error_message="销售订单列表提交失败")
     def test_03_manual_submit_sales_order(self):
@@ -267,6 +287,12 @@ class TestSalesOrderOperator(BaseTest):
             logger.error(f"取消提交订单失败: {str(e)}")
             raise
 
+    @allure.title("作废销售订单")
+    @allure.description("""
+    测试步骤：
+    1. 作废销售订单
+    """)
+    @allure.severity(allure.severity_level.CRITICAL)    
     @pytest.mark.order(5)
     @safe_api_call(error_message="作废销售订单失败")
     def test_05_repeal_sales_order(self):
@@ -329,6 +355,12 @@ class TestSalesOrderOperator(BaseTest):
             logger.error(f"作废订单失败: {str(e)}")
             raise
 
+    @allure.title("冻结销售订单")
+    @allure.description("""
+    测试步骤：
+    1. 冻结销售订单
+    """)
+    @allure.severity(allure.severity_level.CRITICAL)    
     @pytest.mark.order(6)
     @safe_api_call(error_message="冻结销售订单失败")
     def test_06_freeze_sales_order(self):
@@ -397,6 +429,12 @@ class TestSalesOrderOperator(BaseTest):
             logger.error(f"冻结订单失败: {str(e)}")
             raise
 
+    @allure.title("复制销售订单")
+    @allure.description("""
+    测试步骤：
+    1. 复制销售订单
+    """)
+    @allure.severity(allure.severity_level.CRITICAL)    
     @pytest.mark.order(7)
     @safe_api_call(error_message="复制销售订单失败")
     def test_07_copy_sales_order(self):
@@ -461,6 +499,12 @@ class TestSalesOrderOperator(BaseTest):
             logger.error(f"复制订单失败: {str(e)}")
             raise
 
+    @allure.title("提交复制的销售订单")
+    @allure.description("""
+    测试步骤：
+    1. 提交复制的销售订单
+    """)
+    @allure.severity(allure.severity_level.CRITICAL)    
     @pytest.mark.order(8)
     @safe_api_call(error_message="提交复制的销售订单失败")
     def test_08_submit_copied_sales_order(self):

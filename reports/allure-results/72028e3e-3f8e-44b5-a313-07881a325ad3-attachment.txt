@@ -1,2 +1,0 @@
-[32m2025-04-22 17:52:36.461[0m | [1mINFO    [0m | [36mtestcases.SCM.base_test[0m:[36msetup_method[0m:[36m136[0m - [1m开始测试: test_04_query_sales_organization[0m
-[32m2025-04-22 17:52:36.472[0m | [1mINFO    [0m | [36mtestcases.SCM.base_test[0m:[36m_make_request[0m:[36m155[0m - [1m发送请求: 查询销售组织列表[0m

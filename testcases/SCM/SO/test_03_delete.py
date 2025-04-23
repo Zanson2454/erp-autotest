@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import pytest
+import allure
 from datetime import datetime
 from loguru import logger
 from typing import Dict, Any, Optional
@@ -70,7 +71,12 @@ class TestOrderDelete(BaseTest):
             }
         }
 
-    
+    @allure.title("删除销售订单")
+    @allure.description("""
+    测试步骤：
+    1. 删除销售订单
+    """)
+    @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.order(1)
     @safe_api_call(error_message="删除销售订单失败")
     def test_01_delete_order(self):
@@ -142,7 +148,12 @@ class TestOrderDelete(BaseTest):
         assert deleted_record[0]['deleted'] != 0, f"订单 {self.order_id} 未被标记为删除状态"
         logger.info(f"订单 {self.order_id} 在数据库中已标记为删除状态")
 
-    
+    @allure.title("批量删除销售订单")
+    @allure.description("""
+    测试步骤：
+    1. 批量删除销售订单
+    """)
+    @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.order(2)
     @safe_api_call(error_message="批量删除销售订单失败")
     def test_02_batch_delete_orders(self):

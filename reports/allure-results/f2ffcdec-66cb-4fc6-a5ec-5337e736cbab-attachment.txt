@@ -1,0 +1,25 @@
+2025-04-23 10:54:08.348 | INFO     | utils.MysqlUtil:__init__:36 - 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:54:08.349 | INFO     | utils.MysqlUtil:__init__:36 - 数据库管理器初始化完成，运行时模式: False
+2025-04-23 10:54:08.350 | INFO     | utils.LogUtil:info:33 - 内存缓存命中：使用缓存的SCM初始化数据
+2025-04-23 10:54:08.351 | DEBUG    | common.login_manager:login:47 - 使用默认账号: 17376596912
+2025-04-23 10:54:08.715 | DEBUG    | common.login_manager:login:70 - 登录成功
+2025-04-23 10:54:09.149 | INFO     | utils.LogUtil:info:33 - 测试类初始化完成
+2025-04-23 10:54:09.241 | INFO     | testcases.SCM.base_test:setup_method:136 - 开始测试: test_01_query_orders
+2025-04-23 10:54:09.249 | INFO     | test_02_orderlist_query:setup_method:40 - 已加载通用查询参数
+2025-04-23 10:54:09.250 | INFO     | test_02_orderlist_query:setup_method:57 - 初始化新的测试数据
+2025-04-23 10:54:09.252 | INFO     | test_02_orderlist_query:setup_method:61 - 开始执行测试方法: test_01_query_orders
+2025-04-23 10:54:09.252 | INFO     | test_02_orderlist_query:setup_method:65 - 初始化测试数据完成
+2025-04-23 10:54:09.257 | INFO     | test_02_orderlist_query:test_01_query_orders:112 - 
+准备发送请求...
+2025-04-23 10:54:09.258 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 查询销售订单列表
+2025-04-23 10:54:09.537 | INFO     | test_02_orderlist_query:test_01_query_orders:142 - 
+提取的测试数据: {
+  "so_code": "SO002424",
+  "so_type_id": 2101001,
+  "so_status": "EFFECT",
+  "sls_org_id": 14579001,
+  "cust_id": 2059001,
+  "created_by": 540175374525637
+}
+2025-04-23 10:54:09.538 | INFO     | test_02_orderlist_query:test_01_query_orders:146 - 
+已将测试数据保存到类属性

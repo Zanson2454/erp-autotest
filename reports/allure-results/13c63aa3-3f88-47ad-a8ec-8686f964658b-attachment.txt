@@ -1,4 +1,0 @@
-2025-04-22 17:43:21.877 | INFO     | testcases.SCM.base_test:setup_method:136 - 开始测试: test_02_query_customer_info
-2025-04-22 17:43:21.881 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 查询客户信息
-2025-04-22 17:43:22.016 | DEBUG    | testcases.SCM.SO.test_01_create:test_02_query_customer_info:86 - 客户信息查询响应: {'custPersonName': '李月汝', 'addrDetail': '佛山市禅城区季华五路28号', 'addrId': {'id': 70002638}, 'custPhone': '18378999655'}
-2025-04-22 17:43:22.017 | INFO     | utils.LogUtil:info:33 - 客户信息查询测试通过

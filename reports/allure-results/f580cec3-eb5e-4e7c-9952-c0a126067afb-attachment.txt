@@ -1,0 +1,77 @@
+2025-04-23 10:54:35.846 | INFO     | testcases.SCM.base_test:setup_method:136 - 开始测试: test_06_freeze_sales_order
+2025-04-23 10:54:35.852 | INFO     | test_04_operator:test_06_freeze_sales_order:379 - 执行查询: 
+            SELECT id, so_code, so_status, freeze_type 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            AND freeze_type = 'NU_FREEZE'
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+            
+2025-04-23 10:54:36.088 | INFO     | utils.MysqlUtil:connect:60 - 数据库连接成功: rm-bp1f14585v00oh99t.mysql.rds.aliyuncs.com:3306/terp_test
+2025-04-23 10:54:36.165 | INFO     | utils.MysqlUtil:execute_query:108 - 
+==================================================
+执行SQL查询:
+
+            SELECT id, so_code, so_status, freeze_type 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            AND freeze_type = 'NU_FREEZE'
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+            
+参数: None
+结果:
+[
+  {
+    "id": 16379082,
+    "so_code": "SO002428",
+    "so_status": "EFFECT",
+    "freeze_type": "NU_FREEZE"
+  }
+]
+==================================================
+2025-04-23 10:54:36.191 | DEBUG    | utils.MysqlUtil:cursor:83 - 数据库事务已提交
+2025-04-23 10:54:36.192 | INFO     | utils.MysqlUtil:disconnect:67 - 数据库连接已关闭
+2025-04-23 10:54:36.194 | DEBUG    | utils.MysqlUtil:cursor:91 - 数据库游标已关闭
+2025-04-23 10:54:36.195 | INFO     | test_04_operator:test_06_freeze_sales_order:390 - 找到可冻结订单: ID=16379082, 订单号=SO002428
+2025-04-23 10:54:36.196 | INFO     | test_04_operator:test_06_freeze_sales_order:404 - 冻结订单请求URL: https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_HEAD_FREEZE_EVENT_SERVICE?tmodule=ERP_SCM
+2025-04-23 10:54:36.197 | INFO     | test_04_operator:test_06_freeze_sales_order:405 - 冻结订单请求数据: {
+  "params": {
+    "request": {
+      "id": 16379082
+    }
+  }
+}
+2025-04-23 10:54:36.274 | INFO     | test_04_operator:test_06_freeze_sales_order:410 - 冻结订单响应数据: {
+  "requestId": "274fe81a-1086835",
+  "success": true,
+  "data": {
+    "data": null
+  }
+}
+2025-04-23 10:54:36.573 | INFO     | utils.MysqlUtil:connect:60 - 数据库连接成功: rm-bp1f14585v00oh99t.mysql.rds.aliyuncs.com:3306/terp_test
+2025-04-23 10:54:36.598 | INFO     | utils.MysqlUtil:execute_query:108 - 
+==================================================
+执行SQL查询:
+
+            SELECT id, so_code, so_status, freeze_type 
+            FROM sls_so_head_tr 
+            WHERE id = 16379082
+            
+参数: None
+结果:
+[
+  {
+    "id": 16379082,
+    "so_code": "SO002428",
+    "so_status": "EFFECT",
+    "freeze_type": "ALL_FREEZE"
+  }
+]
+==================================================
+2025-04-23 10:54:36.665 | DEBUG    | utils.MysqlUtil:cursor:83 - 数据库事务已提交
+2025-04-23 10:54:36.665 | INFO     | utils.MysqlUtil:disconnect:67 - 数据库连接已关闭
+2025-04-23 10:54:36.666 | DEBUG    | utils.MysqlUtil:cursor:91 - 数据库游标已关闭
+2025-04-23 10:54:36.667 | INFO     | test_04_operator:test_06_freeze_sales_order:426 - 订单 16379082 冻结成功

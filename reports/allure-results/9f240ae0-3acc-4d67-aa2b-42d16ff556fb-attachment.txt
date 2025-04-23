@@ -1,1 +1,0 @@
-[32m2025-04-22 17:52:38.112[0m | [1mINFO    [0m | [36mtestcases.SCM.base_test[0m:[36msetup_method[0m:[36m136[0m - [1m开始测试: test_08_save_sales_order[0m

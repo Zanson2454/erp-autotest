@@ -1,3 +1,0 @@
-[32m2025-04-22 17:57:42.950[0m | [1mINFO    [0m | [36mtestcases.SCM.base_test[0m:[36msetup_method[0m:[36m136[0m - [1m开始测试: test_03_query_partner[0m
-[32m2025-04-22 17:57:42.953[0m | [1mINFO    [0m | [36mtestcases.SCM.base_test[0m:[36m_make_request[0m:[36m155[0m - [1m发送请求: 查询相关方[0m
-[32m2025-04-22 17:57:43.100[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m相关方查询测试通过[0m

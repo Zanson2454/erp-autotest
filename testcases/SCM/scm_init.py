@@ -172,6 +172,8 @@ class InitSQL:
         except Exception as e:
             self.logger.error(f"初始化SCM SQL时出错: {str(e)}")
             raise
+        
+
 
 if __name__ == "__main__":
     # 执行初始化

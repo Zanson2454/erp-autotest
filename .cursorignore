@@ -1,0 +1,22 @@
+# 忽略静态文件
+/static/*
+/media/*
+
+# 忽略迁移文件
+*/migrations/*
+
+# 忽略Python编译文件
+*.pyc
+__pycache__/
+
+# 忽略IDE配置文件
+.idea/
+.vscode/
+
+# 忽略虚拟环境
+venv/
+.env/
+
+# 忽略日志文件
+*.log
+logs/

@@ -1,3 +1,0 @@
-2025-04-22 17:43:20.412 | INFO     | testcases.SCM.base_test:setup_method:136 - 开始测试: test_03_query_orders_by_status
-2025-04-22 17:43:20.419 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 按状态查询: CANCELLED
-2025-04-22 17:43:20.487 | ERROR    | testcases.SCM.base_test:_make_request:171 - 请求失败: 500 Server Error: Internal Server Error for url: https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$sls_so_head_tr_PAGING_DATA_SERVICE
