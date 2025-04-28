@@ -23,21 +23,6 @@ database:
     name: "terp_test"
 
 
-# 日志配置
-logging:
-  path: "logs"
-  level: "INFO"
-  format: "json"
-  rotation: "daily"
-  retention: "7 days"
-  log_dir: "logs"
-
-# 超时配置
-timeouts:
-  api_request: 30  # API请求超时时间（秒）
-  page_load: 60    # 页面加载超时时间（秒）
-  element_wait: 10 # 元素等待超时时间（秒）
-
 # 测试数据配置
 test_data:
   default_language: "zh_CN"
@@ -51,25 +36,3 @@ security:
     - "https://t-erp-portal-test.app.terminus.io"
     - "https://t-erp-portal-test.app.terminus.io:443"
 
-# 报告配置
-reporting:
-  allure:
-    report_dir: "reports/allure"
-    results_dir: "reports/allure-results"
-  html:
-    report_dir: "reports/html"
-  junit:
-    report_dir: "reports/junit"
-
-# 性能监控配置
-performance:
-  monitor_interval: 5  # 监控间隔（秒）
-  metrics:
-    - cpu_usage
-    - memory_usage
-    - disk_usage
-    - network_io
-  thresholds:
-    cpu_usage: 80
-    memory_usage: 80
-    disk_usage: 80 

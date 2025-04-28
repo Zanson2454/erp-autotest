@@ -8,15 +8,27 @@ class ConfigManager:
     
     def __init__(self, config_dir: str = "config"):
         self.config_dir = Path(config_dir)
+        self.base_config: Dict[str, Any] = {}
         self.env_config: Dict[str, Any] = {}
         self.api_config: Dict[str, Any] = {}
         self.db_config: Dict[str, Any] = {}
         self._ensure_config_dir()
+        self._load_base_config()
     
     def _ensure_config_dir(self):
         """确保配置目录存在"""
         (self.config_dir / "env").mkdir(parents=True, exist_ok=True)
         (self.config_dir / "api").mkdir(parents=True, exist_ok=True)
+    
+    def _load_base_config(self):
+        """加载基础配置"""
+        base_config_file = self.config_dir / "env" / "base.yaml"
+        if not base_config_file.exists():
+            logger.error(f"基础配置文件不存在: {base_config_file}")
+            raise FileNotFoundError(f"基础配置文件不存在: {base_config_file}")
+            
+        with open(base_config_file, 'r', encoding='utf-8') as f:
+            self.base_config = yaml.safe_load(f)
     
     def load_env_config(self, env: str = "test") -> Dict[str, Any]:
         """加载环境配置
@@ -37,8 +49,28 @@ class ConfigManager:
             
         with open(config_file, 'r', encoding='utf-8') as f:
             config = yaml.safe_load(f)
-            self.env_config[env] = config
-            return config
+            # 合并基础配置和环境特定配置
+            merged_config = self._merge_configs(self.base_config, config)
+            self.env_config[env] = merged_config
+            return merged_config
+    
+    def _merge_configs(self, base_config: Dict[str, Any], env_config: Dict[str, Any]) -> Dict[str, Any]:
+        """合并基础配置和环境特定配置
+        
+        Args:
+            base_config: 基础配置
+            env_config: 环境特定配置
+            
+        Returns:
+            合并后的配置字典
+        """
+        merged = base_config.copy()
+        for key, value in env_config.items():
+            if key in merged and isinstance(merged[key], dict) and isinstance(value, dict):
+                merged[key] = self._merge_configs(merged[key], value)
+            else:
+                merged[key] = value
+        return merged
     
     def get_base_url(self, env: str = "test") -> str:
         """获取基础URL
@@ -101,15 +133,15 @@ class ConfigManager:
         if service in self.api_config:
             return self.api_config[service]
             
-        config_file = self.config_dir / "api" / "api_config.yaml"
+        config_file = self.config_dir / "api" / f"{service}.yaml"
         if not config_file.exists():
             logger.error(f"API配置文件不存在: {config_file}")
             raise FileNotFoundError(f"API配置文件不存在: {config_file}")
             
         with open(config_file, 'r', encoding='utf-8') as f:
             config = yaml.safe_load(f)
-            self.api_config = config
-            return config.get(service, {})
+            self.api_config[service] = config
+            return config
     
     def get_auth_config(self, env: str = "test") -> Dict[str, Any]:
         """获取认证配置
@@ -133,7 +165,7 @@ class ConfigManager:
             超时配置字典
         """
         config = self.load_env_config(env)
-        return config.get("timeouts", {})
+        return config.get("base", {}).get("timeouts", {})
     
     def get_logging_config(self, env: str = "test") -> Dict[str, Any]:
         """获取日志配置
@@ -145,14 +177,14 @@ class ConfigManager:
             日志配置字典
         """
         config = self.load_env_config(env)
-        return config.get("logging", {}) 
-
+        return config.get("base", {}).get("logging", {})
+    
     def get_trantor_version(self, env: str = "test") -> str:
         """获取Trantor版本
         
         Args:
             env: 环境名称，默认为 'test'
-
+            
         Returns:
             Trantor版本
         """

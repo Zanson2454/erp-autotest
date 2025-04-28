@@ -1,15 +1,14 @@
 from loguru import logger
 import time
-import os,sys
+import os
+import sys
+from pathlib import Path
 
-# 添加项目根目录到 Python 路径
-current_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.dirname(current_dir)
-sys.path.insert(0, project_root)
-    
+# 获取根目录
 from common.config_manager import ConfigManager
 
-log_path = ConfigManager().get_logging_config()["path"]  # 获取日志路径
+# 获取日志路径
+log_path = ConfigManager().get_logging_config()["path"]
 t = time.strftime("%Y_%m_%d")  # 获取当前时间作为文件名
 log_extension = ".log"  # 默认日志文件扩展名
 log_level = "INFO"  # 默认日志等级
@@ -29,20 +28,25 @@ class Loggers:
                rotation="00:00", retention='7 days',
                encoding="utf-8", enqueue=True)
 
-    def info(self, msg,**kwargs):
-        return logger.info(msg,**kwargs)
+    @staticmethod
+    def info(msg, *args, **kwargs):
+        return logger.info(msg, *args, **kwargs)
 
-    def debug(self, msg,**kwargs):
-        return logger.debug(msg,**kwargs)
+    @staticmethod
+    def debug(msg, *args, **kwargs):
+        return logger.debug(msg, *args, **kwargs)
 
-    def warning(self, msg,**kwargs):
-        return logger.warning(msg,**kwargs)
+    @staticmethod
+    def warning(msg, *args, **kwargs):
+        return logger.warning(msg, *args, **kwargs)
 
-    def error(self, msg,**kwargs):
-        return logger.error(msg,**kwargs)
+    @staticmethod
+    def error(msg, *args, **kwargs):
+        return logger.error(msg, *args, **kwargs)
 
-    def critical(self,msg,**kwargs):
-        return logger.critical(msg,**kwargs)
+    @staticmethod
+    def critical(msg, *args, **kwargs):
+        return logger.critical(msg, *args, **kwargs)
 
 
 if __name__ == '__main__':

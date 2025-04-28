@@ -1,0 +1,23 @@
+# 通用分页查询结构
+pagination_query: 
+  params:
+    request:
+      pageable:
+        pageNo: 1
+        pageSize: 20
+        systemParams:
+          viewCondition: null  # 将在运行时动态设置
+        conditionGroup: null   # 将在运行时动态设置
+        sortOrders:
+          - fieldAlias: "createdBy"
+            sortType: "DESC"
+
+# 通用详情查询&删除结构
+detail_query:
+  params:
+    request:
+      id: 1
+
+      
+  
+      

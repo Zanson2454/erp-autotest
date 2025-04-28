@@ -1,0 +1,44 @@
+# 基础配置
+base:
+  # API配置
+  api:
+    version: "v1"
+    timeout: 30
+    retry_attempts: 3
+    
+  # 日志配置
+  logging:
+    path: "logs"
+    level: "INFO"
+    format: "json"
+    rotation: "daily"
+    retention: "7 days"
+    
+  # 报告配置
+  reporting:
+    allure:
+      report_dir: "reports/allure"
+      results_dir: "reports/allure-results"
+    html:
+      report_dir: "reports/html"
+    junit:
+      report_dir: "reports/junit"
+      
+  # 性能监控配置
+  performance:
+    monitor_interval: 5
+    metrics:
+      - cpu_usage
+      - memory_usage
+      - disk_usage
+      - network_io
+    thresholds:
+      cpu_usage: 80
+      memory_usage: 80
+      disk_usage: 80
+      
+  # 测试数据配置
+  test_data:
+    default_language: "zh_CN"
+    default_currency: "CNY"
+    default_timezone: "Asia/Shanghai" 

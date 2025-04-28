@@ -1,0 +1,57 @@
+2025-04-28 16:40:47.850 | INFO     | testcases.SCM.base_test:setup_method:136 - 开始测试: test_04_cancel_submit_sales_order
+2025-04-28 16:40:47.852 | INFO     | test_03_operator:test_04_cancel_submit_sales_order:247 - 执行查询: 
+               SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            and  id not in (select doc_id from del_dn_item_tr  where deleted=0 and doc_id is not null)
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+        
+            
+2025-04-28 16:40:48.020 | INFO     | utils.MysqlUtil:connect:60 - 数据库连接成功: rm-bp1f14585v00oh99t.mysql.rds.aliyuncs.com:3306/terp_test
+2025-04-28 16:40:48.131 | INFO     | utils.MysqlUtil:execute_query:108 - 
+==================================================
+执行SQL查询:
+
+               SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            and  id not in (select doc_id from del_dn_item_tr  where deleted=0 and doc_id is not null)
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+        
+            
+参数: None
+结果:
+[
+  {
+    "id": 16384006,
+    "so_code": "SO002650",
+    "so_status": "EFFECT"
+  }
+]
+==================================================
+2025-04-28 16:40:48.153 | DEBUG    | utils.MysqlUtil:cursor:83 - 数据库事务已提交
+2025-04-28 16:40:48.153 | INFO     | utils.MysqlUtil:disconnect:67 - 数据库连接已关闭
+2025-04-28 16:40:48.154 | DEBUG    | utils.MysqlUtil:cursor:91 - 数据库游标已关闭
+2025-04-28 16:40:48.154 | INFO     | test_03_operator:test_04_cancel_submit_sales_order:255 - 找到已提交订单: ID=16384006, 订单号=SO002650
+2025-04-28 16:40:48.527 | INFO     | test_03_operator:test_04_cancel_submit_sales_order:274 - 取消提交订单响应数据: {
+  "requestId": "dd617133-1320532",
+  "success": false,
+  "data": null,
+  "err": {
+    "code": "V0311",
+    "msg": "扩展服务'DN_FIND_BY_PO_ACTION'执行异常",
+    "suggest": null
+  },
+  "info": {
+    "msg": "扩展服务[DN_FIND_BY_PO_ACTION]执行异常",
+    "innerMsg": "[DN_FIND_BY_PO_ACTION](io.terminus.erp.dn.adapter.admin.common.DnQueryAction#findByPo)发生异常：Unknown column 'mvm_id' in 'field list'",
+    "level": "ERROR"
+  }
+}
+2025-04-28 16:40:48.528 | ERROR    | test_03_operator:test_04_cancel_submit_sales_order:287 - 取消提交订单失败: 取消提交订单失败: {"requestId":"dd617133-1320532","success":false,"data":null,"err":{"code":"V0311","msg":"扩展服务'DN_FIND_BY_PO_ACTION'执行异常","suggest":null},"info":{"msg":"扩展服务[DN_FIND_BY_PO_ACTION]执行异常","innerMsg":"[DN_FIND_BY_PO_ACTION](io.terminus.erp.dn.adapter.admin.common.DnQueryAction#findByPo)发生异常：Unknown column 'mvm_id' in 'field list'","level":"ERROR"}}
+assert 500 == 200
+ +  where 500 = <Response [500]>.status_code

@@ -155,4 +155,7 @@ class TestOrderTypeConfig(BaseTest):
             )
     
 if __name__ == "__main__":
-    pytest.main(["-v", __file__, "--alluredir=./allure-results"])
+    pytest.main(["-v", __file__, "--alluredir=./reports/allure-results"])
+    # test = TestOrderTypeConfig()
+    # test.setup_class()
+    # test.test_01_query_order_type()

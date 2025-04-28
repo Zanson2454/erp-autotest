@@ -68,7 +68,6 @@ class TestSalesOrderCreate(BaseTest):
         """初始化销售订单"""
         url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$sls_sales_order_create_init_service"
         data = {"params": {"request": {"btClass": "SALES"}}}
-        
         result = super()._make_request(url, data, "销售订单创建初始化", extract_nested_data=True)
         # 保存销售人员信息供后续使用
         self.sls_person_obj = result["slsPerson"]
@@ -427,9 +426,9 @@ class TestSalesOrderCreate(BaseTest):
 
 
 if __name__ == "__main__":
-    # pytest.main(["-v", __file__, "--alluredir=./reports/allure-results"])
-    test = TestSalesOrderCreate()
-    test.setup_class()
-    test.test_save_sales_order()
-    test.test_submit_sales_order()
+    pytest.main(["-v", __file__, "--alluredir=./reports/allure-results"])
+    # test = TestSalesOrderCreate()
+    # test.setup_class()
+    # test.test_save_sales_order()
+    # test.test_submit_sales_order()
     

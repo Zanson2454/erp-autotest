@@ -616,8 +616,8 @@ class TestOrderList(BaseTest):
         logger.info(f"\n成功查询到 {len(nested_data)} 条匹配的订单数据")
 
 if __name__ == "__main__":
-    test = TestOrderList()
-    test.setup_method()
+    # test = TestOrderList()
+    # test.setup_method()
     # test.test_01_query_orders()
     # test.test_02_query_orders_by_so_code()
     # test.test_03_query_orders_by_status("DRAFT")
@@ -626,4 +626,4 @@ if __name__ == "__main__":
     # test.test_03_query_orders_by_status("CANCELLED")
     # test.test_04_query_orders_by_so_type()
     # test.test_05_query_orders_by_cus
-    pytest.main(["-v", __file__])
+    pytest.main(["-v", __file__, "--alluredir=./reports/allure-results"])
