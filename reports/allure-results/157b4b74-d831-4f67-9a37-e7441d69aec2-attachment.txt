@@ -1,0 +1,20 @@
+[32m2025-04-30 17:50:29.114[0m | [1mINFO    [0m | [36mutils.MysqlUtil[0m:[36m__init__[0m:[36m36[0m - [1m数据库管理器初始化完成，运行时模式: False[0m
+[32m2025-04-30 17:50:29.115[0m | [1mINFO    [0m | [36mutils.MysqlUtil[0m:[36m__init__[0m:[36m36[0m - [1m数据库管理器初始化完成，运行时模式: False[0m
+[32m2025-04-30 17:50:29.116[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m文件缓存命中：使用缓存的SCM初始化数据[0m
+[32m2025-04-30 17:50:29.117[0m | [1mINFO    [0m | [36mcommon.login_manager[0m:[36m__init__[0m:[36m19[0m - [1m初始化登录管理器[0m
+[32m2025-04-30 17:50:29.122[0m | [1mINFO    [0m | [36mcommon.login_manager[0m:[36m__init__[0m:[36m24[0m - [1mIAM URL: https://t-erp-iam-test.app.terminus.io[0m
+[32m2025-04-30 17:50:29.122[0m | [1mINFO    [0m | [36mcommon.login_manager[0m:[36m__init__[0m:[36m25[0m - [1mAPI URL: https://t-erp-portal-test.app.terminus.io[0m
+[32m2025-04-30 17:50:29.290[0m | [1mINFO    [0m | [36mcommon.login_manager[0m:[36m__init__[0m:[36m56[0m - [1m登录管理器初始化完成[0m
+[32m2025-04-30 17:50:29.291[0m | [1mINFO    [0m | [36mcommon.login_manager[0m:[36mlogin[0m:[36m69[0m - [1m开始登录流程[0m
+[32m2025-04-30 17:50:29.292[0m | [1mINFO    [0m | [36mcommon.login_manager[0m:[36mlogin[0m:[36m72[0m - [1m使用配置文件中的默认账号密码[0m
+[32m2025-04-30 17:50:29.293[0m | [1mINFO    [0m | [36mcommon.login_manager[0m:[36mlogin[0m:[36m76[0m - [1m使用账号: 17376596912[0m
+[32m2025-04-30 17:50:29.293[0m | [1mINFO    [0m | [36mcommon.login_manager[0m:[36mlogin[0m:[36m86[0m - [1m登录URL: https://t-erp-iam-test.app.terminus.io/iam/api/v1/user/login/account[0m
+[32m2025-04-30 17:50:29.413[0m | [1mINFO    [0m | [36mcommon.login_manager[0m:[36mlogin[0m:[36m92[0m - [1m登录响应状态码: 200[0m
+[32m2025-04-30 17:50:29.413[0m | [1mINFO    [0m | [36mcommon.login_manager[0m:[36mlogin[0m:[36m101[0m - [1m重定向URL: https://t-erp-portal-test.app.terminus.io/TERP_PORTAL-TERP-tpf_umwrhzbg/login[0m
+[32m2025-04-30 17:50:29.511[0m | [1mINFO    [0m | [36mcommon.login_manager[0m:[36mget_current_user[0m:[36m130[0m - [1m获取用户信息URL: https://t-erp-portal-test.app.terminus.io/api/trantor/portal/user/current[0m
+[32m2025-04-30 17:50:29.545[0m | [1mINFO    [0m | [36mcommon.login_manager[0m:[36mget_current_user[0m:[36m136[0m - [1m获取用户信息响应状态码: 200[0m
+[32m2025-04-30 17:50:29.546[0m | [1mINFO    [0m | [36mcommon.login_manager[0m:[36mlogin[0m:[36m114[0m - [1m登录成功，用户信息: {'requestId': '5db9d055-1427276', 'success': True, 'data': {'id': 540175374525637, 'username': 'zhangang', 'email': 'zhangang.26@163.com', 'mobile': '17376596912', 'nickname': '章昂', 'status': True, 'avatar': 'https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png'}}[0m
+[32m2025-04-30 17:50:29.853[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m测试类初始化完成[0m
+[32m2025-04-30 17:50:29.854[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m开始测试: test_01_query_order_type[0m
+[32m2025-04-30 17:50:29.858[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m发送请求: 查询订单类型[0m
+[32m2025-04-30 17:50:29.941[0m | [1mINFO    [0m | [36mtest_00_so_config_check[0m:[36mtest_01_query_order_type[0m:[36m87[0m - [1m找到STND记录, ID: 2101001[0m

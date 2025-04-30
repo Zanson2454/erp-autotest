@@ -1,0 +1,72 @@
+[32m2025-04-30 18:05:45.771[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m开始测试: test_04_cancel_submit_sales_order[0m
+[32m2025-04-30 18:05:45.773[0m | [1mINFO    [0m | [36mtest_03_operator[0m:[36mtest_04_cancel_submit_sales_order[0m:[36m247[0m - [1m执行查询: 
+               SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            and  id not in (select doc_id from del_dn_item_tr  where deleted=0 and doc_id is not null)
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+        
+            [0m
+[32m2025-04-30 18:05:45.919[0m | [1mINFO    [0m | [36mutils.MysqlUtil[0m:[36mconnect[0m:[36m60[0m - [1m数据库连接成功: rm-bp1f14585v00oh99t.mysql.rds.aliyuncs.com:3306/terp_test[0m
+[32m2025-04-30 18:05:46.002[0m | [1mINFO    [0m | [36mutils.MysqlUtil[0m:[36mexecute_query[0m:[36m108[0m - [1m
+==================================================
+执行SQL查询:
+
+               SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            and  id not in (select doc_id from del_dn_item_tr  where deleted=0 and doc_id is not null)
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+        
+            
+参数: None
+结果:
+[
+  {
+    "id": 16390003,
+    "so_code": "SO002813",
+    "so_status": "EFFECT"
+  }
+]
+==================================================[0m
+[32m2025-04-30 18:05:46.030[0m | [34m[1mDEBUG   [0m | [36mutils.MysqlUtil[0m:[36mcursor[0m:[36m83[0m - [34m[1m数据库事务已提交[0m
+[32m2025-04-30 18:05:46.030[0m | [1mINFO    [0m | [36mutils.MysqlUtil[0m:[36mdisconnect[0m:[36m67[0m - [1m数据库连接已关闭[0m
+[32m2025-04-30 18:05:46.031[0m | [34m[1mDEBUG   [0m | [36mutils.MysqlUtil[0m:[36mcursor[0m:[36m91[0m - [34m[1m数据库游标已关闭[0m
+[32m2025-04-30 18:05:46.031[0m | [1mINFO    [0m | [36mtest_03_operator[0m:[36mtest_04_cancel_submit_sales_order[0m:[36m255[0m - [1m找到已提交订单: ID=16390003, 订单号=SO002813[0m
+[32m2025-04-30 18:05:46.197[0m | [1mINFO    [0m | [36mtest_03_operator[0m:[36mtest_04_cancel_submit_sales_order[0m:[36m274[0m - [1m取消提交订单响应数据: {
+  "requestId": "bfed27ad-1427968",
+  "success": true,
+  "data": {
+    "data": {
+      "id": 16390003,
+      "context": {},
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false,
+      "syncSubmit": false
+    }
+  }
+}[0m
+[32m2025-04-30 18:05:46.337[0m | [1mINFO    [0m | [36mutils.MysqlUtil[0m:[36mconnect[0m:[36m60[0m - [1m数据库连接成功: rm-bp1f14585v00oh99t.mysql.rds.aliyuncs.com:3306/terp_test[0m
+[32m2025-04-30 18:05:46.398[0m | [1mINFO    [0m | [36mutils.MysqlUtil[0m:[36mexecute_query[0m:[36m108[0m - [1m
+==================================================
+执行SQL查询:
+select id,so_code,so_status from sls_so_head_tr where id=16390003
+参数: None
+结果:
+[
+  {
+    "id": 16390003,
+    "so_code": "SO002813",
+    "so_status": "DRAFT"
+  }
+]
+==================================================[0m
+[32m2025-04-30 18:05:46.417[0m | [34m[1mDEBUG   [0m | [36mutils.MysqlUtil[0m:[36mcursor[0m:[36m83[0m - [34m[1m数据库事务已提交[0m
+[32m2025-04-30 18:05:46.418[0m | [1mINFO    [0m | [36mutils.MysqlUtil[0m:[36mdisconnect[0m:[36m67[0m - [1m数据库连接已关闭[0m
+[32m2025-04-30 18:05:46.418[0m | [34m[1mDEBUG   [0m | [36mutils.MysqlUtil[0m:[36mcursor[0m:[36m91[0m - [34m[1m数据库游标已关闭[0m
+[32m2025-04-30 18:05:46.419[0m | [1mINFO    [0m | [36mtest_03_operator[0m:[36mtest_04_cancel_submit_sales_order[0m:[36m284[0m - [1m订单 None 取消提交成功[0m

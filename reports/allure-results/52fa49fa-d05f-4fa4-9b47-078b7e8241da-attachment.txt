@@ -1,0 +1,10 @@
+[32m2025-04-30 18:04:53.594[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m开始测试: test_04_query_orders_by_so_type[0m
+[32m2025-04-30 18:04:53.595[0m | [1mINFO    [0m | [36mtest_02_orderlist_query[0m:[36msetup_method[0m:[36m47[0m - [1m使用类属性中的测试数据[0m
+[32m2025-04-30 18:04:53.595[0m | [1mINFO    [0m | [36mtest_02_orderlist_query[0m:[36msetup_method[0m:[36m61[0m - [1m开始执行测试方法: test_04_query_orders_by_so_type[0m
+[32m2025-04-30 18:04:53.596[0m | [1mINFO    [0m | [36mtest_02_orderlist_query[0m:[36msetup_method[0m:[36m65[0m - [1m初始化测试数据完成[0m
+[32m2025-04-30 18:04:53.598[0m | [1mINFO    [0m | [36mtest_02_orderlist_query[0m:[36mtest_04_query_orders_by_so_type[0m:[36m416[0m - [1m
+准备发送请求...[0m
+[32m2025-04-30 18:04:53.598[0m | [1mINFO    [0m | [36mtest_02_orderlist_query[0m:[36mtest_04_query_orders_by_so_type[0m:[36m417[0m - [1m查询条件: 订单类型ID = 2101001[0m
+[32m2025-04-30 18:04:53.598[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m发送请求: 按单据类型查询销售订单列表[0m
+[32m2025-04-30 18:04:53.771[0m | [1mINFO    [0m | [36mtest_02_orderlist_query[0m:[36mtest_04_query_orders_by_so_type[0m:[36m446[0m - [1m
+成功查询到 20 条匹配的订单数据[0m

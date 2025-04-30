@@ -153,7 +153,7 @@ class ConfigManager:
             认证配置字典
         """
         config = self.load_env_config(env)
-        return config.get("auth", {})
+        return config["tenants"]["terp"]["auth"]
     
     def get_timeout_config(self, env: str = "test") -> Dict[str, int]:
         """获取超时配置

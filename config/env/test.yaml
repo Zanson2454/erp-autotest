@@ -4,14 +4,14 @@ trantor_version: "2.5.25.0130.0-SNAPSHOT"
 # 基础配置
 base_url: "https://t-erp-portal-test.app.terminus.io"
 iam_url: "https://t-erp-iam-test.app.terminus.io"
-api_version: "v1"
 
 # 认证配置
-auth:
-  username: "17376596912"
-  password: "Anson2454@"
-  token_expiry: 3600  # token过期时间（秒）
-  retry_attempts: 3   # 重试次数
+tenants:
+  terp:
+    name: "terp"
+    auth:
+      username: "17376596912"
+      password: "Anson2454@"
 
 # 数据库配置
 database:
@@ -22,17 +22,4 @@ database:
     password: "43sVPCQ2pE%g55bc"
     name: "terp_test"
 
-
-# 测试数据配置
-test_data:
-  default_language: "zh_CN"
-  default_currency: "CNY"
-  default_timezone: "Asia/Shanghai"
-
-# 安全配置
-security:
-  ssl_verify: true
-  allowed_origins:
-    - "https://t-erp-portal-test.app.terminus.io"
-    - "https://t-erp-portal-test.app.terminus.io:443"
 
