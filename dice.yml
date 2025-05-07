@@ -1,0 +1,23 @@
+version: "2.0"
+meta: {}
+envs: {}
+services:
+  test-api:
+    ports:
+      - port: 8000
+        expose: true
+    health_check:
+      http:
+        # port 配置健康检查 http get 请求的端口，此端口应该是 ports 配置中的一个
+        port: 8000
+        # path 配置健康检查 http get 的 URI 路径
+
+        path: /docs
+        # duration 设定健康检查需要持续的检查的时间，单位是秒；这个时间值应该设置为比服务启动需要的时间更长一点
+        duration: 300
+
+    resources:
+      cpu: 0.8
+      mem: 128
+    deployments:
+      replicas: 1

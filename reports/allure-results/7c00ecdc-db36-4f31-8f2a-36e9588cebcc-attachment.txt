@@ -1,0 +1,18 @@
+[32m2025-05-07 11:35:36.431[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m开始测试: test_01_query_orders[0m
+[32m2025-05-07 11:35:36.432[0m | [1mINFO    [0m | [36mtest_02_orderlist_query[0m:[36msetup_method[0m:[36m57[0m - [1m初始化新的测试数据[0m
+[32m2025-05-07 11:35:36.433[0m | [1mINFO    [0m | [36mtest_02_orderlist_query[0m:[36msetup_method[0m:[36m61[0m - [1m开始执行测试方法: test_01_query_orders[0m
+[32m2025-05-07 11:35:36.433[0m | [1mINFO    [0m | [36mtest_02_orderlist_query[0m:[36msetup_method[0m:[36m65[0m - [1m初始化测试数据完成[0m
+[32m2025-05-07 11:35:36.436[0m | [1mINFO    [0m | [36mtest_02_orderlist_query[0m:[36mtest_01_query_orders[0m:[36m112[0m - [1m
+准备发送请求...[0m
+[32m2025-05-07 11:35:36.437[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m发送请求: 查询销售订单列表[0m
+[32m2025-05-07 11:35:36.587[0m | [1mINFO    [0m | [36mtest_02_orderlist_query[0m:[36mtest_01_query_orders[0m:[36m142[0m - [1m
+提取的测试数据: {
+  "so_code": "SO002869",
+  "so_type_id": 2101001,
+  "so_status": "EFFECT",
+  "sls_org_id": 14139002,
+  "cust_id": 2125006,
+  "created_by": 643874941128517
+}[0m
+[32m2025-05-07 11:35:36.588[0m | [1mINFO    [0m | [36mtest_02_orderlist_query[0m:[36mtest_01_query_orders[0m:[36m146[0m - [1m
+已将测试数据保存到类属性[0m

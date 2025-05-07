@@ -1,0 +1,69 @@
+version: "1.1"
+name: "CI Pipeline"
+stages:
+  - stage:
+      - git-checkout:
+          alias: git-checkout
+          description: 代码仓库克隆
+          params:
+            depth: 1
+
+  - stage:
+      - script:
+          alias: lint
+          description: 代码风格检查
+          commands:
+            - cd ${git-checkout}
+            - ruff check .
+
+      - script:
+          alias: type-check
+          description: 类型检查
+          commands:
+            - cd ${git-checkout}
+            - mypy .
+
+      - script:
+          alias: bandit
+          description: 安全检查
+          commands:
+            - cd ${git-checkout}
+            - bandit -r ./ -x tests
+
+      - script:
+          alias: pytest
+          description: 自动化测试
+          commands:
+            - cd ${git-checkout}
+            - bash run_test.sh
+
+      - archive:
+          alias: archive-allure
+          description: 上传 Allure 测试报告
+          params:
+            path: ${git-checkout}/reports/allure-results
+            type: artifact
+
+  - stage:
+      - dockerfile:
+          alias: pack-testapi
+          description: 针对自定义 dockerfile 打包，产出可运行镜像
+          params:
+            path: Dockerfile
+            workdir: ${git-checkout}
+
+  - stage:
+      - release:
+          alias: release
+          description: 用于打包完成时，向dicehub 提交完整可部署的dice.yml
+          params:
+            dice_yml: ${git-checkout}/dice.yml
+            image:
+              test-api: ${pack-testapi:OUTPUT:image}
+
+  - stage:
+      - dice:
+          alias: dice
+          description: 用于 Erda 平台部署应用服务
+          params:
+            release_id_path: ${release}

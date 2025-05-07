@@ -1,0 +1,145 @@
+2025-05-06 14:38:10.891 | INFO     | utils.LogUtil:info:33 - 开始测试: test_02_query_orders_by_so_code
+2025-05-06 14:38:10.891 | INFO     | test_02_orderlist_query:setup_method:47 - 使用类属性中的测试数据
+2025-05-06 14:38:10.891 | INFO     | test_02_orderlist_query:setup_method:61 - 开始执行测试方法: test_02_query_orders_by_so_code
+2025-05-06 14:38:10.892 | INFO     | test_02_orderlist_query:setup_method:65 - 初始化测试数据完成
+2025-05-06 14:38:10.895 | INFO     | test_02_orderlist_query:test_02_query_orders_by_so_code:216 - 
+准备发送请求...
+2025-05-06 14:38:10.896 | INFO     | test_02_orderlist_query:test_02_query_orders_by_so_code:217 - 查询条件: 订单编号 = SO002829
+2025-05-06 14:38:10.897 | INFO     | utils.LogUtil:info:33 - 发送请求: 按订单编号查询销售订单列表
+2025-05-06 14:38:11.033 | INFO     | test_02_orderlist_query:test_02_query_orders_by_so_code:221 - 
+提取的嵌套数据: [
+  {
+    "soCode": "SO002829",
+    "soDocDate": 1746007548000,
+    "soExtCode": null,
+    "baseCurrId": {
+      "id": 2000001
+    },
+    "slsCurrId": {
+      "id": 2000001
+    },
+    "exchRate": 1.0,
+    "grossBaseAmt": 115.0,
+    "netBaseAmt": 101.769912,
+    "taxAmt": 13.230088,
+    "soCreateSource": "TERP门户",
+    "slsOrgId": {
+      "id": 14139002
+    },
+    "slsTmId": null,
+    "soTypeId": {
+      "soTypeCode": "STND",
+      "soTypeName": "标准销售",
+      "partnerProcedureHeadRef": {
+        "id": 14005002
+      },
+      "attachmentProcedureHeadRef": null,
+      "status": "ENABLED",
+      "soTypeDesc": "标准销售",
+      "genTextTypeRef": null,
+      "isRev": false,
+      "isSubmitApproval": true,
+      "isModifyApproval": false,
+      "currExchangeRateType": {
+        "id": 2000001
+      },
+      "btClass": "SALES",
+      "effectiveDays": null,
+      "syncPrice": false,
+      "isDefault": false,
+      "id": 2101001,
+      "createdBy": {
+        "id": 27
+      },
+      "updatedBy": {
+        "id": 477234922377861
+      },
+      "createdAt": 1685108645000,
+      "updatedAt": 1745892294000,
+      "version": 68,
+      "deleted": 0,
+      "originOrgId": 0
+    },
+    "custId": {
+      "id": 2059001
+    },
+    "custPersonName": "李月汝",
+    "custPhone": "18378999655",
+    "slsPersonName": "侯新雨",
+    "slsPhone": "15825540081",
+    "soStatus": "EFFECT",
+    "approveStatus": null,
+    "soTitle": null,
+    "soDesc": null,
+    "soNotes": null,
+    "isFixedExchRate": false,
+    "slsComId": {
+      "id": 14139001
+    },
+    "priceIdempotent": "9d5b9997e5cb6d8046028baa69b27c6a",
+    "freezeType": "NU_FREEZE",
+    "soAssociationCode": null,
+    "soBusinessStatus": null,
+    "bizRuleGroup": null,
+    "addrDetail": "佛山市禅城区季华五路28号",
+    "currExchangeRateType": {
+      "id": 2000001
+    },
+    "slsDcId": {
+      "id": 2001001
+    },
+    "btClass": "SALES",
+    "effectiveAt": null,
+    "slsPerson": {
+      "id": 14123089
+    },
+    "reCalculate": null,
+    "invOrg": null,
+    "invLoc": null,
+    "priceCalcDate": 1745994478000,
+    "deliveryInterceptFail": true,
+    "externalBuyerId": null,
+    "addrId": {
+      "id": 70002638
+    },
+    "totalAmt": 115.0,
+    "discountAmt": 0.0,
+    "discountInfo": null,
+    "platformDiscountAmt": null,
+    "merchantDiscountAmt": null,
+    "actualPaidAmt": null,
+    "freightAmt": null,
+    "buyerRemark": null,
+    "sellerRemark": null,
+    "id": 16391001,
+    "createdBy": {
+      "id": 540175374525637
+    },
+    "updatedBy": {
+      "id": 540175374525637
+    },
+    "createdAt": 1746007549000,
+    "updatedAt": 1746007549000,
+    "version": 9,
+    "deleted": 0,
+    "originOrgId": 0,
+    "slsPartnerLinks": [
+      {
+        "soId": {
+          "id": 16391001
+        },
+        "id": 16235001
+      }
+    ],
+    "soItems": [
+      {
+        "soId": {
+          "id": 16391001
+        },
+        "id": 16313001
+      }
+    ]
+  }
+]
+2025-05-06 14:38:11.034 | INFO     | test_02_orderlist_query:test_02_query_orders_by_so_code:230 - 
+成功查询到 1 条匹配的订单数据

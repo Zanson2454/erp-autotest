@@ -1,4 +1,7 @@
 #!/bin/bash
+set -e
+export PYTHONPATH=/app
+pytest --alluredir=reports/allure-results --env=test "$@"
 
 # 获取脚本所在目录的绝对路径
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -17,7 +20,7 @@ cd "$SCRIPT_DIR"
 
 # 运行测试并生成报告
 echo "Running tests and generating report..."
-PYTHONPATH="$SCRIPT_DIR" pytest testcases/SCM/SO -v \
+PYTHONPATH="$SCRIPT_DIR" pytest testcases/sls -v \
   --alluredir="$REPORT_DIR" \
   --clean-alluredir
 

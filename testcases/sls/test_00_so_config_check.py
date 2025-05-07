@@ -156,6 +156,7 @@ class TestOrderTypeConfig(BaseTest):
     
 if __name__ == "__main__":
     allure_dir = os.path.join(project_root, "reports", "allure-results")
+    logger.info(f"allure_dir: {allure_dir}")
     pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])
     # test = TestOrderTypeConfig()
     # test.setup_class()

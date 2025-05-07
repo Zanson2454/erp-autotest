@@ -1,0 +1,16 @@
+2025-05-06 14:38:12.384 | INFO     | utils.LogUtil:info:33 - 开始测试: test_05_query_orders_by_customer
+2025-05-06 14:38:12.385 | INFO     | test_02_orderlist_query:setup_method:47 - 使用类属性中的测试数据
+2025-05-06 14:38:12.385 | INFO     | test_02_orderlist_query:setup_method:61 - 开始执行测试方法: test_05_query_orders_by_customer
+2025-05-06 14:38:12.386 | INFO     | test_02_orderlist_query:setup_method:65 - 初始化测试数据完成
+2025-05-06 14:38:12.388 | INFO     | test_02_orderlist_query:test_05_query_orders_by_customer:518 - 
+准备发送请求...
+2025-05-06 14:38:12.389 | INFO     | test_02_orderlist_query:test_05_query_orders_by_customer:519 - 查询条件: 客户ID = 2059001
+2025-05-06 14:38:12.389 | INFO     | utils.LogUtil:info:33 - 发送请求: 按客户查询销售订单列表
+2025-05-06 14:38:12.530 | INFO     | test_02_orderlist_query:test_05_query_orders_by_customer:548 - 
+成功查询到 20 条匹配的订单数据
+2025-05-06 14:38:12.531 | INFO     | test_02_orderlist_query:test_05_query_orders_by_customer:601 - 
+准备发送请求...
+2025-05-06 14:38:12.532 | INFO     | test_02_orderlist_query:test_05_query_orders_by_customer:602 - 查询条件: 外部单号包含 '123'
+2025-05-06 14:38:12.532 | INFO     | utils.LogUtil:info:33 - 发送请求: 按外部单号查询销售订单列表
+2025-05-06 14:38:12.611 | WARNING  | test_02_orderlist_query:test_05_query_orders_by_customer:609 - 
+警告：未查询到匹配的订单数据

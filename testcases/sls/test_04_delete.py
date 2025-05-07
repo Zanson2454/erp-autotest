@@ -12,9 +12,9 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.abspath(os.path.join(current_dir, "..", "..", ".."))
 sys.path.insert(0, project_root)
 
-from testcases.SCM.base_test import BaseTest, DecimalEncoder
+from testcases.comm.base_test import BaseTest, DecimalEncoder
 from utils.ExceptionUtil import safe_api_call
-from testcases.SCM.SO.test_01_create import TestSalesOrderCreate
+from testcases.sls.test_01_create import TestSalesOrderCreate
 
 class TestOrderDelete(BaseTest):
     """销售订单删除测试类"""
