@@ -7,6 +7,11 @@ import allure_pytest
 from datetime import datetime
 from loguru import logger
 from typing import Dict, Any, Optional
+from common.config_manager import ConfigManager
+
+# 获取项目根目录
+def get_project_root():
+    return os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # 添加项目根目录到 Python 路径
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -155,9 +160,10 @@ class TestOrderTypeConfig(BaseTest):
             )
     
 if __name__ == "__main__":
-    allure_dir = os.path.join(project_root, "reports", "allure-results")
-    logger.info(f"allure_dir: {allure_dir}")
-    pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])
+    project_root = get_project_root()
+    reports_dir = os.path.join(project_root, "reports", "allure-results")
+    logger.info(f"reports_dir: {reports_dir}")
+    pytest.main(["-v", __file__, f"--alluredir={reports_dir}"])
     # test = TestOrderTypeConfig()
     # test.setup_class()
     # test.test_01_query_order_type()

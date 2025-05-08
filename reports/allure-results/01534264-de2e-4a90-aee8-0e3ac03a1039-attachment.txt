@@ -1,0 +1,16 @@
+2025-05-08 21:27:54.722 | INFO     | utils.LogUtil:info:33 - 开始测试: test_05_query_orders_by_customer
+2025-05-08 21:27:54.723 | INFO     | erp_autotest.testcases.sls.test_02_orderlist_query:setup_method:47 - 使用类属性中的测试数据
+2025-05-08 21:27:54.723 | INFO     | erp_autotest.testcases.sls.test_02_orderlist_query:setup_method:61 - 开始执行测试方法: test_05_query_orders_by_customer
+2025-05-08 21:27:54.723 | INFO     | erp_autotest.testcases.sls.test_02_orderlist_query:setup_method:65 - 初始化测试数据完成
+2025-05-08 21:27:54.724 | INFO     | erp_autotest.testcases.sls.test_02_orderlist_query:test_05_query_orders_by_customer:518 - 
+准备发送请求...
+2025-05-08 21:27:54.725 | INFO     | erp_autotest.testcases.sls.test_02_orderlist_query:test_05_query_orders_by_customer:519 - 查询条件: 客户ID = 2125006
+2025-05-08 21:27:54.725 | INFO     | utils.LogUtil:info:33 - 发送请求: 按客户查询销售订单列表
+2025-05-08 21:27:54.866 | INFO     | erp_autotest.testcases.sls.test_02_orderlist_query:test_05_query_orders_by_customer:548 - 
+成功查询到 12 条匹配的订单数据
+2025-05-08 21:27:54.867 | INFO     | erp_autotest.testcases.sls.test_02_orderlist_query:test_05_query_orders_by_customer:601 - 
+准备发送请求...
+2025-05-08 21:27:54.867 | INFO     | erp_autotest.testcases.sls.test_02_orderlist_query:test_05_query_orders_by_customer:602 - 查询条件: 外部单号包含 '123'
+2025-05-08 21:27:54.867 | INFO     | utils.LogUtil:info:33 - 发送请求: 按外部单号查询销售订单列表
+2025-05-08 21:27:54.938 | WARNING  | erp_autotest.testcases.sls.test_02_orderlist_query:test_05_query_orders_by_customer:609 - 
+警告：未查询到匹配的订单数据

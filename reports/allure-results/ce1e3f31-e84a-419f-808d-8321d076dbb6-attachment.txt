@@ -1,0 +1,83 @@
+2025-05-08 21:28:04.443 | INFO     | utils.MysqlUtil:__init__:36 - 数据库管理器初始化完成，运行时模式: False
+2025-05-08 21:28:04.443 | INFO     | utils.MysqlUtil:__init__:36 - 数据库管理器初始化完成，运行时模式: False
+2025-05-08 21:28:04.444 | INFO     | utils.LogUtil:info:33 - 内存缓存命中：使用缓存的SCM初始化数据
+2025-05-08 21:28:04.444 | INFO     | common.login_manager:__init__:19 - 初始化登录管理器
+2025-05-08 21:28:04.447 | INFO     | common.login_manager:__init__:24 - IAM URL: https://t-erp-iam-test.app.terminus.io
+2025-05-08 21:28:04.447 | INFO     | common.login_manager:__init__:25 - API URL: https://t-erp-portal-test.app.terminus.io
+2025-05-08 21:28:04.448 | INFO     | common.login_manager:__init__:56 - 登录管理器初始化完成
+2025-05-08 21:28:04.448 | INFO     | common.login_manager:login:69 - 开始登录流程
+2025-05-08 21:28:04.449 | INFO     | common.login_manager:login:72 - 使用配置文件中的默认账号密码
+2025-05-08 21:28:04.449 | INFO     | common.login_manager:login:76 - 使用账号: 17376596912
+2025-05-08 21:28:04.449 | INFO     | common.login_manager:login:86 - 登录URL: https://t-erp-iam-test.app.terminus.io/iam/api/v1/user/login/account
+2025-05-08 21:28:04.538 | INFO     | common.login_manager:login:92 - 登录响应状态码: 200
+2025-05-08 21:28:04.539 | INFO     | common.login_manager:login:101 - 重定向URL: https://t-erp-portal-test.app.terminus.io/TERP_PORTAL-TERP-tpf_umwrhzbg/login
+2025-05-08 21:28:04.622 | INFO     | common.login_manager:get_current_user:130 - 获取用户信息URL: https://t-erp-portal-test.app.terminus.io/api/trantor/portal/user/current
+2025-05-08 21:28:04.669 | INFO     | common.login_manager:get_current_user:136 - 获取用户信息响应状态码: 200
+2025-05-08 21:28:04.669 | INFO     | common.login_manager:login:114 - 登录成功，用户信息: {'requestId': '09a50fd6-1610284', 'success': True, 'data': {'id': 540175374525637, 'username': 'zhangang', 'email': 'zhangang.26@163.com', 'mobile': '17376596912', 'nickname': '章昂', 'status': True, 'avatar': 'https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png'}}
+2025-05-08 21:28:04.677 | INFO     | utils.LogUtil:info:33 - 测试类初始化完成
+2025-05-08 21:28:04.678 | INFO     | utils.LogUtil:info:33 - 开始测试: test_01_delete_order
+2025-05-08 21:28:04.679 | INFO     | erp_autotest.testcases.sls.test_04_delete:setup_method:51 - 初始化新的测试数据
+2025-05-08 21:28:04.679 | INFO     | erp_autotest.testcases.sls.test_04_delete:setup_method:55 - 开始执行测试方法: test_01_delete_order
+2025-05-08 21:28:04.679 | INFO     | erp_autotest.testcases.sls.test_04_delete:setup_method:59 - 初始化测试数据完成
+2025-05-08 21:28:04.681 | INFO     | erp_autotest.testcases.sls.test_04_delete:test_01_delete_order:109 - 执行查询: 
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'DRAFT' 
+                AND so_type_id = %s
+                AND created_by = %s
+                AND deleted = 0 
+            ORDER BY created_at DESC
+            LIMIT 1
+        
+2025-05-08 21:28:04.858 | INFO     | utils.MysqlUtil:connect:60 - 数据库连接成功: rm-bp1f14585v00oh99t.mysql.rds.aliyuncs.com:3306/terp_test
+2025-05-08 21:28:04.900 | INFO     | utils.MysqlUtil:execute_query:108 - 
+==================================================
+执行SQL查询:
+
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'DRAFT' 
+                AND so_type_id = %s
+                AND created_by = %s
+                AND deleted = 0 
+            ORDER BY created_at DESC
+            LIMIT 1
+        
+参数: (2101001, 540175374525637)
+结果:
+[
+  {
+    "id": 16395010,
+    "so_code": "SO003017",
+    "so_status": "DRAFT"
+  }
+]
+==================================================
+2025-05-08 21:28:04.969 | DEBUG    | utils.MysqlUtil:cursor:83 - 数据库事务已提交
+2025-05-08 21:28:04.969 | INFO     | utils.MysqlUtil:disconnect:67 - 数据库连接已关闭
+2025-05-08 21:28:04.970 | DEBUG    | utils.MysqlUtil:cursor:91 - 数据库游标已关闭
+2025-05-08 21:28:04.970 | INFO     | erp_autotest.testcases.sls.test_04_delete:test_01_delete_order:138 - 准备删除订单: ID = 16395010, 编号 = SO003017
+2025-05-08 21:28:04.975 | INFO     | utils.LogUtil:info:33 - 发送请求: 删除销售订单
+2025-05-08 21:28:05.086 | INFO     | erp_autotest.testcases.sls.test_04_delete:test_01_delete_order:143 - 成功删除订单: 16395010
+2025-05-08 21:28:05.266 | INFO     | utils.MysqlUtil:connect:60 - 数据库连接成功: rm-bp1f14585v00oh99t.mysql.rds.aliyuncs.com:3306/terp_test
+2025-05-08 21:28:05.336 | INFO     | utils.MysqlUtil:execute_query:108 - 
+==================================================
+执行SQL查询:
+
+            SELECT id, deleted
+            FROM sls_so_head_tr
+            WHERE id = %s
+        
+参数: (16395010,)
+结果:
+[
+  {
+    "id": 16395010,
+    "deleted": 1746710885177
+  }
+]
+==================================================
+2025-05-08 21:28:05.365 | DEBUG    | utils.MysqlUtil:cursor:83 - 数据库事务已提交
+2025-05-08 21:28:05.365 | INFO     | utils.MysqlUtil:disconnect:67 - 数据库连接已关闭
+2025-05-08 21:28:05.366 | DEBUG    | utils.MysqlUtil:cursor:91 - 数据库游标已关闭
+2025-05-08 21:28:05.366 | INFO     | erp_autotest.testcases.sls.test_04_delete:test_01_delete_order:154 - 订单 16395010 在数据库中已标记为删除状态

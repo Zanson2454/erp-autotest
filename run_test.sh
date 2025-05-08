@@ -1,29 +1,32 @@
 #!/bin/bash
-set -e
-export PYTHONPATH=/app
-pytest --alluredir=reports/allure-results --env=test "$@"
 
 # 获取脚本所在目录的绝对路径
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 REPORT_DIR="$SCRIPT_DIR/reports/allure-results"
 
-# 确保reports目录存在
-echo "Creating reports directory if not exists..."
+# 设置默认参数
+ENV="test"
+TEST_PATH="testcases"
+
+# 解析命令行参数
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --env=*)
+            ENV="${1#*=}"
+            shift
+            ;;
+        *)
+            TEST_PATH="$1"
+            shift
+            ;;
+    esac
+done
+
+# 确保报告目录存在
 mkdir -p "$REPORT_DIR"
 
-# 清除历史数据
-echo "Cleaning previous test results..."
-rm -rf "$REPORT_DIR"/*
+# 运行测试
+pytest "$TEST_PATH" -v --alluredir="$REPORT_DIR" --clean-alluredir --env="$ENV"
 
-# 切换到项目根目录
-cd "$SCRIPT_DIR"
-
-# 运行测试并生成报告
-echo "Running tests and generating report..."
-PYTHONPATH="$SCRIPT_DIR" pytest testcases/sls -v \
-  --alluredir="$REPORT_DIR" \
-  --clean-alluredir
-
-# 启动在线报告
-echo "Starting Allure report server..."
-allure serve "$REPORT_DIR" 
+# 启动 Allure 服务
+allure serve "$REPORT_DIR" --port 8080 

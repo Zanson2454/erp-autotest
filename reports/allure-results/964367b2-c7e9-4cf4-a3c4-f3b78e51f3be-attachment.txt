@@ -1,1 +1,0 @@
-[32m2025-04-30 18:02:14.336[0m | [1mINFO    [0m | [36mutils.LogUtil[0m:[36minfo[0m:[36m33[0m - [1m开始测试: test_02_query_orders_by_so_code[0m

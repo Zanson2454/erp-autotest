@@ -1,0 +1,24 @@
+2025-05-08 21:27:53.580 | INFO     | utils.LogUtil:info:33 - 开始测试: test_03_query_orders_by_status
+2025-05-08 21:27:53.580 | INFO     | erp_autotest.testcases.sls.test_02_orderlist_query:setup_method:47 - 使用类属性中的测试数据
+2025-05-08 21:27:53.580 | INFO     | erp_autotest.testcases.sls.test_02_orderlist_query:setup_method:61 - 开始执行测试方法: test_03_query_orders_by_status
+2025-05-08 21:27:53.581 | INFO     | erp_autotest.testcases.sls.test_02_orderlist_query:setup_method:65 - 初始化测试数据完成
+2025-05-08 21:27:53.583 | INFO     | erp_autotest.testcases.sls.test_02_orderlist_query:test_03_query_orders_by_status:324 - 
+准备发送请求...
+2025-05-08 21:27:53.583 | INFO     | erp_autotest.testcases.sls.test_02_orderlist_query:test_03_query_orders_by_status:325 - 查询条件: 订单状态 = DRAFT
+2025-05-08 21:27:53.584 | INFO     | utils.LogUtil:info:33 - 发送请求: 按单据状态 DRAFT 查询销售订单列表
+2025-05-08 21:27:53.646 | INFO     | erp_autotest.testcases.sls.test_02_orderlist_query:test_03_query_orders_by_status:329 - 
+收到完整响应: {
+  "requestId": "09a50fd6-1610234",
+  "success": true,
+  "data": {
+    "data": {
+      "data": null,
+      "total": 0
+    }
+  }
+}
+2025-05-08 21:27:53.647 | INFO     | utils.LogUtil:info:33 - 发送请求: 按单据状态 DRAFT 查询销售订单列表
+2025-05-08 21:27:53.728 | INFO     | erp_autotest.testcases.sls.test_02_orderlist_query:test_03_query_orders_by_status:333 - 
+提取的嵌套数据: null
+2025-05-08 21:27:53.729 | WARNING  | erp_autotest.testcases.sls.test_02_orderlist_query:test_03_query_orders_by_status:337 - 
+警告：未查询到状态为 DRAFT 的订单数据

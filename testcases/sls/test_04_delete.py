@@ -6,6 +6,11 @@ import allure
 from datetime import datetime
 from loguru import logger
 from typing import Dict, Any, Optional
+from common.config_manager import ConfigManager
+
+# 获取项目根目录
+def get_project_root():
+    return os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # 添加项目根目录到 Python 路径
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -189,7 +194,7 @@ class TestOrderDelete(BaseTest):
                 try:
                     test_create = TestSalesOrderCreate()
                     test_create.setup_class()
-                    test_create.test_08_save_sales_order()
+                    test_create.test_save_sales_order()
                     logger.info(f"成功创建第 {i+1} 条新订单")
                 except Exception as e:
                     logger.error(f"创建新订单失败: {str(e)}")
@@ -233,7 +238,9 @@ class TestOrderDelete(BaseTest):
 
 
 if __name__ == "__main__":
-    pytest.main(["-v", __file__, "--alluredir=./reports/allure-results"])
+    project_root = get_project_root()
+    reports_dir = os.path.join(project_root, "reports", "allure-results")
+    pytest.main(["-v", __file__, f"--alluredir={reports_dir}"])
     # test = TestOrderDelete()
     # test.setup_class()
     # test.test_01_delete_order()

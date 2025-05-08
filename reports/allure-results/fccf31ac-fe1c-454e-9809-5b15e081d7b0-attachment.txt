@@ -1,0 +1,70 @@
+2025-05-08 21:27:56.430 | INFO     | utils.MysqlUtil:__init__:36 - 数据库管理器初始化完成，运行时模式: False
+2025-05-08 21:27:56.430 | INFO     | utils.MysqlUtil:__init__:36 - 数据库管理器初始化完成，运行时模式: False
+2025-05-08 21:27:56.430 | INFO     | utils.LogUtil:info:33 - 内存缓存命中：使用缓存的SCM初始化数据
+2025-05-08 21:27:56.431 | INFO     | common.login_manager:__init__:19 - 初始化登录管理器
+2025-05-08 21:27:56.435 | INFO     | common.login_manager:__init__:24 - IAM URL: https://t-erp-iam-test.app.terminus.io
+2025-05-08 21:27:56.435 | INFO     | common.login_manager:__init__:25 - API URL: https://t-erp-portal-test.app.terminus.io
+2025-05-08 21:27:56.436 | INFO     | common.login_manager:__init__:56 - 登录管理器初始化完成
+2025-05-08 21:27:56.437 | INFO     | common.login_manager:login:69 - 开始登录流程
+2025-05-08 21:27:56.438 | INFO     | common.login_manager:login:72 - 使用配置文件中的默认账号密码
+2025-05-08 21:27:56.438 | INFO     | common.login_manager:login:76 - 使用账号: 17376596912
+2025-05-08 21:27:56.439 | INFO     | common.login_manager:login:86 - 登录URL: https://t-erp-iam-test.app.terminus.io/iam/api/v1/user/login/account
+2025-05-08 21:27:56.588 | INFO     | common.login_manager:login:92 - 登录响应状态码: 200
+2025-05-08 21:27:56.593 | INFO     | common.login_manager:login:101 - 重定向URL: https://t-erp-portal-test.app.terminus.io/TERP_PORTAL-TERP-tpf_umwrhzbg/login
+2025-05-08 21:27:56.694 | INFO     | common.login_manager:get_current_user:130 - 获取用户信息URL: https://t-erp-portal-test.app.terminus.io/api/trantor/portal/user/current
+2025-05-08 21:27:56.746 | INFO     | common.login_manager:get_current_user:136 - 获取用户信息响应状态码: 200
+2025-05-08 21:27:56.746 | INFO     | common.login_manager:login:114 - 登录成功，用户信息: {'requestId': 'eec63832-1610258', 'success': True, 'data': {'id': 540175374525637, 'username': 'zhangang', 'email': 'zhangang.26@163.com', 'mobile': '17376596912', 'nickname': '章昂', 'status': True, 'avatar': 'https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png'}}
+2025-05-08 21:27:56.756 | INFO     | utils.LogUtil:info:33 - 测试类初始化完成
+2025-05-08 21:27:56.759 | INFO     | utils.LogUtil:info:33 - 测试类初始化完成
+2025-05-08 21:27:56.761 | INFO     | utils.LogUtil:info:33 - 开始测试: test_01_query_order_detail
+2025-05-08 21:27:56.765 | INFO     | erp_autotest.testcases.sls.test_03_operator:test_01_query_order_detail:120 - 未找到订单ID，尝试从数据库查询
+2025-05-08 21:27:56.766 | INFO     | utils.LogUtil:info:33 - 执行查询: 
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE created_by = %s
+                AND so_status = 'DRAFT'
+                AND deleted = 0 
+            ORDER BY created_at DESC
+            LIMIT 1
+        
+2025-05-08 21:27:57.018 | INFO     | utils.MysqlUtil:connect:60 - 数据库连接成功: rm-bp1f14585v00oh99t.mysql.rds.aliyuncs.com:3306/terp_test
+2025-05-08 21:27:57.097 | INFO     | utils.MysqlUtil:execute_query:108 - 
+==================================================
+执行SQL查询:
+
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE created_by = %s
+                AND so_status = 'DRAFT'
+                AND deleted = 0 
+            ORDER BY created_at DESC
+            LIMIT 1
+        
+参数: (540175374525637,)
+结果:
+[]
+==================================================
+2025-05-08 21:27:57.145 | DEBUG    | utils.MysqlUtil:cursor:83 - 数据库事务已提交
+2025-05-08 21:27:57.150 | INFO     | utils.MysqlUtil:disconnect:67 - 数据库连接已关闭
+2025-05-08 21:27:57.151 | DEBUG    | utils.MysqlUtil:cursor:91 - 数据库游标已关闭
+2025-05-08 21:27:57.152 | INFO     | utils.LogUtil:info:33 - 未找到草稿态订单，创建新订单
+2025-05-08 21:27:57.152 | INFO     | utils.MysqlUtil:__init__:36 - 数据库管理器初始化完成，运行时模式: False
+2025-05-08 21:27:57.152 | INFO     | utils.MysqlUtil:__init__:36 - 数据库管理器初始化完成，运行时模式: False
+2025-05-08 21:27:57.153 | INFO     | utils.LogUtil:info:33 - 内存缓存命中：使用缓存的SCM初始化数据
+2025-05-08 21:27:57.153 | INFO     | common.login_manager:__init__:19 - 初始化登录管理器
+2025-05-08 21:27:57.158 | INFO     | common.login_manager:__init__:24 - IAM URL: https://t-erp-iam-test.app.terminus.io
+2025-05-08 21:27:57.158 | INFO     | common.login_manager:__init__:25 - API URL: https://t-erp-portal-test.app.terminus.io
+2025-05-08 21:27:57.170 | INFO     | common.login_manager:__init__:56 - 登录管理器初始化完成
+2025-05-08 21:27:57.170 | INFO     | common.login_manager:login:69 - 开始登录流程
+2025-05-08 21:27:57.172 | INFO     | common.login_manager:login:72 - 使用配置文件中的默认账号密码
+2025-05-08 21:27:57.174 | INFO     | common.login_manager:login:76 - 使用账号: 17376596912
+2025-05-08 21:27:57.175 | INFO     | common.login_manager:login:86 - 登录URL: https://t-erp-iam-test.app.terminus.io/iam/api/v1/user/login/account
+2025-05-08 21:27:57.307 | INFO     | common.login_manager:login:92 - 登录响应状态码: 200
+2025-05-08 21:27:57.308 | INFO     | common.login_manager:login:101 - 重定向URL: https://t-erp-portal-test.app.terminus.io/TERP_PORTAL-TERP-tpf_umwrhzbg/login
+2025-05-08 21:27:57.425 | INFO     | common.login_manager:get_current_user:130 - 获取用户信息URL: https://t-erp-portal-test.app.terminus.io/api/trantor/portal/user/current
+2025-05-08 21:27:57.456 | INFO     | common.login_manager:get_current_user:136 - 获取用户信息响应状态码: 200
+2025-05-08 21:27:57.457 | INFO     | common.login_manager:login:114 - 登录成功，用户信息: {'requestId': 'eec63832-1610259', 'success': True, 'data': {'id': 540175374525637, 'username': 'zhangang', 'email': 'zhangang.26@163.com', 'mobile': '17376596912', 'nickname': '章昂', 'status': True, 'avatar': 'https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png'}}
+2025-05-08 21:27:57.484 | INFO     | utils.LogUtil:info:33 - 测试类初始化完成
+2025-05-08 21:27:57.485 | INFO     | utils.LogUtil:info:33 - 初始化渲染数量: 40
+2025-05-08 21:27:57.486 | INFO     | utils.LogUtil:info:33 - 测试类初始化完成
+2025-05-08 21:27:57.486 | ERROR    | utils.LogUtil:error:45 - 创建新订单失败: 'TestSalesOrderCreate' object has no attribute 'test_08_save_sales_order'

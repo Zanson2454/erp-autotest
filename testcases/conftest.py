@@ -7,8 +7,16 @@ from utils.LogUtil import Loggers
 from common.config_manager import ConfigManager
 import allure
 import json
+from typing import Dict, Any
 
-project_root = os.path.dirname(os.path.abspath(__file__))
+# 获取项目根目录
+def get_project_root():
+    return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# 确保必要的目录存在
+project_root = get_project_root()
+for dir_name in ["reports/allure-results", "logs"]:
+    os.makedirs(os.path.join(project_root, dir_name), exist_ok=True)
 
 def pytest_addoption(parser):
     parser.addoption("--env", action="store", default="test", help="测试环境：dev/test/staging/prod")
@@ -19,17 +27,21 @@ def pytest_configure(config):
     Loggers.info(f"当前测试环境: {env}")
     if env:
         os.environ["TEST_ENV"] = env
-    # 确保必要目录存在
-    for dir_name in ["reports/allure-results", "logs"]:
-        try:
-            os.makedirs(os.path.join(project_root, dir_name), exist_ok=True)
-        except Exception as e:
-            Loggers.error(f"创建目录失败: {dir_name}, {e}")
     # 设置 Trantor 版本
     config_manager = ConfigManager()
     env_config = config_manager.load_env_config(env)
     trantor_version = config.getoption("--trantor_version", env_config.get("trantor_version", ""))
     os.environ["TRANTOR_VERSION"] = trantor_version
+
+    reports_dir = os.path.join(project_root, "reports", "allure-results")
+    env_file = os.path.join(reports_dir, "environment.properties")
+    
+    with open(env_file, "w") as f:
+        f.write(f"Browser=Chrome\n")
+        f.write(f"Browser.Version=Latest\n")
+        f.write(f"Platform=MacOS\n")
+        f.write(f"Python.Version=3.8+\n")
+        f.write(f"Timestamp={datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
 
 @pytest.fixture(autouse=True, scope="session")
 def allure_env_info(request):
@@ -53,49 +65,29 @@ def pytest_runtest_makereport(item, call):
     outcome = yield
     report = outcome.get_result()
     extra = getattr(report, "extra", [])
+    
     if report.when == "call":
-        allure_notes = getattr(item, "_testcase_notes", None)
-        if allure_notes:
-            extra.append(allure.attach(
-                allure_notes,
-                "测试用例注释",
-                allure.attachment_type.TEXT
-            ))
+        # 添加测试步骤
+        if hasattr(item, "funcargs"):
+            test_name = item.name
+            allure.dynamic.title(f"Test: {test_name}")
+            
+        # 添加失败截图
         if report.failed:
-            if hasattr(item, "_testcase_failure_info"):
-                extra.append(allure.attach(
-                    item._testcase_failure_info,
-                    "失败信息",
-                    allure.attachment_type.TEXT
-                ))
-            if hasattr(item, "_request_info"):
-                extra.append(allure.attach(
-                    json.dumps(item._request_info, ensure_ascii=False, indent=2),
-                    "请求信息",
-                    allure.attachment_type.JSON
-                ))
-            if hasattr(item, "_response_info"):
-                extra.append(allure.attach(
-                    json.dumps(item._response_info, ensure_ascii=False, indent=2),
-                    "响应信息",
-                    allure.attachment_type.JSON
-                ))
-            if hasattr(item, "_exception_info"):
-                extra.append(allure.attach(
-                    item._exception_info,
-                    "异常堆栈",
-                    allure.attachment_type.TEXT
-                ))
+            if hasattr(item, "funcargs"):
+                driver = item.funcargs.get("driver")
+                if driver:
+                    screenshot = driver.get_screenshot_as_png()
+                    allure.attach(
+                        screenshot,
+                        name="failure_screenshot",
+                        attachment_type=allure.attachment_type.PNG
+                    )
+    
+    # 添加设置和清理步骤
     if report.when == "setup":
-        item._testcase_start_time = datetime.now()
+        allure.dynamic.description("Test Setup")
     if report.when == "teardown":
-        start_time = getattr(item, "_testcase_start_time", None)
-        if start_time:
-            end_time = datetime.now()
-            duration = (end_time - start_time).total_seconds()
-            extra.append(allure.attach(
-                f"开始时间: {start_time}\n结束时间: {end_time}\n执行时间: {duration}秒",
-                "执行时间",
-                allure.attachment_type.TEXT
-            ))
+        allure.dynamic.description("Test Cleanup")
+    
     report.extra = extra 
