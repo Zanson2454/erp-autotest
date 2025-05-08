@@ -36,14 +36,14 @@ class InitSQL:
     """SQL初始化测试类，用于执行和验证数据库初始化SQL"""
     # 类变量，用于存储初始化结果
     _scm_init_cache = None
-    _cache_file = os.path.join(project_root, "data", "cache", "scm_init_cache.json")
+    _cache_file = os.path.join(project_root, "testcases", "comm", "cache", "scm_init_cache.json")
 
     def __init__(self):
         """初始化测试类"""
         # 初始化日志
         self.logger = Loggers()
         # 设置配置文件路径
-        self.scm_config_path = os.path.join(project_root, "data", "init", "scm_config.yml")
+        self.gen_config_path = os.path.join(project_root,  "config","biz", "gen_config.yml")
         # 初始化数据库管理器
         self.db = DBManager()
 

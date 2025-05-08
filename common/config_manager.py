@@ -10,15 +10,15 @@ class ConfigManager:
         self.config_dir = Path(config_dir)
         self.base_config: Dict[str, Any] = {}
         self.env_config: Dict[str, Any] = {}
-        self.api_config: Dict[str, Any] = {}
         self.db_config: Dict[str, Any] = {}
+        self.biz_config: Dict[str, Any] = {}
         self._ensure_config_dir()
         self._load_base_config()
     
     def _ensure_config_dir(self):
         """确保配置目录存在"""
         (self.config_dir / "env").mkdir(parents=True, exist_ok=True)
-        (self.config_dir / "api").mkdir(parents=True, exist_ok=True)
+        (self.config_dir / "biz").mkdir(parents=True, exist_ok=True)
     
     def _load_base_config(self):
         """加载基础配置"""
@@ -53,6 +53,28 @@ class ConfigManager:
             merged_config = self._merge_configs(self.base_config, config)
             self.env_config[env] = merged_config
             return merged_config
+    
+    def get_biz_config(self, module: str) -> Dict[str, Any]:
+        """获取业务配置
+        
+        Args:
+            module: 业务模块名称，如 'crm', 'inv', 'sls' 等
+            
+        Returns:
+            业务配置字典
+        """
+        if module in self.biz_config:
+            return self.biz_config[module]
+            
+        config_file = self.config_dir / "biz" / f"{module}.yaml"
+        if not config_file.exists():
+            logger.error(f"业务配置文件不存在: {config_file}")
+            raise FileNotFoundError(f"业务配置文件不存在: {config_file}")
+            
+        with open(config_file, 'r', encoding='utf-8') as f:
+            config = yaml.safe_load(f)
+            self.biz_config[module] = config
+            return config
     
     def _merge_configs(self, base_config: Dict[str, Any], env_config: Dict[str, Any]) -> Dict[str, Any]:
         """合并基础配置和环境特定配置
@@ -120,28 +142,6 @@ class ConfigManager:
         """
         config = self.load_env_config(env)
         return config.get("database", {}).get(db_name, {})
-    
-    def get_api_config(self, service: str) -> Dict[str, Any]:
-        """获取API配置
-        
-        Args:
-            service: 服务名称，如 'SCM', 'SO'
-            
-        Returns:
-            API配置字典
-        """
-        if service in self.api_config:
-            return self.api_config[service]
-            
-        config_file = self.config_dir / "api" / f"{service}.yaml"
-        if not config_file.exists():
-            logger.error(f"API配置文件不存在: {config_file}")
-            raise FileNotFoundError(f"API配置文件不存在: {config_file}")
-            
-        with open(config_file, 'r', encoding='utf-8') as f:
-            config = yaml.safe_load(f)
-            self.api_config[service] = config
-            return config
     
     def get_auth_config(self, env: str = "test") -> Dict[str, Any]:
         """获取认证配置
