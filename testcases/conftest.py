@@ -18,6 +18,12 @@ project_root = get_project_root()
 for dir_name in ["reports/allure-results", "logs"]:
     os.makedirs(os.path.join(project_root, dir_name), exist_ok=True)
 
+# 确保testcases目录下没有logs目录
+testcases_logs = os.path.join(project_root, "testcases", "logs")
+if os.path.exists(testcases_logs):
+    import shutil
+    shutil.rmtree(testcases_logs)
+
 def pytest_addoption(parser):
     parser.addoption("--env", action="store", default="test", help="测试环境：dev/test/staging/prod")
     parser.addoption("--trantor_version", action="store", default="2.5.25.0130.0-SNAPSHOT", help="Trantor版本号")
