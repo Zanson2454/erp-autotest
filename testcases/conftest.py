@@ -102,36 +102,32 @@ def pytest_configure(config: pytest.Config) -> None:
     _create_allure_env_file(config)
 
 
-def _create_allure_env_file(config: pytest.Config) -> None:
-    """创建 Allure 环境信息文件
-    
-    Args:
-        config: pytest 配置对象
-    """
-    env_info = {
-        "Browser": "Chrome",
-        "Browser.Version": "Latest",
-        "Platform": "MacOS",
-        "Python.Version": sys.version.replace('\n', ' '),
-        "Pytest.Version": pytest.__version__,
-        "Environment": config.getoption("--env"),
-        "Trantor.Version": config.getoption("--trantor_version"),
-        "Timestamp": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    }
-    
-    # 使用 Allure 的结果目录
-    results_dir = allure.results_dir
-    if not results_dir:
-        results_dir = project_root / "reports" / "allure-results"
-        os.makedirs(results_dir, exist_ok=True)
-    
-    env_file = Path(results_dir) / "environment.properties"
+def _create_allure_env_file(config):
+    """创建 Allure 环境配置文件"""
     try:
-        with open(env_file, "w") as f:
+        # 获取 Allure 结果目录
+        results_dir = config.getoption("--alluredir") or "allure-results"
+        
+        # 确保结果目录存在
+        os.makedirs(results_dir, exist_ok=True)
+        
+        # 创建环境配置文件
+        env_file = os.path.join(results_dir, "environment.properties")
+        
+        # 获取环境信息
+        env_info = {
+            "Environment": os.getenv("ENV", "test"),
+            "Python.Version": sys.version,
+            "Platform": sys.platform
+        }
+        
+        # 写入环境信息
+        with open(env_file, "w", encoding="utf-8") as f:
             for key, value in env_info.items():
                 f.write(f"{key}={value}\n")
+                
     except Exception as e:
-        Loggers.error(f"写入 Allure 环境信息失败: {e}")
+        print(f"创建 Allure 环境配置文件失败: {str(e)}")
 
 
 @pytest.fixture(scope="session", autouse=True)

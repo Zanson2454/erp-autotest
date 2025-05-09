@@ -37,14 +37,38 @@ class Loggers:
     ```
     """
     
-    def __init__(self, config: Optional[Dict[str, Any]] = None):
-        """初始化日志工具类
+    def __init__(self):
+        # 获取项目根目录
+        project_root = Path(__file__).parent.parent
+        log_dir = project_root / "logs"
         
-        Args:
-            config: 日志配置，如果为None则使用默认配置
-        """
-        self.config = self._load_config(config)
-        self._setup_logger()
+        # 确保日志目录存在
+        log_dir.mkdir(parents=True, exist_ok=True)
+        
+        # 配置日志文件路径
+        log_file = log_dir / f"log_{Path(__file__).stem}.log"
+        
+        # 移除默认的处理器
+        logger.remove()
+        
+        # 添加控制台输出
+        logger.add(
+            sys.stdout,
+            format="<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
+            level="DEBUG"
+        )
+        
+        # 添加文件输出
+        logger.add(
+            log_file,
+            rotation="500 MB",
+            retention="10 days",
+            format="{time:YYYY-MM-DD HH:mm:ss.SSS} | {level: <8} | {name}:{function}:{line} - {message}",
+            level="DEBUG",
+            encoding="utf-8"
+        )
+        
+        self.logger = logger
     
     @safe_config_load(error_message="日志配置加载失败")
     def _load_config(self, config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:

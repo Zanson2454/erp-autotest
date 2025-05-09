@@ -1,0 +1,2 @@
+2025-05-09 19:15:56.612 | INFO     | utils.log_util:info:147 - 开始测试: test_02_query_orders_by_so_code
+2025-05-09 19:15:56.657 | INFO     | utils.log_util:info:147 - 测试会话结束

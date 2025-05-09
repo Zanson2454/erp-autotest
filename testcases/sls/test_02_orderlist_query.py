@@ -14,7 +14,7 @@ sys.path.insert(0, project_root)
 
 from testcases.comm.base_test import BaseTest, DecimalEncoder
 from utils.exception_util import safe_api_call
-from utils.yaml_util import YamlReader
+from utils.yaml_util import YamlUtil
 from utils.assert_util import AssertHelper
 
 class TestOrderList(BaseTest):
@@ -36,8 +36,8 @@ class TestOrderList(BaseTest):
         # 读取通用查询参数
         if not hasattr(TestOrderList, 'common_params'):
             yaml_path = os.path.join(project_root, "testcases", "templates", "query_params.yml")
-            yaml_reader = YamlReader(yaml_path)
-            TestOrderList.common_params = yaml_reader.data()
+            yaml_reader = YamlUtil(yaml_path)
+            TestOrderList.common_params = yaml_reader.read_yaml(yaml_path)
             logger.info("已加载通用查询参数")
         
         # 初始化测试数据，但保留已有的数据
@@ -113,38 +113,51 @@ class TestOrderList(BaseTest):
         logger.info("\n准备发送请求...")
         response = self._make_request(url, data, "查询销售订单列表")
         
-        # 检查响应结构并提取数据
-        self.assert_util.assert_response_has_data(response, "data.data.data")
+        # 打印完整响应结构
+        logger.info(f"\n完整响应结构: {json.dumps(response, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
         
-        # 如果有数据，验证返回的订单数据结构并提取测试数据
-        if response["data"]['data']['data']:
-            order = response["data"]["data"]["data"][0]
+        # 检查响应结构并提取数据
+        self.assert_util.assert_response_has_data(response, "data")
+        
+        # 获取数据列表并验证
+        data_list = response.get("data", {}).get("data", [])
+        logger.info(f"\n数据列表类型: {type(data_list)}")
+        logger.info(f"数据列表内容: {json.dumps(data_list, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
+        
+        if not isinstance(data_list, list):
+            logger.error(f"数据列表不是列表类型: {type(data_list)}")
+            pytest.fail("响应数据格式错误：data.data 不是列表类型")
             
-            # 提取测试数据并验证
-            self.test_data["so_code"] = order.get("soCode")
-            self.test_data["so_type_id"] = order.get("soTypeId", {}).get("id") if order.get("soTypeId") else None
-            self.test_data["so_status"] = order.get("soStatus")
-            self.test_data["cust_id"] = order.get("custId", {}).get("id") if order.get("custId") else None
-            self.test_data["created_by"] = order.get("createdBy", {}).get("id") if order.get("createdBy") else None
-            self.test_data["sls_org_id"] = order.get("slsOrgId", {}).get("id") if order.get("slsOrgId") else None
+        if not data_list:
+            logger.warning("未查询到订单数据")
+            return
             
-            # 验证数据完整性
-            self.assert_util.assert_id_exists(self.test_data["so_code"], "订单编号")
-            self.assert_util.assert_id_exists(self.test_data["so_type_id"], "订单类型")
-            self.assert_util.assert_id_exists(self.test_data["so_status"], "订单状态")
-            self.assert_util.assert_id_exists(self.test_data["cust_id"], "客户ID")
-            self.assert_util.assert_id_exists(self.test_data["created_by"], "创建者")
-            self.assert_util.assert_id_exists(self.test_data["sls_org_id"], "销售组织ID")
-            
-            # 输出提取的测试数据
-            logger.info(f"\n提取的测试数据: {json.dumps(self.test_data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
-            
-            # 将测试数据保存到类属性，确保后续测试可以访问
-            TestOrderList.test_data = self.test_data
-            logger.info("\n已将测试数据保存到类属性")
-        else:
-            logger.warning("\n警告：未获取到订单数据，无法提取测试数据")
-            logger.debug(f"响应数据结构: {json.dumps(response['data'], cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
+        # 获取第一个订单数据
+        order = data_list[0]
+        logger.info(f"\n第一个订单数据: {json.dumps(order, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
+        
+        # 提取测试数据并验证
+        self.test_data["so_code"] = order.get("soCode")
+        self.test_data["so_type_id"] = order.get("soTypeId", {}).get("id") if order.get("soTypeId") else None
+        self.test_data["so_status"] = order.get("soStatus")
+        self.test_data["cust_id"] = order.get("custId", {}).get("id") if order.get("custId") else None
+        self.test_data["created_by"] = order.get("createdBy", {}).get("id") if order.get("createdBy") else None
+        self.test_data["sls_org_id"] = order.get("slsOrgId", {}).get("id") if order.get("slsOrgId") else None
+        
+        # 验证数据完整性
+        self.assert_util.assert_id_exists(self.test_data["so_code"], "订单编号")
+        self.assert_util.assert_id_exists(self.test_data["so_type_id"], "订单类型")
+        self.assert_util.assert_id_exists(self.test_data["so_status"], "订单状态")
+        self.assert_util.assert_id_exists(self.test_data["cust_id"], "客户ID")
+        self.assert_util.assert_id_exists(self.test_data["created_by"], "创建者")
+        self.assert_util.assert_id_exists(self.test_data["sls_org_id"], "销售组织ID")
+        
+        # 输出提取的测试数据
+        logger.info(f"\n提取的测试数据: {json.dumps(self.test_data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
+        
+        # 将测试数据保存到类属性，确保后续测试可以访问
+        TestOrderList.test_data = self.test_data
+        logger.info("\n已将测试数据保存到类属性")
 
     
     @allure.title("按订单编号查询销售订单列表")
@@ -544,86 +557,18 @@ class TestOrderList(BaseTest):
             assert order_cust_id == expected_id, f"客户ID {order_cust_id} 不匹配查询条件 {expected_id}"
             
         logger.info(f"\n成功查询到 {len(nested_data)} 条匹配的订单数据")
-        """测试按外部单号查询销售订单列表"""
-        
-        url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$sls_so_head_tr_PAGING_DATA_SERVICE"
-        
-        # 构建按外部单号筛选的查询条件
-        conditionGroup = {
-            "type": "ConditionGroup",
-            "logicOperator": "AND",
-            "conditions": [
-                {
-                    "type": "ConditionGroup",
-                    "logicOperator": "AND",
-                    "conditions": [
-                        {
-                            "type": "ConditionGroup",
-                            "logicOperator": "AND",
-                            "conditions": [
-                                {
-                                    "key": "z68NkIZCu_YRYaaatY4Yf",
-                                    "type": "ConditionLeaf",
-                                    "leftValue": {
-                                        "id": "fFG6FqbqpcnEJhu8L8lfS",
-                                        "key": "fFG6FqbqpcnEJhu8L8lfS",
-                                        "type": "VarValue",
-                                        "fieldType": "Text",
-                                        "valueType": "VAR",
-                                        "varValue": [
-                                            {
-                                                "valueKey": "soExtCode",
-                                                "valueName": "soExtCode"
-                                            }
-                                        ]
-                                    },
-                                    "operator": "CONTAINS",
-                                    "rightValue": {
-                                        "key": "ChqtGFNHzvn7Gp2OsjaVW",
-                                        "type": "VarValue",
-                                        "fieldType": "Text",
-                                        "valueType": "CONST",
-                                        "constValue": "123"
-                                    }
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        }
-        
-        data = self._build_order_list_query_data(conditionGroup)
-        
-        # 执行测试
-        logger.info("\n准备发送请求...")
-        logger.info("查询条件: 外部单号包含 '123'")
-        
-        # 获取提取后的嵌套数据
-        nested_data = self._make_request(url, data, "按外部单号查询销售订单列表", extract_nested_data=True)
-        
-        # 验证查询结果
-        if not nested_data:
-            logger.warning("\n警告：未查询到匹配的订单数据")
-            return
-            
-        # 验证所有返回的订单都匹配查询条件
-        for order in nested_data:
-            assert "123" in order.get("soExtCode", ""), f"外部单号 {order.get('soExtCode')} 不包含查询条件 '123'"
-            
-        logger.info(f"\n成功查询到 {len(nested_data)} 条匹配的订单数据")
 
 if __name__ == "__main__":
-    # test = TestOrderList()
-    # test.setup_method()
-    # test.test_01_query_orders()
-    # test.test_02_query_orders_by_so_code()
-    # test.test_03_query_orders_by_status("DRAFT")
-    # test.test_03_query_orders_by_status("EFFECT")
-    # test.test_03_query_orders_by_status("APPROVING")
-    # test.test_03_query_orders_by_status("CANCELLED")
-    # test.test_04_query_orders_by_so_type()
-    # test.test_05_query_orders_by_cus
-    allure_dir = os.path.join(project_root, "reports", "allure-results")
-    pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])
+    test = TestOrderList()
+    test.setup_method()
+    test.test_01_query_orders()
+    test.test_02_query_orders_by_so_code()
+    test.test_03_query_orders_by_status("DRAFT")
+    test.test_03_query_orders_by_status("EFFECT")
+    test.test_03_query_orders_by_status("APPROVING")
+    test.test_03_query_orders_by_status("CANCELLED")
+    test.test_04_query_orders_by_so_type()
+    test.test_05_query_orders_by_customer()
+    # allure_dir = os.path.join(project_root, "reports", "allure-results")
+    # pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])
     
