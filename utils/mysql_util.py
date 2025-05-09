@@ -7,7 +7,6 @@ import pymysql
 from pymysql.cursors import DictCursor
 from pymysql.connections import Connection
 from dbutils.pooled_db import PooledDB as Pool
-from loguru import logger
 import json
 from datetime import datetime
 from decimal import Decimal
@@ -78,17 +77,13 @@ class DBManager:
             pool_name: 连接池名称
             is_runtime: 是否连接运行时数据库
         """
-        # 如果已经初始化过，直接返回
-        if hasattr(self, 'initialized'):
-            return
-            
         self.pool_size = pool_size
         self.pool_name = pool_name
         self.is_runtime = is_runtime
         self.connection: Optional[Connection] = None
-        self._init_pool()
-        log.info(f"数据库管理器初始化完成 [pool={pool_name}, size={pool_size}, runtime={is_runtime}]")
-        self.initialized = True
+        self.log = log  # 先初始化logger
+        self._init_pool()  # 再初始化连接池
+        self.log.info(f"数据库管理器初始化完成 [pool={pool_name}, size={pool_size}, runtime={is_runtime}]")
     
     def _init_pool(self) -> None:
         """初始化数据库连接池"""
@@ -113,7 +108,7 @@ class DBManager:
                     'cursorclass': DictCursor
                 }
             )
-            log.info(f"数据库连接池初始化完成 [host={db_config['host']}, port={db_config['port']}]")
+            self.log.info(f"数据库连接池初始化完成 [host={db_config['host']}, port={db_config['port']}]")
     
     def __enter__(self) -> 'DBManager':
         """上下文管理器入口"""
@@ -129,21 +124,21 @@ class DBManager:
         """建立数据库连接"""
         if not self.connection:
             self.connection = DBManager._pool.connection()
-            log.debug(f"获取数据库连接 [id={id(self.connection)}]")
+            self.log.debug(f"获取数据库连接 [id={id(self.connection)}]")
     
     def disconnect(self) -> None:
         """关闭数据库连接"""
         if self.connection:
             self.connection.close()
             self.connection = None
-            log.debug("数据库连接已关闭")
+            self.log.debug("数据库连接已关闭")
     
     def close(self) -> None:
         """关闭连接池"""
         if DBManager._pool:
             DBManager._pool.close()
             DBManager._pool = None
-            log.info("数据库连接池已关闭")
+            self.log.info("数据库连接池已关闭")
     
     @contextmanager
     def cursor(self) -> Generator[DictCursor, None, None]:
@@ -160,55 +155,77 @@ class DBManager:
         try:
             yield cursor
             self.connection.commit()
+            self.log.debug("数据库事务已提交")
         except Exception as e:
             self.connection.rollback()
-            logger.error(f"数据库事务回滚: {str(e)}")
+            self.log.error(f"数据库事务回滚: {str(e)}")
             raise DatabaseException(f"数据库操作失败: {str(e)}")
         finally:
             cursor.close()
             self.disconnect()
+            self.log.debug("数据库游标已关闭")
     
     @safe_db_operation(error_message="SQL查询执行失败")
-    def execute_query(
-        self,
-        sql: str,
-        params: Optional[Dict[str, Any]] = None
-    ) -> List[Dict[str, Any]]:
-        """执行查询语句
+    def execute_query(self, sql: str, params: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
+        """执行查询SQL
         
         Args:
-            sql: SQL查询语句
-            params: 查询参数
+            sql: SQL语句
+            params: 查询参数，支持命名参数
             
         Returns:
             List[Dict[str, Any]]: 查询结果列表
             
         Raises:
-            DatabaseException: 数据库操作异常
+            Exception: 查询执行失败时抛出
         """
-        with allure.step(f"执行SQL查询: {sql}"):
+        try:
+            # 处理LIKE语句中的%通配符
+            if 'LIKE' in sql.upper():
+                # 先保存参数占位符
+                placeholders = []
+                for i in range(sql.count('%s')):
+                    placeholders.append(f'__PLACEHOLDER_{i}__')
+                
+                # 替换参数占位符
+                for i, placeholder in enumerate(placeholders):
+                    sql = sql.replace('%s', placeholder, 1)
+                
+                # 转义LIKE中的%
+                sql = sql.replace('%', '%%')
+                
+                # 恢复参数占位符
+                for placeholder in placeholders:
+                    sql = sql.replace(placeholder, '%s')
+                
+            self.log.debug(f"执行查询SQL: {sql}")
+            if params:
+                self.log.debug(f"查询参数: {params}")
+                
             with self.cursor() as cursor:
-                try:
-                    # 如果参数是字典，使用命名参数
+                if params:
+                    # 将命名参数转换为位置参数
                     if isinstance(params, dict):
-                        cursor.execute(sql, params)
-                    # 如果参数是元组或列表，直接使用
-                    elif isinstance(params, (tuple, list)):
-                        cursor.execute(sql, params)
-                    # 如果没有参数，直接执行
+                        # 将 %(name)s 格式的占位符替换为 %s
+                        for key in params:
+                            sql = sql.replace(f'%({key})s', '%s')
+                        # 按顺序提取参数值
+                        param_values = [params[key] for key in params]
+                        cursor.execute(sql, param_values)
                     else:
-                        cursor.execute(sql)
-                        
-                    results = cursor.fetchall()
-                    # 使用logger.isEnabledFor来检查日志级别
-                    if logger.isEnabledFor(10):  # DEBUG level
-                        log.debug(f"执行SQL: {sql}, 参数: {params}")
-                    return results
-                except Exception as e:
-                    log.error(f"SQL执行失败: {sql}")
-                    log.error(f"参数: {params}")
-                    log.error(f"错误: {str(e)}")
-                    raise
+                        cursor.execute(sql, params)
+                else:
+                    cursor.execute(sql)
+                result = cursor.fetchall()
+                self.log.debug(f"查询结果: {result}")
+                return result
+                    
+        except Exception as e:
+            self.log.error(f"执行查询失败: {str(e)}")
+            self.log.error(f"SQL: {sql}")
+            if params:
+                self.log.error(f"参数: {params}")
+            raise
     
     @safe_db_operation(error_message="SQL更新执行失败")
     def execute_update(
@@ -231,7 +248,7 @@ class DBManager:
         with allure.step(f"执行SQL更新: {sql}"):
             with self.cursor() as cursor:
                 affected_rows = cursor.execute(sql, params or {})
-                logger.info(
+                self.log.info(
                     f"\n{'='*50}\n"
                     f"执行SQL更新:\n{sql}\n"
                     f"参数: {params}\n"
@@ -267,7 +284,7 @@ class DBManager:
             with self.cursor() as cursor:
                 cursor.execute(sql, values)
                 inserted_id = cursor.lastrowid
-                logger.info(
+                self.log.info(
                     f"\n{'='*50}\n"
                     f"插入数据:\n"
                     f"表名: {table}\n"
@@ -301,7 +318,7 @@ class DBManager:
         
         with allure.step(f"从表 {table} 删除数据"):
             affected_rows = self.execute_update(sql, params)
-            logger.info(
+            self.log.info(
                 f"\n{'='*50}\n"
                 f"删除数据:\n"
                 f"表名: {table}\n"
@@ -332,7 +349,7 @@ class DBManager:
                     where=data["where"],
                     params=data.get("params")
                 )
-            logger.info(
+            self.log.info(
                 f"\n{'='*50}\n"
                 f"清理测试数据完成:\n"
                 f"{json.dumps(cleanup_data, ensure_ascii=False, indent=2)}\n"
@@ -373,7 +390,7 @@ class DBManager:
             "database": config["database"],
             "table": table
         })
-        logger.info(
+        self.log.info(
             f"\n{'='*50}\n"
             f"获取表结构:\n"
             f"表名: {table}\n"
@@ -411,7 +428,7 @@ class DBManager:
             "table": table
         })[0]
         exists = result["count"] > 0
-        logger.info(
+        self.log.info(
             f"\n{'='*50}\n"
             f"检查表是否存在:\n"
             f"表名: {table}\n"

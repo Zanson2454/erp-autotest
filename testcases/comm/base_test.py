@@ -66,71 +66,81 @@ class InitSQL:
     """SQL初始化测试类
     
     用于执行和验证数据库初始化SQL，支持缓存机制。
-    
-    Attributes:
-        _init_cache: 类级别的缓存，存储初始化结果
-        _cache_file: 缓存文件路径
     """
-    _init_cache: Optional[Dict[str, Any]] = None
-    _cache_file: Path = Path(__file__).parent / "cache" / "init_cache.json"
-
     def __init__(self) -> None:
         """初始化测试类"""
         self.log = log  # 使用模块级别的日志工具
         # 更新配置文件路径
         self.gen_config_path = project_root / "config" / "biz" / "gen.yaml"
         self.db = DBManager()
+        # 修改缓存目录到 testcases/comm/cache
+        self.cache_dir = Path(__file__).parent / "cache"
+        self.cache_file = self.cache_dir / "init_cache.json"
+        self.log.info(f"缓存文件路径: {self.cache_file}")
+        self.cache_expire_minutes = 30
 
-    def _load_cache(self) -> Optional[Dict[str, Any]]:
-        """从文件加载缓存
+    def _get_cache_data(self) -> Optional[Dict[str, Any]]:
+        """获取缓存数据
         
         Returns:
-            Optional[Dict[str, Any]]: 缓存的初始化数据，如果加载失败则返回 None
+            Optional[Dict[str, Any]]: 缓存数据，如果不存在则返回None
         """
         try:
-            if self._cache_file.exists():
-                with open(self._cache_file, 'r', encoding='utf-8') as f:
-                    return json.load(f)
+            if not self.cache_file.exists():
+                self.log.info(f"缓存文件不存在: {self.cache_file}")
+                return None
+            
+            with open(self.cache_file, 'r', encoding='utf-8') as f:
+                cache_data = json.load(f)
+                self.log.info(f"成功从缓存文件加载数据: {self.cache_file}")
+                return cache_data
         except Exception as e:
-            self.log.warning(f"加载缓存文件失败: {str(e)}")
-        return None
-
-    def _save_cache(self, data: Dict[str, Any]) -> None:
-        """保存缓存到文件
+            self.log.warning(f"读取缓存数据失败: {str(e)}")
+            return None
+            
+    def _write_cache_data(self, data: Dict[str, Any]) -> None:
+        """写入缓存数据
         
         Args:
             data: 要缓存的数据
         """
         try:
-            self._cache_file.parent.mkdir(parents=True, exist_ok=True)
-            with open(self._cache_file, 'w', encoding='utf-8') as f:
+            # 确保缓存目录存在
+            self.cache_dir.mkdir(parents=True, exist_ok=True)
+            
+            # 写入缓存文件
+            with open(self.cache_file, 'w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=2, cls=DecimalEncoder)
+            self.log.info(f"成功写入缓存文件: {self.cache_file}")
         except Exception as e:
-            self.log.warning(f"保存缓存文件失败: {str(e)}")
+            self.log.warning(f"写入缓存数据失败: {str(e)}")
+   
 
-    def _format_datetime(self, value: Any) -> Any:
-        """格式化日期时间值
+    def init_sql(self) -> Dict[str, Any]:
+        """初始化SQL数据
         
-        Args:
-            value: 要格式化的值
-            
         Returns:
-            Any: 格式化后的值
+            Dict[str, Any]: 初始化数据
         """
-        if isinstance(value, datetime):
-            return value.strftime('%Y-%m-%d %H:%M:%S')
-        return value
-
-    def _format_result(self, result: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """格式化查询结果
-        
-        Args:
-            result: 查询结果列表
+        try:
+            # 尝试从缓存获取数据
+            cache_data = self._get_cache_data()
+            if cache_data:
+                self.log.info("从缓存获取数据成功")
+                return cache_data
+                
+            # 缓存不存在或已过期，重新初始化数据
+            self.log.info("缓存数据不存在或已过期，开始初始化数据")
+            init_data = self._init_sql_impl()
             
-        Returns:
-            List[Dict[str, Any]]: 格式化后的结果列表
-        """
-        return [{k: self._format_datetime(v) for k, v in row.items()} for row in result]
+            # 写入缓存
+            self._write_cache_data(init_data)
+            self.log.info("数据初始化完成并写入缓存")
+            
+            return init_data
+        except Exception as e:
+            self.log.error(f"初始化SQL时出错: {str(e)}")
+            raise
 
     def _init_sql_impl(self) -> Dict[str, Any]:
         """实际的SQL初始化实现
@@ -139,20 +149,6 @@ class InitSQL:
             Dict[str, Any]: 初始化数据
         """
         self.log.info("开始执行init_sql方法...")
-        
-        # 检查内存缓存
-        if InitSQL._init_cache is not None:
-            self.log.info("内存缓存命中：使用缓存的初始化数据")
-            return InitSQL._init_cache
-
-        # 检查文件缓存
-        file_cache = self._load_cache()
-        if file_cache is not None:
-            self.log.info("文件缓存命中：使用缓存的初始化数据")
-            InitSQL._init_cache = file_cache
-            return file_cache
-
-        self.log.info("缓存未命中：开始执行初始化")
         
         # 读取YAML配置文件
         self.log.info(f"尝试读取配置文件: {self.gen_config_path}")
@@ -237,101 +233,35 @@ class InitSQL:
                 self.log.error(f"执行查询 {query_key} 时出错: {str(e)}")
                 raise
 
-        # 缓存结果
-        InitSQL._init_cache = init_data
-        self._save_cache(init_data)
-        self.log.info("初始化数据已缓存")
+        self.log.info("所有查询执行完成")
         return init_data
 
-    def init_sql(self) -> Dict[str, Any]:
-        """初始化SQL数据
-        
-        Returns:
-            Dict[str, Any]: 初始化数据
-        """
-        try:
-            # 尝试从缓存获取数据
-            cache_data = self._get_cache_data()
-            if cache_data:
-                log.info("从缓存获取数据成功")
-                return cache_data
-                
-            # 缓存不存在或已过期，重新初始化数据
-            log.info("缓存数据不存在，开始初始化数据")
-            init_data = self._init_sql_impl()
-            
-            # 写入缓存
-            self._write_cache_data(init_data)
-            log.info("数据初始化完成并写入缓存")
-            
-            return init_data
-        except Exception as e:
-            log.error(f"初始化SQL时出错: {str(e)}")
-            raise
-            
-    def _get_cache_data(self) -> Optional[Dict[str, Any]]:
-        """获取缓存数据
-        
-        Returns:
-            Optional[Dict[str, Any]]: 缓存数据，如果不存在则返回None
-        """
-        try:
-            cache_file = self._get_cache_file_path()
-            if not os.path.exists(cache_file):
-                return None
-                
-            # 检查缓存是否过期
-            if self._is_cache_expired(cache_file):
-                os.remove(cache_file)
-                return None
-                
-            with open(cache_file, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except Exception as e:
-            log.warning(f"读取缓存数据失败: {str(e)}")
-            return None
-            
-    def _write_cache_data(self, data: Dict[str, Any]) -> None:
-        """写入缓存数据
+    def _format_result(self, result: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """格式化查询结果
         
         Args:
-            data: 要缓存的数据
-        """
-        try:
-            cache_file = self._get_cache_file_path()
-            cache_dir = os.path.dirname(cache_file)
-            os.makedirs(cache_dir, exist_ok=True)
-            
-            with open(cache_file, 'w', encoding='utf-8') as f:
-                json.dump(data, f, ensure_ascii=False, indent=2)
-        except Exception as e:
-            log.warning(f"写入缓存数据失败: {str(e)}")
-            
-    def _get_cache_file_path(self) -> str:
-        """获取缓存文件路径
-        
-        Returns:
-            str: 缓存文件路径
-        """
-        cache_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'cache')
-        return os.path.join(cache_dir, f"{self.__class__.__name__}_cache.json")
-        
-    def _is_cache_expired(self, cache_file: str) -> bool:
-        """检查缓存是否过期
-        
-        Args:
-            cache_file: 缓存文件路径
+            result: 原始查询结果列表
             
         Returns:
-            bool: 是否过期
+            List[Dict[str, Any]]: 格式化后的结果列表
         """
-        try:
-            # 获取文件修改时间
-            mtime = os.path.getmtime(cache_file)
-            # 检查是否超过24小时
-            return (time.time() - mtime) > 24 * 3600
-        except Exception:
-            return True
+        if not result:
+            return []
+            
+        # 处理Decimal类型
+        formatted_result = []
+        for row in result:
+            formatted_row = {}
+            for key, value in row.items():
+                if isinstance(value, Decimal):
+                    formatted_row[key] = float(value)
+                elif isinstance(value, datetime):
+                    formatted_row[key] = value.isoformat()
+                else:
+                    formatted_row[key] = value
+            formatted_result.append(formatted_row)
+            
+        return formatted_result
 
 
 class BaseTest:
