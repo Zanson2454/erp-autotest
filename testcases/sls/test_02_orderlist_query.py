@@ -13,8 +13,8 @@ project_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
 sys.path.insert(0, project_root)
 
 from testcases.comm.base_test import BaseTest, DecimalEncoder
-from utils.ExceptionUtil import safe_api_call
-from utils.YamlUtil import YamlReader
+from utils.exception_util import safe_api_call
+from utils.yaml_util import YamlReader
 
 class TestOrderList(BaseTest):
     """销售订单列表测试类"""

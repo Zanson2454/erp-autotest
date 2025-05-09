@@ -8,12 +8,11 @@ from loguru import logger
 import json
 from datetime import datetime
 from decimal import Decimal
+from utils.yaml_util import YamlUtil
 
 # 动态获取项目根目录（兼容不同调用方式）
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(BASE_DIR)
-
-from common.config_manager import ConfigManager
 
 class DecimalEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -47,7 +46,7 @@ class DBManager:
     def connect(self):
         """建立数据库连接"""
         if not self.connection:
-            db_config = ConfigManager().get_db_config()
+            db_config = YamlUtil().get_db_config()
             self.connection = pymysql.connect(
                 host=db_config['host'],
                 port=db_config['port'],
@@ -212,7 +211,7 @@ class DBManager:
             ORDINAL_POSITION
         """
         
-        config = Config.get_db_config(self.is_runtime)
+        config = YamlUtil().get_db_config()
         results = self.execute_query(sql, {
             "database": config["database"],
             "table": table
@@ -240,7 +239,7 @@ class DBManager:
             AND TABLE_NAME = %(table)s
         """
         
-        config = Config.get_db_config(self.is_runtime)
+        config = YamlUtil().get_db_config()
         result = self.execute_query(sql, {
             "database": config["database"],
             "table": table

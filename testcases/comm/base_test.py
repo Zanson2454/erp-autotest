@@ -15,13 +15,13 @@ sys.path.insert(0, project_root)
 
 from common.login_manager import LoginManager
 from common.config_manager import ConfigManager
-from utils.AssertUtil import AssertHelper
-from utils.LogUtil import Loggers
-from utils.MysqlUtil import DBManager
-from utils.HttpUtil import HttpUtil
-from utils.ExceptionUtil import handle_exception, safe_api_call, handle_class_method_exception
-from utils.YamlUtil import YamlReader
-from utils.MockUtil import MockData
+from utils.assert_util import AssertHelper
+from utils.log_util import Loggers
+from utils.mysql_util import DBManager
+from utils.http_util import HttpUtil
+from utils.exception_util import handle_exception, safe_api_call, handle_class_method_exception
+from utils.yaml_util import YamlUtil
+from utils.mock_util import MockData
 
 class DecimalEncoder(json.JSONEncoder):
     """自定义 JSON 编码器，用于处理 Decimal 类型"""
@@ -196,7 +196,7 @@ class BaseTest:
         # 初始化登录和API配置
         cls.login_manager = LoginManager()
         cls.session = cls.login_manager.login()
-        cls.base_url = ConfigManager().get_base_url()
+        cls.base_url = YamlUtil().get_base_url()
         # 初始化请求头
         cls.headers = {
             'Accept': 'application/json, text/plain, */*',

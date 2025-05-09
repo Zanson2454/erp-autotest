@@ -3,8 +3,8 @@ import os
 import sys
 import pytest
 from datetime import datetime
-from utils.LogUtil import Loggers
-from common.config_manager import ConfigManager
+from utils.log_util import Loggers
+from utils.yaml_util import YamlUtil
 import allure
 import json
 from typing import Dict, Any
@@ -34,7 +34,7 @@ def pytest_configure(config):
     if env:
         os.environ["TEST_ENV"] = env
     # 设置 Trantor 版本
-    config_manager = ConfigManager()
+    config_manager = YamlUtil()
     env_config = config_manager.load_env_config(env)
     trantor_version = config.getoption("--trantor_version", env_config.get("trantor_version", ""))
     os.environ["TRANTOR_VERSION"] = trantor_version

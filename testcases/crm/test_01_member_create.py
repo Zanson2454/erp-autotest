@@ -14,7 +14,7 @@ from faker import Faker
 root_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(root_path)
 
-from utils.MockUtil import MockData
+from utils.mock_util import MockData
 from testcases.comm.base_test import BaseTest
 
 

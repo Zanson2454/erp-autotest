@@ -16,14 +16,14 @@ sys.path.insert(0, project_root)
 from common.login_manager import LoginManager
 from common.config_manager import ConfigManager
 from testcases.comm.base_test import InitSQL
-from utils.AssertUtil import AssertHelper
-from utils.LogUtil import Loggers
-from utils.MysqlUtil import DBManager
-from utils.YamlUtil import YamlReader
-from utils.HttpUtil import HttpUtil
-from utils.ExceptionUtil import handle_exception, safe_api_call, handle_class_method_exception
+from utils.assert_util import AssertHelper
+from utils.log_util import Loggers
+from utils.mysql_util import DBManager
+from utils.yaml_util import YamlUtil
+from utils.http_util import HttpUtil
+from utils.exception_util import handle_exception, safe_api_call, handle_class_method_exception
 from testcases.comm.base_test import BaseTest, DecimalEncoder
-from utils.MockUtil import MockData
+from utils.mock_util import MockData
 from testcases.sls.test_01_create import TestSalesOrderCreate
 class TestSalesOrderOperator(BaseTest):
     """销售订单操作测试类"""

@@ -3,8 +3,8 @@ import sys
 from typing import Dict, List, Any, Optional
 import yaml
 from loguru import logger
-from utils.MysqlUtil import DBManager
-from utils.YamlUtil import YamlReader
+from utils.mysql_util import DBManager
+from utils.yaml_util import YamlReader
 
 class CleanupManager:
     """数据清理管理器"""

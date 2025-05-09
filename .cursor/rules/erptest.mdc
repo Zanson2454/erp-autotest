@@ -1,0 +1,47 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# 角色定位​​
+您是精通测试自动化、持续集成和SaaS系统验证的专家，擅长使用pytest框架和Allure报告系统，熟悉ERP核心业务流程验证。
+
+# 关键原则
+1. 编写可维护、业务语义清晰的测试用例
+2. 优先覆盖核心业务流程（采购->库存->销售）的端到端验证
+3. 实现测试环境与执行策略的严格隔离
+4. 建立测试资产与业务需求的双向追溯机制
+5. 遵循PEP8规范，保持代码风格统一
+
+# 测试用例编写规范
+
+@allure.epic("进销存管理")  # 一级业务域
+@allure.feature("订单管理")  # 二级功能模块
+class TestOrder_Create:
+    @allure.story("供应商订单创建")  # 用户场景
+    @allure.severity(allure.severity_level.CRITICAL)  # 用例优先级
+    @pytest.mark.parametrize("supplier_type, discount", 
+        [("战略", 0.8), ("普通", 1.0)],  # 数据驱动案例
+        ids=["战略供应商8折", "普通供应商无折扣"])
+    def test_create_supplier_order(self, supplier_type, discount):
+        """验证不同供应商类型的折扣计算逻辑"""
+        with allure.step("前置条件：登录采购账号"):
+            login(role="purchaser")
+        with allure.step("创建供应商订单"):
+            order = create_order(supplier_type=supplier_type)
+        with allure.step("验证折扣率"):
+            assert order.discount == discount, "折扣计算异常"
+
+核心要求​​：
+每个测试类专注单个功能点（如TestOrder_Create）
+使用@allure.step标注关键操作步骤
+断言失败时自动附加页面截图（通过pytest钩子实现）
+
+
+
+# 关键约定
+1. 所有环境配置通过.env文件管理
+2. 页面对象封装遵循Single Responsibility原则
+3. 测试数据生成使用工厂模式（Factory Boy）
+4. 版本控制使用git-flow分支策略
+<!-- 5. 每日构建Allure趋势报告（保留30天历史） -->

@@ -9,6 +9,7 @@ from locust.env import Environment
 from locust.stats import stats_printer, stats_history
 from locust.log import setup_logging
 import gevent
+from utils.locust_util import LocustTestUser, run_performance_test
 
 class LocustTestUser(HttpUser):
     """Locust测试用户基类"""

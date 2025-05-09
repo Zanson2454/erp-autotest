@@ -7,3 +7,9 @@ base:
     format: "json"
     rotation: "daily"
     retention: "7 days"
+  # 超时配置
+  timeouts:
+    connect: 10
+    read: 30
+    write: 30
+

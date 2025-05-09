@@ -11,7 +11,7 @@ from typing import Dict, Any, Optional
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, project_root)
 
-from common.config_manager import ConfigManager
+from utils.yaml_util import YamlUtil
 
 # 获取项目根目录
 def get_project_root():
@@ -23,7 +23,7 @@ project_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
 sys.path.insert(0, project_root)
 
 from testcases.comm.base_test import BaseTest, DecimalEncoder
-from utils.ExceptionUtil import safe_api_call
+from utils.exception_util import safe_api_call
 
 @allure.epic("ERP系统")
 @allure.feature("SCM模块")

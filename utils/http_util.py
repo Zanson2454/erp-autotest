@@ -1,5 +1,5 @@
 import requests
-from utils.LogUtil import Loggers
+from utils.log_util import Loggers
 
 class HttpUtil:
     """HTTP 工具类，提供基本的 HTTP 请求功能"""

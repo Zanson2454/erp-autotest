@@ -1,6 +1,6 @@
 from faker import Faker
 from faker.providers import BaseProvider
-from utils.LogUtil import Loggers
+from utils.log_util import Loggers
 
 
 class MockData:

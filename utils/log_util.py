@@ -5,10 +5,10 @@ import sys
 from pathlib import Path
 
 # 获取根目录
-from common.config_manager import ConfigManager
+from utils.yaml_util import YamlUtil
 
 # 获取日志路径
-log_path = ConfigManager().get_logging_config()["path"]
+log_path = YamlUtil().get_logging_config()["path"]
 t = time.strftime("%Y_%m_%d")  # 获取当前时间作为文件名
 log_extension = ".log"  # 默认日志文件扩展名
 log_level = "INFO"  # 默认日志等级
