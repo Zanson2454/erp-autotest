@@ -15,6 +15,7 @@ sys.path.insert(0, project_root)
 from testcases.comm.base_test import BaseTest, DecimalEncoder
 from utils.exception_util import safe_api_call
 from utils.yaml_util import YamlReader
+from utils.assert_util import AssertHelper
 
 class TestOrderList(BaseTest):
     """销售订单列表测试类"""
@@ -113,14 +114,11 @@ class TestOrderList(BaseTest):
         response = self._make_request(url, data, "查询销售订单列表")
         
         # 检查响应结构并提取数据
-        assert "data" in response, "响应格式错误：缺少 data 字段"
-        assert "data" in response["data"], "响应格式错误：缺少 data.data 字段"
-        assert "data" in response["data"]["data"], "响应格式错误：缺少 data.data.data 字段"
+        self.assert_util.assert_response_has_data(response, "data.data.data")
         
         # 如果有数据，验证返回的订单数据结构并提取测试数据
         if response["data"]['data']['data']:
             order = response["data"]["data"]["data"][0]
-            # logger.info(f"\n获取到订单数据: {json.dumps(order, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
             
             # 提取测试数据并验证
             self.test_data["so_code"] = order.get("soCode")
@@ -131,12 +129,12 @@ class TestOrderList(BaseTest):
             self.test_data["sls_org_id"] = order.get("slsOrgId", {}).get("id") if order.get("slsOrgId") else None
             
             # 验证数据完整性
-            assert self.test_data["so_code"], "未获取到订单编号"
-            assert self.test_data["so_type_id"], "未获取到订单类型"
-            assert self.test_data["so_status"], "未获取到订单状态"
-            assert self.test_data["cust_id"], "未获取到客户ID"
-            assert self.test_data["created_by"], "未获取到创建者"
-            assert self.test_data["sls_org_id"], "未获取到销售组织ID"
+            self.assert_util.assert_id_exists(self.test_data["so_code"], "订单编号")
+            self.assert_util.assert_id_exists(self.test_data["so_type_id"], "订单类型")
+            self.assert_util.assert_id_exists(self.test_data["so_status"], "订单状态")
+            self.assert_util.assert_id_exists(self.test_data["cust_id"], "客户ID")
+            self.assert_util.assert_id_exists(self.test_data["created_by"], "创建者")
+            self.assert_util.assert_id_exists(self.test_data["sls_org_id"], "销售组织ID")
             
             # 输出提取的测试数据
             logger.info(f"\n提取的测试数据: {json.dumps(self.test_data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")

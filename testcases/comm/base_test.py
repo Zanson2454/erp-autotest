@@ -1,203 +1,426 @@
+"""测试基类模块
+
+提供测试用例的基础功能，包括：
+1. 环境初始化
+2. 数据库操作
+3. HTTP 请求处理
+4. 断言工具
+5. 日志记录
+6. 测试数据管理
+
+使用示例：python -m pytest testcases/comm/base_test.py
+@allure.epic("进销存管理")
+@allure.feature("订单管理")
+class TestOrder(BaseTest):
+    @allure.story("供应商订单创建")
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_create_supplier_order(self):
+        # 验证不同供应商类型的折扣计算逻辑
+        pass
+
+"""
+
 import json
 import pytest
-import os
-import sys
-import yaml
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Union
 from datetime import datetime
 from decimal import Decimal
+from pathlib import Path
+import sys
+import os
 import time
 
-# 添加项目根目录到 Python 路径
-current_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
-sys.path.insert(0, project_root)
+# Add project root to Python path
+current_file = Path(__file__).resolve()
+project_root = current_file.parent.parent.parent
+sys.path.insert(0, str(project_root))
 
 from common.login_manager import LoginManager
-from common.config_manager import ConfigManager
+from utils.yaml_util import YamlUtil
 from utils.assert_util import AssertHelper
 from utils.log_util import Loggers
 from utils.mysql_util import DBManager
 from utils.http_util import HttpUtil
 from utils.exception_util import handle_exception, safe_api_call, handle_class_method_exception
-from utils.yaml_util import YamlUtil
 from utils.mock_util import MockData
 
+# 初始化日志工具
+log = Loggers()
+
 class DecimalEncoder(json.JSONEncoder):
-    """自定义 JSON 编码器，用于处理 Decimal 类型"""
-    def default(self, obj):
+    """自定义 JSON 编码器，用于处理 Decimal 类型
+    
+    支持以下类型的序列化：
+    - Decimal: 转换为 float
+    - datetime: 转换为 ISO 格式字符串
+    """
+    def default(self, obj: Any) -> Any:
         if isinstance(obj, Decimal):
             return float(obj)
         if isinstance(obj, datetime):
             return obj.strftime('%Y-%m-%d %H:%M:%S')
         return super(DecimalEncoder, self).default(obj)
 
-class InitSQL:
-    """SQL初始化测试类，用于执行和验证数据库初始化SQL"""
-    # 类变量，用于存储初始化结果
-    _scm_init_cache = None
-    _cache_file = os.path.join(project_root, "testcases", "comm", "cache", "scm_init_cache.json")
 
-    def __init__(self):
+class InitSQL:
+    """SQL初始化测试类
+    
+    用于执行和验证数据库初始化SQL，支持缓存机制。
+    
+    Attributes:
+        _init_cache: 类级别的缓存，存储初始化结果
+        _cache_file: 缓存文件路径
+    """
+    _init_cache: Optional[Dict[str, Any]] = None
+    _cache_file: Path = Path(__file__).parent / "cache" / "init_cache.json"
+
+    def __init__(self) -> None:
         """初始化测试类"""
-        # 初始化日志
-        self.logger = Loggers()
-        # 设置配置文件路径
-        self.gen_config_path = os.path.join(project_root,  "config","biz", "gen_config.yml")
-        # 初始化数据库管理器
+        self.log = log  # 使用模块级别的日志工具
+        # 更新配置文件路径
+        self.gen_config_path = project_root / "config" / "biz" / "gen.yaml"
         self.db = DBManager()
 
-    def _load_cache(self) -> Dict[str, Any]:
-        """从文件加载缓存"""
+    def _load_cache(self) -> Optional[Dict[str, Any]]:
+        """从文件加载缓存
+        
+        Returns:
+            Optional[Dict[str, Any]]: 缓存的初始化数据，如果加载失败则返回 None
+        """
         try:
-            if os.path.exists(self._cache_file):
+            if self._cache_file.exists():
                 with open(self._cache_file, 'r', encoding='utf-8') as f:
                     return json.load(f)
         except Exception as e:
-            self.logger.warning(f"加载缓存文件失败: {str(e)}")
+            self.log.warning(f"加载缓存文件失败: {str(e)}")
         return None
 
     def _save_cache(self, data: Dict[str, Any]) -> None:
-        """保存缓存到文件"""
+        """保存缓存到文件
+        
+        Args:
+            data: 要缓存的数据
+        """
         try:
-            os.makedirs(os.path.dirname(self._cache_file), exist_ok=True)
+            self._cache_file.parent.mkdir(parents=True, exist_ok=True)
             with open(self._cache_file, 'w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=2, cls=DecimalEncoder)
         except Exception as e:
-            self.logger.warning(f"保存缓存文件失败: {str(e)}")
+            self.log.warning(f"保存缓存文件失败: {str(e)}")
 
     def _format_datetime(self, value: Any) -> Any:
-        """格式化日期时间值"""
+        """格式化日期时间值
+        
+        Args:
+            value: 要格式化的值
+            
+        Returns:
+            Any: 格式化后的值
+        """
         if isinstance(value, datetime):
             return value.strftime('%Y-%m-%d %H:%M:%S')
         return value
 
-    def _format_result(self, result: List[Dict]) -> List[Dict]:
-        """格式化查询结果"""
-        formatted = []
-        for row in result:
-            formatted_row = {}
-            for key, value in row.items():
-                formatted_row[key] = self._format_datetime(value)
-            formatted.append(formatted_row)
-        return formatted
-
-    def init_sql(self) -> Dict[str, Any]:
-        """
-        从YAML配置文件读取SQL查询并执行
+    def _format_result(self, result: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """格式化查询结果
+        
+        Args:
+            result: 查询结果列表
+            
         Returns:
-            Dict[str, Any]: {
-                "base_info": {...},
-                "org_info": {...},
-                ...
-            }
+            List[Dict[str, Any]]: 格式化后的结果列表
         """
-        # 如果已经有缓存的结果，直接返回，不执行任何SQL查询
-        if InitSQL._scm_init_cache is not None:
-            self.logger.info("内存缓存命中：使用缓存的SCM初始化数据")
-            return InitSQL._scm_init_cache
-        # 尝试从文件加载缓存
+        return [{k: self._format_datetime(v) for k, v in row.items()} for row in result]
+
+    def _init_sql_impl(self) -> Dict[str, Any]:
+        """实际的SQL初始化实现
+        
+        Returns:
+            Dict[str, Any]: 初始化数据
+        """
+        self.log.info("开始执行init_sql方法...")
+        
+        # 检查内存缓存
+        if InitSQL._init_cache is not None:
+            self.log.info("内存缓存命中：使用缓存的初始化数据")
+            return InitSQL._init_cache
+
+        # 检查文件缓存
         file_cache = self._load_cache()
         if file_cache is not None:
-            self.logger.info("文件缓存命中：使用缓存的SCM初始化数据")
-            InitSQL._scm_init_cache = file_cache
+            self.log.info("文件缓存命中：使用缓存的初始化数据")
+            InitSQL._init_cache = file_cache
             return file_cache
-        self.logger.info("缓存未命中：开始执行SCM初始化")
-        self.logger.info(f"配置文件路径: {self.scm_config_path}")
+
+        self.log.info("缓存未命中：开始执行初始化")
+        
+        # 读取YAML配置文件
+        self.log.info(f"尝试读取配置文件: {self.gen_config_path}")
+        yaml_util = YamlUtil()
+        
+        if not self.gen_config_path.exists():
+            error_msg = f"配置文件不存在: {self.gen_config_path}"
+            self.log.error(error_msg)
+            raise FileNotFoundError(error_msg)
+            
+        scm_config = yaml_util.read_yaml(self.gen_config_path)
+        if not scm_config:
+            error_msg = f"配置文件为空: {self.gen_config_path}"
+            self.log.error(error_msg)
+            raise ValueError(error_msg)
+            
+        self.log.info(f"成功读取配置文件: {self.gen_config_path}")
+        self.log.debug(f"配置文件内容: {json.dumps(scm_config, ensure_ascii=False, indent=2)}")
+
+        # 初始化返回结果
+        init_data = {
+            "user_info": {},
+            "base_info": {},
+            "org_info": {},
+            "partner_info": {},
+            "material_info": {}
+        }
+
+        # 获取用户信息
+        if 'base_info' not in scm_config:
+            error_msg = "配置文件中缺少 base_info 配置"
+            self.log.error(error_msg)
+            raise ValueError(error_msg)
+            
+        if 'user_info' not in scm_config['base_info']:
+            error_msg = "配置文件中缺少 user_info 配置"
+            self.log.error(error_msg)
+            raise ValueError(error_msg)
+            
+        user_info_sql = scm_config['base_info']['user_info'].get('sql')
+        if not user_info_sql:
+            error_msg = "user_info 配置中缺少 SQL 语句"
+            self.log.error(error_msg)
+            raise ValueError(error_msg)
+            
+        self.log.info(f"执行用户信息查询SQL: {user_info_sql}")
+        user_info = self.db.execute_query(user_info_sql)
+        if not user_info:
+            error_msg = "未找到用户信息"
+            self.log.error(error_msg)
+            raise ValueError(error_msg)
+            
+        init_data['user_info'] = user_info[0]
+        self.log.info(f"成功初始化用户信息: {user_info[0]}")
+
+        # 执行查询并格式化结果
+        for query_key, query_config in scm_config.get('base_info', {}).items():
+            try:
+                self.log.info(f"执行查询: {query_key}")
+                sql = query_config.get('sql', '')
+                self.log.debug(f"SQL: {sql}")
+                
+                if not sql:
+                    self.log.warning(f"查询配置缺少SQL语句: {query_key}")
+                    continue
+                    
+                query_result = self.db.execute_query(sql)
+                formatted_result = self._format_result(query_result)
+                
+                # 根据查询类型分类存储结果
+                if 'org' in query_key:
+                    init_data['org_info'][query_key] = formatted_result[0] if formatted_result else None
+                elif 'partner' in query_key or 'vend' in query_key or 'cust' in query_key:
+                    init_data['partner_info'][query_key] = formatted_result[0] if formatted_result else None
+                elif 'mat' in query_key or 'atp' in query_key or 'inv' in query_key:
+                    init_data['material_info'][query_key] = formatted_result[0] if formatted_result else None
+                else:
+                    init_data['base_info'][query_key] = formatted_result[0] if formatted_result else None
+                    
+                self.log.info(f"查询 {query_key} 执行成功")
+            except Exception as e:
+                self.log.error(f"执行查询 {query_key} 时出错: {str(e)}")
+                raise
+
+        # 缓存结果
+        InitSQL._init_cache = init_data
+        self._save_cache(init_data)
+        self.log.info("初始化数据已缓存")
+        return init_data
+
+    def init_sql(self) -> Dict[str, Any]:
+        """初始化SQL数据
+        
+        Returns:
+            Dict[str, Any]: 初始化数据
+        """
         try:
-            # 读取YAML配置文件
-            yaml_reader = YamlReader(self.scm_config_path)
-            scm_config = yaml_reader.data()
-            # 初始化返回结果
-            scm_init_data = {
-                "user_info": {},  # 用户信息
-                "base_info": {},  # 基础配置数据
-                "org_info": {},   # 组织信息
-                "partner_info": {},  # 合作伙伴信息
-                "material_info": {}  # 物料相关信息
-            }
-            # 获取用户信息
-            user_info = self.db.query_all(scm_config['base_info']['user_info']['sql'])
-            if not user_info:
-                raise ValueError("未找到用户信息")
-            # 存储用户信息
-            scm_init_data['user_info'] = user_info[0]  # 直接存储第一条用户记录
-            self.logger.info(f"成功初始化用户信息: {user_info[0]}")
-            # 执行查询并格式化结果
-            for query_key, query_config in scm_config['base_info'].items():
-                try:
-                    self.logger.info(f"执行SCM查询: {query_key}")
-                    self.logger.debug(f"SQL: {query_config['sql']}")
-                    # 执行SQL查询
-                    query_result = self.db.query_all(query_config['sql'])
-                    formatted_result = self._format_result(query_result)
-                    # 根据查询类型分类存储结果
-                    if 'org' in query_key:
-                        scm_init_data['org_info'][query_key] = formatted_result[0] if formatted_result else None
-                    elif 'partner' in query_key or 'vend' in query_key or 'cust' in query_key:
-                        scm_init_data['partner_info'][query_key] = formatted_result[0] if formatted_result else None
-                    elif 'mat' in query_key or 'atp' in query_key or 'inv' in query_key:
-                        scm_init_data['material_info'][query_key] = formatted_result[0] if formatted_result else None
-                    else:
-                        scm_init_data['base_info'][query_key] = formatted_result[0] if formatted_result else None
-                    self.logger.info(f"SCM查询 {query_key} 执行成功")
-                except Exception as e:
-                    self.logger.error(f"执行SCM查询 {query_key} 时出错: {str(e)}")
-                    raise
-            # 将结果存入内存缓存和文件缓存
-            InitSQL._scm_init_cache = scm_init_data
-            self._save_cache(scm_init_data)
-            self.logger.info("SCM初始化数据已缓存")
-            return scm_init_data
+            # 尝试从缓存获取数据
+            cache_data = self._get_cache_data()
+            if cache_data:
+                log.info("从缓存获取数据成功")
+                return cache_data
+                
+            # 缓存不存在或已过期，重新初始化数据
+            log.info("缓存数据不存在，开始初始化数据")
+            init_data = self._init_sql_impl()
+            
+            # 写入缓存
+            self._write_cache_data(init_data)
+            log.info("数据初始化完成并写入缓存")
+            
+            return init_data
         except Exception as e:
-            self.logger.error(f"初始化SCM SQL时出错: {str(e)}")
+            log.error(f"初始化SQL时出错: {str(e)}")
             raise
+            
+    def _get_cache_data(self) -> Optional[Dict[str, Any]]:
+        """获取缓存数据
+        
+        Returns:
+            Optional[Dict[str, Any]]: 缓存数据，如果不存在则返回None
+        """
+        try:
+            cache_file = self._get_cache_file_path()
+            if not os.path.exists(cache_file):
+                return None
+                
+            # 检查缓存是否过期
+            if self._is_cache_expired(cache_file):
+                os.remove(cache_file)
+                return None
+                
+            with open(cache_file, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception as e:
+            log.warning(f"读取缓存数据失败: {str(e)}")
+            return None
+            
+    def _write_cache_data(self, data: Dict[str, Any]) -> None:
+        """写入缓存数据
+        
+        Args:
+            data: 要缓存的数据
+        """
+        try:
+            cache_file = self._get_cache_file_path()
+            cache_dir = os.path.dirname(cache_file)
+            os.makedirs(cache_dir, exist_ok=True)
+            
+            with open(cache_file, 'w', encoding='utf-8') as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+        except Exception as e:
+            log.warning(f"写入缓存数据失败: {str(e)}")
+            
+    def _get_cache_file_path(self) -> str:
+        """获取缓存文件路径
+        
+        Returns:
+            str: 缓存文件路径
+        """
+        cache_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'cache')
+        return os.path.join(cache_dir, f"{self.__class__.__name__}_cache.json")
+        
+    def _is_cache_expired(self, cache_file: str) -> bool:
+        """检查缓存是否过期
+        
+        Args:
+            cache_file: 缓存文件路径
+            
+        Returns:
+            bool: 是否过期
+        """
+        try:
+            # 获取文件修改时间
+            mtime = os.path.getmtime(cache_file)
+            # 检查是否超过24小时
+            return (time.time() - mtime) > 24 * 3600
+        except Exception:
+            return True
+
 
 class BaseTest:
-    """SCM 测试基类，提供公共方法"""
+    """测试基类
+    
+    提供测试用例的公共功能，包括：
+    1. 环境初始化
+    2. 数据库操作
+    3. HTTP 请求处理
+    4. 断言工具
+    5. 日志记录
+    6. 测试数据管理
+    """
+    
     @classmethod
     @handle_class_method_exception(log_level="ERROR")
-    def setup_class(cls):
-        """测试类初始化，获取必要的配置信息"""
+    def setup_class(cls) -> None:
+        """测试类初始化
+        
+        初始化必要的组件和配置信息，包括：
+        1. 日志工具
+        2. 数据库管理器
+        3. HTTP 工具
+        4. 断言工具
+        5. SQL 初始化工具
+        6. 登录管理器
+        7. 请求头配置
+        """
         # 初始化基础组件
-        cls.logger = Loggers()
+        cls.log = log  # 使用模块级别的日志工具
         cls.db = DBManager()
         cls.http = HttpUtil()
         cls.assert_util = AssertHelper()
-        # 初始化SQL工具并获取初始化数据（利用缓存机制）
+        
+        # 初始化SQL工具并获取初始化数据
+        cls.log.info("开始初始化SQL工具...")
         cls.init_sql = InitSQL()
+        cls.log.info("SQL工具初始化完成，开始获取初始化数据...")
+        
+        # 直接调用实例方法，而不是通过属性访问
         init_data = cls.init_sql.init_sql()
-        # 只获取需要的配置信息
+        cls.log.info(f"获取到的初始化数据类型: {type(init_data)}")
+        
+        if not isinstance(init_data, dict):
+            error_msg = f"初始化数据格式错误，期望dict类型，实际为{type(init_data)}"
+            cls.log.error(error_msg)
+            raise TypeError(error_msg)
+            
+        # 提取必要的配置信息
+        cls.log.info("开始提取配置信息...")
         cls.init_data = {
             "user_info": {
-                "user_info": init_data["base_info"]["user_info"]
+                "user_info": init_data.get("base_info", {}).get("user_info", {})
             },
             "base_info": {
-                "so_type_info": init_data["base_info"]["so_type_info"],
-                "sales_channel_info": init_data["base_info"]["sales_channel_info"],
-                "exchange_rate_type_info": init_data["base_info"]["exchange_rate_type_info"],
-                "currency_info": init_data["base_info"]["currency_info"]
+                "so_type_info": init_data.get("base_info", {}).get("so_type_info", {}),
+                "sales_channel_info": init_data.get("base_info", {}).get("sales_channel_info", {}),
+                "exchange_rate_type_info": init_data.get("base_info", {}).get("exchange_rate_type_info", {}),
+                "currency_info": init_data.get("base_info", {}).get("currency_info", {})
             },
             "org_info": {
-                "sls_org_info": init_data["org_info"]["sls_org_info"],
-                "pur_org_info": init_data["org_info"]["pur_org_info"],
-                "inv_org_info": init_data["org_info"]["inv_org_info"],
-                "com_org_info": init_data["org_info"]["com_org_info"]
+                "sls_org_info": init_data.get("org_info", {}).get("sls_org_info", {}),
+                "pur_org_info": init_data.get("org_info", {}).get("pur_org_info", {}),
+                "inv_org_info": init_data.get("org_info", {}).get("inv_org_info", {}),
+                "com_org_info": init_data.get("org_info", {}).get("com_org_info", {})
             },
             "partner_info": {
-                "cust_info": init_data["partner_info"]["cust_info"]
+                "cust_info": init_data.get("partner_info", {}).get("cust_info", {})
             },
             "material_info": {
-                "inv_loc_info": init_data["material_info"]["inv_loc_info"]
+                "inv_loc_info": init_data.get("material_info", {}).get("inv_loc_info", {})
             }
         }
+        cls.log.info("配置信息提取完成")
+        
         # 提取必要的ID
+        cls.log.info("开始提取ID信息...")
         cls._extract_ids()
+        cls.log.info("ID信息提取完成")
+        
         # 初始化登录和API配置
+        cls.log.info("开始初始化登录和API配置...")
         cls.login_manager = LoginManager()
         cls.session = cls.login_manager.login()
         cls.base_url = YamlUtil().get_base_url()
+        cls.log.info("登录和API配置初始化完成")
+        
         # 初始化请求头
+        cls.log.info("开始初始化请求头...")
         cls.headers = {
             'Accept': 'application/json, text/plain, */*',
             'Accept-Language': 'zh-CN',
@@ -212,13 +435,19 @@ class BaseTest:
             'Sec-Fetch-Site': 'same-origin',
             'User-Agent': MockData().get_mock_user_agent()
         }
+        cls.log.info("请求头初始化完成")
+        
         # 初始化测试数据
         cls.test_data = {}
-        cls.logger.info("测试类初始化完成")
+        cls.log.info("测试类初始化完成")
 
     @classmethod
     def _extract_ids(cls) -> None:
-        """提取必要的ID并验证"""
+        """提取必要的ID并验证
+        
+        从初始化数据中提取各种ID，并进行存在性验证。
+        包括：用户ID、客户ID、订单类型ID、组织ID等。
+        """
         id_mappings = {
             'user_id': ('user_info', 'user_info', 'id'),
             'cust_id': ('partner_info', 'cust_info', 'id'),
@@ -233,39 +462,52 @@ class BaseTest:
             'base_curr_id': ('base_info', 'currency_info', 'curr_id'),
             'sls_curr_id': ('base_info', 'currency_info', 'curr_id')
         }
+        
         for attr_name, path in id_mappings.items():
             value = cls.init_data
             for key in path:
-                value = value[key]
+                value = value.get(key, {})
             setattr(cls, attr_name, value)
             cls.assert_util.assert_id_exists(value, f"{attr_name.replace('_', ' ').title()}")
 
-    def setup_method(self, method=None):
-        """测试方法开始前的设置"""
+    def setup_method(self, method: Optional[pytest.Function] = None) -> None:
+        """测试方法开始前的设置
+        
+        Args:
+            method: 当前执行的测试方法
+        """
         if method and hasattr(method, '__name__'):
-            self.logger.info(f"开始测试: {method.__name__}")
+            self.log.info(f"开始测试: {method.__name__}")
         else:
-            self.logger.info("开始测试方法")
+            self.log.info("开始测试方法")
         self.test_data = {}
 
-    def _make_request(self, url: str, data: dict, description: str = "", extract_nested_data: bool = False, headers: dict = None) -> dict:
+    def _make_request(self, url: str, data: Dict[str, Any], description: str = "", 
+                     extract_nested_data: bool = False, headers: Optional[Dict[str, str]] = None) -> Dict[str, Any]:
         """发送请求并处理响应
+        
         Args:
             url: 请求URL
             data: 请求数据
             description: 请求描述，用于日志记录
             extract_nested_data: 是否提取嵌套的 data 结构
+            headers: 自定义请求头
+            
         Returns:
-            dict: 响应数据
+            Dict[str, Any]: 响应数据
+            
+        Raises:
+            Exception: 请求失败时抛出
         """
         try:
             if description:
-                self.logger.info(f"发送请求: {description}")
-            response = self.session.post(url, json=data, headers=self.headers)
-            self.last_response_text = response.text  # 保存原始响应内容
+                self.log.info(f"发送请求: {description}")
+                
+            response = self.session.post(url, json=data, headers=headers or self.headers)
+            self.last_response_text = response.text
             response.raise_for_status()
             response_data = response.json()
-            # 如果需要提取嵌套的 data 结构
+            
             if extract_nested_data:
                 if isinstance(response_data, dict) and "data" in response_data:
                     nested_data = response_data["data"]
@@ -275,28 +517,42 @@ class BaseTest:
                             nested_data = nested_data["data"]
                     return nested_data
                 else:
-                    # 没有嵌套结构时，强制输出原始HTTP响应内容
-                    self.logger.error(f"extract_nested_data=True 但响应无嵌套data字段，原始response.text: {response.text}")
-                    self.logger.error(f"extract_nested_data=True 但响应无嵌套data字段，response.json: {json.dumps(response_data, ensure_ascii=False, indent=2) if isinstance(response_data, dict) else response_data}")
+                    self.log.error(f"extract_nested_data=True 但响应无嵌套data字段，原始response.text: {response.text}")
+                    self.log.error(f"extract_nested_data=True 但响应无嵌套data字段，response.json: {json.dumps(response_data, ensure_ascii=False, indent=2) if isinstance(response_data, dict) else response_data}")
                     return response_data
             return response_data
+            
         except Exception as e:
-            # 异常时也输出原始响应内容
             if 'response' in locals() and response is not None:
                 try:
-                    self.logger.error(f"接口原始响应内容: {response.text}")
+                    self.log.error(f"接口原始响应内容: {response.text}")
                 except Exception:
                     pass
-            self.logger.error(f"请求失败: {str(e)}")
+            self.log.error(f"请求失败: {str(e)}")
             raise
 
-    def _make_request_with_assertion(self, url: str, data: dict, description: str = "", extract_nested_data: bool = False, headers: dict = None) -> dict:
-        """发送请求并处理响应，并断言业务成功"""
+    def _make_request_with_assertion(self, url: str, data: Dict[str, Any], description: str = "", 
+                                   extract_nested_data: bool = False, headers: Optional[Dict[str, str]] = None) -> Dict[str, Any]:
+        """发送请求并处理响应，并断言业务成功
+        
+        Args:
+            url: 请求URL
+            data: 请求数据
+            description: 请求描述，用于日志记录
+            extract_nested_data: 是否提取嵌套的 data 结构
+            headers: 自定义请求头
+            
+        Returns:
+            Dict[str, Any]: 响应数据
+            
+        Raises:
+            AssertionError: 当业务响应不成功时抛出
+            Exception: 请求失败时抛出
+        """
         result = self._make_request(url, data, description, extract_nested_data, headers)
-        if isinstance(result, dict) and not result.get("success", True):
-            self.logger.error(f"业务失败，原始响应: {json.dumps(result, ensure_ascii=False, indent=2)}")
-            raise ValueError(f"接口业务失败: {result.get('err', {}).get('msg', '未知错误')}")
+        self.assert_util.assert_response_status(result)
         return result
+
 if __name__ == "__main__":
     test = BaseTest()
     test.setup_class()

@@ -19,8 +19,6 @@ from common.login_manager import LoginManager
 from testcases.comm.base_test import InitSQL
 from utils.assert_util import AssertHelper
 from utils.log_util import Loggers
-from common.config_manager import ConfigManager
-from utils.mysql_util import DBManager
 from utils.yaml_util import YamlUtil
 from utils.http_util import HttpUtil
 from utils.exception_util import handle_exception, safe_api_call, handle_class_method_exception
@@ -90,10 +88,10 @@ class TestSalesOrderCreate(BaseTest):
         self.cust_person_name = result["custPersonName"]
         self.cust_phone = result["custPhone"]
         
-        assert self.addr_id is not None, "地址ID为空"
-        assert self.addr_detail is not None, "地址信息为空"
-        assert self.cust_person_name is not None, "客户姓名为空"
-        assert self.cust_phone is not None, "客户电话为空"
+        self.assert_util.assert_id_exists(self.addr_id, "地址ID")
+        self.assert_util.assert_id_exists(self.addr_detail, "地址信息")
+        self.assert_util.assert_id_exists(self.cust_person_name, "客户姓名")
+        self.assert_util.assert_id_exists(self.cust_phone, "客户电话")
         self.logger.info("客户信息查询完成")
 
     def _query_partner(self):
@@ -125,7 +123,7 @@ class TestSalesOrderCreate(BaseTest):
         logger.debug(f"相关方查询响应: {json.dumps(result, indent=2, ensure_ascii=False, cls=DecimalEncoder)}")
         self.sls_partner_links = result["slsPartnerLinks"]
         self.logger.info("相关方查询完成")
-        assert self.sls_partner_links is not None, "相关方信息为空"
+        self.assert_util.assert_id_exists(self.sls_partner_links, "相关方信息")
 
     def _query_sales_organization(self):
         """查询销售组织列表"""
@@ -138,8 +136,8 @@ class TestSalesOrderCreate(BaseTest):
         self.sls_org_id = self.sls_org_obj["id"]
         logger.info(f"销售组织列表查询完成: {self.sls_org_obj}")
         self.logger.info("销售组织列表查询完成")
-        assert self.sls_org_obj is not None, "销售组织信息为空"
-        assert self.sls_org_id is not None, "销售组织ID为空"
+        self.assert_util.assert_id_exists(self.sls_org_obj, "销售组织信息")
+        self.assert_util.assert_id_exists(self.sls_org_id, "销售组织ID")
 
     def _query_materials(self):
         """查询物料列表"""
@@ -171,7 +169,7 @@ class TestSalesOrderCreate(BaseTest):
         self.mat_obj["matBasePrice"] = 100.00  # 设置默认价格
         logger.debug(f"物料列表查询响应: {self.mat_obj}")
         self.logger.info("物料列表查询完成")
-        assert self.mat_obj is not None, "物料信息为空"
+        self.assert_util.assert_id_exists(self.mat_obj, "物料信息")
 
     def _render_order_line(self):
         """渲染订单行"""

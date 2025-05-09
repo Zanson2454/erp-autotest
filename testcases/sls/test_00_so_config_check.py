@@ -12,10 +12,7 @@ project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(_
 sys.path.insert(0, project_root)
 
 from utils.yaml_util import YamlUtil
-
-# 获取项目根目录
-def get_project_root():
-    return os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from utils.performance_util import measure_time
 
 # 添加项目根目录到 Python 路径
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -46,6 +43,7 @@ class TestOrderTypeConfig(BaseTest):
     3. 检查标准订单类型是否存在
     """)
     @allure.severity(allure.severity_level.CRITICAL)
+    @measure_time(name="查询订单类型", log_level="INFO")
     def test_01_query_order_type(self):
         """测试查询订单类型"""
         # 1. 准备请求参数
@@ -109,6 +107,7 @@ class TestOrderTypeConfig(BaseTest):
     3. 检查标准订单类型配置
     """)
     @allure.severity(allure.severity_level.CRITICAL)
+    @measure_time(name="查询订单类型详情", log_level="INFO")
     def test_02_query_order_type_detail(self):
         """测试查询订单类型详情"""
         # 1. 检查并获取标准订单类型ID

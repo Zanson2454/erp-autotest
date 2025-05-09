@@ -66,12 +66,7 @@
       "wc_head_name": "标准工作日历",
       "enable_status": "ENABLED"
     },
-    "calendar_info": {
-      "calendar_id": 14014001,
-      "calendar_code": "2024Y",
-      "calendar_name": "勿删勿改-标准会计期间",
-      "status": "ENABLED"
-    },
+    "calendar_info": null,
     "employee_info": {
       "id": 14082001,
       "name": "admin"

@@ -89,7 +89,7 @@ class TestMemberCreate(BaseTest):
         data = self._generate_member_data()
         url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_CRM$CRM_MEMBER_MD_CREATE_ACTION_SERVICE?tmodule=ERP_CRM"
         response = self._make_request(url, data, "新增会员接口")
-        assert response.get("success", False), f"接口返回失败: {json.dumps(response, ensure_ascii=False)}"
+        self.assert_util.assert_response_status(response)
         logger.info(f"新增会员接口响应: {json.dumps(response, ensure_ascii=False, indent=2)}")
 
     @allure.title("批量新增会员接口")
@@ -137,6 +137,11 @@ class TestMemberCreate(BaseTest):
             for member in failed_members:
                 logger.error(f"第{member['index']}个会员 - 手机号: {member['phone']}, 错误: {member['error']}")
         
+        # 验证批量创建结果
+        self.assert_util.assert_value_in_range(success_count, 0, count, "成功创建数量")
+        self.assert_util.assert_value_in_range(failed_count, 0, count, "失败创建数量")
+        self.assert_util.assert_value_in_range(success_count + failed_count, count, count, "总创建数量")
+        
         return {
             "total": count,
             "success": success_count,
@@ -152,9 +157,9 @@ if __name__ == "__main__":
     # 测试单个会员创建
     test_member_create.test_create_member()
     
-    # 测试批量创建会员（创建3个）
-    result = test_member_create.test_batch_create_members(1000)
-    logger.info(f"批量创建结果: {json.dumps(result, ensure_ascii=False, indent=2)}")
+    # # 测试批量创建会员（创建3个）
+    # result = test_member_create.test_batch_create_members(1000)
+    # logger.info(f"批量创建结果: {json.dumps(result, ensure_ascii=False, indent=2)}")
 
     # 测试批量创建会员（使用Locust）
     # test_member_create.test_batch_create_members_with_locust()

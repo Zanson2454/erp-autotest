@@ -1,14 +1,33 @@
 import os
 import yaml
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Union
 from loguru import logger
 from dotenv import load_dotenv
 
 class YamlUtil:
     """YAML 配置管理工具类，负责加载和管理所有配置"""
     
+    _instance = None
+    _env_loaded = False
+    
+    def __new__(cls, *args, **kwargs):
+        """实现单例模式"""
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+    
     def __init__(self, config_dir: str = "config", env: str = "test"):
+        """初始化配置管理器
+        
+        Args:
+            config_dir: 配置目录路径
+            env: 环境名称
+        """
+        # 如果已经初始化过，直接返回
+        if hasattr(self, 'initialized'):
+            return
+            
         self.config_dir = Path(config_dir)
         self.env = env
         self.base_config: Dict[str, Any] = {}
@@ -16,19 +35,23 @@ class YamlUtil:
         self.db_config: Dict[str, Any] = {}
         self.biz_config: Dict[str, Any] = {}
         
-        # 加载环境变量
+        # 加载环境变量（只加载一次）
         self._load_env_vars()
         # 确保配置目录存在
         self._ensure_config_dir()
         # 加载基础配置
         self._load_base_config()
+        
+        self.initialized = True
     
     def _load_env_vars(self):
-        """加载环境变量"""
-        env_file = Path(".env")
-        if env_file.exists():
-            load_dotenv(env_file)
-            logger.info("已加载 .env 文件")
+        """加载环境变量（确保只加载一次）"""
+        if not YamlUtil._env_loaded:
+            env_file = Path(".env")
+            if env_file.exists():
+                load_dotenv(env_file)
+                logger.info("已加载 .env 文件")
+                YamlUtil._env_loaded = True
     
     def _ensure_config_dir(self):
         """确保配置目录存在"""
@@ -176,20 +199,37 @@ class YamlUtil:
         """保存配置到YAML文件
         
         Args:
-            data: 要保存的配置数据
+            data: 要保存的数据
             file_path: 文件路径
         """
         with open(file_path, 'w', encoding='utf-8') as f:
-            yaml.safe_dump(data, f, allow_unicode=True)
-    
-    def read_yaml(self, file_path: str) -> Dict[str, Any]:
+            yaml.dump(data, f, allow_unicode=True, default_flow_style=False)
+            
+    def read_yaml(self, file_path: Union[str, Path]) -> Dict[str, Any]:
         """读取YAML文件
         
         Args:
-            file_path: 文件路径
+            file_path: YAML文件路径
             
         Returns:
-            YAML文件内容
+            Dict[str, Any]: 解析后的配置数据
+            
+        Raises:
+            FileNotFoundError: 文件不存在时抛出
+            yaml.YAMLError: YAML解析错误时抛出
         """
-        with open(file_path, 'r', encoding='utf-8') as f:
-            return yaml.safe_load(f)
+        file_path = Path(file_path)
+        if not file_path.exists():
+            logger.error(f"YAML文件不存在: {file_path}")
+            raise FileNotFoundError(f"YAML文件不存在: {file_path}")
+            
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                config = yaml.safe_load(f)
+                if config is None:
+                    logger.warning(f"YAML文件为空: {file_path}")
+                    return {}
+                return config
+        except yaml.YAMLError as e:
+            logger.error(f"YAML解析错误: {str(e)}")
+            raise

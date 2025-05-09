@@ -6,20 +6,19 @@ import allure
 from datetime import datetime
 from loguru import logger
 from typing import Dict, Any, Optional
-from utils.yaml_util import YamlUtil
+from pathlib import Path
 
-# 获取项目根目录
-def get_project_root():
-    return os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # 添加项目根目录到 Python 路径
-current_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.abspath(os.path.join(current_dir, "..", "..", ".."))
-sys.path.insert(0, project_root)
+current_file = Path(__file__).resolve()
+project_root = current_file.parent.parent.parent
+sys.path.insert(0, str(project_root))
 
+from utils.yaml_util import YamlUtil
 from testcases.comm.base_test import BaseTest, DecimalEncoder
 from utils.exception_util import safe_api_call
 from testcases.sls.test_01_create import TestSalesOrderCreate
+from utils.assert_util import AssertHelper
 
 class TestOrderDelete(BaseTest):
     """销售订单删除测试类"""
@@ -119,8 +118,7 @@ class TestOrderDelete(BaseTest):
                 logger.info("成功创建新订单")
                 # 重新查询订单
                 result = self.db.execute_query(sql, (self.so_type_id, self.user_id))
-                if not result:
-                    pytest.fail("创建订单后仍然未找到可删除的订单")
+                self.assert_util.assert_list_not_empty(result, "订单列表")
             except Exception as e:
                 logger.error(f"创建新订单失败: {str(e)}")
                 pytest.fail(f"创建新订单失败: {str(e)}")
@@ -139,7 +137,7 @@ class TestOrderDelete(BaseTest):
         response = self._make_request(url, data, "删除销售订单")
         
         # 5. 验证删除结果
-        assert response.get("success", False), f"删除订单失败: {response.get('message', '未知错误')}"
+        self.assert_util.assert_response_status(response)
         logger.info(f"成功删除订单: {self.order_id}")
         
         # 6. 验证数据库中的删除状态
@@ -149,8 +147,8 @@ class TestOrderDelete(BaseTest):
             WHERE id = %s
         """
         deleted_record = self.db.execute_query(verify_sql, (self.order_id,))
-        assert len(deleted_record) > 0, f"订单 {self.order_id} 在数据库中不存在"
-        assert deleted_record[0]['deleted'] != 0, f"订单 {self.order_id} 未被标记为删除状态"
+        self.assert_util.assert_list_not_empty(deleted_record, "删除记录")
+        self.assert_util.assert_value_in_range(deleted_record[0]['deleted'], 1, 1, "删除状态")
         logger.info(f"订单 {self.order_id} 在数据库中已标记为删除状态")
 
     @allure.title("批量删除销售订单")
@@ -238,11 +236,8 @@ class TestOrderDelete(BaseTest):
 
 
 if __name__ == "__main__":
-    project_root = get_project_root()
-    reports_dir = os.path.join(project_root, "reports", "allure-results")
-    pytest.main(["-v", __file__, f"--alluredir={reports_dir}"])
-    # test = TestOrderDelete()
-    # test.setup_class()
-    # test.test_01_delete_order()
-    # test.test_02_batch_delete_orders()
+    test = TestOrderDelete()
+    test.setup_class()
+    test.test_01_delete_order()
+    test.test_02_batch_delete_orders()
   

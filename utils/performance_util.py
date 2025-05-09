@@ -1,15 +1,129 @@
 import time
-from typing import Dict, Any
+import functools
+from typing import Callable, Any, Optional
 from loguru import logger
 import psutil
 import threading
+import allure
+
+
+def measure_time(
+    name: Optional[str] = None,
+    log_level: str = "DEBUG",
+    allure_step: bool = True
+) -> Callable:
+    """测量函数执行时间的装饰器
+    
+    Args:
+        name: 计时器名称，默认使用函数名
+        log_level: 日志级别，可选 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'
+        allure_step: 是否在 Allure 报告中记录步骤
+        
+    Returns:
+        Callable: 装饰器函数
+        
+    使用示例：
+    ```python
+    @measure_time(name="创建订单", log_level="INFO")
+    def create_order():
+        # 创建订单的代码
+        pass
+    ```
+    """
+    def decorator(func: Callable) -> Callable:
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs) -> Any:
+            timer_name = name or func.__name__
+            start_time = time.time()
+            
+            # 记录开始时间
+            logger.log(log_level.upper(), f"开始执行 {timer_name}")
+            
+            try:
+                # 使用 Allure 步骤记录
+                if allure_step:
+                    with allure.step(f"执行 {timer_name}"):
+                        result = func(*args, **kwargs)
+                else:
+                    result = func(*args, **kwargs)
+                    
+                # 计算执行时间
+                duration = time.time() - start_time
+                
+                # 记录执行时间
+                logger.log(
+                    log_level.upper(),
+                    f"完成执行 {timer_name}, 耗时: {duration:.3f}秒"
+                )
+                
+                # 添加到 Allure 报告
+                if allure_step:
+                    allure.attach(
+                        f"执行时间: {duration:.3f}秒",
+                        name=f"{timer_name} 执行时间",
+                        attachment_type=allure.attachment_type.TEXT
+                    )
+                
+                return result
+                
+            except Exception as e:
+                # 记录异常情况下的执行时间
+                duration = time.time() - start_time
+                logger.error(
+                    f"{timer_name} 执行失败, 耗时: {duration:.3f}秒, 错误: {str(e)}"
+                )
+                raise
+                
+        return wrapper
+    return decorator
+
+
+class PerformanceMetrics:
+    """性能指标收集器
+    
+    用于收集和记录测试用例的性能指标。
+    支持与 Allure 报告集成。
+    
+    使用示例：
+    ```python
+    metrics = PerformanceMetrics()
+    
+    @metrics.measure
+    def test_case():
+        # 测试用例代码
+        pass
+    ```
+    """
+    
+    def __init__(self):
+        self.metrics: dict[str, float] = {}
+    
+    def measure(self, name: Optional[str] = None) -> Callable:
+        """测量函数执行时间的装饰器
+        
+        Args:
+            name: 计时器名称，默认使用函数名
+            
+        Returns:
+            Callable: 装饰器函数
+        """
+        return measure_time(name=name)
+    
+    def get_metrics(self) -> dict[str, float]:
+        """获取性能指标
+        
+        Returns:
+            dict[str, float]: 性能指标字典
+        """
+        return self.metrics.copy()
+
 
 class PerformanceTest:
     """性能测试支持类，用于收集性能指标"""
     
     def __init__(self):
-        self.metrics: Dict[str, Any] = {}
-        self._timers: Dict[str, float] = {}
+        self.metrics: dict[str, float] = {}
+        self._timers: dict[str, float] = {}
         self._resource_monitor = None
         self._stop_monitor = False
     
@@ -70,10 +184,10 @@ class PerformanceTest:
             self.metrics["memory_percent"] = memory.percent
             time.sleep(interval)
     
-    def get_metrics(self) -> Dict[str, Any]:
+    def get_metrics(self) -> dict[str, float]:
         """获取性能指标
         
         Returns:
-            性能指标字典
+            dict[str, float]: 性能指标字典
         """
         return self.metrics.copy() 
