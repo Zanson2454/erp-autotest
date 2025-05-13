@@ -337,4 +337,14 @@ base_info:
     description: "查询销售订单类型信息"
     validation:
       min_records: 1
-      required_fields: ["id", "so_type_code", "so_type_name"] 
+      required_fields: ["id", "so_type_code", "so_type_name"]
+  # 税码信息
+  tax_info:
+    sql: |
+      select id, tax_code,taxcate,tax ,associated_tax_code 
+      from gen_tax_type_cf 
+      where deleted=0
+    description: "查询税码信息"
+    validation:
+      min_records: 1
+      required_fields: ["id", "tax_code", "taxcate", "tax", "associated_tax_code"]
