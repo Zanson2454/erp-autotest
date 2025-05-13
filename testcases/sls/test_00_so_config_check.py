@@ -5,7 +5,6 @@ import pytest
 import allure
 import allure_pytest
 from datetime import datetime
-from loguru import logger
 from typing import Dict, Any, Optional
 
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -121,7 +120,7 @@ class TestOrderTypeConfig(BaseTest):
             
             # 记录标准订单类型ID
             self.so_stnd_id = stnd_record["id"]
-            logger.info(f"找到STND记录, ID: {self.so_stnd_id}")
+            self.log.info(f"找到STND记录, ID: {self.so_stnd_id}")
             allure.attach(
                 str(self.so_stnd_id),
                 "标准订单类型ID",
@@ -144,7 +143,7 @@ class TestOrderTypeConfig(BaseTest):
         with allure.step("检查标准订单类型ID"):
             if not self.so_stnd_id:
                 self.test_01_query_order_type()
-            logger.info(f"self.so_stnd_id: {self.so_stnd_id}")
+            self.log.info(f"self.so_stnd_id: {self.so_stnd_id}")
         
         # 2. 准备请求参数
         with allure.step("准备请求参数"):
@@ -175,7 +174,7 @@ class TestOrderTypeConfig(BaseTest):
                 params=params,
                 description="查询订单类型详情"
             )
-            logger.info(f"response: {response}")
+            self.log.info(f"response: {response}")
             allure.attach(
                 json.dumps(response, indent=2, ensure_ascii=False, cls=DecimalEncoder),
                 "响应数据",
@@ -208,7 +207,7 @@ class TestOrderTypeConfig(BaseTest):
 if __name__ == "__main__":
     # project_root = get_project_root()
     # reports_dir = os.path.join(project_root, "reports", "allure-results")
-    # logger.info(f"reports_dir: {reports_dir}")
+    # self.log.info(f"reports_dir: {reports_dir}")
     # pytest.main(["-v", __file__, f"--alluredir={reports_dir}"])
     test = TestOrderTypeConfig()
     test.setup_class()

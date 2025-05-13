@@ -110,7 +110,7 @@ class TestOrderList(BaseTest):
         data = self._build_order_list_query_data()
         # 执行测试
         self.log.info("\n准备发送请求...")
-        response = self._make_request(url, data, "查询销售订单列表",extract_nested_data=True)        
+        response = self.http_util.post(url, data, "查询销售订单列表",extract_nested_data=True)        
         # 打印完整响应结构
         self.log.info(f"\n完整响应结构: {json.dumps(response, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
         if not response:

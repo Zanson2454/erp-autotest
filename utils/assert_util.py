@@ -7,14 +7,21 @@
 
 import os
 import sys
+from pathlib import  Path
 from typing import Dict, Any, List, Optional, Union
-# 添加项目根目录到 Python 路径
-current_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
-sys.path.insert(0, project_root)
 
-from utils.log_util import LogUtil
-logger = LogUtil.get_logger()
+
+# 添加项目根目录到 Python 路径
+current_file = Path(__file__).resolve()
+project_root = current_file.parent.parent
+sys.path.insert(0, str(project_root))
+
+
+
+from utils.log_util import Loggers
+
+logger = Loggers()
+logger
 class AssertHelper:
     """断言辅助类，提供通用的断言方法"""
     
