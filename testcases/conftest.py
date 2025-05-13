@@ -34,11 +34,11 @@ from functools import wraps
 from utils.log_util import Loggers
 from utils.yaml_util import YamlUtil
 from utils.report_util import ReportEnhancer, TestStatus
-from utils.path_util import PathUtil
 
+# 获取项目根目录
+project_root = Path(__file__).resolve().parent.parent
 
 # 确保必要的目录存在
-project_root = PathUtil.get_project_root()
 for dir_name in ["reports/allure-results", "logs", "data"]:
     os.makedirs(project_root / dir_name, exist_ok=True)
 

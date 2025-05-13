@@ -45,8 +45,9 @@ class Loggers:
         # 确保日志目录存在
         log_dir.mkdir(parents=True, exist_ok=True)
         
-        # 配置日志文件路径
-        log_file = log_dir / f"log_{Path(__file__).stem}.log"
+        # 配置日志文件路径，添加日期戳
+        current_date = datetime.now().strftime('%Y_%m_%d')
+        log_file = log_dir / f"log_{current_date}.log"
         
         # 移除默认的处理器
         logger.remove()
@@ -60,7 +61,7 @@ class Loggers:
         
         # 添加文件输出
         logger.add(
-            log_file,
+            str(log_file),
             rotation="500 MB",
             retention="10 days",
             format="{time:YYYY-MM-DD HH:mm:ss.SSS} | {level: <8} | {name}:{function}:{line} - {message}",
@@ -69,6 +70,10 @@ class Loggers:
         )
         
         self.logger = logger
+        
+        # 加载配置并设置日志记录器
+        self.config = self._load_config()
+        self._setup_logger()
     
     @safe_config_load(error_message="日志配置加载失败")
     def _load_config(self, config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
