@@ -17,6 +17,21 @@ class TestSettlementItem(BaseTest):
     
     def test_search_detail(self):
         """测试查询结算项详情"""
+        
+        #查询最新一条结算项
+        sql="""
+            SELECT id
+            FROM sett_item_tr
+            WHERE deleted = 0
+            ORDER BY created_at DESC
+            LIMIT 1
+        """
+
+        request_id = self.db.execute_query(sql)[0]["id"]
+        if request_id is None:
+            self.log.error("数据库查询结果为空，请新增结算项")
+            return
+          
         request_data = {
             "sceneKey": "ERP_FIN$SETT_ITEM_FROM_DS",
             "viewKey": "ERP_FIN$SETT_ITEM_FROM_DS:detail",
@@ -24,7 +39,7 @@ class TestSettlementItem(BaseTest):
             "serviceKey": "ERP_FIN$SETT_ITEM_TR_FIND_DATA_BY_ID_SERVICE",
             "params": {
                 "request": {
-                    "id": "14499018"
+                    "id": request_id
                 }
             }
         }
@@ -36,6 +51,7 @@ class TestSettlementItem(BaseTest):
         )
         # 验证响应数据
         self.assert_util.assert_response_success(response_data)
+        assert response_data["data"]["data"]["id"] == request_id
         self.log.info(f"查询结算项详情成功，响应数据: {response_data}")
 
 if __name__ == "__main__":
