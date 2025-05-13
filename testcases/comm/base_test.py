@@ -412,54 +412,6 @@ class BaseTest:
             self.log.info("开始测试方法")
         self.test_data = {}
 
-    def _make_request(self, url: str, data: Dict[str, Any], description: str = "", 
-                     extract_nested_data: bool = False, headers: Optional[Dict[str, str]] = None) -> Dict[str, Any]:
-        """发送请求并处理响应
-        
-        Args:
-            url: 请求URL
-            data: 请求数据
-            description: 请求描述，用于日志记录
-            extract_nested_data: 是否提取嵌套的 data 结构
-            headers: 自定义请求头
-            
-        Returns:
-            Dict[str, Any]: 响应数据
-            
-        Raises:
-            Exception: 请求失败时抛出
-        """
-        try:
-            if description:
-                self.log.info(f"发送请求: {description}")
-                
-            response = self.session.post(url, json=data, headers=headers or self.headers)
-            self.last_response_text = response.text
-            response.raise_for_status()
-            response_data = response.json()
-            
-            if extract_nested_data:
-                if isinstance(response_data, dict) and "data" in response_data:
-                    nested_data = response_data["data"]
-                    if isinstance(nested_data, dict) and "data" in nested_data:
-                        nested_data = nested_data["data"]
-                        if isinstance(nested_data, dict) and "data" in nested_data:
-                            nested_data = nested_data["data"]
-                    return nested_data
-                else:
-                    self.log.error(f"extract_nested_data=True 但响应无嵌套data字段，原始response.text: {response.text}")
-                    self.log.error(f"extract_nested_data=True 但响应无嵌套data字段，response.json: {json.dumps(response_data, ensure_ascii=False, indent=2) if isinstance(response_data, dict) else response_data}")
-                    return response_data
-            return response_data
-            
-        except Exception as e:
-            if 'response' in locals() and response is not None:
-                try:
-                    self.log.error(f"接口原始响应内容: {response.text}")
-                except Exception:
-                    pass
-            self.log.error(f"请求失败: {str(e)}")
-            raise
 
 
 if __name__ == "__main__":
