@@ -17,7 +17,6 @@ from common.login_manager import LoginManager
 from testcases.comm.base_test import InitSQL
 from utils.assert_util import AssertHelper
 from utils.yaml_util import YamlUtil
-from utils.http_util import HttpUtil
 from utils.exception_util import handle_exception, safe_api_call, handle_class_method_exception
 from testcases.comm.base_test import BaseTest, DecimalEncoder
 from utils.mock_util import MockData
@@ -138,7 +137,7 @@ class TestSalesOrderOperator(BaseTest):
         # 发送请求
         self.log.info(f"查询订单详情请求数据: {json.dumps(data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
         try:
-            result = super()._make_request(url, data, "订单详情查询", extract_nested_data=True, headers=self.headers)
+            result = self.http.post(url, json=data, description="订单详情查询")
             self.log.info(json.dumps(result, cls=DecimalEncoder, ensure_ascii=False, indent=2))
             
             # 保存订单详情数据
@@ -174,7 +173,7 @@ class TestSalesOrderOperator(BaseTest):
             }
         }
        
-        result = self._make_request(url, data, "销售订单编辑提交", extract_nested_data=True)
+        result = self.http.post(url, json=data, description="销售订单编辑提交")
         self.log.info(json.dumps(result, cls=DecimalEncoder, ensure_ascii=False, indent=2))
         
         so_status = self.db.execute_query(f"select id,so_code,so_status from sls_so_head_tr where id={self.order_id}")
@@ -219,7 +218,7 @@ class TestSalesOrderOperator(BaseTest):
             }
         }
         self.log.debug(f"销售订单手动提交请求数据: {json.dumps(data, cls=DecimalEncoder, indent=2)}")
-        result = super()._make_request(url, data, "销售订单手动提交", extract_nested_data=True)
+        result = self.http.post(url, json=data, description="销售订单手动提交")
         self.log.debug(f"销售订单手动提交响应数据: {json.dumps(result, cls=DecimalEncoder, indent=2)}")
         # 验证响应
         assert result is not None, "销售订单列表提交失败"

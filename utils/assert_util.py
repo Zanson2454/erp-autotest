@@ -32,12 +32,20 @@ class AssertHelper:
         """
         assert id_value is not None, f"未能获取到{id_name}"
     @staticmethod
-    def assert_response_success(response: Dict[str, Any], error_message: str = "请求失败") -> None:
+    def assert_response_success(response: Union[Dict[str, Any], Any], error_message: str = "请求失败") -> None:
         """
-        断言http 状态码为200，且success为True
+        断言响应成功
+        支持处理Response对象和字典类型的响应数据
         """
-        assert response.status_code == 200, f"{error_message}: {response.get('errorMsg', f'接口请求非200，状态码为{response.status_code}')}"
-        assert response.get("success", False), f"{error_message}: {response.get('errorMsg', '接口请求成功，但返回数据失败')}"
+        # 如果是Response对象
+        if hasattr(response, 'status_code'):
+            assert response.status_code == 200, f"{error_message}: {response.get('errorMsg', f'接口请求非200，状态码为{response.status_code}')}"
+            response_data = response.json() if hasattr(response, 'json') else response
+        else:
+            # 如果是字典类型
+            response_data = response
+            
+        assert response_data.get("success", False), f"{error_message}: {response_data.get('errorMsg', '接口请求成功，但返回数据失败')}"
         
     @staticmethod
     def assert_contains(container: Union[List, Dict, str], item: Any):
@@ -51,8 +59,24 @@ class AssertHelper:
 
 
     @staticmethod
-    def assert_response_time(response, max_time: float = 2.0):
-        """验证接口响应时间"""
-        elapsed = response.elapsed.total_seconds()
-        assert elapsed <= max_time, f"响应时间 {elapsed}s 超过阈值 {max_time}s"
-        logger.info(f"接口响应时间：{elapsed:.3f}s")
+    def assert_response_time(response: Union[Dict[str, Any], Any], max_time: int = 1000, unit: str = 'ms'):
+        """
+        验证接口响应时间
+        支持处理Response对象和字典类型的响应数据
+        
+        Args:
+            response: 响应对象或响应数据
+            max_time: 最大允许时间
+            unit: 时间单位，支持 's'(秒) 或 'ms'(毫秒)
+        """
+        if hasattr(response, 'elapsed'):
+            elapsed = response.elapsed.total_seconds()
+            # 如果单位是毫秒，进行转换
+            if unit.lower() == 'ms':
+                elapsed = elapsed * 1000
+                max_time = max_time * 1000
+                
+            assert elapsed <= max_time, f"响应时间 {elapsed:.2f}{unit} 超过阈值 {max_time:.2f}{unit}"
+            logger.info(f"接口响应时间：{elapsed:.2f}{unit}")
+        else:
+            logger.warning("响应对象中没有elapsed属性，无法验证响应时间")

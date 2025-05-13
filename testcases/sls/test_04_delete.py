@@ -18,6 +18,7 @@ from testcases.comm.base_test import BaseTest, DecimalEncoder
 from utils.exception_util import safe_api_call
 from testcases.sls.test_01_create import TestSalesOrderCreate
 from utils.assert_util import AssertHelper
+from utils.http_util import HttpUtil
 
 class TestOrderDelete(BaseTest):
     """销售订单删除测试类"""
@@ -34,7 +35,7 @@ class TestOrderDelete(BaseTest):
             
         # 调用父类的 setup_method
         super().setup_method(method)
-        
+        self.http_util = HttpUtil()
         # 初始化测试数据，但保留已有的数据
         if not hasattr(self, 'test_data') or not self.test_data:
             # 如果类属性中有测试数据，使用类属性中的数据
@@ -133,7 +134,7 @@ class TestOrderDelete(BaseTest):
         
         # 4. 执行删除操作
         self.log.info(f"准备删除订单: ID = {self.order_id}, 编号 = {self.so_code}")
-        response = self._make_request(url, data, "删除销售订单")
+        response = self.http.post(url, json=data, description="删除销售订单")
         
         # 5. 验证删除结果
         self.log.info(f"成功删除订单: {self.order_id}")
@@ -219,7 +220,7 @@ class TestOrderDelete(BaseTest):
         
         # 4. 执行删除操作
         self.log.info(f"开始批量删除订单")
-        response = self._make_request(delete_url, delete_data, "批量删除销售订单")
+        response = self.http.post(delete_url, json=delete_data, description="批量删除销售订单")
         
         # 5. 验证删除结果
         assert response.get("success", False), "批量删除订单失败"

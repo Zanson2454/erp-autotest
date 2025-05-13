@@ -12,7 +12,6 @@ sys.path.insert(0, project_root)
 
 from utils.yaml_util import YamlUtil
 from utils.performance_util import measure_time
-from utils.http_util import HttpUtil
 
 # 添加项目根目录到 Python 路径
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -33,7 +32,6 @@ class TestOrderTypeConfig(BaseTest):
         """测试类初始化"""
         super().setup_class()
         cls.so_stnd_id = None
-        cls.http_util = HttpUtil()
     
     @pytest.mark.order(1)
     @allure.title("查询订单类型")
@@ -78,7 +76,7 @@ class TestOrderTypeConfig(BaseTest):
         
         # 2. 发送请求
         with allure.step("发送查询请求"):
-            response = self.http_util.post(
+            response = self.http.post(
                 url,
                 json=data,
                 params=params,
@@ -168,7 +166,7 @@ class TestOrderTypeConfig(BaseTest):
         
         # 3. 发送请求
         with allure.step("发送查询详情请求"):
-            response = self.http_util.post(
+            response = self.http.post(
                 url,
                 json=data,
                 params=params,

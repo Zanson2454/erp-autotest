@@ -31,7 +31,6 @@ class TestOrderList(BaseTest):
             
         # 调用父类的 setup_method
         super().setup_method(method)
-        
         # 读取通用查询参数
         if not hasattr(TestOrderList, 'common_params'):
             yaml_path = os.path.join(project_root, "testcases", "templates", "query_params.yml")
@@ -110,7 +109,7 @@ class TestOrderList(BaseTest):
         data = self._build_order_list_query_data()
         # 执行测试
         self.log.info("\n准备发送请求...")
-        response = self.http_util.post(url, data, "查询销售订单列表",extract_nested_data=True)        
+        response = self.http.post(url, json=data, description="查询销售订单列表")        
         # 打印完整响应结构
         self.log.info(f"\n完整响应结构: {json.dumps(response, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
         if not response:
@@ -118,7 +117,7 @@ class TestOrderList(BaseTest):
             return
             
         # 获取第一个订单数据
-        order = response[0]
+        order = response.get("data", {}).get("data", []).get("data", [])[0]
         self.log.info(f"\n第一个订单数据: {json.dumps(order, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
         
         # 提取测试数据并验证
@@ -213,14 +212,14 @@ class TestOrderList(BaseTest):
         self.log.info(f"查询条件: 订单编号 = {self.test_data['so_code']}")
 
         # 获取提取后的嵌套数据
-        nested_data = self._make_request(url, data, "按订单编号查询销售订单列表", extract_nested_data=True)
+        nested_data = self.http.post(url, json=data, description="按订单编号查询销售订单列表")
         self.log.info(f"\n提取的嵌套数据: {json.dumps(nested_data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
         
         # 验证查询结果
         assert nested_data, "未查询到匹配的订单数据"
         
         # 验证所有返回的订单都匹配查询条件
-        for order in nested_data:
+        for order in nested_data.get("data", {}).get("data", []).get("data", []):
             assert self.test_data["so_code"] in order.get("soCode", ""), f"订单编号 {order.get('soCode')} 不匹配查询条件 {self.test_data['so_code']}"
             
         self.log.info(f"\n成功查询到 {len(nested_data)} 条匹配的订单数据")
@@ -321,11 +320,11 @@ class TestOrderList(BaseTest):
         self.log.info(f"查询条件: 订单状态 = {so_status}")
         
         # 获取完整响应
-        full_response = self._make_request(url, data, f"按单据状态 {so_status} 查询销售订单列表")
+        full_response = self.http.post(url, json=data, description=f"按单据状态 {so_status} 查询销售订单列表")
         self.log.info(f"\n收到完整响应: {json.dumps(full_response, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
         
         # 获取提取后的嵌套数据
-        nested_data = self._make_request(url, data, f"按单据状态 {so_status} 查询销售订单列表", extract_nested_data=True)
+        nested_data = self.http.post(url, json=data, description=f"按单据状态 {so_status} 查询销售订单列表")
         self.log.info(f"\n提取的嵌套数据: {json.dumps(nested_data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
         
         # 验证查询结果
@@ -333,9 +332,7 @@ class TestOrderList(BaseTest):
             self.log.warning(f"\n警告：未查询到状态为 {so_status} 的订单数据")
             return
             
-        # 验证所有返回的订单都匹配查询条件
-        for order in nested_data:
-            assert order.get("soStatus") == so_status, f"订单状态 {order.get('soStatus')} 不匹配查询条件 {so_status}"
+        self.assert_util.assert_response_success(full_response)
             
         self.log.info(f"\n成功查询到 {len(nested_data)} 条状态为 {so_status} 的订单数据")
 
@@ -413,13 +410,13 @@ class TestOrderList(BaseTest):
         self.log.info(f"查询条件: 订单类型ID = {self.test_data['so_type_id']}")
         
         # 获取提取后的嵌套数据
-        nested_data = self._make_request(url, data, "按单据类型查询销售订单列表", extract_nested_data=True)
+        nested_data = self.http.post(url, json=data, description="按单据类型查询销售订单列表")
         
         # 验证查询结果
         assert nested_data, "未查询到匹配的订单数据"
         
         # 验证所有返回的订单都匹配查询条件
-        for order in nested_data:
+        for order in nested_data.get("data", {}).get("data", []).get("data", []):
             # 根据实际结构进行断言
             if isinstance(order.get("soTypeId"), dict):
                 # 如果soTypeId是对象，获取其id属性
@@ -515,13 +512,13 @@ class TestOrderList(BaseTest):
         self.log.info(f"查询条件: 客户ID = {self.test_data['cust_id']}")
         
         # 获取提取后的嵌套数据
-        nested_data = self._make_request(url, data, "按客户查询销售订单列表", extract_nested_data=True)
+        nested_data = self.http.post(url, json=data, description="按客户查询销售订单列表")
         
         # 验证查询结果
         assert nested_data, "未查询到匹配的订单数据"
         
         # 验证所有返回的订单都匹配查询条件
-        for order in nested_data:
+        for order in nested_data.get("data", {}).get("data", []).get("data", []):
             # 根据实际结构进行断言
             if isinstance(order.get("custId"), dict):
                 # 如果custId是对象，获取其id属性

@@ -1,0 +1,271 @@
+2025-05-13 17:39:57.475 | INFO     | utils.log_util:info:147 - 数据库管理器初始化完成 [pool=default, size=5, runtime=False]
+2025-05-13 17:39:57.491 | INFO     | common.login_manager:__init__:186 - 初始化登录管理器
+2025-05-13 17:39:57.597 | INFO     | common.login_manager:__init__:195 - 登录管理器初始化完成
+2025-05-13 17:39:57.598 | INFO     | common.login_manager:login:217 - 开始登录流程
+2025-05-13 17:39:57.598 | INFO     | common.login_manager:_get_credentials:244 - 使用配置文件中的默认账号密码
+2025-05-13 17:39:57.598 | INFO     | common.login_manager:_get_credentials:248 - 使用账号: 17376596912
+2025-05-13 17:39:57.721 | INFO     | common.login_manager:_login_iam:266 - 登录响应状态码: 200
+2025-05-13 17:39:57.722 | INFO     | common.login_manager:_handle_redirect:284 - 重定向URL: https://t-erp-portal-test.app.terminus.io/TERP_PORTAL-TERP-tpf_umwrhzbg/login
+2025-05-13 17:39:57.798 | INFO     | common.login_manager:get_current_user:309 - 获取用户信息URL: https://t-erp-portal-test.app.terminus.io/api/trantor/portal/user/current
+2025-05-13 17:39:57.817 | INFO     | common.login_manager:get_current_user:314 - 获取用户信息响应状态码: 200
+2025-05-13 17:39:57.817 | INFO     | common.login_manager:login:224 - 登录成功，用户信息: {'requestId': '1358c852-1741516', 'success': True, 'data': {'id': 540175374525637, 'username': 'zhangang', 'email': 'zhangang.26@163.com', 'mobile': '17376596912', 'nickname': '章昂', 'status': True, 'avatar': 'https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png'}}
+2025-05-13 17:39:57.818 | INFO     | utils.log_util:info:147 - 开始初始化SQL工具...
+2025-05-13 17:39:57.818 | INFO     | utils.log_util:info:147 - 数据库管理器初始化完成 [pool=default, size=5, runtime=False]
+2025-05-13 17:39:57.818 | INFO     | utils.log_util:info:147 - 缓存文件路径: /Users/anson/Documents/Erda-project/erp-autotest/testcases/comm/cache/init_cache.json
+2025-05-13 17:39:57.818 | INFO     | utils.log_util:info:147 - SQL工具初始化完成，开始获取初始化数据...
+2025-05-13 17:39:57.819 | INFO     | utils.log_util:info:147 - 成功从缓存文件加载数据: /Users/anson/Documents/Erda-project/erp-autotest/testcases/comm/cache/init_cache.json
+2025-05-13 17:39:57.819 | INFO     | utils.log_util:info:147 - 从缓存获取数据成功
+2025-05-13 17:39:57.820 | INFO     | utils.log_util:info:147 - 获取到的初始化数据类型: <class 'dict'>
+2025-05-13 17:39:57.820 | INFO     | utils.log_util:info:147 - 开始提取配置信息...
+2025-05-13 17:39:57.820 | INFO     | utils.log_util:info:147 - 配置信息提取完成
+2025-05-13 17:39:57.820 | INFO     | utils.log_util:info:147 - 开始提取ID信息...
+2025-05-13 17:39:57.820 | INFO     | utils.log_util:info:147 - ID信息提取完成
+2025-05-13 17:39:57.821 | INFO     | utils.log_util:info:147 - 开始初始化登录和API配置...
+2025-05-13 17:39:57.821 | INFO     | common.login_manager:__init__:186 - 初始化登录管理器
+2025-05-13 17:39:57.928 | INFO     | common.login_manager:__init__:195 - 登录管理器初始化完成
+2025-05-13 17:39:57.928 | INFO     | common.login_manager:login:217 - 开始登录流程
+2025-05-13 17:39:57.928 | INFO     | common.login_manager:_get_credentials:244 - 使用配置文件中的默认账号密码
+2025-05-13 17:39:57.928 | INFO     | common.login_manager:_get_credentials:248 - 使用账号: 17376596912
+2025-05-13 17:39:58.034 | INFO     | common.login_manager:_login_iam:266 - 登录响应状态码: 200
+2025-05-13 17:39:58.035 | INFO     | common.login_manager:_handle_redirect:284 - 重定向URL: https://t-erp-portal-test.app.terminus.io/TERP_PORTAL-TERP-tpf_umwrhzbg/login
+2025-05-13 17:39:58.120 | INFO     | common.login_manager:get_current_user:309 - 获取用户信息URL: https://t-erp-portal-test.app.terminus.io/api/trantor/portal/user/current
+2025-05-13 17:39:58.194 | INFO     | common.login_manager:get_current_user:314 - 获取用户信息响应状态码: 200
+2025-05-13 17:39:58.195 | INFO     | common.login_manager:login:224 - 登录成功，用户信息: {'requestId': '00fad7a2-1741517', 'success': True, 'data': {'id': 540175374525637, 'username': 'zhangang', 'email': 'zhangang.26@163.com', 'mobile': '17376596912', 'nickname': '章昂', 'status': True, 'avatar': 'https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png'}}
+2025-05-13 17:39:58.196 | INFO     | utils.log_util:info:147 - 登录和API配置初始化完成
+2025-05-13 17:39:58.198 | INFO     | utils.log_util:info:147 - 开始初始化请求头...
+2025-05-13 17:39:58.308 | INFO     | utils.log_util:info:147 - 请求头初始化完成
+2025-05-13 17:39:58.308 | INFO     | utils.log_util:info:147 - 测试类初始化完成
+2025-05-13 17:39:58.322 | INFO     | common.login_manager:__init__:186 - 初始化登录管理器
+2025-05-13 17:39:58.424 | INFO     | common.login_manager:__init__:195 - 登录管理器初始化完成
+2025-05-13 17:39:58.424 | INFO     | common.login_manager:login:217 - 开始登录流程
+2025-05-13 17:39:58.424 | INFO     | common.login_manager:_get_credentials:244 - 使用配置文件中的默认账号密码
+2025-05-13 17:39:58.424 | INFO     | common.login_manager:_get_credentials:248 - 使用账号: 17376596912
+2025-05-13 17:39:58.534 | INFO     | common.login_manager:_login_iam:266 - 登录响应状态码: 200
+2025-05-13 17:39:58.535 | INFO     | common.login_manager:_handle_redirect:284 - 重定向URL: https://t-erp-portal-test.app.terminus.io/TERP_PORTAL-TERP-tpf_umwrhzbg/login
+2025-05-13 17:39:58.602 | INFO     | common.login_manager:get_current_user:309 - 获取用户信息URL: https://t-erp-portal-test.app.terminus.io/api/trantor/portal/user/current
+2025-05-13 17:39:58.622 | INFO     | common.login_manager:get_current_user:314 - 获取用户信息响应状态码: 200
+2025-05-13 17:39:58.623 | INFO     | common.login_manager:login:224 - 登录成功，用户信息: {'requestId': 'edae38e2-1741519', 'success': True, 'data': {'id': 540175374525637, 'username': 'zhangang', 'email': 'zhangang.26@163.com', 'mobile': '17376596912', 'nickname': '章昂', 'status': True, 'avatar': 'https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png'}}
+2025-05-13 17:39:58.737 | INFO     | utils.log_util:info:147 - 测试类初始化完成
+2025-05-13 17:39:58.738 | INFO     | utils.log_util:info:147 - 开始测试: test_07_copy_sales_order
+2025-05-13 17:39:58.739 | INFO     | utils.log_util:info:147 - 执行查询: 
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+            
+2025-05-13 17:39:58.739 | DEBUG    | utils.log_util:debug:158 - 执行查询SQL: 
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+            
+2025-05-13 17:39:58.739 | DEBUG    | utils.log_util:debug:158 - 获取数据库连接 [id=4538061904]
+2025-05-13 17:39:58.763 | DEBUG    | utils.log_util:debug:158 - 查询结果: [{'id': 16397021, 'so_code': 'SO003215', 'so_status': 'EFFECT'}]
+2025-05-13 17:39:58.823 | DEBUG    | utils.log_util:debug:158 - 数据库事务已提交
+2025-05-13 17:39:58.842 | DEBUG    | utils.log_util:debug:158 - 数据库连接已关闭
+2025-05-13 17:39:58.842 | DEBUG    | utils.log_util:debug:158 - 数据库游标已关闭
+2025-05-13 17:39:58.842 | INFO     | utils.log_util:info:147 - 找到可复制订单: ID=16397021, 订单号=SO003215
+2025-05-13 17:39:58.843 | INFO     | utils.log_util:info:147 - 复制订单请求URL: https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_DATA_COPY_EVENT_SERVICE?tmodule=ERP_SCM
+2025-05-13 17:39:58.843 | INFO     | utils.log_util:info:147 - 复制订单请求数据: {
+  "params": {
+    "request": {
+      "id": "16397021"
+    }
+  }
+}
+2025-05-13 17:39:58.966 | INFO     | utils.log_util:info:147 - 复制订单响应数据: {
+  "requestId": "00fad7a2-1741520",
+  "success": true,
+  "data": {
+    "data": {
+      "context": {},
+      "originOrgId": 0,
+      "version": 2,
+      "deleted": 0,
+      "soCode": "SO003216",
+      "soDocDate": 1747129198988,
+      "baseCurrId": {
+        "id": 2000001,
+        "context": {}
+      },
+      "slsCurrId": {
+        "id": 2000001,
+        "context": {}
+      },
+      "exchRate": 1.0,
+      "grossBaseAmt": 6904.0,
+      "netBaseAmt": 6109.734513,
+      "totalAmt": 7104.0,
+      "taxAmt": 794.265487,
+      "soCreateSource": "TERP门户",
+      "slsOrgId": {
+        "id": 14579001,
+        "context": {}
+      },
+      "slsComId": {
+        "id": 14373001,
+        "context": {}
+      },
+      "slsDcId": {
+        "id": 14378001,
+        "context": {}
+      },
+      "soTypeId": {
+        "id": 2101001,
+        "context": {}
+      },
+      "custId": {
+        "id": 2059001,
+        "context": {}
+      },
+      "addrId": {
+        "id": 70002638,
+        "context": {}
+      },
+      "custPersonName": "李月汝",
+      "custPhone": "18378999655",
+      "slsPerson": {
+        "id": 14094003,
+        "context": {}
+      },
+      "slsPersonName": "章昂",
+      "slsPhone": "17376596912",
+      "currExchangeRateType": 2000001,
+      "soItems": [
+        {
+          "context": {},
+          "originOrgId": 0,
+          "version": 2,
+          "deleted": 0,
+          "soItemCode": "SOI20250513100031",
+          "soCode": "SO003216",
+          "matId": {
+            "id": 900000001,
+            "context": {}
+          },
+          "matCode": "TESTMAT1",
+          "matName": "测试物料1",
+          "matBasePrice": 5999.0,
+          "soItemSlsQty": 8.0,
+          "soItemOutstandingQty": 8.0,
+          "soItemPrice": 763.716814,
+          "soItemGrossPrice": 863.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 794.265487,
+          "grossTradeAmt": 6904.0,
+          "netTradeAmt": 6109.734513,
+          "soDocDate": 1747129197000,
+          "soSchlDelDate": 1747065600000,
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {}
+          },
+          "uomSlsId": {
+            "id": 2004001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 2004001,
+            "context": {}
+          },
+          "soItemBaseQty": 8.0,
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "bomId": {
+            "context": {}
+          },
+          "weightUomId": {
+            "id": 2002011,
+            "context": {}
+          },
+          "grossWeight": 1.11,
+          "netWeight": 1.11,
+          "volumUomId": {
+            "id": 14049001,
+            "context": {}
+          },
+          "matVolum": 1.0,
+          "delAddrId": {
+            "id": 70002638,
+            "context": {}
+          },
+          "delPersonName": "李月汝",
+          "delPhone": "18378999655",
+          "itemNumber": 1,
+          "atpCheck": true,
+          "parentItemType": {
+            "context": {}
+          },
+          "deliveryModeId": {
+            "context": {}
+          },
+          "serviceVendId": {
+            "context": {}
+          },
+          "expressComId": {
+            "context": {}
+          },
+          "salesPrice": 888.0,
+          "children": null,
+          "freeze": false,
+          "delAddrDetail": "佛山市禅城区季华五路28号",
+          "soItemTypeGroupId": 2002001,
+          "isCompleteSet": false,
+          "salesAmt": 7104.0
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "originOrgId": 0,
+          "version": 1,
+          "deleted": 0,
+          "createdAt": 1747129197000,
+          "updatedAt": 1747129197000,
+          "createdBy": 540175374525637,
+          "updatedBy": 540175374525637,
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ],
+      "invOrg": {
+        "context": {}
+      },
+      "invLoc": {
+        "context": {}
+      },
+      "priceIdempotent": "86fa840923a96d7862ded407466966bb",
+      "addrDetail": "佛山市禅城区季华五路28号",
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false,
+      "priceCalcDate": 1747129197000,
+      "discountAmt": -200.0,
+      "discountInfo": "订单总金额: 7104.00\n\n优先级: 999\n活动名称: 优惠券活动\n是否为排他性活动: 否\n优惠工具描述: 店铺-单次-满金额-扣减\n依赖优先级: \n参加活动的商品金额: 888.00*8=7104.00\n优惠金额: 200.00\n\n",
+      "btClass": "SALES",
+      "isFixedExchRate": false,
+      "isFreezeType": "NU_FREEZE"
+    }
+  }
+}
+2025-05-13 17:39:58.966 | INFO     | utils.log_util:info:147 - 订单复制成功，原订单号: SO003215, 新订单号: SO003216

@@ -17,9 +17,7 @@ sys.path.insert(0, project_root)
 from common.login_manager import LoginManager
 from testcases.comm.base_test import InitSQL
 from utils.assert_util import AssertHelper
-from utils.log_util import Loggers
 from utils.yaml_util import YamlUtil
-from utils.http_util import HttpUtil
 from utils.exception_util import handle_exception, safe_api_call, handle_class_method_exception
 from testcases.comm.base_test import BaseTest
 
@@ -40,9 +38,6 @@ class TestSalesOrderCreate(BaseTest):
     def setup_class(cls):
         """测试类初始化，获取必要的ID和配置信息"""
         super().setup_class()
-        
-        # 初始化 http_util
-        cls.http_util = HttpUtil()
         
         # 初始化测试数据
         cls.addr_id = None
@@ -68,7 +63,7 @@ class TestSalesOrderCreate(BaseTest):
         """初始化销售订单"""
         url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$sls_sales_order_create_init_service"
         data = {"params": {"request": {"btClass": "SALES"}}}
-        result = self.http_util.post(url, json=data, description="销售订单创建初始化")
+        result = self.http.post(url, json=data, description="销售订单创建初始化")
         
         # 从嵌套结构中获取数据
         response_data = result.get("data", {}).get("data", {})
@@ -92,7 +87,7 @@ class TestSalesOrderCreate(BaseTest):
         url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$sls_cust_select_render_service"
         data = {"params": {"custId": self.cust_id}}
         
-        result = self.http_util.post(url, json=data, description="查询客户信息")
+        result = self.http.post(url, json=data, description="查询客户信息")
         # 记录响应数据
         self.log.debug(f"客户信息查询响应: {result}") 
         
@@ -138,7 +133,7 @@ class TestSalesOrderCreate(BaseTest):
                 }
              }
         self.log.debug(f"相关方查询请求数据: {json.dumps(data, cls=DecimalEncoder, indent=2)}")
-        result = self.http_util.post(url, json=data, description="查询相关方")
+        result = self.http.post(url, json=data, description="查询相关方")
         # 保存相关方信息供后续使用
         response_data = result.get("data", {}).get("data", {})
         self.sls_partner_links = response_data.get("slsPartnerLinks")
@@ -149,7 +144,7 @@ class TestSalesOrderCreate(BaseTest):
         """查询销售组织列表"""
         url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$sls_sales_organization_paging_service"
         data = {"params":{"request":{"pageable":{"pageNo":1,"pageSize":20,"conditionGroup":{"type":"ConditionGroup","logicOperator":"AND","conditions":[{"type":"ConditionGroup","logicOperator":"AND","conditions":[{"key":"nr_nqTvXmIyHnHxKfmn3S","type":"ConditionLeaf","leftValue":{"id":"iJlX7JIkAyn7AIr9omqK-","key":"iJlX7JIkAyn7AIr9omqK-","type":"VarValue","fieldType":"Text","valueType":"VAR","varValue":[{"valueKey":"orgCode","valueName":"orgCode"}]},"operator":"CONTAINS","rightValue":{"key":"ggwEgoMfFc91CYI1zUwzb","type":"VarValue","fieldType":"Text","valueType":"CONST","constValue":"AUTOTEST_SLS_ORG"}}]}]},"sortOrders":None,"keyword":None}}}}
-        result = self.http_util.post(url, json=data, description="查询销售组织列表")
+        result = self.http.post(url, json=data, description="查询销售组织列表")
         self.log.debug(f"销售组织列表查询响应: {result}")
         # 直接使用列表的第一个元素
         response_data = result.get("data", {}).get("data", {}).get("data", [])
@@ -181,7 +176,7 @@ class TestSalesOrderCreate(BaseTest):
             }
         }
         self.log.debug(f"物料列表查询请求数据: {json.dumps(data, cls=DecimalEncoder, indent=2)}")
-        result = self.http_util.post(url, json=data, description="查询物料列表")
+        result = self.http.post(url, json=data, description="查询物料列表")
         # 记录响应数据  
         response_data = result.get("data", {}).get("data", {}).get("data", [])
         self.mat_obj = response_data[0] # 直接使用列表的第一个元素
@@ -237,7 +232,7 @@ class TestSalesOrderCreate(BaseTest):
         self.log.debug(f"订单行渲染请求URL: {url}")
         self.log.debug(f"订单行渲染请求头: {self.headers}")
         self.log.debug(f"订单行渲染请求数据: {json.dumps(data, cls=DecimalEncoder, indent=2)}")
-        result = self.http_util.post(url, json=data, description="订单行渲染")
+        result = self.http.post(url, json=data, description="订单行渲染")
         result = result.get("data", {}).get("data", {})
         self.log.debug(f"订单行渲染响应: {result}")
         if "soItems" not in result:
@@ -307,7 +302,7 @@ class TestSalesOrderCreate(BaseTest):
             # 2. 发送请求
             with allure.step("发送定价请求"):
                 try:
-                    result = self.http_util.post(url, json=data, description="自动定价")
+                    result = self.http.post(url, json=data, description="自动定价")
                     result = result.get("data", {}).get("data", {})
                     allure.attach(
                         json.dumps(result, indent=2, ensure_ascii=False, cls=DecimalEncoder),
@@ -402,7 +397,7 @@ class TestSalesOrderCreate(BaseTest):
                 )
                 self.log.debug(f"{'提交' if is_submit else '保存'}销售订单请求数据: {json.dumps(data, cls=DecimalEncoder, indent=2)}")
                 
-                result = self.http_util.post(url, json=data, description=f"销售订单{'提交' if is_submit else '保存'}")
+                result = self.http.post(url, json=data, description=f"销售订单{'提交' if is_submit else '保存'}")
                 assert result is not None, f"销售订单{'提交' if is_submit else '保存'}失败"
                 
                 allure.attach(

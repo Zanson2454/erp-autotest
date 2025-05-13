@@ -1,0 +1,53 @@
+2025-05-13 17:38:00.441 | INFO     | utils.log_util:info:147 - 开始测试: test_01_query_order_detail
+2025-05-13 17:38:00.442 | INFO     | utils.log_util:info:147 - 未找到订单ID，尝试从数据库查询
+2025-05-13 17:38:00.443 | INFO     | utils.log_util:info:147 - 执行查询: 
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE created_by = %s
+                AND so_status = 'DRAFT'
+                AND deleted = 0 
+            ORDER BY created_at DESC
+            LIMIT 1
+        
+2025-05-13 17:38:00.443 | DEBUG    | utils.log_util:debug:158 - 执行查询SQL: 
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE created_by = %s
+                AND so_status = 'DRAFT'
+                AND deleted = 0 
+            ORDER BY created_at DESC
+            LIMIT 1
+        
+2025-05-13 17:38:00.444 | DEBUG    | utils.log_util:debug:158 - 查询参数: (540175374525637,)
+2025-05-13 17:38:00.444 | DEBUG    | utils.log_util:debug:158 - 获取数据库连接 [id=4483018704]
+2025-05-13 17:38:00.465 | DEBUG    | utils.log_util:debug:158 - 查询结果: [{'id': 16397015, 'so_code': 'SO003203', 'so_status': 'DRAFT'}]
+2025-05-13 17:38:00.487 | DEBUG    | utils.log_util:debug:158 - 数据库事务已提交
+2025-05-13 17:38:00.547 | DEBUG    | utils.log_util:debug:158 - 数据库连接已关闭
+2025-05-13 17:38:00.549 | DEBUG    | utils.log_util:debug:158 - 数据库游标已关闭
+2025-05-13 17:38:00.550 | INFO     | utils.log_util:info:147 - 
+查询到的草稿态订单数据: {
+  "so_id": "16397015",
+  "so_code": "SO003203",
+  "so_status": "DRAFT"
+}
+2025-05-13 17:38:00.550 | INFO     | utils.log_util:info:147 - 从数据库获取到订单ID: 16397015
+2025-05-13 17:38:00.550 | INFO     | utils.log_util:info:147 - 查询订单详情请求数据: {
+  "params": {
+    "request": {
+      "id": "16397015"
+    }
+  }
+}
+2025-05-13 17:38:00.551 | ERROR    | utils.exception_util:wrapper:186 - API调用失败: 查询销售订单详情失败
+2025-05-13 17:38:00.552 | ERROR    | utils.exception_util:wrapper:187 - 错误上下文: {'timestamp': '2025-05-13T17:38:00.551297', 'function': {'name': 'test_01_query_order_detail', 'module': 'testcases.sls.test_03_operator', 'signature': '(self)'}, 'arguments': {'args': ['<testcases.sls.test_03_operator.TestSalesOrderOperator object at 0x10b3507d0>'], 'kwargs': {}}, 'error': {'type': 'AttributeError', 'message': "'super' object has no attribute '_make_request'"}, 'caller': {'filename': '/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py', 'line_number': 101, 'function': '_enrich_error_context', 'locals': {'args': '(<testcases.sls.test_03_operator.TestSalesOrderOperator object at 0x10b3507d0>,)', 'kwargs': '{}', 'error': "'super' object has no attribute '_make_request'", 'additional_context': 'None'}}, 'api_error': {'message': '查询销售订单详情失败', 'original_error': "'super' object has no attribute '_make_request'"}}
+2025-05-13 17:38:00.557 | ERROR    | utils.exception_util:wrapper:188 - 异常堆栈:
+Traceback (most recent call last):
+  File "/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py", line 173, in wrapper
+    return func(*args, **kwargs)
+  File "/Users/anson/Documents/Erda-project/erp-autotest/testcases/sls/test_03_operator.py", line 148, in test_01_query_order_detail
+    raise e
+  File "/Users/anson/Documents/Erda-project/erp-autotest/testcases/sls/test_03_operator.py", line 141, in test_01_query_order_detail
+    result = super()._make_request(url, data, "订单详情查询", extract_nested_data=True, headers=self.headers)
+             ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'super' object has no attribute '_make_request'
+

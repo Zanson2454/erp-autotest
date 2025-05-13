@@ -1,0 +1,97 @@
+2025-05-13 17:38:02.254 | INFO     | utils.log_util:info:147 - 开始测试: test_02_submit_sales_order_edit
+2025-05-13 17:38:02.255 | INFO     | utils.log_util:info:147 - 未找到订单ID，尝试从数据库查询
+2025-05-13 17:38:02.256 | INFO     | utils.log_util:info:147 - 执行查询: 
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE created_by = %s
+                AND so_status = 'DRAFT'
+                AND deleted = 0 
+            ORDER BY created_at DESC
+            LIMIT 1
+        
+2025-05-13 17:38:02.256 | DEBUG    | utils.log_util:debug:158 - 执行查询SQL: 
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE created_by = %s
+                AND so_status = 'DRAFT'
+                AND deleted = 0 
+            ORDER BY created_at DESC
+            LIMIT 1
+        
+2025-05-13 17:38:02.256 | DEBUG    | utils.log_util:debug:158 - 查询参数: (540175374525637,)
+2025-05-13 17:38:02.256 | DEBUG    | utils.log_util:debug:158 - 获取数据库连接 [id=4484703568]
+2025-05-13 17:38:02.276 | DEBUG    | utils.log_util:debug:158 - 查询结果: [{'id': 16397015, 'so_code': 'SO003203', 'so_status': 'DRAFT'}]
+2025-05-13 17:38:02.297 | DEBUG    | utils.log_util:debug:158 - 数据库事务已提交
+2025-05-13 17:38:02.371 | DEBUG    | utils.log_util:debug:158 - 数据库连接已关闭
+2025-05-13 17:38:02.372 | DEBUG    | utils.log_util:debug:158 - 数据库游标已关闭
+2025-05-13 17:38:02.372 | INFO     | utils.log_util:info:147 - 
+查询到的草稿态订单数据: {
+  "so_id": "16397015",
+  "so_code": "SO003203",
+  "so_status": "DRAFT"
+}
+2025-05-13 17:38:02.373 | INFO     | utils.log_util:info:147 - 从数据库获取到订单ID: 16397015
+2025-05-13 17:38:02.373 | INFO     | utils.log_util:info:147 - 查询订单详情请求数据: {
+  "params": {
+    "request": {
+      "id": "16397015"
+    }
+  }
+}
+2025-05-13 17:38:02.374 | ERROR    | utils.exception_util:wrapper:186 - API调用失败: 查询销售订单详情失败
+2025-05-13 17:38:02.374 | ERROR    | utils.exception_util:wrapper:187 - 错误上下文: {'timestamp': '2025-05-13T17:38:02.373970', 'function': {'name': 'test_01_query_order_detail', 'module': 'testcases.sls.test_03_operator', 'signature': '(self)'}, 'arguments': {'args': ['<testcases.sls.test_03_operator.TestSalesOrderOperator object at 0x10b350a50>'], 'kwargs': {}}, 'error': {'type': 'AttributeError', 'message': "'super' object has no attribute '_make_request'"}, 'caller': {'filename': '/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py', 'line_number': 101, 'function': '_enrich_error_context', 'locals': {'args': '(<testcases.sls.test_03_operator.TestSalesOrderOperator object at 0x10b350a50>,)', 'kwargs': '{}', 'error': "'super' object has no attribute '_make_request'", 'additional_context': 'None'}}, 'api_error': {'message': '查询销售订单详情失败', 'original_error': "'super' object has no attribute '_make_request'"}}
+2025-05-13 17:38:02.375 | ERROR    | utils.exception_util:wrapper:188 - 异常堆栈:
+Traceback (most recent call last):
+  File "/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py", line 173, in wrapper
+    return func(*args, **kwargs)
+  File "/Users/anson/Documents/Erda-project/erp-autotest/testcases/sls/test_03_operator.py", line 148, in test_01_query_order_detail
+    raise e
+  File "/Users/anson/Documents/Erda-project/erp-autotest/testcases/sls/test_03_operator.py", line 141, in test_01_query_order_detail
+    result = super()._make_request(url, data, "订单详情查询", extract_nested_data=True, headers=self.headers)
+             ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'super' object has no attribute '_make_request'
+
+2025-05-13 17:38:02.377 | ERROR    | utils.exception_util:wrapper:186 - API调用失败: 销售订单编辑提交失败
+2025-05-13 17:38:02.377 | ERROR    | utils.exception_util:wrapper:187 - 错误上下文: {'timestamp': '2025-05-13T17:38:02.377035', 'function': {'name': 'test_02_submit_sales_order_edit', 'module': 'testcases.sls.test_03_operator', 'signature': '(self)'}, 'arguments': {'args': ['<testcases.sls.test_03_operator.TestSalesOrderOperator object at 0x10b350a50>'], 'kwargs': {}}, 'error': {'type': 'APIException', 'message': '错误时间: 2025-05-13T17:38:02.376199\n错误信息: 查询销售订单详情失败: \'super\' object has no attribute \'_make_request\'\n错误详情:\n  timestamp: 2025-05-13T17:38:02.373970\n  function: {\'name\': \'test_01_query_order_detail\', \'module\': \'testcases.sls.test_03_operator\', \'signature\': \'(self)\'}\n  arguments: {\'args\': [\'<testcases.sls.test_03_operator.TestSalesOrderOperator object at 0x10b350a50>\'], \'kwargs\': {}}\n  error: {\'type\': \'AttributeError\', \'message\': "\'super\' object has no attribute \'_make_request\'"}\n  caller: {\'filename\': \'/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py\', \'line_number\': 101, \'function\': \'_enrich_error_context\', \'locals\': {\'args\': \'(<testcases.sls.test_03_operator.TestSalesOrderOperator object at 0x10b350a50>,)\', \'kwargs\': \'{}\', \'error\': "\'super\' object has no attribute \'_make_request\'", \'additional_context\': \'None\'}}\n  api_error: {\'message\': \'查询销售订单详情失败\', \'original_error\': "\'super\' object has no attribute \'_make_request\'"}\n堆栈信息:\nTraceback (most recent call last):\n  File "/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py", line 173, in wrapper\n    return func(*args, **kwargs)\n  File "/Users/anson/Documents/Erda-project/erp-autotest/testcases/sls/test_03_operator.py", line 148, in test_01_query_order_detail\n    raise e\n  File "/Users/anson/Documents/Erda-project/erp-autotest/testcases/sls/test_03_operator.py", line 141, in test_01_query_order_detail\n    result = super()._make_request(url, data, "订单详情查询", extract_nested_data=True, headers=self.headers)\n             ^^^^^^^^^^^^^^^^^^^^^\nAttributeError: \'super\' object has no attribute \'_make_request\'\n'}, 'caller': {'filename': '/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py', 'line_number': 101, 'function': '_enrich_error_context', 'locals': {'args': '(<testcases.sls.test_03_operator.TestSalesOrderOperator object at 0x10b350a50>,)', 'kwargs': '{}', 'error': '错误时间: 2025-05-13T17:38:02.376199\n错误信息: 查询销售订单详情失败: \'super\' object has no attribute \'_make_request\'\n错误详情:\n  timestamp: 2025-05-13T17:38:02.373970\n  function: {\'name\': \'test_01_query_order_detail\', \'module\': \'testcases.sls.test_03_operator\', \'signature\': \'(self)\'}\n  arguments: {\'args\': [\'<testcases.sls.test_03_operator.TestSalesOrderOperator object at 0x10b350a50>\'], \'kwargs\': {}}\n  error: {\'type\': \'AttributeError\', \'message\': "\'super\' object has no attribute \'_make_request\'"}\n  caller: {\'filename\': \'/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py\', \'line_number\': 101, \'function\': \'_enrich_error_context\', \'locals\': {\'args\': \'(<testcases.sls.test_03_operator.TestSalesOrderOperator object at 0x10b350a50>,)\', \'kwargs\': \'{}\', \'error\': "\'super\' object has no attribute \'_make_request\'", \'additional_context\': \'None\'}}\n  api_error: {\'message\': \'查询销售订单详情失败\', \'original_error\': "\'super\' object has no attribute \'_make_request\'"}\n堆栈信息:\nTraceback (most recent call last):\n  File "/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py", line 173, in wrapper\n    return func(*args, **kwargs)\n  File "/Users/anson/Documents/Erda-project/erp-autotest/testcases/sls/test_03_operator.py", line 148, in test_01_query_order_detail\n    raise e\n  File "/Users/anson/Documents/Erda-project/erp-autotest/testcases/sls/test_03_operator.py", line 141, in test_01_query_order_detail\n    result = super()._make_request(url, data, "订单详情查询", extract_nested_data=True, headers=self.headers)\n             ^^^^^^^^^^^^^^^^^^^^^\nAttributeError: \'super\' object has no attribute \'_make_request\'\n', 'additional_context': 'None'}}, 'api_error': {'message': '销售订单编辑提交失败', 'original_error': '错误时间: 2025-05-13T17:38:02.376199\n错误信息: 查询销售订单详情失败: \'super\' object has no attribute \'_make_request\'\n错误详情:\n  timestamp: 2025-05-13T17:38:02.373970\n  function: {\'name\': \'test_01_query_order_detail\', \'module\': \'testcases.sls.test_03_operator\', \'signature\': \'(self)\'}\n  arguments: {\'args\': [\'<testcases.sls.test_03_operator.TestSalesOrderOperator object at 0x10b350a50>\'], \'kwargs\': {}}\n  error: {\'type\': \'AttributeError\', \'message\': "\'super\' object has no attribute \'_make_request\'"}\n  caller: {\'filename\': \'/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py\', \'line_number\': 101, \'function\': \'_enrich_error_context\', \'locals\': {\'args\': \'(<testcases.sls.test_03_operator.TestSalesOrderOperator object at 0x10b350a50>,)\', \'kwargs\': \'{}\', \'error\': "\'super\' object has no attribute \'_make_request\'", \'additional_context\': \'None\'}}\n  api_error: {\'message\': \'查询销售订单详情失败\', \'original_error\': "\'super\' object has no attribute \'_make_request\'"}\n堆栈信息:\nTraceback (most recent call last):\n  File "/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py", line 173, in wrapper\n    return func(*args, **kwargs)\n  File "/Users/anson/Documents/Erda-project/erp-autotest/testcases/sls/test_03_operator.py", line 148, in test_01_query_order_detail\n    raise e\n  File "/Users/anson/Documents/Erda-project/erp-autotest/testcases/sls/test_03_operator.py", line 141, in test_01_query_order_detail\n    result = super()._make_request(url, data, "订单详情查询", extract_nested_data=True, headers=self.headers)\n             ^^^^^^^^^^^^^^^^^^^^^\nAttributeError: \'super\' object has no attribute \'_make_request\'\n'}}
+2025-05-13 17:38:02.380 | ERROR    | utils.exception_util:wrapper:188 - 异常堆栈:
+Traceback (most recent call last):
+  File "/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py", line 173, in wrapper
+    return func(*args, **kwargs)
+  File "/Users/anson/Documents/Erda-project/erp-autotest/testcases/sls/test_03_operator.py", line 148, in test_01_query_order_detail
+    raise e
+  File "/Users/anson/Documents/Erda-project/erp-autotest/testcases/sls/test_03_operator.py", line 141, in test_01_query_order_detail
+    result = super()._make_request(url, data, "订单详情查询", extract_nested_data=True, headers=self.headers)
+             ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'super' object has no attribute '_make_request'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py", line 173, in wrapper
+    return func(*args, **kwargs)
+  File "/Users/anson/Documents/Erda-project/erp-autotest/testcases/sls/test_03_operator.py", line 161, in test_02_submit_sales_order_edit
+    self.test_01_query_order_detail()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py", line 191, in wrapper
+    raise APIException(f"{error_message}: {str(e)}", context) from e
+utils.exception_util.APIException: 错误时间: 2025-05-13T17:38:02.376199
+错误信息: 查询销售订单详情失败: 'super' object has no attribute '_make_request'
+错误详情:
+  timestamp: 2025-05-13T17:38:02.373970
+  function: {'name': 'test_01_query_order_detail', 'module': 'testcases.sls.test_03_operator', 'signature': '(self)'}
+  arguments: {'args': ['<testcases.sls.test_03_operator.TestSalesOrderOperator object at 0x10b350a50>'], 'kwargs': {}}
+  error: {'type': 'AttributeError', 'message': "'super' object has no attribute '_make_request'"}
+  caller: {'filename': '/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py', 'line_number': 101, 'function': '_enrich_error_context', 'locals': {'args': '(<testcases.sls.test_03_operator.TestSalesOrderOperator object at 0x10b350a50>,)', 'kwargs': '{}', 'error': "'super' object has no attribute '_make_request'", 'additional_context': 'None'}}
+  api_error: {'message': '查询销售订单详情失败', 'original_error': "'super' object has no attribute '_make_request'"}
+堆栈信息:
+Traceback (most recent call last):
+  File "/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py", line 173, in wrapper
+    return func(*args, **kwargs)
+  File "/Users/anson/Documents/Erda-project/erp-autotest/testcases/sls/test_03_operator.py", line 148, in test_01_query_order_detail
+    raise e
+  File "/Users/anson/Documents/Erda-project/erp-autotest/testcases/sls/test_03_operator.py", line 141, in test_01_query_order_detail
+    result = super()._make_request(url, data, "订单详情查询", extract_nested_data=True, headers=self.headers)
+             ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'super' object has no attribute '_make_request'
+
+

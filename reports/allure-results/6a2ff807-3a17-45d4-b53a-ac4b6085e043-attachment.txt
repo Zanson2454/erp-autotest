@@ -1,0 +1,86 @@
+2025-05-13 17:37:59.096 | INFO     | utils.log_util:info:147 - 数据库管理器初始化完成 [pool=default, size=5, runtime=False]
+2025-05-13 17:37:59.116 | INFO     | common.login_manager:__init__:186 - 初始化登录管理器
+2025-05-13 17:37:59.242 | INFO     | common.login_manager:__init__:195 - 登录管理器初始化完成
+2025-05-13 17:37:59.242 | INFO     | common.login_manager:login:217 - 开始登录流程
+2025-05-13 17:37:59.242 | INFO     | common.login_manager:_get_credentials:244 - 使用配置文件中的默认账号密码
+2025-05-13 17:37:59.243 | INFO     | common.login_manager:_get_credentials:248 - 使用账号: 17376596912
+2025-05-13 17:37:59.335 | INFO     | common.login_manager:_login_iam:266 - 登录响应状态码: 200
+2025-05-13 17:37:59.336 | INFO     | common.login_manager:_handle_redirect:284 - 重定向URL: https://t-erp-portal-test.app.terminus.io/TERP_PORTAL-TERP-tpf_umwrhzbg/login
+2025-05-13 17:37:59.397 | INFO     | common.login_manager:get_current_user:309 - 获取用户信息URL: https://t-erp-portal-test.app.terminus.io/api/trantor/portal/user/current
+2025-05-13 17:37:59.419 | INFO     | common.login_manager:get_current_user:314 - 获取用户信息响应状态码: 200
+2025-05-13 17:37:59.419 | INFO     | common.login_manager:login:224 - 登录成功，用户信息: {'requestId': '1da37335-1741063', 'success': True, 'data': {'id': 540175374525637, 'username': 'zhangang', 'email': 'zhangang.26@163.com', 'mobile': '17376596912', 'nickname': '章昂', 'status': True, 'avatar': 'https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png'}}
+2025-05-13 17:37:59.419 | INFO     | utils.log_util:info:147 - 开始初始化SQL工具...
+2025-05-13 17:37:59.419 | INFO     | utils.log_util:info:147 - 数据库管理器初始化完成 [pool=default, size=5, runtime=False]
+2025-05-13 17:37:59.420 | INFO     | utils.log_util:info:147 - 缓存文件路径: /Users/anson/Documents/Erda-project/erp-autotest/testcases/comm/cache/init_cache.json
+2025-05-13 17:37:59.420 | INFO     | utils.log_util:info:147 - SQL工具初始化完成，开始获取初始化数据...
+2025-05-13 17:37:59.421 | INFO     | utils.log_util:info:147 - 成功从缓存文件加载数据: /Users/anson/Documents/Erda-project/erp-autotest/testcases/comm/cache/init_cache.json
+2025-05-13 17:37:59.421 | INFO     | utils.log_util:info:147 - 从缓存获取数据成功
+2025-05-13 17:37:59.421 | INFO     | utils.log_util:info:147 - 获取到的初始化数据类型: <class 'dict'>
+2025-05-13 17:37:59.421 | INFO     | utils.log_util:info:147 - 开始提取配置信息...
+2025-05-13 17:37:59.422 | INFO     | utils.log_util:info:147 - 配置信息提取完成
+2025-05-13 17:37:59.422 | INFO     | utils.log_util:info:147 - 开始提取ID信息...
+2025-05-13 17:37:59.422 | INFO     | utils.log_util:info:147 - ID信息提取完成
+2025-05-13 17:37:59.422 | INFO     | utils.log_util:info:147 - 开始初始化登录和API配置...
+2025-05-13 17:37:59.423 | INFO     | common.login_manager:__init__:186 - 初始化登录管理器
+2025-05-13 17:37:59.552 | INFO     | common.login_manager:__init__:195 - 登录管理器初始化完成
+2025-05-13 17:37:59.553 | INFO     | common.login_manager:login:217 - 开始登录流程
+2025-05-13 17:37:59.553 | INFO     | common.login_manager:_get_credentials:244 - 使用配置文件中的默认账号密码
+2025-05-13 17:37:59.553 | INFO     | common.login_manager:_get_credentials:248 - 使用账号: 17376596912
+2025-05-13 17:37:59.650 | INFO     | common.login_manager:_login_iam:266 - 登录响应状态码: 200
+2025-05-13 17:37:59.651 | INFO     | common.login_manager:_handle_redirect:284 - 重定向URL: https://t-erp-portal-test.app.terminus.io/TERP_PORTAL-TERP-tpf_umwrhzbg/login
+2025-05-13 17:37:59.734 | INFO     | common.login_manager:get_current_user:309 - 获取用户信息URL: https://t-erp-portal-test.app.terminus.io/api/trantor/portal/user/current
+2025-05-13 17:37:59.769 | INFO     | common.login_manager:get_current_user:314 - 获取用户信息响应状态码: 200
+2025-05-13 17:37:59.770 | INFO     | common.login_manager:login:224 - 登录成功，用户信息: {'requestId': '1da37335-1741064', 'success': True, 'data': {'id': 540175374525637, 'username': 'zhangang', 'email': 'zhangang.26@163.com', 'mobile': '17376596912', 'nickname': '章昂', 'status': True, 'avatar': 'https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png'}}
+2025-05-13 17:37:59.770 | INFO     | utils.log_util:info:147 - 登录和API配置初始化完成
+2025-05-13 17:37:59.771 | INFO     | utils.log_util:info:147 - 开始初始化请求头...
+2025-05-13 17:37:59.901 | INFO     | utils.log_util:info:147 - 请求头初始化完成
+2025-05-13 17:37:59.901 | INFO     | utils.log_util:info:147 - 测试类初始化完成
+2025-05-13 17:38:00.018 | INFO     | utils.log_util:info:147 - 测试类初始化完成
+2025-05-13 17:38:00.019 | INFO     | utils.log_util:info:147 - 开始测试: test_04_cancel_submit_sales_order
+2025-05-13 17:38:00.020 | INFO     | utils.log_util:info:147 - 执行查询: 
+               SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            and  id not in (select doc_id from del_dn_item_tr  where deleted=0 and doc_id is not null)
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+        
+            
+2025-05-13 17:38:00.020 | DEBUG    | utils.log_util:debug:158 - 执行查询SQL: 
+               SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            and  id not in (select doc_id from del_dn_item_tr  where deleted=0 and doc_id is not null)
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+        
+            
+2025-05-13 17:38:00.020 | DEBUG    | utils.log_util:debug:158 - 获取数据库连接 [id=4484253968]
+2025-05-13 17:38:00.100 | DEBUG    | utils.log_util:debug:158 - 查询结果: [{'id': 16397015, 'so_code': 'SO003203', 'so_status': 'EFFECT'}]
+2025-05-13 17:38:00.133 | DEBUG    | utils.log_util:debug:158 - 数据库事务已提交
+2025-05-13 17:38:00.203 | DEBUG    | utils.log_util:debug:158 - 数据库连接已关闭
+2025-05-13 17:38:00.204 | DEBUG    | utils.log_util:debug:158 - 数据库游标已关闭
+2025-05-13 17:38:00.205 | INFO     | utils.log_util:info:147 - 找到已提交订单: ID=16397015, 订单号=SO003203
+2025-05-13 17:38:00.328 | INFO     | utils.log_util:info:147 - 取消提交订单响应数据: {
+  "requestId": "71a4a485-1741067",
+  "success": true,
+  "data": {
+    "data": {
+      "id": 16397015,
+      "context": {},
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false,
+      "syncSubmit": false
+    }
+  }
+}
+2025-05-13 17:38:00.330 | DEBUG    | utils.log_util:debug:158 - 执行查询SQL: select id,so_code,so_status from sls_so_head_tr where id=16397015
+2025-05-13 17:38:00.331 | DEBUG    | utils.log_util:debug:158 - 获取数据库连接 [id=4483015360]
+2025-05-13 17:38:00.343 | DEBUG    | utils.log_util:debug:158 - 查询结果: [{'id': 16397015, 'so_code': 'SO003203', 'so_status': 'DRAFT'}]
+2025-05-13 17:38:00.364 | DEBUG    | utils.log_util:debug:158 - 数据库事务已提交
+2025-05-13 17:38:00.428 | DEBUG    | utils.log_util:debug:158 - 数据库连接已关闭
+2025-05-13 17:38:00.430 | DEBUG    | utils.log_util:debug:158 - 数据库游标已关闭
+2025-05-13 17:38:00.431 | INFO     | utils.log_util:info:147 - 订单 None 取消提交成功

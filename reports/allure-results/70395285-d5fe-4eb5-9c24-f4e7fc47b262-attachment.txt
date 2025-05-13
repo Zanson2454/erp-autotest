@@ -1,0 +1,48 @@
+2025-05-13 17:48:37.325 | INFO     | utils.log_util:info:147 - 开始测试: test_04_cancel_submit_sales_order
+2025-05-13 17:48:37.326 | INFO     | utils.log_util:info:147 - 执行查询: 
+               SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            and  id not in (select doc_id from del_dn_item_tr  where deleted=0 and doc_id is not null)
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+        
+            
+2025-05-13 17:48:37.327 | DEBUG    | utils.log_util:debug:158 - 执行查询SQL: 
+               SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            and  id not in (select doc_id from del_dn_item_tr  where deleted=0 and doc_id is not null)
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+        
+            
+2025-05-13 17:48:37.327 | DEBUG    | utils.log_util:debug:158 - 获取数据库连接 [id=4507378368]
+2025-05-13 17:48:37.431 | DEBUG    | utils.log_util:debug:158 - 查询结果: [{'id': 16397022, 'so_code': 'SO003218', 'so_status': 'EFFECT'}]
+2025-05-13 17:48:37.493 | DEBUG    | utils.log_util:debug:158 - 数据库事务已提交
+2025-05-13 17:48:37.521 | DEBUG    | utils.log_util:debug:158 - 数据库连接已关闭
+2025-05-13 17:48:37.521 | DEBUG    | utils.log_util:debug:158 - 数据库游标已关闭
+2025-05-13 17:48:37.522 | INFO     | utils.log_util:info:147 - 找到已提交订单: ID=16397022, 订单号=SO003218
+2025-05-13 17:48:37.646 | INFO     | utils.log_util:info:147 - 取消提交订单响应数据: {
+  "requestId": "e1b477aa-1742643",
+  "success": true,
+  "data": {
+    "data": {
+      "id": 16397022,
+      "context": {},
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false,
+      "syncSubmit": false
+    }
+  }
+}
+2025-05-13 17:48:37.646 | DEBUG    | utils.log_util:debug:158 - 执行查询SQL: select id,so_code,so_status from sls_so_head_tr where id=16397022
+2025-05-13 17:48:37.646 | DEBUG    | utils.log_util:debug:158 - 获取数据库连接 [id=4506310352]
+2025-05-13 17:48:37.657 | DEBUG    | utils.log_util:debug:158 - 查询结果: [{'id': 16397022, 'so_code': 'SO003218', 'so_status': 'DRAFT'}]
+2025-05-13 17:48:37.716 | DEBUG    | utils.log_util:debug:158 - 数据库事务已提交
+2025-05-13 17:48:37.734 | DEBUG    | utils.log_util:debug:158 - 数据库连接已关闭
+2025-05-13 17:48:37.735 | DEBUG    | utils.log_util:debug:158 - 数据库游标已关闭
+2025-05-13 17:48:37.735 | INFO     | utils.log_util:info:147 - 订单 None 取消提交成功
