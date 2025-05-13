@@ -1,0 +1,20 @@
+2025-05-13 11:47:43.697 | INFO     | utils.log_util:info:147 - 开始测试: test_05_repeal_sales_order
+2025-05-13 11:47:43.700 | ERROR    | utils.exception_util:wrapper:186 - API调用失败: 作废销售订单失败
+2025-05-13 11:47:43.701 | ERROR    | utils.exception_util:wrapper:187 - 错误上下文: {'timestamp': '2025-05-13T11:47:43.700178', 'function': {'name': 'test_05_repeal_sales_order', 'module': 'testcases.sls.test_03_operator', 'signature': '(self)'}, 'arguments': {'args': ['<testcases.sls.test_03_operator.TestSalesOrderOperator object at 0x110110290>'], 'kwargs': {}}, 'error': {'type': 'NameError', 'message': "name 'logger' is not defined"}, 'caller': {'filename': '/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py', 'line_number': 101, 'function': '_enrich_error_context', 'locals': {'args': '(<testcases.sls.test_03_operator.TestSalesOrderOperator object at 0x110110290>,)', 'kwargs': '{}', 'error': "name 'logger' is not defined", 'additional_context': 'None'}}, 'api_error': {'message': '作废销售订单失败', 'original_error': "name 'logger' is not defined"}}
+2025-05-13 11:47:43.711 | ERROR    | utils.exception_util:wrapper:188 - 异常堆栈:
+Traceback (most recent call last):
+  File "/Users/anson/Documents/Erda-project/erp-autotest/testcases/sls/test_03_operator.py", line 307, in test_05_repeal_sales_order
+    logger.info(f"执行查询: {sql}")
+    ^^^^^^
+NameError: name 'logger' is not defined
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py", line 173, in wrapper
+    return func(*args, **kwargs)
+  File "/Users/anson/Documents/Erda-project/erp-autotest/testcases/sls/test_03_operator.py", line 352, in test_05_repeal_sales_order
+    logger.error(f"作废订单失败: {str(e)}")
+    ^^^^^^
+NameError: name 'logger' is not defined
+

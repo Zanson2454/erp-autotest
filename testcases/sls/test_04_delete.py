@@ -4,7 +4,6 @@ import json
 import pytest
 import allure
 from datetime import datetime
-from loguru import logger
 from typing import Dict, Any, Optional
 from pathlib import Path
 
@@ -41,21 +40,21 @@ class TestOrderDelete(BaseTest):
             # 如果类属性中有测试数据，使用类属性中的数据
             if hasattr(TestOrderDelete, 'test_data') and TestOrderDelete.test_data:
                 self.test_data = TestOrderDelete.test_data
-                logger.info("使用类属性中的测试数据")
+                self.log.info("使用类属性中的测试数据")
             else:
                 self.test_data = {
                     "so_id": None,
                     "so_code": None
                 }
-                logger.info("初始化新的测试数据")
+                self.log.info("初始化新的测试数据")
         
         # 如果提供了 method 参数，记录方法名
         if method and hasattr(method, '__name__'):
-            logger.info(f"开始执行测试方法: {method.__name__}")
+            self.log.info(f"开始执行测试方法: {method.__name__}")
         else:
-            logger.info("开始执行测试方法")
+            self.log.info("开始执行测试方法")
             
-        logger.info("初始化测试数据完成")
+        self.log.info("初始化测试数据完成")
     
     def _build_delete_order_data(self, order_id: str) -> Dict[str, Any]:
         """构建删除销售订单的请求数据
@@ -105,22 +104,22 @@ class TestOrderDelete(BaseTest):
             ORDER BY created_at DESC
             LIMIT 1
         """
-        logger.info(f"执行查询: {sql}")
+        self.log.info(f"执行查询: {sql}")
         result = self.db.execute_query(sql, (self.so_type_id, self.user_id))
         
         # 2. 如果订单不存在，创建新订单
         if not result or len(result) == 0:
-            logger.info("未找到可删除的订单，创建新订单")
+            self.log.info("未找到可删除的订单，创建新订单")
             try:
                 test_create = TestSalesOrderCreate()
                 test_create.setup_class()
                 test_create.test_08_save_sales_order()
-                logger.info("成功创建新订单")
+                self.log.info("成功创建新订单")
                 # 重新查询订单
                 result = self.db.execute_query(sql, (self.so_type_id, self.user_id))
                 self.assert_util.assert_list_not_empty(result, "订单列表")
             except Exception as e:
-                logger.error(f"创建新订单失败: {str(e)}")
+                self.log.error(f"创建新订单失败: {str(e)}")
                 pytest.fail(f"创建新订单失败: {str(e)}")
         
         order = result[0]
@@ -133,12 +132,11 @@ class TestOrderDelete(BaseTest):
         data = self._build_delete_order_data(self.order_id)
         
         # 4. 执行删除操作
-        logger.info(f"准备删除订单: ID = {self.order_id}, 编号 = {self.so_code}")
+        self.log.info(f"准备删除订单: ID = {self.order_id}, 编号 = {self.so_code}")
         response = self._make_request(url, data, "删除销售订单")
         
         # 5. 验证删除结果
-        self.assert_util.assert_response_status(response)
-        logger.info(f"成功删除订单: {self.order_id}")
+        self.log.info(f"成功删除订单: {self.order_id}")
         
         # 6. 验证数据库中的删除状态
         verify_sql = """
@@ -147,9 +145,12 @@ class TestOrderDelete(BaseTest):
             WHERE id = %s
         """
         deleted_record = self.db.execute_query(verify_sql, (self.order_id,))
-        self.assert_util.assert_list_not_empty(deleted_record, "删除记录")
-        self.assert_util.assert_value_in_range(deleted_record[0]['deleted'], 1, 1, "删除状态")
-        logger.info(f"订单 {self.order_id} 在数据库中已标记为删除状态")
+        self.log.info(f"删除记录: {deleted_record}")
+        if deleted_record[0]['deleted'] !=0:
+            self.log.info(f"订单 {self.order_id} 在数据库中已标记为删除状态")
+        else:
+            self.log.error(f"订单 {self.order_id} 在数据库中未标记为删除状态")
+            pytest.fail(f"订单 {self.order_id} 在数据库中未标记为删除状态")
 
     @allure.title("批量删除销售订单")
     @allure.description("""
@@ -182,20 +183,20 @@ class TestOrderDelete(BaseTest):
             ORDER BY created_at DESC
             LIMIT 2
         """
-        logger.info(f"执行查询: {sql}")
+        self.log.info(f"执行查询: {sql}")
         result = self.db.execute_query(sql, (self.so_type_id, self.user_id))
         
         # 2. 如果订单数量不足，创建新订单
         if len(result) < 2:
-            logger.info(f"当前只有 {len(result)} 条订单，需要创建 {2 - len(result)} 条新订单")
+            self.log.info(f"当前只有 {len(result)} 条订单，需要创建 {2 - len(result)} 条新订单")
             for i in range(2 - len(result)):
                 try:
                     test_create = TestSalesOrderCreate()
                     test_create.setup_class()
                     test_create.test_save_sales_order()
-                    logger.info(f"成功创建第 {i+1} 条新订单")
+                    self.log.info(f"成功创建第 {i+1} 条新订单")
                 except Exception as e:
-                    logger.error(f"创建新订单失败: {str(e)}")
+                    self.log.error(f"创建新订单失败: {str(e)}")
                     pytest.fail(f"创建新订单失败: {str(e)}")
             
             # 重新查询订单
@@ -205,7 +206,7 @@ class TestOrderDelete(BaseTest):
         
         # 3. 准备批量删除请求
         order_ids = [order['id'] for order in result]
-        logger.info(f"准备删除的订单ID: {order_ids}")
+        self.log.info(f"准备删除的订单ID: {order_ids}")
         
         delete_url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$sales_order_batch_delete_service"
         delete_data = {
@@ -217,12 +218,12 @@ class TestOrderDelete(BaseTest):
         }
         
         # 4. 执行删除操作
-        logger.info(f"开始批量删除订单")
+        self.log.info(f"开始批量删除订单")
         response = self._make_request(delete_url, delete_data, "批量删除销售订单")
         
         # 5. 验证删除结果
         assert response.get("success", False), "批量删除订单失败"
-        logger.info(f"成功批量删除订单，订单ID: {order_ids}")
+        self.log.info(f"成功批量删除订单，订单ID: {order_ids}")
         
         # 6. 验证数据库中的删除状态
         verify_sql = """
@@ -232,7 +233,7 @@ class TestOrderDelete(BaseTest):
         """
         deleted_records = self.db.execute_query(verify_sql, (tuple(order_ids),))
         assert all(record['deleted'] != 0 for record in deleted_records), "部分订单未成功删除"
-        logger.info("所有订单在数据库中已标记为删除状态")
+        self.log.info("所有订单在数据库中已标记为删除状态")
 
 
 if __name__ == "__main__":

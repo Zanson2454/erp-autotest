@@ -1,0 +1,223 @@
+2025-05-13 11:48:10.729 | INFO     | utils.log_util:info:147 - 开始测试: test_07_copy_sales_order
+2025-05-13 11:48:10.733 | INFO     | utils.log_util:info:147 - 执行查询: 
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+            
+2025-05-13 11:48:10.734 | DEBUG    | utils.log_util:debug:158 - 执行查询SQL: 
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+            
+2025-05-13 11:48:10.734 | DEBUG    | utils.log_util:debug:158 - 获取数据库连接 [id=4587461200]
+2025-05-13 11:48:10.767 | DEBUG    | utils.log_util:debug:158 - 查询结果: [{'id': 16397003, 'so_code': 'SO003179', 'so_status': 'EFFECT'}]
+2025-05-13 11:48:10.900 | DEBUG    | utils.log_util:debug:158 - 数据库事务已提交
+2025-05-13 11:48:10.937 | DEBUG    | utils.log_util:debug:158 - 数据库连接已关闭
+2025-05-13 11:48:10.938 | DEBUG    | utils.log_util:debug:158 - 数据库游标已关闭
+2025-05-13 11:48:10.939 | INFO     | utils.log_util:info:147 - 找到可复制订单: ID=16397003, 订单号=SO003179
+2025-05-13 11:48:10.939 | INFO     | utils.log_util:info:147 - 复制订单请求URL: https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_DATA_COPY_EVENT_SERVICE?tmodule=ERP_SCM
+2025-05-13 11:48:10.940 | INFO     | utils.log_util:info:147 - 复制订单请求数据: {
+  "params": {
+    "request": {
+      "id": "16397003"
+    }
+  }
+}
+2025-05-13 11:48:11.090 | INFO     | utils.log_util:info:147 - 复制订单响应数据: {
+  "requestId": "cea44101-1725092",
+  "success": true,
+  "data": {
+    "data": {
+      "context": {},
+      "originOrgId": 0,
+      "version": 4,
+      "deleted": 0,
+      "soCode": "SO003180",
+      "soDocDate": 1747108092385,
+      "baseCurrId": {
+        "id": 2000001,
+        "context": {}
+      },
+      "slsCurrId": {
+        "id": 2000001,
+        "context": {}
+      },
+      "exchRate": 1.0,
+      "grossBaseAmt": 6904.0,
+      "netBaseAmt": 6109.734513,
+      "totalAmt": 7104.0,
+      "taxAmt": 794.265487,
+      "soCreateSource": "TERP门户",
+      "slsOrgId": {
+        "id": 14579001,
+        "context": {}
+      },
+      "slsComId": {
+        "id": 14373001,
+        "context": {}
+      },
+      "slsDcId": {
+        "id": 14378001,
+        "context": {}
+      },
+      "soTypeId": {
+        "id": 2101001,
+        "context": {}
+      },
+      "custId": {
+        "id": 2059001,
+        "context": {}
+      },
+      "addrId": {
+        "id": 70002638,
+        "context": {}
+      },
+      "custPersonName": "李月汝",
+      "custPhone": "18378999655",
+      "slsPerson": {
+        "id": 14094003,
+        "context": {}
+      },
+      "slsPersonName": "章昂",
+      "slsPhone": "17376596912",
+      "currExchangeRateType": 2000001,
+      "soItems": [
+        {
+          "context": {},
+          "originOrgId": 0,
+          "version": 3,
+          "deleted": 0,
+          "soItemCode": "SOI20250513100009",
+          "soCode": "SO003180",
+          "matId": {
+            "id": 900000001,
+            "context": {}
+          },
+          "matCode": "TESTMAT1",
+          "matName": "测试物料1",
+          "matBasePrice": 5999.0,
+          "soItemSlsQty": 8.0,
+          "soItemOutstandingQty": 8.0,
+          "soItemPrice": 763.716814,
+          "soItemGrossPrice": 863.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 794.265487,
+          "grossTradeAmt": 6904.0,
+          "netTradeAmt": 6109.734513,
+          "soDocDate": 1747108073000,
+          "soSchlDelDate": 1747065600000,
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {}
+          },
+          "uomSlsId": {
+            "id": 2004001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 2004001,
+            "context": {}
+          },
+          "soItemBaseQty": 8.0,
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "bomId": {
+            "context": {}
+          },
+          "weightUomId": {
+            "id": 2002011,
+            "context": {}
+          },
+          "grossWeight": 1.11,
+          "netWeight": 1.11,
+          "volumUomId": {
+            "id": 14049001,
+            "context": {}
+          },
+          "matVolum": 1.0,
+          "delAddrId": {
+            "id": 70002638,
+            "context": {}
+          },
+          "delPersonName": "李月汝",
+          "delPhone": "18378999655",
+          "itemNumber": 1,
+          "atpCheck": true,
+          "parentItemType": {
+            "context": {}
+          },
+          "deliveryModeId": {
+            "context": {}
+          },
+          "serviceVendId": {
+            "context": {}
+          },
+          "expressComId": {
+            "context": {}
+          },
+          "salesPrice": 888.0,
+          "children": null,
+          "freeze": false,
+          "delAddrDetail": "佛山市禅城区季华五路28号",
+          "soItemTypeGroupId": 2002001,
+          "isCompleteSet": false,
+          "salesAmt": 7104.0
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "originOrgId": 0,
+          "version": 1,
+          "deleted": 0,
+          "createdAt": 1747108073000,
+          "updatedAt": 1747108073000,
+          "createdBy": 540175374525637,
+          "updatedBy": 540175374525637,
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ],
+      "invOrg": {
+        "context": {}
+      },
+      "invLoc": {
+        "context": {}
+      },
+      "priceIdempotent": "b99069a70cbc6ba75d3ccc18dd4db902",
+      "addrDetail": "佛山市禅城区季华五路28号",
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false,
+      "priceCalcDate": 1747108071000,
+      "discountAmt": -200.0,
+      "discountInfo": "订单总金额: 7104.00\n\n优先级: 999\n活动名称: 优惠券活动\n是否为排他性活动: 否\n优惠工具描述: 店铺-单次-满金额-扣减\n依赖优先级: \n参加活动的商品金额: 888.00*8=7104.00\n优惠金额: 200.00\n\n",
+      "btClass": "SALES",
+      "isFixedExchRate": false,
+      "isFreezeType": "NU_FREEZE"
+    }
+  }
+}
+2025-05-13 11:48:11.091 | INFO     | utils.log_util:info:147 - 订单复制成功，原订单号: SO003179, 新订单号: SO003180

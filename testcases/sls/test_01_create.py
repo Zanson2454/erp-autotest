@@ -5,7 +5,6 @@ import pytest
 import random
 from decimal import Decimal
 from datetime import datetime
-from loguru import logger
 from typing import Dict, Any, Optional
 import allure
 
@@ -42,6 +41,9 @@ class TestSalesOrderCreate(BaseTest):
         """测试类初始化，获取必要的ID和配置信息"""
         super().setup_class()
         
+        # 初始化 http_util
+        cls.http_util = HttpUtil()
+        
         # 初始化测试数据
         cls.addr_id = None
         cls.addr_detail = None
@@ -59,40 +61,58 @@ class TestSalesOrderCreate(BaseTest):
         cls.render_qty = random.randint(1, 99)  # 生成1-99之间的随机整数
         
 
-        cls.logger.info(f"初始化渲染数量: {cls.render_qty}")
-        cls.logger.info("测试类初始化完成")
+        cls.log.info(f"初始化渲染数量: {cls.render_qty}")
+        cls.log.info("测试类初始化完成")
 
     def _init_sales_order(self):
         """初始化销售订单"""
         url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$sls_sales_order_create_init_service"
         data = {"params": {"request": {"btClass": "SALES"}}}
-        result = super()._make_request(url, data, "销售订单创建初始化", extract_nested_data=True)
+        result = self.http_util.post(url, json=data, description="销售订单创建初始化")
+        
+        # 从嵌套结构中获取数据
+        response_data = result.get("data", {}).get("data", {})
+        
         # 保存销售人员信息供后续使用
-        self.sls_person_obj = result["slsPerson"]
-        self.sls_phone = result["slsPhone"]
-        self.sls_person_name = result["slsPerson"]["name"]
-        logger.debug(f"销售人员信息: {self.sls_person_obj}")
-        self.logger.info("销售订单创建初始化完成")
+        self.sls_person_obj = response_data.get("slsPerson")
+        self.sls_phone = response_data.get("slsPhone")
+        if self.sls_person_obj:
+            self.sls_person_name = self.sls_person_obj.get("name")
+        
+        self.log.debug(f"销售人员信息: {self.sls_person_obj}")
+        self.log.info("销售订单创建初始化完成")
+        
+        # 验证必要字段
+        assert self.sls_person_obj is not None, "销售人员信息为空"
+        assert self.sls_phone is not None, "销售人员电话为空"
+        assert self.sls_person_name is not None, "销售人员姓名为空"
 
     def _query_customer_info(self):
         """查询客户信息"""
         url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$sls_cust_select_render_service"
         data = {"params": {"custId": self.cust_id}}
         
-        result = super()._make_request(url, data, "查询客户信息", extract_nested_data=True)
+        result = self.http_util.post(url, json=data, description="查询客户信息")
         # 记录响应数据
-        logger.debug(f"客户信息查询响应: {result}")
-        # 保存地址ID和地址信息供后续使用
-        self.addr_id = result["addrId"]["id"]
-        self.addr_detail = result["addrDetail"]
-        self.cust_person_name = result["custPersonName"]
-        self.cust_phone = result["custPhone"]
+        self.log.debug(f"客户信息查询响应: {result}") 
         
-        self.assert_util.assert_id_exists(self.addr_id, "地址ID")
-        self.assert_util.assert_id_exists(self.addr_detail, "地址信息")
-        self.assert_util.assert_id_exists(self.cust_person_name, "客户姓名")
-        self.assert_util.assert_id_exists(self.cust_phone, "客户电话")
-        self.logger.info("客户信息查询完成")
+        # 从嵌套结构中获取数据
+        response_data = result.get("data", {}).get("data", {})
+        
+        # 保存地址ID和地址信息供后续使用
+        addr_id_obj = response_data.get("addrId", {})
+        self.addr_id = addr_id_obj.get("id")
+        self.addr_detail = response_data.get("addrDetail")
+        self.cust_person_name = response_data.get("custPersonName")
+        self.cust_phone = response_data.get("custPhone")
+        
+        # 验证必要字段
+        assert self.addr_id is not None, "地址ID为空"
+        assert self.addr_detail is not None, "地址信息为空"
+        assert self.cust_person_name is not None, "客户姓名为空"
+        assert self.cust_phone is not None, "客户电话为空"
+        
+        self.log.info("客户信息查询完成")
 
     def _query_partner(self):
         """查询相关方"""
@@ -117,25 +137,26 @@ class TestSalesOrderCreate(BaseTest):
                     }
                 }
              }
-        logger.debug(f"相关方查询请求数据: {json.dumps(data, cls=DecimalEncoder, indent=2)}")
-        result = super()._make_request(url, data, "查询相关方", extract_nested_data=True)
+        self.log.debug(f"相关方查询请求数据: {json.dumps(data, cls=DecimalEncoder, indent=2)}")
+        result = self.http_util.post(url, json=data, description="查询相关方")
         # 保存相关方信息供后续使用
-        logger.debug(f"相关方查询响应: {json.dumps(result, indent=2, ensure_ascii=False, cls=DecimalEncoder)}")
-        self.sls_partner_links = result["slsPartnerLinks"]
-        self.logger.info("相关方查询完成")
+        response_data = result.get("data", {}).get("data", {})
+        self.sls_partner_links = response_data.get("slsPartnerLinks")
+        self.log.info("相关方查询完成")
         self.assert_util.assert_id_exists(self.sls_partner_links, "相关方信息")
 
     def _query_sales_organization(self):
         """查询销售组织列表"""
         url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$sls_sales_organization_paging_service"
         data = {"params":{"request":{"pageable":{"pageNo":1,"pageSize":20,"conditionGroup":{"type":"ConditionGroup","logicOperator":"AND","conditions":[{"type":"ConditionGroup","logicOperator":"AND","conditions":[{"key":"nr_nqTvXmIyHnHxKfmn3S","type":"ConditionLeaf","leftValue":{"id":"iJlX7JIkAyn7AIr9omqK-","key":"iJlX7JIkAyn7AIr9omqK-","type":"VarValue","fieldType":"Text","valueType":"VAR","varValue":[{"valueKey":"orgCode","valueName":"orgCode"}]},"operator":"CONTAINS","rightValue":{"key":"ggwEgoMfFc91CYI1zUwzb","type":"VarValue","fieldType":"Text","valueType":"CONST","constValue":"AUTOTEST_SLS_ORG"}}]}]},"sortOrders":None,"keyword":None}}}}
-        result = super()._make_request(url, data, "查询销售组织列表", extract_nested_data=True)
-        logger.debug(f"销售组织列表查询响应: {result}")
+        result = self.http_util.post(url, json=data, description="查询销售组织列表")
+        self.log.debug(f"销售组织列表查询响应: {result}")
         # 直接使用列表的第一个元素
-        self.sls_org_obj = result[0]
+        response_data = result.get("data", {}).get("data", {}).get("data", [])
+        self.sls_org_obj = response_data[0] # 直接使用列表的第一个元素
         self.sls_org_id = self.sls_org_obj["id"]
-        logger.info(f"销售组织列表查询完成: {self.sls_org_obj}")
-        self.logger.info("销售组织列表查询完成")
+        self.log.info(f"销售组织列表查询完成: {self.sls_org_obj}")
+        self.log.info("销售组织列表查询完成")
         self.assert_util.assert_id_exists(self.sls_org_obj, "销售组织信息")
         self.assert_util.assert_id_exists(self.sls_org_id, "销售组织ID")
 
@@ -159,16 +180,15 @@ class TestSalesOrderCreate(BaseTest):
                 }
             }
         }
-        logger.debug(f"物料列表查询请求数据: {json.dumps(data, cls=DecimalEncoder, indent=2)}")
-        
-        result = super()._make_request(url, data, "查询物料列表", extract_nested_data=True)
-        # 记录响应数据
-        # 直接使用列表的第一个元素
-        self.mat_obj = result[0]
+        self.log.debug(f"物料列表查询请求数据: {json.dumps(data, cls=DecimalEncoder, indent=2)}")
+        result = self.http_util.post(url, json=data, description="查询物料列表")
+        # 记录响应数据  
+        response_data = result.get("data", {}).get("data", {}).get("data", [])
+        self.mat_obj = response_data[0] # 直接使用列表的第一个元素
         # 添加默认价格字段
         self.mat_obj["matBasePrice"] = 100.00  # 设置默认价格
-        logger.debug(f"物料列表查询响应: {self.mat_obj}")
-        self.logger.info("物料列表查询完成")
+        self.log.debug(f"物料列表查询响应: {self.mat_obj}")
+        self.log.info("物料列表查询完成")
         self.assert_util.assert_id_exists(self.mat_obj, "物料信息")
 
     def _render_order_line(self):
@@ -214,31 +234,32 @@ class TestSalesOrderCreate(BaseTest):
             }
         }
         }
-        logger.debug(f"订单行渲染请求URL: {url}")
-        logger.debug(f"订单行渲染请求头: {self.headers}")
-        logger.debug(f"订单行渲染请求数据: {json.dumps(data, cls=DecimalEncoder, indent=2)}")
-        result = super()._make_request(url, data, "订单行渲染", extract_nested_data=True)
-        logger.debug(f"订单行渲染响应: {result}")
+        self.log.debug(f"订单行渲染请求URL: {url}")
+        self.log.debug(f"订单行渲染请求头: {self.headers}")
+        self.log.debug(f"订单行渲染请求数据: {json.dumps(data, cls=DecimalEncoder, indent=2)}")
+        result = self.http_util.post(url, json=data, description="订单行渲染")
+        result = result.get("data", {}).get("data", {})
+        self.log.debug(f"订单行渲染响应: {result}")
         if "soItems" not in result:
-            self.logger.error(f"订单行渲染响应缺少soItems字段，响应内容: {result}")
+            self.log.error(f"订单行渲染响应缺少soItems字段，响应内容: {result}")
             raise KeyError("订单行渲染响应缺少soItems字段。")
 
         # 保存订单行渲染结果供后续使用
-        self.so_items = result["soItems"]
-        self.logger.info("订单行渲染完成")
+        self.so_items = result.get("soItems")
+        self.log.info("订单行渲染完成")
         try:
             assert self.so_items is not None, "订单行信息为空"
         except AssertionError as e:
-            logger.error(f"订单行渲染原始响应: {json.dumps(result, ensure_ascii=False, indent=2)}")
+            self.log.error(f"订单行渲染原始响应: {json.dumps(result, ensure_ascii=False, indent=2)}")
             raise
-        logger.debug(f"订单行渲染结果: {json.dumps(self.so_items, indent=2, ensure_ascii=False, cls=DecimalEncoder)}")
+        self.log.debug(f"订单行渲染结果: {json.dumps(self.so_items, indent=2, ensure_ascii=False, cls=DecimalEncoder)}")
         
         # 检查渲染结果中的税率ID等信息
         if self.so_items and len(self.so_items) > 0:
             first_item = self.so_items[0]
-            logger.debug(f"订单行渲染结果中的税率ID: {first_item.get('taxRateId')}")
-            logger.debug(f"订单行渲染结果中的单位ID: {first_item.get('uomSlsId')}")
-            logger.debug(f"订单行渲染结果中的物料类型ID: {first_item.get('matTypeId')}")
+            self.log.debug(f"订单行渲染结果中的税率ID: {first_item.get('taxRateId')}")
+            self.log.debug(f"订单行渲染结果中的单位ID: {first_item.get('uomSlsId')}")
+            self.log.debug(f"订单行渲染结果中的物料类型ID: {first_item.get('matTypeId')}")
 
     def _calculate_pricing(self):
         """自动定价"""
@@ -281,12 +302,13 @@ class TestSalesOrderCreate(BaseTest):
                     "定价请求参数",
                     allure.attachment_type.JSON
                 )
-                self.logger.info(f"自动定价请求参数: {json.dumps(data, indent=2, ensure_ascii=False, cls=DecimalEncoder)}")
+                self.log.info(f"自动定价请求参数: {json.dumps(data, indent=2, ensure_ascii=False, cls=DecimalEncoder)}")
 
             # 2. 发送请求
             with allure.step("发送定价请求"):
                 try:
-                    result = super()._make_request(url, data, "自动定价", extract_nested_data=True)
+                    result = self.http_util.post(url, json=data, description="自动定价")
+                    result = result.get("data", {}).get("data", {})
                     allure.attach(
                         json.dumps(result, indent=2, ensure_ascii=False, cls=DecimalEncoder),
                         "响应数据",
@@ -296,21 +318,22 @@ class TestSalesOrderCreate(BaseTest):
                     # 检查定价结果中的税率ID等信息
                     if result and "soItems" in result and len(result["soItems"]) > 0:
                         first_item = result["soItems"][0]
-                        logger.debug(f"定价结果中的税率ID: {first_item.get('taxRateId')}")
-                        logger.debug(f"定价结果中的单位ID: {first_item.get('uomSlsId')}")
-                        logger.debug(f"定价结果中的物料类型ID: {first_item.get('matTypeId')}")
+                        self.log.debug(f"定价结果中的税率ID: {first_item.get('taxRateId')}")
+                        self.log.debug(f"定价结果中的单位ID: {first_item.get('uomSlsId')}")
+                        self.log.debug(f"定价结果中的物料类型ID: {first_item.get('matTypeId')}")
                             
                 except Exception as e:
                     error_msg = f"自动定价请求失败: {str(e)}"
                     if hasattr(e, 'response'):
                         error_msg += f"\n响应状态码: {e.response.status_code}"
                         error_msg += f"\n响应内容: {e.response.text}"
-                    self.logger.error(error_msg)
+                    self.log.error(error_msg)
                     raise
 
             # 3. 验证响应
             with allure.step("验证响应数据"):
                 assert result is not None, "定价响应数据为空"
+                self.log.debug(f"定价响应数据: {result}")
                 assert "soItems" in result, "响应中缺少订单项"
                 
                 # 保存定价信息
@@ -321,14 +344,14 @@ class TestSalesOrderCreate(BaseTest):
                     "定价信息",
                     allure.attachment_type.JSON
                 )
-                self.logger.info("自动定价完成")
+                self.log.info("自动定价完成")
 
         except Exception as e:
             error_msg = f"自动定价失败: {str(e)}"
-            self.logger.error(error_msg)
+            self.log.error(error_msg)
             if hasattr(e, 'response'):
-                self.logger.error(f"响应状态码: {e.response.status_code}")
-                self.logger.error(f"响应内容: {e.response.text}")
+                self.log.error(f"响应状态码: {e.response.status_code}")
+                self.log.error(f"响应内容: {e.response.text}")
             raise
 
     def _save_or_submit_order(self, is_submit: bool = False):
@@ -352,13 +375,13 @@ class TestSalesOrderCreate(BaseTest):
             with allure.step("渲染订单行"):
                 self._render_order_line()
                 assert self.so_items is not None, "订单行信息为空"
-                logger.debug(f"订单行信息: {json.dumps(self.so_items, indent=2, ensure_ascii=False, cls=DecimalEncoder)}")
+                self.log.debug(f"订单行信息: {json.dumps(self.so_items, indent=2, ensure_ascii=False, cls=DecimalEncoder)}")
 
             # 2. 自动定价
             with allure.step("自动定价"):
                 self._calculate_pricing()
                 assert self.so_price_data is not None, "定价信息为空"
-                logger.debug(f"定价信息: {json.dumps(self.so_price_data, indent=2, ensure_ascii=False, cls=DecimalEncoder)}")
+                self.log.debug(f"定价信息: {json.dumps(self.so_price_data, indent=2, ensure_ascii=False, cls=DecimalEncoder)}")
 
             # 3. 保存或提交订单
             with allure.step("保存或提交订单"):
@@ -377,9 +400,9 @@ class TestSalesOrderCreate(BaseTest):
                     f"{'提交' if is_submit else '保存'}订单请求参数",
                     allure.attachment_type.JSON
                 )
-                logger.debug(f"{'提交' if is_submit else '保存'}销售订单请求数据: {json.dumps(data, cls=DecimalEncoder, indent=2)}")
+                self.log.debug(f"{'提交' if is_submit else '保存'}销售订单请求数据: {json.dumps(data, cls=DecimalEncoder, indent=2)}")
                 
-                result = super()._make_request(url, data, f"销售订单{'提交' if is_submit else '保存'}", extract_nested_data=True)
+                result = self.http_util.post(url, json=data, description=f"销售订单{'提交' if is_submit else '保存'}")
                 assert result is not None, f"销售订单{'提交' if is_submit else '保存'}失败"
                 
                 allure.attach(
@@ -387,20 +410,20 @@ class TestSalesOrderCreate(BaseTest):
                     f"{'提交' if is_submit else '保存'}订单响应数据",
                     allure.attachment_type.JSON
                 )
-                logger.debug(f"{'提交' if is_submit else '保存'}销售订单响应数据: {json.dumps(result, cls=DecimalEncoder, indent=2)}")
+                self.log.debug(f"{'提交' if is_submit else '保存'}销售订单响应数据: {json.dumps(result, cls=DecimalEncoder, indent=2)}")
                 
                 if not is_submit:
-                    self.order_id = result['id']
-                    logger.info(f"销售订单保存成功，订单ID: {self.order_id}")
+                    self.order_id = result.get("data", {}).get("data", {}).get("id")
+                    self.log.info(f"销售订单保存成功，订单ID: {self.order_id}")
                 else:
-                    logger.info("销售订单提交成功")
+                    self.log.info("销售订单提交成功")
 
         except Exception as e:
             error_msg = f"销售订单{'提交' if is_submit else '保存'}失败: {str(e)}"
-            self.logger.error(error_msg)
+            self.log.error(error_msg)
             if hasattr(e, 'response'):
-                self.logger.error(f"响应状态码: {e.response.status_code}")
-                self.logger.error(f"响应内容: {e.response.text}")
+                self.log.error(f"响应状态码: {e.response.status_code}")
+                self.log.error(f"响应内容: {e.response.text}")
             raise
 
     @allure.title("销售订单保存")

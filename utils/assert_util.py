@@ -12,20 +12,6 @@ class AssertHelper:
     """断言辅助类，提供通用的断言方法"""
     
     @staticmethod
-    def assert_response_status(response_data: Dict[str, Any], expected_success: bool = True) -> None:
-        """
-        断言响应状态
-        
-        Args:
-            response_data: 响应数据
-            expected_success: 期望的成功状态，默认为True
-            
-        Raises:
-            AssertionError: 当响应状态不符合预期时抛出
-        """
-        assert response_data["success"] is expected_success, f"响应状态不符合预期: {response_data}"
-    
-    @staticmethod
     def assert_response_has_data(response_data: Dict[str, Any], data_path: str = "data") -> Dict[str, Any]:
         """
         断言响应包含数据字段
@@ -51,67 +37,6 @@ class AssertHelper:
         return data
     
     @staticmethod
-    def assert_fields_exist(data: Dict[str, Any], expected_fields: List[str], field_descriptions: Optional[Dict[str, str]] = None) -> None:
-        """
-        断言数据包含指定的字段
-        
-        Args:
-            data: 数据对象
-            expected_fields: 期望的字段列表
-            field_descriptions: 字段描述字典，用于错误提示
-            
-        Raises:
-            AssertionError: 当数据中缺少指定字段时抛出
-        """
-        for field in expected_fields:
-            assert field in data, f"数据中缺少{field_descriptions.get(field, field)}字段: {data}"
-    
-    @staticmethod
-    def assert_list_not_empty(data_list: List[Any], list_name: str) -> None:
-        """
-        断言列表不为空
-        
-        Args:
-            data_list: 数据列表
-            list_name: 列表名称，用于错误提示
-            
-        Raises:
-            AssertionError: 当列表为空或不是列表类型时抛出
-        """
-        assert isinstance(data_list, list), f"{list_name}不是列表类型: {type(data_list)}"
-        assert len(data_list) > 0, f"{list_name}为空"
-    
-    @staticmethod
-    def assert_list_length(data_list: List[Any], min_length: int, list_name: str) -> None:
-        """
-        断言列表长度符合预期
-        
-        Args:
-            data_list: 数据列表
-            min_length: 最小长度
-            list_name: 列表名称，用于错误提示
-            
-        Raises:
-            AssertionError: 当列表长度不足或不是列表类型时抛出
-        """
-        assert isinstance(data_list, list), f"{list_name}不是列表类型: {type(data_list)}"
-        assert len(data_list) >= min_length, f"{list_name}长度不足，当前只有{len(data_list)}条记录，期望至少{min_length}条"
-    
-    @staticmethod
-    def assert_http_status(response: Any, expected_status: int = 200) -> None:
-        """
-        断言HTTP响应状态码
-        
-        Args:
-            response: HTTP响应对象
-            expected_status: 期望的状态码，默认为200
-            
-        Raises:
-            AssertionError: 当HTTP状态码不符合预期时抛出
-        """
-        assert response.status_code == expected_status, f"HTTP请求失败: 状态码 {response.status_code}，响应内容: {response.text}"
-    
-    @staticmethod
     def assert_id_exists(id_value: Any, id_name: str) -> None:
         """
         断言ID存在
@@ -124,62 +49,79 @@ class AssertHelper:
             AssertionError: 当ID不存在时抛出
         """
         assert id_value is not None, f"未能获取到{id_name}"
-    
+        
     @staticmethod
-    def assert_response_code(response_data: Dict[str, Any], expected_code: str) -> None:
+    def assert_list_not_empty(data_list: List[Any], list_name: str) -> None:
         """
-        断言响应码
+        断言列表非空
         
         Args:
-            response_data: 响应数据
-            expected_code: 期望的响应码
+            data_list: 要检查的列表
+            list_name: 列表名称，用于错误提示
             
         Raises:
-            AssertionError: 当响应码不符合预期时抛出
+            AssertionError: 当列表为空时抛出
         """
-        assert response_data.get("code") == expected_code, f"响应码不符合预期: 期望 {expected_code}，实际 {response_data.get('code')}"
-    
+        assert data_list is not None and len(data_list) > 0, f"{list_name}为空"
+        
     @staticmethod
-    def assert_response_message(response_data: Dict[str, Any], expected_message: str) -> None:
+    def assert_status_matches(actual_status: str, expected_status: str, entity_name: str) -> None:
         """
-        断言响应消息
+        断言状态匹配
         
         Args:
-            response_data: 响应数据
-            expected_message: 期望的响应消息
+            actual_status: 实际状态
+            expected_status: 期望状态
+            entity_name: 实体名称，用于错误提示
             
         Raises:
-            AssertionError: 当响应消息不符合预期时抛出
+            AssertionError: 当状态不匹配时抛出
         """
-        assert response_data.get("message") == expected_message, f"响应消息不符合预期: 期望 {expected_message}，实际 {response_data.get('message')}"
-    
+        assert actual_status == expected_status, f"{entity_name}状态不匹配: 期望={expected_status}, 实际={actual_status}"
+        
     @staticmethod
-    def assert_value_in_range(value: Union[int, float], min_value: Union[int, float], max_value: Union[int, float], value_name: str) -> None:
+    def assert_field_value_matches(actual_value: Any, expected_value: Any, field_name: str) -> None:
         """
-        断言数值在指定范围内
+        断言字段值匹配
         
         Args:
-            value: 要检查的数值
-            min_value: 最小值
-            max_value: 最大值
-            value_name: 数值名称，用于错误提示
+            actual_value: 实际值
+            expected_value: 期望值
+            field_name: 字段名称，用于错误提示
             
         Raises:
-            AssertionError: 当数值不在指定范围内时抛出
+            AssertionError: 当值不匹配时抛出
         """
-        assert min_value <= value <= max_value, f"{value_name}不在有效范围内: 期望 {min_value} <= {value} <= {max_value}"
-    
+        assert actual_value == expected_value, f"{field_name}值不匹配: 期望={expected_value}, 实际={actual_value}"
+        
     @staticmethod
-    def assert_string_contains(text: str, substring: str, description: str = "文本") -> None:
+    def assert_response_success(response: Dict[str, Any], error_message: str = "请求失败") -> None:
         """
-        断言字符串包含指定子串
+        断言响应成功
         
         Args:
-            text: 要检查的文本
-            substring: 期望包含的子串
-            description: 文本描述，用于错误提示
+            response: 响应数据
+            error_message: 错误消息
             
         Raises:
-            AssertionError: 当文本不包含指定子串时抛出
+            AssertionError: 当响应不成功时抛出
         """
-        assert substring in text, f"{description}不包含预期内容: 期望包含 '{substring}'，实际内容: '{text}'"
+        assert response.get("success", False), f"{error_message}: {response.get('errorMsg', '未知错误')}"
+        
+    @staticmethod
+    def assert_all_records_match(records: List[Dict[str, Any]], field_name: str, expected_value: Any, entity_name: str) -> None:
+        """
+        断言所有记录都匹配指定条件
+        
+        Args:
+            records: 记录列表
+            field_name: 字段名称
+            expected_value: 期望值
+            entity_name: 实体名称，用于错误提示
+            
+        Raises:
+            AssertionError: 当存在不匹配的记录时抛出
+        """
+        for record in records:
+            actual_value = record.get(field_name)
+            assert actual_value == expected_value, f"{entity_name} {field_name}不匹配: 期望={expected_value}, 实际={actual_value}"

@@ -66,12 +66,12 @@ class AuthConfig:
         Args:
             config: 配置工具实例，用于读取配置信息
         """
-        self.config = config
-        self.iam_url = config.get_iam_url()
-        self.api_url = config.get_base_url()
-        self.auth_config = config.get_auth_config()
+        self.config = config 
+        self.iam_url = config.get_iam_url()  # 获取 IAM 服务地址
+        self.api_url = config.get_base_url()  # 获取 API 服务地址
+        self.auth_config = config.get_auth_config()  # 获取认证配置
     
-    def get_default_credentials(self) -> Dict[str, str]:
+    def get_default_credentials(self) -> Dict[str, str]: 
         """
         获取默认认证信息
         
@@ -109,9 +109,9 @@ class HeadersManager:
         """
         self.iam_url = iam_url
         self.api_url = api_url
-        self.base_headers = self._get_base_headers()
-        self.iam_headers = self._get_iam_headers()
-        self.api_headers = self._get_api_headers()
+        self.base_headers = self._get_base_headers()  # 获取基础请求头
+        self.iam_headers = self._get_iam_headers()  # 获取 IAM 登录请求头
+        self.api_headers = self._get_api_headers()  # 获取 API 请求头
     
     def _get_base_headers(self) -> Dict[str, str]:
         """
@@ -184,14 +184,14 @@ class LoginManager:
         4. 初始化请求头管理器
         """
         logger.info("初始化登录管理器")
-        self.session = requests.Session()
-        self.config = YamlUtil()
-        self.auth_config = AuthConfig(self.config)
+        self.session = requests.Session() 
+        self.config = YamlUtil() # 加载配置
+        self.auth_config = AuthConfig(self.config) # 初始化认证配置
         self.headers_manager = HeadersManager(
-            self.auth_config.iam_url,
-            self.auth_config.api_url
+            self.config.get_iam_url(), 
+            self.config.get_base_url()
         )
-        self.session.headers.update(self.headers_manager.base_headers)
+        self.session.headers.update(self.headers_manager.base_headers)  # 更新请求头    
         logger.info("登录管理器初始化完成")
     
     def login(self, account: Optional[str] = None, password: Optional[str] = None) -> requests.Session:

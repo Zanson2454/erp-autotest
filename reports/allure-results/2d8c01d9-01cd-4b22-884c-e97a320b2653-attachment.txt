@@ -1,0 +1,51 @@
+2025-05-12 11:46:30.656 | INFO     | utils.log_util:info:147 - 开始测试: test_06_freeze_sales_order
+2025-05-12 11:46:30.660 | INFO     | testcases.sls.test_03_operator:test_06_freeze_sales_order:377 - 执行查询: 
+            SELECT id, so_code, so_status, freeze_type 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            AND freeze_type = 'NU_FREEZE'
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+            
+2025-05-12 11:46:30.661 | DEBUG    | utils.log_util:debug:158 - 执行查询SQL: 
+            SELECT id, so_code, so_status, freeze_type 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            AND freeze_type = 'NU_FREEZE'
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+            
+2025-05-12 11:46:30.661 | DEBUG    | utils.log_util:debug:158 - 获取数据库连接 [id=4467613072]
+2025-05-12 11:46:30.691 | DEBUG    | utils.log_util:debug:158 - 查询结果: [{'id': 16396005, 'so_code': 'SO003061', 'so_status': 'EFFECT', 'freeze_type': 'NU_FREEZE'}]
+2025-05-12 11:46:30.713 | DEBUG    | utils.log_util:debug:158 - 数据库事务已提交
+2025-05-12 11:46:30.778 | DEBUG    | utils.log_util:debug:158 - 数据库连接已关闭
+2025-05-12 11:46:30.778 | DEBUG    | utils.log_util:debug:158 - 数据库游标已关闭
+2025-05-12 11:46:30.779 | INFO     | testcases.sls.test_03_operator:test_06_freeze_sales_order:388 - 找到可冻结订单: ID=16396005, 订单号=SO003061
+2025-05-12 11:46:30.780 | INFO     | testcases.sls.test_03_operator:test_06_freeze_sales_order:402 - 冻结订单请求URL: https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_HEAD_FREEZE_EVENT_SERVICE?tmodule=ERP_SCM
+2025-05-12 11:46:30.781 | INFO     | testcases.sls.test_03_operator:test_06_freeze_sales_order:403 - 冻结订单请求数据: {
+  "params": {
+    "request": {
+      "id": 16396005
+    }
+  }
+}
+2025-05-12 11:46:31.162 | INFO     | testcases.sls.test_03_operator:test_06_freeze_sales_order:408 - 冻结订单响应数据: {
+  "requestId": "50f1a9e1-1688796",
+  "success": true,
+  "data": {
+    "data": null
+  }
+}
+2025-05-12 11:46:31.163 | DEBUG    | utils.log_util:debug:158 - 执行查询SQL: 
+            SELECT id, so_code, so_status, freeze_type 
+            FROM sls_so_head_tr 
+            WHERE id = 16396005
+            
+2025-05-12 11:46:31.164 | DEBUG    | utils.log_util:debug:158 - 获取数据库连接 [id=4468607184]
+2025-05-12 11:46:31.178 | DEBUG    | utils.log_util:debug:158 - 查询结果: [{'id': 16396005, 'so_code': 'SO003061', 'so_status': 'EFFECT', 'freeze_type': 'ALL_FREEZE'}]
+2025-05-12 11:46:31.200 | DEBUG    | utils.log_util:debug:158 - 数据库事务已提交
+2025-05-12 11:46:31.265 | DEBUG    | utils.log_util:debug:158 - 数据库连接已关闭
+2025-05-12 11:46:31.266 | DEBUG    | utils.log_util:debug:158 - 数据库游标已关闭
+2025-05-12 11:46:31.267 | INFO     | testcases.sls.test_03_operator:test_06_freeze_sales_order:424 - 订单 16396005 冻结成功

@@ -1,0 +1,12 @@
+2025-05-13 11:47:42.175 | INFO     | utils.log_util:info:147 - 开始测试: test_03_manual_submit_sales_order
+2025-05-13 11:47:42.180 | ERROR    | utils.exception_util:wrapper:186 - API调用失败: 销售订单列表提交失败
+2025-05-13 11:47:42.181 | ERROR    | utils.exception_util:wrapper:187 - 错误上下文: {'timestamp': '2025-05-13T11:47:42.180091', 'function': {'name': 'test_03_manual_submit_sales_order', 'module': 'testcases.sls.test_03_operator', 'signature': '(self)'}, 'arguments': {'args': ['<testcases.sls.test_03_operator.TestSalesOrderOperator object at 0x110048fc0>'], 'kwargs': {}}, 'error': {'type': 'NameError', 'message': "name 'logger' is not defined"}, 'caller': {'filename': '/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py', 'line_number': 101, 'function': '_enrich_error_context', 'locals': {'args': '(<testcases.sls.test_03_operator.TestSalesOrderOperator object at 0x110048fc0>,)', 'kwargs': '{}', 'error': "name 'logger' is not defined", 'additional_context': 'None'}}, 'api_error': {'message': '销售订单列表提交失败', 'original_error': "name 'logger' is not defined"}}
+2025-05-13 11:47:42.183 | ERROR    | utils.exception_util:wrapper:188 - 异常堆栈:
+Traceback (most recent call last):
+  File "/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py", line 173, in wrapper
+    return func(*args, **kwargs)
+  File "/Users/anson/Documents/Erda-project/erp-autotest/testcases/sls/test_03_operator.py", line 205, in test_03_manual_submit_sales_order
+    logger.info(f"执行查询: {sql}")
+    ^^^^^^
+NameError: name 'logger' is not defined
+

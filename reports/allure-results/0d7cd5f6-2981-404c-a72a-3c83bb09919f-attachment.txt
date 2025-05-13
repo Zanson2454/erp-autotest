@@ -1,0 +1,58 @@
+2025-05-12 11:46:31.296 | INFO     | utils.log_util:info:147 - 开始测试: test_05_repeal_sales_order
+2025-05-12 11:46:31.301 | INFO     | testcases.sls.test_03_operator:test_05_repeal_sales_order:308 - 执行查询: 
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+            
+2025-05-12 11:46:31.302 | DEBUG    | utils.log_util:debug:158 - 执行查询SQL: 
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+            
+2025-05-12 11:46:31.303 | DEBUG    | utils.log_util:debug:158 - 获取数据库连接 [id=4468611808]
+2025-05-12 11:46:31.331 | DEBUG    | utils.log_util:debug:158 - 查询结果: [{'id': 16396005, 'so_code': 'SO003061', 'so_status': 'EFFECT'}]
+2025-05-12 11:46:31.361 | DEBUG    | utils.log_util:debug:158 - 数据库事务已提交
+2025-05-12 11:46:31.425 | DEBUG    | utils.log_util:debug:158 - 数据库连接已关闭
+2025-05-12 11:46:31.426 | DEBUG    | utils.log_util:debug:158 - 数据库游标已关闭
+2025-05-12 11:46:31.427 | INFO     | testcases.sls.test_03_operator:test_05_repeal_sales_order:316 - 找到已提交订单: ID=16396005, 订单号=SO003061
+2025-05-12 11:46:31.428 | INFO     | testcases.sls.test_03_operator:test_05_repeal_sales_order:329 - 作废订单请求URL: https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SLS_REPEAL_EVENT_SERVICE?tmodule=ERP_SCM
+2025-05-12 11:46:31.428 | INFO     | testcases.sls.test_03_operator:test_05_repeal_sales_order:330 - 作废订单请求数据: {
+  "params": {
+    "request": {
+      "id": 16396005
+    }
+  }
+}
+2025-05-12 11:46:31.679 | INFO     | testcases.sls.test_03_operator:test_05_repeal_sales_order:335 - 作废订单响应数据: {
+  "requestId": "50f1a9e1-1688797",
+  "success": false,
+  "data": null,
+  "err": {
+    "code": "DEL_DN_BT_CLASS_IS_NOT_NULL",
+    "msg": "业务类型不能为空",
+    "suggest": null
+  }
+}
+2025-05-12 11:46:31.681 | ERROR    | testcases.sls.test_03_operator:test_05_repeal_sales_order:353 - 作废订单失败: 作废订单失败: None
+assert False
+ +  where False = <built-in method get of dict object at 0x10a45f040>('success')
+ +    where <built-in method get of dict object at 0x10a45f040> = {'data': None, 'err': {'code': 'DEL_DN_BT_CLASS_IS_NOT_NULL', 'msg': '业务类型不能为空', 'suggest': None}, 'requestId': '50f1a9e1-1688797', 'success': False}.get
+2025-05-12 11:46:31.682 | ERROR    | utils.exception_util:wrapper:186 - API调用失败: 作废销售订单失败
+2025-05-12 11:46:31.683 | ERROR    | utils.exception_util:wrapper:187 - 错误上下文: {'timestamp': '2025-05-12T11:46:31.682480', 'function': {'name': 'test_05_repeal_sales_order', 'module': 'testcases.sls.test_03_operator', 'signature': '(self)'}, 'arguments': {'args': ['<testcases.sls.test_03_operator.TestSalesOrderOperator object at 0x10a4a4290>'], 'kwargs': {}}, 'error': {'type': 'AssertionError', 'message': "作废订单失败: None\nassert False\n +  where False = <built-in method get of dict object at 0x10a45f040>('success')\n +    where <built-in method get of dict object at 0x10a45f040> = {'data': None, 'err': {'code': 'DEL_DN_BT_CLASS_IS_NOT_NULL', 'msg': '业务类型不能为空', 'suggest': None}, 'requestId': '50f1a9e1-1688797', 'success': False}.get"}, 'caller': {'filename': '/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py', 'line_number': 101, 'function': '_enrich_error_context', 'locals': {'args': '(<testcases.sls.test_03_operator.TestSalesOrderOperator object at 0x10a4a4290>,)', 'kwargs': '{}', 'error': "作废订单失败: None\nassert False\n +  where False = <built-in method get of dict object at 0x10a45f040>('success')\n +    where <built-in method get of dict object at 0x10a45f040> = {'data': None, 'err': {'code': 'DEL_DN_BT_CLASS_IS_NOT_NULL', 'msg': '业务类型不能为空', 'suggest': None}, 'requestId': '50f1a9e1-1688797', 'success': False}.get", 'additional_context': 'None'}}, 'api_error': {'message': '作废销售订单失败', 'original_error': "作废订单失败: None\nassert False\n +  where False = <built-in method get of dict object at 0x10a45f040>('success')\n +    where <built-in method get of dict object at 0x10a45f040> = {'data': None, 'err': {'code': 'DEL_DN_BT_CLASS_IS_NOT_NULL', 'msg': '业务类型不能为空', 'suggest': None}, 'requestId': '50f1a9e1-1688797', 'success': False}.get"}}
+2025-05-12 11:46:31.698 | ERROR    | utils.exception_util:wrapper:188 - 异常堆栈:
+Traceback (most recent call last):
+  File "/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py", line 173, in wrapper
+    return func(*args, **kwargs)
+  File "/Users/anson/Documents/Erda-project/erp-autotest/testcases/sls/test_03_operator.py", line 339, in test_05_repeal_sales_order
+    assert response_data.get("success"), f"作废订单失败: {response_data.get('message')}"
+AssertionError: 作废订单失败: None
+assert False
+ +  where False = <built-in method get of dict object at 0x10a45f040>('success')
+ +    where <built-in method get of dict object at 0x10a45f040> = {'data': None, 'err': {'code': 'DEL_DN_BT_CLASS_IS_NOT_NULL', 'msg': '业务类型不能为空', 'suggest': None}, 'requestId': '50f1a9e1-1688797', 'success': False}.get
+

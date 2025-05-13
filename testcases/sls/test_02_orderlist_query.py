@@ -4,7 +4,6 @@ import json
 import allure
 import pytest   
 from datetime import datetime
-from loguru import logger
 from typing import Dict, Any, Optional
 
 # 添加项目根目录到 Python 路径
@@ -38,14 +37,14 @@ class TestOrderList(BaseTest):
             yaml_path = os.path.join(project_root, "testcases", "templates", "query_params.yml")
             yaml_reader = YamlUtil(yaml_path)
             TestOrderList.common_params = yaml_reader.read_yaml(yaml_path)
-            logger.info("已加载通用查询参数")
+            self.log.info("已加载通用查询参数")
         
         # 初始化测试数据，但保留已有的数据
         if not hasattr(self, 'test_data') or not self.test_data:
             # 如果类属性中有测试数据，使用类属性中的数据
             if hasattr(TestOrderList, 'test_data') and TestOrderList.test_data:
                 self.test_data = TestOrderList.test_data
-                logger.info("使用类属性中的测试数据")
+                self.log.info("使用类属性中的测试数据")
             else:
                 self.test_data = {
                     "so_code": None,
@@ -55,15 +54,15 @@ class TestOrderList(BaseTest):
                     "cust_id": None,
                     "created_by": None   
                 }
-                logger.info("初始化新的测试数据")
+                self.log.info("初始化新的测试数据")
         
         # 如果提供了 method 参数，记录方法名
         if method and hasattr(method, '__name__'):
-            logger.info(f"开始执行测试方法: {method.__name__}")
+            self.log.info(f"开始执行测试方法: {method.__name__}")
         else:
-            logger.info("开始执行测试方法")
+            self.log.info("开始执行测试方法")
             
-        logger.info("初始化测试数据完成")
+        self.log.info("初始化测试数据完成")
     
     
     def _build_order_list_query_data(self, conditionGroup=None) -> Dict[str, Any]:
@@ -110,31 +109,17 @@ class TestOrderList(BaseTest):
         
         data = self._build_order_list_query_data()
         # 执行测试
-        logger.info("\n准备发送请求...")
-        response = self._make_request(url, data, "查询销售订单列表")
-        
+        self.log.info("\n准备发送请求...")
+        response = self._make_request(url, data, "查询销售订单列表",extract_nested_data=True)        
         # 打印完整响应结构
-        logger.info(f"\n完整响应结构: {json.dumps(response, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
-        
-        # 检查响应结构并提取数据
-        self.assert_util.assert_response_has_data(response, "data")
-        
-        # 获取数据列表并验证
-        data_list = response.get("data", {}).get("data", [])
-        logger.info(f"\n数据列表类型: {type(data_list)}")
-        logger.info(f"数据列表内容: {json.dumps(data_list, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
-        
-        if not isinstance(data_list, list):
-            logger.error(f"数据列表不是列表类型: {type(data_list)}")
-            pytest.fail("响应数据格式错误：data.data 不是列表类型")
-            
-        if not data_list:
-            logger.warning("未查询到订单数据")
+        self.log.info(f"\n完整响应结构: {json.dumps(response, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
+        if not response:
+            self.log.warning("未查询到订单数据")
             return
             
         # 获取第一个订单数据
-        order = data_list[0]
-        logger.info(f"\n第一个订单数据: {json.dumps(order, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
+        order = response[0]
+        self.log.info(f"\n第一个订单数据: {json.dumps(order, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
         
         # 提取测试数据并验证
         self.test_data["so_code"] = order.get("soCode")
@@ -153,11 +138,11 @@ class TestOrderList(BaseTest):
         self.assert_util.assert_id_exists(self.test_data["sls_org_id"], "销售组织ID")
         
         # 输出提取的测试数据
-        logger.info(f"\n提取的测试数据: {json.dumps(self.test_data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
+        self.log.info(f"\n提取的测试数据: {json.dumps(self.test_data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
         
         # 将测试数据保存到类属性，确保后续测试可以访问
         TestOrderList.test_data = self.test_data
-        logger.info("\n已将测试数据保存到类属性")
+        self.log.info("\n已将测试数据保存到类属性")
 
     
     @allure.title("按订单编号查询销售订单列表")
@@ -174,7 +159,7 @@ class TestOrderList(BaseTest):
         # 确保第一个测试已经执行并获取了订单编号
         if not self.test_data.get("so_code"):
             error_msg = "未获取到订单编号，无法执行按订单编号查询测试"
-            logger.error(error_msg)
+            self.log.error(error_msg)
             pytest.fail(error_msg)
             
         url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$sls_so_head_tr_PAGING_DATA_SERVICE"
@@ -224,12 +209,12 @@ class TestOrderList(BaseTest):
         data = self._build_order_list_query_data(conditionGroup)
         
         # 执行测试
-        logger.info("\n准备发送请求...")
-        logger.info(f"查询条件: 订单编号 = {self.test_data['so_code']}")
+        self.log.info("\n准备发送请求...")
+        self.log.info(f"查询条件: 订单编号 = {self.test_data['so_code']}")
 
         # 获取提取后的嵌套数据
         nested_data = self._make_request(url, data, "按订单编号查询销售订单列表", extract_nested_data=True)
-        logger.info(f"\n提取的嵌套数据: {json.dumps(nested_data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
+        self.log.info(f"\n提取的嵌套数据: {json.dumps(nested_data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
         
         # 验证查询结果
         assert nested_data, "未查询到匹配的订单数据"
@@ -238,7 +223,7 @@ class TestOrderList(BaseTest):
         for order in nested_data:
             assert self.test_data["so_code"] in order.get("soCode", ""), f"订单编号 {order.get('soCode')} 不匹配查询条件 {self.test_data['so_code']}"
             
-        logger.info(f"\n成功查询到 {len(nested_data)} 条匹配的订单数据")
+        self.log.info(f"\n成功查询到 {len(nested_data)} 条匹配的订单数据")
 
     @allure.title("按单据状态查询销售订单列表")
     @allure.description("""
@@ -332,27 +317,27 @@ class TestOrderList(BaseTest):
         data = self._build_order_list_query_data(condition_group)
         
         # 执行测试
-        logger.info("\n准备发送请求...")
-        logger.info(f"查询条件: 订单状态 = {so_status}")
+        self.log.info("\n准备发送请求...")
+        self.log.info(f"查询条件: 订单状态 = {so_status}")
         
         # 获取完整响应
         full_response = self._make_request(url, data, f"按单据状态 {so_status} 查询销售订单列表")
-        logger.info(f"\n收到完整响应: {json.dumps(full_response, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
+        self.log.info(f"\n收到完整响应: {json.dumps(full_response, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
         
         # 获取提取后的嵌套数据
         nested_data = self._make_request(url, data, f"按单据状态 {so_status} 查询销售订单列表", extract_nested_data=True)
-        logger.info(f"\n提取的嵌套数据: {json.dumps(nested_data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
+        self.log.info(f"\n提取的嵌套数据: {json.dumps(nested_data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
         
         # 验证查询结果
         if not nested_data:
-            logger.warning(f"\n警告：未查询到状态为 {so_status} 的订单数据")
+            self.log.warning(f"\n警告：未查询到状态为 {so_status} 的订单数据")
             return
             
         # 验证所有返回的订单都匹配查询条件
         for order in nested_data:
             assert order.get("soStatus") == so_status, f"订单状态 {order.get('soStatus')} 不匹配查询条件 {so_status}"
             
-        logger.info(f"\n成功查询到 {len(nested_data)} 条状态为 {so_status} 的订单数据")
+        self.log.info(f"\n成功查询到 {len(nested_data)} 条状态为 {so_status} 的订单数据")
 
 
     @allure.title("按单据类型查询销售订单列表")
@@ -369,7 +354,7 @@ class TestOrderList(BaseTest):
         # 确保第一个测试已经执行并获取了订单类型ID
         if not self.test_data.get("so_type_id"):
             error_msg = "未获取到订单类型ID，无法执行按单据类型查询测试"
-            logger.error(error_msg)
+            self.log.error(error_msg)
             pytest.fail(error_msg)
             
         url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$sls_so_head_tr_PAGING_DATA_SERVICE"
@@ -424,8 +409,8 @@ class TestOrderList(BaseTest):
         data = self._build_order_list_query_data(conditionGroup)
         
         # 执行测试
-        logger.info("\n准备发送请求...")
-        logger.info(f"查询条件: 订单类型ID = {self.test_data['so_type_id']}")
+        self.log.info("\n准备发送请求...")
+        self.log.info(f"查询条件: 订单类型ID = {self.test_data['so_type_id']}")
         
         # 获取提取后的嵌套数据
         nested_data = self._make_request(url, data, "按单据类型查询销售订单列表", extract_nested_data=True)
@@ -454,7 +439,7 @@ class TestOrderList(BaseTest):
             # 进行断言
             assert order_so_type_id == expected_id, f"订单类型ID {order_so_type_id} 不匹配查询条件 {expected_id}"
             
-        logger.info(f"\n成功查询到 {len(nested_data)} 条匹配的订单数据")
+        self.log.info(f"\n成功查询到 {len(nested_data)} 条匹配的订单数据")
 
 
     @allure.title("按客户查询销售订单列表")
@@ -471,7 +456,7 @@ class TestOrderList(BaseTest):
         # 确保第一个测试已经执行并获取了客户ID
         if not self.test_data.get("cust_id"):
             error_msg = "未获取到客户ID，无法执行按客户查询测试"
-            logger.error(error_msg)
+            self.log.error(error_msg)
             pytest.fail(error_msg)
             
         url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$sls_so_head_tr_PAGING_DATA_SERVICE"
@@ -526,8 +511,8 @@ class TestOrderList(BaseTest):
         data = self._build_order_list_query_data(conditionGroup)
         
         # 执行测试
-        logger.info("\n准备发送请求...")
-        logger.info(f"查询条件: 客户ID = {self.test_data['cust_id']}")
+        self.log.info("\n准备发送请求...")
+        self.log.info(f"查询条件: 客户ID = {self.test_data['cust_id']}")
         
         # 获取提取后的嵌套数据
         nested_data = self._make_request(url, data, "按客户查询销售订单列表", extract_nested_data=True)
@@ -556,7 +541,7 @@ class TestOrderList(BaseTest):
             # 进行断言
             assert order_cust_id == expected_id, f"客户ID {order_cust_id} 不匹配查询条件 {expected_id}"
             
-        logger.info(f"\n成功查询到 {len(nested_data)} 条匹配的订单数据")
+        self.log.info(f"\n成功查询到 {len(nested_data)} 条匹配的订单数据")
 
 if __name__ == "__main__":
     test = TestOrderList()

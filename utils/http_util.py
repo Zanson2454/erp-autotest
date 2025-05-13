@@ -4,9 +4,19 @@ from urllib3.util import Retry
 from typing import Optional, Dict, Any, Union, Callable
 from urllib.parse import urljoin
 import json
+import os
+import sys
 from datetime import datetime
+
+
+# 添加项目根目录到 Python 路径
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
+sys.path.insert(0, project_root)
+
 from utils.log_util import Loggers
 from utils.exception_util import safe_api_call, APIException
+from common.login_manager import LoginManager
 
 class HttpUtil:
     """HTTP 工具类，提供增强的 HTTP 请求功能
@@ -18,18 +28,7 @@ class HttpUtil:
     4. 支持会话管理
     5. 支持响应状态码检查
     6. 支持请求/响应数据的序列化处理
-    
-    使用示例：
-    ```python
-    # 创建 HTTP 工具实例
-    http = HttpUtil(base_url="http://api.example.com")
-    
-    # 发送 GET 请求
-    response = http.get("/users", params={"page": 1})
-    
-    # 发送 POST 请求
-    response = http.post("/users", json={"name": "John"})
-    ```
+    7. 支持默认登录和自定义请求头
     """
     
     def __init__(
@@ -39,7 +38,8 @@ class HttpUtil:
         max_retries: int = 3,
         retry_backoff: float = 0.5,
         retry_status_codes: Optional[list] = None,
-        default_headers: Optional[Dict[str, str]] = None
+        default_headers: Optional[Dict[str, str]] = None,
+        use_default_login: bool = True
     ):
         """初始化 HTTP 工具类
         
@@ -50,6 +50,7 @@ class HttpUtil:
             retry_backoff: 重试间隔时间（秒）
             retry_status_codes: 需要重试的状态码列表
             default_headers: 默认请求头
+            use_default_login: 是否使用默认登录，默认为True
         """
         self.logger = Loggers()
         self.base_url = base_url
@@ -65,10 +66,19 @@ class HttpUtil:
         )
         
         # 配置会话
-        self.session = requests.Session()
-        adapter = HTTPAdapter(max_retries=retry_strategy)
-        self.session.mount("http://", adapter)
-        self.session.mount("https://", adapter)
+        if use_default_login:
+            # 使用 LoginManager 的会话
+            login_manager = LoginManager()
+            self.session = login_manager.login()
+            # 更新默认请求头
+            if hasattr(self.session, 'headers') and self.session.headers:
+                self.default_headers.update(dict(self.session.headers))
+        else:
+            # 创建新的会话
+            self.session = requests.Session()
+            adapter = HTTPAdapter(max_retries=retry_strategy)
+            self.session.mount("http://", adapter)
+            self.session.mount("https://", adapter)
         
         # 请求/响应拦截器
         self.request_interceptors: list[Callable] = []
@@ -117,9 +127,16 @@ class HttpUtil:
         # 构建完整 URL
         full_url = self._build_url(url)
         
+        # 移除自定义参数
+        description = kwargs.pop("description", "")
+        if description:
+            self.logger.info(f"发送请求: {description}")
+        
         # 合并请求头
         headers = self.default_headers.copy()
-        headers.update(kwargs.pop("headers", {}))
+        custom_headers = kwargs.pop("headers", {})
+        if custom_headers:
+            headers.update(custom_headers)
         kwargs["headers"] = headers
         
         # 设置超时
@@ -163,18 +180,20 @@ class HttpUtil:
         url: str,
         params: Optional[Dict[str, Any]] = None,
         headers: Optional[Dict[str, str]] = None,
+        description: str = "",
         **kwargs
-    ) -> requests.Response:
+    ) -> Dict[str, Any]:
         """发送 GET 请求
         
         Args:
             url: 请求 URL
             params: 请求参数
             headers: 请求头
+            description: 请求描述，用于日志记录
             **kwargs: 其他参数
             
         Returns:
-            Response: 响应对象
+            Dict[str, Any]: 响应数据
             
         Raises:
             APIException: 请求失败时抛出异常
@@ -183,13 +202,14 @@ class HttpUtil:
         self.logger.debug(f"请求参数: {params}")
         self.logger.debug(f"请求头: {headers}")
         
-        full_url, kwargs = self._prepare_request("GET", url, params=params, headers=headers, **kwargs)
+        full_url, kwargs = self._prepare_request("GET", url, params=params, headers=headers, description=description, **kwargs)
         response = self.session.get(full_url, **kwargs)
         
         self.logger.info(f"响应状态码: {response.status_code}")
         self.logger.debug(f"响应内容: {response.text}")
         
-        return self._handle_response(response)
+        response = self._handle_response(response)
+        return response.json()
     
     @safe_api_call(error_message="POST请求失败")
     def post(
@@ -199,8 +219,9 @@ class HttpUtil:
         json: Optional[Dict[str, Any]] = None,
         params: Optional[Dict[str, Any]] = None,
         headers: Optional[Dict[str, str]] = None,
+        description: str = "",
         **kwargs
-    ) -> requests.Response:
+    ) -> Dict[str, Any]:
         """发送 POST 请求
         
         Args:
@@ -209,10 +230,11 @@ class HttpUtil:
             json: JSON 格式的请求数据
             params: 请求参数
             headers: 请求头
+            description: 请求描述，用于日志记录
             **kwargs: 其他参数
             
         Returns:
-            Response: 响应对象
+            Dict[str, Any]: 响应数据
             
         Raises:
             APIException: 请求失败时抛出异常
@@ -223,13 +245,14 @@ class HttpUtil:
         self.logger.debug(f"JSON 数据: {json}")
         self.logger.debug(f"请求头: {headers}")
         
-        full_url, kwargs = self._prepare_request("POST", url, data=data, json=json, params=params, headers=headers, **kwargs)
+        full_url, kwargs = self._prepare_request("POST", url, data=data, json=json, params=params, headers=headers, description=description, **kwargs)
         response = self.session.post(full_url, **kwargs)
         
         self.logger.info(f"响应状态码: {response.status_code}")
         self.logger.debug(f"响应内容: {response.text}")
         
-        return self._handle_response(response)
+        response = self._handle_response(response)
+        return response.json()
     
     @safe_api_call(error_message="PUT请求失败")
     def put(
@@ -307,4 +330,4 @@ class HttpUtil:
     
     def close(self) -> None:
         """关闭会话"""
-        self.session.close() 
+        self.session.close()

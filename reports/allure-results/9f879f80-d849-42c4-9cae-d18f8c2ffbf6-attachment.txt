@@ -1,0 +1,91 @@
+[32m2025-05-13 11:48:02.948[0m | [1mINFO    [0m | [36mutils.log_util[0m:[36minfo[0m:[36m147[0m - [1m开始测试会话[0m
+[32m2025-05-13 11:48:03.584[0m | [1mINFO    [0m | [36mutils.log_util[0m:[36minfo[0m:[36m147[0m - [1m数据库连接池初始化完成 [host=rm-bp1f14585v00oh99t.mysql.rds.aliyuncs.com, port=3306][0m
+[32m2025-05-13 11:48:03.585[0m | [1mINFO    [0m | [36mutils.log_util[0m:[36minfo[0m:[36m147[0m - [1m数据库管理器初始化完成 [pool=default, size=5, runtime=False][0m
+2025-05-13 11:48:03.626 | INFO     | common.login_manager:__init__:186 - 初始化登录管理器
+2025-05-13 11:48:03.994 | INFO     | common.login_manager:__init__:195 - 登录管理器初始化完成
+2025-05-13 11:48:03.994 | INFO     | common.login_manager:login:217 - 开始登录流程
+2025-05-13 11:48:03.994 | INFO     | common.login_manager:_get_credentials:244 - 使用配置文件中的默认账号密码
+2025-05-13 11:48:03.995 | INFO     | common.login_manager:_get_credentials:248 - 使用账号: 17376596912
+2025-05-13 11:48:04.202 | INFO     | common.login_manager:_login_iam:266 - 登录响应状态码: 200
+2025-05-13 11:48:04.204 | INFO     | common.login_manager:_handle_redirect:284 - 重定向URL: https://t-erp-portal-test.app.terminus.io/TERP_PORTAL-TERP-tpf_umwrhzbg/login
+2025-05-13 11:48:04.372 | INFO     | common.login_manager:get_current_user:309 - 获取用户信息URL: https://t-erp-portal-test.app.terminus.io/api/trantor/portal/user/current
+2025-05-13 11:48:04.439 | INFO     | common.login_manager:get_current_user:314 - 获取用户信息响应状态码: 200
+2025-05-13 11:48:04.440 | INFO     | common.login_manager:login:224 - 登录成功，用户信息: {'requestId': 'c98f490f-1725083', 'success': True, 'data': {'id': 540175374525637, 'username': 'zhangang', 'email': 'zhangang.26@163.com', 'mobile': '17376596912', 'nickname': '章昂', 'status': True, 'avatar': 'https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png'}}
+2025-05-13 11:48:04.441 | INFO     | utils.log_util:info:147 - 开始初始化SQL工具...
+2025-05-13 11:48:04.442 | INFO     | utils.log_util:info:147 - 数据库管理器初始化完成 [pool=default, size=5, runtime=False]
+2025-05-13 11:48:04.442 | INFO     | utils.log_util:info:147 - 缓存文件路径: /Users/anson/Documents/Erda-project/erp-autotest/testcases/comm/cache/init_cache.json
+2025-05-13 11:48:04.443 | INFO     | utils.log_util:info:147 - SQL工具初始化完成，开始获取初始化数据...
+2025-05-13 11:48:04.445 | INFO     | utils.log_util:info:147 - 成功从缓存文件加载数据: /Users/anson/Documents/Erda-project/erp-autotest/testcases/comm/cache/init_cache.json
+2025-05-13 11:48:04.446 | INFO     | utils.log_util:info:147 - 从缓存获取数据成功
+2025-05-13 11:48:04.446 | INFO     | utils.log_util:info:147 - 获取到的初始化数据类型: <class 'dict'>
+2025-05-13 11:48:04.447 | INFO     | utils.log_util:info:147 - 开始提取配置信息...
+2025-05-13 11:48:04.448 | INFO     | utils.log_util:info:147 - 配置信息提取完成
+2025-05-13 11:48:04.448 | INFO     | utils.log_util:info:147 - 开始提取ID信息...
+2025-05-13 11:48:04.449 | INFO     | utils.log_util:info:147 - ID信息提取完成
+2025-05-13 11:48:04.450 | INFO     | utils.log_util:info:147 - 开始初始化登录和API配置...
+2025-05-13 11:48:04.451 | INFO     | common.login_manager:__init__:186 - 初始化登录管理器
+2025-05-13 11:48:05.752 | INFO     | common.login_manager:__init__:195 - 登录管理器初始化完成
+2025-05-13 11:48:05.753 | INFO     | common.login_manager:login:217 - 开始登录流程
+2025-05-13 11:48:05.754 | INFO     | common.login_manager:_get_credentials:244 - 使用配置文件中的默认账号密码
+2025-05-13 11:48:05.755 | INFO     | common.login_manager:_get_credentials:248 - 使用账号: 17376596912
+2025-05-13 11:48:05.934 | INFO     | common.login_manager:_login_iam:266 - 登录响应状态码: 200
+2025-05-13 11:48:05.934 | INFO     | common.login_manager:_handle_redirect:284 - 重定向URL: https://t-erp-portal-test.app.terminus.io/TERP_PORTAL-TERP-tpf_umwrhzbg/login
+2025-05-13 11:48:06.208 | INFO     | common.login_manager:get_current_user:309 - 获取用户信息URL: https://t-erp-portal-test.app.terminus.io/api/trantor/portal/user/current
+2025-05-13 11:48:06.265 | INFO     | common.login_manager:get_current_user:314 - 获取用户信息响应状态码: 200
+2025-05-13 11:48:06.266 | INFO     | common.login_manager:login:224 - 登录成功，用户信息: {'requestId': 'cea44101-1725084', 'success': True, 'data': {'id': 540175374525637, 'username': 'zhangang', 'email': 'zhangang.26@163.com', 'mobile': '17376596912', 'nickname': '章昂', 'status': True, 'avatar': 'https://terminus-new-trantor.oss-cn-hangzhou.aliyuncs.com/iam/user/avatar/540175374525637/2025-03-10_14_44_32_7dbc5543-0152-4a67-9901-b7da94c6ba4f_%E5%A4%8D%E6%B4%BB%E5%B2%9B%E5%B7%A8%E4%BA%BA%E5%83%8F.png'}}
+2025-05-13 11:48:06.267 | INFO     | utils.log_util:info:147 - 登录和API配置初始化完成
+2025-05-13 11:48:06.267 | INFO     | utils.log_util:info:147 - 开始初始化请求头...
+2025-05-13 11:48:06.776 | INFO     | utils.log_util:info:147 - 请求头初始化完成
+2025-05-13 11:48:06.777 | INFO     | utils.log_util:info:147 - 测试类初始化完成
+2025-05-13 11:48:07.285 | INFO     | utils.log_util:info:147 - 测试类初始化完成
+2025-05-13 11:48:07.288 | INFO     | utils.log_util:info:147 - 开始测试: test_06_freeze_sales_order
+2025-05-13 11:48:07.292 | INFO     | utils.log_util:info:147 - 执行查询: 
+            SELECT id, so_code, so_status, freeze_type 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            AND freeze_type = 'NU_FREEZE'
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+            
+2025-05-13 11:48:07.293 | DEBUG    | utils.log_util:debug:158 - 执行查询SQL: 
+            SELECT id, so_code, so_status, freeze_type 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'EFFECT' 
+            and so_type_id = 2101001
+            AND freeze_type = 'NU_FREEZE'
+            AND deleted = 0 order by created_at desc
+            LIMIT 1
+            
+2025-05-13 11:48:07.294 | DEBUG    | utils.log_util:debug:158 - 获取数据库连接 [id=4587070608]
+2025-05-13 11:48:07.342 | DEBUG    | utils.log_util:debug:158 - 查询结果: [{'id': 16397003, 'so_code': 'SO003179', 'so_status': 'EFFECT', 'freeze_type': 'NU_FREEZE'}]
+2025-05-13 11:48:07.412 | DEBUG    | utils.log_util:debug:158 - 数据库事务已提交
+2025-05-13 11:48:07.445 | DEBUG    | utils.log_util:debug:158 - 数据库连接已关闭
+2025-05-13 11:48:07.446 | DEBUG    | utils.log_util:debug:158 - 数据库游标已关闭
+2025-05-13 11:48:07.447 | INFO     | utils.log_util:info:147 - 找到可冻结订单: ID=16397003, 订单号=SO003179
+2025-05-13 11:48:07.448 | INFO     | utils.log_util:info:147 - 冻结订单请求URL: https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_HEAD_FREEZE_EVENT_SERVICE?tmodule=ERP_SCM
+2025-05-13 11:48:07.448 | INFO     | utils.log_util:info:147 - 冻结订单请求数据: {
+  "params": {
+    "request": {
+      "id": 16397003
+    }
+  }
+}
+2025-05-13 11:48:07.742 | INFO     | utils.log_util:info:147 - 冻结订单响应数据: {
+  "requestId": "f5ede524-1725086",
+  "success": true,
+  "data": {
+    "data": null
+  }
+}
+2025-05-13 11:48:07.743 | DEBUG    | utils.log_util:debug:158 - 执行查询SQL: 
+            SELECT id, so_code, so_status, freeze_type 
+            FROM sls_so_head_tr 
+            WHERE id = 16397003
+            
+2025-05-13 11:48:07.744 | DEBUG    | utils.log_util:debug:158 - 获取数据库连接 [id=4585415056]
+2025-05-13 11:48:07.792 | DEBUG    | utils.log_util:debug:158 - 查询结果: [{'id': 16397003, 'so_code': 'SO003179', 'so_status': 'EFFECT', 'freeze_type': 'ALL_FREEZE'}]
+2025-05-13 11:48:07.863 | DEBUG    | utils.log_util:debug:158 - 数据库事务已提交
+2025-05-13 11:48:07.897 | DEBUG    | utils.log_util:debug:158 - 数据库连接已关闭
+2025-05-13 11:48:07.897 | DEBUG    | utils.log_util:debug:158 - 数据库游标已关闭
+2025-05-13 11:48:07.898 | INFO     | utils.log_util:info:147 - 订单 16397003 冻结成功

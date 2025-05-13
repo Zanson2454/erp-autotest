@@ -461,27 +461,6 @@ class BaseTest:
             self.log.error(f"请求失败: {str(e)}")
             raise
 
-    def _make_request_with_assertion(self, url: str, data: Dict[str, Any], description: str = "", 
-                                   extract_nested_data: bool = False, headers: Optional[Dict[str, str]] = None) -> Dict[str, Any]:
-        """发送请求并处理响应，并断言业务成功
-        
-        Args:
-            url: 请求URL
-            data: 请求数据
-            description: 请求描述，用于日志记录
-            extract_nested_data: 是否提取嵌套的 data 结构
-            headers: 自定义请求头
-            
-        Returns:
-            Dict[str, Any]: 响应数据
-            
-        Raises:
-            AssertionError: 当业务响应不成功时抛出
-            Exception: 请求失败时抛出
-        """
-        result = self._make_request(url, data, description, extract_nested_data, headers)
-        self.assert_util.assert_response_status(result)
-        return result
 
 if __name__ == "__main__":
     test = BaseTest()
