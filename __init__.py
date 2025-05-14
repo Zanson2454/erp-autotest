@@ -1,4 +1,13 @@
-"""ERP自动化测试框架"""
+"""
+ERP自动化测试框架
+
+提供完整的ERP系统自动化测试能力，包括：
+1. 测试用例管理
+2. 数据驱动测试
+3. 环境配置管理
+4. 测试报告生成
+5. 性能测试支持
+"""
 
 import os
 import sys
@@ -63,7 +72,7 @@ def get_log_path() -> Path:
     return PROJECT_ROOT / "logs"
 
 # 包版本信息
-__version__ = "0.1"
+__version__ = "1.0.0"
 
 # 确保必要的目录在Python路径中
 for subdir in ['common', 'utils', 'testcases']:

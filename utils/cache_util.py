@@ -41,7 +41,9 @@ class CacheUtil:
     
     def _ensure_cache_dir(self) -> None:
         """确保缓存目录存在"""
+        logger.info(f"缓存目录: {self.cache_dir.absolute()}")
         self.cache_dir.mkdir(parents=True, exist_ok=True)
+        logger.info(f"缓存目录创建状态: 存在={self.cache_dir.exists()}")
     
     def get(self, key: str) -> Optional[Dict[str, Any]]:
         """获取缓存数据
@@ -58,17 +60,22 @@ class CacheUtil:
                 user_id = data.get("id")
         """
         cache_file = self.cache_dir / f"{key}.json"
+        logger.info(f"读取缓存文件: {cache_file.absolute()}")
         try:
             if not cache_file.exists():
+                logger.info(f"缓存文件不存在: {cache_file.absolute()}")
                 return None
             
             if self._is_expired(cache_file):
+                logger.info(f"缓存文件已过期: {cache_file.absolute()}")
                 return None
             
             with open(cache_file, 'r', encoding='utf-8') as f:
-                return json.load(f)
+                data = json.load(f)
+                logger.info(f"成功读取缓存: {cache_file.name}")
+                return data
         except Exception as e:
-            logger.error(f"读取缓存失败: {str(e)}")
+            logger.error(f"读取缓存失败: {str(e)}, 文件: {cache_file.absolute()}")
             return None
     
     def set(self, key: str, data: Dict[str, Any]) -> None:
@@ -82,11 +89,13 @@ class CacheUtil:
             cache_util.set("user_info", {"id": 1, "name": "test"})
         """
         cache_file = self.cache_dir / f"{key}.json"
+        logger.info(f"写入缓存文件: {cache_file.absolute()}")
         try:
             with open(cache_file, 'w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=2, cls=DecimalEncoder)
+                logger.info(f"成功写入缓存: {cache_file.name}")
         except Exception as e:
-            logger.error(f"写入缓存失败: {str(e)}")
+            logger.error(f"写入缓存失败: {str(e)}, 文件: {cache_file.absolute()}")
     
     def exists(self, key: str) -> bool:
         """检查缓存是否存在且未过期

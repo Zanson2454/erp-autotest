@@ -28,7 +28,6 @@ from dotenv import load_dotenv
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from testcases.comm.login import LoginManager
 from utils.yaml_util import YamlUtil
 from utils.assert_util import AssertHelper
 from utils.log_util import Loggers
@@ -157,28 +156,24 @@ class Login:
         try:
             # 获取登录信息
             login_data = {
-                "username": self.config.get("tenants", {}).get("terp", {}).get("auth", {}).get("username", ""),
+                "account": self.config.get("tenants", {}).get("terp", {}).get("auth", {}).get("username", ""),
                 "password": self.config.get("tenants", {}).get("terp", {}).get("auth", {}).get("password", "")          
             }
-            logger.info(f"使用账号: {login_data['username']}")
+            logger.info(f"使用账号: {login_data['account']}")
+            logger.info(f"完整登录参数: {login_data}")
+            logger.info(f"配置信息: {self.config}")
             
             # 执行IAM登录
             login_url = f"{self.iam_url}/iam/api/v1/user/login/account"
+            logger.info(f"登录URL: {login_url}")
             self.session.headers.update(self.iam_headers)
-            response = self.session.post(login_url, json=login_data)
+            logger.info(f"请求头: {self.session.headers}")
+            logger.info(f"登录参数: {login_data}")
+            response = self.session.post(login_url, json=login_data,headers=self.iam_headers)
             logger.info(f"登录响应状态码: {response.status_code}")
+            logger.info(f"登录响应内容: {response.text}")
             
-            if response.status_code != 200:
-                raise Exception(f"登录失败: {response.text}")
-            
-            # 处理重定向
-            redirect_url = f"{self.api_url}/TERP_PORTAL-TERP-tpf_umwrhzbg/login"
-            self.session.headers.update(self.api_headers)
-            response = self.session.get(redirect_url, allow_redirects=True)
-            
-            if response.status_code != 200:
-                raise Exception(f"重定向失败: {response.text}")
-            
+  
             # 获取用户信息验证登录状态
             user_info = self.get_current_user()
             if not user_info:
@@ -252,7 +247,10 @@ class SQLInitializer:
         """
         try:
             # 尝试从缓存获取数据
-            cache_data = self.cache.get()
+            cache_key = str(self.config_path.stem)+'_cache'  # 只使用文件名（不包含扩展名）作为缓存键
+            self.log.info(f"使用缓存键: {cache_key}")
+            self.log.info(f"配置文件路径: {self.config_path.absolute()}")
+            cache_data = self.cache.get(cache_key)
             if cache_data:
                 self.log.info("从缓存获取数据成功")
                 return cache_data
@@ -262,8 +260,8 @@ class SQLInitializer:
             init_data = self._init_sql_impl()
             
             # 写入缓存
-            self.cache.set(init_data)
-            self.log.info("数据初始化完成并写入缓存")
+            self.cache.set(cache_key, init_data)
+            self.log.info(f"数据初始化完成并写入缓存: testdata/cache/{cache_key}.json")
             
             return init_data
         except Exception as e:
@@ -294,8 +292,24 @@ class SQLInitializer:
                 if not sql:
                     continue
                 
-                # 使用新的 query 方法
-                result = self.db.query(sql)
+                # 处理SQL中的LIKE语句，将%作为参数传递
+                if 'LIKE' in sql:
+                    # 提取LIKE条件的值
+                    import re
+                    like_pattern = re.compile(r"LIKE\s+'([^']*)'")
+                    matches = like_pattern.findall(sql)
+                    if matches:
+                        # 替换SQL中的LIKE值为占位符
+                        sql = like_pattern.sub("LIKE %s", sql)
+                        # 准备参数
+                        params = [match.replace('%', '') + '%' for match in matches]
+                        # 执行查询
+                        result = self.db.query(sql, params)
+                    else:
+                        result = self.db.query(sql)
+                else:
+                    result = self.db.query(sql)
+                
                 formatted_result = self._format_result(result)
                 
                 # 根据查询类型分类存储结果
@@ -346,12 +360,19 @@ class BaseTest:
         3. 初始化SQL工具
         4. 初始化HTTP工具和断言工具
         """
+        # 初始化登录
+        cls.login = Login()
+        cls.base_url = cls.login.api_url
+        cls.headers = cls.login.base_headers
+        
         # 初始化日志
         cls.logger = Loggers()
         
         # 初始化缓存管理器
-        cache_dir = Path(__file__).parent.parent.parent / "testdata" / "cache"
+        cache_dir = project_root / "testdata" / "cache"
+        cache_dir.mkdir(parents=True, exist_ok=True)  # 确保缓存目录存在
         cls.cache = CacheUtil(cache_dir)
+        logger.info(f"缓存目录: {cache_dir.absolute()}")
         
         # 初始化环境配置
         cls.env = EnvInit()
@@ -369,9 +390,15 @@ class BaseTest:
         cls.init_sql = SQLInitializer(config_path, cls.cache, db_config, cls.logger) # SQL初始化器
         cls.db = cls.init_sql.db  # 获取数据库管理器实例
         
-        # 初始化其他组件
-        cls.http = HttpUtil() # HTTP 工具
-        cls.assert_util = AssertHelper() # 断言工具
+        # 初始化HTTP工具，使用已认证的会话
+        cls.http = HttpUtil(
+            url=cls.base_url,
+            session=cls.login.session,  # 传递已认证的会话
+            headers=cls.login.api_headers  # 传递API请求头
+        )
+        
+        # 初始化断言工具
+        cls.assert_util = AssertHelper()
         
         # 获取初始化数据
         init_data = cls.init_sql.init_sql() # 获取初始化数据
@@ -451,7 +478,5 @@ class BaseTest:
 
 if __name__ == "__main__":
     # 测试环境初始化
-    env = EnvInit()
-    logger.info(f"环境配置: {env.get_config()}")
-    login = Login()
-    logger.info(f"当前登录用户: {login.get_current_user()}")
+    test=BaseTest()
+    test.setup_class()
