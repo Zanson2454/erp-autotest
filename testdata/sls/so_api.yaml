@@ -1,0 +1,7 @@
+# 放每个模块的 api
+销售订单:
+  销售配置:
+    tmodule: "ERP_SCM"
+    modelKey: "sls_so_type_cf"
+    查询订单类型配置: "/api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService"
+    查询订单类型详情: "/api/trantor/service/engine/execute/ERP_SCM$SYS_FindDataByIdService"

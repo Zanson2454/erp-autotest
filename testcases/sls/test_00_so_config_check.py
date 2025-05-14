@@ -15,6 +15,7 @@ logger.info(f"project_root: {project_root}")
 
 from testcases.comm.base_test import BaseTest
 from utils.exception_util import safe_api_call
+from utils.yaml_util import YamlUtil
 
 class TestSalesOrderConfig(BaseTest):
     """销售订单配置检查测试类"""
@@ -24,57 +25,54 @@ class TestSalesOrderConfig(BaseTest):
         """测试类初始化"""
         super().setup_class()
         cls.so_stnd_id = None
+        cls.yaml_util = YamlUtil()
+        cls._build_params()
+        
+    @classmethod
+    def _build_params(cls):    
+        # 获取销售订单类型API
+        api_path = Path(project_root) / "testdata" / "sls" / "so_api.yaml"
+        cls.api_path = cls.yaml_util.read_yaml(api_path)
+        cls.api_path = cls.api_path["销售订单"]["销售配置"]
     
+        # 获取销售订单类型配置参数
+        config_path = Path(project_root) / "testdata" / "sls" / "so_config.yaml"
+        cls.params = cls.yaml_util.read_yaml(config_path)
+        
+        # 替换变量
+        tmodule = cls.api_path["tmodule"]
+        modelKey = cls.api_path["modelKey"]
+        
+        # 替换sys_params中的变量
+        cls.params["sys_params"]["tmodule"] = cls.params["sys_params"]["tmodule"].format(tmodule=tmodule)
+        cls.params["sys_params"]["modelKey"] = cls.params["sys_params"]["modelKey"].format(tmodule=tmodule, modelKey=modelKey)
+        
+        # 替换page_data中的变量
+        for key in ["sceneKey", "viewKey", "containerKey", "serviceKey"]:
+            if key in cls.params["page_data"]:
+                cls.params["page_data"][key] = cls.params["page_data"][key].format(tmodule=tmodule, modelKey=modelKey)
+        cls.params["page_data"]["params"]["modelKey"] = cls.params["page_data"]["params"]["modelKey"].format(tmodule=tmodule, modelKey=modelKey)
+        
+        # 替换detail_data中的变量
+        for key in ["sceneKey", "viewKey", "containerKey", "serviceKey"]:
+            if key in cls.params["detail_data"]:
+                cls.params["detail_data"][key] = cls.params["detail_data"][key].format(tmodule=tmodule, modelKey=modelKey)
+        cls.params["detail_data"]["params"]["modelKey"] = cls.params["detail_data"]["params"]["modelKey"].format(tmodule=tmodule, modelKey=modelKey)
+        
+        logger.info(f"Parameters after variable replacement: {cls.params}")
+        
     @pytest.mark.order(1)
     def test_01_query_order_type(self):
         """查询订单类型配置"""
         # URL和查询参数
-        url = "/api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService"
-        params = {
-            "tmodule": "ERP_SCM",
-            "modelKey": "ERP_SCM$sls_so_type_cf"
-        }
-        
-        # 构建请求参数
-        data = {
-            "sceneKey": "ERP_SCM$so_type_cf",
-            "viewKey": "ERP_SCM$so_type_cf:list",
-            "containerKey": "ERP_SCM$so_type_cf-list-ERP_SCM$sls_so_type_cf",
-            "serviceKey": "ERP_SCM$SYS_PagingDataService",
-            "params": {
-                "request": {
-                    "pageable": {
-                        "pageNo": 1,
-                        "pageSize": 20,
-                        "conditionItems": None
-                    }
-                },
-                "modelKey": "ERP_SCM$sls_so_type_cf"
-            }
-        }
-        
-        # 构建请求头
-        headers = {
-            'Accept': 'application/json, text/plain, */*',
-            'Accept-Language': 'zh-CN',
-            'Cache-Control': 'no-cache',
-            'Pragma': 'no-cache',
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'same-origin',
-            'sec-ch-ua': '"Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"macOS"',
-            'terminus-request-id': self._generate_request_id()
-        }
+        url = self.api_path["查询订单类型配置"]
         
         # 发送请求
         try:
             response = self.http.post(
                 url=url,
-                params=params,
-                json=data,
-                headers=headers,
+                params=self.params['sys_params'],
+                json=self.params['page_data'],
                 description="查询订单类型"
             )
             
@@ -100,10 +98,6 @@ class TestSalesOrderConfig(BaseTest):
                 self.logger.error(f"响应内容: {e.response.text}")
             raise
     
-    def _generate_request_id(self) -> str:
-        """生成请求ID"""
-        import uuid
-        return str(uuid.uuid4())
     
     @pytest.mark.order(2)
     def test_02_query_order_type_detail(self):
@@ -114,30 +108,17 @@ class TestSalesOrderConfig(BaseTest):
         self.logger.info(f"使用订单类型ID: {self.so_stnd_id}")
         
         # 准备请求参数
-        url = "/api/trantor/service/engine/execute/ERP_SCM$SYS_FindDataByIdService"
-        params = {
-            "tmodule": "ERP_SCM",
-            "modelKey": "ERP_SCM$sls_so_type_cf"
-        }
+        url = self.api_path["查询订单类型详情"]
         
-        data = {
-            "sceneKey": "ERP_SCM$so_type_cf",
-            "viewKey": "ERP_SCM$so_type_cf:list",
-            "containerKey": "ERP_SCM$so_type_cf-detailView-ERP_SCM$sls_so_type_cf-detail",
-            "serviceKey": "ERP_SCM$SYS_FindDataByIdService",
-            "params": {
-                "request": {
-                    "id": self.so_stnd_id
-                },
-                "modelKey": "ERP_SCM$sls_so_type_cf"
-            }
-        }
+        # 设置ID
+        self.params['detail_data']['params']['request']['id'] = self.so_stnd_id
+        
         # 发送请求
         try:
             response = self.http.post(
                 url=url,
-                params=params,
-                json=data,
+                params=self.params['sys_params'],
+                json=self.params['detail_data'],
                 description="查询订单类型详情"
             )
             self.logger.info(f"响应数据: {response}")

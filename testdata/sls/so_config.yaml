@@ -1,0 +1,29 @@
+# 系统服务通用参数
+sys_params:
+  tmodule: "{tmodule}"
+  modelKey: "{tmodule}${modelKey}"
+
+# 销售订单类型配置
+page_data:
+  sceneKey: "{tmodule}${modelKey}"
+  viewKey: "{tmodule}${modelKey}:list"
+  containerKey: "{tmodule}${modelKey}-list-{tmodule}${modelKey}"
+  serviceKey: "{tmodule}$SYS_PagingDataService"
+  params:
+    request:
+      pageable:
+        pageNo: 1
+        pageSize: 20
+        conditionItems: null
+    modelKey: "{tmodule}${modelKey}"
+
+# 销售订单类型详情
+detail_data:
+  sceneKey: "{tmodule}${modelKey}"
+  viewKey: "{tmodule}${modelKey}:list"
+  containerKey: "{tmodule}${modelKey}-detailView-{tmodule}${modelKey}"
+  serviceKey: "{tmodule}$SYS_FindDataByIdService"
+  params:
+    request:
+      id: 1
+    modelKey: "{tmodule}${modelKey}"
