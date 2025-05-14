@@ -1,0 +1,31 @@
+# 放每个模块的 api
+客户管理:
+  会员主数据:
+    - path: /api/user/list # 获取用户列表
+    - path: /api/user/detail # 获取用户详情
+    - path: /api/user/create # 创建用户
+    - path: /api/user/update # 更新用户
+    - path: /api/user/delete # 删除用户
+    - path: /api/user/list # 获取用户列表
+    - path: /api/user/detail # 获取用户详情
+    - path: /api/user/create # 创建用户
+    - path: /api/user/update # 更新用户
+    - path: /api/user/delete # 删除用户
+    - path: /api/user/list # 获取用户列表
+    - path: /api/user/detail # 获取用户详情
+    - path: /api/user/create # 创建用户
+    - path: /api/user/update # 更新用户
+    - path: /api/user/delete # 删除用户
+  卡券:
+    - path: /api/user/list # 获取用户列表
+    - path: /api/user/detail # 获取用户详情
+    - path: /api/user/create # 创建用户
+    - path: /api/user/update # 更新用户
+    - path: /api/user/delete # 删除用户
+账户管理:
+  账户主数据:
+    - path: /api/user/list # 获取用户列表
+    - path: /api/user/detail # 获取用户详情
+    - path: /api/user/create # 创建用户
+    - path: /api/user/update # 更新用户
+    - path: /api/user/delete # 删除用户

@@ -25,10 +25,11 @@ import requests
 from urllib.parse import quote
 from loguru import logger
 from typing import Optional, Dict, Any
+from pathlib import Path
 
 # 动态获取项目根目录（兼容不同调用方式）
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(BASE_DIR)
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+sys.path.append(str(BASE_DIR))
 
 from utils.yaml_util import YamlUtil
 from utils.mock_util import MockData
@@ -59,17 +60,19 @@ class AuthConfig:
         auth_config (dict): 认证配置信息
     """
     
-    def __init__(self, config: YamlUtil):
+    def __init__(self, config: Dict[str, Any]):
         """
         初始化认证配置
         
         Args:
-            config: 配置工具实例，用于读取配置信息
+            config: 配置信息，包含认证、URL等配置
         """
-        self.config = config 
-        self.iam_url = config.get_iam_url()  # 获取 IAM 服务地址
-        self.api_url = config.get_base_url()  # 获取 API 服务地址
-        self.auth_config = config.get_auth_config()  # 获取认证配置
+        env = os.getenv("ENV", "test")  # 获取环境变量，默认为test环境
+        env_config = YamlUtil().read_yaml(f"env/{env}.yaml")
+        self.iam_url = env_config.get("iam_url")
+        self.api_url = env_config.get("api_url")
+        self.auth_config = env_config.get("auth_config", {})
+        logger.info(f"初始化认证配置: {self.iam_url}, {self.api_url}, {self.auth_config}")
     
     def get_default_credentials(self) -> Dict[str, str]: 
         """
@@ -79,8 +82,8 @@ class AuthConfig:
             Dict[str, str]: 包含用户名和密码的字典
         """
         return {
-            "username": self.auth_config["username"],
-            "password": self.auth_config["password"]
+            "username": self.auth_config.get("username", ""),
+            "password": self.auth_config.get("password", "")
         }
 
 class HeadersManager:
@@ -168,30 +171,34 @@ class LoginManager:
     
     Attributes:
         session (requests.Session): HTTP会话对象
-        config (YamlUtil): 配置工具实例
+        config (Dict[str, Any]): 配置信息
         auth_config (AuthConfig): 认证配置管理器
         headers_manager (HeadersManager): 请求头管理器
     """
     
-    def __init__(self):
+    def __init__(self, config_dir: str = "config"):
         """
         初始化登录管理器
         
+        Args:
+            config: 配置信息，包含认证、URL等配置
+            
         初始化过程包括：
         1. 创建HTTP会话
-        2. 加载配置
-        3. 初始化认证配置
-        4. 初始化请求头管理器
+        2. 初始化认证配置
+        3. 初始化请求头管理器
         """
+        env = os.getenv("ENV", "test")  # 获取环境变量，默认为test环境
+        env_config = YamlUtil().read_yaml(f"env/{env}.yaml")
         logger.info("初始化登录管理器")
         self.session = requests.Session() 
-        self.config = YamlUtil() # 加载配置
-        self.auth_config = AuthConfig(self.config) # 初始化认证配置
+        self.config = env_config
+        self.auth_config = AuthConfig(env_config)
         self.headers_manager = HeadersManager(
-            self.config.get_iam_url(), 
-            self.config.get_base_url()
+            env_config.get("iam_url"),
+            env_config.get("api_url")
         )
-        self.session.headers.update(self.headers_manager.base_headers)  # 更新请求头    
+        self.session.headers.update(self.headers_manager.base_headers)
         logger.info("登录管理器初始化完成")
     
     def login(self, account: Optional[str] = None, password: Optional[str] = None) -> requests.Session:

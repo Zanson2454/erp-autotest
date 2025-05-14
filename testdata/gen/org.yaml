@@ -1,0 +1,41 @@
+# 用例模板
+org:
+  - path: /api/user/list # 获取用户列表
+  - params: 
+      request: {
+        pageNo: 1
+        pageSize: 20
+        object: {
+          "id":1,
+          "name":"string"
+        }
+        sortOrders:
+          - fieldAlias: "createdBy"
+            sortType: "DESC"
+      }
+
+
+self.user_params = get_params(gen,'/api/user/list')
+
+
+class Org(BaseCase):
+  def setup_class(self):
+    self.user_params['object']['id'] = self.com_id
+    self.log.info(f'self.user_params: {self.user_params}')
+  def _get_params_id(self,path):
+    self.user_params = get_params(gen,path)
+    self.user_params['object']['id'] = get_id() 
+  
+  
+  def case_1(self):
+    
+    res = self.http_request(path,json=self.user_params)
+    assert res.status_code == 200
+    assert res.json()['code'] == 0
+    assert res.json()['data']['total'] > 0
+
+  def case_2(self):
+
+
+  def case_3(self):
+    self.user_params['object']['id'] = get_id()

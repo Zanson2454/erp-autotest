@@ -37,7 +37,58 @@ class Loggers:
     ```
     """
     
-    def __init__(self):
+    _instance = None
+    _config_loaded = False
+    
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+    
+    def __init__(self, config: Optional[Dict[str, Any]] = None):
+        """初始化日志工具
+        
+        Args:
+            config: 可选的日志配置，如果不提供则使用默认配置
+        """
+        if not hasattr(self, 'initialized'):
+            self.config = self._load_config(config)
+            self._setup_logger()
+            self.initialized = True
+    
+    @safe_config_load(error_message="日志配置加载失败")
+    def _load_config(self, config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """加载日志配置
+        
+        Args:
+            config: 可选的配置覆盖
+            
+        Returns:
+            Dict[str, Any]: 日志配置
+        """
+        try:
+            # 默认配置
+            default_config = {
+                "level": "INFO",
+                "rotation": "500 MB",
+                "retention": "10 days",
+                "encoding": "utf-8",
+                "console_format": "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
+                "file_format": "{time:YYYY-MM-DD HH:mm:ss.SSS} | {level: <8} | {name}:{function}:{line} - {message}"
+            }
+            
+            # 如果提供了配置覆盖，则合并配置
+            if config:
+                default_config.update(config)
+            return default_config
+        except Exception as e:
+            raise ConfigException("日志配置加载失败", {
+                "error": str(e),
+                "config": config
+            })
+    
+    def _setup_logger(self) -> None:
+        """设置日志记录器"""
         # 获取项目根目录
         project_root = Path(__file__).parent.parent
         log_dir = project_root / "logs"
@@ -70,75 +121,6 @@ class Loggers:
         )
         
         self.logger = logger
-        
-        # 加载配置并设置日志记录器
-        self.config = self._load_config()
-        self._setup_logger()
-    
-    @safe_config_load(error_message="日志配置加载失败")
-    def _load_config(self, config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-        """加载日志配置
-        
-        Args:
-            config: 自定义配置
-            
-        Returns:
-            Dict[str, Any]: 日志配置
-        """
-        if config:
-            return config
-            
-        # 从配置文件加载
-        yaml_config = YamlUtil().get_logging_config()
-        
-        # 默认配置
-        default_config = {
-            "path": "logs",
-            "level": "INFO",
-            "rotation": "00:00",
-            "retention": "7 days",
-            "encoding": "utf-8",
-            "console_format": "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> | <level>{message}</level>",
-            "file_format": "<yellow>{time:YYYY-MM-DD HH:mm:ss.SSS}</yellow> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> | <level>{message}</level>"
-        }
-        
-        # 合并配置
-        return {**default_config, **yaml_config}
-    
-    def _setup_logger(self) -> None:
-        """设置日志记录器"""
-        # 确保日志目录存在
-        log_path = Path(self.config["path"])
-        log_path.mkdir(parents=True, exist_ok=True)
-        
-        # 生成日志文件名
-        log_file = log_path / f"log_{datetime.now().strftime('%Y_%m_%d')}.log"
-        
-        # 移除所有已存在的处理器
-        logger.remove()
-        
-        # 添加控制台输出
-        logger.add(
-            sys.stderr,
-            format=self.config["console_format"],
-            level="DEBUG",
-            filter=lambda record: record["extra"].get("console", True),
-            backtrace=True,
-            diagnose=True
-        )
-        
-        # 添加文件输出
-        logger.add(
-            str(log_file),
-            format=self.config["file_format"],
-            level=self.config["level"],
-            rotation=self.config["rotation"],
-            retention=self.config["retention"],
-            encoding=self.config["encoding"],
-            enqueue=True,
-            backtrace=True,
-            diagnose=True
-        )
     
     @staticmethod
     def info(msg: str, *args: Any, **kwargs: Any) -> None:
