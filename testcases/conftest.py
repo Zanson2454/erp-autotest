@@ -25,7 +25,6 @@ import os
 import sys
 import pytest
 import allure
-import shutil
 from datetime import datetime
 from typing import Generator, Callable, Any
 from pathlib import Path
@@ -39,21 +38,12 @@ from utils.report_util import ReportEnhancer, TestStatus
 project_root = Path(__file__).resolve().parent.parent
 
 # 确保必要的目录存在
-for dir_name in ["reports/allure-results", "logs", "data"]:
+REQUIRED_DIRS = ["reports/allure-results", "logs", "data"]
+for dir_name in REQUIRED_DIRS:
     os.makedirs(project_root / dir_name, exist_ok=True)
 
-# 清理测试用例目录下的日志
-testcases_logs = project_root / "logs"
-if testcases_logs.exists():
-    shutil.rmtree(testcases_logs)
-
-
 def pytest_addoption(parser: pytest.Parser) -> None:
-    """添加命令行参数
-    
-    Args:
-        parser: pytest 参数解析器
-    """
+    """添加命令行参数"""
     parser.addoption(
         "--env",
         action="store",
@@ -65,114 +55,89 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         "--trantor_version",
         action="store",
         default="2.5.25.0130.0-SNAPSHOT",
-        help="Trantor版本号:查看配置文件config/env/xxx.yaml"
-    )
-    parser.addoption(
-        "--headless",
-        action="store_true",
-        default=False,
-        help="是否使用无头模式运行浏览器"
+        help="Trantor版本号"
     )
 
-
-def pytest_configure(config: pytest.Config) -> None:
-    """配置测试环境
+def load_env_config(env: str) -> dict:
+    """加载环境配置
     
     Args:
-        config: pytest 配置对象
+        env: 环境名称
+        
+    Returns:
+        dict: 环境配置
     """
+    config_path = project_root / "config" / "env" / f"{env}.yaml"
+    if not config_path.exists():
+        Loggers.warning(f"环境配置文件不存在: {config_path}")
+        return {}
+        
+    yaml_util = YamlUtil()
+    return yaml_util.read_yaml(config_path)
+
+def pytest_configure(config: pytest.Config) -> None:
+    """配置测试环境"""
     # 设置测试环境
     env = config.getoption("--env")
     Loggers.info(f"当前测试环境: {env}")
     os.environ["TEST_ENV"] = env
     
+    # 加载环境配置
+    env_config = load_env_config(env)
+    
     # 设置 Trantor 版本
-    config_manager = YamlUtil()
-    env_config = config_manager.load_env_config(env)
     trantor_version = config.getoption("--trantor_version") or env_config.get("trantor_version", "")
     os.environ["TRANTOR_VERSION"] = trantor_version
+    Loggers.info(f"Trantor版本: {trantor_version}")
     
     # 注册自定义标记
-    config.addinivalue_line("markers", "critical: 标记为关键测试用例")
-    config.addinivalue_line("markers", "high: 标记为高优先级测试用例")
-    config.addinivalue_line("markers", "medium: 标记为中优先级测试用例")
-    config.addinivalue_line("markers", "low: 标记为低优先级测试用例")
+    for marker, desc in {
+        "critical": "标记为关键测试用例",
+        "high": "标记为高优先级测试用例",
+        "medium": "标记为中优先级测试用例",
+        "low": "标记为低优先级测试用例"
+    }.items():
+        config.addinivalue_line("markers", f"{marker}: {desc}")
     
-    # 创建 Allure 环境信息文件
-    _create_allure_env_file(config)
+    # 创建 Allure 环境信息
+    create_allure_environment(config)
 
-
-def _create_allure_env_file(config):
+def create_allure_environment(config: pytest.Config) -> None:
     """创建 Allure 环境配置文件"""
     try:
-        # 获取 Allure 结果目录
-        results_dir = config.getoption("--alluredir") or "allure-results"
-        
-        # 确保结果目录存在
+        results_dir = config.getoption("--alluredir") or project_root / "reports/allure-results"
         os.makedirs(results_dir, exist_ok=True)
         
-        # 创建环境配置文件
-        env_file = os.path.join(results_dir, "environment.properties")
-        
-        # 获取环境信息
         env_info = {
-            "Environment": os.getenv("ENV", "test"),
-            "Python.Version": sys.version,
-            "Platform": sys.platform
+            "Environment": os.getenv("TEST_ENV", "test"),
+            "Trantor_Version": os.getenv("TRANTOR_VERSION", ""),
+            "Python_Version": sys.version.split()[0],
+            "Platform": sys.platform,
+            "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }
         
-        # 写入环境信息
+        env_file = Path(results_dir) / "environment.properties"
         with open(env_file, "w", encoding="utf-8") as f:
             for key, value in env_info.items():
                 f.write(f"{key}={value}\n")
                 
     except Exception as e:
-        print(f"创建 Allure 环境配置文件失败: {str(e)}")
-
+        Loggers.error(f"创建 Allure 环境配置文件失败: {str(e)}")
 
 @pytest.fixture(scope="session", autouse=True)
-def setup_test_environment(request: pytest.FixtureRequest) -> Generator[None, None, None]:
-    """测试环境设置 fixture
-    
-    在测试会话开始时设置环境，结束时清理环境。
-    
-    Args:
-        request: pytest fixture 请求对象
-        
-    Yields:
-        None
-    """
+def setup_test_environment() -> Generator[None, None, None]:
+    """测试环境设置"""
     Loggers.info("开始测试会话")
     yield
     Loggers.info("测试会话结束")
 
-
 @pytest.fixture(scope="function")
 def report_enhancer() -> ReportEnhancer:
-    """报告增强器 fixture
-    
-    为每个测试用例提供报告增强器实例。
-    
-    Returns:
-        ReportEnhancer: 报告增强器实例
-    """
+    """报告增强器"""
     return ReportEnhancer()
 
-
 def business_case(epic: str, feature: str, story: str, severity: allure.severity_level = allure.severity_level.NORMAL) -> Callable:
-    """业务测试用例装饰器
-    
-    用于标记测试用例的业务属性和优先级。
-    
-    Args:
-        epic: 一级业务域
-        feature: 二级功能模块
-        story: 用户场景
-        severity: 用例优先级
-        
-    Returns:
-        Callable: 装饰器函数
-    """
+    """业务测试用例装饰器"""
     def decorator(func: Callable) -> Callable:
         @allure.epic(epic)
         @allure.feature(feature)
@@ -184,26 +149,15 @@ def business_case(epic: str, feature: str, story: str, severity: allure.severity
         return wrapper
     return decorator
 
-
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item: pytest.Item, call: pytest.CallInfo) -> Generator[None, pytest.TestReport, None]:
-    """测试报告生成钩子
-    
-    在测试执行过程中收集信息并生成报告。
-    
-    Args:
-        item: 测试项
-        call: 测试调用信息
-        
-    Yields:
-        None
-    """
+    """测试报告生成钩子"""
     outcome = yield
     report = outcome.get_result()
     
     if report.when == "call":
-        # 设置测试标题
         if hasattr(item, "funcargs"):
+            # 设置测试标题
             test_name = item.name
             allure.dynamic.title(f"Test: {test_name}")
             
@@ -213,22 +167,10 @@ def pytest_runtest_makereport(item: pytest.Item, call: pytest.CallInfo) -> Gener
         
         # 处理测试失败
         if report.failed:
-            _handle_test_failure(item, report)
-    
-    # 添加测试阶段信息
-    if report.when == "setup":
-        allure.dynamic.description("Test Setup")
-    elif report.when == "teardown":
-        allure.dynamic.description("Test Cleanup")
+            handle_test_failure(item, report)
 
-
-def _handle_test_failure(item: pytest.Item, report: pytest.TestReport) -> None:
-    """处理测试失败
-    
-    Args:
-        item: 测试项
-        report: 测试报告
-    """
+def handle_test_failure(item: pytest.Item, report: pytest.TestReport) -> None:
+    """处理测试失败"""
     if hasattr(item, "funcargs"):
         # 获取报告增强器
         report_enhancer = item.funcargs.get("report_enhancer")
@@ -242,7 +184,7 @@ def _handle_test_failure(item: pytest.Item, report: pytest.TestReport) -> None:
                 screenshot = driver.get_screenshot_as_png()
                 allure.attach(
                     screenshot,
-                    name="failure_screenshot",
+                    name=f"failure_screenshot_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
                     attachment_type=allure.attachment_type.PNG
                 )
             except Exception as e:

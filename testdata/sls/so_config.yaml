@@ -11,10 +11,7 @@ page_data:
   serviceKey: "{tmodule}$SYS_PagingDataService"
   params:
     request:
-      pageable:
-        pageNo: 1
-        pageSize: 20
-        conditionItems: null
+      pageable: {pageNo: 1, pageSize: 20, conditionItems: null}
     modelKey: "{tmodule}${modelKey}"
 
 # 销售订单类型详情
@@ -24,6 +21,5 @@ detail_data:
   containerKey: "{tmodule}${modelKey}-detailView-{tmodule}${modelKey}"
   serviceKey: "{tmodule}$SYS_FindDataByIdService"
   params:
-    request:
-      id: 1
+    request: {id: 1}
     modelKey: "{tmodule}${modelKey}"

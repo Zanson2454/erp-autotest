@@ -462,9 +462,9 @@ class BaseTest:
     def setup_method(self, method: Optional[pytest.Function] = None) -> None:
         """测试方法开始前的设置"""
         if method and hasattr(method, '__name__'):
-            self.log.info(f"开始测试: {method.__name__}")
+            self.logger.info(f"开始测试: {method.__name__}")
         else:
-            self.log.info("开始测试方法")
+            self.logger.info("开始测试方法")
         self.test_data = {}
 
     def teardown_method(self):

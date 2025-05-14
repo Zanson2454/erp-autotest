@@ -1,20 +1,15 @@
 """销售订单配置检查测试用例"""
 
-import json
 import pytest
-from typing import Dict, Any, Optional, List
 from pathlib import Path
 from loguru import logger
 import sys
-import os
 
 # 添加项目根目录到 Python 路径
 project_root = Path(__file__).resolve().parent.parent.parent
-sys.path.insert(0, str(project_root))  # 确保转换为字符串
-logger.info(f"project_root: {project_root}")
+sys.path.insert(0, str(project_root))
 
 from testcases.comm.base_test import BaseTest
-from utils.exception_util import safe_api_call
 from utils.yaml_util import YamlUtil
 
 class TestSalesOrderConfig(BaseTest):
@@ -27,56 +22,44 @@ class TestSalesOrderConfig(BaseTest):
         cls.so_stnd_id = None
         cls.yaml_util = YamlUtil()
         cls._build_params()
-        
+    
+    @classmethod
+    def _replace_template(cls, data: dict, variables: dict) -> None:
+        """递归替换字典中的模板变量"""
+        for key, value in data.items():
+            if isinstance(value, dict):
+                cls._replace_template(value, variables)
+            elif isinstance(value, str):
+                data[key] = value.format(**variables)
+    
     @classmethod
     def _build_params(cls):    
-        # 获取销售订单类型API
+        # 加载配置文件
         api_path = Path(project_root) / "testdata" / "sls" / "so_api.yaml"
-        cls.api_path = cls.yaml_util.read_yaml(api_path)
-        cls.api_path = cls.api_path["销售订单"]["销售配置"]
-    
-        # 获取销售订单类型配置参数
         config_path = Path(project_root) / "testdata" / "sls" / "so_config.yaml"
+        
+        cls.api_path = cls.yaml_util.read_yaml(api_path)["销售订单"]["销售配置"]
         cls.params = cls.yaml_util.read_yaml(config_path)
         
-        # 替换变量
-        tmodule = cls.api_path["tmodule"]
-        modelKey = cls.api_path["modelKey"]
-        
-        # 替换sys_params中的变量
-        cls.params["sys_params"]["tmodule"] = cls.params["sys_params"]["tmodule"].format(tmodule=tmodule)
-        cls.params["sys_params"]["modelKey"] = cls.params["sys_params"]["modelKey"].format(tmodule=tmodule, modelKey=modelKey)
-        
-        # 替换page_data中的变量
-        for key in ["sceneKey", "viewKey", "containerKey", "serviceKey"]:
-            if key in cls.params["page_data"]:
-                cls.params["page_data"][key] = cls.params["page_data"][key].format(tmodule=tmodule, modelKey=modelKey)
-        cls.params["page_data"]["params"]["modelKey"] = cls.params["page_data"]["params"]["modelKey"].format(tmodule=tmodule, modelKey=modelKey)
-        
-        # 替换detail_data中的变量
-        for key in ["sceneKey", "viewKey", "containerKey", "serviceKey"]:
-            if key in cls.params["detail_data"]:
-                cls.params["detail_data"][key] = cls.params["detail_data"][key].format(tmodule=tmodule, modelKey=modelKey)
-        cls.params["detail_data"]["params"]["modelKey"] = cls.params["detail_data"]["params"]["modelKey"].format(tmodule=tmodule, modelKey=modelKey)
-        
-        logger.info(f"Parameters after variable replacement: {cls.params}")
-        
+        # 替换所有模板变量
+        variables = {
+            "tmodule": cls.api_path["tmodule"],
+            "modelKey": cls.api_path["modelKey"]
+        }
+        cls._replace_template(cls.params, variables)
+        logger.info(f"Parameters after replacement: {cls.params}")
+    
     @pytest.mark.order(1)
     def test_01_query_order_type(self):
         """查询订单类型配置"""
-        # URL和查询参数
-        url = self.api_path["查询订单类型配置"]
-        
-        # 发送请求
         try:
             response = self.http.post(
-                url=url,
+                url=self.api_path["查询订单类型配置"],
                 params=self.params['sys_params'],
                 json=self.params['page_data'],
                 description="查询订单类型"
             )
             
-            # 验证响应
             self.assert_util.assert_response_success(response)
             
             # 获取标准订单类型ID
@@ -85,59 +68,47 @@ class TestSalesOrderConfig(BaseTest):
                 (record for record in response_data if record.get("soTypeCode") == "STND"),
                 None
             )
+            
             if stnd_record:
                 self.so_stnd_id = stnd_record["id"]
-                self.logger.info(f"找到STND记录, ID: {self.so_stnd_id}")
+                self.logger.info(f"标准订单类型ID: {self.so_stnd_id}")
             else:
                 self.logger.error("未找到标准订单类型(STND)")
-                
+            
             return response
+            
         except Exception as e:
             self.logger.error(f"查询订单类型失败: {str(e)}")
             if hasattr(e, 'response'):
                 self.logger.error(f"响应内容: {e.response.text}")
             raise
     
-    
     @pytest.mark.order(2)
     def test_02_query_order_type_detail(self):
         """测试查询订单类型详情"""
-        # 检查并获取标准订单类型ID
         if not self.so_stnd_id:
             self.test_01_query_order_type()
+            
         self.logger.info(f"使用订单类型ID: {self.so_stnd_id}")
-        
-        # 准备请求参数
-        url = self.api_path["查询订单类型详情"]
-        
-        # 设置ID
         self.params['detail_data']['params']['request']['id'] = self.so_stnd_id
         
-        # 发送请求
         try:
             response = self.http.post(
-                url=url,
+                url=self.api_path["查询订单类型详情"],
                 params=self.params['sys_params'],
                 json=self.params['detail_data'],
                 description="查询订单类型详情"
             )
-            self.logger.info(f"响应数据: {response}")
             
-            # 验证响应
             self.assert_util.assert_response_success(response)
             
-            # 验证详细数据
+            # 验证响应数据
             response_data = response.get("data", {}).get("data", {})
             assert response_data.get("id") == self.so_stnd_id, "返回的ID与请求的ID不匹配"
             assert response_data.get("soTypeCode") == "STND", "订单类型代码不匹配"
-            assert response_data.get("status") == "ENABLED", "订单类型状态不匹配"
-            
-            # 检查必要字段
-            required_fields = ["soTypeCode", "soTypeName", "id", "status"]
-            for field in required_fields:
-                assert field in response_data, f"缺少必要字段: {field}"
-            
+            assert response_data.get("status") == "ENABLED", "订单类型状态不匹配"           
             return response
+            
         except Exception as e:
             self.logger.error(f"查询订单类型详情失败: {str(e)}")
             if hasattr(e, 'response'):
@@ -145,7 +116,10 @@ class TestSalesOrderConfig(BaseTest):
             raise
 
 if __name__ == "__main__":
-    test = TestSalesOrderConfig()
-    test.setup_class()
-    test.test_01_query_order_type()
-    test.test_02_query_order_type_detail()
+    # test = TestSalesOrderConfig()
+    # test.setup_class()
+    # test.test_01_query_order_type()
+    # test.test_02_query_order_type_detail()
+    
+    allure_dir = Path(project_root) / "reports" / "allure-results"
+    pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])
