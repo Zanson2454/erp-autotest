@@ -85,7 +85,7 @@ class TestSalesOrderConfig(BaseTest):
             self.test_01_query_order_type()
             
         self.logger.info(f"使用订单类型ID: {self.so_stnd_id}")
-        self.params['detail_data']['params']['request']['id'] = self.so_stnd_id
+        self.detail_data['params']['request']['id'] = self.so_stnd_id
         
         try:
             response = self.http.post(
@@ -116,5 +116,5 @@ if __name__ == "__main__":
     # test.test_01_query_order_type()
     # test.test_02_query_order_type_detail()
     
-    # allure_dir = Path(project_root) / "reports" / "allure-results"
-    # pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])
+    allure_dir = Path(project_root) / "reports" / "allure-results"
+    pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])
