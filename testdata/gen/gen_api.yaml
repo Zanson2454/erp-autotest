@@ -1,5 +1,5 @@
 # 放每个模块的 api
-客户管理:
+通用管理:
   会员主数据:
     - path: /api/user/list # 获取用户列表
     - path: /api/user/detail # 获取用户详情

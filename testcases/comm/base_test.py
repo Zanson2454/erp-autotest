@@ -37,6 +37,32 @@ from utils.exception_util import handle_exception, safe_api_call, handle_class_m
 from utils.mock_util import MockData
 from utils.cache_util import CacheUtil
 
+def timer():
+    """装饰器，用于记录函数执行时间
+    
+    使用示例:
+        @timer()
+        def my_function():
+            pass
+            
+    输出示例:
+        函数 my_function 执行时间: 0.123 秒
+    """
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            start_time = time.time()
+            try:
+                result = func(*args, **kwargs)
+                end_time = time.time()
+                logger.info(f"函数 {func.__name__} 执行时间: {end_time - start_time:.3f} 秒")
+                return result
+            except Exception as e:
+                end_time = time.time()
+                logger.error(f"函数 {func.__name__} 执行失败，耗时: {end_time - start_time:.3f} 秒，错误: {str(e)}")
+                raise
+        return wrapper
+    return decorator
+
 class EnvInit:
     """环境初始化类"""
     

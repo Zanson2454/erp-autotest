@@ -35,8 +35,8 @@ class TestSalesOrderConfig(BaseTest):
     @classmethod
     def _build_params(cls):    
         # 加载配置文件
-        api_path = Path(project_root) / "testdata" / "sls" / "so_api.yaml"
-        config_path = Path(project_root) / "testdata" / "sls" / "so_config.yaml"
+        api_path = Path(project_root) / "testdata" / "sls" / "sls_api_path.yaml"
+        config_path = Path(project_root) / "testdata" / "sls" / "so_api_params.yaml"
         
         cls.api_path = cls.yaml_util.read_yaml(api_path)["销售订单"]["销售配置"]
         cls.params = cls.yaml_util.read_yaml(config_path)
