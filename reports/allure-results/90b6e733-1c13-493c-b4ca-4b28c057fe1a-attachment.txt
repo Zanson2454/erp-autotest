@@ -1,0 +1,63 @@
+[32m2025-05-15 18:03:26.398[0m | [1mINFO    [0m | [36mutils.log_util[0m:[36minfo[0m:[36m134[0m - [1m开始测试: test_01_query_order_type[0m
+[32m2025-05-15 18:03:26.400[0m | [1mINFO    [0m | [36mutils.request_util[0m:[36mrequest_log[0m:[36m122[0m - [1m接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService[0m
+[32m2025-05-15 18:03:26.400[0m | [1mINFO    [0m | [36mutils.request_util[0m:[36mrequest_log[0m:[36m123[0m - [1m接口请求的方法>>>POST[0m
+[32m2025-05-15 18:03:26.401[0m | [1mINFO    [0m | [36mutils.request_util[0m:[36mrequest_log[0m:[36m127[0m - [1m接口请求的json参数>>>
+{
+  "sceneKey": "{tmodule}${modelKey}",
+  "viewKey": "{tmodule}${modelKey}:list",
+  "containerKey": "{tmodule}${modelKey}-list-{tmodule}${modelKey}",
+  "serviceKey": "{tmodule}$SYS_PagingDataService",
+  "params": {
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "conditionItems": null
+      }
+    },
+    "modelKey": "{tmodule}${modelKey}"
+  }
+}[0m
+[32m2025-05-15 18:03:26.401[0m | [1mINFO    [0m | [36mutils.request_util[0m:[36mrequest_log[0m:[36m129[0m - [1m接口请求的params参数>>>
+{
+  "tmodule": "ERP_SCM",
+  "modelKey": "ERP_SCM${modelKey}"
+}[0m
+[32m2025-05-15 18:03:26.401[0m | [1mINFO    [0m | [36mutils.request_util[0m:[36mrequest[0m:[36m88[0m - [1m请求描述: 查询订单类型[0m
+[32m2025-05-15 18:03:26.441[0m | [1mINFO    [0m | [36mutils.request_util[0m:[36mrequest[0m:[36m94[0m - [1m响应状态码: 500[0m
+[32m2025-05-15 18:03:26.442[0m | [1mINFO    [0m | [36mutils.request_util[0m:[36mrequest[0m:[36m95[0m - [1m响应头: {'Date': 'Thu, 15 May 2025 10:03:26 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '26f97464-1843314', 'Trace-Id': '26f97464-1843314', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiY2FlN2VkMWI3M2QxNGI0ZTg2NjVmNzgyZTc0MWNkN2QiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAxMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0NzU2MjYwNiwibmJmIjoxNzQ3MzAzNDA2LCJpYXQiOjE3NDczMDM0MDYsImp0aSI6ImMyYmNlYzRkNjE4YzQ0ZWRhZGMxYzE5NGU0OTljZDA3In0.rqIEE5GV2FDVXT9-CjMulZ3CcNktZOnyMEi-6NjFbpc; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Sun, 18 May 2025 10:03:26 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '12', 'X-Kong-Proxy-Latency': '14', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}[0m
+[32m2025-05-15 18:03:26.443[0m | [1mINFO    [0m | [36mutils.request_util[0m:[36mrequest[0m:[36m99[0m - [1m响应内容: {
+  "requestId": "26f97464-1843314",
+  "success": false,
+  "data": null,
+  "err": {
+    "code": "V0324",
+    "msg": "不能跨模块执行系统服务，当前应用不可执行该‘{tmodule}${modelKey}’模型的系统服务",
+    "suggest": null
+  },
+  "info": {
+    "msg": "不能跨模块执行系统服务，当前应用不可执行该‘{tmodule}${modelKey}’模型的系统服务",
+    "innerMsg": "[ERP_SCM$SYS_PagingDataService]发生异常：不能跨模块执行系统服务，当前应用不可执行该‘{tmodule}${modelKey}’模型的系统服务",
+    "level": "ERROR"
+  }
+}[0m
+[32m2025-05-15 18:03:26.443[0m | [31m[1mERROR   [0m | [36mutils.request_util[0m:[36mrequest[0m:[36m106[0m - [31m[1m请求失败: 500 Server Error: Internal Server Error for url: https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService?tmodule=ERP_SCM&modelKey=ERP_SCM%24%7BmodelKey%7D[0m
+[32m2025-05-15 18:03:26.444[0m | [31m[1mERROR   [0m | [36mutils.request_util[0m:[36mrequest[0m:[36m108[0m - [31m[1m失败的请求: 查询订单类型[0m
+[32m2025-05-15 18:03:26.445[0m | [31m[1mERROR   [0m | [36mutils.request_util[0m:[36mrequest[0m:[36m112[0m - [31m[1m错误详情: {
+  "requestId": "26f97464-1843314",
+  "success": false,
+  "data": null,
+  "err": {
+    "code": "V0324",
+    "msg": "不能跨模块执行系统服务，当前应用不可执行该‘{tmodule}${modelKey}’模型的系统服务",
+    "suggest": null
+  },
+  "info": {
+    "msg": "不能跨模块执行系统服务，当前应用不可执行该‘{tmodule}${modelKey}’模型的系统服务",
+    "innerMsg": "[ERP_SCM$SYS_PagingDataService]发生异常：不能跨模块执行系统服务，当前应用不可执行该‘{tmodule}${modelKey}’模型的系统服务",
+    "level": "ERROR"
+  }
+}[0m
+[32m2025-05-15 18:03:26.445[0m | [31m[1mERROR   [0m | [36mutils.log_util[0m:[36merror[0m:[36m167[0m - [31m[1m查询订单类型失败: 500 Server Error: Internal Server Error for url: https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService?tmodule=ERP_SCM&modelKey=ERP_SCM%24%7BmodelKey%7D[0m
+[32m2025-05-15 18:03:26.445[0m | [31m[1mERROR   [0m | [36mutils.log_util[0m:[36merror[0m:[36m167[0m - [31m[1m响应内容: {"requestId":"26f97464-1843314","success":false,"data":null,"err":{"code":"V0324","msg":"不能跨模块执行系统服务，当前应用不可执行该‘{tmodule}${modelKey}’模型的系统服务","suggest":null},"info":{"msg":"不能跨模块执行系统服务，当前应用不可执行该‘{tmodule}${modelKey}’模型的系统服务","innerMsg":"[ERP_SCM$SYS_PagingDataService]发生异常：不能跨模块执行系统服务，当前应用不可执行该‘{tmodule}${modelKey}’模型的系统服务","level":"ERROR"}}[0m
+[32m2025-05-15 18:03:26.511[0m | [1mINFO    [0m | [36mutils.log_util[0m:[36minfo[0m:[36m134[0m - [1m测试会话结束[0m

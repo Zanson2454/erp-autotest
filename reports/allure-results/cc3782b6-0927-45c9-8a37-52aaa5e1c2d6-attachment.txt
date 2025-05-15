@@ -1,0 +1,35 @@
+[32m2025-05-15 16:41:52.419[0m | [1mINFO    [0m | [36mutils.log_util[0m:[36minfo[0m:[36m134[0m - [1m开始测试: test_01_query_order_detail[0m
+[32m2025-05-15 16:41:52.421[0m | [1mINFO    [0m | [36mutils.log_util[0m:[36minfo[0m:[36m134[0m - [1m未找到订单ID，尝试从数据库查询[0m
+[32m2025-05-15 16:41:52.422[0m | [1mINFO    [0m | [36mutils.log_util[0m:[36minfo[0m:[36m134[0m - [1m执行查询: 
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE created_by = %s
+                AND so_status = 'DRAFT'
+                AND deleted = 0 
+            ORDER BY created_at DESC
+            LIMIT 1
+        [0m
+[32m2025-05-15 16:41:52.522[0m | [34m[1mDEBUG   [0m | [36mutils.log_util[0m:[36mdebug[0m:[36m145[0m - [34m[1m执行查询: 
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE created_by = %s
+                AND so_status = 'DRAFT'
+                AND deleted = 0 
+            ORDER BY created_at DESC
+            LIMIT 1
+        [0m
+[32m2025-05-15 16:41:52.523[0m | [34m[1mDEBUG   [0m | [36mutils.log_util[0m:[36mdebug[0m:[36m145[0m - [34m[1m查询参数: (540175374525637,)[0m
+[32m2025-05-15 16:41:52.523[0m | [34m[1mDEBUG   [0m | [36mutils.log_util[0m:[36mdebug[0m:[36m145[0m - [34m[1m查询结果: [{"id": 16398007, "so_code": "SO003246", "so_status": "DRAFT"}][0m
+[32m2025-05-15 16:41:52.524[0m | [31m[1mERROR   [0m | [36mutils.exception_util[0m:[36mwrapper[0m:[36m186[0m - [31m[1mAPI调用失败: 查询销售订单详情失败[0m
+[32m2025-05-15 16:41:52.524[0m | [31m[1mERROR   [0m | [36mutils.exception_util[0m:[36mwrapper[0m:[36m187[0m - [31m[1m错误上下文: {'timestamp': '2025-05-15T16:41:52.524000', 'function': {'name': 'test_01_query_order_detail', 'module': 'testcases.sls.test_03_operator', 'signature': '(self)'}, 'arguments': {'args': ['<testcases.sls.test_03_operator.TestSalesOrderOperator object at 0x10d5f5090>'], 'kwargs': {}}, 'error': {'type': 'NameError', 'message': "name 'DecimalEncoder' is not defined"}, 'caller': {'filename': '/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py', 'line_number': 101, 'function': '_enrich_error_context', 'locals': {'args': '(<testcases.sls.test_03_operator.TestSalesOrderOperator object at 0x10d5f5090>,)', 'kwargs': '{}', 'error': "name 'DecimalEncoder' is not defined", 'additional_context': 'None'}}, 'api_error': {'message': '查询销售订单详情失败', 'original_error': "name 'DecimalEncoder' is not defined"}}[0m
+[32m2025-05-15 16:41:52.525[0m | [31m[1mERROR   [0m | [36mutils.exception_util[0m:[36mwrapper[0m:[36m188[0m - [31m[1m异常堆栈:
+Traceback (most recent call last):
+  File "/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py", line 173, in wrapper
+    return func(*args, **kwargs)
+  File "/Users/anson/Documents/Erda-project/erp-autotest/testcases/sls/test_03_operator.py", line 115, in test_01_query_order_detail
+    draft_order = self._query_draft_orders_from_db()
+  File "/Users/anson/Documents/Erda-project/erp-autotest/testcases/sls/test_03_operator.py", line 99, in _query_draft_orders_from_db
+    self.logger.info(f"\n查询到的草稿态订单数据: {json.dumps(self.test_data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
+                                                                                 ^^^^^^^^^^^^^^
+NameError: name 'DecimalEncoder' is not defined
+[0m

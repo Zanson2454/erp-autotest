@@ -21,33 +21,28 @@ class TestSalesOrderConfig(BaseTest):
         super().setup_class()
         cls.so_stnd_id = None
         cls.yaml_util = YamlUtil()
-        cls._build_params()
+        cls._build_order_type_params()
     
+
     @classmethod
-    def _replace_template(cls, data: dict, variables: dict) -> None:
-        """递归替换字典中的模板变量"""
-        for key, value in data.items():
-            if isinstance(value, dict):
-                cls._replace_template(value, variables)
-            elif isinstance(value, str):
-                data[key] = value.format(**variables)
-    
-    @classmethod
-    def _build_params(cls):    
+    def _build_order_type_params(cls):    
         # 加载配置文件
         api_path = Path(project_root) / "testdata" / "sls" / "sls_api_path.yaml"
         config_path = Path(project_root) / "testdata" / "sls" / "so_api_params.yaml"
         
         cls.api_path = cls.yaml_util.read_yaml(api_path)["销售订单"]["销售配置"]
+        so_type_list_key = cls.api_path["查询订单类型配置"]
+        so_type_detail_key = cls.api_path["查询订单类型详情"]
         cls.params = cls.yaml_util.read_yaml(config_path)
+
+        cls.params["api_params"][so_type_list_key]["params"]["request"]["modelKey"] = "ERP_SCM$sls_so_type_cf"
+        cls.params["api_params"][so_type_list_key]["params"]["modelKey"] = "ERP_SCM$sls_so_type_cf"
+        cls.params["api_params"][so_type_detail_key]["params"]["request"]["modelKey"] = "ERP_SCM$sls_so_type_cf"
+        cls.params["api_params"][so_type_detail_key]["params"]["modelKey"] = "ERP_SCM$sls_so_type_cf"
         
-        # 替换所有模板变量
-        variables = {
-            "tmodule": cls.api_path["tmodule"],
-            "modelKey": cls.api_path["modelKey"]
-        }
-        cls._replace_template(cls.params, variables)
-        logger.info(f"Parameters after replacement: {cls.params}")
+        cls.page_data =  cls.params["api_params"][so_type_list_key]
+        cls.detail_data =  cls.params["api_params"][so_type_detail_key]
+        logger.info(f"配置文件加载成功: {cls.params}")
     
     @pytest.mark.order(1)
     def test_01_query_order_type(self):
@@ -55,8 +50,8 @@ class TestSalesOrderConfig(BaseTest):
         try:
             response = self.http.post(
                 url=self.api_path["查询订单类型配置"],
-                params=self.params['sys_params'],
-                json=self.params['page_data'],
+                params={"tmodule": "ERP_SCM", "modelKey": "sls_so_type_cf"},
+                json= self.page_data ,
                 description="查询订单类型"
             )
             
@@ -95,8 +90,8 @@ class TestSalesOrderConfig(BaseTest):
         try:
             response = self.http.post(
                 url=self.api_path["查询订单类型详情"],
-                params=self.params['sys_params'],
-                json=self.params['detail_data'],
+                params={"tmodule": "ERP_SCM", "modelKey": "ERP_SCM$sls_so_type_cf"},
+                json= self.detail_data,
                 description="查询订单类型详情"
             )
             
@@ -121,5 +116,5 @@ if __name__ == "__main__":
     # test.test_01_query_order_type()
     # test.test_02_query_order_type_detail()
     
-    allure_dir = Path(project_root) / "reports" / "allure-results"
-    pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])
+    # allure_dir = Path(project_root) / "reports" / "allure-results"
+    # pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])

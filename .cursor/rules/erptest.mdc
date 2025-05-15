@@ -15,6 +15,7 @@ alwaysApply: true
 7. 路径获取统一用 pathlib 的 PATH 获取
 8. 所有环境配置通过.env文件管理
 9. 版本控制使用git-flow分支策略
+10. 所有入参都不要 teamId 和 appId
 
 # 测试用例编写规范
 
