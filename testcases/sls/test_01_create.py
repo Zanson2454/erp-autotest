@@ -6,29 +6,18 @@ import random
 from decimal import Decimal
 from datetime import datetime
 from typing import Dict, Any, Optional
+from pathlib import Path
 import allure
 
 
 # 添加项目根目录到 Python 路径
-current_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
-sys.path.insert(0, project_root)
+project_root = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(project_root))
 
-from common.login_manager import LoginManager
-from testcases.comm.base_test import InitSQL
-from utils.assert_util import AssertHelper
 from utils.yaml_util import YamlUtil
 from utils.exception_util import handle_exception, safe_api_call, handle_class_method_exception
-from testcases.comm.base_test import BaseTest
+from testcases.comm.base_test import BaseTest,SQLInitializer
 
-class DecimalEncoder(json.JSONEncoder):
-    """自定义 JSON 编码器，用于处理 Decimal 类型"""
-    def default(self, obj):
-        if isinstance(obj, Decimal):
-                return float(obj)
-        if isinstance(obj, datetime):
-            return obj.strftime('%Y-%m-%d %H:%M:%S')
-        return super(DecimalEncoder, self).default(obj)
 
 class TestSalesOrderCreate(BaseTest):
     """销售订单创建测试类"""
@@ -55,14 +44,26 @@ class TestSalesOrderCreate(BaseTest):
         cls.order_id = None
         cls.render_qty = random.randint(1, 99)  # 生成1-99之间的随机整数
         
+             # 加载配置文件
+        cls.base_api_path = Path(project_root) / "testdata" / "sls" / "sls_api_path.yaml"
+        cls.base_config_path = Path(project_root) / "testdata" / "sls" / "so_api_params.yaml"
+        
+        # 当前用例集所需接口
+        cls.yaml_util = YamlUtil()
+        cls.so_path = cls.yaml_util.read_yaml(cls.base_api_path)["销售订单"]["订单管理"]
+        
+        # 前用例集所需参数
+        cls.so_params = cls.yaml_util.read_yaml(cls.base_config_path).get("api_params", {})
 
-        cls.log.info(f"初始化渲染数量: {cls.render_qty}")
-        cls.log.info("测试类初始化完成")
+        cls.logger.info(f"初始化渲染数量: {cls.render_qty}")
+        cls.logger.info("测试类初始化完成")
+        
+        
 
     def _init_sales_order(self):
         """初始化销售订单"""
-        url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$sls_sales_order_create_init_service"
-        data = {"params": {"request": {"btClass": "SALES"}}}
+        url = self.so_path["初始化订单"]
+        data = self.so_params.get(url, {})
         result = self.http.post(url, json=data, description="销售订单创建初始化")
         
         # 从嵌套结构中获取数据
@@ -74,8 +75,10 @@ class TestSalesOrderCreate(BaseTest):
         if self.sls_person_obj:
             self.sls_person_name = self.sls_person_obj.get("name")
         
-        self.log.debug(f"销售人员信息: {self.sls_person_obj}")
-        self.log.info("销售订单创建初始化完成")
+        self.logger.debug(f"销售人员信息: {self.sls_person_obj}")
+        self.logger.info("销售订单创建初始化完成")
+        
+        self.assert_util.assert_response_success(result)
         
         # 验证必要字段
         assert self.sls_person_obj is not None, "销售人员信息为空"
@@ -84,106 +87,92 @@ class TestSalesOrderCreate(BaseTest):
 
     def _query_customer_info(self):
         """查询客户信息"""
-        url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$sls_cust_select_render_service"
-        data = {"params": {"custId": self.cust_id}}
-        
+        url = self.so_path["查询客户信息"]  
+        self.logger.info(f"查询客户信息URL: {url}")
+        data = self.so_params.get(url, {})
+        self.logger.debug(f"查询客户信息请求数据: {json.dumps(data, indent=2, ensure_ascii=False)}")
+        data['params']['request']['pageable']['conditionGroup']['conditions'][0]['conditions'][0]['conditions'][0]['rightValue']['constValue'] = "AUTOTEST_CUST"  
+       
         result = self.http.post(url, json=data, description="查询客户信息")
-        # 记录响应数据
-        self.log.debug(f"客户信息查询响应: {result}") 
         
         # 从嵌套结构中获取数据
-        response_data = result.get("data", {}).get("data", {})
+        response_data = result.get("data", {}).get("data", {}).get("data", [])[0]
+        actual_cust_id = response_data.get('id',{})
+        self.assert_util.assert_eq(actual_cust_id, self.cust_id, "客户编码不匹配")
+        self.logger.info("客户信息查询完成")
         
-        # 保存地址ID和地址信息供后续使用
-        addr_id_obj = response_data.get("addrId", {})
-        self.addr_id = addr_id_obj.get("id")
-        self.addr_detail = response_data.get("addrDetail")
-        self.cust_person_name = response_data.get("custPersonName")
-        self.cust_phone = response_data.get("custPhone")
         
-        # 验证必要字段
-        assert self.addr_id is not None, "地址ID为空"
-        assert self.addr_detail is not None, "地址信息为空"
-        assert self.cust_person_name is not None, "客户姓名为空"
-        assert self.cust_phone is not None, "客户电话为空"
-        
-        self.log.info("客户信息查询完成")
+    def _render_addr_info(self):
+        """渲染地址信息"""
+        url = self.so_path["基于客户信息渲染地址信息"]
+        data = self.so_params.get(url, {})
+        data['params']['request']['custId'] = {"id": self.cust_id}
+        result = self.http.post(url, json=data, description="基于客户信息渲染地址信息")
+        addr_info = result.get("data", {}).get("data", {})
+        self.addr_id = addr_info.get("addrId")
+        self.addr_detail = addr_info.get("addrDetail")
+        self.cust_person_name = addr_info.get("custPersonName")
+        self.cust_phone = addr_info.get("custPhone")
+        self.logger.info("地址信息渲染完成")
 
     def _query_partner(self):
         """查询相关方"""
-        url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SO_QUERY_PARTNER_EVENT_SERVICE"
-        data = {
-                "params": {
-                    "request": {
-                        "reCalculate": False,
-                        "soTypeId":self.so_type_id, #初始化
-                        "soDocDate": int(datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp() * 1000),
-                        "priceCalcDate": int(datetime.now().timestamp() * 1000),
-                        "custId": self.cust_id,
-                        "slsPerson": self.sls_person_obj,
-                        "slsPhone": self.sls_phone,
-                        "slsPersonName": self.sls_person_name,
-                        "isFixedExchRate": False,
-                        "currExchangeRateType": 2000001,
-                        "soItems":[{
-                            "bomWhether": False,
-                            "soSchlDelDate": int(datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp() * 1000),                   
-                        }]
-                    }
-                }
-             }
-        self.log.debug(f"相关方查询请求数据: {json.dumps(data, cls=DecimalEncoder, indent=2)}")
+        url = self.so_path["查询相关方"]
+        data = self.so_params.get(url, {})
+        data['params']['request']['soTypeId'] = {"id": self.so_type_id} #更新变量
+        data['params']['request']['custId'] = {"id": self.cust_id} #更新变量
+        data['params']['request']['slsPerson'] = self.sls_person_obj #更新变量
+        data['params']['request']['slsPhone'] = self.sls_phone #更新变量
+        data['params']['request']['slsPersonName'] = self.sls_person_name #更新变量
+        data['params']['request']['currExchangeRateType'] = self.exchange_rate_type_id #更新变量
+        data['params']['request']['soDocDate'] = int(datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp() * 1000) #更新变量
+        data['params']['request']['priceCalcDate'] = int(datetime.now().timestamp() * 1000) #更新变量
+        data['params']['request']['soItems'] = [{
+            "bomWhether": False,
+            "soSchlDelDate": int(datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp() * 1000),                   
+        }]
+        
+        # self.logger.debug(f"相关方查询请求数据: {json.dumps(data,  indent=2)}")
         result = self.http.post(url, json=data, description="查询相关方")
+        
         # 保存相关方信息供后续使用
         response_data = result.get("data", {}).get("data", {})
         self.sls_partner_links = response_data.get("slsPartnerLinks")
-        self.log.info("相关方查询完成")
+        self.logger.info("相关方查询完成")
         self.assert_util.assert_id_exists(self.sls_partner_links, "相关方信息")
 
     def _query_sales_organization(self):
         """查询销售组织列表"""
-        url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$sls_sales_organization_paging_service"
-        data = {"params":{"request":{"pageable":{"pageNo":1,"pageSize":20,"conditionGroup":{"type":"ConditionGroup","logicOperator":"AND","conditions":[{"type":"ConditionGroup","logicOperator":"AND","conditions":[{"key":"nr_nqTvXmIyHnHxKfmn3S","type":"ConditionLeaf","leftValue":{"id":"iJlX7JIkAyn7AIr9omqK-","key":"iJlX7JIkAyn7AIr9omqK-","type":"VarValue","fieldType":"Text","valueType":"VAR","varValue":[{"valueKey":"orgCode","valueName":"orgCode"}]},"operator":"CONTAINS","rightValue":{"key":"ggwEgoMfFc91CYI1zUwzb","type":"VarValue","fieldType":"Text","valueType":"CONST","constValue":"AUTOTEST_SLS_ORG"}}]}]},"sortOrders":None,"keyword":None}}}}
+        url = self.so_path["查询销售组织"]
+        data = self.so_params.get(url, {})
+        data['params']['request']['pageable']['conditionGroup']['conditions'][0]['conditions'][0]['conditions'][0]['rightValue']['constValue'] = "AUTOTEST_SLS_ORG" #更新变量
         result = self.http.post(url, json=data, description="查询销售组织列表")
-        self.log.debug(f"销售组织列表查询响应: {result}")
+        self.logger.debug(f"销售组织列表查询响应: {result}")
         # 直接使用列表的第一个元素
         response_data = result.get("data", {}).get("data", {}).get("data", [])
         self.sls_org_obj = response_data[0] # 直接使用列表的第一个元素
         self.sls_org_id = self.sls_org_obj["id"]
-        self.log.info(f"销售组织列表查询完成: {self.sls_org_obj}")
-        self.log.info("销售组织列表查询完成")
+        self.logger.info(f"销售组织列表查询完成: {self.sls_org_obj}")
+        self.logger.info("销售组织列表查询完成")
         self.assert_util.assert_id_exists(self.sls_org_obj, "销售组织信息")
         self.assert_util.assert_id_exists(self.sls_org_id, "销售组织ID")
 
     def _query_materials(self):
         """查询物料列表"""
-        url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$INV_MAT_PAGING_SERVICE"
-        data = {
-            "params": {
-                "request": {
-                    "pageable": {
-                        "pageNo": 1,
-                        "pageSize": 20,
-                        "sortOrders": [
-                            {"fieldAlias": "matCode", "id": "matCode-0", "sortType": "ASC"},
-                            {"fieldAlias": "matName", "id": "matName-1", "sortType": "ASC"}
-                        ],
-                        "keyword": "TESTMAT1"
-                    },
-                    "slsOrgId": self.sls_org_id,  # 直接使用整数ID
-                    "slsDcId": self.sls_dc_id
-                }
-            }
-        }
-        self.log.debug(f"物料列表查询请求数据: {json.dumps(data, cls=DecimalEncoder, indent=2)}")
+        url = self.so_path["查询物料"]
+        data = self.so_params.get(url, {})
+        data['params']['request']['slsOrgId'] = self.sls_org_id #更新变量
+        data['params']['request']['slsDcId'] = self.sls_dc_id #更新变量
+
+        # self.logger.debug(f"物料列表查询请求数据: {json.dumps(data,  indent=2)}")
         result = self.http.post(url, json=data, description="查询物料列表")
         # 记录响应数据  
         response_data = result.get("data", {}).get("data", {}).get("data", [])
         self.mat_obj = response_data[0] # 直接使用列表的第一个元素
         # 添加默认价格字段
-        self.mat_obj["matBasePrice"] = 100.00  # 设置默认价格
-        self.log.debug(f"物料列表查询响应: {self.mat_obj}")
-        self.log.info("物料列表查询完成")
+        self.mat_obj["matBasePrice"] = random.randint(1, 999999)  # 设置默认价格
+        # self.logger.debug(f"物料列表查询响应: {self.mat_obj}")
+        self.logger.info("物料列表查询完成")
         self.assert_util.assert_id_exists(self.mat_obj, "物料信息")
 
     def _render_order_line(self):
@@ -192,112 +181,91 @@ class TestSalesOrderCreate(BaseTest):
         if not hasattr(self, 'mat_obj') or self.mat_obj is None:
             self._query_materials()
         
-        url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SLS_AFTER_MAT_SELECT_RENDER_EVENT_SERVICE"
+        url = self.so_path["渲染订单行"]
         curr_time = int(datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp() * 1000)
-        data = {
-            "params": {
-                "request": {
-                    "addrId": {"id": self.addr_id},
-                    "custId": {"id": self.cust_id},
-                    "invLoc": None,
-                    "invOrg": None,
-                    "slsComId": {"id": self.com_org_id},
-                    "slsDcId": {"id": self.sls_dc_id},
-                    "slsOrgId": {"id": self.sls_org_id},
-                    "slsPerson": self.sls_person_obj,
-                    "slsPhone": self.sls_phone,
-                    "slsPersonName": self.sls_person_name,
-                    "soDocDate": curr_time,
-                    "soTypeId": {"id": self.so_type_id},
-                    "baseCurrId": {"id": self.base_curr_id},
-                    "slsCurrId": {"id": self.sls_curr_id},
-                    "currExchangeRateType": self.exchange_rate_type_id,
-                    "slsPartnerLinks": self.sls_partner_links,
-                    "soItems":[
-                    {
-                        "matId": {"id": self.mat_obj['id']},
-                        "taxRateId": None,
-                        "invOrgId": {"id": self.inv_org_id},
-                        "invLocId": {"id": self.inv_loc_id},
-                        "soItemSlsQty": self.render_qty,
-                        "delAddrDetail": self.addr_detail,
-                        "delAddrId": {"id": self.addr_id},
-                        "delPersonName": self.cust_person_name,
-                        "delPhone": self.cust_phone
-                    }
-                ]
-            }
-        }
-        }
-        self.log.debug(f"订单行渲染请求URL: {url}")
-        self.log.debug(f"订单行渲染请求头: {self.headers}")
-        self.log.debug(f"订单行渲染请求数据: {json.dumps(data, cls=DecimalEncoder, indent=2)}")
+        data = self.so_params.get(url, {})
+        data['params']['request']['addrId'] = {"id": self.addr_id} #更新变量
+        data['params']['request']['custId'] = {"id": self.cust_id} #更新变量
+        data['params']['request']['slsComId'] = {"id": self.com_org_id} #更新变量
+        data['params']['request']['slsDcId'] = {"id": self.sls_dc_id} #更新变量
+        data['params']['request']['slsOrgId'] = {"id": self.sls_org_id} #更新变量
+        data['params']['request']['slsPerson'] = self.sls_person_obj #更新变量
+        data['params']['request']['slsPhone'] = self.sls_phone #更新变量
+        data['params']['request']['slsPersonName'] = self.sls_person_name #更新变量
+        data['params']['request']['soDocDate'] = curr_time #更新变量
+        data['params']['request']['soTypeId'] = {"id": self.so_type_id} #更新变量   
+        data['params']['request']['baseCurrId'] = {"id": self.base_curr_id} #更新变量
+        data['params']['request']['slsCurrId'] = {"id": self.sls_curr_id} #更新变量
+        data['params']['request']['currExchangeRateType'] = self.exchange_rate_type_id #更新变量
+        data['params']['request']['slsPartnerLinks'] = self.sls_partner_links #更新变量
+        data['params']['request']['soItems'][0]['matId'] = {"id": self.mat_obj['id']} #更新变量
+        data['params']['request']['soItems'][0]['soItemSlsQty'] = self.render_qty #更新变量
+        data['params']['request']['soItems'][0]['delAddrDetail'] = self.addr_detail #更新变量
+        data['params']['request']['soItems'][0]['delAddrId'] = {"id": self.addr_id} #更新变量
+        data['params']['request']['soItems'][0]['delPersonName'] = self.cust_person_name #更新变量
+        data['params']['request']['soItems'][0]['delPhone'] = self.cust_phone #更新变量
+        data['params']['request']['soItems'][0]['invOrgId'] = {"id": self.inv_org_id} #更新变量
+        data['params']['request']['soItems'][0]['invLocId'] = {"id": self.inv_loc_id} #更新变量
+        
+        
+        # self.logger.debug(f"订单行渲染请求数据: {json.dumps(data,  indent=2)}")
         result = self.http.post(url, json=data, description="订单行渲染")
         result = result.get("data", {}).get("data", {})
-        self.log.debug(f"订单行渲染响应: {result}")
+        self.logger.debug(f"订单行渲染响应: {result}")
         if "soItems" not in result:
-            self.log.error(f"订单行渲染响应缺少soItems字段，响应内容: {result}")
+            self.logger.error(f"订单行渲染响应缺少soItems字段，响应内容: {result}")
             raise KeyError("订单行渲染响应缺少soItems字段。")
 
         # 保存订单行渲染结果供后续使用
         self.so_items = result.get("soItems")
-        self.log.info("订单行渲染完成")
+        self.logger.info("订单行渲染完成")
         try:
             assert self.so_items is not None, "订单行信息为空"
         except AssertionError as e:
-            self.log.error(f"订单行渲染原始响应: {json.dumps(result, ensure_ascii=False, indent=2)}")
+            self.logger.error(f"订单行渲染原始响应: {json.dumps(result, ensure_ascii=False, indent=2)}")
             raise
-        self.log.debug(f"订单行渲染结果: {json.dumps(self.so_items, indent=2, ensure_ascii=False, cls=DecimalEncoder)}")
+        self.logger.debug(f"订单行渲染结果: {json.dumps(self.so_items, indent=2, ensure_ascii=False)}")
         
         # 检查渲染结果中的税率ID等信息
         if self.so_items and len(self.so_items) > 0:
             first_item = self.so_items[0]
-            self.log.debug(f"订单行渲染结果中的税率ID: {first_item.get('taxRateId')}")
-            self.log.debug(f"订单行渲染结果中的单位ID: {first_item.get('uomSlsId')}")
-            self.log.debug(f"订单行渲染结果中的物料类型ID: {first_item.get('matTypeId')}")
+            self.logger.debug(f"订单行渲染结果中的税率ID: {first_item.get('taxRateId')}")
+            self.logger.debug(f"订单行渲染结果中的单位ID: {first_item.get('uomSlsId')}")
+            self.logger.debug(f"订单行渲染结果中的物料类型ID: {first_item.get('matTypeId')}")
 
     def _calculate_pricing(self):
         """自动定价"""
         try:
             # 1. 准备请求参数
             with allure.step("准备定价参数"):
-                url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SO_AUTO_PRICE_EVENT_copy_SERVICE"
-                data = {
-                    "params": {
-                        "request": {
-                            "id": None,
-                            "priceIdempotent": None,
-                            "reCalculate": False,
-                            "soTypeId": {"id": self.so_type_id},
-                            "soDocDate": int(datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp() * 1000),
-                            "priceCalcDate": int(datetime.now().timestamp() * 1000),
-                            "custId": {"id": self.cust_id},
-                            "addrId": {"id": self.addr_id},
-                            "addrDetail": self.addr_detail,
-                            "custPersonName": self.cust_person_name,
-                            "custPhone": self.cust_phone,
-                            "slsPerson": self.sls_person_obj,
-                            "slsPhone": self.sls_phone,
-                            "slsPersonName": self.sls_person_name,
-                            "slsOrgId": self.sls_org_obj,
-                            "slsDcId": {"id": self.sls_dc_id},
-                            "slsComId": {"id": self.com_org_id},
-                            "slsCurrId": {"id": self.sls_curr_id},
-                            "baseCurrId": {"id": self.base_curr_id},
-                            "isFixedExchRate": False,
-                            "currExchangeRateType": self.exchange_rate_type_id,
-                            "exchRate": 1,
-                            "soItems": self.so_items,
-                            "slsPartnerLinks": self.sls_partner_links
-                        }
-                    }
-                }
+                url = self.so_path["自动定价"]
+                data = self.so_params.get(url, {})
+                data['params']['request']['soTypeId'] = {"id": self.so_type_id} #更新变量
+                data['params']['request']['soDocDate'] = int(datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp() * 1000) #更新变量
+                data['params']['request']['priceCalcDate'] = int(datetime.now().timestamp() * 1000) #更新变量
+                data['params']['request']['custId'] = {"id": self.cust_id} #更新变量
+                data['params']['request']['addrId'] = {"id": self.addr_id} #更新变量
+                data['params']['request']['addrDetail'] = self.addr_detail #更新变量
+                data['params']['request']['custPersonName'] = self.cust_person_name #更新变量
+                data['params']['request']['custPhone'] = self.cust_phone #更新变量
+                data['params']['request']['slsPerson'] = self.sls_person_obj #更新变量
+                data['params']['request']['slsPhone'] = self.sls_phone #更新变量
+                data['params']['request']['slsPersonName'] = self.sls_person_name #更新变量
+                data['params']['request']['slsOrgId'] = {"id": self.sls_org_id} #更新变量
+                data['params']['request']['slsDcId'] = {"id": self.sls_dc_id} #更新变量
+                data['params']['request']['slsComId'] = {"id": self.com_org_id} #更新变量
+                data['params']['request']['slsCurrId'] = {"id": self.sls_curr_id} #更新变量
+                data['params']['request']['baseCurrId'] = {"id": self.base_curr_id} #更新变量
+                data['params']['request']['currExchangeRateType'] = self.exchange_rate_type_id #更新变量
+                data['params']['request']['exchRate'] = 1 #更新变量
+                data['params']['request']['soItems'] = self.so_items #更新变量
+                data['params']['request']['slsPartnerLinks'] = self.sls_partner_links #更新变量
                 allure.attach(
-                    json.dumps(data, indent=2, ensure_ascii=False, cls=DecimalEncoder),
+                    json.dumps(data, indent=2, ensure_ascii=False),
                     "定价请求参数",
                     allure.attachment_type.JSON
                 )
-                self.log.info(f"自动定价请求参数: {json.dumps(data, indent=2, ensure_ascii=False, cls=DecimalEncoder)}")
+                self.logger.info(f"自动定价请求参数: {json.dumps(data, indent=2, ensure_ascii=False)}")
 
             # 2. 发送请求
             with allure.step("发送定价请求"):
@@ -305,7 +273,7 @@ class TestSalesOrderCreate(BaseTest):
                     result = self.http.post(url, json=data, description="自动定价")
                     result = result.get("data", {}).get("data", {})
                     allure.attach(
-                        json.dumps(result, indent=2, ensure_ascii=False, cls=DecimalEncoder),
+                        json.dumps(result, indent=2, ensure_ascii=False),
                         "响应数据",
                         allure.attachment_type.JSON
                     )
@@ -313,40 +281,40 @@ class TestSalesOrderCreate(BaseTest):
                     # 检查定价结果中的税率ID等信息
                     if result and "soItems" in result and len(result["soItems"]) > 0:
                         first_item = result["soItems"][0]
-                        self.log.debug(f"定价结果中的税率ID: {first_item.get('taxRateId')}")
-                        self.log.debug(f"定价结果中的单位ID: {first_item.get('uomSlsId')}")
-                        self.log.debug(f"定价结果中的物料类型ID: {first_item.get('matTypeId')}")
+                        self.logger.debug(f"定价结果中的税率ID: {first_item.get('taxRateId')}")
+                        self.logger.debug(f"定价结果中的单位ID: {first_item.get('uomSlsId')}")
+                        self.logger.debug(f"定价结果中的物料类型ID: {first_item.get('matTypeId')}")
                             
                 except Exception as e:
                     error_msg = f"自动定价请求失败: {str(e)}"
                     if hasattr(e, 'response'):
                         error_msg += f"\n响应状态码: {e.response.status_code}"
                         error_msg += f"\n响应内容: {e.response.text}"
-                    self.log.error(error_msg)
+                    self.logger.error(error_msg)
                     raise
 
             # 3. 验证响应
             with allure.step("验证响应数据"):
                 assert result is not None, "定价响应数据为空"
-                self.log.debug(f"定价响应数据: {result}")
+                self.logger.debug(f"定价响应数据: {result}")
                 assert "soItems" in result, "响应中缺少订单项"
                 
                 # 保存定价信息
                 self.so_price_data = result
                 
                 allure.attach(
-                    json.dumps(self.so_price_data, indent=2, ensure_ascii=False, cls=DecimalEncoder),
+                    json.dumps(self.so_price_data, indent=2, ensure_ascii=False),
                     "定价信息",
                     allure.attachment_type.JSON
                 )
-                self.log.info("自动定价完成")
+                self.logger.info("自动定价完成")
 
         except Exception as e:
             error_msg = f"自动定价失败: {str(e)}"
-            self.log.error(error_msg)
+            self.logger.error(error_msg)
             if hasattr(e, 'response'):
-                self.log.error(f"响应状态码: {e.response.status_code}")
-                self.log.error(f"响应内容: {e.response.text}")
+                self.logger.error(f"响应状态码: {e.response.status_code}")
+                self.logger.error(f"响应内容: {e.response.text}")
             raise
 
     def _save_or_submit_order(self, is_submit: bool = False):
@@ -370,17 +338,21 @@ class TestSalesOrderCreate(BaseTest):
             with allure.step("渲染订单行"):
                 self._render_order_line()
                 assert self.so_items is not None, "订单行信息为空"
-                self.log.debug(f"订单行信息: {json.dumps(self.so_items, indent=2, ensure_ascii=False, cls=DecimalEncoder)}")
+                self.logger.debug(f"订单行信息: {json.dumps(self.so_items, indent=2, ensure_ascii=False)}")
 
             # 2. 自动定价
             with allure.step("自动定价"):
                 self._calculate_pricing()
                 assert self.so_price_data is not None, "定价信息为空"
-                self.log.debug(f"定价信息: {json.dumps(self.so_price_data, indent=2, ensure_ascii=False, cls=DecimalEncoder)}")
+                self.logger.debug(f"定价信息: {json.dumps(self.so_price_data, indent=2, ensure_ascii=False)}")
 
             # 3. 保存或提交订单
             with allure.step("保存或提交订单"):
-                url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SLS_SALES_MANUAL_SAVE_EVENT?tmodule=ERP_SCM"
+                url = self.so_path["保存订单"]
+                data = self.so_params.get(url, {})
+                self.logger.info(f"保存订单请求参数: {json.dumps(data, indent=2, ensure_ascii=False)}")
+                data['params']['request']['soItems'] = self.so_items #更新变量
+                data['params']['request']['syncSubmit'] = is_submit #更新变量
                 data = {
                     "params": {
                         "request": {
@@ -391,34 +363,34 @@ class TestSalesOrderCreate(BaseTest):
                     }
                 }
                 allure.attach(
-                    json.dumps(data, indent=2, ensure_ascii=False, cls=DecimalEncoder),
+                    json.dumps(data, indent=2, ensure_ascii=False),
                     f"{'提交' if is_submit else '保存'}订单请求参数",
                     allure.attachment_type.JSON
                 )
-                self.log.debug(f"{'提交' if is_submit else '保存'}销售订单请求数据: {json.dumps(data, cls=DecimalEncoder, indent=2)}")
+                self.logger.debug(f"{'提交' if is_submit else '保存'}销售订单请求数据: {json.dumps(data,  indent=2)}")
                 
                 result = self.http.post(url, json=data, description=f"销售订单{'提交' if is_submit else '保存'}")
                 assert result is not None, f"销售订单{'提交' if is_submit else '保存'}失败"
                 
                 allure.attach(
-                    json.dumps(result, indent=2, ensure_ascii=False, cls=DecimalEncoder),
+                    json.dumps(result, indent=2, ensure_ascii=False),
                     f"{'提交' if is_submit else '保存'}订单响应数据",
                     allure.attachment_type.JSON
                 )
-                self.log.debug(f"{'提交' if is_submit else '保存'}销售订单响应数据: {json.dumps(result, cls=DecimalEncoder, indent=2)}")
+                self.logger.debug(f"{'提交' if is_submit else '保存'}销售订单响应数据: {json.dumps(result,  indent=2)}")
                 
                 if not is_submit:
                     self.order_id = result.get("data", {}).get("data", {}).get("id")
-                    self.log.info(f"销售订单保存成功，订单ID: {self.order_id}")
+                    self.logger.info(f"销售订单保存成功，订单ID: {self.order_id}")
                 else:
-                    self.log.info("销售订单提交成功")
+                    self.logger.info("销售订单提交成功")
 
         except Exception as e:
             error_msg = f"销售订单{'提交' if is_submit else '保存'}失败: {str(e)}"
-            self.log.error(error_msg)
+            self.logger.error(error_msg)
             if hasattr(e, 'response'):
-                self.log.error(f"响应状态码: {e.response.status_code}")
-                self.log.error(f"响应内容: {e.response.text}")
+                self.logger.error(f"响应状态码: {e.response.status_code}")
+                self.logger.error(f"响应内容: {e.response.text}")
             raise
 
     @allure.title("销售订单保存")
@@ -456,5 +428,5 @@ if __name__ == "__main__":
     test = TestSalesOrderCreate()
     test.setup_class()
     test.test_save_sales_order()
-    # test.test_submit_sales_order()
+    test.test_submit_sales_order()
     
