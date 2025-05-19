@@ -1,8 +1,8 @@
 # 放每个模块的 api
 销售订单:
   销售配置:
-    查询订单类型配置: "/api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService"
-    查询订单类型详情: "/api/trantor/service/engine/execute/ERP_SCM$SYS_FindDataByIdService"
+    查询订单类型配置: "/api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService?tmodule=ERP_SCM&modelKey=ERP_SCM$sls_so_type_cf"
+    查询订单类型详情: "/api/trantor/service/engine/execute/ERP_SCM$SYS_FindDataByIdService?tmodule=ERP_SCM&modelKey=ERP_SCM$sls_so_type_cf"
   订单管理:
     查询订单: "/api/trantor/service/engine/execute/ERP_SCM$sls_so_head_tr_PAGING_DATA_SERVICE"
     查询订单详情: "/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_QUERY_DETAIL_EVENT_SERVICE"
@@ -14,12 +14,11 @@
     复制订单: "/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_DATA_COPY_EVENT_SERVICE"
     删除订单: "/api/trantor/service/engine/execute/ERP_SCM$SYS_DeleteDataByIdService"
     批量删除: "/api/trantor/service/engine/execute/ERP_SCM$sales_order_batch_delete_service"
-  
-  订单创建:
     初始化订单: "/api/trantor/service/engine/execute/ERP_SCM$sls_sales_order_create_init_service"
-    查询客户信息: "/api/trantor/service/engine/execute/ERP_SCM$sls_cust_select_render_service"
+    查询客户信息: "/api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService?tmodule=ERP_SCM&modelKey=ERP_GEN$gen_cust_info_md"
+    基于客户信息渲染地址信息: "/api/trantor/service/engine/execute/ERP_SCM$sls_cust_select_render_service?tmodule=ERP_SCM"
     查询相关方: "/api/trantor/service/engine/execute/ERP_SCM$SO_QUERY_PARTNER_EVENT_SERVICE"
-    查询销售组织: "/api/trantor/service/engine/execute/ERP_SCM$sls_sales_organization_paging_service"
+    查询销售组织: "/api/trantor/service/engine/execute/ERP_SCM$sls_sales_organization_paging_service?tmodule=ERP_SCM"
     查询物料: "/api/trantor/service/engine/execute/ERP_SCM$INV_MAT_PAGING_SERVICE"
     渲染订单行: "/api/trantor/service/engine/execute/ERP_SCM$SLS_AFTER_MAT_SELECT_RENDER_EVENT_SERVICE"
     自动定价: "/api/trantor/service/engine/execute/ERP_SCM$SO_AUTO_PRICE_EVENT_copy_SERVICE"

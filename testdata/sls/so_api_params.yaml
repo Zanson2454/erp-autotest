@@ -1,9 +1,10 @@
 # 系统服务通用参数
 
 # 定义所有API接口的请求参数结构
+
 api_params:
-  # 通用分页查询服务
-  "/api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService":
+  # 订单类型查询
+  "/api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService?tmodule=ERP_SCM&modelKey=ERP_SCM$sls_so_type_cf":
     params:
       request:
         pageable:
@@ -15,14 +16,14 @@ api_params:
           sortOrders:  # 排序条件
             - fieldAlias: "createdBy"  # 排序字段
               sortType: "DESC"  # 排序方式
-      modelKey: "ERP_SCM${modelKey}"  # 模型键
+      modelKey: "ERP_SCM$sls_so_type_cf"  # 模型键
 
-  # 通用详情查询服务
-  "/api/trantor/service/engine/execute/ERP_SCM$SYS_FindDataByIdService":
+  # 订单详情查询服务
+  "/api/trantor/service/engine/execute/ERP_SCM$SYS_FindDataByIdService?tmodule=ERP_SCM&modelKey=ERP_SCM$sls_so_type_cf":
     params:
       request:
         id: "{order_id}"  # 要查询的订单ID
-      modelKey: "ERP_SCM${modelKey}"  # 模型键
+      modelKey: "ERP_SCM$sls_so_type_cf"  # 模型键
 
   # 销售订单列表查询服务
   "/api/trantor/service/engine/execute/ERP_SCM$sls_so_head_tr_PAGING_DATA_SERVICE":
@@ -102,9 +103,52 @@ api_params:
         btClass: "SALES"  # 业务类型
 
   # 客户信息查询服务
-  "/api/trantor/service/engine/execute/ERP_SCM$sls_cust_select_render_service":
+  "/api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService?tmodule=ERP_SCM&modelKey=ERP_GEN$gen_cust_info_md":
+    sceneKey: "ERP_SCM$sls_so_730"
+    viewKey: "ERP_SCM$sls_so_730:edit"
+    serviceKey: "ERP_SCM$SYS_PagingDataService"
     params:
-      custId: "{cust_id}"  # 客户ID
+      modelKey: "ERP_GEN$gen_cust_info_md"
+      request:
+        pageable:
+          pageNo: 1  # 页码
+          pageSize: 20  # 每页大小
+          conditionGroup:  # 查询条件组
+            type: "ConditionGroup"
+            logicOperator: "AND"
+            conditions:
+              - type: "ConditionGroup"
+                logicOperator: "AND"
+                conditions:
+                  - type: "ConditionGroup"
+                    logicOperator: "AND"
+                    conditions:
+                      - key: "V9-9Z27ZOiitzmCTR3toD"
+                        type: "ConditionLeaf"
+                        leftValue:
+                          id: "Cs-llCMSNSEI2xK0ajnbw"
+                          key: "Cs-llCMSNSEI2xK0ajnbw"
+                          type: "VarValue"
+                          fieldType: "Text"
+                          valueType: "VAR"
+                          varValue:
+                            - valueKey: "custCode"
+                              valueName: "custCode"
+                        operator: "CONTAINS"
+                        rightValue:
+                          key: "Kf1gTg48B2elte3S_U-Wb"
+                          type: "VarValue"
+                          fieldType: "Text"
+                          valueType: "CONST"
+                          constValue: "AUTOTEST_CUST"
+          sortOrders: null
+          keyword: null
+
+  # 基于客户信息渲染地址信息
+  "/api/trantor/service/engine/execute/ERP_SCM$sls_cust_select_render_service?tmodule=ERP_SCM":
+    params:
+      request:
+        custId: "{cust_id}"  # 客户ID
 
   # 相关方查询服务
   "/api/trantor/service/engine/execute/ERP_SCM$SO_QUERY_PARTNER_EVENT_SERVICE":
@@ -125,7 +169,7 @@ api_params:
             soSchlDelDate: null  # 计划交货日期
 
   # 销售组织查询服务
-  "/api/trantor/service/engine/execute/ERP_SCM$sls_sales_organization_paging_service":
+  "/api/trantor/service/engine/execute/ERP_SCM$sls_sales_organization_paging_service?tmodule=ERP_SCM":
     params:
       request:
         pageable:
@@ -159,6 +203,8 @@ api_params:
                           fieldType: "Text"
                           valueType: "CONST"
                           constValue: "AUTOTEST_SLS_ORG"
+          sortOrders: null
+          keyword: null
 
   # 物料查询服务
   "/api/trantor/service/engine/execute/ERP_SCM$INV_MAT_PAGING_SERVICE":
