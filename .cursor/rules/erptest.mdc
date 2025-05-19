@@ -41,6 +41,7 @@ sys.path.insert(0, str(project_root))
         super().setup_class()
 '''
 3. 基于 curl 生成测试用例时,所有入参都去除teamId 和 appId
+4. 所有用例都要加上异常捕获
 
 
 <!-- 5. 每日构建Allure趋势报告（保留30天历史） -->
