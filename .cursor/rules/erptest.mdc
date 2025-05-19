@@ -11,38 +11,36 @@ alwaysApply: true
 3. 实现测试环境与执行策略的严格隔离
 4. 建立测试资产与业务需求的双向追溯机制
 5. 遵循PEP8规范，保持代码风格统一
-6. 字典取值优先使用 get,取不到 key,默认为 None 
-7. 路径获取统一用 pathlib 的 PATH 获取
-8. 所有环境配置通过.env文件管理
-9. 版本控制使用git-flow分支策略
-10. 所有入参都不要 teamId 和 appId
+5. 版本控制使用git-flow分支策略
+
+# 代码规范
+1. 字典取值优先使用 get,取不到 key,默认为 None 
+2. 路径获取统一用 pathlib 的 PATH 获取
+3. 所有环境配置通过.env文件管理 
+4. 所有测试文件都生成类方法调用
+'''
+if __name__ == "__main__":
+    test = TestXXXXX()
+    test.setup_class()
+'''
 
 # 测试用例编写规范
+1. 所有测试用例都需要加上基础断言  assert_response_success方法,来自 utils/assert_util.py 中的AssertHelper类
+2. 所有测试文件都需要添加项目根目录到 Python 路径,例如：
+'''
+project_root = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(project_root))
+'''
 
-@allure.epic("进销存管理")  # 一级业务域
-@allure.feature("订单管理")  # 二级功能模块
-class TestOrder_Create:
-    @allure.story("供应商订单创建")  # 用户场景
-    @allure.severity(allure.severity_level.CRITICAL)  # 用例优先级
-    @pytest.mark.parametrize("supplier_type, discount", 
-        [("战略", 0.8), ("普通", 1.0)],  # 数据驱动案例
-        ids=["战略供应商8折", "普通供应商无折扣"])
-    def test_create_supplier_order(self, supplier_type, discount):
-        """验证不同供应商类型的折扣计算逻辑"""
-        with allure.step("前置条件：登录采购账号"):
-            login(role="purchaser")
-        with allure.step("创建供应商订单"):
-            order = create_order(supplier_type=supplier_type)
-        with allure.step("验证折扣率"):
-            assert order.discount == discount, "折扣计算异常"
+3. 所有测试文件都依赖 testcases/comm/base_test.py 中的BaseTest类,且都必须有 setup_class
 
-核心要求​​：
-每个测试类专注单个功能点（如TestOrder_Create）
-使用@allure.step标注关键操作步骤
-断言失败时自动附加页面截图（通过pytest钩子实现）
-
-
-
+'''
+  @classmethod
+    def setup_class(cls):
+        """测试类初始化"""
+        super().setup_class()
+'''
+3. 基于 curl 生成测试用例时,所有入参都去除teamId 和 appId
 
 
 <!-- 5. 每日构建Allure趋势报告（保留30天历史） -->
