@@ -109,3 +109,18 @@ class AssertHelper:
             logger.info(f"接口响应时间：{elapsed:.2f}{unit}")
         else:
             logger.warning("响应对象中没有elapsed属性，无法验证响应时间")
+
+    @staticmethod
+    def assert_not_empty(value: Any, message: str = None) -> None:
+        """
+        断言值不为空（None/空列表/空字典/空字符串等）
+        
+        Args:
+            value: 要检查的值
+            message: 自定义错误消息
+        """
+        if message is None:
+            message = f"期望值不为空，但实际值为: {value}"
+        assert value, message
+        if isinstance(value, (list, dict, str)):
+            assert len(value) > 0, message

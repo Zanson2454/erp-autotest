@@ -6,20 +6,21 @@ import allure
 from decimal import Decimal
 from datetime import datetime
 from typing import Dict, Any, Optional
-
+from pathlib import Path
 # 添加项目根目录到 Python 路径
-current_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
-sys.path.insert(0, project_root)
 
-from common.login_manager import LoginManager
 
-from testcases.comm.base_test import InitSQL
+project_root = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(project_root))
+
+
+
 from utils.assert_util import AssertHelper
 from utils.yaml_util import YamlUtil
 from utils.exception_util import handle_exception, safe_api_call, handle_class_method_exception
-from testcases.comm.base_test import BaseTest, DecimalEncoder
+from testcases.comm.base_test import BaseTest, SQLInitializer
 from utils.mock_util import MockData
+from utils.response_util import ResponseUtil
 from testcases.sls.test_01_create import TestSalesOrderCreate
 class TestSalesOrderOperator(BaseTest):
     """销售订单操作测试类"""
@@ -35,17 +36,20 @@ class TestSalesOrderOperator(BaseTest):
         cls.so_data = None
         cls.user_id = cls.init_data["user_info"]["user_info"]["id"]
         cls.so_type_id = cls.init_data["base_info"]["so_type_info"]["id"]
-        # 初始化请求头
-        cls.headers = {
-            'Content-Type': 'application/json',
-            'Referer': f"{cls.base_url}/TERP_PORTAL-TERP",
-            'User-Agent': MockData().get_mock_user_agent()
-        }
+        cls.logger.info("测试类初始化完成")
         
-        cls.log.info("测试类初始化完成")
+        # 加载配置文件
+        cls.base_api_path = Path(project_root) / "testdata" / "sls" / "sls_api_path.yaml"
+        cls.base_config_path = Path(project_root) / "testdata" / "sls" / "so_api_params.yaml"
         
+        # 当前用例集所需接口
+        cls.yaml_util = YamlUtil()
+        cls.so_path = cls.yaml_util.read_yaml(cls.base_api_path)["销售订单"]["订单管理"]
+        
+        # 前用例集所需参数
+        cls.so_params = cls.yaml_util.read_yaml(cls.base_config_path).get("api_params", {})
     
-
+        cls.response_util = ResponseUtil()
     def _query_draft_orders_from_db(self) -> Dict[str, Any]:
         """从数据库查询草稿态订单
         
@@ -69,24 +73,24 @@ class TestSalesOrderOperator(BaseTest):
         """
         
         # 执行查询
-        self.log.info(f"执行查询: {sql}")
-        result = self.db.execute_query(sql, (self.user_id,))
+        self.logger.info(f"执行查询: {sql}")
+        result = self.db.query(sql, (self.user_id,))
         
         # 2. 如果未找到订单，创建新订单
         if not result or len(result) == 0:
-            self.log.info("未找到草稿态订单，创建新订单")
+            self.logger.info("未找到草稿态订单，创建新订单")
             try:
                 test_create = TestSalesOrderCreate()
                 test_create.setup_class()
                 test_create.test_08_save_sales_order()
-                self.log.info("成功创建新订单")
+                self.logger.info("成功创建新订单")
                 # 重新查询订单
-                result = self.db.execute_query(sql, (self.user_id,))
+                result = self.db.query(sql, (self.user_id,))
                 if not result:
-                    self.log.error("创建订单后仍然未找到草稿态订单")
+                    self.logger.error("创建订单后仍然未找到草稿态订单")
                     return {}
             except Exception as e:
-                self.log.error(f"创建新订单失败: {str(e)}")
+                self.logger.error(f"创建新订单失败: {str(e)}")
                 return {}
         
         # 3. 处理查询结果
@@ -98,7 +102,7 @@ class TestSalesOrderOperator(BaseTest):
         }
         
         # 输出查询结果
-        self.log.info(f"\n查询到的草稿态订单数据: {json.dumps(self.test_data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
+        self.logger.info(f"\n查询到的草稿态订单数据: {json.dumps(self.test_data, ensure_ascii=False, indent=2)}")
         return self.test_data
 
     @allure.title("查询销售订单详情")
@@ -113,36 +117,29 @@ class TestSalesOrderOperator(BaseTest):
         """测试查询销售订单详情"""
         # 如果没有订单ID，尝试获取
         if not self.order_id:
-            self.log.info("未找到订单ID，尝试从数据库查询")
+            self.logger.info("未找到订单ID，尝试从数据库查询")
             draft_order = self._query_draft_orders_from_db()
             if not draft_order:
                 raise ValueError("未找到草稿态订单")
             self.order_id = draft_order["so_id"]
-            self.log.info(f"从数据库获取到订单ID: {self.order_id}")
+            self.logger.info(f"从数据库获取到订单ID: {self.order_id}")
         else:
-            self.log.info(f"使用已有订单ID: {self.order_id}")
+            self.logger.info(f"使用已有订单ID: {self.order_id}")
             
         # 构建请求URL
-        url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_QUERY_DETAIL_EVENT_SERVICE?tmodule=ERP_SCM"
-        
-        # 构建请求数据
-        data = {
-            "params": {
-                "request": {
-                    "id": self.order_id
-                }
-            }
-        }
+        url = self.so_path["查询订单详情"]
+        data = self.so_params[url]
+        data["params"]["request"]["id"] = self.order_id
         
         # 发送请求
-        self.log.info(f"查询订单详情请求数据: {json.dumps(data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
+        self.logger.info(f"查询订单详情请求数据: {json.dumps(data, ensure_ascii=False, indent=2)}")
         try:
             result = self.http.post(url, json=data, description="订单详情查询")
-            self.log.info(json.dumps(result, cls=DecimalEncoder, ensure_ascii=False, indent=2))
+            self.logger.info(json.dumps(result, ensure_ascii=False, indent=2))
             
             # 保存订单详情数据
             self.so_data =result
-            self.log.info(json.dumps(self.so_data, cls=DecimalEncoder, ensure_ascii=False, indent=2))
+            self.logger.info(json.dumps(self.so_data, ensure_ascii=False, indent=2))
         except Exception as e:
             raise e
 
@@ -163,23 +160,17 @@ class TestSalesOrderOperator(BaseTest):
             self._query_draft_orders_from_db()
        # 发送请求
         self.so_data['syncSubmit'] = True # 直接设 置 id 字段
-        url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SLS_SALES_MANUAL_SAVE_EVENT?tmodule=ERP_SCM" 
-      
-        data = {
-            "params": {
-                "request": {
-                    **self.so_data
-                }
-            }
-        }
-       
+        url = self.so_path["销售订单编辑提交"]
+        data = self.so_params[url]
+        data["params"]["request"] = self.so_data
         result = self.http.post(url, json=data, description="销售订单编辑提交")
-        self.log.info(json.dumps(result, cls=DecimalEncoder, ensure_ascii=False, indent=2))
+        self.response_util.process_response(result)
+        self.logger.info(json.dumps(result, ensure_ascii=False, indent=2))
         
-        so_status = self.db.execute_query(f"select id,so_code,so_status from sls_so_head_tr where id={self.order_id}")
+        so_status = self.db.query(f"select id,so_code,so_status from sls_so_head_tr where id={self.order_id}")
         assert so_status[0]['so_status'] == 'EFFECT', "销售订单编辑提交失败"
         assert result is not None, "销售订单编辑提交失败"
-        self.log.info("销售订单编辑提交成功")
+        self.logger.info("销售订单编辑提交成功")
 
 
 
@@ -201,13 +192,13 @@ class TestSalesOrderOperator(BaseTest):
                 AND deleted = 0 order by created_at desc
                 LIMIT 1
             """
-        self.log.info(f"执行查询: {sql}")
-        result = self.db.execute_query(sql)
+        self.logger.info(f"执行查询: {sql}")
+        result = self.db.query(sql)
         if not result or len(result) == 0:
             pytest.fail("未找到可提交的订单")
         order = result[0]
         self.order_id = order["id"]
-        self.log.info(f"找到可提交订单: ID={self.order_id}, 订单号={order['so_code']}")
+        self.logger.info(f"找到可提交订单: ID={self.order_id}, 订单号={order['so_code']}")
         # 发送请求
         url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_MANUAL_SUBMIT?tmodule=ERP_SCM"
         data = {
@@ -217,12 +208,12 @@ class TestSalesOrderOperator(BaseTest):
                 }
             }
         }
-        self.log.debug(f"销售订单手动提交请求数据: {json.dumps(data, cls=DecimalEncoder, indent=2)}")
+        self.logger.debug(f"销售订单手动提交请求数据: {json.dumps(data, indent=2)}")
         result = self.http.post(url, json=data, description="销售订单手动提交")
-        self.log.debug(f"销售订单手动提交响应数据: {json.dumps(result, cls=DecimalEncoder, indent=2)}")
+        self.logger.debug(f"销售订单手动提交响应数据: {json.dumps(result, indent=2)}")
         # 验证响应
         assert result is not None, "销售订单列表提交失败"
-        self.log.info("销售订单列表提交成功")
+        self.logger.info("销售订单列表提交成功")
 
     @pytest.mark.order(4)
     @safe_api_call(error_message="取消提交销售订单失败")
@@ -240,15 +231,15 @@ class TestSalesOrderOperator(BaseTest):
             LIMIT 1
         
             """
-            self.log.info(f"执行查询: {sql}")
-            result = self.db.execute_query(sql)
+            self.logger.info(f"执行查询: {sql}")
+            result = self.db.query(sql)
             
             if not result or len(result) == 0:
                 self.test_03_manual_submit_sales_order()
                 
             order = result[0]
             order_id = order["id"]
-            self.log.info(f"找到已提交订单: ID={order_id}, 订单号={order['so_code']}")
+            self.logger.info(f"找到已提交订单: ID={order_id}, 订单号={order['so_code']}")
            
             # 2. 构造请求数据
             request_data = {
@@ -267,20 +258,20 @@ class TestSalesOrderOperator(BaseTest):
             response = self.session.post(url, json=request_data, headers=self.headers)
             response_data = response.json()
             
-            self.log.info(f"取消提交订单响应数据: {json.dumps(response_data, ensure_ascii=False, indent=2)}")
+            self.logger.info(f"取消提交订单响应数据: {json.dumps(response_data, ensure_ascii=False, indent=2)}")
             
             # 4. 验证响应
             assert response.status_code == 200, f"取消提交订单失败: {response.text}"
             assert response_data.get("success"), f"取消提交订单失败: {response_data.get('message')}"
             
             # 5. 验证订单状态
-            so_status = self.db.execute_query(f"select id,so_code,so_status from sls_so_head_tr where id={order_id}")
+            so_status = self.db.query(f"select id,so_code,so_status from sls_so_head_tr where id={order_id}")
             assert so_status[0]['so_status'] == 'DRAFT', "销售订单取消提交失败"
             
-            self.log.info(f"订单 {self.order_id} 取消提交成功")
+            self.logger.info(f"订单 {self.order_id} 取消提交成功")
             
         except Exception as e:
-            self.log.error(f"取消提交订单失败: {str(e)}")
+            self.logger.error(f"取消提交订单失败: {str(e)}")
             raise
 
     @allure.title("作废销售订单")
@@ -303,15 +294,15 @@ class TestSalesOrderOperator(BaseTest):
             AND deleted = 0 order by created_at desc
             LIMIT 1
             """
-            self.log.info(f"执行查询: {sql}")
-            result = self.db.execute_query(sql)
+            self.logger.info(f"执行查询: {sql}")
+            result = self.db.query(sql)
             
             if not result or len(result) == 0:
                 self.test_03_manual_submit_sales_order()
                 
             order = result[0]
             order_id = order["id"]
-            self.log.info(f"找到已提交订单: ID={order_id}, 订单号={order['so_code']}")
+            self.logger.info(f"找到已提交订单: ID={order_id}, 订单号={order['so_code']}")
             
             # 2. 构造请求数据
             request_data = {
@@ -324,13 +315,13 @@ class TestSalesOrderOperator(BaseTest):
             
             # 3. 发送请求
             url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SLS_REPEAL_EVENT_SERVICE?tmodule=ERP_SCM"
-            self.log.info(f"作废订单请求URL: {url}")
-            self.log.info(f"作废订单请求数据: {json.dumps(request_data, ensure_ascii=False, indent=2)}")
+            self.logger.info(f"作废订单请求URL: {url}")
+            self.logger.info(f"作废订单请求数据: {json.dumps(request_data, ensure_ascii=False, indent=2)}")
             
             response = self.session.post(url, json=request_data, headers=self.headers)
             response_data = response.json()
             
-            self.log.info(f"作废订单响应数据: {json.dumps(response_data, ensure_ascii=False, indent=2)}")
+            self.logger.info(f"作废订单响应数据: {json.dumps(response_data, ensure_ascii=False, indent=2)}")
             
             # 4. 验证响应
             assert response.status_code == 200, f"作废订单失败: {response.text}"
@@ -342,13 +333,13 @@ class TestSalesOrderOperator(BaseTest):
             FROM sls_so_head_tr 
             WHERE id = {order_id}
             """
-            verify_result = self.db.execute_query(verify_sql)
+            verify_result = self.db.query(verify_sql)
             assert verify_result[0]["so_status"] == "CANCELLED", f"订单状态未更新为已作废: {verify_result[0]['so_status']}"
             
-            self.log.info(f"订单 {order_id} 作废成功")
+            self.logger.info(f"订单 {order_id} 作废成功")
             
         except Exception as e:
-            self.log.error(f"作废订单失败: {str(e)}")
+            self.logger.error(f"作废订单失败: {str(e)}")
             raise
 
     @allure.title("冻结销售订单")
@@ -372,18 +363,18 @@ class TestSalesOrderOperator(BaseTest):
             AND deleted = 0 order by created_at desc
             LIMIT 1
             """
-            self.log.info(f"执行查询: {sql}")
-            result = self.db.execute_query(sql)
+            self.logger.info(f"执行查询: {sql}")
+            result = self.db.query(sql)
             
             if not result or len(result) == 0:
                 self.test_03_manual_submit_sales_order()
-                result = self.db.execute_query(sql)
+                result = self.db.query(sql)
                 if not result or len(result) == 0:
                     pytest.fail("未找到可冻结的订单")
                 
             order = result[0]
             order_id = order["id"]
-            self.log.info(f"找到可冻结订单: ID={order_id}, 订单号={order['so_code']}")
+            self.logger.info(f"找到可冻结订单: ID={order_id}, 订单号={order['so_code']}")
             
             # 2. 构造请求数据
             request_data = {
@@ -397,13 +388,13 @@ class TestSalesOrderOperator(BaseTest):
             # 3. 发送请求
             url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_HEAD_FREEZE_EVENT_SERVICE?tmodule=ERP_SCM"
             
-            self.log.info(f"冻结订单请求URL: {url}")
-            self.log.info(f"冻结订单请求数据: {json.dumps(request_data, ensure_ascii=False, indent=2)}")
+            self.logger.info(f"冻结订单请求URL: {url}")
+            self.logger.info(f"冻结订单请求数据: {json.dumps(request_data, ensure_ascii=False, indent=2)}")
             
             response = self.session.post(url, json=request_data, headers=self.headers)
             response_data = response.json()
             
-            self.log.info(f"冻结订单响应数据: {json.dumps(response_data, ensure_ascii=False, indent=2)}")
+            self.logger.info(f"冻结订单响应数据: {json.dumps(response_data, ensure_ascii=False, indent=2)}")
             
             # 4. 验证响应
             assert response.status_code == 200, f"冻结订单失败: {response.text}"
@@ -415,14 +406,14 @@ class TestSalesOrderOperator(BaseTest):
             FROM sls_so_head_tr 
             WHERE id = {order_id}
             """
-            verify_result = self.db.execute_query(verify_sql)
+            verify_result = self.db.query(verify_sql)
             assert verify_result[0]["so_status"] == "EFFECT", f"订单状态不正确: {verify_result[0]['so_status']}"
             assert verify_result[0]["freeze_type"] == "ALL_FREEZE", f"冻结状态未更新为已冻结: {verify_result[0]['freeze_type']}"
             
-            self.log.info(f"订单 {order_id} 冻结成功")
+            self.logger.info(f"订单 {order_id} 冻结成功")
             
         except Exception as e:
-            self.log.error(f"冻结订单失败: {str(e)}")
+            self.logger.error(f"冻结订单失败: {str(e)}")
             raise
 
     @allure.title("复制销售订单")
@@ -445,19 +436,19 @@ class TestSalesOrderOperator(BaseTest):
             AND deleted = 0 order by created_at desc
             LIMIT 1
             """
-            self.log.info(f"执行查询: {sql}")
-            result = self.db.execute_query(sql)
+            self.logger.info(f"执行查询: {sql}")
+            result = self.db.query(sql)
             
             if not result or len(result) == 0:
                 self.test_03_manual_submit_sales_order()
-                result = self.db.execute_query(sql)
+                result = self.db.query(sql)
                 if not result or len(result) == 0:
                     pytest.fail("未找到可复制的订单")
                 
             order = result[0]
             order_id = order["id"]
             original_so_code = order["so_code"]
-            self.log.info(f"找到可复制订单: ID={order_id}, 订单号={original_so_code}")
+            self.logger.info(f"找到可复制订单: ID={order_id}, 订单号={original_so_code}")
             
             # 2. 构造请求数据
             request_data = {
@@ -471,13 +462,13 @@ class TestSalesOrderOperator(BaseTest):
             # 3. 发送请求
             url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_DATA_COPY_EVENT_SERVICE?tmodule=ERP_SCM"
             
-            self.log.info(f"复制订单请求URL: {url}")
-            self.log.info(f"复制订单请求数据: {json.dumps(request_data, ensure_ascii=False, indent=2)}")
+            self.logger.info(f"复制订单请求URL: {url}")
+            self.logger.info(f"复制订单请求数据: {json.dumps(request_data, ensure_ascii=False, indent=2)}")
             
             response = self.session.post(url, json=request_data, headers=self.headers)
             response_data = response.json()
             
-            self.log.info(f"复制订单响应数据: {json.dumps(response_data, ensure_ascii=False, indent=2)}")
+            self.logger.info(f"复制订单响应数据: {json.dumps(response_data, ensure_ascii=False, indent=2)}")
             
             # 4. 验证响应
             assert response.status_code == 200, f"复制订单失败: {response.text}"
@@ -489,10 +480,10 @@ class TestSalesOrderOperator(BaseTest):
             assert new_so_code is not None, "响应中未找到新订单号"
             assert new_so_code != original_so_code, f"新订单号与原订单号相同: {new_so_code}"
             
-            self.log.info(f"订单复制成功，原订单号: {original_so_code}, 新订单号: {new_so_code}")
+            self.logger.info(f"订单复制成功，原订单号: {original_so_code}, 新订单号: {new_so_code}")
             
         except Exception as e:
-            self.log.error(f"复制订单失败: {str(e)}")
+            self.logger.error(f"复制订单失败: {str(e)}")
             raise
 
     @allure.title("提交复制的销售订单")
@@ -523,13 +514,13 @@ class TestSalesOrderOperator(BaseTest):
             # 3. 发送请求
             url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SLS_SALES_MANUAL_SAVE_EVENT?tmodule=ERP_SCM"
             
-            self.log.info(f"提交复制订单请求URL: {url}")
-            self.log.info(f"提交复制订单请求数据: {json.dumps(request_data, ensure_ascii=False, indent=2)}")
+            self.logger.info(f"提交复制订单请求URL: {url}")
+            self.logger.info(f"提交复制订单请求数据: {json.dumps(request_data, ensure_ascii=False, indent=2)}")
             
             response = self.session.post(url, json=request_data, headers=self.headers)
             response_data = response.json()
             
-            self.log.info(f"提交复制订单响应数据: {json.dumps(response_data, ensure_ascii=False, indent=2)}")
+            self.logger.info(f"提交复制订单响应数据: {json.dumps(response_data, ensure_ascii=False, indent=2)}")
             
             # 4. 验证响应
             assert response.status_code == 200, f"提交复制订单失败: {response.text}"
@@ -539,22 +530,22 @@ class TestSalesOrderOperator(BaseTest):
             new_so_code = response_data['data']['data']['soCode']
             assert new_so_code == self.so_data['soCode'], f"订单号不匹配: 期望={self.so_data['soCode']}, 实际={new_so_code}"
             
-            self.log.info(f"复制订单提交成功，订单号: {new_so_code}")
+            self.logger.info(f"复制订单提交成功，订单号: {new_so_code}")
             
         except Exception as e:
-            self.log.error(f"提交复制订单失败: {str(e)}")
+            self.logger.error(f"提交复制订单失败: {str(e)}")
             raise
 
 if __name__ == "__main__":
-    # test = TestSalesOrderOperator()
-    # test.setup_class()
-    # test.test_01_query_order_detail()
-    # test.test_02_submit_sales_order_edit()
-    # test.test_03_manual_submit_sales_order()    
+    test = TestSalesOrderOperator()
+    test.setup_class()
+    test.test_01_query_order_detail()
+    test.test_02_submit_sales_order_edit()
+    # test.test_03_manual_submit_sales_order() \   
     # test.test_04_cancel_submit_sales_order()
     # test.test_05_repeal_sales_order()
     # test.test_06_freeze_sales_order()
     # test.test_07_copy_sales_order()
     # test.test_08_submit_copied_sales_order()
-    allure_dir = os.path.join(project_root, "reports", "allure-results")
-    pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])    
+    # allure_dir = os.path.join(project_root, "reports", "allure-results")
+    # pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])    

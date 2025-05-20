@@ -283,3 +283,9 @@ api_params:
         exchRate: 1  # 汇率
         soItems: "{so_items}"  # 订单行项目
         slsPartnerLinks: "{sls_partner_links}"  # 相关方链接
+
+  # 销售订单编辑提交服务
+  "/api/trantor/service/engine/execute/ERP_SCM$SLS_SALES_MANUAL_SAVE_EVENT":
+    params:
+      request:
+        {}

@@ -21,13 +21,14 @@ class DecimalEncoder(json.JSONEncoder):
             return obj.isoformat()  # 将 datetime 转换为 ISO 格式字符串
         return super().default(obj)  # 调用父类默认的序列化方法
 
-def process_response(response):
-    if response.status_code == 200 or response.status_code == 201:
-        response.success = True
-        response.body = response.json()
-    else:
-        response.success = False
-        logger.info("接口状态码不是2开头，请检查")
-    logger.info("接口的返回内容>>>：" + json.dumps(response.json(), ensure_ascii=False, cls=DecimalEncoder))
-    return response
+class ResponseUtil:
+    def process_response(self, response):
+        if response.status_code == 200 or response.status_code == 201:
+            response.success = True
+            response.body = response.json()
+        else:
+            response.success = False
+            logger.info("接口状态码不是2开头，请检查")
+            logger.info("接口的返回内容>>>：" + json.dumps(response.json(), ensure_ascii=False, cls=DecimalEncoder))
+        return response
 
