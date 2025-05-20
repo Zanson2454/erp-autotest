@@ -13,7 +13,7 @@
     冻结订单: "/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_HEAD_FREEZE_EVENT_SERVICE"
     复制订单: "/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_DATA_COPY_EVENT_SERVICE"
     删除订单: "/api/trantor/service/engine/execute/ERP_SCM$SYS_DeleteDataByIdService?tmodule=ERP_SCM&modelKey=ERP_SCM$sls_so_head_tr"
-    批量删除: "/api/trantor/service/engine/execute/ERP_SCM$sales_order_batch_delete_service"
+    批量删除订单: "/api/trantor/service/engine/execute/ERP_SCM$sales_order_batch_delete_service"
     初始化订单: "/api/trantor/service/engine/execute/ERP_SCM$sls_sales_order_create_init_service"
     查询客户信息: "/api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService?tmodule=ERP_SCM&modelKey=ERP_GEN$gen_cust_info_md"
     基于客户信息渲染地址信息: "/api/trantor/service/engine/execute/ERP_SCM$sls_cust_select_render_service?tmodule=ERP_SCM"

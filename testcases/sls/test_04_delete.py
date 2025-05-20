@@ -162,7 +162,7 @@ class TestOrderDelete(BaseTest):
         self.test_data["order_codes"] = [order['so_code'] for order in result]
         self.logger.info(f"测试数据: {self.test_data}")
         
-        delete_url = self.so_path["批量删除销售订单"]
+        delete_url = self.so_path["批量删除订单"]
         delete_data = self.so_params.get(delete_url, {})
         delete_data['params']['request']['ids'] = self.test_data['order_ids']
         self.logger.info(f"删除请求数据: {delete_data}")
@@ -195,5 +195,5 @@ if __name__ == "__main__":
     test = TestOrderDelete()
     test.setup_class()
     test.test_01_delete_order()
-    # test.test_02_batch_delete_orders()
+    test.test_02_batch_delete_orders()
   
