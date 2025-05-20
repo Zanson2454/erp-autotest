@@ -394,6 +394,9 @@ class BaseTest:
         # 初始化日志
         cls.logger = Loggers()
         
+        # 初始化断言工具
+        cls.assert_util = AssertHelper()
+        
         # 初始化缓存管理器
         cache_dir = project_root / "testdata" / "cache"
         cache_dir.mkdir(parents=True, exist_ok=True)  # 确保缓存目录存在
@@ -423,15 +426,13 @@ class BaseTest:
             headers=cls.login.api_headers  # 传递API请求头
         )
         
-        # 初始化断言工具
-        cls.assert_util = AssertHelper()
-        
         # 获取初始化数据
         init_data = cls.init_sql.init_sql() # 获取初始化数据
         cls._process_init_data(init_data) # 处理初始化数据
         
         # 初始化测试数据
         cls.test_data = {}
+        
     
     @classmethod
     def _process_init_data(cls, init_data: Dict[str, Any]) -> None:
