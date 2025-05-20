@@ -38,7 +38,7 @@ from utils.report_util import ReportEnhancer, TestStatus
 project_root = Path(__file__).resolve().parent.parent
 
 # 确保必要的目录存在
-REQUIRED_DIRS = ["reports/allure-results", "logs", "data"]
+REQUIRED_DIRS = ["reports/allure-results", "logs", "testdata", "testcases"]
 for dir_name in REQUIRED_DIRS:
     os.makedirs(project_root / dir_name, exist_ok=True)
 

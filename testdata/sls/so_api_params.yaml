@@ -84,7 +84,7 @@ api_params:
         id: "{order_id}"  # 要复制的订单ID
 
   # 销售订单删除服务
-  "/api/trantor/service/engine/execute/ERP_SCM$SYS_DeleteDataByIdService":
+  "/api/trantor/service/engine/execute/ERP_SCM$SYS_DeleteDataByIdService?tmodule=ERP_SCM&modelKey=ERP_SCM$sls_so_head_tr":
     params:
       request:
         id: "{order_id}"  # 要删除的订单ID

@@ -99,8 +99,7 @@ class TestSalesOrderCreate(BaseTest):
         response_data = result.get("data", {}).get("data", {}).get("data", [])[0]
         actual_cust_id = response_data.get('id',{})
         self.assert_util.assert_eq(actual_cust_id, self.cust_id, "客户编码不匹配")
-        self.logger.info("客户信息查询完成")
-        
+        self.logger.info("客户信息查询完成")    
         
     def _render_addr_info(self):
         """渲染地址信息"""

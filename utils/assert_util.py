@@ -47,6 +47,20 @@ class AssertHelper:
         assert actual == expected, message
 
     @staticmethod
+    def assert_not_eq(actual: Any, expected: Any, message: str = None) -> None:
+        """
+        断言两个值不相等
+        
+        Args:
+            actual: 实际值
+            expected: 期望值
+            message: 自定义错误消息，如果不提供则使用默认消息
+        """
+        if message is None:
+            message = f"期望值 {expected} 与实际值 {actual} 相等，但预期它们不相等"
+        assert actual != expected, message
+
+    @staticmethod
     def assert_response_success(response: Union[Dict[str, Any], Any], error_message: str = "请求失败") -> None:
         """
         断言响应成功

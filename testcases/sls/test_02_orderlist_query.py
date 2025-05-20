@@ -5,63 +5,39 @@ import allure
 import pytest   
 from datetime import datetime
 from typing import Dict, Any, Optional
-
+from pathlib import Path
 # 添加项目根目录到 Python 路径
-current_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
-sys.path.insert(0, project_root)
+project_root = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(project_root))
 
 from testcases.comm.base_test import BaseTest, DecimalEncoder
 from utils.exception_util import safe_api_call
 from utils.yaml_util import YamlUtil
-from utils.assert_util import AssertHelper
 
 class TestOrderList(BaseTest):
     """销售订单列表测试类"""
     
-    def setup_method(self, method=None):
+    def setup_method(cls):
         """每个测试方法执行前的准备工作
         
         Args:
             method: 当前执行的测试方法，可选参数
         """
-        # 确保 base_url 已初始化
-        if not hasattr(self, 'base_url') or not self.base_url:
-            self.setup_class()
-            
-        # 调用父类的 setup_method
-        super().setup_method(method)
-        # 读取通用查询参数
-        if not hasattr(TestOrderList, 'common_params'):
-            yaml_path = os.path.join(project_root, "testcases", "templates", "query_params.yml")
-            yaml_reader = YamlUtil(yaml_path)
-            TestOrderList.common_params = yaml_reader.read_yaml(yaml_path)
-            self.log.info("已加载通用查询参数")
+        super().setup_class()
         
-        # 初始化测试数据，但保留已有的数据
-        if not hasattr(self, 'test_data') or not self.test_data:
-            # 如果类属性中有测试数据，使用类属性中的数据
-            if hasattr(TestOrderList, 'test_data') and TestOrderList.test_data:
-                self.test_data = TestOrderList.test_data
-                self.log.info("使用类属性中的测试数据")
-            else:
-                self.test_data = {
-                    "so_code": None,
-                    "so_type_id": None,
-                    "so_status": None,
-                    "sls_org_id": None,
-                    "cust_id": None,
-                    "created_by": None   
-                }
-                self.log.info("初始化新的测试数据")
+        # 初始化测试数
         
-        # 如果提供了 method 参数，记录方法名
-        if method and hasattr(method, '__name__'):
-            self.log.info(f"开始执行测试方法: {method.__name__}")
-        else:
-            self.log.info("开始执行测试方法")
-            
-        self.log.info("初始化测试数据完成")
+         # 加载配置文件
+        cls.base_api_path = Path(project_root) / "testdata" / "sls" / "sls_api_path.yaml"
+        cls.base_config_path = Path(project_root) / "testdata" / "sls" / "so_api_params.yaml"
+        
+        # 当前用例集所需接口
+        cls.yaml_util = YamlUtil()
+        cls.so_path = cls.yaml_util.read_yaml(cls.base_api_path)["销售订单"]["订单管理"]
+        
+        # 前用例集所需参数
+        cls.so_params = cls.yaml_util.read_yaml(cls.base_config_path).get("api_params", {})
+
     
     
     def _build_order_list_query_data(self, conditionGroup=None) -> Dict[str, Any]:
