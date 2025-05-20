@@ -1,0 +1,7 @@
+# 存放通用的path路径
+通用基础:
+  物料管理:
+    物料主数据默认页面: "/api/trantor/service/engine/execute/ERP_GEN$gen_mat_md_PAGING_DATA_SERVICE?tmodule=ERP_SCM"
+    新增物料: "/api/trantor/service/engine/execute/ERP_GEN$GEN_MD_MAT_CLEAR_CACHE_BY_IDS_EVENT_SERVICE?tmodule=ERP_SCM"
+  订单管理:
+    查询订单: "/api/trantor/service/engine/execute/ERP_SCM$sls_so_head_tr_PAGING_DATA_SERVICE"
