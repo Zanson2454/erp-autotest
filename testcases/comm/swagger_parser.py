@@ -160,9 +160,14 @@ class SwaggerParser:
         # 处理$ref引用
         if '$ref' in schema:
             ref_path = schema['$ref']
-            # 这里需要实现引用解析逻辑
-            # 暂时返回引用路径
-            return {'$ref': ref_path}
+            # 只支持本地引用
+            if ref_path.startswith('#/components/schemas/'):
+                ref_name = ref_path.split('/')[-1]
+                ref_schema = self.swagger_data.get('components', {}).get('schemas', {}).get(ref_name, {})
+                logger.debug(f"递归解析 $ref: {ref_path} => {ref_name}, schema: {ref_schema}")
+                return self._get_schema_value(ref_schema)
+            logger.warning(f"不支持的 $ref 路径: {ref_path}")
+            return None
             
         parsed = {
             'type': schema.get('type'),
@@ -179,14 +184,20 @@ class SwaggerParser:
         # 处理对象类型
         elif schema.get('type') == 'object':
             properties = schema.get('properties', {})
-            parsed['properties'] = {
-                prop: self._parse_schema(prop_schema)
-                for prop, prop_schema in properties.items()
-            }
-            # 处理required属性
-            if 'required' in schema:
-                parsed['required'] = schema['required']
-                
+            logger.debug(f"对象类型 properties: {properties}")
+            if not properties:
+                return {}
+            # 优先处理 params.request
+            if 'params' in properties and isinstance(properties['params'], dict):
+                params_props = properties['params'].get('properties', {})
+                logger.debug(f"params properties: {params_props}")
+                if 'request' in params_props and isinstance(params_props['request'], dict):
+                    request_props = params_props['request'].get('properties', {})
+                    logger.debug(f"request properties: {request_props}")
+                    return {k: self._get_schema_value(v) for k, v in request_props.items()}
+            # fallback: 递归所有属性
+            return {k: self._get_schema_value(v) for k, v in properties.items()}
+            
         # 处理枚举类型
         if 'enum' in schema:
             parsed['enum'] = schema['enum']
@@ -236,11 +247,11 @@ class SwaggerParser:
 
             for path, methods in endpoints.items():
                 for method, info in methods.items():
-                    # 添加调试日志
-                    logger.debug(f"处理接口: {path} {method}")
-                    logger.debug(f"接口信息: {info}")
-
-                    # --- Logic for gen_path.yaml (api_dict) ---
+                    logger.info(f"\n{'='*50}")
+                    logger.info(f"开始解析接口: {path} {method}")
+                    logger.info(f"接口信息: {info}")
+                    
+                    # 处理接口路径信息
                     service_name = info.get('summary', '').strip()
                     if not service_name:
                         service_name = path.split('/')[-1] if '/' in path else path
@@ -255,30 +266,34 @@ class SwaggerParser:
                     if description:
                         api_info_for_gen_path['description'] = description
                     api_dict[service_name] = api_info_for_gen_path
-
-                    # --- Parameter processing for gen_api_params.yaml ---
+                    
                     # 获取请求体参数
                     request_params = {}
                     if 'requestBody' in info and info['requestBody']:
-                        content = info['requestBody'].get('content', {})
-                        logger.debug(f"请求体content: {content}")
-                        if 'application/json' in content:
-                            schema = content['application/json'].get('schema', {})
-                            logger.debug(f"请求体schema: {schema}")
-                            if schema:
-                                # 解析请求体schema
-                                request_params = self._get_schema_value(schema)
-                                logger.debug(f"解析后的请求参数: {request_params}")
+                        schema = info['requestBody'].get('schema', {})
+                        logger.info(f"请求体schema: {schema}")
+                        if schema:
+                            # 解析请求体schema
+                            request_params = self._get_schema_value(schema)
+                            logger.info(f"解析后的请求参数: {request_params}")
+
+                    # 处理URL参数
+                    for param in info.get('parameters', []):
+                        if param.get('in') == 'query':
+                            param_schema = param.get('schema', {})
+                            request_params[param['name']] = self._get_schema_value(param_schema)
 
                     # 构建参数结构
                     api_entry_data = {
                         'params': {
-                            'request': request_params
+                            'request': request_params or {}  # 确保不返回 None
                         }
                     }
                     
                     # 添加到参数字典
                     params_dict_for_yaml[path] = api_entry_data
+                    logger.info(f"最终生成的参数结构: {api_entry_data}")
+                    logger.info(f"{'='*50}\n")
             
             # --- Saving gen_path.yaml ---
             paths_info_to_save = {
@@ -334,27 +349,57 @@ class SwaggerParser:
         return request_dict_content
         
     def _get_schema_value(self, schema: dict) -> Any:
-        """
-        获取schema的完整结构或占位符
-        
-        Args:
-            schema: Swagger schema定义
-            
-        Returns:
-            Any: 解析后的值
-        """
         if not schema:
             return None
 
-        # 处理$ref引用
+        # 1. 处理扁平化结构（无 type/properties/$ref）
+        if isinstance(schema, dict) and not any(k in schema for k in ['type', 'properties', '$ref']):
+            result = {}
+            for key, value in schema.items():
+                if isinstance(value, dict):
+                    result[key] = self._get_schema_value(value)
+                elif isinstance(value, list):
+                    # 处理数组元素
+                    result[key] = [self._get_schema_value(item) if isinstance(item, dict) else item for item in value]
+                else:
+                    result[key] = value
+            return result
+
+        # 2. 标准 Swagger 结构
         if '$ref' in schema:
             ref_path = schema['$ref']
-            # 这里需要实现引用解析逻辑
+            logger.info(f"发现$ref引用: {ref_path}")
+            if ref_path.startswith('#/components/schemas/'):
+                ref_name = ref_path.split('/')[-1]
+                ref_schema = self.swagger_data.get('components', {}).get('schemas', {}).get(ref_name, {})
+                logger.info(f"解析$ref: {ref_path} => {ref_name}")
+                logger.info(f"引用schema内容: {ref_schema}")
+                return self._get_schema_value(ref_schema)
+            logger.warning(f"不支持的 $ref 路径: {ref_path}")
             return None
 
-        schema_type = schema.get('type')
-        
+        if 'properties' in schema:
+            properties = schema['properties']
+            logger.info(f"发现对象类型，properties: {properties}")
+            if not properties:
+                return {}
+            result = {}
+            for prop_name, prop_schema in properties.items():
+                logger.info(f"处理属性: {prop_name}, schema: {prop_schema}")
+                result[prop_name] = self._get_schema_value(prop_schema)
+            return result
+
+        if schema.get('type') == 'array':
+            items = schema.get('items', {})
+            logger.info(f"处理数组类型，items: {items}")
+            if not items:
+                return []
+            return [self._get_schema_value(items)]
+
         # 处理基本类型
+        schema_type = schema.get('type')
+        logger.info(f"处理类型: {schema_type}")
+
         if schema_type == 'string':
             return 'string'
         elif schema_type == 'integer':
@@ -363,29 +408,15 @@ class SwaggerParser:
             return 0.0
         elif schema_type == 'boolean':
             return False
-        elif schema_type == 'array':
-            items = schema.get('items', {})
-            return [self._get_schema_value(items)]
         elif schema_type == 'object':
             properties = schema.get('properties', {})
+            logger.info(f"处理对象类型，properties: {properties}")
             if not properties:
                 return {}
-            
             result = {}
-            for prop, prop_schema in properties.items():
-                # 特殊处理嵌套的 params.request 结构
-                if prop == 'params' and isinstance(prop_schema, dict):
-                    params_props = prop_schema.get('properties', {})
-                    if 'request' in params_props:
-                        request_schema = params_props['request']
-                        if isinstance(request_schema, dict):
-                            request_props = request_schema.get('properties', {})
-                            for req_prop, req_prop_schema in request_props.items():
-                                result[req_prop] = self._get_schema_value(req_prop_schema)
-                            continue
-                
-                # 处理其他属性
-                result[prop] = self._get_schema_value(prop_schema)
+            for prop_name, prop_schema in properties.items():
+                logger.info(f"处理对象属性: {prop_name}, schema: {prop_schema}")
+                result[prop_name] = self._get_schema_value(prop_schema)
             return result
             
         return None
