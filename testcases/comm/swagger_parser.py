@@ -302,7 +302,7 @@ class SwaggerParser:
                 'apis': api_dict
             }
             if output_path is None:
-                gen_path_output_file = Path(__file__).parent / "gen_path.yaml"
+                gen_path_output_file = Path(__file__).parent / "api_path.yaml"
             else:
                 gen_path_output_file = Path(output_path)
             gen_path_output_file.parent.mkdir(parents=True, exist_ok=True)
@@ -312,7 +312,7 @@ class SwaggerParser:
             
             # --- Saving gen_api_params.yaml ---
             if params_dict_for_yaml:
-                params_yaml_output_file = gen_path_output_file.parent / "gen_api_params.yaml"
+                params_yaml_output_file = gen_path_output_file.parent / "api_params.yaml"
                 final_params_yaml_structure = {'api_params': params_dict_for_yaml}
                 with open(params_yaml_output_file, 'w', encoding='utf-8') as f:
                     yaml.dump(final_params_yaml_structure, f, allow_unicode=True, sort_keys=False, default_flow_style=False)
@@ -386,7 +386,13 @@ class SwaggerParser:
             result = {}
             for prop_name, prop_schema in properties.items():
                 logger.info(f"处理属性: {prop_name}, schema: {prop_schema}")
-                result[prop_name] = self._get_schema_value(prop_schema)
+                # 处理分页参数
+                if prop_name == 'pageNo':
+                    result[prop_name] = 1
+                elif prop_name == 'pageSize':
+                    result[prop_name] = 20
+                else:
+                    result[prop_name] = self._get_schema_value(prop_schema)
             return result
 
         if schema.get('type') == 'array':
@@ -416,10 +422,39 @@ class SwaggerParser:
             result = {}
             for prop_name, prop_schema in properties.items():
                 logger.info(f"处理对象属性: {prop_name}, schema: {prop_schema}")
-                result[prop_name] = self._get_schema_value(prop_schema)
+                # 处理分页参数
+                if prop_name == 'pageNo':
+                    result[prop_name] = 1
+                elif prop_name == 'pageSize':
+                    result[prop_name] = 20
+                else:
+                    result[prop_name] = self._get_schema_value(prop_schema)
             return result
             
         return None
+        
+    def _get_default_value(self, prop_name: str, prop_schema: dict) -> Any:
+        """
+        获取属性的默认值
+        
+        Args:
+            prop_name: 属性名
+            prop_schema: 属性schema
+            
+        Returns:
+            Any: 默认值
+        """
+        # 处理分页参数
+        if prop_name == 'pageNo':
+            return 1
+        elif prop_name == 'pageSize':
+            return 20
+            
+        # 处理ID字段
+        if prop_name == 'id':
+            return 1
+                
+        return self._get_schema_value(prop_schema)
         
     def _create_module_index(self, api_list: list) -> dict:
         """创建按模块索引的字典"""
@@ -522,7 +557,7 @@ if __name__ == "__main__":
     )
     
     # 获取指定团队和模块的Swagger文档
-    swagger_doc = parser.fetch_swagger_doc("TERP", "ERP_GEN")
+    swagger_doc = parser.fetch_swagger_doc("TERP", "ERP_FIN")
     
     # 解析所有接口
     endpoints = parser.parse_endpoints()
