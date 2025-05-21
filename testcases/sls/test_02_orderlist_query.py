@@ -10,14 +10,14 @@ from pathlib import Path
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from testcases.comm.base_test import BaseTest, DecimalEncoder
+from testcases.comm.base_test import BaseTest,SQLInitializer
 from utils.exception_util import safe_api_call
 from utils.yaml_util import YamlUtil
 
 class TestOrderList(BaseTest):
     """销售订单列表测试类"""
     
-    def setup_method(cls):
+    def setup_method(cls, method=None):
         """每个测试方法执行前的准备工作
         
         Args:
@@ -37,37 +37,6 @@ class TestOrderList(BaseTest):
         
         # 前用例集所需参数
         cls.so_params = cls.yaml_util.read_yaml(cls.base_config_path).get("api_params", {})
-
-    
-    
-    def _build_order_list_query_data(self, conditionGroup=None) -> Dict[str, Any]:
-        """构建销售订单列表查询数据"""
-        # 更新查询参数
-        query_data = TestOrderList.common_params["pagination_query"]
-        query_data["params"]["request"]["pageable"]["conditionGroup"] = conditionGroup
-        
-        # 设置视图条件
-        query_data["params"]["request"]["pageable"]["systemParams"]["viewCondition"] = {
-            "conditionKey": "gYLG-UJ0RZbOCvMez5f7D",
-            "rightValues": {
-                "jYJ-mOKGX5JJkeGr274TK": [
-                    {
-                        "constValue": "SALES",
-                        "fieldType": "Enum",
-                        "type": "ConstValue",
-                        "valueType": "CONST"
-                    },
-                    {
-                        "constValue": "ASS",
-                        "fieldType": "Enum",
-                        "type": "ConstValue",
-                        "valueType": "CONST"
-                    }
-                ]
-            }
-        }
-        
-        return query_data
     
     @allure.title("查询销售订单列表")
     @allure.description("""
@@ -80,21 +49,12 @@ class TestOrderList(BaseTest):
     def test_01_query_orders(self):
         """测试查询销售订单列表"""
         
-        url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$sls_so_head_tr_PAGING_DATA_SERVICE"
-        
-        data = self._build_order_list_query_data()
+        url = self.so_path["查询订单"]
+        data = self.so_params[url]
         # 执行测试
-        self.log.info("\n准备发送请求...")
         response = self.http.post(url, json=data, description="查询销售订单列表")        
-        # 打印完整响应结构
-        self.log.info(f"\n完整响应结构: {json.dumps(response, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
-        if not response:
-            self.log.warning("未查询到订单数据")
-            return
-            
         # 获取第一个订单数据
         order = response.get("data", {}).get("data", []).get("data", [])[0]
-        self.log.info(f"\n第一个订单数据: {json.dumps(order, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
         
         # 提取测试数据并验证
         self.test_data["so_code"] = order.get("soCode")
@@ -113,11 +73,11 @@ class TestOrderList(BaseTest):
         self.assert_util.assert_id_exists(self.test_data["sls_org_id"], "销售组织ID")
         
         # 输出提取的测试数据
-        self.log.info(f"\n提取的测试数据: {json.dumps(self.test_data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
+        self.logger.info(f"\n提取的测试数据: {json.dumps(self.test_data,  ensure_ascii=False, indent=2)}")
         
         # 将测试数据保存到类属性，确保后续测试可以访问
         TestOrderList.test_data = self.test_data
-        self.log.info("\n已将测试数据保存到类属性")
+        self.logger.info("\n已将测试数据保存到类属性test_data")
 
     
     @allure.title("按订单编号查询销售订单列表")
@@ -134,10 +94,11 @@ class TestOrderList(BaseTest):
         # 确保第一个测试已经执行并获取了订单编号
         if not self.test_data.get("so_code"):
             error_msg = "未获取到订单编号，无法执行按订单编号查询测试"
-            self.log.error(error_msg)
+            self.logger.error(error_msg)
             pytest.fail(error_msg)
             
-        url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$sls_so_head_tr_PAGING_DATA_SERVICE"
+        url = self.so_path["查询订单"]
+        data = self.so_params[url]
         conditionGroup = {
                             "type": "ConditionGroup",
                             "logicOperator": "AND",
@@ -181,24 +142,20 @@ class TestOrderList(BaseTest):
                                 }
                             ]
                         }
-        data = self._build_order_list_query_data(conditionGroup)
+        data["params"]["request"]["pageable"]["conditionGroup"] =conditionGroup
         
         # 执行测试
-        self.log.info("\n准备发送请求...")
-        self.log.info(f"查询条件: 订单编号 = {self.test_data['so_code']}")
+        self.logger.info(f"查询条件: 订单编号 = {self.test_data['so_code']}")
 
         # 获取提取后的嵌套数据
         nested_data = self.http.post(url, json=data, description="按订单编号查询销售订单列表")
-        self.log.info(f"\n提取的嵌套数据: {json.dumps(nested_data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
-        
-        # 验证查询结果
-        assert nested_data, "未查询到匹配的订单数据"
-        
+        result =  nested_data.get("data", {}).get("data", []).get("data", [])
+        self.assert_util.assert_not_empty(result, "未查询到匹配的订单数据")
         # 验证所有返回的订单都匹配查询条件
-        for order in nested_data.get("data", {}).get("data", []).get("data", []):
+        for order in result:
             assert self.test_data["so_code"] in order.get("soCode", ""), f"订单编号 {order.get('soCode')} 不匹配查询条件 {self.test_data['so_code']}"
             
-        self.log.info(f"\n成功查询到 {len(nested_data)} 条匹配的订单数据")
+        self.logger.info(f"\n成功查询到 {len(result)} 条匹配的订单数据")
 
     @allure.title("按单据状态查询销售订单列表")
     @allure.description("""
@@ -215,7 +172,8 @@ class TestOrderList(BaseTest):
         Args:
             so_status: 订单状态，通过参数化传入
         """
-        url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$sls_so_head_tr_PAGING_DATA_SERVICE"
+        url = self.so_path["查询订单"]
+        data = self.so_params[url]
         
         # 构建按单据状态筛选的查询条件
         condition_group = {
@@ -289,28 +247,25 @@ class TestOrderList(BaseTest):
             ]
         }
         
-        data = self._build_order_list_query_data(condition_group)
+        data["params"]["request"]["pageable"]["conditionGroup"] = condition_group
         
         # 执行测试
-        self.log.info("\n准备发送请求...")
-        self.log.info(f"查询条件: 订单状态 = {so_status}")
+        self.logger.info(f"查询条件: 订单状态 = {so_status}")
         
         # 获取完整响应
         full_response = self.http.post(url, json=data, description=f"按单据状态 {so_status} 查询销售订单列表")
-        self.log.info(f"\n收到完整响应: {json.dumps(full_response, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
         
         # 获取提取后的嵌套数据
-        nested_data = self.http.post(url, json=data, description=f"按单据状态 {so_status} 查询销售订单列表")
-        self.log.info(f"\n提取的嵌套数据: {json.dumps(nested_data, cls=DecimalEncoder, ensure_ascii=False, indent=2)}")
+        result =  full_response.get("data", {}).get("data", []).get("data", [])
         
         # 验证查询结果
-        if not nested_data:
-            self.log.warning(f"\n警告：未查询到状态为 {so_status} 的订单数据")
+        if not result:
+            self.logger.warning(f"\n警告：未查询到状态为 {so_status} 的订单数据")
             return
-            
+        self.assert_util.assert_not_empty(result, "未查询到匹配的订单数据")
         self.assert_util.assert_response_success(full_response)
             
-        self.log.info(f"\n成功查询到 {len(nested_data)} 条状态为 {so_status} 的订单数据")
+        self.logger.info(f"\n成功查询到 {len(result)} 条状态为 {so_status} 的订单数据")
 
 
     @allure.title("按单据类型查询销售订单列表")
@@ -327,12 +282,11 @@ class TestOrderList(BaseTest):
         # 确保第一个测试已经执行并获取了订单类型ID
         if not self.test_data.get("so_type_id"):
             error_msg = "未获取到订单类型ID，无法执行按单据类型查询测试"
-            self.log.error(error_msg)
+            self.logger.error(error_msg)
             pytest.fail(error_msg)
             
-        url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$sls_so_head_tr_PAGING_DATA_SERVICE"
-        
-        # 构建按单据类型筛选的查询条件
+        url = self.so_path["查询订单"]
+        data = self.so_params[url]
         conditionGroup = {
             "type": "ConditionGroup",
             "logicOperator": "AND",
@@ -378,21 +332,19 @@ class TestOrderList(BaseTest):
                 }
             ]
         }
-        
-        data = self._build_order_list_query_data(conditionGroup)
-        
+        data["params"]["request"]["pageable"]["conditionGroup"] = conditionGroup
+        # 构建按单据类型筛选的查询条件
         # 执行测试
-        self.log.info("\n准备发送请求...")
-        self.log.info(f"查询条件: 订单类型ID = {self.test_data['so_type_id']}")
+        self.logger.info(f"查询条件: 订单类型ID = {self.test_data['so_type_id']}")
         
         # 获取提取后的嵌套数据
         nested_data = self.http.post(url, json=data, description="按单据类型查询销售订单列表")
-        
+        result =  nested_data.get("data", {}).get("data", []).get("data", [])
         # 验证查询结果
-        assert nested_data, "未查询到匹配的订单数据"
+        self.assert_util.assert_not_empty(result, "未查询到匹配的订单数据")
         
         # 验证所有返回的订单都匹配查询条件
-        for order in nested_data.get("data", {}).get("data", []).get("data", []):
+        for order in result:
             # 根据实际结构进行断言
             if isinstance(order.get("soTypeId"), dict):
                 # 如果soTypeId是对象，获取其id属性
@@ -412,7 +364,7 @@ class TestOrderList(BaseTest):
             # 进行断言
             assert order_so_type_id == expected_id, f"订单类型ID {order_so_type_id} 不匹配查询条件 {expected_id}"
             
-        self.log.info(f"\n成功查询到 {len(nested_data)} 条匹配的订单数据")
+        self.logger.info(f"\n成功查询到 {len(nested_data)} 条匹配的订单数据")
 
 
     @allure.title("按客户查询销售订单列表")
@@ -429,11 +381,11 @@ class TestOrderList(BaseTest):
         # 确保第一个测试已经执行并获取了客户ID
         if not self.test_data.get("cust_id"):
             error_msg = "未获取到客户ID，无法执行按客户查询测试"
-            self.log.error(error_msg)
+            self.logger.error(error_msg)
             pytest.fail(error_msg)
             
-        url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$sls_so_head_tr_PAGING_DATA_SERVICE"
-        
+        url = self.so_path["查询订单"]
+        data = self.so_params[url]
         # 构建按客户筛选的查询条件
         conditionGroup = {
             "type": "ConditionGroup",
@@ -480,21 +432,19 @@ class TestOrderList(BaseTest):
                 }
             ]
         }
-        
-        data = self._build_order_list_query_data(conditionGroup)
+        data["params"]["request"]["pageable"]["conditionGroup"] = conditionGroup
         
         # 执行测试
-        self.log.info("\n准备发送请求...")
-        self.log.info(f"查询条件: 客户ID = {self.test_data['cust_id']}")
+        self.logger.info(f"查询条件: 客户ID = {self.test_data['cust_id']}")
         
         # 获取提取后的嵌套数据
         nested_data = self.http.post(url, json=data, description="按客户查询销售订单列表")
-        
+        result =  nested_data.get("data", {}).get("data", []).get("data", [])
         # 验证查询结果
-        assert nested_data, "未查询到匹配的订单数据"
+        self.assert_util.assert_not_empty(result, "未查询到匹配的订单数据")
         
         # 验证所有返回的订单都匹配查询条件
-        for order in nested_data.get("data", {}).get("data", []).get("data", []):
+        for order in result:
             # 根据实际结构进行断言
             if isinstance(order.get("custId"), dict):
                 # 如果custId是对象，获取其id属性
@@ -514,7 +464,7 @@ class TestOrderList(BaseTest):
             # 进行断言
             assert order_cust_id == expected_id, f"客户ID {order_cust_id} 不匹配查询条件 {expected_id}"
             
-        self.log.info(f"\n成功查询到 {len(nested_data)} 条匹配的订单数据")
+        self.logger.info(f"\n成功查询到 {len(nested_data)} 条匹配的订单数据")
 
 if __name__ == "__main__":
     test = TestOrderList()
