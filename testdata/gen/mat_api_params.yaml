@@ -5,88 +5,40 @@ api_params:
     params:
       request:
         pageable:
-          pageNo: 1  # 页码
-          pageSize: 20  # 每页大小
-          keyword: ""  # 搜索关键字
-          conditionGroup: null  # 查询条件组
-          sortOrders:  # 排序条件
-            - fieldAlias: "updatedAt"  # 排序字段
-              id: "updatedAt-0"  # 排序ID
-              sortType: "DESC"  # 排序方式
-        cateId: null  # 分类ID
+          pageNo: 1
+          pageSize: 20
+          keyword: ""
+          conditionGroup: null
+          sortOrders:
+            - fieldAlias: "updatedAt"
+              id: "updatedAt-0"
+              sortType: "DESC"
+        cateId: null
 
   # 新增物料
   "/api/trantor/service/engine/execute/ERP_GEN$GEN_MD_MAT_CLEAR_CACHE_BY_IDS_EVENT_SERVICE?tmodule=ERP_SCM":
     params:
       request:
-        imageUrl: null
-        matCode: "MAT20250520123123"
-        matName: "sssq11qq"
-        cateId: 
-          id: 2001001
-        genMatTypeCfId:
-          id: 2000001
-          matTypeCode: "FINP"
-          matTypeName: "成品"
-          syncNode: []
-          syncParty: []
-          createdBy:
-            id: 40
-          updatedBy:
-            id: 50
-          createdAt: 1685107017000
-          updatedAt: 1692600203000
-          version: 0
-          deleted: 0
-          originOrgId: 0
-          requestId: null
-        baseUomId:
-          id: 2000001
-          uomType: "QTY"
-          uomCode: "PC"
-          uomDesc: "个"
-          createdBy:
-            id: 490353660330053
-          updatedBy:
-            id: 490997387587717
-          createdAt: 1703143129000
-          updatedAt: 1706501769000
-          version: 2
-          deleted: 0
-          originOrgId: 0
-          requestId: null
-        matAbbr: "wljc"
-        matCodeExt: "wbwlbm"
-        brandId: null
-        isKitSls: false
-        bomUseId: null
-        isCompleteSetDel: false
-        id: null
-        specModel: null
-        bizStatus: "SALE"
-        remark: null
-        status: "INACTIVE"
-        labelList: null
-        weightUomId: null
-        netWeight: null
-        grossWeight: null
-        volumUomId: null
-        matVolum: null
-        lengthUnitId: null
-        length: 0
-        width: 0
-        height: 0
-        purchaseReferPrice: null
-        shelfLife: null
-        atpGroupId: null
-        isAutoCountPlan: false
-        matCharaClassList: []
-        matSlsId: null
-        matPurId: null
-        matInvId: null
-        matPrd: null
-        matMrpId: null
-        matWmIds: null
-        uomFormulaTypeId: null
-        matRelList: null
-        matAttach: null
+        matCode: ${mat_code}  # 动态替换的物料编码
+        matName: ${mat_name}  # 动态替换的物料名称
+        status: "INACTIVE"  # 初始状态：未启用
+        bizStatus: "SALE"  # 业务状态：销售
+        baseUomId: 2004001  # 基本单位：件
+        genMatTypeCfId: 2000001  # 物料类型：成品
+        remark: ${remark}  # 动态替换的备注
+
+  # 启用物料
+  "/api/trantor/service/engine/execute/ERP_GEN$GEN_MAT_ENABLED_CLEAR_CACHE_EVENT_SERVICE?tmodule=ERP_SCM":
+    params:
+      request:
+        id: ${mat_id}  # 动态替换的物料ID
+        matCode: ${mat_code}  # 动态替换的物料编码
+        status: "ACTIVE"  # 启用状态
+
+  # 停用物料
+  "/api/trantor/service/engine/execute/ERP_GEN$GEN_MAT_DISSBLED_CLEAR_CACHE_EVENT_SERVICE?tmodule=ERP_SCM":
+    params:
+      request:
+        id: ${mat_id}  # 动态替换的物料ID
+        matCode: ${mat_code}  # 动态替换的物料编码
+        status: "ENABLED"  # 停用状态

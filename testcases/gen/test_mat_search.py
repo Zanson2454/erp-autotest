@@ -1,82 +1,117 @@
 import os
 import sys
+import allure
 from pathlib import Path
 from testcases.comm.base_test import BaseTest
 from utils.yaml_util import YamlUtil
 
 # 添加项目根目录到 Python 路径，确保可以正确导入项目模块
-project_root = Path(__file__).resolve().parent.parent.parent
+project_root = Path(__file__).resolve().parent.parent.parent  # 值: /Users/shengqiaowei/Desktop/erp-autotest
 sys.path.insert(0, str(project_root))
 
+@allure.epic("ERP通用基础模块")
+@allure.feature("物料管理")
 class TestMatSearch(BaseTest):
-    """物料搜索测试用例类
-    
-    继承自BaseTest基类，用于测试物料列表查询功能
-    包含物料列表的查询和验证逻辑
-    """
-    
     @classmethod
     def setup_class(cls):
-        """测试类初始化方法
-        
-        执行以下初始化操作：
-        1. 调用父类的初始化方法
-        2. 初始化配置文件路径
-        3. 读取接口路径和参数配置
-        """
         # 调用父类的初始化方法
         super().setup_class()
         
         # 初始化配置文件路径和YAML工具
-        # testdata/gen/mat.yaml: 存储接口路径配置
-        # testdata/gen/mat_api_params.yaml: 存储接口参数配置
         cls.base_api_path = Path(project_root) / "testdata" / "gen" / "mat.yaml"
+        # 值: /Users/shengqiaowei/Desktop/erp-autotest/testdata/gen/mat.yaml
+        
         cls.base_config_path = Path(project_root) / "testdata" / "gen" / "mat_api_params.yaml"
+        # 值: /Users/shengqiaowei/Desktop/erp-autotest/testdata/gen/mat_api_params.yaml
+        
         cls.yaml_util = YamlUtil()
         
         # 从YAML文件读取接口路径和参数
-        # mat_path: 获取物料管理相关的接口路径
-        # mat_params: 获取接口调用需要的参数
         cls.mat_path = cls.yaml_util.read_yaml(cls.base_api_path)["通用基础"]["物料管理"]
+        # mat_path值示例: {
+        #   "物料主数据默认页面": "/api/trantor/service/engine/execute/ERP_GEN$gen_mat_md_PAGING_DATA_SERVICE?tmodule=ERP_SCM"
+        # }
+        
         cls.mat_params = cls.yaml_util.read_yaml(cls.base_config_path).get("api_params", {})
+        # mat_params值示例: {
+        #   "/api/.../gen_mat_md_PAGING_DATA_SERVICE?tmodule=ERP_SCM": {
+        #     "params": {
+        #       "request": {
+        #         "pageable": {
+        #           "pageNo": 1,
+        #           "pageSize": 20,
+        #           "keyword": "",
+        #           "conditionGroup": None,
+        #           "sortOrders": [{"fieldAlias": "updatedAt", "id": "updatedAt-0", "sortType": "DESC"}]
+        #         },
+        #         "cateId": None
+        #       }
+        #     }
+        #   }
+        # }
         
         cls.logger.info("测试类初始化完成")
 
+    @allure.title("物料列表查询")
+    @allure.description("测试步骤：物料列表查询")
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_mat_search(self):
-        """物料列表查询测试方法
-        
-        测试步骤：
-        1. 获取物料查询接口的URL和请求参数
-        2. 发送POST请求查询物料列表
-        3. 验证响应结果的正确性
-        
-        异常处理：
-        - 捕获并记录请求过程中的异常
-        - 记录错误日志并向上抛出异常
-        """
         try:
             # 1. 获取接口路径和参数
-            # 从配置中获取物料主数据查询接口的URL和对应的请求参数
             url = self.mat_path["物料主数据默认页面"]
+            # url作为key，用于从mat_params中获取对应的请求参数
+            self.logger.debug(f"接口URL: {url}")
+            self.logger.debug(f"mat_params原始数据: {self.mat_params}")
+            
+            # 使用url作为key从mat_params中获取对应的参数配置，如果获取不到就返回{}
             data = self.mat_params.get(url, {})
+            self.logger.debug(f"获取到的请求参数: {data}")
             
             # 2. 发送POST请求并获取响应
-            # 调用http工具发送请求，并从响应中提取data字段
             result = self.http.post(url, json=data, description="查询物料列表")
+            #result里的值先取第一层data，再取第二层data，data是参数名，拿到第三层data才是我们想要的数据
             response_data = result.get("data", {}).get("data", {})
+            # response_data值示例: {
+            #   "data": [
+            #     {
+            #       "matCode": "W1790",
+            #       "matName": "XB三力士普通带001",
+            #       "genMatTypeCfId": {"matTypeName": "成品", "id": 2000001},
+            #       "baseUomId": {"uomDesc": "件", "id": 2004001},
+            #       "status": "ENABLED",
+            #       "bizStatus": "SALE",
+            #       ...
+            #     },
+            #     ...
+            #   ],
+            #   "total": 330
+            # }
             
-            # 3. 验证响应结果
-            # 3.1 验证请求是否成功
+            # 3. 验证响应结果，调用工具类判断是否=200 和 success是否=true
             self.assert_util.assert_response_success(result)
+            # 验证result["success"] == true
             
-            # 3.2 验证返回的total字段（总记录数）不为空且大于等于0
-            total = response_data.get("total")
+            # 验证返回的total字段（总记录数）不为空且大于0
+            total = response_data.get("total")  # 值示例: 330
             assert total is not None and total > 0, f"物料总数异常: {total}"
+            
+            # 验证返回的数据列表不为空
+            data_list = response_data.get("data", [])  
+            # data_list值示例: [
+            #   {
+            #     "matCode": "W1790",
+            #     "matName": "XB三力士普通带001",
+            #     "status": "ENABLED",
+            #     "bizStatus": "SALE",
+            #     ...
+            #   },
+            #   ...
+            # ]
+            assert len(data_list) > 0, "返回的物料列表为空"
             
             self.logger.info(f"物料列表查询完成，总记录数: {total}")
             
         except Exception as e:
-            # 异常处理：记录错误日志并向上抛出异常
             self.logger.error(f"物料列表查询失败: {str(e)}")
             raise
 
