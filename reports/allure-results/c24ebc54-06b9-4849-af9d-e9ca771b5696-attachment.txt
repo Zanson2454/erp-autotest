@@ -1,6 +1,0 @@
-2025-05-08 21:27:50.780 | INFO     | utils.LogUtil:info:33 - 开始测试: test_02_query_order_type_detail
-2025-05-08 21:27:50.783 | INFO     | utils.LogUtil:info:33 - 发送请求: 查询订单类型
-2025-05-08 21:27:50.860 | INFO     | erp_autotest.testcases.sls.test_00_so_config_check:test_01_query_order_type:92 - 找到STND记录, ID: 2101001
-2025-05-08 21:27:50.861 | INFO     | erp_autotest.testcases.sls.test_00_so_config_check:test_02_query_order_type_detail:114 - self.so_stnd_id: 2101001
-2025-05-08 21:27:50.862 | INFO     | utils.LogUtil:info:33 - 发送请求: 查询订单类型详情
-2025-05-08 21:27:50.928 | INFO     | erp_autotest.testcases.sls.test_00_so_config_check:test_02_query_order_type_detail:136 - response: {'soTypeCode': 'STND', 'soTypeName': '标准销售', 'partnerProcedureHeadRef': {'id': 14005002}, 'attachmentProcedureHeadRef': None, 'status': 'ENABLED', 'soTypeDesc': '标准销售', 'genTextTypeRef': None, 'isRev': False, 'isSubmitApproval': True, 'isModifyApproval': False, 'currExchangeRateType': {'id': 2000001}, 'btClass': 'SALES', 'effectiveDays': None, 'syncPrice': False, 'isDefault': False, 'id': 2101001, 'createdBy': {'id': 27}, 'updatedBy': {'id': 477234922377861}, 'createdAt': 1685108645000, 'updatedAt': 1745892294000, 'version': 68, 'deleted': 0, 'originOrgId': 0}
