@@ -2,7 +2,7 @@ version: "2.0"
 services:
   test-api:
     ports:
-      - port: 63261
+      - port: 8000
         expose: true
     resources:
       cpu: 0.5
