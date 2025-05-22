@@ -1,0 +1,146 @@
+{
+    "version": "1.0.0",
+    "description": "Master Control Program Configuration",
+    "tools": {
+        "assert": {
+            "class": "AssertHelper",
+            "module": "utils.assert_util",
+            "description": "断言工具类，提供各种断言方法",
+            "methods": {
+                "assert_id_exists": "断言ID存在",
+                "assert_eq": "断言两个值相等",
+                "assert_not_eq": "断言两个值不相等",
+                "assert_response_success": "断言响应成功",
+                "assert_contains": "验证元素存在于容器",
+                "assert_not_contains": "验证元素不存在于容器",
+                "assert_response_time": "验证接口响应时间",
+                "assert_not_empty": "断言值不为空"
+            }
+        },
+        "cache": {
+            "class": "CacheUtil",
+            "module": "utils.cache_util",
+            "description": "缓存工具类，提供缓存数据的读写功能",
+            "methods": {
+                "get": "获取缓存数据",
+                "set": "设置缓存数据",
+                "exists": "检查缓存是否存在且未过期"
+            }
+        },
+        "exception": {
+            "class": "TestException",
+            "module": "utils.exception_util",
+            "description": "异常处理工具类，提供异常处理装饰器",
+            "decorators": {
+                "handle_exception": "通用异常处理装饰器",
+                "safe_api_call": "API调用安全处理装饰器",
+                "safe_db_operation": "数据库操作安全处理装饰器",
+                "validate_data": "数据验证装饰器",
+                "safe_config_load": "配置加载安全处理装饰器"
+            }
+        },
+        "file": {
+            "class": "FileReader",
+            "module": "utils.file_util",
+            "description": "文件读取工具类，支持Excel和CSV文件",
+            "methods": {
+                "read_file": "根据文件后缀名自动选择读取方式",
+                "read_excel_sheet": "读取Excel文件的指定工作表",
+                "read_csv_with_encoding": "使用指定编码读取CSV文件",
+                "read_excel_columns": "读取Excel文件的列名",
+                "read_excel_rows": "读取Excel所有行数据"
+            }
+        },
+        "log": {
+            "class": "Loggers",
+            "module": "utils.log_util",
+            "description": "日志工具类，提供统一的日志记录功能",
+            "methods": {
+                "info": "记录信息级别日志",
+                "debug": "记录调试级别日志",
+                "warning": "记录警告级别日志",
+                "error": "记录错误级别日志",
+                "critical": "记录严重错误级别日志",
+                "exception": "记录异常日志"
+            }
+        },
+        "mock": {
+            "class": "MockData",
+            "module": "utils.mock_util",
+            "description": "模拟数据生成工具类",
+            "methods": {
+                "get_mock_name": "生成中文姓名",
+                "get_mock_address": "生成详细地址",
+                "get_mock_phone_number": "生成手机号",
+                "get_mock_ssn": "生成身份证号",
+                "get_mock_email": "生成邮箱地址",
+                "get_mock_company": "生成公司名称",
+                "get_mock_bank_info": "生成银行信息",
+                "get_mock_date": "生成随机日期"
+            }
+        },
+        "mysql": {
+            "class": "DBManager",
+            "module": "utils.mysql_util",
+            "description": "数据库管理器，提供基本的数据库操作功能",
+            "methods": {
+                "query": "执行查询SQL",
+                "insert": "插入数据",
+                "update": "更新数据",
+                "delete": "删除数据"
+            }
+        },
+        "report": {
+            "class": "ReportEnhancer",
+            "module": "utils.report_util",
+            "description": "测试报告增强类，用于丰富测试报告内容",
+            "methods": {
+                "set_business_context": "设置业务上下文",
+                "add_test_step": "添加测试步骤",
+                "add_screenshot": "添加截图",
+                "add_metrics": "添加性能指标",
+                "set_test_status": "设置测试状态"
+            }
+        },
+        "request": {
+            "class": "HttpUtil",
+            "module": "utils.request_util",
+            "description": "HTTP工具类，提供增强的HTTP请求功能",
+            "methods": {
+                "get": "发送GET请求",
+                "post": "发送POST请求",
+                "put": "发送PUT请求",
+                "delete": "发送DELETE请求",
+                "request": "发送HTTP请求"
+            }
+        },
+        "response": {
+            "class": "ResponseUtil",
+            "module": "utils.response_util",
+            "description": "响应处理工具类",
+            "methods": {
+                "process_response": "处理响应数据"
+            }
+        },
+        "yaml": {
+            "class": "YamlUtil",
+            "module": "utils.yaml_util",
+            "description": "YAML配置管理工具类",
+            "methods": {
+                "read_yaml": "读取YAML文件"
+            }
+        }
+    },
+    "dependencies": {
+        "required_packages": [
+            "requests",
+            "pymysql",
+            "dbutils",
+            "pandas",
+            "faker",
+            "loguru",
+            "allure-pytest",
+            "pyyaml"
+        ]
+    }
+} 

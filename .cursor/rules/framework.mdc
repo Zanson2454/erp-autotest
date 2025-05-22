@@ -1,0 +1,55 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 测试框架与工具规范
+
+## 代码实现规范
+[always]
+1. 断言规范：
+   - 使用 assert_util 中的断言方法
+   - 每个断言都要有明确的错误信息
+   - 断言要验证关键业务逻辑
+   - 断言要验证数据完整性
+
+2. 日志记录规范：
+   - 使用 logger 记录关键操作
+   - 记录测试用例的执行步骤
+   - 记录测试数据的准备和清理
+   - 记录断言的结果
+
+3. 异常处理规范：
+   - 使用 safe_api_call 装饰器处理异常
+   - 捕获并记录所有可能的异常
+   - 提供清晰的错误信息
+   - 确保测试环境清理
+
+4. 测试数据清理规范：
+   - 在 teardown 中清理测试数据
+   - 使用 try-finally 确保清理执行
+   - 记录清理操作的结果
+   - 验证清理是否成功
+
+# 测试框架使用规范
+
+## pytest fixture 使用规范
+[always]
+- 使用 fixture 管理测试数据
+- 使用 fixture 管理测试环境
+- 使用 fixture 管理测试资源
+- 使用 fixture 的 scope 控制生命周期
+
+## allure 报告生成规范
+[recommended]
+- 使用 allure.title 标记测试标题
+- 使用 allure.description 描述测试步骤
+- 使用 allure.severity 标记测试优先级
+- 使用 allure.step 标记测试步骤
+
+## pytest-xdist 并行测试规范
+[recommended]
+- 使用 pytest-xdist 实现并行测试
+- 控制并行测试的进程数
+- 确保测试用例的独立性
+- 处理并行测试的资源竞争
