@@ -167,7 +167,7 @@ class SwaggerParser:
                 logger.debug(f"递归解析 $ref: {ref_path} => {ref_name}, schema: {ref_schema}")
                 return self._get_schema_value(ref_schema)
             logger.warning(f"不支持的 $ref 路径: {ref_path}")
-            return None
+            return {}
             
         parsed = {
             'type': schema.get('type'),
@@ -350,7 +350,7 @@ class SwaggerParser:
         
     def _get_schema_value(self, schema: dict) -> Any:
         if not schema:
-            return None
+            return {}
 
         # 1. 处理扁平化结构（无 type/properties/$ref）
         if isinstance(schema, dict) and not any(k in schema for k in ['type', 'properties', '$ref']):
@@ -376,7 +376,7 @@ class SwaggerParser:
                 logger.info(f"引用schema内容: {ref_schema}")
                 return self._get_schema_value(ref_schema)
             logger.warning(f"不支持的 $ref 路径: {ref_path}")
-            return None
+            return {}
 
         if 'properties' in schema:
             properties = schema['properties']
@@ -399,7 +399,7 @@ class SwaggerParser:
             items = schema.get('items', {})
             logger.info(f"处理数组类型，items: {items}")
             if not items:
-                return []
+                return [{}]
             return [self._get_schema_value(items)]
 
         # 处理基本类型
@@ -409,29 +409,15 @@ class SwaggerParser:
         if schema_type == 'string':
             return 'string'
         elif schema_type == 'integer':
-            return 0
+            return 0  # 使用整数
         elif schema_type == 'number':
-            return 0.0
+            return 0  # 使用整数
         elif schema_type == 'boolean':
             return False
         elif schema_type == 'object':
-            properties = schema.get('properties', {})
-            logger.info(f"处理对象类型，properties: {properties}")
-            if not properties:
-                return {}
-            result = {}
-            for prop_name, prop_schema in properties.items():
-                logger.info(f"处理对象属性: {prop_name}, schema: {prop_schema}")
-                # 处理分页参数
-                if prop_name == 'pageNo':
-                    result[prop_name] = 1
-                elif prop_name == 'pageSize':
-                    result[prop_name] = 20
-                else:
-                    result[prop_name] = self._get_schema_value(prop_schema)
-            return result
+            return {}
             
-        return None
+        return {}
         
     def _get_default_value(self, prop_name: str, prop_schema: dict) -> Any:
         """
@@ -557,7 +543,7 @@ if __name__ == "__main__":
     )
     
     # 获取指定团队和模块的Swagger文档
-    swagger_doc = parser.fetch_swagger_doc("TERP", "ERP_FIN")
+    swagger_doc = parser.fetch_swagger_doc("TERP", "ERP_GEN")
     
     # 解析所有接口
     endpoints = parser.parse_endpoints()
