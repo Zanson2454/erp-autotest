@@ -15,7 +15,7 @@ from testcases.gen import GenBaseTest
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-@allure.epic("ERP通用基础模块")
+@allure.epic("通用基础")
 @allure.feature("物料管理")
 class TestMatAdd(GenBaseTest):
     """物料管理测试类"""
@@ -41,16 +41,10 @@ class TestMatAdd(GenBaseTest):
         cls.logger.info("物料管理测试类初始化完成")
 
     @pytest.mark.run(order=1)
-    @allure.title("新增物料")
+    @allure.story("新增物料")
     @allure.description("测试步骤：1.生成物料基础信息 2.调用新增接口 3.验证响应结果")
     @allure.severity(allure.severity_level.BLOCKER)
     def test_mat_add(self):
-        """
-        新增物料测试用例
-        1. 生成随机编码和名称
-        2. 调用新增API
-        3. 验证响应并保存ID信息
-        """
         try:
             # 1. 生成物料基础信息
             # 使用时间戳和随机数生成唯一编码和名称
@@ -103,16 +97,10 @@ class TestMatAdd(GenBaseTest):
             raise
 
     @pytest.mark.run(order=2)
-    @allure.title("启用物料")
+    @allure.story("启用物料")
     @allure.description("测试步骤：1.验证前置条件 2.调用启用接口 3.验证响应结果")
     @allure.severity(allure.severity_level.CRITICAL)
     def test_mat_enable(self):
-        """
-        启用物料测试用例
-        1. 验证前置条件
-        2. 调用启用API
-        3. 验证响应结果
-        """
         try:
             # 1. 验证前置条件 - 确保mat_info中有数据
             assert TestMatAdd.mat_info.get("mat_id"), "未找到待启用的物料ID，请先执行新增物料测试"
@@ -142,16 +130,10 @@ class TestMatAdd(GenBaseTest):
             raise
 
     @pytest.mark.run(order=3)
-    @allure.title("停用物料")
+    @allure.story("停用物料")
     @allure.description("测试步骤：1.验证前置条件 2.调用停用接口 3.验证响应结果")
     @allure.severity(allure.severity_level.CRITICAL)
     def test_mat_disable(self):
-        """
-        停用物料测试用例
-        1. 验证前置条件
-        2. 调用停用API
-        3. 验证响应结果
-        """
         try:
             # 1. 验证前置条件 - 确保mat_info中有数据
             assert TestMatAdd.mat_info.get("mat_id"), "未找到待停用的物料ID，请先执行新增物料测试"

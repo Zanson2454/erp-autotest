@@ -2,7 +2,6 @@
 合作伙伴模块测试用例
 包含新增、查询、启用、停用、删除等操作
 """
-
 import sys
 import time
 import random
@@ -15,42 +14,26 @@ from testcases.gen import GenBaseTest
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-@allure.epic("ERP通用基础模块")
+@allure.epic("通用基础")
 @allure.feature("合作伙伴管理")
 class TestPartners(GenBaseTest):
-    """合作伙伴测试类"""
-    
     # 保存合作伙伴相关信息的类变量，所有测试用例共享
     partner_info = {}
-    
     @classmethod
     def setup_class(cls):
-        """
-        测试类初始化
-        1. 调用父类初始化方法
-        2. 获取合作伙伴模块的API配置
-        """
         # 调用GenBaseTest的初始化方法
         # 这会初始化logger、http客户端、断言工具和YAML处理器等
         super().setup_class()
-        
         # 获取合作伙伴相关的API路径配置
         # partner_path内容示例: {'新增合作伙伴': '/api/xxx/yyy', '查询合作伙伴': '/api/xxx/zzz', ...}
         cls.partner_path = cls.get_module_paths("通用基础", "合作伙伴")
-        
         cls.logger.info("合作伙伴测试类初始化完成")
 
     @pytest.mark.run(order=1)
-    @allure.title("新增合作伙伴")
+    @allure.story("新增合作伙伴")
     @allure.description("测试步骤：1.生成合作伙伴基础信息 2.调用新增接口 3.验证响应结果")
     @allure.severity(allure.severity_level.BLOCKER)
     def test_partner_add(self):
-        """
-        新增合作伙伴测试用例
-        1. 生成随机编码和名称
-        2. 调用新增API
-        3. 验证响应并保存ID信息
-        """
         try:
             # 1. 生成合作伙伴基础信息
             # 使用时间戳和随机数生成唯一编码和名称
@@ -101,16 +84,10 @@ class TestPartners(GenBaseTest):
             raise
 
     @pytest.mark.run(order=2)
-    @allure.title("查询合作伙伴")
+    @allure.story("查询合作伙伴")
     @allure.description("测试步骤：1.使用新增的合作伙伴编码查询 2.验证查询结果")
     @allure.severity(allure.severity_level.NORMAL)
     def test_partner_search(self):
-        """
-        查询合作伙伴测试用例
-        1. 验证前置条件
-        2. 调用查询API
-        3. 验证查询结果包含新增的合作伙伴
-        """
         try:
             # 1. 验证前置条件 - 确保partner_info中有数据
             # 检查partner_code是否存在，如果不存在则测试失败
@@ -160,16 +137,10 @@ class TestPartners(GenBaseTest):
             raise
 
     @pytest.mark.run(order=3)
-    @allure.title("启用合作伙伴")
+    @allure.story("启用合作伙伴")
     @allure.description("测试步骤：1.使用合作伙伴ID调用启用接口 2.验证响应结果")
     @allure.severity(allure.severity_level.BLOCKER) 
     def test_partner_enable(self):
-        """
-        启用合作伙伴测试用例
-        1. 验证前置条件
-        2. 调用启用API
-        3. 验证响应结果
-        """
         try:
             # 1. 验证前置条件 - 确保partner_info中有数据
             assert TestPartners.partner_info.get("partner_id"), "未找到要启用的合作伙伴ID，请先执行新增用例"
@@ -198,16 +169,10 @@ class TestPartners(GenBaseTest):
             raise
 
     @pytest.mark.run(order=4)
-    @allure.title("停用合作伙伴")
+    @allure.story("停用合作伙伴")
     @allure.description("测试步骤：1.使用合作伙伴ID调用停用接口 2.验证响应结果")
     @allure.severity(allure.severity_level.BLOCKER) 
     def test_partner_disable(self):
-        """
-        停用合作伙伴测试用例
-        1. 验证前置条件
-        2. 调用停用API
-        3. 验证响应结果
-        """
         try:
             # 1. 验证前置条件 - 确保partner_info中有数据
             assert TestPartners.partner_info.get("partner_id"), "未找到要停用的合作伙伴ID，请先执行新增用例"
@@ -236,17 +201,10 @@ class TestPartners(GenBaseTest):
             raise
 
     @pytest.mark.run(order=5)
-    @allure.title("删除合作伙伴")
+    @allure.story("删除合作伙伴")
     @allure.description("测试步骤：1.使用合作伙伴ID调用删除接口 2.验证响应结果")
     @allure.severity(allure.severity_level.BLOCKER) 
     def test_partner_delete(self):
-        """
-        删除合作伙伴测试用例
-        1. 验证前置条件
-        2. 调用删除API
-        3. 验证响应结果
-        4. 清理测试数据
-        """
         try:
             # 1. 验证前置条件 - 确保partner_info中有数据
             assert TestPartners.partner_info.get("partner_id"), "未找到要删除的合作伙伴ID，请先执行新增用例"

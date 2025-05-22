@@ -9,8 +9,8 @@ from utils.yaml_util import YamlUtil
 project_root = Path(__file__).resolve().parent.parent.parent  # 值: /Users/shengqiaowei/Desktop/erp-autotest
 sys.path.insert(0, str(project_root))
 
-@allure.epic("ERP通用基础模块")
-@allure.feature("物料管理")
+@allure.epic("通用基础")
+@allure.feature("物料管理_物料列表查询")
 class TestMatSearch(BaseTest):
     @classmethod
     def setup_class(cls):
@@ -52,7 +52,7 @@ class TestMatSearch(BaseTest):
         
         cls.logger.info("测试类初始化完成")
 
-    @allure.title("物料列表查询")
+    @allure.story("物料列表查询")
     @allure.description("测试步骤：物料列表查询")
     @allure.severity(allure.severity_level.CRITICAL)
     def test_mat_search(self):
