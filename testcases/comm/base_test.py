@@ -85,7 +85,7 @@ class EnvInit:
     def _load_env(self):
         """加载.env文件中的环境变量"""
         if self.env_file.exists():
-            load_dotenv(self.env_file)
+            load_dotenv(self.env_file, override=True)  # 强制覆盖已存在的环境变量
             logger.info(f"已加载环境变量文件: {self.env_file}")
         else:
             logger.warning(f"环境变量文件不存在: {self.env_file}")
