@@ -12,4 +12,4 @@ RUN pip install -r /app/requirements.txt -i https://pypi.mirrors.ustc.edu.cn/sim
 COPY run_test.sh /app/run_test.sh
 RUN chmod +x /app/run_test.sh
 
-CMD cd /app && ls & uvicorn main:app --reload --host 0.0.0.0 --port 8000
+CMD cd /app && ls && uvicorn main:app --reload --host 0.0.0.0 --port 8000
