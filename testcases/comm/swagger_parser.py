@@ -232,7 +232,7 @@ class SwaggerParser:
             logger.error(f"保存YAML文件失败: {str(e)}")
             raise
 
-    def save_paths_to_yaml(self, endpoints: Dict[str, Dict[str, Any]], output_path: str = None) -> None:
+    def save_paths_to_yaml(self, endpoints: Dict[str, Dict[str, Any]], output_path: str = None, module: str = None) -> None:
         """
         将接口路径信息保存到YAML文件，采用扁平化结构，便于调用和阅读
         同时将详细参数信息保存到 gen_api_params.yaml
@@ -240,6 +240,7 @@ class SwaggerParser:
         Args:
             endpoints: 解析后的接口信息
             output_path: gen_path.yaml的输出文件路径，默认为swagger_parser.py同级目录下的gen_path.yaml
+            module: 模块名称，用于生成文件名前缀
         """
         try:
             api_dict = {}  # For gen_path.yaml
@@ -295,6 +296,15 @@ class SwaggerParser:
                     logger.info(f"最终生成的参数结构: {api_entry_data}")
                     logger.info(f"{'='*50}\n")
             
+            # 处理模块名称生成文件名前缀
+            if module:
+                if '_' in module:
+                    prefix = module.split('_')[-1].lower()
+                else:
+                    prefix = module.lower()
+            else:
+                prefix = 'api'  # 默认前缀
+            
             # --- Saving gen_path.yaml ---
             paths_info_to_save = {
                 'version': '1.0',
@@ -302,7 +312,7 @@ class SwaggerParser:
                 'apis': api_dict
             }
             if output_path is None:
-                gen_path_output_file = Path(__file__).parent / "api_path.yaml"
+                gen_path_output_file = Path(__file__).parent / f"{prefix}_api_path.yaml"
             else:
                 gen_path_output_file = Path(output_path)
             gen_path_output_file.parent.mkdir(parents=True, exist_ok=True)
@@ -312,7 +322,7 @@ class SwaggerParser:
             
             # --- Saving gen_api_params.yaml ---
             if params_dict_for_yaml:
-                params_yaml_output_file = gen_path_output_file.parent / "api_params.yaml"
+                params_yaml_output_file = gen_path_output_file.parent / f"{prefix}_api_params.yaml"
                 final_params_yaml_structure = {'api_params': params_dict_for_yaml}
                 with open(params_yaml_output_file, 'w', encoding='utf-8') as f:
                     yaml.dump(final_params_yaml_structure, f, allow_unicode=True, sort_keys=False, default_flow_style=False)
@@ -543,10 +553,10 @@ if __name__ == "__main__":
     )
     
     # 获取指定团队和模块的Swagger文档
-    swagger_doc = parser.fetch_swagger_doc("TERP", "ERP_GEN")
+    swagger_doc = parser.fetch_swagger_doc("TERP", "ERP_FIN")
     
     # 解析所有接口
     endpoints = parser.parse_endpoints()
     
     # 保存路径信息到gen_path.yaml
-    parser.save_paths_to_yaml(endpoints) 
+    parser.save_paths_to_yaml(endpoints, module="ERP_FIN") 
