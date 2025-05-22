@@ -1,88 +1,70 @@
+"""
+物料管理模块测试用例
+包含新增、启用、停用等操作
+"""
+
 import sys
 import time
-import copy
 import random
 import allure
 import pytest
 from pathlib import Path
-from testcases.comm.base_test import BaseTest
-from utils.yaml_util import YamlUtil
+from testcases.gen import GenBaseTest
 
-# 添加项目根目录到 Python 路径，确保可以正确导入项目模块
+# 添加项目根目录到 Python 路径
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 @allure.epic("ERP通用基础模块")
 @allure.feature("物料管理")
-class TestMatAdd(BaseTest):
+class TestMatAdd(GenBaseTest):
+    """物料管理测试类"""
     
-    # 类级别变量，用于在不同测试方法间共享物料信息
-    # 结构: {
-    #   "mat_id": "物料ID",  # 接口返回的物料唯一标识
-    #   "mat_code": "物料编码",  # 格式: MAT + 时间戳 + 4位随机数
-    #   "mat_name": "物料名称"   # 格式: TEST_MAT_ + 3位随机数
-    # }
+    # 保存物料相关信息的类变量，所有测试用例共享
     mat_info = {}
     
     @classmethod
     def setup_class(cls):
+        """
+        测试类初始化
+        1. 调用父类初始化方法
+        2. 获取物料管理模块的API配置
+        """
+        # 调用GenBaseTest的初始化方法
+        # 这会初始化logger、http客户端、断言工具和YAML处理器等
         super().setup_class()
         
-        # 配置文件路径定义
-        cls.base_api_path = Path(project_root) / "testdata" / "gen" / "mat.yaml"  # 接口路径配置
-        cls.base_config_path = Path(project_root) / "testdata" / "gen" / "mat_api_params.yaml"  # 接口参数配置
-        cls.yaml_util = YamlUtil()
+        # 获取物料管理相关的API路径配置
+        # mat_path内容示例: {'新增物料': '/api/xxx/yyy', '启用物料': '/api/xxx/zzz', ...}
+        cls.mat_path = cls.get_module_paths("通用基础", "物料管理")
         
-        # 读取YAML配置
-        cls.mat_path = cls.yaml_util.read_yaml(cls.base_api_path)["通用基础"]["物料管理"]
-        cls.mat_params = cls.yaml_util.read_yaml(cls.base_config_path).get("api_params", {})
-        
-        cls.logger.info("物料新增测试类初始化完成")
-
-    def get_request_data(self, api_url, **kwargs):
-        #从YAML配置中获取请求数据，并替换动态参数
-        try:
-            # 1. 获取API的默认参数配置
-            api_config = self.mat_params.get(api_url, {})
-            if not api_config:
-                self.logger.error(f"在YAML中未找到API配置: {api_url}")
-                return {}
-                
-            # 2. 深拷贝配置，避免修改原始数据
-            request_data = copy.deepcopy(api_config)
-            
-            # 3. 获取请求参数部分
-            # params格式: {"matCode": "${mat_code}", "matName": "${mat_name}", ...}
-            params = request_data["params"]["request"]
-            
-            # 4. 替换动态参数
-            # 遍历参数，将${xxx}格式的值替换为kwargs中对应的值
-            for key, value in params.items():
-                if isinstance(value, str) and value.startswith("${") and value.endswith("}"):
-                    var_name = value[2:-1]  # 提取变量名，例如从${mat_code}提取出mat_code
-                    if var_name in kwargs:
-                        params[key] = kwargs[var_name]
-                        
-            return request_data
-            
-        except Exception as e:
-            self.logger.error(f"处理请求数据时出错: {str(e)}")
-            return {}
+        cls.logger.info("物料管理测试类初始化完成")
 
     @pytest.mark.run(order=1)
     @allure.title("新增物料")
     @allure.description("测试步骤：1.生成物料基础信息 2.调用新增接口 3.验证响应结果")
     @allure.severity(allure.severity_level.BLOCKER)
     def test_mat_add(self):
+        """
+        新增物料测试用例
+        1. 生成随机编码和名称
+        2. 调用新增API
+        3. 验证响应并保存ID信息
+        """
         try:
             # 1. 生成物料基础信息
-            timestamp = time.strftime("%Y%m%d%H%M%S")  # 格式：20240319152101
-            mat_code = f"MAT{timestamp}{random.randint(1000, 9999)}"  # 示例：MAT202403191521011234
-            mat_name = f"TEST_MAT_{random.randint(100, 999)}"  # 示例：TEST_MAT_123
-            remark = f"自动化测试创建 - {time.strftime('%Y-%m-%d %H:%M:%S')}"
+            # 使用时间戳和随机数生成唯一编码和名称
+            timestamp = time.strftime("%Y%m%d%H%M%S")  # 当前时间，格式如: 20250522100512
+            mat_code = f"MAT{timestamp}{random.randint(1000, 9999)}"  # 编码格式如: MAT202505221005121234
+            mat_name = f"TEST_MAT_{random.randint(100, 999)}"  # 名称格式如: TEST_MAT_123
+            remark = f"自动化测试创建 - {time.strftime('%Y-%m-%d %H:%M:%S')}"  # 备注，包含创建时间
             
             # 2. 准备请求数据
-            url = self.mat_path["新增物料"]  # 从YAML获取接口路径
+            # 从mat_path获取API路径，如: /api/trantor/service/engine/execute/ERP_GEN$GEN_MD_MAT_CLEAR_CACHE_BY_IDS_EVENT_SERVICE?tmodule=ERP_SCM
+            url = self.mat_path["新增物料"]
+            
+            # 使用get_request_data方法获取请求数据，并替换动态参数
+            # data内容示例: {'params': {'request': {...}}}，其中request中的mat_code和mat_name被替换为随机生成的值
             data = self.get_request_data(
                 url,
                 mat_code=mat_code,
@@ -91,19 +73,30 @@ class TestMatAdd(BaseTest):
             )
             
             # 3. 发送请求并验证响应
+            # result内容示例: {'success': True, 'data': {'data': {'id': 12345, ...}}}
             result = self.http.post(url, json=data, description="新增物料")
+            
+            # 4. 断言响应成功
+            # 验证响应中的success字段为True，否则抛出异常
             self.assert_util.assert_response_success(result)
             
-            # 4. 保存测试数据到类变量
-            # response_data格式: {"id": "12345", "matCode": "MAT001", ...}
+            # 从响应中获取物料ID
+            # response_data内容示例: {'id': 12345, 'matCode': 'MAT202505221005121234', ...}
             response_data = result.get("data", {}).get("data", {})
+            mat_id = response_data.get("id")  # 获取ID，示例: 12345
+            
+            # 确保返回了有效的ID
+            assert mat_id, "新增物料失败：返回的ID为空"
+            
+            # 5. 保存测试数据到类变量，供后续测试用例使用
+            # mat_info内容示例: {'mat_id': 12345, 'mat_code': 'MAT202505221005121234', 'mat_name': 'TEST_MAT_123'}
             TestMatAdd.mat_info.update({
-                "mat_id": response_data["id"],  # 物料ID，后续接口调用需要
-                "mat_code": mat_code,  # 物料编码，用于查询和验证
-                "mat_name": mat_name   # 物料名称，用于查询和验证
+                "mat_id": mat_id,
+                "mat_code": mat_code,
+                "mat_name": mat_name
             })
             
-            self.logger.info(f"新增物料成功 - ID: {TestMatAdd.mat_info['mat_id']}, 编码: {mat_code}")
+            self.logger.info(f"新增物料成功 - ID: {mat_id}, 编码: {mat_code}")
             
         except Exception as e:
             self.logger.error(f"新增物料失败: {str(e)}")
@@ -114,20 +107,32 @@ class TestMatAdd(BaseTest):
     @allure.description("测试步骤：1.验证前置条件 2.调用启用接口 3.验证响应结果")
     @allure.severity(allure.severity_level.CRITICAL)
     def test_mat_enable(self):
+        """
+        启用物料测试用例
+        1. 验证前置条件
+        2. 调用启用API
+        3. 验证响应结果
+        """
         try:
-            # 1. 验证前置条件
+            # 1. 验证前置条件 - 确保mat_info中有数据
             assert TestMatAdd.mat_info.get("mat_id"), "未找到待启用的物料ID，请先执行新增物料测试"
             
             # 2. 准备请求数据
+            # 从mat_path获取启用API路径
             url = self.mat_path["启用物料"]
+            
+            # 使用get_request_data方法获取请求数据，并替换mat_id和mat_code参数
             data = self.get_request_data(
                 url,
                 mat_id=TestMatAdd.mat_info["mat_id"],
                 mat_code=TestMatAdd.mat_info["mat_code"]
             )
             
-            # 3. 发送请求并验证响应
+            # 3. 发送启用请求
+            # result内容示例: {'success': True, 'data': {...}}
             result = self.http.post(url, json=data, description="启用物料")
+            
+            # 4. 断言响应成功
             self.assert_util.assert_response_success(result)
             
             self.logger.info(f"物料启用成功 - ID: {TestMatAdd.mat_info['mat_id']}")
@@ -141,20 +146,32 @@ class TestMatAdd(BaseTest):
     @allure.description("测试步骤：1.验证前置条件 2.调用停用接口 3.验证响应结果")
     @allure.severity(allure.severity_level.CRITICAL)
     def test_mat_disable(self):
+        """
+        停用物料测试用例
+        1. 验证前置条件
+        2. 调用停用API
+        3. 验证响应结果
+        """
         try:
-            # 1. 验证前置条件
+            # 1. 验证前置条件 - 确保mat_info中有数据
             assert TestMatAdd.mat_info.get("mat_id"), "未找到待停用的物料ID，请先执行新增物料测试"
             
             # 2. 准备请求数据
+            # 从mat_path获取停用API路径
             url = self.mat_path["停用物料"]
+            
+            # 使用get_request_data方法获取请求数据，并替换mat_id和mat_code参数
             data = self.get_request_data(
                 url,
                 mat_id=TestMatAdd.mat_info["mat_id"],
                 mat_code=TestMatAdd.mat_info["mat_code"]
             )
             
-            # 3. 发送请求并验证响应
+            # 3. 发送停用请求
+            # result内容示例: {'success': True, 'data': {...}}
             result = self.http.post(url, json=data, description="停用物料")
+            
+            # 4. 断言响应成功
             self.assert_util.assert_response_success(result)
             
             self.logger.info(f"物料停用成功 - ID: {TestMatAdd.mat_info['mat_id']}")
@@ -164,7 +181,7 @@ class TestMatAdd(BaseTest):
             raise
 
 if __name__ == "__main__":
-    # 直接运行测试用例
+    """直接运行测试用例的入口点"""
     test = TestMatAdd()
     test.setup_class()
     test.test_mat_add()      # 第1步：新增物料
