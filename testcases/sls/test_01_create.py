@@ -431,7 +431,10 @@ class TestSalesOrderCreate(BaseTest):
         """测试销售订单提交"""
         self._save_or_submit_order(is_submit=True)
 
-
+    
+    def teardown_class(self):
+        self.clear_so
+        self.logger.info("销售订单创建测试类清理")
 
 
 if __name__ == "__main__":

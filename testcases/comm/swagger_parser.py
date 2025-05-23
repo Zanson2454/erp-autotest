@@ -417,7 +417,7 @@ class SwaggerParser:
         logger.info(f"处理类型: {schema_type}")
 
         if schema_type == 'string':
-            return 'string'
+            return None
         elif schema_type == 'integer':
             return 0  # 使用整数
         elif schema_type == 'number':
