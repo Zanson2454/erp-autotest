@@ -15,11 +15,9 @@ sys.path.insert(0, str(project_root))
 
 
 
-from utils.assert_util import AssertHelper
 from utils.yaml_util import YamlUtil
-from utils.exception_util import handle_exception, safe_api_call, handle_class_method_exception
-from testcases.comm.base_test import BaseTest, SQLInitializer
-from utils.mock_util import MockData
+from utils.exception_util import  safe_api_call, handle_class_method_exception
+from testcases.comm.base_test import BaseTest
 from utils.response_util import ResponseUtil
 from testcases.sls.test_01_create import TestSalesOrderCreate
 class TestSalesOrderOperator(BaseTest):
@@ -200,14 +198,9 @@ class TestSalesOrderOperator(BaseTest):
         self.order_id = order["id"]
         self.logger.info(f"找到可提交订单: ID={self.order_id}, 订单号={order['so_code']}")
         # 发送请求
-        url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_MANUAL_SUBMIT?tmodule=ERP_SCM"
-        data = {
-            "params": {
-                "request": {
-                    "id": self.order_id
-                }
-            }
-        }
+        url = self.so_path["提交订单"]
+        data = self.so_params[url]
+        data["params"]["request"] = self.so_data
         self.logger.debug(f"销售订单手动提交请求数据: {json.dumps(data, indent=2)}")
         result = self.http.post(url, json=data, description="销售订单手动提交")
         self.logger.debug(f"销售订单手动提交响应数据: {json.dumps(result, indent=2)}")
@@ -251,7 +244,12 @@ class TestSalesOrderOperator(BaseTest):
             }
             
             # 3. 发送请求
-            url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_CANNEL_COMMIT_EVENT_SERVICE?tmodule=ERP_SCM"
+            url = self.so_path["取消提交销售订单"]
+            data = self.so_params[url]
+            data["params"]["request"] = request_data
+            result = self.http.post(url, json=data, description="取消提交销售订单")
+            self.response_util.process_response(result)
+            self.logger.info(json.dumps(result, ensure_ascii=False, indent=2))
 
 
             
@@ -540,8 +538,8 @@ if __name__ == "__main__":
     test = TestSalesOrderOperator()
     test.setup_class()
     test.test_01_query_order_detail()
-    test.test_02_submit_sales_order_edit()
-    # test.test_03_manual_submit_sales_order() \   
+    # test.test_02_submit_sales_order_edit()
+    test.test_03_manual_submit_sales_order()   
     # test.test_04_cancel_submit_sales_order()
     # test.test_05_repeal_sales_order()
     # test.test_06_freeze_sales_order()

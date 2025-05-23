@@ -2,7 +2,7 @@
 erp_env: "test"
 trantor_version: "2.5.25.0130.0-SNAPSHOT"
 
-# 基础配置
+# 基础配置_hyr
 base_url: "https://t-erp-portal-test.app.terminus.io"
 iam_url: "https://t-erp-iam-test.app.terminus.io"
 
@@ -21,8 +21,5 @@ database:
     port: ${TEST_DB_PORT}
     user: ${TEST_DB_USER}
     password: ${TEST_DB_PASSWORD}
-    name: ${TEST_DB_NAME}
+    database: ${TEST_DB_NAME}
     charset: utf8mb4
-    pool_size: 5
-    pool_timeout: 30
-    pool_recycle: 3600

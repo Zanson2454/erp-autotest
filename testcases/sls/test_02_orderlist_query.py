@@ -1,4 +1,4 @@
-import os
+
 import sys
 import json
 import allure
@@ -10,14 +10,15 @@ from pathlib import Path
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from testcases.comm.base_test import BaseTest,SQLInitializer
+from testcases.comm.base_test import BaseTest
 from utils.exception_util import safe_api_call
 from utils.yaml_util import YamlUtil
 
 class TestOrderList(BaseTest):
     """销售订单列表测试类"""
     
-    def setup_method(cls, method=None):
+    @classmethod
+    def setup_class(cls):
         """每个测试方法执行前的准备工作
         
         Args:
@@ -37,7 +38,10 @@ class TestOrderList(BaseTest):
         
         # 前用例集所需参数
         cls.so_params = cls.yaml_util.read_yaml(cls.base_config_path).get("api_params", {})
-    
+
+        # testdata
+        cls.test_data = {}
+        
     @allure.title("查询销售订单列表")
     @allure.description("""
     测试步骤：
@@ -237,7 +241,7 @@ class TestOrderList(BaseTest):
                                         "type": "ConstValue",
                                         "fieldType": "Object",
                                         "valueType": "CONST",
-                                        "constValue": self.user_id
+                                        "constValue": self.ids.get("user_id")
                                     }
                                 }
                             ]
@@ -468,7 +472,7 @@ class TestOrderList(BaseTest):
 
 if __name__ == "__main__":
     test = TestOrderList()
-    test.setup_method()
+    test.setup_class()
     test.test_01_query_orders()
     test.test_02_query_orders_by_so_code()
     test.test_03_query_orders_by_status("DRAFT")

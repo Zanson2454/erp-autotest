@@ -14,59 +14,14 @@ from utils.yaml_util import YamlUtil
 from utils.exception_util import safe_config_load, ConfigException
 
 class Loggers:
-    """日志工具类，提供统一的日志记录功能
-    
-    主要功能：
-    1. 支持控制台和文件日志输出
-    2. 支持日志级别动态配置
-    3. 支持日志文件自动轮转
-    4. 支持日志格式自定义
-    5. 支持异常日志记录
-    
-    使用示例：
-    ```python
-    # 创建日志实例
-    log = Loggers()
-    
-    # 记录不同级别的日志
-    log.debug("调试信息")
-    log.info("普通信息")
-    log.warning("警告信息")
-    log.error("错误信息")
-    log.critical("严重错误信息")
-    ```
-    """
-    
-    _instance = None
-    _config_loaded = False
-    
-    def __new__(cls, *args, **kwargs):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
-    
-    def __init__(self, config: Optional[Dict[str, Any]] = None):
-        """初始化日志工具
-        
-        Args:
-            config: 可选的日志配置，如果不提供则使用默认配置
-        """
-        if not hasattr(self, 'initialized'):
-            self.config = self._load_config(config)
-            self._setup_logger()
-            self.initialized = True
-    
-    @safe_config_load(error_message="日志配置加载失败")
-    def _load_config(self, config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-        """加载日志配置
-        
-        Args:
-            config: 可选的配置覆盖
-            
-        Returns:
-            Dict[str, Any]: 日志配置
-        """
-        try:
+    """日志工具类（全类属性+类方法风格）"""
+    _initialized = False
+    _logger = logger
+    _config = {}
+
+    @classmethod
+    def init(cls, config: Optional[Dict[str, Any]] = None):
+        if not cls._initialized:
             # 默认配置
             default_config = {
                 "level": "INFO",
@@ -76,130 +31,71 @@ class Loggers:
                 "console_format": "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
                 "file_format": "{time:YYYY-MM-DD HH:mm:ss.SSS} | {level: <8} | {name}:{function}:{line} - {message}"
             }
-            
-            # 如果提供了配置覆盖，则合并配置
             if config:
                 default_config.update(config)
-            return default_config
-        except Exception as e:
-            raise ConfigException("日志配置加载失败", {
-                "error": str(e),
-                "config": config
-            })
-    
-    def _setup_logger(self) -> None:
-        """设置日志记录器"""
-        # 获取项目根目录
-        project_root = Path(__file__).parent.parent
-        log_dir = project_root / "logs"
-        
-        # 确保日志目录存在
-        log_dir.mkdir(parents=True, exist_ok=True)
-        
-        # 配置日志文件路径，添加日期戳
-        current_date = datetime.now().strftime('%Y_%m_%d')
-        log_file = log_dir / f"log_{current_date}.log"
-        
-        # 移除默认的处理器
-        logger.remove()
-        
-        # 添加控制台输出
-        logger.add(
-            sys.stdout,
-            format="<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
-            level="DEBUG"
-        )
-        
-        # 添加文件输出
-        logger.add(
-            str(log_file),
-            rotation="500 MB",
-            retention="10 days",
-            format="{time:YYYY-MM-DD HH:mm:ss.SSS} | {level: <8} | {name}:{function}:{line} - {message}",
-            level="DEBUG",
-            encoding="utf-8"
-        )
-        
-        self.logger = logger
-    
+            cls._config = default_config
+
+            # 日志文件路径
+            project_root = Path(__file__).parent.parent
+            log_dir = project_root / "logs"
+            log_dir.mkdir(parents=True, exist_ok=True)
+            current_date = datetime.now().strftime('%Y_%m_%d')
+            log_file = log_dir / f"log_{current_date}.log"
+
+            # 配置 loguru
+            logger.remove()
+            logger.add(
+                sys.stdout,
+                format=cls._config["console_format"],
+                level="DEBUG"
+            )
+            logger.add(
+                str(log_file),
+                rotation=cls._config["rotation"],
+                retention=cls._config["retention"],
+                format=cls._config["file_format"],
+                level="DEBUG",
+                encoding=cls._config["encoding"]
+            )
+            cls._logger = logger
+            cls._initialized = True
+
     @staticmethod
-    def info(msg: str, *args: Any, **kwargs: Any) -> None:
-        """记录信息级别日志
-        
-        Args:
-            msg: 日志消息
-            *args: 位置参数
-            **kwargs: 关键字参数
-        """
+    def info(msg: str, *args, **kwargs):
         logger.info(msg, *args, **kwargs)
-    
+
     @staticmethod
-    def debug(msg: str, *args: Any, **kwargs: Any) -> None:
-        """记录调试级别日志
-        
-        Args:
-            msg: 日志消息
-            *args: 位置参数
-            **kwargs: 关键字参数
-        """
+    def debug(msg: str, *args, **kwargs):
         logger.debug(msg, *args, **kwargs)
-    
+
     @staticmethod
-    def warning(msg: str, *args: Any, **kwargs: Any) -> None:
-        """记录警告级别日志
-        
-        Args:
-            msg: 日志消息
-            *args: 位置参数
-            **kwargs: 关键字参数
-        """
+    def warning(msg: str, *args, **kwargs):
         logger.warning(msg, *args, **kwargs)
-    
+
     @staticmethod
-    def error(msg: str, *args: Any, **kwargs: Any) -> None:
-        """记录错误级别日志
-        
-        Args:
-            msg: 日志消息
-            *args: 位置参数
-            **kwargs: 关键字参数
-        """
+    def error(msg: str, *args, **kwargs):
         logger.error(msg, *args, **kwargs)
-    
+
     @staticmethod
-    def critical(msg: str, *args: Any, **kwargs: Any) -> None:
-        """记录严重错误级别日志
-        
-        Args:
-            msg: 日志消息
-            *args: 位置参数
-            **kwargs: 关键字参数
-        """
+    def critical(msg: str, *args, **kwargs):
         logger.critical(msg, *args, **kwargs)
-    
+
     @staticmethod
-    def exception(msg: str, *args: Any, **kwargs: Any) -> None:
-        """记录异常日志
-        
-        Args:
-            msg: 日志消息
-            *args: 位置参数
-            **kwargs: 关键字参数
-        """
+    def exception(msg: str, *args, **kwargs):
         logger.opt(exception=True).exception(msg, *args, **kwargs)
 
 
 if __name__ == '__main__':
     # 测试日志功能
-    log = Loggers()
-    log.debug("调试消息")
-    log.info("普通消息")
-    log.warning("警告消息")
-    log.error("错误消息")
-    log.critical("严重错误消息")
+    Loggers.init()
+    Loggers.debug("调试消息")
+    Loggers.info("普通消息")
+    Loggers.warning("警告消息")
+    Loggers.error("错误消息")
+    Loggers.critical("严重错误消息")
     
     try:
         1/0
     except Exception as e:
-        log.exception("发生异常")
+        Loggers.exception("发生异常")
 

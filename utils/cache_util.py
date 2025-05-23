@@ -5,71 +5,49 @@
 
 import json
 import time
+import sys
 from pathlib import Path
 from typing import Dict, Any, Optional
 from loguru import logger
+
+project_root = Path(__file__).parent.parent
+sys.path.append(str(project_root))
+
 from utils.response_util import DecimalEncoder
 
 class CacheUtil:
-    """缓存工具类
+    """缓存工具类（全类属性+类方法风格）
     
     使用示例:
-        # 基础用法
-        cache_util = CacheUtil(cache_dir="cache")
-        cache_util.set("user_info", {"id": 1, "name": "test"})
-        user_info = cache_util.get("user_info")
-        
-        # 自定义过期时间
-        cache_util = CacheUtil(cache_dir="cache", expire_minutes=60)
-        cache_util.set("config", {"key": "value"})
-        
-        # 检查缓存是否存在
-        if cache_util.exists("user_info"):
-            data = cache_util.get("user_info")
+        CacheUtil.init(cache_dir="cache", expire_minutes=60)
+        CacheUtil.set("user_info", {"id": 1, "name": "test"})
+        user_info = CacheUtil.get("user_info")
     """
-    
-    def __init__(self, cache_dir: str = "cache", expire_minutes: int = 30):
-        """初始化缓存工具类
-        
-        Args:
-            cache_dir: 缓存目录路径，默认为"cache"
-            expire_minutes: 缓存过期时间(分钟)，默认30分钟
-        """
-        self.cache_dir = Path(cache_dir)
-        self.expire_minutes = expire_minutes
-        self._ensure_cache_dir()
-    
-    def _ensure_cache_dir(self) -> None:
-        """确保缓存目录存在"""
-        logger.info(f"缓存目录: {self.cache_dir.absolute()}")
-        self.cache_dir.mkdir(parents=True, exist_ok=True)
-        logger.info(f"缓存目录创建状态: 存在={self.cache_dir.exists()}")
-    
-    def get(self, key: str) -> Optional[Dict[str, Any]]:
-        """获取缓存数据
-        
-        Args:
-            key: 缓存键名
-            
-        Returns:
-            Optional[Dict[str, Any]]: 缓存数据，如果不存在或已过期则返回None
-            
-        使用示例:
-            data = cache_util.get("user_info")
-            if data:
-                user_id = data.get("id")
-        """
-        cache_file = self.cache_dir / f"{key}.json"
+    _cache_dir = Path("cache")
+    _expire_minutes = 30
+    _initialized = False
+
+    @classmethod
+    def init(cls, cache_dir: str = "cache", expire_minutes: int = 30):
+        if not cls._initialized:
+            cls._cache_dir = Path(cache_dir)
+            cls._expire_minutes = expire_minutes
+            cls._cache_dir.mkdir(parents=True, exist_ok=True)
+            logger.info(f"缓存目录: {cls._cache_dir.absolute()}")
+            logger.info(f"缓存目录创建状态: 存在={cls._cache_dir.exists()}")
+            cls._initialized = True
+
+    @classmethod
+    def get(cls, key: str) -> Optional[Dict[str, Any]]:
+        cache_file = cls._cache_dir / f"{key}.json"
         logger.info(f"读取缓存文件: {cache_file.absolute()}")
         try:
             if not cache_file.exists():
                 logger.info(f"缓存文件不存在: {cache_file.absolute()}")
                 return None
-            
-            if self._is_expired(cache_file):
+            if cls._is_expired(cache_file):
                 logger.info(f"缓存文件已过期: {cache_file.absolute()}")
                 return None
-            
             with open(cache_file, 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 logger.info(f"成功读取缓存: {cache_file.name}")
@@ -77,18 +55,10 @@ class CacheUtil:
         except Exception as e:
             logger.error(f"读取缓存失败: {str(e)}, 文件: {cache_file.absolute()}")
             return None
-    
-    def set(self, key: str, data: Dict[str, Any]) -> None:
-        """设置缓存数据
-        
-        Args:
-            key: 缓存键名
-            data: 要缓存的数据
-            
-        使用示例:
-            cache_util.set("user_info", {"id": 1, "name": "test"})
-        """
-        cache_file = self.cache_dir / f"{key}.json"
+
+    @classmethod
+    def set(cls, key: str, data: Dict[str, Any]) -> None:
+        cache_file = cls._cache_dir / f"{key}.json"
         logger.info(f"写入缓存文件: {cache_file.absolute()}")
         try:
             with open(cache_file, 'w', encoding='utf-8') as f:
@@ -96,32 +66,22 @@ class CacheUtil:
                 logger.info(f"成功写入缓存: {cache_file.name}")
         except Exception as e:
             logger.error(f"写入缓存失败: {str(e)}, 文件: {cache_file.absolute()}")
-    
-    def exists(self, key: str) -> bool:
-        """检查缓存是否存在且未过期
-        
-        Args:
-            key: 缓存键名
-            
-        Returns:
-            bool: 缓存是否存在且未过期
-            
-        使用示例:
-            if cache_util.exists("user_info"):
-                data = cache_util.get("user_info")
-        """
-        cache_file = self.cache_dir / f"{key}.json"
-        return cache_file.exists() and not self._is_expired(cache_file)
-    
-    def _is_expired(self, cache_file: Path) -> bool:
-        """检查缓存是否过期
-        
-        Args:
-            cache_file: 缓存文件路径
-            
-        Returns:
-            bool: 是否过期
-        """
+
+    @classmethod
+    def exists(cls, key: str) -> bool:
+        cache_file = cls._cache_dir / f"{key}.json"
+        return cache_file.exists() and not cls._is_expired(cache_file)
+
+    @classmethod
+    def _is_expired(cls, cache_file: Path) -> bool:
         file_time = cache_file.stat().st_mtime
         current_time = time.time()
-        return (current_time - file_time) > (self.expire_minutes * 60) 
+        return (current_time - file_time) > (cls._expire_minutes * 60) 
+    
+    
+    
+if __name__ == "__main__":
+    cache_util = CacheUtil()
+    cache_util.init()
+    cache_util.set("test", {"test": "test"})
+    print(cache_util.get("test"))

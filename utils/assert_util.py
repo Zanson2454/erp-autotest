@@ -124,3 +124,15 @@ class AssertHelper:
         assert value, message
         if isinstance(value, (list, dict, str)):
             assert len(value) > 0, message
+            
+            
+            
+if __name__ == "__main__":
+    assert_helper = AssertHelper()
+    assert_helper.assert_id_exists(1, "id")
+    assert_helper.assert_eq(1, 1)
+    assert_helper.assert_not_eq(1, 2)
+    # assert_helper.assert_response_success({"status_code": 200, "json": {"success": True}})
+    assert_helper.assert_contains([1, 2, 3], 2)
+    assert_helper.assert_not_contains([1, 2, 3], 4)
+    # assert_helper.assert_response_time({"elapsed": 1000})

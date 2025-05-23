@@ -136,7 +136,9 @@
     "dept_org_info": {
       "id": 14420004
     },
-    "pln_org_info": null
+    "pln_org_info": {
+      "id": 88884
+    }
   },
   "partner_info": {
     "cust_tax_type_info": {

@@ -12,12 +12,10 @@ from pathlib import Path
 project_root =Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from utils.yaml_util import YamlUtil
-from testcases.comm.base_test import BaseTest, SQLInitializer
-from utils.exception_util import safe_api_call
+from testcases.comm.base_test import BaseTest
 from testcases.sls.test_01_create import TestSalesOrderCreate
-from utils.request_util import HttpUtil
-from utils.assert_util import AssertHelper
+from utils.exception_util import safe_api_call
+
 
 class TestOrderDelete(BaseTest):
     """销售订单删除测试类"""
@@ -32,11 +30,14 @@ class TestOrderDelete(BaseTest):
         cls.base_config_path = Path(project_root) / "testdata" / "sls" / "so_api_params.yaml"
         
         # 当前用例集所需接口
-        cls.yaml_util = YamlUtil()
         cls.so_path = cls.yaml_util.read_yaml(cls.base_api_path)["销售订单"]["订单管理"]
         
         # 当前用例集所需参数
         cls.so_params = cls.yaml_util.read_yaml(cls.base_config_path).get("api_params", {})
+        
+        
+        cls.so_type_id = cls.ids.get("so_type_id")
+        cls.user_id = cls.ids.get("user_id")
     
     
     @allure.title("删除销售订单")
@@ -67,7 +68,8 @@ class TestOrderDelete(BaseTest):
         """
         self.logger.info(f"执行查询: {sql}")
         result = self.db.query(sql, (self.so_type_id, self.user_id))
-      
+        self.logger.info(f"查询结果: {result}")
+        self.assert_util.assert_not_empty(result, "订单列表")
         # 2. 如果订单不存在，创建新订单
         if not result or len(result) == 0:
             self.logger.info("未找到可删除的订单，创建新订单")
@@ -77,8 +79,9 @@ class TestOrderDelete(BaseTest):
                 test_create.test_save_sales_order()
                 self.logger.info("成功创建新订单")
                 # 重新查询订单
-                result = self.db.execute_query(sql, (self.so_type_id, self.user_id))
-                self.assert_util.assert_list_not_empty(result, "订单列表")
+                result = self.db.query(sql, (self.so_type_id, self.user_id))
+                self.logger.info(f"创建新订单后查询结果: {result}")
+                self.assert_util.assert_not_empty(result, "订单列表")
             except Exception as e:
                 self.logger.error(f"创建新订单失败: {str(e)}")
                 pytest.fail(f"创建新订单失败: {str(e)}")
@@ -195,5 +198,5 @@ if __name__ == "__main__":
     test = TestOrderDelete()
     test.setup_class()
     test.test_01_delete_order()
-    test.test_02_batch_delete_orders()
+    # test.test_02_batch_delete_orders()
   

@@ -15,8 +15,8 @@ project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 from utils.yaml_util import YamlUtil
-from utils.exception_util import handle_exception, safe_api_call, handle_class_method_exception
-from testcases.comm.base_test import BaseTest,SQLInitializer
+from utils.exception_util import safe_api_call, handle_class_method_exception
+from testcases.comm.base_test import BaseTest
 
 
 class TestSalesOrderCreate(BaseTest):
@@ -29,6 +29,19 @@ class TestSalesOrderCreate(BaseTest):
         super().setup_class()
         
         # 初始化测试数据
+        cls.so_type_id = cls.ids.get("so_type_id")
+        cls.cust_id = cls.ids.get("cust_id")
+        cls.com_org_id = cls.ids.get("com_org_id")
+        cls.sls_dc_id = cls.ids.get("sls_dc_id")
+        cls.sls_org_id = cls.ids.get("sls_org_id")
+        cls.inv_org_id = cls.ids.get("inv_org_id")
+        cls.inv_loc_id = cls.ids.get("inv_loc_id")
+        cls.exchange_rate_type_id = cls.ids.get("exchange_rate_type_id")
+        cls.cust_id = cls.ids.get("cust_id")
+        cls.sls_curr_id = cls.ids.get("sls_curr_id")
+        cls.base_curr_id = cls.ids.get("base_curr_id")
+        
+        
         cls.addr_id = None
         cls.addr_detail = None
         cls.cust_person_name = None
