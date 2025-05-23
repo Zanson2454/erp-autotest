@@ -3158,46 +3158,7 @@ api_params:
   /api/trantor/service/engine/execute/ERP_FIN$SETT_ITEM_CONFIRM_AND_REMAINTTANCE_ASSOCIATE_ASYNC_EVENT_SERVICE:
     params:
       request:
-        approveStatus: string
-        partnerCode: string
-        exchRate: 0
-        remark: string
-        settDocAmt: 0
-        settDate: 0
-        createdAt: 0
-        settDocAssocDocTypeCfId: {}
-        tradingDocStatus: string
-        asyncExecutionStatus: string
-        settItems:
-        - {}
-        id: 0
-        baseCurrId: {}
-        purSlsOrg: string
-        extBizGroup: string
-        updatedAt: 0
-        settBaseAmt: 0
-        sdcType: string
-        updatedBy: {}
-        originOrgId: 0
-        docCurrId: {}
-        partnerName: string
-        extLatestPiSbDate: 0
-        tradingDocCode: string
-        comOrgId: {}
-        extPartner: string
-        version: 0
-        tradingDocId: string
-        asyncExecutionFailureReason: string
-        deleted: 0
-        purSlsOrgId: 0
-        createdBy: {}
-        settDocCode: string
-        purSlsOrgName: string
-        clientSideConfirmStatus: string
-        partnerType: string
-        partnerId: 0
-        settDocTypeId: {}
-        settDocStatus: string
+        - id: 0
   /api/trantor/service/engine/execute/ERP_FIN$AP_PAGE_FROM_ES_EVENT_SERVICE:
     params:
       request:
@@ -5897,77 +5858,8 @@ api_params:
         slsTmId: {}
   /api/trantor/service/engine/execute/ERP_FIN$SETT_ITEM_DELETE_EVENT_SERVICE:
     params:
-      request:
-        invMvmItemCode: string
-        netDocAmt: 0
-        purSlsOrgType: string
-        settDocId: {}
-        relType: string
-        isSdcCancelRelv: false
-        extSettQty: 0
-        createdAt: 0
-        whetherAutoGenerateBkbSettlement: false
-        extSettDocPrice: 0
-        lockKey: string
+      request:  
         id: 0
-        baseCurrId: {}
-        taxAmt: 0
-        purSlsOrg: string
-        invOrgId: {}
-        extBizGroup: string
-        counterpartyPartnerId: 0
-        updatedAt: 0
-        settItemStatus: string
-        grossBaseAmt: 0
-        sdcType: string
-        netBaseAmt: 0
-        settItemTypeId: {}
-        updatedBy: {}
-        originOrgId: 0
-        docCurrId: {}
-        poSoItemCode: string
-        taxCodeId: {}
-        genMatTypeCfId: {}
-        version: 0
-        taxRate: 0
-        asyncExecutionFailureReason: string
-        purSlsOrgId: 0
-        matId: {}
-        partnerType: string
-        dnItemId: 0
-        basicUnitId: {}
-        settItemCode: string
-        idempotentKey: string
-        partnerCode: string
-        dnCode: string
-        exchRate: 0
-        remark: string
-        createType: string
-        settDocAmt: 0
-        ptHeadId: {}
-        dnItemCode: string
-        counterpartyComOrgId: {}
-        settDate: 0
-        poSoId: 0
-        asyncExecutionStatus: string
-        settQty: 0
-        extDpd: 0
-        relId: 0
-        settDocPrice: 0
-        partnerName: string
-        extLatestPiSbDate: 0
-        comOrgId: {}
-        dnId: 0
-        extPartner: string
-        bkbSettlementItemId: 0
-        poSoItemId: 0
-        deleted: 0
-        createdBy: {}
-        purSlsOrgName: string
-        bkbSettlementItemCode: string
-        partnerId: 0
-        settDocTypeId: {}
-        poSoCode: string
   /api/trantor/service/engine/execute/ERP_FIN$PN_EDITABLE_VAL_SERVICE:
     params:
       request:
@@ -17339,11 +17231,9 @@ api_params:
     params:
       request:
         pageable:
-          sortOrders:
-          - {}
-          conditionItems: {}
+          sortOrders: null
           pageNo: 1
-          conditionGroup: {}
+          conditionGroup: null
           pageSize: 20
   /api/trantor/service/engine/execute/ERP_FIN$FIN_IV_VOUCHER_HEAD_TR_FOLDING_ASSOCIATED_SERVICE:
     params:
