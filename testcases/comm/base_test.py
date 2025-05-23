@@ -127,9 +127,9 @@ class BaseTest:
         """
         try:
             # 初始化数据工厂
-            DataFactory.init(env_name="test")
-            cls.init_data = DataFactory.get_base_data(module="gen") # 获取结构化基础数据
-            cls.env_config = DataFactory.get_env_config() # 获取环境基础配置
+            data_factory = DataFactory()
+            cls.init_data = data_factory.get_base_data(module="gen") # 获取结构化基础数据
+            cls.env_config = data_factory.get_env_config() # 获取环境基础配置
             
             # 登录 并保存 userId
             cls.login = Login()

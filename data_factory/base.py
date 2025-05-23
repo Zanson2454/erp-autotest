@@ -118,7 +118,7 @@ class DataFactory:
     _env_config = None
 
     @classmethod
-    def init(cls, env_name="test",db_config_name="erp_db"):
+    def __init__(cls, env_name="test",db_config_name="erp_db"):
         """
         初始化环境配置，加载.env和YAML，递归替换环境变量，合并db_config。
         :param env_name: 环境名（如test/dev/prod）
@@ -183,7 +183,6 @@ class DataFactory:
         获取全局环境配置（含db_config），便于用例和工厂方法统一调用。
         :return: 环境配置字典
         """
-        cls.init()
         return cls._env_config
 
     @classmethod
@@ -209,7 +208,6 @@ class DataFactory:
         :param db_config: 数据库连接配置
         :return: 结构化业务数据
         """
-        cls.init()
         return SQLInitializer.init_sql(config_path, db_config)
 
     @staticmethod
@@ -277,7 +275,6 @@ class DataFactory:
         :param data_type: 数据类型
         :param kwargs: 其他参数
         """
-        cls.init()
         # TODO: 实现数据清理逻辑
         pass
 
@@ -288,7 +285,6 @@ class DataFactory:
         :param yaml_path: YAML文件路径
         :return: 配置字典
         """
-        cls.init()
         return YamlUtil.read_yaml(str(yaml_path))
 
     @classmethod
@@ -298,7 +294,6 @@ class DataFactory:
         :param cache_key: 缓存key
         :return: 缓存内容
         """
-        cls.init()
         return CacheUtil.get(cache_key)
 
     @classmethod
@@ -308,11 +303,10 @@ class DataFactory:
         :param cache_key: 缓存key
         :param data: 要写入的数据
         """
-        cls.init()
         CacheUtil.set(cache_key, data)
 
 if __name__ == "__main__":
     # 示例：初始化数据工厂并获取基础数据
-    DataFactory.init()
-    data = DataFactory.get_env_config()
+    data = DataFactory()
+    data = data.get_env_config()
     print(data)
