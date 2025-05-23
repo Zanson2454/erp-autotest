@@ -195,6 +195,7 @@ class TestSalesOrderConfig(BaseTest):
                 self.logger.error(f"- {code}")
         
         self.assert_util.assert_response_success(result)
+        return result  # 返回响应数据
 
 if __name__ == "__main__":
     # test = TestSalesOrderConfig()

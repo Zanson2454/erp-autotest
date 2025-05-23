@@ -17,7 +17,6 @@ sys.path.insert(0, str(project_root))
 from utils.yaml_util import YamlUtil
 from utils.exception_util import handle_exception, safe_api_call, handle_class_method_exception
 from testcases.comm.base_test import BaseTest,SQLInitializer
-from testcases.sls.test_00_so_config_check import TestSalesOrderConfig
 
 
 class TestSalesOrderCreate(BaseTest):
@@ -45,32 +44,21 @@ class TestSalesOrderCreate(BaseTest):
         cls.order_id = None
         cls.render_qty = random.randint(1, 99)  # 生成1-99之间的随机整数
         
-        # 加载配置文件
+             # 加载配置文件
         cls.base_api_path = Path(project_root) / "testdata" / "sls" / "sls_api_path.yaml"
         cls.base_config_path = Path(project_root) / "testdata" / "sls" / "so_api_params.yaml"
         
         # 当前用例集所需接口
         cls.yaml_util = YamlUtil()
         cls.so_path = cls.yaml_util.read_yaml(cls.base_api_path)["销售订单"]["订单管理"]
+        
+        # 前用例集所需参数
         cls.so_params = cls.yaml_util.read_yaml(cls.base_config_path).get("api_params", {})
-        
-        # 从配置检查类获取订单类型和订单行类型
-        config_check = TestSalesOrderConfig()
-        config_check.setup_class()
-        config_check.test_01_query_order_type()
-        config_check.test_03_query_order_line_type()
-        
-        # 保存订单类型和订单行类型ID
-        cls.order_type_ids = config_check.order_type_ids
-        cls.order_line_type_ids = config_check.order_line_type_ids
-        
-        # 确保订单行类型ID被正确保存
-        if not cls.order_line_type_ids:
-            cls.logger.error("订单行类型ID未正确获取")
-            raise ValueError("订单行类型ID未正确获取")
-        
+
         cls.logger.info(f"初始化渲染数量: {cls.render_qty}")
         cls.logger.info("测试类初始化完成")
+        
+        
 
     def _init_sales_order(self):
         """初始化销售订单"""
@@ -172,29 +160,18 @@ class TestSalesOrderCreate(BaseTest):
         """查询物料列表"""
         url = self.so_path["查询物料"]
         data = self.so_params.get(url, {})
-        data['params']['request']['slsOrgId'] = self.sls_org_id
-        data['params']['request']['slsDcId'] = self.sls_dc_id
-        
-        # 根据订单类型选择物料编码
-        material_code = {
-            "STND": "hxymat-20241202744",
-            "CENT": "hxymat-20241202744",
-            "CONS_ISSU": "hxymat-20241202744",
-            "VEND_CONS": "hxymat-20241202744",
-            "CONS_FILL": "hxymat-20241202744",
-            "THRD": "hxymat-20241202744",
-            "SERV": "MAT2025043009551"
-        }.get(self.so_type_code, "hxymat-20241202744")  # 默认使用 hxymat-20241202744
-        
-        # 设置物料编码查询条件
-        data['params']['request']['pageable']['keyword'] = material_code
+        data['params']['request']['slsOrgId'] = self.sls_org_id #更新变量
+        data['params']['request']['slsDcId'] = self.sls_dc_id #更新变量
 
+        # self.logger.debug(f"物料列表查询请求数据: {json.dumps(data,  indent=2)}")
         result = self.http.post(url, json=data, description="查询物料列表")
         # 记录响应数据  
         response_data = result.get("data", {}).get("data", {}).get("data", [])
-        self.mat_obj = response_data[0]
+        self.mat_obj = response_data[0] # 直接使用列表的第一个元素
+        # 添加默认价格字段
         self.mat_obj["matBasePrice"] = random.randint(1, 999999)  # 设置默认价格
-        self.logger.info(f"物料列表查询完成，物料编码: {material_code}")
+        # self.logger.debug(f"物料列表查询响应: {self.mat_obj}")
+        self.logger.info("物料列表查询完成")
         self.assert_util.assert_id_exists(self.mat_obj, "物料信息")
 
     def _render_order_line(self):
@@ -206,61 +183,31 @@ class TestSalesOrderCreate(BaseTest):
         url = self.so_path["渲染订单行"]
         curr_time = int(datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp() * 1000)
         data = self.so_params.get(url, {})
+        data['params']['request']['addrId'] = {"id": self.addr_id} #更新变量
+        data['params']['request']['custId'] = {"id": self.cust_id} #更新变量
+        data['params']['request']['slsComId'] = {"id": self.com_org_id} #更新变量
+        data['params']['request']['slsDcId'] = {"id": self.sls_dc_id} #更新变量
+        data['params']['request']['slsOrgId'] = {"id": self.sls_org_id} #更新变量
+        data['params']['request']['slsPerson'] = self.sls_person_obj #更新变量
+        data['params']['request']['slsPhone'] = self.sls_phone #更新变量
+        data['params']['request']['slsPersonName'] = self.sls_person_name #更新变量
+        data['params']['request']['soDocDate'] = curr_time #更新变量
+        data['params']['request']['soTypeId'] = {"id": self.so_type_id} #更新变量   
+        data['params']['request']['baseCurrId'] = {"id": self.base_curr_id} #更新变量
+        data['params']['request']['slsCurrId'] = {"id": self.sls_curr_id} #更新变量
+        data['params']['request']['currExchangeRateType'] = self.exchange_rate_type_id #更新变量
+        data['params']['request']['slsPartnerLinks'] = self.sls_partner_links #更新变量
+        data['params']['request']['soItems'][0]['matId'] = {"id": self.mat_obj['id']} #更新变量
+        data['params']['request']['soItems'][0]['soItemSlsQty'] = self.render_qty #更新变量
+        data['params']['request']['soItems'][0]['delAddrDetail'] = self.addr_detail #更新变量
+        data['params']['request']['soItems'][0]['delAddrId'] = {"id": self.addr_id} #更新变量
+        data['params']['request']['soItems'][0]['delPersonName'] = self.cust_person_name #更新变量
+        data['params']['request']['soItems'][0]['delPhone'] = self.cust_phone #更新变量
+        data['params']['request']['soItems'][0]['invOrgId'] = {"id": self.inv_org_id} #更新变量
+        data['params']['request']['soItems'][0]['invLocId'] = {"id": self.inv_loc_id} #更新变量
         
-        # 根据订单类型设置对应的订单行类型
-        order_line_type_mapping = {
-            "STND": "NORM",      # 标准销售 -> 常规销售
-            "CENT": "CENT",      # 集中销售 -> 集中销售
-            "CONS_ISSU": "CONS_ISSU",  # 寄售销售-消耗 -> 寄售销售-消耗
-            "VEND_CONS": "VEND_CONS",  # 供应商寄售直接销售 -> 供应商寄售直接销售
-            "CONS_FILL": "CONS_FILL",  # 寄售销售-补货 -> 寄售销售-补货
-            "THRD": "THRD",      # 三方销售 -> 三方销售
-            "SERV": "SERV"       # 服务销售 -> 标准服务销售(无库存)
-        }
         
-        # 获取对应的订单行类型ID
-        order_line_type_code = order_line_type_mapping.get(self.so_type_code)
-        self.logger.info(f"当前订单类型: {self.so_type_code}")
-        self.logger.info(f"映射的订单行类型代码: {order_line_type_code}")
-        self.logger.info(f"可用的订单行类型ID: {self.order_line_type_ids}")
-        
-        # 直接从字典中获取订单行类型ID
-        order_line_type_id = self.order_line_type_ids.get(order_line_type_code)
-        self.logger.info(f"获取到的订单行类型ID: {order_line_type_id}")
-        
-        if not order_line_type_id:
-            self.logger.error(f"订单行类型映射: {order_line_type_mapping}")
-            self.logger.error(f"可用的订单行类型: {self.order_line_type_ids}")
-            self.logger.error(f"当前订单类型: {self.so_type_code}")
-            self.logger.error(f"映射的订单行类型代码: {order_line_type_code}")
-            raise ValueError(f"未找到订单类型 {self.so_type_code} 对应的订单行类型 {order_line_type_code}")
-        
-        data['params']['request']['addrId'] = {"id": self.addr_id}
-        data['params']['request']['custId'] = {"id": self.cust_id}
-        data['params']['request']['slsComId'] = {"id": self.com_org_id}
-        data['params']['request']['slsDcId'] = {"id": self.sls_dc_id}
-        data['params']['request']['slsOrgId'] = {"id": self.sls_org_id}
-        data['params']['request']['slsPerson'] = self.sls_person_obj
-        data['params']['request']['slsPhone'] = self.sls_phone
-        data['params']['request']['slsPersonName'] = self.sls_person_name
-        data['params']['request']['soDocDate'] = curr_time
-        data['params']['request']['soTypeId'] = {"id": self.so_type_id}
-        data['params']['request']['baseCurrId'] = {"id": self.base_curr_id}
-        data['params']['request']['slsCurrId'] = {"id": self.sls_curr_id}
-        data['params']['request']['currExchangeRateType'] = self.exchange_rate_type_id
-        data['params']['request']['slsPartnerLinks'] = self.sls_partner_links
-        
-        # 设置订单行类型ID
-        data['params']['request']['soItems'][0]['itemTypeId'] = {"id": order_line_type_id}
-        data['params']['request']['soItems'][0]['matId'] = {"id": self.mat_obj['id']}
-        data['params']['request']['soItems'][0]['soItemSlsQty'] = self.render_qty
-        data['params']['request']['soItems'][0]['delAddrDetail'] = self.addr_detail
-        data['params']['request']['soItems'][0]['delAddrId'] = {"id": self.addr_id}
-        data['params']['request']['soItems'][0]['delPersonName'] = self.cust_person_name
-        data['params']['request']['soItems'][0]['delPhone'] = self.cust_phone
-        data['params']['request']['soItems'][0]['invOrgId'] = {"id": self.inv_org_id}
-        data['params']['request']['soItems'][0]['invLocId'] = {"id": self.inv_loc_id}
-        
+        # self.logger.debug(f"订单行渲染请求数据: {json.dumps(data,  indent=2)}")
         result = self.http.post(url, json=data, description="订单行渲染")
         result = result.get("data", {}).get("data", {})
         self.logger.debug(f"订单行渲染响应: {result}")
@@ -270,7 +217,7 @@ class TestSalesOrderCreate(BaseTest):
 
         # 保存订单行渲染结果供后续使用
         self.so_items = result.get("soItems")
-        self.logger.info(f"订单行渲染完成，订单类型: {self.so_type_code}，订单行类型: {order_line_type_code}")
+        self.logger.info("订单行渲染完成")
         try:
             assert self.so_items is not None, "订单行信息为空"
         except AssertionError as e:
@@ -370,52 +317,41 @@ class TestSalesOrderCreate(BaseTest):
             raise
 
     def _save_or_submit_order(self, is_submit: bool = False):
-        """保存或提交销售订单"""
+        """保存或提交销售订单
+        
+        Args:
+            is_submit: 是否提交订单，True为提交，False为保存
+        """
         try:
             # 1. 渲染订单行
             with allure.step("初始化销售订单"):
-                self.logger.info(f"开始初始化订单类型: {self.so_type_code}")
                 self._init_sales_order()
-                self.logger.info(f"初始化完成，销售人员信息: {self.sls_person_obj}")
-            
             with allure.step("查询客户信息"):
-                self.logger.info(f"开始查询客户信息 - 订单类型: {self.so_type_code}")
                 self._query_customer_info()
-                self.logger.info(f"客户信息查询完成，客户ID: {self.cust_id}")
-            
             with allure.step("查询相关方"):
-                self.logger.info(f"开始查询相关方 - 订单类型: {self.so_type_code}")
                 self._query_partner()
-                self.logger.info(f"相关方查询完成，相关方信息: {self.sls_partner_links}")
-            
             with allure.step("查询销售组织"):
-                self.logger.info(f"开始查询销售组织 - 订单类型: {self.so_type_code}")
                 self._query_sales_organization()
-                self.logger.info(f"销售组织查询完成，组织ID: {self.sls_org_id}")
-            
             with allure.step("查询物料"):
-                self.logger.info(f"开始查询物料 - 订单类型: {self.so_type_code}")
                 self._query_materials()
-                self.logger.info(f"物料查询完成，物料信息: {self.mat_obj}")
-            
-            with allure.step("渲染订单行类型"):
-                self.logger.info(f"开始渲染订单行类型 - 订单类型: {self.so_type_code}")
+            with allure.step("渲染订单行"):
                 self._render_order_line()
                 assert self.so_items is not None, "订单行信息为空"
                 self.logger.debug(f"订单行信息: {json.dumps(self.so_items, indent=2, ensure_ascii=False)}")
 
             # 2. 自动定价
             with allure.step("自动定价"):
-                self.logger.info(f"开始自动定价 - 订单类型: {self.so_type_code}")
                 self._calculate_pricing()
                 assert self.so_price_data is not None, "定价信息为空"
                 self.logger.debug(f"定价信息: {json.dumps(self.so_price_data, indent=2, ensure_ascii=False)}")
 
             # 3. 保存或提交订单
             with allure.step("保存或提交订单"):
-                self.logger.info(f"开始{'提交' if is_submit else '保存'}订单 - 订单类型: {self.so_type_code}")
                 url = self.so_path["保存订单"]
                 data = self.so_params.get(url, {})
+                self.logger.info(f"保存订单请求参数: {json.dumps(data, indent=2, ensure_ascii=False)}")
+                data['params']['request']['soItems'] = self.so_items #更新变量
+                data['params']['request']['syncSubmit'] = is_submit #更新变量
                 data = {
                     "params": {
                         "request": {
@@ -425,9 +361,23 @@ class TestSalesOrderCreate(BaseTest):
                         }
                     }
                 }
+                allure.attach(
+                    json.dumps(data, indent=2, ensure_ascii=False),
+                    f"{'提交' if is_submit else '保存'}订单请求参数",
+                    allure.attachment_type.JSON
+                )
+                self.logger.debug(f"{'提交' if is_submit else '保存'}销售订单请求数据: {json.dumps(data,  indent=2)}")
+                
                 result = self.http.post(url, json=data, description=f"销售订单{'提交' if is_submit else '保存'}")
-                if result is None:
-                    raise RuntimeError("保存/提交订单接口返回None，请检查接口调用和参数！")
+                assert result is not None, f"销售订单{'提交' if is_submit else '保存'}失败"
+                
+                allure.attach(
+                    json.dumps(result, indent=2, ensure_ascii=False),
+                    f"{'提交' if is_submit else '保存'}订单响应数据",
+                    allure.attachment_type.JSON
+                )
+                self.logger.debug(f"{'提交' if is_submit else '保存'}销售订单响应数据: {json.dumps(result,  indent=2)}")
+                
                 if not is_submit:
                     self.order_id = result.get("data", {}).get("data", {}).get("id")
                     self.logger.info(f"销售订单保存成功，订单ID: {self.order_id}")
@@ -442,32 +392,7 @@ class TestSalesOrderCreate(BaseTest):
                 self.logger.error(f"响应内容: {e.response.text}")
             raise
 
-    @classmethod
-    def teardown_class(cls):
-        """测试类结束时打印测试结果总结"""
-        cls.logger.info("\n" + "="*50)
-        cls.logger.info("测试结果总结")
-        cls.logger.info("="*50)
-        
-        # 打印保存订单的结果
-        cls.logger.info("\n保存订单结果:")
-        cls.logger.info("-"*30)
-        for order_type, result in cls.test_results["save"].items():
-            status = "成功" if result["success"] else "失败"
-            error = f" - 错误: {result['error']}" if not result["success"] else ""
-            cls.logger.info(f"订单类型 {order_type}: {status}{error}")
-        
-        # 打印提交订单的结果
-        cls.logger.info("\n提交订单结果:")
-        cls.logger.info("-"*30)
-        for order_type, result in cls.test_results["submit"].items():
-            status = "成功" if result["success"] else "失败"
-            error = f" - 错误: {result['error']}" if not result["success"] else ""
-            cls.logger.info(f"订单类型 {order_type}: {status}{error}")
-        
-        cls.logger.info("\n" + "="*50)
-
-    @allure.title("销售订单保存-{order_type}")
+    @allure.title("销售订单保存")
     @allure.description("""
     测试步骤：
     1. 渲染订单行
@@ -475,41 +400,12 @@ class TestSalesOrderCreate(BaseTest):
     3. 保存销售订单
     """)
     @allure.severity(allure.severity_level.CRITICAL)
-    @pytest.mark.parametrize("order_type", TestSalesOrderConfig.ORDER_TYPES.keys())
     @safe_api_call(error_message="销售订单保存失败")
-    def test_save_sales_order(self, order_type):
+    def test_save_sales_order(self):
         """测试销售订单保存"""
-        self.logger.info(f"开始处理订单类型: {order_type}")
-        self.so_type_code = order_type
-        self.so_type_id = self.order_type_ids.get(order_type)
-        if not self.so_type_id:
-            self.logger.error(f"未找到订单类型 {order_type} 的ID")
-            self.test_results["save"][order_type] = {
-                "success": False,
-                "error": f"未找到订单类型ID"
-            }
-            pytest.skip(f"未找到订单类型 {order_type} 的ID")
-        
-        try:
-            self._save_or_submit_order(is_submit=False)
-            self.logger.info(f"订单类型 {order_type} 保存成功")
-            self.test_results["save"][order_type] = {
-                "success": True,
-                "error": None
-            }
-        except Exception as e:
-            error_msg = str(e)
-            if hasattr(e, 'response'):
-                error_msg += f"\n响应状态码: {e.response.status_code}"
-                error_msg += f"\n响应内容: {e.response.text}"
-            self.logger.error(f"订单类型 {order_type} 保存失败: {error_msg}")
-            self.test_results["save"][order_type] = {
-                "success": False,
-                "error": error_msg
-            }
-            raise
+        self._save_or_submit_order(is_submit=False)
 
-    @allure.title("销售订单提交-{order_type}")
+    @allure.title("销售订单提交")
     @allure.description("""
     测试步骤：
     1. 渲染订单行
@@ -517,39 +413,10 @@ class TestSalesOrderCreate(BaseTest):
     3. 提交销售订单
     """)
     @allure.severity(allure.severity_level.CRITICAL)
-    @pytest.mark.parametrize("order_type", TestSalesOrderConfig.ORDER_TYPES.keys())
     @safe_api_call(error_message="销售订单提交失败")
-    def test_submit_sales_order(self, order_type):
+    def test_submit_sales_order(self):
         """测试销售订单提交"""
-        self.logger.info(f"开始处理订单类型: {order_type}")
-        self.so_type_code = order_type
-        self.so_type_id = self.order_type_ids.get(order_type)
-        if not self.so_type_id:
-            self.logger.error(f"未找到订单类型 {order_type} 的ID")
-            self.test_results["submit"][order_type] = {
-                "success": False,
-                "error": f"未找到订单类型ID"
-            }
-            pytest.skip(f"未找到订单类型 {order_type} 的ID")
-        
-        try:
-            self._save_or_submit_order(is_submit=True)
-            self.logger.info(f"订单类型 {order_type} 提交成功")
-            self.test_results["submit"][order_type] = {
-                "success": True,
-                "error": None
-            }
-        except Exception as e:
-            error_msg = str(e)
-            if hasattr(e, 'response'):
-                error_msg += f"\n响应状态码: {e.response.status_code}"
-                error_msg += f"\n响应内容: {e.response.text}"
-            self.logger.error(f"订单类型 {order_type} 提交失败: {error_msg}")
-            self.test_results["submit"][order_type] = {
-                "success": False,
-                "error": error_msg
-            }
-            raise
+        self._save_or_submit_order(is_submit=True)
 
 
 
@@ -559,6 +426,5 @@ if __name__ == "__main__":
     # pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])
     test = TestSalesOrderCreate()
     test.setup_class()
-    # 使用 pytest 运行测试，这样会自动处理参数化测试
-    pytest.main(["-v", __file__, "--env=test"])
-    
+    test.test_save_sales_order()
+    test.test_submit_sales_order()
