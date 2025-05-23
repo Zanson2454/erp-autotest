@@ -441,4 +441,3 @@ if __name__ == "__main__":
     test.setup_class()
     test.test_save_sales_order()
     test.test_submit_sales_order()
-    

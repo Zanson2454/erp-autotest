@@ -17,6 +17,21 @@ api_params:
             - fieldAlias: "createdBy"  # 排序字段
               sortType: "DESC"  # 排序方式
       modelKey: "ERP_SCM$sls_so_type_cf"  # 模型键
+  # 订单行类型查询
+  "/api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService?tmodule=ERP_SCM&modelKey=ERP_SCM$sls_so_item_type_cf":
+    sceneKey: "ERP_SCM$so_item_type_cf"
+    viewKey: "ERP_SCM$so_item_type_cf:list"
+    containerKey: "ERP_SCM$so_item_type_cf-list-ERP_SCM$sls_so_item_type_cf"
+    appId: 0
+    teamId: 22
+    serviceKey: "ERP_SCM$SYS_PagingDataService"
+    params:
+      request:
+        pageable:
+          pageNo: 1
+          pageSize: 20
+          conditionItems: null
+      modelKey: "ERP_SCM$sls_so_item_type_cf"
 
   # 订单详情查询服务
   "/api/trantor/service/engine/execute/ERP_SCM$SYS_FindDataByIdService?tmodule=ERP_SCM&modelKey=ERP_SCM$sls_so_type_cf":

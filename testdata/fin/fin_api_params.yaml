@@ -2282,7 +2282,6 @@ api_params:
   /api/trantor/service/engine/execute/ERP_FIN$SETT_ITEM_MANUAL_CREATE_EVENT_SERVICE:
     params:
       request:
-        invMvmItemCode: string
         netDocAmt: 0
         purSlsOrgType: string
         settDocId: {}
@@ -2339,7 +2338,6 @@ api_params:
         relId: 0
         settDocPrice: 0
         partnerName: string
-        extLatestPiSbDate: 0
         comOrgId: {}
         dnId: 0
         extPartner: string
@@ -14124,7 +14122,8 @@ api_params:
   /api/trantor/service/engine/execute/ERP_FIN$SETT_ITEM_TR_INVOKE_CODE_RULE_SERVICE:
     params:
       request:
-        formParams: {}
+        ruleKey: string
+      modelKey: string
   /api/trantor/service/engine/execute/ERP_FIN$FIN_ARM_AR_HEAD_TR_GEI_EXPORT_SERVICE:
     params:
       request: {}
