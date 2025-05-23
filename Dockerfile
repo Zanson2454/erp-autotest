@@ -2,10 +2,14 @@
 FROM m.daocloud.io/docker.io/python:3.9-slim
 
 # 设置环境变量，优化Python和pip
-ENV PYTHONDONTWRITEBYTECODE=1 \  # 防止Python生成.pyc文件，减少镜像大小
-    PYTHONUNBUFFERED=1 \         # 实时输出Python日志，便于调试
-    PIP_NO_CACHE_DIR=1 \         # 不缓存pip下载的包，减少镜像大小
-    PIP_DISABLE_PIP_VERSION_CHECK=1  # 禁用pip版本检查，加快构建速度
+# PYTHONDONTWRITEBYTECODE=1: 防止Python生成.pyc文件，减少镜像大小
+# PYTHONUNBUFFERED=1: 实时输出Python日志，便于调试
+# PIP_NO_CACHE_DIR=1: 不缓存pip下载的包，减少镜像大小
+# PIP_DISABLE_PIP_VERSION_CHECK=1: 禁用pip版本检查，加快构建速度
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
 
 WORKDIR /app    # 设置工作目录
 USER root
