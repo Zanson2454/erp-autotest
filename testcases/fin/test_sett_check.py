@@ -239,10 +239,62 @@ class TestSettlementItem(BaseTest):
         assert result.get("data").get("data")[0].get("settItemStatus") == "CREATED"
         assert result.get("data").get("data")[0].get("asyncExecutionStatus") == 'CREATED'
         
-            
+        #提供其它测试用例使用
+        return result.get("data").get("data")[0].get("id")
+        
+    @allure.title("删除结算项")
+    @allure.description("测试步骤：删除结算项")
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_delete_sett_item(self):
+        """测试删除结算项"""
+        url = self.fin_path["apis"]["结算项-删除服务"]["path"]
+        self.logger.debug(f"删除结算项接口URL: {url}")
+        
+        #查询最新一条结算项
+        sql="""
+            select *
+            from sett_item_tr where deleted=0
+            and sett_item_status='CREATED'
+            order by created_at desc;
+        """
+        request_id=self.db.query(sql)[0]["id"]
+        
+        data= self.fin_params.get(url, {})
+        data["params"]["request"]["id"] = request_id
+        
+        result = self.http.post(url, json=data, description="删除结算项")
+        self.assert_util.assert_response_success(result)
+        after_sql=f"""
+            select *
+            from sett_item_tr where deleted=0
+            and sett_item_status='CREATED'
+            and id={request_id};
+        """
+        after_result=self.db.query(after_sql)
+        assert not after_result
+
+    @allure.title("查询结算项分页数据")
+    @allure.description("测试步骤：查询结算项分页数据")
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_sett_item_paging_data(self):
+        """测试结算项分页数据"""
+        url = self.fin_path["apis"]["结算项表-分页数据服务"]["path"]
+        self.logger.debug(f"结算项分页数据接口URL: {url}")
+        
+        data= self.fin_params.get(url, {})
+        data["params"]["request"]["pageable"]["pageNo"] = 1
+        data["params"]["request"]["pageable"]["pageSize"] = 200
+        
+        result = self.http.post(url, json=data, description="结算项分页数据")
+        self.assert_util.assert_response_success(result)
+        assert result.get("data").get("data").get("total") >= 0
+
+
 if __name__ == "__main__":
     test = TestSettlementItem()
     test.setup_class()
-    test.test_get_sett_item_code()
-    test.test_add_sett_item()
+    #test.test_delete_sett_item()
+    #test.test_get_sett_item_code()
+    #test.test_add_sett_item()
     # test.test_search_detail()
+    test.test_sett_item_paging_data()
