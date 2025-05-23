@@ -1,33 +1,34 @@
 version: "1.1"
-name: "CI Pipeline"
+name: ""
 stages:
+  # 第一阶段：代码检出
   - stage:
       - git-checkout:
           alias: git-checkout
           description: 代码仓库克隆
           params:
-            depth: 1
-
+            depth: 1  # 浅克隆，只获取最新的提交，加快克隆速度
+  # 第二阶段：构建Docker镜像
   - stage:
       - dockerfile:
           alias: pack-testapi
           description: 针对自定义 dockerfile 打包，产出可运行镜像
           params:
             path: Dockerfile
-            workdir: ${git-checkout}
-
+            workdir: ${git-checkout}  # 工作目录，使用第一阶段检出的代码目录
+  # 第三阶段：制品发布
   - stage:
       - release:
           alias: release
-          description: 用于打包完成时，向dicehub 提交完整可部署的dice.yml
+          version: "1.0"
           params:
-            dice_yml: ${git-checkout}/dice.yml
+            dice_yml: ${git-checkout}/dice.yml    # dice.yml配置文件路径
             image:
-              test-api: ${pack-testapi:OUTPUT:image}
-
+              erp-autotest: ${pack-testapi:OUTPUT:image}  # 制品名称，使用第二阶段构建的镜像
+  # 第四阶段：部署到Erda平台
   - stage:
       - dice:
           alias: dice
           description: 用于 Erda 平台部署应用服务
           params:
-            release_id_path: ${release}
+            release_id_path: ${release}  # 使用第三阶段的发布ID
