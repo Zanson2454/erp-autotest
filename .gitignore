@@ -72,3 +72,4 @@ db.sqlite3-journal
 **/.DS_Store
 
 .cursor/
+.DS_Store
