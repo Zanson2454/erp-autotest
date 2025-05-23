@@ -11,20 +11,23 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1
 
-WORKDIR /app    # 设置工作目录
+# 设置工作目录
+WORKDIR /app
+
 USER root
 
 # 使用阿里云镜像源替换Debian官方源
 RUN sed -i 's|deb.debian.org|mirrors.aliyun.com|g' /etc/apt/sources.list.d/debian.sources
 
 # 安装编译工具和系统依赖
+# 注：安装default-jre是因为Allure需要Java运行环境
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     build-essential \
     gcc \
     wget \
     unzip \
-    default-jre && \    # 安装Java运行环境，Allure需要
+    default-jre && \
     rm -rf /var/lib/apt/lists/*
 
 # 配置pip镜像源
@@ -40,7 +43,7 @@ RUN python -m pip install --upgrade pip && \
 RUN wget https://mirrors.huaweicloud.com/repository/maven/io/qameta/allure/allure-commandline/2.24.1/allure-commandline-2.24.1.zip && \
     unzip allure-commandline-2.24.1.zip -d /opt/ && \
     ln -s /opt/allure-2.24.1/bin/allure /usr/local/bin/allure && \
-    rm allure-commandline-2.24.1.zip    # 删除zip包，减少镜像大小
+    rm allure-commandline-2.24.1.zip
 
 # 复制项目文件
 COPY . /app
