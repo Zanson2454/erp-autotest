@@ -13,7 +13,7 @@ services:
         # path 配置健康检查 http get 的 URI 路径
         path: /
         # duration 设定健康检查需要持续的检查的时间，单位是秒；这个时间值应该设置为比服务启动需要的时间更长一点
-        duration: 300
+        duration: 600
     resources:
       cpu: 0.5
       mem: 256
