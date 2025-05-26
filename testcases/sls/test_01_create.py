@@ -17,7 +17,7 @@ sys.path.insert(0, str(project_root))
 from utils.yaml_util import YamlUtil
 from utils.exception_util import handle_exception, safe_api_call, handle_class_method_exception
 from testcases.comm.base_test import BaseTest
-from testcases.sls.test_00_so_config_check import TestSalesOrderConfig
+from testcases.sls.sales_order_config import SalesOrderConfig
 
 
 class TestSalesOrderCreate(BaseTest):
@@ -33,7 +33,8 @@ class TestSalesOrderCreate(BaseTest):
         super().setup_class()
         
         # 初始化订单配置
-        cls.order_config = TestSalesOrderConfig()
+        cls.order_config = SalesOrderConfig()
+        
         
         # 初始化测试数据
         cls.so_type_id = cls.ids.get("so_type_id")
@@ -512,15 +513,15 @@ class TestSalesOrderCreate(BaseTest):
 
     
     def teardown_class(self):
-        self.clear_so
+        # self.clear_so --todo
         self.logger.info("销售订单创建测试类清理")
 
 
 if __name__ == "__main__":
-    # allure_dir = os.path.join(project_root, "reports", "allure-results")
-    # pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])
-    test = TestSalesOrderCreate()
-    test.setup_class()
-    test.test_save_multiple_order_types()
-    test.test_submit_multiple_order_types()
+    allure_dir = os.path.join(project_root, "reports", "allure-results")
+    pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])
+    # test = TestSalesOrderCreate()
+    # test.setup_class()
+    # test.test_save_multiple_order_types()
+    # test.test_submit_multiple_order_types()
     
