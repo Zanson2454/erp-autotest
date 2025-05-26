@@ -32,3 +32,13 @@ stages:
           description: 用于 Erda 平台部署应用服务
           params:
             release_id_path: ${release}  # 使用第三阶段的发布ID
+  # 第五阶段：自动化测试阶段（服务已启动，自动触发用例）
+  - stage:
+      - custom-script:
+          alias: run-api-test
+          description: 服务启动后自动化接口测试
+          params:
+            commands:
+              - pytest --alluredir=reports/allure-results testcases
+              - allure generate reports/allure-results -o reports/allure-report --clean
+              # 可选：上传 Allure 报告到制品库或 OSS

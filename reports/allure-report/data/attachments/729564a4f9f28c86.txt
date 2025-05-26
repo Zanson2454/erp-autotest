@@ -1,3 +1,0 @@
-2025-04-22 17:43:34.767 | INFO     | testcases.SCM.base_test:setup_method:136 - 开始测试: test_02_submit_sales_order_edit
-2025-04-22 17:43:34.772 | INFO     | test_04_operator:test_01_query_order_detail:138 - 使用已有订单ID: 16379029
-2025-04-22 17:43:34.775 | INFO     | testcases.SCM.base_test:_make_request:155 - 发送请求: 查询订单详情

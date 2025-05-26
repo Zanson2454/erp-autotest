@@ -14,8 +14,6 @@ RUN mkdir -p /root/.pip && \
 COPY requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt --timeout 120
 
-# 先运行所有测试用例并生成 Allure 报告，全部通过后再启动服务
-CMD pytest --alluredir=reports/allure-results testcases && \
-    allure generate reports/allure-results -o reports/allure-report --clean && \
-    uvicorn main:app --reload --host 0.0.0.0 --port 8000
+# 只启动 uvicorn 服务，测试请在 CI/CD 流水线单独执行
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 

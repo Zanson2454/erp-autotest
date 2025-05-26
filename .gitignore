@@ -1,5 +1,4 @@
 # 忽略静态文件
-/static/*
 /media/*
 
 # 忽略迁移文件
@@ -73,3 +72,9 @@ db.sqlite3-journal
 
 .cursor/
 .DS_Store
+
+
+# 忽略本地报告
+
+reports/allure-results/*
+reports/allure-report/*
