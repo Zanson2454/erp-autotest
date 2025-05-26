@@ -65,7 +65,6 @@ db.sqlite3-journal
 
 # 忽略配置数据
 .env
-*reports/*
 *logs/*
 .DS_Store
 **/.DS_Store
