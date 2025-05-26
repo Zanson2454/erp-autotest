@@ -1,0 +1,2 @@
+2025-05-26 22:36:53.998 | INFO     | utils.log_util:info:65 - 开始测试: test_04_query_orders_by_so_type
+2025-05-26 22:36:54.000 | ERROR    | utils.log_util:error:77 - 未获取到订单类型ID，无法执行按单据类型查询测试

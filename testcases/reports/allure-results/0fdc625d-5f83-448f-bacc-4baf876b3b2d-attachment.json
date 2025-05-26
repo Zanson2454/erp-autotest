@@ -1,0 +1,129 @@
+{
+  "params": {
+    "request": {
+      "id": null,
+      "priceIdempotent": null,
+      "reCalculate": false,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "soDocDate": 1748188800000,
+      "priceCalcDate": 1748270340306,
+      "custId": {
+        "id": 2059001
+      },
+      "addrId": {
+        "id": null
+      },
+      "addrDetail": null,
+      "custPersonName": null,
+      "custPhone": null,
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPhone": "17376596912",
+      "slsPersonName": "章昂",
+      "slsOrgId": {
+        "id": 14579001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "isFixedExchRate": false,
+      "currExchangeRateType": 2000001,
+      "exchRate": 1,
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250526100192",
+          "matId": {
+            "id": 14633001,
+            "context": {},
+            "matCode": "hxymat-20241202744",
+            "matName": "hxy测试物料4",
+            "genMatTypeCfId": {
+              "id": 2000001
+            },
+            "baseUomId": 14047001,
+            "isKitSls": false,
+            "isCompleteSetDel": false,
+            "slsUomId": {
+              "id": 14047001
+            }
+          },
+          "matCode": "hxymat-20241202744",
+          "matName": "hxy测试物料4",
+          "soItemSlsQty": 12,
+          "soItemGrossPrice": 10.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 13.805309734513,
+          "grossTradeAmt": 120.0,
+          "soSchlDelDate": 1748188800000,
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {}
+          },
+          "uomSlsId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "weightUomId": {
+            "context": {}
+          },
+          "volumUomId": {
+            "context": {}
+          },
+          "delAddrId": {
+            "context": {}
+          },
+          "itemNumber": 1,
+          "salesPrice": 10.0,
+          "children": null,
+          "matTypeId": 2000001,
+          "isCompleteSet": false,
+          "salesAmt": 120.0
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ]
+    }
+  }
+}

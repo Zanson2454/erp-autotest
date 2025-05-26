@@ -1,0 +1,5238 @@
+2025-05-26 22:38:57.366 | INFO     | utils.log_util:info:65 - 开始测试: test_submit_multiple_order_types
+2025-05-26 22:38:57.367 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$sls_sales_order_create_init_service
+2025-05-26 22:38:57.368 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-26 22:38:57.368 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "btClass": "SALES",
+      "orderTypeId": 2101001,
+      "orderLineTypeId": 2103001
+    }
+  }
+}
+2025-05-26 22:38:57.369 | INFO     | utils.request_util:request:88 - 请求描述: 销售订单创建初始化
+2025-05-26 22:38:57.422 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-26 22:38:57.423 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Mon, 26 May 2025 14:38:57 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '6dabdeb8-197836', 'Trace-Id': '6dabdeb8-197836', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNmRlMjg1NjlhNWFkNGQxMDg2MjczNTg3ODQ4MjFlOGYiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODUyOTUzNywibmJmIjoxNzQ4MjcwMzM3LCJpYXQiOjE3NDgyNzAzMzcsImp0aSI6IjE3NGNiNTM1NDZhYzRkN2ViOGY1ZTQ2MmQwMjgwMWQxIn0.CwKlSJxTWdDQBnU7Y0rkLr5S7qKLB20Asgge2tjgf2Y; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Thu, 29 May 2025 14:38:57 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '33', 'X-Kong-Proxy-Latency': '0', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-26 22:38:57.423 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "6dabdeb8-197836",
+  "success": true,
+  "data": {
+    "data": {
+      "slsOrgId": null,
+      "slsCurrId": null,
+      "extAchievementShop": null,
+      "slsDcId": null,
+      "effectiveAt": null,
+      "slsPhone": "17376596912",
+      "slsComId": null,
+      "baseCurrId": null,
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "soTypeId": {
+        "id": 2101001,
+        "context": {},
+        "originOrgId": 0,
+        "version": 68,
+        "deleted": 0,
+        "createdAt": 1685108645000,
+        "updatedAt": 1745892294000,
+        "createdBy": 27,
+        "updatedBy": 477234922377861,
+        "soTypeCode": "STND",
+        "soTypeName": "标准销售",
+        "soTypeDesc": "标准销售",
+        "partnerProcedureHeadRef": {
+          "id": 14005002
+        },
+        "status": "ENABLED",
+        "submitApproval": true,
+        "modifyApproval": false,
+        "currExchangeRateType": 2000001,
+        "btClass": "SALES",
+        "syncPrice": false,
+        "isRev": false
+      }
+    }
+  }
+}
+2025-05-26 22:38:57.424 | DEBUG    | utils.log_util:debug:69 - 销售人员信息: {'id': 14094003, 'context': {}, 'name': '章昂'}
+2025-05-26 22:38:57.425 | INFO     | utils.log_util:info:65 - 销售订单创建初始化完成，订单类型: STND
+2025-05-26 22:38:57.426 | INFO     | utils.log_util:info:65 - 查询客户信息URL: /api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService?tmodule=ERP_SCM&modelKey=ERP_GEN$gen_cust_info_md
+2025-05-26 22:38:57.427 | DEBUG    | utils.log_util:debug:69 - 查询客户信息请求数据: {
+  "sceneKey": "ERP_SCM$sls_so_730",
+  "viewKey": "ERP_SCM$sls_so_730:edit",
+  "serviceKey": "ERP_SCM$SYS_PagingDataService",
+  "params": {
+    "modelKey": "ERP_GEN$gen_cust_info_md",
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "conditionGroup": {
+          "type": "ConditionGroup",
+          "logicOperator": "AND",
+          "conditions": [
+            {
+              "type": "ConditionGroup",
+              "logicOperator": "AND",
+              "conditions": [
+                {
+                  "type": "ConditionGroup",
+                  "logicOperator": "AND",
+                  "conditions": [
+                    {
+                      "key": "V9-9Z27ZOiitzmCTR3toD",
+                      "type": "ConditionLeaf",
+                      "leftValue": {
+                        "id": "Cs-llCMSNSEI2xK0ajnbw",
+                        "key": "Cs-llCMSNSEI2xK0ajnbw",
+                        "type": "VarValue",
+                        "fieldType": "Text",
+                        "valueType": "VAR",
+                        "varValue": [
+                          {
+                            "valueKey": "custCode",
+                            "valueName": "custCode"
+                          }
+                        ]
+                      },
+                      "operator": "CONTAINS",
+                      "rightValue": {
+                        "key": "Kf1gTg48B2elte3S_U-Wb",
+                        "type": "VarValue",
+                        "fieldType": "Text",
+                        "valueType": "CONST",
+                        "constValue": "AUTOTEST_CUST"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "sortOrders": null,
+        "keyword": null
+      }
+    }
+  }
+}
+2025-05-26 22:38:57.427 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService?tmodule=ERP_SCM&modelKey=ERP_GEN$gen_cust_info_md
+2025-05-26 22:38:57.428 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-26 22:38:57.429 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "sceneKey": "ERP_SCM$sls_so_730",
+  "viewKey": "ERP_SCM$sls_so_730:edit",
+  "serviceKey": "ERP_SCM$SYS_PagingDataService",
+  "params": {
+    "modelKey": "ERP_GEN$gen_cust_info_md",
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "conditionGroup": {
+          "type": "ConditionGroup",
+          "logicOperator": "AND",
+          "conditions": [
+            {
+              "type": "ConditionGroup",
+              "logicOperator": "AND",
+              "conditions": [
+                {
+                  "type": "ConditionGroup",
+                  "logicOperator": "AND",
+                  "conditions": [
+                    {
+                      "key": "V9-9Z27ZOiitzmCTR3toD",
+                      "type": "ConditionLeaf",
+                      "leftValue": {
+                        "id": "Cs-llCMSNSEI2xK0ajnbw",
+                        "key": "Cs-llCMSNSEI2xK0ajnbw",
+                        "type": "VarValue",
+                        "fieldType": "Text",
+                        "valueType": "VAR",
+                        "varValue": [
+                          {
+                            "valueKey": "custCode",
+                            "valueName": "custCode"
+                          }
+                        ]
+                      },
+                      "operator": "CONTAINS",
+                      "rightValue": {
+                        "key": "Kf1gTg48B2elte3S_U-Wb",
+                        "type": "VarValue",
+                        "fieldType": "Text",
+                        "valueType": "CONST",
+                        "constValue": "AUTOTEST_CUST"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "sortOrders": null,
+        "keyword": null
+      }
+    }
+  }
+}
+2025-05-26 22:38:57.430 | INFO     | utils.request_util:request:88 - 请求描述: 查询客户信息
+2025-05-26 22:38:57.493 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-26 22:38:57.493 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Mon, 26 May 2025 14:38:57 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': 'fb2478c3-197837', 'Trace-Id': 'fb2478c3-197837', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNmRlMjg1NjlhNWFkNGQxMDg2MjczNTg3ODQ4MjFlOGYiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODUyOTUzNywibmJmIjoxNzQ4MjcwMzM3LCJpYXQiOjE3NDgyNzAzMzcsImp0aSI6IjE3NGNiNTM1NDZhYzRkN2ViOGY1ZTQ2MmQwMjgwMWQxIn0.CwKlSJxTWdDQBnU7Y0rkLr5S7qKLB20Asgge2tjgf2Y; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Thu, 29 May 2025 14:38:57 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '36', 'X-Kong-Proxy-Latency': '1', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-26 22:38:57.494 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "fb2478c3-197837",
+  "success": true,
+  "data": {
+    "data": {
+      "total": 1,
+      "data": [
+        {
+          "custCode": "AUTOTEST_CUST",
+          "custName": "客户(自动化)",
+          "custShortName": null,
+          "custCateType": "COMPANY",
+          "comId": null,
+          "status": "ENABLED",
+          "remark": null,
+          "custTypeId": {
+            "id": 2503008
+          },
+          "custPreId": null,
+          "relatedCompanyInformation": {
+            "id": 14419001
+          },
+          "associatePersonalInformation": null,
+          "custExtCode": null,
+          "genBusinessPartnerMdId": {
+            "id": 2059001
+          },
+          "id": 2059001,
+          "createdBy": {
+            "id": 477142386786949
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1715829452000,
+          "updatedAt": 1744359938000,
+          "version": 38,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": null
+        }
+      ]
+    }
+  }
+}
+2025-05-26 22:38:57.494 | INFO     | utils.log_util:info:65 - 客户信息查询完成
+2025-05-26 22:38:57.495 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SO_QUERY_PARTNER_EVENT_SERVICE
+2025-05-26 22:38:57.495 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-26 22:38:57.496 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "reCalculate": false,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "soDocDate": 1748188800000,
+      "priceCalcDate": 1748270337495,
+      "custId": {
+        "id": 2059001
+      },
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPhone": "17376596912",
+      "slsPersonName": "章昂",
+      "isFixedExchRate": false,
+      "currExchangeRateType": 2000001,
+      "soItems": [
+        {
+          "bomWhether": false,
+          "soSchlDelDate": 1748188800000
+        }
+      ]
+    }
+  }
+}
+2025-05-26 22:38:57.497 | INFO     | utils.request_util:request:88 - 请求描述: 查询相关方
+2025-05-26 22:38:57.575 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-26 22:38:57.576 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Mon, 26 May 2025 14:38:57 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '18898d5d-197838', 'Trace-Id': '18898d5d-197838', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNmRlMjg1NjlhNWFkNGQxMDg2MjczNTg3ODQ4MjFlOGYiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODUyOTUzNywibmJmIjoxNzQ4MjcwMzM3LCJpYXQiOjE3NDgyNzAzMzcsImp0aSI6IjE3NGNiNTM1NDZhYzRkN2ViOGY1ZTQ2MmQwMjgwMWQxIn0.CwKlSJxTWdDQBnU7Y0rkLr5S7qKLB20Asgge2tjgf2Y; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Thu, 29 May 2025 14:38:57 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '43', 'X-Kong-Proxy-Latency': '1', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-26 22:38:57.576 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "18898d5d-197838",
+  "success": true,
+  "data": {
+    "data": {
+      "context": {},
+      "soDocDate": 1748188800000,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "custId": {
+        "id": 2059001
+      },
+      "slsPerson": {
+        "id": 14094003
+      },
+      "slsPersonName": "章昂",
+      "slsPhone": "17376596912",
+      "currExchangeRateType": 2000001,
+      "priceCalcDate": 1748270337495,
+      "soItems": [
+        {
+          "context": {},
+          "soSchlDelDate": 1748188800000,
+          "bomWhether": false
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ],
+      "reCalculate": false,
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false,
+      "syncSubmit": false,
+      "isFixedExchRate": false
+    }
+  }
+}
+2025-05-26 22:38:57.577 | INFO     | utils.log_util:info:65 - 相关方查询完成
+2025-05-26 22:38:57.577 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$sls_sales_organization_paging_service?tmodule=ERP_SCM
+2025-05-26 22:38:57.578 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-26 22:38:57.578 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "conditionGroup": {
+          "type": "ConditionGroup",
+          "logicOperator": "AND",
+          "conditions": [
+            {
+              "type": "ConditionGroup",
+              "logicOperator": "AND",
+              "conditions": [
+                {
+                  "type": "ConditionGroup",
+                  "logicOperator": "AND",
+                  "conditions": [
+                    {
+                      "key": "nr_nqTvXmIyHnHxKfmn3S",
+                      "type": "ConditionLeaf",
+                      "leftValue": {
+                        "id": "iJlX7JIkAyn7AIr9omqK-",
+                        "key": "iJlX7JIkAyn7AIr9omqK-",
+                        "type": "VarValue",
+                        "fieldType": "Text",
+                        "valueType": "VAR",
+                        "varValue": [
+                          {
+                            "valueKey": "orgCode",
+                            "valueName": "orgCode"
+                          }
+                        ]
+                      },
+                      "operator": "CONTAINS",
+                      "rightValue": {
+                        "key": "ggwEgoMfFc91CYI1zUwzb",
+                        "type": "VarValue",
+                        "fieldType": "Text",
+                        "valueType": "CONST",
+                        "constValue": "AUTOTEST_SLS_ORG"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "sortOrders": null,
+        "keyword": null
+      }
+    }
+  }
+}
+2025-05-26 22:38:57.579 | INFO     | utils.request_util:request:88 - 请求描述: 查询销售组织列表
+2025-05-26 22:38:57.639 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-26 22:38:57.640 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Mon, 26 May 2025 14:38:57 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '18898d5d-197839', 'Trace-Id': '18898d5d-197839', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNmRlMjg1NjlhNWFkNGQxMDg2MjczNTg3ODQ4MjFlOGYiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODUyOTUzNywibmJmIjoxNzQ4MjcwMzM3LCJpYXQiOjE3NDgyNzAzMzcsImp0aSI6IjE3NGNiNTM1NDZhYzRkN2ViOGY1ZTQ2MmQwMjgwMWQxIn0.CwKlSJxTWdDQBnU7Y0rkLr5S7qKLB20Asgge2tjgf2Y; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Thu, 29 May 2025 14:38:57 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '35', 'X-Kong-Proxy-Latency': '1', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-26 22:38:57.640 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "18898d5d-197839",
+  "success": true,
+  "data": {
+    "data": {
+      "data": [
+        {
+          "orgCode": "AUTOTEST_SLS_ORG",
+          "orgName": "销售组织(自动化)",
+          "orgStatus": "ENABLED",
+          "orgBusinessTypeCode": null,
+          "comOrgId": {
+            "id": 14507001
+          },
+          "id": 14579001
+        }
+      ],
+      "total": 1
+    }
+  }
+}
+2025-05-26 22:38:57.641 | DEBUG    | utils.log_util:debug:69 - 销售组织列表查询响应: {'requestId': '18898d5d-197839', 'success': True, 'data': {'data': {'data': [{'orgCode': 'AUTOTEST_SLS_ORG', 'orgName': '销售组织(自动化)', 'orgStatus': 'ENABLED', 'orgBusinessTypeCode': None, 'comOrgId': {'id': 14507001}, 'id': 14579001}], 'total': 1}}}
+2025-05-26 22:38:57.641 | INFO     | utils.log_util:info:65 - 销售组织列表查询完成: {'orgCode': 'AUTOTEST_SLS_ORG', 'orgName': '销售组织(自动化)', 'orgStatus': 'ENABLED', 'orgBusinessTypeCode': None, 'comOrgId': {'id': 14507001}, 'id': 14579001}
+2025-05-26 22:38:57.642 | INFO     | utils.log_util:info:65 - 销售组织列表查询完成
+物料查询请求参数: {
+  "params": {
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "sortOrders": [
+          {
+            "fieldAlias": "matCode",
+            "id": "matCode-0",
+            "sortType": "ASC"
+          },
+          {
+            "fieldAlias": "matName",
+            "id": "matName-1",
+            "sortType": "ASC"
+          }
+        ],
+        "keyword": "hxymat-20241202744"
+      },
+      "slsOrgId": 14579001,
+      "slsDcId": 14378001
+    }
+  }
+}
+2025-05-26 22:38:57.642 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$INV_MAT_PAGING_SERVICE
+2025-05-26 22:38:57.643 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-26 22:38:57.643 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "sortOrders": [
+          {
+            "fieldAlias": "matCode",
+            "id": "matCode-0",
+            "sortType": "ASC"
+          },
+          {
+            "fieldAlias": "matName",
+            "id": "matName-1",
+            "sortType": "ASC"
+          }
+        ],
+        "keyword": "hxymat-20241202744"
+      },
+      "slsOrgId": 14579001,
+      "slsDcId": 14378001
+    }
+  }
+}
+2025-05-26 22:38:57.643 | INFO     | utils.request_util:request:88 - 请求描述: 查询物料列表
+2025-05-26 22:38:57.712 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-26 22:38:57.713 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Mon, 26 May 2025 14:38:57 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '39ac4003-197840', 'Trace-Id': '39ac4003-197840', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNmRlMjg1NjlhNWFkNGQxMDg2MjczNTg3ODQ4MjFlOGYiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODUyOTUzNywibmJmIjoxNzQ4MjcwMzM3LCJpYXQiOjE3NDgyNzAzMzcsImp0aSI6IjE3NGNiNTM1NDZhYzRkN2ViOGY1ZTQ2MmQwMjgwMWQxIn0.CwKlSJxTWdDQBnU7Y0rkLr5S7qKLB20Asgge2tjgf2Y; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Thu, 29 May 2025 14:38:57 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '45', 'X-Kong-Proxy-Latency': '2', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-26 22:38:57.714 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "39ac4003-197840",
+  "success": true,
+  "data": {
+    "data": {
+      "total": 1,
+      "data": [
+        {
+          "matCode": "hxymat-20241202744",
+          "matName": "hxy测试物料4",
+          "genMatTypeCfId": {
+            "matTypeName": "成品",
+            "id": 2000001
+          },
+          "baseUomId": {
+            "uomDesc": "双",
+            "id": 14047001
+          },
+          "cateId": {
+            "matCateName": "化工品",
+            "id": 2000002
+          },
+          "brandId": null,
+          "status": "ENABLED",
+          "bizStatus": "SALE",
+          "specModel": null,
+          "id": 14633001,
+          "updatedAt": 1746518417000
+        }
+      ]
+    }
+  }
+}
+物料查询响应数据: [
+  {
+    "matCode": "hxymat-20241202744",
+    "matName": "hxy测试物料4",
+    "genMatTypeCfId": {
+      "matTypeName": "成品",
+      "id": 2000001
+    },
+    "baseUomId": {
+      "uomDesc": "双",
+      "id": 14047001
+    },
+    "cateId": {
+      "matCateName": "化工品",
+      "id": 2000002
+    },
+    "brandId": null,
+    "status": "ENABLED",
+    "bizStatus": "SALE",
+    "specModel": null,
+    "id": 14633001,
+    "updatedAt": 1746518417000
+  }
+]
+物料查询关键字: hxymat-20241202744
+2025-05-26 22:38:57.715 | INFO     | utils.log_util:info:65 - 检查物料: hxymat-20241202744, 是否匹配关键字 hxymat-20241202744: True
+2025-05-26 22:38:57.716 | INFO     | utils.log_util:info:65 - 找到匹配的物料: hxymat-20241202744
+查到的物料code: hxymat-20241202744
+2025-05-26 22:38:57.716 | INFO     | utils.log_util:info:65 - 物料列表查询完成，使用物料: hxymat-20241202744
+2025-05-26 22:38:57.717 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SLS_AFTER_MAT_SELECT_RENDER_EVENT_SERVICE
+2025-05-26 22:38:57.718 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-26 22:38:57.718 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "addrId": {
+        "id": null
+      },
+      "custId": {
+        "id": 2059001
+      },
+      "invLoc": null,
+      "invOrg": null,
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "slsOrgId": {
+        "id": 14579001
+      },
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPhone": "17376596912",
+      "slsPersonName": "章昂",
+      "soDocDate": 1748188800000,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "currExchangeRateType": 2000001,
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ],
+      "soItems": [
+        {
+          "matId": {
+            "id": 14633001
+          },
+          "taxRateId": null,
+          "invOrgId": {
+            "id": 14375002
+          },
+          "invLocId": {
+            "id": 14376002
+          },
+          "soItemSlsQty": 12,
+          "delAddrDetail": null,
+          "delAddrId": {
+            "id": null
+          },
+          "delPersonName": null,
+          "delPhone": null
+        }
+      ],
+      "orderTypeId": 2101001,
+      "orderLineTypeId": 2103001
+    }
+  }
+}
+2025-05-26 22:38:57.719 | INFO     | utils.request_util:request:88 - 请求描述: 订单行渲染
+2025-05-26 22:38:57.884 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-26 22:38:57.885 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Mon, 26 May 2025 14:38:58 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '39ac4003-197841', 'Trace-Id': '39ac4003-197841', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNmRlMjg1NjlhNWFkNGQxMDg2MjczNTg3ODQ4MjFlOGYiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODUyOTUzNywibmJmIjoxNzQ4MjcwMzM3LCJpYXQiOjE3NDgyNzAzMzcsImp0aSI6IjE3NGNiNTM1NDZhYzRkN2ViOGY1ZTQ2MmQwMjgwMWQxIn0.CwKlSJxTWdDQBnU7Y0rkLr5S7qKLB20Asgge2tjgf2Y; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Thu, 29 May 2025 14:38:58 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '139', 'X-Kong-Proxy-Latency': '1', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-26 22:38:57.886 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "39ac4003-197841",
+  "success": true,
+  "data": {
+    "data": {
+      "context": {},
+      "soCode": "SO004919",
+      "soDocDate": 1748188800000,
+      "baseCurrId": {
+        "id": 2000001,
+        "context": {}
+      },
+      "slsCurrId": {
+        "id": 2000001,
+        "context": {}
+      },
+      "slsOrgId": {
+        "id": 14579001,
+        "context": {}
+      },
+      "slsComId": {
+        "id": 14373001,
+        "context": {}
+      },
+      "slsDcId": {
+        "id": 14378001,
+        "context": {}
+      },
+      "soTypeId": {
+        "id": 2101001,
+        "context": {}
+      },
+      "custId": {
+        "id": 2059001,
+        "context": {}
+      },
+      "addrId": {
+        "context": {}
+      },
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPersonName": "章昂",
+      "slsPhone": "17376596912",
+      "currExchangeRateType": 2000001,
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250526100190",
+          "matId": {
+            "id": 14633001,
+            "context": {},
+            "matCode": "hxymat-20241202744",
+            "matName": "hxy测试物料4",
+            "genMatTypeCfId": {
+              "id": 2000001
+            },
+            "baseUomId": 14047001,
+            "isKitSls": false,
+            "isCompleteSetDel": false,
+            "slsUomId": {
+              "id": 14047001
+            }
+          },
+          "matCode": "hxymat-20241202744",
+          "matName": "hxy测试物料4",
+          "soItemSlsQty": 12,
+          "soItemGrossPrice": 10.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 13.805309734513,
+          "grossTradeAmt": 120.0,
+          "soSchlDelDate": 1748188800000,
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {}
+          },
+          "uomSlsId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "weightUomId": {
+            "context": {}
+          },
+          "volumUomId": {
+            "context": {}
+          },
+          "delAddrId": {
+            "context": {}
+          },
+          "itemNumber": 1,
+          "salesPrice": 10.0,
+          "children": null,
+          "matTypeId": 2000001,
+          "isCompleteSet": false,
+          "salesAmt": 120.0
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ],
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false
+    }
+  }
+}
+2025-05-26 22:38:57.887 | INFO     | utils.log_util:info:65 - 订单行渲染完成，订单类型: STND
+2025-05-26 22:38:57.889 | INFO     | utils.log_util:info:65 - 自动定价请求参数: {
+  "params": {
+    "request": {
+      "id": null,
+      "priceIdempotent": null,
+      "reCalculate": false,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "soDocDate": 1748188800000,
+      "priceCalcDate": 1748270337887,
+      "custId": {
+        "id": 2059001
+      },
+      "addrId": {
+        "id": null
+      },
+      "addrDetail": null,
+      "custPersonName": null,
+      "custPhone": null,
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPhone": "17376596912",
+      "slsPersonName": "章昂",
+      "slsOrgId": {
+        "id": 14579001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "isFixedExchRate": false,
+      "currExchangeRateType": 2000001,
+      "exchRate": 1,
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250526100190",
+          "matId": {
+            "id": 14633001,
+            "context": {},
+            "matCode": "hxymat-20241202744",
+            "matName": "hxy测试物料4",
+            "genMatTypeCfId": {
+              "id": 2000001
+            },
+            "baseUomId": 14047001,
+            "isKitSls": false,
+            "isCompleteSetDel": false,
+            "slsUomId": {
+              "id": 14047001
+            }
+          },
+          "matCode": "hxymat-20241202744",
+          "matName": "hxy测试物料4",
+          "soItemSlsQty": 12,
+          "soItemGrossPrice": 10.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 13.805309734513,
+          "grossTradeAmt": 120.0,
+          "soSchlDelDate": 1748188800000,
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {}
+          },
+          "uomSlsId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "weightUomId": {
+            "context": {}
+          },
+          "volumUomId": {
+            "context": {}
+          },
+          "delAddrId": {
+            "context": {}
+          },
+          "itemNumber": 1,
+          "salesPrice": 10.0,
+          "children": null,
+          "matTypeId": 2000001,
+          "isCompleteSet": false,
+          "salesAmt": 120.0
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ]
+    }
+  }
+}
+2025-05-26 22:38:57.889 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SO_AUTO_PRICE_EVENT_copy_SERVICE
+2025-05-26 22:38:57.890 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-26 22:38:57.890 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "id": null,
+      "priceIdempotent": null,
+      "reCalculate": false,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "soDocDate": 1748188800000,
+      "priceCalcDate": 1748270337887,
+      "custId": {
+        "id": 2059001
+      },
+      "addrId": {
+        "id": null
+      },
+      "addrDetail": null,
+      "custPersonName": null,
+      "custPhone": null,
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPhone": "17376596912",
+      "slsPersonName": "章昂",
+      "slsOrgId": {
+        "id": 14579001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "isFixedExchRate": false,
+      "currExchangeRateType": 2000001,
+      "exchRate": 1,
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250526100190",
+          "matId": {
+            "id": 14633001,
+            "context": {},
+            "matCode": "hxymat-20241202744",
+            "matName": "hxy测试物料4",
+            "genMatTypeCfId": {
+              "id": 2000001
+            },
+            "baseUomId": 14047001,
+            "isKitSls": false,
+            "isCompleteSetDel": false,
+            "slsUomId": {
+              "id": 14047001
+            }
+          },
+          "matCode": "hxymat-20241202744",
+          "matName": "hxy测试物料4",
+          "soItemSlsQty": 12,
+          "soItemGrossPrice": 10.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 13.805309734513,
+          "grossTradeAmt": 120.0,
+          "soSchlDelDate": 1748188800000,
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {}
+          },
+          "uomSlsId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "weightUomId": {
+            "context": {}
+          },
+          "volumUomId": {
+            "context": {}
+          },
+          "delAddrId": {
+            "context": {}
+          },
+          "itemNumber": 1,
+          "salesPrice": 10.0,
+          "children": null,
+          "matTypeId": 2000001,
+          "isCompleteSet": false,
+          "salesAmt": 120.0
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ]
+    }
+  }
+}
+2025-05-26 22:38:57.891 | INFO     | utils.request_util:request:88 - 请求描述: 自动定价
+2025-05-26 22:38:58.034 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-26 22:38:58.034 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Mon, 26 May 2025 14:38:58 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '93da375a-197842', 'Trace-Id': '93da375a-197842', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNmRlMjg1NjlhNWFkNGQxMDg2MjczNTg3ODQ4MjFlOGYiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODUyOTUzOCwibmJmIjoxNzQ4MjcwMzM4LCJpYXQiOjE3NDgyNzAzMzgsImp0aSI6IjE3NGNiNTM1NDZhYzRkN2ViOGY1ZTQ2MmQwMjgwMWQxIn0.KX3Zk8FlaTB8ZFcFVhROKapoJ24UTd0y6nmBwAcHUho; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Thu, 29 May 2025 14:38:58 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '123', 'X-Kong-Proxy-Latency': '1', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-26 22:38:58.035 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "93da375a-197842",
+  "success": true,
+  "data": {
+    "data": {
+      "context": {},
+      "soCode": "SO004920",
+      "soDocDate": 1748188800000,
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "exchRate": 1,
+      "grossBaseAmt": 120.0,
+      "netBaseAmt": 106.194690265487,
+      "totalAmt": 120.0,
+      "taxAmt": 13.805309734513,
+      "slsOrgId": {
+        "id": 14579001
+      },
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "soTypeId": {
+        "id": 2101001
+      },
+      "custId": {
+        "id": 2059001
+      },
+      "slsPerson": {
+        "id": 14094003
+      },
+      "slsPersonName": "章昂",
+      "slsPhone": "17376596912",
+      "currExchangeRateType": 2000001,
+      "priceCalcDate": 1748270337887,
+      "discountAmt": 0,
+      "discountInfo": "",
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250526100190",
+          "matId": {
+            "id": 14633001
+          },
+          "matCode": "hxymat-20241202744",
+          "matName": "hxy测试物料4",
+          "soItemSlsQty": 12,
+          "soItemPrice": 8.849557522124,
+          "soItemGrossPrice": 10.0,
+          "taxRateId": {
+            "id": 2002002
+          },
+          "taxRate": 0.13,
+          "taxAmt": 13.805309734513,
+          "grossTradeAmt": 120.0,
+          "netTradeAmt": 106.194690265487,
+          "soSchlDelDate": 1748188800000,
+          "soItemTypeId": {
+            "id": 2103001
+          },
+          "uomSlsId": {
+            "id": 14047001
+          },
+          "uomBaseId": {
+            "id": 14047001
+          },
+          "invOrgId": {
+            "id": 14375002
+          },
+          "invLocId": {
+            "id": 14376002
+          },
+          "bomWhether": false,
+          "itemNumber": 1,
+          "isCompleteSet": false,
+          "salesPrice": 10.0,
+          "salesAmt": 120.0,
+          "slsSoItemTypeCfDTO": {
+            "id": 2103001,
+            "context": {},
+            "originOrgId": 0,
+            "version": 205,
+            "deleted": 0,
+            "createdAt": 1685108592000,
+            "updatedAt": 1745892427000,
+            "createdBy": 27,
+            "updatedBy": 477234922377861,
+            "soItemTypeCode": "NORM",
+            "soItemTypeName": "常规销售",
+            "delRelv": true,
+            "autoDelivery": true,
+            "checkInvLocRelv": true,
+            "status": "ENABLED",
+            "isAutomaticComplete": false,
+            "isCompletePickControl": false,
+            "autoPr": false,
+            "autoOutDnPost": false,
+            "settlement": true,
+            "priceControlType": "STAND"
+          },
+          "matTypeId": 2000001,
+          "giftCondition": {
+            "sls_so_head_tr": {
+              "sls_partner_links": [
+                {
+                  "partnerTypeId": 2000001,
+                  "context": {},
+                  "partnerClass": "CUSTOMER",
+                  "partnerId": 2059001
+                }
+              ],
+              "sls_dc_id": 14378001,
+              "whether_price": false,
+              "so_doc_date": "2025-05-26T00:00:00",
+              "sync_submit": false,
+              "so_items": [
+                {
+                  "itemNumber": 1,
+                  "uomSlsId": 14047001,
+                  "uomBaseId": 14047001,
+                  "soSchlDelDate": "2025-05-26T00:00:00",
+                  "salesPrice": 10.0,
+                  "matTypeId": 2000001,
+                  "soItemGrossPrice": 10.0,
+                  "invLocId": 14376002,
+                  "isCompleteSet": false,
+                  "salesAmt": 120.0,
+                  "soItemCode": "SOI20250526100190",
+                  "bomWhether": false,
+                  "taxRate": 0.13,
+                  "matId": 14633001,
+                  "context": {},
+                  "soItemTypeId": 2103001,
+                  "soItemSlsQty": 12,
+                  "taxRateId": 2002002,
+                  "matCode": "hxymat-20241202744",
+                  "taxAmt": 13.805309734513,
+                  "invOrgId": 14375002,
+                  "matName": "hxy测试物料4",
+                  "grossTradeAmt": 120.0
+                }
+              ],
+              "sls_phone": "17376596912",
+              "sls_com_id": 14373001,
+              "sls_person": 14094003,
+              "re_calculate": false,
+              "curr_exchange_rate_type": 2000001,
+              "sls_org_id": 14579001,
+              "sls_curr_id": 2000001,
+              "price_calc_date": "2025-05-26T22:38:57.887",
+              "mat_qualification_check": false,
+              "partner_check": false,
+              "context": {},
+              "is_fixed_exch_rate": false,
+              "sls_person_name": "章昂",
+              "exch_rate": 1,
+              "base_curr_id": 2000001,
+              "so_type_id": 2101001,
+              "cust_id": 2059001
+            },
+            "sls_so_item_tr": {
+              "uom_base_id": 14047001,
+              "so_schl_del_date": "2025-05-26T00:00:00",
+              "is_complete_set": false,
+              "inv_org_id": 14375002,
+              "so_item_code": "SOI20250526100190",
+              "item_number": 1,
+              "bom_whether": false,
+              "mat_type_id": 2000001,
+              "tax_rate": 0.13,
+              "tax_rate_id": 2002002,
+              "mat_code": "hxymat-20241202744",
+              "tax_amt": 13.805309734513,
+              "mat_name": "hxy测试物料4",
+              "so_item_sls_qty": 12,
+              "mat_id": 14633001,
+              "context": {},
+              "sales_price": 10.0,
+              "gross_trade_amt": 120.0,
+              "so_item_gross_price": 10.0,
+              "so_item_type_id": 2103001,
+              "uom_sls_id": 14047001,
+              "sales_amt": 120.0,
+              "inv_loc_id": 14376002
+            }
+          },
+          "discountAmt": 0,
+          "discountInfo": ""
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ],
+      "priceIdempotent": "6d401a0983da1c8915cdf5d4117ee908",
+      "preCalculate": true,
+      "reCalculate": false,
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false,
+      "successGiftStrategy": {
+        "id": 2001001,
+        "context": {},
+        "matchStatus": "MATCH_SUCCESS"
+      },
+      "giftCondition": {
+        "sls_so_head_tr": {
+          "sls_partner_links": [
+            {
+              "partnerTypeId": 2000001,
+              "context": {},
+              "partnerClass": "CUSTOMER",
+              "partnerId": 2059001
+            }
+          ],
+          "sls_dc_id": 14378001,
+          "whether_price": false,
+          "so_doc_date": "2025-05-26T00:00:00",
+          "sync_submit": false,
+          "so_items": [
+            {
+              "itemNumber": 1,
+              "uomSlsId": 14047001,
+              "uomBaseId": 14047001,
+              "soSchlDelDate": "2025-05-26T00:00:00",
+              "salesPrice": 10.0,
+              "matTypeId": 2000001,
+              "soItemGrossPrice": 10.0,
+              "invLocId": 14376002,
+              "isCompleteSet": false,
+              "salesAmt": 120.0,
+              "soItemCode": "SOI20250526100190",
+              "bomWhether": false,
+              "taxRate": 0.13,
+              "matId": 14633001,
+              "context": {},
+              "soItemTypeId": 2103001,
+              "soItemSlsQty": 12,
+              "taxRateId": 2002002,
+              "matCode": "hxymat-20241202744",
+              "taxAmt": 13.805309734513,
+              "invOrgId": 14375002,
+              "matName": "hxy测试物料4",
+              "grossTradeAmt": 120.0
+            }
+          ],
+          "sls_phone": "17376596912",
+          "sls_com_id": 14373001,
+          "sls_person": 14094003,
+          "re_calculate": false,
+          "curr_exchange_rate_type": 2000001,
+          "sls_org_id": 14579001,
+          "sls_curr_id": 2000001,
+          "price_calc_date": "2025-05-26T22:38:57.887",
+          "mat_qualification_check": false,
+          "partner_check": false,
+          "context": {},
+          "is_fixed_exch_rate": false,
+          "sls_person_name": "章昂",
+          "exch_rate": 1,
+          "base_curr_id": 2000001,
+          "so_type_id": 2101001,
+          "cust_id": 2059001
+        }
+      },
+      "syncSubmit": false,
+      "isFixedExchRate": false
+    }
+  }
+}
+2025-05-26 22:38:58.036 | DEBUG    | utils.log_util:debug:69 - 定价结果中的税率ID: {'id': 2002002}
+2025-05-26 22:38:58.036 | DEBUG    | utils.log_util:debug:69 - 定价结果中的单位ID: {'id': 14047001}
+2025-05-26 22:38:58.037 | DEBUG    | utils.log_util:debug:69 - 定价结果中的物料类型ID: 2000001
+2025-05-26 22:38:58.037 | DEBUG    | utils.log_util:debug:69 - 定价响应数据: {'context': {}, 'soCode': 'SO004920', 'soDocDate': 1748188800000, 'baseCurrId': {'id': 2000001}, 'slsCurrId': {'id': 2000001}, 'exchRate': 1, 'grossBaseAmt': 120.0, 'netBaseAmt': 106.194690265487, 'totalAmt': 120.0, 'taxAmt': 13.805309734513, 'slsOrgId': {'id': 14579001}, 'slsComId': {'id': 14373001}, 'slsDcId': {'id': 14378001}, 'soTypeId': {'id': 2101001}, 'custId': {'id': 2059001}, 'slsPerson': {'id': 14094003}, 'slsPersonName': '章昂', 'slsPhone': '17376596912', 'currExchangeRateType': 2000001, 'priceCalcDate': 1748270337887, 'discountAmt': 0, 'discountInfo': '', 'soItems': [{'context': {}, 'soItemCode': 'SOI20250526100190', 'matId': {'id': 14633001}, 'matCode': 'hxymat-20241202744', 'matName': 'hxy测试物料4', 'soItemSlsQty': 12, 'soItemPrice': 8.849557522124, 'soItemGrossPrice': 10.0, 'taxRateId': {'id': 2002002}, 'taxRate': 0.13, 'taxAmt': 13.805309734513, 'grossTradeAmt': 120.0, 'netTradeAmt': 106.194690265487, 'soSchlDelDate': 1748188800000, 'soItemTypeId': {'id': 2103001}, 'uomSlsId': {'id': 14047001}, 'uomBaseId': {'id': 14047001}, 'invOrgId': {'id': 14375002}, 'invLocId': {'id': 14376002}, 'bomWhether': False, 'itemNumber': 1, 'isCompleteSet': False, 'salesPrice': 10.0, 'salesAmt': 120.0, 'slsSoItemTypeCfDTO': {'id': 2103001, 'context': {}, 'originOrgId': 0, 'version': 205, 'deleted': 0, 'createdAt': 1685108592000, 'updatedAt': 1745892427000, 'createdBy': 27, 'updatedBy': 477234922377861, 'soItemTypeCode': 'NORM', 'soItemTypeName': '常规销售', 'delRelv': True, 'autoDelivery': True, 'checkInvLocRelv': True, 'status': 'ENABLED', 'isAutomaticComplete': False, 'isCompletePickControl': False, 'autoPr': False, 'autoOutDnPost': False, 'settlement': True, 'priceControlType': 'STAND'}, 'matTypeId': 2000001, 'giftCondition': {'sls_so_head_tr': {'sls_partner_links': [{'partnerTypeId': 2000001, 'context': {}, 'partnerClass': 'CUSTOMER', 'partnerId': 2059001}], 'sls_dc_id': 14378001, 'whether_price': False, 'so_doc_date': '2025-05-26T00:00:00', 'sync_submit': False, 'so_items': [{'itemNumber': 1, 'uomSlsId': 14047001, 'uomBaseId': 14047001, 'soSchlDelDate': '2025-05-26T00:00:00', 'salesPrice': 10.0, 'matTypeId': 2000001, 'soItemGrossPrice': 10.0, 'invLocId': 14376002, 'isCompleteSet': False, 'salesAmt': 120.0, 'soItemCode': 'SOI20250526100190', 'bomWhether': False, 'taxRate': 0.13, 'matId': 14633001, 'context': {}, 'soItemTypeId': 2103001, 'soItemSlsQty': 12, 'taxRateId': 2002002, 'matCode': 'hxymat-20241202744', 'taxAmt': 13.805309734513, 'invOrgId': 14375002, 'matName': 'hxy测试物料4', 'grossTradeAmt': 120.0}], 'sls_phone': '17376596912', 'sls_com_id': 14373001, 'sls_person': 14094003, 're_calculate': False, 'curr_exchange_rate_type': 2000001, 'sls_org_id': 14579001, 'sls_curr_id': 2000001, 'price_calc_date': '2025-05-26T22:38:57.887', 'mat_qualification_check': False, 'partner_check': False, 'context': {}, 'is_fixed_exch_rate': False, 'sls_person_name': '章昂', 'exch_rate': 1, 'base_curr_id': 2000001, 'so_type_id': 2101001, 'cust_id': 2059001}, 'sls_so_item_tr': {'uom_base_id': 14047001, 'so_schl_del_date': '2025-05-26T00:00:00', 'is_complete_set': False, 'inv_org_id': 14375002, 'so_item_code': 'SOI20250526100190', 'item_number': 1, 'bom_whether': False, 'mat_type_id': 2000001, 'tax_rate': 0.13, 'tax_rate_id': 2002002, 'mat_code': 'hxymat-20241202744', 'tax_amt': 13.805309734513, 'mat_name': 'hxy测试物料4', 'so_item_sls_qty': 12, 'mat_id': 14633001, 'context': {}, 'sales_price': 10.0, 'gross_trade_amt': 120.0, 'so_item_gross_price': 10.0, 'so_item_type_id': 2103001, 'uom_sls_id': 14047001, 'sales_amt': 120.0, 'inv_loc_id': 14376002}}, 'discountAmt': 0, 'discountInfo': ''}], 'slsPartnerLinks': [{'context': {}, 'partnerTypeId': {'id': 2000001}, 'partnerClass': 'CUSTOMER', 'partnerId': {'id': 2059001}}], 'priceIdempotent': '6d401a0983da1c8915cdf5d4117ee908', 'preCalculate': True, 'reCalculate': False, 'partnerCheck': False, 'matQualificationCheck': False, 'whetherPrice': False, 'successGiftStrategy': {'id': 2001001, 'context': {}, 'matchStatus': 'MATCH_SUCCESS'}, 'giftCondition': {'sls_so_head_tr': {'sls_partner_links': [{'partnerTypeId': 2000001, 'context': {}, 'partnerClass': 'CUSTOMER', 'partnerId': 2059001}], 'sls_dc_id': 14378001, 'whether_price': False, 'so_doc_date': '2025-05-26T00:00:00', 'sync_submit': False, 'so_items': [{'itemNumber': 1, 'uomSlsId': 14047001, 'uomBaseId': 14047001, 'soSchlDelDate': '2025-05-26T00:00:00', 'salesPrice': 10.0, 'matTypeId': 2000001, 'soItemGrossPrice': 10.0, 'invLocId': 14376002, 'isCompleteSet': False, 'salesAmt': 120.0, 'soItemCode': 'SOI20250526100190', 'bomWhether': False, 'taxRate': 0.13, 'matId': 14633001, 'context': {}, 'soItemTypeId': 2103001, 'soItemSlsQty': 12, 'taxRateId': 2002002, 'matCode': 'hxymat-20241202744', 'taxAmt': 13.805309734513, 'invOrgId': 14375002, 'matName': 'hxy测试物料4', 'grossTradeAmt': 120.0}], 'sls_phone': '17376596912', 'sls_com_id': 14373001, 'sls_person': 14094003, 're_calculate': False, 'curr_exchange_rate_type': 2000001, 'sls_org_id': 14579001, 'sls_curr_id': 2000001, 'price_calc_date': '2025-05-26T22:38:57.887', 'mat_qualification_check': False, 'partner_check': False, 'context': {}, 'is_fixed_exch_rate': False, 'sls_person_name': '章昂', 'exch_rate': 1, 'base_curr_id': 2000001, 'so_type_id': 2101001, 'cust_id': 2059001}}, 'syncSubmit': False, 'isFixedExchRate': False}
+2025-05-26 22:38:58.038 | INFO     | utils.log_util:info:65 - 自动定价完成
+2025-05-26 22:38:58.038 | INFO     | utils.log_util:info:65 - 订单类型: STND
+2025-05-26 22:38:58.038 | INFO     | utils.log_util:info:65 - 订单类型ID: 2101001
+2025-05-26 22:38:58.039 | INFO     | utils.log_util:info:65 - 订单行类型ID: 2103001
+2025-05-26 22:38:58.039 | INFO     | utils.log_util:info:65 - 保存订单请求数据: {
+  "params": {
+    "request": {
+      "context": {},
+      "soCode": "SO004920",
+      "soDocDate": 1748188800000,
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "exchRate": 1,
+      "grossBaseAmt": 120.0,
+      "netBaseAmt": 106.194690265487,
+      "totalAmt": 120.0,
+      "taxAmt": 13.805309734513,
+      "slsOrgId": {
+        "id": 14579001
+      },
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "soTypeId": {
+        "id": 2101001
+      },
+      "custId": {
+        "id": 2059001
+      },
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPersonName": "章昂",
+      "slsPhone": "17376596912",
+      "currExchangeRateType": 2000001,
+      "priceCalcDate": 1748270337887,
+      "discountAmt": 0,
+      "discountInfo": "",
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250526100190",
+          "matId": {
+            "id": 14633001,
+            "context": {},
+            "matCode": "hxymat-20241202744",
+            "matName": "hxy测试物料4",
+            "genMatTypeCfId": {
+              "id": 2000001
+            },
+            "baseUomId": 14047001,
+            "isKitSls": false,
+            "isCompleteSetDel": false,
+            "slsUomId": {
+              "id": 14047001
+            }
+          },
+          "matCode": "hxymat-20241202744",
+          "matName": "hxy测试物料4",
+          "soItemSlsQty": 12,
+          "soItemGrossPrice": 10.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 13.805309734513,
+          "grossTradeAmt": 120.0,
+          "soSchlDelDate": 1748188800000,
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {}
+          },
+          "uomSlsId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "weightUomId": {
+            "context": {}
+          },
+          "volumUomId": {
+            "context": {}
+          },
+          "delAddrId": {
+            "context": {}
+          },
+          "itemNumber": 1,
+          "salesPrice": 10.0,
+          "children": null,
+          "matTypeId": 2000001,
+          "isCompleteSet": false,
+          "salesAmt": 120.0
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ],
+      "priceIdempotent": "6d401a0983da1c8915cdf5d4117ee908",
+      "preCalculate": true,
+      "reCalculate": false,
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false,
+      "successGiftStrategy": {
+        "id": 2001001,
+        "context": {},
+        "matchStatus": "MATCH_SUCCESS"
+      },
+      "giftCondition": {
+        "sls_so_head_tr": {
+          "sls_partner_links": [
+            {
+              "partnerTypeId": 2000001,
+              "context": {},
+              "partnerClass": "CUSTOMER",
+              "partnerId": 2059001
+            }
+          ],
+          "sls_dc_id": 14378001,
+          "whether_price": false,
+          "so_doc_date": "2025-05-26T00:00:00",
+          "sync_submit": false,
+          "so_items": [
+            {
+              "itemNumber": 1,
+              "uomSlsId": 14047001,
+              "uomBaseId": 14047001,
+              "soSchlDelDate": "2025-05-26T00:00:00",
+              "salesPrice": 10.0,
+              "matTypeId": 2000001,
+              "soItemGrossPrice": 10.0,
+              "invLocId": 14376002,
+              "isCompleteSet": false,
+              "salesAmt": 120.0,
+              "soItemCode": "SOI20250526100190",
+              "bomWhether": false,
+              "taxRate": 0.13,
+              "matId": 14633001,
+              "context": {},
+              "soItemTypeId": 2103001,
+              "soItemSlsQty": 12,
+              "taxRateId": 2002002,
+              "matCode": "hxymat-20241202744",
+              "taxAmt": 13.805309734513,
+              "invOrgId": 14375002,
+              "matName": "hxy测试物料4",
+              "grossTradeAmt": 120.0
+            }
+          ],
+          "sls_phone": "17376596912",
+          "sls_com_id": 14373001,
+          "sls_person": 14094003,
+          "re_calculate": false,
+          "curr_exchange_rate_type": 2000001,
+          "sls_org_id": 14579001,
+          "sls_curr_id": 2000001,
+          "price_calc_date": "2025-05-26T22:38:57.887",
+          "mat_qualification_check": false,
+          "partner_check": false,
+          "context": {},
+          "is_fixed_exch_rate": false,
+          "sls_person_name": "章昂",
+          "exch_rate": 1,
+          "base_curr_id": 2000001,
+          "so_type_id": 2101001,
+          "cust_id": 2059001
+        }
+      },
+      "syncSubmit": true,
+      "isFixedExchRate": false,
+      "orderTypeId": {
+        "id": 2101001
+      },
+      "orderLineTypeId": {
+        "id": 2103001
+      },
+      "addrId": {
+        "id": null
+      },
+      "addrDetail": null,
+      "custPersonName": null,
+      "custPhone": null
+    }
+  }
+}
+2025-05-26 22:38:58.039 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SLS_SALES_MANUAL_SAVE_EVENT
+2025-05-26 22:38:58.039 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-26 22:38:58.040 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "context": {},
+      "soCode": "SO004920",
+      "soDocDate": 1748188800000,
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "exchRate": 1,
+      "grossBaseAmt": 120.0,
+      "netBaseAmt": 106.194690265487,
+      "totalAmt": 120.0,
+      "taxAmt": 13.805309734513,
+      "slsOrgId": {
+        "id": 14579001
+      },
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "soTypeId": {
+        "id": 2101001
+      },
+      "custId": {
+        "id": 2059001
+      },
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPersonName": "章昂",
+      "slsPhone": "17376596912",
+      "currExchangeRateType": 2000001,
+      "priceCalcDate": 1748270337887,
+      "discountAmt": 0,
+      "discountInfo": "",
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250526100190",
+          "matId": {
+            "id": 14633001,
+            "context": {},
+            "matCode": "hxymat-20241202744",
+            "matName": "hxy测试物料4",
+            "genMatTypeCfId": {
+              "id": 2000001
+            },
+            "baseUomId": 14047001,
+            "isKitSls": false,
+            "isCompleteSetDel": false,
+            "slsUomId": {
+              "id": 14047001
+            }
+          },
+          "matCode": "hxymat-20241202744",
+          "matName": "hxy测试物料4",
+          "soItemSlsQty": 12,
+          "soItemGrossPrice": 10.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 13.805309734513,
+          "grossTradeAmt": 120.0,
+          "soSchlDelDate": 1748188800000,
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {}
+          },
+          "uomSlsId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "weightUomId": {
+            "context": {}
+          },
+          "volumUomId": {
+            "context": {}
+          },
+          "delAddrId": {
+            "context": {}
+          },
+          "itemNumber": 1,
+          "salesPrice": 10.0,
+          "children": null,
+          "matTypeId": 2000001,
+          "isCompleteSet": false,
+          "salesAmt": 120.0
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ],
+      "priceIdempotent": "6d401a0983da1c8915cdf5d4117ee908",
+      "preCalculate": true,
+      "reCalculate": false,
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false,
+      "successGiftStrategy": {
+        "id": 2001001,
+        "context": {},
+        "matchStatus": "MATCH_SUCCESS"
+      },
+      "giftCondition": {
+        "sls_so_head_tr": {
+          "sls_partner_links": [
+            {
+              "partnerTypeId": 2000001,
+              "context": {},
+              "partnerClass": "CUSTOMER",
+              "partnerId": 2059001
+            }
+          ],
+          "sls_dc_id": 14378001,
+          "whether_price": false,
+          "so_doc_date": "2025-05-26T00:00:00",
+          "sync_submit": false,
+          "so_items": [
+            {
+              "itemNumber": 1,
+              "uomSlsId": 14047001,
+              "uomBaseId": 14047001,
+              "soSchlDelDate": "2025-05-26T00:00:00",
+              "salesPrice": 10.0,
+              "matTypeId": 2000001,
+              "soItemGrossPrice": 10.0,
+              "invLocId": 14376002,
+              "isCompleteSet": false,
+              "salesAmt": 120.0,
+              "soItemCode": "SOI20250526100190",
+              "bomWhether": false,
+              "taxRate": 0.13,
+              "matId": 14633001,
+              "context": {},
+              "soItemTypeId": 2103001,
+              "soItemSlsQty": 12,
+              "taxRateId": 2002002,
+              "matCode": "hxymat-20241202744",
+              "taxAmt": 13.805309734513,
+              "invOrgId": 14375002,
+              "matName": "hxy测试物料4",
+              "grossTradeAmt": 120.0
+            }
+          ],
+          "sls_phone": "17376596912",
+          "sls_com_id": 14373001,
+          "sls_person": 14094003,
+          "re_calculate": false,
+          "curr_exchange_rate_type": 2000001,
+          "sls_org_id": 14579001,
+          "sls_curr_id": 2000001,
+          "price_calc_date": "2025-05-26T22:38:57.887",
+          "mat_qualification_check": false,
+          "partner_check": false,
+          "context": {},
+          "is_fixed_exch_rate": false,
+          "sls_person_name": "章昂",
+          "exch_rate": 1,
+          "base_curr_id": 2000001,
+          "so_type_id": 2101001,
+          "cust_id": 2059001
+        }
+      },
+      "syncSubmit": true,
+      "isFixedExchRate": false,
+      "orderTypeId": {
+        "id": 2101001
+      },
+      "orderLineTypeId": {
+        "id": 2103001
+      },
+      "addrId": {
+        "id": null
+      },
+      "addrDetail": null,
+      "custPersonName": null,
+      "custPhone": null
+    }
+  }
+}
+2025-05-26 22:38:58.040 | INFO     | utils.request_util:request:88 - 请求描述: 销售订单提交
+2025-05-26 22:38:58.612 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-26 22:38:58.613 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Mon, 26 May 2025 14:38:58 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '18898d5d-197843', 'Trace-Id': '18898d5d-197843', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNmRlMjg1NjlhNWFkNGQxMDg2MjczNTg3ODQ4MjFlOGYiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODUyOTUzOCwibmJmIjoxNzQ4MjcwMzM4LCJpYXQiOjE3NDgyNzAzMzgsImp0aSI6IjE3NGNiNTM1NDZhYzRkN2ViOGY1ZTQ2MmQwMjgwMWQxIn0.KX3Zk8FlaTB8ZFcFVhROKapoJ24UTd0y6nmBwAcHUho; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Thu, 29 May 2025 14:38:58 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '548', 'X-Kong-Proxy-Latency': '1', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-26 22:38:58.614 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "18898d5d-197843",
+  "success": false,
+  "data": null,
+  "err": {
+    "code": "Inventory.stock.qty.is.not.enough",
+    "msg": "库存余额不足,物料为:hxy测试物料4(hxymat-20241202744)",
+    "suggest": null
+  }
+}
+2025-05-26 22:38:58.615 | INFO     | utils.log_util:info:65 - 保存订单响应数据: {
+  "requestId": "18898d5d-197843",
+  "success": false,
+  "data": null,
+  "err": {
+    "code": "Inventory.stock.qty.is.not.enough",
+    "msg": "库存余额不足,物料为:hxy测试物料4(hxymat-20241202744)",
+    "suggest": null
+  }
+}
+2025-05-26 22:38:58.616 | INFO     | utils.log_util:info:65 - STND类型销售订单提交成功
+2025-05-26 22:38:58.616 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$sls_sales_order_create_init_service
+2025-05-26 22:38:58.617 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-26 22:38:58.617 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "btClass": "SALES",
+      "orderTypeId": 14010001,
+      "orderLineTypeId": 2103001
+    }
+  }
+}
+2025-05-26 22:38:58.618 | INFO     | utils.request_util:request:88 - 请求描述: 销售订单创建初始化
+2025-05-26 22:38:58.673 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-26 22:38:58.674 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Mon, 26 May 2025 14:38:58 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '93da375a-197844', 'Trace-Id': '93da375a-197844', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNmRlMjg1NjlhNWFkNGQxMDg2MjczNTg3ODQ4MjFlOGYiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODUyOTUzOCwibmJmIjoxNzQ4MjcwMzM4LCJpYXQiOjE3NDgyNzAzMzgsImp0aSI6IjE3NGNiNTM1NDZhYzRkN2ViOGY1ZTQ2MmQwMjgwMWQxIn0.KX3Zk8FlaTB8ZFcFVhROKapoJ24UTd0y6nmBwAcHUho; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Thu, 29 May 2025 14:38:58 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '34', 'X-Kong-Proxy-Latency': '1', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-26 22:38:58.675 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "93da375a-197844",
+  "success": true,
+  "data": {
+    "data": {
+      "slsOrgId": null,
+      "slsCurrId": null,
+      "extAchievementShop": null,
+      "slsDcId": null,
+      "effectiveAt": null,
+      "slsPhone": "17376596912",
+      "slsComId": null,
+      "baseCurrId": null,
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "soTypeId": {
+        "id": 2101001,
+        "context": {},
+        "originOrgId": 0,
+        "version": 68,
+        "deleted": 0,
+        "createdAt": 1685108645000,
+        "updatedAt": 1745892294000,
+        "createdBy": 27,
+        "updatedBy": 477234922377861,
+        "soTypeCode": "STND",
+        "soTypeName": "标准销售",
+        "soTypeDesc": "标准销售",
+        "partnerProcedureHeadRef": {
+          "id": 14005002
+        },
+        "status": "ENABLED",
+        "submitApproval": true,
+        "modifyApproval": false,
+        "currExchangeRateType": 2000001,
+        "btClass": "SALES",
+        "syncPrice": false,
+        "isRev": false
+      }
+    }
+  }
+}
+2025-05-26 22:38:58.675 | DEBUG    | utils.log_util:debug:69 - 销售人员信息: {'id': 14094003, 'context': {}, 'name': '章昂'}
+2025-05-26 22:38:58.676 | INFO     | utils.log_util:info:65 - 销售订单创建初始化完成，订单类型: THRD
+2025-05-26 22:38:58.676 | INFO     | utils.log_util:info:65 - 查询客户信息URL: /api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService?tmodule=ERP_SCM&modelKey=ERP_GEN$gen_cust_info_md
+2025-05-26 22:38:58.677 | DEBUG    | utils.log_util:debug:69 - 查询客户信息请求数据: {
+  "sceneKey": "ERP_SCM$sls_so_730",
+  "viewKey": "ERP_SCM$sls_so_730:edit",
+  "serviceKey": "ERP_SCM$SYS_PagingDataService",
+  "params": {
+    "modelKey": "ERP_GEN$gen_cust_info_md",
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "conditionGroup": {
+          "type": "ConditionGroup",
+          "logicOperator": "AND",
+          "conditions": [
+            {
+              "type": "ConditionGroup",
+              "logicOperator": "AND",
+              "conditions": [
+                {
+                  "type": "ConditionGroup",
+                  "logicOperator": "AND",
+                  "conditions": [
+                    {
+                      "key": "V9-9Z27ZOiitzmCTR3toD",
+                      "type": "ConditionLeaf",
+                      "leftValue": {
+                        "id": "Cs-llCMSNSEI2xK0ajnbw",
+                        "key": "Cs-llCMSNSEI2xK0ajnbw",
+                        "type": "VarValue",
+                        "fieldType": "Text",
+                        "valueType": "VAR",
+                        "varValue": [
+                          {
+                            "valueKey": "custCode",
+                            "valueName": "custCode"
+                          }
+                        ]
+                      },
+                      "operator": "CONTAINS",
+                      "rightValue": {
+                        "key": "Kf1gTg48B2elte3S_U-Wb",
+                        "type": "VarValue",
+                        "fieldType": "Text",
+                        "valueType": "CONST",
+                        "constValue": "AUTOTEST_CUST"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "sortOrders": null,
+        "keyword": null
+      }
+    }
+  }
+}
+2025-05-26 22:38:58.677 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService?tmodule=ERP_SCM&modelKey=ERP_GEN$gen_cust_info_md
+2025-05-26 22:38:58.678 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-26 22:38:58.678 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "sceneKey": "ERP_SCM$sls_so_730",
+  "viewKey": "ERP_SCM$sls_so_730:edit",
+  "serviceKey": "ERP_SCM$SYS_PagingDataService",
+  "params": {
+    "modelKey": "ERP_GEN$gen_cust_info_md",
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "conditionGroup": {
+          "type": "ConditionGroup",
+          "logicOperator": "AND",
+          "conditions": [
+            {
+              "type": "ConditionGroup",
+              "logicOperator": "AND",
+              "conditions": [
+                {
+                  "type": "ConditionGroup",
+                  "logicOperator": "AND",
+                  "conditions": [
+                    {
+                      "key": "V9-9Z27ZOiitzmCTR3toD",
+                      "type": "ConditionLeaf",
+                      "leftValue": {
+                        "id": "Cs-llCMSNSEI2xK0ajnbw",
+                        "key": "Cs-llCMSNSEI2xK0ajnbw",
+                        "type": "VarValue",
+                        "fieldType": "Text",
+                        "valueType": "VAR",
+                        "varValue": [
+                          {
+                            "valueKey": "custCode",
+                            "valueName": "custCode"
+                          }
+                        ]
+                      },
+                      "operator": "CONTAINS",
+                      "rightValue": {
+                        "key": "Kf1gTg48B2elte3S_U-Wb",
+                        "type": "VarValue",
+                        "fieldType": "Text",
+                        "valueType": "CONST",
+                        "constValue": "AUTOTEST_CUST"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "sortOrders": null,
+        "keyword": null
+      }
+    }
+  }
+}
+2025-05-26 22:38:58.678 | INFO     | utils.request_util:request:88 - 请求描述: 查询客户信息
+2025-05-26 22:38:58.750 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-26 22:38:58.752 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Mon, 26 May 2025 14:38:58 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '6dabdeb8-197845', 'Trace-Id': '6dabdeb8-197845', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNmRlMjg1NjlhNWFkNGQxMDg2MjczNTg3ODQ4MjFlOGYiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODUyOTUzOCwibmJmIjoxNzQ4MjcwMzM4LCJpYXQiOjE3NDgyNzAzMzgsImp0aSI6IjE3NGNiNTM1NDZhYzRkN2ViOGY1ZTQ2MmQwMjgwMWQxIn0.KX3Zk8FlaTB8ZFcFVhROKapoJ24UTd0y6nmBwAcHUho; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Thu, 29 May 2025 14:38:58 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '36', 'X-Kong-Proxy-Latency': '1', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-26 22:38:58.752 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "6dabdeb8-197845",
+  "success": true,
+  "data": {
+    "data": {
+      "total": 1,
+      "data": [
+        {
+          "custCode": "AUTOTEST_CUST",
+          "custName": "客户(自动化)",
+          "custShortName": null,
+          "custCateType": "COMPANY",
+          "comId": null,
+          "status": "ENABLED",
+          "remark": null,
+          "custTypeId": {
+            "id": 2503008
+          },
+          "custPreId": null,
+          "relatedCompanyInformation": {
+            "id": 14419001
+          },
+          "associatePersonalInformation": null,
+          "custExtCode": null,
+          "genBusinessPartnerMdId": {
+            "id": 2059001
+          },
+          "id": 2059001,
+          "createdBy": {
+            "id": 477142386786949
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1715829452000,
+          "updatedAt": 1744359938000,
+          "version": 38,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": null
+        }
+      ]
+    }
+  }
+}
+2025-05-26 22:38:58.753 | INFO     | utils.log_util:info:65 - 客户信息查询完成
+2025-05-26 22:38:58.754 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SO_QUERY_PARTNER_EVENT_SERVICE
+2025-05-26 22:38:58.754 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-26 22:38:58.754 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "reCalculate": false,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "soDocDate": 1748188800000,
+      "priceCalcDate": 1748270338754,
+      "custId": {
+        "id": 2059001
+      },
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPhone": "17376596912",
+      "slsPersonName": "章昂",
+      "isFixedExchRate": false,
+      "currExchangeRateType": 2000001,
+      "soItems": [
+        {
+          "bomWhether": false,
+          "soSchlDelDate": 1748188800000
+        }
+      ]
+    }
+  }
+}
+2025-05-26 22:38:58.755 | INFO     | utils.request_util:request:88 - 请求描述: 查询相关方
+2025-05-26 22:38:58.817 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-26 22:38:58.817 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Mon, 26 May 2025 14:38:59 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '39ac4003-197846', 'Trace-Id': '39ac4003-197846', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNmRlMjg1NjlhNWFkNGQxMDg2MjczNTg3ODQ4MjFlOGYiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODUyOTUzOCwibmJmIjoxNzQ4MjcwMzM4LCJpYXQiOjE3NDgyNzAzMzgsImp0aSI6IjE3NGNiNTM1NDZhYzRkN2ViOGY1ZTQ2MmQwMjgwMWQxIn0.KX3Zk8FlaTB8ZFcFVhROKapoJ24UTd0y6nmBwAcHUho; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Thu, 29 May 2025 14:38:59 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '40', 'X-Kong-Proxy-Latency': '2', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-26 22:38:58.819 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "39ac4003-197846",
+  "success": true,
+  "data": {
+    "data": {
+      "context": {},
+      "soDocDate": 1748188800000,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "custId": {
+        "id": 2059001
+      },
+      "slsPerson": {
+        "id": 14094003
+      },
+      "slsPersonName": "章昂",
+      "slsPhone": "17376596912",
+      "currExchangeRateType": 2000001,
+      "priceCalcDate": 1748270338754,
+      "soItems": [
+        {
+          "context": {},
+          "soSchlDelDate": 1748188800000,
+          "bomWhether": false
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ],
+      "reCalculate": false,
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false,
+      "syncSubmit": false,
+      "isFixedExchRate": false
+    }
+  }
+}
+2025-05-26 22:38:58.819 | INFO     | utils.log_util:info:65 - 相关方查询完成
+2025-05-26 22:38:58.820 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$sls_sales_organization_paging_service?tmodule=ERP_SCM
+2025-05-26 22:38:58.821 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-26 22:38:58.821 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "conditionGroup": {
+          "type": "ConditionGroup",
+          "logicOperator": "AND",
+          "conditions": [
+            {
+              "type": "ConditionGroup",
+              "logicOperator": "AND",
+              "conditions": [
+                {
+                  "type": "ConditionGroup",
+                  "logicOperator": "AND",
+                  "conditions": [
+                    {
+                      "key": "nr_nqTvXmIyHnHxKfmn3S",
+                      "type": "ConditionLeaf",
+                      "leftValue": {
+                        "id": "iJlX7JIkAyn7AIr9omqK-",
+                        "key": "iJlX7JIkAyn7AIr9omqK-",
+                        "type": "VarValue",
+                        "fieldType": "Text",
+                        "valueType": "VAR",
+                        "varValue": [
+                          {
+                            "valueKey": "orgCode",
+                            "valueName": "orgCode"
+                          }
+                        ]
+                      },
+                      "operator": "CONTAINS",
+                      "rightValue": {
+                        "key": "ggwEgoMfFc91CYI1zUwzb",
+                        "type": "VarValue",
+                        "fieldType": "Text",
+                        "valueType": "CONST",
+                        "constValue": "AUTOTEST_SLS_ORG"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "sortOrders": null,
+        "keyword": null
+      }
+    }
+  }
+}
+2025-05-26 22:38:58.822 | INFO     | utils.request_util:request:88 - 请求描述: 查询销售组织列表
+2025-05-26 22:38:58.879 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-26 22:38:58.879 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Mon, 26 May 2025 14:38:59 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '6dabdeb8-197847', 'Trace-Id': '6dabdeb8-197847', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNmRlMjg1NjlhNWFkNGQxMDg2MjczNTg3ODQ4MjFlOGYiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODUyOTUzOSwibmJmIjoxNzQ4MjcwMzM5LCJpYXQiOjE3NDgyNzAzMzksImp0aSI6IjE3NGNiNTM1NDZhYzRkN2ViOGY1ZTQ2MmQwMjgwMWQxIn0.n_U3Mf8TZJio91TDDO-ukJra5Ai7zFGYA6xnKHR9WLI; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Thu, 29 May 2025 14:38:59 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '36', 'X-Kong-Proxy-Latency': '1', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-26 22:38:58.880 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "6dabdeb8-197847",
+  "success": true,
+  "data": {
+    "data": {
+      "data": [
+        {
+          "orgCode": "AUTOTEST_SLS_ORG",
+          "orgName": "销售组织(自动化)",
+          "orgStatus": "ENABLED",
+          "orgBusinessTypeCode": null,
+          "comOrgId": {
+            "id": 14507001
+          },
+          "id": 14579001
+        }
+      ],
+      "total": 1
+    }
+  }
+}
+2025-05-26 22:38:58.881 | DEBUG    | utils.log_util:debug:69 - 销售组织列表查询响应: {'requestId': '6dabdeb8-197847', 'success': True, 'data': {'data': {'data': [{'orgCode': 'AUTOTEST_SLS_ORG', 'orgName': '销售组织(自动化)', 'orgStatus': 'ENABLED', 'orgBusinessTypeCode': None, 'comOrgId': {'id': 14507001}, 'id': 14579001}], 'total': 1}}}
+2025-05-26 22:38:58.881 | INFO     | utils.log_util:info:65 - 销售组织列表查询完成: {'orgCode': 'AUTOTEST_SLS_ORG', 'orgName': '销售组织(自动化)', 'orgStatus': 'ENABLED', 'orgBusinessTypeCode': None, 'comOrgId': {'id': 14507001}, 'id': 14579001}
+2025-05-26 22:38:58.882 | INFO     | utils.log_util:info:65 - 销售组织列表查询完成
+物料查询请求参数: {
+  "params": {
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "sortOrders": [
+          {
+            "fieldAlias": "matCode",
+            "id": "matCode-0",
+            "sortType": "ASC"
+          },
+          {
+            "fieldAlias": "matName",
+            "id": "matName-1",
+            "sortType": "ASC"
+          }
+        ],
+        "keyword": "hxymat-20241202744"
+      },
+      "slsOrgId": 14579001,
+      "slsDcId": 14378001
+    }
+  }
+}
+2025-05-26 22:38:58.883 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$INV_MAT_PAGING_SERVICE
+2025-05-26 22:38:58.883 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-26 22:38:58.884 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "sortOrders": [
+          {
+            "fieldAlias": "matCode",
+            "id": "matCode-0",
+            "sortType": "ASC"
+          },
+          {
+            "fieldAlias": "matName",
+            "id": "matName-1",
+            "sortType": "ASC"
+          }
+        ],
+        "keyword": "hxymat-20241202744"
+      },
+      "slsOrgId": 14579001,
+      "slsDcId": 14378001
+    }
+  }
+}
+2025-05-26 22:38:58.884 | INFO     | utils.request_util:request:88 - 请求描述: 查询物料列表
+2025-05-26 22:38:58.963 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-26 22:38:58.963 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Mon, 26 May 2025 14:38:59 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '93da375a-197848', 'Trace-Id': '93da375a-197848', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNmRlMjg1NjlhNWFkNGQxMDg2MjczNTg3ODQ4MjFlOGYiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODUyOTUzOSwibmJmIjoxNzQ4MjcwMzM5LCJpYXQiOjE3NDgyNzAzMzksImp0aSI6IjE3NGNiNTM1NDZhYzRkN2ViOGY1ZTQ2MmQwMjgwMWQxIn0.n_U3Mf8TZJio91TDDO-ukJra5Ai7zFGYA6xnKHR9WLI; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Thu, 29 May 2025 14:38:59 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '50', 'X-Kong-Proxy-Latency': '0', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-26 22:38:58.964 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "93da375a-197848",
+  "success": true,
+  "data": {
+    "data": {
+      "total": 1,
+      "data": [
+        {
+          "matCode": "hxymat-20241202744",
+          "matName": "hxy测试物料4",
+          "genMatTypeCfId": {
+            "matTypeName": "成品",
+            "id": 2000001
+          },
+          "baseUomId": {
+            "uomDesc": "双",
+            "id": 14047001
+          },
+          "cateId": {
+            "matCateName": "化工品",
+            "id": 2000002
+          },
+          "brandId": null,
+          "status": "ENABLED",
+          "bizStatus": "SALE",
+          "specModel": null,
+          "id": 14633001,
+          "updatedAt": 1746518417000
+        }
+      ]
+    }
+  }
+}
+物料查询响应数据: [
+  {
+    "matCode": "hxymat-20241202744",
+    "matName": "hxy测试物料4",
+    "genMatTypeCfId": {
+      "matTypeName": "成品",
+      "id": 2000001
+    },
+    "baseUomId": {
+      "uomDesc": "双",
+      "id": 14047001
+    },
+    "cateId": {
+      "matCateName": "化工品",
+      "id": 2000002
+    },
+    "brandId": null,
+    "status": "ENABLED",
+    "bizStatus": "SALE",
+    "specModel": null,
+    "id": 14633001,
+    "updatedAt": 1746518417000
+  }
+]
+物料查询关键字: hxymat-20241202744
+2025-05-26 22:38:58.965 | INFO     | utils.log_util:info:65 - 检查物料: hxymat-20241202744, 是否匹配关键字 hxymat-20241202744: True
+2025-05-26 22:38:58.965 | INFO     | utils.log_util:info:65 - 找到匹配的物料: hxymat-20241202744
+查到的物料code: hxymat-20241202744
+2025-05-26 22:38:58.966 | INFO     | utils.log_util:info:65 - 物料列表查询完成，使用物料: hxymat-20241202744
+2025-05-26 22:38:58.966 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SLS_AFTER_MAT_SELECT_RENDER_EVENT_SERVICE
+2025-05-26 22:38:58.967 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-26 22:38:58.967 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "addrId": {
+        "id": null
+      },
+      "custId": {
+        "id": 2059001
+      },
+      "invLoc": null,
+      "invOrg": null,
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "slsOrgId": {
+        "id": 14579001
+      },
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPhone": "17376596912",
+      "slsPersonName": "章昂",
+      "soDocDate": 1748188800000,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "currExchangeRateType": 2000001,
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ],
+      "soItems": [
+        {
+          "matId": {
+            "id": 14633001
+          },
+          "taxRateId": null,
+          "invOrgId": {
+            "id": 14375002
+          },
+          "invLocId": {
+            "id": 14376002
+          },
+          "soItemSlsQty": 12,
+          "delAddrDetail": null,
+          "delAddrId": {
+            "id": null
+          },
+          "delPersonName": null,
+          "delPhone": null
+        }
+      ],
+      "orderTypeId": 14010001,
+      "orderLineTypeId": 2103001
+    }
+  }
+}
+2025-05-26 22:38:58.968 | INFO     | utils.request_util:request:88 - 请求描述: 订单行渲染
+2025-05-26 22:38:59.138 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-26 22:38:59.138 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Mon, 26 May 2025 14:38:59 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '93da375a-197849', 'Trace-Id': '93da375a-197849', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNmRlMjg1NjlhNWFkNGQxMDg2MjczNTg3ODQ4MjFlOGYiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODUyOTUzOSwibmJmIjoxNzQ4MjcwMzM5LCJpYXQiOjE3NDgyNzAzMzksImp0aSI6IjE3NGNiNTM1NDZhYzRkN2ViOGY1ZTQ2MmQwMjgwMWQxIn0.n_U3Mf8TZJio91TDDO-ukJra5Ai7zFGYA6xnKHR9WLI; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Thu, 29 May 2025 14:38:59 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '148', 'X-Kong-Proxy-Latency': '1', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-26 22:38:59.139 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "93da375a-197849",
+  "success": true,
+  "data": {
+    "data": {
+      "context": {},
+      "soCode": "SO004921",
+      "soDocDate": 1748188800000,
+      "baseCurrId": {
+        "id": 2000001,
+        "context": {}
+      },
+      "slsCurrId": {
+        "id": 2000001,
+        "context": {}
+      },
+      "slsOrgId": {
+        "id": 14579001,
+        "context": {}
+      },
+      "slsComId": {
+        "id": 14373001,
+        "context": {}
+      },
+      "slsDcId": {
+        "id": 14378001,
+        "context": {}
+      },
+      "soTypeId": {
+        "id": 2101001,
+        "context": {}
+      },
+      "custId": {
+        "id": 2059001,
+        "context": {}
+      },
+      "addrId": {
+        "context": {}
+      },
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPersonName": "章昂",
+      "slsPhone": "17376596912",
+      "currExchangeRateType": 2000001,
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250526100191",
+          "matId": {
+            "id": 14633001,
+            "context": {},
+            "matCode": "hxymat-20241202744",
+            "matName": "hxy测试物料4",
+            "genMatTypeCfId": {
+              "id": 2000001
+            },
+            "baseUomId": 14047001,
+            "isKitSls": false,
+            "isCompleteSetDel": false,
+            "slsUomId": {
+              "id": 14047001
+            }
+          },
+          "matCode": "hxymat-20241202744",
+          "matName": "hxy测试物料4",
+          "soItemSlsQty": 12,
+          "soItemGrossPrice": 10.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 13.805309734513,
+          "grossTradeAmt": 120.0,
+          "soSchlDelDate": 1748188800000,
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {}
+          },
+          "uomSlsId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "weightUomId": {
+            "context": {}
+          },
+          "volumUomId": {
+            "context": {}
+          },
+          "delAddrId": {
+            "context": {}
+          },
+          "itemNumber": 1,
+          "salesPrice": 10.0,
+          "children": null,
+          "matTypeId": 2000001,
+          "isCompleteSet": false,
+          "salesAmt": 120.0
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ],
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false
+    }
+  }
+}
+2025-05-26 22:38:59.140 | INFO     | utils.log_util:info:65 - 订单行渲染完成，订单类型: THRD
+2025-05-26 22:38:59.142 | INFO     | utils.log_util:info:65 - 自动定价请求参数: {
+  "params": {
+    "request": {
+      "id": null,
+      "priceIdempotent": null,
+      "reCalculate": false,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "soDocDate": 1748188800000,
+      "priceCalcDate": 1748270339141,
+      "custId": {
+        "id": 2059001
+      },
+      "addrId": {
+        "id": null
+      },
+      "addrDetail": null,
+      "custPersonName": null,
+      "custPhone": null,
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPhone": "17376596912",
+      "slsPersonName": "章昂",
+      "slsOrgId": {
+        "id": 14579001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "isFixedExchRate": false,
+      "currExchangeRateType": 2000001,
+      "exchRate": 1,
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250526100191",
+          "matId": {
+            "id": 14633001,
+            "context": {},
+            "matCode": "hxymat-20241202744",
+            "matName": "hxy测试物料4",
+            "genMatTypeCfId": {
+              "id": 2000001
+            },
+            "baseUomId": 14047001,
+            "isKitSls": false,
+            "isCompleteSetDel": false,
+            "slsUomId": {
+              "id": 14047001
+            }
+          },
+          "matCode": "hxymat-20241202744",
+          "matName": "hxy测试物料4",
+          "soItemSlsQty": 12,
+          "soItemGrossPrice": 10.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 13.805309734513,
+          "grossTradeAmt": 120.0,
+          "soSchlDelDate": 1748188800000,
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {}
+          },
+          "uomSlsId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "weightUomId": {
+            "context": {}
+          },
+          "volumUomId": {
+            "context": {}
+          },
+          "delAddrId": {
+            "context": {}
+          },
+          "itemNumber": 1,
+          "salesPrice": 10.0,
+          "children": null,
+          "matTypeId": 2000001,
+          "isCompleteSet": false,
+          "salesAmt": 120.0
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ]
+    }
+  }
+}
+2025-05-26 22:38:59.143 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SO_AUTO_PRICE_EVENT_copy_SERVICE
+2025-05-26 22:38:59.144 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-26 22:38:59.144 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "id": null,
+      "priceIdempotent": null,
+      "reCalculate": false,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "soDocDate": 1748188800000,
+      "priceCalcDate": 1748270339141,
+      "custId": {
+        "id": 2059001
+      },
+      "addrId": {
+        "id": null
+      },
+      "addrDetail": null,
+      "custPersonName": null,
+      "custPhone": null,
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPhone": "17376596912",
+      "slsPersonName": "章昂",
+      "slsOrgId": {
+        "id": 14579001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "isFixedExchRate": false,
+      "currExchangeRateType": 2000001,
+      "exchRate": 1,
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250526100191",
+          "matId": {
+            "id": 14633001,
+            "context": {},
+            "matCode": "hxymat-20241202744",
+            "matName": "hxy测试物料4",
+            "genMatTypeCfId": {
+              "id": 2000001
+            },
+            "baseUomId": 14047001,
+            "isKitSls": false,
+            "isCompleteSetDel": false,
+            "slsUomId": {
+              "id": 14047001
+            }
+          },
+          "matCode": "hxymat-20241202744",
+          "matName": "hxy测试物料4",
+          "soItemSlsQty": 12,
+          "soItemGrossPrice": 10.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 13.805309734513,
+          "grossTradeAmt": 120.0,
+          "soSchlDelDate": 1748188800000,
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {}
+          },
+          "uomSlsId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "weightUomId": {
+            "context": {}
+          },
+          "volumUomId": {
+            "context": {}
+          },
+          "delAddrId": {
+            "context": {}
+          },
+          "itemNumber": 1,
+          "salesPrice": 10.0,
+          "children": null,
+          "matTypeId": 2000001,
+          "isCompleteSet": false,
+          "salesAmt": 120.0
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ]
+    }
+  }
+}
+2025-05-26 22:38:59.145 | INFO     | utils.request_util:request:88 - 请求描述: 自动定价
+2025-05-26 22:38:59.303 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-26 22:38:59.304 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Mon, 26 May 2025 14:38:59 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '93da375a-197850', 'Trace-Id': '93da375a-197850', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNmRlMjg1NjlhNWFkNGQxMDg2MjczNTg3ODQ4MjFlOGYiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODUyOTUzOSwibmJmIjoxNzQ4MjcwMzM5LCJpYXQiOjE3NDgyNzAzMzksImp0aSI6IjE3NGNiNTM1NDZhYzRkN2ViOGY1ZTQ2MmQwMjgwMWQxIn0.n_U3Mf8TZJio91TDDO-ukJra5Ai7zFGYA6xnKHR9WLI; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Thu, 29 May 2025 14:38:59 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '135', 'X-Kong-Proxy-Latency': '1', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-26 22:38:59.305 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "93da375a-197850",
+  "success": true,
+  "data": {
+    "data": {
+      "context": {},
+      "soCode": "SO004922",
+      "soDocDate": 1748188800000,
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "exchRate": 1,
+      "grossBaseAmt": 120.0,
+      "netBaseAmt": 106.194690265487,
+      "totalAmt": 120.0,
+      "taxAmt": 13.805309734513,
+      "slsOrgId": {
+        "id": 14579001
+      },
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "soTypeId": {
+        "id": 2101001
+      },
+      "custId": {
+        "id": 2059001
+      },
+      "slsPerson": {
+        "id": 14094003
+      },
+      "slsPersonName": "章昂",
+      "slsPhone": "17376596912",
+      "currExchangeRateType": 2000001,
+      "priceCalcDate": 1748270339141,
+      "discountAmt": 0,
+      "discountInfo": "",
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250526100191",
+          "matId": {
+            "id": 14633001
+          },
+          "matCode": "hxymat-20241202744",
+          "matName": "hxy测试物料4",
+          "soItemSlsQty": 12,
+          "soItemPrice": 8.849557522124,
+          "soItemGrossPrice": 10.0,
+          "taxRateId": {
+            "id": 2002002
+          },
+          "taxRate": 0.13,
+          "taxAmt": 13.805309734513,
+          "grossTradeAmt": 120.0,
+          "netTradeAmt": 106.194690265487,
+          "soSchlDelDate": 1748188800000,
+          "soItemTypeId": {
+            "id": 2103001
+          },
+          "uomSlsId": {
+            "id": 14047001
+          },
+          "uomBaseId": {
+            "id": 14047001
+          },
+          "invOrgId": {
+            "id": 14375002
+          },
+          "invLocId": {
+            "id": 14376002
+          },
+          "bomWhether": false,
+          "itemNumber": 1,
+          "isCompleteSet": false,
+          "salesPrice": 10.0,
+          "salesAmt": 120.0,
+          "slsSoItemTypeCfDTO": {
+            "id": 2103001,
+            "context": {},
+            "originOrgId": 0,
+            "version": 205,
+            "deleted": 0,
+            "createdAt": 1685108592000,
+            "updatedAt": 1745892427000,
+            "createdBy": 27,
+            "updatedBy": 477234922377861,
+            "soItemTypeCode": "NORM",
+            "soItemTypeName": "常规销售",
+            "delRelv": true,
+            "autoDelivery": true,
+            "checkInvLocRelv": true,
+            "status": "ENABLED",
+            "isAutomaticComplete": false,
+            "isCompletePickControl": false,
+            "autoPr": false,
+            "autoOutDnPost": false,
+            "settlement": true,
+            "priceControlType": "STAND"
+          },
+          "matTypeId": 2000001,
+          "giftCondition": {
+            "sls_so_head_tr": {
+              "sls_partner_links": [
+                {
+                  "partnerTypeId": 2000001,
+                  "context": {},
+                  "partnerClass": "CUSTOMER",
+                  "partnerId": 2059001
+                }
+              ],
+              "sls_dc_id": 14378001,
+              "whether_price": false,
+              "so_doc_date": "2025-05-26T00:00:00",
+              "sync_submit": false,
+              "so_items": [
+                {
+                  "itemNumber": 1,
+                  "uomSlsId": 14047001,
+                  "uomBaseId": 14047001,
+                  "soSchlDelDate": "2025-05-26T00:00:00",
+                  "salesPrice": 10.0,
+                  "matTypeId": 2000001,
+                  "soItemGrossPrice": 10.0,
+                  "invLocId": 14376002,
+                  "isCompleteSet": false,
+                  "salesAmt": 120.0,
+                  "soItemCode": "SOI20250526100191",
+                  "bomWhether": false,
+                  "taxRate": 0.13,
+                  "matId": 14633001,
+                  "context": {},
+                  "soItemTypeId": 2103001,
+                  "soItemSlsQty": 12,
+                  "taxRateId": 2002002,
+                  "matCode": "hxymat-20241202744",
+                  "taxAmt": 13.805309734513,
+                  "invOrgId": 14375002,
+                  "matName": "hxy测试物料4",
+                  "grossTradeAmt": 120.0
+                }
+              ],
+              "sls_phone": "17376596912",
+              "sls_com_id": 14373001,
+              "sls_person": 14094003,
+              "re_calculate": false,
+              "curr_exchange_rate_type": 2000001,
+              "sls_org_id": 14579001,
+              "sls_curr_id": 2000001,
+              "price_calc_date": "2025-05-26T22:38:59.141",
+              "mat_qualification_check": false,
+              "partner_check": false,
+              "context": {},
+              "is_fixed_exch_rate": false,
+              "sls_person_name": "章昂",
+              "exch_rate": 1,
+              "base_curr_id": 2000001,
+              "so_type_id": 2101001,
+              "cust_id": 2059001
+            },
+            "sls_so_item_tr": {
+              "uom_base_id": 14047001,
+              "so_schl_del_date": "2025-05-26T00:00:00",
+              "is_complete_set": false,
+              "inv_org_id": 14375002,
+              "so_item_code": "SOI20250526100191",
+              "item_number": 1,
+              "bom_whether": false,
+              "mat_type_id": 2000001,
+              "tax_rate": 0.13,
+              "tax_rate_id": 2002002,
+              "mat_code": "hxymat-20241202744",
+              "tax_amt": 13.805309734513,
+              "mat_name": "hxy测试物料4",
+              "so_item_sls_qty": 12,
+              "mat_id": 14633001,
+              "context": {},
+              "sales_price": 10.0,
+              "gross_trade_amt": 120.0,
+              "so_item_gross_price": 10.0,
+              "so_item_type_id": 2103001,
+              "uom_sls_id": 14047001,
+              "sales_amt": 120.0,
+              "inv_loc_id": 14376002
+            }
+          },
+          "discountAmt": 0,
+          "discountInfo": ""
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ],
+      "priceIdempotent": "6d597cc30c6125116b2c90bb12f34d2d",
+      "preCalculate": true,
+      "reCalculate": false,
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false,
+      "successGiftStrategy": {
+        "id": 2001001,
+        "context": {},
+        "matchStatus": "MATCH_SUCCESS"
+      },
+      "giftCondition": {
+        "sls_so_head_tr": {
+          "sls_partner_links": [
+            {
+              "partnerTypeId": 2000001,
+              "context": {},
+              "partnerClass": "CUSTOMER",
+              "partnerId": 2059001
+            }
+          ],
+          "sls_dc_id": 14378001,
+          "whether_price": false,
+          "so_doc_date": "2025-05-26T00:00:00",
+          "sync_submit": false,
+          "so_items": [
+            {
+              "itemNumber": 1,
+              "uomSlsId": 14047001,
+              "uomBaseId": 14047001,
+              "soSchlDelDate": "2025-05-26T00:00:00",
+              "salesPrice": 10.0,
+              "matTypeId": 2000001,
+              "soItemGrossPrice": 10.0,
+              "invLocId": 14376002,
+              "isCompleteSet": false,
+              "salesAmt": 120.0,
+              "soItemCode": "SOI20250526100191",
+              "bomWhether": false,
+              "taxRate": 0.13,
+              "matId": 14633001,
+              "context": {},
+              "soItemTypeId": 2103001,
+              "soItemSlsQty": 12,
+              "taxRateId": 2002002,
+              "matCode": "hxymat-20241202744",
+              "taxAmt": 13.805309734513,
+              "invOrgId": 14375002,
+              "matName": "hxy测试物料4",
+              "grossTradeAmt": 120.0
+            }
+          ],
+          "sls_phone": "17376596912",
+          "sls_com_id": 14373001,
+          "sls_person": 14094003,
+          "re_calculate": false,
+          "curr_exchange_rate_type": 2000001,
+          "sls_org_id": 14579001,
+          "sls_curr_id": 2000001,
+          "price_calc_date": "2025-05-26T22:38:59.141",
+          "mat_qualification_check": false,
+          "partner_check": false,
+          "context": {},
+          "is_fixed_exch_rate": false,
+          "sls_person_name": "章昂",
+          "exch_rate": 1,
+          "base_curr_id": 2000001,
+          "so_type_id": 2101001,
+          "cust_id": 2059001
+        }
+      },
+      "syncSubmit": false,
+      "isFixedExchRate": false
+    }
+  }
+}
+2025-05-26 22:38:59.307 | DEBUG    | utils.log_util:debug:69 - 定价结果中的税率ID: {'id': 2002002}
+2025-05-26 22:38:59.307 | DEBUG    | utils.log_util:debug:69 - 定价结果中的单位ID: {'id': 14047001}
+2025-05-26 22:38:59.308 | DEBUG    | utils.log_util:debug:69 - 定价结果中的物料类型ID: 2000001
+2025-05-26 22:38:59.309 | DEBUG    | utils.log_util:debug:69 - 定价响应数据: {'context': {}, 'soCode': 'SO004922', 'soDocDate': 1748188800000, 'baseCurrId': {'id': 2000001}, 'slsCurrId': {'id': 2000001}, 'exchRate': 1, 'grossBaseAmt': 120.0, 'netBaseAmt': 106.194690265487, 'totalAmt': 120.0, 'taxAmt': 13.805309734513, 'slsOrgId': {'id': 14579001}, 'slsComId': {'id': 14373001}, 'slsDcId': {'id': 14378001}, 'soTypeId': {'id': 2101001}, 'custId': {'id': 2059001}, 'slsPerson': {'id': 14094003}, 'slsPersonName': '章昂', 'slsPhone': '17376596912', 'currExchangeRateType': 2000001, 'priceCalcDate': 1748270339141, 'discountAmt': 0, 'discountInfo': '', 'soItems': [{'context': {}, 'soItemCode': 'SOI20250526100191', 'matId': {'id': 14633001}, 'matCode': 'hxymat-20241202744', 'matName': 'hxy测试物料4', 'soItemSlsQty': 12, 'soItemPrice': 8.849557522124, 'soItemGrossPrice': 10.0, 'taxRateId': {'id': 2002002}, 'taxRate': 0.13, 'taxAmt': 13.805309734513, 'grossTradeAmt': 120.0, 'netTradeAmt': 106.194690265487, 'soSchlDelDate': 1748188800000, 'soItemTypeId': {'id': 2103001}, 'uomSlsId': {'id': 14047001}, 'uomBaseId': {'id': 14047001}, 'invOrgId': {'id': 14375002}, 'invLocId': {'id': 14376002}, 'bomWhether': False, 'itemNumber': 1, 'isCompleteSet': False, 'salesPrice': 10.0, 'salesAmt': 120.0, 'slsSoItemTypeCfDTO': {'id': 2103001, 'context': {}, 'originOrgId': 0, 'version': 205, 'deleted': 0, 'createdAt': 1685108592000, 'updatedAt': 1745892427000, 'createdBy': 27, 'updatedBy': 477234922377861, 'soItemTypeCode': 'NORM', 'soItemTypeName': '常规销售', 'delRelv': True, 'autoDelivery': True, 'checkInvLocRelv': True, 'status': 'ENABLED', 'isAutomaticComplete': False, 'isCompletePickControl': False, 'autoPr': False, 'autoOutDnPost': False, 'settlement': True, 'priceControlType': 'STAND'}, 'matTypeId': 2000001, 'giftCondition': {'sls_so_head_tr': {'sls_partner_links': [{'partnerTypeId': 2000001, 'context': {}, 'partnerClass': 'CUSTOMER', 'partnerId': 2059001}], 'sls_dc_id': 14378001, 'whether_price': False, 'so_doc_date': '2025-05-26T00:00:00', 'sync_submit': False, 'so_items': [{'itemNumber': 1, 'uomSlsId': 14047001, 'uomBaseId': 14047001, 'soSchlDelDate': '2025-05-26T00:00:00', 'salesPrice': 10.0, 'matTypeId': 2000001, 'soItemGrossPrice': 10.0, 'invLocId': 14376002, 'isCompleteSet': False, 'salesAmt': 120.0, 'soItemCode': 'SOI20250526100191', 'bomWhether': False, 'taxRate': 0.13, 'matId': 14633001, 'context': {}, 'soItemTypeId': 2103001, 'soItemSlsQty': 12, 'taxRateId': 2002002, 'matCode': 'hxymat-20241202744', 'taxAmt': 13.805309734513, 'invOrgId': 14375002, 'matName': 'hxy测试物料4', 'grossTradeAmt': 120.0}], 'sls_phone': '17376596912', 'sls_com_id': 14373001, 'sls_person': 14094003, 're_calculate': False, 'curr_exchange_rate_type': 2000001, 'sls_org_id': 14579001, 'sls_curr_id': 2000001, 'price_calc_date': '2025-05-26T22:38:59.141', 'mat_qualification_check': False, 'partner_check': False, 'context': {}, 'is_fixed_exch_rate': False, 'sls_person_name': '章昂', 'exch_rate': 1, 'base_curr_id': 2000001, 'so_type_id': 2101001, 'cust_id': 2059001}, 'sls_so_item_tr': {'uom_base_id': 14047001, 'so_schl_del_date': '2025-05-26T00:00:00', 'is_complete_set': False, 'inv_org_id': 14375002, 'so_item_code': 'SOI20250526100191', 'item_number': 1, 'bom_whether': False, 'mat_type_id': 2000001, 'tax_rate': 0.13, 'tax_rate_id': 2002002, 'mat_code': 'hxymat-20241202744', 'tax_amt': 13.805309734513, 'mat_name': 'hxy测试物料4', 'so_item_sls_qty': 12, 'mat_id': 14633001, 'context': {}, 'sales_price': 10.0, 'gross_trade_amt': 120.0, 'so_item_gross_price': 10.0, 'so_item_type_id': 2103001, 'uom_sls_id': 14047001, 'sales_amt': 120.0, 'inv_loc_id': 14376002}}, 'discountAmt': 0, 'discountInfo': ''}], 'slsPartnerLinks': [{'context': {}, 'partnerTypeId': {'id': 2000001}, 'partnerClass': 'CUSTOMER', 'partnerId': {'id': 2059001}}], 'priceIdempotent': '6d597cc30c6125116b2c90bb12f34d2d', 'preCalculate': True, 'reCalculate': False, 'partnerCheck': False, 'matQualificationCheck': False, 'whetherPrice': False, 'successGiftStrategy': {'id': 2001001, 'context': {}, 'matchStatus': 'MATCH_SUCCESS'}, 'giftCondition': {'sls_so_head_tr': {'sls_partner_links': [{'partnerTypeId': 2000001, 'context': {}, 'partnerClass': 'CUSTOMER', 'partnerId': 2059001}], 'sls_dc_id': 14378001, 'whether_price': False, 'so_doc_date': '2025-05-26T00:00:00', 'sync_submit': False, 'so_items': [{'itemNumber': 1, 'uomSlsId': 14047001, 'uomBaseId': 14047001, 'soSchlDelDate': '2025-05-26T00:00:00', 'salesPrice': 10.0, 'matTypeId': 2000001, 'soItemGrossPrice': 10.0, 'invLocId': 14376002, 'isCompleteSet': False, 'salesAmt': 120.0, 'soItemCode': 'SOI20250526100191', 'bomWhether': False, 'taxRate': 0.13, 'matId': 14633001, 'context': {}, 'soItemTypeId': 2103001, 'soItemSlsQty': 12, 'taxRateId': 2002002, 'matCode': 'hxymat-20241202744', 'taxAmt': 13.805309734513, 'invOrgId': 14375002, 'matName': 'hxy测试物料4', 'grossTradeAmt': 120.0}], 'sls_phone': '17376596912', 'sls_com_id': 14373001, 'sls_person': 14094003, 're_calculate': False, 'curr_exchange_rate_type': 2000001, 'sls_org_id': 14579001, 'sls_curr_id': 2000001, 'price_calc_date': '2025-05-26T22:38:59.141', 'mat_qualification_check': False, 'partner_check': False, 'context': {}, 'is_fixed_exch_rate': False, 'sls_person_name': '章昂', 'exch_rate': 1, 'base_curr_id': 2000001, 'so_type_id': 2101001, 'cust_id': 2059001}}, 'syncSubmit': False, 'isFixedExchRate': False}
+2025-05-26 22:38:59.310 | INFO     | utils.log_util:info:65 - 自动定价完成
+2025-05-26 22:38:59.311 | INFO     | utils.log_util:info:65 - 订单类型: THRD
+2025-05-26 22:38:59.311 | INFO     | utils.log_util:info:65 - 订单类型ID: 14010001
+2025-05-26 22:38:59.311 | INFO     | utils.log_util:info:65 - 订单行类型ID: 2103001
+2025-05-26 22:38:59.312 | INFO     | utils.log_util:info:65 - 保存订单请求数据: {
+  "params": {
+    "request": {
+      "context": {},
+      "soCode": "SO004922",
+      "soDocDate": 1748188800000,
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "exchRate": 1,
+      "grossBaseAmt": 120.0,
+      "netBaseAmt": 106.194690265487,
+      "totalAmt": 120.0,
+      "taxAmt": 13.805309734513,
+      "slsOrgId": {
+        "id": 14579001
+      },
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "soTypeId": {
+        "id": 14010001
+      },
+      "custId": {
+        "id": 2059001
+      },
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPersonName": "章昂",
+      "slsPhone": "17376596912",
+      "currExchangeRateType": 2000001,
+      "priceCalcDate": 1748270339141,
+      "discountAmt": 0,
+      "discountInfo": "",
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250526100191",
+          "matId": {
+            "id": 14633001,
+            "context": {},
+            "matCode": "hxymat-20241202744",
+            "matName": "hxy测试物料4",
+            "genMatTypeCfId": {
+              "id": 2000001
+            },
+            "baseUomId": 14047001,
+            "isKitSls": false,
+            "isCompleteSetDel": false,
+            "slsUomId": {
+              "id": 14047001
+            }
+          },
+          "matCode": "hxymat-20241202744",
+          "matName": "hxy测试物料4",
+          "soItemSlsQty": 12,
+          "soItemGrossPrice": 10.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 13.805309734513,
+          "grossTradeAmt": 120.0,
+          "soSchlDelDate": 1748188800000,
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {}
+          },
+          "uomSlsId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "weightUomId": {
+            "context": {}
+          },
+          "volumUomId": {
+            "context": {}
+          },
+          "delAddrId": {
+            "context": {}
+          },
+          "itemNumber": 1,
+          "salesPrice": 10.0,
+          "children": null,
+          "matTypeId": 2000001,
+          "isCompleteSet": false,
+          "salesAmt": 120.0
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ],
+      "priceIdempotent": "6d597cc30c6125116b2c90bb12f34d2d",
+      "preCalculate": true,
+      "reCalculate": false,
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false,
+      "successGiftStrategy": {
+        "id": 2001001,
+        "context": {},
+        "matchStatus": "MATCH_SUCCESS"
+      },
+      "giftCondition": {
+        "sls_so_head_tr": {
+          "sls_partner_links": [
+            {
+              "partnerTypeId": 2000001,
+              "context": {},
+              "partnerClass": "CUSTOMER",
+              "partnerId": 2059001
+            }
+          ],
+          "sls_dc_id": 14378001,
+          "whether_price": false,
+          "so_doc_date": "2025-05-26T00:00:00",
+          "sync_submit": false,
+          "so_items": [
+            {
+              "itemNumber": 1,
+              "uomSlsId": 14047001,
+              "uomBaseId": 14047001,
+              "soSchlDelDate": "2025-05-26T00:00:00",
+              "salesPrice": 10.0,
+              "matTypeId": 2000001,
+              "soItemGrossPrice": 10.0,
+              "invLocId": 14376002,
+              "isCompleteSet": false,
+              "salesAmt": 120.0,
+              "soItemCode": "SOI20250526100191",
+              "bomWhether": false,
+              "taxRate": 0.13,
+              "matId": 14633001,
+              "context": {},
+              "soItemTypeId": 2103001,
+              "soItemSlsQty": 12,
+              "taxRateId": 2002002,
+              "matCode": "hxymat-20241202744",
+              "taxAmt": 13.805309734513,
+              "invOrgId": 14375002,
+              "matName": "hxy测试物料4",
+              "grossTradeAmt": 120.0
+            }
+          ],
+          "sls_phone": "17376596912",
+          "sls_com_id": 14373001,
+          "sls_person": 14094003,
+          "re_calculate": false,
+          "curr_exchange_rate_type": 2000001,
+          "sls_org_id": 14579001,
+          "sls_curr_id": 2000001,
+          "price_calc_date": "2025-05-26T22:38:59.141",
+          "mat_qualification_check": false,
+          "partner_check": false,
+          "context": {},
+          "is_fixed_exch_rate": false,
+          "sls_person_name": "章昂",
+          "exch_rate": 1,
+          "base_curr_id": 2000001,
+          "so_type_id": 2101001,
+          "cust_id": 2059001
+        }
+      },
+      "syncSubmit": true,
+      "isFixedExchRate": false,
+      "orderTypeId": {
+        "id": 14010001
+      },
+      "orderLineTypeId": {
+        "id": 2103001
+      },
+      "addrId": {
+        "id": null
+      },
+      "addrDetail": null,
+      "custPersonName": null,
+      "custPhone": null
+    }
+  }
+}
+2025-05-26 22:38:59.312 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SLS_SALES_MANUAL_SAVE_EVENT
+2025-05-26 22:38:59.313 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-26 22:38:59.313 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "context": {},
+      "soCode": "SO004922",
+      "soDocDate": 1748188800000,
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "exchRate": 1,
+      "grossBaseAmt": 120.0,
+      "netBaseAmt": 106.194690265487,
+      "totalAmt": 120.0,
+      "taxAmt": 13.805309734513,
+      "slsOrgId": {
+        "id": 14579001
+      },
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "soTypeId": {
+        "id": 14010001
+      },
+      "custId": {
+        "id": 2059001
+      },
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPersonName": "章昂",
+      "slsPhone": "17376596912",
+      "currExchangeRateType": 2000001,
+      "priceCalcDate": 1748270339141,
+      "discountAmt": 0,
+      "discountInfo": "",
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250526100191",
+          "matId": {
+            "id": 14633001,
+            "context": {},
+            "matCode": "hxymat-20241202744",
+            "matName": "hxy测试物料4",
+            "genMatTypeCfId": {
+              "id": 2000001
+            },
+            "baseUomId": 14047001,
+            "isKitSls": false,
+            "isCompleteSetDel": false,
+            "slsUomId": {
+              "id": 14047001
+            }
+          },
+          "matCode": "hxymat-20241202744",
+          "matName": "hxy测试物料4",
+          "soItemSlsQty": 12,
+          "soItemGrossPrice": 10.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 13.805309734513,
+          "grossTradeAmt": 120.0,
+          "soSchlDelDate": 1748188800000,
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {}
+          },
+          "uomSlsId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "weightUomId": {
+            "context": {}
+          },
+          "volumUomId": {
+            "context": {}
+          },
+          "delAddrId": {
+            "context": {}
+          },
+          "itemNumber": 1,
+          "salesPrice": 10.0,
+          "children": null,
+          "matTypeId": 2000001,
+          "isCompleteSet": false,
+          "salesAmt": 120.0
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ],
+      "priceIdempotent": "6d597cc30c6125116b2c90bb12f34d2d",
+      "preCalculate": true,
+      "reCalculate": false,
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false,
+      "successGiftStrategy": {
+        "id": 2001001,
+        "context": {},
+        "matchStatus": "MATCH_SUCCESS"
+      },
+      "giftCondition": {
+        "sls_so_head_tr": {
+          "sls_partner_links": [
+            {
+              "partnerTypeId": 2000001,
+              "context": {},
+              "partnerClass": "CUSTOMER",
+              "partnerId": 2059001
+            }
+          ],
+          "sls_dc_id": 14378001,
+          "whether_price": false,
+          "so_doc_date": "2025-05-26T00:00:00",
+          "sync_submit": false,
+          "so_items": [
+            {
+              "itemNumber": 1,
+              "uomSlsId": 14047001,
+              "uomBaseId": 14047001,
+              "soSchlDelDate": "2025-05-26T00:00:00",
+              "salesPrice": 10.0,
+              "matTypeId": 2000001,
+              "soItemGrossPrice": 10.0,
+              "invLocId": 14376002,
+              "isCompleteSet": false,
+              "salesAmt": 120.0,
+              "soItemCode": "SOI20250526100191",
+              "bomWhether": false,
+              "taxRate": 0.13,
+              "matId": 14633001,
+              "context": {},
+              "soItemTypeId": 2103001,
+              "soItemSlsQty": 12,
+              "taxRateId": 2002002,
+              "matCode": "hxymat-20241202744",
+              "taxAmt": 13.805309734513,
+              "invOrgId": 14375002,
+              "matName": "hxy测试物料4",
+              "grossTradeAmt": 120.0
+            }
+          ],
+          "sls_phone": "17376596912",
+          "sls_com_id": 14373001,
+          "sls_person": 14094003,
+          "re_calculate": false,
+          "curr_exchange_rate_type": 2000001,
+          "sls_org_id": 14579001,
+          "sls_curr_id": 2000001,
+          "price_calc_date": "2025-05-26T22:38:59.141",
+          "mat_qualification_check": false,
+          "partner_check": false,
+          "context": {},
+          "is_fixed_exch_rate": false,
+          "sls_person_name": "章昂",
+          "exch_rate": 1,
+          "base_curr_id": 2000001,
+          "so_type_id": 2101001,
+          "cust_id": 2059001
+        }
+      },
+      "syncSubmit": true,
+      "isFixedExchRate": false,
+      "orderTypeId": {
+        "id": 14010001
+      },
+      "orderLineTypeId": {
+        "id": 2103001
+      },
+      "addrId": {
+        "id": null
+      },
+      "addrDetail": null,
+      "custPersonName": null,
+      "custPhone": null
+    }
+  }
+}
+2025-05-26 22:38:59.313 | INFO     | utils.request_util:request:88 - 请求描述: 销售订单提交
+2025-05-26 22:38:59.725 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-26 22:38:59.725 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Mon, 26 May 2025 14:38:59 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '39ac4003-197851', 'Trace-Id': '39ac4003-197851', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNmRlMjg1NjlhNWFkNGQxMDg2MjczNTg3ODQ4MjFlOGYiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODUyOTUzOSwibmJmIjoxNzQ4MjcwMzM5LCJpYXQiOjE3NDgyNzAzMzksImp0aSI6IjE3NGNiNTM1NDZhYzRkN2ViOGY1ZTQ2MmQwMjgwMWQxIn0.n_U3Mf8TZJio91TDDO-ukJra5Ai7zFGYA6xnKHR9WLI; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Thu, 29 May 2025 14:38:59 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '326', 'X-Kong-Proxy-Latency': '1', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-26 22:38:59.726 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "39ac4003-197851",
+  "success": false,
+  "data": null,
+  "err": {
+    "code": "DEL_DN_TYPE_IS_NOT_NULL",
+    "msg": "交货单类型不存在",
+    "suggest": null
+  }
+}
+2025-05-26 22:38:59.726 | INFO     | utils.log_util:info:65 - 保存订单响应数据: {
+  "requestId": "39ac4003-197851",
+  "success": false,
+  "data": null,
+  "err": {
+    "code": "DEL_DN_TYPE_IS_NOT_NULL",
+    "msg": "交货单类型不存在",
+    "suggest": null
+  }
+}
+2025-05-26 22:38:59.727 | INFO     | utils.log_util:info:65 - THRD类型销售订单提交成功
+2025-05-26 22:38:59.727 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$sls_sales_order_create_init_service
+2025-05-26 22:38:59.727 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-26 22:38:59.728 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "btClass": "SALES",
+      "orderTypeId": 14012001,
+      "orderLineTypeId": 2001002
+    }
+  }
+}
+2025-05-26 22:38:59.728 | INFO     | utils.request_util:request:88 - 请求描述: 销售订单创建初始化
+2025-05-26 22:38:59.784 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-26 22:38:59.785 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Mon, 26 May 2025 14:38:59 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '6dabdeb8-197852', 'Trace-Id': '6dabdeb8-197852', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNmRlMjg1NjlhNWFkNGQxMDg2MjczNTg3ODQ4MjFlOGYiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODUyOTUzOSwibmJmIjoxNzQ4MjcwMzM5LCJpYXQiOjE3NDgyNzAzMzksImp0aSI6IjE3NGNiNTM1NDZhYzRkN2ViOGY1ZTQ2MmQwMjgwMWQxIn0.n_U3Mf8TZJio91TDDO-ukJra5Ai7zFGYA6xnKHR9WLI; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Thu, 29 May 2025 14:38:59 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '34', 'X-Kong-Proxy-Latency': '1', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-26 22:38:59.785 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "6dabdeb8-197852",
+  "success": true,
+  "data": {
+    "data": {
+      "slsOrgId": null,
+      "slsCurrId": null,
+      "extAchievementShop": null,
+      "slsDcId": null,
+      "effectiveAt": null,
+      "slsPhone": "17376596912",
+      "slsComId": null,
+      "baseCurrId": null,
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "soTypeId": {
+        "id": 2101001,
+        "context": {},
+        "originOrgId": 0,
+        "version": 68,
+        "deleted": 0,
+        "createdAt": 1685108645000,
+        "updatedAt": 1745892294000,
+        "createdBy": 27,
+        "updatedBy": 477234922377861,
+        "soTypeCode": "STND",
+        "soTypeName": "标准销售",
+        "soTypeDesc": "标准销售",
+        "partnerProcedureHeadRef": {
+          "id": 14005002
+        },
+        "status": "ENABLED",
+        "submitApproval": true,
+        "modifyApproval": false,
+        "currExchangeRateType": 2000001,
+        "btClass": "SALES",
+        "syncPrice": false,
+        "isRev": false
+      }
+    }
+  }
+}
+2025-05-26 22:38:59.786 | DEBUG    | utils.log_util:debug:69 - 销售人员信息: {'id': 14094003, 'context': {}, 'name': '章昂'}
+2025-05-26 22:38:59.786 | INFO     | utils.log_util:info:65 - 销售订单创建初始化完成，订单类型: CENT
+2025-05-26 22:38:59.787 | INFO     | utils.log_util:info:65 - 查询客户信息URL: /api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService?tmodule=ERP_SCM&modelKey=ERP_GEN$gen_cust_info_md
+2025-05-26 22:38:59.787 | DEBUG    | utils.log_util:debug:69 - 查询客户信息请求数据: {
+  "sceneKey": "ERP_SCM$sls_so_730",
+  "viewKey": "ERP_SCM$sls_so_730:edit",
+  "serviceKey": "ERP_SCM$SYS_PagingDataService",
+  "params": {
+    "modelKey": "ERP_GEN$gen_cust_info_md",
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "conditionGroup": {
+          "type": "ConditionGroup",
+          "logicOperator": "AND",
+          "conditions": [
+            {
+              "type": "ConditionGroup",
+              "logicOperator": "AND",
+              "conditions": [
+                {
+                  "type": "ConditionGroup",
+                  "logicOperator": "AND",
+                  "conditions": [
+                    {
+                      "key": "V9-9Z27ZOiitzmCTR3toD",
+                      "type": "ConditionLeaf",
+                      "leftValue": {
+                        "id": "Cs-llCMSNSEI2xK0ajnbw",
+                        "key": "Cs-llCMSNSEI2xK0ajnbw",
+                        "type": "VarValue",
+                        "fieldType": "Text",
+                        "valueType": "VAR",
+                        "varValue": [
+                          {
+                            "valueKey": "custCode",
+                            "valueName": "custCode"
+                          }
+                        ]
+                      },
+                      "operator": "CONTAINS",
+                      "rightValue": {
+                        "key": "Kf1gTg48B2elte3S_U-Wb",
+                        "type": "VarValue",
+                        "fieldType": "Text",
+                        "valueType": "CONST",
+                        "constValue": "AUTOTEST_CUST"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "sortOrders": null,
+        "keyword": null
+      }
+    }
+  }
+}
+2025-05-26 22:38:59.788 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService?tmodule=ERP_SCM&modelKey=ERP_GEN$gen_cust_info_md
+2025-05-26 22:38:59.788 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-26 22:38:59.788 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "sceneKey": "ERP_SCM$sls_so_730",
+  "viewKey": "ERP_SCM$sls_so_730:edit",
+  "serviceKey": "ERP_SCM$SYS_PagingDataService",
+  "params": {
+    "modelKey": "ERP_GEN$gen_cust_info_md",
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "conditionGroup": {
+          "type": "ConditionGroup",
+          "logicOperator": "AND",
+          "conditions": [
+            {
+              "type": "ConditionGroup",
+              "logicOperator": "AND",
+              "conditions": [
+                {
+                  "type": "ConditionGroup",
+                  "logicOperator": "AND",
+                  "conditions": [
+                    {
+                      "key": "V9-9Z27ZOiitzmCTR3toD",
+                      "type": "ConditionLeaf",
+                      "leftValue": {
+                        "id": "Cs-llCMSNSEI2xK0ajnbw",
+                        "key": "Cs-llCMSNSEI2xK0ajnbw",
+                        "type": "VarValue",
+                        "fieldType": "Text",
+                        "valueType": "VAR",
+                        "varValue": [
+                          {
+                            "valueKey": "custCode",
+                            "valueName": "custCode"
+                          }
+                        ]
+                      },
+                      "operator": "CONTAINS",
+                      "rightValue": {
+                        "key": "Kf1gTg48B2elte3S_U-Wb",
+                        "type": "VarValue",
+                        "fieldType": "Text",
+                        "valueType": "CONST",
+                        "constValue": "AUTOTEST_CUST"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "sortOrders": null,
+        "keyword": null
+      }
+    }
+  }
+}
+2025-05-26 22:38:59.789 | INFO     | utils.request_util:request:88 - 请求描述: 查询客户信息
+2025-05-26 22:38:59.859 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-26 22:38:59.860 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Mon, 26 May 2025 14:39:00 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '6dabdeb8-197853', 'Trace-Id': '6dabdeb8-197853', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNmRlMjg1NjlhNWFkNGQxMDg2MjczNTg3ODQ4MjFlOGYiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODUyOTU0MCwibmJmIjoxNzQ4MjcwMzQwLCJpYXQiOjE3NDgyNzAzNDAsImp0aSI6IjE3NGNiNTM1NDZhYzRkN2ViOGY1ZTQ2MmQwMjgwMWQxIn0.-XAe0ai09h_xbt0G2I9B4qkHDfkLAtn2-VzbGTpzKO8; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Thu, 29 May 2025 14:39:00 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '47', 'X-Kong-Proxy-Latency': '1', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-26 22:38:59.860 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "6dabdeb8-197853",
+  "success": true,
+  "data": {
+    "data": {
+      "total": 1,
+      "data": [
+        {
+          "custCode": "AUTOTEST_CUST",
+          "custName": "客户(自动化)",
+          "custShortName": null,
+          "custCateType": "COMPANY",
+          "comId": null,
+          "status": "ENABLED",
+          "remark": null,
+          "custTypeId": {
+            "id": 2503008
+          },
+          "custPreId": null,
+          "relatedCompanyInformation": {
+            "id": 14419001
+          },
+          "associatePersonalInformation": null,
+          "custExtCode": null,
+          "genBusinessPartnerMdId": {
+            "id": 2059001
+          },
+          "id": 2059001,
+          "createdBy": {
+            "id": 477142386786949
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1715829452000,
+          "updatedAt": 1744359938000,
+          "version": 38,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": null
+        }
+      ]
+    }
+  }
+}
+2025-05-26 22:38:59.861 | INFO     | utils.log_util:info:65 - 客户信息查询完成
+2025-05-26 22:38:59.862 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SO_QUERY_PARTNER_EVENT_SERVICE
+2025-05-26 22:38:59.862 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-26 22:38:59.863 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "reCalculate": false,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "soDocDate": 1748188800000,
+      "priceCalcDate": 1748270339862,
+      "custId": {
+        "id": 2059001
+      },
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPhone": "17376596912",
+      "slsPersonName": "章昂",
+      "isFixedExchRate": false,
+      "currExchangeRateType": 2000001,
+      "soItems": [
+        {
+          "bomWhether": false,
+          "soSchlDelDate": 1748188800000
+        }
+      ]
+    }
+  }
+}
+2025-05-26 22:38:59.863 | INFO     | utils.request_util:request:88 - 请求描述: 查询相关方
+2025-05-26 22:38:59.983 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-26 22:38:59.984 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Mon, 26 May 2025 14:39:00 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '93da375a-197854', 'Trace-Id': '93da375a-197854', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNmRlMjg1NjlhNWFkNGQxMDg2MjczNTg3ODQ4MjFlOGYiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODUyOTU0MCwibmJmIjoxNzQ4MjcwMzQwLCJpYXQiOjE3NDgyNzAzNDAsImp0aSI6IjE3NGNiNTM1NDZhYzRkN2ViOGY1ZTQ2MmQwMjgwMWQxIn0.-XAe0ai09h_xbt0G2I9B4qkHDfkLAtn2-VzbGTpzKO8; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Thu, 29 May 2025 14:39:00 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '48', 'X-Kong-Proxy-Latency': '1', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-26 22:38:59.985 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "93da375a-197854",
+  "success": true,
+  "data": {
+    "data": {
+      "context": {},
+      "soDocDate": 1748188800000,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "custId": {
+        "id": 2059001
+      },
+      "slsPerson": {
+        "id": 14094003
+      },
+      "slsPersonName": "章昂",
+      "slsPhone": "17376596912",
+      "currExchangeRateType": 2000001,
+      "priceCalcDate": 1748270339862,
+      "soItems": [
+        {
+          "context": {},
+          "soSchlDelDate": 1748188800000,
+          "bomWhether": false
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ],
+      "reCalculate": false,
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false,
+      "syncSubmit": false,
+      "isFixedExchRate": false
+    }
+  }
+}
+2025-05-26 22:38:59.986 | INFO     | utils.log_util:info:65 - 相关方查询完成
+2025-05-26 22:38:59.986 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$sls_sales_organization_paging_service?tmodule=ERP_SCM
+2025-05-26 22:38:59.987 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-26 22:38:59.987 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "conditionGroup": {
+          "type": "ConditionGroup",
+          "logicOperator": "AND",
+          "conditions": [
+            {
+              "type": "ConditionGroup",
+              "logicOperator": "AND",
+              "conditions": [
+                {
+                  "type": "ConditionGroup",
+                  "logicOperator": "AND",
+                  "conditions": [
+                    {
+                      "key": "nr_nqTvXmIyHnHxKfmn3S",
+                      "type": "ConditionLeaf",
+                      "leftValue": {
+                        "id": "iJlX7JIkAyn7AIr9omqK-",
+                        "key": "iJlX7JIkAyn7AIr9omqK-",
+                        "type": "VarValue",
+                        "fieldType": "Text",
+                        "valueType": "VAR",
+                        "varValue": [
+                          {
+                            "valueKey": "orgCode",
+                            "valueName": "orgCode"
+                          }
+                        ]
+                      },
+                      "operator": "CONTAINS",
+                      "rightValue": {
+                        "key": "ggwEgoMfFc91CYI1zUwzb",
+                        "type": "VarValue",
+                        "fieldType": "Text",
+                        "valueType": "CONST",
+                        "constValue": "AUTOTEST_SLS_ORG"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "sortOrders": null,
+        "keyword": null
+      }
+    }
+  }
+}
+2025-05-26 22:38:59.988 | INFO     | utils.request_util:request:88 - 请求描述: 查询销售组织列表
+2025-05-26 22:39:00.055 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-26 22:39:00.055 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Mon, 26 May 2025 14:39:00 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '6dabdeb8-197855', 'Trace-Id': '6dabdeb8-197855', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNmRlMjg1NjlhNWFkNGQxMDg2MjczNTg3ODQ4MjFlOGYiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODUyOTU0MCwibmJmIjoxNzQ4MjcwMzQwLCJpYXQiOjE3NDgyNzAzNDAsImp0aSI6IjE3NGNiNTM1NDZhYzRkN2ViOGY1ZTQ2MmQwMjgwMWQxIn0.-XAe0ai09h_xbt0G2I9B4qkHDfkLAtn2-VzbGTpzKO8; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Thu, 29 May 2025 14:39:00 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '41', 'X-Kong-Proxy-Latency': '1', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-26 22:39:00.055 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "6dabdeb8-197855",
+  "success": true,
+  "data": {
+    "data": {
+      "data": [
+        {
+          "orgCode": "AUTOTEST_SLS_ORG",
+          "orgName": "销售组织(自动化)",
+          "orgStatus": "ENABLED",
+          "orgBusinessTypeCode": null,
+          "comOrgId": {
+            "id": 14507001
+          },
+          "id": 14579001
+        }
+      ],
+      "total": 1
+    }
+  }
+}
+2025-05-26 22:39:00.055 | DEBUG    | utils.log_util:debug:69 - 销售组织列表查询响应: {'requestId': '6dabdeb8-197855', 'success': True, 'data': {'data': {'data': [{'orgCode': 'AUTOTEST_SLS_ORG', 'orgName': '销售组织(自动化)', 'orgStatus': 'ENABLED', 'orgBusinessTypeCode': None, 'comOrgId': {'id': 14507001}, 'id': 14579001}], 'total': 1}}}
+2025-05-26 22:39:00.056 | INFO     | utils.log_util:info:65 - 销售组织列表查询完成: {'orgCode': 'AUTOTEST_SLS_ORG', 'orgName': '销售组织(自动化)', 'orgStatus': 'ENABLED', 'orgBusinessTypeCode': None, 'comOrgId': {'id': 14507001}, 'id': 14579001}
+2025-05-26 22:39:00.056 | INFO     | utils.log_util:info:65 - 销售组织列表查询完成
+物料查询请求参数: {
+  "params": {
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "sortOrders": [
+          {
+            "fieldAlias": "matCode",
+            "id": "matCode-0",
+            "sortType": "ASC"
+          },
+          {
+            "fieldAlias": "matName",
+            "id": "matName-1",
+            "sortType": "ASC"
+          }
+        ],
+        "keyword": "hxymat-20241202744"
+      },
+      "slsOrgId": 14579001,
+      "slsDcId": 14378001
+    }
+  }
+}
+2025-05-26 22:39:00.056 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$INV_MAT_PAGING_SERVICE
+2025-05-26 22:39:00.056 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-26 22:39:00.057 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "sortOrders": [
+          {
+            "fieldAlias": "matCode",
+            "id": "matCode-0",
+            "sortType": "ASC"
+          },
+          {
+            "fieldAlias": "matName",
+            "id": "matName-1",
+            "sortType": "ASC"
+          }
+        ],
+        "keyword": "hxymat-20241202744"
+      },
+      "slsOrgId": 14579001,
+      "slsDcId": 14378001
+    }
+  }
+}
+2025-05-26 22:39:00.057 | INFO     | utils.request_util:request:88 - 请求描述: 查询物料列表
+2025-05-26 22:39:00.130 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-26 22:39:00.130 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Mon, 26 May 2025 14:39:00 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '93da375a-197856', 'Trace-Id': '93da375a-197856', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNmRlMjg1NjlhNWFkNGQxMDg2MjczNTg3ODQ4MjFlOGYiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODUyOTU0MCwibmJmIjoxNzQ4MjcwMzQwLCJpYXQiOjE3NDgyNzAzNDAsImp0aSI6IjE3NGNiNTM1NDZhYzRkN2ViOGY1ZTQ2MmQwMjgwMWQxIn0.-XAe0ai09h_xbt0G2I9B4qkHDfkLAtn2-VzbGTpzKO8; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Thu, 29 May 2025 14:39:00 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '54', 'X-Kong-Proxy-Latency': '1', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-26 22:39:00.131 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "93da375a-197856",
+  "success": true,
+  "data": {
+    "data": {
+      "total": 1,
+      "data": [
+        {
+          "matCode": "hxymat-20241202744",
+          "matName": "hxy测试物料4",
+          "genMatTypeCfId": {
+            "matTypeName": "成品",
+            "id": 2000001
+          },
+          "baseUomId": {
+            "uomDesc": "双",
+            "id": 14047001
+          },
+          "cateId": {
+            "matCateName": "化工品",
+            "id": 2000002
+          },
+          "brandId": null,
+          "status": "ENABLED",
+          "bizStatus": "SALE",
+          "specModel": null,
+          "id": 14633001,
+          "updatedAt": 1746518417000
+        }
+      ]
+    }
+  }
+}
+物料查询响应数据: [
+  {
+    "matCode": "hxymat-20241202744",
+    "matName": "hxy测试物料4",
+    "genMatTypeCfId": {
+      "matTypeName": "成品",
+      "id": 2000001
+    },
+    "baseUomId": {
+      "uomDesc": "双",
+      "id": 14047001
+    },
+    "cateId": {
+      "matCateName": "化工品",
+      "id": 2000002
+    },
+    "brandId": null,
+    "status": "ENABLED",
+    "bizStatus": "SALE",
+    "specModel": null,
+    "id": 14633001,
+    "updatedAt": 1746518417000
+  }
+]
+物料查询关键字: hxymat-20241202744
+2025-05-26 22:39:00.131 | INFO     | utils.log_util:info:65 - 检查物料: hxymat-20241202744, 是否匹配关键字 hxymat-20241202744: True
+2025-05-26 22:39:00.131 | INFO     | utils.log_util:info:65 - 找到匹配的物料: hxymat-20241202744
+查到的物料code: hxymat-20241202744
+2025-05-26 22:39:00.131 | INFO     | utils.log_util:info:65 - 物料列表查询完成，使用物料: hxymat-20241202744
+2025-05-26 22:39:00.132 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SLS_AFTER_MAT_SELECT_RENDER_EVENT_SERVICE
+2025-05-26 22:39:00.132 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-26 22:39:00.132 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "addrId": {
+        "id": null
+      },
+      "custId": {
+        "id": 2059001
+      },
+      "invLoc": null,
+      "invOrg": null,
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "slsOrgId": {
+        "id": 14579001
+      },
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPhone": "17376596912",
+      "slsPersonName": "章昂",
+      "soDocDate": 1748188800000,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "currExchangeRateType": 2000001,
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ],
+      "soItems": [
+        {
+          "matId": {
+            "id": 14633001
+          },
+          "taxRateId": null,
+          "invOrgId": {
+            "id": 14375002
+          },
+          "invLocId": {
+            "id": 14376002
+          },
+          "soItemSlsQty": 12,
+          "delAddrDetail": null,
+          "delAddrId": {
+            "id": null
+          },
+          "delPersonName": null,
+          "delPhone": null
+        }
+      ],
+      "orderTypeId": 14012001,
+      "orderLineTypeId": 2001002
+    }
+  }
+}
+2025-05-26 22:39:00.132 | INFO     | utils.request_util:request:88 - 请求描述: 订单行渲染
+2025-05-26 22:39:00.305 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-26 22:39:00.305 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Mon, 26 May 2025 14:39:00 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': 'f46431d2-197857', 'Trace-Id': 'f46431d2-197857', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNmRlMjg1NjlhNWFkNGQxMDg2MjczNTg3ODQ4MjFlOGYiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODUyOTU0MCwibmJmIjoxNzQ4MjcwMzQwLCJpYXQiOjE3NDgyNzAzNDAsImp0aSI6IjE3NGNiNTM1NDZhYzRkN2ViOGY1ZTQ2MmQwMjgwMWQxIn0.-XAe0ai09h_xbt0G2I9B4qkHDfkLAtn2-VzbGTpzKO8; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Thu, 29 May 2025 14:39:00 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '151', 'X-Kong-Proxy-Latency': '2', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-26 22:39:00.305 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "f46431d2-197857",
+  "success": true,
+  "data": {
+    "data": {
+      "context": {},
+      "soCode": "SO004923",
+      "soDocDate": 1748188800000,
+      "baseCurrId": {
+        "id": 2000001,
+        "context": {}
+      },
+      "slsCurrId": {
+        "id": 2000001,
+        "context": {}
+      },
+      "slsOrgId": {
+        "id": 14579001,
+        "context": {}
+      },
+      "slsComId": {
+        "id": 14373001,
+        "context": {}
+      },
+      "slsDcId": {
+        "id": 14378001,
+        "context": {}
+      },
+      "soTypeId": {
+        "id": 2101001,
+        "context": {}
+      },
+      "custId": {
+        "id": 2059001,
+        "context": {}
+      },
+      "addrId": {
+        "context": {}
+      },
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPersonName": "章昂",
+      "slsPhone": "17376596912",
+      "currExchangeRateType": 2000001,
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250526100192",
+          "matId": {
+            "id": 14633001,
+            "context": {},
+            "matCode": "hxymat-20241202744",
+            "matName": "hxy测试物料4",
+            "genMatTypeCfId": {
+              "id": 2000001
+            },
+            "baseUomId": 14047001,
+            "isKitSls": false,
+            "isCompleteSetDel": false,
+            "slsUomId": {
+              "id": 14047001
+            }
+          },
+          "matCode": "hxymat-20241202744",
+          "matName": "hxy测试物料4",
+          "soItemSlsQty": 12,
+          "soItemGrossPrice": 10.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 13.805309734513,
+          "grossTradeAmt": 120.0,
+          "soSchlDelDate": 1748188800000,
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {}
+          },
+          "uomSlsId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "weightUomId": {
+            "context": {}
+          },
+          "volumUomId": {
+            "context": {}
+          },
+          "delAddrId": {
+            "context": {}
+          },
+          "itemNumber": 1,
+          "salesPrice": 10.0,
+          "children": null,
+          "matTypeId": 2000001,
+          "isCompleteSet": false,
+          "salesAmt": 120.0
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ],
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false
+    }
+  }
+}
+2025-05-26 22:39:00.306 | INFO     | utils.log_util:info:65 - 订单行渲染完成，订单类型: CENT
+2025-05-26 22:39:00.307 | INFO     | utils.log_util:info:65 - 自动定价请求参数: {
+  "params": {
+    "request": {
+      "id": null,
+      "priceIdempotent": null,
+      "reCalculate": false,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "soDocDate": 1748188800000,
+      "priceCalcDate": 1748270340306,
+      "custId": {
+        "id": 2059001
+      },
+      "addrId": {
+        "id": null
+      },
+      "addrDetail": null,
+      "custPersonName": null,
+      "custPhone": null,
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPhone": "17376596912",
+      "slsPersonName": "章昂",
+      "slsOrgId": {
+        "id": 14579001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "isFixedExchRate": false,
+      "currExchangeRateType": 2000001,
+      "exchRate": 1,
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250526100192",
+          "matId": {
+            "id": 14633001,
+            "context": {},
+            "matCode": "hxymat-20241202744",
+            "matName": "hxy测试物料4",
+            "genMatTypeCfId": {
+              "id": 2000001
+            },
+            "baseUomId": 14047001,
+            "isKitSls": false,
+            "isCompleteSetDel": false,
+            "slsUomId": {
+              "id": 14047001
+            }
+          },
+          "matCode": "hxymat-20241202744",
+          "matName": "hxy测试物料4",
+          "soItemSlsQty": 12,
+          "soItemGrossPrice": 10.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 13.805309734513,
+          "grossTradeAmt": 120.0,
+          "soSchlDelDate": 1748188800000,
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {}
+          },
+          "uomSlsId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "weightUomId": {
+            "context": {}
+          },
+          "volumUomId": {
+            "context": {}
+          },
+          "delAddrId": {
+            "context": {}
+          },
+          "itemNumber": 1,
+          "salesPrice": 10.0,
+          "children": null,
+          "matTypeId": 2000001,
+          "isCompleteSet": false,
+          "salesAmt": 120.0
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ]
+    }
+  }
+}
+2025-05-26 22:39:00.307 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SO_AUTO_PRICE_EVENT_copy_SERVICE
+2025-05-26 22:39:00.307 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-26 22:39:00.307 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "id": null,
+      "priceIdempotent": null,
+      "reCalculate": false,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "soDocDate": 1748188800000,
+      "priceCalcDate": 1748270340306,
+      "custId": {
+        "id": 2059001
+      },
+      "addrId": {
+        "id": null
+      },
+      "addrDetail": null,
+      "custPersonName": null,
+      "custPhone": null,
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPhone": "17376596912",
+      "slsPersonName": "章昂",
+      "slsOrgId": {
+        "id": 14579001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "isFixedExchRate": false,
+      "currExchangeRateType": 2000001,
+      "exchRate": 1,
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250526100192",
+          "matId": {
+            "id": 14633001,
+            "context": {},
+            "matCode": "hxymat-20241202744",
+            "matName": "hxy测试物料4",
+            "genMatTypeCfId": {
+              "id": 2000001
+            },
+            "baseUomId": 14047001,
+            "isKitSls": false,
+            "isCompleteSetDel": false,
+            "slsUomId": {
+              "id": 14047001
+            }
+          },
+          "matCode": "hxymat-20241202744",
+          "matName": "hxy测试物料4",
+          "soItemSlsQty": 12,
+          "soItemGrossPrice": 10.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 13.805309734513,
+          "grossTradeAmt": 120.0,
+          "soSchlDelDate": 1748188800000,
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {}
+          },
+          "uomSlsId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "weightUomId": {
+            "context": {}
+          },
+          "volumUomId": {
+            "context": {}
+          },
+          "delAddrId": {
+            "context": {}
+          },
+          "itemNumber": 1,
+          "salesPrice": 10.0,
+          "children": null,
+          "matTypeId": 2000001,
+          "isCompleteSet": false,
+          "salesAmt": 120.0
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ]
+    }
+  }
+}
+2025-05-26 22:39:00.308 | INFO     | utils.request_util:request:88 - 请求描述: 自动定价
+2025-05-26 22:39:00.475 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-26 22:39:00.476 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Mon, 26 May 2025 14:39:00 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '39ac4003-197859', 'Trace-Id': '39ac4003-197859', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNmRlMjg1NjlhNWFkNGQxMDg2MjczNTg3ODQ4MjFlOGYiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODUyOTU0MCwibmJmIjoxNzQ4MjcwMzQwLCJpYXQiOjE3NDgyNzAzNDAsImp0aSI6IjE3NGNiNTM1NDZhYzRkN2ViOGY1ZTQ2MmQwMjgwMWQxIn0.-XAe0ai09h_xbt0G2I9B4qkHDfkLAtn2-VzbGTpzKO8; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Thu, 29 May 2025 14:39:00 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '141', 'X-Kong-Proxy-Latency': '2', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-26 22:39:00.477 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "39ac4003-197859",
+  "success": true,
+  "data": {
+    "data": {
+      "context": {},
+      "soCode": "SO004924",
+      "soDocDate": 1748188800000,
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "exchRate": 1,
+      "grossBaseAmt": 120.0,
+      "netBaseAmt": 106.194690265487,
+      "totalAmt": 120.0,
+      "taxAmt": 13.805309734513,
+      "slsOrgId": {
+        "id": 14579001
+      },
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "soTypeId": {
+        "id": 2101001
+      },
+      "custId": {
+        "id": 2059001
+      },
+      "slsPerson": {
+        "id": 14094003
+      },
+      "slsPersonName": "章昂",
+      "slsPhone": "17376596912",
+      "currExchangeRateType": 2000001,
+      "priceCalcDate": 1748270340306,
+      "discountAmt": 0,
+      "discountInfo": "",
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250526100192",
+          "matId": {
+            "id": 14633001
+          },
+          "matCode": "hxymat-20241202744",
+          "matName": "hxy测试物料4",
+          "soItemSlsQty": 12,
+          "soItemPrice": 8.849557522124,
+          "soItemGrossPrice": 10.0,
+          "taxRateId": {
+            "id": 2002002
+          },
+          "taxRate": 0.13,
+          "taxAmt": 13.805309734513,
+          "grossTradeAmt": 120.0,
+          "netTradeAmt": 106.194690265487,
+          "soSchlDelDate": 1748188800000,
+          "soItemTypeId": {
+            "id": 2103001
+          },
+          "uomSlsId": {
+            "id": 14047001
+          },
+          "uomBaseId": {
+            "id": 14047001
+          },
+          "invOrgId": {
+            "id": 14375002
+          },
+          "invLocId": {
+            "id": 14376002
+          },
+          "bomWhether": false,
+          "itemNumber": 1,
+          "isCompleteSet": false,
+          "salesPrice": 10.0,
+          "salesAmt": 120.0,
+          "slsSoItemTypeCfDTO": {
+            "id": 2103001,
+            "context": {},
+            "originOrgId": 0,
+            "version": 205,
+            "deleted": 0,
+            "createdAt": 1685108592000,
+            "updatedAt": 1745892427000,
+            "createdBy": 27,
+            "updatedBy": 477234922377861,
+            "soItemTypeCode": "NORM",
+            "soItemTypeName": "常规销售",
+            "delRelv": true,
+            "autoDelivery": true,
+            "checkInvLocRelv": true,
+            "status": "ENABLED",
+            "isAutomaticComplete": false,
+            "isCompletePickControl": false,
+            "autoPr": false,
+            "autoOutDnPost": false,
+            "settlement": true,
+            "priceControlType": "STAND"
+          },
+          "matTypeId": 2000001,
+          "giftCondition": {
+            "sls_so_head_tr": {
+              "sls_partner_links": [
+                {
+                  "partnerTypeId": 2000001,
+                  "context": {},
+                  "partnerClass": "CUSTOMER",
+                  "partnerId": 2059001
+                }
+              ],
+              "sls_dc_id": 14378001,
+              "whether_price": false,
+              "so_doc_date": "2025-05-26T00:00:00",
+              "sync_submit": false,
+              "so_items": [
+                {
+                  "itemNumber": 1,
+                  "uomSlsId": 14047001,
+                  "uomBaseId": 14047001,
+                  "soSchlDelDate": "2025-05-26T00:00:00",
+                  "salesPrice": 10.0,
+                  "matTypeId": 2000001,
+                  "soItemGrossPrice": 10.0,
+                  "invLocId": 14376002,
+                  "isCompleteSet": false,
+                  "salesAmt": 120.0,
+                  "soItemCode": "SOI20250526100192",
+                  "bomWhether": false,
+                  "taxRate": 0.13,
+                  "matId": 14633001,
+                  "context": {},
+                  "soItemTypeId": 2103001,
+                  "soItemSlsQty": 12,
+                  "taxRateId": 2002002,
+                  "matCode": "hxymat-20241202744",
+                  "taxAmt": 13.805309734513,
+                  "invOrgId": 14375002,
+                  "matName": "hxy测试物料4",
+                  "grossTradeAmt": 120.0
+                }
+              ],
+              "sls_phone": "17376596912",
+              "sls_com_id": 14373001,
+              "sls_person": 14094003,
+              "re_calculate": false,
+              "curr_exchange_rate_type": 2000001,
+              "sls_org_id": 14579001,
+              "sls_curr_id": 2000001,
+              "price_calc_date": "2025-05-26T22:39:00.306",
+              "mat_qualification_check": false,
+              "partner_check": false,
+              "context": {},
+              "is_fixed_exch_rate": false,
+              "sls_person_name": "章昂",
+              "exch_rate": 1,
+              "base_curr_id": 2000001,
+              "so_type_id": 2101001,
+              "cust_id": 2059001
+            },
+            "sls_so_item_tr": {
+              "uom_base_id": 14047001,
+              "so_schl_del_date": "2025-05-26T00:00:00",
+              "is_complete_set": false,
+              "inv_org_id": 14375002,
+              "so_item_code": "SOI20250526100192",
+              "item_number": 1,
+              "bom_whether": false,
+              "mat_type_id": 2000001,
+              "tax_rate": 0.13,
+              "tax_rate_id": 2002002,
+              "mat_code": "hxymat-20241202744",
+              "tax_amt": 13.805309734513,
+              "mat_name": "hxy测试物料4",
+              "so_item_sls_qty": 12,
+              "mat_id": 14633001,
+              "context": {},
+              "sales_price": 10.0,
+              "gross_trade_amt": 120.0,
+              "so_item_gross_price": 10.0,
+              "so_item_type_id": 2103001,
+              "uom_sls_id": 14047001,
+              "sales_amt": 120.0,
+              "inv_loc_id": 14376002
+            }
+          },
+          "discountAmt": 0,
+          "discountInfo": ""
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ],
+      "priceIdempotent": "4526b21c780d81f9558844c85da562bf",
+      "preCalculate": true,
+      "reCalculate": false,
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false,
+      "successGiftStrategy": {
+        "id": 2001001,
+        "context": {},
+        "matchStatus": "MATCH_SUCCESS"
+      },
+      "giftCondition": {
+        "sls_so_head_tr": {
+          "sls_partner_links": [
+            {
+              "partnerTypeId": 2000001,
+              "context": {},
+              "partnerClass": "CUSTOMER",
+              "partnerId": 2059001
+            }
+          ],
+          "sls_dc_id": 14378001,
+          "whether_price": false,
+          "so_doc_date": "2025-05-26T00:00:00",
+          "sync_submit": false,
+          "so_items": [
+            {
+              "itemNumber": 1,
+              "uomSlsId": 14047001,
+              "uomBaseId": 14047001,
+              "soSchlDelDate": "2025-05-26T00:00:00",
+              "salesPrice": 10.0,
+              "matTypeId": 2000001,
+              "soItemGrossPrice": 10.0,
+              "invLocId": 14376002,
+              "isCompleteSet": false,
+              "salesAmt": 120.0,
+              "soItemCode": "SOI20250526100192",
+              "bomWhether": false,
+              "taxRate": 0.13,
+              "matId": 14633001,
+              "context": {},
+              "soItemTypeId": 2103001,
+              "soItemSlsQty": 12,
+              "taxRateId": 2002002,
+              "matCode": "hxymat-20241202744",
+              "taxAmt": 13.805309734513,
+              "invOrgId": 14375002,
+              "matName": "hxy测试物料4",
+              "grossTradeAmt": 120.0
+            }
+          ],
+          "sls_phone": "17376596912",
+          "sls_com_id": 14373001,
+          "sls_person": 14094003,
+          "re_calculate": false,
+          "curr_exchange_rate_type": 2000001,
+          "sls_org_id": 14579001,
+          "sls_curr_id": 2000001,
+          "price_calc_date": "2025-05-26T22:39:00.306",
+          "mat_qualification_check": false,
+          "partner_check": false,
+          "context": {},
+          "is_fixed_exch_rate": false,
+          "sls_person_name": "章昂",
+          "exch_rate": 1,
+          "base_curr_id": 2000001,
+          "so_type_id": 2101001,
+          "cust_id": 2059001
+        }
+      },
+      "syncSubmit": false,
+      "isFixedExchRate": false
+    }
+  }
+}
+2025-05-26 22:39:00.479 | DEBUG    | utils.log_util:debug:69 - 定价结果中的税率ID: {'id': 2002002}
+2025-05-26 22:39:00.479 | DEBUG    | utils.log_util:debug:69 - 定价结果中的单位ID: {'id': 14047001}
+2025-05-26 22:39:00.480 | DEBUG    | utils.log_util:debug:69 - 定价结果中的物料类型ID: 2000001
+2025-05-26 22:39:00.480 | DEBUG    | utils.log_util:debug:69 - 定价响应数据: {'context': {}, 'soCode': 'SO004924', 'soDocDate': 1748188800000, 'baseCurrId': {'id': 2000001}, 'slsCurrId': {'id': 2000001}, 'exchRate': 1, 'grossBaseAmt': 120.0, 'netBaseAmt': 106.194690265487, 'totalAmt': 120.0, 'taxAmt': 13.805309734513, 'slsOrgId': {'id': 14579001}, 'slsComId': {'id': 14373001}, 'slsDcId': {'id': 14378001}, 'soTypeId': {'id': 2101001}, 'custId': {'id': 2059001}, 'slsPerson': {'id': 14094003}, 'slsPersonName': '章昂', 'slsPhone': '17376596912', 'currExchangeRateType': 2000001, 'priceCalcDate': 1748270340306, 'discountAmt': 0, 'discountInfo': '', 'soItems': [{'context': {}, 'soItemCode': 'SOI20250526100192', 'matId': {'id': 14633001}, 'matCode': 'hxymat-20241202744', 'matName': 'hxy测试物料4', 'soItemSlsQty': 12, 'soItemPrice': 8.849557522124, 'soItemGrossPrice': 10.0, 'taxRateId': {'id': 2002002}, 'taxRate': 0.13, 'taxAmt': 13.805309734513, 'grossTradeAmt': 120.0, 'netTradeAmt': 106.194690265487, 'soSchlDelDate': 1748188800000, 'soItemTypeId': {'id': 2103001}, 'uomSlsId': {'id': 14047001}, 'uomBaseId': {'id': 14047001}, 'invOrgId': {'id': 14375002}, 'invLocId': {'id': 14376002}, 'bomWhether': False, 'itemNumber': 1, 'isCompleteSet': False, 'salesPrice': 10.0, 'salesAmt': 120.0, 'slsSoItemTypeCfDTO': {'id': 2103001, 'context': {}, 'originOrgId': 0, 'version': 205, 'deleted': 0, 'createdAt': 1685108592000, 'updatedAt': 1745892427000, 'createdBy': 27, 'updatedBy': 477234922377861, 'soItemTypeCode': 'NORM', 'soItemTypeName': '常规销售', 'delRelv': True, 'autoDelivery': True, 'checkInvLocRelv': True, 'status': 'ENABLED', 'isAutomaticComplete': False, 'isCompletePickControl': False, 'autoPr': False, 'autoOutDnPost': False, 'settlement': True, 'priceControlType': 'STAND'}, 'matTypeId': 2000001, 'giftCondition': {'sls_so_head_tr': {'sls_partner_links': [{'partnerTypeId': 2000001, 'context': {}, 'partnerClass': 'CUSTOMER', 'partnerId': 2059001}], 'sls_dc_id': 14378001, 'whether_price': False, 'so_doc_date': '2025-05-26T00:00:00', 'sync_submit': False, 'so_items': [{'itemNumber': 1, 'uomSlsId': 14047001, 'uomBaseId': 14047001, 'soSchlDelDate': '2025-05-26T00:00:00', 'salesPrice': 10.0, 'matTypeId': 2000001, 'soItemGrossPrice': 10.0, 'invLocId': 14376002, 'isCompleteSet': False, 'salesAmt': 120.0, 'soItemCode': 'SOI20250526100192', 'bomWhether': False, 'taxRate': 0.13, 'matId': 14633001, 'context': {}, 'soItemTypeId': 2103001, 'soItemSlsQty': 12, 'taxRateId': 2002002, 'matCode': 'hxymat-20241202744', 'taxAmt': 13.805309734513, 'invOrgId': 14375002, 'matName': 'hxy测试物料4', 'grossTradeAmt': 120.0}], 'sls_phone': '17376596912', 'sls_com_id': 14373001, 'sls_person': 14094003, 're_calculate': False, 'curr_exchange_rate_type': 2000001, 'sls_org_id': 14579001, 'sls_curr_id': 2000001, 'price_calc_date': '2025-05-26T22:39:00.306', 'mat_qualification_check': False, 'partner_check': False, 'context': {}, 'is_fixed_exch_rate': False, 'sls_person_name': '章昂', 'exch_rate': 1, 'base_curr_id': 2000001, 'so_type_id': 2101001, 'cust_id': 2059001}, 'sls_so_item_tr': {'uom_base_id': 14047001, 'so_schl_del_date': '2025-05-26T00:00:00', 'is_complete_set': False, 'inv_org_id': 14375002, 'so_item_code': 'SOI20250526100192', 'item_number': 1, 'bom_whether': False, 'mat_type_id': 2000001, 'tax_rate': 0.13, 'tax_rate_id': 2002002, 'mat_code': 'hxymat-20241202744', 'tax_amt': 13.805309734513, 'mat_name': 'hxy测试物料4', 'so_item_sls_qty': 12, 'mat_id': 14633001, 'context': {}, 'sales_price': 10.0, 'gross_trade_amt': 120.0, 'so_item_gross_price': 10.0, 'so_item_type_id': 2103001, 'uom_sls_id': 14047001, 'sales_amt': 120.0, 'inv_loc_id': 14376002}}, 'discountAmt': 0, 'discountInfo': ''}], 'slsPartnerLinks': [{'context': {}, 'partnerTypeId': {'id': 2000001}, 'partnerClass': 'CUSTOMER', 'partnerId': {'id': 2059001}}], 'priceIdempotent': '4526b21c780d81f9558844c85da562bf', 'preCalculate': True, 'reCalculate': False, 'partnerCheck': False, 'matQualificationCheck': False, 'whetherPrice': False, 'successGiftStrategy': {'id': 2001001, 'context': {}, 'matchStatus': 'MATCH_SUCCESS'}, 'giftCondition': {'sls_so_head_tr': {'sls_partner_links': [{'partnerTypeId': 2000001, 'context': {}, 'partnerClass': 'CUSTOMER', 'partnerId': 2059001}], 'sls_dc_id': 14378001, 'whether_price': False, 'so_doc_date': '2025-05-26T00:00:00', 'sync_submit': False, 'so_items': [{'itemNumber': 1, 'uomSlsId': 14047001, 'uomBaseId': 14047001, 'soSchlDelDate': '2025-05-26T00:00:00', 'salesPrice': 10.0, 'matTypeId': 2000001, 'soItemGrossPrice': 10.0, 'invLocId': 14376002, 'isCompleteSet': False, 'salesAmt': 120.0, 'soItemCode': 'SOI20250526100192', 'bomWhether': False, 'taxRate': 0.13, 'matId': 14633001, 'context': {}, 'soItemTypeId': 2103001, 'soItemSlsQty': 12, 'taxRateId': 2002002, 'matCode': 'hxymat-20241202744', 'taxAmt': 13.805309734513, 'invOrgId': 14375002, 'matName': 'hxy测试物料4', 'grossTradeAmt': 120.0}], 'sls_phone': '17376596912', 'sls_com_id': 14373001, 'sls_person': 14094003, 're_calculate': False, 'curr_exchange_rate_type': 2000001, 'sls_org_id': 14579001, 'sls_curr_id': 2000001, 'price_calc_date': '2025-05-26T22:39:00.306', 'mat_qualification_check': False, 'partner_check': False, 'context': {}, 'is_fixed_exch_rate': False, 'sls_person_name': '章昂', 'exch_rate': 1, 'base_curr_id': 2000001, 'so_type_id': 2101001, 'cust_id': 2059001}}, 'syncSubmit': False, 'isFixedExchRate': False}
+2025-05-26 22:39:00.482 | INFO     | utils.log_util:info:65 - 自动定价完成
+2025-05-26 22:39:00.482 | INFO     | utils.log_util:info:65 - 订单类型: CENT
+2025-05-26 22:39:00.483 | INFO     | utils.log_util:info:65 - 订单类型ID: 14012001
+2025-05-26 22:39:00.483 | INFO     | utils.log_util:info:65 - 订单行类型ID: 2001002
+2025-05-26 22:39:00.483 | INFO     | utils.log_util:info:65 - 保存订单请求数据: {
+  "params": {
+    "request": {
+      "context": {},
+      "soCode": "SO004924",
+      "soDocDate": 1748188800000,
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "exchRate": 1,
+      "grossBaseAmt": 120.0,
+      "netBaseAmt": 106.194690265487,
+      "totalAmt": 120.0,
+      "taxAmt": 13.805309734513,
+      "slsOrgId": {
+        "id": 14579001
+      },
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "soTypeId": {
+        "id": 14012001
+      },
+      "custId": {
+        "id": 2059001
+      },
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPersonName": "章昂",
+      "slsPhone": "17376596912",
+      "currExchangeRateType": 2000001,
+      "priceCalcDate": 1748270340306,
+      "discountAmt": 0,
+      "discountInfo": "",
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250526100192",
+          "matId": {
+            "id": 14633001,
+            "context": {},
+            "matCode": "hxymat-20241202744",
+            "matName": "hxy测试物料4",
+            "genMatTypeCfId": {
+              "id": 2000001
+            },
+            "baseUomId": 14047001,
+            "isKitSls": false,
+            "isCompleteSetDel": false,
+            "slsUomId": {
+              "id": 14047001
+            }
+          },
+          "matCode": "hxymat-20241202744",
+          "matName": "hxy测试物料4",
+          "soItemSlsQty": 12,
+          "soItemGrossPrice": 10.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 13.805309734513,
+          "grossTradeAmt": 120.0,
+          "soSchlDelDate": 1748188800000,
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {}
+          },
+          "uomSlsId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "weightUomId": {
+            "context": {}
+          },
+          "volumUomId": {
+            "context": {}
+          },
+          "delAddrId": {
+            "context": {}
+          },
+          "itemNumber": 1,
+          "salesPrice": 10.0,
+          "children": null,
+          "matTypeId": 2000001,
+          "isCompleteSet": false,
+          "salesAmt": 120.0
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ],
+      "priceIdempotent": "4526b21c780d81f9558844c85da562bf",
+      "preCalculate": true,
+      "reCalculate": false,
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false,
+      "successGiftStrategy": {
+        "id": 2001001,
+        "context": {},
+        "matchStatus": "MATCH_SUCCESS"
+      },
+      "giftCondition": {
+        "sls_so_head_tr": {
+          "sls_partner_links": [
+            {
+              "partnerTypeId": 2000001,
+              "context": {},
+              "partnerClass": "CUSTOMER",
+              "partnerId": 2059001
+            }
+          ],
+          "sls_dc_id": 14378001,
+          "whether_price": false,
+          "so_doc_date": "2025-05-26T00:00:00",
+          "sync_submit": false,
+          "so_items": [
+            {
+              "itemNumber": 1,
+              "uomSlsId": 14047001,
+              "uomBaseId": 14047001,
+              "soSchlDelDate": "2025-05-26T00:00:00",
+              "salesPrice": 10.0,
+              "matTypeId": 2000001,
+              "soItemGrossPrice": 10.0,
+              "invLocId": 14376002,
+              "isCompleteSet": false,
+              "salesAmt": 120.0,
+              "soItemCode": "SOI20250526100192",
+              "bomWhether": false,
+              "taxRate": 0.13,
+              "matId": 14633001,
+              "context": {},
+              "soItemTypeId": 2103001,
+              "soItemSlsQty": 12,
+              "taxRateId": 2002002,
+              "matCode": "hxymat-20241202744",
+              "taxAmt": 13.805309734513,
+              "invOrgId": 14375002,
+              "matName": "hxy测试物料4",
+              "grossTradeAmt": 120.0
+            }
+          ],
+          "sls_phone": "17376596912",
+          "sls_com_id": 14373001,
+          "sls_person": 14094003,
+          "re_calculate": false,
+          "curr_exchange_rate_type": 2000001,
+          "sls_org_id": 14579001,
+          "sls_curr_id": 2000001,
+          "price_calc_date": "2025-05-26T22:39:00.306",
+          "mat_qualification_check": false,
+          "partner_check": false,
+          "context": {},
+          "is_fixed_exch_rate": false,
+          "sls_person_name": "章昂",
+          "exch_rate": 1,
+          "base_curr_id": 2000001,
+          "so_type_id": 2101001,
+          "cust_id": 2059001
+        }
+      },
+      "syncSubmit": true,
+      "isFixedExchRate": false,
+      "orderTypeId": {
+        "id": 14012001
+      },
+      "orderLineTypeId": {
+        "id": 2001002
+      },
+      "addrId": {
+        "id": null
+      },
+      "addrDetail": null,
+      "custPersonName": null,
+      "custPhone": null
+    }
+  }
+}
+2025-05-26 22:39:00.484 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SLS_SALES_MANUAL_SAVE_EVENT
+2025-05-26 22:39:00.484 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-26 22:39:00.485 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "context": {},
+      "soCode": "SO004924",
+      "soDocDate": 1748188800000,
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "exchRate": 1,
+      "grossBaseAmt": 120.0,
+      "netBaseAmt": 106.194690265487,
+      "totalAmt": 120.0,
+      "taxAmt": 13.805309734513,
+      "slsOrgId": {
+        "id": 14579001
+      },
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "soTypeId": {
+        "id": 14012001
+      },
+      "custId": {
+        "id": 2059001
+      },
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPersonName": "章昂",
+      "slsPhone": "17376596912",
+      "currExchangeRateType": 2000001,
+      "priceCalcDate": 1748270340306,
+      "discountAmt": 0,
+      "discountInfo": "",
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250526100192",
+          "matId": {
+            "id": 14633001,
+            "context": {},
+            "matCode": "hxymat-20241202744",
+            "matName": "hxy测试物料4",
+            "genMatTypeCfId": {
+              "id": 2000001
+            },
+            "baseUomId": 14047001,
+            "isKitSls": false,
+            "isCompleteSetDel": false,
+            "slsUomId": {
+              "id": 14047001
+            }
+          },
+          "matCode": "hxymat-20241202744",
+          "matName": "hxy测试物料4",
+          "soItemSlsQty": 12,
+          "soItemGrossPrice": 10.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 13.805309734513,
+          "grossTradeAmt": 120.0,
+          "soSchlDelDate": 1748188800000,
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {}
+          },
+          "uomSlsId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "weightUomId": {
+            "context": {}
+          },
+          "volumUomId": {
+            "context": {}
+          },
+          "delAddrId": {
+            "context": {}
+          },
+          "itemNumber": 1,
+          "salesPrice": 10.0,
+          "children": null,
+          "matTypeId": 2000001,
+          "isCompleteSet": false,
+          "salesAmt": 120.0
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ],
+      "priceIdempotent": "4526b21c780d81f9558844c85da562bf",
+      "preCalculate": true,
+      "reCalculate": false,
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false,
+      "successGiftStrategy": {
+        "id": 2001001,
+        "context": {},
+        "matchStatus": "MATCH_SUCCESS"
+      },
+      "giftCondition": {
+        "sls_so_head_tr": {
+          "sls_partner_links": [
+            {
+              "partnerTypeId": 2000001,
+              "context": {},
+              "partnerClass": "CUSTOMER",
+              "partnerId": 2059001
+            }
+          ],
+          "sls_dc_id": 14378001,
+          "whether_price": false,
+          "so_doc_date": "2025-05-26T00:00:00",
+          "sync_submit": false,
+          "so_items": [
+            {
+              "itemNumber": 1,
+              "uomSlsId": 14047001,
+              "uomBaseId": 14047001,
+              "soSchlDelDate": "2025-05-26T00:00:00",
+              "salesPrice": 10.0,
+              "matTypeId": 2000001,
+              "soItemGrossPrice": 10.0,
+              "invLocId": 14376002,
+              "isCompleteSet": false,
+              "salesAmt": 120.0,
+              "soItemCode": "SOI20250526100192",
+              "bomWhether": false,
+              "taxRate": 0.13,
+              "matId": 14633001,
+              "context": {},
+              "soItemTypeId": 2103001,
+              "soItemSlsQty": 12,
+              "taxRateId": 2002002,
+              "matCode": "hxymat-20241202744",
+              "taxAmt": 13.805309734513,
+              "invOrgId": 14375002,
+              "matName": "hxy测试物料4",
+              "grossTradeAmt": 120.0
+            }
+          ],
+          "sls_phone": "17376596912",
+          "sls_com_id": 14373001,
+          "sls_person": 14094003,
+          "re_calculate": false,
+          "curr_exchange_rate_type": 2000001,
+          "sls_org_id": 14579001,
+          "sls_curr_id": 2000001,
+          "price_calc_date": "2025-05-26T22:39:00.306",
+          "mat_qualification_check": false,
+          "partner_check": false,
+          "context": {},
+          "is_fixed_exch_rate": false,
+          "sls_person_name": "章昂",
+          "exch_rate": 1,
+          "base_curr_id": 2000001,
+          "so_type_id": 2101001,
+          "cust_id": 2059001
+        }
+      },
+      "syncSubmit": true,
+      "isFixedExchRate": false,
+      "orderTypeId": {
+        "id": 14012001
+      },
+      "orderLineTypeId": {
+        "id": 2001002
+      },
+      "addrId": {
+        "id": null
+      },
+      "addrDetail": null,
+      "custPersonName": null,
+      "custPhone": null
+    }
+  }
+}
+2025-05-26 22:39:00.485 | INFO     | utils.request_util:request:88 - 请求描述: 销售订单提交
+2025-05-26 22:39:00.956 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-26 22:39:00.956 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Mon, 26 May 2025 14:39:01 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '93da375a-197860', 'Trace-Id': '93da375a-197860', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNmRlMjg1NjlhNWFkNGQxMDg2MjczNTg3ODQ4MjFlOGYiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODUyOTU0MCwibmJmIjoxNzQ4MjcwMzQwLCJpYXQiOjE3NDgyNzAzNDAsImp0aSI6IjE3NGNiNTM1NDZhYzRkN2ViOGY1ZTQ2MmQwMjgwMWQxIn0.-XAe0ai09h_xbt0G2I9B4qkHDfkLAtn2-VzbGTpzKO8; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Thu, 29 May 2025 14:39:01 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '336', 'X-Kong-Proxy-Latency': '1', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-26 22:39:00.957 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "93da375a-197860",
+  "success": false,
+  "data": null,
+  "err": {
+    "code": "DEL_DN_TYPE_IS_NOT_NULL",
+    "msg": "交货单类型不存在",
+    "suggest": null
+  }
+}
+2025-05-26 22:39:00.957 | INFO     | utils.log_util:info:65 - 保存订单响应数据: {
+  "requestId": "93da375a-197860",
+  "success": false,
+  "data": null,
+  "err": {
+    "code": "DEL_DN_TYPE_IS_NOT_NULL",
+    "msg": "交货单类型不存在",
+    "suggest": null
+  }
+}
+2025-05-26 22:39:00.957 | INFO     | utils.log_util:info:65 - CENT类型销售订单提交成功
+2025-05-26 22:39:00.963 | INFO     | utils.log_util:info:65 - 销售订单创建测试类清理
+2025-05-26 22:39:00.966 | INFO     | utils.log_util:info:65 - 测试会话结束
