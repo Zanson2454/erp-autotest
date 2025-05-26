@@ -1,35 +1,20 @@
-<<<<<<< HEAD
 version: "2.0"
-=======
-version: '2.0'
->>>>>>> fca12a21daa77d0f3e7f9133e80974d15e6b782d
 services:
   erp-autotest:   # 服务名称，与pipeline.yml中的release阶段对应
     ports:
-<<<<<<< HEAD
-<<<<<<< HEAD
       - port: 8000
         expose: true
-    resources:
-      cpu: 0.5
-      mem: 128
-=======
-      - 8000      # 容器暴露的端口号，用于Allure报告服务访问
-=======
-    - port: 8000
-      expose: true # 容器暴露的端口号，用于Allure报告服务访问，并且开启域名配置
->>>>>>> f2a5025ad450589b4eafce63fcf42509a7dff324
-    # 资源配置
+    deployments:
+      replicas: 1   # 部署副本数：1个实例
+    health_check:
+      http:
+        # port 配置健康检查 http get 请求的端口，此端口应该是 ports 配置中的一个
+        port: 8000
+        # path 配置健康检查 http get 的 URI 路径
+        path: /
+        # duration 设定健康检查需要持续的检查的时间，单位是秒；这个时间值应该设置为比服务启动需要的时间更长一点
+        duration: 300
     resources:
       cpu: 0.5
       mem: 256
->>>>>>> fca12a21daa77d0f3e7f9133e80974d15e6b782d
-    deployments:
-      replicas: 1   # 部署副本数：1个实例
-    health_check: {}
-    envs: {}
-    expose: []
-    hosts: []
-    binds: []
-addons: {}
 envs: {}
