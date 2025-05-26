@@ -136,7 +136,7 @@ class TestMatAdd(GenBaseTest):
     @allure.story("停用物料")
     @allure.description("测试步骤：1.验证前置条件 2.调用停用接口 3.验证响应结果")
     @allure.severity(allure.severity_level.CRITICAL)
-    @allure.title("停用物料流程")
+    @allure.title("停用物料")
     def test_mat_disable(self):
         try:
             # 1. 验证前置条件 - 确保mat_info中有数据

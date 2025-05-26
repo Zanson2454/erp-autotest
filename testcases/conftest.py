@@ -181,7 +181,7 @@ def get_custom_title(item):
     
     优先级:
     1. 函数中使用的allure.dynamic.title
-    2. @allure.title装饰器
+    2. @allure.title装饰器1
     """
     if not hasattr(item.function, "__code__"):
         return None

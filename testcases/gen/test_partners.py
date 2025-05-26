@@ -208,7 +208,7 @@ class TestPartners(GenBaseTest):
     @allure.story("删除合作伙伴")
     @allure.description("测试步骤：1.使用合作伙伴ID调用删除接口 2.验证响应结果")
     @allure.severity(allure.severity_level.BLOCKER) 
-    @allure.title("删除合作伙伴流程")
+    @allure.title("删除合作伙伴")
     def test_partner_delete(self):
         try:
             # 1. 验证前置条件 - 确保partner_info中有数据
