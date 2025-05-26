@@ -42,7 +42,11 @@ mypy==1.7.1
 bandit==1.7.7
 
 # 性能测试
-locust==2.20.0
+#locust==2.20.0
+
+# Web 服务相关
+fastapi==0.104.1
+uvicorn==0.24.0
 
 # 如需 Allure HTML 报告或覆盖率，保留下面两行，否则可移除
 pytest-cov
