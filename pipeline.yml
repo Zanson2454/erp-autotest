@@ -39,5 +39,11 @@ stages:
           description: 服务启动后自动化接口测试
           params:
             commands:
-              - pytest --collect-only -q testcases > collected.txt && pytest --alluredir=reports/allure-results testcases && allure generate reports/allure-results -o reports/allure-report --clean
+              # 1. 归档/备份上一次的报告（可选）
+              - if [ -d reports/allure-report ]; then cp -r reports/allure-report reports/allure-report-$(date +%Y%m%d%H%M%S); fi
+              # 2. 清理旧结果
+              - rm -rf reports/allure-results/* reports/allure-report/*
+              # 3. 重新执行测试和生成报告
+              - pytest --alluredir=reports/allure-results testcases
+              - allure generate reports/allure-results -o reports/allure-report --clean
               # 可选：上传 Allure 报告到制品库或 OSS
