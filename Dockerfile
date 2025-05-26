@@ -10,8 +10,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 WORKDIR /app
 
 # 使用阿里云加速 apt-get，安装 Java 运行环境和必要工具
-RUN sed -i 's|deb.debian.org|mirrors.aliyun.com|g' /etc/apt/sources.list && \
-    apt-get update && \
+RUN [ -f /etc/apt/sources.list ] && sed -i 's|deb.debian.org|mirrors.aliyun.com|g' /etc/apt/sources.list || true
+RUN apt-get update && \
     apt-get install -y --no-install-recommends openjdk-11-jre-headless wget unzip && \
     rm -rf /var/lib/apt/lists/*
 
