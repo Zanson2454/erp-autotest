@@ -72,3 +72,9 @@ db.sqlite3-journal
 
 .cursor/
 .DS_Store
+
+
+# 忽略本地报告
+
+reports/allure-results/*
+reports/allure-report/*

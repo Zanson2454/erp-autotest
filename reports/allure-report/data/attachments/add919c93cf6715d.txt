@@ -1,1 +1,0 @@
-2025-04-22 17:43:20.666 | INFO     | testcases.SCM.base_test:setup_method:136 - 开始测试: test_04_query_orders_by_so_type
