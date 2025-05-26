@@ -40,16 +40,15 @@ class TestOrderList(BaseTest):
 
         # testdata
         cls.test_data = {}
-        
+
     @allure.title("查询销售订单列表")
     @allure.description("""
     测试步骤：
     1. 查询销售订单列表
     """)
     @allure.severity(allure.severity_level.CRITICAL)
-    @pytest.mark.order(1)
     @safe_api_call(error_message="查询销售订单列表失败")
-    def test_01_query_orders(self):
+    def _query_orders(self):
         """测试查询销售订单列表"""
         url = self.so_path["查询订单"]
         data = self.so_params[url]
@@ -65,6 +64,7 @@ class TestOrderList(BaseTest):
         # 提取测试数据并验证
         self.test_data["so_code"] = order.get("soCode")
         self.test_data["so_type_id"] = order.get("soTypeId", {}).get("id") if order.get("soTypeId") else None
+        self.logger.info(f"so_type_id: {self.test_data['so_type_id']}")
         self.test_data["so_status"] = order.get("soStatus")
         self.test_data["cust_id"] = order.get("custId", {}).get("id") if order.get("custId") else None
         self.test_data["created_by"] = order.get("createdBy", {}).get("id") if order.get("createdBy") else None
@@ -89,16 +89,14 @@ class TestOrderList(BaseTest):
     1. 按订单编号查询销售订单列表
     """)
     @allure.severity(allure.severity_level.CRITICAL)
-    @pytest.mark.order(2)
+    @pytest.mark.order(1)
     @safe_api_call(error_message="按订单编号查询销售订单列表失败")
-    def test_02_query_orders_by_so_code(self):
+    def test_01_query_orders_by_so_code(self):
         """测试按订单编号查询销售订单列表"""
         
-        # 确保第一个测试已经执行并获取了订单编号
+        # 若test_data无值则自动初始化
         if not self.test_data.get("so_code"):
-            error_msg = "未获取到订单编号，无法执行按订单编号查询测试"
-            self.logger.error(error_msg)
-            pytest.fail(error_msg)
+            self._query_orders()
             
         url = self.so_path["查询订单"]
         data = self.so_params[url]
@@ -166,10 +164,10 @@ class TestOrderList(BaseTest):
     1. 按单据状态查询销售订单列表
     """)
     @allure.severity(allure.severity_level.CRITICAL)    
-    @pytest.mark.order(3)
+    @pytest.mark.order(2)
     @pytest.mark.parametrize("so_status", ["DRAFT", "EFFECT", "APPROVING", "CANCELLED"])
     @safe_api_call(error_message="按单据状态查询销售订单列表失败")
-    def test_03_query_orders_by_status(self, so_status):
+    def test_02_query_orders_by_status(self, so_status):
         """测试按单据状态查询销售订单列表
         
         Args:
@@ -277,16 +275,14 @@ class TestOrderList(BaseTest):
     1. 按单据类型查询销售订单列表
     """)
     @allure.severity(allure.severity_level.CRITICAL)
-    @pytest.mark.order(4)
+    @pytest.mark.order(3)
     @safe_api_call(error_message="按单据类型查询销售订单列表失败")
-    def test_04_query_orders_by_so_type(self):
+    def test_03_query_orders_by_so_type(self):
         """测试按单据类型查询销售订单列表"""
         
-        # 确保第一个测试已经执行并获取了订单类型ID
+        # 若test_data无值则自动初始化
         if not self.test_data.get("so_type_id"):
-            error_msg = "未获取到订单类型ID，无法执行按单据类型查询测试"
-            self.logger.error(error_msg)
-            pytest.fail(error_msg)
+            self._query_orders()
             
         url = self.so_path["查询订单"]
         data = self.so_params[url]
@@ -376,17 +372,14 @@ class TestOrderList(BaseTest):
     1. 按客户查询销售订单列表
     """)
     @allure.severity(allure.severity_level.CRITICAL)
-    @pytest.mark.order(5)
+    @pytest.mark.order(4)
     @safe_api_call(error_message="按客户查询销售订单列表失败")
-    def test_05_query_orders_by_customer(self):
+    def test_04_query_orders_by_customer(self):
         """测试按客户查询销售订单列表"""
         
-        # 确保第一个测试已经执行并获取了客户ID
+        # 若test_data无值则自动初始化
         if not self.test_data.get("cust_id"):
-            self.test_01_query_orders()
-            error_msg = "未获取到客户ID，无法执行按客户查询测试"
-            self.logger.error(error_msg)
-            pytest.fail(error_msg)
+            self._query_orders()
             
         url = self.so_path["查询订单"]
         data = self.so_params[url]
