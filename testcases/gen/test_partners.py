@@ -33,6 +33,7 @@ class TestPartners(GenBaseTest):
     @allure.story("新增合作伙伴")
     @allure.description("测试步骤：1.生成合作伙伴基础信息 2.调用新增接口 3.验证响应结果")
     @allure.severity(allure.severity_level.BLOCKER)
+    @allure.title("新增合作伙伴流程")
     def test_partner_add(self):
         try:
             # 1. 生成合作伙伴基础信息
@@ -87,6 +88,7 @@ class TestPartners(GenBaseTest):
     @allure.story("查询合作伙伴")
     @allure.description("测试步骤：1.使用新增的合作伙伴编码查询 2.验证查询结果")
     @allure.severity(allure.severity_level.NORMAL)
+    @allure.title("查询合作伙伴流程")
     def test_partner_search(self):
         try:
             # 1. 验证前置条件 - 确保partner_info中有数据
@@ -140,6 +142,7 @@ class TestPartners(GenBaseTest):
     @allure.story("启用合作伙伴")
     @allure.description("测试步骤：1.使用合作伙伴ID调用启用接口 2.验证响应结果")
     @allure.severity(allure.severity_level.BLOCKER) 
+    @allure.title("启用合作伙伴流程")
     def test_partner_enable(self):
         try:
             # 1. 验证前置条件 - 确保partner_info中有数据
@@ -172,6 +175,7 @@ class TestPartners(GenBaseTest):
     @allure.story("停用合作伙伴")
     @allure.description("测试步骤：1.使用合作伙伴ID调用停用接口 2.验证响应结果")
     @allure.severity(allure.severity_level.BLOCKER) 
+    @allure.title("停用合作伙伴流程")
     def test_partner_disable(self):
         try:
             # 1. 验证前置条件 - 确保partner_info中有数据
@@ -204,6 +208,7 @@ class TestPartners(GenBaseTest):
     @allure.story("删除合作伙伴")
     @allure.description("测试步骤：1.使用合作伙伴ID调用删除接口 2.验证响应结果")
     @allure.severity(allure.severity_level.BLOCKER) 
+    @allure.title("删除合作伙伴流程")
     def test_partner_delete(self):
         try:
             # 1. 验证前置条件 - 确保partner_info中有数据
