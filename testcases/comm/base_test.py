@@ -47,7 +47,7 @@ class Login:
         self.session = requests.Session()
         self.session.headers.update(self.base_headers)
         self.login()
-
+    
     def _get_base_headers(self) -> Dict[str, str]:
         return {
             'Content-Type': 'application/json',
@@ -60,26 +60,26 @@ class Login:
             'Sec-Fetch-Mode': 'cors',
             'Sec-Fetch-Dest': 'empty'
         }
-
+    
     def _get_iam_headers(self) -> Dict[str, str]:
         return {
             **self.base_headers,
             'Origin': self.iam_url,
             'Referer': f"{self.iam_url}/TERP_PORTAL-TERP-tpf_umwrhzbg/login"
         }
-
+    
     def _get_api_headers(self) -> Dict[str, str]:
         return {
             **self.base_headers,
             'Origin': self.api_url,
             'Referer': f"{self.api_url}/TERP_PORTAL-TERP/TERP_PORTAL/TERP_PORTAL$4f94e448-6fcd-497b-8357-66a90c82a3f9/page"
-        }
-
+        }   
+    
     def login(self):
         try:
             login_data = {
                 "account": self.config.get("tenants", {}).get("terp", {}).get("auth", {}).get("username", ""),
-                "password": self.config.get("tenants", {}).get("terp", {}).get("auth", {}).get("password", "")
+                "password": self.config.get("tenants", {}).get("terp", {}).get("auth", {}).get("password", "")          
             }
             logger.info(f"使用账号: {login_data['account']}")
             login_url = f"{self.iam_url}/iam/api/v1/user/login/account"
@@ -96,7 +96,7 @@ class Login:
         except Exception as e:
             logger.error(f"登录过程发生错误: {str(e)}")
             raise
-
+    
     def get_current_user(self) -> Optional[Dict[str, Any]]:
         url = f"{self.api_url}/api/trantor/portal/user/current"
         try:
@@ -110,7 +110,7 @@ class Login:
         except Exception as e:
             logger.error(f"获取用户信息过程发生错误: {str(e)}")
             return None
-
+    
 class BaseTest:
     """
     测试基类，统一依赖DataFactory进行环境初始化和基础数据获取。
@@ -158,7 +158,7 @@ class BaseTest:
             cls.safe_api_call = safe_api_call # 初始化安全API调用工具
         
            
-            cls.http = HttpUtil(
+        cls.http = HttpUtil(
                 url=cls.env_config.get("base_url"),
                 session=cls.session,
                 headers=cls.base_headers
@@ -169,7 +169,7 @@ class BaseTest:
         except Exception as e:
             logger.error(f"BaseTest.setup_class 初始化失败: {str(e)}")
             raise
-
+    
     def setup_method(self, method: Optional[pytest.Function] = None) -> None:
         """
         测试方法开始前的设置
