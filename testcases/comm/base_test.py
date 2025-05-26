@@ -158,7 +158,7 @@ class BaseTest:
             cls.safe_api_call = safe_api_call # 初始化安全API调用工具
         
            
-        cls.http = HttpUtil(
+            cls.http = HttpUtil(
                 url=cls.env_config.get("base_url"),
                 session=cls.session,
                 headers=cls.base_headers
