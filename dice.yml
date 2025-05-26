@@ -7,6 +7,7 @@ services:
   erp-autotest:   # 服务名称，与pipeline.yml中的release阶段对应
     ports:
 <<<<<<< HEAD
+<<<<<<< HEAD
       - port: 8000
         expose: true
     resources:
@@ -14,6 +15,10 @@ services:
       mem: 128
 =======
       - 8000      # 容器暴露的端口号，用于Allure报告服务访问
+=======
+    - port: 8000
+      expose: true # 容器暴露的端口号，用于Allure报告服务访问，并且开启域名配置
+>>>>>>> f2a5025ad450589b4eafce63fcf42509a7dff324
     # 资源配置
     resources:
       cpu: 0.5

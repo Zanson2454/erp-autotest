@@ -235,7 +235,7 @@ api_params:
             - fieldAlias: "matName"
               id: "matName-1"
               sortType: "ASC"
-          keyword: "TESTMAT1"  # 搜索关键字
+          keyword: "hxymat-20241202744"  # 搜索关键字
         slsOrgId: "{sls_org_id}"  # 销售组织ID
         slsDcId: "{sls_dc_id}"  # 销售配送中心ID
 
