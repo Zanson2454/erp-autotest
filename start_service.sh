@@ -1,41 +1,32 @@
 #!/bin/bash
 
-# 确保脚本在出错时停止执行
-set -e
+# 确保报告目录存在
+mkdir -p /app/reports/allure-results
+mkdir -p /app/reports/allure-report
 
-echo "==== ERP 自动化测试平台启动脚本 ===="
+# 默认测试路径
+TEST_PATH=${TEST_PATH:-"testcases/"}
 
-# 检查并创建虚拟环境
-if [ ! -d ".venv" ]; then
-    echo "创建虚拟环境..."
-    python3 -m venv .venv
-fi
+# 打印环境信息和配置文件
+echo "=== 环境信息 ==="
+echo "容器内目录结构:"
+ls -la /app
+echo "配置文件:"
+if [ -f /app/.env ]; then echo ".env 文件存在"; else echo ".env 文件不存在"; fi
+if [ -f /app/pytest.ini ]; then echo "pytest.ini 文件存在"; else echo "pytest.ini 文件不存在"; fi
+if [ -d /app/config/env ]; then echo "config/env 目录存在"; else echo "config/env 目录不存在"; fi
 
-# 激活虚拟环境
-echo "激活虚拟环境..."
-source .venv/bin/activate || source .venv/Scripts/activate
+# 运行测试用例
+echo "开始运行测试..."
+pytest $TEST_PATH -v --alluredir=/app/reports/allure-results || echo "测试执行完成，返回码: $?"
 
-# 安装依赖
-echo "检查并安装依赖..."
-pip install flask pytest allure-pytest
+# 生成Allure报告
+echo "生成Allure HTML报告..."
+allure generate /app/reports/allure-results -o /app/reports/allure-report --clean
 
-# 创建必要的目录结构
-echo "确保目录结构完整..."
-mkdir -p reports/allure-results
-mkdir -p reports/allure-report
-mkdir -p reports/archive
-mkdir -p reports/history
+echo "==========================================="
+echo "Allure报告已生成，访问地址: http://$(hostname -i):8000"
+echo "==========================================="
 
-# 确保正确退出
-function cleanup {
-    echo "停止服务..."
-    # 查找并终止运行的test_runner.py进程
-    pkill -f "python test_runner.py" || true
-}
-
-# 注册清理函数
-trap cleanup EXIT
-
-# 启动服务
-echo "启动测试平台服务..."
-python test_runner.py
+# 启动HTTP服务提供报告访问
+cd /app/reports/allure-report && python -m http.server 8000 
