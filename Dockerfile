@@ -20,6 +20,7 @@ RUN mkdir -p /root/.pip && \
 # 再拷贝项目代码（避免每次代码变动都重新装依赖）
 COPY . .
 
+RUN mkdir -p reports/allure-results reports/allure-report
 # 启动服务
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 
