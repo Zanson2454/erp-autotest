@@ -108,7 +108,7 @@ if __name__ == "__main__":
     test = TestSettBusiCheck()
     test.setup_class()
     test.test_sett_item_record()
-    test.test_sett_item_manual_remittance()
+    #test.test_sett_item_manual_remittance()
 
         
         
