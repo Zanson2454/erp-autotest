@@ -5,12 +5,11 @@ FROM ${PYTHON_IMAGE}
 WORKDIR /app
 
 
-ARG ALLURE_VERSION=2.24.0
-RUN wget -q https://mirrors.tuna.tsinghua.edu.cn/allure/binaries/allure-commandline/${ALLURE_VERSION}/allure-commandline-${ALLURE_VERSION}.zip \
-    && unzip allure-commandline-${ALLURE_VERSION}.zip -d /opt \
-    && mv /opt/allure-commandline-${ALLURE_VERSION} /opt/allure \
-    && ln -s /opt/allure/bin/allure /usr/bin/allure \
-    && rm allure-commandline-${ALLURE_VERSION}.zip
+# 安装Allure命令行工具（使用国内镜像加速）
+RUN wget https://mirrors.huaweicloud.com/repository/maven/io/qameta/allure/allure-commandline/2.24.1/allure-commandline-2.24.1.zip && \
+    unzip allure-commandline-2.24.1.zip -d /opt/ && \
+    ln -s /opt/allure-2.24.1/bin/allure /usr/local/bin/allure && \
+    rm allure-commandline-2.24.1.zip
 
 # 只拷贝必要文件，减少构建上下文
 COPY requirements.txt ./
