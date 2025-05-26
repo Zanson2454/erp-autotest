@@ -1,2 +1,0 @@
-2025-05-26 22:17:32.046 | INFO     | utils.log_util:info:65 - 开始测试: test_05_query_orders_by_customer
-2025-05-26 22:17:32.047 | ERROR    | utils.log_util:error:77 - 未获取到客户ID，无法执行按客户查询测试
