@@ -4,16 +4,6 @@ from loguru import logger
 
 router = APIRouter(prefix="/data-factory", tags=["数据工厂"])
 
-# 造数相关接口示例
-@router.post("/generate-data")
-async def generate_data(data_type: str, count: int = 1):
-    """
-    造数接口示例：根据类型和数量生成测试数据
-    后续可对接具体造数逻辑
-    """
-    # TODO: 对接具体造数逻辑
-    return {"message": f"已生成 {count} 条类型为 {data_type} 的测试数据（示例）"}
-
 
 @router.get("/get_base_data")
 async def get_base_data():

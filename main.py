@@ -17,10 +17,6 @@ from routers import (
     allure_api
 )
 
-# 定义常量用于静态文件路径
-STATIC_DIR = 'static'
-
-
 # 初始化FastAPI应用程序
 app = FastAPI(
     swagger_ui_parameters=None,
@@ -30,8 +26,7 @@ app = FastAPI(
     version="1.0.0",
     openapi_version="3.1.0")
 
-# 静态文件的目录应该和 STATIC_DIR 一致
-app.mount(f"/{STATIC_DIR}", StaticFiles(directory=f"{STATIC_DIR}"), name='static')
+
 
 # 挂载 Allure 报告静态目录
 ALLURE_REPORT_DIR = 'reports/allure-report'
