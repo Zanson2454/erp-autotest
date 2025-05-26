@@ -55,6 +55,7 @@ class TestMatSearch(BaseTest):
     @allure.story("物料列表查询")
     @allure.description("测试步骤：物料列表查询")
     @allure.severity(allure.severity_level.CRITICAL)
+    @allure.title("物料列表查询")
     def test_mat_search(self):
         try:
             # 1. 获取接口路径和参数

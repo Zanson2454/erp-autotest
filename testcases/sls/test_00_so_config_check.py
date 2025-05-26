@@ -26,7 +26,7 @@ class TestSalesOrderConfig(BaseTest):
         cls.yaml_util = YamlUtil()
         # 加载配置文件
         cls.base_api_path = project_root / "testdata" / "sls" / "sls_api_path.yaml"
-        cls.base_config_path = project_root / "testdata" / "sls" / "so_api_params.yaml"
+        cls.base_config_path = project_root / "testdata" / "sls" / "sls_api_params.yaml"
         
         # 当前 case 要覆盖的接口
         cls.so_path = cls.yaml_util.read_yaml(cls.base_api_path)["销售订单"]["销售配置"]
@@ -198,10 +198,10 @@ class TestSalesOrderConfig(BaseTest):
         return result  # 返回响应数据
 
 if __name__ == "__main__":
-    test = TestSalesOrderConfig()
-    test.setup_class()
-    test.test_01_query_order_type()
-    test.test_02_query_order_type_detail()
+    # test = TestSalesOrderConfig()
+    # test.setup_class()
+    # test.test_01_query_order_type()
+    # test.test_02_query_order_type_detail()
     
-    # allure_dir = Path(project_root) / "reports" / "allure-results"
-    # pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])
+    allure_dir = Path(project_root) / "reports" / "allure-results"
+    pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])

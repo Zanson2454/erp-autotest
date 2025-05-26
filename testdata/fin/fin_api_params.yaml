@@ -2537,46 +2537,7 @@ api_params:
   /api/trantor/service/engine/execute/ERP_FIN$SETT_DOC_CANCEL_SERVICE:
     params:
       request:
-        approveStatus: string
-        partnerCode: string
-        exchRate: 0
-        remark: string
-        settDocAmt: 0
-        settDate: 0
-        createdAt: 0
-        settDocAssocDocTypeCfId: {}
-        tradingDocStatus: string
-        asyncExecutionStatus: string
-        settItems:
-        - {}
-        id: 0
-        baseCurrId: {}
-        purSlsOrg: string
-        extBizGroup: string
-        updatedAt: 0
-        settBaseAmt: 0
-        sdcType: string
-        updatedBy: {}
-        originOrgId: 0
-        docCurrId: {}
-        partnerName: string
-        extLatestPiSbDate: 0
-        tradingDocCode: string
-        comOrgId: {}
-        extPartner: string
-        version: 0
-        tradingDocId: string
-        asyncExecutionFailureReason: string
-        deleted: 0
-        purSlsOrgId: 0
-        createdBy: {}
-        settDocCode: string
-        purSlsOrgName: string
-        clientSideConfirmStatus: string
-        partnerType: string
-        partnerId: 0
-        settDocTypeId: {}
-        settDocStatus: string
+        - id: 0
   /api/trantor/service/engine/execute/ERP_FIN$AP_SCHL_QUERY_EVENT_SERVICE:
     params:
       request:

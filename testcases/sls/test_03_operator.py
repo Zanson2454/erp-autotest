@@ -38,7 +38,7 @@ class TestSalesOrderOperator(BaseTest):
         
         # 加载配置文件
         cls.base_api_path = Path(project_root) / "testdata" / "sls" / "sls_api_path.yaml"
-        cls.base_config_path = Path(project_root) / "testdata" / "sls" / "so_api_params.yaml"
+        cls.base_config_path = Path(project_root) / "testdata" / "sls" / "sls_api_params.yaml"
         
         # 当前用例集所需接口
         cls.yaml_util = YamlUtil()
