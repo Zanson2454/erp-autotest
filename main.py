@@ -51,8 +51,8 @@ use_local_static()
 app = FastAPI(
     swagger_ui_parameters=None,
     openapi_url="/openapi.json",
-    title="自定义API",
-    description="自定义的API.",
+    title="ERP-AUTOTEST",
+    description="ERP自动化测试平台",
     version="1.0.0",
     openapi_version="3.1.0")
 
@@ -71,7 +71,7 @@ app.include_router(allure_api.router)
 app.include_router(api_manage.router)
 
 
-@app.get("/")
+@app.get("/",tags=["首页"])
 async def root():
     return RedirectResponse(url="/docs")
 
