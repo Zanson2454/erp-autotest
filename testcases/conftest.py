@@ -29,6 +29,8 @@ from datetime import datetime
 from typing import Generator, Callable, Any
 from pathlib import Path
 from functools import wraps
+import inspect
+import re
 
 from utils.log_util import Loggers
 from utils.yaml_util import YamlUtil
@@ -157,9 +159,14 @@ def pytest_runtest_makereport(item: pytest.Item, call: pytest.CallInfo) -> Gener
     
     if report.when == "call":
         if hasattr(item, "funcargs"):
-            # 设置测试标题
-            test_name = item.name
-            allure.dynamic.title(f"Test: {test_name}")
+            # 尝试获取自定义标题
+            custom_title = get_custom_title(item)
+            
+            # 如果找到自定义标题，则设置它；否则使用默认标题
+            if custom_title:
+                allure.dynamic.title(custom_title)
+            else:
+                allure.dynamic.title(item.name)
             
             # 添加测试用例文档
             if item.function.__doc__:
@@ -168,6 +175,39 @@ def pytest_runtest_makereport(item: pytest.Item, call: pytest.CallInfo) -> Gener
         # 处理测试失败
         if report.failed:
             handle_test_failure(item, report)
+            
+def get_custom_title(item):
+    """从测试函数中提取自定义标题
+    
+    优先级:
+    1. 函数中使用的allure.dynamic.title
+    2. @allure.title装饰器1
+    """
+    if not hasattr(item.function, "__code__"):
+        return None
+    
+    try:
+        # 一次性获取函数源代码
+        import inspect
+        func_source = inspect.getsource(item.function)
+        
+        # 使用正则表达式匹配两种标题设置方式
+        import re
+        
+        # 先检查函数体中的动态设置
+        dynamic_match = re.search(r'allure\.dynamic\.title\([\'"](.+?)[\'"]\)', func_source)
+        if dynamic_match:
+            return dynamic_match.group(1)
+            
+        # 然后检查装饰器
+        decorator_match = re.search(r'@allure\.title\([\'"](.+?)[\'"]\)', func_source)
+        if decorator_match:
+            return decorator_match.group(1)
+            
+    except Exception as e:
+        Loggers.warning(f"无法解析测试函数标题: {e}")
+    
+    return None
 
 def handle_test_failure(item: pytest.Item, report: pytest.TestReport) -> None:
     """处理测试失败"""
