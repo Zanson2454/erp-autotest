@@ -16,7 +16,8 @@ sys.path.insert(0, str(project_root))
 
 from utils.yaml_util import YamlUtil
 from utils.exception_util import handle_exception, safe_api_call, handle_class_method_exception
-from testcases.comm.base_test import BaseTest,SQLInitializer
+from testcases.comm.base_test import BaseTest
+from testcases.sls.test_00_so_config_check import TestSalesOrderConfig
 
 
 class TestSalesOrderCreate(BaseTest):
@@ -32,7 +33,7 @@ class TestSalesOrderCreate(BaseTest):
         super().setup_class()
         
         # 初始化订单配置
-        cls.order_config = SalesOrderConfig()
+        cls.order_config = TestSalesOrderConfig()
         
         # 初始化测试数据
         cls.so_type_id = cls.ids.get("so_type_id")
@@ -520,6 +521,6 @@ if __name__ == "__main__":
     # pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])
     test = TestSalesOrderCreate()
     test.setup_class()
-    test.test_save_sales_order()
-    test.test_submit_sales_order()
+    test.test_save_multiple_order_types()
+    test.test_submit_multiple_order_types()
     
