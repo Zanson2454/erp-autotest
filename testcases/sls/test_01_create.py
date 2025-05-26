@@ -18,7 +18,6 @@ from utils.yaml_util import YamlUtil
 from utils.exception_util import handle_exception, safe_api_call, handle_class_method_exception
 from utils.cache_util import CacheUtil
 from testcases.comm.base_test import BaseTest
-from testcases.sls.sales_order_config import SalesOrderConfig
 
 
 class TestSalesOrderCreate(BaseTest):
@@ -38,10 +37,8 @@ class TestSalesOrderCreate(BaseTest):
         CacheUtil.init(cache_dir="testdata/cache")  # 先初始化缓存工具
         CacheUtil.load_sls_cache(str(cache_file_path))  # 再加载缓存文件
         
-        # 初始化订单配置
-        cls.order_config = SalesOrderConfig()
         
-        # 初始化测试数据
+        # 初始化订单配置数据
         cls.so_type_id = cls.ids.get("so_type_id")
         cls.cust_id = cls.ids.get("cust_id")
         cls.com_org_id = cls.ids.get("com_org_id")
