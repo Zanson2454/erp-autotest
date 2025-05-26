@@ -30,8 +30,8 @@ class TestMemberCreate(BaseTest):
         cls.yaml_util = YamlUtil()
         # 加载接口路径和参数配置
         cls.api_path_file = project_root / "testdata" / "crm" / "crm_api_path.yaml"
-        cls.api_param_file = project_root / "testdata" / "crm" / "member_api_params.yaml"
-        cls.member_path = cls.yaml_util.read_yaml(cls.api_path_file)["CRM会员"]["会员配置"]
+        cls.api_param_file = project_root / "testdata" / "crm" / "crm_api_params.yaml"
+        cls.member_path = cls.yaml_util.read_yaml(cls.api_path_file)['apis']
         cls.member_params = cls.yaml_util.read_yaml(cls.api_param_file).get("api_params", {})
 
     def _generate_member_data(self):
@@ -43,23 +43,21 @@ class TestMemberCreate(BaseTest):
         nickname = fake.user_name()
         gender = fake.random_element(elements=("MALE", "FEMALE"))
         birthday = fake.date_of_birth(minimum_age=18, maximum_age=60).strftime("%Y-%m-%d")
-
-        # 从yaml获取基础结构，深拷贝防止污染
-        import copy
-        data = copy.deepcopy(self.member_params[self.member_path["新增会员"]])
-        req = data["params"]["request"]
+        self.logger.info(f"self.member_path['CRM-会员主数据-创建']: {self.member_path['CRM-会员主数据-创建']}")
+        req = self.member_params[self.member_path["CRM-会员主数据-创建"]['path']]["params"]["request"]
+        self.logger.info(f"req: {req}")
         req["name"] = name
         req["nickname"] = nickname
         req["idNumber"] = id_number
         req["phone"] = phone
         req["birthday"] = birthday
         req["gender"] = gender
-        req["createdBy"] = {"id": self.user_id}
-        req["updatedBy"] = {"id": self.user_id}
+        req["createdBy"] = {"id": self.ids["user_id"]}
+        req["updatedBy"] = {"id": self.ids["user_id"]}
         req["createdAt"] = int(datetime.now().timestamp() * 1000)
         req["updatedAt"] = int(datetime.now().timestamp() * 1000)
         req["requestId"] = fake.uuid4()
-        return data
+        return req
 
     @allure.title("新增会员接口-手机号唯一")
     @allure.description("""
@@ -71,9 +69,9 @@ class TestMemberCreate(BaseTest):
     @safe_api_call(error_message="新增会员接口失败")
     def test_create_member(self):
         """测试新增会员接口，所有字段用MockUtil或faker生成"""
-        url = self.member_path["新增会员"]
+        url = self.member_path["CRM-会员主数据-创建"]["path"]
         data = self._generate_member_data()
-        response = self._make_request(url, data, "新增会员接口")
+        response = self.http.post(url=url, json=data, description="新增会员接口")
         self.assert_util.assert_response_status(response)
         self.logger.info(f"新增会员接口响应: {json.dumps(response, ensure_ascii=False, indent=2)}")
         return response
@@ -90,7 +88,7 @@ class TestMemberCreate(BaseTest):
         success_count = 0
         failed_count = 0
         failed_members = []
-        url = self.member_path["新增会员"]
+        url = self.member_path["CRM-会员主数据-创建"]
         for i in range(count):
             try:
                 data = self._generate_member_data()
