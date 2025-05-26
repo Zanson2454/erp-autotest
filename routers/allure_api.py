@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from fastapi.responses import RedirectResponse
 import os
 
-router = APIRouter(prefix="/reports", tags=["Allure报告"])
+router = APIRouter(prefix="/reports", tags=["测试报告"])
 
 @router.get("/allure")
 async def allure_index():
