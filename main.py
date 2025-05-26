@@ -7,6 +7,7 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from starlette.staticfiles import StaticFiles
+from fastapi.openapi.docs import get_swagger_ui_html
 
 # 将父目录添加到 sys.path 中，以便包含来自父目录的模块
 project_root = Path(__file__).parent.parent
@@ -14,7 +15,8 @@ sys.path.append(str(project_root))
 
 from routers import (
     data_factory_api,
-    allure_api
+    allure_api,
+    api_manage
 )
 
 # 定义常量用于静态文件路径
@@ -66,11 +68,23 @@ app.mount("/allure", StaticFiles(directory=ALLURE_REPORT_DIR), name="allure")
 # app.include_router(autotest_api.router)
 app.include_router(data_factory_api.router)
 app.include_router(allure_api.router)
+app.include_router(api_manage.router)
 
 
 @app.get("/")
 async def root():
     return RedirectResponse(url="/docs")
+
+
+@app.get("/docs", include_in_schema=False)
+async def custom_swagger_ui_html():
+    return get_swagger_ui_html(
+        openapi_url=app.openapi_url,
+        title=app.title + " - Swagger UI",
+        swagger_js_url=f"/{STATIC_DIR}/swagger-ui/swagger-ui-bundle.js",
+        swagger_css_url=f"/{STATIC_DIR}/swagger-ui/swagger-ui.css",
+        swagger_favicon_url=f"/{STATIC_DIR}/swagger-ui/favicon.jpg"
+    )
 
 
 if __name__ == "__main__":
