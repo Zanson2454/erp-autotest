@@ -15,8 +15,8 @@ COPY . .
 
 # 安装系统依赖和 Allure CLI（合并为一个 RUN，减少镜像层数）
 ENV ALLURE_VERSION=2.24.1
-RUN sed -i 's|http://deb.debian.org|http://mirrors.aliyun.com|g' /etc/apt/sources.list && \
-    sed -i 's|http://security.debian.org|http://mirrors.aliyun.com/debian-security|g' /etc/apt/sources.list && \
+RUN sed -i 's|http://deb.debian.org|http://mirrors.ustc.edu.cn|g' /etc/apt/sources.list && \
+    sed -i 's|http://security.debian.org|http://mirrors.ustc.edu.cn/debian-security|g' /etc/apt/sources.list && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
         wget unzip default-jre \
