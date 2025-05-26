@@ -44,7 +44,9 @@ class TestMatAdd(GenBaseTest):
     @allure.story("新增物料")
     @allure.description("测试步骤：1.生成物料基础信息 2.调用新增接口 3.验证响应结果")
     @allure.severity(allure.severity_level.BLOCKER)
+    @allure.title("新增物料流程")
     def test_mat_add(self):
+        
         try:
             # 1. 生成物料基础信息
             # 使用时间戳和随机数生成唯一编码和名称
@@ -100,6 +102,7 @@ class TestMatAdd(GenBaseTest):
     @allure.story("启用物料")
     @allure.description("测试步骤：1.验证前置条件 2.调用启用接口 3.验证响应结果")
     @allure.severity(allure.severity_level.CRITICAL)
+    @allure.title("启用物料流程")
     def test_mat_enable(self):
         try:
             # 1. 验证前置条件 - 确保mat_info中有数据
@@ -133,6 +136,7 @@ class TestMatAdd(GenBaseTest):
     @allure.story("停用物料")
     @allure.description("测试步骤：1.验证前置条件 2.调用停用接口 3.验证响应结果")
     @allure.severity(allure.severity_level.CRITICAL)
+    @allure.title("停用物料")
     def test_mat_disable(self):
         try:
             # 1. 验证前置条件 - 确保mat_info中有数据
