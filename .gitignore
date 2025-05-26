@@ -75,6 +75,6 @@ db.sqlite3-journal
 
 
 # 忽略本地报告
-reports/*
 reports/allure-results/*
 reports/allure-results/environment.properties
+reports/allure-report/*
