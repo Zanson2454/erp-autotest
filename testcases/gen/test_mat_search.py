@@ -4,6 +4,7 @@ import allure
 from pathlib import Path
 from testcases.comm.base_test import BaseTest
 from utils.yaml_util import YamlUtil
+from utils.allure_simple import a  # 导入简化的Allure辅助类
 
 # 添加项目根目录到 Python 路径，确保可以正确导入项目模块
 project_root = Path(__file__).resolve().parent.parent.parent  # 值: /Users/shengqiaowei/Desktop/erp-autotest
@@ -53,67 +54,71 @@ class TestMatSearch(BaseTest):
         cls.logger.info("测试类初始化完成")
 
     @allure.story("物料列表查询")
-    @allure.description("测试步骤：物料列表查询")
+    @allure.description("""
+    ## 测试步骤
+    1. 获取接口路径和参数
+    2. 发送查询请求
+    3. 验证响应结果
+    4. 验证数据内容
+    """)
     @allure.severity(allure.severity_level.CRITICAL)
     @allure.title("物料列表查询")
+    @allure.tag("物料管理", "功能测试")
     def test_mat_search(self):
         try:
-            # 1. 获取接口路径和参数
-            url = self.mat_path["物料主数据默认页面"]
-            # url作为key，用于从mat_params中获取对应的请求参数
-            self.logger.debug(f"接口URL: {url}")
-            self.logger.debug(f"mat_params原始数据: {self.mat_params}")
+            with a.step("1. 获取接口路径和参数"):
+                # 1. 获取接口路径和参数
+                url = self.mat_path["物料主数据默认页面"]
+                # url作为key，用于从mat_params中获取对应的请求参数
+                self.logger.debug(f"接口URL: {url}")
+                
+                # 使用url作为key从mat_params中获取对应的参数配置，如果获取不到就返回{}
+                data = self.mat_params.get(url, {})
+                self.logger.debug(f"获取到的请求参数: {data}")
+                
+                # 添加请求参数到报告
+                a.json(data, "请求参数")
             
-            # 使用url作为key从mat_params中获取对应的参数配置，如果获取不到就返回{}
-            data = self.mat_params.get(url, {})
-            self.logger.debug(f"获取到的请求参数: {data}")
+            with a.step("2. 发送查询请求"):
+                # 2. 发送POST请求并获取响应
+                result = self.http.post(url, json=data, description="查询物料列表")
+                
+                # 添加响应数据到报告
+                a.json(result, "响应数据")
+                
+                #result里的值先取第一层data，再取第二层data，data是参数名，拿到第三层data才是我们想要的数据
+                response_data = result.get("data", {}).get("data", {})
             
-            # 2. 发送POST请求并获取响应
-            result = self.http.post(url, json=data, description="查询物料列表")
-            #result里的值先取第一层data，再取第二层data，data是参数名，拿到第三层data才是我们想要的数据
-            response_data = result.get("data", {}).get("data", {})
-            # response_data值示例: {
-            #   "data": [
-            #     {
-            #       "matCode": "W1790",
-            #       "matName": "XB三力士普通带001",
-            #       "genMatTypeCfId": {"matTypeName": "成品", "id": 2000001},
-            #       "baseUomId": {"uomDesc": "件", "id": 2004001},
-            #       "status": "ENABLED",
-            #       "bizStatus": "SALE",
-            #       ...
-            #     },
-            #     ...
-            #   ],
-            #   "total": 330
-            # }
+            with a.step("3. 验证响应结果"):
+                # 3. 验证响应结果，调用工具类判断是否=200 和 success是否=true
+                self.assert_util.assert_response_success(result)
+                # 验证result["success"] == true
+                
+                # 验证返回的total字段（总记录数）不为空且大于0
+                total = response_data.get("total")  # 值示例: 330
+                assert total is not None and total > 0, f"物料总数异常: {total}"
+                
+                # 记录验证结果
+                a.text(f"物料总数: {total}", "验证结果 - 总数")
             
-            # 3. 验证响应结果，调用工具类判断是否=200 和 success是否=true
-            self.assert_util.assert_response_success(result)
-            # 验证result["success"] == true
-            
-            # 验证返回的total字段（总记录数）不为空且大于0
-            total = response_data.get("total")  # 值示例: 330
-            assert total is not None and total > 0, f"物料总数异常: {total}"
-            
-            # 验证返回的数据列表不为空
-            data_list = response_data.get("data", [])  
-            # data_list值示例: [
-            #   {
-            #     "matCode": "W1790",
-            #     "matName": "XB三力士普通带001",
-            #     "status": "ENABLED",
-            #     "bizStatus": "SALE",
-            #     ...
-            #   },
-            #   ...
-            # ]
-            assert len(data_list) > 0, "返回的物料列表为空"
-            
-            self.logger.info(f"物料列表查询完成，总记录数: {total}")
+            with a.step("4. 验证数据内容"):
+                # 验证返回的数据列表不为空
+                data_list = response_data.get("data", [])
+                assert len(data_list) > 0, "返回的物料列表为空"
+                
+                # 记录验证结果
+                a.text(f"当前页物料数量: {len(data_list)}", "验证结果 - 列表数量")
+                
+                # 添加物料列表的第一条记录到报告中
+                if len(data_list) > 0:
+                    a.json(data_list[0], "物料记录示例")
+                
+                self.logger.info(f"物料列表查询完成，总记录数: {total}")
             
         except Exception as e:
             self.logger.error(f"物料列表查询失败: {str(e)}")
+            # 记录失败信息
+            a.text(str(e), "失败原因")
             raise
 
 if __name__ == "__main__":
