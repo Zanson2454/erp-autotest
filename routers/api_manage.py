@@ -47,8 +47,8 @@ def run_pytest_background(target: str, task_id: str):
 
         # 2. 运行 pytest，生成 allure-results
         result = subprocess.run(
-            ["pytest", target, "--alluredir=reports/allure-results", "--maxfail=3", "--disable-warnings", "-q"],
-            capture_output=True, text=True, timeout=600
+            ["pytest", target, "--alluredir=reports/allure-results", "--disable-warnings", "-q"],
+            capture_output=True, text=True, timeout=1200
         )
         # 3. 生成 Allure HTML 报告
         gen_result = subprocess.run(
@@ -103,8 +103,8 @@ async def run_tests(req: RunTestRequest):
     # 2. 运行 pytest，生成 allure-results
     try:
         result = subprocess.run(
-            ["pytest", target, "--alluredir=reports/allure-results", "--maxfail=3", "--disable-warnings", "-q"],
-            capture_output=True, text=True, timeout=600
+            ["pytest", target, "--alluredir=reports/allure-results", "--disable-warnings", "-q"],
+            capture_output=True, text=True, timeout=1200
         )
     except Exception as e:
         send_dingtalk_msg(f"[自动化测试异常]\nError: {str(e)}")
