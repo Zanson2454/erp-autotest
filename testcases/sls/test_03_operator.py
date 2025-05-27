@@ -20,7 +20,8 @@ from utils.exception_util import  safe_api_call, handle_class_method_exception
 from testcases.comm.base_test import BaseTest
 from utils.response_util import ResponseUtil
 from testcases.sls.test_01_create import TestSalesOrderCreate
-class TestSalesOrderOperator(BaseTest):
+from testcases.sls import SlsBase
+class TestSalesOrderOperator(BaseTest,SlsBase):
     """销售订单操作测试类"""
     
     @classmethod
@@ -35,19 +36,8 @@ class TestSalesOrderOperator(BaseTest):
         cls.user_id = cls.init_data["user_info"]["user_info"]["id"]
         cls.so_type_id = cls.init_data["base_info"]["so_type_info"]["id"]
         cls.logger.info("测试类初始化完成")
-        
-        # 加载配置文件
-        cls.base_api_path = Path(project_root) / "testdata" / "sls" / "sls_api_path.yaml"
-        cls.base_config_path = Path(project_root) / "testdata" / "sls" / "sls_api_params.yaml"
-        
-        # 当前用例集所需接口
-        cls.yaml_util = YamlUtil()
-        cls.so_path = cls.yaml_util.read_yaml(cls.base_api_path)["销售订单"]["订单管理"]
-        
-        # 前用例集所需参数
-        cls.so_params = cls.yaml_util.read_yaml(cls.base_config_path).get("api_params", {})
-    
         cls.response_util = ResponseUtil()
+        
     def _query_draft_orders_from_db(self) -> Dict[str, Any]:
         """从数据库查询草稿态订单
         
@@ -125,8 +115,8 @@ class TestSalesOrderOperator(BaseTest):
             self.logger.info(f"使用已有订单ID: {self.order_id}")
             
         # 构建请求URL
-        url = self.so_path["查询订单详情"]
-        data = self.so_params[url]
+        url = self.sls_api_paths["订单管理"]["查询订单详情"]
+        data = self.sls_api_params[url]
         data["params"]["request"]["id"] = self.order_id
         
         # 发送请求
@@ -158,8 +148,8 @@ class TestSalesOrderOperator(BaseTest):
             self._query_draft_orders_from_db()
        # 发送请求
         self.so_data['syncSubmit'] = True # 直接设 置 id 字段
-        url = self.so_path["销售订单编辑提交"]
-        data = self.so_params[url]
+        url = self.sls_api_paths["订单管理"]["销售订单编辑提交"]
+        data = self.sls_api_params[url]
         data["params"]["request"] = self.so_data
         result = self.http.post(url, json=data, description="销售订单编辑提交")
         self.response_util.process_response(result)
@@ -198,8 +188,8 @@ class TestSalesOrderOperator(BaseTest):
         self.order_id = order["id"]
         self.logger.info(f"找到可提交订单: ID={self.order_id}, 订单号={order['so_code']}")
         # 发送请求
-        url = self.so_path["提交订单"]
-        data = self.so_params[url]
+        url = self.sls_api_paths["订单管理"]["提交订单"]
+        data = self.sls_api_params[url]
         data["params"]["request"] = self.so_data
         self.logger.debug(f"销售订单手动提交请求数据: {json.dumps(data, indent=2)}")
         result = self.http.post(url, json=data, description="销售订单手动提交")
@@ -244,8 +234,8 @@ class TestSalesOrderOperator(BaseTest):
             }
             
             # 3. 发送请求
-            url = self.so_path["取消提交销售订单"]
-            data = self.so_params[url]
+            url = self.sls_api_paths["订单管理"]["取消提交销售订单"]
+            data = self.sls_api_params[url]
             data["params"]["request"] = request_data
             result = self.http.post(url, json=data, description="取消提交销售订单")
             self.response_util.process_response(result)
@@ -312,7 +302,7 @@ class TestSalesOrderOperator(BaseTest):
             }
             
             # 3. 发送请求
-            url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SLS_REPEAL_EVENT_SERVICE?tmodule=ERP_SCM"
+            url = self.sls_api_paths["订单管理"]["作废销售订单"]
             self.logger.info(f"作废订单请求URL: {url}")
             self.logger.info(f"作废订单请求数据: {json.dumps(request_data, ensure_ascii=False, indent=2)}")
             
@@ -322,8 +312,7 @@ class TestSalesOrderOperator(BaseTest):
             self.logger.info(f"作废订单响应数据: {json.dumps(response_data, ensure_ascii=False, indent=2)}")
             
             # 4. 验证响应
-            assert response.status_code == 200, f"作废订单失败: {response.text}"
-            assert response_data.get("success"), f"作废订单失败: {response_data.get('message')}"
+            self.assert_util.assert_response_success(result)
             
             # 5. 验证订单状态
             verify_sql = f"""
@@ -384,7 +373,7 @@ class TestSalesOrderOperator(BaseTest):
             }
             
             # 3. 发送请求
-            url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_HEAD_FREEZE_EVENT_SERVICE?tmodule=ERP_SCM"
+            url = self.sls_api_paths["订单管理"]["冻结销售订单"]
             
             self.logger.info(f"冻结订单请求URL: {url}")
             self.logger.info(f"冻结订单请求数据: {json.dumps(request_data, ensure_ascii=False, indent=2)}")
@@ -458,7 +447,7 @@ class TestSalesOrderOperator(BaseTest):
             }
             
             # 3. 发送请求
-            url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_DATA_COPY_EVENT_SERVICE?tmodule=ERP_SCM"
+            url = self.sls_api_paths["订单管理"]["复制销售订单"]
             
             self.logger.info(f"复制订单请求URL: {url}")
             self.logger.info(f"复制订单请求数据: {json.dumps(request_data, ensure_ascii=False, indent=2)}")
@@ -510,7 +499,7 @@ class TestSalesOrderOperator(BaseTest):
             }
             
             # 3. 发送请求
-            url = f"{self.base_url}/api/trantor/service/engine/execute/ERP_SCM$SLS_SALES_MANUAL_SAVE_EVENT?tmodule=ERP_SCM"
+            url = self.sls_api_paths["订单管理"]["提交复制的销售订单"]
             
             self.logger.info(f"提交复制订单请求URL: {url}")
             self.logger.info(f"提交复制订单请求数据: {json.dumps(request_data, ensure_ascii=False, indent=2)}")
@@ -535,15 +524,15 @@ class TestSalesOrderOperator(BaseTest):
             raise
 
 if __name__ == "__main__":
-    test = TestSalesOrderOperator()
-    test.setup_class()
-    test.test_01_query_order_detail()
-    # test.test_02_submit_sales_order_edit()
-    test.test_03_manual_submit_sales_order()   
-    # test.test_04_cancel_submit_sales_order()
-    # test.test_05_repeal_sales_order()
-    # test.test_06_freeze_sales_order()
-    # test.test_07_copy_sales_order()
-    # test.test_08_submit_copied_sales_order()
-    # allure_dir = os.path.join(project_root, "reports", "allure-results")
-    # pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])    
+    # test = TestSalesOrderOperator()
+    # test.setup_class()
+    # test.test_01_query_order_detail()
+    # # test.test_02_submit_sales_order_edit()
+    # test.test_03_manual_submit_sales_order()   
+    # # test.test_04_cancel_submit_sales_order()
+    # # test.test_05_repeal_sales_order()
+    # # test.test_06_freeze_sales_order()
+    # # test.test_07_copy_sales_order()
+    # # test.test_08_submit_copied_sales_order()
+    allure_dir = Path(project_root) / "reports" / "allure-results"
+    pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])    
