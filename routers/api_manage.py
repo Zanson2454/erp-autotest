@@ -35,19 +35,26 @@ def send_dingtalk_msg(content: str):
 
 def run_tests_background(task_id, target, req):
     try:
-        # 1. 执行 pytest
+        # 1. 复制上一次报告的 history 到 allure-results/history
+        report_history = "reports/allure-report/history"
+        results_history = "reports/allure-results/history"
+        if os.path.exists(report_history):
+            shutil.rmtree(results_history, ignore_errors=True)
+            shutil.copytree(report_history, results_history)
+
+        # 2. 执行 pytest
         pytest_cmd = ["pytest", target, "--alluredir=reports/allure-results", "--disable-warnings", "-q"]
         pytest_proc = subprocess.run(pytest_cmd, capture_output=True, text=True, timeout=1200)
         tasks[task_id]["pytest"] = pytest_proc.stdout + pytest_proc.stderr
         tasks[task_id]["pytest_returncode"] = pytest_proc.returncode
 
-        # 2. 执行 allure generate 到临时目录
+        # 3. 执行 allure generate 到临时目录
         allure_cmd = ["allure", "generate", "reports/allure-results", "-o", "reports/allure-report-tmp", "--clean"]
         allure_proc = subprocess.run(allure_cmd, capture_output=True, text=True, timeout=300)
         tasks[task_id]["allure"] = allure_proc.stdout + allure_proc.stderr
         tasks[task_id]["allure_returncode"] = allure_proc.returncode
 
-        # 3. 原子替换报告目录
+        # 4. 原子替换报告目录
         shutil.rmtree("reports/allure-report", ignore_errors=True)
         shutil.move("reports/allure-report-tmp", "reports/allure-report")
 
