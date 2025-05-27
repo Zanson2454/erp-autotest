@@ -124,7 +124,6 @@ class DataFactory:
         :param env_name: 环境名（如test/dev/prod）
         """
         if not cls._initialized:
-            project_root = Path(__file__).parent.parent
             env_file = project_root / '.env'
             yaml_file = project_root / 'config' / 'env' / f'{env_name}.yaml'
 
@@ -195,7 +194,7 @@ class DataFactory:
         cache_key = f'{module}_cache'
         data = CacheUtil.get(cache_key)
         if not data:
-            yaml_path = Path(__file__).parent.parent / 'testdata' / 'init' / f'{module}.yaml'
+            yaml_path = Path(__file__).parent.parent / 'testdata' / 'init' / f'{module}_init.yaml'
             db_config = cls._env_config["database"][db_config_name]
             data = SQLInitializer.init_sql(yaml_path, db_config)
         return data
@@ -279,24 +278,6 @@ class DataFactory:
         pass
 
     @classmethod
-    def get_yaml_data(cls, yaml_path):
-        """
-        读取任意YAML文件。
-        :param yaml_path: YAML文件路径
-        :return: 配置字典
-        """
-        return YamlUtil.read_yaml(str(yaml_path))
-
-    @classmethod
-    def get_cache_data(cls, cache_key):
-        """
-        读取缓存数据。
-        :param cache_key: 缓存key
-        :return: 缓存内容
-        """
-        return CacheUtil.get(cache_key)
-
-    @classmethod
     def set_cache_data(cls, cache_key, data):
         """
         写入缓存数据。
@@ -310,3 +291,5 @@ if __name__ == "__main__":
     data = DataFactory()
     data = data.get_env_config()
     print(data)
+    
+    

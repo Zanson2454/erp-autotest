@@ -13,8 +13,8 @@ sys.path.insert(0, str(project_root))
 from testcases.comm.base_test import BaseTest
 from utils.yaml_util import YamlUtil
 from utils.exception_util import safe_api_call
-
-class TestSalesOrderConfig(BaseTest):
+from testcases.sls import SlsBase
+class TestSalesOrderConfig(BaseTest,SlsBase):
     """销售订单配置检查测试类"""
     
     @classmethod
@@ -24,40 +24,7 @@ class TestSalesOrderConfig(BaseTest):
         cls.order_type_ids = {}
         cls.order_line_type_ids = {}
         cls.yaml_util = YamlUtil()
-        # 加载配置文件
-        cls.base_api_path = project_root / "testdata" / "sls" / "sls_api_path.yaml"
-        cls.base_config_path = project_root / "testdata" / "sls" / "sls_api_params.yaml"
-        
-        # 当前 case 要覆盖的接口
-        cls.so_path = cls.yaml_util.read_yaml(cls.base_api_path)["销售订单"]["销售配置"]
-        cls.so_params = cls.yaml_util.read_yaml(cls.base_config_path).get("api_params", {})
-
-    # 定义需要检查的订单类型
-    ORDER_TYPES = {
-        "STND": "标准销售",
-        "CENT": "集中销售",
-        "CONS_ISSU": "寄售销售-消耗",
-        "VEND_CONS": "供应商寄售直接销售",
-        "CONS_FILL": "寄售销售-补货",
-        "THRD": "三方销售",
-        "SERV": "服务销售"
-    }
-    
-    # 定义需要检查的订单行类型
-    ORDER_LINE_TYPES = {
-        "NORM": "常规销售",
-        "CONS_FILL": "寄售销售-补货",
-        "FREE": "赠品销售",
-        "THRD": "三方销售",
-        "CONS_ISSU": "寄售销售-消耗",
-        "SERV": "标准服务销售(无库存)",
-        "BOMB_MAIN": "子件销售-母件商品",
-        "BOMB_SUBL": "子件销售-子件商品",
-        "BOMA_SUBL": "母件销售-子件服务",
-        "BOMA_MAIN": "母件销售-母件商品",
-        "VEND_CONS": "供应商寄售直接销售",
-        "CENT": "集中销售"
-    }
+  
 
     @allure.title("查询订单类型配置")
     @allure.description("""
@@ -71,8 +38,8 @@ class TestSalesOrderConfig(BaseTest):
     @safe_api_call(error_message="查询订单类型配置失败")
     def test_01_query_order_type(self):
         """查询订单类型配置"""
-        url = self.so_path["查询订单类型配置"]
-        data = self.so_params.get(url, {})
+        url = self.sls_api_paths["销售配置"]["查询订单类型配置"]
+        data = self.sls_api_params.get(url, {})
         response = self.http.post(
             url=url,
             json=data,
@@ -124,8 +91,8 @@ class TestSalesOrderConfig(BaseTest):
                 continue
             
             self.logger.info(f"查询{order_type_name}订单类型详情，ID: {order_type_id}")
-            url = self.so_path["查询订单类型详情"]
-            data = self.so_params.get(url, {})
+            url = self.sls_api_paths["销售配置"]["查询订单类型详情"]
+            data = self.sls_api_params.get(url, {})
             data['params']['request']['id'] = order_type_id
             
             try:
@@ -161,8 +128,8 @@ class TestSalesOrderConfig(BaseTest):
     @safe_api_call(error_message="查询订单行类型配置失败")
     def test_03_query_order_line_type(self):
         """查询订单行类型配置"""
-        url = self.so_path["查询订单行类型配置"]
-        data = self.so_params.get(url, {})
+        url = self.sls_api_paths["销售配置"]["查询订单行类型配置"]
+        data = self.sls_api_params.get(url, {})
         result = self.http.post(url, json=data, description="查询订单行类型配置")
         
         # 从响应中获取订单行类型数据
