@@ -51,7 +51,7 @@ app.include_router(api_manage.router)
 
 @app.get("/",tags=["首页"])
 async def root():
-    return RedirectResponse(url="/docs")
+    return "ok"
 
 
 @app.get("/docs", include_in_schema=False)

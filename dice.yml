@@ -15,6 +15,6 @@ services:
         # duration 设定健康检查需要持续的检查的时间，单位是秒；这个时间值应该设置为比服务启动需要的时间更长一点
         duration: 600
     resources:
-      cpu: 0.8
-      mem: 256
+      cpu: 1
+      mem: 1024
 envs: {}
