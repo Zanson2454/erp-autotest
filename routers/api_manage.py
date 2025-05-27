@@ -9,9 +9,11 @@ import requests
 import shutil
 from utils.fix_report import fix_report_title
 import threading
+from utils.dingtalk_util import send_dingtalk_msg
+import datetime
 
 # 钉钉机器人Webhook（请替换为你的真实token）
-DINGTALK_WEBHOOK = "https://oapi.dingtalk.com/robot/send?access_token=YOUR_TOKEN_HERE"
+DINGTALK_WEBHOOK = "https://oapi.dingtalk.com/robot/send?access_token=f239b50eb61afcd187515c7fdf919ff5fdb1e9dae47e184a9515a4dc3335001a"
 
 class ExecType(str, Enum):
     all = "all"
@@ -26,12 +28,6 @@ class RunTestRequest(BaseModel):
 router = APIRouter(prefix="/executor", tags=["用例执行"])
 
 tasks = {}
-
-def send_dingtalk_msg(content: str):
-    requests.post(DINGTALK_WEBHOOK, json={
-        "msgtype": "text",
-        "text": {"content": content}
-    })
 
 def run_tests_background(task_id, target, req):
     try:
@@ -62,12 +58,15 @@ def run_tests_background(task_id, target, req):
     except Exception as e:
         tasks[task_id]["status"] = "error"
         tasks[task_id]["error"] = str(e)
+    finally:
+        tasks[task_id]["end_time"] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 @router.post("/run")
 async def run_tests(req: RunTestRequest):
     # 1. 生成任务ID
     task_id = str(uuid.uuid4())
-    tasks[task_id] = {"status": "running"}
+    now = datetime.datetime.now()
+    tasks[task_id] = {"status": "running", "start_time": now.strftime('%Y-%m-%d %H:%M:%S')}
     # 2. 解析目标
     if req.type == ExecType.all:
         target = "testcases"
@@ -91,7 +90,23 @@ async def run_tests(req: RunTestRequest):
 async def get_status(task_id: str):
     if task_id not in tasks:
         return JSONResponse(status_code=404, content={"error": "任务不存在"})
-    return tasks[task_id]
+    task = tasks[task_id]
+    # 只要任务结束且未通知时，发送钉钉
+    if task["status"] in ("success", "failed", "error") and not task.get("notified"):
+        msg = (
+            f"[自动化测试任务通知]\n"
+            f"任务ID: {task_id}\n"
+            f"执行状态: {task['status']}\n"
+            f"报告入口: https://erp-autotest.app.terminus.io/allure/index.html\n"
+            f"开始时间: {task.get('start_time', '-')}, 结束时间: {task.get('end_time', '-')}\n"
+        )
+        try:
+            send_dingtalk_msg(DINGTALK_WEBHOOK, msg)
+            task["notified"] = True
+        except Exception as e:
+            task["notified"] = False
+            task["notify_error"] = str(e)
+    return task
 
 if __name__ == "__main__":
     """Todo: 测试用例执行"""
