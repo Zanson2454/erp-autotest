@@ -15,7 +15,8 @@ sys.path.insert(0, str(project_root))
 from testcases.comm.base_test import BaseTest
 from utils.yaml_util import YamlUtil
 from testcases.fin.test_sett_check import TestSettlementItem
-
+from data_factory.fin_sett_factory import FinSettlementFactory
+from utils.log_util import Loggers
 @allure.epic("ERP通业财模块")
 @allure.feature("结算管理")
 class TestSettBusiCheck(BaseTest):
@@ -32,10 +33,9 @@ class TestSettBusiCheck(BaseTest):
     
     def get_sett_item_id(self):
         """获取不同状态的结算项ID 已创建，已对账，已汇单 """
-         # 调用 test_add_sett_item 方法 新建一条结算项使用新建结算项进行对账确认
-        sett_item = TestSettlementItem()
-        sett_item.setup_class()
-        created_sett_item_id = sett_item.test_add_sett_item()
+        created_sett_item = FinSettlementFactory.get_or_create_settlement_item("CREATED")
+        created_sett_item_id = created_sett_item.get("id")
+        Loggers.info(f"已创建结算项ID: {created_sett_item_id}")
         
         sett_doc_created_sql="""
             select id
