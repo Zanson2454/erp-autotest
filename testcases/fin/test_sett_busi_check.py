@@ -14,7 +14,6 @@ sys.path.insert(0, str(project_root))
 
 from testcases.comm.base_test import BaseTest
 from utils.yaml_util import YamlUtil
-from testcases.fin.test_sett_check import TestSettlementItem
 from data_factory.fin_sett_factory import FinSettlementFactory
 from utils.log_util import Loggers
 @allure.epic("ERP通业财模块")
