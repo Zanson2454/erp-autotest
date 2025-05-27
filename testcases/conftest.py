@@ -49,8 +49,8 @@ def pytest_addoption(parser: pytest.Parser) -> None:
     parser.addoption(
         "--env",
         action="store",
-        default="test",
-        choices=["dev", "test", "staging", "prod"],
+        default="TEST",
+        choices=["dev", "test", "staging", "prod", "DEV", "TEST", "STAGING", "PROD"],
         help="执行环境：dev/test/staging/prod"
     )
     parser.addoption(
@@ -82,10 +82,11 @@ def pytest_configure(config: pytest.Config) -> None:
     # 设置测试环境
     env = config.getoption("--env")
     Loggers.info(f"当前测试环境: {env}")
-    os.environ["TEST_ENV"] = env
+    # 确保环境名称为大写
+    os.environ["TEST_ENV"] = env.upper()
     
-    # 加载环境配置
-    env_config = load_env_config(env)
+    # 加载环境配置（保持原始环境名称用于加载配置文件）
+    env_config = load_env_config(env.lower())
     
     # 设置 Trantor 版本
     trantor_version = config.getoption("--trantor_version") or env_config.get("trantor_version", "")
@@ -111,10 +112,8 @@ def create_allure_environment(config: pytest.Config) -> None:
         os.makedirs(results_dir, exist_ok=True)
         
         env_info = {
-            "Environment": os.getenv("TEST_ENV", "test"),
+            "Environment": os.getenv("TEST_ENV", "TEST"),
             "Trantor_Version": os.getenv("TRANTOR_VERSION", ""),
-            "Python_Version": sys.version.split()[0],
-            "Platform": sys.platform,
             "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }
         
