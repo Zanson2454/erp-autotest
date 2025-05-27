@@ -30,10 +30,19 @@ stages:
           params:
             release_id_path: ${release}
   - stage:
-      - custom-script:
-          alias: run-api-test
-          version: "1.0"
-          image: ${pack-testapi:OUTPUT:image}
-          commands:
-            - pytest --alluredir=reports/allure-results testcases
-            - allure generate reports/allure-results -o reports/allure-report --clean
+      - api-test:
+          alias: api-test
+          version: "2.0"
+          params:
+            body:
+              content: |-
+                {
+                  "type": "all"
+                }
+              type: application/json
+            headers:
+              - key: Content-Type
+                value: application/json
+            method: POST
+            url: https://erp-autotest.app.terminus.io/executor/run
+          timeout: 3600
