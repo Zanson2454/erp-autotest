@@ -39,5 +39,5 @@ stages:
           description: 服务启动后自动化接口测试
           params:
             commands:
-              - pytest --alluredir=reports/allure-results testcases ; allure generate reports/allure-results -o reports/allure-report --clean
+              - pytest --alluredir=reports/allure-results testcases && allure generate reports/allure-results -o reports/allure-report --clean
               # 可选：上传 Allure 报告到制品库或 OSS
