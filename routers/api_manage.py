@@ -1,4 +1,4 @@
-from fastapi import APIRouter, BackgroundTasks
+from fastapi import APIRouter, BackgroundTasks, Request
 from pydantic import BaseModel, Field
 from enum import Enum
 from fastapi.responses import JSONResponse
@@ -8,6 +8,7 @@ import uuid
 import requests
 import shutil
 from utils.fix_report import fix_report_title
+import threading
 
 # 钉钉机器人Webhook（请替换为你的真实token）
 DINGTALK_WEBHOOK = "https://oapi.dingtalk.com/robot/send?access_token=YOUR_TOKEN_HERE"
@@ -24,53 +25,43 @@ class RunTestRequest(BaseModel):
 
 router = APIRouter(prefix="/executor", tags=["用例执行"])
 
+tasks = {}
+
 def send_dingtalk_msg(content: str):
     requests.post(DINGTALK_WEBHOOK, json={
         "msgtype": "text",
         "text": {"content": content}
     })
 
-def run_pytest_background(target: str, task_id: str):
+def run_tests_background(task_id, target, req):
     try:
-        results_dir = "reports/allure-results"
-        report_dir = "reports/allure-report"
-        history_dir = os.path.join(report_dir, "history")
-        results_history_dir = os.path.join(results_dir, "history")
+        # 1. 执行 pytest
+        pytest_cmd = ["pytest", target, "--alluredir=reports/allure-results", "--disable-warnings", "-q"]
+        pytest_proc = subprocess.run(pytest_cmd, capture_output=True, text=True, timeout=1200)
+        tasks[task_id]["pytest"] = pytest_proc.stdout + pytest_proc.stderr
+        tasks[task_id]["pytest_returncode"] = pytest_proc.returncode
 
-        # 0. 清空 allure-results 目录
-        if os.path.exists(results_dir):
-            shutil.rmtree(results_dir)
-        os.makedirs(results_dir, exist_ok=True)
+        # 2. 执行 allure generate 到临时目录
+        allure_cmd = ["allure", "generate", "reports/allure-results", "-o", "reports/allure-report-tmp", "--clean"]
+        allure_proc = subprocess.run(allure_cmd, capture_output=True, text=True, timeout=300)
+        tasks[task_id]["allure"] = allure_proc.stdout + allure_proc.stderr
+        tasks[task_id]["allure_returncode"] = allure_proc.returncode
 
-        # 1. 复制上一次报告的 history 到 allure-results/history
-        if os.path.exists(history_dir):
-            shutil.copytree(history_dir, results_history_dir, dirs_exist_ok=True)
+        # 3. 原子替换报告目录
+        shutil.rmtree("reports/allure-report", ignore_errors=True)
+        shutil.move("reports/allure-report-tmp", "reports/allure-report")
 
-        # 2. 运行 pytest，生成 allure-results
-        result = subprocess.run(
-            ["pytest", target, "--alluredir=reports/allure-results", "--disable-warnings", "-q"],
-            capture_output=True, text=True, timeout=1200
-        )
-        # 3. 生成 Allure HTML 报告
-        gen_result = subprocess.run(
-            ["allure", "generate", "reports/allure-results", "-o", "reports/allure-report", "--clean"],
-            capture_output=True, text=True, timeout=120
-        )
-        msg = (
-            f"[自动化测试完成]\n任务ID: {task_id}\n"
-            f"ReturnCode: {result.returncode}\n"
-            f"AllureGenCode: {gen_result.returncode}\n"
-            f"AllureGenOut: {gen_result.stdout[-1000:]}\n"
-            f"AllureGenErr: {gen_result.stderr[-1000:]}\n"
-            f"Stdout:\n{result.stdout[-1000:]}\nStderr:\n{result.stderr[-1000:]}"
-        )
+        tasks[task_id]["status"] = "success" if pytest_proc.returncode == 0 else "failed"
     except Exception as e:
-        msg = f"[自动化测试异常]\n任务ID: {task_id}\nError: {str(e)}"
-    send_dingtalk_msg(msg)
+        tasks[task_id]["status"] = "error"
+        tasks[task_id]["error"] = str(e)
 
 @router.post("/run")
 async def run_tests(req: RunTestRequest):
-    # 构建 pytest 路径
+    # 1. 生成任务ID
+    task_id = str(uuid.uuid4())
+    tasks[task_id] = {"status": "running"}
+    # 2. 解析目标
     if req.type == ExecType.all:
         target = "testcases"
     elif req.type == ExecType.module:
@@ -80,73 +71,20 @@ async def run_tests(req: RunTestRequest):
     elif req.type == ExecType.file:
         if not req.module or not req.file:
             return JSONResponse(status_code=400, content={"error": "module 和 file 必填"})
-        target = f"testcases/{req.module}/{req.file}.py"
+        target = f"testcases/{req.module}/{req.file}"
     else:
-        return JSONResponse(status_code=400, content={"error": "未知的执行类型"})
+        return JSONResponse(status_code=400, content={"error": "type参数非法"})
+    # 3. 启动后台线程
+    thread = threading.Thread(target=run_tests_background, args=(task_id, target, req.dict()))
+    thread.start()
+    # 4. 立即返回
+    return {"task_id": task_id, "status": "started"}
 
-    if not os.path.exists(target):
-        return JSONResponse(status_code=400, content={"error": f"目标不存在: {target}"})
-
-    results_dir = "reports/allure-results"
-    report_dir = "reports/allure-report"
-    history_dir = os.path.join(report_dir, "history")
-    results_history_dir = os.path.join(results_dir, "history")
-
-    # 0. 清空 allure-results 目录
-    if os.path.exists(results_dir):
-        shutil.rmtree(results_dir)
-    os.makedirs(results_dir, exist_ok=True)
-
-    # 1. 复制上一次报告的 history 到 allure-results/history
-    if os.path.exists(history_dir):
-        shutil.copytree(history_dir, results_history_dir, dirs_exist_ok=True)
-
-    # 2. 运行 pytest，生成 allure-results
-    try:
-        result = subprocess.run(
-            ["pytest", target, "--alluredir=reports/allure-results", "--disable-warnings", "-q"],
-            capture_output=True, text=True, timeout=1200
-        )
-    except Exception as e:
-        send_dingtalk_msg(f"[自动化测试异常]\nError: {str(e)}")
-        return JSONResponse(status_code=500, content={"error": f"pytest 执行异常: {str(e)}"})
-
-    # 3. 生成 Allure HTML 报告
-    try:
-        gen_result = subprocess.run(
-            ["allure", "generate", "reports/allure-results", "-o", "reports/allure-report", "--clean", "--report-language", "zh"],
-            capture_output=True, text=True, timeout=120
-        )
-        
-        # 4. 修改报告标题
-        fix_report_title(report_dir)
-        
-    except Exception as e:
-        send_dingtalk_msg(f"[Allure 报告生成异常]\nError: {str(e)}")
-        return JSONResponse(status_code=500, content={"error": f"allure generate 执行异常: {str(e)}"})
-
-    task_id = str(uuid.uuid4())
-    msg = (
-        f"[自动化测试完成]\n任务ID: {task_id}\n"
-        f"ReturnCode: {result.returncode}\n"
-        f"AllureGenCode: {gen_result.returncode}\n"
-        f"AllureGenOut: {gen_result.stdout[-1000:]}\n"
-        f"AllureGenErr: {gen_result.stderr[-1000:]}\n"
-        f"Stdout:\n{result.stdout[-1000:]}\nStderr:\n{result.stderr[-1000:]}"
-    )
-    send_dingtalk_msg(msg)
-
-    return {
-        "msg": "用例执行完成",
-        "task_id": task_id,
-        "pytest_returncode": result.returncode,
-        "pytest_stdout": result.stdout[-1000:],
-        "pytest_stderr": result.stderr[-1000:],
-        "allure_returncode": gen_result.returncode,
-        "allure_stdout": gen_result.stdout[-1000:],
-        "allure_stderr": gen_result.stderr[-1000:]
-    }
-
+@router.get("/status/{task_id}")
+async def get_status(task_id: str):
+    if task_id not in tasks:
+        return JSONResponse(status_code=404, content={"error": "任务不存在"})
+    return tasks[task_id]
 
 if __name__ == "__main__":
     """Todo: 测试用例执行"""
