@@ -16,8 +16,8 @@ sys.path.insert(0, str(project_root))
 
 from utils.yaml_util import YamlUtil
 from utils.exception_util import handle_exception, safe_api_call, handle_class_method_exception
+from utils.cache_util import CacheUtil
 from testcases.comm.base_test import BaseTest
-from testcases.sls.test_00_so_config_check import TestSalesOrderConfig
 
 
 class TestSalesOrderCreate(BaseTest):
@@ -32,10 +32,13 @@ class TestSalesOrderCreate(BaseTest):
         """测试类初始化，获取必要的ID和配置信息"""
         super().setup_class()
         
-        # 初始化订单配置
-        cls.order_config = TestSalesOrderConfig()
+        # 初始化缓存工具并加载销售订单缓存
+        cache_file_path = project_root / "testdata" / "cache" / "sls_cache.json"
+        CacheUtil.init(cache_dir="testdata/cache")  # 先初始化缓存工具
+        CacheUtil.load_sls_cache(str(cache_file_path))  # 再加载缓存文件
         
-        # 初始化测试数据
+        
+        # 初始化订单配置数据
         cls.so_type_id = cls.ids.get("so_type_id")
         cls.cust_id = cls.ids.get("cust_id")
         cls.com_org_id = cls.ids.get("com_org_id")
@@ -47,7 +50,6 @@ class TestSalesOrderCreate(BaseTest):
         cls.cust_id = cls.ids.get("cust_id")
         cls.sls_curr_id = cls.ids.get("sls_curr_id")
         cls.base_curr_id = cls.ids.get("base_curr_id")
-        
         
         cls.addr_id = None
         cls.addr_detail = None
@@ -77,8 +79,6 @@ class TestSalesOrderCreate(BaseTest):
 
         cls.logger.info(f"初始化渲染数量: {cls.render_qty}")
         cls.logger.info("测试类初始化完成")
-        
-        
 
     def _init_sales_order(self, order_type="STND"):
         """初始化销售订单
@@ -90,8 +90,8 @@ class TestSalesOrderCreate(BaseTest):
         data = self.so_params.get(url, {})
         
         # 获取订单类型和订单行类型的ID
-        order_type_id = self.order_config.get_order_type_id(order_type)
-        order_line_type_id = self.order_config.get_order_line_type_id(order_type)
+        order_type_id = CacheUtil.get_order_type_id(order_type)
+        order_line_type_id = CacheUtil.get_order_line_type_id("NORM")  # 默认使用常规销售行类型
         
         # 更新请求参数
         data['params']['request']['orderTypeId'] = order_type_id
@@ -256,8 +256,8 @@ class TestSalesOrderCreate(BaseTest):
         data = self.so_params.get(url, {})
         
         # 获取订单类型和订单行类型的ID
-        order_type_id = self.order_config.get_order_type_id(order_type)
-        order_line_type_id = self.order_config.get_order_line_type_id(order_type)
+        order_type_id = CacheUtil.get_order_type_id(order_type)
+        order_line_type_id = CacheUtil.get_order_line_type_id("NORM")  # 默认使用常规销售行类型
         
         # 更新请求参数
         data['params']['request']['orderTypeId'] = order_type_id
@@ -418,8 +418,8 @@ class TestSalesOrderCreate(BaseTest):
                 url = self.so_path["保存订单"]
                 
                 # 获取订单类型和订单行类型的ID
-                order_type_id = self.order_config.get_order_type_id(order_type)
-                order_line_type_id = self.order_config.get_order_line_type_id(order_type)
+                order_type_id = CacheUtil.get_order_type_id(order_type)
+                order_line_type_id = CacheUtil.get_order_line_type_id("NORM")  # 默认使用常规销售行类型
                 
                 # 记录订单类型信息
                 self.logger.info(f"订单类型: {order_type}")
@@ -512,15 +512,15 @@ class TestSalesOrderCreate(BaseTest):
 
     
     def teardown_class(self):
-        self.clear_so
+        # self.clear_so --todo
         self.logger.info("销售订单创建测试类清理")
 
 
 if __name__ == "__main__":
-    # allure_dir = os.path.join(project_root, "reports", "allure-results")
-    # pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])
-    test = TestSalesOrderCreate()
-    test.setup_class()
-    test.test_save_multiple_order_types()
-    test.test_submit_multiple_order_types()
+    allure_dir = os.path.join(project_root, "reports", "allure-results")
+    pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])
+    # test = TestSalesOrderCreate()
+    # test.setup_class()
+    # test.test_save_multiple_order_types()
+    # test.test_submit_multiple_order_types()
     

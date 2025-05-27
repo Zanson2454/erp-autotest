@@ -31,20 +31,16 @@ class TestSettDocBusiCheck(BaseTest):
     def get_sett_doc_id(self):
         """获取不同状态的结算单ID 已创建，已确认 """
         sql = """
-        (
-            SELECT * FROM sett_doc_tr
-            WHERE deleted = 0 AND sett_doc_status = 'CREATED'
-            ORDER BY created_at DESC
-            LIMIT 1
-        )
-            UNION ALL
-        (
-            SELECT * FROM sett_doc_tr
-            WHERE deleted = 0 AND sett_doc_status = 'CONFIRMED'
-            ORDER BY created_at DESC
-            LIMIT 1
-        )
-        ORDER BY created_at,sett_doc_status DESC 
+        SELECT * FROM sett_doc_tr
+        WHERE deleted = 0
+        AND sett_doc_status IN ('CREATED', 'CONFIRMED')
+        ORDER BY
+        created_at DESC,  
+        CASE
+        WHEN sett_doc_status = 'CREATED' THEN 1  -- CREATED 排第1
+        WHEN sett_doc_status = 'CONFIRMED' THEN 2  -- CONFIRMED 排第2
+        END
+        LIMIT 2 
         """
         result = self.db.query(sql)
         return [result[0]["id"],result[1]["id"]]
@@ -78,9 +74,51 @@ class TestSettDocBusiCheck(BaseTest):
             elif index == 1:
                 assert result.get("success",{}) == False
                 assert result.get("err",{}).get("msg",{}) == "结算单异步任务提交失败，请确认结算单异步执行状态！"
+                
+    def test_cancel_sett_doc(self):
+        """测试结算单取消汇单"""
+        url = self.fin_path["SETT-DOC-结算单取消服务"]["path"]
+        data = self.fin_params.get(url, {})
+        sett_doc_ids  = self.get_sett_doc_id()
+        for index, sett_doc_id in enumerate(sett_doc_ids):
+            
+            # 获取已经汇单的结算单对应的结算项的id
+            sett_item_sql=f"""
+                select * from sett_item_tr where sett_doc_id={sett_doc_id}
+                """
+            sett_item_sql_result = self.db.query(sett_item_sql)
+            
+            # 取消汇单接口
+            data["params"]["request"][0]["id"] = sett_doc_id
+            result = self.http.post(url, json=data, description=f"结算单取消汇单 - ID: {sett_doc_id}")
+            time.sleep(2)
+            
+            # 获取取消汇单后的结算项id
+            sett_sql = f"""
+            select * from sett_item_tr where id={sett_item_sql_result[0]["id"]}
+            """
+            sett_sql_result = self.db.query(sett_sql)
+
+            #获取已经删除的结算单的逻辑删除字段
+            sql = f"""
+            select deleted
+            from sett_doc_tr where  id={sett_doc_id}
+            """
+            sql_result = self.db.query(sql)
+            
+            if index == 0:
+                self.assert_util.assert_response_success(result)
+                self.assert_util.assert_not_eq(sql_result[0]["deleted"], 0)
+                self.assert_util.assert_eq(sett_sql_result[0]["sett_item_status"], "RECONCILED")
+                self.assert_util.assert_eq(sett_sql_result[0]["sett_doc_id"], None)
+                self.assert_util.assert_eq(sett_sql_result[0]["is_sdc_cancel_relv"], 1)
+            elif index == 1:
+                assert result.get("success",{}) == False
+                assert result.get("err",{}).get("msg",{}) == "存在已确认的结算单，请重新选择后再进行操作"
+            
 if __name__ == "__main__":
     test = TestSettDocBusiCheck()
     test.setup_class()
-    test.test_sett_doc_confirm()
+    test.test_cancel_sett_doc()
             
             

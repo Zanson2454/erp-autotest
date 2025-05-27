@@ -1,0 +1,33 @@
+{
+    "ORDER_TYPES": {
+        "STND": "标准销售",
+        "THRD": "第三方销售",
+        "CENT": "集中销售"
+    },
+    "ORDER_LINE_TYPES": {
+        "NORM": "常规销售",
+        "THRD": "三方销售",
+        "CENT": "集中销售"
+    },
+    "ORDER_TYPE_LINE_COMBINATIONS": {
+        "STND": [
+            "NORM"
+        ],
+        "THRD": [
+            "THRD"
+        ],
+        "CENT": [
+            "CENT"
+        ]
+    },
+    "ORDER_TYPE_IDS": {
+        "STND": 2101001,
+        "THRD": 14010001,
+        "CENT": 14012001
+    },
+    "ORDER_LINE_TYPE_IDS": {
+        "NORM": 2103001,
+        "THRD": 2000005,
+        "CENT": 2001002
+    }
+}

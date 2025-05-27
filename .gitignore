@@ -65,7 +65,6 @@ db.sqlite3-journal
 
 # 忽略配置数据
 .env
-*reports/*
 *logs/*
 .DS_Store
 **/.DS_Store
@@ -73,8 +72,9 @@ db.sqlite3-journal
 .cursor/
 .DS_Store
 
-
-# 忽略本地报告
-
+# 忽略 Allure 结果和报告内容，但保留目录结构
 reports/allure-results/*
+!reports/allure-results/.gitkeep
+
 reports/allure-report/*
+!reports/allure-report/.gitkeep
