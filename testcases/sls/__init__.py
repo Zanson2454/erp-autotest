@@ -37,6 +37,33 @@ class SlsBase:
     ORDER_LINE_TYPES = data["ORDER_LINE_TYPES"]
     ORDER_TYPE_LINE_COMBINATIONS = data["ORDER_TYPE_LINE_COMBINATIONS"]
     
+    @classmethod
+    def get_order_type_id(cls, order_type_code: str):
+        """通过订单类型编码获取订单类型ID（直接用 ORDER_TYPES 字典）"""
+        if order_type_code in cls.ORDER_TYPES:
+            return order_type_code  # 如果有独立id字段可返回id，否则返回code本身
+        raise ValueError(f"未找到订单类型: {order_type_code}")
+
+    @classmethod
+    def get_order_type_name(cls, order_type_code: str):
+        """通过订单类型编码获取订单类型名称"""
+        for item in cls.ORDER_TYPES:
+            if item["so_type_code"] == order_type_code:
+                return item["so_item_type_name"]
+        raise ValueError(f"未找到订单类型: {order_type_code}")
+
+    @classmethod
+    def get_order_line_type_id(cls, order_line_type_code: str):
+        """通过订单行类型编码获取订单行类型ID"""
+        for code, name in cls.ORDER_LINE_TYPES.items():
+            if code == order_line_type_code:
+                return code  # 如果有id字段可返回id，否则返回code本身
+        raise ValueError(f"未找到订单行类型: {order_line_type_code}")
+
+    @classmethod
+    def get_order_line_type_name(cls, order_line_type_code: str):
+        """通过订单行类型编码获取订单行类型名称"""
+        return cls.ORDER_LINE_TYPES.get(order_line_type_code) or f"未找到订单行类型: {order_line_type_code}"
     
 if __name__ == "__main__":
    sls_base = SlsBase()

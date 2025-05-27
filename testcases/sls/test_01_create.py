@@ -15,12 +15,13 @@ project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 from utils.yaml_util import YamlUtil
-from utils.exception_util import handle_exception, safe_api_call, handle_class_method_exception
+from utils.exception_util import  safe_api_call, handle_class_method_exception
 from utils.cache_util import CacheUtil
 from testcases.comm.base_test import BaseTest
+from testcases.sls import SlsBase
 
 
-class TestSalesOrderCreate(BaseTest):
+class TestSalesOrderCreate(BaseTest,SlsBase):
     """销售订单创建测试类"""
     
     # 定义要测试的订单类型
@@ -31,11 +32,6 @@ class TestSalesOrderCreate(BaseTest):
     def setup_class(cls):
         """测试类初始化，获取必要的ID和配置信息"""
         super().setup_class()
-        
-        # 初始化缓存工具并加载销售订单缓存
-        cache_file_path = project_root / "testdata" / "cache" / "sls_cache.json"
-        CacheUtil.init(cache_dir="testdata/cache")  # 先初始化缓存工具
-        CacheUtil.load_sls_cache(str(cache_file_path))  # 再加载缓存文件
         
         
         # 初始化订单配置数据
@@ -66,17 +62,6 @@ class TestSalesOrderCreate(BaseTest):
         cls.order_id = None
         cls.render_qty = random.randint(1, 99)  # 生成1-99之间的随机整数
         
-        # 加载配置文件
-        cls.base_api_path = project_root / "testdata" / "sls" / "sls_api_path.yaml"
-        cls.base_config_path = project_root / "testdata" / "sls" / "sls_api_params.yaml"
-        
-        # 当前用例集所需接口
-        cls.yaml_util = YamlUtil()
-        cls.so_path = cls.yaml_util.read_yaml(cls.base_api_path)["销售订单"]["订单管理"]
-        
-        # 前用例集所需参数
-        cls.so_params = cls.yaml_util.read_yaml(cls.base_config_path).get("api_params", {})
-
         cls.logger.info(f"初始化渲染数量: {cls.render_qty}")
         cls.logger.info("测试类初始化完成")
 
@@ -86,13 +71,13 @@ class TestSalesOrderCreate(BaseTest):
         Args:
             order_type: 订单类型，默认为标准销售(STND)
         """
-        url = self.so_path["初始化订单"]
-        data = self.so_params.get(url, {})
+        url = self.sls_api_paths["订单管理"]["初始化订单"]
+        data = self.sls_api_params.get(url, {})
         
         # 获取订单类型和订单行类型的ID
-        print(CacheUtil.get_order_type_id(order_type))
-        order_type_id = CacheUtil.get_order_type_id(order_type)
-        order_line_type_id = CacheUtil.get_order_line_type_id("NORM")  # 默认使用常规销售行类型
+        print(SlsBase.get_order_type_id(order_type))
+        order_type_id = SlsBase.get_order_type_id(order_type)
+        order_line_type_id = SlsBase.get_order_line_type_id("NORM")  # 默认使用常规销售行类型
         
         # 更新请求参数
         data['params']['request']['orderTypeId'] = order_type_id
@@ -121,9 +106,9 @@ class TestSalesOrderCreate(BaseTest):
 
     def _query_customer_info(self):
         """查询客户信息"""
-        url = self.so_path["查询客户信息"]  
+        url = self.sls_api_paths["订单管理"]["查询客户信息"]  
         self.logger.info(f"查询客户信息URL: {url}")
-        data = self.so_params.get(url, {})
+        data = self.sls_api_params.get(url, {})
         self.logger.debug(f"查询客户信息请求数据: {json.dumps(data, indent=2, ensure_ascii=False)}")
         data['params']['request']['pageable']['conditionGroup']['conditions'][0]['conditions'][0]['conditions'][0]['rightValue']['constValue'] = "AUTOTEST_CUST"  
        
@@ -137,8 +122,8 @@ class TestSalesOrderCreate(BaseTest):
         
     def _render_addr_info(self):
         """渲染地址信息"""
-        url = self.so_path["基于客户信息渲染地址信息"]
-        data = self.so_params.get(url, {})
+        url = self.sls_api_paths["订单管理"]["基于客户信息渲染地址信息"]
+        data = self.sls_api_params.get(url, {})
         data['params']['request']['custId'] = {"id": self.cust_id}
         result = self.http.post(url, json=data, description="基于客户信息渲染地址信息")
         addr_info = result.get("data", {}).get("data", {})
@@ -150,8 +135,8 @@ class TestSalesOrderCreate(BaseTest):
 
     def _query_partner(self):
         """查询相关方"""
-        url = self.so_path["查询相关方"]
-        data = self.so_params.get(url, {})
+        url = self.sls_api_paths["订单管理"]["查询相关方"]
+        data = self.sls_api_params.get(url, {})
         data['params']['request']['soTypeId'] = {"id": self.so_type_id} #更新变量
         data['params']['request']['custId'] = {"id": self.cust_id} #更新变量
         data['params']['request']['slsPerson'] = self.sls_person_obj #更新变量
@@ -176,8 +161,8 @@ class TestSalesOrderCreate(BaseTest):
 
     def _query_sales_organization(self):
         """查询销售组织列表"""
-        url = self.so_path["查询销售组织"]
-        data = self.so_params.get(url, {})
+        url = self.sls_api_paths["订单管理"]["查询销售组织"]
+        data = self.sls_api_params.get(url, {})
         data['params']['request']['pageable']['conditionGroup']['conditions'][0]['conditions'][0]['conditions'][0]['rightValue']['constValue'] = "AUTOTEST_SLS_ORG" #更新变量
         result = self.http.post(url, json=data, description="查询销售组织列表")
         self.logger.debug(f"销售组织列表查询响应: {result}")
@@ -192,8 +177,8 @@ class TestSalesOrderCreate(BaseTest):
 
     def _query_materials(self):
         """查询物料列表"""
-        url = self.so_path["查询物料"]
-        data = self.so_params.get(url, {})
+        url = self.sls_api_paths["订单管理"]["查询物料"]
+        data = self.sls_api_params.get(url, {})
         data['params']['request']['slsOrgId'] = self.sls_org_id #更新变量
         data['params']['request']['slsDcId'] = self.sls_dc_id #更新变量
 
@@ -252,13 +237,13 @@ class TestSalesOrderCreate(BaseTest):
         if not hasattr(self, 'mat_obj') or self.mat_obj is None:
             self._query_materials()
         
-        url = self.so_path["渲染订单行"]
+        url = self.sls_api_paths["订单管理"]["渲染订单行"]
         curr_time = int(datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp() * 1000)
-        data = self.so_params.get(url, {})
+        data = self.sls_api_params.get(url, {})
         
         # 获取订单类型和订单行类型的ID
-        order_type_id = CacheUtil.get_order_type_id(order_type)
-        order_line_type_id = CacheUtil.get_order_line_type_id("NORM")  # 默认使用常规销售行类型
+        order_type_id = SlsBase.get_order_type_id(order_type)
+        order_line_type_id = SlsBase.get_order_line_type_id("NORM")  # 默认使用常规销售行类型
         
         # 更新请求参数
         data['params']['request']['orderTypeId'] = order_type_id
@@ -307,8 +292,8 @@ class TestSalesOrderCreate(BaseTest):
         try:
             # 1. 准备请求参数
             with allure.step("准备定价参数"):
-                url = self.so_path["自动定价"]
-                data = self.so_params.get(url, {})
+                url = self.sls_api_paths["订单管理"]["自动定价"]
+                data = self.sls_api_params.get(url, {})
                 data['params']['request']['soTypeId'] = {"id": self.so_type_id} #更新变量
                 data['params']['request']['soDocDate'] = int(datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp() * 1000) #更新变量
                 data['params']['request']['priceCalcDate'] = int(datetime.now().timestamp() * 1000) #更新变量
@@ -416,11 +401,11 @@ class TestSalesOrderCreate(BaseTest):
 
             # 3. 保存或提交订单
             with allure.step(f"{'提交' if is_submit else '保存'}{order_type}类型订单"):
-                url = self.so_path["保存订单"]
+                url = self.sls_api_paths["订单管理"]["保存订单"]
                 
                 # 获取订单类型和订单行类型的ID
-                order_type_id = CacheUtil.get_order_type_id(order_type)
-                order_line_type_id = CacheUtil.get_order_line_type_id("NORM")  # 默认使用常规销售行类型
+                order_type_id = SlsBase.get_order_type_id(order_type)
+                order_line_type_id = SlsBase.get_order_line_type_id("NORM")  # 默认使用常规销售行类型
                 
                 # 记录订单类型信息
                 self.logger.info(f"订单类型: {order_type}")
@@ -518,10 +503,10 @@ class TestSalesOrderCreate(BaseTest):
 
 
 if __name__ == "__main__":
-    allure_dir = os.path.join(project_root, "reports", "allure-results")
-    pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])
-    # test = TestSalesOrderCreate()
-    # test.setup_class()
-    # test.test_save_multiple_order_types()
-    # test.test_submit_multiple_order_types()
+    # allure_dir = Path(project_root) / "reports" / "allure-results"
+    # pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])
+    test = TestSalesOrderCreate()
+    test.setup_class()
+    test.test_save_multiple_order_types()
+    test.test_submit_multiple_order_types()
     
