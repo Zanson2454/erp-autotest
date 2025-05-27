@@ -53,9 +53,13 @@ def run_pytest_background(target: str, task_id: str):
         )
         # 3. 生成 Allure HTML 报告
         gen_result = subprocess.run(
-            ["allure", "generate", "reports/allure-results", "-o", "reports/allure-report", "--clean"],
+            ["allure", "generate", "reports/allure-results", "-o", "reports/allure-report", "--clean", "--report-language", "zh"],
             capture_output=True, text=True, timeout=120
         )
+        
+        # 4. 修改报告标题
+        fix_report_title(report_dir)
+        
         msg = (
             f"[自动化测试完成]\n任务ID: {task_id}\n"
             f"ReturnCode: {result.returncode}\n"
