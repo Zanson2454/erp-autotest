@@ -68,7 +68,7 @@ class FinSettlementFactory:
         DBManager.init(db_config)
         # 1. 尝试从数据库查询
         data = cls._query_settlement_doc(status)
-        if  data:
+        if   data:
             Loggers.info(f"从数据库获取到结算单数据: {data.get('id')}")
             return data
             

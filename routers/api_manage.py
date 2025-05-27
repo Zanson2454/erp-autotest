@@ -7,6 +7,7 @@ import os
 import uuid
 import requests
 import shutil
+from utils.fix_report import fix_report_title
 
 # 钉钉机器人Webhook（请替换为你的真实token）
 DINGTALK_WEBHOOK = "https://oapi.dingtalk.com/robot/send?access_token=YOUR_TOKEN_HERE"
@@ -113,9 +114,13 @@ async def run_tests(req: RunTestRequest):
     # 3. 生成 Allure HTML 报告
     try:
         gen_result = subprocess.run(
-            ["allure", "generate", "reports/allure-results", "-o", "reports/allure-report", "--clean"],
+            ["allure", "generate", "reports/allure-results", "-o", "reports/allure-report", "--clean", "--report-language", "zh"],
             capture_output=True, text=True, timeout=120
         )
+        
+        # 4. 修改报告标题
+        fix_report_title(report_dir)
+        
     except Exception as e:
         send_dingtalk_msg(f"[Allure 报告生成异常]\nError: {str(e)}")
         return JSONResponse(status_code=500, content={"error": f"allure generate 执行异常: {str(e)}"})
