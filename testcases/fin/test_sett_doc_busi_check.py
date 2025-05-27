@@ -15,7 +15,8 @@ sys.path.insert(0, str(project_root))
 from testcases.comm.base_test import BaseTest
 from utils.yaml_util import YamlUtil
 from testcases.fin.test_sett_check import TestSettlementItem
-
+from data_factory.fin_sett_factory import FinSettlementFactory
+from utils.log_util import Loggers
 @allure.epic("ERP通业财模块")
 @allure.feature("结算管理")
 class TestSettDocBusiCheck(BaseTest):
@@ -30,20 +31,20 @@ class TestSettDocBusiCheck(BaseTest):
         cls.fin_params = cls.yaml_util.read_yaml(cls.base_api_params).get("api_params", {})
     def get_sett_doc_id(self):
         """获取不同状态的结算单ID 已创建，已确认 """
+        created_sett_doc = FinSettlementFactory.get_or_create_settlement_doc("CREATED")
+        created_sett_doc_id = created_sett_doc.get("id")
+        Loggers.info(f"已创建结算单ID: {created_sett_doc_id}")
+        
         sql = """
         SELECT * FROM sett_doc_tr
         WHERE deleted = 0
-        AND sett_doc_status IN ('CREATED', 'CONFIRMED')
+        AND sett_doc_status = 'CONFIRMED'
         ORDER BY
-        created_at DESC,  
-        CASE
-        WHEN sett_doc_status = 'CREATED' THEN 1  -- CREATED 排第1
-        WHEN sett_doc_status = 'CONFIRMED' THEN 2  -- CONFIRMED 排第2
-        END
-        LIMIT 2 
+        created_at DESC
+        LIMIT 1 
         """
         result = self.db.query(sql)
-        return [result[0]["id"],result[1]["id"]]
+        return [created_sett_doc_id,result[0]["id"]]
         
     # todo 
     def test_sett_doc_remark(self):
@@ -119,6 +120,6 @@ class TestSettDocBusiCheck(BaseTest):
 if __name__ == "__main__":
     test = TestSettDocBusiCheck()
     test.setup_class()
-    test.test_cancel_sett_doc()
+    test.test_sett_doc_confirm()
             
             
