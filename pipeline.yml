@@ -1,43 +1,39 @@
 version: "1.1"
 name: ""
 stages:
-  # 第一阶段：代码检出
   - stage:
       - git-checkout:
           alias: git-checkout
           description: 代码仓库克隆
           params:
-            depth: 1  # 浅克隆，只获取最新的提交，加快克隆速度
-  # 第二阶段：构建Docker镜像
+            depth: 1
   - stage:
       - dockerfile:
           alias: pack-testapi
           description: 针对自定义 dockerfile 打包，产出可运行镜像
           params:
             path: Dockerfile
-            workdir: ${git-checkout}  # 工作目录，使用第一阶段检出的代码目录
-  # 第三阶段：制品发布
+            workdir: ${git-checkout}
   - stage:
       - release:
           alias: release
+          description: 用于打包完成时，向dicehub 提交完整可部署的dice.yml。用户若没在pipeline.yml里定义该action，CI会自动在pipeline.yml里插入该action
           version: "1.0"
           params:
-            dice_yml: ${git-checkout}/dice.yml    # dice.yml配置文件路径
+            dice_yml: ${git-checkout}/dice.yml
             image:
-              erp-autotest: ${pack-testapi:OUTPUT:image}  # 制品名称，使用第二阶段构建的镜像
-  # 第四阶段：部署到Erda平台
+              erp-autotest: ${pack-testapi:OUTPUT:image}
   - stage:
       - dice:
           alias: dice
           description: 用于 Erda 平台部署应用服务
           params:
-            release_id_path: ${release}  # 使用第三阶段的发布ID
-  # 第五阶段：自动化测试阶段（服务已启动，自动触发用例）
+            release_id_path: ${release}
   - stage:
       - custom-script:
           alias: run-api-test
-          description: 服务启动后自动化接口测试
-          params:
-            commands:
-              - pytest --alluredir=reports/allure-results testcases && allure generate reports/allure-results -o reports/allure-report --clean
-              # 可选：上传 Allure 报告到制品库或 OSS
+          version: "1.0"
+          image: ${pack-testapi:OUTPUT:image}
+          commands:
+            - pytest --alluredir=reports/allure-results testcases
+            - allure generate reports/allure-results -o reports/allure-report --clean
