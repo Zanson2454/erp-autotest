@@ -1,0 +1,23 @@
+2025-05-27 16:20:36.921 | INFO     | utils.log_util:info:65 - 开始测试: test_submit_multiple_order_types
+2025-05-27 16:20:36.923 | ERROR    | utils.log_util:error:77 - STND类型销售订单提交失败: 未找到订单类型: STND
+2025-05-27 16:20:36.924 | ERROR    | utils.exception_util:wrapper:186 - API调用失败: 多种类型销售订单提交失败
+2025-05-27 16:20:36.924 | ERROR    | utils.exception_util:wrapper:187 - 错误上下文: {'timestamp': '2025-05-27T16:20:36.924433', 'function': {'name': 'test_submit_multiple_order_types', 'module': 'testcases.sls.test_01_create', 'signature': '(self)'}, 'arguments': {'args': ['<testcases.sls.test_01_create.TestSalesOrderCreate object at 0x105519450>'], 'kwargs': {}}, 'error': {'type': 'ValueError', 'message': '未找到订单类型: STND'}, 'caller': {'filename': '/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py', 'line_number': 101, 'function': '_enrich_error_context', 'locals': {'args': '(<testcases.sls.test_01_create.TestSalesOrderCreate object at 0x105519450>,)', 'kwargs': '{}', 'error': '未找到订单类型: STND', 'additional_context': 'None'}}, 'api_error': {'message': '多种类型销售订单提交失败', 'original_error': '未找到订单类型: STND'}}
+2025-05-27 16:20:36.926 | ERROR    | utils.exception_util:wrapper:188 - 异常堆栈:
+Traceback (most recent call last):
+  File "/Users/anson/Documents/Erda-project/erp-autotest/utils/exception_util.py", line 173, in wrapper
+    return func(*args, **kwargs)
+  File "/Users/anson/Documents/Erda-project/erp-autotest/testcases/sls/test_01_create.py", line 512, in test_submit_multiple_order_types
+    self._save_or_submit_order(order_type=order_type, is_submit=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anson/Documents/Erda-project/erp-autotest/testcases/sls/test_01_create.py", line 399, in _save_or_submit_order
+    self._init_sales_order(order_type)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/Users/anson/Documents/Erda-project/erp-autotest/testcases/sls/test_01_create.py", line 93, in _init_sales_order
+    print(CacheUtil.get_order_type_id(order_type))
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/Users/anson/Documents/Erda-project/erp-autotest/utils/cache_util.py", line 110, in get_order_type_id
+    raise ValueError(f"未找到订单类型: {order_type}")
+ValueError: 未找到订单类型: STND
+
+2025-05-27 16:20:36.993 | INFO     | utils.log_util:info:65 - 销售订单创建测试类清理
+2025-05-27 16:20:36.995 | INFO     | utils.log_util:info:65 - 测试会话结束

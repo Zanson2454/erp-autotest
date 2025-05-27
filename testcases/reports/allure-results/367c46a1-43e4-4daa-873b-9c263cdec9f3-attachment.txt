@@ -1,0 +1,227 @@
+2025-05-27 16:10:54.477 | INFO     | utils.cache_util:get:44 - 读取缓存文件: /Users/anson/Documents/Erda-project/erp-autotest/testdata/cache/gen_init_cache.json
+2025-05-27 16:10:54.478 | INFO     | utils.cache_util:get:50 - 缓存文件已过期: /Users/anson/Documents/Erda-project/erp-autotest/testdata/cache/gen_init_cache.json
+2025-05-27 16:10:54.478 | INFO     | utils.log_util:info:65 - 缓存数据不存在或已过期，开始初始化数据
+2025-05-27 16:10:54.510 | INFO     | utils.yaml_util:read_yaml:38 - 读取YAML文件: /Users/anson/Documents/Erda-project/erp-autotest/testdata/init/gen_init.yaml
+2025-05-27 16:10:54.669 | INFO     | utils.log_util:info:65 - 数据库连接成功 [host=rm-bp1f14585v00oh99t.mysql.rds.aliyuncs.com, port=3306]
+2025-05-27 16:10:54.735 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id,username,mobile,nickname from iam_test.iam_user where mobile='17376596912' and deleted_id=0
+
+2025-05-27 16:10:54.736 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"id": 540175374525637, "username": "zhangang", "mobile": "17376596912", "nickname": "章昂"}]
+2025-05-27 16:10:54.757 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id as 'coun_id', coun_code, coun_name 
+FROM gen_coun_type_cf 
+WHERE coun_code='CHINA' AND deleted=0 LIMIT 1
+
+2025-05-27 16:10:54.758 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"coun_id": 14037001, "coun_code": "CHINA", "coun_name": "中国"}]
+2025-05-27 16:10:54.777 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id as 'curr_id', curr_code, curr_name 
+FROM gen_curr_type_cf 
+WHERE curr_code='CNY' AND deleted=0 LIMIT 1
+
+2025-05-27 16:10:54.777 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"curr_id": 2000001, "curr_code": "CNY", "curr_name": "人民币"}]
+2025-05-27 16:10:55.059 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id as 'language_id', language_code, language_name 
+FROM gen_language_type_cf 
+WHERE language_code='CHINESE' AND deleted=0 LIMIT 1
+
+2025-05-27 16:10:55.059 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"language_id": 2000001, "language_code": "CHINESE", "language_name": "中文"}]
+2025-05-27 16:10:55.081 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id as 'timezone_id', timezone_code, timezone_desc 
+FROM gen_timezone_type_cf 
+WHERE status='INACTIVE' AND deleted=0 LIMIT 1
+
+2025-05-27 16:10:55.082 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"timezone_id": 2000001, "timezone_code": "UTC-8", "timezone_desc": "东八区"}]
+2025-05-27 16:10:55.110 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id as 'exchange_rate_type_id', 
+       type_code as 'exchange_rate_type_code', 
+       type_name as 'exchange_rate_type_name' 
+FROM gen_curr_exchange_rate_type_cf 
+WHERE type_code='HR' AND deleted=0 LIMIT 1
+
+2025-05-27 16:10:55.110 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"exchange_rate_type_id": 2000001, "exchange_rate_type_code": "HR", "exchange_rate_type_name": "固定汇率"}]
+2025-05-27 16:10:55.173 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id as 'tax_type_id', tax_code, tax, taxcate 
+FROM gen_tax_type_cf 
+WHERE deleted=0
+
+2025-05-27 16:10:55.174 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"tax_type_id": 2002001, "tax_code": "CN_PUR_01", "tax": 13.0, "taxcate": "J"}, {"tax_type_id": 2002002, "tax_code": "CN_SLS_01", "tax": 13.0, "taxcate": "X"}, {"tax_type_id": 2003001, "tax_code": "CN_PUR_02", "tax": 6.0, "taxcate": "J"}]
+2025-05-27 16:10:55.224 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id as 'mat_tax_type_id', tax_class_code, tax_class_desc 
+FROM gen_mat_tax_type_cf 
+WHERE deleted=0
+
+2025-05-27 16:10:55.225 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"mat_tax_type_id": 2001001, "tax_class_code": "NORM", "tax_class_desc": "销售或者进口货物"}, {"mat_tax_type_id": 2003001, "tax_class_code": "SERV", "tax_class_desc": "服务类"}, {"mat_tax_type_id": 2003002, "tax_class_code": "EXMT", "tax_class_desc": "免征税类"}]
+2025-05-27 16:10:55.290 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id as 'cust_tax_type_id', tax_class_code, tax_class_desc 
+FROM gen_cust_tax_type_cf 
+WHERE deleted=0
+
+2025-05-27 16:10:55.290 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"cust_tax_type_id": 2000001, "tax_class_code": "SMB", "tax_class_desc": "小规模纳税人"}, {"cust_tax_type_id": 2001001, "tax_class_code": "NORM", "tax_class_desc": "一般纳税人"}, {"cust_tax_type_id": 2002001, "tax_class_code": "EXMT", "tax_class_desc": "免征税对象"}]
+2025-05-27 16:10:55.358 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id as 'coun_tax_type_id', tax_type_code, tax_type_name 
+FROM gen_coun_tax_type_cf 
+WHERE deleted=0
+
+2025-05-27 16:10:55.359 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"coun_tax_type_id": 2000001, "tax_type_code": "TAX_CN", "tax_type_name": "中国税收类别"}]
+2025-05-27 16:10:55.483 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id as 'uom_id', uom_code, uom_type, uom_desc 
+FROM gen_uom_type_cf 
+WHERE deleted=0
+
+2025-05-27 16:10:55.484 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"uom_id": 2000001, "uom_code": "PC", "uom_type": "QTY", "uom_desc": "个"}, {"uom_id": 2001001, "uom_code": "PAC", "uom_type": "OTHER", "uom_desc": "套"}, {"uom_id": 2002009, "uom_code": "BOX", "uom_type": "QTY", "uom_desc": "箱"}, {"uom_id": 2002011, "uom_code": "TON", "uom_type": "MASS", "uom_desc": "吨"}, {"uom_id": 2002012, "uom_code": "TIME", "uom_type": "MASS", "uom_desc": "次"}, {"uom_id": 2004001, "uom_code": "QTY", "uom_type": "QTY", "uom_desc": "件"}, {"uom_id": 2004002, "uom_code": "DAY", "uom_type": "TIME", "uom_desc": "天"}, {"uom_id": 2004003, "uom_code": "M2", "uom_type": "AREA", "uom_desc": "平方米"}, {"uom_id": 2006001, "uom_code": "MON", "uom_type": "TIME", "uom_desc": "月"}, {"uom_id": 2007001, "uom_code": "KG", "uom_type": "MASS", "uom_desc": "千克"}, {"uom_id": 2009001, "uom_code": "BOTTLE", "uom_type": "QTY", "uom_desc": "瓶"}, {"uom_id": 2010001, "uom_code": "MIN", "uom_type": "TIME", "uom_desc": "分钟"}, {"uom_id": 2010002, "uom_code": "HOUR", "uom_type": "TIME", "uom_desc": "小时"}, {"uom_id": 14047001, "uom_code": "PAIR", "uom_type": "QTY", "uom_desc": "双"}, {"uom_id": 14048001, "uom_code": "HANDLE", "uom_type": "QTY", "uom_desc": "把"}, {"uom_id": 14049001, "uom_code": "MTQ", "uom_type": "VOL", "uom_desc": "立方米"}, {"uom_id": 14050001, "uom_code": "CMT", "uom_type": "L", "uom_desc": "厘米"}]
+2025-05-27 16:10:55.509 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id as 'bank_id', bank_code, bank_name, bank_mne_code 
+FROM gen_bank_cf 
+WHERE deleted=0 LIMIT 1
+
+2025-05-27 16:10:55.509 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"bank_id": 1000001, "bank_code": "HB", "bank_name": "湖北银行", "bank_mne_code": null}]
+2025-05-27 16:10:55.664 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id as 'wc_id', wc_head_code, wc_head_name, enable_status 
+FROM gen_wc_head_cf 
+WHERE enable_status="ENABLED" 
+AND JSON_CONTAINS(default_rest_date, '["SATURDAY","SUNDAY"]') 
+AND deleted=0
+
+2025-05-27 16:10:55.665 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"wc_id": 2001004, "wc_head_code": "GZRL001", "wc_head_name": "标准工作日历", "enable_status": "ENABLED"}]
+2025-05-27 16:10:55.686 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id as 'calendar_id', calendar_code, calendar_name, `status` 
+FROM gen_calendar_head_cf 
+WHERE calendar_name LIKE "%%标准会计期间%%" 
+AND deleted=0 
+AND `status`="ENABLED"
+
+2025-05-27 16:10:55.687 | DEBUG    | utils.log_util:debug:69 - 查询结果: []
+2025-05-27 16:10:55.708 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id, org_code, org_name, org_status, org_dimension_code, org_business_type_code
+FROM org_struct_md
+WHERE org_code = "AUTOTEST_GR_ORG" AND org_dimension_code='SCM_ORG_GRP' AND org_status="ENABLED" AND deleted=0
+LIMIT 1
+
+2025-05-27 16:10:55.709 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"id": 14507001, "org_code": "AUTOTEST_GR_ORG", "org_name": "集团(自动化)", "org_status": "ENABLED", "org_dimension_code": "SCM_ORG_GRP", "org_business_type_code": null}]
+2025-05-27 16:10:55.771 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id, org_code, org_name, org_status, org_dimension_code, org_business_type_codes
+FROM org_struct_md
+WHERE org_status="ENABLED" AND org_dimension_code="ADM_ORG_GRP" AND org_code = "AUTOTEST_ADM_ORG" AND org_business_type_codes='[\"ADM_ORG\"]' LIMIT 1
+
+2025-05-27 16:10:55.771 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"id": 14432002, "org_code": "AUTOTEST_ADM_ORG", "org_name": "行政组织(自动化)", "org_status": "ENABLED", "org_dimension_code": "ADM_ORG_GRP", "org_business_type_codes": "[\"ADM_ORG\"]"}]
+2025-05-27 16:10:55.793 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id, org_code, org_name, org_status, org_dimension_code, org_business_type_code
+FROM org_struct_md
+WHERE org_status="ENABLED" AND org_dimension_code="SCM_ORG_GRP" AND org_code="AUTOTEST_COM_ORG" AND org_business_type_codes= '[\"COM_ORG\"]' LIMIT 1
+
+2025-05-27 16:10:55.794 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"id": 14373001, "org_code": "AUTOTEST_COM_ORG", "org_name": "公司组织(自动化)", "org_status": "ENABLED", "org_dimension_code": "SCM_ORG_GRP", "org_business_type_code": "COM_ORG"}]
+2025-05-27 16:10:55.813 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id, org_code, org_name, org_status, org_dimension_code, org_business_type_code
+FROM org_struct_md
+WHERE org_status='ENABLED' AND org_dimension_code='SCM_ORG_GRP' AND org_code LIKE 'AUTOTEST%' AND org_business_type_codes = '[\"PUR_ORG\"]' LIMIT 1
+
+2025-05-27 16:10:55.813 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"id": 14376001, "org_code": "AUTOTEST_PUR_ORG", "org_name": "采购组织(自动化)", "org_status": "ENABLED", "org_dimension_code": "SCM_ORG_GRP", "org_business_type_code": "PUR_ORG"}]
+2025-05-27 16:10:55.873 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id, org_code, org_name, org_status, org_dimension_code, org_business_type_code
+FROM org_struct_md
+WHERE org_status='ENABLED' AND org_dimension_code='SCM_ORG_GRP' AND org_code LIKE 'AUTOTEST%' AND org_business_type_codes = '[\"INV_ORG\"]' LIMIT 1
+
+2025-05-27 16:10:55.874 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"id": 14375002, "org_code": "AUTOTEST_INV_ORG", "org_name": "库存组织(自动化)", "org_status": "ENABLED", "org_dimension_code": "SCM_ORG_GRP", "org_business_type_code": "INV_ORG"}]
+2025-05-27 16:10:55.893 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id, org_code, org_name, org_status, org_dimension_code, org_business_type_code
+FROM org_struct_md
+WHERE org_status='ENABLED' AND org_dimension_code='SCM_ORG_GRP' AND org_code LIKE 'AUTOTEST%' AND org_business_type_codes = '[\"SLS_ORG\"]' LIMIT 1
+
+2025-05-27 16:10:55.893 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"id": 14377001, "org_code": "AUTOTEST_SLS_ORG", "org_name": "销售组织(自动化)", "org_status": "ENABLED", "org_dimension_code": "SCM_ORG_GRP", "org_business_type_code": "SLS_ORG"}]
+2025-05-27 16:10:56.010 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id
+FROM org_struct_md
+WHERE org_status='ENABLED' AND org_dimension_code='ADM_ORG_GRP' AND org_code = 'AUTOTEST_DP_ORG' AND org_business_type_code='ADM_ORG' LIMIT 1
+
+2025-05-27 16:10:56.011 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"id": 14420004}]
+2025-05-27 16:10:56.080 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id
+FROM org_struct_md
+WHERE org_business_type_code='PLN_ORG' AND org_name LIKE '%自动化%'
+
+2025-05-27 16:10:56.081 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"id": 88884}, {"id": 88882121001}, {"id": 88882121002}, {"id": 88882121003}]
+2025-05-27 16:10:56.195 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id, name
+FROM org_employee_md
+WHERE name='admin' LIMIT 1
+
+2025-05-27 16:10:56.196 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"id": 14082001, "name": "admin"}]
+2025-05-27 16:10:56.222 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT a.id, a.`code`, a.`name`
+FROM org_sls_dc_cf a
+JOIN org_struct_md b ON JSON_CONTAINS(b.def13, CAST(a.id AS JSON), '$')
+WHERE a.deleted = 0 LIMIT 1
+
+2025-05-27 16:10:56.223 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"id": 14378001, "code": "AUTOTEST_SLS_DC_ORG", "name": "销售渠道(自动化)"}]
+2025-05-27 16:10:56.294 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id, org_code, org_name, org_status, org_dimension_code, org_business_type_code
+FROM org_struct_md
+WHERE org_status='ENABLED' AND org_dimension_code='SCM_ORG_GRP' AND org_code LIKE 'AUTOTEST%' AND org_business_type_code='INV_LOC' LIMIT 1
+
+2025-05-27 16:10:56.294 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"id": 14376002, "org_code": "AUTOTEST_INV_LOC_ORG", "org_name": "库存地点(自动化)", "org_status": "ENABLED", "org_dimension_code": "SCM_ORG_GRP", "org_business_type_code": "INV_LOC"}]
+2025-05-27 16:10:56.326 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id, `code`, `name`, `status`
+FROM gen_business_partner_md
+WHERE `status` = 'ENABLED' AND JSON_CONTAINS(partner_identity, '"SUPPLIER"') AND `code`='AUTOTEST_VEND' LIMIT 1
+
+2025-05-27 16:10:56.327 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"id": 2058001, "code": "AUTOTEST_VEND", "name": "供应商(自动化)", "status": "ENABLED"}]
+2025-05-27 16:10:56.348 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id, `code`, `name`, `status`
+FROM gen_business_partner_md
+WHERE `status` = 'ENABLED' AND JSON_CONTAINS(partner_identity, '"CUSTOMER"') AND `code`='AUTOTEST_CUST' LIMIT 1
+
+2025-05-27 16:10:56.349 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"id": 2059001, "code": "AUTOTEST_CUST", "name": "客户(自动化)", "status": "ENABLED"}]
+2025-05-27 16:10:56.415 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id 
+FROM gen_atp_group_md 
+WHERE code='ATP001' AND deleted=0 LIMIT 1
+
+2025-05-27 16:10:56.417 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"id": 2000001}]
+2025-05-27 16:10:56.537 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id, name, code 
+FROM inv_inv_type_cf 
+WHERE deleted=0 LIMIT 1
+
+2025-05-27 16:10:56.538 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"id": 2000001, "name": "非限制", "code": "10"}]
+2025-05-27 16:10:56.562 | DEBUG    | utils.log_util:debug:69 - 执行查询: SELECT id, so_type_code, so_type_name 
+FROM sls_so_type_cf 
+WHERE deleted=0 AND so_type_code='STND'
+
+2025-05-27 16:10:56.563 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"id": 2101001, "so_type_code": "STND", "so_type_name": "标准销售"}]
+2025-05-27 16:10:56.722 | DEBUG    | utils.log_util:debug:69 - 执行查询: select id, tax_code,taxcate,tax ,associated_tax_code 
+from gen_tax_type_cf 
+where deleted=0
+
+2025-05-27 16:10:56.722 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"id": 2002001, "tax_code": "CN_PUR_01", "taxcate": "J", "tax": 13.0, "associated_tax_code": 2002002}, {"id": 2002002, "tax_code": "CN_SLS_01", "taxcate": "X", "tax": 13.0, "associated_tax_code": 2002001}, {"id": 2003001, "tax_code": "CN_PUR_02", "taxcate": "J", "tax": 6.0, "associated_tax_code": 2004001}]
+2025-05-27 16:10:56.722 | INFO     | utils.cache_util:set:63 - 写入缓存文件: /Users/anson/Documents/Erda-project/erp-autotest/testdata/cache/gen_init_cache.json
+2025-05-27 16:10:56.725 | INFO     | utils.cache_util:set:67 - 成功写入缓存: gen_init_cache.json
+2025-05-27 16:10:56.726 | INFO     | utils.log_util:info:65 - 数据初始化完成并写入缓存: testdata/cache/gen_init_cache.json
+2025-05-27 16:10:57.154 | INFO     | testcases.comm.base_test:login:84 - 使用账号: 17376596912
+2025-05-27 16:10:57.358 | INFO     | testcases.comm.base_test:login:88 - 登录响应状态码: 200
+2025-05-27 16:10:57.436 | INFO     | testcases.comm.base_test:login:95 - 登录成功
+2025-05-27 16:10:57.460 | INFO     | testcases.comm.base_test:setup_class:147 - ids: {'user_id': 540175374525637, 'cust_id': 2059001, 'so_type_id': 2101001, 'sls_org_id': 14377001, 'pur_org_id': 14376001, 'inv_org_id': 14375002, 'com_org_id': 14373001, 'sls_dc_id': 14378001, 'inv_loc_id': 14376002, 'exchange_rate_type_id': 2000001, 'base_curr_id': 2000001, 'sls_curr_id': 2000001}
+2025-05-27 16:10:57.687 | INFO     | testcases.comm.base_test:setup_class:168 - 测试基类初始化完成
+2025-05-27 16:10:57.688 | INFO     | utils.log_util:info:65 - 开始测试: test_01_delete_order
+2025-05-27 16:10:57.691 | INFO     | utils.log_util:info:65 - 执行查询: 
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'DRAFT' 
+                AND so_type_id = %s
+                AND created_by = %s
+                AND deleted = 0 
+            ORDER BY created_at DESC
+            LIMIT 1
+        
+2025-05-27 16:10:57.781 | DEBUG    | utils.log_util:debug:69 - 执行查询: 
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE so_status = 'DRAFT' 
+                AND so_type_id = %s
+                AND created_by = %s
+                AND deleted = 0 
+            ORDER BY created_at DESC
+            LIMIT 1
+        
+2025-05-27 16:10:57.781 | DEBUG    | utils.log_util:debug:69 - 查询参数: (2101001, 540175374525637)
+2025-05-27 16:10:57.781 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"id": 16410031, "so_code": "SO005450", "so_status": "DRAFT"}]
+2025-05-27 16:10:57.782 | INFO     | utils.log_util:info:65 - 查询结果: [{'id': 16410031, 'so_code': 'SO005450', 'so_status': 'DRAFT'}]
+2025-05-27 16:10:57.782 | INFO     | utils.log_util:info:65 - 查询结果: {'id': 16410031, 'so_code': 'SO005450', 'so_status': 'DRAFT'}
+2025-05-27 16:10:57.782 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SYS_DeleteDataByIdService?tmodule=ERP_SCM&modelKey=ERP_SCM$sls_so_head_tr
+2025-05-27 16:10:57.782 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-05-27 16:10:57.783 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "id": 16410031
+    },
+    "modelKey": "ERP_SCM$sls_so_head_tr"
+  }
+}
+2025-05-27 16:10:57.783 | INFO     | utils.request_util:request:88 - 请求描述: 删除销售订单
+2025-05-27 16:10:57.962 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-05-27 16:10:57.963 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Tue, 27 May 2025 08:10:58 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': 'b0eb77e1-264596', 'Trace-Id': 'b0eb77e1-264596', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiZTFhMzIxYzIyZTU2NDAwZDg4ZGE0YTU2YjMwODAxNDQiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODU5MjY1OCwibmJmIjoxNzQ4MzMzNDU4LCJpYXQiOjE3NDgzMzM0NTgsImp0aSI6Ijg0ZWIxMWUxOTgwMzQ5MDViYjhjOTk4MTRlOGJlOGQzIn0.G9ZBtl-T_POfNf4qDFJhJnragOMgEHPsHfwTPCagRgU; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Fri, 30 May 2025 08:10:58 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '161', 'X-Kong-Proxy-Latency': '2', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-05-27 16:10:57.963 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "b0eb77e1-264596",
+  "success": true,
+  "data": null
+}
+2025-05-27 16:10:57.964 | INFO     | utils.log_util:info:65 - 成功删除订单: 16410031
+2025-05-27 16:10:57.975 | DEBUG    | utils.log_util:debug:69 - 执行查询: 
+            SELECT id, deleted
+            FROM sls_so_head_tr
+            WHERE id = %s
+        
+2025-05-27 16:10:57.976 | DEBUG    | utils.log_util:debug:69 - 查询参数: (16410031,)
+2025-05-27 16:10:57.977 | DEBUG    | utils.log_util:debug:69 - 查询结果: [{"id": 16410031, "deleted": 1748333458132}]
+2025-05-27 16:10:57.977 | INFO     | utils.log_util:info:65 - 订单 16410031 在数据库中已标记为删除状态

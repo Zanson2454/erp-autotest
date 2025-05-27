@@ -12,8 +12,9 @@ sys.path.insert(0, str(project_root))
 from testcases.comm.base_test import BaseTest
 from utils.exception_util import safe_api_call
 from utils.yaml_util import YamlUtil
+from testcases.sls import SlsBase
 
-class TestOrderList(BaseTest):
+class TestOrderList(BaseTest,SlsBase):
     """销售订单列表测试类"""
     
     @classmethod
@@ -24,19 +25,6 @@ class TestOrderList(BaseTest):
             method: 当前执行的测试方法，可选参数
         """
         super().setup_class()
-        
-        # 初始化测试数
-        
-         # 加载配置文件
-        cls.base_api_path = Path(project_root) / "testdata" / "sls" / "sls_api_path.yaml"
-        cls.base_config_path = Path(project_root) / "testdata" / "sls" / "sls_api_params.yaml"
-        
-        # 当前用例集所需接口
-        cls.yaml_util = YamlUtil()
-        cls.so_path = cls.yaml_util.read_yaml(cls.base_api_path)["销售订单"]["订单管理"]
-        
-        # 前用例集所需参数
-        cls.so_params = cls.yaml_util.read_yaml(cls.base_config_path).get("api_params", {})
 
         # testdata
         cls.test_data = {}
@@ -50,8 +38,8 @@ class TestOrderList(BaseTest):
     @safe_api_call(error_message="查询销售订单列表失败")
     def _query_orders(self):
         """测试查询销售订单列表"""
-        url = self.so_path["查询订单"]
-        data = self.so_params[url]
+        url = self.sls_api_paths["订单管理"]["查询订单"]
+        data = self.sls_api_params[url]
         response = self.http.post(url, json=data, description="查询销售订单列表")
         self.logger.info(f"接口原始响应: {json.dumps(response, ensure_ascii=False, indent=2)}")
         
@@ -98,8 +86,8 @@ class TestOrderList(BaseTest):
         if not self.test_data.get("so_code"):
             self._query_orders()
             
-        url = self.so_path["查询订单"]
-        data = self.so_params[url]
+        url = self.sls_api_paths["订单管理"]["查询订单"]
+        data = self.sls_api_params[url]
         conditionGroup = {
                             "type": "ConditionGroup",
                             "logicOperator": "AND",
@@ -173,8 +161,8 @@ class TestOrderList(BaseTest):
         Args:
             so_status: 订单状态，通过参数化传入
         """
-        url = self.so_path["查询订单"]
-        data = self.so_params[url]
+        url = self.sls_api_paths["订单管理"]["查询订单"]
+        data = self.sls_api_params[url]
         
         # 构建按单据状态筛选的查询条件
         condition_group = {
@@ -284,8 +272,8 @@ class TestOrderList(BaseTest):
         if not self.test_data.get("so_type_id"):
             self._query_orders()
             
-        url = self.so_path["查询订单"]
-        data = self.so_params[url]
+        url = self.sls_api_paths["订单管理"]["查询订单"]
+        data = self.sls_api_params[url]
         conditionGroup = {
             "type": "ConditionGroup",
             "logicOperator": "AND",
@@ -381,8 +369,8 @@ class TestOrderList(BaseTest):
         if not self.test_data.get("cust_id"):
             self._query_orders()
             
-        url = self.so_path["查询订单"]
-        data = self.so_params[url]
+        url = self.sls_api_paths["订单管理"]["查询订单"]
+        data = self.sls_api_params[url]
         # 构建按客户筛选的查询条件
         conditionGroup = {
             "type": "ConditionGroup",

@@ -15,27 +15,16 @@ sys.path.insert(0, str(project_root))
 from testcases.comm.base_test import BaseTest
 from testcases.sls.test_01_create import TestSalesOrderCreate
 from utils.exception_util import safe_api_call
+from testcases.sls import SlsBase
 
 
-class TestOrderDelete(BaseTest):
+class TestOrderDelete(BaseTest,SlsBase):
     """销售订单删除测试类"""
     
     @classmethod
     def setup_class(cls):
         """测试类初始化"""
         super().setup_class()
-        
-        # 加载配置文件
-        cls.base_api_path = Path(project_root) / "testdata" / "sls" / "sls_api_path.yaml"
-        cls.base_config_path = Path(project_root) / "testdata" / "sls" / "sls_api_params.yaml"
-        
-        # 当前用例集所需接口
-        cls.so_path = cls.yaml_util.read_yaml(cls.base_api_path)["销售订单"]["订单管理"]
-        
-        # 当前用例集所需参数
-        cls.so_params = cls.yaml_util.read_yaml(cls.base_config_path).get("api_params", {})
-        
-        
         cls.so_type_id = cls.ids.get("so_type_id")
         cls.user_id = cls.ids.get("user_id")
     
@@ -90,8 +79,8 @@ class TestOrderDelete(BaseTest):
         self.logger.info(f"查询结果: {order}")
         
         # 3. 准备删除请求
-        url = self.so_path["删除订单"]
-        data = self.so_params.get(url, {})
+        url = self.sls_api_paths["订单管理"]["删除订单"]
+        data = self.sls_api_params.get(url, {})
         data['params']['request']['id'] =  order["id"]
         
         # 4. 执行删除操作
@@ -160,14 +149,9 @@ class TestOrderDelete(BaseTest):
         order_ids = [order['id'] for order in result]
         self.logger.info(f"准备删除的订单ID: {order_ids}")
         
-        # 更新测试数据
-        self.test_data["order_ids"] = order_ids
-        self.test_data["order_codes"] = [order['so_code'] for order in result]
-        self.logger.info(f"测试数据: {self.test_data}")
-        
-        delete_url = self.so_path["批量删除订单"]
-        delete_data = self.so_params.get(delete_url, {})
-        delete_data['params']['request']['ids'] = self.test_data['order_ids']
+        delete_url = self.sls_api_paths["订单管理"]["批量删除订单"]
+        delete_data = self.sls_api_params.get(delete_url, {})
+        delete_data['params']['request']['ids'] = order_ids
         self.logger.info(f"删除请求数据: {delete_data}")
         
         # 4. 执行删除操作
@@ -176,7 +160,7 @@ class TestOrderDelete(BaseTest):
         
         # 5. 验证删除结果
         self.assert_util.assert_response_success(response)
-        self.logger.info(f"成功批量删除订单，订单ID: {self.test_data['order_ids']}")
+        self.logger.info(f"成功批量删除订单，订单ID: {order_ids}")
         
         # 6. 验证数据库中的删除状态
         verify_sql = """
@@ -184,7 +168,7 @@ class TestOrderDelete(BaseTest):
             FROM sls_so_head_tr
             WHERE id IN %s
         """
-        deleted_records = self.db.query(verify_sql, (tuple(self.test_data['order_ids']),))
+        deleted_records = self.db.query(verify_sql, (tuple(order_ids),))
         self.logger.info(f"删除记录: {deleted_records}")
         
         # 验证每个订单的删除状态
@@ -198,7 +182,7 @@ if __name__ == "__main__":
     # test = TestOrderDelete()
     # test.setup_class()
     # test.test_01_delete_order()
-    # # test.test_02_batch_delete_orders()
+    # test.test_02_batch_delete_orders()
 
     project_root = Path(__file__).resolve().parent.parent
     allure_dir = Path(project_root) / "reports" / "allure-results"

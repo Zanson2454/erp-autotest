@@ -27,6 +27,12 @@ class SlsBase:
 
     CacheUtil.init(str(sls_cache_dir))
     data = CacheUtil.get("sls_cache")
+    if not data:
+        # 缓存过期或读取失败，自动刷新
+        SlsDataFactory.cache_sls_data()
+        data = CacheUtil.get("sls_cache")
+        if not data:
+            raise RuntimeError("sls_cache.json 读取失败或内容为空，请检查数据工厂写入逻辑和缓存文件内容！")
     ORDER_TYPES = data["ORDER_TYPES"]
     ORDER_LINE_TYPES = data["ORDER_LINE_TYPES"]
     ORDER_TYPE_LINE_COMBINATIONS = data["ORDER_TYPE_LINE_COMBINATIONS"]

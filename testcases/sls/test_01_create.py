@@ -90,6 +90,7 @@ class TestSalesOrderCreate(BaseTest):
         data = self.so_params.get(url, {})
         
         # 获取订单类型和订单行类型的ID
+        print(CacheUtil.get_order_type_id(order_type))
         order_type_id = CacheUtil.get_order_type_id(order_type)
         order_line_type_id = CacheUtil.get_order_line_type_id("NORM")  # 默认使用常规销售行类型
         
