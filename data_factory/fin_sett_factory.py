@@ -26,7 +26,7 @@ class FinSettlementFactory:
     def get_or_create_settlement_item(cls, status: str = None) -> Dict[str, Any]:
         """
         获取或创建结算项
-        :param status: 状态（CREATED-已创建, CONFIRMED-已确认）
+        :param status: 状态（CREATED-已创建, RECONCILED-已对账）
         :return: 结算项数据
         """
         data_factory = DataFactory() 

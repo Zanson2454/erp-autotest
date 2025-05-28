@@ -32,9 +32,16 @@ class TestSettBusiCheck(BaseTest):
     
     def get_sett_item_id(self):
         """获取不同状态的结算项ID 已创建，已对账，已汇单 """
+        #已创建结算项
         created_sett_item = FinSettlementFactory.get_or_create_settlement_item("CREATED")
+        #已对账结算项
+        reconciled_sett_item = FinSettlementFactory.get_or_create_settlement_item("RECONCILED")
+        #已创建结算单（同时获得已汇单结算项）
+        FinSettlementFactory.get_or_create_settlement_doc("CREATED")
         created_sett_item_id = created_sett_item.get("id")
+        reconciled_sett_item_id = reconciled_sett_item.get("id")
         Loggers.info(f"已创建结算项ID: {created_sett_item_id}")
+        Loggers.info(f"已对账结算项ID: {reconciled_sett_item_id}")
         
         sett_doc_created_sql="""
             select id
@@ -45,7 +52,7 @@ class TestSettBusiCheck(BaseTest):
         
         doc_created_sett_item_id=self.db.query(sett_doc_created_sql)[0]["id"]
         
-        return [created_sett_item_id, doc_created_sett_item_id]
+        return [created_sett_item_id, doc_created_sett_item_id,reconciled_sett_item_id]
     
     @allure.title("结算项对账确认")
     @allure.description("1、新建结算项\n2、对账确认\n3、检查结算单是否生成")
@@ -71,7 +78,8 @@ class TestSettBusiCheck(BaseTest):
             """
             sql_result = self.db.query(sql)
             
-            if index == 0:  # 第一个ID的断言
+            #已创建、已对账结算项可以汇单
+            if index == 0 or index == 2:  # 第一个ID的断言
                 self.assert_util.assert_response_success(result)
                 self.assert_util.assert_eq(sql_result[0]["sett_item_status"], "SETT_DOC_CREATED")
                 self.assert_util.assert_eq(sql_result[0]["async_execution_status"], "SUCCEEDED")
@@ -82,8 +90,7 @@ class TestSettBusiCheck(BaseTest):
                 self.assert_util.assert_eq(sql_result[0]["sett_item_status"], "SETT_DOC_CREATED")
                 self.assert_util.assert_eq(sql_result[0]["async_execution_status"], "SUCCEEDED")
                 self.assert_util.assert_not_empty(sql_result[0]["sett_doc_id"], "结算单号为空")
-    
-    #缺少已对账情况，待补充            
+                
     def test_sett_item_manual_remittance(self):
         """测试结算项手工汇单"""
         url = self.fin_path["SETT-ITEM-结算项手工汇单-关联操作-异步服务"]["path"]
@@ -103,6 +110,11 @@ class TestSettBusiCheck(BaseTest):
             if index == 0 or index == 1:  # 第1.2个ID的断言
                 assert result.get("success",{}) == False
                 assert result.get("err",{}).get("msg",{}) == "结算单异步任务提交失败，请确认结算单异步执行状态！"
+            elif index == 2:  # 第3个ID的断言
+                self.assert_util.assert_response_success(result)
+                self.assert_util.assert_eq(sql_result[0]["sett_item_status"], "SETT_DOC_CREATED")
+                self.assert_util.assert_eq(sql_result[0]["async_execution_status"], "SUCCEEDED")
+                self.assert_util.assert_not_empty(sql_result[0]["sett_doc_id"], "结算单号为空")
 if __name__ == "__main__":
     test = TestSettBusiCheck()
     test.setup_class()
