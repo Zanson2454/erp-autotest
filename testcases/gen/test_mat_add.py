@@ -12,6 +12,7 @@ import pytest
 from pathlib import Path
 from testcases.gen import GenBaseTest
 from utils.allure_simple import a  # 导入简化的Allure辅助类
+from utils.param_util import ParamUtil  # 导入参数处理工具类
 
 # 添加项目根目录到 Python 路径
 project_root = Path(__file__).resolve().parent.parent.parent
@@ -35,10 +36,6 @@ class TestMatAdd(GenBaseTest):
         # 调用GenBaseTest的初始化方法
         # 这会初始化logger、http客户端、断言工具和YAML处理器等
         super().setup_class()
-        
-        # 获取物料管理相关的API路径配置
-        # mat_path内容示例: {'新增物料': '/api/xxx/yyy', '启用物料': '/api/xxx/zzz', ...}
-        cls.mat_path = cls.get_module_paths("通用基础", "物料管理")
         
         cls.logger.info("物料管理测试类初始化完成")
 
@@ -72,21 +69,36 @@ class TestMatAdd(GenBaseTest):
                 )
                 
             with a.step("2. 准备请求数据"):
-                # 从mat_path获取API路径
-                url = self.mat_path["新增物料"]
-                # 使用get_request_data方法获取请求数据，并替换动态参数
-                data = self.get_request_data(
-                    url,
-                    mat_code=mat_code,
-                    mat_name=mat_name,
-                    remark=remark
-                )
+                # 获取API路径
+                api_path = self.get_api_path("GEN-物料保存清除缓存服务")
+                self.logger.debug(f"物料新增API路径: {api_path}")
+                
+                # 获取请求参数和完整URL
+                params, url = self.get_api_params(api_path)
+                
+                # 使用ParamUtil过滤字段，同时保留嵌套结构
+                filtered_params = ParamUtil.filter_post_body_fields(params, 
+                                 ["mat_code", "mat_name","cateId","genMatTypeCfId", "baseUomId", "status", "remark","matCharaClassList"], ["params", "request"])
+                
+                # 设置必要参数值
+                filtered_params['params']["request"]["mat_code"] = mat_code
+                filtered_params['params']["request"]["mat_name"] = mat_name
+                filtered_params['params']["request"]["remark"] = remark
+                
+                filtered_params['params']["request"]["cateId"] = {"id":2000001}
+                filtered_params['params']["request"]["genMatTypeCfId"] = {"id":2000001}
+                filtered_params['params']["request"]["baseUomId"] = {"id":2000001}
+                filtered_params['params']["request"]["status"] = "INACTIVE"
+                filtered_params['params']["request"]["matCharaClassList"] = []
+            
+                self.logger.info(f"请求URL: {url}")
+                self.logger.info(f"请求参数: {filtered_params}")
                 # 添加请求数据到报告
-                a.json(data, "请求数据")
+                a.json(filtered_params, "请求数据")
 
             with a.step("3. 发送请求并验证响应"):
                 # 发送请求
-                result = self.http.post(url, json=data, description="新增物料")
+                result = self.http.post(url, json=filtered_params, description="新增物料")
                 # 添加响应数据到报告
                 a.json(result, "响应数据")
 
@@ -143,22 +155,27 @@ class TestMatAdd(GenBaseTest):
                 a.json(TestMatAdd.mat_info, "待启用物料信息")
             
             with a.step("2. 准备请求数据"):
-                # 从mat_path获取启用API路径
-                url = self.mat_path["启用物料"]
+                # 获取API路径
+                api_path = self.get_api_path("GEN-物料启用清除缓存服务")
+                self.logger.debug(f"物料启用API路径: {api_path}")
                 
-                # 使用get_request_data方法获取请求数据，并替换mat_id和mat_code参数
-                data = self.get_request_data(
-                    url,
-                    mat_id=TestMatAdd.mat_info["mat_id"],
-                    mat_code=TestMatAdd.mat_info["mat_code"]
-                )
+                # 获取请求参数和完整URL
+                params, url = self.get_api_params(api_path)
                 
+                # 使用ParamUtil过滤字段，同时保留嵌套结构
+                filtered_params = ParamUtil.filter_post_body_fields(params, 
+                                 ["id"], ["params", "request"])
+                
+                # 设置必要参数值
+                filtered_params['params']["request"]["id"] = TestMatAdd.mat_info["mat_id"]                
+                self.logger.info(f"请求URL: {url}")
+                self.logger.info(f"请求参数: {filtered_params}")
                 # 添加请求数据到报告
-                a.json(data, "请求数据")
+                a.json(filtered_params, "请求数据")
             
             with a.step("3. 发送启用请求"):
                 # 发送启用请求
-                result = self.http.post(url, json=data, description="启用物料")
+                result = self.http.post(url, json=filtered_params, description="启用物料")
                 
                 # 添加响应数据到报告
                 a.json(result, "响应数据")
@@ -200,22 +217,27 @@ class TestMatAdd(GenBaseTest):
                 a.json(TestMatAdd.mat_info, "待停用物料信息")
             
             with a.step("2. 准备请求数据"):
-                # 从mat_path获取停用API路径
-                url = self.mat_path["停用物料"]
+                # 获取API路径
+                api_path = self.get_api_path("GEN-物料停用清除缓存服务")
+                self.logger.debug(f"物料停用API路径: {api_path}")
                 
-                # 使用get_request_data方法获取请求数据，并替换mat_id和mat_code参数
-                data = self.get_request_data(
-                    url,
-                    mat_id=TestMatAdd.mat_info["mat_id"],
-                    mat_code=TestMatAdd.mat_info["mat_code"]
-                )
+                # 获取请求参数和完整URL
+                params, url = self.get_api_params(api_path)
                 
+                # 使用ParamUtil过滤字段，同时保留嵌套结构
+                filtered_params = ParamUtil.filter_post_body_fields(params, 
+                                 ["id"], ["params", "request"])
+                
+                # 设置必要参数值
+                filtered_params['params']["request"]["id"] = TestMatAdd.mat_info["mat_id"]                
+                self.logger.info(f"请求URL: {url}")
+                self.logger.info(f"请求参数: {filtered_params}")
                 # 添加请求数据到报告
-                a.json(data, "请求数据")
+                a.json(filtered_params, "请求数据")
             
             with a.step("3. 发送停用请求"):
                 # 发送停用请求
-                result = self.http.post(url, json=data, description="停用物料")
+                result = self.http.post(url, json=filtered_params, description="停用物料")
                 
                 # 添加响应数据到报告
                 a.json(result, "响应数据")
