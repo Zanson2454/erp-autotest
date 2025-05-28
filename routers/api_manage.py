@@ -50,7 +50,10 @@ def run_tests_background(task_id, target, req):
         tasks[task_id]["allure"] = allure_proc.stdout + allure_proc.stderr
         tasks[task_id]["allure_returncode"] = allure_proc.returncode
 
-        # 4. 原子替换报告目录
+        # 4. 修改报告标题
+        fix_report_title("reports/allure-report-tmp")
+
+        # 5. 原子替换报告目录
         shutil.rmtree("reports/allure-report", ignore_errors=True)
         shutil.move("reports/allure-report-tmp", "reports/allure-report")
 
