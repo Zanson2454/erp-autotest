@@ -78,3 +78,6 @@ reports/allure-results/*
 
 reports/allure-report/*
 !reports/allure-report/.gitkeep
+
+
+front/
