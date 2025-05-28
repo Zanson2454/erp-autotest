@@ -46,14 +46,58 @@ class TestSettDocBusiCheck(BaseTest):
         result = self.db.query(sql)
         return [created_sett_doc_id,result[0]["id"]]
         
-    # todo 
+
     def test_sett_doc_remark(self):
         """测试结算单修改备注操作"""
         url = self.fin_path["结算单表-根据ID查找无行信息数据服务"]["path"]
         data = self.fin_params.get(url, {})
         filtered_data = ParamUtil.filter_post_body_fields(data, ["id"], ["params", "request"])
-        print(filtered_data)
+        sett_doc_id  = self.get_sett_doc_id()[0]
+        filtered_data["params"]["request"]["id"] = sett_doc_id
+        result = self.http.post(url, json=filtered_data, description=f"结算单修改备注操作 - ID: {sett_doc_id}")
+        Loggers.info(f"结算单修改备注操作结果: {result}")
+        self.assert_util.assert_response_success(result)
+        self.assert_util.assert_eq(result.get("data",{}).get("data",{}).get("id",{}),sett_doc_id)
         
+    def test_sett_doc_remark_save(self):
+        """测试结算单修改备注保存操作"""
+        url = self.fin_path["结算单表-保存数据服务"]["path"]
+        data = self.fin_params.get(url, {})
+        filtered_data = ParamUtil.filter_post_body_fields(data, ["id","baseCurrId","comOrgId",
+                                                                 "docCurrId","partnerName","partnerType","purSlsOrgName",
+                                                                 "remark","settBaseAmt","settDate","settDocAmt","settDocCode",
+                                                                 "settDocStatus","settDocTypeId","tradingDocCode","tradingDocStatus"], ["params", "request"])
+        
+        sett_doc_id  = self.get_sett_doc_id()[0]
+        sql = f"""
+        select * from sett_doc_tr where id={sett_doc_id}
+        """
+        sql_result = self.db.query(sql)
+        filtered_data["params"]["request"]["id"] = sql_result[0]["id"]
+        filtered_data["params"]["request"]["baseCurrId"] = sql_result[0]["base_curr_id"]
+        filtered_data["params"]["request"]["comOrgId"] = sql_result[0]["com_org_id"]
+        filtered_data["params"]["request"]["docCurrId"] = sql_result[0]["doc_curr_id"]
+        filtered_data["params"]["request"]["partnerName"] = sql_result[0]["partner_name"]
+        filtered_data["params"]["request"]["partnerType"] = sql_result[0]["partner_type"]
+        filtered_data["params"]["request"]["purSlsOrgName"] = sql_result[0]["pur_sls_org_name"]
+        filtered_data["params"]["request"]["remark"] = "AUTOTEST-remark"
+        filtered_data["params"]["request"]["settBaseAmt"] = float(sql_result[0]["sett_base_amt"])
+        filtered_data["params"]["request"]["settDate"] = int(datetime.strptime(str(sql_result[0]["sett_date"]), "%Y-%m-%d %H:%M:%S").timestamp() * 1000)
+        filtered_data["params"]["request"]["settDocAmt"] = float(sql_result[0]["sett_doc_amt"])
+        filtered_data["params"]["request"]["settDocCode"] = sql_result[0]["sett_doc_code"]
+        filtered_data["params"]["request"]["settDocStatus"] = sql_result[0]["sett_doc_status"]
+        filtered_data["params"]["request"]["settDocTypeId"] = sql_result[0]["sett_doc_type_id"]
+        filtered_data["params"]["request"]["tradingDocCode"] = sql_result[0]["trading_doc_code"]
+        filtered_data["params"]["request"]["tradingDocStatus"] = sql_result[0]["trading_doc_status"]
+        Loggers.info(filtered_data["params"]["request"])
+        result = self.http.post(url, json=filtered_data, description=f"结算单修改备注保存操作 - ID: {sett_doc_id}")
+        Loggers.info(f"结算单修改备注保存操作结果: {result}")
+        self.assert_util.assert_response_success(result)
+        self.assert_util.assert_eq(result.get("data",{}).get("data",{}).get("id",{}),sett_doc_id)
+        self.assert_util.assert_eq(result.get("data",{}).get("data",{}).get("remark",{}),"AUTOTEST-remark")
+        
+        
+
     @allure.story("结算单确认")
     def test_sett_doc_confirm(self):
         """测试结算单确认"""
@@ -125,6 +169,7 @@ class TestSettDocBusiCheck(BaseTest):
 if __name__ == "__main__":
     test = TestSettDocBusiCheck()
     test.setup_class()
-    test.test_sett_doc_remark()
+   # test.test_sett_doc_remark()
+    test.test_sett_doc_remark_save()
             
             
