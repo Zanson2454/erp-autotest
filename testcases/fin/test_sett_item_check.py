@@ -17,7 +17,7 @@ from utils.yaml_util import YamlUtil
 
 @allure.epic("ERP通业财模块")
 @allure.feature("结算管理")
-class TestSettlementItem(BaseTest):
+class TestSettItemCheck(BaseTest):
     """结算项测试用例"""
     @classmethod
     def setup_class(cls):

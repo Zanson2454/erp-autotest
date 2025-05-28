@@ -18,7 +18,7 @@ from data_factory.fin_sett_factory import FinSettlementFactory
 from utils.log_util import Loggers
 @allure.epic("ERP通业财模块")
 @allure.feature("结算管理")
-class TestSettBusiCheck(BaseTest):
+class TestSettItemBusiCheck(BaseTest):
     """结算管理业务检查测试用例"""
     @classmethod
     def setup_class(cls):
