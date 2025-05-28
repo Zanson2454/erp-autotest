@@ -22,7 +22,15 @@ class ParamUtil:
             filtered = ParamUtil.filter_post_body_fields(sub_body, fields, path[1:])
             return {p: filtered}
         else:
-            return {k: v for k, v in body.items() if k in fields}
+            result = {}
+            for k, v in body.items():
+                if k in fields:
+                    # 如果字段值是一个字典，保留其所有内容
+                    if isinstance(v, dict):
+                        result[k] = v
+                    else:
+                        result[k] = v
+            return result
 
 # 示例用例
 def _demo():
@@ -31,13 +39,18 @@ def _demo():
             "request": {
                 "id": 1,
                 "name": "test",
-                "desc": "desc"
+                "desc": "desc",
+                "object": {
+                    "id": 1,
+                    "name": "test",
+                    "desc": "desc"
+                }
             }
         }
     }
-    fields = ["id"]
+    fields = ["id", "name"]
     filtered = ParamUtil.filter_post_body_fields(swagger_body, fields, path=["params", "request"])
-    print(filtered)  # 输出: {'params': {'request': {'id': 1}}}
+    print(filtered)  # 输出: {'params': {'request': {'id': 1, 'object': {'id': 1, 'name': 'test', 'desc': 'desc'}}}}
 
 if __name__ == "__main__":
     _demo() 
