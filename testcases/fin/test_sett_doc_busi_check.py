@@ -51,8 +51,10 @@ class TestSettDocBusiCheck(BaseTest):
         """测试结算单修改备注操作"""
         url = self.fin_path["结算单表-根据ID查找无行信息数据服务"]["path"]
         data = self.fin_params.get(url, {})
-        filtered_data = ParamUtil.filter_post_body_fields(data, ["params"]["request"]["id"], ["params", "request"])
+        filtered_data = ParamUtil.filter_post_body_fields(data, ["id"], ["params", "request"])
         print(filtered_data)
+        
+    @allure.story("结算单确认")
     def test_sett_doc_confirm(self):
         """测试结算单确认"""
         url = self.fin_path["SETT-DOC-运营端结算单确认下推应收应付-异步服务"]["path"]
