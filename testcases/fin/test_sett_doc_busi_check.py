@@ -16,6 +16,7 @@ from testcases.comm.base_test import BaseTest
 from utils.yaml_util import YamlUtil
 from data_factory.fin_sett_factory import FinSettlementFactory
 from utils.log_util import Loggers
+from utils.param_util import ParamUtil
 @allure.epic("ERP通业财模块")
 @allure.feature("结算管理")
 class TestSettDocBusiCheck(BaseTest):
@@ -47,8 +48,11 @@ class TestSettDocBusiCheck(BaseTest):
         
     # todo 
     def test_sett_doc_remark(self):
-        """测试结算单修改备注"""
-
+        """测试结算单修改备注操作"""
+        url = self.fin_path["结算单表-根据ID查找无行信息数据服务"]["path"]
+        data = self.fin_params.get(url, {})
+        filtered_data = ParamUtil.filter_post_body_fields(data, ["params"]["request"]["id"], ["params", "request"])
+        print(filtered_data)
     def test_sett_doc_confirm(self):
         """测试结算单确认"""
         url = self.fin_path["SETT-DOC-运营端结算单确认下推应收应付-异步服务"]["path"]
@@ -119,6 +123,6 @@ class TestSettDocBusiCheck(BaseTest):
 if __name__ == "__main__":
     test = TestSettDocBusiCheck()
     test.setup_class()
-    test.test_sett_doc_confirm()
+    test.test_sett_doc_remark()
             
             
