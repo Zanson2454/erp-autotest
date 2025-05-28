@@ -107,10 +107,10 @@ class TestSettBusiCheck(BaseTest):
                 and id={sett_item_id};
             """
             sql_result = self.db.query(sql)
-            if index == 0 or index == 1:  # 第1.2个ID的断言
+            if index == 0 or index == 1:  # 第1.2个ID的断言 已创建、已汇单结算项不可以手工汇单
                 assert result.get("success",{}) == False
                 assert result.get("err",{}).get("msg",{}) == "结算单异步任务提交失败，请确认结算单异步执行状态！"
-            elif index == 2:  # 第3个ID的断言
+            elif index == 2:  # 第3个ID的断言 已对账结算项可以手工汇单
                 self.assert_util.assert_response_success(result)
                 self.assert_util.assert_eq(sql_result[0]["sett_item_status"], "SETT_DOC_CREATED")
                 self.assert_util.assert_eq(sql_result[0]["async_execution_status"], "SUCCEEDED")

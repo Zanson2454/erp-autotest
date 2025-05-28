@@ -107,7 +107,7 @@ class TestSettDocBusiCheck(BaseTest):
         for index, sett_doc_id in enumerate(sett_doc_ids):
             data["params"]["request"]["id"][0] = sett_doc_id
             result = self.http.post(url, json=data, description=f"结算单确认 - ID: {sett_doc_id}")
-            time.sleep(2)
+            time.sleep(3)
             if index == 0:
                 sql = f"""
                 select sett_doc_status,async_execution_status,trading_doc_id,trading_doc_status,trading_doc_code,client_side_confirm_status
