@@ -116,7 +116,7 @@ class TestSettItemBusiCheck(BaseTest):
                 self.assert_util.assert_eq(sql_result[0]["async_execution_status"], "SUCCEEDED")
                 self.assert_util.assert_not_empty(sql_result[0]["sett_doc_id"], "结算单号为空")
 if __name__ == "__main__":
-    test = TestSettBusiCheck()
+    test = TestSettItemBusiCheck()
     test.setup_class()
     test.test_sett_item_record()
     #test.test_sett_item_manual_remittance()

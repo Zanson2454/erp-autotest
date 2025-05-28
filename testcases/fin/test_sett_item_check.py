@@ -291,7 +291,7 @@ class TestSettItemCheck(BaseTest):
 
 
 if __name__ == "__main__":
-    test = TestSettlementItem()
+    test = TestSettItemCheck()
     test.setup_class()
     #test.test_delete_sett_item()
     test.test_get_sett_item_code()
