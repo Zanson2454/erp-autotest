@@ -1,7 +1,7 @@
 ---
 description: 
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 # 测试框架与工具规范
 
@@ -53,3 +53,44 @@ alwaysApply: false
 - 控制并行测试的进程数
 - 确保测试用例的独立性
 - 处理并行测试的资源竞争
+
+# 插件管理规范
+[recommended]
+- 所有第三方pytest插件需在 requirements-dev.txt 中声明
+- 禁止在测试代码中直接import未声明的插件
+- 插件版本升级需评估兼容性并在CI中验证
+
+# 自定义pytest插件开发建议
+[recommended]
+- 自定义插件需有独立目录和README说明
+- 插件功能应模块化、可配置
+- 插件需有单元测试和文档
+- 插件注册与加载方式需在conftest.py中统一管理
+
+# CI集成最佳实践
+[recommended]
+- CI流程需包含依赖安装、环境变量配置、测试执行、报告生成、结果归档等步骤
+- 推荐使用 uv pip install -r requirements-dev.txt 管理依赖
+- CI中需自动生成Allure报告并归档
+- 失败用例需自动重试或报警
+
+# Goal
+帮助用户通过 uv 管理依赖，并确保生成的代码符合以下要求：
+1. 使用 uv 替代 pip 安装/更新依赖
+2. 保持 pytest 和 Allure 的兼容性配置
+3. 生成可复用的依赖管理指令
+
+
+# Rules
+- 所有依赖安装指令必须使用 `uv pip install` 格式
+- 优先推荐使用 `requirements-dev.txt` 管理测试依赖
+- 生成 Allure 报告时需包含环境变量配置
+
+
+# 依赖管理示例模板
+当用户要求安装依赖时，按此模板响应：
+```bash
+# 创建虚拟环境
+uv venv .venv --seed
+# 安装基础依赖
+uv pip install -r requirements-dev.txt
