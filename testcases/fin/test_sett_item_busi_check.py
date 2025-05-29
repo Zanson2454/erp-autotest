@@ -18,7 +18,7 @@ from data_factory.fin_sett_factory import FinSettlementFactory
 from utils.log_util import Loggers
 @allure.epic("ERP通业财模块")
 @allure.feature("结算管理")
-class TestSettBusiCheck(BaseTest):
+class TestSettItemBusiCheck(BaseTest):
     """结算管理业务检查测试用例"""
     @classmethod
     def setup_class(cls):
@@ -116,7 +116,7 @@ class TestSettBusiCheck(BaseTest):
                 self.assert_util.assert_eq(sql_result[0]["async_execution_status"], "SUCCEEDED")
                 self.assert_util.assert_not_empty(sql_result[0]["sett_doc_id"], "结算单号为空")
 if __name__ == "__main__":
-    test = TestSettBusiCheck()
+    test = TestSettItemBusiCheck()
     test.setup_class()
     test.test_sett_item_record()
     #test.test_sett_item_manual_remittance()
