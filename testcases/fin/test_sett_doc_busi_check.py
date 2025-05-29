@@ -165,11 +165,149 @@ class TestSettDocBusiCheck(BaseTest):
             elif index == 1:
                 assert result.get("success",{}) == False
                 assert result.get("err",{}).get("msg",{}) == "存在已确认的结算单，请重新选择后再进行操作"
+    
+    @allure.title("结算单修改操作")
+    @allure.description("测试步骤：点击修改结算单")
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_sett_doc_modify(self):
+        """测试修改结算单"""
+        url = self.fin_path["结算单-详情视图查询服务"]["path"]
+        data = self.fin_params.get(url, {})
+        filtered_data = ParamUtil.filter_post_body_fields(data, ["id"], ["params", "request"])
+        filtered_data["params"]["request"]["id"] = FinSettlementFactory.get_or_create_settlement_doc("CREATED").get("id")
+        result = self.http.post(url, json=filtered_data, description=f"修改结算单")
+        self.assert_util.assert_response_success(result)   
+        self.assert_util.assert_eq(result.get("data",{}).get("data",{}).get("id",{}),filtered_data["params"]["request"]["id"])
+        
+    @allure.title("结算单修改保存操作")
+    @allure.description("测试步骤：结算单修改保存")
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_sett_doc_save(self):
+        """结算单修改保存"""
+        url = self.fin_path["结算单-结算单保存调整结算项服务"]["path"]
+        data = self.fin_params.get(url, {})
+        #过滤请求参数
+        filtered_data = ParamUtil.filter_post_body_fields(data, ["id","settItems"], ["params", "request"])
+        sett_doc = FinSettlementFactory._insert_settlement_doc("CREATED")
+        #获取已创建的结算单id
+        filtered_data["params"]["request"]["id"] = sett_doc.get("id")
+        
+        #获取符合条件的结算行项目类型
+        sql =f"""
+        select bt_class,sett_class from sett_doc_type_cf where deleted=0 and  id=(select sett_doc_type_id
+        from sett_doc_tr where id={filtered_data["params"]["request"]["id"]});
+        """
+        sql_result = self.db.query(sql)
+        sett_class = sql_result[0]["sett_class"]
+        bt_class = sql_result[0]["bt_class"]
+        sql_sett_item_type = f"""
+        select *
+        from sett_item_type_cf where deleted=0 and bt_class='{bt_class}'and sett_class='{sett_class}'
+        """
+        sql_sett_item_type_result = self.db.query(sql_sett_item_type)
+        
+        
+        
+        #获取物料
+        sql_mat = f"""
+            select *
+            from gen_mat_md 
+            where deleted=0 
+            and mat_code like 'AUTOTEST_MAT_RAWM'
+        """
+        sql_mat_result = self.db.query(sql_mat)
+        
+        #获取税码
+        
+        taxcate = 'X' if sett_class=='EXTERNAL' and bt_class=='PURCHASE' else 'J'
+        
+        sql_tax_code = f"""
+            select id, tax_code,tax
+            from gen_tax_type_cf
+            where deleted=0 and taxcate='{taxcate}'
+        """
+        sql_tax_code_result = self.db.query(sql_tax_code)
+        
+        #获取库存组织
+        sql="""
+            select *
+            from org_struct_md 
+            where deleted=0 
+            and org_code like 'AUTOTEST_INV_ORG'
+        """
+        invOrgId=self.db.query(sql)[0]["id"]
+        
+        # 初始化总金额和结算项代码列表
+        total_sett_doc_amt = Decimal('0')
+        all_sett_item_code = []
+        
+        # 初始化settItems列表
+        #item_count = random.randint(2,10)
+        item_count = 1
+        filtered_data["params"]["request"]["settItems"] = [{} for _ in range(item_count)]
+
+        for i in range(item_count):
+            filtered_data["params"]["request"]["settItems"][i]["basicUnitId"] = {'id': sql_mat_result[0]["base_uom_id"]}
+            filtered_data["params"]["request"]["settItems"][i]["invOrgId"] = {'id': invOrgId}
+            filtered_data["params"]["request"]["settItems"][i]["matId"] = {'id': sql_mat_result[0]["id"]}
+            filtered_data["params"]["request"]["settItems"][i]["remark"] =  f"AUTOTEST-SETTI{int(time.time())}"
+            filtered_data["params"]["request"]["settItems"][i]["settItemTypeId"] = {'id': sql_sett_item_type_result[0]["id"]}
+            filtered_data["params"]["request"]["settItems"][i]["taxCodeId"] = {'id': sql_tax_code_result[0]["id"]}
+            filtered_data["params"]["request"]["settItems"][i]["taxRate"] = sql_tax_code_result[0]["tax"]
+            # 生成-1000到1000之间的随机整数
+            sett_qty = random.randint(-1000, 1000)
+            filtered_data["params"]["request"]["settItems"][i]["settQty"] = sett_qty
+            filtered_data["params"]["request"]["settItems"][i]["settItemCode"] = f"AUTOTEST-SETTI{int(time.time())}"
+            # 生成1到100之间的随机数，保留6位小数
+            filtered_data["params"]["request"]["settItems"][i]["settDocPrice"] = Decimal(str(round(random.uniform(1, 100), 6)))
+            filtered_data["params"]["request"]["settItems"][i]["settDocAmt"] = (Decimal(str(sett_qty)) * filtered_data["params"]["request"]["settItems"][i]["settDocPrice"]).quantize(Decimal('0.01'))
+            filtered_data["params"]["request"]["settItems"][i]["netBaseAmt"] = (filtered_data["params"]["request"]["settItems"][i]["settDocAmt"]/(Decimal('1')+Decimal(str(sql_tax_code_result[0]["tax"]))*Decimal('0.01'))).quantize(Decimal('0.01'))
+            filtered_data["params"]["request"]["settItems"][i]["netDocAmt"] = (filtered_data["params"]["request"]["settItems"][i]["settDocAmt"]/(Decimal('1')+Decimal(str(sql_tax_code_result[0]["tax"]))*Decimal('0.01'))).quantize(Decimal('0.01'))
+            filtered_data["params"]["request"]["settItems"][i]["grossBaseAmt"] = (Decimal(str(sett_qty)) * filtered_data["params"]["request"]["settItems"][i]["settDocPrice"]).quantize(Decimal('0.01'))
+            filtered_data["params"]["request"]["settItems"][i]["taxAmt"] = (filtered_data["params"]["request"]["settItems"][i]["settDocAmt"]-filtered_data["params"]["request"]["settItems"][i]["netDocAmt"]).quantize(Decimal('0.01'))
             
+            total_sett_doc_amt += filtered_data["params"]["request"]["settItems"][i]["settDocAmt"]
+            all_sett_item_code.append(filtered_data["params"]["request"]["settItems"][i]["settItemCode"])
+        Loggers.info(f"total_sett_doc_amt: {total_sett_doc_amt}")
+        Loggers.info(f"sett_doc.get('sett_doc_amt'): {sett_doc.get('sett_doc_amt')}")
+        Loggers.info(sett_doc)
+        # 转换Decimal为字符串
+        def convert_decimal_to_str(obj):
+            if isinstance(obj, Decimal):
+                return str(obj)
+            elif isinstance(obj, dict):
+                return {k: convert_decimal_to_str(v) for k, v in obj.items()}
+            elif isinstance(obj, list):
+                return [convert_decimal_to_str(item) for item in obj]
+            return obj
+        
+        # 转换请求数据中的Decimal为字符串
+        filtered_data = convert_decimal_to_str(filtered_data)
+        
+        result = self.http.post(url, json=filtered_data, description=f"结算单修改保存")
+        
+        self.assert_util.assert_response_success(result)
+        
+        expected_amount = (total_sett_doc_amt.quantize(Decimal('0.01')) + Decimal(str(sett_doc.get("sett_doc_amt")))).quantize(Decimal('0.01'))
+        actual_amount = Decimal(str(result.get("data",{}).get("data",{}).get("settDocAmt",{}))).quantize(Decimal('0.01'))
+        self.assert_util.assert_eq(actual_amount, expected_amount)
+        
+        
+        sql_sett_item_code = f"""
+            select * from sett_item_tr where deleted=0 and sett_item_code in ('{"','".join(all_sett_item_code)}')
+        """
+        sql_sett_item_code_result = self.db.query(sql_sett_item_code)
+        # 断言所有结算项的状态都是SETT_DOC_CREATED
+        for item in sql_sett_item_code_result:
+            self.assert_util.assert_eq(item["sett_item_status"], "SETT_DOC_CREATED")
+            self.assert_util.assert_eq(item["sett_doc_id"], filtered_data["params"]["request"]["id"])
+        
+        
+        
+               
 if __name__ == "__main__":
     test = TestSettDocBusiCheck()
     test.setup_class()
-   # test.test_sett_doc_remark()
-    test.test_sett_doc_remark_save()
+    test.test_sett_doc_save()
             
             

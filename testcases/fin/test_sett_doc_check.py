@@ -49,8 +49,11 @@ class TestSettDocCheck(BaseTest):
         self.assert_util.assert_response_success(result)
         #self.assert_util.assert_eq(result.get("data",{}).get("data",{}).get("id",{}),filtered_data["params"]["request"]["id"])
         #self.assert_util.assert_not_empty(result.get("data",{}).get("data",{}).get("settItems",{}),"结算单明细为空")
+    
+        
         
 if __name__ == "__main__":
-    test = TestSettDocCheck()
+    """ test = TestSettDocCheck()
     test.setup_class()
-    test.test_search_detail()
+    test.test_sett_doc_modify() """
+    pytest.main(["-v", __file__])

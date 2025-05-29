@@ -102,7 +102,7 @@ class FinSettlementFactory:
         params = ['%自动化%', '%自动化%']
         
         if status:
-            sql += " AND sett_item_status = %s"
+            sql += " AND sett_item_status = %s order by created_at desc" 
             params.append(status)
             
         result = DBManager.query(sql, params)
@@ -120,7 +120,7 @@ class FinSettlementFactory:
         params = ['%自动化%', '%自动化%']
         
         if status:
-            sql += " AND sett_doc_status = %s"
+            sql += " AND sett_doc_status = %s order by created_at desc"
             params.append(status)
             
         result = DBManager.query(sql, params)
@@ -263,8 +263,8 @@ class FinSettlementFactory:
             'async_execution_failure_reason': None,
             'pur_sls_org_name': '销售组织(自动化)',
             'sett_date': now,
-            'sett_doc_amt': 124266.036442,
-            'sett_base_amt': 124266.036442,
+            'sett_doc_amt': 124226.04,
+            'sett_base_amt': 124226.04,
             'doc_curr_id': 2000001,
             'base_curr_id': 2000001,
             'remark': None,
