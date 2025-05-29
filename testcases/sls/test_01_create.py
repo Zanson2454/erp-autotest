@@ -322,7 +322,14 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
             raise KeyError("订单行渲染响应缺少soItems字段。")
 
         self.so_items = result.get("soItems")
+        
+        # 确保订单行类型被正确设置
+        for item in self.so_items:
+            item["soItemTypeId"] = order_line_type_id
+            item["soItemTypeCode"] = order_line_type_code
+        
         self.logger.info(f"订单行渲染完成，订单类型: {order_type}")
+        self.logger.info(f"订单行数据: {json.dumps(self.so_items, ensure_ascii=False, indent=2)}")
         
         try:
             assert self.so_items is not None, "订单行信息为空"
