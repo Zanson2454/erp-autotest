@@ -75,9 +75,30 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
         data = self.sls_api_params.get(url, {})
         
         # 获取订单类型和订单行类型的ID
-        print(SlsBase.get_order_type_id(order_type))
         order_type_id = SlsBase.get_order_type_id(order_type)
-        order_line_type_id = SlsBase.get_order_line_type_id("NORM")  # 默认使用常规销售行类型
+        
+        # 根据订单类型获取对应的订单行类型
+        order_line_type_code = None
+        for combo in SlsBase.ORDER_TYPE_LINE_COMBINATIONS:
+            for detm_info in combo.get("so_item_detm_info", []):
+                if detm_info.get("so_type_code") == order_type:
+                    order_line_type_code = combo.get("so_item_type_code")
+                    break
+            if order_line_type_code:
+                break
+        
+        if not order_line_type_code:
+            error_msg = f"未找到订单类型 {order_type} 对应的订单行类型，请确保订单类型和订单行类型正确匹配"
+            self.logger.error(error_msg)
+            raise ValueError(error_msg)
+        
+        order_line_type_id = SlsBase.get_order_line_type_id(order_line_type_code)
+        
+        # 记录订单类型信息
+        self.logger.info(f"订单类型: {order_type}")
+        self.logger.info(f"订单类型ID: {order_type_id}")
+        self.logger.info(f"订单行类型: {order_line_type_code}")
+        self.logger.info(f"订单行类型ID: {order_line_type_id}")
         
         # 更新请求参数
         data['params']['request']['orderTypeId'] = order_type_id
