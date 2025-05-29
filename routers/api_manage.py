@@ -45,7 +45,7 @@ def run_tests_background(task_id, target, req):
         tasks[task_id]["pytest_returncode"] = pytest_proc.returncode
 
         # 3. 执行 allure generate 到临时目录
-        allure_cmd = ["allure", "generate", "reports/allure-results", "-o", "reports/allure-report-tmp", "--clean"]
+        allure_cmd = ["allure", "generate", "reports/allure-results", "-o", "reports/allure-report-tmp", "--clean", "--report-language", "zh"]
         allure_proc = subprocess.run(allure_cmd, capture_output=True, text=True, timeout=300)
         tasks[task_id]["allure"] = allure_proc.stdout + allure_proc.stderr
         tasks[task_id]["allure_returncode"] = allure_proc.returncode
