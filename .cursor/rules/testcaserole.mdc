@@ -1,0 +1,341 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# ERP自动化测试用例生成规则
+[always]
+# [manual]
+## 使用说明
+本规则用于指导ERP系统自动化测试用例的编写，确保测试代码风格一致性和可维护性。
+通过在Cursor中使用@testcase-role触发此规则，可以快速生成符合规范的测试用例框架。
+
+## 适用范围
+适用于所有ERP模块的功能测试、接口测试、流程测试等自动化测试场景。
+
+## 1. 文件结构规范
+
+### 1.1 测试文件命名
+- 使用`test_<模块>_<功能>.py`格式命名文件
+- 例如：`test_po_add.py`、`test_po_query.py`
+
+### 1.2 文件头部模板
+```python
+"""
+<模块名称>模块测试用例
+包含<主要功能点列表>等操作
+"""
+import sys
+import time
+import json
+import random
+import allure
+import pytest
+from pathlib import Path
+from testcases.<领域> import <领域>BaseTest
+from utils.allure_simple import a  # 导入简化的Allure辅助类
+from utils.param_util import ParamUtil  # 导入参数处理工具类
+
+# 添加项目根目录到 Python 路径
+project_root = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(project_root))
+```
+
+### 1.3 测试类模板
+```python
+@allure.epic("<领域名称>")
+@allure.feature("<功能模块>")
+class Test<功能名称>(<领域>BaseTest):
+    """<功能名称>测试类"""
+    
+    # 保存相关信息的类变量，所有测试用例共享
+    <功能>_info = {}
+    
+    @classmethod
+    def setup_class(cls):
+        """
+        测试类初始化
+        1. 调用父类初始化方法
+        2. 初始化日志记录器
+        """
+        # 调用父类的初始化方法
+        super().setup_class()
+        
+        cls.logger.info("<功能名称>测试类初始化完成")
+```
+
+## 2. __init__.py文件规范
+
+### 2.1 目录结构
+每个测试领域目录下应包含__init__.py文件
+
+### 2.2 BaseTest类定义
+```python
+"""
+<领域名称>模块基础测试类
+"""
+from testcases.comm.base_test import BaseTest
+
+class <领域>BaseTest(BaseTest):
+    """<领域名称>模块基础测试类"""
+    
+    @classmethod
+    def setup_class(cls):
+        """
+        初始化方法
+        1. 调用父类初始化
+        2. 加载YAML配置
+        """
+        # 调用BaseTest的初始化方法
+        super().setup_class()
+        
+        # 获取API路径和参数配置
+        cls.yaml_path = cls.get_yaml_path("<领域>")
+        cls.yaml_params = cls.get_yaml_params("<领域>")
+        
+        cls.logger.info("<领域>BaseTest初始化完成")
+```
+
+## 3. 测试方法规范
+
+### 3.1 测试方法模板
+```python
+@pytest.mark.run(order=<序号>)
+@allure.story("<功能点>")
+@allure.description("""
+## 测试步骤
+1. <步骤一描述>
+2. <步骤二描述>
+...
+""")
+@allure.severity(allure.severity_level.BLOCKER)
+@allure.title("<测试标题>")
+@allure.tag("<标签1>", "<标签2>")
+def test_<功能点>(self):
+    try:
+        with a.step("1. <步骤一描述>"):
+            # 步骤一代码
+            # 例如：生成测试数据
+            <测试数据生成代码>
+            
+            # 添加到报告中
+            a.text("<测试数据描述>", "<标题>")
+        
+        with a.step("2. 准备请求数据"):
+            # 获取API路径
+            api_path = self.get_api_path("<API路径名称>")
+            self.logger.debug(f"<功能点>API路径: {api_path}")
+            
+            # 获取请求参数和完整URL
+            params, url = self.get_api_params(api_path)
+            
+            # 使用ParamUtil过滤字段，同时保留嵌套结构
+            filtered_params = ParamUtil.filter_post_body_fields(params, 
+                            ["<字段1>", "<字段2>"], ["params", "request"])
+            
+            # 设置必要参数值
+            filtered_params['params']["request"]["<字段名>"] = <值>
+            
+            self.logger.info(f"请求URL: {url}")
+            self.logger.info(f"请求参数: {filtered_params}")
+            # 添加请求数据到报告
+            a.json(filtered_params, "请求数据")
+        
+        with a.step("3. 发送请求"):
+            # 发送请求
+            result = self.http.post(url, json=filtered_params, description="<请求描述>")
+            # 添加响应数据到报告
+            a.json(result, "响应数据")
+        
+        with a.step("4. 验证响应结果"):
+            # 验证响应中的success字段为True
+            self.assert_util.assert_response_success(result)
+            
+            # 从响应中获取关键数据
+            response_data = result.get("data", {}).get("data", {})
+            <关键字段> = response_data.get("<字段名>")
+            
+            # 确保返回了有效的数据
+            assert <关键字段>, "<错误信息>"
+            
+            # 记录验证结果
+            a.text(
+                f"<字段描述>: {<关键字段>}\n验证结果: 成功",
+                "验证结果"
+            )
+        
+        with a.step("5. 保存测试数据"):
+            # 保存测试数据到类变量，供后续测试用例使用
+            Test<功能名称>.<功能>_info.update({
+                "<键1>": <值1>,
+                "<键2>": <值2>
+            })
+            
+            self.logger.info(f"<操作描述> - <关键数据描述>")
+            
+            # 记录保存的数据
+            a.json(Test<功能名称>.<功能>_info, "保存的测试数据")
+        
+    except Exception as e:
+        self.logger.error(f"<功能点>失败: {str(e)}")
+        # 记录失败信息
+        a.text(str(e), "失败原因")
+        raise
+```
+
+## 4. 主函数入口规范
+```python
+if __name__ == "__main__":
+    """直接运行测试用例的入口点"""
+    test = Test<功能名称>()
+    test.setup_class()
+    test.test_<功能点1>()    # <功能点1描述>
+    test.test_<功能点2>()    # <功能点2描述>
+    # ...其他测试方法
+```
+
+## 5. 参数处理规范
+
+### 5.1 参数过滤
+```python
+# 使用ParamUtil过滤字段，同时保留嵌套结构
+filtered_params = ParamUtil.filter_post_body_fields(params, 
+                ["字段1", "字段2"], ["params", "request"])
+```
+
+### 5.2 多层嵌套处理
+
+对于多层嵌套的JSON结构，可以采用以下方式处理：
+
+```python
+# 1. 先获取基本结构
+filtered_params = ParamUtil.filter_post_body_fields(params, 
+                ["字段1", "字段2"], ["params", "request"])
+
+# 2. 然后手动构建嵌套结构
+filtered_params['params']["request"]["conditionItems"] = {
+    "type": "ConditionItems",
+    "logicOperator": "AND",
+    "conditions": {
+        "code": {
+            "operator": "CONTAINS",
+            "value": "查询值"
+        }
+    }
+}
+
+# 3. 设置分页参数
+filtered_params['params']["request"]["pageNo"] = 1
+filtered_params['params']["request"]["pageSize"] = 20
+```
+
+### 5.3 复杂对象构建
+
+对于包含数组或复杂对象的参数，可以这样处理：
+
+```python
+# 构建包含对象的字段
+filtered_params['params']["request"]["partnerTypeId"] = {"id": 2011001}
+
+# 构建数组字段
+filtered_params['params']["request"]["partnerIdentity"] = ["SUPPLIER", "CUSTOMER"]
+
+# 构建空数组
+filtered_params['params']["request"]["matCharaClassList"] = []
+```
+
+### 5.4 API参数处理最佳实践
+
+编写测试用例时，应遵循以下参数处理最佳实践：
+
+```python
+# 不要从配置文件中盲目添加所有参数，只选择真正必要的字段
+filtered_params = ParamUtil.filter_post_body_fields(params, 
+                ["orgCode", "orgName", "orgSort", "orgBusinessTypeIds", "orgEnableDate", "orgDimensionCode"], 
+                ["params", "request"])
+
+# 设置必要参数值，确保数据类型正确
+filtered_params['params']["request"]["orgCode"] = "ORG001"  # 字符串类型
+filtered_params['params']["request"]["orgName"] = "测试组织"
+filtered_params['params']["request"]["orgSort"] = 1  # 数字类型
+filtered_params['params']["request"]["orgBusinessTypeIds"] = [2010001]  # 数组类型
+filtered_params['params']["request"]["orgEnableDate"] = "2025-05-29"  # 日期格式
+filtered_params['params']["request"]["orgDimensionCode"] = "ADM_ORG_GRP"
+```
+
+在选择API参数时，遵循以下原则：
+
+1. **精简原则**：只添加接口真正需要的参数，不是配置文件中的所有字段
+2. **参数筛选方法**：
+   - 分析接口实际调用样例，识别必填和可选参数
+   - 区分业务必要字段和系统生成字段（如createdAt、updatedAt等）
+   - 删除无实际业务意义的字段（如def1-def40等占位字段）
+3. **参数类型注意事项**：
+   - 确保数组类型以数组形式传递（如`orgBusinessTypeIds: [2010001]`）
+   - 确保对象类型正确（如`orgParentId: {"id": 1}`）
+   - 日期类型格式统一（如`"2025-05-29"`）
+4. **最小化测试数据**：只设置能满足业务验证需求的最少参数
+
+## 6. 新领域测试文件创建流程
+
+1. 创建领域目录（如 `testcases/pur/`）
+2. 创建领域的 `__init__.py` 文件，定义BaseTest类
+3. 创建测试用例文件（如 `test_po_add.py`）
+4. 实现测试类和测试方法
+5. 添加主函数入口
+
+## API路径查找最佳实践
+
+## API路径查找的通用方法
+
+### 1. 领域+操作关键词搜索策略
+- 根据**业务领域**（如物料、采购、销售、组织、库存等）加上**操作类型**（新增、查询、编辑、删除等）组合关键词
+- 例如：搜索"物料+新增"、"组织+新增"、"采购+新增"、"库存+查询"等关键词组合
+- 使用模糊搜索找到可能的API路径名称，但最终必须使用精确的路径名称
+
+### 2. 通用API路径查找流程
+1. 分析需求，确定业务领域和操作类型
+2. 在gen_api_path.yaml中组合关键词搜索（如"PUR+新增"对应采购新增）
+3. 从搜索结果中识别最匹配的API路径键名
+4. 验证该键名对应的路径是否在gen_api_params.yaml中存在
+5. 确认后使用精确的API路径键名获取路径
+
+### 3. 不同领域的常见前缀
+- 采购相关：通常以"PUR-"或"采购-"开头
+- 销售相关：通常以"SLS-"或"销售-"开头
+- 库存相关：通常以"INV-"或"库存-"开头
+- 组织相关：通常以"ORG-"或"组织-"开头
+- 通用基础：通常以"GEN-"或"通用-"开头
+
+### 4. 精确匹配的重要性
+- **务必精确查找API路径名称**，不要依赖猜测或模式推断
+- 在gen_api_path.yaml文件中使用全文搜索找到准确的API路径键名
+- 即使是一个字的差异或词序不同也会导致API调用完全失败
+- 例如："ORG-组织管理-停用EHR组织单元服务"与"ORG-组织管理-停用组织EHR组织单元服务"是不同的
+
+### 5. 常见错误与避免方法
+- **词序错误**: 不要假设词序，如"停用组织"与"组织停用"可能是不同API
+- **类似名称错误**: 启用/停用、新增/创建等功能的API名称可能看起来很类似但不完全相同
+- **遗漏字词**: 即使少一个字也会导致API匹配失败
+- **模式推断错误**: 不要假设"编辑XX服务"对应的停用服务就是"停用XX服务"
+
+### 6. 验证与调试方法
+- 在编写测试用例时，先通过日志验证API路径是否正确解析
+- 使用`self.logger.debug(f"{功能点}API路径: {api_path}")`打印路径进行验证
+- 如果api_path为None或输出了不预期的值，说明路径名称有误
+- 使用grep或其他搜索工具在yaml文件中进行关键词搜索，找到精确的API路径键名
+
+### 7. 搜索服务特殊规则
+- **优先使用新版搜索服务**: 如果存在"新版"相关的搜索服务，应优先使用
+  - 例如：使用"ORG-新版组织-搜索服务"而不是"ORG-组织管理-查询EHR组织单元服务"
+- **搜索服务命名特点**:
+  - 新版搜索服务通常包含"搜索服务"、"查询服务"等关键词
+  - 旧版查询服务可能包含具体业务词如"查询EHR组织单元服务"
+- **搜索条件差异**:
+  - 新版搜索服务通常支持更灵活的查询条件（如模糊查询、组合查询）
+  - 旧版查询服务可能只支持特定字段的精确匹配
+- **响应结构差异**:
+  - 新版搜索服务通常返回标准化的列表结构
+  - 旧版查询服务可能有特定的业务数据结构
+
+正确查找和使用API路径是编写可靠测试用例的基础，确保测试用例能够准确调用目标API并验证功能正确性。
