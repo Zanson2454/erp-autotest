@@ -4,12 +4,14 @@
 """
 import sys
 import time
+import json
 import random
 import allure
 import pytest
 from pathlib import Path
 from testcases.gen import GenBaseTest
 from utils.allure_simple import a  # 导入简化的Allure辅助类
+from utils.param_util import ParamUtil  # 导入参数处理工具类
 
 # 添加项目根目录到 Python 路径
 project_root = Path(__file__).resolve().parent.parent.parent
@@ -18,16 +20,22 @@ sys.path.insert(0, str(project_root))
 @allure.epic("通用基础")
 @allure.feature("合作伙伴管理")
 class TestPartners(GenBaseTest):
+    """合作伙伴管理测试类"""
+    
     # 保存合作伙伴相关信息的类变量，所有测试用例共享
     partner_info = {}
+    
     @classmethod
     def setup_class(cls):
+        """
+        测试类初始化
+        1. 调用父类初始化方法
+        2. 初始化日志记录器
+        """
         # 调用GenBaseTest的初始化方法
         # 这会初始化logger、http客户端、断言工具和YAML处理器等
         super().setup_class()
-        # 获取合作伙伴相关的API路径配置
-        # partner_path内容示例: {'新增合作伙伴': '/api/xxx/yyy', '查询合作伙伴': '/api/xxx/zzz', ...}
-        cls.partner_path = cls.get_module_paths("通用基础", "合作伙伴")
+        
         cls.logger.info("合作伙伴测试类初始化完成")
 
     @pytest.mark.run(order=1)
@@ -61,21 +69,32 @@ class TestPartners(GenBaseTest):
                 )
                 
             with a.step("2. 准备请求数据"):
-                # 从partner_path获取API路径
-                url = self.partner_path["新增合作伙伴"]
+                # 获取API路径
+                api_path = self.get_api_path("GEN-合作伙伴-合作伙伴保存服务")
+                self.logger.debug(f"合作伙伴新增API路径: {api_path}")
                 
-                # 使用get_request_data方法获取请求数据，并替换动态参数
-                data = self.get_request_data(
-                    url,
-                    partner_code=partner_code,
-                    partner_name=partner_name
-                )
+                # 获取请求参数和完整URL
+                params, url = self.get_api_params(api_path)
+                
+                # 使用ParamUtil过滤字段，同时保留嵌套结构
+                filtered_params = ParamUtil.filter_post_body_fields(params, 
+                                ["code", "name","classType","status","partnerTypeId","partnerIdentity"], ["params", "request"])
+                
+                # 设置必要参数值
+                filtered_params['params']["request"]["code"] = partner_code
+                filtered_params['params']["request"]["name"] = partner_name
+                filtered_params['params']["request"]["classType"] = "COMPANY"
+                filtered_params['params']["request"]["status"] = "INACTIVE"
+                filtered_params['params']["request"]["partnerTypeId"] = {"id":2011001}
+                filtered_params['params']["request"]["partnerIdentity"] = ["SUPPLIER"]
+                self.logger.info(f"请求URL: {url}")
+                self.logger.info(f"请求参数: {filtered_params}")
                 # 添加请求数据到报告
-                a.json(data, "请求数据")
+                a.json(filtered_params, "请求数据")
             
             with a.step("3. 发送新增请求"):
                 # 发送请求
-                result = self.http.post(url, json=data, description="新增合作伙伴")
+                result = self.http.post(url, json=filtered_params, description="新增合作伙伴")
                 # 添加响应数据到报告
                 a.json(result, "响应数据")
             
@@ -138,21 +157,38 @@ class TestPartners(GenBaseTest):
                 a.json(TestPartners.partner_info, "待查询合作伙伴信息")
             
             with a.step("2. 准备查询参数"):
-                # 从partner_path获取查询API路径
-                url = self.partner_path["查询合作伙伴"]
+                # 获取API路径
+                api_path = self.get_api_path("合作伙伴-分页数据服务")
+                self.logger.debug(f"合作伙伴查询API路径: {api_path}")
                 
-                # 使用get_request_data方法获取请求数据，并替换动态参数
-                data = self.get_request_data(
-                    url,
-                    partner_code=TestPartners.partner_info["partner_code"]
-                )
+                # 获取请求参数和完整URL
+                params, url = self.get_api_params(api_path)
                 
+                # 使用ParamUtil过滤字段，同时保留嵌套结构
+                filtered_params = ParamUtil.filter_post_body_fields(params, 
+                              ["conditionItems", "pageable"], ["params", "request"])
+                
+                # 设置必要参数值
+                filtered_params['params']["request"]["pageable"]["conditionItems"] = {
+                        "conditions": {
+                            "code": {
+                                "operator": "CONTAINS",
+                                "value": TestPartners.partner_info["partner_code"]
+                            }
+                        },
+                    }
+                filtered_params['params']["request"]['pageable']["pageNo"] = 1
+                filtered_params['params']["request"]['pageable']["pageSize"] = 20
+                filtered_params['params']["request"]["pageable"]['sortOrders'] = None
+                self.logger.info(f"查询的合作伙伴编码: {TestPartners.partner_info['partner_code']}")
+                self.logger.info(f"请求URL: {url}")
+                self.logger.info(f"请求参数: {filtered_params}")
                 # 添加请求数据到报告
-                a.json(data, "请求数据")
+                a.json(filtered_params, "请求数据")
             
             with a.step("3. 发送查询请求"):
                 # 发送查询请求
-                result = self.http.post(url, json=data, description="查询合作伙伴")
+                result = self.http.post(url, json=filtered_params, description="查询合作伙伴")
                 
                 # 添加响应数据到报告
                 a.json(result, "响应数据")
@@ -222,21 +258,28 @@ class TestPartners(GenBaseTest):
                 a.json(TestPartners.partner_info, "待启用合作伙伴信息")
             
             with a.step("2. 准备请求数据"):
-                # 从partner_path获取启用API路径
-                url = self.partner_path["启用合作伙伴"]
+                # 获取API路径
+                api_path = self.get_api_path("GEN-合作伙伴-合作伙伴启动服务")
+                self.logger.debug(f"合作伙伴启用API路径: {api_path}")
                 
-                # 使用get_request_data方法获取请求数据，并替换partner_id参数
-                data = self.get_request_data(
-                    url,
-                    partner_id=TestPartners.partner_info["partner_id"]
-                )
+                # 获取请求参数和完整URL
+                params, url = self.get_api_params(api_path)
                 
+                # 使用ParamUtil过滤字段，同时保留嵌套结构
+                filtered_params = ParamUtil.filter_post_body_fields(params, 
+                                ["id"], ["params", "request"])
+                
+                # 设置必要参数值
+                filtered_params['params']["request"]["id"] = TestPartners.partner_info["partner_id"]
+                
+                self.logger.info(f"请求URL: {url}")
+                self.logger.info(f"请求参数: {filtered_params}")
                 # 添加请求数据到报告
-                a.json(data, "请求数据")
+                a.json(filtered_params, "请求数据")
             
             with a.step("3. 发送启用请求"):
                 # 发送启用请求
-                result = self.http.post(url, json=data, description="启用合作伙伴")
+                result = self.http.post(url, json=filtered_params, description="启用合作伙伴")
                 
                 # 添加响应数据到报告
                 a.json(result, "响应数据")
@@ -278,21 +321,28 @@ class TestPartners(GenBaseTest):
                 a.json(TestPartners.partner_info, "待停用合作伙伴信息")
             
             with a.step("2. 准备请求数据"):
-                # 从partner_path获取停用API路径
-                url = self.partner_path["停用合作伙伴"]
+                # 获取API路径
+                api_path = self.get_api_path("GEN-合作伙伴-合作伙伴停用服务")
+                self.logger.debug(f"合作伙伴停用API路径: {api_path}")
                 
-                # 使用get_request_data方法获取请求数据，并替换partner_id参数
-                data = self.get_request_data(
-                    url,
-                    partner_id=TestPartners.partner_info["partner_id"]
-                )
+                # 获取请求参数和完整URL
+                params, url = self.get_api_params(api_path)
                 
+                # 使用ParamUtil过滤字段，同时保留嵌套结构
+                filtered_params = ParamUtil.filter_post_body_fields(params, 
+                                ["id"], ["params", "request"])
+                
+                # 设置必要参数值
+                filtered_params['params']["request"]["id"] = TestPartners.partner_info["partner_id"]
+                
+                self.logger.info(f"请求URL: {url}")
+                self.logger.info(f"请求参数: {filtered_params}")
                 # 添加请求数据到报告
-                a.json(data, "请求数据")
+                a.json(filtered_params, "请求数据")
             
             with a.step("3. 发送停用请求"):
                 # 发送停用请求
-                result = self.http.post(url, json=data, description="停用合作伙伴")
+                result = self.http.post(url, json=filtered_params, description="停用合作伙伴")
                 
                 # 添加响应数据到报告
                 a.json(result, "响应数据")
@@ -335,21 +385,28 @@ class TestPartners(GenBaseTest):
                 a.json(TestPartners.partner_info, "待删除合作伙伴信息")
             
             with a.step("2. 准备请求数据"):
-                # 从partner_path获取删除API路径
-                url = self.partner_path["删除合作伙伴"]
+                # 获取API路径
+                api_path = self.get_api_path("GEN-合作伙伴-删除服务")
+                self.logger.debug(f"合作伙伴删除API路径: {api_path}")
                 
-                # 使用get_request_data方法获取请求数据，并替换partner_id参数
-                data = self.get_request_data(
-                    url,
-                    partner_id=TestPartners.partner_info["partner_id"]
-                )
+                # 获取请求参数和完整URL
+                params, url = self.get_api_params(api_path)
                 
+                # 使用ParamUtil过滤字段，同时保留嵌套结构
+                filtered_params = ParamUtil.filter_post_body_fields(params, 
+                                ["id"], ["params", "request"])
+                
+                # 设置必要参数值
+                filtered_params['params']["request"]["id"] = TestPartners.partner_info["partner_id"]
+                
+                self.logger.info(f"请求URL: {url}")
+                self.logger.info(f"请求参数: {filtered_params}")
                 # 添加请求数据到报告
-                a.json(data, "请求数据")
+                a.json(filtered_params, "请求数据")
             
             with a.step("3. 发送删除请求"):
                 # 发送删除请求
-                result = self.http.post(url, json=data, description="删除合作伙伴")
+                result = self.http.post(url, json=filtered_params, description="删除合作伙伴")
                 
                 # 添加响应数据到报告
                 a.json(result, "响应数据")
