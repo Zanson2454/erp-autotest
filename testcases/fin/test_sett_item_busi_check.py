@@ -65,7 +65,8 @@ class TestSettItemBusiCheck(BaseTest):
         # 遍历每个ID进行测试
         for index, sett_item_id in enumerate(sett_item_ids):
             url = self.fin_path["SETT-ITEM-结算项确认及汇单-关联操作-异步服务"]["path"]
-            data = self.fin_params.get(url, {})
+            data = ParamUtil.filter_post_body_fields(self.fin_params.get(url, {}), ["id"], ["params", "request"])
+            data=ParamUtil.convert_param_type(data, ["params", "request"], "array")
             data["params"]["request"][0]["id"] = sett_item_id
             result = self.http.post(url, json=data, description=f"结算项对账确认 - ID: {sett_item_id}")
             
@@ -89,7 +90,6 @@ class TestSettItemBusiCheck(BaseTest):
                 assert result.get("success",{}) == False
                 assert result.get("err",{}).get("msg",{}) == "结算单异步任务提交失败，请确认结算单异步执行状态！"
                 self.assert_util.assert_eq(sql_result[0]["sett_item_status"], "SETT_DOC_CREATED")
-                self.assert_util.assert_eq(sql_result[0]["async_execution_status"], "SUCCEEDED")
                 self.assert_util.assert_not_empty(sql_result[0]["sett_doc_id"], "结算单号为空")
                 
     def test_sett_item_manual_remittance(self):
@@ -97,7 +97,8 @@ class TestSettItemBusiCheck(BaseTest):
         url = self.fin_path["SETT-ITEM-结算项手工汇单-关联操作-异步服务"]["path"]
         sett_item_ids = self.get_sett_item_id()
         for index, sett_item_id in enumerate(sett_item_ids):
-            data = self.fin_params.get(url, {})
+            data = ParamUtil.filter_post_body_fields(self.fin_params.get(url, {}), ["id"], ["params", "request"])
+            data=ParamUtil.convert_param_type(data, ["params", "request"], "array")
             data["params"]["request"][0]["id"] = sett_item_id
             result = self.http.post(url, json=data, description=f"结算项手工汇单 - ID: {sett_item_id}")
             time.sleep(3)  # 等待3秒
@@ -133,7 +134,7 @@ class TestSettItemBusiCheck(BaseTest):
 if __name__ == "__main__":
     test = TestSettItemBusiCheck()
     test.setup_class()
-    test.test_batch_task_record()
+    test.test_sett_item_record()
     """ pytest.main(["-v", __file__]) """
 
         

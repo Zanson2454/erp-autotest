@@ -102,7 +102,8 @@ class TestSettDocBusiCheck(BaseTest):
     def test_sett_doc_confirm(self):
         """测试结算单确认"""
         url = self.fin_path["SETT-DOC-运营端结算单确认下推应收应付-异步服务"]["path"]
-        data = self.fin_params.get(url, {})
+        data = ParamUtil.filter_post_body_fields(self.fin_params.get(url, {}), ["id"], ["params", "request"])
+        data=ParamUtil.convert_param_type(data, ["params", "request","id"], "array")
         sett_doc_ids  = self.get_sett_doc_id()
         for index, sett_doc_id in enumerate(sett_doc_ids):
             data["params"]["request"]["id"][0] = sett_doc_id
@@ -128,7 +129,8 @@ class TestSettDocBusiCheck(BaseTest):
     def test_cancel_sett_doc(self):
         """测试结算单取消汇单"""
         url = self.fin_path["SETT-DOC-结算单取消服务"]["path"]
-        data = self.fin_params.get(url, {})
+        data = ParamUtil.filter_post_body_fields(self.fin_params.get(url, {}), [""], ["params", "request", 0])
+        data=ParamUtil.convert_param_type(data, ["params", "request"], "array")
         sett_doc_ids  = self.get_sett_doc_id()
         for index, sett_doc_id in enumerate(sett_doc_ids):
             
@@ -139,7 +141,7 @@ class TestSettDocBusiCheck(BaseTest):
             sett_item_sql_result = self.db.query(sett_item_sql)
             
             # 取消汇单接口
-            data["params"]["request"][0]["id"] = sett_doc_id
+            data["params"]["request"][0] = {"id":sett_doc_id}
             result = self.http.post(url, json=data, description=f"结算单取消汇单 - ID: {sett_doc_id}")
             time.sleep(2)
             
@@ -308,6 +310,7 @@ class TestSettDocBusiCheck(BaseTest):
 if __name__ == "__main__":
     test = TestSettDocBusiCheck()
     test.setup_class()
-    test.test_sett_doc_save()
+    test.test_sett_doc_confirm()
+    #FinSettlementFactory._insert_settlement_doc("CREATED")
             
             

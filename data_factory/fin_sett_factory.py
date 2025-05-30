@@ -180,7 +180,7 @@ class FinSettlementFactory:
             'dn_id': 0,
             'dn_item_code': None,
             'dn_item_id': 0,
-            'remark': '自动化测试新增结算项',
+            'remark': '自动化测试新增结算项-数据工厂',
             'inv_org_id': 14375002,
             'is_sdc_cancel_relv': 0,
             'rel_type': 'string',
@@ -290,7 +290,7 @@ class FinSettlementFactory:
             'sett_item_code': f'AUTOTEST-SETTI{now.strftime("%Y%m%d%H%M%S")}',
             'sett_item_status':  'SETT_DOC_CREATED',
             'sett_doc_id': id,
-            'sett_doc_type_id': 2001001,
+            'sett_doc_type_id': 2002002,
             'sett_date': now,
             'sett_qty': 358.000000,
             'sett_doc_price': 347.000099,
@@ -357,5 +357,4 @@ class FinSettlementFactory:
         DBManager.insert('sett_item_tr', sett_item_data)
         return cls._query_settlement_doc(status)
 if __name__ == '__main__':
-    print(FinSettlementFactory.get_or_create_settlement_item())
-    print(FinSettlementFactory.get_or_create_settlement_doc())
+   pass
