@@ -33,7 +33,7 @@ class TestSettDocBusiCheck(BaseTest):
         """获取不同状态的结算单ID 已创建，已确认 """
         created_sett_doc = FinSettlementFactory.get_or_create_settlement_doc("CREATED")
         created_sett_doc_id = created_sett_doc.get("id")
-        Loggers.info(f"已创建结算单ID: {created_sett_doc_id}")
+        Loggers.debug(f"已创建结算单ID: {created_sett_doc_id}")
         
         sql = """
         SELECT * FROM sett_doc_tr
@@ -55,7 +55,7 @@ class TestSettDocBusiCheck(BaseTest):
         sett_doc_id  = self.get_sett_doc_id()[0]
         filtered_data["params"]["request"]["id"] = sett_doc_id
         result = self.http.post(url, json=filtered_data, description=f"结算单修改备注操作 - ID: {sett_doc_id}")
-        Loggers.info(f"结算单修改备注操作结果: {result}")
+        Loggers.debug(f"结算单修改备注操作结果: {result}")
         self.assert_util.assert_response_success(result)
         self.assert_util.assert_eq(result.get("data",{}).get("data",{}).get("id",{}),sett_doc_id)
         
@@ -89,9 +89,9 @@ class TestSettDocBusiCheck(BaseTest):
         filtered_data["params"]["request"]["settDocTypeId"] = sql_result[0]["sett_doc_type_id"]
         filtered_data["params"]["request"]["tradingDocCode"] = sql_result[0]["trading_doc_code"]
         filtered_data["params"]["request"]["tradingDocStatus"] = sql_result[0]["trading_doc_status"]
-        Loggers.info(filtered_data["params"]["request"])
+        Loggers.debug(filtered_data["params"]["request"])
         result = self.http.post(url, json=filtered_data, description=f"结算单修改备注保存操作 - ID: {sett_doc_id}")
-        Loggers.info(f"结算单修改备注保存操作结果: {result}")
+        Loggers.debug(f"结算单修改备注保存操作结果: {result}")
         self.assert_util.assert_response_success(result)
         self.assert_util.assert_eq(result.get("data",{}).get("data",{}).get("id",{}),sett_doc_id)
         self.assert_util.assert_eq(result.get("data",{}).get("data",{}).get("remark",{}),"AUTOTEST-remark")

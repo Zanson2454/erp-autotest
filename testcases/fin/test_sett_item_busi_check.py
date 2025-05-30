@@ -41,8 +41,8 @@ class TestSettItemBusiCheck(BaseTest):
         FinSettlementFactory.get_or_create_settlement_doc("CREATED")
         created_sett_item_id = created_sett_item.get("id")
         reconciled_sett_item_id = reconciled_sett_item.get("id")
-        Loggers.info(f"已创建结算项ID: {created_sett_item_id}")
-        Loggers.info(f"已对账结算项ID: {reconciled_sett_item_id}")
+        Loggers.debug(f"已创建结算项ID: {created_sett_item_id}")
+        Loggers.debug(f"已对账结算项ID: {reconciled_sett_item_id}")
         
         sett_doc_created_sql="""
             select id
