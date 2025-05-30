@@ -14,7 +14,7 @@ sys.path.insert(0, str(project_root))
 
 from testcases.comm.base_test import BaseTest
 from utils.yaml_util import YamlUtil
-
+from utils.param_util import ParamUtil
 @allure.epic("ERP通业财模块")
 @allure.feature("结算管理")
 class TestSettItemCheck(BaseTest):
@@ -102,7 +102,14 @@ class TestSettItemCheck(BaseTest):
         url = self.fin_path["apis"]["SETT-ITEM-手动创建服务"]["path"]
         self.logger.debug(f"新增结算项接口URL: {url}")
         
-        data= self.fin_params.get(url, {})
+        data= ParamUtil.filter_post_body_fields(self.fin_params.get(url, {}), ["settItemCode","settItemStatus","settItemTypeId","settDate",
+                                                                               "partnerType","ptHeadId","remark","comOrgId","purSlsOrgType",
+                                                                               "invOrgId","matId","taxRate","basicUnitId","genMatTypeCfId",
+                                                                               "settQty","settDocPrice","settDocAmt","netDocAmt","taxAmt",
+                                                                               "docCurrId","baseCurrId","exchRate","grossBaseAmt","netBaseAmt",
+                                                                               "settDocTypeId","settDocId","dnCode","dnItemCode","poSoCode",
+                                                                               "poSoItemCode","asyncExecutionStatus","partnerId","taxCodeId",
+                                                                               "purSlsOrgId"],["params","request"])
         
         #获取结算行项目类型
         sql="""
@@ -281,7 +288,7 @@ class TestSettItemCheck(BaseTest):
         url = self.fin_path["apis"]["结算项表-分页数据服务"]["path"]
         self.logger.debug(f"结算项分页数据接口URL: {url}")
         
-        data= self.fin_params.get(url, {})
+        data= ParamUtil.filter_post_body_fields(self.fin_params.get(url, {}), ["pageable"],["params","request","pageable"])
         data["params"]["request"]["pageable"]["pageNo"] = 1
         data["params"]["request"]["pageable"]["pageSize"] = 200
         
@@ -293,8 +300,4 @@ class TestSettItemCheck(BaseTest):
 if __name__ == "__main__":
     test = TestSettItemCheck()
     test.setup_class()
-    #test.test_delete_sett_item()
-    test.test_get_sett_item_code()
     test.test_add_sett_item()
-    test.test_search_detail()
-    test.test_sett_item_paging_data()

@@ -247,6 +247,8 @@ class SwaggerParser:
             params_dict_for_yaml = {}  # For gen_api_params.yaml
 
             for path, methods in endpoints.items():
+                if "$SYS_" in path:
+                    continue
                 for method, info in methods.items():
                     logger.info(f"\n{'='*50}")
                     logger.info(f"开始解析接口: {path} {method}")
@@ -553,10 +555,10 @@ if __name__ == "__main__":
     )
     
     # 获取指定团队和模块的Swagger文档
-    swagger_doc = parser.fetch_swagger_doc("TERP", "ERP_PRD")
+    swagger_doc = parser.fetch_swagger_doc("TERP", "ERP_GEN")
     
     # 解析所有接口
     endpoints = parser.parse_endpoints()
     
     # 保存路径信息到gen_path.yaml
-    parser.save_paths_to_yaml(endpoints, module="ERP_PRD") 
+    parser.save_paths_to_yaml(endpoints, module="ERP_GEN") 

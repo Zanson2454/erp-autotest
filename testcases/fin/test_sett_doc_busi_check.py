@@ -33,7 +33,7 @@ class TestSettDocBusiCheck(BaseTest):
         """获取不同状态的结算单ID 已创建，已确认 """
         created_sett_doc = FinSettlementFactory.get_or_create_settlement_doc("CREATED")
         created_sett_doc_id = created_sett_doc.get("id")
-        Loggers.info(f"已创建结算单ID: {created_sett_doc_id}")
+        Loggers.debug(f"已创建结算单ID: {created_sett_doc_id}")
         
         sql = """
         SELECT * FROM sett_doc_tr
@@ -55,7 +55,7 @@ class TestSettDocBusiCheck(BaseTest):
         sett_doc_id  = self.get_sett_doc_id()[0]
         filtered_data["params"]["request"]["id"] = sett_doc_id
         result = self.http.post(url, json=filtered_data, description=f"结算单修改备注操作 - ID: {sett_doc_id}")
-        Loggers.info(f"结算单修改备注操作结果: {result}")
+        Loggers.debug(f"结算单修改备注操作结果: {result}")
         self.assert_util.assert_response_success(result)
         self.assert_util.assert_eq(result.get("data",{}).get("data",{}).get("id",{}),sett_doc_id)
         
@@ -89,9 +89,9 @@ class TestSettDocBusiCheck(BaseTest):
         filtered_data["params"]["request"]["settDocTypeId"] = sql_result[0]["sett_doc_type_id"]
         filtered_data["params"]["request"]["tradingDocCode"] = sql_result[0]["trading_doc_code"]
         filtered_data["params"]["request"]["tradingDocStatus"] = sql_result[0]["trading_doc_status"]
-        Loggers.info(filtered_data["params"]["request"])
+        Loggers.debug(filtered_data["params"]["request"])
         result = self.http.post(url, json=filtered_data, description=f"结算单修改备注保存操作 - ID: {sett_doc_id}")
-        Loggers.info(f"结算单修改备注保存操作结果: {result}")
+        Loggers.debug(f"结算单修改备注保存操作结果: {result}")
         self.assert_util.assert_response_success(result)
         self.assert_util.assert_eq(result.get("data",{}).get("data",{}).get("id",{}),sett_doc_id)
         self.assert_util.assert_eq(result.get("data",{}).get("data",{}).get("remark",{}),"AUTOTEST-remark")
@@ -102,7 +102,8 @@ class TestSettDocBusiCheck(BaseTest):
     def test_sett_doc_confirm(self):
         """测试结算单确认"""
         url = self.fin_path["SETT-DOC-运营端结算单确认下推应收应付-异步服务"]["path"]
-        data = self.fin_params.get(url, {})
+        data = ParamUtil.filter_post_body_fields(self.fin_params.get(url, {}), ["id"], ["params", "request"])
+        data=ParamUtil.convert_param_type(data, ["params", "request","id"], "array")
         sett_doc_ids  = self.get_sett_doc_id()
         for index, sett_doc_id in enumerate(sett_doc_ids):
             data["params"]["request"]["id"][0] = sett_doc_id
@@ -128,7 +129,8 @@ class TestSettDocBusiCheck(BaseTest):
     def test_cancel_sett_doc(self):
         """测试结算单取消汇单"""
         url = self.fin_path["SETT-DOC-结算单取消服务"]["path"]
-        data = self.fin_params.get(url, {})
+        data = ParamUtil.filter_post_body_fields(self.fin_params.get(url, {}), [""], ["params", "request", 0])
+        data=ParamUtil.convert_param_type(data, ["params", "request"], "array")
         sett_doc_ids  = self.get_sett_doc_id()
         for index, sett_doc_id in enumerate(sett_doc_ids):
             
@@ -139,7 +141,7 @@ class TestSettDocBusiCheck(BaseTest):
             sett_item_sql_result = self.db.query(sett_item_sql)
             
             # 取消汇单接口
-            data["params"]["request"][0]["id"] = sett_doc_id
+            data["params"]["request"][0] = {"id":sett_doc_id}
             result = self.http.post(url, json=data, description=f"结算单取消汇单 - ID: {sett_doc_id}")
             time.sleep(2)
             
@@ -180,8 +182,9 @@ class TestSettDocBusiCheck(BaseTest):
         self.assert_util.assert_eq(result.get("data",{}).get("data",{}).get("id",{}),filtered_data["params"]["request"]["id"])
         
     @allure.title("结算单修改保存操作")
-    @allure.description("测试步骤：结算单修改保存")
+    @allure.description("测试步骤：1结算单修改保存")
     @allure.severity(allure.severity_level.CRITICAL)
+    #检查修改后的结算单金额，检查修改后生成的结算项状态、关联单据id
     def test_sett_doc_save(self):
         """结算单修改保存"""
         url = self.fin_path["结算单-结算单保存调整结算项服务"]["path"]
@@ -242,8 +245,7 @@ class TestSettDocBusiCheck(BaseTest):
         all_sett_item_code = []
         
         # 初始化settItems列表
-        #item_count = random.randint(2,10)
-        item_count = 1
+        item_count = random.randint(2,10)
         filtered_data["params"]["request"]["settItems"] = [{} for _ in range(item_count)]
 
         for i in range(item_count):
@@ -268,9 +270,9 @@ class TestSettDocBusiCheck(BaseTest):
             
             total_sett_doc_amt += filtered_data["params"]["request"]["settItems"][i]["settDocAmt"]
             all_sett_item_code.append(filtered_data["params"]["request"]["settItems"][i]["settItemCode"])
-        Loggers.info(f"total_sett_doc_amt: {total_sett_doc_amt}")
-        Loggers.info(f"sett_doc.get('sett_doc_amt'): {sett_doc.get('sett_doc_amt')}")
-        Loggers.info(sett_doc)
+        Loggers.debug(f"total_sett_doc_amt: {total_sett_doc_amt}")
+        Loggers.debug(f"sett_doc.get('sett_doc_amt'): {sett_doc.get('sett_doc_amt')}")
+        Loggers.debug(sett_doc)
         # 转换Decimal为字符串
         def convert_decimal_to_str(obj):
             if isinstance(obj, Decimal):
@@ -308,6 +310,7 @@ class TestSettDocBusiCheck(BaseTest):
 if __name__ == "__main__":
     test = TestSettDocBusiCheck()
     test.setup_class()
-    test.test_sett_doc_save()
+    test.test_sett_doc_confirm()
+    #FinSettlementFactory._insert_settlement_doc("CREATED")
             
             

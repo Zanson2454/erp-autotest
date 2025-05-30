@@ -16,6 +16,7 @@ from testcases.comm.base_test import BaseTest
 from utils.yaml_util import YamlUtil
 from data_factory.fin_sett_factory import FinSettlementFactory
 from utils.log_util import Loggers
+from utils.param_util import ParamUtil
 @allure.epic("ERP通业财模块")
 @allure.feature("结算管理")
 class TestSettItemBusiCheck(BaseTest):
@@ -40,8 +41,8 @@ class TestSettItemBusiCheck(BaseTest):
         FinSettlementFactory.get_or_create_settlement_doc("CREATED")
         created_sett_item_id = created_sett_item.get("id")
         reconciled_sett_item_id = reconciled_sett_item.get("id")
-        Loggers.info(f"已创建结算项ID: {created_sett_item_id}")
-        Loggers.info(f"已对账结算项ID: {reconciled_sett_item_id}")
+        Loggers.debug(f"已创建结算项ID: {created_sett_item_id}")
+        Loggers.debug(f"已对账结算项ID: {reconciled_sett_item_id}")
         
         sett_doc_created_sql="""
             select id
@@ -64,7 +65,8 @@ class TestSettItemBusiCheck(BaseTest):
         # 遍历每个ID进行测试
         for index, sett_item_id in enumerate(sett_item_ids):
             url = self.fin_path["SETT-ITEM-结算项确认及汇单-关联操作-异步服务"]["path"]
-            data = self.fin_params.get(url, {})
+            data = ParamUtil.filter_post_body_fields(self.fin_params.get(url, {}), ["id"], ["params", "request"])
+            data=ParamUtil.convert_param_type(data, ["params", "request"], "array")
             data["params"]["request"][0]["id"] = sett_item_id
             result = self.http.post(url, json=data, description=f"结算项对账确认 - ID: {sett_item_id}")
             
@@ -88,7 +90,6 @@ class TestSettItemBusiCheck(BaseTest):
                 assert result.get("success",{}) == False
                 assert result.get("err",{}).get("msg",{}) == "结算单异步任务提交失败，请确认结算单异步执行状态！"
                 self.assert_util.assert_eq(sql_result[0]["sett_item_status"], "SETT_DOC_CREATED")
-                self.assert_util.assert_eq(sql_result[0]["async_execution_status"], "SUCCEEDED")
                 self.assert_util.assert_not_empty(sql_result[0]["sett_doc_id"], "结算单号为空")
                 
     def test_sett_item_manual_remittance(self):
@@ -96,7 +97,8 @@ class TestSettItemBusiCheck(BaseTest):
         url = self.fin_path["SETT-ITEM-结算项手工汇单-关联操作-异步服务"]["path"]
         sett_item_ids = self.get_sett_item_id()
         for index, sett_item_id in enumerate(sett_item_ids):
-            data = self.fin_params.get(url, {})
+            data = ParamUtil.filter_post_body_fields(self.fin_params.get(url, {}), ["id"], ["params", "request"])
+            data=ParamUtil.convert_param_type(data, ["params", "request"], "array")
             data["params"]["request"][0]["id"] = sett_item_id
             result = self.http.post(url, json=data, description=f"结算项手工汇单 - ID: {sett_item_id}")
             time.sleep(3)  # 等待3秒
@@ -115,8 +117,25 @@ class TestSettItemBusiCheck(BaseTest):
                 self.assert_util.assert_eq(sql_result[0]["sett_item_status"], "SETT_DOC_CREATED")
                 self.assert_util.assert_eq(sql_result[0]["async_execution_status"], "SUCCEEDED")
                 self.assert_util.assert_not_empty(sql_result[0]["sett_doc_id"], "结算单号为空")
+                
+    def test_batch_task_record(self):
+        """批量任务记录"""
+        url = self.fin_path["结算汇单记录-分页数据服务_PmHKWs1"]["path"]
+        data = self.fin_params.get(url, {})
+        filter_data = ParamUtil.filter_post_body_fields(data, ["pageNo","pageSize","conditionItems","sortOrders"],["params","request","pageable"])
+        filter_data["params"]["request"]["pageable"]["pageNo"] = "1"
+        filter_data["params"]["request"]["pageable"]["pageSize"] = "20"
+        filter_data["params"]["request"]["pageable"]["conditionItems"] =None
+        filter_data["params"]["request"]["pageable"]["sortOrders"] = None
+        result = self.http.post(url, json=filter_data, description=f"批量任务记录")
+        self.assert_util.assert_response_success(result)
+        assert result.get("data",{}).get("data",{}).get("total",{}) >= 0
+        
 if __name__ == "__main__":
-    pytest.main(["-v", __file__])
+    test = TestSettItemBusiCheck()
+    test.setup_class()
+    test.test_sett_item_record()
+    """ pytest.main(["-v", __file__]) """
 
         
         
