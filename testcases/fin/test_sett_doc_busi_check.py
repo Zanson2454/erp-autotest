@@ -180,8 +180,9 @@ class TestSettDocBusiCheck(BaseTest):
         self.assert_util.assert_eq(result.get("data",{}).get("data",{}).get("id",{}),filtered_data["params"]["request"]["id"])
         
     @allure.title("结算单修改保存操作")
-    @allure.description("测试步骤：结算单修改保存")
+    @allure.description("测试步骤：1结算单修改保存")
     @allure.severity(allure.severity_level.CRITICAL)
+    #检查修改后的结算单金额，检查修改后生成的结算项状态、关联单据id
     def test_sett_doc_save(self):
         """结算单修改保存"""
         url = self.fin_path["结算单-结算单保存调整结算项服务"]["path"]
@@ -242,8 +243,7 @@ class TestSettDocBusiCheck(BaseTest):
         all_sett_item_code = []
         
         # 初始化settItems列表
-        #item_count = random.randint(2,10)
-        item_count = 1
+        item_count = random.randint(2,10)
         filtered_data["params"]["request"]["settItems"] = [{} for _ in range(item_count)]
 
         for i in range(item_count):
@@ -268,9 +268,9 @@ class TestSettDocBusiCheck(BaseTest):
             
             total_sett_doc_amt += filtered_data["params"]["request"]["settItems"][i]["settDocAmt"]
             all_sett_item_code.append(filtered_data["params"]["request"]["settItems"][i]["settItemCode"])
-        Loggers.info(f"total_sett_doc_amt: {total_sett_doc_amt}")
-        Loggers.info(f"sett_doc.get('sett_doc_amt'): {sett_doc.get('sett_doc_amt')}")
-        Loggers.info(sett_doc)
+        Loggers.debug(f"total_sett_doc_amt: {total_sett_doc_amt}")
+        Loggers.debug(f"sett_doc.get('sett_doc_amt'): {sett_doc.get('sett_doc_amt')}")
+        Loggers.debug(sett_doc)
         # 转换Decimal为字符串
         def convert_decimal_to_str(obj):
             if isinstance(obj, Decimal):

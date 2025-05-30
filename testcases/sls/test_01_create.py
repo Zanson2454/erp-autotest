@@ -65,7 +65,7 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
         cls.logger.info(f"初始化渲染数量: {cls.render_qty}")
         cls.logger.info("测试类初始化完成")
 
-    def _init_sales_order(self, order_type="STND"):
+    def test_01_init_sales_order(self, order_type="STND"):
         """初始化销售订单
         
         Args:
@@ -125,7 +125,7 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
         assert self.sls_phone is not None, "销售人员电话为空"
         assert self.sls_person_name is not None, "销售人员姓名为空"
 
-    def _query_customer_info(self):
+    def test_02_query_customer_info(self):
         """查询客户信息"""
         url = self.sls_api_paths["订单管理"]["查询客户信息"]  
         self.logger.info(f"查询客户信息URL: {url}")
@@ -141,7 +141,7 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
         self.assert_util.assert_eq(actual_cust_id, self.cust_id, "客户编码不匹配")
         self.logger.info("客户信息查询完成")    
         
-    def _render_addr_info(self):
+    def test_03_render_addr_info(self):
         """渲染地址信息"""
         url = self.sls_api_paths["订单管理"]["基于客户信息渲染地址信息"]
         data = self.sls_api_params.get(url, {})
@@ -154,7 +154,7 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
         self.cust_phone = addr_info.get("custPhone")
         self.logger.info("地址信息渲染完成")
 
-    def _query_partner(self):
+    def test_04_query_partner(self):
         """查询相关方"""
         url = self.sls_api_paths["订单管理"]["查询相关方"]
         data = self.sls_api_params.get(url, {})
@@ -171,7 +171,6 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
             "soSchlDelDate": int(datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp() * 1000),                   
         }]
         
-        # self.logger.debug(f"相关方查询请求数据: {json.dumps(data,  indent=2)}")
         result = self.http.post(url, json=data, description="查询相关方")
         
         # 保存相关方信息供后续使用
@@ -180,7 +179,7 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
         self.logger.info("相关方查询完成")
         self.assert_util.assert_id_exists(self.sls_partner_links, "相关方信息")
 
-    def _query_sales_organization(self):
+    def test_05_query_sales_organization(self):
         """查询销售组织列表"""
         url = self.sls_api_paths["订单管理"]["查询销售组织"]
         data = self.sls_api_params.get(url, {})
@@ -196,7 +195,7 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
         self.assert_util.assert_id_exists(self.sls_org_obj, "销售组织信息")
         self.assert_util.assert_id_exists(self.sls_org_id, "销售组织ID")
 
-    def _query_materials(self):
+    def test_06_query_materials(self):
         """查询物料列表"""
         url = self.sls_api_paths["订单管理"]["查询物料"]
         data = self.sls_api_params.get(url, {})
@@ -248,7 +247,7 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
             self.logger.error("未找到任何物料")
             raise Exception("未找到任何物料")
 
-    def _render_order_line(self, order_type="STND"):
+    def test_07_render_order_line(self, order_type="STND"):
         """渲染订单行
         
         Args:
@@ -256,7 +255,7 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
         """
         # 确保物料已查询
         if not hasattr(self, 'mat_obj') or self.mat_obj is None:
-            self._query_materials()
+            self.test_06_query_materials()
         
         url = self.sls_api_paths["订单管理"]["渲染订单行"]
         curr_time = int(datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp() * 1000)
@@ -337,13 +336,32 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
             self.logger.error(f"订单行渲染原始响应: {json.dumps(result, ensure_ascii=False, indent=2)}")
             raise
 
-    def _calculate_pricing(self):
+    def test_08_calculate_pricing(self):
         """自动定价"""
         try:
-            # 1. 准备请求参数
             with allure.step("准备定价参数"):
+                # 新增日志，打印所有依赖变量
                 url = self.sls_api_paths["订单管理"]["自动定价"]
                 data = self.sls_api_params.get(url, {})
+                
+                # 防止单独调用没拿到变量
+                if not self.sls_person_obj:
+                    self.test_01_init_sales_order()
+                if not self.cust_id:
+                    self.test_02_query_customer_info()
+                if not self.addr_id:
+                    self.test_03_render_addr_info() 
+                if not self.sls_partner_links:
+                    self.test_04_query_partner()
+                if not self.sls_org_id:
+                    self.test_05_query_sales_organization()
+                if not self.mat_obj:
+                    self.test_06_query_materials()
+                if not self.so_items:
+                    self.test_07_render_order_line()
+                url = self.sls_api_paths["订单管理"]["自动定价"]
+                data = self.sls_api_params.get(url, {})
+  
                 data['params']['request']['soTypeId'] = {"id": self.so_type_id} #更新变量
                 data['params']['request']['soDocDate'] = int(datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp() * 1000) #更新变量
                 data['params']['request']['priceCalcDate'] = int(datetime.now().timestamp() * 1000) #更新变量
@@ -371,7 +389,6 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
                 )
                 self.logger.info(f"自动定价请求参数: {json.dumps(data, indent=2, ensure_ascii=False)}")
 
-            # 2. 发送请求
             with allure.step("发送定价请求"):
                 try:
                     result = self.http.post(url, json=data, description="自动定价")
@@ -431,22 +448,22 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
         try:
             # 1. 渲染订单行
             with allure.step(f"初始化{order_type}类型销售订单"):
-                self._init_sales_order(order_type)
+                self.test_01_init_sales_order(order_type)
             with allure.step("查询客户信息"):
-                self._query_customer_info()
+                self.test_02_query_customer_info()
             with allure.step("查询相关方"):
-                self._query_partner()
+                self.test_04_query_partner()
             with allure.step("查询销售组织"):
-                self._query_sales_organization()
+                self.test_05_query_sales_organization()
             with allure.step("查询物料"):
-                self._query_materials()
+                self.test_06_query_materials()
             with allure.step(f"渲染{order_type}类型订单行"):
-                self._render_order_line(order_type)
+                self.test_07_render_order_line(order_type)
                 assert self.so_items is not None, "订单行信息为空"
 
             # 2. 自动定价
             with allure.step("自动定价"):
-                self._calculate_pricing()
+                self.test_08_calculate_pricing()
                 assert self.so_price_data is not None, "定价信息为空"
 
             # 3. 保存或提交订单
@@ -574,6 +591,15 @@ if __name__ == "__main__":
     # pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])
     test = TestSalesOrderCreate()
     test.setup_class()
+    test.test_01_init_sales_order()
+    test.test_02_query_customer_info()
+    test.test_03_render_addr_info()
+    test.test_04_query_partner()
+    test.test_05_query_sales_organization()
+    test.test_06_query_materials()
+    test.test_07_render_order_line()
+    test.test_08_calculate_pricing()
+    test._save_or_submit_order()
     test.test_save_multiple_order_types()
     test.test_submit_multiple_order_types()
     
