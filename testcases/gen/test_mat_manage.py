@@ -38,7 +38,7 @@ class TestMatAdd(GenBaseTest):
         super().setup_class()
         
         cls.logger.info("物料管理测试类初始化完成")
-
+    @pytest.mark.smoke
     @pytest.mark.run(order=1)
     @allure.story("新增物料")
     @allure.description(""" 
