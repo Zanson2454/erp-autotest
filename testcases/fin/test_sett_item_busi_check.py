@@ -16,6 +16,7 @@ from testcases.comm.base_test import BaseTest
 from utils.yaml_util import YamlUtil
 from data_factory.fin_sett_factory import FinSettlementFactory
 from utils.log_util import Loggers
+from utils.param_util import ParamUtil
 @allure.epic("ERP通业财模块")
 @allure.feature("结算管理")
 class TestSettItemBusiCheck(BaseTest):
@@ -115,8 +116,25 @@ class TestSettItemBusiCheck(BaseTest):
                 self.assert_util.assert_eq(sql_result[0]["sett_item_status"], "SETT_DOC_CREATED")
                 self.assert_util.assert_eq(sql_result[0]["async_execution_status"], "SUCCEEDED")
                 self.assert_util.assert_not_empty(sql_result[0]["sett_doc_id"], "结算单号为空")
+                
+    def test_batch_task_record(self):
+        """批量任务记录"""
+        url = self.fin_path["结算汇单记录-分页数据服务_PmHKWs1"]["path"]
+        data = self.fin_params.get(url, {})
+        filter_data = ParamUtil.filter_post_body_fields(data, ["pageNo","pageSize","conditionItems","sortOrders"],["params","request","pageable"])
+        filter_data["params"]["request"]["pageable"]["pageNo"] = "1"
+        filter_data["params"]["request"]["pageable"]["pageSize"] = "20"
+        filter_data["params"]["request"]["pageable"]["conditionItems"] =None
+        filter_data["params"]["request"]["pageable"]["sortOrders"] = None
+        result = self.http.post(url, json=filter_data, description=f"批量任务记录")
+        self.assert_util.assert_response_success(result)
+        assert result.get("data",{}).get("data",{}).get("total",{}) >= 0
+        
 if __name__ == "__main__":
-    pytest.main(["-v", __file__])
+    test = TestSettItemBusiCheck()
+    test.setup_class()
+    test.test_batch_task_record()
+    """ pytest.main(["-v", __file__]) """
 
         
         
