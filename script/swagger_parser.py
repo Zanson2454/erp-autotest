@@ -257,6 +257,10 @@ class SwaggerParser:
                     if not service_name:
                         service_name = path.split('/')[-1] if '/' in path else path
                     
+                    # 过滤条件：路径包含 $SYS_ 或 summary 包含"系统"
+                    if "$SYS_" in path or "系统" in service_name:
+                        continue
+                    
                     service_name = service_name.replace('【系统服务】', '').replace('【事件服务】', '').replace('【编排服务】', '').strip()
                     
                     api_info_for_gen_path = {
@@ -553,10 +557,10 @@ if __name__ == "__main__":
     )
     
     # 获取指定团队和模块的Swagger文档
-    swagger_doc = parser.fetch_swagger_doc("TERP", "ERP_PRD")
+    swagger_doc = parser.fetch_swagger_doc("TERPSAAS", "GEN_MD")
     
     # 解析所有接口
     endpoints = parser.parse_endpoints()
     
     # 保存路径信息到gen_path.yaml
-    parser.save_paths_to_yaml(endpoints, module="ERP_PRD") 
+    parser.save_paths_to_yaml(endpoints, module="GEN_MD") 
