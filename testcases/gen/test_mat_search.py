@@ -40,15 +40,17 @@ class TestMatSearch(GenBaseTest):
                 # 使用ParamUtil.filter_post_body_fields过滤字段，同时保留嵌套结构
                 filtered_params = ParamUtil.filter_post_body_fields(params, 
                 ["slsOrgId","cateId","slsDcId","pageable"],["params", "request"])
-                # 设置必要的值
-                filtered_params['params']["request"]["slsOrgId"] = 0
-                filtered_params['params']["request"]["cateId"] = 0
-                filtered_params['params']["request"]["slsDcId"] = 0
-                # 设置pageable字段的值
-                filtered_params['params']["request"]["pageable"]["pageNo"] = 1
-                filtered_params['params']["request"]["pageable"]["pageSize"] = 20
-                # 修正sortOrders，设置为空数组避免SQL错误
-                filtered_params['params']["request"]["pageable"]["sortOrders"] = []
+                
+                # 使用基类方法批量设置参数
+                self.set_request_params(filtered_params, {
+                    "slsOrgId": 0,
+                    "cateId": 0,
+                    "slsDcId": 0,
+                    "pageable": {
+                        "sortOrders": []
+                    }
+                })
+                
                 self.logger.info(f"请求URL: {url}")
                 self.logger.info(f"请求参数: {filtered_params}")
                 # 添加请求参数到报告

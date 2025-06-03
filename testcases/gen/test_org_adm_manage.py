@@ -56,11 +56,11 @@ class TestOrgStruct(GenBaseTest):
     def test_org_struct_save(self):
         try:
             with a.step("1. 生成组织基础信息"):
-                # 使用时间戳和随机数生成唯一编码和名称
-                timestamp = time.strftime("%Y%m%d%H%M%S")
-                org_code = f"ORG{timestamp}{random.randint(1000, 9999)}"
-                org_name = f"TEST_ORG_{random.randint(100, 999)}"
-                remark = f"自动化测试创建 - {time.strftime('%Y-%m-%d %H:%M:%S')}"
+                # 使用基类方法生成唯一编码和名称
+                org_code = self.generate_unique_code("ORG")
+                org_name = self.generate_test_name("TEST_ORG")
+                remark = self.generate_remark()
+                
                 # 记录生成的信息
                 self.logger.info(f"生成组织编码: {org_code}, 名称: {org_name}")
                 # 添加到报告中
@@ -82,15 +82,19 @@ class TestOrgStruct(GenBaseTest):
                                 ["orgCode", "orgName", "orgSort", "orgDimensionCode","orgBusinessTypeIds","orgEnableDate"], 
                                 ["params", "request"])
                 
-                # 设置必要参数值
-                filtered_params['params']["request"]["orgCode"] = org_code
-                filtered_params['params']["request"]["orgName"] = org_name
-                filtered_params['params']["request"]["orgSort"] = 1  # 组织排序
-                filtered_params['params']["request"]["orgDimensionCode"] = "ADM_ORG_GRP"  # 组织维度代码
-                filtered_params['params']["request"]["orgBusinessTypeIds"] = [2010001]  # 组织业务类型ID
                 # 生成当前日期作为启用日期
                 current_date = datetime.datetime.now().strftime("%Y-%m-%d")
-                filtered_params['params']["request"]["orgEnableDate"] = current_date  # 使用当前日期作为启用日期
+                
+                # 使用基类方法批量设置参数
+                self.set_request_params(filtered_params, {
+                    "orgCode": org_code,
+                    "orgName": org_name,
+                    "orgSort": 1,  # 组织排序
+                    "orgDimensionCode": "ADM_ORG_GRP",  # 组织维度代码
+                    "orgBusinessTypeIds": [2010001],  # 组织业务类型ID
+                    "orgEnableDate": current_date  # 使用当前日期作为启用日期
+                })
+                
                 self.logger.info(f"请求URL: {url}")
                 self.logger.info(f"请求参数: {filtered_params}")
                 # 添加请求数据到报告
@@ -166,8 +170,9 @@ class TestOrgStruct(GenBaseTest):
                 filtered_params = ParamUtil.filter_post_body_fields(params, 
                                  ["id"], ["params", "request"])
                 
-                # 设置必要参数值
-                filtered_params['params']["request"]["id"] = TestOrgStruct.org_info["org_id"]                
+                # 使用基类方法设置参数
+                self.set_request_param(filtered_params, "id", TestOrgStruct.org_info["org_id"])
+                
                 self.logger.info(f"请求URL: {url}")
                 self.logger.info(f"请求参数: {filtered_params}")
                 # 添加请求数据到报告
@@ -238,17 +243,19 @@ class TestOrgStruct(GenBaseTest):
                                 ["id", "orgCode", "orgName", "orgSort", "orgDimensionCode", "orgBusinessTypeIds", "orgEnableDate"], 
                                 ["params", "request"])
                 
-                # 设置必要参数值
-                filtered_params['params']["request"]["id"] = TestOrgStruct.org_info["org_id"]  # 设置组织ID
-                filtered_params['params']["request"]["orgCode"] = TestOrgStruct.org_info["org_code"]  # 保持原编码不变
-                filtered_params['params']["request"]["orgName"] = new_org_name  # 设置新名称
-                filtered_params['params']["request"]["orgSort"] = 1  # 组织排序
-                filtered_params['params']["request"]["orgDimensionCode"] = "ADM_ORG_GRP"  # 组织维度代码
-                filtered_params['params']["request"]["orgBusinessTypeIds"] = [2010001]  # 组织业务类型ID
-                
                 # 生成当前日期作为启用日期
                 current_date = datetime.datetime.now().strftime("%Y-%m-%d")
-                filtered_params['params']["request"]["orgEnableDate"] = current_date
+                
+                # 使用基类方法批量设置参数
+                self.set_request_params(filtered_params, {
+                    "id": TestOrgStruct.org_info["org_id"],  # 设置组织ID
+                    "orgCode": TestOrgStruct.org_info["org_code"],  # 保持原编码不变
+                    "orgName": new_org_name,  # 设置新名称
+                    "orgSort": 1,  # 组织排序
+                    "orgDimensionCode": "ADM_ORG_GRP",  # 组织维度代码
+                    "orgBusinessTypeIds": [2010001],  # 组织业务类型ID
+                    "orgEnableDate": current_date  # 使用当前日期作为启用日期
+                })
                 
                 self.logger.info(f"请求URL: {url}")
                 self.logger.info(f"请求参数: {filtered_params}")
@@ -325,8 +332,9 @@ class TestOrgStruct(GenBaseTest):
                 filtered_params = ParamUtil.filter_post_body_fields(params, 
                                  ["id"], ["params", "request"])
                 
-                # 设置必要参数值
-                filtered_params['params']["request"]["id"] = TestOrgStruct.org_info["org_id"]
+                # 使用基类方法设置参数
+                self.set_request_param(filtered_params, "id", TestOrgStruct.org_info["org_id"])
+                
                 self.logger.info(f"请求URL: {url}")
                 self.logger.info(f"请求参数: {filtered_params}")
                 # 添加请求数据到报告
@@ -387,10 +395,12 @@ class TestOrgStruct(GenBaseTest):
                 filtered_params = ParamUtil.filter_post_body_fields(params, 
                                 ["orgName", "orgStatus", "orgDimensionCode"], ["params", "request"])
                 
-                # 设置查询条件
-                filtered_params['params']["request"]["orgStatus"] = ["ENABLED","INACTIVE", "DRAFT", "DISABLED"] 
-                filtered_params['params']["request"]["orgName"] = TestOrgStruct.org_info["org_name"]
-                filtered_params['params']["request"]["orgDimensionCode"] = "ADM_ORG_GRP"
+                # 使用基类方法批量设置参数
+                self.set_request_params(filtered_params, {
+                    "orgStatus": ["ENABLED","INACTIVE", "DRAFT", "DISABLED"],
+                    "orgName": TestOrgStruct.org_info["org_name"],
+                    "orgDimensionCode": "ADM_ORG_GRP"
+                })
                 
                 self.logger.info(f"请求URL: {url}")
                 self.logger.info(f"请求参数: {filtered_params}")
@@ -469,8 +479,9 @@ class TestOrgStruct(GenBaseTest):
                 filtered_params = ParamUtil.filter_post_body_fields(params, 
                                  ["id"], ["params", "request"])
                 
-                # 设置必要参数值
-                filtered_params['params']["request"]["id"] = TestOrgStruct.org_info["org_id"]
+                # 使用基类方法设置参数
+                self.set_request_param(filtered_params, "id", TestOrgStruct.org_info["org_id"])
+                
                 self.logger.info(f"请求URL: {url}")
                 self.logger.info(f"请求参数: {filtered_params}")
                 # 添加请求数据到报告

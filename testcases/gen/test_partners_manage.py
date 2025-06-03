@@ -54,11 +54,10 @@ class TestPartners(GenBaseTest):
     def test_partner_add(self):
         try:
             with a.step("1. 生成合作伙伴基础信息"):
-                # 使用时间戳和随机数生成唯一编码和名称
-                timestamp = time.strftime("%Y%m%d%H%M%S")
-                partner_code = f"PAR{timestamp}{random.randint(1000, 9999)}"
-                partner_name = f"TEST_PARTNER_{random.randint(100, 999)}"
-                remark = f"自动化测试创建 - {time.strftime('%Y-%m-%d %H:%M:%S')}"
+                # 使用基类方法生成唯一编码和名称
+                partner_code = self.generate_unique_code("PAR")
+                partner_name = self.generate_test_name("TEST_PARTNER")
+                remark = self.generate_remark()
                 
                 # 记录生成的信息
                 self.logger.info(f"生成合作伙伴编码: {partner_code}, 名称: {partner_name}")
@@ -80,13 +79,16 @@ class TestPartners(GenBaseTest):
                 filtered_params = ParamUtil.filter_post_body_fields(params, 
                                 ["code", "name","classType","status","partnerTypeId","partnerIdentity"], ["params", "request"])
                 
-                # 设置必要参数值
-                filtered_params['params']["request"]["code"] = partner_code
-                filtered_params['params']["request"]["name"] = partner_name
-                filtered_params['params']["request"]["classType"] = "COMPANY"
-                filtered_params['params']["request"]["status"] = "INACTIVE"
-                filtered_params['params']["request"]["partnerTypeId"] = {"id":2011001}
-                filtered_params['params']["request"]["partnerIdentity"] = ["SUPPLIER"]
+                # 使用基类方法批量设置参数
+                self.set_request_params(filtered_params, {
+                    "code": partner_code,
+                    "name": partner_name,
+                    "classType": "COMPANY",
+                    "status": "INACTIVE",
+                    "partnerTypeId": {"id":2011001},
+                    "partnerIdentity": ["SUPPLIER"]
+                })
+                
                 self.logger.info(f"请求URL: {url}")
                 self.logger.info(f"请求参数: {filtered_params}")
                 # 添加请求数据到报告
@@ -168,18 +170,21 @@ class TestPartners(GenBaseTest):
                 filtered_params = ParamUtil.filter_post_body_fields(params, 
                               ["conditionItems", "pageable"], ["params", "request"])
                 
-                # 设置必要参数值
-                filtered_params['params']["request"]["pageable"]["conditionItems"] = {
-                        "conditions": {
-                            "code": {
-                                "operator": "CONTAINS",
-                                "value": TestPartners.partner_info["partner_code"]
+                # 使用基类方法设置查询参数
+                self.set_request_params(filtered_params, {
+                    "pageable": {
+                        "conditionItems": {
+                            "conditions": {
+                                "code": {
+                                    "operator": "CONTAINS",
+                                    "value": TestPartners.partner_info["partner_code"]
+                                }
                             }
                         },
+                        "sortOrders": None
                     }
-                filtered_params['params']["request"]['pageable']["pageNo"] = 1
-                filtered_params['params']["request"]['pageable']["pageSize"] = 20
-                filtered_params['params']["request"]["pageable"]['sortOrders'] = None
+                })
+                
                 self.logger.info(f"查询的合作伙伴编码: {TestPartners.partner_info['partner_code']}")
                 self.logger.info(f"请求URL: {url}")
                 self.logger.info(f"请求参数: {filtered_params}")
@@ -269,8 +274,8 @@ class TestPartners(GenBaseTest):
                 filtered_params = ParamUtil.filter_post_body_fields(params, 
                                 ["id"], ["params", "request"])
                 
-                # 设置必要参数值
-                filtered_params['params']["request"]["id"] = TestPartners.partner_info["partner_id"]
+                # 使用基类方法设置请求参数
+                self.set_request_param(filtered_params, "id", TestPartners.partner_info["partner_id"])
                 
                 self.logger.info(f"请求URL: {url}")
                 self.logger.info(f"请求参数: {filtered_params}")
@@ -332,8 +337,8 @@ class TestPartners(GenBaseTest):
                 filtered_params = ParamUtil.filter_post_body_fields(params, 
                                 ["id"], ["params", "request"])
                 
-                # 设置必要参数值
-                filtered_params['params']["request"]["id"] = TestPartners.partner_info["partner_id"]
+                # 使用基类方法设置请求参数
+                self.set_request_param(filtered_params, "id", TestPartners.partner_info["partner_id"])
                 
                 self.logger.info(f"请求URL: {url}")
                 self.logger.info(f"请求参数: {filtered_params}")
@@ -396,8 +401,8 @@ class TestPartners(GenBaseTest):
                 filtered_params = ParamUtil.filter_post_body_fields(params, 
                                 ["id"], ["params", "request"])
                 
-                # 设置必要参数值
-                filtered_params['params']["request"]["id"] = TestPartners.partner_info["partner_id"]
+                # 使用基类方法设置请求参数
+                self.set_request_param(filtered_params, "id", TestPartners.partner_info["partner_id"])
                 
                 self.logger.info(f"请求URL: {url}")
                 self.logger.info(f"请求参数: {filtered_params}")

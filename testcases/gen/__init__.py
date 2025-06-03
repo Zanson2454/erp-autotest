@@ -3,6 +3,8 @@
 提供配置加载等通用功能
 """
 import yaml
+import time
+import random
 from pathlib import Path
 from testcases.comm.base_test import BaseTest
 from utils.yaml_util import YamlUtil
@@ -82,3 +84,77 @@ class GenBaseTest(BaseTest):
         # 获取请求参数 (从api_params字典中获取对应api_path的参数模板)
         params = self.api_params.get(api_path, {})
         return params, url
+    
+    def generate_unique_code(self, prefix="TEST"):
+        """
+        生成唯一编码
+        
+        参数:
+            prefix (str): 编码前缀，默认为"TEST"
+            
+        返回:
+            str: 生成的唯一编码，格式为"<prefix><时间戳><随机数>"
+        """
+        timestamp = time.strftime("%Y%m%d%H%M%S")
+        return f"{prefix}{timestamp}{random.randint(1000, 9999)}"
+    
+    def generate_test_name(self, prefix="TEST_NAME"):
+        """
+        生成测试名称
+        
+        参数:
+            prefix (str): 名称前缀，默认为"TEST_NAME"
+            
+        返回:
+            str: 生成的测试名称，格式为"<prefix>_<随机数>"
+        """
+        return f"{prefix}_{random.randint(100, 999)}"
+    
+    def generate_remark(self):
+        """
+        生成备注信息
+        
+        返回:
+            str: 生成的备注信息，包含当前时间
+        """
+        return f"自动化测试创建 - {time.strftime('%Y-%m-%d %H:%M:%S')}"
+        
+    def set_request_param(self, params, key, value):
+        """
+        设置请求参数中的值，简化嵌套访问
+        
+        参数:
+            params: 请求参数字典
+            key: 参数键名
+            value: 参数值
+        
+        返回:
+            更新后的参数字典
+        """
+        if 'params' not in params:
+            params['params'] = {}
+        if 'request' not in params['params']:
+            params['params']['request'] = {}
+            
+        params['params']['request'][key] = value
+        return params
+    
+    def set_request_params(self, params, param_dict):
+        """
+        批量设置请求参数，简化嵌套访问
+        
+        参数:
+            params: 请求参数字典
+            param_dict: 要设置的参数字典 {key: value, ...}
+        
+        返回:
+            更新后的参数字典
+        """
+        if 'params' not in params:
+            params['params'] = {}
+        if 'request' not in params['params']:
+            params['params']['request'] = {}
+            
+        for key, value in param_dict.items():
+            params['params']['request'][key] = value
+        return params

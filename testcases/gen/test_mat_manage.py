@@ -55,11 +55,11 @@ class TestMatAdd(GenBaseTest):
     def test_mat_add(self):
         try:
             with a.step("1. 生成物料基础信息"):
-                # 使用时间戳和随机数生成唯一编码和名称
-                timestamp = time.strftime("%Y%m%d%H%M%S")
-                mat_code = f"MAT{timestamp}{random.randint(1000, 9999)}"
-                mat_name = f"TEST_MAT_{random.randint(100, 999)}"
-                remark = f"自动化测试创建 - {time.strftime('%Y-%m-%d %H:%M:%S')}"
+                # 使用基类方法生成唯一编码和名称
+                mat_code = self.generate_unique_code("MAT")
+                mat_name = self.generate_test_name("TEST_MAT")
+                remark = self.generate_remark()
+                
                 # 记录生成的信息
                 self.logger.info(f"生成物料编码: {mat_code}, 名称: {mat_name}")
                 # 添加到报告中
@@ -80,16 +80,17 @@ class TestMatAdd(GenBaseTest):
                 filtered_params = ParamUtil.filter_post_body_fields(params, 
                                  ["mat_code", "mat_name","cateId","genMatTypeCfId", "baseUomId", "status", "remark","matCharaClassList"], ["params", "request"])
                 
-                # 设置必要参数值
-                filtered_params['params']["request"]["mat_code"] = mat_code
-                filtered_params['params']["request"]["mat_name"] = mat_name
-                filtered_params['params']["request"]["remark"] = remark
-                
-                filtered_params['params']["request"]["cateId"] = {"id":2000001}
-                filtered_params['params']["request"]["genMatTypeCfId"] = {"id":2000001}
-                filtered_params['params']["request"]["baseUomId"] = {"id":2000001}
-                filtered_params['params']["request"]["status"] = "INACTIVE"
-                filtered_params['params']["request"]["matCharaClassList"] = []
+                # 使用基类方法批量设置参数
+                self.set_request_params(filtered_params, {
+                    "mat_code": mat_code,
+                    "mat_name": mat_name,
+                    "remark": remark,
+                    "cateId": {"id":2000001},
+                    "genMatTypeCfId": {"id":2000001},
+                    "baseUomId": {"id":2000001},
+                    "status": "INACTIVE",
+                    "matCharaClassList": []
+                })
             
                 self.logger.info(f"请求URL: {url}")
                 self.logger.info(f"请求参数: {filtered_params}")
@@ -166,8 +167,9 @@ class TestMatAdd(GenBaseTest):
                 filtered_params = ParamUtil.filter_post_body_fields(params, 
                                  ["id"], ["params", "request"])
                 
-                # 设置必要参数值
-                filtered_params['params']["request"]["id"] = TestMatAdd.mat_info["mat_id"]                
+                # 使用基类方法设置参数
+                self.set_request_param(filtered_params, "id", TestMatAdd.mat_info["mat_id"])
+                
                 self.logger.info(f"请求URL: {url}")
                 self.logger.info(f"请求参数: {filtered_params}")
                 # 添加请求数据到报告
@@ -228,8 +230,9 @@ class TestMatAdd(GenBaseTest):
                 filtered_params = ParamUtil.filter_post_body_fields(params, 
                                  ["id"], ["params", "request"])
                 
-                # 设置必要参数值
-                filtered_params['params']["request"]["id"] = TestMatAdd.mat_info["mat_id"]                
+                # 使用基类方法设置参数
+                self.set_request_param(filtered_params, "id", TestMatAdd.mat_info["mat_id"])
+                
                 self.logger.info(f"请求URL: {url}")
                 self.logger.info(f"请求参数: {filtered_params}")
                 # 添加请求数据到报告
