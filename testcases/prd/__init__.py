@@ -126,4 +126,42 @@ class PrdBaseTest(BaseTest):
             url = f"{api_path}?{with_query_params}"
         
         params = self.api_params.get(api_path, {})
-        return params, url 
+        return params, url
+    
+    def get_latest_prd_order(self):
+        """
+        获取最新的生产订单信息
+        
+        返回:
+            dict: 包含生产订单ID和编号的字典
+        """
+        try:
+            # 查询最新的草稿状态生产订单
+            sql = """
+                SELECT id, wo_code, status, confirm_status, delivered_status
+                FROM prd_order_header_tr
+                WHERE deleted = 0
+                AND status = 'DRAFT'
+                AND confirm_status = 'UNCONFIRMED'
+                AND delivered_status = 'UNDELIVERED'
+                ORDER BY id DESC
+                LIMIT 1
+            """
+            result = self.db.query(sql)
+            assert result, "未找到草稿状态的生产订单"
+            
+            # 返回生产订单信息
+            order_info = {
+                "id": result[0]["id"],
+                "wo_code": result[0]["wo_code"],
+                "status": result[0]["status"],
+                "confirm_status": result[0]["confirm_status"],
+                "delivered_status": result[0]["delivered_status"]
+            }
+            
+            self.logger.info(f"获取到生产订单信息: {order_info}")
+            return order_info
+            
+        except Exception as e:
+            self.logger.error(f"获取生产订单信息失败: {str(e)}")
+            raise 

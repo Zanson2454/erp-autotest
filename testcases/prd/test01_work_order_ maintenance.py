@@ -511,12 +511,6 @@ class TestPrdOrder(PrdBaseTest):
                 
                 # 设置必要参数值
                 filtered_params = {
-                    "sceneKey": "ERP_PRD$PRD_WO_VIEW",
-                    "viewKey": "ERP_PRD$PRD_WO_VIEW:edit",
-                    "viewTitle": "edit",
-                    "appId": 0,
-                    "teamId": 22,
-                    "serviceKey": "ERP_PRD$PRD_FIND_ORDER_ITEM_BY_VRS_EVENT_SERVICE",
                     "params": {
                         "request": {
                             "woTypeId": {
@@ -553,10 +547,7 @@ class TestPrdOrder(PrdBaseTest):
                                 "id": self.prd_order_info["mvm_type_id"]
                             },
                             "prdVrsId": {
-                                "id": self.prd_order_info["prd_version_info"]["id"],
-                                "bomVrsId": {
-                                    "id": self.prd_order_info["prd_version_info"]["bomVrsId"]["id"]
-                                }
+                                "id": self.prd_order_info["prd_version_info"]["id"]
                             },
                             "routingList": [],
                             "bomList": []
