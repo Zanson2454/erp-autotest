@@ -52,18 +52,16 @@ class PrdBaseTest(BaseTest):
     def _init_base_info(cls):
         """初始化基础配置数据"""
         try:
-            # 1. 查询工单类型配置
+            # 查询工单类型配置
             wo_type_sql = """
                 SELECT id, type_code, type_name 
                 FROM prd_wo_type_cf 
                 WHERE deleted = 0 AND type_name = '量产生产订单'
                 LIMIT 1
             """
-            wo_type_result = DBManager.query(wo_type_sql)
-            if not wo_type_result:
-                raise Exception("未找到量产生产订单工单类型配置")
+            wo_type_info = DBManager.query(wo_type_sql)[0]
             
-            # 2. 查询库存组织配置
+            # 查询库存组织配置
             inv_org_sql = """
                 SELECT id, org_code, org_name 
                 FROM org_struct_md 
@@ -74,23 +72,23 @@ class PrdBaseTest(BaseTest):
                 AND deleted=0 
                 LIMIT 1
             """
-            inv_org_result = DBManager.query(inv_org_sql)
-            if not inv_org_result:
-                raise Exception("未找到C100开头的库存组织配置")
+            inv_org_info = DBManager.query(inv_org_sql)[0]
+
+            # 查询生产物料配置
+            prd_mat_sql = """
+                SELECT id, mat_code, mat_name
+                FROM gen_mat_md
+                WHERE deleted = 0 AND mat_code = 'W1790'
+                LIMIT 1
+            """
+            prd_mat_info = DBManager.query(prd_mat_sql)[0]
             
-            # 3. 保存查询结果
-            cls.base_info.update({
-                "wo_type_info": {
-                    "id": wo_type_result[0]["id"],
-                    "type_code": wo_type_result[0]["type_code"],
-                    "type_name": wo_type_result[0]["type_name"]
-                },
-                "inv_org_info": {
-                    "id": inv_org_result[0]["id"],
-                    "org_code": inv_org_result[0]["org_code"],
-                    "org_name": inv_org_result[0]["org_name"]
-                }
-            })
+            # 保存配置信息
+            cls.base_info = {
+                "wo_type_info": wo_type_info,
+                "inv_org_info": inv_org_info,
+                "prd_mat_info": prd_mat_info
+            }
             
             cls.logger.info(f"基础配置数据初始化成功: {cls.base_info}")
             
