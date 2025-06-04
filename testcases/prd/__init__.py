@@ -164,4 +164,27 @@ class PrdBaseTest(BaseTest):
             
         except Exception as e:
             self.logger.error(f"获取生产订单信息失败: {str(e)}")
-            raise 
+            raise
+
+    def get_prd_order_pending_issue_bom_items(self):
+        """
+        获取生产订单待领料BOM行信息
+        Returns:
+            list: 包含待领料BOM行ID的列表
+                [{'id': xxx}, {'id': xxx}]
+        """
+        # 获取最新的生产订单ID
+        latest_order = self.get_latest_prd_order()
+        order_id = latest_order.get("id")
+        
+        sql = f"""
+            SELECT id
+            FROM prd_order_bom_item_tr
+            WHERE deleted = 0 
+            AND is_backflush = 0 
+            AND prd_order_header_tr_id = {order_id}
+            ORDER BY id DESC
+        """
+        result = self.db.query(sql)
+        self.logger.info(f"获取到生产订单待领料BOM行信息: {result}")
+        return result 
