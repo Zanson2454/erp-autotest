@@ -503,21 +503,63 @@ class TestPrdOrder(PrdBaseTest):
         try:
             with a.step("1. 准备请求数据"):
                 # 获取API路径
-                api_path = self.get_api_path("根据生产版本更新物料组件服务")
+                api_path = self.get_api_path("根据生产版本获取物料组件服务")
                 self.logger.debug(f"查询BOM清单API路径: {api_path}")
                 
                 # 获取请求参数
                 params, url = self.get_api_params(api_path)
                 
-                # 设置必要参数值 - 只保留最基本参数进行测试
+                # 设置必要参数值
                 filtered_params = {
+                    "sceneKey": "ERP_PRD$PRD_WO_VIEW",
+                    "viewKey": "ERP_PRD$PRD_WO_VIEW:edit",
+                    "viewTitle": "edit",
+                    "appId": 0,
+                    "teamId": 22,
+                    "serviceKey": "ERP_PRD$PRD_FIND_ORDER_ITEM_BY_VRS_EVENT_SERVICE",
                     "params": {
                         "request": {
-                            # 只保留生产版本相关信息
+                            "woTypeId": {
+                                "id": self.base_info["wo_type_info"]["id"]
+                            },
+                            "invOrgId": {
+                                "id": self.base_info["inv_org_info"]["id"]
+                            },
+                            "matId": {
+                                "id": self.base_info["prd_mat_info"]["id"]
+                            },
+                            "status": "DRAFT",
+                            "confirmStatus": "UNCONFIRMED",
+                            "deliveredStatus": "UNDELIVERED",
+                            "prdMatId": {
+                                "id": self.prd_order_info["prd_mat_view_info"]["id"]
+                            },
+                            "qty": self.base_qty,
+                            "prdUomId": {
+                                "id": self.prd_order_info["prd_mat_view_info"]["prdUomId"]["id"]
+                            },
+                            "insufficientDeliveryTolerance": self.prd_order_info["insufficient_tolerance"],
+                            "unlimitedOverDelivery": self.prd_order_info["unlimited_over_delivery"],
+                            "excessiveDeliveryTolerance": self.prd_order_info["excessive_tolerance"],
+                            "plannedStartDate": self.prd_order_info["planned_start_date"],
+                            "plannedEndDate": self.prd_order_info["planned_end_date"],
+                            "locId": {
+                                "id": self.prd_order_info["prd_mat_view_info"]["invLocId"]["id"]
+                            },
+                            "postInvTypeId": {
+                                "id": self.prd_order_info["prd_mat_view_info"]["postInvTypeId"]
+                            },
+                            "mvmTypeId": {
+                                "id": self.prd_order_info["mvm_type_id"]
+                            },
                             "prdVrsId": {
                                 "id": self.prd_order_info["prd_version_info"]["id"],
-                                "bomVrsId": {"id": self.prd_order_info["prd_version_info"]["bomVrsId"]["id"]}
-                            }
+                                "bomVrsId": {
+                                    "id": self.prd_order_info["prd_version_info"]["bomVrsId"]["id"]
+                                }
+                            },
+                            "routingList": [],
+                            "bomList": []
                         }
                     }
                 }
