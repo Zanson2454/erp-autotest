@@ -366,7 +366,7 @@ class TestSalesOrderOperator(BaseTest,SlsBase):
         }
         
         # 发送请求
-        url = self.sls_api_paths["订单管理"]["提交订单"]
+        url = self.sls_api_paths["订单管理"]["销售订单编辑提交"]
         data = self.sls_api_params[url]
         data["params"]["request"] = request_data["params"]["request"]
         

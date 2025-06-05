@@ -1,0 +1,77 @@
+2025-06-05 10:48:23.496 | INFO     | utils.log_util:info:65 - 开始测试: test_04_query_partner
+2025-06-05 10:48:23.497 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SO_QUERY_PARTNER_EVENT_SERVICE
+2025-06-05 10:48:23.498 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-06-05 10:48:23.498 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "reCalculate": false,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "soDocDate": 1749052800000,
+      "priceCalcDate": 1749091703497,
+      "custId": {
+        "id": 2059001
+      },
+      "slsPerson": null,
+      "slsPhone": null,
+      "slsPersonName": null,
+      "isFixedExchRate": false,
+      "currExchangeRateType": 2000001,
+      "soItems": [
+        {
+          "bomWhether": false,
+          "soSchlDelDate": 1749052800000
+        }
+      ]
+    }
+  }
+}
+2025-06-05 10:48:23.498 | INFO     | utils.request_util:request:88 - 请求描述: 查询相关方
+2025-06-05 10:48:23.563 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-06-05 10:48:23.563 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Thu, 05 Jun 2025 02:48:23 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '13670ccf-828108', 'Trace-Id': '13670ccf-828108', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiODg3MDYxNDhmYjUzNGRiN2JlODgxMTViMmViMDQxY2EiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0OTM1MDkwMywibmJmIjoxNzQ5MDkxNzAzLCJpYXQiOjE3NDkwOTE3MDMsImp0aSI6IjI0MmRiNzIzZDQ3NzRkZmI5ZjRjYjBjMzZkYzNjNDVkIn0.64GkiXTcuPUk_O_fTdKen91lwfWwMU5pKzbQmh2yCe8; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Sun, 08 Jun 2025 02:48:23 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '45', 'X-Kong-Proxy-Latency': '1', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-06-05 10:48:23.565 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "13670ccf-828108",
+  "success": true,
+  "data": {
+    "data": {
+      "context": {},
+      "soDocDate": 1749052800000,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "custId": {
+        "id": 2059001
+      },
+      "currExchangeRateType": 2000001,
+      "priceCalcDate": 1749091703497,
+      "soItems": [
+        {
+          "context": {},
+          "soSchlDelDate": 1749052800000,
+          "bomWhether": false
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ],
+      "reCalculate": false,
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false,
+      "syncSubmit": false,
+      "isFixedExchRate": false
+    }
+  }
+}
+2025-06-05 10:48:23.566 | INFO     | utils.log_util:info:65 - 相关方查询完成

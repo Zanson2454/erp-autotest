@@ -1,0 +1,183 @@
+2025-06-05 10:47:44.745 | INFO     | utils.cache_util:get:44 - 读取缓存文件: /Users/test/erp-autotest/testdata/cache/gen_init_cache.json
+2025-06-05 10:47:44.747 | INFO     | utils.cache_util:get:54 - 成功读取缓存: gen_init_cache.json
+2025-06-05 10:47:44.747 | INFO     | utils.log_util:info:65 - 从缓存获取数据成功
+2025-06-05 10:47:44.795 | INFO     | testcases.comm.base_test:login:84 - 使用账号: 17376596912
+2025-06-05 10:47:44.918 | INFO     | testcases.comm.base_test:login:88 - 登录响应状态码: 200
+2025-06-05 10:47:44.990 | INFO     | testcases.comm.base_test:login:95 - 登录成功
+2025-06-05 10:47:45.011 | INFO     | testcases.comm.base_test:setup_class:147 - ids: {'user_id': 540175374525637, 'cust_id': 2059001, 'so_type_id': 2101001, 'sls_org_id': 14377001, 'pur_org_id': 14376001, 'inv_org_id': 14375002, 'com_org_id': 14373001, 'sls_dc_id': 14378001, 'inv_loc_id': 14376002, 'exchange_rate_type_id': 2000001, 'base_curr_id': 2000001, 'sls_curr_id': 2000001}
+2025-06-05 10:47:45.173 | INFO     | utils.log_util:info:65 - 数据库连接成功 [host=rm-bp1f14585v00oh99t.mysql.rds.aliyuncs.com, port=3306]
+2025-06-05 10:47:45.173 | INFO     | testcases.comm.base_test:setup_class:168 - 测试基类初始化完成
+2025-06-05 10:47:45.174 | INFO     | utils.log_util:info:65 - 初始化渲染数量: 92
+2025-06-05 10:47:45.174 | INFO     | utils.log_util:info:65 - 测试类初始化完成
+2025-06-05 10:47:45.175 | INFO     | utils.log_util:info:65 - 开始测试: test_02_query_customer_info
+2025-06-05 10:47:45.176 | INFO     | utils.log_util:info:65 - 查询客户信息URL: /api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService?tmodule=ERP_SCM&modelKey=ERP_GEN$gen_cust_info_md
+2025-06-05 10:47:45.177 | DEBUG    | utils.log_util:debug:69 - 查询客户信息请求数据: {
+  "sceneKey": "ERP_SCM$sls_so_730",
+  "viewKey": "ERP_SCM$sls_so_730:edit",
+  "serviceKey": "ERP_SCM$SYS_PagingDataService",
+  "params": {
+    "modelKey": "ERP_GEN$gen_cust_info_md",
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "conditionGroup": {
+          "type": "ConditionGroup",
+          "logicOperator": "AND",
+          "conditions": [
+            {
+              "type": "ConditionGroup",
+              "logicOperator": "AND",
+              "conditions": [
+                {
+                  "type": "ConditionGroup",
+                  "logicOperator": "AND",
+                  "conditions": [
+                    {
+                      "key": "V9-9Z27ZOiitzmCTR3toD",
+                      "type": "ConditionLeaf",
+                      "leftValue": {
+                        "id": "Cs-llCMSNSEI2xK0ajnbw",
+                        "key": "Cs-llCMSNSEI2xK0ajnbw",
+                        "type": "VarValue",
+                        "fieldType": "Text",
+                        "valueType": "VAR",
+                        "varValue": [
+                          {
+                            "valueKey": "custCode",
+                            "valueName": "custCode"
+                          }
+                        ]
+                      },
+                      "operator": "CONTAINS",
+                      "rightValue": {
+                        "key": "Kf1gTg48B2elte3S_U-Wb",
+                        "type": "VarValue",
+                        "fieldType": "Text",
+                        "valueType": "CONST",
+                        "constValue": "AUTOTEST_CUST"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "sortOrders": null,
+        "keyword": null
+      }
+    }
+  }
+}
+2025-06-05 10:47:45.177 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService?tmodule=ERP_SCM&modelKey=ERP_GEN$gen_cust_info_md
+2025-06-05 10:47:45.177 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-06-05 10:47:45.177 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "sceneKey": "ERP_SCM$sls_so_730",
+  "viewKey": "ERP_SCM$sls_so_730:edit",
+  "serviceKey": "ERP_SCM$SYS_PagingDataService",
+  "params": {
+    "modelKey": "ERP_GEN$gen_cust_info_md",
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "conditionGroup": {
+          "type": "ConditionGroup",
+          "logicOperator": "AND",
+          "conditions": [
+            {
+              "type": "ConditionGroup",
+              "logicOperator": "AND",
+              "conditions": [
+                {
+                  "type": "ConditionGroup",
+                  "logicOperator": "AND",
+                  "conditions": [
+                    {
+                      "key": "V9-9Z27ZOiitzmCTR3toD",
+                      "type": "ConditionLeaf",
+                      "leftValue": {
+                        "id": "Cs-llCMSNSEI2xK0ajnbw",
+                        "key": "Cs-llCMSNSEI2xK0ajnbw",
+                        "type": "VarValue",
+                        "fieldType": "Text",
+                        "valueType": "VAR",
+                        "varValue": [
+                          {
+                            "valueKey": "custCode",
+                            "valueName": "custCode"
+                          }
+                        ]
+                      },
+                      "operator": "CONTAINS",
+                      "rightValue": {
+                        "key": "Kf1gTg48B2elte3S_U-Wb",
+                        "type": "VarValue",
+                        "fieldType": "Text",
+                        "valueType": "CONST",
+                        "constValue": "AUTOTEST_CUST"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "sortOrders": null,
+        "keyword": null
+      }
+    }
+  }
+}
+2025-06-05 10:47:45.177 | INFO     | utils.request_util:request:88 - 请求描述: 查询客户信息
+2025-06-05 10:47:45.256 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-06-05 10:47:45.256 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Thu, 05 Jun 2025 02:47:45 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '418ab163-827924', 'Trace-Id': '418ab163-827924', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiZWZkOWVmZmI5NTk1NGZjMGJiNmNjNTlhNTQxN2I5NmMiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0OTM1MDg2NSwibmJmIjoxNzQ5MDkxNjY1LCJpYXQiOjE3NDkwOTE2NjUsImp0aSI6ImEyMGQwOTUwN2JiMjQ1NGNhMzU0MzU0ZDgzNzI0MjM1In0.Fm_OnClqI5vlEWj9JrUbCWS9L8bgoXul7A85lR3rQ7Y; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Sun, 08 Jun 2025 02:47:45 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '59', 'X-Kong-Proxy-Latency': '1', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-06-05 10:47:45.257 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "418ab163-827924",
+  "success": true,
+  "data": {
+    "data": {
+      "total": 1,
+      "data": [
+        {
+          "custCode": "AUTOTEST_CUST",
+          "custName": "客户(自动化)",
+          "custShortName": null,
+          "custCateType": "COMPANY",
+          "comId": null,
+          "status": "ENABLED",
+          "remark": null,
+          "custTypeId": {
+            "id": 2503008
+          },
+          "custPreId": null,
+          "relatedCompanyInformation": {
+            "id": 14419001
+          },
+          "associatePersonalInformation": null,
+          "custExtCode": null,
+          "genBusinessPartnerMdId": {
+            "id": 2059001
+          },
+          "id": 2059001,
+          "createdBy": {
+            "id": 477142386786949
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1715829452000,
+          "updatedAt": 1744359938000,
+          "version": 38,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": null
+        }
+      ]
+    }
+  }
+}
+2025-06-05 10:47:45.257 | INFO     | utils.log_util:info:65 - 客户信息查询完成
