@@ -153,18 +153,48 @@ class TestSalesOrderOperator(BaseTest,SlsBase):
     @safe_api_call(error_message="销售订单编辑提交失败")
     def test_02_submit_sales_order_edit(self):
         """测试销售订单编辑提交"""
-        # 查询订单详情
-        self.test_01_query_order_detail()
+        # 查询草稿态订单
+        draft_order = self._query_draft_orders_from_db()
+        if not draft_order:
+            raise ValueError("未找到草稿态订单")
+            
+        self.order_id = draft_order["so_id"]
+
+        # 编辑销售订单
+        edit_url = self.sls_api_paths["订单管理"]["编辑订单"]
+        edit_data = self.sls_api_params[edit_url]
+        edit_data["params"]["request"]["id"] = self.order_id
         
-        # 发送请求
-        self.so_data['syncSubmit'] = True
-        url = self.sls_api_paths["订单管理"]["销售订单编辑提交"]
-        data = self.sls_api_params[url]
-        data["params"]["request"] = self.so_data
+        # 发送编辑请求并获取响应
+        edit_result = self.http.post(edit_url, json=edit_data, description="编辑销售订单")
+        assert edit_result is not None, "编辑销售订单失败"
+        assert edit_result.get('success', False), f"编辑销售订单失败: {edit_result.get('err', {}).get('msg', '未知错误')}"
         
-        result = self.http.post(url, json=data, description="销售订单编辑提交")
-        assert result is not None, "销售订单编辑提交失败"
-        assert result.get('success', False), f"销售订单编辑提交失败: {result.get('err', {}).get('msg', '未知错误')}"
+        # 记录编辑响应数据
+        self.logger.info(f"编辑销售订单响应数据: {json.dumps(edit_result, indent=2, ensure_ascii=False)}")
+        
+        # 使用编辑响应数据构造提交请求
+        submit_url = self.sls_api_paths["订单管理"]["销售订单编辑提交"]
+        submit_data = {
+            "params": {
+                "request": {
+                    **edit_result["data"],  # 使用编辑响应的data字段
+                    "syncSubmit": True
+                }
+            }
+        }
+        
+        # 记录提交请求数据
+        self.logger.info(f"销售订单编辑提交请求数据: {json.dumps(submit_data, indent=2, ensure_ascii=False)}")
+        
+        # 发送提交请求
+        submit_result = self.http.post(submit_url, json=submit_data, description="销售订单编辑提交")
+        
+        # 记录提交响应数据
+        self.logger.info(f"销售订单编辑提交响应数据: {json.dumps(submit_result, indent=2, ensure_ascii=False)}")
+        
+        assert submit_result is not None, "销售订单编辑提交失败"
+        assert submit_result.get('success', False), f"销售订单编辑提交失败: {submit_result.get('err', {}).get('msg', '未知错误')}"
         
         # 验证订单状态
         so_status = self.db.query(f"select id,so_code,so_status from sls_so_head_tr where id={self.order_id}")
