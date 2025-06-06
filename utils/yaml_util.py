@@ -23,23 +23,20 @@ class YamlUtil:
     @classmethod
     def read_yaml(cls, file_path: str) -> Dict[str, Any]:
         # 支持绝对路径和相对路径
-        file_path = Path(file_path)
-        if not file_path.is_absolute():
-            file_path = cls._config_dir / file_path
-        if not file_path.exists():
+        if not os.path.isabs(file_path):
+            file_path = os.path.join(cls._config_dir, file_path)
+        print(f"[DEBUG] 实际加载的YAML路径: {file_path}")
+        if not os.path.exists(file_path):
             logger.error(f"YAML文件不存在: {file_path}")
-            raise FileNotFoundError(f"YAML文件不存在: {file_path}")
+            return {}
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
-                config = yaml.safe_load(f)
-                if config is None:
-                    logger.warning(f"YAML文件为空: {file_path}")
-                    return {}
-                logger.info(f"读取YAML文件: {file_path}")
-                return config
-        except yaml.YAMLError as e:
-            logger.error(f"YAML解析错误: {str(e)}")
-            raise
+                data = yaml.safe_load(f)
+                print(f"[DEBUG] 加载YAML内容repr: {repr(data)}")
+                return data if data else {}
+        except Exception as e:
+            logger.error(f"读取YAML文件失败: {file_path}, 错误: {e}")
+            return {}
 
 
 

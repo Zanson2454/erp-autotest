@@ -24,4 +24,5 @@
     查询物料: "/api/trantor/service/engine/execute/ERP_SCM$INV_MAT_PAGING_SERVICE"
     渲染订单行: "/api/trantor/service/engine/execute/ERP_SCM$SLS_AFTER_MAT_SELECT_RENDER_EVENT_SERVICE"
     自动定价: "/api/trantor/service/engine/execute/ERP_SCM$SO_AUTO_PRICE_EVENT_copy_SERVICE"
-    销售订单编辑提交: "/api/trantor/service/engine/execute/ERP_SCM$SLS_SALES_MANUAL_SAVE_EVENT"
+    编辑页提交: "/api/trantor/service/engine/execute/ERP_SCM$SLS_SALES_MANUAL_SAVE_EVENT?tmodule=ERP_SCM"
+    编辑订单: "/api/trantor/service/engine/execute/ERP_SCM$query_sls_order_bom_detail?tmodule=ERP_SCM"
