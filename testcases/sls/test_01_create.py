@@ -94,11 +94,6 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
         
         order_line_type_id = SlsBase.get_order_line_type_id(order_line_type_code)
         
-        # 记录订单类型信息
-        self.logger.info(f"订单类型: {order_type}")
-        self.logger.info(f"订单类型ID: {order_type_id}")
-        self.logger.info(f"订单行类型: {order_line_type_code}")
-        self.logger.info(f"订单行类型ID: {order_line_type_id}")
         
         # 更新请求参数
         data['params']['request']['orderTypeId'] = order_type_id
@@ -128,9 +123,7 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
     def test_02_query_customer_info(self):
         """查询客户信息"""
         url = self.sls_api_paths["订单管理"]["查询客户信息"]  
-        self.logger.info(f"查询客户信息URL: {url}")
         data = self.sls_api_params.get(url, {})
-        self.logger.debug(f"查询客户信息请求数据: {json.dumps(data, indent=2, ensure_ascii=False)}")
         data['params']['request']['pageable']['conditionGroup']['conditions'][0]['conditions'][0]['conditions'][0]['rightValue']['constValue'] = "AUTOTEST_CUST"  
        
         result = self.http.post(url, json=data, description="查询客户信息")
@@ -281,11 +274,6 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
         
         order_line_type_id = SlsBase.get_order_line_type_id(order_line_type_code)
         
-        # 记录订单类型信息
-        self.logger.info(f"订单类型: {order_type}")
-        self.logger.info(f"订单类型ID: {order_type_id}")
-        self.logger.info(f"订单行类型: {order_line_type_code}")
-        self.logger.info(f"订单行类型ID: {order_line_type_id}")
         
         # 更新请求参数
         data['params']['request']['orderTypeId'] = order_type_id
