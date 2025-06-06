@@ -435,16 +435,16 @@ class TestSalesOrderOperator(BaseTest,SlsBase):
         assert so_status[0]['so_status'] == 'EFFECT', "复制订单提交失败"
 
 if __name__ == "__main__":
-    #test = TestSalesOrderOperator()
-    #test.setup_class()  
-    #test.test_01_query_order_detail()
-    #test.test_02_sales_order_edit()
-    #test.test_03_submit_sales_order_edit()
-    #test.test_04_manual_submit_sales_order()   
-    #test.test_05_cancel_submit_sales_order()
-    #test.test_06_repeal_sales_order()
-    #test.test_07_freeze_sales_order()
-    #test.test_08_copy_sales_order()
-    #test.test_09_submit_copied_sales_order()
-    allure_dir = Path(project_root) / "reports" / "allure-results"
-    pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])    
+    test = TestSalesOrderOperator()
+    test.setup_class()  
+    test.test_01_query_order_detail()
+    test.test_02_sales_order_edit()
+    test.test_03_submit_sales_order_edit()
+    test.test_04_manual_submit_sales_order()   
+    test.test_05_cancel_submit_sales_order()
+    test.test_06_repeal_sales_order()
+    test.test_07_freeze_sales_order()
+    test.test_08_copy_sales_order()
+    test.test_09_submit_copied_sales_order()
+    #allure_dir = Path(project_root) / "reports" / "allure-results"
+    #pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])    
