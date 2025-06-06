@@ -1,0 +1,12 @@
+{
+  "params": {
+    "request": {
+      "slsOrgId": 0,
+      "cateId": 0,
+      "slsDcId": 0,
+      "pageable": {
+        "sortOrders": []
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "requestId": "9ce25b1f-820462",
+  "success": true,
+  "data": {
+    "data": {
+      "id": 14606001,
+      "context": {},
+      "orgDimensionCode": "ADM_ORG_GRP",
+      "orgDimensionId": 2014004,
+      "orgCode": "ORG202506050930006931",
+      "orgName": "TEST_ORG_515_EDIT_470",
+      "orgEnableDate": 1749052800000,
+      "orgBusinessTypeIds": [
+        2010001
+      ],
+      "orgBusinessTypeCodes": [
+        "ADM_ORG"
+      ],
+      "orgSort": 1
+    }
+  }
+}

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 生产订单领料单创建测试用例
-包含根据生产订单BOM清单创建领料单等操作
+包含根据生产订单分组创建待提交领料单和提交领料单等操作
 """
 import sys
 import time
@@ -36,23 +36,23 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
         cls.logger.info("生产订单领料单创建测试类初始化完成")
 
     @pytest.mark.run(order=1)
-    @allure.story("创建生产订单领料单")
+    @allure.story("创建待提交生产订单领料单")
     @allure.description("""
     ## 测试步骤
     1. 准备请求数据
-    2. 发送创建领料单请求
+    2. 发送创建待提交领料单请求
     3. 验证响应结果
     4. 保存创建结果数据
     """)
     @allure.severity(allure.severity_level.BLOCKER)
-    @allure.title("根据生产订单BOM清单创建领料单")
+    @allure.title("根据生产订单BOM清单创建待提交领料单")
     def test_create_issue_by_order_bom_list(self):
-        """根据生产订单BOM清单创建领料单测试用例"""
+        """根据生产订单BOM清单创建待提交领料单测试用例"""
         try:
             with a.step("1. 准备请求数据"):
                 # 获取API路径
                 api_path = self.get_api_path("根据生产订单BOM行创建领料单服务")
-                self.logger.debug(f"创建领料单API路径: {api_path}")
+                self.logger.debug(f"创建待提交领料单API路径: {api_path}")
                 
                 # 获取请求参数
                 params, url = self.get_api_params(api_path)
@@ -61,7 +61,7 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
                 latest_bom_items = self.get_prd_order_pending_issue_bom_items()
                 bom_item_ids = [{"id": item.get("id")} for item in latest_bom_items]
                 
-                # 构建创建领料单的请求参数
+                # 构建创建待提交领料单的请求参数
                 filtered_params = {
                     "params": {
                         "request": {
@@ -110,7 +110,7 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
             
             with a.step("2. 发送请求"):
                 # 发送请求
-                result = self.http.post(url, json=filtered_params, description="创建领料单")
+                result = self.http.post(url, json=filtered_params, description="创建待提交领料单")
                 # 添加响应数据到报告
                 a.json(result, "响应数据")
             
@@ -118,11 +118,11 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
                 # 验证响应中的success字段为True
                 self.assert_util.assert_response_success(result)
                 
-                # 从响应中获取创建的领料单信息
+                # 从响应中获取创建的待提交领料单信息
                 response_data = result.get("data", {})
                 
-                # 确保返回了领料单信息
-                assert response_data is not None, "未返回领料单信息"
+                # 确保返回了待提交领料单信息
+                assert response_data is not None, "未返回待提交领料单信息"
                 
                 # 记录验证结果
                 a.text(
@@ -132,19 +132,111 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
                 )
             
             with a.step("4. 保存创建结果数据"):
-                # 保存领料单信息到类变量
+                # 保存待提交领料单信息到类变量
                 TestPrdOrderIssueCreate.issue_create_info.update({
                     "bom_item_ids": filtered_params['params']['request']['ids'],
                     "issue_info": response_data
                 })
                 
-                self.logger.info(f"领料单创建成功 - BOM项ID: {[item.get('id') for item in filtered_params['params']['request']['ids']]}")
+                self.logger.info(f"待提交领料单创建成功 - BOM项ID: {[item.get('id') for item in filtered_params['params']['request']['ids']]}")
                 
                 # 记录保存的数据
                 a.json(TestPrdOrderIssueCreate.issue_create_info, "保存的测试数据")
         
         except Exception as e:
-            self.logger.error(f"创建领料单失败: {str(e)}")
+            self.logger.error(f"创建待提交领料单失败: {str(e)}")
+            # 记录失败信息
+            a.text(str(e), "失败原因")
+            raise
+
+    @pytest.mark.run(order=2)
+    @allure.story("提交生产订单领料单")
+    @allure.description("""
+    ## 测试步骤
+    1. 准备请求数据
+    2. 发送提交领料单请求
+    3. 验证响应结果
+    4. 保存提交结果数据
+    """)
+    @allure.severity(allure.severity_level.BLOCKER)
+    @allure.title("批量提交生产订单领料单")
+    def test_submit_issue_orders(self):
+        """批量提交生产订单领料单测试用例"""
+        try:
+            with a.step("1. 准备请求数据"):
+                # 获取API路径
+                api_path = self.get_api_path("领料批量保存服务")
+                self.logger.debug(f"提交领料单API路径: {api_path}")
+                
+                # 获取请求参数
+                params, url = self.get_api_params(api_path)
+                
+                # 从创建结果中获取待提交的领料单信息
+                created_issues = self.issue_create_info.get("issue_info", {}).get("data", [])
+                if not created_issues:
+                    raise ValueError("未找到待提交的领料单信息")
+                
+                # 构建提交领料单的请求参数
+                filtered_params = {
+                    "params": {
+                        "request": []
+                    }
+                }
+                
+                # 遍历创建的领料单，构建提交请求
+                for issue in created_issues:
+                    issue_values = issue.get("values", {})
+                    submit_issue = {
+                        "issueCode": issue_values.get("issueCode"),
+                        "issueDocTypeId": issue_values.get("issueDocTypeId"),
+                        "issueType": issue_values.get("issueType"),
+                        "issueDate": issue_values.get("issueDate"),
+                        "postingDate": issue_values.get("postingDate"),
+                        "issueItemList": issue_values.get("issueItemList", [])
+                    }
+                    filtered_params["params"]["request"].append(submit_issue)
+                
+                self.logger.info(f"请求URL: {url}")
+                self.logger.info(f"请求参数: {filtered_params}")
+                # 添加请求数据到报告
+                a.json(filtered_params, "请求数据")
+            
+            with a.step("2. 发送请求"):
+                # 发送请求
+                result = self.http.post(url, json=filtered_params, description="提交领料单")
+                # 添加响应数据到报告
+                a.json(result, "响应数据")
+            
+            with a.step("3. 验证响应结果"):
+                # 验证响应中的success字段为True
+                self.assert_util.assert_response_success(result)
+                
+                # 从响应中获取提交结果信息
+                response_data = result.get("data", {})
+                
+                # 确保返回了提交结果信息
+                assert response_data is not None, "未返回提交结果信息"
+                
+                # 记录验证结果
+                a.text(
+                    f"领料单提交结果: {json.dumps(response_data, ensure_ascii=False)}\n"
+                    f"验证结果: 成功",
+                    "验证结果"
+                )
+            
+            with a.step("4. 保存提交结果数据"):
+                # 保存提交结果信息到类变量
+                self.issue_create_info.update({
+                    "submit_result": response_data
+                })
+                
+                self.logger.info(f"领料单提交成功")
+                
+                # 记录保存的数据
+                a.json(self.issue_create_info, "保存的测试数据")
+        
+        except Exception as e:
+            self.logger.error(f"提交领料单失败: {str(e)}")
             # 记录失败信息
             a.text(str(e), "失败原因")
             raise
@@ -153,4 +245,5 @@ if __name__ == "__main__":
     """直接运行测试用例的入口点"""
     test = TestPrdOrderIssueCreate()
     test.setup_class()
-    test.test_create_issue_by_order_bom_list()    # 创建生产订单领料单 
+    test.test_create_issue_by_order_bom_list()    # 创建待提交生产订单领料单
+    test.test_submit_issue_orders()               # 提交生产订单领料单 

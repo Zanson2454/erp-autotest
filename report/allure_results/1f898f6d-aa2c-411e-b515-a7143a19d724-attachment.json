@@ -1,0 +1,42 @@
+{
+  "params": {
+    "request": {
+      "pageable": {
+        "needTotal": true,
+        "systemParams": {
+          "viewCondition": {
+            "conditionKey": null,
+            "rightValues": {}
+          }
+        },
+        "conditionGroup": {
+          "type": "ConditionGroup",
+          "logicOperator": "AND",
+          "conditions": [
+            {
+              "type": "ConditionLeaf",
+              "leftValue": {
+                "type": "VarValue",
+                "fieldType": "Text",
+                "valueType": "VAR",
+                "varValue": [
+                  {
+                    "valueKey": "vrsCode",
+                    "valueName": "vrsCode"
+                  }
+                ]
+              },
+              "operator": "CONTAINS",
+              "rightValue": {
+                "type": "VarValue",
+                "fieldType": "Text",
+                "valueType": "CONST",
+                "constValue": "2207"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

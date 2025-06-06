@@ -1,0 +1,231 @@
+{
+  "requestId": "9ce25b1f-820660",
+  "success": true,
+  "data": {
+    "data": {
+      "data": [
+        {
+          "matCode": "MAT202506050930156931",
+          "matName": "TEST_MAT_515",
+          "genMatTypeCfId": {
+            "matTypeName": "成品",
+            "id": 2000001
+          },
+          "baseUomId": {
+            "uomDesc": "个",
+            "id": 2000001
+          },
+          "cateId": {
+            "matCateName": "成品油",
+            "id": 2000001
+          },
+          "brandId": null,
+          "status": "DISABLED",
+          "bizStatus": null,
+          "specModel": null,
+          "id": 14679001,
+          "updatedAt": 1749087057000
+        },
+        {
+          "matCode": "XB0604001",
+          "matName": "XB沙湖拉1.8",
+          "genMatTypeCfId": {
+            "matTypeName": "成品",
+            "id": 2000001
+          },
+          "baseUomId": {
+            "uomDesc": "套",
+            "id": 2001001
+          },
+          "cateId": {
+            "matCateName": "汽油",
+            "id": 2001001
+          },
+          "brandId": null,
+          "status": "DISABLED",
+          "bizStatus": "SALE",
+          "specModel": null,
+          "id": 14678029,
+          "updatedAt": 1749031085000
+        },
+        {
+          "matCode": "MAT202506040946261486",
+          "matName": "TEST_MAT_912",
+          "genMatTypeCfId": {
+            "matTypeName": "成品",
+            "id": 2000001
+          },
+          "baseUomId": {
+            "uomDesc": "个",
+            "id": 2000001
+          },
+          "cateId": {
+            "matCateName": "成品油",
+            "id": 2000001
+          },
+          "brandId": null,
+          "status": "DISABLED",
+          "bizStatus": null,
+          "specModel": null,
+          "id": 14678028,
+          "updatedAt": 1749001625000
+        },
+        {
+          "matCode": "MAT202506031423355565",
+          "matName": "TEST_MAT_443",
+          "genMatTypeCfId": {
+            "matTypeName": "成品",
+            "id": 2000001
+          },
+          "baseUomId": {
+            "uomDesc": "个",
+            "id": 2000001
+          },
+          "cateId": {
+            "matCateName": "成品油",
+            "id": 2000001
+          },
+          "brandId": null,
+          "status": "DISABLED",
+          "bizStatus": null,
+          "specModel": null,
+          "id": 14678027,
+          "updatedAt": 1748931832000
+        },
+        {
+          "matCode": "MAT202506011505084760",
+          "matName": "TEST_MAT_608",
+          "genMatTypeCfId": {
+            "matTypeName": "成品",
+            "id": 2000001
+          },
+          "baseUomId": {
+            "uomDesc": "个",
+            "id": 2000001
+          },
+          "cateId": {
+            "matCateName": "成品油",
+            "id": 2000001
+          },
+          "brandId": null,
+          "status": "DISABLED",
+          "bizStatus": null,
+          "specModel": null,
+          "id": 14678026,
+          "updatedAt": 1748761525000
+        },
+        {
+          "matCode": "MAT202506011504159108",
+          "matName": "TEST_MAT_479",
+          "genMatTypeCfId": {
+            "matTypeName": "成品",
+            "id": 2000001
+          },
+          "baseUomId": {
+            "uomDesc": "个",
+            "id": 2000001
+          },
+          "cateId": {
+            "matCateName": "成品油",
+            "id": 2000001
+          },
+          "brandId": null,
+          "status": "DISABLED",
+          "bizStatus": null,
+          "specModel": null,
+          "id": 14678025,
+          "updatedAt": 1748761472000
+        },
+        {
+          "matCode": "MAT202506011503035932",
+          "matName": "TEST_MAT_495",
+          "genMatTypeCfId": {
+            "matTypeName": "成品",
+            "id": 2000001
+          },
+          "baseUomId": {
+            "uomDesc": "个",
+            "id": 2000001
+          },
+          "cateId": {
+            "matCateName": "成品油",
+            "id": 2000001
+          },
+          "brandId": null,
+          "status": "DISABLED",
+          "bizStatus": null,
+          "specModel": null,
+          "id": 14678024,
+          "updatedAt": 1748761400000
+        },
+        {
+          "matCode": "MAT202505311223145793",
+          "matName": "TEST_MAT_482",
+          "genMatTypeCfId": {
+            "matTypeName": "成品",
+            "id": 2000001
+          },
+          "baseUomId": {
+            "uomDesc": "个",
+            "id": 2000001
+          },
+          "cateId": {
+            "matCateName": "成品油",
+            "id": 2000001
+          },
+          "brandId": null,
+          "status": "DISABLED",
+          "bizStatus": null,
+          "specModel": null,
+          "id": 14678023,
+          "updatedAt": 1748694229000
+        },
+        {
+          "matCode": "MAT202505311220339810",
+          "matName": "TEST_MAT_774",
+          "genMatTypeCfId": {
+            "matTypeName": "成品",
+            "id": 2000001
+          },
+          "baseUomId": {
+            "uomDesc": "个",
+            "id": 2000001
+          },
+          "cateId": {
+            "matCateName": "成品油",
+            "id": 2000001
+          },
+          "brandId": null,
+          "status": "DISABLED",
+          "bizStatus": null,
+          "specModel": null,
+          "id": 14678022,
+          "updatedAt": 1748694067000
+        },
+        {
+          "matCode": "MAT202505311204021972",
+          "matName": "TEST_MAT_227",
+          "genMatTypeCfId": {
+            "matTypeName": "成品",
+            "id": 2000001
+          },
+          "baseUomId": {
+            "uomDesc": "个",
+            "id": 2000001
+          },
+          "cateId": {
+            "matCateName": "成品油",
+            "id": 2000001
+          },
+          "brandId": null,
+          "status": "DISABLED",
+          "bizStatus": null,
+          "specModel": null,
+          "id": 14678021,
+          "updatedAt": 1748693077000
+        }
+      ],
+      "total": 528
+    }
+  }
+}

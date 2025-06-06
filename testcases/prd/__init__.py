@@ -128,27 +128,29 @@ class PrdBaseTest(BaseTest):
         params = self.api_params.get(api_path, {})
         return params, url
     
-    def get_latest_prd_order(self):
+    def get_latest_prd_order(self, status="DRAFT"):
         """
         获取最新的生产订单信息
         
+        参数：
+            status (str): 生产订单状态，默认为'DRAFT'
         返回:
             dict: 包含生产订单ID和编号的字典
         """
         try:
-            # 查询最新的草稿状态生产订单
-            sql = """
+            # 查询最新的指定状态生产订单
+            sql = f"""
                 SELECT id, wo_code, status, confirm_status, delivered_status
                 FROM prd_order_header_tr
                 WHERE deleted = 0
-                AND status = 'DRAFT'
+                AND status = '{status}'
                 AND confirm_status = 'UNCONFIRMED'
                 AND delivered_status = 'UNDELIVERED'
                 ORDER BY id DESC
                 LIMIT 1
             """
             result = self.db.query(sql)
-            assert result, "未找到草稿状态的生产订单"
+            assert result, f"未找到状态为{status}的生产订单"
             
             # 返回生产订单信息
             order_info = {
@@ -168,13 +170,13 @@ class PrdBaseTest(BaseTest):
 
     def get_prd_order_pending_issue_bom_items(self):
         """
-        获取生产订单待领料BOM行信息
+        获取已下达单生产订单的待领料BOM行信息
         Returns:
             list: 包含待领料BOM行ID的列表
                 [{'id': xxx}, {'id': xxx}]
         """
-        # 获取最新的生产订单ID
-        latest_order = self.get_latest_prd_order()
+        # 获取最新的已下达单生产订单ID
+        latest_order = self.get_latest_prd_order(status="SUBMITTED")
         order_id = latest_order.get("id")
         
         sql = f"""

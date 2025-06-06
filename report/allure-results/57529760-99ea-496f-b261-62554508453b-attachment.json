@@ -1,0 +1,71 @@
+{
+  "requestId": "2e1bb8c0-757254",
+  "success": true,
+  "data": {
+    "data": [
+      {
+        "context": {},
+        "operationCode": 1,
+        "operationName": "工序1",
+        "workCenterId": {
+          "id": 2000002
+        },
+        "invOrgId": {
+          "id": 2110010
+        },
+        "controlKeyId": {
+          "id": 2001002
+        },
+        "operationQty": 10.0,
+        "uom": {
+          "id": 2004001
+        },
+        "outsourcingMat": {
+          "id": -1
+        }
+      },
+      {
+        "context": {},
+        "operationCode": 2,
+        "operationName": "工序2",
+        "workCenterId": {
+          "id": 2000001
+        },
+        "invOrgId": {
+          "id": 2110010
+        },
+        "controlKeyId": {
+          "id": 2001002
+        },
+        "operationQty": 10.0,
+        "uom": {
+          "id": 2004001
+        },
+        "outsourcingMat": {
+          "id": -1
+        }
+      },
+      {
+        "context": {},
+        "operationCode": 3,
+        "operationName": "工序3",
+        "workCenterId": {
+          "id": 14003003
+        },
+        "invOrgId": {
+          "id": 2110010
+        },
+        "controlKeyId": {
+          "id": 2001003
+        },
+        "operationQty": 10.0,
+        "uom": {
+          "id": 2004001
+        },
+        "outsourcingMat": {
+          "id": -1
+        }
+      }
+    ]
+  }
+}

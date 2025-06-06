@@ -1,0 +1,20 @@
+{
+  "params": {
+    "request": {
+      "orgName": "TEST_SALES_515",
+      "orgDimensionCode": "SCM_ORG_GRP",
+      "orgParentId": 14606002,
+      "orgEnableDate": "2025-06-05",
+      "orgCode": "SLS202506050930436931",
+      "def13": [
+        14378001
+      ],
+      "comOrgId": 14606002,
+      "orgBusinessTypeIds": [
+        2015005
+      ],
+      "partnerId": 2058001,
+      "orgParentCode": "COM202506050930046931"
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "requestId": "99996b02-820511",
+  "success": true,
+  "data": {
+    "data": [
+      {
+        "id": 14606001,
+        "context": {},
+        "originOrgId": 0,
+        "version": 3,
+        "deleted": 0,
+        "createdAt": 1749087001000,
+        "updatedAt": 1749087061000,
+        "createdBy": 540175374525637,
+        "updatedBy": 540175374525637,
+        "orgDimensionCode": "ADM_ORG_GRP",
+        "orgDimensionId": 2014004,
+        "orgCode": "ORG202506050930006931",
+        "orgName": "TEST_ORG_515_EDIT_470",
+        "orgStatus": "DISABLED",
+        "orgEnableDate": 1749052800000,
+        "orgBusinessTypeIds": [
+          2010001
+        ],
+        "orgBusinessTypeCodes": [
+          "ADM_ORG"
+        ],
+        "child": []
+      }
+    ]
+  }
+}

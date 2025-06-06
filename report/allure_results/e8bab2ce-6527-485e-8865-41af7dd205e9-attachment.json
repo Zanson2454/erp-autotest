@@ -1,0 +1,22 @@
+{
+  "matCode": "MAT202506050930156931",
+  "matName": "TEST_MAT_515",
+  "genMatTypeCfId": {
+    "matTypeName": "成品",
+    "id": 2000001
+  },
+  "baseUomId": {
+    "uomDesc": "个",
+    "id": 2000001
+  },
+  "cateId": {
+    "matCateName": "成品油",
+    "id": 2000001
+  },
+  "brandId": null,
+  "status": "DISABLED",
+  "bizStatus": null,
+  "specModel": null,
+  "id": 14679001,
+  "updatedAt": 1749087057000
+}
