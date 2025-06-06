@@ -183,8 +183,9 @@ class PrdBaseTest(BaseTest):
             SELECT id
             FROM prd_order_bom_item_tr
             WHERE deleted = 0 
-            AND is_backflush = 0 
-            AND prd_order_header_tr_id = {order_id}
+            AND is_backflush = 0
+            AND consumed_qty = 0
+            AND prd_order_header_tr_id = {order_id}  #需确保前面用例执行成功否则可能取到没有领料的BOM行
             ORDER BY id DESC
         """
         result = self.db.query(sql)
