@@ -1,0 +1,153 @@
+{
+  "params": {
+    "request": {
+      "id": null,
+      "priceIdempotent": null,
+      "reCalculate": false,
+      "soTypeId": {
+        "id": 2101001
+      },
+      "soDocDate": 1749139200000,
+      "priceCalcDate": 1749180302615,
+      "custId": {
+        "id": 2059001
+      },
+      "addrId": {
+        "id": null
+      },
+      "addrDetail": null,
+      "custPersonName": null,
+      "custPhone": null,
+      "slsPerson": {
+        "id": 14094003,
+        "context": {},
+        "name": "章昂"
+      },
+      "slsPhone": "17376596912",
+      "slsPersonName": "章昂",
+      "slsOrgId": {
+        "id": 14579001
+      },
+      "slsDcId": {
+        "id": 14378001
+      },
+      "slsComId": {
+        "id": 14373001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "isFixedExchRate": false,
+      "currExchangeRateType": 2000001,
+      "exchRate": 1,
+      "soItems": [
+        {
+          "context": {},
+          "soItemCode": "SOI20250606100168",
+          "matId": {
+            "id": 14633001,
+            "context": {},
+            "matCode": "hxymat-20241202744",
+            "matName": "hxy测试物料4",
+            "genMatTypeCfId": {
+              "id": 2000001
+            },
+            "baseUomId": 14047001,
+            "weightUomId": 2007001,
+            "grossWeight": 2.0,
+            "netWeight": 3.0,
+            "volumUomId": 14049001,
+            "matVolum": 4.0,
+            "isKitSls": false,
+            "isCompleteSetDel": false,
+            "slsSoItemTypeGroupId": 2002001,
+            "invOrgId": {
+              "id": 14375002
+            },
+            "invLovId": {
+              "id": 14376002
+            },
+            "slsOrgId": {
+              "id": 14579001
+            },
+            "slsDcId": {
+              "id": 14378001
+            },
+            "slsUomId": {
+              "id": 14047001
+            },
+            "slsBasePrice": 101.0
+          },
+          "matCode": "hxymat-20241202744",
+          "matName": "hxy测试物料4",
+          "matBasePrice": 101.0,
+          "soItemSlsQty": 63,
+          "soItemGrossPrice": 10.0,
+          "taxRateId": {
+            "id": 2002002,
+            "context": {}
+          },
+          "taxRate": 0.13,
+          "taxAmt": 72.477876106195,
+          "grossTradeAmt": 630.0,
+          "soSchlDelDate": 1749139200000,
+          "soItemTypeId": 2000005,
+          "uomSlsId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "uomBaseId": {
+            "id": 14047001,
+            "context": {}
+          },
+          "invOrgId": {
+            "id": 14375002,
+            "context": {}
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {}
+          },
+          "bomWhether": false,
+          "weightUomId": {
+            "id": 2007001,
+            "context": {}
+          },
+          "grossWeight": 2.0,
+          "netWeight": 3.0,
+          "volumUomId": {
+            "id": 14049001,
+            "context": {}
+          },
+          "matVolum": 4.0,
+          "delAddrId": {
+            "context": {}
+          },
+          "itemNumber": 1,
+          "salesPrice": 10.0,
+          "children": null,
+          "matTypeId": 2000001,
+          "soItemTypeGroupId": 2002001,
+          "isCompleteSet": false,
+          "salesAmt": 630.0,
+          "soItemTypeCode": "THRD"
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "context": {},
+          "partnerTypeId": {
+            "id": 2000001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ]
+    }
+  }
+}

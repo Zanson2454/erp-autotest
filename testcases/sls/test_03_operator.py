@@ -160,17 +160,6 @@ class TestSalesOrderOperator(BaseTest,SlsBase):
             
         self.order_id = draft_order["so_id"]
         original_so_code = draft_order["so_code"]
-
-        # 调试：打印 sls_api_paths 的类型和内容
-        self.logger.info(f"sls_api_paths 类型: {type(self.sls_api_paths)}")
-        self.logger.info(f"sls_api_paths repr: {repr(self.sls_api_paths)}")
-        try:
-            print("订单管理所有key:", list(self.sls_api_paths["订单管理"].keys()))
-            print("订单管理原始dict:", repr(self.sls_api_paths["订单管理"]))
-            self.logger.info(f"订单管理下所有key: {[repr(k) for k in self.sls_api_paths['订单管理'].keys()]}")
-        except Exception as e:
-            self.logger.error(f"无法访问['销售订单']['订单管理']，顶层key: {[repr(k) for k in self.sls_api_paths.keys()]}")
-            raise
         
         # 构造请求数据
         request_data = {

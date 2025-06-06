@@ -1,0 +1,109 @@
+2025-06-06 11:24:31.250 | INFO     | utils.log_util:info:65 - 开始测试: test_02_query_orders_by_status
+2025-06-06 11:24:31.252 | INFO     | utils.log_util:info:65 - 查询条件: 订单状态 = APPROVING
+2025-06-06 11:24:31.252 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$sls_so_head_tr_PAGING_DATA_SERVICE
+2025-06-06 11:24:31.253 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-06-06 11:24:31.253 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "systemParams": {
+          "viewCondition": null
+        },
+        "conditionGroup": {
+          "type": "ConditionGroup",
+          "logicOperator": "AND",
+          "conditions": [
+            {
+              "type": "ConditionGroup",
+              "logicOperator": "AND",
+              "conditions": [
+                {
+                  "type": "ConditionGroup",
+                  "logicOperator": "AND",
+                  "conditions": [
+                    {
+                      "key": "64B0O2CfJfcOoCi6rRYF1",
+                      "type": "ConditionLeaf",
+                      "leftValue": {
+                        "id": "XdGqXf0INwfXIncliBOF-",
+                        "key": "XdGqXf0INwfXIncliBOF-",
+                        "type": "VarValue",
+                        "fieldType": "Text",
+                        "valueType": "VAR",
+                        "varValue": [
+                          {
+                            "valueKey": "soStatus",
+                            "valueName": "soStatus"
+                          }
+                        ]
+                      },
+                      "operator": "IN",
+                      "rightValues": [
+                        {
+                          "key": "t5GpRIoC_DDU4SjW1WUi3",
+                          "type": "VarValue",
+                          "fieldType": "Text",
+                          "valueType": "CONST",
+                          "constValue": "APPROVING"
+                        }
+                      ]
+                    },
+                    {
+                      "key": "fa7hlBBPOhnPZZWIFeCvy",
+                      "type": "ConditionLeaf",
+                      "leftValue": {
+                        "id": "i_p4wT0Gew5Xnx1AInwPH",
+                        "key": "i_p4wT0Gew5Xnx1AInwPH",
+                        "type": "VarValue",
+                        "fieldType": "Object",
+                        "valueType": "VAR",
+                        "varValue": [
+                          {
+                            "valueKey": "createdBy",
+                            "valueName": "createdBy"
+                          }
+                        ]
+                      },
+                      "operator": "EQ",
+                      "rightValue": {
+                        "key": "oDkbT7tIhBcvbHsvqzLHN",
+                        "type": "ConstValue",
+                        "fieldType": "Object",
+                        "valueType": "CONST",
+                        "constValue": 540175374525637
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "sortOrders": [
+          {
+            "fieldAlias": "createdBy",
+            "sortType": "DESC"
+          }
+        ]
+      }
+    }
+  }
+}
+2025-06-06 11:24:31.254 | INFO     | utils.request_util:request:88 - 请求描述: 按单据状态 APPROVING 查询销售订单列表
+2025-06-06 11:24:31.329 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-06-06 11:24:31.330 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Fri, 06 Jun 2025 03:24:31 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': '67b5eda0-897744', 'Trace-Id': '67b5eda0-897744', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiYWEwMDVmMTU2ODFmNDVmMzllMTBhZWY5ZmU0OWQxMzUiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0OTQzOTQ3MSwibmJmIjoxNzQ5MTgwMjcxLCJpYXQiOjE3NDkxODAyNzEsImp0aSI6IjA4NjA4YTZlMWQ0NTRlOGM4M2QxOGY2NTE1NzU3ZTBkIn0.k8f9LiNoMPcaGPekfT4ari5d05qdjgDkU7RWF_Iz62g; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Mon, 09 Jun 2025 03:24:31 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '55', 'X-Kong-Proxy-Latency': '0', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-06-06 11:24:31.330 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "67b5eda0-897744",
+  "success": true,
+  "data": {
+    "data": {
+      "data": null,
+      "total": 0
+    }
+  }
+}
+2025-06-06 11:24:31.331 | WARNING  | utils.log_util:warning:73 - 
+警告：未查询到状态为 APPROVING 的订单数据

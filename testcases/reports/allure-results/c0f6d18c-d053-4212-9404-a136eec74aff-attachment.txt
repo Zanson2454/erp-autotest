@@ -1,0 +1,2735 @@
+[DEBUG] 实际加载的YAML路径: config/env/test.yaml
+[DEBUG] 加载YAML内容repr: {'erp_env': 'test', 'erp_version': '0630', 'trantor_version': '2.5.25.0330.0-SNAPSHOT', 'base_url': 'https://t-erp-portal-test.app.terminus.io', 'iam_url': 'https://t-erp-iam-test.app.terminus.io', 'tenants': {'terp': {'name': 'terp', 'auth': {'username': '${TEST_AUTH_USERNAME}', 'password': '${TEST_AUTH_PASSWORD}'}}}, 'database': {'erp_db': {'host': '${TEST_DB_HOST}', 'port': '${TEST_DB_PORT}', 'user': '${TEST_DB_USER}', 'password': '${TEST_DB_PASSWORD}', 'database': '${TEST_DB_NAME}', 'charset': 'utf8mb4'}}}
+2025-06-06 11:24:29.520 | INFO     | utils.cache_util:get:44 - 读取缓存文件: /Users/test/erp-autotest/testdata/cache/gen_init_cache.json
+2025-06-06 11:24:29.522 | INFO     | utils.cache_util:get:54 - 成功读取缓存: gen_init_cache.json
+2025-06-06 11:24:29.522 | INFO     | utils.log_util:info:65 - 从缓存获取数据成功
+2025-06-06 11:24:29.579 | INFO     | testcases.comm.base_test:login:84 - 使用账号: 17376596912
+2025-06-06 11:24:29.693 | INFO     | testcases.comm.base_test:login:88 - 登录响应状态码: 200
+2025-06-06 11:24:29.806 | INFO     | testcases.comm.base_test:login:95 - 登录成功
+2025-06-06 11:24:29.860 | INFO     | testcases.comm.base_test:setup_class:147 - ids: {'user_id': 540175374525637, 'cust_id': 2059001, 'so_type_id': 2101001, 'sls_org_id': 14377001, 'pur_org_id': 14376001, 'inv_org_id': 14375002, 'com_org_id': 14373001, 'sls_dc_id': 14378001, 'inv_loc_id': 14376002, 'exchange_rate_type_id': 2000001, 'base_curr_id': 2000001, 'sls_curr_id': 2000001}
+2025-06-06 11:24:30.086 | INFO     | utils.log_util:info:65 - 数据库连接成功 [host=rm-bp1f14585v00oh99t.mysql.rds.aliyuncs.com, port=3306]
+2025-06-06 11:24:30.087 | INFO     | testcases.comm.base_test:setup_class:168 - 测试基类初始化完成
+2025-06-06 11:24:30.089 | INFO     | utils.log_util:info:65 - 开始测试: test_02_query_orders_by_status
+2025-06-06 11:24:30.091 | INFO     | utils.log_util:info:65 - 查询条件: 订单状态 = EFFECT
+2025-06-06 11:24:30.092 | INFO     | utils.request_util:request_log:122 - 接口请求的地址>>>https://t-erp-portal-test.app.terminus.io/api/trantor/service/engine/execute/ERP_SCM$sls_so_head_tr_PAGING_DATA_SERVICE
+2025-06-06 11:24:30.092 | INFO     | utils.request_util:request_log:123 - 接口请求的方法>>>POST
+2025-06-06 11:24:30.093 | INFO     | utils.request_util:request_log:127 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "systemParams": {
+          "viewCondition": null
+        },
+        "conditionGroup": {
+          "type": "ConditionGroup",
+          "logicOperator": "AND",
+          "conditions": [
+            {
+              "type": "ConditionGroup",
+              "logicOperator": "AND",
+              "conditions": [
+                {
+                  "type": "ConditionGroup",
+                  "logicOperator": "AND",
+                  "conditions": [
+                    {
+                      "key": "64B0O2CfJfcOoCi6rRYF1",
+                      "type": "ConditionLeaf",
+                      "leftValue": {
+                        "id": "XdGqXf0INwfXIncliBOF-",
+                        "key": "XdGqXf0INwfXIncliBOF-",
+                        "type": "VarValue",
+                        "fieldType": "Text",
+                        "valueType": "VAR",
+                        "varValue": [
+                          {
+                            "valueKey": "soStatus",
+                            "valueName": "soStatus"
+                          }
+                        ]
+                      },
+                      "operator": "IN",
+                      "rightValues": [
+                        {
+                          "key": "t5GpRIoC_DDU4SjW1WUi3",
+                          "type": "VarValue",
+                          "fieldType": "Text",
+                          "valueType": "CONST",
+                          "constValue": "EFFECT"
+                        }
+                      ]
+                    },
+                    {
+                      "key": "fa7hlBBPOhnPZZWIFeCvy",
+                      "type": "ConditionLeaf",
+                      "leftValue": {
+                        "id": "i_p4wT0Gew5Xnx1AInwPH",
+                        "key": "i_p4wT0Gew5Xnx1AInwPH",
+                        "type": "VarValue",
+                        "fieldType": "Object",
+                        "valueType": "VAR",
+                        "varValue": [
+                          {
+                            "valueKey": "createdBy",
+                            "valueName": "createdBy"
+                          }
+                        ]
+                      },
+                      "operator": "EQ",
+                      "rightValue": {
+                        "key": "oDkbT7tIhBcvbHsvqzLHN",
+                        "type": "ConstValue",
+                        "fieldType": "Object",
+                        "valueType": "CONST",
+                        "constValue": 540175374525637
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "sortOrders": [
+          {
+            "fieldAlias": "createdBy",
+            "sortType": "DESC"
+          }
+        ]
+      }
+    }
+  }
+}
+2025-06-06 11:24:30.093 | INFO     | utils.request_util:request:88 - 请求描述: 按单据状态 EFFECT 查询销售订单列表
+2025-06-06 11:24:30.307 | INFO     | utils.request_util:request:94 - 响应状态码: 200
+2025-06-06 11:24:30.307 | INFO     | utils.request_util:request:95 - 响应头: {'Date': 'Fri, 06 Jun 2025 03:24:30 GMT', 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'terminus-response-terminus-key': 'b6d3938b9242961f3a6393324ca8e5d7', 'x-msp-trace-id': 'db96d43b-897737', 'Trace-Id': 'db96d43b-897737', 'Set-Cookie': 't_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiYWEwMDVmMTU2ODFmNDVmMzllMTBhZWY5ZmU0OWQxMzUiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAzMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0OTQzOTQ3MCwibmJmIjoxNzQ5MTgwMjcwLCJpYXQiOjE3NDkxODAyNzAsImp0aSI6IjA4NjA4YTZlMWQ0NTRlOGM4M2QxOGY2NTE1NzU3ZTBkIn0.btEL_We_Q5GGwUCCH-sXSWeLoH62_dQoLr8EpXx7t64; Path=/; Domain=terminus.io; Max-Age=259200; Expires=Mon, 09 Jun 2025 03:24:30 GMT; HttpOnly', 'X-Kong-Upstream-Latency': '188', 'X-Kong-Proxy-Latency': '3', 'Content-Encoding': 'gzip', 'Cache-Control': 'no-cache', 'Strict-Transport-Security': 'max-age=63072000;includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-XSS-Protection': '0'}
+2025-06-06 11:24:30.314 | INFO     | utils.request_util:request:99 - 响应内容: {
+  "requestId": "db96d43b-897737",
+  "success": true,
+  "data": {
+    "data": {
+      "data": [
+        {
+          "soCode": "SO008788",
+          "soDocDate": 1749139200000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 360.0,
+          "netBaseAmt": 318.584071,
+          "taxAmt": 41.415929,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "soTypeCode": "CENT",
+            "soTypeName": "集中销售",
+            "partnerProcedureHeadRef": {
+              "id": 14007001
+            },
+            "attachmentProcedureHeadRef": null,
+            "status": "ENABLED",
+            "soTypeDesc": "集中销售",
+            "genTextTypeRef": null,
+            "isRev": false,
+            "isSubmitApproval": false,
+            "isModifyApproval": false,
+            "currExchangeRateType": null,
+            "btClass": "SALES",
+            "effectiveDays": null,
+            "syncPrice": null,
+            "isDefault": null,
+            "id": 14012001,
+            "createdBy": {
+              "id": 477142386786949
+            },
+            "updatedBy": {
+              "id": 643874941128517
+            },
+            "createdAt": 1716292960000,
+            "updatedAt": 1744946519000,
+            "version": 8,
+            "deleted": 0,
+            "originOrgId": 0,
+            "requestId": null
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": null,
+          "custPhone": null,
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "30abcbc46dc0ef1772ce59f33fd6f517",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": null,
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1749180262000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": null,
+          "totalAmt": 360.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16417538,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1749180262000,
+          "updatedAt": 1749180262000,
+          "version": 2,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": null,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16417538
+              },
+              "id": 16263568
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16417538
+              },
+              "id": 16339539
+            }
+          ]
+        },
+        {
+          "soCode": "SO008786",
+          "soDocDate": 1749139200000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 360.0,
+          "netBaseAmt": 318.584071,
+          "taxAmt": 41.415929,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "soTypeCode": "THRD",
+            "soTypeName": "三方销售",
+            "partnerProcedureHeadRef": {
+              "id": 14005002
+            },
+            "attachmentProcedureHeadRef": null,
+            "status": "ENABLED",
+            "soTypeDesc": null,
+            "genTextTypeRef": null,
+            "isRev": false,
+            "isSubmitApproval": false,
+            "isModifyApproval": false,
+            "currExchangeRateType": null,
+            "btClass": "SALES",
+            "effectiveDays": null,
+            "syncPrice": null,
+            "isDefault": null,
+            "id": 14010001,
+            "createdBy": {
+              "id": 496988507945925
+            },
+            "updatedBy": {
+              "id": 477142386786949
+            },
+            "createdAt": 1714963636000,
+            "updatedAt": 1723432742000,
+            "version": 10,
+            "deleted": 0,
+            "originOrgId": 0,
+            "requestId": null
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": null,
+          "custPhone": null,
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "0bec004e5684f4efaaa6bacbf938c54e",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": null,
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1749180260000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": null,
+          "totalAmt": 360.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16417537,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1749180260000,
+          "updatedAt": 1749180261000,
+          "version": 2,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": null,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16417537
+              },
+              "id": 16263567
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16417537
+              },
+              "id": 16339538
+            }
+          ]
+        },
+        {
+          "soCode": "SO008784",
+          "soDocDate": 1749139200000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 0.0,
+          "netBaseAmt": 0.0,
+          "taxAmt": 0.0,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "soTypeCode": "STND",
+            "soTypeName": "标准销售",
+            "partnerProcedureHeadRef": {
+              "id": 14005002
+            },
+            "attachmentProcedureHeadRef": null,
+            "status": "ENABLED",
+            "soTypeDesc": "标准销售",
+            "genTextTypeRef": null,
+            "isRev": false,
+            "isSubmitApproval": true,
+            "isModifyApproval": false,
+            "currExchangeRateType": {
+              "id": 2000001
+            },
+            "btClass": "SALES",
+            "effectiveDays": null,
+            "syncPrice": false,
+            "isDefault": false,
+            "id": 2101001,
+            "createdBy": {
+              "id": 27
+            },
+            "updatedBy": {
+              "id": 477234922377861
+            },
+            "createdAt": 1685108645000,
+            "updatedAt": 1745892294000,
+            "version": 68,
+            "deleted": 0,
+            "originOrgId": 0,
+            "requestId": null
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": null,
+          "custPhone": null,
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "1f5b3befa7f611418ff0d647ac1fd784",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": null,
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1749180258000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": null,
+          "totalAmt": 0.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16417536,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1749180258000,
+          "updatedAt": 1749180258000,
+          "version": 2,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": null,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16417536
+              },
+              "id": 16263566
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16417536
+              },
+              "id": 16339537
+            }
+          ]
+        },
+        {
+          "soCode": "SO008763",
+          "soDocDate": 1749168000000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 400.0,
+          "netBaseAmt": 353.982301,
+          "taxAmt": 46.017699,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "soTypeCode": "CENT",
+            "soTypeName": "集中销售",
+            "partnerProcedureHeadRef": {
+              "id": 14007001
+            },
+            "attachmentProcedureHeadRef": null,
+            "status": "ENABLED",
+            "soTypeDesc": "集中销售",
+            "genTextTypeRef": null,
+            "isRev": false,
+            "isSubmitApproval": false,
+            "isModifyApproval": false,
+            "currExchangeRateType": null,
+            "btClass": "SALES",
+            "effectiveDays": null,
+            "syncPrice": null,
+            "isDefault": null,
+            "id": 14012001,
+            "createdBy": {
+              "id": 477142386786949
+            },
+            "updatedBy": {
+              "id": 643874941128517
+            },
+            "createdAt": 1716292960000,
+            "updatedAt": 1744946519000,
+            "version": 8,
+            "deleted": 0,
+            "originOrgId": 0,
+            "requestId": null
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": null,
+          "custPhone": null,
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "a64a769a01f53167dae06e3b53853c11",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": null,
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1749180002000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": null,
+          "totalAmt": 400.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16417528,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1749180003000,
+          "updatedAt": 1749180003000,
+          "version": 2,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": null,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16417528
+              },
+              "id": 16263558
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16417528
+              },
+              "id": 16339529
+            }
+          ]
+        },
+        {
+          "soCode": "SO008761",
+          "soDocDate": 1749168000000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 400.0,
+          "netBaseAmt": 353.982301,
+          "taxAmt": 46.017699,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "soTypeCode": "THRD",
+            "soTypeName": "三方销售",
+            "partnerProcedureHeadRef": {
+              "id": 14005002
+            },
+            "attachmentProcedureHeadRef": null,
+            "status": "ENABLED",
+            "soTypeDesc": null,
+            "genTextTypeRef": null,
+            "isRev": false,
+            "isSubmitApproval": false,
+            "isModifyApproval": false,
+            "currExchangeRateType": null,
+            "btClass": "SALES",
+            "effectiveDays": null,
+            "syncPrice": null,
+            "isDefault": null,
+            "id": 14010001,
+            "createdBy": {
+              "id": 496988507945925
+            },
+            "updatedBy": {
+              "id": 477142386786949
+            },
+            "createdAt": 1714963636000,
+            "updatedAt": 1723432742000,
+            "version": 10,
+            "deleted": 0,
+            "originOrgId": 0,
+            "requestId": null
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": null,
+          "custPhone": null,
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "cbcb273ab423f52254248ebed8ba9f56",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": null,
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1749180000000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": null,
+          "totalAmt": 400.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16417527,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1749180001000,
+          "updatedAt": 1749180001000,
+          "version": 2,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": null,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16417527
+              },
+              "id": 16263557
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16417527
+              },
+              "id": 16339528
+            }
+          ]
+        },
+        {
+          "soCode": "SO008759",
+          "soDocDate": 1749168000000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 0.0,
+          "netBaseAmt": 0.0,
+          "taxAmt": 0.0,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "soTypeCode": "STND",
+            "soTypeName": "标准销售",
+            "partnerProcedureHeadRef": {
+              "id": 14005002
+            },
+            "attachmentProcedureHeadRef": null,
+            "status": "ENABLED",
+            "soTypeDesc": "标准销售",
+            "genTextTypeRef": null,
+            "isRev": false,
+            "isSubmitApproval": true,
+            "isModifyApproval": false,
+            "currExchangeRateType": {
+              "id": 2000001
+            },
+            "btClass": "SALES",
+            "effectiveDays": null,
+            "syncPrice": false,
+            "isDefault": false,
+            "id": 2101001,
+            "createdBy": {
+              "id": 27
+            },
+            "updatedBy": {
+              "id": 477234922377861
+            },
+            "createdAt": 1685108645000,
+            "updatedAt": 1745892294000,
+            "version": 68,
+            "deleted": 0,
+            "originOrgId": 0,
+            "requestId": null
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": null,
+          "custPhone": null,
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "142f2625e13fc57c864acf865c04fa39",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": null,
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1749179999000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": null,
+          "totalAmt": 0.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16417526,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1749179999000,
+          "updatedAt": 1749179999000,
+          "version": 2,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": null,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16417526
+              },
+              "id": 16263556
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16417526
+              },
+              "id": 16339527
+            }
+          ]
+        },
+        {
+          "soCode": "SO008757",
+          "soDocDate": 1749168000000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 400.0,
+          "netBaseAmt": 353.982301,
+          "taxAmt": 46.017699,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "soTypeCode": "CENT",
+            "soTypeName": "集中销售",
+            "partnerProcedureHeadRef": {
+              "id": 14007001
+            },
+            "attachmentProcedureHeadRef": null,
+            "status": "ENABLED",
+            "soTypeDesc": "集中销售",
+            "genTextTypeRef": null,
+            "isRev": false,
+            "isSubmitApproval": false,
+            "isModifyApproval": false,
+            "currExchangeRateType": null,
+            "btClass": "SALES",
+            "effectiveDays": null,
+            "syncPrice": null,
+            "isDefault": null,
+            "id": 14012001,
+            "createdBy": {
+              "id": 477142386786949
+            },
+            "updatedBy": {
+              "id": 643874941128517
+            },
+            "createdAt": 1716292960000,
+            "updatedAt": 1744946519000,
+            "version": 8,
+            "deleted": 0,
+            "originOrgId": 0,
+            "requestId": null
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": null,
+          "custPhone": null,
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "188795084ed1ccae69d8f36cb3f6bf69",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": null,
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1749179995000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": null,
+          "totalAmt": 400.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16417525,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1749179995000,
+          "updatedAt": 1749179996000,
+          "version": 2,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": null,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16417525
+              },
+              "id": 16263555
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16417525
+              },
+              "id": 16339526
+            }
+          ]
+        },
+        {
+          "soCode": "SO008755",
+          "soDocDate": 1749168000000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 400.0,
+          "netBaseAmt": 353.982301,
+          "taxAmt": 46.017699,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "soTypeCode": "THRD",
+            "soTypeName": "三方销售",
+            "partnerProcedureHeadRef": {
+              "id": 14005002
+            },
+            "attachmentProcedureHeadRef": null,
+            "status": "ENABLED",
+            "soTypeDesc": null,
+            "genTextTypeRef": null,
+            "isRev": false,
+            "isSubmitApproval": false,
+            "isModifyApproval": false,
+            "currExchangeRateType": null,
+            "btClass": "SALES",
+            "effectiveDays": null,
+            "syncPrice": null,
+            "isDefault": null,
+            "id": 14010001,
+            "createdBy": {
+              "id": 496988507945925
+            },
+            "updatedBy": {
+              "id": 477142386786949
+            },
+            "createdAt": 1714963636000,
+            "updatedAt": 1723432742000,
+            "version": 10,
+            "deleted": 0,
+            "originOrgId": 0,
+            "requestId": null
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": null,
+          "custPhone": null,
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "e20085d0231c7230c82dad61222d699c",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": null,
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1749179993000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": null,
+          "totalAmt": 400.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16417524,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1749179994000,
+          "updatedAt": 1749179994000,
+          "version": 2,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": null,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16417524
+              },
+              "id": 16263554
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16417524
+              },
+              "id": 16339525
+            }
+          ]
+        },
+        {
+          "soCode": "SO008753",
+          "soDocDate": 1749168000000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 0.0,
+          "netBaseAmt": 0.0,
+          "taxAmt": 0.0,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "soTypeCode": "STND",
+            "soTypeName": "标准销售",
+            "partnerProcedureHeadRef": {
+              "id": 14005002
+            },
+            "attachmentProcedureHeadRef": null,
+            "status": "ENABLED",
+            "soTypeDesc": "标准销售",
+            "genTextTypeRef": null,
+            "isRev": false,
+            "isSubmitApproval": true,
+            "isModifyApproval": false,
+            "currExchangeRateType": {
+              "id": 2000001
+            },
+            "btClass": "SALES",
+            "effectiveDays": null,
+            "syncPrice": false,
+            "isDefault": false,
+            "id": 2101001,
+            "createdBy": {
+              "id": 27
+            },
+            "updatedBy": {
+              "id": 477234922377861
+            },
+            "createdAt": 1685108645000,
+            "updatedAt": 1745892294000,
+            "version": 68,
+            "deleted": 0,
+            "originOrgId": 0,
+            "requestId": null
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": null,
+          "custPhone": null,
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "5ddb5743b85b5bd355e726f7d4113715",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": null,
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1749179992000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": null,
+          "totalAmt": 0.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16417523,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1749179992000,
+          "updatedAt": 1749179992000,
+          "version": 2,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": null,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16417523
+              },
+              "id": 16263553
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16417523
+              },
+              "id": 16339524
+            }
+          ]
+        },
+        {
+          "soCode": "SO008737",
+          "soDocDate": 1749139200000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 690.0,
+          "netBaseAmt": 610.619469,
+          "taxAmt": 79.380531,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "soTypeCode": "CENT",
+            "soTypeName": "集中销售",
+            "partnerProcedureHeadRef": {
+              "id": 14007001
+            },
+            "attachmentProcedureHeadRef": null,
+            "status": "ENABLED",
+            "soTypeDesc": "集中销售",
+            "genTextTypeRef": null,
+            "isRev": false,
+            "isSubmitApproval": false,
+            "isModifyApproval": false,
+            "currExchangeRateType": null,
+            "btClass": "SALES",
+            "effectiveDays": null,
+            "syncPrice": null,
+            "isDefault": null,
+            "id": 14012001,
+            "createdBy": {
+              "id": 477142386786949
+            },
+            "updatedBy": {
+              "id": 643874941128517
+            },
+            "createdAt": 1716292960000,
+            "updatedAt": 1744946519000,
+            "version": 8,
+            "deleted": 0,
+            "originOrgId": 0,
+            "requestId": null
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": null,
+          "custPhone": null,
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "c2fd440d7d068e7b6e8d7f771a408dad",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": null,
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1749179966000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": null,
+          "totalAmt": 690.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16417518,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1749179966000,
+          "updatedAt": 1749179971000,
+          "version": 3,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": null,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16417518
+              },
+              "id": 16263548
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16417518
+              },
+              "id": 16339519
+            }
+          ]
+        },
+        {
+          "soCode": "SO008731",
+          "soDocDate": 1749139200000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 690.0,
+          "netBaseAmt": 610.619469,
+          "taxAmt": 79.380531,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "soTypeCode": "CENT",
+            "soTypeName": "集中销售",
+            "partnerProcedureHeadRef": {
+              "id": 14007001
+            },
+            "attachmentProcedureHeadRef": null,
+            "status": "ENABLED",
+            "soTypeDesc": "集中销售",
+            "genTextTypeRef": null,
+            "isRev": false,
+            "isSubmitApproval": false,
+            "isModifyApproval": false,
+            "currExchangeRateType": null,
+            "btClass": "SALES",
+            "effectiveDays": null,
+            "syncPrice": null,
+            "isDefault": null,
+            "id": 14012001,
+            "createdBy": {
+              "id": 477142386786949
+            },
+            "updatedBy": {
+              "id": 643874941128517
+            },
+            "createdAt": 1716292960000,
+            "updatedAt": 1744946519000,
+            "version": 8,
+            "deleted": 0,
+            "originOrgId": 0,
+            "requestId": null
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": null,
+          "custPhone": null,
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "ab4825860b41c12f03dd3ebfdc7b39f5",
+          "freezeType": "ALL_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": null,
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1749179962000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": null,
+          "totalAmt": 690.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16417515,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1749179963000,
+          "updatedAt": 1749179969000,
+          "version": 3,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": null,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16417515
+              },
+              "id": 16263545
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16417515
+              },
+              "id": 16339516
+            }
+          ]
+        },
+        {
+          "soCode": "SO008729",
+          "soDocDate": 1749139200000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 690.0,
+          "netBaseAmt": 610.619469,
+          "taxAmt": 79.380531,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "soTypeCode": "THRD",
+            "soTypeName": "三方销售",
+            "partnerProcedureHeadRef": {
+              "id": 14005002
+            },
+            "attachmentProcedureHeadRef": null,
+            "status": "ENABLED",
+            "soTypeDesc": null,
+            "genTextTypeRef": null,
+            "isRev": false,
+            "isSubmitApproval": false,
+            "isModifyApproval": false,
+            "currExchangeRateType": null,
+            "btClass": "SALES",
+            "effectiveDays": null,
+            "syncPrice": null,
+            "isDefault": null,
+            "id": 14010001,
+            "createdBy": {
+              "id": 496988507945925
+            },
+            "updatedBy": {
+              "id": 477142386786949
+            },
+            "createdAt": 1714963636000,
+            "updatedAt": 1723432742000,
+            "version": 10,
+            "deleted": 0,
+            "originOrgId": 0,
+            "requestId": null
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": null,
+          "custPhone": null,
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "b32e67eaa5e170027225ce06fac06d91",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": null,
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1749179961000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": null,
+          "totalAmt": 690.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16417514,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1749179961000,
+          "updatedAt": 1749179962000,
+          "version": 2,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": null,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16417514
+              },
+              "id": 16263544
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16417514
+              },
+              "id": 16339515
+            }
+          ]
+        },
+        {
+          "soCode": "SO008727",
+          "soDocDate": 1749139200000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 0.0,
+          "netBaseAmt": 0.0,
+          "taxAmt": 0.0,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "soTypeCode": "STND",
+            "soTypeName": "标准销售",
+            "partnerProcedureHeadRef": {
+              "id": 14005002
+            },
+            "attachmentProcedureHeadRef": null,
+            "status": "ENABLED",
+            "soTypeDesc": "标准销售",
+            "genTextTypeRef": null,
+            "isRev": false,
+            "isSubmitApproval": true,
+            "isModifyApproval": false,
+            "currExchangeRateType": {
+              "id": 2000001
+            },
+            "btClass": "SALES",
+            "effectiveDays": null,
+            "syncPrice": false,
+            "isDefault": false,
+            "id": 2101001,
+            "createdBy": {
+              "id": 27
+            },
+            "updatedBy": {
+              "id": 477234922377861
+            },
+            "createdAt": 1685108645000,
+            "updatedAt": 1745892294000,
+            "version": 68,
+            "deleted": 0,
+            "originOrgId": 0,
+            "requestId": null
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": null,
+          "custPhone": null,
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "ca9675dd25961834d6950d6788472b88",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": null,
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1749179960000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": null,
+          "totalAmt": 0.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16417513,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1749179960000,
+          "updatedAt": 1749179960000,
+          "version": 2,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": null,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16417513
+              },
+              "id": 16263543
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16417513
+              },
+              "id": 16339514
+            }
+          ]
+        },
+        {
+          "soCode": "SO008714",
+          "soDocDate": 1749168000000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 400.0,
+          "netBaseAmt": 353.982301,
+          "taxAmt": 46.017699,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "soTypeCode": "THRD",
+            "soTypeName": "三方销售",
+            "partnerProcedureHeadRef": {
+              "id": 14005002
+            },
+            "attachmentProcedureHeadRef": null,
+            "status": "ENABLED",
+            "soTypeDesc": null,
+            "genTextTypeRef": null,
+            "isRev": false,
+            "isSubmitApproval": false,
+            "isModifyApproval": false,
+            "currExchangeRateType": null,
+            "btClass": "SALES",
+            "effectiveDays": null,
+            "syncPrice": null,
+            "isDefault": null,
+            "id": 14010001,
+            "createdBy": {
+              "id": 496988507945925
+            },
+            "updatedBy": {
+              "id": 477142386786949
+            },
+            "createdAt": 1714963636000,
+            "updatedAt": 1723432742000,
+            "version": 10,
+            "deleted": 0,
+            "originOrgId": 0,
+            "requestId": null
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": null,
+          "custPhone": null,
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "a5c3773e036ce1329cc878caaea1d330",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": null,
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1749179927000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": null,
+          "totalAmt": 400.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16417508,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1749179927000,
+          "updatedAt": 1749179928000,
+          "version": 2,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": null,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16417508
+              },
+              "id": 16263538
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16417508
+              },
+              "id": 16339509
+            }
+          ]
+        },
+        {
+          "soCode": "SO008712",
+          "soDocDate": 1749168000000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 0.0,
+          "netBaseAmt": 0.0,
+          "taxAmt": 0.0,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "soTypeCode": "STND",
+            "soTypeName": "标准销售",
+            "partnerProcedureHeadRef": {
+              "id": 14005002
+            },
+            "attachmentProcedureHeadRef": null,
+            "status": "ENABLED",
+            "soTypeDesc": "标准销售",
+            "genTextTypeRef": null,
+            "isRev": false,
+            "isSubmitApproval": true,
+            "isModifyApproval": false,
+            "currExchangeRateType": {
+              "id": 2000001
+            },
+            "btClass": "SALES",
+            "effectiveDays": null,
+            "syncPrice": false,
+            "isDefault": false,
+            "id": 2101001,
+            "createdBy": {
+              "id": 27
+            },
+            "updatedBy": {
+              "id": 477234922377861
+            },
+            "createdAt": 1685108645000,
+            "updatedAt": 1745892294000,
+            "version": 68,
+            "deleted": 0,
+            "originOrgId": 0,
+            "requestId": null
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": null,
+          "custPhone": null,
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "8827919a4f5f0830fb1d8407ef4ce124",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": null,
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1749179925000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": null,
+          "totalAmt": 0.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16417507,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1749179926000,
+          "updatedAt": 1749179926000,
+          "version": 2,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": null,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16417507
+              },
+              "id": 16263537
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16417507
+              },
+              "id": 16339508
+            }
+          ]
+        },
+        {
+          "soCode": "SO008707",
+          "soDocDate": 1749179414000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 0.0,
+          "netBaseAmt": 0.0,
+          "taxAmt": 0.0,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "soTypeCode": "STND",
+            "soTypeName": "标准销售",
+            "partnerProcedureHeadRef": {
+              "id": 14005002
+            },
+            "attachmentProcedureHeadRef": null,
+            "status": "ENABLED",
+            "soTypeDesc": "标准销售",
+            "genTextTypeRef": null,
+            "isRev": false,
+            "isSubmitApproval": true,
+            "isModifyApproval": false,
+            "currExchangeRateType": {
+              "id": 2000001
+            },
+            "btClass": "SALES",
+            "effectiveDays": null,
+            "syncPrice": false,
+            "isDefault": false,
+            "id": 2101001,
+            "createdBy": {
+              "id": 27
+            },
+            "updatedBy": {
+              "id": 477234922377861
+            },
+            "createdAt": 1685108645000,
+            "updatedAt": 1745892294000,
+            "version": 68,
+            "deleted": 0,
+            "originOrgId": 0,
+            "requestId": null
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": null,
+          "custPhone": null,
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "19726432776ca6d4f5d0b75f4c5b60c2",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": null,
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1749179407000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": null,
+          "totalAmt": 0.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16417506,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1749179414000,
+          "updatedAt": 1749179414000,
+          "version": 3,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": null,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16417506
+              },
+              "id": 16263536
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16417506
+              },
+              "id": 16339507
+            }
+          ]
+        },
+        {
+          "soCode": "SO008701",
+          "soDocDate": 1749139200000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 0.0,
+          "netBaseAmt": 0.0,
+          "taxAmt": 0.0,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "soTypeCode": "STND",
+            "soTypeName": "标准销售",
+            "partnerProcedureHeadRef": {
+              "id": 14005002
+            },
+            "attachmentProcedureHeadRef": null,
+            "status": "ENABLED",
+            "soTypeDesc": "标准销售",
+            "genTextTypeRef": null,
+            "isRev": false,
+            "isSubmitApproval": true,
+            "isModifyApproval": false,
+            "currExchangeRateType": {
+              "id": 2000001
+            },
+            "btClass": "SALES",
+            "effectiveDays": null,
+            "syncPrice": false,
+            "isDefault": false,
+            "id": 2101001,
+            "createdBy": {
+              "id": 27
+            },
+            "updatedBy": {
+              "id": 477234922377861
+            },
+            "createdAt": 1685108645000,
+            "updatedAt": 1745892294000,
+            "version": 68,
+            "deleted": 0,
+            "originOrgId": 0,
+            "requestId": null
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": null,
+          "custPhone": null,
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "44f4cc9c8b71fdcd53d6bcbbf5b0965b",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": null,
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1749179407000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": null,
+          "totalAmt": 0.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16417503,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1749179407000,
+          "updatedAt": 1749179407000,
+          "version": 2,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": null,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16417503
+              },
+              "id": 16263533
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16417503
+              },
+              "id": 16339504
+            }
+          ]
+        },
+        {
+          "soCode": "SO008696",
+          "soDocDate": 1749139200000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 850.0,
+          "netBaseAmt": 752.212389,
+          "taxAmt": 97.787611,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "soTypeCode": "CENT",
+            "soTypeName": "集中销售",
+            "partnerProcedureHeadRef": {
+              "id": 14007001
+            },
+            "attachmentProcedureHeadRef": null,
+            "status": "ENABLED",
+            "soTypeDesc": "集中销售",
+            "genTextTypeRef": null,
+            "isRev": false,
+            "isSubmitApproval": false,
+            "isModifyApproval": false,
+            "currExchangeRateType": null,
+            "btClass": "SALES",
+            "effectiveDays": null,
+            "syncPrice": null,
+            "isDefault": null,
+            "id": 14012001,
+            "createdBy": {
+              "id": 477142386786949
+            },
+            "updatedBy": {
+              "id": 643874941128517
+            },
+            "createdAt": 1716292960000,
+            "updatedAt": 1744946519000,
+            "version": 8,
+            "deleted": 0,
+            "originOrgId": 0,
+            "requestId": null
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": null,
+          "custPhone": null,
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "0ed1392c66162bafc602ef1725e64c51",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": null,
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1749179405000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": null,
+          "totalAmt": 850.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16417502,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1749179405000,
+          "updatedAt": 1749179411000,
+          "version": 2,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": null,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16417502
+              },
+              "id": 16263532
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16417502
+              },
+              "id": 16339503
+            }
+          ]
+        },
+        {
+          "soCode": "SO008694",
+          "soDocDate": 1749139200000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 850.0,
+          "netBaseAmt": 752.212389,
+          "taxAmt": 97.787611,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "soTypeCode": "THRD",
+            "soTypeName": "三方销售",
+            "partnerProcedureHeadRef": {
+              "id": 14005002
+            },
+            "attachmentProcedureHeadRef": null,
+            "status": "ENABLED",
+            "soTypeDesc": null,
+            "genTextTypeRef": null,
+            "isRev": false,
+            "isSubmitApproval": false,
+            "isModifyApproval": false,
+            "currExchangeRateType": null,
+            "btClass": "SALES",
+            "effectiveDays": null,
+            "syncPrice": null,
+            "isDefault": null,
+            "id": 14010001,
+            "createdBy": {
+              "id": 496988507945925
+            },
+            "updatedBy": {
+              "id": 477142386786949
+            },
+            "createdAt": 1714963636000,
+            "updatedAt": 1723432742000,
+            "version": 10,
+            "deleted": 0,
+            "originOrgId": 0,
+            "requestId": null
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": null,
+          "custPhone": null,
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "5332d55058f451b6cad3b17ddbe3b9bd",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": null,
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1749179404000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": null,
+          "totalAmt": 850.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16417501,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1749179404000,
+          "updatedAt": 1749179413000,
+          "version": 3,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": null,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16417501
+              },
+              "id": 16263531
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16417501
+              },
+              "id": 16339502
+            }
+          ]
+        },
+        {
+          "soCode": "SO008690",
+          "soDocDate": 1749139200000,
+          "soExtCode": null,
+          "baseCurrId": {
+            "id": 2000001
+          },
+          "slsCurrId": {
+            "id": 2000001
+          },
+          "exchRate": 1.0,
+          "grossBaseAmt": 590.0,
+          "netBaseAmt": 522.123894,
+          "taxAmt": 67.876106,
+          "soCreateSource": "TERP门户",
+          "slsOrgId": {
+            "id": 14579001
+          },
+          "slsTmId": null,
+          "soTypeId": {
+            "soTypeCode": "CENT",
+            "soTypeName": "集中销售",
+            "partnerProcedureHeadRef": {
+              "id": 14007001
+            },
+            "attachmentProcedureHeadRef": null,
+            "status": "ENABLED",
+            "soTypeDesc": "集中销售",
+            "genTextTypeRef": null,
+            "isRev": false,
+            "isSubmitApproval": false,
+            "isModifyApproval": false,
+            "currExchangeRateType": null,
+            "btClass": "SALES",
+            "effectiveDays": null,
+            "syncPrice": null,
+            "isDefault": null,
+            "id": 14012001,
+            "createdBy": {
+              "id": 477142386786949
+            },
+            "updatedBy": {
+              "id": 643874941128517
+            },
+            "createdAt": 1716292960000,
+            "updatedAt": 1744946519000,
+            "version": 8,
+            "deleted": 0,
+            "originOrgId": 0,
+            "requestId": null
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "custPersonName": null,
+          "custPhone": null,
+          "slsPersonName": "章昂",
+          "slsPhone": "17376596912",
+          "soStatus": "EFFECT",
+          "approveStatus": null,
+          "soTitle": null,
+          "soDesc": null,
+          "soNotes": null,
+          "isFixedExchRate": false,
+          "slsComId": {
+            "id": 14373001
+          },
+          "priceIdempotent": "e4bf3f3df746eed4ec58928abb86e000",
+          "freezeType": "NU_FREEZE",
+          "soAssociationCode": null,
+          "soBusinessStatus": null,
+          "bizRuleGroup": null,
+          "addrDetail": null,
+          "currExchangeRateType": {
+            "id": 2000001
+          },
+          "slsDcId": {
+            "id": 14378001
+          },
+          "btClass": "SALES",
+          "effectiveAt": null,
+          "slsPerson": {
+            "id": 14094003
+          },
+          "reCalculate": null,
+          "invOrg": null,
+          "invLoc": null,
+          "priceCalcDate": 1749177597000,
+          "deliveryInterceptFail": null,
+          "externalBuyerId": null,
+          "addrId": null,
+          "totalAmt": 590.0,
+          "discountAmt": 0.0,
+          "discountInfo": "",
+          "platformDiscountAmt": null,
+          "merchantDiscountAmt": null,
+          "actualPaidAmt": null,
+          "freightAmt": null,
+          "buyerRemark": null,
+          "sellerRemark": null,
+          "id": 16417499,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1749177597000,
+          "updatedAt": 1749177805000,
+          "version": 3,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": null,
+          "slsPartnerLinks": [
+            {
+              "soId": {
+                "id": 16417499
+              },
+              "id": 16263529
+            }
+          ],
+          "soItems": [
+            {
+              "soId": {
+                "id": 16417499
+              },
+              "id": 16339500
+            }
+          ]
+        }
+      ],
+      "total": 800
+    }
+  }
+}
+2025-06-06 11:24:30.315 | INFO     | utils.log_util:info:65 - 
+成功查询到 20 条状态为 EFFECT 的订单数据
