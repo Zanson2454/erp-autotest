@@ -170,12 +170,12 @@ class PrdBaseTest(BaseTest):
 
     def get_prd_order_pending_issue_bom_items(self):
         """
-        获取已下达单生产订单的待领料BOM行信息
+        获取已下达生产订单的待领料BOM行信息
         Returns:
             list: 包含待领料BOM行ID的列表
                 [{'id': xxx}, {'id': xxx}]
         """
-        # 获取最新的已下达单生产订单ID
+        # 获取最新的已下达生产订单ID
         latest_order = self.get_latest_prd_order(status="SUBMITTED")
         order_id = latest_order.get("id")
         
@@ -188,5 +188,5 @@ class PrdBaseTest(BaseTest):
             ORDER BY id DESC
         """
         result = self.db.query(sql)
-        self.logger.info(f"获取到生产订单待领料BOM行信息: {result}")
+        self.logger.info(f"获取到已下达生产订单待领料BOM行信息: {result}")
         return result 
