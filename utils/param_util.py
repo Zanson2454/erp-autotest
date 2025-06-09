@@ -278,6 +278,8 @@ class ParamUtil:
     @staticmethod
     def case_decorator(title="", story="", description="", severity="normal", order=0, smoke=False, tags=None):
         """
+        统一的测试用例装饰器 - 修复重复执行问题
+        
         Args:
             title: 测试用例标题，必填
             story: 所属故事/模块，必填
@@ -296,23 +298,10 @@ class ParamUtil:
         }
         
         def decorator(func):
-            # 先应用allure装饰器
-            if title:
-                func = allure.title(title)(func)
-            if story:
-                func = allure.story(story)(func)
-            if description:
-                func = allure.description(description)(func)
-            if severity:
-                func = allure.severity(severity_map.get(severity, allure.severity_level.NORMAL))(func)
-            if tags:
-                for tag in tags:
-                    func = allure.tag(tag)(func)
-            
             # 使用functools.wraps保留原始函数的元数据
             @functools.wraps(func)
             def wrapper(*args, **kwargs):
-                # 在测试运行时再次动态设置title，确保它显示正确
+                # 只在运行时设置allure信息，不在装饰时重复设置
                 if title:
                     allure.dynamic.title(title)
                 if story:
@@ -333,9 +322,6 @@ class ParamUtil:
                 wrapper = pytest.mark.smoke(wrapper)
             if order:
                 wrapper = pytest.mark.run(order=order)(wrapper)
-            
-            # 添加一个唯一标识符，确保pytest不会混淆测试用例
-            wrapper.__uuid__ = str(uuid.uuid4())
             
             return wrapper
         return decorator

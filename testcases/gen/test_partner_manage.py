@@ -130,7 +130,9 @@ class TestPartnerSimplified(GenBaseTest):
                 params, url = ParamUtil.get_api_params(self.api_params, api_path)
                 
                 filtered_params = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
-                ParamUtil.set_request_param(filtered_params, "id", TestPartnerSimplified.partner_info["partner_id"])
+                ParamUtil.set_request_params(filtered_params, {
+                    "id": TestPartnerSimplified.partner_info["partner_id"]
+                })
                 
                 result = self.http.post(url, json=filtered_params)
                 self.assert_util.assert_response_success(result)
@@ -161,7 +163,9 @@ class TestPartnerSimplified(GenBaseTest):
                 params, url = ParamUtil.get_api_params(self.api_params, api_path)
                 
                 filtered_params = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
-                ParamUtil.set_request_param(filtered_params, "id", TestPartnerSimplified.partner_info["partner_id"])
+                ParamUtil.set_request_params(filtered_params, {
+                    "id": TestPartnerSimplified.partner_info["partner_id"]
+                })
                 
                 result = self.http.post(url, json=filtered_params)
                 self.assert_util.assert_response_success(result)
@@ -192,7 +196,9 @@ class TestPartnerSimplified(GenBaseTest):
                 params, url = ParamUtil.get_api_params(self.api_params, api_path)
                 
                 filtered_params = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
-                ParamUtil.set_request_param(filtered_params, "id", TestPartnerSimplified.partner_info["partner_id"])
+                ParamUtil.set_request_params(filtered_params, {
+                    "id": TestPartnerSimplified.partner_info["partner_id"]
+                })
                 result = self.http.post(url, json=filtered_params)
                 self.assert_util.assert_response_success(result)
                 
