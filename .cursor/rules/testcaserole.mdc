@@ -1,10 +1,10 @@
 ---
 description: 
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 # ERP自动化测试用例生成规则
-# [always]
+[always]
 # [manual]
 
 ## 使用说明
