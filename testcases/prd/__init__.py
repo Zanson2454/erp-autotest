@@ -52,18 +52,16 @@ class PrdBaseTest(BaseTest):
     def _init_base_info(cls):
         """初始化基础配置数据"""
         try:
-            # 1. 查询工单类型配置
+            # 查询工单类型配置
             wo_type_sql = """
                 SELECT id, type_code, type_name 
                 FROM prd_wo_type_cf 
                 WHERE deleted = 0 AND type_name = '量产生产订单'
                 LIMIT 1
             """
-            wo_type_result = DBManager.query(wo_type_sql)
-            if not wo_type_result:
-                raise Exception("未找到量产生产订单工单类型配置")
+            wo_type_info = DBManager.query(wo_type_sql)[0]
             
-            # 2. 查询库存组织配置
+            # 查询库存组织配置
             inv_org_sql = """
                 SELECT id, org_code, org_name 
                 FROM org_struct_md 
@@ -74,23 +72,23 @@ class PrdBaseTest(BaseTest):
                 AND deleted=0 
                 LIMIT 1
             """
-            inv_org_result = DBManager.query(inv_org_sql)
-            if not inv_org_result:
-                raise Exception("未找到C100开头的库存组织配置")
+            inv_org_info = DBManager.query(inv_org_sql)[0]
+
+            # 查询生产物料配置
+            prd_mat_sql = """
+                SELECT id, mat_code, mat_name
+                FROM gen_mat_md
+                WHERE deleted = 0 AND mat_code = 'W1790'
+                LIMIT 1
+            """
+            prd_mat_info = DBManager.query(prd_mat_sql)[0]
             
-            # 3. 保存查询结果
-            cls.base_info.update({
-                "wo_type_info": {
-                    "id": wo_type_result[0]["id"],
-                    "type_code": wo_type_result[0]["type_code"],
-                    "type_name": wo_type_result[0]["type_name"]
-                },
-                "inv_org_info": {
-                    "id": inv_org_result[0]["id"],
-                    "org_code": inv_org_result[0]["org_code"],
-                    "org_name": inv_org_result[0]["org_name"]
-                }
-            })
+            # 保存配置信息
+            cls.base_info = {
+                "wo_type_info": wo_type_info,
+                "inv_org_info": inv_org_info,
+                "prd_mat_info": prd_mat_info
+            }
             
             cls.logger.info(f"基础配置数据初始化成功: {cls.base_info}")
             
@@ -128,4 +126,68 @@ class PrdBaseTest(BaseTest):
             url = f"{api_path}?{with_query_params}"
         
         params = self.api_params.get(api_path, {})
-        return params, url 
+        return params, url
+    
+    def get_latest_prd_order(self, status="DRAFT"):
+        """
+        获取最新的生产订单信息
+        
+        参数：
+            status (str): 生产订单状态，默认为'DRAFT'
+        返回:
+            dict: 包含生产订单ID和编号的字典
+        """
+        try:
+            # 查询最新的指定状态生产订单
+            sql = f"""
+                SELECT id, wo_code, status, confirm_status, delivered_status
+                FROM prd_order_header_tr
+                WHERE deleted = 0
+                AND status = '{status}'
+                AND confirm_status = 'UNCONFIRMED'
+                AND delivered_status = 'UNDELIVERED'
+                ORDER BY id DESC
+                LIMIT 1
+            """
+            result = self.db.query(sql)
+            assert result, f"未找到状态为{status}的生产订单"
+            
+            # 返回生产订单信息
+            order_info = {
+                "id": result[0]["id"],
+                "wo_code": result[0]["wo_code"],
+                "status": result[0]["status"],
+                "confirm_status": result[0]["confirm_status"],
+                "delivered_status": result[0]["delivered_status"]
+            }
+            
+            self.logger.info(f"获取到生产订单信息: {order_info}")
+            return order_info
+            
+        except Exception as e:
+            self.logger.error(f"获取生产订单信息失败: {str(e)}")
+            raise
+
+    def get_prd_order_pending_issue_bom_items(self):
+        """
+        获取已下达生产订单的待领料BOM行信息
+        Returns:
+            list: 包含待领料BOM行ID的列表
+                [{'id': xxx}, {'id': xxx}]
+        """
+        # 获取最新的已下达生产订单ID
+        latest_order = self.get_latest_prd_order(status="SUBMITTED")
+        order_id = latest_order.get("id")
+        
+        sql = f"""
+            SELECT id
+            FROM prd_order_bom_item_tr
+            WHERE deleted = 0 
+            AND is_backflush = 0
+            AND consumed_qty = 0
+            AND prd_order_header_tr_id = {order_id}  #需确保前面用例执行成功否则可能取到没有领料的BOM行
+            ORDER BY id DESC
+        """
+        result = self.db.query(sql)
+        self.logger.info(f"获取到已下达生产订单待领料BOM行信息: {result}")
+        return result 

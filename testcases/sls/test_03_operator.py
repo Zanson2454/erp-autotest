@@ -146,36 +146,89 @@ class TestSalesOrderOperator(BaseTest,SlsBase):
         assert self.so_data is not None, "获取订单详情失败"
         assert "data" in self.so_data, "订单详情数据格式错误"
 
+    @allure.title("销售订单编辑")
+    @allure.description("测试销售订单编辑")
+    @allure.severity(allure.severity_level.CRITICAL)    
+    @pytest.mark.order(2)
+    @safe_api_call(error_message="销售订单编辑失败")
+    def test_02_sales_order_edit(self):
+        """测试编辑销售订单"""
+        # 查询草稿态订单
+        draft_order = self._query_draft_orders_from_db()
+        if not draft_order:
+            raise ValueError("未找到草稿态订单")
+            
+        self.order_id = draft_order["so_id"]
+        original_so_code = draft_order["so_code"]
+        
+        # 构造请求数据
+        request_data = {
+            "sceneKey": "ERP_SCM$sls_so_730",
+            "viewKey": "ERP_SCM$sls_so_730:edit",
+            "appId": 0,
+            "teamId": 22,
+            "serviceKey": "ERP_SCM$query_sls_order_bom_detail",
+            "params": {
+                "id": str(self.order_id)    
+            }
+        }
+        
+        # 编辑订单
+        url = self.sls_api_paths["订单管理"]["编辑订单"]
+        data = self.sls_api_params[url]
+        data.update(request_data)
+        
+        result = self.http.post(url, json=data, description="编辑订单")
+        assert result is not None, "编辑销售订单失败"
+        assert result.get('success', False), f"编辑销售订单失败: {result.get('err', {}).get('msg', '未知错误')}"
+        
+        # 验证订单
+        new_so_code = result['data']['data']['soCode']
+        self.so_data = result['data']['data']
+        assert new_so_code is not None, "响应中未找到新订单号"
+        
     @allure.title("销售订单编辑提交")
     @allure.description("测试销售订单编辑提交")
     @allure.severity(allure.severity_level.CRITICAL)    
     @pytest.mark.order(2)
     @safe_api_call(error_message="销售订单编辑提交失败")
-    def test_02_submit_sales_order_edit(self):
+    def test_03_submit_sales_order_edit(self):
         """测试销售订单编辑提交"""
-        # 查询订单详情
-        self.test_01_query_order_detail()
+        # 编辑订单
+        self.test_02_sales_order_edit()
+
+       # 构造请求数据
+        request_data = {
+            "params": {
+                "request": {
+                    **self.so_data,
+                    "syncSubmit": True
+                }
+            }
+        }
         
         # 发送请求
-        self.so_data['syncSubmit'] = True
-        url = self.sls_api_paths["订单管理"]["销售订单编辑提交"]
+        url = self.sls_api_paths["订单管理"]["编辑页提交"]
         data = self.sls_api_params[url]
-        data["params"]["request"] = self.so_data
+        data["params"]["request"] = request_data["params"]["request"]
         
-        result = self.http.post(url, json=data, description="销售订单编辑提交")
-        assert result is not None, "销售订单编辑提交失败"
-        assert result.get('success', False), f"销售订单编辑提交失败: {result.get('err', {}).get('msg', '未知错误')}"
+        result = self.http.post(url, json=data, description="提交复制订单")
+        assert result is not None, "提交复制的销售订单失败"
+        assert result.get('success', False), f"提交复制的销售订单失败: {result.get('err', {}).get('msg', '未知错误')}"
         
         # 验证订单状态
-        so_status = self.db.query(f"select id,so_code,so_status from sls_so_head_tr where id={self.order_id}")
-        assert so_status[0]['so_status'] == 'EFFECT', "销售订单编辑提交失败"
+        new_so_code = result['data']['data']['soCode']
+        assert new_so_code == self.so_data['soCode'], f"订单号不匹配: 期望={self.so_data['soCode']}, 实际={new_so_code}"
+        
+        so_status = self.db.query(f"select id,so_code,so_status from sls_so_head_tr where so_code='{new_so_code}'")
+        assert so_status[0]['so_status'] == 'EFFECT', "复制订单提交失败"
 
     @allure.title("销售订单列表提交")
     @allure.description("测试销售订单列表提交")
     @allure.severity(allure.severity_level.CRITICAL)    
     @pytest.mark.order(3)
     @safe_api_call(error_message="销售订单列表提交失败")
-    def test_03_manual_submit_sales_order(self):
+    def test_04_manual_submit_sales_order(self):
         """测试销售订单列表提交"""
         # 查询草稿态订单
         draft_order = self._query_draft_orders_from_db()
@@ -202,7 +255,7 @@ class TestSalesOrderOperator(BaseTest,SlsBase):
     @allure.severity(allure.severity_level.CRITICAL)    
     @pytest.mark.order(4)
     @safe_api_call(error_message="取消提交销售订单失败")
-    def test_04_cancel_submit_sales_order(self):
+    def test_05_cancel_submit_sales_order(self):
         """测试取消提交销售订单"""
         # 查询生效态订单
         effective_order = self._query_effective_orders_from_db()
@@ -238,7 +291,7 @@ class TestSalesOrderOperator(BaseTest,SlsBase):
     @allure.severity(allure.severity_level.CRITICAL)    
     @pytest.mark.order(5)
     @safe_api_call(error_message="作废销售订单失败")
-    def test_05_repeal_sales_order(self):
+    def test_06_repeal_sales_order(self):
         """测试作废销售订单"""
         # 查询生效态订单
         effective_order = self._query_effective_orders_from_db()
@@ -274,7 +327,7 @@ class TestSalesOrderOperator(BaseTest,SlsBase):
     @allure.severity(allure.severity_level.CRITICAL)    
     @pytest.mark.order(6)
     @safe_api_call(error_message="冻结销售订单失败")
-    def test_06_freeze_sales_order(self):
+    def test_07_freeze_sales_order(self):
         """测试冻结销售订单"""
         # 查询生效态订单
         effective_order = self._query_effective_orders_from_db()
@@ -311,7 +364,7 @@ class TestSalesOrderOperator(BaseTest,SlsBase):
     @allure.severity(allure.severity_level.CRITICAL)    
     @pytest.mark.order(7)
     @safe_api_call(error_message="复制销售订单失败")
-    def test_07_copy_sales_order(self):
+    def test_08_copy_sales_order(self):
         """测试复制销售订单"""
         # 查询生效态订单
         effective_order = self._query_effective_orders_from_db()
@@ -350,10 +403,10 @@ class TestSalesOrderOperator(BaseTest,SlsBase):
     @allure.severity(allure.severity_level.CRITICAL)    
     @pytest.mark.order(8)
     @safe_api_call(error_message="提交复制的销售订单失败")
-    def test_08_submit_copied_sales_order(self):
+    def test_09_submit_copied_sales_order(self):
         """测试提交复制的销售订单"""
         # 复制订单
-        self.test_07_copy_sales_order()
+        self.test_08_copy_sales_order()
         
         # 构造请求数据
         request_data = {
@@ -366,7 +419,7 @@ class TestSalesOrderOperator(BaseTest,SlsBase):
         }
         
         # 发送请求
-        url = self.sls_api_paths["订单管理"]["提交订单"]
+        url = self.sls_api_paths["订单管理"]["编辑页提交"]
         data = self.sls_api_params[url]
         data["params"]["request"] = request_data["params"]["request"]
         
@@ -382,15 +435,16 @@ class TestSalesOrderOperator(BaseTest,SlsBase):
         assert so_status[0]['so_status'] == 'EFFECT', "复制订单提交失败"
 
 if __name__ == "__main__":
-    # test = TestSalesOrderOperator()
-    # test.setup_class()
-    # test.test_01_query_order_detail()
-    # # test.test_02_submit_sales_order_edit()
-    # test.test_03_manual_submit_sales_order()   
-    # # test.test_04_cancel_submit_sales_order()
-    # # test.test_05_repeal_sales_order()
-    # # test.test_06_freeze_sales_order()
-    # # test.test_07_copy_sales_order()
-    # # test.test_08_submit_copied_sales_order()
-    allure_dir = Path(project_root) / "reports" / "allure-results"
-    pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])    
+    test = TestSalesOrderOperator()
+    test.setup_class()  
+    test.test_01_query_order_detail()
+    test.test_02_sales_order_edit()
+    test.test_03_submit_sales_order_edit()
+    test.test_04_manual_submit_sales_order()   
+    test.test_05_cancel_submit_sales_order()
+    test.test_06_repeal_sales_order()
+    test.test_07_freeze_sales_order()
+    test.test_08_copy_sales_order()
+    test.test_09_submit_copied_sales_order()
+    #allure_dir = Path(project_root) / "reports" / "allure-results"
+    #pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])    

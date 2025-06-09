@@ -1,0 +1,35 @@
+{
+  "requestId": "99996b02-820453",
+  "success": true,
+  "data": {
+    "data": {
+      "data": [
+        {
+          "invOrgId": {
+            "orgName": "库存组织(自动化)",
+            "id": 14375002
+          },
+          "dateFrom": 1748880000000,
+          "dateTo": 253402185600000,
+          "matId": {
+            "matCode": "AUTO_XBMAT0020",
+            "matName": "自动化_XB黑胡桃原木",
+            "id": 14618004
+          },
+          "bomUseId": {
+            "useCode": "1",
+            "id": 1
+          },
+          "vrsCode": "2207",
+          "vrsName": "info",
+          "statusId": {
+            "statusCode": "1",
+            "id": 2000002
+          },
+          "id": 14409001
+        }
+      ],
+      "total": 1
+    }
+  }
+}

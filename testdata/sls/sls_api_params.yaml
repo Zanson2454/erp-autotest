@@ -299,8 +299,18 @@ api_params:
         soItems: "{so_items}"  # 订单行项目
         slsPartnerLinks: "{sls_partner_links}"  # 相关方链接
 
-  # 销售订单编辑提交服务
-  "/api/trantor/service/engine/execute/ERP_SCM$SLS_SALES_MANUAL_SAVE_EVENT":
+  # 编辑页提交服务
+  "/api/trantor/service/engine/execute/ERP_SCM$SLS_SALES_MANUAL_SAVE_EVENT?tmodule=ERP_SCM":
     params:
       request:
         {}
+
+  # 编辑订单服务
+  "/api/trantor/service/engine/execute/ERP_SCM$query_sls_order_bom_detail?tmodule=ERP_SCM":
+    sceneKey: "ERP_SCM$sls_so_730"
+    viewKey: "ERP_SCM$sls_so_730:edit"
+    appId: 0
+    teamId: 22
+    serviceKey: "ERP_SCM$query_sls_order_bom_detail"
+    params:
+      id: "{order_id}"  # 要编辑的订单ID

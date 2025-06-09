@@ -179,11 +179,11 @@ class TestOrderDelete(BaseTest,SlsBase):
 
 
 if __name__ == "__main__":
-    # test = TestOrderDelete()
-    # test.setup_class()
-    # test.test_01_delete_order()
-    # test.test_02_batch_delete_orders()
+    test = TestOrderDelete()
+    test.setup_class()
+    test.test_01_delete_order()
+    test.test_02_batch_delete_orders()
 
-    project_root = Path(__file__).resolve().parent.parent
-    allure_dir = Path(project_root) / "reports" / "allure-results"
-    pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])
+    #project_root = Path(__file__).resolve().parent.parent
+    #allure_dir = Path(project_root) / "reports" / "allure-results"
+    #pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])

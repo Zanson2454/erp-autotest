@@ -1,0 +1,86 @@
+{
+  "requestId": "00598d54-757255",
+  "success": true,
+  "data": {
+    "data": [
+      {
+        "context": {},
+        "matId": {
+          "id": 14655007
+        },
+        "locId": {
+          "id": 2110015
+        },
+        "uom": {
+          "id": 2007001
+        },
+        "operationNum": 1,
+        "isBackflush": false,
+        "invOrgId": {
+          "id": 2110010
+        },
+        "isCoproduct": false,
+        "isByproduct": false,
+        "notPostedQty": 0,
+        "issueCompleted": false,
+        "isDisassembly": false,
+        "specialized": false,
+        "costElementId": {
+          "id": 2007003
+        }
+      },
+      {
+        "context": {},
+        "matId": {
+          "id": 14655006
+        },
+        "locId": {
+          "id": 2110015
+        },
+        "uom": {
+          "id": 2007001
+        },
+        "operationNum": 2,
+        "isBackflush": true,
+        "invOrgId": {
+          "id": 2110010
+        },
+        "isCoproduct": false,
+        "isByproduct": false,
+        "notPostedQty": 0,
+        "issueCompleted": false,
+        "isDisassembly": false,
+        "specialized": false,
+        "costElementId": {
+          "id": 2007003
+        }
+      },
+      {
+        "context": {},
+        "matId": {
+          "id": 14655003
+        },
+        "locId": {
+          "id": 2110015
+        },
+        "uom": {
+          "id": 2009001
+        },
+        "operationNum": 3,
+        "isBackflush": false,
+        "invOrgId": {
+          "id": 2110010
+        },
+        "isCoproduct": false,
+        "isByproduct": false,
+        "notPostedQty": 0,
+        "issueCompleted": false,
+        "isDisassembly": false,
+        "specialized": false,
+        "costElementId": {
+          "id": 2007003
+        }
+      }
+    ]
+  }
+}

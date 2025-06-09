@@ -1,0 +1,40 @@
+{
+  "params": {
+    "request": {
+      "woTypeId": {
+        "id": 2000001
+      },
+      "invOrgId": 2110010,
+      "plannedStartDate": 1749003054509,
+      "plannedEndDate": 1749089454509,
+      "matId": {
+        "id": 14652007
+      },
+      "prdMatId": {
+        "id": 14408001
+      },
+      "status": "DRAFT",
+      "confirmStatus": "UNCONFIRMED",
+      "deliveredStatus": "UNDELIVERED",
+      "qty": 10,
+      "prdUomId": {
+        "id": 2004001
+      },
+      "locId": {
+        "id": 14336001
+      },
+      "postInvTypeId": {
+        "id": 2000001
+      },
+      "mvmTypeId": {
+        "id": 4010005
+      },
+      "prdVrsId": {
+        "id": 14323001
+      },
+      "matCode": "W1790",
+      "matName": "XB三力士普通带001",
+      "invLocId": 14336001
+    }
+  }
+}

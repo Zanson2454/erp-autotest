@@ -1,0 +1,20 @@
+{
+  "requestId": "5af52eeb-757251",
+  "success": true,
+  "data": {
+    "data": {
+      "context": {},
+      "invOrgId": {
+        "id": 2110010
+      },
+      "plannedStartDate": 1749003054509,
+      "plannedEndDate": 1749089454509,
+      "postInvTypeId": {
+        "id": 2000001
+      },
+      "matId": {
+        "id": 14652007
+      }
+    }
+  }
+}

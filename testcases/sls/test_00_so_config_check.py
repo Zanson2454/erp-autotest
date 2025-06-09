@@ -165,10 +165,10 @@ class TestSalesOrderConfig(BaseTest,SlsBase):
         return result  # 返回响应数据
 
 if __name__ == "__main__":
-    # test = TestSalesOrderConfig()
-    # test.setup_class()
-    # test.test_01_query_order_type()
-    # test.test_02_query_order_type_detail()
-    
-    allure_dir = Path(project_root) / "reports" / "allure-results"
-    pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])
+    test = TestSalesOrderConfig()
+    test.setup_class()
+    test.test_01_query_order_type()
+    test.test_02_query_order_type_detail()
+    test.test_03_query_order_line_type()
+    #allure_dir = Path(project_root) / "reports" / "allure-results"
+    #pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])

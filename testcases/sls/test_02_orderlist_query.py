@@ -452,17 +452,17 @@ class TestOrderList(BaseTest,SlsBase):
         self.logger.info(f"\n成功查询到 {len(nested_data)} 条匹配的订单数据")
 
 if __name__ == "__main__":
-    # test = TestOrderList()
-    # test.setup_class()
-    # test.test_01_query_orders()
-    # test.test_02_query_orders_by_so_code()
-    # test.test_03_query_orders_by_status("DRAFT")
-    # test.test_03_query_orders_by_status("EFFECT")
-    # test.test_03_query_orders_by_status("APPROVING")
-    # test.test_03_query_orders_by_status("CANCELLED")
-    # test.test_04_query_orders_by_so_type()
-    # test.test_05_query_orders_by_customer()
-    project_root = Path(__file__).resolve().parent.parent
-    allure_dir = Path(project_root) / "reports" / "allure-results"
-    pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])
+    test = TestOrderList()
+    test.setup_class()
+    test.test_01_query_orders()
+    test.test_02_query_orders_by_so_code()
+    test.test_03_query_orders_by_status("DRAFT")
+    test.test_03_query_orders_by_status("EFFECT")
+    test.test_03_query_orders_by_status("APPROVING")
+    test.test_03_query_orders_by_status("CANCELLED")
+    test.test_04_query_orders_by_so_type()
+    test.test_05_query_orders_by_customer()
+   # project_root = Path(__file__).resolve().parent.parent
+   # allure_dir = Path(project_root) / "reports" / "allure-results"
+   # pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])
     
