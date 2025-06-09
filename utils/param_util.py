@@ -3,8 +3,17 @@
 
 功能：
 - 提供 post 请求 body 字段过滤方法，便于用例只传递需要的字段。
+- 提供统一的测试用例装饰器，简化测试用例的装饰器使用
 """
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional, Union
+import allure
+import pytest
+import functools
+import re
+import inspect
+import sys
+import uuid
+
 
 class ParamUtil:
     @staticmethod
@@ -126,6 +135,215 @@ class ParamUtil:
                 
         return result
 
+    @staticmethod
+    def get_api_path(apis_dict: Dict[str, Any], api_key: str) -> str:
+        """
+        获取API路径
+        
+        参数:
+            apis_dict (dict): API路径配置字典
+            api_key (str): API的名称键值，如"物料主数据定义表-分页数据服务"
+            
+        返回:
+            str: 对应的API路径，如"/api/trantor/service/engine/execute/ERP_GEN$gen_mat_md_PAGING_DATA_SERVICE"
+                 如果找不到对应的API，则返回None
+        """
+        return apis_dict.get(api_key, {}).get("path")
+    
+    @staticmethod
+    def get_api_params(api_params_dict: Dict[str, Any], api_path: str, with_query_params: str = None) -> tuple:
+        """
+        获取API请求参数和完整URL
+        
+        参数:
+            api_params_dict (dict): API参数配置字典
+            api_path (str): API路径，如"/api/trantor/service/engine/execute/ERP_GEN$gen_mat_md_PAGING_DATA_SERVICE"
+            with_query_params (str, optional): 查询参数字符串，如"param1=value1&param2=value2"
+            
+        返回:
+            tuple: (params, url)
+                params (dict): 对应API的请求参数模板，如{"params": {"request": {...}}}
+                url (str): 完整的API URL，如果提供了with_query_params，则会附加到路径后
+                           例如: "/api/..." 或 "/api/...?param1=value1"
+        """
+        # 准备URL
+        url = api_path
+        if with_query_params:
+            url = f"{api_path}?{with_query_params}"
+        
+        # 获取请求参数 (从api_params字典中获取对应api_path的参数模板)
+        params = api_params_dict.get(api_path, {})
+        return params, url
+    
+    @staticmethod
+    def set_request_param(params: Dict[str, Any], key: str, value: Any) -> Dict[str, Any]:
+        """
+        设置请求参数中的值，简化嵌套访问
+        
+        参数:
+            params: 请求参数字典
+            key: 参数键名
+            value: 参数值
+        
+        返回:
+            更新后的参数字典
+        """
+        if 'params' not in params:
+            params['params'] = {}
+        if 'request' not in params['params']:
+            params['params']['request'] = {}
+            
+        params['params']['request'][key] = value
+        return params
+    
+    @staticmethod
+    def set_request_params(params: Dict[str, Any], param_dict: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        批量设置请求参数，简化嵌套访问
+        
+        参数:
+            params: 请求参数字典
+            param_dict: 要设置的参数字典 {key: value, ...}
+        
+        返回:
+            更新后的参数字典
+        """
+        if 'params' not in params:
+            params['params'] = {}
+        if 'request' not in params['params']:
+            params['params']['request'] = {}
+            
+        for key, value in param_dict.items():
+            params['params']['request'][key] = value
+        return params
+
+    @staticmethod
+    def generate_unique_code(prefix: str = "TEST") -> str:
+        """
+        生成唯一编码
+        
+        参数:
+            prefix (str): 编码前缀，默认为"TEST"
+            
+        返回:
+            str: 生成的唯一编码，格式为"<prefix><时间戳><随机数>"
+        """
+        import time
+        import random
+        timestamp = time.strftime("%Y%m%d%H%M%S")
+        return f"{prefix}{timestamp}{random.randint(1000, 9999)}"
+    
+    @staticmethod
+    def generate_test_name(prefix: str = "TEST_NAME") -> str:
+        """
+        生成测试名称
+        
+        参数:
+            prefix (str): 名称前缀，默认为"TEST_NAME"
+            
+        返回:
+            str: 生成的测试名称，格式为"<prefix>_<随机数>"
+        """
+        import random
+        return f"{prefix}_{random.randint(100, 999)}"
+    
+    @staticmethod
+    def generate_remark() -> str:
+        """
+        生成备注信息
+        
+        返回:
+            str: 生成的备注信息，包含当前时间
+        """
+        import time
+        return f"自动化测试创建 - {time.strftime('%Y-%m-%d %H:%M:%S')}"
+    
+    @staticmethod
+    def extract_id(result: dict, path: str = "data.data.id"):
+        """
+        从API响应中提取ID
+        
+        参数:
+            result: API响应结果
+            path: ID在响应中的路径，默认为 "data.data.id"
+            
+        返回:
+            提取到的ID值
+        """
+        data = result
+        for key in path.split("."):
+            data = data.get(key, {})
+        return data
+    
+    @staticmethod
+    def case_decorator(title="", story="", description="", severity="normal", order=0, smoke=False, tags=None):
+        """
+        Args:
+            title: 测试用例标题，必填
+            story: 所属故事/模块，必填
+            description: 详细描述，可选
+            severity: 严重级别，支持：blocker/critical/normal/minor/trivial，默认normal
+            order: 执行顺序，数字越小越先执行，默认0
+            smoke: 是否为冒烟测试，默认False
+            tags: 标签列表，用于分类和过滤，默认为空
+        """
+        severity_map = {
+            "blocker": allure.severity_level.BLOCKER,
+            "critical": allure.severity_level.CRITICAL,
+            "normal": allure.severity_level.NORMAL,
+            "minor": allure.severity_level.MINOR,
+            "trivial": allure.severity_level.TRIVIAL,
+        }
+        
+        def decorator(func):
+            # 先应用allure装饰器
+            if title:
+                func = allure.title(title)(func)
+            if story:
+                func = allure.story(story)(func)
+            if description:
+                func = allure.description(description)(func)
+            if severity:
+                func = allure.severity(severity_map.get(severity, allure.severity_level.NORMAL))(func)
+            if tags:
+                for tag in tags:
+                    func = allure.tag(tag)(func)
+            
+            # 使用functools.wraps保留原始函数的元数据
+            @functools.wraps(func)
+            def wrapper(*args, **kwargs):
+                # 在测试运行时再次动态设置title，确保它显示正确
+                if title:
+                    allure.dynamic.title(title)
+                if story:
+                    allure.dynamic.story(story)
+                if description:
+                    allure.dynamic.description(description)
+                if severity:
+                    allure.dynamic.severity(severity_map.get(severity, allure.severity_level.NORMAL))
+                if tags:
+                    for tag in tags:
+                        allure.dynamic.tag(tag)
+                
+                # 调用原始函数
+                return func(*args, **kwargs)
+            
+            # 应用pytest装饰器
+            if smoke:
+                wrapper = pytest.mark.smoke(wrapper)
+            if order:
+                wrapper = pytest.mark.run(order=order)(wrapper)
+            
+            # 添加一个唯一标识符，确保pytest不会混淆测试用例
+            wrapper.__uuid__ = str(uuid.uuid4())
+            
+            return wrapper
+        return decorator
+
+
+
+
+
 # 示例用例
 def _demo():
     swagger_body = {
@@ -183,6 +401,7 @@ def _demo():
     }
     timestamp_converted = ParamUtil.convert_param_type(timestamp_data, ["params", "request", "date"], "timestamp")
     print("\n转换为时间戳:", timestamp_converted)
+
 
 if __name__ == "__main__":
     _demo() 

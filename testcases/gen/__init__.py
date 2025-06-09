@@ -8,6 +8,7 @@ import random
 from pathlib import Path
 from testcases.comm.base_test import BaseTest
 from utils.yaml_util import YamlUtil
+# from utils.common_utils import APIHelper  # 不再需要APIHelper
 
 # 获取项目根目录 (例如: /Users/shengqiaowei/Desktop/erp-autotest)
 project_root = Path(__file__).resolve().parent.parent.parent
@@ -46,8 +47,6 @@ class GenBaseTest(BaseTest):
         # 加载API参数配置
         # api_params: 存储所有API参数模板的字典，格式为 {"/api/...": {...参数模板...}, ...}
         cls.api_params = cls.yaml_util.read_yaml(cls.base_api_params).get("api_params", {})
-        
-        cls.logger.info("GenBaseTest初始化完成")
     
     def get_api_path(self, api_key):
         """

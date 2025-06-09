@@ -194,16 +194,7 @@ class TestBomMat(GenBaseTest):
                 # 构建简化的查询参数
                 search_params = {
                     "pageable": {
-                        "needTotal": True,
-                        "systemParams": {
-                            "viewCondition": {
-                                "conditionKey": None,
-                                "rightValues": {}
-                            }
-                        },
                         "conditionGroup": {
-                            "type": "ConditionGroup",
-                            "logicOperator": "AND",
                             "conditions": [
                                 {
                                     "type": "ConditionLeaf",
