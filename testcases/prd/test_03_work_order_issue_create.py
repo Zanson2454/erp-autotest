@@ -359,10 +359,250 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
                 
                 # 记录保存的数据
                 a.json(self.issue_create_info, "保存的测试数据")
-        
+
         except Exception as e:
             self.logger.error(f"提交领料单失败: {str(e)}")
             # 记录失败信息
+            a.text(str(e), "失败原因")
+            raise
+
+    @pytest.mark.run(order=5)
+    @allure.story("查询生产订单领料行项目")
+    @allure.description("""
+    ## 测试步骤
+    1. 准备请求参数
+    2. 发送查询请求
+    3. 验证响应结果
+    4. 验证数据内容
+    5. 验证领料单和交货入库单状态
+    """)
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.title("查询生产订单领料行项目")
+    def test_query_issue_items(self):
+        """查询生产订单领料行项目测试用例"""
+        try:
+            with a.step("1. 准备请求参数"):
+                # 获取API路径
+                api_path = self.get_api_path("分页查询生产领料单") + \
+                          "?tmodule=ERP_PRD"
+                self.logger.debug(f"查询生产订单领料行项目API路径: {api_path}")
+                
+                # 获取请求参数
+                params, url = self.get_api_params(api_path)
+                
+                # 从之前的测试数据中获取生产订单编号
+                created_issues = self.issue_create_info.get("issue_info", {}).get("data", [])
+                if not created_issues:
+                    raise ValueError("未找到已创建的领料单信息")
+                
+                # 获取第一个领料单的生产订单ID
+                first_issue = created_issues[0]
+                prd_order_id = first_issue.get("values", {}).get("issueItemList", [])[0].get("prdOrderHeadId", {}).get("id")
+                if not prd_order_id:
+                    raise ValueError("未找到生产订单ID")
+
+                # 根据生产订单ID查询生产订单编号
+                sql = f"""
+                    SELECT wo_code
+                    FROM prd_order_header_tr
+                    WHERE id = {prd_order_id}
+                    AND deleted = 0
+                """
+                result = self.db.query(sql)
+                if not result:
+                    raise ValueError(f"未找到生产订单信息: {prd_order_id}")
+                
+                prd_order_code = result[0]["wo_code"]
+                self.logger.info(f"获取到生产订单编号: {prd_order_code}")
+                
+                # 构建查询参数
+                filtered_params = {
+                    "params": {
+                        "pageable": {
+                            "pageNo": 1,
+                            "pageSize": 20,
+                            "needTotal": True,
+                            "conditionGroup": {
+                                "type": "ConditionGroup",
+                                "logicOperator": "AND",
+                                "conditions": [{
+                                    "type": "ConditionGroup",
+                                    "logicOperator": "AND",
+                                    "conditions": [{
+                                        "type": "ConditionGroup",
+                                        "logicOperator": "AND",
+                                        "conditions": [{
+                                            "key": "E7xyvAmg29xtoBatpO7A-",
+                                            "type": "ConditionLeaf",
+                                            "leftValue": {
+                                                "id": "3KOJzHxH69EzLe9gpKpXR",
+                                                "key": "3KOJzHxH69EzLe9gpKpXR",
+                                                "type": "VarValue",
+                                                "fieldType": "Text",
+                                                "valueType": "VAR",
+                                                "varValue": [{
+                                                    "valueKey": "prdOrderHeadId.woCode",
+                                                    "valueName": "prdOrderHeadId.woCode"
+                                                }]
+                                            },
+                                            "operator": "CONTAINS",
+                                            "rightValue": {
+                                                "key": "SHkkpuRb6QJiMy0H4W53Y",
+                                                "type": "VarValue",
+                                                "fieldType": "Text",
+                                                "valueType": "CONST",
+                                                "constValue": prd_order_code
+                                            }
+                                        }]
+                                    }]
+                                }]
+                            }
+                        }
+                    }
+                }
+                
+                self.logger.info(f"请求URL: {url}")
+                self.logger.info(f"请求参数: {filtered_params}")
+                a.json(filtered_params, "请求数据")
+            
+            with a.step("2. 发送请求"):
+                result = self.http.post(url, json=filtered_params, description="查询生产订单领料行项目")
+                a.json(result, "响应数据")
+            
+            with a.step("3. 验证响应结果"):
+                # 验证响应成功
+                self.assert_util.assert_response_success(result)
+                
+                # 获取响应数据
+                response_data = result.get("data", {})
+                assert response_data is not None, "响应数据为空"
+                
+                # 验证分页数据结构
+                page_data = response_data.get("data", {})
+                assert isinstance(page_data, dict), "分页数据结构不正确"
+                assert "total" in page_data, "分页数据缺少total字段"
+                assert "data" in page_data, "分页数据缺少data字段"
+                
+                # 验证查询结果不为空
+                data_list = page_data.get("data", [])
+                assert len(data_list) > 0, "查询结果为空"
+                
+                a.text(f"查询到 {len(data_list)} 条领料行项目数据", "验证结果")
+            
+            with a.step("4. 验证数据内容"):
+                # 定义必要字段列表
+                required_fields = [
+                    "id", "prdOrderHeadId", "matId", "planQty", 
+                    "issuedQty", "status", "dnCode"
+                ]
+                
+                # 验证每一条数据
+                for index, item in enumerate(data_list, 1):
+                    self.logger.info(f"正在验证第 {index} 条数据")
+                    
+                    # 验证必要字段存在
+                    for field in required_fields:
+                        assert field in item, f"第 {index} 条数据缺少必要字段: {field}"
+                    
+                    # 验证数据状态
+                    assert item["status"] == "POSTED", f"第 {index} 条数据状态不正确,期望:POSTED,实际:{item['status']}"
+                    
+                    # 验证数量
+                    assert float(item["planQty"]) > 0, f"第 {index} 条数据计划数量必须大于0"
+                    assert float(item["issuedQty"]) == float(item["planQty"]), \
+                        f"第 {index} 条数据实际领料数量与计划数量不相等,实际领料:{item['issuedQty']},计划领料:{item['planQty']}"
+                    
+                    # 验证关联数据
+                    assert item["prdOrderHeadId"] is not None, f"第 {index} 条数据缺少生产订单关联"
+                    assert item["matId"] is not None, f"第 {index} 条数据缺少物料关联"
+                    assert item["dnCode"] is not None and item["dnCode"].strip() != "", f"第 {index} 条数据的交货单号为空"
+
+                    # 验证交货入库单状态
+                    sql = f"""
+                        SELECT id, biz_status
+                        FROM del_dn_head_tr 
+                        WHERE dn_code = '{item["dnCode"]}'
+                        AND bt_class = 'PRD_ISSUE'
+                        AND deleted = 0
+                    """
+                    delivery_head_result = self.db.query(sql)
+                    assert len(delivery_head_result) > 0, f"未找到交货入库单: {item['dnCode']}"
+                    delivery_head = delivery_head_result[0]
+                    assert delivery_head["biz_status"] == "POSTED", \
+                        f"交货入库单 {item['dnCode']} 状态不正确,期望:POSTED,实际:{delivery_head['biz_status']}"
+
+                    # 验证交货入库单行表数据
+                    sql = f"""
+                        SELECT id, dn_code, mat_code, doc_code, plan_del_qty, real_del_qty, 
+                               biz_status, bt_class, deleted, dn_item_code, doc_item_code
+                        FROM del_dn_item_tr
+                        WHERE dn_code = '{item["dnCode"]}'
+                        AND bt_class = 'PRD_ISSUE'
+                        AND deleted = 0
+                    """
+                    delivery_item_results = self.db.query(sql)
+                    assert len(delivery_item_results) > 0, f"交货入库单 {item['dnCode']} 没有行项目数据"
+
+                    # 验证每个交货入库单行项目
+                    for delivery_item in delivery_item_results:
+                        # 验证基本状态
+                        assert delivery_item["biz_status"] == "POSTED", \
+                            f"交货入库单 {item['dnCode']} 行项目 {delivery_item['dn_item_code']} 状态不正确,期望:POSTED,实际:{delivery_item['biz_status']}"
+                        assert delivery_item["bt_class"] == "PRD_ISSUE", \
+                            f"交货入库单 {item['dnCode']} 行项目 {delivery_item['dn_item_code']} 业务类型不正确,期望:PRD_ISSUE,实际:{delivery_item['bt_class']}"
+                        
+                        # 验证数量
+                        assert float(delivery_item["plan_del_qty"]) > 0, \
+                            f"交货入库单 {item['dnCode']} 行项目 {delivery_item['dn_item_code']} 计划交货数量必须大于0"
+                        assert float(delivery_item["real_del_qty"]) == float(delivery_item["plan_del_qty"]), \
+                            f"交货入库单 {item['dnCode']} 行项目 {delivery_item['dn_item_code']} 实际交货数量与计划数量不相等," \
+                            f"实际交货:{delivery_item['real_del_qty']},计划交货:{delivery_item['plan_del_qty']}"
+                        
+                        # 验证关联信息
+                        assert delivery_item["mat_code"] is not None and delivery_item["mat_code"].strip() != "", \
+                            f"交货入库单 {item['dnCode']} 行项目 {delivery_item['dn_item_code']} 物料编码为空"
+                        assert delivery_item["doc_code"] is not None and delivery_item["doc_code"].strip() != "", \
+                            f"交货入库单 {item['dnCode']} 行项目 {delivery_item['dn_item_code']} 来源单据编号为空"
+                        assert delivery_item["doc_item_code"] is not None and delivery_item["doc_item_code"].strip() != "", \
+                            f"交货入库单 {item['dnCode']} 行项目 {delivery_item['dn_item_code']} 来源单据行号为空"
+                        
+                        # 先查询物料ID
+                        sql = f"""
+                            SELECT id
+                            FROM gen_mat_md
+                            WHERE mat_code = '{delivery_item["mat_code"]}'
+                            AND deleted = 0
+                        """
+                        mat_result = self.db.query(sql)
+                        assert len(mat_result) > 0, \
+                            f"未找到物料编码 {delivery_item['mat_code']} 对应的物料ID"
+                        mat_id = mat_result[0]["id"]
+
+                        # 验证移动凭证行项目
+                        sql = f"""
+                            SELECT id, code, mvm_pos_neg, mvm_qty, doc_id_pre, mat_id,
+                                   assn_doc_code, deleted, mvm_type_id, source_type, mvm_uom_id
+                            FROM inv_mvm_doc_item_tr
+                            WHERE doc_id_pre = '{delivery_item["dn_code"]}'
+                            AND mat_id = {mat_id}
+                            AND deleted = 0
+                        """
+                        mvm_item_results = self.db.query(sql)
+                        assert len(mvm_item_results) > 0, \
+                            f"交货入库单 {delivery_item['dn_code']} 行项目 {delivery_item['dn_item_code']} 未找到对应的移动凭证行"
+
+                        # 验证移动凭证行
+                        for mvm_item in mvm_item_results:
+                            # 验证数量
+                            assert float(mvm_item["mvm_qty"]) == float(delivery_item["real_del_qty"]), \
+                                f"移动凭证行 {mvm_item['code']} 移动数量与交货数量不一致," \
+                                f"移动数量:{mvm_item['mvm_qty']},交货数量:{delivery_item['real_del_qty']}"
+
+                self.logger.info(f"已完成全部 {len(data_list)} 条数据的验证")
+                a.text(f"全部 {len(data_list)} 条数据验证通过", "验证结果")
+        
+        except Exception as e:
+            self.logger.error(f"查询生产订单领料行项目失败: {str(e)}")
             a.text(str(e), "失败原因")
             raise
 
@@ -373,4 +613,5 @@ if __name__ == "__main__":
     test.test_get_issue_rule_render_default()     # 获取默认领料分单规则
     test.test_get_issue_rule_items()              # 获取领料分单规则明细
     test.test_create_issue_by_order_bom_list()    # 创建待提交生产订单领料单
-    test.test_submit_issue_orders()               # 提交生产订单领料单 
+    test.test_submit_issue_orders()               # 提交生产订单领料单
+    test.test_query_issue_items()                 # 查询生产订单领料行项目 
