@@ -100,7 +100,6 @@ class Login:
                 logger.error(f"登录失败: {response.text}")
                 raise Exception("登录失败")
             user_info = self.get_current_user()
-            logger.info(f"获取用户信息: {user_info}")
             if not user_info:
                 raise Exception("获取用户信息失败")
             logger.info("登录成功")
@@ -113,6 +112,7 @@ class Login:
         logger.info(f"获取用户信息URL: {url}")
         try:
             self.session.headers.update(self.portal_headers)
+
             response = self.session.get(url)
             if response.status_code != 200:
                 logger.error(f"获取用户信息失败: {response.text}")
@@ -232,5 +232,3 @@ if __name__ == "__main__":
     # 测试环境初始化
     test = BaseTest()
     test.setup_class()
-    # test = Login(env_name="test")
-    # test.login()

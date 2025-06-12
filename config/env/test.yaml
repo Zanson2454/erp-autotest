@@ -2,7 +2,6 @@
 erp_env: "test"
 erp_version: "0630"
 trantor_version: "3.0.2506"
-
 # 基础配置_hyr
 portal_url: "https://t-erp-portal-test.app.terminus.io"
 iam_url: "https://t-erp-iam-test.app.terminus.io"

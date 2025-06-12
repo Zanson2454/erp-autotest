@@ -555,10 +555,18 @@ if __name__ == "__main__":
     )
     
     # 获取指定团队和模块的Swagger文档
+<<<<<<< HEAD
     swagger_doc = parser.fetch_swagger_doc("TERPSAAS", "GEN_GM")
+=======
+    swagger_doc = parser.fetch_swagger_doc("TERP", "ERP_GEN")
+>>>>>>> e2fd33f5f532e0c1c9d3b4de4943b8cec8e9462f
     
     # 解析所有接口
     endpoints = parser.parse_endpoints()
     
     # 保存路径信息到gen_path.yaml
+<<<<<<< HEAD
     parser.save_paths_to_yaml(endpoints, module="GEN_GM") 
+=======
+    parser.save_paths_to_yaml(endpoints, module="ERP_GEN") 
+>>>>>>> e2fd33f5f532e0c1c9d3b4de4943b8cec8e9462f

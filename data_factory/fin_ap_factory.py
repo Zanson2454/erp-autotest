@@ -271,7 +271,6 @@ class FinApFactory:
         """生成多个apItems明细，结构与页面json一致"""
         # 可根据页面json静态模板补全
         items = []
-        # 第一条
         items.append(self.create_ap_item(
             mat=mat_list[0],
             tax_code=tax_code_list[0],
@@ -281,9 +280,9 @@ class FinApFactory:
             tax_amt=283.02,
             net_amt=4716.98,
             tax_rate=6,
-            mat_id=14672002
+            mat_id=mat_list[0]["id"]  # 使用实际查询到的物料ID
         ))
-        # 第二条
+        # 第二条 - 使用实际的物料ID
         items.append(self.create_ap_item(
             mat=mat_list[1],
             tax_code=tax_code_list[1],
@@ -316,7 +315,7 @@ class FinApFactory:
             tax_amt=287.61,
             net_amt=2212.39,
             tax_rate=13,
-            mat_id=14660002
+            mat_id=mat_list[1]["id"]  # 使用实际查询到的物料ID
         ))
         return items
 
@@ -548,6 +547,16 @@ class FinApFactory:
         DBManager.insert('fin_apm_ap_item_tr', item_data)
         
         return cls._query_ap_doc(status)
+
+    def get_latest_ap_doc_id_by_status(self, status: str) -> str:
+        sql = '''
+            SELECT id FROM fin_apm_ap_head_tr
+            WHERE deleted = 0 AND ap_status = %s
+            ORDER BY updated_at DESC
+            LIMIT 1
+        '''
+        result = DBManager.query(sql, [status])
+        return str(result[0]["id"]) if result else None
 
 if __name__ == '__main__':
     print(FinApFactory.get_or_create_ap_doc()) 

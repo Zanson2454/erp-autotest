@@ -246,6 +246,7 @@ class DataFactory:
         :return: ID映射字典
         """
         id_mappings = {
+            'user_id': ('user_info', 'user_info', 'id'),
             'cust_id': ('partner_info', 'cust_info', 'id'),
             'so_type_id': ('base_info', 'so_type_info', 'id'),
             'sls_org_id': ('org_info', 'sls_org_info', 'id'),
@@ -261,9 +262,7 @@ class DataFactory:
         ids = {}
         for attr_name, path in id_mappings.items():
             value = structured_data
-            # print(f"value: {value}")
             for key in path:
-                # print(f"key: {key}")
                 value = value.get(key, {})
             ids[attr_name] = value
         print(f"ids: {ids}")
@@ -291,9 +290,7 @@ class DataFactory:
 if __name__ == "__main__":
     # 示例：初始化数据工厂并获取基础数据
     data = DataFactory()
-    # data = data.get_env_config()
     data = data.get_base_data()
-    # data = data.extract_ids(data)
     print(data)
     
     
