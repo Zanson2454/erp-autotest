@@ -1,0 +1,2641 @@
+api_params:
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_TYPE_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_PROCEDURE_HEAD_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CUST_TAX_TYPE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_FORMULA_TYPE_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_PROCEDURE_HEAD_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FIELD_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FIELD_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_TYPE_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BRAND_MD_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TIMEZONE_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$ORG_DIMENSION_QUERY_ENABLE_LIST_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MODEL_SYSTEM_QUERY_BY_IDS_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_ENABLED_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BRAND_MD_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_PROCEDURE_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_COUN_TYPE_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CUST_TAX_TYPE_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_DING_TALK_SYNC_ORG_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_COUN_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SUB_BANK_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_TYPE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_BUSINESS_TYPE_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_WC_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_PROCEDURE_HEAD_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_BUSINESS_TYPE_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_PROCEDURE_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_DISABLED_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_QUERY_CHILD_BY_PID_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TIMEZONE_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_HEAD_MD_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_FIND_BY_PID_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CUST_TAX_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_ENABLED_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CUST_TAX_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$ORG_DIMENSION_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_STATUS_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_FORMULA_TYPE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_PROCEDURE_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTR_QUERY_AVAILABLE_BIND_FILED_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_TYPE_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_PROCEDURE_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_ENABLED_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$ORG_DIMENSION_CF_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_HEAD_MD_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_WC_HEAD_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_PROCEDURE_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SUB_BANK_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTR_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TIMEZONE_TYPE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_USE_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$ORG_BUSINESS_TYPE_ENABLED_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_COUN_TYPE_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_USE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_DISABLED_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_HEAD_MD_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FIELD_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CUST_TAX_TYPE_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_SUPP_IND_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_TYPE_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_BUSINESS_TYPE_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_DISABLED_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_PROCEDURE_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$ORG_BUSINESS_TYPE_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_COUN_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$ORG_DIMENSION_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_FORMULA_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BRAND_MD_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTR_CF_ENABLED_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_STATUS_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TIMEZONE_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BRAND_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_FORMULA_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FILED_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_STATUS_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_PROCEDURE_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTR_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_PROCEDURE_HEAD_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_PROCEDURE_HEAD_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_USE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_PROCEDURE_HEAD_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request:
+        bomUseId: {}
+        purchaseReferPrice: 0
+        remark: null
+        matVolume: 0
+        isKitSls: false
+        baseUomId: {}
+        createdAt: 0
+        atpGroupId: 0
+        requestId: null
+        imageUrl: null
+        volumeUomId: {}
+        specModel: null
+        lengthUnitId: {}
+        id: 0
+        shelfLife: null
+        bizStatus: null
+        isCompleteSetDel: false
+        matName: null
+        height: 0
+        updatedAt: 0
+        outerCode: null
+        customMat: false
+        updatedBy: {}
+        originOrgId: 0
+        costPrice: 0
+        length: 0
+        genMatTypeCfId: {}
+        version: 0
+        grossWeight: 0
+        netWeight: 0
+        deleted: 0
+        createdBy: {}
+        cateId: {}
+        brandId: {}
+        width: 0
+        tenantId: 0
+        weightUomId: {}
+        saleReferPrice: 0
+        matCode: null
+        status: null
+        matAbbr: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_ENABLED_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_DISABLED_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_DIMENSION_CF_ENABLED_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_USE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BRAND_MD_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_PROCEDURE_HEAD_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_SUPP_IND_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_DIMENSION_CF_DISABLED_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_PROCEDURE_HEAD_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTR_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FILED_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_TYPE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_FORMULA_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FIELD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BRAND_MD_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_FORMULA_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_FIND_IMPORT_TEMPLATE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_PROCEDURE_HEAD_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_HISTORY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_PROCEDURE_HEAD_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_PROCEDURE_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTR_CF_DISABLED_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BRAND_MD_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_PROCEDURE_HEAD_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_PROCEDURE_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_COUN_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SUB_BANK_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_USE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_DISABLED_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_COUN_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TIMEZONE_TYPE_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_DISABLED_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_COUN_TYPE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_USE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SUB_BANK_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_TYPE_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TIMEZONE_TYPE_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_WC_HEAD_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_UPDATE_IMPORT_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_FORMULA_TYPE_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_BUSINESS_TYPE_DISABLED_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TIMEZONE_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CUST_TAX_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_TYPE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_ENABLED_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_USE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_FIND_TYPE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_PROCEDURE_HEAD_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_PROCEDURE_HEAD_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_STATUS_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_HEAD_MD_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FILED_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_ENABLED_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_USE_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_PROCEDURE_HEAD_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_SUPP_IND_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_SUPP_IND_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CUST_TAX_TYPE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_TYPE_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$ORG_DIMENSION_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CUST_TAX_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_DISABLED_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_DISABLE_IMPORT_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_WC_HEAD_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_QUERY_CURRENT_COM_ORG_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TIMEZONE_TYPE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTR_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_BUILD_TREE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request:
+        uomCode: null
+        updatedBy: {}
+        originOrgId: 0
+        uomType: null
+        uomDesc: null
+        version: 0
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        uomDigit: 0
+        requestId: null
+        tenantId: 0
+        id: 0
+        updatedAt: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_COUN_TYPE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FILED_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_ENABLED_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_FORMULA_TYPE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_TYPE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_SEARCH_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_CREATE_IMPORT_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BRAND_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          fileName: null
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          fileKey: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          relationFieldConvert: false
+          service: null
+          modelMainField: null
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_PROCEDURE_HEAD_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_ENABLED_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request:
+        orgStatus: null
+        orgBusinessTypeCode: null
+        orgDimensionCode: null
+        orgParentId: 0
+        rootId: 0
+        pageable:
+          needTotal: false
+          sortOrders:
+          - {}
+          conditionItems: null
+          pageNo: 1
+          conditionGroup: null
+          pageSize: 20
+          keyword: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_DISABLED_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      request:
+        params:
+          sheetConfig: {}
+          sliceSize: 0
+          repeatDataStrategy: null
+          processConfig: {}
+          errStrategy: null
+          appCode: null
+          templateId: 0
+          mergeData: false
+          multiSheetConfig:
+          - {}
+          taskCode: null
+          service: null
+          modelMainField: null
+          queryData: {}
+          selfRelationModelField: null
+          headerSelectiveRecord: {}
+          namespace: null
+          taskName: null
+          selfRelationModel: false
+        serviceKey: null
+        teamId: 0

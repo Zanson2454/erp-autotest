@@ -1,0 +1,27 @@
+{
+  "requestId": "88352af9-820515",
+  "success": true,
+  "data": {
+    "data": {
+      "id": 14606006,
+      "context": {},
+      "orgDimensionCode": "SCM_ORG_GRP",
+      "orgDimensionId": 2014001,
+      "orgCode": "LOC202506050931216931",
+      "orgName": "TEST_LOCATION_515",
+      "orgParentId": 14606005,
+      "orgEnableDate": 1749052800000,
+      "orgBusinessTypeIds": [
+        2015004
+      ],
+      "orgBusinessTypeCodes": [
+        "INV_LOC"
+      ],
+      "def2": "70035293",
+      "def7": "收货联系人",
+      "def8": "13732324455",
+      "def9": "收货详细地址",
+      "def10": "14510001"
+    }
+  }
+}

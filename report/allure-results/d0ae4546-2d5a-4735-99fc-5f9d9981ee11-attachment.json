@@ -1,0 +1,37 @@
+{
+  "requestId": "2e1bb8c0-757252",
+  "success": true,
+  "data": {
+    "data": [
+      {
+        "id": 14323001,
+        "context": {},
+        "originOrgId": 14507001,
+        "version": 2,
+        "deleted": 0,
+        "createdAt": 1748568586000,
+        "updatedAt": 1748940649000,
+        "createdBy": 506895512805061,
+        "updatedBy": 488514364564997,
+        "invOrgId": {
+          "id": 2110010
+        },
+        "prdVrsCode": "14323001",
+        "prdVrsName": "多工序",
+        "lotSizeFrom": 0,
+        "lotSizeTo": 999999999,
+        "routingsVrsId": {
+          "id": 14382022
+        },
+        "validFrom": 1746374400000,
+        "validTo": 253402185600000,
+        "matId": {
+          "id": 14652007
+        },
+        "bomVrsId": {
+          "id": 14403001
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+# 放每个模块的 api
+销售订单:
+  销售配置:
+    查询订单类型配置: "/api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService?tmodule=ERP_SCM&modelKey=ERP_SCM$sls_so_type_cf"
+    查询订单类型详情: "/api/trantor/service/engine/execute/ERP_SCM$SYS_FindDataByIdService?tmodule=ERP_SCM&modelKey=ERP_SCM$sls_so_type_cf"
+    查询订单行类型配置: "/api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService?tmodule=ERP_SCM&modelKey=ERP_SCM$sls_so_item_type_cf"
+    查询订单行类型详情: "/api/trantor/service/engine/execute/ERP_SCM$SYS_FindDataByIdService?tmodule=ERP_SCM&modelKey=ERP_SCM$sls_so_item_type_cf"
+  订单管理:
+    查询订单: "/api/trantor/service/engine/execute/ERP_SCM$sls_so_head_tr_PAGING_DATA_SERVICE"
+    查询订单详情: "/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_QUERY_DETAIL_EVENT_SERVICE"
+    保存订单: "/api/trantor/service/engine/execute/ERP_SCM$SLS_SALES_MANUAL_SAVE_EVENT"
+    提交订单: "/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_MANUAL_SUBMIT"
+    取消提交: "/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_CANNEL_COMMIT_EVENT_SERVICE"
+    作废订单: "/api/trantor/service/engine/execute/ERP_SCM$SLS_REPEAL_EVENT_SERVICE"
+    冻结订单: "/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_HEAD_FREEZE_EVENT_SERVICE"
+    复制订单: "/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_DATA_COPY_EVENT_SERVICE"
+    删除订单: "/api/trantor/service/engine/execute/ERP_SCM$SYS_DeleteDataByIdService?tmodule=ERP_SCM&modelKey=ERP_SCM$sls_so_head_tr"
+    批量删除订单: "/api/trantor/service/engine/execute/ERP_SCM$sales_order_batch_delete_service"
+    初始化订单: "/api/trantor/service/engine/execute/ERP_SCM$sls_sales_order_create_init_service"
+    查询客户信息: "/api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService?tmodule=ERP_SCM&modelKey=ERP_GEN$gen_cust_info_md"
+    基于客户信息渲染地址信息: "/api/trantor/service/engine/execute/ERP_SCM$sls_cust_select_render_service?tmodule=ERP_SCM"
+    查询相关方: "/api/trantor/service/engine/execute/ERP_SCM$SO_QUERY_PARTNER_EVENT_SERVICE"
+    查询销售组织: "/api/trantor/service/engine/execute/ERP_SCM$sls_sales_organization_paging_service?tmodule=ERP_SCM"
+    查询物料: "/api/trantor/service/engine/execute/ERP_SCM$INV_MAT_PAGING_SERVICE"
+    渲染订单行: "/api/trantor/service/engine/execute/ERP_SCM$SLS_AFTER_MAT_SELECT_RENDER_EVENT_SERVICE"
+    自动定价: "/api/trantor/service/engine/execute/ERP_SCM$SO_AUTO_PRICE_EVENT_copy_SERVICE"
+    编辑页提交: "/api/trantor/service/engine/execute/ERP_SCM$SLS_SALES_MANUAL_SAVE_EVENT?tmodule=ERP_SCM"
+    编辑订单: "/api/trantor/service/engine/execute/ERP_SCM$query_sls_order_bom_detail?tmodule=ERP_SCM"

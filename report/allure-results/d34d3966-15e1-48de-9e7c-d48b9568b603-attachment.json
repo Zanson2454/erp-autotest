@@ -1,0 +1,25 @@
+{
+  "params": {
+    "request": {
+      "woTypeId": {
+        "id": 2000001
+      },
+      "invOrgId": {
+        "id": 2110010
+      },
+      "qty": 10,
+      "plannedStartDate": 1749003054509,
+      "plannedEndDate": 1749089454509,
+      "matId": {
+        "id": 14652007
+      },
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "conditionGroup": null,
+        "sortOrders": null,
+        "keyword": null
+      }
+    }
+  }
+}

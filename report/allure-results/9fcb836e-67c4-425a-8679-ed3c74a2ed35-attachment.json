@@ -1,0 +1,12 @@
+{
+  "params": {
+    "request": {
+      "prdVrsId": {
+        "id": 14323001,
+        "bomVrsId": {
+          "id": 14403001
+        }
+      }
+    }
+  }
+}

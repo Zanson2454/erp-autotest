@@ -1,0 +1,996 @@
+version: '1.0'
+total_apis: 331
+apis:
+  币种配置-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  GEN-文本类型-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_TYPE_CF_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-资质组-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_PROCEDURE_HEAD_CF_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-税配置-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  客户税分类标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CUST_TAX_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  数据字典类别标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_GEI_EXPORT_SERVICE
+    method: POST
+  GEN-计量单位转换-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_FORMULA_TYPE_CF_SAVE_ACTION_SERVICE
+    method: POST
+  GEN-附件组-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_PROCEDURE_HEAD_CF_SAVE_ACTION_SERVICE
+    method: POST
+  物料主数据-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  税配置-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  银行配置-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  条码规则允许业务字段标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FIELD_CF_GEI_EXPORT_SERVICE
+    method: POST
+  条码规则允许业务字段-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FIELD_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  GEN-数据字典类别-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-BOM行项目类别配置-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_TYPE_CF_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-品牌-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BRAND_MD_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  GEN-条码规则-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  GEN-地址库-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_DELETE_ACTION_SERVICE
+    method: POST
+  时区配置-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TIMEZONE_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  ORG-组织维度-查询启用的组织维度列表服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_DIMENSION_QUERY_ENABLE_LIST_ACTION_SERVICE
+    method: POST
+  模型根据ID集合查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MODEL_SYSTEM_QUERY_BY_IDS_ACTION_SERVICE
+    method: POST
+  地址库标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  GEN-特征类定义表-启用服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_ENABLED_ACTION_SERVICE
+    method: POST
+  GEN-合作伙伴类型-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-品牌-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BRAND_MD_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  GEN-税配置-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_DELETE_ACTION_SERVICE
+    method: POST
+  相关方组-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_PROCEDURE_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  GEN-国家配置表-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_COUN_TYPE_CF_SAVE_ACTION_SERVICE
+    method: POST
+  数据字典类别-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  GEN-客户税分类-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CUST_TAX_TYPE_CF_DELETE_ACTION_SERVICE
+    method: POST
+  ORG-组织-钉钉同步组织架构服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_DING_TALK_SYNC_ORG_ACTION_SERVICE
+    method: POST
+  类目配置标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_GEI_IMPORT_SERVICE
+    method: POST
+  GEN-国家配置表-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_COUN_TYPE_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  GEN-物料类型-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_SAVE_ACTION_SERVICE
+    method: POST
+  GEN-条码规则-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_SAVE_ACTION_SERVICE
+    method: POST
+  GEN-银行支行-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_SUB_BANK_CF_SAVE_ACTION_SERVICE
+    method: POST
+  ORG-组织架构-查询组织单元详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_DETAIL_ACTION_SERVICE
+    method: POST
+  附件类型标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  ORG-组织类型-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_BUSINESS_TYPE_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-工作日日历头表-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_WC_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  相关方组标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_PROCEDURE_HEAD_CF_GEI_IMPORT_SERVICE
+    method: POST
+  GEN-类目配置-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_SAVE_ACTION_SERVICE
+    method: POST
+  GEN-类目配置-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  ORG-组织架构-删除组织单元服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-汇率类型-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_DELETE_ACTION_SERVICE
+    method: POST
+  ORG-组织类型-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_BUSINESS_TYPE_SAVE_ACTION_SERVICE
+    method: POST
+  资质组-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_PROCEDURE_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  GEN-类目配置-禁用服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_DISABLED_ACTION_SERVICE
+    method: POST
+  GEN-资质类型-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_SAVE_ACTION_SERVICE
+    method: POST
+  GEN-资质类型-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-类目配置-根据父类目查询下级类目服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_QUERY_CHILD_BY_PID_ACTION_SERVICE
+    method: POST
+  GEN-时区配置-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TIMEZONE_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  GEN-物料BOM头-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_HEAD_MD_SAVE_ACTION_SERVICE
+    method: POST
+  GEN-条码主数据-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_SAVE_ACTION_SERVICE
+    method: POST
+  数据字典类别标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_GEI_IMPORT_SERVICE
+    method: POST
+  ORG-组织架构-查询下级服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_FIND_BY_PID_ACTION_SERVICE
+    method: POST
+  GEN-条码规则-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  税配置标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  GEN-物料主数据-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  附件类型-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  客户税分类-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CUST_TAX_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  银行配置标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_GEI_EXPORT_SERVICE
+    method: POST
+  文本组标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_GEI_EXPORT_SERVICE
+    method: POST
+  GEN-合作伙伴类型-启用服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_ENABLED_ACTION_SERVICE
+    method: POST
+  客户税分类-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CUST_TAX_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  计量单位标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  物料主数据-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  文本类型-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  ORG-组织维度-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_DIMENSION_CF_SAVE_ACTION_SERVICE
+    method: POST
+  GEN-物料价值数量配置-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-BOM状态配置表-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_STATUS_CF_SAVE_ACTION_SERVICE
+    method: POST
+  物料单位转换标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_FORMULA_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  币种配置标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  附件组-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_PROCEDURE_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  查询属性可以绑定的字段服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ATTR_QUERY_AVAILABLE_BIND_FILED_ACTION_SERVICE
+    method: POST
+  GEN-汇率类型-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  GEN-附件类型-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_TYPE_CF_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-资质组-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_PROCEDURE_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  GEN-类目配置-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-合作伙伴-启用服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_ENABLED_ACTION_SERVICE
+    method: POST
+  特征类定义表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  ORG-组织维度-详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_DIMENSION_CF_DETAIL_ACTION_SERVICE
+    method: POST
+  GEN-合作伙伴-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  地址库标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  GEN-计量单位-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-物料BOM头-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_HEAD_MD_DELETE_ACTION_SERVICE
+    method: POST
+  条码规则-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  GEN-工作日日历头表-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_WC_HEAD_CF_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-相关方组-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_PROCEDURE_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  GEN-物料价值数量配置-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_DETAIL_ACTION_SERVICE
+    method: POST
+  GEN-物料价值数量配置-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  计量单位标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  GEN-银行支行-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_SUB_BANK_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  币种配置标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  GEN-属性表-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ATTR_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  时区配置标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TIMEZONE_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  条码规则标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  合作伙伴类型-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  GEN-文本类型-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_TYPE_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  GEN-BOM用途配置-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_USE_CF_SAVE_ACTION_SERVICE
+    method: POST
+  税配置-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  ORG-组织类型-启用服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_BUSINESS_TYPE_ENABLED_ACTION_SERVICE
+    method: POST
+  GEN-国家配置表-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_COUN_TYPE_CF_DELETE_ACTION_SERVICE
+    method: POST
+  特征类定义表标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_GEI_IMPORT_SERVICE
+    method: POST
+  BOM用途配置-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_USE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  GEN-物料主数据-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-合作伙伴-禁用服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_DISABLED_ACTION_SERVICE
+    method: POST
+  GEN-物料BOM头-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_HEAD_MD_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  GEN-银行配置-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_SAVE_ACTION_SERVICE
+    method: POST
+  条码规则允许业务字段标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FIELD_CF_GEI_IMPORT_SERVICE
+    method: POST
+  物料数量价值更新配置-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  GEN-客户税分类-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CUST_TAX_TYPE_CF_SAVE_ACTION_SERVICE
+    method: POST
+  ORG-组织架构-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_SAVE_ACTION_SERVICE
+    method: POST
+  GEN-类目配置-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  GEN-BOM 行项目供应标识配置表-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_SUPP_IND_CF_SAVE_ACTION_SERVICE
+    method: POST
+  物料数量价值更新配置-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  GEN-附件类型-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_TYPE_CF_SAVE_ACTION_SERVICE
+    method: POST
+  GEN-组织类型-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_BUSINESS_TYPE_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  GEN-文本组-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-特征类定义表-禁用服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_DISABLED_ACTION_SERVICE
+    method: POST
+  资质组-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_PROCEDURE_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  汇率类型-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  ORG-组织类型-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_BUSINESS_TYPE_DETAIL_ACTION_SERVICE
+    method: POST
+  GEN-国家配置表-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_COUN_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  条码主数据标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_GEI_EXPORT_SERVICE
+    method: POST
+  GEN-地址库-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  合作伙伴标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_GEI_EXPORT_SERVICE
+    method: POST
+  汇率类型标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  ORG-组织维度-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_DIMENSION_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  GEN-计量单位转换-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_FORMULA_TYPE_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  GEN-品牌-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BRAND_MD_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-地址库-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_SAVE_ACTION_SERVICE
+    method: POST
+  GEN-属性表-启用服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ATTR_CF_ENABLED_ACTION_SERVICE
+    method: POST
+  GEN-税配置-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  GEN-地址库-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  GEN-BOM状态配置表-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_STATUS_CF_DELETE_ACTION_SERVICE
+    method: POST
+  特征类定义表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  时区配置-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TIMEZONE_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  物料类型标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  GEN-银行配置-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  品牌-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BRAND_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  物料单位转换-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_FORMULA_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  GEN-附件类型-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  相关方类型-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  GEN-币种配置-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_DELETE_ACTION_SERVICE
+    method: POST
+  资质类型标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  计量单位-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  GEN-文本组-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  GEN-条码字段-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FILED_CF_SAVE_ACTION_SERVICE
+    method: POST
+  GEN-BOM状态配置表-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_STATUS_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  附件组-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_PROCEDURE_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  GEN-汇率-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_SAVE_ACTION_SERVICE
+    method: POST
+  条码主数据-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  GEN-属性表-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ATTR_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  GEN-特征类定义表-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  GEN-银行配置-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_DELETE_ACTION_SERVICE
+    method: POST
+  资质类型-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  物料主数据标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_GEI_EXPORT_SERVICE
+    method: POST
+  资质组标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_PROCEDURE_HEAD_CF_GEI_EXPORT_SERVICE
+    method: POST
+  资质类型标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  附件组标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_PROCEDURE_HEAD_CF_GEI_EXPORT_SERVICE
+    method: POST
+  特征类定义表标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_GEI_EXPORT_SERVICE
+    method: POST
+  GEN-汇率-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  计量单位-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  BOM用途配置标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_USE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  GEN-资质组-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_PROCEDURE_HEAD_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  条码主数据标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_GEI_IMPORT_SERVICE
+    method: POST
+  GEN-汇率-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_DELETE_ACTION_SERVICE
+    method: POST
+  物料类型-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  GEN-物料类型-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  GEN-物料主数据-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  GEN-条码主数据-启用服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_ENABLED_ACTION_SERVICE
+    method: POST
+  GEN-合作伙伴-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_SAVE_ACTION_SERVICE
+    method: POST
+  GEN-合作伙伴类型-禁用服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_DISABLED_ACTION_SERVICE
+    method: POST
+  ORG-组织维度-启用服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_DIMENSION_CF_ENABLED_ACTION_SERVICE
+    method: POST
+  BOM用途配置-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_USE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  品牌标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BRAND_MD_GEI_EXPORT_SERVICE
+    method: POST
+  GEN-相关方组-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_PROCEDURE_HEAD_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  GEN-BOM 行项目供应标识配置表-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_SUPP_IND_CF_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-BOM行项目类别配置-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_TYPE_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  ORG-组织维度-禁用服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_DIMENSION_CF_DISABLED_ACTION_SERVICE
+    method: POST
+  GEN-相关方组-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_PROCEDURE_HEAD_CF_DELETE_ACTION_SERVICE
+    method: POST
+  物料数量价值更新配置标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_CF_GEI_EXPORT_SERVICE
+    method: POST
+  合作伙伴标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_GEI_IMPORT_SERVICE
+    method: POST
+  GEN-合作伙伴类型-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  GEN-属性表-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ATTR_CF_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-条码字段-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FILED_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  文本类型-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  GEN-银行配置-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  条码规则标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  文本类型标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  GEN-资质类型-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  币种配置-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  GEN-计量单位转换-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_FORMULA_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  条码规则允许业务字段-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FIELD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  GEN-计量单位-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  品牌标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BRAND_MD_GEI_IMPORT_SERVICE
+    method: POST
+  物料单位转换-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_FORMULA_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  GEN-条码主数据-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_DELETE_ACTION_SERVICE
+    method: POST
+  汇率类型-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  文本组-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  汇率标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  GEN-相关方类型-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  GEN-条码主数据-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  合作伙伴类型标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  GEN-特征类定义表-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_DELETE_ACTION_SERVICE
+    method: POST
+  汇率-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  GEN-物料类型-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  地址库-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  GEN-文本组-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  ORG-组织架构-获取组织导入的模版服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_FIND_IMPORT_TEMPLATE_ACTION_SERVICE
+    method: POST
+  GEN-附件组-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_PROCEDURE_HEAD_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  相关方类型标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  物料数量价值更新配置标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_CF_GEI_IMPORT_SERVICE
+    method: POST
+  GEN-合作伙伴类型-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  ORG-组织架构-组织历史版本查看服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_HISTORY_DETAIL_ACTION_SERVICE
+    method: POST
+  GEN-合作伙伴-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  物料类型-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  GEN-计量单位-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_SAVE_ACTION_SERVICE
+    method: POST
+  GEN-相关方组-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_PROCEDURE_HEAD_CF_SAVE_ACTION_SERVICE
+    method: POST
+  相关方组-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_PROCEDURE_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  GEN-属性表-禁用服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ATTR_CF_DISABLED_ACTION_SERVICE
+    method: POST
+  GEN-BOM行项目类别配置-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  汇率类型标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  GEN-品牌-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BRAND_MD_SAVE_ACTION_SERVICE
+    method: POST
+  附件类型-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  GEN-资质组-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_PROCEDURE_HEAD_CF_SAVE_ACTION_SERVICE
+    method: POST
+  GEN-附件组-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_PROCEDURE_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  国家配置-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_COUN_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  GEN-银行支行-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_SUB_BANK_CF_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-BOM用途配置-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_USE_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  GEN-条码主数据-禁用服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_DISABLED_ACTION_SERVICE
+    method: POST
+  国家配置-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_COUN_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  GEN-时区配置-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TIMEZONE_TYPE_CF_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-数据字典类别-禁用服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_DISABLED_ACTION_SERVICE
+    method: POST
+  国家配置标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_COUN_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  BOM用途配置标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_USE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  GEN-银行支行-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_SUB_BANK_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  银行配置-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  GEN-相关方类型-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  数据字典类别-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  GEN-BOM行项目类别配置-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_TYPE_CF_SAVE_ACTION_SERVICE
+    method: POST
+  GEN-时区配置-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TIMEZONE_TYPE_CF_SAVE_ACTION_SERVICE
+    method: POST
+  GEN-工作日日历头表-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_WC_HEAD_CF_SAVE_ACTION_SERVICE
+    method: POST
+  ORG-组织架构-组织调整导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_UPDATE_IMPORT_ACTION_SERVICE
+    method: POST
+  GEN-相关方类型-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-数据字典类别-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_SAVE_ACTION_SERVICE
+    method: POST
+  GEN-计量单位转换-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_FORMULA_TYPE_CF_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-币种配置-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_SAVE_ACTION_SERVICE
+    method: POST
+  ORG-组织类型-禁用服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_BUSINESS_TYPE_DISABLED_ACTION_SERVICE
+    method: POST
+  GEN-时区配置-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TIMEZONE_TYPE_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  GEN-特征类定义表-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  GEN-客户税分类-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CUST_TAX_TYPE_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  文本类型标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  ORG-组织架构-启用组织单元服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_ENABLED_ACTION_SERVICE
+    method: POST
+  GEN-BOM用途配置-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_USE_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  ORG-组织架构-查询组织类型列表服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_FIND_TYPE_ACTION_SERVICE
+    method: POST
+  GEN-文本类型-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  资质组标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_PROCEDURE_HEAD_CF_GEI_IMPORT_SERVICE
+    method: POST
+  GEN-附件类型-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_TYPE_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  物料类型标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  相关方组标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_PROCEDURE_HEAD_CF_GEI_EXPORT_SERVICE
+    method: POST
+  GEN-BOM状态配置表-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_STATUS_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  GEN-物料BOM头-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_HEAD_MD_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  GEN-条码字段-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FILED_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  物料主数据标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_GEI_IMPORT_SERVICE
+    method: POST
+  GEN-税配置-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_SAVE_ACTION_SERVICE
+    method: POST
+  GEN-类目配置-启用服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_ENABLED_ACTION_SERVICE
+    method: POST
+  GEN-BOM用途配置-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_USE_CF_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-附件组-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_PROCEDURE_HEAD_CF_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-BOM 行项目供应标识配置表-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_SUPP_IND_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  GEN-数据字典类别-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  资质类型-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  GEN-币种配置-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  GEN-数据字典类别-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  GEN-条码规则-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-BOM 行项目供应标识配置表-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_SUPP_IND_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  GEN-资质类型-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  文本组-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  GEN-汇率-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  客户税分类标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CUST_TAX_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  相关方类型标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  GEN-文本类型-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_TYPE_CF_SAVE_ACTION_SERVICE
+    method: POST
+  条码规则-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  ORG-组织维度-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_DIMENSION_CF_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-客户税分类-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CUST_TAX_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  ORG-组织架构-停用组织单元服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_DISABLED_ACTION_SERVICE
+    method: POST
+  ORG-组织架构-组织禁用导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_DISABLE_IMPORT_ACTION_SERVICE
+    method: POST
+  GEN-工作日日历头表-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_WC_HEAD_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  ORG-组织架构-查询当前组织的公司组织服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_QUERY_CURRENT_COM_ORG_ACTION_SERVICE
+    method: POST
+  银行配置标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_GEI_IMPORT_SERVICE
+    method: POST
+  GEN-汇率类型-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_SAVE_ACTION_SERVICE
+    method: POST
+  地址库-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  时区配置标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TIMEZONE_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  税配置标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  GEN-币种配置-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  GEN-属性表-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ATTR_CF_SAVE_ACTION_SERVICE
+    method: POST
+  ORG-组织架构-根据维度构建一个组织树服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_BUILD_TREE_ACTION_SERVICE
+    method: POST
+  GEN-特征类定义表-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_SAVE_ACTION_SERVICE
+    method: POST
+  GEN-合作伙伴-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-相关方类型-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_SAVE_ACTION_SERVICE
+    method: POST
+  汇率-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  GEN-文本组-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_SAVE_ACTION_SERVICE
+    method: POST
+  GEN-计量单位-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  国家配置标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_COUN_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  GEN-条码字段-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FILED_CF_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-合作伙伴类型-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_SAVE_ACTION_SERVICE
+    method: POST
+  GEN-数据字典类别-启用服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_ENABLED_ACTION_SERVICE
+    method: POST
+  物料单位转换标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_FORMULA_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  合作伙伴-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  合作伙伴类型-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  附件类型标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  ORG-组织架构-新组织搜索服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_SEARCH_ACTION_SERVICE
+    method: POST
+  合作伙伴-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  ORG-组织架构-组织新增导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_CREATE_IMPORT_ACTION_SERVICE
+    method: POST
+  条码主数据-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  品牌-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BRAND_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  合作伙伴类型标准导出服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  类目配置-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  GEN-条码主数据-查询分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  附件组标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_PROCEDURE_HEAD_CF_GEI_IMPORT_SERVICE
+    method: POST
+  GEN-物料主数据-启用服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_ENABLED_ACTION_SERVICE
+    method: POST
+  汇率标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  GEN-物料价值数量配置-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_SAVE_ACTION_SERVICE
+    method: POST
+  ORG-组织架构-分页查询服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  GEN-汇率类型-查询详情服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  文本组标准导入服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_GEI_IMPORT_SERVICE
+    method: POST
+  GEN-物料类型-删除服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_DELETE_ACTION_SERVICE
+    method: POST
+  GEN-物料主数据-禁用服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_DISABLED_ACTION_SERVICE
+    method: POST
+  GEN-物料主数据-保存服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_SAVE_ACTION_SERVICE
+    method: POST
+  相关方类型-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST

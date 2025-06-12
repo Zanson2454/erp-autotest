@@ -1,0 +1,48 @@
+version: "1.1"
+name: ""
+stages:
+  - stage:
+      - git-checkout:
+          alias: git-checkout
+          description: 代码仓库克隆
+          params:
+            depth: 1
+  - stage:
+      - dockerfile:
+          alias: pack-testapi
+          description: 针对自定义 dockerfile 打包，产出可运行镜像
+          params:
+            path: Dockerfile
+            workdir: ${git-checkout}
+  - stage:
+      - release:
+          alias: release
+          description: 用于打包完成时，向dicehub 提交完整可部署的dice.yml。用户若没在pipeline.yml里定义该action，CI会自动在pipeline.yml里插入该action
+          version: "1.0"
+          params:
+            dice_yml: ${git-checkout}/dice.yml
+            image:
+              erp-autotest: ${pack-testapi:OUTPUT:image}
+  - stage:
+      - dice:
+          alias: dice
+          description: 用于 Erda 平台部署应用服务
+          params:
+            release_id_path: ${release}
+  - stage:
+      - api-test:
+          alias: api-test
+          version: "2.0"
+          params:
+            body:
+              content: |-
+                {
+                  "type": "all"
+                }
+              type: application/json
+            headers:
+              - key: Content-Type
+                value: application/json
+            method: POST
+            url: https://erp-autotest.app.terminus.io/executor/run
+          timeout: 3600

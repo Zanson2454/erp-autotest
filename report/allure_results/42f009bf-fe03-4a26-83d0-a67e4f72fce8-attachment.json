@@ -1,0 +1,18 @@
+{
+  "params": {
+    "request": {
+      "orgSort": 1,
+      "orgName": "TEST_COMPANY_515",
+      "orgDimensionCode": "SCM_ORG_GRP",
+      "orgEnableDate": "2025-06-05",
+      "orgCode": "COM202506050930046931",
+      "def12": 2002001,
+      "def3": 14037001,
+      "orgBusinessTypeIds": [
+        2015007
+      ],
+      "partnerId": 2058001,
+      "def6": 2000001
+    }
+  }
+}

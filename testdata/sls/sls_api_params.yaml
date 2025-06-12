@@ -1,0 +1,316 @@
+# 系统服务通用参数
+
+# 定义所有API接口的请求参数结构
+
+api_params:
+  # 订单类型查询
+  "/api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService?tmodule=ERP_SCM&modelKey=ERP_SCM$sls_so_type_cf":
+    params:
+      request:
+        pageable:
+          pageNo: 1  # 页码
+          pageSize: 20  # 每页大小
+          systemParams:
+            viewCondition: null  # 视图条件
+          conditionItems: null  # 查询条件
+          sortOrders:  # 排序条件
+            - fieldAlias: "createdBy"  # 排序字段
+              sortType: "DESC"  # 排序方式
+      modelKey: "ERP_SCM$sls_so_type_cf"  # 模型键
+  # 订单行类型查询
+  "/api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService?tmodule=ERP_SCM&modelKey=ERP_SCM$sls_so_item_type_cf":
+    sceneKey: "ERP_SCM$so_item_type_cf"
+    viewKey: "ERP_SCM$so_item_type_cf:list"
+    containerKey: "ERP_SCM$so_item_type_cf-list-ERP_SCM$sls_so_item_type_cf"
+    appId: 0
+    teamId: 22
+    serviceKey: "ERP_SCM$SYS_PagingDataService"
+    params:
+      request:
+        pageable:
+          pageNo: 1
+          pageSize: 20
+          conditionItems: null
+      modelKey: "ERP_SCM$sls_so_item_type_cf"
+
+  # 订单详情查询服务
+  "/api/trantor/service/engine/execute/ERP_SCM$SYS_FindDataByIdService?tmodule=ERP_SCM&modelKey=ERP_SCM$sls_so_type_cf":
+    params:
+      request:
+        id: "{order_id}"  # 要查询的订单ID
+      modelKey: "ERP_SCM$sls_so_type_cf"  # 模型键
+
+  # 销售订单列表查询服务
+  "/api/trantor/service/engine/execute/ERP_SCM$sls_so_head_tr_PAGING_DATA_SERVICE":
+    params:
+      request:
+        pageable:
+          pageNo: 1  # 页码
+          pageSize: 20  # 每页大小
+          systemParams:
+            viewCondition: null  # 视图条件
+          conditionGroup: null  # 查询条件组
+          sortOrders:  # 排序条件
+            - fieldAlias: "createdBy"  # 排序字段
+              sortType: "DESC"  # 排序方式
+
+  # 销售订单详情查询服务
+  "/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_QUERY_DETAIL_EVENT_SERVICE":
+    params:
+      request:
+        id: "{order_id}"  # 要查询的订单ID
+
+  # 销售订单保存服务
+  "/api/trantor/service/engine/execute/ERP_SCM$SLS_SALES_MANUAL_SAVE_EVENT":
+    params:
+      request:
+        syncSubmit: false  # 是否同步提交
+        soItems: "{so_items}"  # 订单行项目
+        slsPartnerLinks: "{sls_partner_links}"  # 相关方链接
+
+  # 销售订单提交服务
+  "/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_MANUAL_SUBMIT":
+    params:
+      request:
+        id: "{order_id}"  # 要提交的订单ID
+
+  # 销售订单取消提交服务
+  "/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_CANNEL_COMMIT_EVENT_SERVICE":
+    params:
+      request:
+        id: "{order_id}"  # 要取消提交的订单ID
+
+  # 销售订单作废服务
+  "/api/trantor/service/engine/execute/ERP_SCM$SLS_REPEAL_EVENT_SERVICE":
+    params:
+      request:
+        id: "{order_id}"  # 要作废的订单ID
+
+  # 销售订单冻结服务
+  "/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_HEAD_FREEZE_EVENT_SERVICE":
+    params:
+      request:
+        id: "{order_id}"  # 要冻结的订单ID
+
+  # 销售订单复制服务
+  "/api/trantor/service/engine/execute/ERP_SCM$SLS_SO_DATA_COPY_EVENT_SERVICE":
+    params:
+      request:
+        id: "{order_id}"  # 要复制的订单ID
+
+  # 销售订单删除服务
+  "/api/trantor/service/engine/execute/ERP_SCM$SYS_DeleteDataByIdService?tmodule=ERP_SCM&modelKey=ERP_SCM$sls_so_head_tr":
+    params:
+      request:
+        id: "{order_id}"  # 要删除的订单ID
+      modelKey: "ERP_SCM$sls_so_head_tr"  # 模型键
+
+  # 销售订单批量删除服务
+  "/api/trantor/service/engine/execute/ERP_SCM$sales_order_batch_delete_service":
+    params:
+      request:
+        ids: []  # 要批量删除的订单ID列表
+
+  # 销售订单创建初始化服务
+  "/api/trantor/service/engine/execute/ERP_SCM$sls_sales_order_create_init_service":
+    params:
+      request:
+        btClass: "SALES"  # 业务类型
+
+  # 客户信息查询服务
+  "/api/trantor/service/engine/execute/ERP_SCM$SYS_PagingDataService?tmodule=ERP_SCM&modelKey=ERP_GEN$gen_cust_info_md":
+    sceneKey: "ERP_SCM$sls_so_730"
+    viewKey: "ERP_SCM$sls_so_730:edit"
+    serviceKey: "ERP_SCM$SYS_PagingDataService"
+    params:
+      modelKey: "ERP_GEN$gen_cust_info_md"
+      request:
+        pageable:
+          pageNo: 1  # 页码
+          pageSize: 20  # 每页大小
+          conditionGroup:  # 查询条件组
+            type: "ConditionGroup"
+            logicOperator: "AND"
+            conditions:
+              - type: "ConditionGroup"
+                logicOperator: "AND"
+                conditions:
+                  - type: "ConditionGroup"
+                    logicOperator: "AND"
+                    conditions:
+                      - key: "V9-9Z27ZOiitzmCTR3toD"
+                        type: "ConditionLeaf"
+                        leftValue:
+                          id: "Cs-llCMSNSEI2xK0ajnbw"
+                          key: "Cs-llCMSNSEI2xK0ajnbw"
+                          type: "VarValue"
+                          fieldType: "Text"
+                          valueType: "VAR"
+                          varValue:
+                            - valueKey: "custCode"
+                              valueName: "custCode"
+                        operator: "CONTAINS"
+                        rightValue:
+                          key: "Kf1gTg48B2elte3S_U-Wb"
+                          type: "VarValue"
+                          fieldType: "Text"
+                          valueType: "CONST"
+                          constValue: "AUTOTEST_CUST"
+          sortOrders: null
+          keyword: null
+
+  # 基于客户信息渲染地址信息
+  "/api/trantor/service/engine/execute/ERP_SCM$sls_cust_select_render_service?tmodule=ERP_SCM":
+    params:
+      request:
+        custId: "{cust_id}"  # 客户ID
+
+  # 相关方查询服务
+  "/api/trantor/service/engine/execute/ERP_SCM$SO_QUERY_PARTNER_EVENT_SERVICE":
+    params:
+      request:
+        reCalculate: false  # 是否重新计算
+        soTypeId: "{so_type_id}"  # 订单类型ID
+        soDocDate: null  # 订单日期
+        priceCalcDate: null  # 价格计算日期
+        custId: "{cust_id}"  # 客户ID
+        slsPerson: "{sls_person_obj}"  # 销售人员对象
+        slsPhone: "{sls_phone}"  # 销售人员电话
+        slsPersonName: "{sls_person_name}"  # 销售人员姓名
+        isFixedExchRate: false  # 是否固定汇率
+        currExchangeRateType: "{exchange_rate_type_id}"  # 汇率类型
+        soItems:  # 订单行项目
+          - bomWhether: false  # 是否BOM
+            soSchlDelDate: null  # 计划交货日期
+
+  # 销售组织查询服务
+  "/api/trantor/service/engine/execute/ERP_SCM$sls_sales_organization_paging_service?tmodule=ERP_SCM":
+    params:
+      request:
+        pageable:
+          pageNo: 1  # 页码
+          pageSize: 20  # 每页大小
+          conditionGroup:  # 查询条件组
+            type: "ConditionGroup"
+            logicOperator: "AND"
+            conditions:
+              - type: "ConditionGroup"
+                logicOperator: "AND"
+                conditions:
+                  - type: "ConditionGroup"
+                    logicOperator: "AND"
+                    conditions:
+                      - key: "nr_nqTvXmIyHnHxKfmn3S"
+                        type: "ConditionLeaf"
+                        leftValue:
+                          id: "iJlX7JIkAyn7AIr9omqK-"
+                          key: "iJlX7JIkAyn7AIr9omqK-"
+                          type: "VarValue"
+                          fieldType: "Text"
+                          valueType: "VAR"
+                          varValue:
+                            - valueKey: "orgCode"
+                              valueName: "orgCode"
+                        operator: "CONTAINS"
+                        rightValue:
+                          key: "ggwEgoMfFc91CYI1zUwzb"
+                          type: "VarValue"
+                          fieldType: "Text"
+                          valueType: "CONST"
+                          constValue: "AUTOTEST_SLS_ORG"
+          sortOrders: null
+          keyword: null
+
+  # 物料查询服务
+  "/api/trantor/service/engine/execute/ERP_SCM$INV_MAT_PAGING_SERVICE":
+    params:
+      request:
+        pageable:
+          pageNo: 1  # 页码
+          pageSize: 20  # 每页大小
+          sortOrders:  # 排序条件
+            - fieldAlias: "matCode"
+              id: "matCode-0"
+              sortType: "ASC"
+            - fieldAlias: "matName"
+              id: "matName-1"
+              sortType: "ASC"
+          keyword: "hxymat-20241202744"  # 搜索关键字
+        slsOrgId: "{sls_org_id}"  # 销售组织ID
+        slsDcId: "{sls_dc_id}"  # 销售配送中心ID
+
+  # 订单行渲染服务
+  "/api/trantor/service/engine/execute/ERP_SCM$SLS_AFTER_MAT_SELECT_RENDER_EVENT_SERVICE":
+    params:
+      request:
+        addrId: "{addr_id}"  # 地址ID
+        custId: "{cust_id}"  # 客户ID
+        invLoc: null  # 库存地点
+        invOrg: null  # 库存组织
+        slsComId: "{com_org_id}"  # 公司组织ID
+        slsDcId: "{sls_dc_id}"  # 销售配送中心ID
+        slsOrgId: "{sls_org_id}"  # 销售组织ID
+        slsPerson: "{sls_person_obj}"  # 销售人员对象
+        slsPhone: "{sls_phone}"  # 销售人员电话
+        slsPersonName: "{sls_person_name}"  # 销售人员姓名
+        soDocDate: null  # 订单日期
+        soTypeId: "{so_type_id}"  # 订单类型ID
+        baseCurrId: "{base_curr_id}"  # 基础币种ID
+        slsCurrId: "{sls_curr_id}"  # 销售币种ID
+        currExchangeRateType: "{exchange_rate_type_id}"  # 汇率类型
+        slsPartnerLinks: "{sls_partner_links}"  # 相关方链接
+        soItems:  # 订单行项目
+          - matId: "{mat_obj.id}"  # 物料ID
+            taxRateId: null  # 税率ID
+            invOrgId: "{inv_org_id}"  # 库存组织ID
+            invLocId: "{inv_loc_id}"  # 库存地点ID
+            soItemSlsQty: "{render_qty}"  # 销售数量
+            delAddrDetail: "{addr_detail}"  # 交货地址详情
+            delAddrId: "{addr_id}"  # 交货地址ID
+            delPersonName: "{cust_person_name}"  # 交货联系人
+            delPhone: "{cust_phone}"  # 交货联系电话
+
+  # 自动定价服务
+  "/api/trantor/service/engine/execute/ERP_SCM$SO_AUTO_PRICE_EVENT_copy_SERVICE":
+    params:
+      request:
+        id: null  # 订单ID
+        priceIdempotent: null  # 价格幂等性标识
+        reCalculate: false  # 是否重新计算
+        soTypeId: "{so_type_id}"  # 订单类型ID
+        soDocDate: null  # 订单日期
+        priceCalcDate: null  # 价格计算日期
+        custId: "{cust_id}"  # 客户ID
+        addrId: "{addr_id}"  # 地址ID
+        addrDetail: "{addr_detail}"  # 地址详情
+        custPersonName: "{cust_person_name}"  # 客户联系人
+        custPhone: "{cust_phone}"  # 客户电话
+        slsPerson: "{sls_person_obj}"  # 销售人员对象
+        slsPhone: "{sls_phone}"  # 销售人员电话
+        slsPersonName: "{sls_person_name}"  # 销售人员姓名
+        slsOrgId: "{sls_org_obj}"  # 销售组织对象
+        slsDcId: "{sls_dc_id}"  # 销售配送中心ID
+        slsComId: "{com_org_id}"  # 公司组织ID
+        slsCurrId: "{sls_curr_id}"  # 销售币种ID
+        baseCurrId: "{base_curr_id}"  # 基础币种ID
+        isFixedExchRate: false  # 是否固定汇率
+        currExchangeRateType: "{exchange_rate_type_id}"  # 汇率类型
+        exchRate: 1  # 汇率
+        soItems: "{so_items}"  # 订单行项目
+        slsPartnerLinks: "{sls_partner_links}"  # 相关方链接
+
+  # 编辑页提交服务
+  "/api/trantor/service/engine/execute/ERP_SCM$SLS_SALES_MANUAL_SAVE_EVENT?tmodule=ERP_SCM":
+    params:
+      request:
+        {}
+
+  # 编辑订单服务
+  "/api/trantor/service/engine/execute/ERP_SCM$query_sls_order_bom_detail?tmodule=ERP_SCM":
+    sceneKey: "ERP_SCM$sls_so_730"
+    viewKey: "ERP_SCM$sls_so_730:edit"
+    appId: 0
+    teamId: 22
+    serviceKey: "ERP_SCM$query_sls_order_bom_detail"
+    params:
+      id: "{order_id}"  # 要编辑的订单ID
