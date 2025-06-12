@@ -75,21 +75,21 @@ base_info:
       min_records: 1
       required_fields: ["exchange_rate_type_id", "exchange_rate_type_code", "exchange_rate_type_name"]
 
-  # 物料税信息
-  mat_tax_type_info:
-    sql: |
-      SELECT id as 'mat_tax_type_id', tax_class_code, tax_class_desc 
-      FROM gen_mat_tax_type_cf 
-      WHERE deleted=0
-    description: "查询物料税信息"
-    insert_sql: |
-        INSERT INTO `gen_mat_tax_type_cf` (`created_at`, `updated_at`, `version`, `deleted`, `tax_type`, `origin_org_id`, `request_id`, `tax_class_code`, `tax_class_desc`, `coun_id`, `created_by`, `updated_by`,`tenant_id`) VALUES
-        (NOW(), NOW(), 0, 0, (select id from  gen_tax_type_cf  where taxcate='X' and tax=0.13 limit 1 ), 0, NULL, 'NORM', '销售或者进口货物', (select id from gen_coun_type_cf where coun_code='CHINA' limit 1), 1, 1,0),
-        (NOW(), NOW(), 0, 0, (select id from  gen_tax_type_cf  where taxcate='X' and tax=0.13 limit 1 ), 0, NULL, 'SERV', '服务类', (select id from gen_coun_type_cf where coun_code='CHINA' limit 1), 1, 1,0),
-        (NOW(), NOW(), 0, 0, (select id from  gen_tax_type_cf  where taxcate='X' and tax=0.13 limit 1 ), 0, NULL, 'EXMT', '免征税类', (select id from gen_coun_type_cf where coun_code='CHINA' limit 1), 1, 1,0);
-    validation:
-      min_records: 0
-      required_fields: ["mat_tax_type_id", "tax_class_code", "tax_class_desc"]
+  # # 物料税信息
+  # mat_tax_type_info:
+  #   sql: |
+  #     SELECT id as 'mat_tax_type_id', tax_class_code, tax_class_desc 
+  #     FROM gen_mat_tax_type_cf 
+  #     WHERE deleted=0 limit 1
+  #   description: "查询物料税信息"
+  #   insert_sql: |
+  #       INSERT INTO `gen_mat_tax_type_cf` (`created_at`, `updated_at`, `version`, `deleted`, `tax_type`, `origin_org_id`, `request_id`, `tax_class_code`, `tax_class_desc`, `coun_id`, `created_by`, `updated_by`,`tenant_id`) VALUES
+  #       (NOW(), NOW(), 0, 0, (select id from  gen_tax_type_cf  where taxcate='X' and tax=0.13 limit 1 ), 0, NULL, 'NORM', '销售或者进口货物', (select id from gen_coun_type_cf where coun_code='CHINA' limit 1), 1, 1,0),
+  #       (NOW(), NOW(), 0, 0, (select id from  gen_tax_type_cf  where taxcate='X' and tax=0.13 limit 1 ), 0, NULL, 'SERV', '服务类', (select id from gen_coun_type_cf where coun_code='CHINA' limit 1), 1, 1,0),
+  #       (NOW(), NOW(), 0, 0, (select id from  gen_tax_type_cf  where taxcate='X' and tax=0.13 limit 1 ), 0, NULL, 'EXMT', '免征税类', (select id from gen_coun_type_cf where coun_code='CHINA' limit 1), 1, 1,0);
+  #   validation:
+  #     min_records: 0
+  #     required_fields: ["mat_tax_type_id", "tax_class_code", "tax_class_desc"]
 
   # 客户税信息
   cust_tax_type_info:
@@ -101,18 +101,6 @@ base_info:
     validation:
       min_records: 0
       required_fields: ["cust_tax_type_id", "tax_class_code", "tax_class_desc"]
-
-  # 国家税信息
-  coun_tax_type_info:
-    sql: |
-      SELECT id as 'coun_tax_type_id', tax_type_code, tax_type_name 
-      FROM gen_coun_tax_type_cf 
-      WHERE deleted=0
-    description: "查询国家税信息"
-    validation:
-      min_records: 0
-      required_fields: ["coun_tax_type_id", "tax_type_code", "tax_type_name"]
-
   # 计量单位信息
   uom_info:
     sql: |
@@ -135,55 +123,7 @@ base_info:
       min_records: 1
       required_fields: ["bank_id", "bank_code", "bank_name", "bank_mne_code"]
 
-  # 工作日历信息
-  work_calendar_info:
-    sql: |
-      SELECT id as 'wc_id', wc_head_code, wc_head_name, enable_status 
-      FROM gen_wc_head_cf 
-      WHERE enable_status="ENABLED" 
-      AND JSON_CONTAINS(default_rest_date, '["SATURDAY","SUNDAY"]') 
-      AND deleted=0
-    description: "查询工作日历信息"
-    validation:
-      min_records: 1
-      required_fields: ["wc_id", "wc_head_code", "wc_head_name", "enable_status"]
-
-  # 会计期间信息
-  calendar_info:
-    sql: |
-      SELECT id as 'calendar_id', calendar_code, calendar_name, `status` 
-      FROM gen_calendar_head_cf 
-      WHERE calendar_name LIKE "%%标准会计期间%%" 
-      AND deleted=0 
-      AND `status`="ENABLED"
-    description: "查询会计期间信息"
-    validation:
-      min_records: 1
-      required_fields: ["calendar_id", "calendar_code", "calendar_name", "status"]
-
   # 组织信息
-  # 集团组织
-  group_org_info:
-    sql: |
-      SELECT id, org_code, org_name, org_status, org_dimension_code, org_business_type_code
-      FROM org_struct_md
-      WHERE org_code = "AUTOTEST_GR_ORG" AND org_dimension_code='SCM_ORG_GRP' AND org_status="ENABLED" AND deleted=0
-      LIMIT 1
-    description: "查询集团组织信息"
-    validation:
-      min_records: 1
-      required_fields: ["id", "org_code", "org_name", "org_status", "org_dimension_code", "org_business_type_code"]
-
-  # 行政组织-主组织
-  adm_org_info:
-    sql: |
-      SELECT id, org_code, org_name, org_status, org_dimension_code, org_business_type_codes
-      FROM org_struct_md
-      WHERE org_status="ENABLED" AND org_dimension_code="ADM_ORG_GRP" AND org_code = "AUTOTEST_ADM_ORG" AND org_business_type_codes='[\"ADM_ORG\"]' LIMIT 1
-    description: "查询行政组织-主组织信息"
-    validation:
-      min_records: 1
-      required_fields: ["id", "org_code", "org_name", "org_status", "org_dimension_code", "org_business_type_codes"]
 
   # 公司组织
   com_org_info:
@@ -229,23 +169,12 @@ base_info:
       min_records: 1
       required_fields: ["id", "org_code", "org_name", "org_status", "org_dimension_code", "org_business_type_code"]
 
-  # 行政组织-部门组织
-  dept_org_info:
-    sql: |
-      SELECT id
-      FROM org_struct_md
-      WHERE org_status='ENABLED' AND org_dimension_code='ADM_ORG_GRP' AND org_code = 'AUTOTEST_DP_ORG' AND org_business_type_code='ADM_ORG' LIMIT 1
-    description: "查询行政组织-部门组织信息"
-    validation:
-      min_records: 1
-      required_fields: ["id"]
-
   # 计划组织
   pln_org_info:
     sql: |
-      SELECT id
+      SELECT id, org_code, org_name, org_status, org_dimension_code, org_business_type_code
       FROM org_struct_md
-      WHERE org_business_type_code='PLN_ORG' AND org_name LIKE '%自动化%'
+      WHERE org_status='ENABLED' AND org_dimension_code='SCM_ORG_GRP' AND org_code LIKE 'AUTOTEST%' AND org_business_type_codes = '[\"PLN_ORG\"]' LIMIT 1
     description: "查询计划组织信息"
     validation:
       min_records: 1
@@ -265,21 +194,32 @@ base_info:
   # 销售渠道
   sales_channel_info:
     sql: |
-      SELECT a.id, a.`code`, a.`name`
-      FROM org_sls_dc_cf a
-      JOIN org_struct_md b ON JSON_CONTAINS(b.def13, CAST(a.id AS JSON), '$')
-      WHERE a.deleted = 0 LIMIT 1
+      SELECT id, `code`, `name`
+      FROM org_sls_dc_cf
+      WHERE `code` like 'AUTOTEST_SLS_DC%' AND deleted=0 LIMIT 1
     description: "查询销售渠道信息"
     validation:
       min_records: 1
       required_fields: ["id", "code", "name"]
+
+
+  # sales_channel_info:
+  #   sql: |
+  #     SELECT id, `code`, `name`
+  #     FROM sls_dc_md
+  #     WHERE `code`='AUTOTEST_SLS_DC' AND deleted=0 LIMIT 1
+  #   description: "查询销售渠道信息"
+  #   validation:
+  #     min_records: 1
+  #     required_fields: ["id", "code", "name"]
+
 
   # 库存地点
   inv_loc_info:
     sql: |
       SELECT id, org_code, org_name, org_status, org_dimension_code, org_business_type_code
       FROM org_struct_md
-      WHERE org_status='ENABLED' AND org_dimension_code='SCM_ORG_GRP' AND org_code LIKE 'AUTOTEST%' AND org_business_type_code='INV_LOC' LIMIT 1
+      WHERE org_status='ENABLED' AND org_dimension_code='SCM_ORG_GRP' AND org_code LIKE 'AUTOTEST%' AND org_business_type_codes = '[\"INV_LOC\"]' LIMIT 1
     description: "查询库存地点信息"
     validation:
       min_records: 1
@@ -344,10 +284,12 @@ base_info:
   # 税码信息
   tax_info:
     sql: |
-      select id, tax_code,taxcate,tax ,associated_tax_code 
+      select id, tax_code,taxcate,tax  
       from gen_tax_type_cf 
       where deleted=0
     description: "查询税码信息"
     validation:
       min_records: 1
-      required_fields: ["id", "tax_code", "taxcate", "tax", "associated_tax_code"]
+      required_fields: ["id", "tax_code", "taxcate", "tax"]
+
+    # associated_tax_code

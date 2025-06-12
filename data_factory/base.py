@@ -263,6 +263,9 @@ class DataFactory:
         for attr_name, path in id_mappings.items():
             value = structured_data
             for key in path:
+                if value is None:
+                    print(f"[extract_ids] value is None before get('{key}'), keys链：{path}")
+                    raise Exception(f"extract_ids: value is None at key={key}, keys链={path}")
                 value = value.get(key, {})
             ids[attr_name] = value
         print(f"ids: {ids}")

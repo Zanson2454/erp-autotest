@@ -21,11 +21,6 @@
       "exchange_rate_type_code": "HR",
       "exchange_rate_type_name": "固定汇率"
     },
-    "coun_tax_type_info": {
-      "coun_tax_type_id": 2000001,
-      "tax_type_code": "TAX_CN",
-      "tax_type_name": "中国税收类别"
-    },
     "uom_info": {
       "uom_id": 2000001,
       "uom_code": "PC",
@@ -38,13 +33,6 @@
       "bank_name": "湖北银行",
       "bank_mne_code": null
     },
-    "work_calendar_info": {
-      "wc_id": 2001004,
-      "wc_head_code": "GZRL001",
-      "wc_head_name": "标准工作日历",
-      "enable_status": "ENABLED"
-    },
-    "calendar_info": null,
     "employee_info": {
       "id": 14082001,
       "name": "admin"
@@ -63,27 +51,10 @@
       "id": 2002001,
       "tax_code": "CN_PUR_01",
       "taxcate": "J",
-      "tax": 13.0,
-      "associated_tax_code": 2002002
+      "tax": 13.0
     }
   },
   "org_info": {
-    "group_org_info": {
-      "id": 14507001,
-      "org_code": "AUTOTEST_GR_ORG",
-      "org_name": "集团(自动化)",
-      "org_status": "ENABLED",
-      "org_dimension_code": "SCM_ORG_GRP",
-      "org_business_type_code": null
-    },
-    "adm_org_info": {
-      "id": 14432002,
-      "org_code": "AUTOTEST_ADM_ORG",
-      "org_name": "行政组织(自动化)",
-      "org_status": "ENABLED",
-      "org_dimension_code": "ADM_ORG_GRP",
-      "org_business_type_codes": "[\"ADM_ORG\"]"
-    },
     "com_org_info": {
       "id": 14373001,
       "org_code": "AUTOTEST_COM_ORG",
@@ -116,12 +87,7 @@
       "org_dimension_code": "SCM_ORG_GRP",
       "org_business_type_code": "SLS_ORG"
     },
-    "dept_org_info": {
-      "id": 14420004
-    },
-    "pln_org_info": {
-      "id": 88884
-    }
+    "pln_org_info": null
   },
   "partner_info": {
     "cust_tax_type_info": {
@@ -143,11 +109,6 @@
     }
   },
   "material_info": {
-    "mat_tax_type_info": {
-      "mat_tax_type_id": 2001001,
-      "tax_class_code": "NORM",
-      "tax_class_desc": "销售或者进口货物"
-    },
     "inv_loc_info": {
       "id": 14376002,
       "org_code": "AUTOTEST_INV_LOC_ORG",
