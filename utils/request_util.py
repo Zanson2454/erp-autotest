@@ -119,14 +119,14 @@ class HttpUtil:
         json_data = dict(**kwargs).get("json")
         params = dict(**kwargs).get("params")
         headers = dict(**kwargs).get("headers")
-        logger.info("接口请求的地址>>>{}".format(full_url))
-        logger.info("接口请求的方法>>>{}".format(method))
+        logger.info("接口请求的地址>>>{}", full_url, stacklevel=3)
+        logger.info("接口请求的方法>>>{}", method, stacklevel=3)
         if data is not None:
-            logger.info("接口请求的data参数>>>\n{}".format(json.dumps(data, ensure_ascii=False, indent=2)))
+            logger.info("接口请求的data参数>>>\n{}", json.dumps(data, ensure_ascii=False, indent=2), stacklevel=3)
         if json_data is not None:
-            logger.info("接口请求的json参数>>>\n{}".format(json.dumps(json_data, ensure_ascii=False, indent=2)))
+            logger.info("接口请求的json参数>>>\n{}", json.dumps(json_data, ensure_ascii=False, indent=2), stacklevel=3)
         if params is not None:
-            logger.info("接口请求的params参数>>>\n{}".format(json.dumps(params, ensure_ascii=False, indent=2)))
+            logger.info("接口请求的params参数>>>\n{}", json.dumps(params, ensure_ascii=False, indent=2), stacklevel=3)
         if headers is not None:
-            logger.info("接口请求的headers参数>>>\n{}".format(json.dumps(headers, ensure_ascii=False, indent=2)))
+            logger.info("接口请求的headers参数>>>\n{}", json.dumps(headers, ensure_ascii=False, indent=2), stacklevel=3)
 

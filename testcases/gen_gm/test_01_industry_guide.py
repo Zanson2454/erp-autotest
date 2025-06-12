@@ -1,16 +1,20 @@
 import allure
-from testcases.gen import GenBaseTest
+from testcases.comm.base_test import BaseTest
 from utils.param_util import ParamUtil
 from utils.allure_simple import a
+from pathlib import Path
+from utils.yaml_util import YamlUtil
+from testcases.gen_gm import init_gen_gm_config
 
 @allure.epic("通用基础")
 @allure.feature("行业引导配置")
-class TestIndustryGuide(GenBaseTest):
+class TestIndustryGuide(BaseTest):
     industry_guide_info = {}
     
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        init_gen_gm_config(cls)
     
     @ParamUtil.case_decorator(
         story="行业引导配置管理",

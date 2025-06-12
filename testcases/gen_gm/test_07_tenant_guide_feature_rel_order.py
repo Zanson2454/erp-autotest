@@ -1,16 +1,18 @@
 import allure
-from testcases.gen import GenBaseTest
+from testcases.comm.base_test import BaseTest
 from utils.param_util import ParamUtil
 from utils.allure_simple import a
+from testcases.gen_gm import init_gen_gm_config
 
 @allure.epic("通用基础")
 @allure.feature("租户引导配置功能点关联排序")
-class TestTenantGuideFeatureRelOrder(GenBaseTest):
+class TestTenantGuideFeatureRelOrder(BaseTest):
     tenant_guide_feature_rel_order_info = {}
     
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        init_gen_gm_config(cls)
     
     @ParamUtil.case_decorator(
         story="租户引导配置功能点关联排序管理",

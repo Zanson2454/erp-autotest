@@ -4,6 +4,7 @@ from utils.param_util import ParamUtil
 from utils.allure_simple import a
 from pathlib import Path
 from utils.yaml_util import YamlUtil
+from testcases.gen_gm import init_gen_gm_config
 
 
 @allure.epic("通用基础")
@@ -17,15 +18,16 @@ class TestIndustryInfo(BaseTest):
     def setup_class(cls):
         """测试类初始化"""
         super().setup_class()
+        init_gen_gm_config(cls)
         
-        # 初始化 API 配置
-        project_root = Path(__file__).resolve().parent.parent.parent
-        api_path_yaml = project_root / "testdata" / "gen_gm" / "gm_api_path.yaml"
-        api_params_yaml = project_root / "testdata" / "gen_gm" / "gm_api_params.yaml"
+        # # 初始化 API 配置
+        # project_root = Path(__file__).resolve().parent.parent.parent
+        # api_path_yaml = project_root / "testdata" / "gen_gm" / "gm_api_path.yaml"
+        # api_params_yaml = project_root / "testdata" / "gen_gm" / "gm_api_params.yaml"
         
-        # 读取 API 配置
-        cls.apis = YamlUtil.read_yaml(str(api_path_yaml))["apis"]
-        cls.api_params = YamlUtil.read_yaml(str(api_params_yaml))["api_params"]
+        # # 读取 API 配置
+        # cls.apis = YamlUtil.read_yaml(str(api_path_yaml))["apis"]
+        # cls.api_params = YamlUtil.read_yaml(str(api_params_yaml))["api_params"]
         
 
     
