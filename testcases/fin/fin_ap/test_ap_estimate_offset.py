@@ -10,6 +10,7 @@ import time
 from decimal import Decimal
 from testcases.fin.fin_ap.test_ap_doc_save import TestApDocumentSave
 from data_factory.fin_ap_factory import FinApFactory
+from pathlib import Path
 
 @allure.epic("ERP通业财模块")
 @allure.feature("应付管理")
@@ -20,6 +21,13 @@ class TestApEstimateOffset(BaseTest):
     def setup_class(cls):
         super().setup_class()
         cls.ap_factory = FinApFactory()
+        
+        # 初始化财务API配置
+        project_root = Path(__file__).resolve().parent.parent.parent.parent
+        apis = cls.yaml_util.read_yaml(project_root / "testdata/fin/fin_api_path.yaml").get("apis", {})
+        api_params = cls.yaml_util.read_yaml(project_root / "testdata/fin/fin_api_params.yaml").get("api_params", {})
+        cls.apis = apis
+        cls.api_params = api_params
 
     def _wait_for_ap_completion(self, ap_head_code):
         """等待应付单异步处理完成"""
