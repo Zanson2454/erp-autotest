@@ -271,7 +271,6 @@ class FinApFactory:
         """生成多个apItems明细，结构与页面json一致"""
         # 可根据页面json静态模板补全
         items = []
-        # 第一条 - 使用实际的物料ID
         items.append(self.create_ap_item(
             mat=mat_list[0],
             tax_code=tax_code_list[0],

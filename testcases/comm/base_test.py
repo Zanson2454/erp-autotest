@@ -37,15 +37,25 @@ class Login:
     """
     登录类，依赖DataFactory获取环境配置。
     """
-    def __init__(self, env: str = "test"):
-        self.config = DataFactory.get_env_config()
+    def __init__(self, env_name: str = "test"):
+        """
+        初始化登录类
+        :param env_name: 环境名称，如 test/dev/prod
+        """
+        Loggers.info(f"初始化登录类，环境: {env_name}")
+        self.config = DataFactory(env_name=env_name).get_env_config()
         self.iam_url = self.config.get("iam_url")
-        self.api_url = self.config.get("base_url")
+        self.portal_url = self.config.get("portal_url")
+        self.admin_url = self.config.get("admin_url")
+        self.iam_referer = self.config.get("iam_referer")
+        self.portal_referer = self.config.get("portal_referer")
+        self.admin_referer = self.config.get("admin_referer")
         self.base_headers = self._get_base_headers()
         self.iam_headers = self._get_iam_headers()
-        self.api_headers = self._get_api_headers()
+        self.portal_headers = self._get_portal_headers()
         self.session = requests.Session()
         self.session.headers.update(self.base_headers)
+        self.user_info = None  # 初始化 user_info 属性
         self.login()
     
     def _get_base_headers(self) -> Dict[str, str]:
@@ -65,14 +75,14 @@ class Login:
         return {
             **self.base_headers,
             'Origin': self.iam_url,
-            'Referer': f"{self.iam_url}/TERP_PORTAL-TERP-tpf_umwrhzbg/login"
+            'Referer': self.iam_referer
         }
     
-    def _get_api_headers(self) -> Dict[str, str]:
+    def _get_portal_headers(self) -> Dict[str, str]:
         return {
             **self.base_headers,
-            'Origin': self.api_url,
-            'Referer': f"{self.api_url}/TERP_PORTAL-TERP/TERP_PORTAL/TERP_PORTAL$4f94e448-6fcd-497b-8357-66a90c82a3f9/page"
+            'Origin': self.portal_url,
+            'Referer': self.portal_referer
         }   
     
     def login(self):
@@ -98,9 +108,11 @@ class Login:
             raise
     
     def get_current_user(self) -> Optional[Dict[str, Any]]:
-        url = f"{self.api_url}/api/trantor/portal/user/current"
+        url = f"{self.portal_url}/api/trantor/portal/user/current"
+        logger.info(f"获取用户信息URL: {url}")
         try:
-            self.session.headers.update(self.api_headers)
+            self.session.headers.update(self.portal_headers)
+
             response = self.session.get(url)
             if response.status_code != 200:
                 logger.error(f"获取用户信息失败: {response.text}")
@@ -126,13 +138,18 @@ class BaseTest:
         4. 初始化断言、日志、HTTP等工具
         """
         try:
+            # 获取当前环境
+            env = os.getenv("TEST_ENV", "test")
+            Loggers.info(f"使用环境: {env}")
+            
             # 初始化数据工厂
-            data_factory = DataFactory()
+            data_factory = DataFactory(env_name=env)
             cls.init_data = data_factory.get_base_data(module="gen") # 获取结构化基础数据
             cls.env_config = data_factory.get_env_config() # 获取环境基础配置
             
             # 登录 并保存 userId
-            cls.login = Login()
+            cls.login = Login(env)
+            logger.info(f"登录成功: {cls.login}")
             cls.user_info = cls.login.get_current_user() # 获取当前用户信息
             if not cls.user_info or "id" not in cls.user_info:
                 raise RuntimeError("user_info 未正确初始化或缺少 id 字段")
@@ -151,15 +168,16 @@ class BaseTest:
             cls.cache = CacheUtil() # 初始化缓存工具
             cls.yaml_util = YamlUtil() # 初始化Yaml工具
             
-            
-            _db_config = cls.env_config.get("database").get("erp_db")
+            _db_config = cls.env_config.get("database", {}).get("erp_db")
+            if not _db_config:
+                raise RuntimeError("数据库配置未找到，请检查环境配置文件")
             DBManager.init(_db_config)
             cls.db=DBManager()
             cls.safe_api_call = safe_api_call # 初始化安全API调用工具
         
            
             cls.http = HttpUtil(
-                url=cls.env_config.get("base_url"),
+                url=cls.env_config.get("portal_url"),
                 session=cls.session,
                 headers=cls.base_headers
             ) # 初始化HTTP工具

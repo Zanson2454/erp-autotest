@@ -1,0 +1,180 @@
+version: '1.0'
+total_apis: 59
+apis:
+  行业引导配置-分页:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_CF_PAGING_SERV
+    method: POST
+  行业信息-禁用:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_MD_DISABLE_BY_ID_SERV
+    method: POST
+  行业引导配置-批量启用:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_CF_ENABLE_BY_IDS_SERV
+    method: POST
+  行业信息-批量禁用:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_MD_DISABLE_BY_IDS_SERV
+    method: POST
+  租户引导配置-批量启用:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_CF_ENABLE_BY_IDS_SERV
+    method: POST
+  租户信息-批量启用:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_MD_ENABLE_BY_IDS_SERV
+    method: POST
+  租户信息-删除:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_MD_DELETE_BY_ID_SERV
+    method: POST
+  行业引导配置功能点-批量禁用:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_FEATURE_CF_DISABLE_BY_IDS_SERV
+    method: POST
+  根据租户查询租户管理员修改信息:
+    path: /api/trantor/service/engine/execute/GEN_GM$tenant_query_tenant_admin_modify_info
+    method: POST
+  租户信息-详情:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_MD_QUERY_BY_ID_SERV
+    method: POST
+  菜单-查询:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TRANTOR_MENU_TREE_QUERY_ACTION
+    method: POST
+  租户信息-批量禁用:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_MD_DISABLE_BY_IDS_SERV
+    method: POST
+  行业引导配置功能点-批量启用:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_FEATURE_CF_ENABLE_BY_IDS_SERV
+    method: POST
+  行业信息-详情:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_MD_QUERY_BY_ID_SERV
+    method: POST
+  行业信息-删除:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_MD_DELETE_BY_ID_SERV
+    method: POST
+  行业引导配置功能点-禁用:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_FEATURE_CF_DISABLE_BY_ID_SERV
+    method: POST
+  行业引导配置-启用:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_CF_ENABLE_BY_ID_SERV
+    method: POST
+  租户引导配置-禁用:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_CF_DISABLE_BY_ID_SERV
+    method: POST
+  租户引导功能点-批量禁用:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_FEATURE_CF_DISABLE_BY_IDS_SERV
+    method: POST
+  行业引导配置功能点-详情:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_FEATURE_CF_QUERY_BY_ID_SERV
+    method: POST
+  租户信息-分页:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_MD_PAGING_SERV
+    method: POST
+  行业引导配置功能点-批量删除:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_FEATURE_CF_DELETE_BY_IDS_SERV
+    method: POST
+  租户信息-启用:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_MD_ENABLE_BY_ID_SERV
+    method: POST
+  租户引导配置-批量删除:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_CF_DELETE_BY_IDS_SERV
+    method: POST
+  租户引导配置-批量禁用:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_CF_DISABLE_BY_IDS_SERV
+    method: POST
+  行业引导配置-保存:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_CF_SAVE_SERV
+    method: POST
+  行业引导配置功能点-删除:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_FEATURE_CF_DELETE_BY_ID_SERV
+    method: POST
+  行业信息-批量删除:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_MD_DELETE_BY_IDS_SERV
+    method: POST
+  租户引导配置-保存:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_CF_SAVE_SERV
+    method: POST
+  行业引导配置-详情:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_CF_QUERY_BY_ID_SERV
+    method: POST
+  租户引导功能点-禁用:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_FEATURE_CF_DISABLE_BY_ID_SERV
+    method: POST
+  租户引导功能点-详情:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_FEATURE_CF_QUERY_BY_ID_SERV
+    method: POST
+  租户引导功能点-删除:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_FEATURE_CF_DELETE_BY_ID_SERV
+    method: POST
+  租户引导功能点-批量删除:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_FEATURE_CF_DELETE_BY_IDS_SERV
+    method: POST
+  行业引导配置功能点-分页:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_FEATURE_CF_PAGING_SERV
+    method: POST
+  行业引导配置-删除:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_CF_DELETE_BY_ID_SERV
+    method: POST
+  行业信息-启用:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_MD_ENABLE_BY_ID_SERV
+    method: POST
+  行业引导配置功能点-启用:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_FEATURE_CF_ENABLE_BY_ID_SERV
+    method: POST
+  查询租户下员工:
+    path: /api/trantor/service/engine/execute/GEN_GM$QUERY_TENANT_EMPLOYEES_SERV
+    method: POST
+  行业引导配置功能点-保存:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_FEATURE_CF_SAVE_SERV
+    method: POST
+  租户引导功能点-启用:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_FEATURE_CF_ENABLE_BY_ID_SERV
+    method: POST
+  租户引导功能点-批量启用:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_FEATURE_CF_ENABLE_BY_IDS_SERV
+    method: POST
+  租户引导配置-详情:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_CF_QUERY_BY_ID_SERV
+    method: POST
+  行业引导配置-分页（按行业查询）:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_CF_INDUSTRY_PAGING_SERV
+    method: POST
+  租户引导功能点-保存:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_FEATURE_CF_SAVE_SERV
+    method: POST
+  菜单-查询（权限过滤）:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TRANTOR_MENU_TREE_QUERY_WITH_AUTH_ACTION
+    method: POST
+  租户信息-保存:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_MD_SAVE_SERV
+    method: POST
+  租户信息-更换企业管理员:
+    path: /api/trantor/service/engine/execute/GEN_GM$TENANT_CHANGE_ADMIN_SERV
+    method: POST
+  行业信息-分页:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_MD_PAGING_SERV
+    method: POST
+  租户引导配置-启用:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_CF_ENABLE_BY_ID_SERV
+    method: POST
+  行业引导配置-批量删除:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_CF_DELETE_BY_IDS_SERV
+    method: POST
+  租户引导配置-分页:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_CF_PAGING_SERV
+    method: POST
+  行业引导配置-批量禁用:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_CF_DISABLE_BY_IDS_SERV
+    method: POST
+  租户信息-批量删除:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_MD_DELETE_BY_IDS_SERV
+    method: POST
+  行业引导配置-禁用:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_CF_DISABLE_BY_ID_SERV
+    method: POST
+  租户信息-禁用:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_MD_DISABLE_BY_ID_SERV
+    method: POST
+  行业信息-保存:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_MD_SAVE_SERV
+    method: POST
+  租户引导配置-删除:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_CF_DELETE_BY_ID_SERV
+    method: POST
+  行业信息-批量启用:
+    path: /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_MD_ENABLE_BY_IDS_SERV
+    method: POST

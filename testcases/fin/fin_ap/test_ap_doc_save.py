@@ -257,7 +257,6 @@ class TestApDocumentSave(BaseTest):
                 gross_base_amt = TestApDocumentSave.ap_save_info.get("gross_base_amt")
                 net_base_amt = TestApDocumentSave.ap_save_info.get("net_base_amt")
                 assert ap_doc_id and ap_head_code and sett_partner_id and pay_org_id, "请先执行创建用例，确保ap_doc_id、apHeadCode、settPartnerId和payOrgId已生成"
-                
                 # 动态查询应付单最新状态
                 query_api_path = ParamUtil.get_api_path(self.apis, "应付单头表-分页数据服务_PmHKWs2")
                 query_params, query_url = ParamUtil.get_api_params(self.api_params, query_api_path)
@@ -292,7 +291,6 @@ class TestApDocumentSave(BaseTest):
                     return
                 
                 assert current_ap_status == "CONFIRM", f"应付单状态应为CONFIRM，实际为：{current_ap_status}"
-                
                 api_path = ParamUtil.get_api_path(self.apis, "应付单-过账-异步服务")
                 params, url = ParamUtil.get_api_params(self.api_params, api_path)
                 filtered_params = ParamUtil.filter_post_body_fields(

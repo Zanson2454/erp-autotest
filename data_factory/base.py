@@ -147,11 +147,11 @@ class DataFactory:
 
             # 4. 合并db_config（变量名需与YAML一致）
             db_config = {
-                "host": os.environ.get("TEST_DB_HOST"),
-                "port": int(os.environ.get("TEST_DB_PORT", 3306)),
-                "user": os.environ.get("TEST_DB_USER"),
-                "password": os.environ.get("TEST_DB_PASSWORD"),
-                "database": os.environ.get("TEST_DB_NAME"),
+                "host": os.environ.get(f"{env_name.upper()}_DB_HOST"),
+                "port": int(os.environ.get(f"{env_name.upper()}_DB_PORT", 3306)),
+                "user": os.environ.get(f"{env_name.upper()}_DB_USER"),
+                "password": os.environ.get(f"{env_name.upper()}_DB_PASSWORD"),
+                "database": os.environ.get(f"{env_name.upper()}_DB_NAME"),
                 "charset": os.environ.get("DB_CHARSET", "utf8mb4")
             }
             config["database"][db_config_name] = db_config
@@ -265,6 +265,7 @@ class DataFactory:
             for key in path:
                 value = value.get(key, {})
             ids[attr_name] = value
+        print(f"ids: {ids}")
         return ids
 
     @classmethod
@@ -289,7 +290,7 @@ class DataFactory:
 if __name__ == "__main__":
     # 示例：初始化数据工厂并获取基础数据
     data = DataFactory()
-    data = data.get_env_config()
+    data = data.get_base_data()
     print(data)
     
     

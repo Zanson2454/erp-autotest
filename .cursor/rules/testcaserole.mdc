@@ -50,6 +50,29 @@ class Test<功能名称>(<领域>BaseTest):
 - setup_class 只需调用父类方法
 - 使用类变量存储测试过程中的共享数据
 
+### 1.4 测试类继承规范
+```python
+# 正确的继承方式
+from testcases.gen import GenBaseTest  # 优先使用领域特定的基类
+from testcases.comm.base_test import BaseTest  # 直接使用通用基类
+
+@allure.epic("<领域名称>")
+@allure.feature("<功能模块>")
+class Test<功能名称>(GenBaseTest):  # 优先继承领域基类
+    pass
+
+# 或者
+class Test<功能名称>(BaseTest):  # 直接继承通用基类
+    pass
+```
+
+**重要说明：**
+- 优先使用领域特定的基类（如 GenBaseTest）
+- 领域基类必须继承自 BaseTest
+- 避免直接继承 BaseTest，除非是通用功能测试
+- 禁止使用多重继承，保持继承关系简单清晰
+- 如果需要多个基类的功能，应该通过组合或接口实现
+
 ## 2. 测试方法规范
 
 ### 2.1 使用 ParamUtil.case_decorator 装饰器

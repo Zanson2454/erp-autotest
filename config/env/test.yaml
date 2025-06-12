@@ -1,11 +1,14 @@
 # 测试环境配置
 erp_env: "test"
 erp_version: "0630"
-trantor_version: "2.5.25.0330.0-SNAPSHOT"
-
+trantor_version: "3.0.2506"
 # 基础配置_hyr
-base_url: "https://t-erp-portal-test.app.terminus.io"
+portal_url: "https://t-erp-portal-test.app.terminus.io"
 iam_url: "https://t-erp-iam-test.app.terminus.io"
+
+# header
+iam_referer: "https://t-erp-iam-test.app.terminus.io/TERP_PORTAL-TERP-tpf_umwrhzbg/login"
+portal_referer: "https://t-erp-portal-test.app.terminus.io/TERP_PORTAL-TERP/TERP_PORTAL/TERP_PORTAL$4f94e448-6fcd-497b-8357-66a90c82a3f9/page"
 
 # 认证配置
 tenants:
