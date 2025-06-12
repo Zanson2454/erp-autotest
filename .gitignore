@@ -83,3 +83,4 @@ reports/allure-report/*
 
 # 忽略正在调试的用例
 gen_gm/
+testdata/cache/init_cache.json
