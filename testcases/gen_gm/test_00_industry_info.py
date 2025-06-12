@@ -5,6 +5,7 @@ from utils.allure_simple import a
 from pathlib import Path
 from utils.yaml_util import YamlUtil
 
+
 @allure.epic("通用基础")
 @allure.feature("行业信息管理")
 class TestIndustryInfo(BaseTest):
@@ -25,6 +26,8 @@ class TestIndustryInfo(BaseTest):
         # 读取 API 配置
         cls.apis = YamlUtil.read_yaml(str(api_path_yaml))["apis"]
         cls.api_params = YamlUtil.read_yaml(str(api_params_yaml))["api_params"]
+        
+
     
     @ParamUtil.case_decorator(
         story="行业信息管理",
@@ -103,15 +106,16 @@ class TestIndustryInfo(BaseTest):
                     params, ["id"], ["params", "request"]
                 )
                 ParamUtil.set_request_params(filtered_params, {
-                    "id": TestIndustryInfo.industry_info["industry_id"]
+                    "id": self.industry_info["industry_id"]
                 })
-                
-                # 发送请求并验证
+
                 result = self.http.post(url, json=filtered_params)
+                self.logger.debug(f"result: {result}")
                 self.assert_util.assert_response_success(result)
                 
                 # 验证返回数据
-                data = result.json()["data"]
+                data = result['data']['data']
+                self.logger.info(f"TestIndustryInfo.industry_info: {TestIndustryInfo.industry_info}")
                 assert data["industryName"] == TestIndustryInfo.industry_info["industry_name"], "行业名称不匹配"
                 assert data["industryDesc"] == TestIndustryInfo.industry_info["industry_desc"], "行业描述不匹配"
                 

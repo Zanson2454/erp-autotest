@@ -185,18 +185,18 @@ class DataFactory:
         return cls._env_config
 
     @classmethod
-    def get_base_data(cls, module='gen',db_config_name="erp_db"):
+    def get_base_data(cls,db_config_name="erp_db"):
         """
         获取指定模块的基础数据，优先读缓存，否则自动初始化并写入缓存。
         :param module: 业务模块名（如gen/fin/prd等）
         :return: 结构化业务数据
         """
-        cache_key = f'{module}_cache'
-        data = CacheUtil.get(cache_key)
+        data = CacheUtil.get('init_cache')
         if not data:
-            yaml_path = Path(__file__).parent.parent / 'testdata' / 'init' / f'{module}_init.yaml'
+            yaml_path = Path(__file__).parent.parent / 'testdata' / 'init' / 'init.yaml'
             db_config = cls._env_config["database"][db_config_name]
             data = SQLInitializer.init_sql(yaml_path, db_config)
+            CacheUtil.set('init_cache', data)
         return data
 
     @classmethod

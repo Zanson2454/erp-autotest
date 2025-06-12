@@ -1,0 +1,87 @@
+{
+  "user_info": {},
+  "base_info": {
+    "country_info": {
+      "coun_id": 3009010,
+      "coun_code": "CHINA",
+      "coun_name": "中国"
+    },
+    "currency_info": null,
+    "language_info": null,
+    "timezone_info": null,
+    "exchange_rate_type_info": {
+      "exchange_rate_type_id": 3005001,
+      "exchange_rate_type_code": "HR",
+      "exchange_rate_type_name": "固定汇率"
+    },
+    "tax_type_info": {
+      "tax_type_id": 3003001,
+      "tax_code": "CN_PUR_02",
+      "tax": 0.05,
+      "taxcate": "J"
+    },
+    "coun_tax_type_info": null,
+    "uom_info": {
+      "uom_id": 4021001,
+      "uom_code": "KG",
+      "uom_type": "MASS",
+      "uom_desc": "千克"
+    },
+    "bank_info": {
+      "bank_id": 2002001,
+      "bank_code": "ICBC",
+      "bank_name": "中国工商银行",
+      "bank_mne_code": null
+    },
+    "work_calendar_info": {
+      "wc_id": 2004001,
+      "wc_head_code": "GZRL001",
+      "wc_head_name": "标准工作日历",
+      "enable_status": "ENABLED"
+    },
+    "calendar_info": null,
+    "employee_info": null,
+    "sales_channel_info": null,
+    "so_type_info": {
+      "id": 2101001,
+      "so_type_code": "STND",
+      "so_type_name": "标准销售"
+    },
+    "tax_info": {
+      "id": 3003001,
+      "tax_code": "CN_PUR_02",
+      "taxcate": "J",
+      "tax": 0.05,
+      "associated_tax_code": null
+    }
+  },
+  "org_info": {
+    "group_org_info": null,
+    "adm_org_info": null,
+    "com_org_info": null,
+    "pur_org_info": null,
+    "inv_org_info": null,
+    "sls_org_info": null,
+    "dept_org_info": null,
+    "pln_org_info": null
+  },
+  "partner_info": {
+    "cust_tax_type_info": {
+      "cust_tax_type_id": 2004001,
+      "tax_class_code": "aaa",
+      "tax_class_desc": "分类描述"
+    },
+    "vend_info": null,
+    "cust_info": null
+  },
+  "material_info": {
+    "mat_tax_type_info": null,
+    "inv_loc_info": null,
+    "atp_group_info": null,
+    "inv_type_info": {
+      "id": 2000001,
+      "name": "非限制",
+      "code": "10"
+    }
+  }
+}

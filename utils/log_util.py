@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 from typing import Optional, Dict, Any, Union
 from datetime import datetime
+import logging
 
 # Add project root to Python path
 current_file = Path(__file__).resolve()
@@ -62,19 +63,19 @@ class Loggers:
     
     @staticmethod
     def info(msg: str, *args, **kwargs):
-        logger.info(msg, *args, **kwargs)
+        logging.getLogger().info(msg, stacklevel=2, *args, **kwargs)
     
     @staticmethod
     def debug(msg: str, *args, **kwargs):
-        logger.debug(msg, *args, **kwargs)
+        logging.getLogger().debug(msg, stacklevel=2, *args, **kwargs)
     
     @staticmethod
     def warning(msg: str, *args, **kwargs):
-        logger.warning(msg, *args, **kwargs)
+        logging.getLogger().warning(msg, stacklevel=2, *args, **kwargs)
     
     @staticmethod
     def error(msg: str, *args, **kwargs):
-        logger.error(msg, *args, **kwargs)
+        logging.getLogger().error(msg, stacklevel=2, *args, **kwargs)
     
     @staticmethod
     def critical(msg: str, *args, **kwargs):
