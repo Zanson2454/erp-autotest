@@ -1,0 +1,671 @@
+api_params:
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_CF_PAGING_SERV:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_MD_DISABLE_BY_ID_SERV:
+    params:
+      request:
+        id: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_CF_ENABLE_BY_IDS_SERV:
+    params:
+      request:
+        ids:
+        - 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_MD_DISABLE_BY_IDS_SERV:
+    params:
+      request:
+        ids:
+        - 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_CF_ENABLE_BY_IDS_SERV:
+    params:
+      request:
+        ids:
+        - 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_MD_ENABLE_BY_IDS_SERV:
+    params:
+      request:
+        ids:
+        - 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_MD_DELETE_BY_ID_SERV:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        adminEmp: {}
+        dueDate: 0
+        regDate: 0
+        industry: {}
+        remark: null
+        tenantCode: null
+        version: 0
+        shardNo: 0
+        adminName: null
+        enterpriseSize: null
+        createdAt: 0
+        deleted: 0
+        tenantName: null
+        adminUser: {}
+        adminPhone: null
+        createdBy: {}
+        requestId: null
+        tenantId: 0
+        id: 0
+        regChannel: null
+        status: null
+        updatedAt: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_FEATURE_CF_DISABLE_BY_IDS_SERV:
+    params:
+      request:
+        ids:
+        - 0
+  /api/trantor/service/engine/execute/GEN_GM$tenant_query_tenant_admin_modify_info:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        adminEmp: {}
+        dueDate: 0
+        regDate: 0
+        industry: {}
+        remark: null
+        tenantCode: null
+        version: 0
+        shardNo: 0
+        adminName: null
+        enterpriseSize: null
+        createdAt: 0
+        deleted: 0
+        tenantName: null
+        adminUser: {}
+        adminPhone: null
+        createdBy: {}
+        requestId: null
+        tenantId: 0
+        id: 0
+        regChannel: null
+        status: null
+        updatedAt: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_MD_QUERY_BY_ID_SERV:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        adminEmp: {}
+        dueDate: 0
+        regDate: 0
+        industry: {}
+        remark: null
+        tenantCode: null
+        version: 0
+        shardNo: 0
+        adminName: null
+        enterpriseSize: null
+        createdAt: 0
+        deleted: 0
+        tenantName: null
+        adminUser: {}
+        adminPhone: null
+        createdBy: {}
+        requestId: null
+        tenantId: 0
+        id: 0
+        regChannel: null
+        status: null
+        updatedAt: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TRANTOR_MENU_TREE_QUERY_ACTION:
+    params:
+      request:
+        params: {}
+        serviceKey: null
+        teamId: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_MD_DISABLE_BY_IDS_SERV:
+    params:
+      request:
+        ids:
+        - 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_FEATURE_CF_ENABLE_BY_IDS_SERV:
+    params:
+      request:
+        ids:
+        - 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_MD_QUERY_BY_ID_SERV:
+    params:
+      request:
+        id: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_MD_DELETE_BY_ID_SERV:
+    params:
+      request:
+        id: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_FEATURE_CF_DISABLE_BY_ID_SERV:
+    params:
+      request:
+        id: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_CF_ENABLE_BY_ID_SERV:
+    params:
+      request:
+        id: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_CF_DISABLE_BY_ID_SERV:
+    params:
+      request:
+        country: null
+        updatedBy: {}
+        originOrgId: 0
+        cardName: null
+        industry: {}
+        cardDescription: null
+        version: 0
+        createdAt: 0
+        deleted: 0
+        cardIcon: null
+        createdBy: {}
+        featureItems:
+        - {}
+        requestId: null
+        tenantId: 0
+        step: null
+        id: 0
+        cardOrder: 0
+        tenant: {}
+        status: null
+        updatedAt: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_FEATURE_CF_DISABLE_BY_IDS_SERV:
+    params:
+      request:
+        ids:
+        - 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_FEATURE_CF_QUERY_BY_ID_SERV:
+    params:
+      request:
+        id: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_MD_PAGING_SERV:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_FEATURE_CF_DELETE_BY_IDS_SERV:
+    params:
+      request:
+        ids:
+        - 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_MD_ENABLE_BY_ID_SERV:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        adminEmp: {}
+        dueDate: 0
+        regDate: 0
+        industry: {}
+        remark: null
+        tenantCode: null
+        version: 0
+        shardNo: 0
+        adminName: null
+        enterpriseSize: null
+        createdAt: 0
+        deleted: 0
+        tenantName: null
+        adminUser: {}
+        adminPhone: null
+        createdBy: {}
+        requestId: null
+        tenantId: 0
+        id: 0
+        regChannel: null
+        status: null
+        updatedAt: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_CF_DELETE_BY_IDS_SERV:
+    params:
+      request:
+        ids:
+        - 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_CF_DISABLE_BY_IDS_SERV:
+    params:
+      request:
+        ids:
+        - 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_CF_SAVE_SERV:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        cardName: null
+        industry: {}
+        helpPath: null
+        version: 0
+        createdAt: 0
+        helpLabel: null
+        deleted: 0
+        cardIcon: null
+        createdBy: {}
+        featureItems:
+        - {}
+        requestId: null
+        tenantId: 0
+        step: null
+        cardDesc: null
+        id: 0
+        cardOrder: 0
+        status: null
+        updatedAt: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_FEATURE_CF_DELETE_BY_ID_SERV:
+    params:
+      request:
+        id: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_MD_DELETE_BY_IDS_SERV:
+    params:
+      request:
+        ids:
+        - 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_CF_SAVE_SERV:
+    params:
+      request:
+        country: null
+        updatedBy: {}
+        originOrgId: 0
+        cardName: null
+        industry: {}
+        cardDescription: null
+        version: 0
+        createdAt: 0
+        deleted: 0
+        cardIcon: null
+        createdBy: {}
+        featureItems:
+        - {}
+        requestId: null
+        tenantId: 0
+        step: null
+        id: 0
+        cardOrder: 0
+        tenant: {}
+        status: null
+        updatedAt: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_CF_QUERY_BY_ID_SERV:
+    params:
+      request:
+        id: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_FEATURE_CF_DISABLE_BY_ID_SERV:
+    params:
+      request:
+        genTenantGuideCfFeatureItemsId: {}
+        updatedBy: {}
+        originOrgId: 0
+        menuPath: null
+        featureOrder: 0
+        menuName: null
+        version: 0
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        tenantId: 0
+        menuId: 0
+        id: 0
+        guide: {}
+        status: null
+        updatedAt: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_FEATURE_CF_QUERY_BY_ID_SERV:
+    params:
+      request:
+        genTenantGuideCfFeatureItemsId: {}
+        updatedBy: {}
+        originOrgId: 0
+        menuPath: null
+        featureOrder: 0
+        menuName: null
+        version: 0
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        tenantId: 0
+        menuId: 0
+        id: 0
+        guide: {}
+        status: null
+        updatedAt: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_FEATURE_CF_DELETE_BY_ID_SERV:
+    params:
+      request:
+        genTenantGuideCfFeatureItemsId: {}
+        updatedBy: {}
+        originOrgId: 0
+        menuPath: null
+        featureOrder: 0
+        menuName: null
+        version: 0
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        tenantId: 0
+        menuId: 0
+        id: 0
+        guide: {}
+        status: null
+        updatedAt: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_FEATURE_CF_DELETE_BY_IDS_SERV:
+    params:
+      request:
+        ids:
+        - 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_FEATURE_CF_PAGING_SERV:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_CF_DELETE_BY_ID_SERV:
+    params:
+      request:
+        id: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_MD_ENABLE_BY_ID_SERV:
+    params:
+      request:
+        id: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_FEATURE_CF_ENABLE_BY_ID_SERV:
+    params:
+      request:
+        id: 0
+  /api/trantor/service/engine/execute/GEN_GM$QUERY_TENANT_EMPLOYEES_SERV:
+    params:
+      request:
+        tenantId: 0
+        pageable:
+          needTotal: false
+          sortOrders:
+          - {}
+          conditionItems: null
+          pageNo: 1
+          conditionGroup: null
+          pageSize: 20
+          keyword: null
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_FEATURE_CF_SAVE_SERV:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        menuPath: null
+        featureOrder: 0
+        genIndustryGuideCfFeatureItemsId: {}
+        menuName: null
+        version: 0
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        tenantId: 0
+        menuId: null
+        id: 0
+        status: null
+        updatedAt: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_FEATURE_CF_ENABLE_BY_ID_SERV:
+    params:
+      request:
+        genTenantGuideCfFeatureItemsId: {}
+        updatedBy: {}
+        originOrgId: 0
+        menuPath: null
+        featureOrder: 0
+        menuName: null
+        version: 0
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        tenantId: 0
+        menuId: 0
+        id: 0
+        guide: {}
+        status: null
+        updatedAt: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_FEATURE_CF_ENABLE_BY_IDS_SERV:
+    params:
+      request:
+        ids:
+        - 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_CF_QUERY_BY_ID_SERV:
+    params:
+      request:
+        country: null
+        updatedBy: {}
+        originOrgId: 0
+        cardName: null
+        industry: {}
+        cardDescription: null
+        version: 0
+        createdAt: 0
+        deleted: 0
+        cardIcon: null
+        createdBy: {}
+        featureItems:
+        - {}
+        requestId: null
+        tenantId: 0
+        step: null
+        id: 0
+        cardOrder: 0
+        tenant: {}
+        status: null
+        updatedAt: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_CF_INDUSTRY_PAGING_SERV:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+        industry: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_FEATURE_CF_SAVE_SERV:
+    params:
+      request:
+        genTenantGuideCfFeatureItemsId: {}
+        updatedBy: {}
+        originOrgId: 0
+        menuPath: null
+        featureOrder: 0
+        menuName: null
+        version: 0
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        tenantId: 0
+        menuId: 0
+        id: 0
+        guide: {}
+        status: null
+        updatedAt: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TRANTOR_MENU_TREE_QUERY_WITH_AUTH_ACTION:
+    params:
+      request: {}
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_MD_SAVE_SERV:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        adminEmp: {}
+        dueDate: 0
+        regDate: 0
+        industry: {}
+        remark: null
+        tenantCode: null
+        version: 0
+        shardNo: 0
+        adminName: null
+        enterpriseSize: null
+        createdAt: 0
+        deleted: 0
+        tenantName: null
+        adminUser: {}
+        adminPhone: null
+        createdBy: {}
+        requestId: null
+        tenantId: 0
+        id: 0
+        regChannel: null
+        status: null
+        updatedAt: 0
+  /api/trantor/service/engine/execute/GEN_GM$TENANT_CHANGE_ADMIN_SERV:
+    params:
+      request:
+        adminEmpNew: {}
+        tenantName: null
+        adminEmp: {}
+        id: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_MD_PAGING_SERV:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_CF_ENABLE_BY_ID_SERV:
+    params:
+      request:
+        country: null
+        updatedBy: {}
+        originOrgId: 0
+        cardName: null
+        industry: {}
+        cardDescription: null
+        version: 0
+        createdAt: 0
+        deleted: 0
+        cardIcon: null
+        createdBy: {}
+        featureItems:
+        - {}
+        requestId: null
+        tenantId: 0
+        step: null
+        id: 0
+        cardOrder: 0
+        tenant: {}
+        status: null
+        updatedAt: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_CF_DELETE_BY_IDS_SERV:
+    params:
+      request:
+        ids:
+        - 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_CF_PAGING_SERV:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_CF_DISABLE_BY_IDS_SERV:
+    params:
+      request:
+        ids:
+        - 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_MD_DELETE_BY_IDS_SERV:
+    params:
+      request:
+        ids:
+        - 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_GUIDE_CF_DISABLE_BY_ID_SERV:
+    params:
+      request:
+        id: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_MD_DISABLE_BY_ID_SERV:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        adminEmp: {}
+        dueDate: 0
+        regDate: 0
+        industry: {}
+        remark: null
+        tenantCode: null
+        version: 0
+        shardNo: 0
+        adminName: null
+        enterpriseSize: null
+        createdAt: 0
+        deleted: 0
+        tenantName: null
+        adminUser: {}
+        adminPhone: null
+        createdBy: {}
+        requestId: null
+        tenantId: 0
+        id: 0
+        regChannel: null
+        status: null
+        updatedAt: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_MD_SAVE_SERV:
+    params:
+      request:
+        industryName: null
+        updatedBy: {}
+        originOrgId: 0
+        templateTenant: {}
+        industryDesc: null
+        version: 0
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        tenantId: 0
+        id: 0
+        status: null
+        updatedAt: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_TENANT_GUIDE_CF_DELETE_BY_ID_SERV:
+    params:
+      request:
+        country: null
+        updatedBy: {}
+        originOrgId: 0
+        cardName: null
+        industry: {}
+        cardDescription: null
+        version: 0
+        createdAt: 0
+        deleted: 0
+        cardIcon: null
+        createdBy: {}
+        featureItems:
+        - {}
+        requestId: null
+        tenantId: 0
+        step: null
+        id: 0
+        cardOrder: 0
+        tenant: {}
+        status: null
+        updatedAt: 0
+  /api/trantor/service/engine/execute/GEN_GM$GEN_INDUSTRY_MD_ENABLE_BY_IDS_SERV:
+    params:
+      request:
+        ids:
+        - 0

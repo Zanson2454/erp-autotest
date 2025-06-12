@@ -4,7 +4,6 @@ from typing import Generator, List, Dict, Any, Optional, Union, Tuple
 import pymysql
 from pymysql.cursors import DictCursor
 from pymysql.connections import Connection
-from dbutils.pooled_db import PooledDB as Pool
 import json
 from datetime import datetime
 from decimal import Decimal
