@@ -1,0 +1,26 @@
+# 测试环境配置
+erp_env: "test"
+erp_version: "0630"
+trantor_version: "2.5.25.0330.0-SNAPSHOT"
+
+# 基础配置_hyr
+base_url: "https://t-erp-portal-test.app.terminus.io"
+iam_url: "https://t-erp-iam-test.app.terminus.io"
+
+# 认证配置
+tenants:
+  terp:
+    name: "terp"
+    auth:
+      username: ${TEST_AUTH_USERNAME}
+      password: ${TEST_AUTH_PASSWORD}
+
+# 数据库配置
+database:
+  erp_db:
+    host: ${TEST_DB_HOST}
+    port: ${TEST_DB_PORT}
+    user: ${TEST_DB_USER}
+    password: ${TEST_DB_PASSWORD}
+    database: ${TEST_DB_NAME}
+    charset: utf8mb4
