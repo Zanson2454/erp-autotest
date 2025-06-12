@@ -144,7 +144,7 @@ class BaseTest:
             
             # 初始化数据工厂
             data_factory = DataFactory(env_name=env)
-            cls.init_data = data_factory.get_base_data(module="gen") # 获取结构化基础数据
+            cls.init_data = data_factory.get_base_data()
             cls.env_config = data_factory.get_env_config() # 获取环境基础配置
             
             # 登录 并保存 userId
@@ -232,3 +232,5 @@ if __name__ == "__main__":
     # 测试环境初始化
     test = BaseTest()
     test.setup_class()
+    # test = Login(env_name="dev")
+    # test.login()
