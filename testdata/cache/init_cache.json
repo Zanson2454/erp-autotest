@@ -1,129 +1,278 @@
 {
-  "user_info": {},
-  "base_info": {
-    "currency_info": {
+  "currency_info": [
+    {
       "curr_id": 2000001,
       "curr_code": "CNY",
       "curr_name": "人民币"
-    },
-    "country_info": {
+    }
+  ],
+  "country_info": [
+    {
       "coun_id": 14037001,
       "coun_code": "CHINA",
       "coun_name": "中国"
-    },
-    "timezone_info": {
+    }
+  ],
+  "timezone_info": [
+    {
       "timezone_id": 2000001,
       "timezone_code": "UTC-8",
       "timezone_desc": "东八区"
-    },
-    "exchange_rate_type_info": {
+    }
+  ],
+  "exchange_rate_type_info": [
+    {
       "exchange_rate_type_id": 2000001,
       "exchange_rate_type_code": "HR",
       "exchange_rate_type_name": "固定汇率"
+    }
+  ],
+  "cust_tax_type_info": [
+    {
+      "cust_tax_type_id": 2000001,
+      "tax_class_code": "SMB",
+      "tax_class_desc": "小规模纳税人"
     },
-    "uom_info": {
+    {
+      "cust_tax_type_id": 2001001,
+      "tax_class_code": "NORM",
+      "tax_class_desc": "一般纳税人"
+    },
+    {
+      "cust_tax_type_id": 2002001,
+      "tax_class_code": "EXMT",
+      "tax_class_desc": "免征税对象"
+    }
+  ],
+  "uom_info": [
+    {
       "uom_id": 2000001,
       "uom_code": "PC",
       "uom_type": "QTY",
       "uom_desc": "个"
     },
-    "bank_info": {
+    {
+      "uom_id": 2001001,
+      "uom_code": "PAC",
+      "uom_type": "OTHER",
+      "uom_desc": "套"
+    },
+    {
+      "uom_id": 2002009,
+      "uom_code": "BOX",
+      "uom_type": "QTY",
+      "uom_desc": "箱"
+    },
+    {
+      "uom_id": 2002011,
+      "uom_code": "TON",
+      "uom_type": "MASS",
+      "uom_desc": "吨"
+    },
+    {
+      "uom_id": 2002012,
+      "uom_code": "TIME",
+      "uom_type": "MASS",
+      "uom_desc": "次"
+    },
+    {
+      "uom_id": 2004001,
+      "uom_code": "QTY",
+      "uom_type": "QTY",
+      "uom_desc": "件"
+    },
+    {
+      "uom_id": 2004002,
+      "uom_code": "DAY",
+      "uom_type": "TIME",
+      "uom_desc": "天"
+    },
+    {
+      "uom_id": 2004003,
+      "uom_code": "M2",
+      "uom_type": "AREA",
+      "uom_desc": "平方米"
+    },
+    {
+      "uom_id": 2006001,
+      "uom_code": "MON",
+      "uom_type": "TIME",
+      "uom_desc": "月"
+    },
+    {
+      "uom_id": 2007001,
+      "uom_code": "KG",
+      "uom_type": "MASS",
+      "uom_desc": "千克"
+    },
+    {
+      "uom_id": 2009001,
+      "uom_code": "BOTTLE",
+      "uom_type": "QTY",
+      "uom_desc": "瓶"
+    },
+    {
+      "uom_id": 2010001,
+      "uom_code": "MIN",
+      "uom_type": "TIME",
+      "uom_desc": "分钟"
+    },
+    {
+      "uom_id": 2010002,
+      "uom_code": "HOUR",
+      "uom_type": "TIME",
+      "uom_desc": "小时"
+    },
+    {
+      "uom_id": 14047001,
+      "uom_code": "PAIR",
+      "uom_type": "QTY",
+      "uom_desc": "双"
+    },
+    {
+      "uom_id": 14048001,
+      "uom_code": "HANDLE",
+      "uom_type": "QTY",
+      "uom_desc": "把"
+    },
+    {
+      "uom_id": 14049001,
+      "uom_code": "MTQ",
+      "uom_type": "VOL",
+      "uom_desc": "立方米"
+    },
+    {
+      "uom_id": 14050001,
+      "uom_code": "CMT",
+      "uom_type": "L",
+      "uom_desc": "厘米"
+    }
+  ],
+  "bank_info": [
+    {
       "bank_id": 1000001,
       "bank_code": "HB",
       "bank_name": "湖北银行",
       "bank_mne_code": null
-    },
-    "employee_info": {
-      "id": 14082001,
-      "name": "admin"
-    },
-    "sales_channel_info": {
-      "id": 14378001,
-      "code": "AUTOTEST_SLS_DC_ORG",
-      "name": "销售渠道(自动化)"
-    },
-    "so_type_info": {
-      "id": 2101001,
-      "so_type_code": "STND",
-      "so_type_name": "标准销售"
-    },
-    "tax_info": {
-      "id": 2002001,
-      "tax_code": "CN_PUR_01",
-      "taxcate": "J",
-      "tax": 13.0
     }
-  },
-  "org_info": {
-    "com_org_info": {
+  ],
+  "com_org_info": [
+    {
       "id": 14373001,
       "org_code": "AUTOTEST_COM_ORG",
       "org_name": "公司组织(自动化)",
       "org_status": "ENABLED",
       "org_dimension_code": "SCM_ORG_GRP",
       "org_business_type_code": "COM_ORG"
-    },
-    "pur_org_info": {
+    }
+  ],
+  "pur_org_info": [
+    {
       "id": 14376001,
       "org_code": "AUTOTEST_PUR_ORG",
       "org_name": "采购组织(自动化)",
       "org_status": "ENABLED",
       "org_dimension_code": "SCM_ORG_GRP",
       "org_business_type_code": "PUR_ORG"
-    },
-    "inv_org_info": {
+    }
+  ],
+  "inv_org_info": [
+    {
       "id": 14375002,
       "org_code": "AUTOTEST_INV_ORG",
       "org_name": "库存组织(自动化)",
       "org_status": "ENABLED",
       "org_dimension_code": "SCM_ORG_GRP",
       "org_business_type_code": "INV_ORG"
-    },
-    "sls_org_info": {
+    }
+  ],
+  "sls_org_info": [
+    {
       "id": 14377001,
       "org_code": "AUTOTEST_SLS_ORG",
       "org_name": "销售组织(自动化)",
       "org_status": "ENABLED",
       "org_dimension_code": "SCM_ORG_GRP",
       "org_business_type_code": "SLS_ORG"
-    },
-    "pln_org_info": null
-  },
-  "partner_info": {
-    "cust_tax_type_info": {
-      "cust_tax_type_id": 2000001,
-      "tax_class_code": "SMB",
-      "tax_class_desc": "小规模纳税人"
-    },
-    "vend_info": {
-      "id": 2058001,
-      "code": "AUTOTEST_VEND",
-      "name": "供应商(自动化)",
-      "status": "ENABLED"
-    },
-    "cust_info": {
-      "id": 2059001,
-      "code": "AUTOTEST_CUST",
-      "name": "客户(自动化)",
-      "status": "ENABLED"
     }
-  },
-  "material_info": {
-    "inv_loc_info": {
+  ],
+  "pln_org_info": [],
+  "employee_info": [
+    {
+      "id": 14082001,
+      "name": "admin"
+    }
+  ],
+  "sales_channel_info": [
+    {
+      "id": 14378001,
+      "code": "AUTOTEST_SLS_DC_ORG",
+      "name": "销售渠道(自动化)"
+    }
+  ],
+  "inv_loc_info": [
+    {
       "id": 14376002,
       "org_code": "AUTOTEST_INV_LOC_ORG",
       "org_name": "库存地点(自动化)",
       "org_status": "ENABLED",
       "org_dimension_code": "SCM_ORG_GRP",
       "org_business_type_code": "INV_LOC"
-    },
-    "atp_group_info": {
+    }
+  ],
+  "vend_info": [
+    {
+      "id": 2058001,
+      "code": "AUTOTEST_VEND",
+      "name": "供应商(自动化)",
+      "status": "ENABLED"
+    }
+  ],
+  "cust_info": [
+    {
+      "id": 2059001,
+      "code": "AUTOTEST_CUST",
+      "name": "客户(自动化)",
+      "status": "ENABLED"
+    }
+  ],
+  "atp_group_info": [
+    {
       "id": 2000001
-    },
-    "inv_type_info": {
+    }
+  ],
+  "inv_type_info": [
+    {
       "id": 2000001,
       "name": "非限制",
       "code": "10"
     }
-  }
+  ],
+  "so_type_info": [
+    {
+      "id": 2101001,
+      "so_type_code": "STND",
+      "so_type_name": "标准销售"
+    }
+  ],
+  "tax_info": [
+    {
+      "id": 2002001,
+      "tax_code": "CN_PUR_01",
+      "taxcate": "J",
+      "tax": 13.0
+    },
+    {
+      "id": 2002002,
+      "tax_code": "CN_SLS_01",
+      "taxcate": "X",
+      "tax": 13.0
+    },
+    {
+      "id": 2003001,
+      "tax_code": "CN_PUR_02",
+      "taxcate": "J",
+      "tax": 6.0
+    }
+  ]
 }

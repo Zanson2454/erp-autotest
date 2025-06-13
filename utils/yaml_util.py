@@ -41,7 +41,16 @@ class YamlUtil:
             logger.error(f"YAML解析错误: {str(e)}")
             raise
 
-
+    @classmethod
+    def get_project_config(cls, project: str, config_name: str) -> dict:
+        """
+        加载指定项目下的配置文件
+        :param project: 项目名（如 'erp'）
+        :param config_name: 配置文件名（如 'id_mappings.yaml'）
+        :return: 配置字典
+        """
+        file_path = Path(project) / config_name
+        return cls.read_yaml(str(file_path))
 
 if __name__ == "__main__":
     yaml_util = YamlUtil()

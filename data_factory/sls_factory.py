@@ -15,20 +15,19 @@ class SlsDataFactory:
     销售（SLS）专用数据工厂：负责初始化销售域相关的业务常量数据，结构与 sc.json 一致。
     """
     
-    sls_init_path = project_root / "testdata" / "init" / "sls_init.yaml"
     sls_cache_path = project_root / "testdata" / "cache" / "sls_cache.json"
-    read_yaml = YamlUtil.read_yaml
     @classmethod
     def cache_sls_data(cls):
         """
-        读取 sls_init.yaml，执行 SQL，生成业务常量结构并写入 cache/sls_cache.json
+        读取 sls_init_sql.yaml，执行 SQL，生成业务常量结构并写入 cache/sls_cache.json
         结构与 sc.json 一致。
         """
         cls.sls_cache_path.parent.mkdir(exist_ok=True)
         data_factory = DataFactory() 
         db_config = data_factory.get_env_config()['database']['erp_db']
         DBManager.init(db_config)
-        sls_config = cls.read_yaml(str(cls.sls_init_path))["sls_config"]
+        sls_config_full = YamlUtil.get_project_config("erp", "sls_init_sql.yaml")
+        sls_config = sls_config_full.get("sls_config", {})
         result = {}
         
         # 1. 订单类型

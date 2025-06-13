@@ -31,6 +31,7 @@ from data_factory.base import DataFactory
 from utils.yaml_util import YamlUtil
 from utils.exception_util import safe_api_call
 from utils.mysql_util import DBManager
+from data_factory.erp_factory import ErpDataFactory
 
 
 class Login:
@@ -144,8 +145,12 @@ class BaseTest:
             
             # 初始化数据工厂
             data_factory = DataFactory(env_name=env)
-            cls.init_data = data_factory.get_base_data()
+            raw_data = data_factory.get_base_data(project="erp")
             cls.env_config = data_factory.get_env_config() # 获取环境基础配置
+            
+            # 结构化数据和ID提取通过业务工厂实现
+            cls.init_data = ErpDataFactory.get_structured_data(raw_data)
+            cls.ids = ErpDataFactory.extract_ids(cls.init_data)
             
             # 登录 并保存 userId
             cls.login = Login(env)
@@ -153,15 +158,12 @@ class BaseTest:
             cls.user_info = cls.login.get_current_user() # 获取当前用户信息
             if not cls.user_info or "id" not in cls.user_info:
                 raise RuntimeError("user_info 未正确初始化或缺少 id 字段")
- 
             cls.base_headers = cls.login.base_headers
             cls.session = cls.login.session 
             cls.init_data["user_info"] = {"user_info": cls.user_info}
             if not cls.init_data: # 如果基础数据获取失败，则抛出异常
                 raise RuntimeError("基础数据获取失败，请检查数据工厂配置和数据库连接！")
             
-            cls.ids = DataFactory.extract_ids(cls.init_data) # 提取常用ID   
-            logger.info(f"ids: {cls.ids}")
             cls.logger = Loggers() # 初始化日志
             cls.assert_util = AssertHelper() # 初始化断言工具
             cls.mock_util = MockData() # 初始化Mock工具
@@ -174,14 +176,12 @@ class BaseTest:
             DBManager.init(_db_config)
             cls.db=DBManager()
             cls.safe_api_call = safe_api_call # 初始化安全API调用工具
-        
-           
+            
             cls.http = HttpUtil(
                 url=cls.env_config.get("portal_url"),
                 session=cls.session,
                 headers=cls.base_headers
             ) # 初始化HTTP工具
-
             
             logger.info("测试基类初始化完成")
         except Exception as e:

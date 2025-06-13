@@ -188,4 +188,60 @@ db_host = config.get('database.erp_db.host')
 - v1.0.0: 初始版本
   - 实现销售订单创建流程测试
   - 集成 Allure 报告
-  - 添加日志记录功能 
+  - 添加日志记录功能
+
+## 多项目/多环境配置结构与用法
+
+### 目录结构
+```
+config/
+  erp/
+    id_mappings.yaml
+    category_rules.yaml
+    sql_templates.yaml
+  other_project/
+    id_mappings.yaml
+    category_rules.yaml
+    sql_templates.yaml
+  env/
+    dev.yaml
+    test.yaml
+    prod.yaml
+```
+
+### 配置文件示例
+
+**config/erp/id_mappings.yaml**
+```yaml
+user_id: ["user_info", "user_info", "id"]
+so_type_id: ["base_info", "so_type_info", "id"]
+```
+
+**config/other_project/id_mappings.yaml**
+```yaml
+user_id: ["user", "id"]
+order_id: ["order", "id"]
+```
+
+### 加载方法示例
+
+```python
+from utils.yaml_util import YamlUtil
+
+# 加载ERP项目的ID映射
+erp_id_mappings = YamlUtil.get_project_config("erp", "id_mappings.yaml")
+
+# 加载other_project的ID映射
+other_id_mappings = YamlUtil.get_project_config("other_project", "id_mappings.yaml")
+```
+
+### 在BaseTest/DataFactory中动态加载
+
+```python
+import os
+PROJECT = os.getenv("TEST_PROJECT", "erp")
+ENV = os.getenv("TEST_ENV", "dev")
+
+id_mappings = YamlUtil.get_project_config(PROJECT, "id_mappings.yaml")
+env_config = YamlUtil.read_yaml(f"env/{ENV}.yaml")
+``` 

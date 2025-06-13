@@ -2,8 +2,6 @@ from pathlib import Path
 from dotenv import load_dotenv
 import sys
 from typing import Dict, Any, List
-from datetime import datetime
-from decimal import Decimal
 import os
 
 project_root = Path(__file__).parent.parent
@@ -16,147 +14,79 @@ from utils.log_util import Loggers
 
 class SQLInitializer:
     """
-    SQL初始化器：负责从YAML配置读取SQL，执行数据库查询，初始化基础数据，并缓存。
-    用于数据工厂的底层数据准备。
+    通用SQL初始化器：负责从YAML配置读取SQL，执行数据库查询，初始化基础数据，并缓存。
+    仅做通用数据加载，不做结构化、ID提取、分类等业务处理。
     """
     @classmethod
-    def init_sql(cls, config_path: Path, db_config: Dict[str, Any]) -> Dict[str, Any]:
+    def init_sql(cls, sql_config: dict, db_config: Dict[str, Any], cache_key: str = None) -> Dict[str, Any]:
         """
-        初始化SQL数据，优先从缓存获取，否则从YAML读取SQL并执行，写入缓存。
-        :param config_path: SQL配置YAML路径
+        初始化SQL数据，优先从缓存获取，否则执行SQL并写入缓存。
+        :param sql_config: SQL配置（已加载的dict）
         :param db_config: 数据库连接配置
-        :return: 结构化业务数据
+        :param cache_key: 缓存key（可选）
+        :return: 原始业务数据
         """
-        cache_key = str(config_path.stem) + '_cache'
-        CacheUtil.init(str(project_root / 'testdata' / 'cache'))
-        Loggers.init()
-        cache_data = CacheUtil.get(cache_key)
-        if cache_data:
-            Loggers.info("从缓存获取数据成功")
-            return cache_data
-        Loggers.info("缓存数据不存在或已过期，开始初始化数据")
-        init_data = cls._init_sql_impl(config_path, db_config)
-        CacheUtil.set(cache_key, init_data)
-        Loggers.info(f"数据初始化完成并写入缓存: testdata/cache/{cache_key}.json")
-        return init_data
-
-    @staticmethod
-    def _init_sql_impl(config_path: Path, db_config: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        实际执行SQL并分类结果，返回结构化数据。
-        :param config_path: SQL配置YAML路径
-        :param db_config: 数据库连接配置
-        :return: 结构化业务数据
-        """
-        config = YamlUtil.read_yaml(str(config_path))
-        if not config:
-            raise ValueError(f"配置文件为空: {config_path}")
-        # 初始化各业务分类
-        init_data = {
-            "user_info": {},
-            "base_info": {},
-            "org_info": {},
-            "partner_info": {},
-            "material_info": {}
-        }
+        if cache_key:
+            CacheUtil.init(str(project_root / 'testdata' / 'cache'))
+            cache_data = CacheUtil.get(cache_key)
+            if cache_data:
+                Loggers.info("从缓存获取数据成功")
+                return cache_data
+            Loggers.info("缓存数据不存在或已过期，开始初始化数据")
         DBManager.init(db_config)
-        for query_key, query_config in config.get('base_info', {}).items():
+        result_data = {}
+        for key, item in sql_config.items():
+            sql = item.get('sql', '')
+            Loggers.info(f"准备执行SQL: {key} -> {sql}")
+            if not sql:
+                continue
             try:
-                sql = query_config.get('sql', '')
-                if not sql:
-                    continue
-                # 只支持无参数SQL，如需参数化可扩展
                 result = DBManager.query(sql)
-                formatted_result = SQLInitializer._format_result(result)
-                category = SQLInitializer._get_result_category(query_key)
-                init_data[category][query_key] = formatted_result[0] if formatted_result else None
+                Loggers.info(f"SQL执行结果: {key} -> {result}")
+                result_data[key] = result
             except Exception as e:
-                Loggers.error(f"执行查询 {query_key} 时出错: {str(e)}")
-                raise
-        return init_data
-
-    @staticmethod
-    def _format_result(result: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """
-        格式化SQL查询结果，处理Decimal和datetime类型，便于序列化。
-        :param result: 查询结果
-        :return: 格式化后的结果
-        """
-        if not result:
-            return []
-        return [{
-            key: float(value) if isinstance(value, Decimal)
-            else value.isoformat() if isinstance(value, datetime)
-            else value
-            for key, value in row.items()
-        } for row in result]
-
-    @staticmethod
-    def _get_result_category(query_key: str) -> str:
-        """
-        根据key归类到base_info/org_info/partner_info/material_info等。
-        :param query_key: 查询key
-        :return: 分类名
-        """
-        if any(x in query_key for x in [
-            'group_org', 'adm_org', 'com_org', 'pur_org', 'inv_org', 'sls_org', 'dept_org', 'pln_org']):
-            return 'org_info'
-        elif any(x in query_key for x in [
-            'vend', 'cust', 'partner', 'cust_tax_type']):
-            return 'partner_info'
-        elif any(x in query_key for x in [
-            'mat', 'atp', 'inv_loc', 'inv_type', 'mat_tax_type']):
-            return 'material_info'
-        return 'base_info'
+                Loggers.error(f"执行查询 {key} 时出错: {str(e)}")
+                result_data[key] = None
+        if not result_data:
+            Loggers.warning("所有SQL查询均未返回数据，请检查数据库连接和SQL配置！")
+        if cache_key:
+            CacheUtil.set(cache_key, result_data)
+            Loggers.info(f"数据初始化完成并写入缓存: testdata/cache/{cache_key}.json")
+        return result_data
 
 class DataFactory:
     """
-    通用数据工厂，统一管理测试用例所需的业务数据，支持数据获取、造数、清理、结构化、ID提取等能力。
-    用例、BaseTest、业务工厂均可通过本类统一获取和管理数据。
+    通用数据工厂，仅负责数据加载、SQL执行、缓存、环境配置加载。
+    结构化、ID提取、分类等业务逻辑由业务工厂实现。
     """
     _initialized = False
     _env_config = None
 
+   
     @classmethod
-    def __init__(cls, env_name="test",db_config_name="erp_db"):
-        """
-        初始化环境配置，加载.env和YAML，递归替换环境变量，合并db_config。
-        :param env_name: 环境名（如test/dev/prod）
-        """
+    def __init__(cls, env_name="test", db_config_name="erp_db"):
         if not cls._initialized:
             env_file = project_root / '.env'
             yaml_file = project_root / 'config' / 'env' / f'{env_name}.yaml'
-
-            # 1. 加载.env环境变量
+            # 加载.env环境变量
             if env_file.exists():
                 load_dotenv(env_file, override=True)
                 Loggers.info(f"已加载环境变量文件: {env_file}")
             else:
                 Loggers.error(f"环境变量文件不存在: {env_file}")
-
-            # 2. 加载YAML配置
+            # 加载YAML配置
             if yaml_file.exists():
                 YamlUtil.init("config")
                 config = YamlUtil.read_yaml(f"env/{env_name}.yaml")
+                DataFactory._replace_env_vars(config)  # 递归替换
                 Loggers.info(f"已加载YAML配置文件: {yaml_file}")
-                # 3. 递归替换环境变量
-                cls._replace_env_vars(config)
+                cls._env_config = config
             else:
                 Loggers.warning(f"YAML配置文件不存在: {yaml_file}")
                 config = {}
-
-            # 4. 合并db_config（变量名需与YAML一致）
-            db_config = {
-                "host": os.environ.get(f"{env_name.upper()}_DB_HOST"),
-                "port": int(os.environ.get(f"{env_name.upper()}_DB_PORT", 3306)),
-                "user": os.environ.get(f"{env_name.upper()}_DB_USER"),
-                "password": os.environ.get(f"{env_name.upper()}_DB_PASSWORD"),
-                "database": os.environ.get(f"{env_name.upper()}_DB_NAME"),
-                "charset": os.environ.get("DB_CHARSET", "utf8mb4")
-            }
-            config["database"][db_config_name] = db_config
-            cls._env_config = config
+                cls._env_config = config
             cls._initialized = True
+
 
     @staticmethod
     def _replace_env_vars(config: dict):
@@ -176,6 +106,8 @@ class DataFactory:
                 else:
                     Loggers.warning(f"环境变量未定义: {env_var}")
 
+
+
     @classmethod
     def get_env_config(cls):
         """
@@ -185,101 +117,33 @@ class DataFactory:
         return cls._env_config
 
     @classmethod
-    def get_base_data(cls,db_config_name="erp_db"):
+    def get_base_data(cls, project="erp", db_config_name="erp_db", cache_key="init_cache"):
         """
-        获取指定模块的基础数据，优先读缓存，否则自动初始化并写入缓存。
-        :param module: 业务模块名（如gen/fin/prd等）
-        :return: 结构化业务数据
+        获取指定项目的基础数据，优先读缓存，否则自动初始化并写入缓存。
+        :param project: 项目名（如erp/other_project）
+        :param db_config_name: 数据库配置名
+        :param cache_key: 缓存key
+        :return: 原始业务数据（未结构化）
         """
-        data = CacheUtil.get('init_cache')
+        data = CacheUtil.get(cache_key)
         if not data:
-            yaml_path = Path(__file__).parent.parent / 'testdata' / 'init' / 'init.yaml'
+            sql_config_full = YamlUtil.get_project_config(project, "base_init_sql.yaml")
+            sql_config = sql_config_full.get("base_info", {})  # 只取 base_info 层
+            Loggers.info(f"加载SQL配置keys: {list(sql_config.keys())}")
             db_config = cls._env_config["database"][db_config_name]
-            data = SQLInitializer.init_sql(yaml_path, db_config)
-            CacheUtil.set('init_cache', data)
+            data = SQLInitializer.init_sql(sql_config, db_config, cache_key=cache_key)
+            Loggers.info(f"写入缓存内容: {data}")
+            CacheUtil.set(cache_key, data)
         return data
 
     @classmethod
-    def init_sql_data(cls, config_path: Path, db_config: Dict[str, Any]) -> Dict[str, Any]:
+    def get_env_config_by_name(cls, env_name="test"):
         """
-        直接初始化指定SQL配置的数据（兼容老接口）。
-        :param config_path: SQL配置YAML路径
-        :param db_config: 数据库连接配置
-        :return: 结构化业务数据
+        获取指定环境的配置
+        :param env_name: 环境名
+        :return: 环境配置字典
         """
-        return SQLInitializer.init_sql(config_path, db_config)
-
-    @staticmethod
-    def process_init_data(init_data: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        结构化原始init_data，便于用例直接取用。
-        :param init_data: 原始数据
-        :return: 结构化数据
-        """
-        return {
-            "user_info": {"user_info": init_data.get("base_info", {}).get("user_info", {})},
-            "base_info": {
-                "so_type_info": init_data.get("base_info", {}).get("so_type_info", {}),
-                "sales_channel_info": init_data.get("base_info", {}).get("sales_channel_info", {}),
-                "exchange_rate_type_info": init_data.get("base_info", {}).get("exchange_rate_type_info", {}),
-                "currency_info": init_data.get("base_info", {}).get("currency_info", {})
-            },
-            "org_info": {
-                "sls_org_info": init_data.get("org_info", {}).get("sls_org_info", {}),
-                "pur_org_info": init_data.get("org_info", {}).get("pur_org_info", {}),
-                "inv_org_info": init_data.get("org_info", {}).get("inv_org_info", {}),
-                "com_org_info": init_data.get("org_info", {}).get("com_org_info", {})
-            },
-            "partner_info": {
-                "cust_info": init_data.get("partner_info", {}).get("cust_info", {})
-            },
-            "material_info": {
-                "inv_loc_info": init_data.get("material_info", {}).get("inv_loc_info", {})
-            }
-        }
-
-    @staticmethod
-    def extract_ids(structured_data: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        从结构化数据中提取常用ID，便于用例参数化。
-        :param structured_data: 结构化数据
-        :return: ID映射字典
-        """
-        id_mappings = {
-            'user_id': ('user_info', 'user_info', 'id'),
-            'cust_id': ('partner_info', 'cust_info', 'id'),
-            'so_type_id': ('base_info', 'so_type_info', 'id'),
-            'sls_org_id': ('org_info', 'sls_org_info', 'id'),
-            'pur_org_id': ('org_info', 'pur_org_info', 'id'),
-            'inv_org_id': ('org_info', 'inv_org_info', 'id'),
-            'com_org_id': ('org_info', 'com_org_info', 'id'),
-            'sls_dc_id': ('base_info', 'sales_channel_info', 'id'),
-            'inv_loc_id': ('material_info', 'inv_loc_info', 'id'),
-            'exchange_rate_type_id': ('base_info', 'exchange_rate_type_info', 'exchange_rate_type_id'),
-            'base_curr_id': ('base_info', 'currency_info', 'curr_id'),
-            'sls_curr_id': ('base_info', 'currency_info', 'curr_id')
-        }
-        ids = {}
-        for attr_name, path in id_mappings.items():
-            value = structured_data
-            for key in path:
-                if value is None:
-                    print(f"[extract_ids] value is None before get('{key}'), keys链：{path}")
-                    raise Exception(f"extract_ids: value is None at key={key}, keys链={path}")
-                value = value.get(key, {})
-            ids[attr_name] = value
-        print(f"ids: {ids}")
-        return ids
-
-    @classmethod
-    def clear_test_data(cls, data_type, **kwargs):
-        """
-        清理测试数据（预留接口，便于后续扩展）。
-        :param data_type: 数据类型
-        :param kwargs: 其他参数
-        """
-        # TODO: 实现数据清理逻辑
-        pass
+        return YamlUtil.read_yaml(f"env/{env_name}.yaml")
 
     @classmethod
     def set_cache_data(cls, cache_key, data):
