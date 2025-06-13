@@ -41,14 +41,12 @@ class TestOrderList(BaseTest,SlsBase):
         url = self.sls_api_paths["订单管理"]["查询订单"]
         data = self.sls_api_params[url]
         response = self.http.post(url, json=data, description="查询销售订单列表")
-        self.logger.info(f"接口原始响应: {json.dumps(response, ensure_ascii=False, indent=2)}")
-        
+     
         orders = response.get("data", {}).get("data", {}).get("data", [])
         if not orders:
             self.logger.error("查询结果为空，未获取到任何订单数据")
             pytest.fail("查询结果为空，未获取到任何订单数据")
         order = orders[0]
-        
         # 提取测试数据并验证
         self.test_data["so_code"] = order.get("soCode")
         self.test_data["so_type_id"] = order.get("soTypeId", {}).get("id") if order.get("soTypeId") else None
@@ -226,7 +224,7 @@ class TestOrderList(BaseTest,SlsBase):
                                         "type": "ConstValue",
                                         "fieldType": "Object",
                                         "valueType": "CONST",
-                                        "constValue": self.ids.get("user_id")
+                                        "constValue": self.user_info['id']
                                     }
                                 }
                             ]
@@ -274,6 +272,7 @@ class TestOrderList(BaseTest,SlsBase):
             
         url = self.sls_api_paths["订单管理"]["查询订单"]
         data = self.sls_api_params[url]
+        print(f"self.test_data['so_type_id']: {self.test_data['so_type_id']}")
         conditionGroup = {
             "type": "ConditionGroup",
             "logicOperator": "AND",
@@ -454,14 +453,12 @@ class TestOrderList(BaseTest,SlsBase):
 if __name__ == "__main__":
     test = TestOrderList()
     test.setup_class()
-    test.test_01_query_orders()
-    test.test_02_query_orders_by_so_code()
-    test.test_03_query_orders_by_status("DRAFT")
-    test.test_03_query_orders_by_status("EFFECT")
-    test.test_03_query_orders_by_status("APPROVING")
-    test.test_03_query_orders_by_status("CANCELLED")
-    test.test_04_query_orders_by_so_type()
-    test.test_05_query_orders_by_customer()
+    test._query_orders()
+    # test.test_01_query_orders_by_so_code()
+    # test.test_02_query_orders_by_status("DRAFT")
+    # test.test_03_query_orders_by_so_type()
+    # test.test_04_query_orders_by_customer()
+
    # project_root = Path(__file__).resolve().parent.parent
    # allure_dir = Path(project_root) / "reports" / "allure-results"
    # pytest.main(["-v", __file__, f"--alluredir={allure_dir}", "--env=test"])
