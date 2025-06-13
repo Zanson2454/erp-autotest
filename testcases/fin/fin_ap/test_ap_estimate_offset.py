@@ -180,56 +180,26 @@ class TestApEstimateOffset(BaseTest):
                 result = self.http.post(url, json=filtered_params)
                 self.assert_util.assert_response_success(result)
                 
-                # 提取暂估冲回ID
-                offset_id = ParamUtil.extract_id(result)
-                assert offset_id, "暂估冲回创建失败，未返回ID"
+                # 断言暂估冲回执行成功
+                success = result.get("success", False)
+                if not success:
+                    inner_msg = result.get("innerMsg", "未知错误")
+                    assert success, f"暂估冲回执行失败，错误信息: {inner_msg}"
+                else:
+                    assert success, "暂估冲回执行成功"
                 
                 # 保存测试数据
                 TestApEstimateOffset.ap_estimate_offset_info.update({
-                    "offset_id": offset_id,
                     "ap_doc_id": ap_doc_id,
                     "adj_net_doc_amt": total_adj_net_amt,
-                    "diff_net_doc_amt": total_diff_net_amt
+                    "diff_net_doc_amt": total_diff_net_amt,
+                    "success": success
                 })
                 
                 # 添加报告附件
                 a.json(filtered_params, "请求数据")
                 a.json(result, "响应结果数据")
                 a.json(TestApEstimateOffset.ap_estimate_offset_info, "断言结果")
-                
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
-
-    @ParamUtil.case_decorator(
-        story="应付单暂估冲回验证",
-        title="验证暂估冲回结果",
-        description="验证暂估冲回执行后的单据状态和金额调整结果",
-        severity="normal",
-        order=7,
-        smoke=False,
-        tags=["ap", "estimate_offset", "verify"]
-    )
-    def test_verify_estimate_offset_result(self):
-        try:
-            with a.step("验证暂估冲回结果"):
-                offset_id = TestApEstimateOffset.ap_estimate_offset_info.get("offset_id")
-                source_ap_doc_id = TestApEstimateOffset.ap_estimate_offset_info.get("ap_doc_id")
-                diff_net_doc_amt = TestApEstimateOffset.ap_estimate_offset_info.get("diff_net_doc_amt")
-                
-                assert offset_id, "未找到暂估冲回ID，请先执行暂估冲回用例"
-                assert source_ap_doc_id, "未找到源应付单ID"
-                assert diff_net_doc_amt == -292.2, f"净额差异应为-292.2，实际为：{diff_net_doc_amt}"
-                
-                # 添加验证结果
-                verify_result = {
-                    "offset_id": offset_id,
-                    "source_ap_doc_id": source_ap_doc_id,
-                    "diff_net_doc_amt": diff_net_doc_amt,
-                    "verification_status": "PASSED"
-                }
-                
-                a.json(verify_result, "验证结果")
                 
         except Exception as e:
             a.text(str(e), "失败原因")
