@@ -14,6 +14,7 @@ import decimal
 
 # 工具：递归将Decimal转float
 def _convert_decimal_to_float(obj):
+    """递归转换Decimal类型为float"""
     if isinstance(obj, dict):
         return {k: _convert_decimal_to_float(v) for k, v in obj.items()}
     elif isinstance(obj, list):
