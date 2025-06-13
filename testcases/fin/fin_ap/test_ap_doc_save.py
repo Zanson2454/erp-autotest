@@ -288,52 +288,51 @@ class TestApDocumentSave(BaseTest):
                     a.json(query_params, "状态查询请求")
                     a.json(query_result, "状态查询结果")
                     a.text("应付单状态已经是DONE，跳过过账步骤", "过账结果")
-                    return
-                
-                assert current_ap_status == "CONFIRM", f"应付单状态应为CONFIRM，实际为：{current_ap_status}"
-                api_path = ParamUtil.get_api_path(self.apis, "应付单-过账-异步服务")
-                params, url = ParamUtil.get_api_params(self.api_params, api_path)
-                filtered_params = ParamUtil.filter_post_body_fields(
-                    params,
-                    ["apHeadCode", "docTypeId", "apStatus", "comOrgId", "purOrgId", "payOrgId", "settPartnerType", "settPartnerId", "docCurrId", "baseCurrId", "exchRate", "grossDocAmt", "netDocAmt", "grossBaseAmt", "netBaseAmt", "payClearingStatus", "invClearingStatus", "unpaidDocAmt", "uninvoicedDocAmt", "unpaidBaseAmt", "uninvoicedBaseAmt", "unoffsetDocAmt", "unoffsetBaseAmt", "headOffsetStatus", "asyncExecutionStatus", "id"],
-                    ["params", "request"]
-                )
-                pur_org_id = TestApDocumentSave.ap_save_info.get("purOrgId")
-                ParamUtil.set_request_params(filtered_params, {
-                    "apHeadCode": ap_head_code,
-                    "docTypeId": {"id": 2002001},
-                    "apStatus": current_ap_status,  # 使用动态查询到的状态
-                    "comOrgId": pay_org_id,
-                    "purOrgId": pur_org_id,
-                    "payOrgId": pay_org_id,
-                    "settPartnerType": "SUPPLIER",
-                    "settPartnerId": {"id": sett_partner_id["id"]},
-                    "docCurrId": {"id": pay_org_id["id"]},
-                    "baseCurrId": {"id": pay_org_id["id"]},
-                    "exchRate": 1,
-                    "grossDocAmt": total_amt,
-                    "netDocAmt": net_doc_amt,
-                    "grossBaseAmt": gross_base_amt,
-                    "netBaseAmt": net_base_amt,
-                    "payClearingStatus": "UNCLEARED",
-                    "invClearingStatus": "UNCLEARED",
-                    "unpaidDocAmt": total_amt,
-                    "uninvoicedDocAmt": total_amt,
-                    "unpaidBaseAmt": net_base_amt,
-                    "uninvoicedBaseAmt": net_base_amt,
-                    "unoffsetDocAmt": total_amt,
-                    "unoffsetBaseAmt": total_amt,
-                    "headOffsetStatus": "UNOFFSET",
-                    "asyncExecutionStatus": "CREATED",
-                    "id": ap_doc_id
-                })
-                filtered_params = _convert_decimal_to_float(filtered_params)
-                result = self.http.post(url, json=filtered_params)
-                self.assert_util.assert_response_success(result)
-                a.json(query_params, "状态查询请求")
-                a.json(query_result, "状态查询结果")
-                a.json(filtered_params, "过账请求数据")
-                a.json(result, "过账响应结果")
+                else:
+                    assert current_ap_status == "CONFIRM", f"应付单状态应为CONFIRM，实际为：{current_ap_status}"
+                    api_path = ParamUtil.get_api_path(self.apis, "应付单-过账-异步服务")
+                    params, url = ParamUtil.get_api_params(self.api_params, api_path)
+                    filtered_params = ParamUtil.filter_post_body_fields(
+                        params,
+                        ["apHeadCode", "docTypeId", "apStatus", "comOrgId", "purOrgId", "payOrgId", "settPartnerType", "settPartnerId", "docCurrId", "baseCurrId", "exchRate", "grossDocAmt", "netDocAmt", "grossBaseAmt", "netBaseAmt", "payClearingStatus", "invClearingStatus", "unpaidDocAmt", "uninvoicedDocAmt", "unpaidBaseAmt", "uninvoicedBaseAmt", "unoffsetDocAmt", "unoffsetBaseAmt", "headOffsetStatus", "asyncExecutionStatus", "id"],
+                        ["params", "request"]
+                    )
+                    pur_org_id = TestApDocumentSave.ap_save_info.get("purOrgId")
+                    ParamUtil.set_request_params(filtered_params, {
+                        "apHeadCode": ap_head_code,
+                        "docTypeId": {"id": 2002001},
+                        "apStatus": current_ap_status,  # 使用动态查询到的状态
+                        "comOrgId": pay_org_id,
+                        "purOrgId": pur_org_id,
+                        "payOrgId": pay_org_id,
+                        "settPartnerType": "SUPPLIER",
+                        "settPartnerId": {"id": sett_partner_id["id"]},
+                        "docCurrId": {"id": pay_org_id["id"]},
+                        "baseCurrId": {"id": pay_org_id["id"]},
+                        "exchRate": 1,
+                        "grossDocAmt": total_amt,
+                        "netDocAmt": net_doc_amt,
+                        "grossBaseAmt": gross_base_amt,
+                        "netBaseAmt": net_base_amt,
+                        "payClearingStatus": "UNCLEARED",
+                        "invClearingStatus": "UNCLEARED",
+                        "unpaidDocAmt": total_amt,
+                        "uninvoicedDocAmt": total_amt,
+                        "unpaidBaseAmt": net_base_amt,
+                        "uninvoicedBaseAmt": net_base_amt,
+                        "unoffsetDocAmt": total_amt,
+                        "unoffsetBaseAmt": total_amt,
+                        "headOffsetStatus": "UNOFFSET",
+                        "asyncExecutionStatus": "CREATED",
+                        "id": ap_doc_id
+                    })
+                    filtered_params = _convert_decimal_to_float(filtered_params)
+                    result = self.http.post(url, json=filtered_params)
+                    self.assert_util.assert_response_success(result)
+                    a.json(query_params, "状态查询请求")
+                    a.json(query_result, "状态查询结果")
+                    a.json(filtered_params, "过账请求数据")
+                    a.json(result, "过账响应结果")
         except Exception as e:
             a.text(str(e), "失败原因")
             raise

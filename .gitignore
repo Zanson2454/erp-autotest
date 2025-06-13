@@ -78,7 +78,6 @@ reports/allure-results/*
 !reports/allure-results/.gitkeep
 
 reports/allure-report/*
-<<<<<<< HEAD
 !reports/allure-report/.gitkeep
 
 # 忽略正在调试的用例

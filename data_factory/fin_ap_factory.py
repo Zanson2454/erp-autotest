@@ -1,6 +1,6 @@
 from pathlib import Path
 import sys
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 from datetime import datetime
 from decimal import Decimal
 
@@ -45,34 +45,61 @@ class FinApFactory:
         else:
             return obj
 
+    @staticmethod
+    def _to_timestamp(dt):
+        """统一的时间戳转换函数"""
+        if isinstance(dt, datetime):
+            return int(dt.timestamp() * 1000)
+        if isinstance(dt, str):
+            try:
+                return int(datetime.strptime(dt[:19], "%Y-%m-%dT%H:%M:%S").timestamp() * 1000)
+            except:
+                return dt
+        return dt
+
+    def _build_common_fields(self, obj: Dict[str, Any]) -> Dict[str, Any]:
+        """构建通用字段映射"""
+        return {
+            "id": obj["id"],
+            "createdBy": {"id": obj.get("created_by")},
+            "updatedBy": {"id": obj.get("updated_by")},
+            "createdAt": self._to_timestamp(obj.get("created_at")),
+            "updatedAt": self._to_timestamp(obj.get("updated_at")),
+            "version": obj.get("version"),
+            "deleted": obj.get("deleted"),
+            "originOrgId": obj.get("origin_org_id"),
+        }
+
+    def _query_single_record(self, table: str, condition: str, params: List[Any]) -> Optional[Dict[str, Any]]:
+        """通用的单条记录查询方法"""
+        sql = f"""
+            SELECT * FROM {table} 
+            WHERE deleted = 0 
+            AND {condition}
+        """
+        result = DBManager.query(sql, params)
+        return result[0] if result else None
+
     def create_org(self, org_type: str) -> Dict[str, Any]:
         """
         创建组织
         :param org_type: 组织类型（COM-公司组织, PUR-采购组织）
         :return: 组织数据
         """
-        sql = """
-            SELECT * FROM org_struct_md 
-            WHERE deleted = 0 
-            AND org_code LIKE %s
-        """
-        params = [f'AUTOTEST_{org_type}_ORG%']
-        result = DBManager.query(sql, params)
-        org = result[0]
-        def to_ts(dt):
-            if isinstance(dt, datetime):
-                return int(dt.timestamp() * 1000)
-            if isinstance(dt, str):
-                try:
-                    return int(datetime.strptime(dt[:19], "%Y-%m-%dT%H:%M:%S").timestamp() * 1000)
-                except:
-                    return dt
-            return dt
-        # 补全页面json需要的字段
-        return {
+        org = self._query_single_record(
+            "org_struct_md", 
+            "org_code LIKE %s", 
+            [f'AUTOTEST_{org_type}_ORG%']
+        )
+        
+        if not org:
+            raise ValueError(f"未找到类型为 {org_type} 的组织数据")
+        
+        # 构建组织特有字段
+        org_fields = {
             "orgCode": org["org_code"],
             "orgName": org["org_name"],
-            "orgEnableDate": to_ts(org.get("org_enable_date")),
+            "orgEnableDate": self._to_timestamp(org.get("org_enable_date")),
             "orgStatus": org.get("org_status"),
             "isLeaf": org.get("is_leaf", False),
             "orgBusinessTypeId": {"id": org.get("org_business_type_id")},
@@ -83,181 +110,138 @@ class FinApFactory:
             "orgBusinessTypeIds": org.get("org_business_type_ids"),
             "orgBusinessTypeCodes": org.get("org_business_type_codes"),
             "path": org.get("path"),
-            "id": org["id"],
-            "createdBy": {"id": org.get("created_by")},
-            "updatedBy": {"id": org.get("updated_by")},
-            "createdAt": to_ts(org.get("created_at")),
-            "updatedAt": to_ts(org.get("updated_at")),
-            "version": org.get("version"),
-            "deleted": org.get("deleted"),
-            "originOrgId": org.get("origin_org_id"),
         }
+        
+        # 合并通用字段
+        org_fields.update(self._build_common_fields(org))
+        return org_fields
 
     def create_vendor(self) -> Dict[str, Any]:
         """创建供应商"""
-        sql = """
-            SELECT * FROM gen_vend_info_md 
-            WHERE deleted = 0 
-            AND vend_code LIKE 'AUTOTEST_VEND%'
-        """
-        result = DBManager.query(sql)
-        vend = result[0]
-        def to_ts(dt):
-            if isinstance(dt, datetime):
-                return int(dt.timestamp() * 1000)
-            if isinstance(dt, str):
-                try:
-                    return int(datetime.strptime(dt[:19], "%Y-%m-%dT%H:%M:%S").timestamp() * 1000)
-                except:
-                    return dt
-            return dt
-        return {
+        vend = self._query_single_record(
+            "gen_vend_info_md", 
+            "vend_code LIKE %s", 
+            ['AUTOTEST_VEND%']
+        )
+        
+        if not vend:
+            raise ValueError("未找到供应商数据")
+        
+        # 构建供应商特有字段
+        vend_fields = {
             "vendCode": vend["vend_code"],
             "name": vend["name"],
             "status": vend["status"],
             "vendCateType": vend.get("vend_cate_type"),
             "vendType": {"id": vend.get("vend_type_id")},
             "com": {"id": vend.get("com_id")},
-            "id": vend["id"],
-            "createdBy": {"id": vend.get("created_by")},
-            "updatedBy": {"id": vend.get("updated_by")},
-            "createdAt": to_ts(vend.get("created_at")),
-            "updatedAt": to_ts(vend.get("updated_at")),
-            "version": vend.get("version"),
-            "deleted": vend.get("deleted"),
-            "originOrgId": vend.get("origin_org_id"),
             "vendCateId": vend.get("vend_cate_id"),
             "vendPersonLink": vend.get("vend_person_link"),
         }
+        
+        # 合并通用字段
+        vend_fields.update(self._build_common_fields(vend))
+        return vend_fields
 
     def create_currency(self) -> Dict[str, Any]:
         """创建币种"""
-        sql = """
-            SELECT * FROM gen_curr_type_cf 
-            WHERE deleted = 0 
-            AND curr_name = '人民币'
-        """
-        result = DBManager.query(sql)
-        curr = result[0]
-        def to_ts(dt):
-            if isinstance(dt, datetime):
-                return int(dt.timestamp() * 1000)
-            if isinstance(dt, str):
-                try:
-                    return int(datetime.strptime(dt[:19], "%Y-%m-%dT%H:%M:%S").timestamp() * 1000)
-                except:
-                    return dt
-            return dt
-        return {
+        curr = self._query_single_record(
+            "gen_curr_type_cf", 
+            "curr_name = %s", 
+            ['人民币']
+        )
+        
+        if not curr:
+            raise ValueError("未找到人民币币种数据")
+        
+        # 构建币种特有字段
+        curr_fields = {
             "currCode": curr["curr_code"],
             "currName": curr["curr_name"],
             "symbol": curr["symbol"],
             "remark": curr["remark"],
-            "id": curr["id"],
-            "createdBy": {"id": curr.get("created_by")},
-            "updatedBy": {"id": curr.get("updated_by")},
-            "createdAt": to_ts(curr.get("created_at")),
-            "updatedAt": to_ts(curr.get("updated_at")),
-            "version": curr.get("version"),
-            "deleted": curr.get("deleted"),
-            "originOrgId": curr.get("origin_org_id"),
         }
+        
+        # 合并通用字段
+        curr_fields.update(self._build_common_fields(curr))
+        return curr_fields
 
     def create_tax_code(self) -> Dict[str, Any]:
         """创建税码"""
-        sql = """
-            SELECT * FROM gen_tax_type_cf 
-            WHERE deleted = 0 
-            AND tax = 13
-        """
-        result = DBManager.query(sql)
-        tax = result[0]
-        def to_ts(dt):
-            if isinstance(dt, datetime):
-                return int(dt.timestamp() * 1000)
-            if isinstance(dt, str):
-                try:
-                    return int(datetime.strptime(dt[:19], "%Y-%m-%dT%H:%M:%S").timestamp() * 1000)
-                except:
-                    return dt
-            return dt
-        return {
+        tax = self._query_single_record(
+            "gen_tax_type_cf", 
+            "tax = %s", 
+            [13]
+        )
+        
+        if not tax:
+            raise ValueError("未找到税率为13%的税码数据")
+        
+        # 构建税码特有字段
+        tax_fields = {
             "taxCode": tax["tax_code"],
             "taxcate": tax["taxcate"],
             "tax": tax["tax"],
-            "id": tax["id"],
-            "createdBy": {"id": tax.get("created_by")},
-            "updatedBy": {"id": tax.get("updated_by")},
-            "createdAt": to_ts(tax.get("created_at")),
-            "updatedAt": to_ts(tax.get("updated_at")),
-            "version": tax.get("version"),
-            "deleted": tax.get("deleted"),
-            "originOrgId": tax.get("origin_org_id"),
         }
+        
+        # 合并通用字段
+        tax_fields.update(self._build_common_fields(tax))
+        return tax_fields
 
     def create_material(self) -> Dict[str, Any]:
         """创建物料"""
-        sql = """
-            SELECT * FROM gen_mat_md 
-            WHERE deleted = 0 
-            AND mat_code LIKE 'AUTOTEST_MAT%'
-        """
-        result = DBManager.query(sql)
-        mat = result[0]
-        def to_ts(dt):
-            if isinstance(dt, datetime):
-                return int(dt.timestamp() * 1000)
-            if isinstance(dt, str):
-                try:
-                    return int(datetime.strptime(dt[:19], "%Y-%m-%dT%H:%M:%S").timestamp() * 1000)
-                except:
-                    return dt
-            return dt
-        return {
+        mat = self._query_single_record(
+            "gen_mat_md", 
+            "mat_code LIKE %s", 
+            ['AUTOTEST_MAT%']
+        )
+        
+        if not mat:
+            raise ValueError("未找到物料数据")
+        
+        # 构建物料特有字段
+        mat_fields = {
             "matCode": mat["mat_code"],
             "matName": mat["mat_name"],
             "status": mat["status"],
-            "id": mat["id"],
-            "createdBy": {"id": mat.get("created_by")},
-            "updatedBy": {"id": mat.get("updated_by")},
-            "createdAt": to_ts(mat.get("created_at")),
-            "updatedAt": to_ts(mat.get("updated_at")),
-            "version": mat.get("version"),
-            "deleted": mat.get("deleted"),
-            "originOrgId": mat.get("origin_org_id"),
         }
+        
+        # 合并通用字段
+        mat_fields.update(self._build_common_fields(mat))
+        return mat_fields
 
     def create_ap_item(self, mat, tax_code, sett_item_type=None, amount=5000, qty=10, price=500, tax_amt=283.02, net_amt=4716.98, tax_rate=6, mat_id=None) -> Dict[str, Any]:
         """生成apItems明细，结构与页面json一致"""
-        # sett_item_type、tax_code、mat等都应为完整对象
-        # 可根据页面json静态模板补全
+        # 默认结算项目类型
+        default_sett_item_type = {
+            "settItemTypeCode": "E_PUR_FRET_C",
+            "settItemTypeName": "外部-采购-计量运费",
+            "settClass": "EXTERNAL",
+            "btClass": "PURCHASE",
+            "priceGroupId": {"id": 2000005},
+            "priceGroupClass": "EXPENSES",
+            "accCode": None,
+            "settDocTypeCode": {"id": 2001001},
+            "affiliateSettItemTypeCode": None,
+            "isCountQty": False,
+            "exchangeRateType": {"id": 2003001},
+            "isAcqCost": False,
+            "id": 2000001,
+            "createdBy": {"id": 166382094639791},
+            "updatedBy": {"id": 479645949903493},
+            "createdAt": 1696906084000,
+            "updatedAt": 1721201191000,
+            "version": 2,
+            "deleted": 0,
+            "originOrgId": 0,
+            "requestId": None
+        }
+        
         return {
             "taxAmt": tax_amt,
             "grossBaseAmt": amount,
             "netBaseAmt": 1,
-            "settItemTypeId": sett_item_type or {
-                "settItemTypeCode": "E_PUR_FRET_C",
-                "settItemTypeName": "外部-采购-计量运费",
-                "settClass": "EXTERNAL",
-                "btClass": "PURCHASE",
-                "priceGroupId": {"id": 2000005},
-                "priceGroupClass": "EXPENSES",
-                "accCode": None,
-                "settDocTypeCode": {"id": 2001001},
-                "affiliateSettItemTypeCode": None,
-                "isCountQty": False,
-                "exchangeRateType": {"id": 2003001},
-                "isAcqCost": False,
-                "id": 2000001,
-                "createdBy": {"id": 166382094639791},
-                "updatedBy": {"id": 479645949903493},
-                "createdAt": 1696906084000,
-                "updatedAt": 1721201191000,
-                "version": 2,
-                "deleted": 0,
-                "originOrgId": 0,
-                "requestId": None
-            },
+            "settItemTypeId": sett_item_type or default_sett_item_type,
             "matId": mat_id or mat["id"],
             "grossDocAmt": amount,
             "netDocAmt": net_amt,
@@ -269,54 +253,65 @@ class FinApFactory:
 
     def create_ap_items_full(self, mat_list, tax_code_list) -> list:
         """生成多个apItems明细，结构与页面json一致"""
-        # 可根据页面json静态模板补全
-        items = []
-        items.append(self.create_ap_item(
-            mat=mat_list[0],
-            tax_code=tax_code_list[0],
-            amount=5000,
-            qty=10,
-            price=500,
-            tax_amt=283.02,
-            net_amt=4716.98,
-            tax_rate=6,
-            mat_id=mat_list[0]["id"]  # 使用实际查询到的物料ID
-        ))
-        # 第二条 - 使用实际的物料ID
-        items.append(self.create_ap_item(
-            mat=mat_list[1],
-            tax_code=tax_code_list[1],
-            sett_item_type={
-                "settItemTypeCode": "I_PUR_INSP",
-                "settItemTypeName": "内部-采购-检测费",
-                "settClass": "INSIDE",
-                "btClass": "PURCHASE",
-                "priceGroupId": {"id": 2000003},
-                "priceGroupClass": "EXPENSES",
-                "accCode": None,
-                "settDocTypeCode": {"id": 2002004},
-                "affiliateSettItemTypeCode": None,
-                "isCountQty": True,
-                "exchangeRateType": {"id": 2003001},
-                "isAcqCost": None,
-                "id": 11,
-                "createdBy": None,
-                "updatedBy": {"id": 166382094639791},
-                "createdAt": 1687778100000,
-                "updatedAt": 1696760889000,
-                "version": 1,
-                "deleted": 0,
-                "originOrgId": 0,
-                "requestId": None
+        if len(mat_list) != len(tax_code_list):
+            raise ValueError("物料列表和税码列表长度不匹配")
+        
+        # 第二个明细的结算项目类型
+        second_sett_item_type = {
+            "settItemTypeCode": "I_PUR_INSP",
+            "settItemTypeName": "内部-采购-检测费",
+            "settClass": "INSIDE",
+            "btClass": "PURCHASE",
+            "priceGroupId": {"id": 2000003},
+            "priceGroupClass": "EXPENSES",
+            "accCode": None,
+            "settDocTypeCode": {"id": 2002004},
+            "affiliateSettItemTypeCode": None,
+            "isCountQty": True,
+            "exchangeRateType": {"id": 2003001},
+            "isAcqCost": None,
+            "id": 11,
+            "createdBy": None,
+            "updatedBy": {"id": 166382094639791},
+            "createdAt": 1687778100000,
+            "updatedAt": 1696760889000,
+            "version": 1,
+            "deleted": 0,
+            "originOrgId": 0,
+            "requestId": None
+        }
+        
+        # 明细配置
+        item_configs = [
+            {
+                "amount": 5000, "qty": 10, "price": 500, 
+                "tax_amt": 283.02, "net_amt": 4716.98, "tax_rate": 6,
+                "sett_item_type": None  # 使用默认
             },
-            amount=2500,
-            qty=25,
-            price=100,
-            tax_amt=287.61,
-            net_amt=2212.39,
-            tax_rate=13,
-            mat_id=mat_list[1]["id"]  # 使用实际查询到的物料ID
-        ))
+            {
+                "amount": 2500, "qty": 25, "price": 100,
+                "tax_amt": 287.61, "net_amt": 2212.39, "tax_rate": 13,
+                "sett_item_type": second_sett_item_type
+            }
+        ]
+        
+        items = []
+        for i, (mat, tax_code) in enumerate(zip(mat_list, tax_code_list)):
+            if i < len(item_configs):
+                config = item_configs[i]
+                items.append(self.create_ap_item(
+                    mat=mat,
+                    tax_code=tax_code,
+                    sett_item_type=config["sett_item_type"],
+                    amount=config["amount"],
+                    qty=config["qty"],
+                    price=config["price"],
+                    tax_amt=config["tax_amt"],
+                    net_amt=config["net_amt"],
+                    tax_rate=config["tax_rate"],
+                    mat_id=mat["id"]
+                ))
+        
         return items
 
     def create_ap_schl(self, amount=1080000, due_date=None) -> Dict[str, Any]:
@@ -343,55 +338,26 @@ class FinApFactory:
             "paymentClearingStatus": "UNCLEARED"
         }
 
+    # 保留原有的查询方法以保持向后兼容
     def _query_org(self, org_code: str) -> Optional[Dict[str, Any]]:
         """查询组织"""
-        sql = """
-            SELECT * FROM org_struct_md 
-            WHERE deleted = 0 
-            AND org_code = %s
-        """
-        result = DBManager.query(sql, [org_code])
-        return result[0] if result else None
+        return self._query_single_record("org_struct_md", "org_code = %s", [org_code])
 
     def _query_vendor(self, vend_code: str) -> Optional[Dict[str, Any]]:
         """查询供应商"""
-        sql = """
-            SELECT * FROM gen_vend_info_md 
-            WHERE deleted = 0 
-            AND vend_code = %s
-        """
-        result = DBManager.query(sql, [vend_code])
-        return result[0] if result else None
+        return self._query_single_record("gen_vend_info_md", "vend_code = %s", [vend_code])
 
     def _query_currency(self, curr_code: str) -> Optional[Dict[str, Any]]:
         """查询币种"""
-        sql = """
-            SELECT * FROM gen_curr_type_cf 
-            WHERE deleted = 0 
-            AND curr_code = %s
-        """
-        result = DBManager.query(sql, [curr_code])
-        return result[0] if result else None
+        return self._query_single_record("gen_curr_type_cf", "curr_code = %s", [curr_code])
 
     def _query_tax_code(self, tax: int) -> Optional[Dict[str, Any]]:
         """查询税码"""
-        sql = """
-            SELECT * FROM gen_tax_type_cf 
-            WHERE deleted = 0 
-            AND tax = %s
-        """
-        result = DBManager.query(sql, [tax])
-        return result[0] if result else None
+        return self._query_single_record("gen_tax_type_cf", "tax = %s", [tax])
 
     def _query_material(self, mat_code: str) -> Optional[Dict[str, Any]]:
         """查询物料"""
-        sql = """
-            SELECT * FROM gen_mat_md 
-            WHERE deleted = 0 
-            AND mat_code = %s
-        """
-        result = DBManager.query(sql, [mat_code])
-        return result[0] if result else None
+        return self._query_single_record("gen_mat_md", "mat_code = %s", [mat_code])
 
     @classmethod
     def get_or_create_ap_doc(cls, status: str = None) -> Dict[str, Any]:

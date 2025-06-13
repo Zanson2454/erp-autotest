@@ -19,6 +19,7 @@ from utils.param_util import ParamUtil
 @allure.feature("结算管理")
 class TestSettItemCheck(BaseTest):
     """结算项测试用例"""
+    sett_item_code_result = None
     @classmethod
     def setup_class(cls):
         """测试类初始化"""
@@ -91,8 +92,8 @@ class TestSettItemCheck(BaseTest):
         assert result.get("data").get("data")
         assert "SETTI" in result.get("data").get("data")
         self.logger.debug(f"获取结算项编码响应数据: {result}")
-        return result.get("data").get("data")
-        
+        self.sett_item_code_result = result.get("data").get("data")
+        # return result.get("data").get("data")
         
     @allure.title("新增结算项")
     @allure.description("测试步骤：新增结算项")
@@ -194,6 +195,8 @@ class TestSettItemCheck(BaseTest):
         custId=self.db.query(sql)[0]["id"]
         
         settItemcode=self.test_get_sett_item_code()
+        settItemcode=self.sett_item_code_result
+        
         # 给参数附值
         data["params"]["request"]["id"] = None
         data["params"]["request"]["createdBy"] = None
@@ -247,7 +250,7 @@ class TestSettItemCheck(BaseTest):
         assert result.get("data").get("data")[0].get("asyncExecutionStatus") == 'CREATED'
         
         #提供其它测试用例使用
-        return result.get("data").get("data")[0].get("id")
+        #return result.get("data").get("data")[0].get("id")
         
     @allure.title("删除结算项")
     @allure.description("测试步骤：删除结算项")
