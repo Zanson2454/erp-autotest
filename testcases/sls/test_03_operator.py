@@ -68,7 +68,7 @@ class TestSalesOrderOperator(BaseTest,SlsBase):
         """
         
         self.logger.info(f"执行查询草稿态订单: {sql}")
-        result = self.db.query(sql, (self.user_id,))
+        result = self.db.query(sql, (self.user_info['id'],))
         
         if not result or len(result) == 0:
             self.logger.error("未找到草稿态订单")
@@ -101,7 +101,7 @@ class TestSalesOrderOperator(BaseTest,SlsBase):
         """
         
         self.logger.info(f"执行查询生效态订单: {sql}")
-        result = self.db.query(sql, (self.user_id,))
+        result = self.db.query(sql, (self.user_info['id'],))
         
         if not result or len(result) == 0:
             self.logger.error("未找到生效态订单")

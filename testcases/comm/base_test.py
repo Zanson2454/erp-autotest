@@ -156,6 +156,7 @@ class BaseTest:
             cls.login = Login(env)
             logger.info(f"登录成功: {cls.login}")
             cls.user_info = cls.login.get_current_user() # 获取当前用户信息
+            logger.info(f"user_info: {cls.user_info}")
             if not cls.user_info or "id" not in cls.user_info:
                 raise RuntimeError("user_info 未正确初始化或缺少 id 字段")
             cls.base_headers = cls.login.base_headers

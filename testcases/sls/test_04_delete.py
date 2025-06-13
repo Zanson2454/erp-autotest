@@ -56,7 +56,7 @@ class TestOrderDelete(BaseTest,SlsBase):
             LIMIT 1
         """
         self.logger.info(f"执行查询: {sql}")
-        result = self.db.query(sql, (self.so_type_id, self.user_id))
+        result = self.db.query(sql, (self.so_type_id, self.user_info['id']))
         self.logger.info(f"查询结果: {result}")
         self.assert_util.assert_not_empty(result, "订单列表")
         # 2. 如果订单不存在，创建新订单
@@ -68,7 +68,7 @@ class TestOrderDelete(BaseTest,SlsBase):
                 test_create.test_save_sales_order()
                 self.logger.info("成功创建新订单")
                 # 重新查询订单
-                result = self.db.query(sql, (self.so_type_id, self.user_id))
+                result = self.db.query(sql, (self.so_type_id, self.user_info['id']))
                 self.logger.info(f"创建新订单后查询结果: {result}")
                 self.assert_util.assert_not_empty(result, "订单列表")
             except Exception as e:
@@ -126,7 +126,7 @@ class TestOrderDelete(BaseTest,SlsBase):
             LIMIT 2
         """
         self.logger.info(f"执行查询: {sql}")
-        result = self.db.query(sql, (self.so_type_id, self.user_id))
+        result = self.db.query(sql, (self.so_type_id, self.user_info['id']))
         
         # 2. 如果订单数量不足，创建新订单
         if len(result) < 2:
@@ -142,7 +142,7 @@ class TestOrderDelete(BaseTest,SlsBase):
                     pytest.fail(f"创建新订单失败: {str(e)}")
             
             # 重新查询订单
-            result = self.db.query(sql, (self.so_type_id, self.user_id))
+            result = self.db.query(sql, (self.so_type_id, self.user_info['id']))
             self.assert_util.assert_true(len(result) >= 2, f"创建订单后仍然不足2条，当前有 {len(result)} 条订单")
         
         # 3. 准备批量删除请求
