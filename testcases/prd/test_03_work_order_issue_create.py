@@ -367,19 +367,35 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
             raise
 
     @pytest.mark.run(order=5)
-    @allure.story("查询生产订单领料行项目")
+    @allure.story("验证生产领料业务单据")
     @allure.description("""
     ## 测试步骤
     1. 准备请求参数
     2. 发送查询请求
-    3. 验证响应结果
-    4. 验证数据内容
-    5. 验证领料单和交货入库单状态
+    3. 验证领料单数据
+    4. 验证交货入库单数据
+    5. 验证移动凭证数据
+    
+    ## 验证内容
+    1. 领料单验证：
+       - 验证领料单状态为POSTED
+       - 验证实际领料数量与计划数量一致
+       - 验证关联信息完整性
+       
+    2. 交货入库单验证：
+       - 验证入库单生成并过账(POSTED)
+       - 验证入库数量与领料数量一致
+       - 验证来源单据信息完整性
+       
+    3. 移动凭证验证：
+       - 验证移动凭证生成
+       - 验证移动数量与交货数量一致
+       - 验证移动类型和来源信息
     """)
-    @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("查询生产订单领料行项目")
-    def test_query_issue_items(self):
-        """查询生产订单领料行项目测试用例"""
+    @allure.severity(allure.severity_level.CRITICAL)
+    @allure.title("验证生产领料相关单据生成状态")
+    def test_verify_issue_related_documents(self):
+        """验证生产领料单、交货入库单及移动凭证生成状态测试用例"""
         try:
             with a.step("1. 准备请求参数"):
                 # 获取API路径
@@ -489,7 +505,7 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
                 
                 a.text(f"查询到 {len(data_list)} 条领料行项目数据", "验证结果")
             
-            with a.step("4. 验证数据内容"):
+            with a.step("4. 验证领料单数据"):
                 # 定义必要字段列表
                 required_fields = [
                     "id", "prdOrderHeadId", "matId", "planQty", 
@@ -504,7 +520,7 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
                     for field in required_fields:
                         assert field in item, f"第 {index} 条数据缺少必要字段: {field}"
                     
-                    # 验证数据状态
+                    # 验证领料单状态
                     assert item["status"] == "POSTED", f"第 {index} 条数据状态不正确,期望:POSTED,实际:{item['status']}"
                     
                     # 验证数量
@@ -517,7 +533,9 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
                     assert item["matId"] is not None, f"第 {index} 条数据缺少物料关联"
                     assert item["dnCode"] is not None and item["dnCode"].strip() != "", f"第 {index} 条数据的交货单号为空"
 
-                    # 验证交货入库单状态
+            with a.step("5. 验证交货入库单数据"):
+                # 验证入库单生成并过账(POSTED)
+                for item in data_list:
                     sql = f"""
                         SELECT id, biz_status
                         FROM del_dn_head_tr 
@@ -531,7 +549,7 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
                     assert delivery_head["biz_status"] == "POSTED", \
                         f"交货入库单 {item['dnCode']} 状态不正确,期望:POSTED,实际:{delivery_head['biz_status']}"
 
-                    # 验证交货入库单行表数据
+                    # 验证入库数量与领料数量一致
                     sql = f"""
                         SELECT id, dn_code, mat_code, doc_code, plan_del_qty, real_del_qty, 
                                biz_status, bt_class, deleted, dn_item_code, doc_item_code
@@ -578,31 +596,34 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
                             f"未找到物料编码 {delivery_item['mat_code']} 对应的物料ID"
                         mat_id = mat_result[0]["id"]
 
-                        # 验证移动凭证行项目
-                        sql = f"""
-                            SELECT id, code, mvm_pos_neg, mvm_qty, doc_id_pre, mat_id,
-                                   assn_doc_code, deleted, mvm_type_id, source_type, mvm_uom_id
-                            FROM inv_mvm_doc_item_tr
-                            WHERE doc_id_pre = '{delivery_item["dn_code"]}'
-                            AND mat_id = {mat_id}
-                            AND deleted = 0
-                        """
-                        mvm_item_results = self.db.query(sql)
-                        assert len(mvm_item_results) > 0, \
-                            f"交货入库单 {delivery_item['dn_code']} 行项目 {delivery_item['dn_item_code']} 未找到对应的移动凭证行"
+            with a.step("6. 验证移动凭证数据"):
+                # 验证移动凭证生成
+                for item in data_list:
+                    # 验证移动凭证行项目
+                    sql = f"""
+                        SELECT id, code, mvm_pos_neg, mvm_qty, doc_id_pre, mat_id,
+                               assn_doc_code, deleted, mvm_type_id, source_type, mvm_uom_id
+                        FROM inv_mvm_doc_item_tr
+                        WHERE doc_id_pre = '{item["dnCode"]}'
+                        AND mat_id = {mat_id}
+                        AND deleted = 0
+                    """
+                    mvm_item_results = self.db.query(sql)
+                    assert len(mvm_item_results) > 0, \
+                        f"交货入库单 {item['dnCode']} 行项目 {delivery_item['dn_item_code']} 未找到对应的移动凭证行"
 
-                        # 验证移动凭证行
-                        for mvm_item in mvm_item_results:
-                            # 验证数量
-                            assert float(mvm_item["mvm_qty"]) == float(delivery_item["real_del_qty"]), \
-                                f"移动凭证行 {mvm_item['code']} 移动数量与交货数量不一致," \
-                                f"移动数量:{mvm_item['mvm_qty']},交货数量:{delivery_item['real_del_qty']}"
+                    # 验证移动凭证行
+                    for mvm_item in mvm_item_results:
+                        # 验证数量
+                        assert float(mvm_item["mvm_qty"]) == float(delivery_item["real_del_qty"]), \
+                            f"移动凭证行 {mvm_item['code']} 移动数量与交货数量不一致," \
+                            f"移动数量:{mvm_item['mvm_qty']},交货数量:{delivery_item['real_del_qty']}"
 
                 self.logger.info(f"已完成全部 {len(data_list)} 条数据的验证")
                 a.text(f"全部 {len(data_list)} 条数据验证通过", "验证结果")
         
         except Exception as e:
-            self.logger.error(f"查询生产订单领料行项目失败: {str(e)}")
+            self.logger.error(f"验证生产领料相关单据生成状态失败: {str(e)}")
             a.text(str(e), "失败原因")
             raise
 
@@ -614,4 +635,4 @@ if __name__ == "__main__":
     test.test_get_issue_rule_items()              # 获取领料分单规则明细
     test.test_create_issue_by_order_bom_list()    # 创建待提交生产订单领料单
     test.test_submit_issue_orders()               # 提交生产订单领料单
-    test.test_query_issue_items()                 # 查询生产订单领料行项目 
+    test.test_verify_issue_related_documents()    # 验证生产领料相关单据生成 
