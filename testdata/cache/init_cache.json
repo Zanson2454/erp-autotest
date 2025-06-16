@@ -200,7 +200,7 @@
   "sales_channel_info": [
     {
       "id": 14378001,
-      "code": "AUTOTEST_SLS_DC_ORG",
+      "code": "AUTOTEST_SLS_DC",
       "name": "销售渠道(自动化)"
     }
   ],
