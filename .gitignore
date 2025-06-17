@@ -31,7 +31,6 @@ wheels/
 .vscode/
 *.swp
 *.swo
-.DS_Store
 
 # 忽略虚拟环境
 venv/
@@ -70,9 +69,6 @@ run_tests.sh
 .DS_Store
 **/.DS_Store
 
-.cursor/
-.DS_Store
-
 # 忽略 Allure 结果和报告内容，但保留目录结构
 reports/allure-results/*
 !reports/allure-results/.gitkeep
@@ -81,5 +77,6 @@ reports/allure-report/*
 !reports/allure-report/.gitkeep
 
 # 忽略正在调试的用例
+testcases/gen_gm/
 testdata/cache/init_cache.json
-testcases/sls/gen_gm
+case_coverage_stat.json
