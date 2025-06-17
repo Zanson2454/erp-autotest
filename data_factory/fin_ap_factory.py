@@ -17,52 +17,52 @@ class FinApFactory(FinAparBaseFactory):
     
     # 默认结算项目类型配置
     DEFAULT_SETT_ITEM_TYPE = {
-        "settItemTypeCode": "E_PUR_FRET_C",
-        "settItemTypeName": "外部-采购-计量运费",
-        "settClass": "EXTERNAL",
-        "btClass": "PURCHASE",
-        "priceGroupId": {"id": 2000005},
-        "priceGroupClass": "EXPENSES",
-        "accCode": None,
-        "settDocTypeCode": {"id": 2001001},
-        "affiliateSettItemTypeCode": None,
-        "isCountQty": False,
-        "exchangeRateType": {"id": 2003001},
-        "isAcqCost": False,
-        "id": 2000001,
-        "createdBy": {"id": 166382094639791},
-        "updatedBy": {"id": 479645949903493},
-        "createdAt": 1696906084000,
-        "updatedAt": 1721201191000,
-        "version": 2,
-        "deleted": 0,
-        "originOrgId": 0,
-        "requestId": None
+                "settItemTypeCode": "E_PUR_FRET_C",
+                "settItemTypeName": "外部-采购-计量运费",
+                "settClass": "EXTERNAL",
+                "btClass": "PURCHASE",
+                "priceGroupId": {"id": 2000005},
+                "priceGroupClass": "EXPENSES",
+                "accCode": None,
+                "settDocTypeCode": {"id": 2001001},
+                "affiliateSettItemTypeCode": None,
+                "isCountQty": False,
+                "exchangeRateType": {"id": 2003001},
+                "isAcqCost": False,
+                "id": 2000001,
+                "createdBy": {"id": 166382094639791},
+                "updatedBy": {"id": 479645949903493},
+                "createdAt": 1696906084000,
+                "updatedAt": 1721201191000,
+                "version": 2,
+                "deleted": 0,
+                "originOrgId": 0,
+                "requestId": None
     }
     
     # 第二个结算项目类型配置
     SECOND_SETT_ITEM_TYPE = {
-        "settItemTypeCode": "I_PUR_INSP",
-        "settItemTypeName": "内部-采购-检测费",
-        "settClass": "INSIDE",
-        "btClass": "PURCHASE",
-        "priceGroupId": {"id": 2000003},
-        "priceGroupClass": "EXPENSES",
-        "accCode": None,
-        "settDocTypeCode": {"id": 2002004},
-        "affiliateSettItemTypeCode": None,
-        "isCountQty": True,
-        "exchangeRateType": {"id": 2003001},
-        "isAcqCost": None,
-        "id": 11,
-        "createdBy": None,
-        "updatedBy": {"id": 166382094639791},
-        "createdAt": 1687778100000,
-        "updatedAt": 1696760889000,
-        "version": 1,
-        "deleted": 0,
-        "originOrgId": 0,
-        "requestId": None
+                "settItemTypeCode": "I_PUR_INSP",
+                "settItemTypeName": "内部-采购-检测费",
+                "settClass": "INSIDE",
+                "btClass": "PURCHASE",
+                "priceGroupId": {"id": 2000003},
+                "priceGroupClass": "EXPENSES",
+                "accCode": None,
+                "settDocTypeCode": {"id": 2002004},
+                "affiliateSettItemTypeCode": None,
+                "isCountQty": True,
+                "exchangeRateType": {"id": 2003001},
+                "isAcqCost": None,
+                "id": 11,
+                "createdBy": None,
+                "updatedBy": {"id": 166382094639791},
+                "createdAt": 1687778100000,
+                "updatedAt": 1696760889000,
+                "version": 1,
+                "deleted": 0,
+                "originOrgId": 0,
+                "requestId": None
     }
     
     # 明细配置模板
@@ -309,8 +309,6 @@ class FinApFactory(FinAparBaseFactory):
         try:
             # 插入应付单头表
             DBManager.insert('fin_apm_ap_head_tr', head_data)
-            # 插入应付单行表
-            DBManager.insert('fin_apm_ap_item_tr', item_data)
             
             return cls._query_ap_doc(status)
         except Exception as e:
@@ -320,6 +318,115 @@ class FinApFactory(FinAparBaseFactory):
     def get_latest_ap_doc_id_by_status(self, status: str) -> str:
         """根据状态获取最新的应付单ID"""
         return self.get_latest_fin_doc_id_by_status('fin_apm_ap_head_tr', 'ap_status', status)
+
+    def query_payment_request_by_ap_id(self, ap_doc_id: str) -> Optional[Dict[str, Any]]:
+        """
+        根据应付单ID查询付款申请单信息
+        :param ap_doc_id: 应付单ID
+        :return: 付款申请单信息字典，包含cm_pr_head_tr_id和pr_head_code
+        """
+        try:
+            sql = """
+                SELECT 
+                    item.cm_pr_head_tr_id,
+                    head.pr_head_code,
+                    item.rel_doc_head_id,
+                    item.id as pr_item_id,
+                    head.pr_status,
+                    head.created_at,
+                    head.updated_at
+                FROM fin_cm_pr_item_tr item
+                INNER JOIN fin_cm_pr_head_tr head ON item.cm_pr_head_tr_id = head.id
+                WHERE item.rel_doc_head_id = %s 
+                AND item.deleted = 0 
+                AND head.deleted = 0
+                ORDER BY item.created_at DESC
+                LIMIT 1
+            """
+            
+            result = DBManager.query(sql, [ap_doc_id])
+            
+            if result:
+                pr_info = result[0]
+                Loggers.info(f"根据应付单ID {ap_doc_id} 查询到付款申请单信息: cm_pr_head_tr_id={pr_info.get('cm_pr_head_tr_id')}, pr_head_code={pr_info.get('pr_head_code')}")
+                return {
+                    "cm_pr_head_tr_id": pr_info.get("cm_pr_head_tr_id"),
+                    "pr_head_code": pr_info.get("pr_head_code"),
+                    "rel_doc_head_id": pr_info.get("rel_doc_head_id"),
+                    "pr_item_id": pr_info.get("pr_item_id"),
+                    "pr_status": pr_info.get("pr_status"),
+                    "created_at": pr_info.get("created_at"),
+                    "updated_at": pr_info.get("updated_at")
+                }
+            else:
+                Loggers.warning(f"未找到应付单ID {ap_doc_id} 对应的付款申请单信息")
+                return None
+                
+        except Exception as e:
+            Loggers.error(f"根据应付单ID {ap_doc_id} 查询付款申请单信息失败: {str(e)}")
+            return None
+
+    def query_payment_requests_by_ap_id(self, ap_doc_id: str) -> List[Dict[str, Any]]:
+        """
+        根据应付单ID查询所有相关的付款申请单信息（支持一对多关系）
+        :param ap_doc_id: 应付单ID
+        :return: 付款申请单信息列表
+        """
+        try:
+            sql = """
+                SELECT 
+                    item.cm_pr_head_tr_id,
+                    head.pr_head_code,
+                    item.rel_doc_head_id,
+                    item.id as pr_item_id,
+                    head.pr_status,
+                    item.pr_doc_amt,
+                    item.pr_base_amt,
+                    head.created_at,
+                    head.updated_at
+                FROM fin_cm_pr_item_tr item
+                INNER JOIN fin_cm_pr_head_tr head ON item.cm_pr_head_tr_id = head.id
+                WHERE item.rel_doc_head_id = %s 
+                AND item.deleted = 0 
+                AND head.deleted = 0
+                ORDER BY item.created_at DESC
+            """
+            
+            results = DBManager.query(sql, [ap_doc_id])
+            
+            if results:
+                pr_list = []
+                for pr_info in results:
+                    pr_list.append({
+                        "cm_pr_head_tr_id": pr_info.get("cm_pr_head_tr_id"),
+                        "pr_head_code": pr_info.get("pr_head_code"),
+                        "rel_doc_head_id": pr_info.get("rel_doc_head_id"),
+                        "pr_item_id": pr_info.get("pr_item_id"),
+                        "pr_status": pr_info.get("pr_status"),
+                        "pr_doc_amt": pr_info.get("pr_doc_amt"),
+                        "pr_base_amt": pr_info.get("pr_base_amt"),
+                        "created_at": pr_info.get("created_at"),
+                        "updated_at": pr_info.get("updated_at")
+                    })
+                
+                Loggers.info(f"根据应付单ID {ap_doc_id} 查询到 {len(pr_list)} 条付款申请单信息")
+                return pr_list
+            else:
+                Loggers.warning(f"未找到应付单ID {ap_doc_id} 对应的付款申请单信息")
+                return []
+                
+        except Exception as e:
+            Loggers.error(f"根据应付单ID {ap_doc_id} 查询付款申请单信息失败: {str(e)}")
+            return []
+
+    def get_payment_request_status_by_ap_id(self, ap_doc_id: str) -> Optional[str]:
+        """
+        根据应付单ID获取最新付款申请单的状态
+        :param ap_doc_id: 应付单ID
+        :return: 付款申请单状态
+        """
+        pr_info = self.query_payment_request_by_ap_id(ap_doc_id)
+        return pr_info.get("pr_status") if pr_info else None
 
 if __name__ == '__main__':
     print(FinApFactory.get_or_create_ap_doc()) 

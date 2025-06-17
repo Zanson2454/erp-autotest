@@ -16,6 +16,8 @@ class TestWorkOrderConfirm(PrdBaseTest):
     2. 批量确认工序
     3. 批量报工确认
     4. 查询送货单状态验证
+    5. 查询送货单过账明细
+    6. 执行送货单过账操作
     
     业务规则：
     - 入库工序：生成送货单，需要手工过账(WAIT_POST)
@@ -36,7 +38,7 @@ class TestWorkOrderConfirm(PrdBaseTest):
         
         # 获取最新的生产订单信息
         order_info = self.get_latest_prd_order(status="SUBMITTED")
-        print(f"order_info: {order_info}")
+        self.logger.info("order_info: %s", order_info)
         # 检查生产订单状态
         assert order_info["status"] == "SUBMITTED", f"生产订单状态不是已提交状态，当前状态: {order_info['status']}"
         
@@ -497,17 +499,296 @@ class TestWorkOrderConfirm(PrdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+    @pytest.mark.run(order=5)
+    def test_query_dn_post_detail(self):
+        """查询送货单过账明细
+        
+        步骤：
+        1. 使用已生成的入库工序送货单进行过账明细查询
+        2. 验证送货单相关信息的完整性
+        
+        验证点：
+        - 能成功查询到送货单明细
+        - 送货单状态正确（未生效、待过账）
+        - 相关业务数据完整
+        """
+        try:
+            with a.step(f"查询送货单过账明细"):
+                # 验证是否有送货单需要查询
+                dn_codes = self.confirm_info.get("dn_codes", [])
+                assert dn_codes, "没有找到需要查询的送货单"
+                
+                # 查询符合条件的入库工序送货单
+                head_sql = f"""
+                    SELECT id, dn_code, del_status, biz_status, bt_class
+                    FROM del_dn_head_tr 
+                    WHERE dn_code IN ({','.join([f"'{dn['dnCode']}'" for dn in dn_codes])})
+                    AND bt_class = 'PRD_CONFIRM'
+                    AND biz_status = 'WAIT_POST'
+                    AND del_class = 'RECV'
+                    AND deleted = 0
+                """
+                head_results = self.db.query(head_sql)
+                assert head_results, "没有找到符合条件的入库工序送货单"
+                
+                # 获取SCM模块的API配置
+                api_path = self.get_cross_module_api_path("scm", "DEL-过账专属交货单详情服务")
+                params, url = self.get_cross_module_api_params("scm", api_path)
+                
+                post_detail_results = []
+                for head_record in head_results:
+                    dn_code = head_record["dn_code"]
+                    self.logger.info(f"查询入库工序送货单{dn_code}的过账明细")
+                    
+                    # 设置查询参数
+                    filtered_params = {
+                        "params": {
+                            "request": {
+                                "id": head_record["id"]
+                            }
+                        }
+                    }
+                    
+                    # 发送请求
+                    result = self.http.post(url, json=filtered_params)
+                    # 验证响应
+                    self.assert_util.assert_response_success(result)
+                    
+                    # 保存查询结果
+                    detail = result.get("data", {}).get("data", {})
+                    post_detail_results.append({
+                        "dnCode": dn_code,
+                        "detail": detail,
+                        "isInboundOperation": True 
+                    })
+                    
+                    # 验证送货单基本信息
+                    assert detail.get("dnCode") == dn_code, "送货单号不匹配"
+                    assert detail.get("btClass") == "PRD_CONFIRM", "业务类型不是生产确认"
+                    assert detail.get("delStatus") == "INEFFECT", "单据状态不是未生效"
+                    assert detail.get("bizStatus") == "WAIT_POST", "业务状态不是待过账"
+                    assert detail.get("docCode") == self.confirm_info["wo_code"], "生产订单号不匹配"
+                    
+                    # 验证库存相关信息
+                    assert detail.get("invOrgId"), "未找到库存组织"
+                    assert detail.get("invLocId"), "未找到库存地点"
+                    
+                    # 验证收货信息
+                    if detail.get("delClass") == "RECV":
+                        assert detail.get("recvAddrId"), "收货地址为空"
+                        assert detail.get("recvContactInfo"), "收货联系方式为空"
+                        assert detail.get("recvContactPhone"), "收货电话为空"
+                    
+                    # 验证入库工序特定信息
+                    assert detail.get("invLocId"), "入库工序送货单缺少库存地点"
+                
+                # 保存所有查询结果
+                self.confirm_info["post_detail_results"] = post_detail_results
+                
+                # 添加报告附件
+                report_data = []
+                for result in post_detail_results:
+                    report_item = {
+                        "dnCode": result["dnCode"],
+                        "isInboundOperation": result["isInboundOperation"],
+                        "detail": {
+                            "btClass": result["detail"].get("btClass"),
+                            "delStatus": result["detail"].get("delStatus"),
+                            "bizStatus": result["detail"].get("bizStatus"),
+                            "docCode": result["detail"].get("docCode"),
+                            "delClass": result["detail"].get("delClass")
+                        }
+                    }
+                    report_data.append(report_item)
+                
+                a.json(report_data, "入库工序送货单过账明细查询结果")
+                
+                # 汇总查询结果
+                summary = {
+                    "total_inbound_dn_count": len(post_detail_results),
+                    "verification_passed": True
+                }
+                a.json(summary, "入库工序送货单查询结果汇总")
+                
+                self.logger.info(f"入库工序送货单过账明细查询完成: 共{summary['total_inbound_dn_count']}个送货单")
+                
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @pytest.mark.run(order=6)
+    def test_execute_dn_posting(self):
+        """执行送货单过账操作
+        
+        步骤：
+        1. 获取待过账的送货单详细信息
+        2. 执行送货单过账操作
+        3. 验证过账操作的结果
+        
+        验证点：
+        - 过账操作成功执行
+        - 送货单状态从WAIT_POST变为POSTED
+        - 相关业务数据完整
+        """
+        try:
+            with a.step(f"执行送货单过账操作"):
+                # 获取SCM模块的API配置
+                api_path = self.get_cross_module_api_path("scm", "DEL-交货单过账服务")
+                params, url = self.get_cross_module_api_params("scm", api_path)
+                
+                posting_results = []
+                
+                # 获取待过账的送货单详情
+                post_detail_results = self.confirm_info.get("post_detail_results", [])
+                assert post_detail_results, "没有找到需要过账的送货单详情"
+                
+                for detail_result in post_detail_results:
+                    dn_code = detail_result["dnCode"]
+                    detail = detail_result["detail"]
+                    self.logger.info(f"执行送货单{dn_code}的过账操作")
+                    
+                    # 构造过账请求参数
+                    filtered_params = {
+                        "params": {
+                            "request": {
+                                "dnType": {"id": detail["dnType"]["id"]},
+                                "btClass": "PRD_CONFIRM",
+                                "dnCode": detail["dnCode"],
+                                "delStatus": detail["delStatus"],
+                                "delClass": detail["delClass"],
+                                "recvContactPhone": detail.get("recvContactPhone"),
+                                "parentDnId": detail.get("parentDnId"),
+                                "recvContactInfo": detail.get("recvContactInfo"),
+                                "recvAddrDesc": detail.get("recvAddrDesc"),
+                                "recvAddrId": detail.get("recvAddrId"),
+                                "custPrtnId": detail.get("custPrtnId"),
+                                "invOrgId": detail.get("invOrgId"),
+                                "isInvExecuted": detail.get("isInvExecuted", False),
+                                "wmEnabled": detail.get("wmEnabled", False),
+                                "bizStatus": detail["bizStatus"],
+                                "invLocId": detail.get("invLocId"),
+                                "groupConditionKey": detail.get("groupConditionKey"),
+                                "docCreateFinal": False,
+                                "sourceType": "SYSTEM",
+                                "id": detail["id"],
+                                "dnItemList": detail.get("dnItemList", [])
+                            }
+                        }
+                    }
+                    
+                    # 发送过账请求
+                    result = self.http.post(url, json=filtered_params)
+                    
+                    # 断言接口返回success
+                    if not result.get("success", False):
+                        err_msg = result.get("err", {}).get("msg", "未知错误")
+                        assert err_msg, f"送货单{dn_code}过账失败且未返回错误信息"
+                        raise AssertionError(f"送货单{dn_code}过账操作失败: {err_msg}")
+                    
+                    # 加强断言：过账后立即查询送货单头表，校验状态
+                    head_sql = f"""
+                        SELECT biz_status, del_status, id
+                        FROM del_dn_head_tr
+                        WHERE dn_code = '{dn_code}' AND deleted = 0
+                    """
+                    head_results = self.db.query(head_sql)
+                    assert head_results, f"过账后未查到送货单{dn_code}头表"
+                    head_record = head_results[0]
+                    assert head_record["biz_status"] == "POSTED", f"送货单{dn_code}过账后业务状态应为POSTED，实际为{head_record['biz_status']}"
+                    assert head_record["del_status"] == "INEFFECT", f"送货单{dn_code}过账后单据状态应为INEFFECT，实际为{head_record['del_status']}"
+                    
+                    # 可选：校验行项目biz_status和real_del_qty
+                    item_sql = f"""
+                        SELECT biz_status, real_del_qty, plan_del_qty
+                        FROM del_dn_item_tr
+                        WHERE dn_id = {head_record['id']} AND deleted = 0
+                    """
+                    item_results = self.db.query(item_sql)
+                    for item in item_results:
+                        assert item["biz_status"] == "POSTED", f"送货单{dn_code}行项目业务状态应为POSTED，实际为{item['biz_status']}"
+                        assert item["real_del_qty"] == item["plan_del_qty"], f"送货单{dn_code}行项目实际交货数量应等于计划数量，实际为{item['real_del_qty']}，计划为{item['plan_del_qty']}"
+                    
+                    # 验证移动凭证
+                    mvm_sql = f"""
+                        SELECT id, code, mvm_pos_neg, mvm_qty, doc_id_pre, mat_id,
+                               assn_doc_code, deleted, mvm_type_id, source_type, mvm_uom_id
+                        FROM inv_mvm_doc_item_tr
+                        WHERE doc_id_pre = '{dn_code}'
+                        AND deleted = 0
+                    """
+                    mvm_results = self.db.query(mvm_sql)
+                    assert len(mvm_results) > 0, f"送货单{dn_code}未找到对应的移动凭证行"
+                    
+                    # 查询入库单明细
+                    item_sql = f"""
+                        SELECT id, mat_id, real_del_qty
+                        FROM del_dn_item_tr
+                        WHERE dn_id = {head_record['id']} AND deleted = 0
+                    """
+                    item_results = self.db.query(item_sql)
+                    item_map = {item["mat_id"]: item for item in item_results}
+
+                    # 验证移动凭证行数据
+                    for mvm_item in mvm_results:
+                        mat_id = mvm_item["mat_id"]
+                        assert mat_id in item_map, f"移动凭证行{mvm_item['code']}的物料ID未在入库单明细中找到"
+                        dn_item = item_map[mat_id]
+                        assert float(mvm_item["mvm_qty"]) == float(dn_item["real_del_qty"]), \
+                            f"移动凭证行{mvm_item['code']}数量{mvm_item['mvm_qty']}与入库单明细{dn_item['id']}实际交货数量{dn_item['real_del_qty']}不一致"
+                        # 其他原有校验
+                        assert mvm_item["mvm_uom_id"] is not None, \
+                            f"移动凭证行 {mvm_item['code']} 单位ID不能为空"
+                        self.logger.info(f"送货单 {dn_code} 移动凭证行 {mvm_item['code']} 验证通过")
+                    
+                    # 保存过账结果
+                    posting_result = {
+                        "dnCode": dn_code,
+                        "result": result.get("data", {}),
+                        "hasMaterialConsumption": detail.get("hasMaterialConsumption", False)
+                    }
+                    posting_results.append(posting_result)
+                    
+                    self.logger.info(f"送货单{dn_code}过账操作成功")
+                
+                # 保存所有过账结果
+                self.confirm_info["posting_results"] = posting_results
+                
+                # 添加报告附件
+                report_data = []
+                for result in posting_results:
+                    report_item = {
+                        "dnCode": result["dnCode"],
+                        "hasMaterialConsumption": result["hasMaterialConsumption"],
+                        "postingSuccess": result["result"].get("success", False)
+                    }
+                    report_data.append(report_item)
+                
+                a.json(report_data, "送货单过账操作结果")
+                
+                # 汇总过账结果
+                successful_count = len([r for r in posting_results if r["result"].get("success", False)])
+                summary = {
+                    "total_dn_count": len(posting_results),
+                    "successful_posting_count": successful_count,
+                    "posting_success_rate": f"{successful_count}/{len(posting_results)}"
+                }
+                a.json(summary, "过账操作汇总")
+                
+                self.logger.info(f"送货单过账操作完成: 共{summary['total_dn_count']}个送货单，"
+                               f"成功{summary['successful_posting_count']}个")
+                
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
 if __name__ == "__main__":
-    """本地调试入口
-    
-    按照测试用例执行顺序运行：
-    1. 初始化测试类
-    2. 执行setup_class
-    3. 依次执行4个测试方法
-    """
+    """本地调试入口"""
+
     test = TestWorkOrderConfirm()
     test.setup_class()
     test.test_query_confirm_list()
     test.test_batch_confirm_routings()
     test.test_delivery_confirm_batch()
-    test.test_query_dn_status() 
+    test.test_query_dn_status()
+    test.test_query_dn_post_detail()
+    test.test_execute_dn_posting() 
