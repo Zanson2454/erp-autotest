@@ -1,5 +1,5 @@
 import allure
-from testcases.comm.base_test import BaseTest
+from testcases.fin.fin_ar import ArBaseTest, convert_decimal_to_float
 from utils.param_util import ParamUtil
 from utils.allure_simple import a
 from data_factory.fin_ar_factory import FinArFactory
@@ -8,156 +8,13 @@ from datetime import datetime
 from pathlib import Path
 import time
 
-def _convert_decimal_to_float(obj):
-    """递归转换Decimal类型为float - 工具函数必需返回值"""
-    if isinstance(obj, dict):
-        return {k: _convert_decimal_to_float(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [_convert_decimal_to_float(item) for item in obj]
-    elif isinstance(obj, Decimal):
-        return float(obj)
-    else:
-        return obj
-
 @allure.epic("ERP通业财模块")
 @allure.feature("应收管理")
-class TestArDocCreatePn(BaseTest):
+class TestArDocCreatePn(ArBaseTest):
     """基于应收单创建收款单测试类"""
     
     # 类变量存储测试数据
     ar_info = {}
-    
-    @classmethod
-    def setup_class(cls):
-        """测试类初始化，获取必要的配置信息"""
-        super().setup_class()
-        cls.ar_factory = FinArFactory()
-        
-        project_root = Path(__file__).resolve().parent.parent.parent.parent
-        apis = cls.yaml_util.read_yaml(project_root / "testdata/fin/fin_api_path.yaml").get("apis", {})
-        api_params = cls.yaml_util.read_yaml(project_root / "testdata/fin/fin_api_params.yaml").get("api_params", {})
-        cls.apis = apis
-        cls.api_params = api_params
-
-    def _create_ar_request_body(self, now_ts, output_dict):
-        """创建应收单请求体，结果存储到output_dict中"""
-        # 主数据获取
-        com_org_id = self.ar_factory.get_org_by_id(14373001)["id"]
-        sls_org_id = self.ar_factory.get_org_by_id(14579001)["id"]
-        curr_id = self.ar_factory.create_currency()["id"]
-        customer_id = self.ar_factory.get_customer_by_id(14103001)["id"]
-        mat_id = self.ar_factory.get_material_by_id(14672002)["id"]
-        tax_code_id = self.ar_factory.get_tax_code_by_id(2002002)["id"]
-        sett_item_type_id = self.ar_factory.get_sett_item_type_by_id(12)["id"]
-        
-        ar_items = self.ar_factory.create_ar_items_full(mat_id, tax_code_id, sett_item_type_id)
-        ar_schls = self.ar_factory.create_ar_schls_full(due_date=now_ts)
-        
-        gross_doc_amt = sum([item.get("grossDocAmt", 0) for item in ar_items])
-        net_doc_amt = sum([item.get("netDocAmt", 0) for item in ar_items])
-        gross_base_amt = sum([item.get("grossBaseAmt", 0) for item in ar_items])
-        net_base_amt = sum([item.get("netBaseAmt", 0) for item in ar_items])
-        tax_amt = sum([item.get("taxAmt", 0) for item in ar_items])
-        
-        output_dict.update({
-            "docTypeId": {"id": 14003001},
-            "arDate": now_ts,
-            "comOrgId": {"id": com_org_id},
-            "slsOrgId": {"id": sls_org_id},
-            "payOrgId": {"id": com_org_id},
-            "docCurrId": {"id": curr_id},
-            "baseCurrId": {"id": curr_id},
-            "exchRate": 1,
-            "settPartnerType": "CUSTOMER",
-            "settPartnerId": {"id": customer_id},
-            "arStatus": "DRAFT",
-            "collectionClearingStatus": "UNCLEARED",
-            "billingClearingStatus": "UNCLEARED",
-            "headOffsetStatus": "UNOFFSET",
-            "remark": ParamUtil.generate_remark(),
-            "arItems": ar_items,
-            "arSchls": ar_schls,
-            "grossDocAmt": gross_doc_amt,
-            "netDocAmt": net_doc_amt,
-            "grossBaseAmt": gross_base_amt,
-            "netBaseAmt": net_base_amt,
-            "taxAmt": tax_amt,
-            "uncollectedDocAmt": gross_doc_amt,
-            "uncollectedBaseAmt": gross_base_amt,
-            "unbilledDocAmt": gross_doc_amt,
-            "unbilledBaseAmt": gross_base_amt,
-            "unoffsetDocAmt": gross_doc_amt,
-            "unoffsetBaseAmt": gross_base_amt,
-        })
-
-    def _send_api_request(self, api_key, request_data, result_dict):
-        """发送API请求，结果存储到result_dict中"""
-        api_path = ParamUtil.get_api_path(self.apis, api_key)
-        params, url = ParamUtil.get_api_params(self.api_params, api_path)
-        
-        filtered_params = ParamUtil.filter_post_body_fields(
-            params,
-            list(request_data.keys()),
-            ["params", "request"]
-        )
-        ParamUtil.set_request_params(filtered_params, request_data)
-        filtered_params = _convert_decimal_to_float(filtered_params)
-        
-        result = self.http.post(url, json=filtered_params)
-        self.assert_util.assert_response_success(result)
-        
-        a.json(filtered_params, "请求数据")
-        a.json(result, "响应结果数据")
-        
-        result_dict.update(result)
-
-    def _wait_for_status(self, ar_head_code, target_status, status_result, max_wait=60, interval=2):
-        """等待应收单状态变更，结果存储到status_result中"""
-        api_path = ParamUtil.get_api_path(self.apis, "应收单头表-分页数据服务_PmHKWs4")
-        params, url = ParamUtil.get_api_params(self.api_params, api_path)
-        
-        ParamUtil.set_request_params(params, {
-            "pageable": {
-                "pageNo": 1,
-                "pageSize": 1,
-                "needTotal": False,
-                "conditionItems": {
-                    "type": "ConditionItems",
-                    "conditions": {
-                        "arHeadCode": {
-                            "operator": "CONTAINS",
-                            "value": ar_head_code
-                        }
-                    },
-                    "logicOperator": "AND"
-                }
-            }
-        })
-        
-        waited = 0
-        final_status = None
-        status_found = False
-        
-        while waited < max_wait and not status_found:
-            result = self.http.post(url, json=params)
-            self.assert_util.assert_response_success(result)
-            
-            data_list = result.get("data", {}).get("data", {}).get("data", [])
-            if data_list:
-                status = data_list[0].get("arStatus")
-                if status == target_status:
-                    final_status = status
-                    status_found = True
-            
-            if not status_found:
-                time.sleep(interval)
-                waited += interval
-        
-        status_result.update({
-            "final_status": final_status,
-            "status_found": status_found,
-            "waited_time": waited
-        })
 
     @ParamUtil.case_decorator(
         story="应收单创建",
@@ -174,10 +31,10 @@ class TestArDocCreatePn(BaseTest):
             with a.step("创建标准应收单"):
                 now_ts = int(datetime.now().timestamp() * 1000)
                 request_body = {}
-                self._create_ar_request_body(now_ts, request_body)
+                self.create_ar_request_body(now_ts, request_body)
                 
                 result = {}
-                self._send_api_request("AR-应收单保存服务", request_body, result)
+                self.send_api_request("AR-应收单保存服务", request_body, result)
                 ar_doc_id = ParamUtil.extract_id(result)
                 assert ar_doc_id, "创建应收单失败：未获取到单据ID"
                 
@@ -186,7 +43,7 @@ class TestArDocCreatePn(BaseTest):
                     "request_body": request_body
                 })
                 
-                a.json(_convert_decimal_to_float(TestArDocCreatePn.ar_info), "断言结果")
+                a.json(convert_decimal_to_float(TestArDocCreatePn.ar_info), "断言结果")
 
             with a.step("提交应收单"):
                 base_request = request_body.copy()
@@ -197,23 +54,20 @@ class TestArDocCreatePn(BaseTest):
                 })
                 
                 submit_result = {}
-                self._send_api_request("AR-应收单-列表提交服务", base_request, submit_result)
-                TestArDocCreatePn.ar_info["request_body"]["arHeadCode"] = base_request["arHeadCode"]
+                self.send_api_request("AR-应收单-列表提交服务", base_request, submit_result)
+                
+                TestArDocCreatePn.ar_info["ar_head_code"] = base_request["arHeadCode"]
 
             with a.step("过账应收单"):
                 post_result = {}
-                self._send_api_request("应收单-过账-异步服务", base_request, post_result)
+                self.send_api_request("应收单-过账-异步服务", base_request, post_result)
 
-            with a.step("验证过账状态"):
-                ar_head_code = base_request.get("arHeadCode")
+            with a.step("等待过账完成"):
                 status_result = {}
-                self._wait_for_status(ar_head_code, "DONE", status_result)
+                self.wait_for_ar_status(base_request["arHeadCode"], "DONE", status_result)
+                assert status_result.get("success") and status_result.get("status") == "DONE", \
+                    f"过账后单据状态应为DONE，实际为：{status_result.get('status')}"
                 
-                final_status = status_result.get("final_status")
-                assert final_status == "DONE", f"过账后单据状态应为DONE，实际为：{final_status}"
-                
-                a.json({"arHeadCode": ar_head_code, "arStatus": final_status}, "断言结果")
-        
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -228,27 +82,36 @@ class TestArDocCreatePn(BaseTest):
         tags=["ar", "pn", "create"]
     )
     def test_02_create_pn_by_ar(self):
+        """基于应收单创建收款单"""
         try:
             with a.step("基于应收单创建收款单"):
                 ar_doc_id = TestArDocCreatePn.ar_info.get("ar_doc_id")
-                base_request = TestArDocCreatePn.ar_info.get("request_body", {}).copy()
-                assert ar_doc_id and base_request, "请先执行创建应收单用例，确保ar_doc_id和request_body已生成"
+                assert ar_doc_id, "请先执行创建应收单用例，确保ar_doc_id已生成"
                 
-                base_request.update({
-                    "id": ar_doc_id,
-                    "arStatus": "DONE"
-                })
-
+                pn_request = {
+                    "params": {
+                        "request": {
+                            "id": ar_doc_id,
+                            "docTypeId": {"id": 20000011}
+                        }
+                    }
+                }
+                
                 api_path = "/api/trantor/service/engine/execute/ERP_FIN$PN_CREATE_BY_AR_ASYNC_EVENT_SERVICE"
-                params = {"params": {"request": base_request}}
-                
-                filtered_params = _convert_decimal_to_float(params)
-                result = self.http.post(api_path, json=filtered_params)
+                result = self.http.post(api_path, json=pn_request)
                 self.assert_util.assert_response_success(result)
                 
-                a.json(filtered_params, "请求数据")
+                response_data = result.get("data", {})
+                assert response_data, "创建收款单失败：未获取到响应数据"
+                
+                TestArDocCreatePn.ar_info.update({
+                    "pn_result": response_data
+                })
+                
+                a.json(pn_request, "请求数据")
                 a.json(result, "响应结果数据")
-        
+                a.json(TestArDocCreatePn.ar_info, "断言结果")
+                
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -433,7 +296,7 @@ class TestArDocCreatePn(BaseTest):
                 }
                 
                 result = {}
-                self._send_api_request("PN-收付款-列表提交服务", submit_data, result)
+                self.send_api_request("PN-收付款-列表提交服务", submit_data, result)
                 response_data = result.get("data", {})
                 assert response_data, "提交收款单失败：未获取到响应数据"
                 
@@ -476,7 +339,7 @@ class TestArDocCreatePn(BaseTest):
                 }
                 
                 result = {}
-                self._send_api_request("收款单过账-异步服务", post_data, result)
+                self.send_api_request("收款单过账-异步服务", post_data, result)
                 response_data = result.get("data", {})
                 assert response_data, "过账收款单失败：未获取到响应数据"
                 
@@ -604,7 +467,7 @@ class TestArDocCreatePn(BaseTest):
                 assert ar_doc_id, "请先执行应收单创建用例，确保ar_doc_id已生成"
                 
                 ar_data = {}
-                self._query_ar_detail(ar_doc_id, ar_data)
+                self.query_ar_detail(ar_doc_id, ar_data)
                 assert ar_data, f"未查询到应收单ID为{ar_doc_id}的数据"
                 
                 collected_doc_amt = ar_data.get("collectedDocAmt", 0)
@@ -676,20 +539,6 @@ class TestArDocCreatePn(BaseTest):
             error_msg = f"收款单过账后应收单更新状态验证失败：{str(e)}，请检查收款单过账是否异常"
             a.text(error_msg, "失败原因")
             raise AssertionError(error_msg)
-
-    def _query_ar_detail(self, ar_doc_id, detail_result):
-        """查询应收单详情，结果存储到detail_result中"""
-        api_path = ParamUtil.get_api_path(self.apis, "应收单头表-根据ID查找数据服务")
-        params, url = ParamUtil.get_api_params(self.api_params, api_path)
-        
-        filtered_params = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
-        ParamUtil.set_request_params(filtered_params, {"id": ar_doc_id})
-        
-        result = self.http.post(url, json=filtered_params)
-        self.assert_util.assert_response_success(result)
-        
-        data = result.get("data", {}).get("data", {})
-        detail_result.update(data)
 
 if __name__ == "__main__":
     test = TestArDocCreatePn()

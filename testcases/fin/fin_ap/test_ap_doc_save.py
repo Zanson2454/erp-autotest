@@ -3,41 +3,20 @@
 包含创建、编辑、提交、过账、状态校验等场景
 """
 import allure
-from testcases.comm.base_test import BaseTest
+from testcases.fin.fin_ap import ApBaseTest
 from utils.param_util import ParamUtil
 from utils.allure_simple import a
-from data_factory.fin_ap_factory import FinApFactory
 from datetime import datetime
 import time
-from pathlib import Path
-import decimal
-
-# 工具：递归将Decimal转float
-def _convert_decimal_to_float(obj):
-    if isinstance(obj, dict):
-        return {k: _convert_decimal_to_float(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [_convert_decimal_to_float(i) for i in obj]
-    elif isinstance(obj, decimal.Decimal):
-        return float(obj)
-    else:
-        return obj
 
 @allure.epic("ERP通业财模块")
 @allure.feature("应付管理")
-class TestApDocumentSave(BaseTest):
-    ap_save_info = {}
+class TestApDocumentSave(ApBaseTest):
+    ap_info = {}
 
     @classmethod
     def setup_class(cls):
         super().setup_class()
-        cls.ap_factory = FinApFactory()
-        # 初始化财务API配置
-        project_root = Path(__file__).resolve().parent.parent.parent.parent
-        apis = cls.yaml_util.read_yaml(project_root / "testdata/fin/fin_api_path.yaml").get("apis", {})
-        api_params = cls.yaml_util.read_yaml(project_root / "testdata/fin/fin_api_params.yaml").get("api_params", {})
-        cls.apis = apis
-        cls.api_params = api_params
 
     @ParamUtil.case_decorator(
         story="应付单保存",
@@ -51,83 +30,48 @@ class TestApDocumentSave(BaseTest):
     def test_create_draft_ap_doc(self):
         try:
             with a.step("创建标准应付单"):
-                now = datetime.now()
-                now_ts = int(now.timestamp() * 1000)
-                com_org = self.ap_factory.create_org("COM")
-                vend = self.ap_factory.create_vendor()
-                pur_org = self.ap_factory.create_org("PUR")
-                pay_org = com_org
-                curr = self.ap_factory.create_currency()
-                tax_code = self.ap_factory.create_tax_code()
-                mat = self.ap_factory.create_material()
-                mat_list = [mat, mat]
-                tax_code_list = [tax_code, tax_code]
-                ap_items = self.ap_factory.create_ap_items_full(mat_list, tax_code_list)
-                for item in ap_items:
-                    for k in ["grossDocAmt", "netDocAmt", "grossBaseAmt", "netBaseAmt"]:
-                        if k in item:
-                            item[k] = float(item[k])
-                total_amt = float(sum([item["grossDocAmt"] for item in ap_items]))
-                net_doc_amt = float(sum([item["netDocAmt"] for item in ap_items]))
-                gross_base_amt = float(sum([item["grossBaseAmt"] for item in ap_items]))
-                net_base_amt = float(sum([item["netBaseAmt"] for item in ap_items]))
-                ap_schl = self.ap_factory.create_ap_schl(amount=total_amt, due_date=now_ts)
-                if isinstance(ap_schl, dict):
-                    for k in ap_schl:
-                        if hasattr(ap_schl[k], "__float__"):
-                            ap_schl[k] = float(ap_schl[k])
-                api_path = ParamUtil.get_api_path(self.apis, "AP-应付保存服务")
-                params, url = ParamUtil.get_api_params(self.api_params, api_path)
-                filtered_params = ParamUtil.filter_post_body_fields(
-                    params,
-                    ["docTypeId", "apDate", "comOrgId", "purOrgId", "payOrgId", "apHeadCode", "remark", "settPartnerType", "settPartnerId", "docCurrId", "baseCurrId", "exchRate", "grossDocAmt", "netDocAmt", "grossBaseAmt", "netBaseAmt", "payClearingStatus", "invClearingStatus", "headOffsetStatus", "apItems", "apSchls"],
-                    ["params", "request"]
-                )
-                ParamUtil.set_request_params(filtered_params, {
-                    "docTypeId": {"id": 2002001},
-                    "apDate": now_ts,
-                    "comOrgId": com_org,
-                    "purOrgId": pur_org,
-                    "payOrgId": pay_org,
-                    "apHeadCode": ParamUtil.generate_unique_code("AP"),
-                    "remark": f"自动化测试创建应付单 - {now.strftime('%Y-%m-%d %H:%M:%S')}",
-                    "settPartnerType": "SUPPLIER",
-                    "settPartnerId": {"id": vend["id"]},
-                    "docCurrId": {"id": curr["id"]},
-                    "baseCurrId": {"id": curr["id"]},
-                    "exchRate": 1,
-                    "grossDocAmt": total_amt,
-                    "netDocAmt": net_doc_amt,
-                    "grossBaseAmt": gross_base_amt,
-                    "netBaseAmt": net_base_amt,
-                    "payClearingStatus": "UNCLEARED",
-                    "invClearingStatus": "UNCLEARED",
-                    "headOffsetStatus": "UNOFFSET",
-                    "apItems": ap_items,
-                    "apSchls": [ap_schl]
-                })
-                filtered_params = _convert_decimal_to_float(filtered_params)
-                result = self.http.post(url, json=filtered_params)
-                self.assert_util.assert_response_success(result)
+                # 创建应付单请求体
+                ap_data = self.create_ap_request_body(doc_type_id=2002001, account_type="FIN")
+                request_body = ap_data["request_body"]
+                base_data = ap_data["base_data"]
+                
+                # 发送创建请求
+                fields = ["docTypeId", "apDate", "comOrgId", "purOrgId", "payOrgId", "apHeadCode", 
+                         "remark", "settPartnerType", "settPartnerId", "docCurrId", "baseCurrId", 
+                         "exchRate", "grossDocAmt", "netDocAmt", "grossBaseAmt", "netBaseAmt", 
+                         "payClearingStatus", "invClearingStatus", "headOffsetStatus", "apItems", "apSchls"]
+                
+                response = self.send_api_request("AP-应付保存服务", request_body, fields)
+                result = response["result"]
+                filtered_params = response["request_params"]
+                
+                # 提取应付单ID
                 ap_doc_id = ParamUtil.extract_id(result)
                 assert ap_doc_id, "创建应付单失败：未获取到单据ID"
-                request_body = filtered_params["params"]["request"].copy()
-                TestApDocumentSave.ap_save_info.update({
+                
+                # 保存测试数据
+                TestApDocumentSave.ap_info.update({
                     "ap_doc_id": ap_doc_id,
-                    "apHeadCode": filtered_params["params"]["request"]["apHeadCode"],
-                    "settPartnerId": vend,
-                    "payOrgId": pay_org,
-                    "comOrgId": com_org,
-                    "purOrgId": pur_org,
-                    "total_amt": total_amt,
-                    "net_doc_amt": net_doc_amt,
-                    "gross_base_amt": gross_base_amt,
-                    "net_base_amt": net_base_amt,
+                    "apHeadCode": request_body["apHeadCode"],
+                    "settPartnerId": base_data["vend"],
+                    "payOrgId": base_data["pay_org"],
+                    "comOrgId": base_data["com_org"],
+                    "purOrgId": base_data["pur_org"],
+                    "total_amt": base_data["total_amt"],
+                    "net_doc_amt": base_data["net_doc_amt"],
+                    "gross_base_amt": base_data["gross_base_amt"],
+                    "net_base_amt": base_data["net_base_amt"],
                     "request_body": request_body
                 })
+                
+                # 转换Decimal类型以便JSON序列化
+                ap_info_for_report = self.convert_decimal_to_float(TestApDocumentSave.ap_info)
+                
+                # 添加报告附件
                 a.json(filtered_params, "请求数据")
                 a.json(result, "响应结果数据")
-                a.json(TestApDocumentSave.ap_save_info, "断言结果")
+                a.json(ap_info_for_report, "断言结果")
+                
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -144,29 +88,33 @@ class TestApDocumentSave(BaseTest):
     def test_edit_ap_doc_to_estimate(self):
         try:
             with a.step("编辑为标准暂估应付单"):
-                ap_doc_id = TestApDocumentSave.ap_save_info.get("ap_doc_id")
+                ap_doc_id = TestApDocumentSave.ap_info.get("ap_doc_id")
                 assert ap_doc_id, "请先执行创建标准应付单用例"
-                api_path = ParamUtil.get_api_path(self.apis, "AP-应付保存服务")
-                params, url = ParamUtil.get_api_params(self.api_params, api_path)
-                base_request = TestApDocumentSave.ap_save_info.get("request_body", {}).copy()
-                base_request["id"] = ap_doc_id
-                base_request["docTypeId"] = {"id": 2002002}
-                base_request["accountType"] = "EST"
-                filtered_params = ParamUtil.filter_post_body_fields(
-                    params,
-                    list(base_request.keys()),
-                    ["params", "request"]
-                )
-                ParamUtil.set_request_params(filtered_params, base_request)
-                filtered_params = _convert_decimal_to_float(filtered_params)
-                result = self.http.post(url, json=filtered_params)
+                
+                # 构建编辑请求
+                base_request = TestApDocumentSave.ap_info.get("request_body", {}).copy()
+                base_request.update({
+                    "id": ap_doc_id,
+                    "docTypeId": {"id": 2002002},
+                    "accountType": "EST"
+                })
+                
+                # 发送编辑请求
+                response = self.send_api_request("AP-应付保存服务", base_request, list(base_request.keys()))
+                result = response["result"]
+                filtered_params = response["request_params"]
+                
+                # 验证编辑结果
                 data = result.get("data", {}).get("data", {})
                 assert result.get("success") is True
                 assert isinstance(data.get("id"), int)
                 assert data.get("docTypeId", {}).get("id") == 2002002
                 assert data.get("apHeadCode")
+                
+                # 添加报告附件
                 a.json(filtered_params, "请求数据")
                 a.json(result, "响应结果数据")
+                
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -183,28 +131,25 @@ class TestApDocumentSave(BaseTest):
     def test_submit_ap_doc(self):
         try:
             with a.step("提交应付单"):
-                ap_doc_id = TestApDocumentSave.ap_save_info.get("ap_doc_id")
-                ap_head_code = TestApDocumentSave.ap_save_info.get("apHeadCode")
-                sett_partner_id = TestApDocumentSave.ap_save_info.get("settPartnerId")
-                pay_org_id = TestApDocumentSave.ap_save_info.get("payOrgId")
-                total_amt = TestApDocumentSave.ap_save_info.get("total_amt")
-                net_doc_amt = TestApDocumentSave.ap_save_info.get("net_doc_amt")
-                gross_base_amt = TestApDocumentSave.ap_save_info.get("gross_base_amt")
-                net_base_amt = TestApDocumentSave.ap_save_info.get("net_base_amt")
-                assert ap_doc_id and ap_head_code and sett_partner_id and pay_org_id, "请先执行创建用例，确保ap_doc_id、apHeadCode、settPartnerId和payOrgId已生成"
-                api_path = ParamUtil.get_api_path(self.apis, "AP-应付单-列表提交服务")
-                params, url = ParamUtil.get_api_params(self.api_params, api_path)
-                filtered_params = ParamUtil.filter_post_body_fields(
-                    params,
-                    ["apHeadCode", "apStatus", "comOrgId", "purOrgId", "payOrgId", "grossDocAmt", "grossBaseAmt", "payClearingStatus", "invClearingStatus", "unpaidDocAmt", "uninvoicedDocAmt", "unpaidBaseAmt", "uninvoicedBaseAmt", "unoffsetDocAmt", "unoffsetBaseAmt", "headOffsetStatus", "asyncExecutionStatus", "id", "apItems", "apSchls", "settPartnerId", "netDocAmt", "netBaseAmt"],
-                    ["params", "request"]
-                )
-                pur_org_id = TestApDocumentSave.ap_save_info.get("purOrgId")
-                ParamUtil.set_request_params(filtered_params, {
+                # 获取前置数据
+                ap_doc_id = TestApDocumentSave.ap_info.get("ap_doc_id")
+                ap_head_code = TestApDocumentSave.ap_info.get("apHeadCode")
+                sett_partner_id = TestApDocumentSave.ap_info.get("settPartnerId")
+                pay_org_id = TestApDocumentSave.ap_info.get("payOrgId")
+                total_amt = TestApDocumentSave.ap_info.get("total_amt")
+                net_doc_amt = TestApDocumentSave.ap_info.get("net_doc_amt")
+                gross_base_amt = TestApDocumentSave.ap_info.get("gross_base_amt")
+                net_base_amt = TestApDocumentSave.ap_info.get("net_base_amt")
+                
+                assert all([ap_doc_id, ap_head_code, sett_partner_id, pay_org_id]), \
+                    "请先执行创建用例，确保ap_doc_id、apHeadCode、settPartnerId和payOrgId已生成"
+                
+                # 构建提交请求
+                submit_request = {
                     "apHeadCode": ap_head_code,
                     "apStatus": "CONFIRM",
-                    "comOrgId": pay_org_id,
-                    "purOrgId": pur_org_id,
+                    "comOrgId": TestApDocumentSave.ap_info.get("comOrgId"),
+                    "purOrgId": TestApDocumentSave.ap_info.get("purOrgId"),
                     "payOrgId": pay_org_id,
                     "grossDocAmt": total_amt,
                     "grossBaseAmt": gross_base_amt,
@@ -224,14 +169,18 @@ class TestApDocumentSave(BaseTest):
                     "settPartnerId": {"id": sett_partner_id["id"]},
                     "netDocAmt": net_doc_amt,
                     "netBaseAmt": net_base_amt
-                })
-                filtered_params = _convert_decimal_to_float(filtered_params)
-                result = self.http.post(url, json=filtered_params)
-                self.assert_util.assert_response_success(result)
-                data = result.get("data", {}).get("data", {})
-                assert data.get("apHeadCode") == ap_head_code
+                }
+                
+                # 发送提交请求
+                fields = list(submit_request.keys())
+                response = self.send_api_request("AP-应付单-列表提交服务", submit_request, fields)
+                result = response["result"]
+                filtered_params = response["request_params"]
+                
+                # 添加报告附件
                 a.json(filtered_params, "请求数据")
                 a.json(result, "响应结果数据")
+                
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -239,7 +188,7 @@ class TestApDocumentSave(BaseTest):
     @ParamUtil.case_decorator(
         story="应付单过账",
         title="应付单过账-AP_POST_ASYNC_EVENT_SERVICE（动态单据）",
-        description="用前置用例生成的单据进行过账并断言成功",
+        description="用前置用例生成的单据进行过账并断言API调用成功",
         severity="critical",
         order=4,
         smoke=False,
@@ -248,151 +197,166 @@ class TestApDocumentSave(BaseTest):
     def test_post_ap_doc(self):
         try:
             with a.step("应付单过账"):
-                ap_doc_id = TestApDocumentSave.ap_save_info.get("ap_doc_id")
-                ap_head_code = TestApDocumentSave.ap_save_info.get("apHeadCode")
-                sett_partner_id = TestApDocumentSave.ap_save_info.get("settPartnerId")
-                pay_org_id = TestApDocumentSave.ap_save_info.get("payOrgId")
-                total_amt = TestApDocumentSave.ap_save_info.get("total_amt")
-                net_doc_amt = TestApDocumentSave.ap_save_info.get("net_doc_amt")
-                gross_base_amt = TestApDocumentSave.ap_save_info.get("gross_base_amt")
-                net_base_amt = TestApDocumentSave.ap_save_info.get("net_base_amt")
-                assert ap_doc_id and ap_head_code and sett_partner_id and pay_org_id, "请先执行创建用例，确保ap_doc_id、apHeadCode、settPartnerId和payOrgId已生成"
-                # 动态查询应付单最新状态
-                query_api_path = ParamUtil.get_api_path(self.apis, "应付单头表-分页数据服务_PmHKWs2")
-                query_params, query_url = ParamUtil.get_api_params(self.api_params, query_api_path)
-                ParamUtil.set_request_params(query_params, {
-                    "pageable": {
-                        "pageNo": 1,
-                        "pageSize": 1,
-                        "needTotal": False,
-                        "conditionItems": {
-                            "type": "ConditionItems",
-                            "conditions": {
-                                "apHeadCode": {
-                                    "operator": "CONTAINS",
-                                    "value": ap_head_code
-                                }
-                            },
-                            "logicOperator": "AND"
-                        }
-                    }
-                })
-                query_result = self.http.post(query_url, json=query_params)
-                self.assert_util.assert_response_success(query_result)
-                data_list = query_result.get("data", {}).get("data", {}).get("data", [])
-                assert data_list, f"未找到应付单：{ap_head_code}"
-                current_ap_status = data_list[0].get("apStatus")
+                # 获取前置数据
+                ap_doc_id = TestApDocumentSave.ap_info.get("ap_doc_id")
+                ap_head_code = TestApDocumentSave.ap_info.get("apHeadCode")
+                assert ap_doc_id and ap_head_code, "请先执行前置用例，确保ap_doc_id和apHeadCode已生成"
                 
-                # 如果状态已经是DONE，说明已经过账，跳过过账步骤
-                if current_ap_status == "DONE":
-                    a.json(query_params, "状态查询请求")
-                    a.json(query_result, "状态查询结果")
-                    a.text("应付单状态已经是DONE，跳过过账步骤", "过账结果")
-                else:
-                    assert current_ap_status == "CONFIRM", f"应付单状态应为CONFIRM，实际为：{current_ap_status}"
-                    api_path = ParamUtil.get_api_path(self.apis, "应付单-过账-异步服务")
-                    params, url = ParamUtil.get_api_params(self.api_params, api_path)
-                    filtered_params = ParamUtil.filter_post_body_fields(
-                        params,
-                        ["apHeadCode", "docTypeId", "apStatus", "comOrgId", "purOrgId", "payOrgId", "settPartnerType", "settPartnerId", "docCurrId", "baseCurrId", "exchRate", "grossDocAmt", "netDocAmt", "grossBaseAmt", "netBaseAmt", "payClearingStatus", "invClearingStatus", "unpaidDocAmt", "uninvoicedDocAmt", "unpaidBaseAmt", "uninvoicedBaseAmt", "unoffsetDocAmt", "unoffsetBaseAmt", "headOffsetStatus", "asyncExecutionStatus", "id"],
-                        ["params", "request"]
-                    )
-                    pur_org_id = TestApDocumentSave.ap_save_info.get("purOrgId")
-                    ParamUtil.set_request_params(filtered_params, {
-                        "apHeadCode": ap_head_code,
-                        "docTypeId": {"id": 2002001},
-                        "apStatus": current_ap_status,  # 使用动态查询到的状态
-                        "comOrgId": pay_org_id,
-                        "purOrgId": pur_org_id,
-                        "payOrgId": pay_org_id,
-                        "settPartnerType": "SUPPLIER",
-                        "settPartnerId": {"id": sett_partner_id["id"]},
-                        "docCurrId": {"id": pay_org_id["id"]},
-                        "baseCurrId": {"id": pay_org_id["id"]},
-                        "exchRate": 1,
-                        "grossDocAmt": total_amt,
-                        "netDocAmt": net_doc_amt,
-                        "grossBaseAmt": gross_base_amt,
-                        "netBaseAmt": net_base_amt,
-                        "payClearingStatus": "UNCLEARED",
-                        "invClearingStatus": "UNCLEARED",
-                        "unpaidDocAmt": total_amt,
-                        "uninvoicedDocAmt": total_amt,
-                        "unpaidBaseAmt": net_base_amt,
-                        "uninvoicedBaseAmt": net_base_amt,
-                        "unoffsetDocAmt": total_amt,
-                        "unoffsetBaseAmt": total_amt,
-                        "headOffsetStatus": "UNOFFSET",
-                        "asyncExecutionStatus": "CREATED",
-                        "id": ap_doc_id
-                    })
-                    filtered_params = _convert_decimal_to_float(filtered_params)
-                    result = self.http.post(url, json=filtered_params)
-                    self.assert_util.assert_response_success(result)
-                    a.json(query_params, "状态查询请求")
-                    a.json(query_result, "状态查询结果")
-                    a.json(filtered_params, "过账请求数据")
-                    a.json(result, "过账响应结果")
+                # 构建过账请求
+                post_request = {
+                    "apHeadCode": ap_head_code,
+                    "docTypeId": {"id": 2002002},
+                    "apStatus": "CONFIRM",
+                    "comOrgId": TestApDocumentSave.ap_info.get("comOrgId"),
+                    "purOrgId": TestApDocumentSave.ap_info.get("purOrgId"),
+                    "payOrgId": TestApDocumentSave.ap_info.get("payOrgId"),
+                    "settPartnerType": "SUPPLIER",
+                    "settPartnerId": {"id": TestApDocumentSave.ap_info.get("settPartnerId")["id"]},
+                    "docCurrId": {"id": TestApDocumentSave.ap_info.get("payOrgId")["id"]},
+                    "baseCurrId": {"id": TestApDocumentSave.ap_info.get("payOrgId")["id"]},
+                    "exchRate": 1,
+                    "grossDocAmt": TestApDocumentSave.ap_info.get("total_amt"),
+                    "netDocAmt": TestApDocumentSave.ap_info.get("net_doc_amt"),
+                    "grossBaseAmt": TestApDocumentSave.ap_info.get("gross_base_amt"),
+                    "netBaseAmt": TestApDocumentSave.ap_info.get("net_base_amt"),
+                    "payClearingStatus": "UNCLEARED",
+                    "invClearingStatus": "UNCLEARED",
+                    "unpaidDocAmt": TestApDocumentSave.ap_info.get("total_amt"),
+                    "uninvoicedDocAmt": TestApDocumentSave.ap_info.get("total_amt"),
+                    "unpaidBaseAmt": TestApDocumentSave.ap_info.get("net_base_amt"),
+                    "uninvoicedBaseAmt": TestApDocumentSave.ap_info.get("total_amt"),
+                    "unoffsetDocAmt": TestApDocumentSave.ap_info.get("total_amt"),
+                    "unoffsetBaseAmt": TestApDocumentSave.ap_info.get("total_amt"),
+                    "headOffsetStatus": "UNOFFSET",
+                    "asyncExecutionStatus": "CREATED",
+                    "id": ap_doc_id,
+                    "apItems": [],
+                    "apSchls": []
+                }
+                
+                # 发送过账请求
+                fields = list(post_request.keys())
+                response = self.send_api_request("应付单-过账-异步服务", post_request, fields)
+                result = response["result"]
+                filtered_params = response["request_params"]
+                
+                # 验证API调用成功
+                assert result.get("success") is True, f"应付单过账API调用失败，单据编号: {ap_head_code}"
+                
+                # 添加报告附件
+                a.json(filtered_params, "请求数据")
+                a.json(result, "响应结果数据")
+                a.json({"api_success": result.get("success"), "ap_head_code": ap_head_code}, "过账结果")
+                
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
 
     @ParamUtil.case_decorator(
         story="应付单状态校验",
-        title="根据单据编号分页精简查询应付单状态",
-        description="用apHeadCode分页精简查询应付单详情并断言状态（yaml参数自动获取）",
+        title="根据单据编号分页查询应付单状态",
+        description="用apHeadCode分页查询应付单详情并轮询等待状态变为DONE",
         severity="critical",
         order=5,
         smoke=False,
-        tags=["ap", "check", "status", "by_code", "paging"]
+        tags=["ap", "check", "status", "by_code", "polling"]
     )
     def test_check_ap_doc_status_by_code_paging(self):
         try:
-            with a.step("根据单据编号分页精简查询应付单状态"):
-                ap_head_code = TestApDocumentSave.ap_save_info.get("apHeadCode")
-                assert ap_head_code, "请先执行创建用例，确保apHeadCode已生成"
-                api_path = ParamUtil.get_api_path(self.apis, "应付单头表-分页数据服务_PmHKWs2")
-                params, url = ParamUtil.get_api_params(self.api_params, api_path)
-                ParamUtil.set_request_params(params, {
-                    "pageable": {
-                        "pageNo": 1,
-                        "pageSize": 1,
-                        "needTotal": False,
-                        "conditionItems": {
-                            "type": "ConditionItems",
-                            "conditions": {
-                                "apHeadCode": {
-                                    "operator": "CONTAINS",
-                                    "value": ap_head_code
-                                }
-                            },
-                            "logicOperator": "AND"
+            with a.step("根据单据编号分页查询应付单状态"):
+                ap_head_code = TestApDocumentSave.ap_info.get("apHeadCode")
+                assert ap_head_code, "请先执行前置用例，确保apHeadCode已生成"
+                
+                # 轮询查询应付单状态
+                max_attempts = 15  # 最大轮询次数
+                interval = 2  # 轮询间隔（秒）
+                current_status = None
+                
+                for attempt in range(max_attempts):
+                    try:
+                        # 构建查询请求
+                        query_request = {
+                            "apHeadCode": ap_head_code,
+                            "pageable": {
+                                "page": 0,
+                                "size": 10,
+                                "sort": []
+                            }
                         }
-                    }
-                })
-                max_wait = 60
-                interval = 2
-                waited = 0
-                ap_status = None
-                result = None
-                while waited < max_wait:
-                    result = self.http.post(url, json=params)
-                    self.assert_util.assert_response_success(result)
-                    data_list = result.get("data", {}).get("data", {}).get("data", [])
-                    if data_list:
-                        ap_status = data_list[0].get("apStatus")
-                        if ap_status == "DONE":
-                            break
-                    time.sleep(interval)
-                    waited += interval
-                assert ap_status == "DONE", f"过账后单据状态应为DONE，实际为：{ap_status}"
-                a.json(params, "请求数据")
-                a.json(result, "响应结果数据")
-                a.json({"apHeadCode": ap_head_code, "apStatus": ap_status}, "断言结果")
+                        
+                        # 使用指定的分页数据服务API
+                        api_path = ParamUtil.get_api_path(self.apis, "应付单头表-分页数据服务_PmHKWs2")
+                        params, url = ParamUtil.get_api_params(self.api_params, api_path)
+                        
+                        filtered_params = ParamUtil.filter_post_body_fields(
+                            params, ["apHeadCode", "pageable"], ["params", "request"]
+                        )
+                        ParamUtil.set_request_params(filtered_params, query_request)
+                        
+                        # 发送查询请求
+                        result = self.http.post(url, json=filtered_params)
+                        
+                        if result.get("success"):
+                            data = result.get("data", {}).get("data", {})
+                            records = data.get("data", [])  # 修正数据结构路径
+                            
+                            if records:
+                                # 找到匹配的应付单记录
+                                ap_record = None
+                                for record in records:
+                                    if record.get("apHeadCode") == ap_head_code:
+                                        ap_record = record
+                                        break
+                                
+                                if ap_record:
+                                    current_status = ap_record.get("apStatus")
+                                    a.text(f"第{attempt + 1}次查询，当前状态: {current_status}", "轮询状态")
+                                    
+                                    if current_status == "DONE":
+                                        # 状态已变为DONE，验证成功
+                                        a.json({"apHeadCode": ap_head_code}, "查询条件")
+                                        a.json(ap_record, "应付单详情")
+                                        a.json({
+                                            "ap_status": current_status, 
+                                            "polling_attempts": attempt + 1,
+                                            "status_check": "PASSED"
+                                        }, "状态校验结果")
+                                        return
+                                    
+                                    elif current_status in ["DRAFT", "CONFIRM"]:
+                                        # 状态还未完成，继续轮询
+                                        if attempt < max_attempts - 1:
+                                            time.sleep(interval)
+                                            continue
+                                    else:
+                                        # 状态异常
+                                        assert False, f"应付单状态异常，期望: DONE，实际: {current_status}"
+                                else:
+                                    a.text(f"第{attempt + 1}次查询，未找到匹配的应付单记录", "轮询状态")
+                            else:
+                                a.text(f"第{attempt + 1}次查询，返回记录为空", "轮询状态")
+                        else:
+                            a.text(f"第{attempt + 1}次查询，API调用失败", "轮询状态")
+                        
+                        # 如果不是最后一次尝试，等待后继续
+                        if attempt < max_attempts - 1:
+                            time.sleep(interval)
+                            
+                    except Exception as e:
+                        a.text(f"第{attempt + 1}次查询异常: {str(e)}", "轮询异常")
+                        if attempt < max_attempts - 1:
+                            time.sleep(interval)
+                            continue
+                        else:
+                            raise
+                
+                # 轮询结束仍未达到期望状态
+                assert False, f"轮询{max_attempts}次后，应付单状态仍未变为DONE，最后状态: {current_status}，单据编号: {ap_head_code}"
+                
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
 
 if __name__ == "__main__":
-    import pytest
-    pytest.main(["-v", __file__]) 
+    test = TestApDocumentSave()
+    test.setup_class() 

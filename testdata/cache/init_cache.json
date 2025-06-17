@@ -13,13 +13,7 @@
       "coun_name": "中国"
     }
   ],
-  "timezone_info": [
-    {
-      "timezone_id": 2000001,
-      "timezone_code": "UTC-8",
-      "timezone_desc": "东八区"
-    }
-  ],
+  "timezone_info": [],
   "exchange_rate_type_info": [
     {
       "exchange_rate_type_id": 2000001,
@@ -206,7 +200,7 @@
   "sales_channel_info": [
     {
       "id": 14378001,
-      "code": "AUTOTEST_SLS_DC_ORG",
+      "code": "AUTOTEST_SLS_DC",
       "name": "销售渠道(自动化)"
     }
   ],

@@ -3,27 +3,12 @@
 覆盖草稿、已确认、已完成三种状态，动态获取ID，符合testcaserole规范
 """
 import allure
-from testcases.comm.base_test import BaseTest
+from testcases.fin.fin_ar import ArBaseTest
 from utils.param_util import ParamUtil
 from utils.allure_simple import a
-from data_factory.fin_ar_factory import FinArFactory
-from pathlib import Path
 
-@allure.epic("ERP通业财模块")
-@allure.feature("应收管理")
-class TestArDocumentQuery(BaseTest):
+class TestArDocumentQuery(ArBaseTest):
     ar_query_info = {}
-
-    @classmethod
-    def setup_class(cls):
-        super().setup_class()
-        cls.ar_factory = FinArFactory()
-        # 初始化财务API配置
-        project_root = Path(__file__).resolve().parent.parent.parent.parent
-        apis = cls.yaml_util.read_yaml(project_root / "testdata/fin/fin_api_path.yaml").get("apis", {})
-        api_params = cls.yaml_util.read_yaml(project_root / "testdata/fin/fin_api_params.yaml").get("api_params", {})
-        cls.apis = apis
-        cls.api_params = api_params
 
     @ParamUtil.case_decorator(
         story="应收单详情查询",

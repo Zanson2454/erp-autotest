@@ -16,15 +16,15 @@ from utils.yaml_util import YamlUtil
 from utils.exception_util import safe_api_call
 from testcases.sls import SlsBase
 
-@allure.epic("销售管理")
-@allure.feature("销售数据检查")
-class TestSalesOrderConfig(BaseTest,SlsBase):
+class TestSalesOrderConfig(SlsBase):
     """销售订单配置检查测试类"""
     
     @classmethod
     def setup_class(cls):
         """测试类初始化"""
+        # 先初始化 SlsBase，因为它包含了基础配置
         super().setup_class()
+        
         cls.order_type_ids = {}
         cls.order_line_type_ids = {}
         cls.yaml_util = YamlUtil()
@@ -153,6 +153,7 @@ class TestSalesOrderConfig(BaseTest,SlsBase):
                     a.text(f"缺少以下订单行类型: {missing_types}", "缺失类型")
                     a.text("可用的订单行类型: " + ", ".join(self.order_line_type_ids.keys()), "可用类型")
             self.assert_util.assert_response_success(result)
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
