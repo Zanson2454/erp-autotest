@@ -1,27 +1,21 @@
-import os
 import sys
 import json
-import pytest
 import random
-from decimal import Decimal
 from datetime import datetime
-from typing import Dict, Any, Optional
 from pathlib import Path
 import allure
+from utils.allure_simple import a
 
 
 # 添加项目根目录到 Python 路径
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from utils.yaml_util import YamlUtil
 from utils.exception_util import  safe_api_call, handle_class_method_exception
-from utils.cache_util import CacheUtil
-from testcases.comm.base_test import BaseTest
 from testcases.sls import SlsBase
 
 
-class TestSalesOrderCreate(BaseTest,SlsBase):
+class TestSalesOrderCreate(SlsBase):
     """销售订单创建测试类"""
     
     # 定义要测试的订单类型
@@ -62,8 +56,8 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
         cls.order_id = None
         cls.render_qty = random.randint(1, 99)  # 生成1-99之间的随机整数
         
-        cls.logger.info(f"初始化渲染数量: {cls.render_qty}")
-        cls.logger.info("测试类初始化完成")
+        a.text(f"初始化渲染数量: {cls.render_qty}", "初始化信息")
+        a.text("测试类初始化完成", "初始化信息")
 
     def test_01_init_sales_order(self, order_type="STND"):
         """初始化销售订单
@@ -89,7 +83,7 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
         
         if not order_line_type_code:
             error_msg = f"未找到订单类型 {order_type} 对应的订单行类型，请确保订单类型和订单行类型正确匹配"
-            self.logger.error(error_msg)
+            a.text(error_msg, "错误")
             raise ValueError(error_msg)
         
         order_line_type_id = SlsBase.get_order_line_type_id(order_line_type_code)
@@ -110,8 +104,8 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
         if self.sls_person_obj:
             self.sls_person_name = self.sls_person_obj.get("name")
         
-        self.logger.debug(f"销售人员信息: {self.sls_person_obj}")
-        self.logger.info(f"销售订单创建初始化完成，订单类型: {order_type}")
+        a.json(self.sls_person_obj, "销售人员信息")
+        a.text(f"销售订单创建初始化完成，订单类型: {order_type}", "初始化完成")
         
         self.assert_util.assert_response_success(result)
         
@@ -132,7 +126,7 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
         response_data = result.get("data", {}).get("data", {}).get("data", [])[0]
         actual_cust_id = response_data.get('id',{})
         self.assert_util.assert_eq(actual_cust_id, self.cust_id, "客户编码不匹配")
-        self.logger.info("客户信息查询完成")    
+        a.text("客户信息查询完成", "步骤信息")    
         
     def test_03_render_addr_info(self):
         """渲染地址信息"""
@@ -145,7 +139,7 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
         self.addr_detail = addr_info.get("addrDetail")
         self.cust_person_name = addr_info.get("custPersonName")
         self.cust_phone = addr_info.get("custPhone")
-        self.logger.info("地址信息渲染完成")
+        a.text("地址信息渲染完成", "步骤信息")
 
     def test_04_query_partner(self):
         """查询相关方"""
@@ -169,7 +163,7 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
         # 保存相关方信息供后续使用
         response_data = result.get("data", {}).get("data", {})
         self.sls_partner_links = response_data.get("slsPartnerLinks")
-        self.logger.info("相关方查询完成")
+        a.text("相关方查询完成", "步骤信息")
         self.assert_util.assert_id_exists(self.sls_partner_links, "相关方信息")
 
     def test_05_query_sales_organization(self):
@@ -185,6 +179,8 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
         self.sls_org_id = self.sls_org_obj["id"]
         self.logger.info(f"销售组织列表查询完成: {self.sls_org_obj}")
         self.logger.info("销售组织列表查询完成")
+        a.json(self.sls_org_obj, "销售组织信息")
+        a.text("销售组织列表查询完成", "步骤信息")
         self.assert_util.assert_id_exists(self.sls_org_obj, "销售组织信息")
         self.assert_util.assert_id_exists(self.sls_org_id, "销售组织ID")
 
@@ -222,10 +218,12 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
             if not found:
                 error_msg = f"未找到关键字为 {keyword} 的物料"
                 self.logger.error(error_msg)
+                a.text(error_msg, "错误")
                 raise Exception(error_msg)
         else:
             error_msg = "未指定物料关键字"
             self.logger.error(error_msg)
+            a.text(error_msg, "错误")
             raise Exception(error_msg)
         
         #打印查到的物料code
@@ -235,9 +233,11 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
             # 添加默认价格字段
             self.mat_obj["matBasePrice"] = random.randint(1, 999999)  # 设置默认价格
             self.logger.info(f"物料列表查询完成，使用物料: {self.mat_obj.get('matCode')}")
+            a.text(f"物料列表查询完成，使用物料: {self.mat_obj.get('matCode')}", "步骤信息")
             self.assert_util.assert_id_exists(self.mat_obj, "物料信息")
         else:
             self.logger.error("未找到任何物料")
+            a.text("未找到任何物料", "错误")
             raise Exception("未找到任何物料")
 
     def test_07_render_order_line(self, order_type="STND"):
@@ -269,7 +269,7 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
         
         if not order_line_type_code:
             error_msg = f"未找到订单类型 {order_type} 对应的订单行类型，请确保订单类型和订单行类型正确匹配"
-            self.logger.error(error_msg)
+            a.text(error_msg, "错误")
             raise ValueError(error_msg)
         
         order_line_type_id = SlsBase.get_order_line_type_id(order_line_type_code)
@@ -306,6 +306,7 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
         
         if "soItems" not in result:
             self.logger.error(f"订单行渲染响应缺少soItems字段，响应内容: {result}")
+            a.text(f"订单行渲染响应缺少soItems字段，响应内容: {result}", "错误")
             raise KeyError("订单行渲染响应缺少soItems字段。")
 
         self.so_items = result.get("soItems")
@@ -317,11 +318,14 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
         
         self.logger.info(f"订单行渲染完成，订单类型: {order_type}")
         self.logger.info(f"订单行数据: {json.dumps(self.so_items, ensure_ascii=False, indent=2)}")
+        a.text(f"订单行渲染完成，订单类型: {order_type}", "步骤信息")
+        a.json(self.so_items, "订单行数据")
         
         try:
             assert self.so_items is not None, "订单行信息为空"
         except AssertionError as e:
             self.logger.error(f"订单行渲染原始响应: {json.dumps(result, ensure_ascii=False, indent=2)}")
+            a.json(result, "订单行渲染原始响应")
             raise
 
     def test_08_calculate_pricing(self):
@@ -370,22 +374,14 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
                 data['params']['request']['exchRate'] = 1 #更新变量
                 data['params']['request']['soItems'] = self.so_items #更新变量
                 data['params']['request']['slsPartnerLinks'] = self.sls_partner_links #更新变量
-                allure.attach(
-                    json.dumps(data, indent=2, ensure_ascii=False),
-                    "定价请求参数",
-                    allure.attachment_type.JSON
-                )
-                self.logger.info(f"自动定价请求参数: {json.dumps(data, indent=2, ensure_ascii=False)}")
+                a.json(data, "自动定价请求参数")
+                a.text(f"自动定价请求参数: {json.dumps(data, indent=2, ensure_ascii=False)}")
 
             with allure.step("发送定价请求"):
                 try:
                     result = self.http.post(url, json=data, description="自动定价")
                     result = result.get("data", {}).get("data", {})
-                    allure.attach(
-                        json.dumps(result, indent=2, ensure_ascii=False),
-                        "响应数据",
-                        allure.attachment_type.JSON
-                    )
+                    a.json(result, "响应数据")
                     
                     # 检查定价结果中的税率ID等信息
                     if result and "soItems" in result and len(result["soItems"]) > 0:
@@ -393,6 +389,9 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
                         self.logger.debug(f"定价结果中的税率ID: {first_item.get('taxRateId')}")
                         self.logger.debug(f"定价结果中的单位ID: {first_item.get('uomSlsId')}")
                         self.logger.debug(f"定价结果中的物料类型ID: {first_item.get('matTypeId')}")
+                        a.text(f"定价结果中的税率ID: {first_item.get('taxRateId')}", "定价信息")
+                        a.text(f"定价结果中的单位ID: {first_item.get('uomSlsId')}", "定价信息")
+                        a.text(f"定价结果中的物料类型ID: {first_item.get('matTypeId')}", "定价信息")
                             
                 except Exception as e:
                     error_msg = f"自动定价请求失败: {str(e)}"
@@ -400,6 +399,7 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
                         error_msg += f"\n响应状态码: {e.response.status_code}"
                         error_msg += f"\n响应内容: {e.response.text}"
                     self.logger.error(error_msg)
+                    a.text(error_msg, "错误")
                     raise
 
             # 3. 验证响应
@@ -411,19 +411,16 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
                 # 保存定价信息
                 self.so_price_data = result
                 
-                allure.attach(
-                    json.dumps(self.so_price_data, indent=2, ensure_ascii=False),
-                    "定价信息",
-                    allure.attachment_type.JSON
-                )
-                self.logger.info("自动定价完成")
+                a.json(self.so_price_data, "定价信息")
+                a.text("自动定价完成", "步骤信息")
 
         except Exception as e:
             error_msg = f"自动定价失败: {str(e)}"
             self.logger.error(error_msg)
+            a.text(error_msg, "错误")
             if hasattr(e, 'response'):
-                self.logger.error(f"响应状态码: {e.response.status_code}")
-                self.logger.error(f"响应内容: {e.response.text}")
+                a.text(f"响应状态码: {e.response.status_code}", "错误")
+                a.text(f"响应内容: {e.response.text}", "错误")
             raise
 
     def _save_or_submit_order(self, order_type="STND", is_submit=False):
@@ -473,7 +470,7 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
                 
                 if not order_line_type_code:
                     error_msg = f"未找到订单类型 {order_type} 对应的订单行类型，请确保订单类型和订单行类型正确匹配"
-                    self.logger.error(error_msg)
+                    a.text(error_msg, "错误")
                     raise ValueError(error_msg)
                 
                 order_line_type_id = SlsBase.get_order_line_type_id(order_line_type_code)
@@ -483,6 +480,10 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
                 self.logger.info(f"订单类型ID: {order_type_id}")
                 self.logger.info(f"订单行类型: {order_line_type_code}")
                 self.logger.info(f"订单行类型ID: {order_line_type_id}")
+                a.text(f"订单类型: {order_type}", "类型信息")
+                a.text(f"订单类型ID: {order_type_id}", "类型信息")
+                a.text(f"订单行类型: {order_line_type_code}", "类型信息")
+                a.text(f"订单行类型ID: {order_line_type_id}", "类型信息")
                 
                 # 构建请求数据
                 request_data = {
@@ -514,26 +515,31 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
                 
                 # 记录请求数据
                 self.logger.info(f"保存订单请求数据: {json.dumps(data, indent=2, ensure_ascii=False)}")
+                a.json(data, "保存订单请求数据")
                 
                 result = self.http.post(url, json=data, description=f"销售订单{'提交' if is_submit else '保存'}")
                 
                 # 记录响应数据
                 self.logger.info(f"保存订单响应数据: {json.dumps(result, indent=2, ensure_ascii=False)}")
+                a.json(result, "保存订单响应数据")
                 
                 assert result is not None, f"销售订单{'提交' if is_submit else '保存'}失败"
                 
                 if not is_submit:
                     self.order_id = result.get("data", {}).get("data", {}).get("id")
                     self.logger.info(f"{order_type}类型销售订单保存成功，订单ID: {self.order_id}")
+                    a.text(f"{order_type}类型销售订单保存成功，订单ID: {self.order_id}", "保存成功")
                 else:
                     self.logger.info(f"{order_type}类型销售订单提交成功")
+                    a.text(f"{order_type}类型销售订单提交成功", "提交成功")
 
         except Exception as e:
             error_msg = f"{order_type}类型销售订单{'提交' if is_submit else '保存'}失败: {str(e)}"
             self.logger.error(error_msg)
+            a.text(error_msg, "错误")
             if hasattr(e, 'response'):
-                self.logger.error(f"响应状态码: {e.response.status_code}")
-                self.logger.error(f"响应内容: {e.response.text}")
+                a.text(f"响应状态码: {e.response.status_code}", "错误")
+                a.text(f"响应内容: {e.response.text}", "错误")
             raise
 
     @allure.title("测试多种类型销售订单保存")
@@ -572,6 +578,7 @@ class TestSalesOrderCreate(BaseTest,SlsBase):
     def teardown_class(self):
         # self.clear_so --todo
         self.logger.info("销售订单创建测试类清理")
+        a.text("销售订单创建测试类清理", "清理信息")
 
 
 if __name__ == "__main__":

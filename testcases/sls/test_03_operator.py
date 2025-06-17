@@ -3,9 +3,7 @@ import sys
 import json
 import pytest
 import allure
-from decimal import Decimal
-from datetime import datetime
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 from pathlib import Path
 # 添加项目根目录到 Python 路径
 
@@ -15,13 +13,11 @@ sys.path.insert(0, str(project_root))
 
 
 
-from utils.yaml_util import YamlUtil
 from utils.exception_util import  safe_api_call, handle_class_method_exception
-from testcases.comm.base_test import BaseTest
 from utils.response_util import ResponseUtil
 from testcases.sls.test_01_create import TestSalesOrderCreate
 from testcases.sls import SlsBase
-class TestSalesOrderOperator(BaseTest,SlsBase):
+class TestSalesOrderOperator(SlsBase):
     """销售订单操作测试类"""
     
     @classmethod
@@ -29,7 +25,7 @@ class TestSalesOrderOperator(BaseTest,SlsBase):
     def setup_class(cls):
         """测试类初始化，获取必要的ID和配置信息"""
         super().setup_class()
-        
+        SlsBase.setup_class()
         # 初始化测试数据
         cls.order_id = None
         cls.so_data = None
