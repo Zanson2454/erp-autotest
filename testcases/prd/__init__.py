@@ -98,7 +98,7 @@ class PrdBaseTest(BaseTest):
     
     def get_api_path(self, api_key):
         """
-        获取API路径
+        获取API路径（兼容原有方法）
         
         参数:
             api_key (str): API的名称键值
@@ -107,6 +107,60 @@ class PrdBaseTest(BaseTest):
             str: 对应的API路径，如果找不到对应的API，则返回None
         """
         return self.apis.get(api_key, {}).get("path")
+    
+    def get_cross_module_api_path(self, module_name: str, api_key: str) -> str:
+        """
+        获取跨模块的API路径
+        
+        Args:
+            module_name: 模块名称，如 'scm', 'gen', 'fin' 等
+            api_key: API的名称键值
+            
+        Returns:
+            str: 对应的API路径
+        """
+        # 构建模块API路径配置文件路径
+        api_path_file = Path(project_root) / "testdata" / module_name / f"{module_name}_api_path.yaml"
+        
+        # 读取API路径配置
+        api_config = self.yaml_util.read_yaml(api_path_file)
+        apis = api_config.get("apis", {})
+        
+        # 获取API路径
+        api_path = apis.get(api_key, {}).get("path")
+        if not api_path:
+            raise ValueError(f"在{module_name}模块中未找到API: {api_key}")
+            
+        return api_path
+    
+    def get_cross_module_api_params(self, module_name: str, api_path: str, with_query_params: str = None) -> tuple:
+        """
+        获取跨模块的API请求参数和完整URL
+        
+        Args:
+            module_name: 模块名称，如 'scm', 'gen', 'fin' 等
+            api_path: API路径
+            with_query_params: 查询参数字符串（可选）
+            
+        Returns:
+            tuple: (params, url)
+        """
+        # 构建模块API参数配置文件路径
+        api_params_file = Path(project_root) / "testdata" / module_name / f"{module_name}_api_params.yaml"
+        
+        # 读取API参数配置
+        api_config = self.yaml_util.read_yaml(api_params_file)
+        api_params = api_config.get("api_params", {})
+        
+        # 获取API参数
+        params = api_params.get(api_path, {})
+        
+        # 构建完整URL
+        url = api_path
+        if with_query_params:
+            url = f"{api_path}?{with_query_params}"
+            
+        return params, url
     
     def get_api_params(self, api_path, with_query_params=None):
         """
