@@ -66,9 +66,3 @@ alwaysApply: true
 1. 字典取值优先使用 get,取不到 key,默认为 None 
 2. 路径获取统一用 pathlib 的 PATH 获取
 3. 所有环境配置通过.env文件管理 
-4. 所有测试文件都生成类方法调用
-   '''
-   if __name__ == "__main__":
-       test = TestXXXXX()
-       test.setup_class()
-   '''
