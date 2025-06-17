@@ -1,10 +1,6 @@
-import os
 import sys
-import json
 import pytest
 import allure
-from datetime import datetime
-from typing import Dict, Any, Optional
 from pathlib import Path
 
 
@@ -12,13 +8,12 @@ from pathlib import Path
 project_root =Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from testcases.comm.base_test import BaseTest
 from testcases.sls.test_01_create import TestSalesOrderCreate
 from utils.exception_util import safe_api_call
 from testcases.sls import SlsBase
 
 
-class TestOrderDelete(BaseTest,SlsBase):
+class TestOrderDelete(SlsBase):
     """销售订单删除测试类"""
     
     @classmethod

@@ -2,19 +2,16 @@ import sys
 import json
 import allure
 import pytest   
-from datetime import datetime
-from typing import Dict, Any, Optional
 from pathlib import Path
 # 添加项目根目录到 Python 路径
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from testcases.comm.base_test import BaseTest
 from utils.exception_util import safe_api_call
-from utils.yaml_util import YamlUtil
+
 from testcases.sls import SlsBase
 
-class TestOrderList(BaseTest,SlsBase):
+class TestOrderList(SlsBase):
     """销售订单列表测试类"""
     
     @classmethod
@@ -25,7 +22,6 @@ class TestOrderList(BaseTest,SlsBase):
             method: 当前执行的测试方法，可选参数
         """
         super().setup_class()
-
         # testdata
         cls.test_data = {}
 

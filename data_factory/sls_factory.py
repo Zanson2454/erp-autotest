@@ -4,7 +4,6 @@ import sys
 project_root = Path(__file__).resolve().parent.parent
 sys.path.append(str(project_root))
 
-
 from data_factory.base import DataFactory
 from utils.yaml_util import YamlUtil
 from utils.cache_util import CacheUtil
@@ -16,16 +15,21 @@ class SlsDataFactory:
     """
     
     sls_cache_path = project_root / "testdata" / "cache" / "sls_cache.json"
+    
+    @classmethod
+    def setup(cls):
+        """初始化数据库连接"""
+        cls.sls_cache_path.parent.mkdir(exist_ok=True)
+        data_factory = DataFactory() 
+        db_config = data_factory.get_env_config()['database']['erp_db']
+        DBManager.init(db_config)
+    
     @classmethod
     def cache_sls_data(cls):
         """
         读取 sls_init_sql.yaml，执行 SQL，生成业务常量结构并写入 cache/sls_cache.json
         结构与 sc.json 一致。
         """
-        cls.sls_cache_path.parent.mkdir(exist_ok=True)
-        data_factory = DataFactory() 
-        db_config = data_factory.get_env_config()['database']['erp_db']
-        DBManager.init(db_config)
         sls_config_full = YamlUtil.get_project_config("erp", "sls_init_sql.yaml")
         sls_config = sls_config_full.get("sls_config", {})
         result = {}
@@ -67,6 +71,7 @@ class SlsDataFactory:
                 group_name = row.get("so_item_type_group_name")
                 if group_id:
                     so_item_type_group_map[group_id] = group_name
+                    
         # 4. 物料类型
         mat_type_map = {}
         if "MATERIAL_TYPE" in sls_config:
@@ -76,6 +81,7 @@ class SlsDataFactory:
                 mat_type_name = row.get("mat_type_name")
                 if mat_type_id:
                     mat_type_map[mat_type_id] = mat_type_name
+                    
         # 5. 订单类型和订单行类型分配
         order_type_line_combos = {}
         rows = DBManager.query(sls_config["ORDER_TYPE_LINE_COMBINATIONS"]["sql"])
@@ -96,6 +102,7 @@ class SlsDataFactory:
                 "so_item_type_group_name": so_item_type_group_map.get(row.get("so_item_type_group_id"))
             }
             order_type_line_combos.setdefault(so_item_type_id, []).append(detm_info)
+            
         # 转换为 list 格式，提升可读性
         order_type_line_combos_list = [
             {
@@ -107,16 +114,17 @@ class SlsDataFactory:
             for so_item_type_id, detm_infos in order_type_line_combos.items()
         ]
         result["ORDER_TYPE_LINE_COMBINATIONS"] = order_type_line_combos_list
+        
         CacheUtil.init(str(cls.sls_cache_path.parent))
         CacheUtil.set("sls_cache", result)
-        print(result)
         return result
     
-    def get_stnd_so(slef):
+    def get_stnd_so(self):
         """
         获取标准销售订单
         """
         pass
 
 if __name__ == "__main__":
+    SlsDataFactory.setup()
     SlsDataFactory.cache_sls_data() 
