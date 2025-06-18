@@ -92,7 +92,6 @@ class HttpUtil:
             response = self.session.request(method, full_url, **kwargs)
             # 记录响应信息
             logger.info(f"响应状态码: {response.status_code}")
-            logger.info(f"响应头: {dict(response.headers)}")
             
             try:
                 response_json = response.json()
