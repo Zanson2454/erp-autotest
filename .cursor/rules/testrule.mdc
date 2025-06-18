@@ -1,0 +1,182 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+## 1. 文件结构规范
+### 1.1 文件命名：test_<模块>_<功能>.py (例：test_partner_manage.py)
+### 1.2 导入规范：
+```python
+import sys
+from pathlib import Path
+
+project_root = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(project_root))
+
+from testcases.<领域> import <领域>BaseTest  # 优先使用领域基类
+from utils.param_util import ParamUtil
+from utils.allure_simple import a
+```
+### 1.3 用例模块下的__init__.py规范
+```python
+import sys
+from pathlib import Path
+
+project_root = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(project_root))
+
+from testcases.comm.base_test import BaseTest
+from utils.param_util import ParamUtil
+from utils.allure_simple import a
+
+class <功能模块>Base(BaseTest):
+    """XXX管理测试基类
+    
+    提供基础数据管理模块测试用例的通用功能:
+    1. API 路径和参数配置加载
+    2. 通用的 setup/teardown 逻辑
+    3. 常用的工具方法
+    """
+    
+    # 类变量用于存储API配置
+    apis = {}
+    api_params = {}
+    
+    @classmethod
+    def setup_class(cls):
+        """测试类初始化
+        
+        1. 调用父类初始化
+        2. 加载API配置文件
+        3. 加载API参数模板
+        """
+        super().setup_class()
+        
+        # 获取XXXX模块的API配置文件路径
+        api_path_file = project_root / "testdata" / "gen_md" / "{}_api_path.yaml"
+        api_params_file = project_root / "testdata" / "gen_md" / "{}_api_params.yaml"
+        
+        # 加载API配置
+        cls.apis = cls.load_yaml(str(api_path_file)).get("apis")
+        cls.api_params = cls.load_yaml(str(api_params_file)).get("api_params")
+```
+
+## 2. 测试类规范
+```python
+@allure.epic("<领域名称>")
+@allure.feature("<功能模块>")
+class Test<功能名称>(<领域>BaseTest):
+    <实体>_info = {}  # 类变量存储共享数据
+    
+    @classmethod
+    def setup_class(cls):
+        super().setup_class()  # 必须调用父类初始化
+```
+
+## 3. 测试方法规范
+
+```python
+@ParamUtil.case_decorator(
+    story="<功能故事>",
+    title="<测试标题>",
+    description="<详细描述>",
+    severity="blocker",  # blocker/critical/normal/minor/trivial
+    order=<执行顺序>,
+    smoke=True/False,
+    tags=["<标签>"]
+)
+def test_<操作>_<实体>(self):
+    try:
+        # 1. 生成测试数据
+        code = ParamUtil.generate_unique_code("<前缀>")
+        name = ParamUtil.generate_test_name("<前缀>")
+        
+        # 2. 获取API配置
+        api_path = ParamUtil.get_api_path(self.apis, "<API键名>")
+        params, url = ParamUtil.get_api_params(self.api_params, api_path)
+        
+        # 3. 过滤和设置参数
+        filtered_params = ParamUtil.filter_post_body_fields(
+            params, 
+            ["必填字段1", "必填字段2"],  # 需替换为实际字段
+            ["params", "request"]  # 嵌套路径
+        )
+        ParamUtil.set_request_params(filtered_params, {
+            "字段1": 值1,
+            "字段2": 值2  # 使用生成的测试数据
+        })
+        
+        # 4. 发送请求
+        response = self.http.post(url, json=filtered_params)
+        
+        # 5. 验证响应
+        self.assert_util.assert_response_success(response)
+        entity_id = ParamUtil.extract_id(response)
+        assert entity_id, "ID提取失败"
+        
+        # 6. 保存数据
+        Test<功能名称>.<实体>_info.update({
+            "id": entity_id,
+            "code": code,
+            "name": name
+        })
+        
+        # 7. 添加Allure附件
+        a.json(filtered_params, "请求数据")
+        a.json(response, "响应数据")
+    except Exception as e:
+        a.text(str(e), "失败原因")
+        raise
+```
+
+## 4. 关键工具方法
+### 4.1 generate_unique_code(): 生成唯一业务编码
+### 4.2 filter_post_body_fields(): 过滤指定嵌套结构的参数
+### 4.3 set_request_params(): 批量设置参数值
+### 4.4 extract_id(): 从响应中提取实体ID
+
+## 5. 测试规范要求:
+### 5.1 使用ParamUtil工具类处理参数
+### 5.2 必须包含异常处理和Allure附件
+### 5.3 类变量存储跨测试数据
+### 5.4 断言必须包含assert_response_success()
+
+## 6. 测试用例输出案例
+```python
+import allure
+
+# 添加项目根目录到 Python 路径
+project_root = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(project_root))
+
+from testcases.gen import GenBaseTest
+from utils.param_util import ParamUtil
+from utils.allure_simple import a
+
+@allure.epic("合作伙伴管理")
+@allure.feature("合作伙伴生命周期")
+class TestPartnerManage(GenBaseTest):
+    partner_info = {}
+    
+    @classmethod
+    def setup_class(cls):
+        super().setup_class()
+    
+    # 生成此处填写完整的测试方法
+```
+
+## 7. 关键优化点说明
+### 7.1. **参数处理精准化**  
+   明确要求使用 `filter_post_body_fields()` 的嵌套路径 `["params", "request"]`，与yaml参数结构完全匹配
+
+### 7.2. **测试数据生命周期**  
+   强调类变量`<实体>_info`的跨方法共享机制，符合业务测试场景需求
+
+### 7.3. **异常处理标准化**  
+   强制要求 try-except 结构和Allure错误记录，确保测试可维护性
+
+### 7.4. **API元数据直接映射**  
+   通过`<API键名>`精确对应md_api_path.yaml中的接口定义
+
+### 7.5. **动态生成与硬编码结合**  
+   区分需动态生成的字段（code/name）和可硬编码字段（type.id），平衡灵活性与效率

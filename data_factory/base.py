@@ -132,8 +132,8 @@ class DataFactory:
             Loggers.info(f"加载SQL配置keys: {list(sql_config.keys())}")
             db_config = cls._env_config["database"][db_config_name]
             data = SQLInitializer.init_sql(sql_config, db_config, cache_key=cache_key)
-            Loggers.info(f"写入缓存内容: {data}")
             CacheUtil.set(cache_key, data)
+            Loggers.info(f"写入缓存成功，路径为: {CacheUtil._cache_dir / f'{cache_key}.json'}")
         return data
 
     @classmethod

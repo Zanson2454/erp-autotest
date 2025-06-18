@@ -174,7 +174,7 @@ class ArBaseTest(BaseTest):
             "id", "sbStatus", "sbHeadCode", "bilCode", "sbDate", 
             "docTypeId", "comOrgId", "slsOrgId", "docCurrId", "baseCurrId", 
             "exchRate", "traParType", "traParId", "bilDocAmt", "bilBaseAmt", 
-            "clearingDocAmt", "clearingBaseAmt", "bilBaseTax", "version"
+            "clearingDocAmt", "clearingBaseAmt", "bilDocTax", "bilBaseTax", "version"
         ]
         
         request_data = {
@@ -195,6 +195,7 @@ class ArBaseTest(BaseTest):
             "bilBaseAmt": sb_record.get("bilBaseAmt", 0),
             "clearingDocAmt": sb_record.get("clearingDocAmt", 0),
             "clearingBaseAmt": sb_record.get("clearingBaseAmt", 0),
+            "bilDocTax": sb_record.get("bilDocTax", 0),
             "bilBaseTax": sb_record.get("bilBaseTax", 0),
             "version": sb_record.get("version", 0)
         }

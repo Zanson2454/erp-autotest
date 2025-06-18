@@ -16,8 +16,10 @@ class TestWorkOrderConfirm(PrdBaseTest):
     2. 批量确认工序
     3. 批量报工确认
     4. 查询送货单状态验证
-    5. 查询送货单过账明细
+    5. 查询待过账入库工序送货单详情
     6. 执行送货单过账操作
+    7. 查询已过账入库工序送货单详情
+    8. 执行送货单冲销操作
     
     业务规则：
     - 入库工序：生成送货单，需要手工过账(WAIT_POST)
@@ -250,10 +252,6 @@ class TestWorkOrderConfirm(PrdBaseTest):
                 
                 # 设置请求参数
                 filtered_params = {
-                    "sceneKey": "ERP_PRD$PRD_CONFIRM_VIEW",
-                    "viewKey": "ERP_PRD$PRD_CONFIRM_VIEW:RS7T_DQ7LY1O8JCNDwtds",
-                    "teamId": 22,
-                    "serviceKey": "ERP_PRD$PRD_ORDER_DELIVERY_CONFIRM_BATCH_EVENT_SERVICE",
                     "params": {
                         "request": request_list
                     }
@@ -500,20 +498,20 @@ class TestWorkOrderConfirm(PrdBaseTest):
             raise
 
     @pytest.mark.run(order=5)
-    def test_query_dn_post_detail(self):
-        """查询送货单过账明细
+    def test_query_inbound_dn_post_detail(self):
+        """查询待过账入库工序送货单详情
         
         步骤：
         1. 使用已生成的入库工序送货单进行过账明细查询
         2. 验证送货单相关信息的完整性
         
         验证点：
-        - 能成功查询到送货单明细
+        - 能成功查询到入库工序送货单明细
         - 送货单状态正确（未生效、待过账）
         - 相关业务数据完整
         """
         try:
-            with a.step(f"查询送货单过账明细"):
+            with a.step(f"查询待过账入库工序送货单详情"):
                 # 验证是否有送货单需要查询
                 dn_codes = self.confirm_info.get("dn_codes", [])
                 assert dn_codes, "没有找到需要查询的送货单"
@@ -786,9 +784,9 @@ if __name__ == "__main__":
 
     test = TestWorkOrderConfirm()
     test.setup_class()
-    test.test_query_confirm_list()
-    test.test_batch_confirm_routings()
-    test.test_delivery_confirm_batch()
-    test.test_query_dn_status()
-    test.test_query_dn_post_detail()
-    test.test_execute_dn_posting() 
+    test.test_query_confirm_list()    # 查询工序报工列表
+    test.test_batch_confirm_routings() # 批量确认工序
+    test.test_delivery_confirm_batch() # 批量报工确认
+    test.test_query_dn_status() # 查询送货单状态
+    test.test_query_inbound_dn_post_detail() # 查询待过账入库工序送货单详情
+    test.test_execute_dn_posting() # 执行送货单过账操作
