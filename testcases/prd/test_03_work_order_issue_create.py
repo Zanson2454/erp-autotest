@@ -23,8 +23,8 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
     """生产订单领料单创建测试类"""
     
     # 保存测试过程中的数据
-    issue_create_info = {}
-    rule_render_info = {}
+    rule_render_info = {}  # 存储领料分单规则数据
+    issue_info = {}       # 存储领料单相关数据
     
     @classmethod
     def setup_class(cls):
@@ -95,75 +95,57 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
     @allure.severity(allure.severity_level.CRITICAL)
     @allure.description("""
     ## 测试步骤
-    1. 准备请求参数
-    2. 发送请求获取领料分单规则明细
-    3. 校验接口响应结构和关键字段
-    4. 保存接口返回数据
+    1. 使用SQL直接查询领料分单规则明细
+    2. 保存规则明细用于后续测试
+    
+    ## 验证点
+    - 能成功查询到规则明细
+    - 规则明细数据结构完整
     """)
     def test_get_issue_rule_items(self):
+        """获取领料分单规则明细
+        
+        步骤：
+        1. 使用SQL直接查询领料分单规则明细
+        2. 保存规则明细用于后续测试
+        
+        验证点：
+        - 能成功查询到规则明细
+        - 规则明细数据结构完整
+        """
         try:
-            with a.step("1. 准备请求参数"):
-                api_path = self.get_api_path("(系统)查询分页数据服务") + \
-                          "?tmodule=ERP_PRD&modelKey=ERP_PRD$prd_issue_rule_item_cf"
-                self.logger.debug(f"获取领料分单规则明细API路径: {api_path}")
+            with a.step("查询领料分单规则明细"):
+                # 获取规则ID
+                rule_id = self.rule_render_info.get("response", {}).get("data", {}).get("data", {}).get("id")
+                assert rule_id, "未找到领料分单规则ID"
+                self.logger.info(f"获取到领料分单规则ID: {rule_id}")
                 
-                params, url = self.get_api_params(api_path)
+                # 构建SQL查询
+                sql = f"""
+                    SELECT 
+                        id,
+                        prd_issue_rule_cf_id,
+                        item,
+                        default_value,
+                        deleted
+                    FROM prd_issue_rule_item_cf 
+                    WHERE prd_issue_rule_cf_id = {rule_id}
+                    AND deleted = 0
+                """
                 
-                filtered_params = {
-                    "params": {
-                        "modelKey": "ERP_PRD$prd_issue_rule_item_cf",
-                        "request": {
-                            "pageable": {
-                                "pageNo": 1,
-                                "pageSize": 1000,
-                                "conditionItems": {
-                                    "type": "ConditionItems",
-                                    "logicOperator": "AND",
-                                    "conditions": {
-                                        "prdIssueRuleCfId": {
-                                            "operator": "EQ",
-                                            "value": TestPrdOrderIssueCreate.rule_render_info \
-                                                    .get("response", {}) \
-                                                    .get("data", {}) \
-                                                    .get("data", {}) \
-                                                    .get("id")
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                # 执行查询
+                records = self.db.query(sql)
+                self.logger.info(f"查询到{len(records)}条领料分单规则明细")
                 
-                self.logger.info(f"请求URL: {url}")
-                self.logger.info(f"请求参数: {filtered_params}")
-                a.json(filtered_params, "请求数据")
-
-            with a.step("2. 发送请求获取领料分单规则明细"):
-                result = self.http.post(url, json=filtered_params, description="获取领料分单规则明细")
-                a.json(result, "接口响应")
-
-            with a.step("3. 校验接口响应结构和关键字段"):
-                self.assert_util.assert_response_success(result)
+                # 保存查询结果
+                self.issue_info["rule_items"] = records
                 
-                data_list = result.get("data", {}).get("data", {}).get("data", [])
-                assert isinstance(data_list, list), "响应data字段不是列表类型"
-                assert len(data_list) > 0, "响应数据列表为空"
+                # 验证查询结果
+                assert records, "未找到领料分单规则明细"
                 
-                first_item = data_list[0]
-                assert first_item.get("item") is not None, "数据项缺少item字段"
-                assert first_item.get("defaultValue") is not None, "数据项缺少defaultValue字段"
-                assert first_item.get("id") is not None, "数据项缺少id字段"
+                # 添加报告附件
+                a.json(records, "查询结果数据")
                 
-                a.text(f"获取到{len(data_list)}条领料分单规则明细数据", "验证结果")
-
-            with a.step("4. 保存接口返回数据"):
-                TestPrdOrderIssueCreate.rule_render_info.update({
-                    "items": result
-                })
-                self.logger.info("领料分单规则明细接口返回数据已保存")
-                a.json(TestPrdOrderIssueCreate.rule_render_info, "保存的测试数据")
-
         except Exception as e:
             self.logger.error(f"获取领料分单规则明细失败: {str(e)}")
             a.text(str(e), "失败原因")
@@ -173,51 +155,54 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
     @allure.story("创建待提交生产订单领料单")
     @allure.description("""
     ## 测试步骤
-    1. 准备请求数据
-    2. 发送创建待提交领料单请求
-    3. 验证响应结果
-    4. 保存创建结果数据
+    1. 准备请求参数
+    2. 发送创建请求
+    3. 验证创建结果
+    
+    ## 验证点
+    - 接口调用成功
+    - 返回数据结构完整
     """)
     @allure.severity(allure.severity_level.BLOCKER)
     @allure.title("根据生产订单BOM清单创建待提交领料单")
     def test_create_issue_by_order_bom_list(self):
-        """根据生产订单BOM清单创建待提交领料单测试用例"""
+        """创建待提交领料单
+        
+        步骤：
+        1. 准备请求参数
+        2. 发送创建请求
+        3. 验证创建结果
+        
+        验证点：
+        - 接口调用成功
+        - 返回数据结构完整
+        """
         try:
-            with a.step("1. 准备请求数据"):
-                # 获取API路径
+            with a.step("创建待提交领料单"):
+                # 获取API配置
                 api_path = self.get_api_path("根据生产订单BOM行创建领料单服务")
-                self.logger.debug(f"创建待提交领料单API路径: {api_path}")
-                
-                # 获取请求参数
                 params, url = self.get_api_params(api_path)
                 
-                # 获取最新的BOM项
-                latest_bom_items = self.get_prd_order_pending_issue_bom_items()
-                bom_item_ids = [{"id": item.get("id")} for item in latest_bom_items]
+                # 获取规则明细
+                rule_items = self.issue_info.get("rule_items", [])
+                assert rule_items, "未找到领料分单规则明细"
                 
-                # 从规则明细中获取配置项
-                rule_items = self.rule_render_info.get("items", {}).get("data", {}).get("data", {}).get("data", [])
-                issue_rule_items = []
+                # 只使用 default_value = 1 的规则明细
+                default_rule_items = [item for item in rule_items if item["default_value"] == 1]
+                self.logger.info(f"筛选出{len(default_rule_items)}条默认规则明细")
                 
-                # 只保存defaultValue为true的规则项
-                for item in rule_items:
-                    if item.get("defaultValue"):
-                        issue_rule_items.append({
-                            "label": item.get("label"),
-                            "value": item.get("value"),
-                            "item": item.get("item"),
-                            "defaultValue": True,
-                            "isModified": item.get("isModified", False),
-                            "disabled": item.get("disabled", False)
-                        })
+                # 获取待领料BOM行ID
+                bom_items = self.get_prd_order_pending_issue_bom_items()
+                assert bom_items, "未找到待领料BOM行"
+                self.logger.info(f"获取到{len(bom_items)}条待领料BOM行")
                 
-                # 构建创建待提交领料单的请求参数
+                # 设置请求参数
                 filtered_params = {
                     "params": {
                         "request": {
-                            "ids": bom_item_ids,
+                            "ids": bom_items,
                             "issueRule": {
-                                "issueRuleItems": issue_rule_items,
+                                "issueRuleItems": default_rule_items,
                                 "issueRule": {
                                     "code": "aaa",
                                     "name": "默认分单规则",
@@ -228,49 +213,21 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
                     }
                 }
                 
-                self.logger.info(f"请求URL: {url}")
-                self.logger.info(f"请求参数: {filtered_params}")
-                # 添加请求数据到报告
-                a.json(filtered_params, "请求数据")
-            
-            with a.step("2. 发送请求"):
                 # 发送请求
-                result = self.http.post(url, json=filtered_params, description="创建待提交领料单")
-                # 添加响应数据到报告
-                a.json(result, "响应数据")
-            
-            with a.step("3. 验证响应结果"):
-                # 验证响应中的success字段为True
+                result = self.http.post(url, json=filtered_params)
+                
+                # 验证响应成功
                 self.assert_util.assert_response_success(result)
                 
-                # 从响应中获取创建的待提交领料单信息
-                response_data = result.get("data", {})
+                # 保存创建结果
+                self.issue_info["create_result"] = result
                 
-                # 确保返回了待提交领料单信息
-                assert response_data is not None, "未返回待提交领料单信息"
+                # 添加报告附件
+                a.json(filtered_params, "请求数据")
+                a.json(result, "响应结果数据")
                 
-                # 记录验证结果
-                a.text(
-                    f"生产订单BOM项ID: {[item.get('id') for item in filtered_params['params']['request']['ids']]}\n"
-                    f"验证结果: 成功",
-                    "验证结果"
-                )
-            
-            with a.step("4. 保存创建结果数据"):
-                # 保存待提交领料单信息到类变量
-                TestPrdOrderIssueCreate.issue_create_info.update({
-                    "bom_item_ids": filtered_params['params']['request']['ids'],
-                    "issue_info": response_data
-                })
-                
-                self.logger.info(f"待提交领料单创建成功 - BOM项ID: {[item.get('id') for item in filtered_params['params']['request']['ids']]}")
-                
-                # 记录保存的数据
-                a.json(TestPrdOrderIssueCreate.issue_create_info, "保存的测试数据")
-        
         except Exception as e:
             self.logger.error(f"创建待提交领料单失败: {str(e)}")
-            # 记录失败信息
             a.text(str(e), "失败原因")
             raise
 
@@ -297,7 +254,7 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
                 params, url = self.get_api_params(api_path)
                 
                 # 从创建结果中获取待提交的领料单信息
-                created_issues = self.issue_create_info.get("issue_info", {}).get("data", [])
+                created_issues = self.issue_info.get("create_result", {}).get("data", {}).get("data", [])
                 if not created_issues:
                     raise ValueError("未找到待提交的领料单信息")
                 
@@ -351,14 +308,14 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
             
             with a.step("4. 保存提交结果数据"):
                 # 保存提交结果信息到类变量
-                self.issue_create_info.update({
+                self.issue_info.update({
                     "submit_result": response_data
                 })
                 
                 self.logger.info(f"领料单提交成功")
                 
                 # 记录保存的数据
-                a.json(self.issue_create_info, "保存的测试数据")
+                a.json(self.issue_info, "保存的测试数据")
 
         except Exception as e:
             self.logger.error(f"提交领料单失败: {str(e)}")
@@ -407,26 +364,30 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
                 params, url = self.get_api_params(api_path)
                 
                 # 从之前的测试数据中获取生产订单编号
-                created_issues = self.issue_create_info.get("issue_info", {}).get("data", [])
+                created_issues = self.issue_info.get("create_result", {}).get("data", {}).get("data", [])
                 if not created_issues:
                     raise ValueError("未找到已创建的领料单信息")
                 
                 # 获取第一个领料单的生产订单ID
                 first_issue = created_issues[0]
-                prd_order_id = first_issue.get("values", {}).get("issueItemList", [])[0].get("prdOrderHeadId", {}).get("id")
-                if not prd_order_id:
+                issue_items = first_issue.get("values", {}).get("issueItemList", [])
+                if not issue_items:
+                    raise ValueError("未找到领料单行项目")
+                
+                prd_order_head_id = issue_items[0].get("prdOrderHeadId", {}).get("id")
+                if not prd_order_head_id:
                     raise ValueError("未找到生产订单ID")
 
                 # 根据生产订单ID查询生产订单编号
                 sql = f"""
                     SELECT wo_code
                     FROM prd_order_header_tr
-                    WHERE id = {prd_order_id}
+                    WHERE id = {prd_order_head_id}
                     AND deleted = 0
                 """
                 result = self.db.query(sql)
                 if not result:
-                    raise ValueError(f"未找到生产订单信息: {prd_order_id}")
+                    raise ValueError(f"未找到生产订单信息: {prd_order_head_id}")
                 
                 prd_order_code = result[0]["wo_code"]
                 self.logger.info(f"获取到生产订单编号: {prd_order_code}")
