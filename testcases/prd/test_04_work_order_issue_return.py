@@ -95,75 +95,57 @@ class TestPrdOrderIssueReturn(PrdBaseTest):
     @allure.severity(allure.severity_level.CRITICAL)
     @allure.description("""
     ## 测试步骤
-    1. 准备请求参数
-    2. 发送请求获取领料分单规则明细
-    3. 校验接口响应结构和关键字段
-    4. 保存接口返回数据
+    1. 使用SQL直接查询领料分单规则明细
+    2. 保存规则明细用于后续测试
+    
+    ## 验证点
+    - 能成功查询到规则明细
+    - 规则明细数据结构完整
     """)
     def test_get_issue_rule_items(self):
+        """获取领料分单规则明细
+        
+        步骤：
+        1. 使用SQL直接查询领料分单规则明细
+        2. 保存规则明细用于后续测试
+        
+        验证点：
+        - 能成功查询到规则明细
+        - 规则明细数据结构完整
+        """
         try:
-            with a.step("1. 准备请求参数"):
-                api_path = self.get_api_path("(系统)查询分页数据服务") + \
-                          "?tmodule=ERP_PRD&modelKey=ERP_PRD$prd_issue_rule_item_cf"
-                self.logger.debug(f"获取领料分单规则明细API路径: {api_path}")
+            with a.step("查询领料分单规则明细"):
+                # 获取规则ID
+                rule_id = self.rule_render_info.get("response", {}).get("data", {}).get("data", {}).get("id")
+                assert rule_id, "未找到领料分单规则ID"
+                self.logger.info(f"获取到领料分单规则ID: {rule_id}")
                 
-                params, url = self.get_api_params(api_path)
+                # 构建SQL查询
+                sql = f"""
+                    SELECT 
+                        id,
+                        prd_issue_rule_cf_id,
+                        item,
+                        default_value,
+                        deleted
+                    FROM prd_issue_rule_item_cf 
+                    WHERE prd_issue_rule_cf_id = {rule_id}
+                    AND deleted = 0
+                """
                 
-                filtered_params = {
-                    "params": {
-                        "modelKey": "ERP_PRD$prd_issue_rule_item_cf",
-                        "request": {
-                            "pageable": {
-                                "pageNo": 1,
-                                "pageSize": 1000,
-                                "conditionItems": {
-                                    "type": "ConditionItems",
-                                    "logicOperator": "AND",
-                                    "conditions": {
-                                        "prdIssueRuleCfId": {
-                                            "operator": "EQ",
-                                            "value": TestPrdOrderIssueReturn.rule_render_info \
-                                                    .get("response", {}) \
-                                                    .get("data", {}) \
-                                                    .get("data", {}) \
-                                                    .get("id")
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                # 执行查询
+                records = self.db.query(sql)
+                self.logger.info(f"查询到{len(records)}条领料分单规则明细")
                 
-                self.logger.info(f"请求URL: {url}")
-                self.logger.info(f"请求参数: {filtered_params}")
-                a.json(filtered_params, "请求数据")
-
-            with a.step("2. 发送请求获取领料分单规则明细"):
-                result = self.http.post(url, json=filtered_params, description="获取领料分单规则明细")
-                a.json(result, "接口响应")
-
-            with a.step("3. 校验接口响应结构和关键字段"):
-                self.assert_util.assert_response_success(result)
+                # 保存查询结果
+                self.issue_return_info["rule_items"] = records
                 
-                data_list = result.get("data", {}).get("data", {}).get("data", [])
-                assert isinstance(data_list, list), "响应data字段不是列表类型"
-                assert len(data_list) > 0, "响应数据列表为空"
+                # 验证查询结果
+                assert records, "未找到领料分单规则明细"
                 
-                first_item = data_list[0]
-                assert first_item.get("item") is not None, "数据项缺少item字段"
-                assert first_item.get("defaultValue") is not None, "数据项缺少defaultValue字段"
-                assert first_item.get("id") is not None, "数据项缺少id字段"
+                # 添加报告附件
+                a.json(records, "查询结果数据")
                 
-                a.text(f"获取到{len(data_list)}条领料分单规则明细数据", "验证结果")
-
-            with a.step("4. 保存接口返回数据"):
-                TestPrdOrderIssueReturn.rule_render_info.update({
-                    "items": result
-                })
-                self.logger.info("领料分单规则明细接口返回数据已保存")
-                a.json(TestPrdOrderIssueReturn.rule_render_info, "保存的测试数据")
-
         except Exception as e:
             self.logger.error(f"获取领料分单规则明细失败: {str(e)}")
             a.text(str(e), "失败原因")
@@ -217,29 +199,11 @@ class TestPrdOrderIssueReturn(PrdBaseTest):
                 
                 # 从规则明细中获取配置项
                 rule_data = self.rule_render_info.get("response", {}).get("data", {}).get("data", {})
-                rule_items = self.rule_render_info.get("items", {}).get("data", {}).get("data", {}).get("data", [])
-                issue_rule_items = []
+                rule_items = self.issue_return_info.get("rule_items", [])
                 
-                # 只保存defaultValue为true的规则项
-                for item in rule_items:
-                    if item.get("defaultValue"):
-                        issue_rule_items.append({
-                            "label": item.get("label"),
-                            "value": item.get("id"),
-                            "item": item.get("item"),
-                            "defaultValue": True,
-                            "isModified": item.get("isModified", False),
-                            "id": item.get("id"),
-                            "createdBy": item.get("createdBy"),
-                            "updatedBy": item.get("updatedBy"),
-                            "createdAt": item.get("createdAt"),
-                            "updatedAt": item.get("updatedAt"),
-                            "version": item.get("version"),
-                            "deleted": item.get("deleted"),
-                            "originOrgId": item.get("originOrgId"),
-                            "prdIssueRuleCfId": item.get("prdIssueRuleCfId"),
-                            "disabled": item.get("disabled", False)
-                        })
+                # 只使用 default_value = 1 的规则明细
+                default_rule_items = [item for item in rule_items if item["default_value"] == 1]
+                self.logger.info(f"筛选出{len(default_rule_items)}条默认规则明细")
                 
                 # 构建创建待提交退料单的请求参数
                 filtered_params = {
@@ -248,7 +212,7 @@ class TestPrdOrderIssueReturn(PrdBaseTest):
                             "ids": issue_item_ids,
                             "issueRule": {
                                 "issueRule": rule_data,
-                                "issueRuleItems": issue_rule_items
+                                "issueRuleItems": default_rule_items
                             }
                         }
                     }

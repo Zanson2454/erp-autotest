@@ -511,14 +511,6 @@ class TestWorkOrderCancelConfirm(PrdBaseTest):
                 
                 # 2. 执行取消确认操作
                 filtered_params = {
-                    "sceneKey": "ERP_PRD$PRD_WO_CONFIRM_CANCEL_VIEW",
-                    "viewKey": "ERP_PRD$PRD_WO_CONFIRM_CANCEL_VIEW:list",
-                    "viewTitle": "list",
-                    "buttonKey": "ERP_PRD$PRD_WO_CONFIRM_CANCEL_VIEW-batch-actions-1-button-1",
-                    "buttonName": "取消确认",
-                    "appId": 0,
-                    "teamId": 22,
-                    "serviceKey": "ERP_PRD$PRD_ORDER_DELIVERY_CANCEL_CONFIRM_EVENT_SERVICE",
                     "params": {
                         "request": {
                             "ids": [confirm_id]
