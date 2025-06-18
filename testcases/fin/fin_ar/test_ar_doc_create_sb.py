@@ -361,7 +361,8 @@ class TestArDocCreateSb(ArBaseTest):
                 
                 TestArDocCreateSb.ar_info.update({
                     "ar_doc_id": ar_doc_id,
-                    "request_body": request_body
+                    "request_body": request_body,
+                    "total_amt": request_body.get("grossDocAmt", 0)  # 添加total_amt用于后续验证
                 })
 
             with a.step("提交并过账应收单"):
@@ -535,6 +536,23 @@ class TestArDocCreateSb(ArBaseTest):
                 assert sb_record, "请先执行销售发票创建验证用例，确保sb_record已获取"
                 assert bil_code, "未找到bil_code，请先执行创建销售发票用例"
 
+            with a.step("通过数据工厂查询销售发票完整信息包括税额"):
+                # 使用数据工厂查询当前销售发票的完整信息，包括税额
+                sb_db_info = self.ar_factory.query_sales_invoice_by_bil_code(bil_code)
+                assert sb_db_info, f"数据工厂未查询到bil_code为[{bil_code}]的销售发票信息"
+                
+                # 提取税额信息
+                bil_doc_tax = sb_db_info.get("bil_doc_tax", 0.0)
+                bil_base_tax = sb_db_info.get("bil_base_tax", 0.0)
+                
+                # 更新sb_record以包含税额信息
+                sb_record.update({
+                    "bilDocTax": bil_doc_tax,
+                    "bilBaseTax": bil_base_tax
+                })
+                
+                a.json(sb_db_info, "数据工厂查询的销售发票完整信息")
+
             with a.step("发送销售发票提交请求"):
                 api_path = ParamUtil.get_api_path(self.apis, "SB-销售发票-列表提交服务")
                 params, url = ParamUtil.get_api_params(self.api_params, api_path)
@@ -574,10 +592,19 @@ class TestArDocCreateSb(ArBaseTest):
             with a.step("保存提交结果"):
                 TestArDocCreateSb.ar_info.update({
                     "updated_sb_record": updated_sb_record,
-                    "final_sb_status": updated_status
+                    "final_sb_status": updated_status,
+                    "bil_doc_tax": bil_doc_tax,  # 保存税额信息以供后续用例使用
+                    "bil_base_tax": bil_base_tax
                 })
                 
-                a.json(TestArDocCreateSb.ar_info, "断言结果")
+                a.json({
+                    "bilCode": bil_code,
+                    "bil_doc_tax": bil_doc_tax,
+                    "bil_base_tax": bil_base_tax,
+                    "success": success,
+                    "final_status": updated_status,
+                    "submit_result": "PASSED"
+                }, "提交结果汇总")
                 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -585,14 +612,14 @@ class TestArDocCreateSb(ArBaseTest):
 
     @ParamUtil.case_decorator(
         story="销售发票过账",
-        title="销售发票过账流程",
-        description="先执行SB_POST_VAL_SERVICE校验是否需要强制钩稽，根据result判断是否执行SB_POST_ASYNC_EVENT_SERVICE过账",
+        title="销售发票过账校验与自动钩稽",
+        description="校验过账金额是否与发票金额合计值一致，如果不一致则执行自动钩稽",
         severity="critical",
         order=6,
         smoke=True,
-        tags=["sb", "post", "validation", "async"]
+        tags=["sb", "post_validation", "auto_match"]
     )
-    def test_sb_post(self):
+    def test_sb_post_validation_and_auto_match(self):
         try:
             with a.step("获取销售发票信息"):
                 sb_id = TestArDocCreateSb.ar_info.get("sb_id")
@@ -607,9 +634,11 @@ class TestArDocCreateSb(ArBaseTest):
                 assert current_status == "CONFIRM", f"销售发票状态应为CONFIRM才能过账，当前状态：{current_status}"
 
             with a.step("执行销售发票过账校验"):
+                # 获取校验接口配置
                 val_api_path = ParamUtil.get_api_path(self.apis, "销售发票-校验是否需要强制钩稽服务")
                 val_params, val_url = ParamUtil.get_api_params(self.api_params, val_api_path)
                 
+                # 构建校验请求参数
                 val_sb_params = {}
                 self.build_sb_request_params(sb_record, sb_id, bil_code, sb_record.get("sbStatus"), val_sb_params)
                 val_core_fields = val_sb_params["core_fields"]
@@ -621,141 +650,152 @@ class TestArDocCreateSb(ArBaseTest):
                 ParamUtil.set_request_params(val_filtered_params, val_request_data)
                 val_filtered_params = convert_decimal_to_float(val_filtered_params)
                 
+                # 发送校验请求
                 val_result = self.http.post(val_url, json=val_filtered_params)
                 self.assert_util.assert_response_success(val_result)
                 
-                validation_success = val_result.get("success", False)
+                # 获取校验结果
                 validation_data = val_result.get("data", {})
-                need_force_clearing = validation_data.get("result", True)
+                result_flag = validation_data.get("result", True)
                 
-                a.json(val_filtered_params, "校验请求数据")
-                a.json(val_result, "校验响应结果")
-                
-                validation_result = {
-                    "validation_success": validation_success,
-                    "need_force_clearing": need_force_clearing,
-                    "validation_response": val_result
-                }
+                a.json(val_filtered_params, "过账校验请求")
+                a.json(val_result, "过账校验响应")
 
-            with a.step("根据校验结果决定是否执行过账"):
-                post_result = {}
-                
-                if need_force_clearing is True:
-                    a.text("校验结果：需要执行销售发票强制钩稽", "过账决策")
-                    post_result.update({
-                        "post_executed": False,
-                        "reason": "需要执行强制钩稽，本用例暂不处理强制钩稽逻辑"
-                    })
-                else:
-                    a.text("校验结果：需要执行销售发票过账异步服务", "过账决策")
+            with a.step("根据校验结果处理过账流程"):
+                if result_flag is False:
+                    # result=false表示过账金额与发票金额一致，执行自动钩稽接口
+                    a.text("校验结果：过账金额与发票金额一致，自动执行钩稽接口", "校验结果")
                     
-                    post_api_path = ParamUtil.get_api_path(self.apis, "销售发票自动钩稽-异步服务")
-                    post_params, post_url = ParamUtil.get_api_params(self.api_params, post_api_path)
+                    # 获取自动钩稽接口配置
+                    match_api_path = ParamUtil.get_api_path(self.apis, "销售发票自动钩稽-异步服务")
+                    match_params, match_url = ParamUtil.get_api_params(self.api_params, match_api_path)
                     
-                    post_sb_params = {}
-                    self.build_sb_request_params(sb_record, sb_id, bil_code, sb_record.get("sbStatus"), post_sb_params)
-                    post_core_fields = post_sb_params["core_fields"]
-                    post_request_data = post_sb_params["request_data"]
-                    
-                    post_filtered_params = ParamUtil.filter_post_body_fields(
-                        post_params, post_core_fields, ["params", "request"]
+                    # 构建自动钩稽请求参数（使用相同的请求数据）
+                    match_filtered_params = ParamUtil.filter_post_body_fields(
+                        match_params, val_core_fields, ["params", "request"]
                     )
-                    ParamUtil.set_request_params(post_filtered_params, post_request_data)
-                    post_filtered_params = convert_decimal_to_float(post_filtered_params)
+                    ParamUtil.set_request_params(match_filtered_params, val_request_data)
+                    match_filtered_params = convert_decimal_to_float(match_filtered_params)
                     
-                    post_response = self.http.post(post_url, json=post_filtered_params)
-                    self.assert_util.assert_response_success(post_response)
+                    # 发送自动钩稽请求
+                    match_result = self.http.post(match_url, json=match_filtered_params)
+                    self.assert_util.assert_response_success(match_result)
                     
-                    post_success = post_response.get("success", False)
-                    assert post_success is True, f"销售发票过账失败，success字段应为True，实际为：{post_success}"
+                    # 断言自动钩稽接口success字段
+                    match_success = match_result.get("success")
+                    assert match_success is True, f"销售发票自动钩稽失败，success应为True，实际为: {match_success}"
                     
-                    a.json(post_filtered_params, "过账请求数据")
-                    a.json(post_response, "过账响应结果")
-                    
-                    post_result.update({
-                        "post_executed": True,
-                        "post_success": post_success,
-                        "post_response": post_response
+                    # 保存结果
+                    TestArDocCreateSb.ar_info.update({
+                        "post_validation_result": "AUTO_MATCH_EXECUTED",
+                        "auto_match_success": True,
+                        "validation_response": val_result,
+                        "auto_match_response": match_result
                     })
-
-            with a.step("等待并验证过账结果"):
-                if post_result.get("post_executed", False):
-                    assert post_result.get("post_success") is True, "过账接口调用失败，success字段应为True"
-                    a.text("过账接口调用成功", "过账接口验证")
+                    
+                    a.json(match_filtered_params, "自动钩稽请求")
+                    a.json(match_result, "自动钩稽响应")
+                    a.json({
+                        "bil_code": bil_code,
+                        "validation_result": result_flag,
+                        "auto_match_success": match_success,
+                        "process_result": "AUTO_MATCH_COMPLETED"
+                    }, "钩稽流程结果")
+                    
                 else:
-                    a.text("ℹ 校验结果显示无需过账，跳过过账步骤", "无需过账")
-
-            with a.step("保存过账结果"):
-                TestArDocCreateSb.ar_info.update({
-                    "validation_result": validation_result,
-                    "post_execution_result": post_result
-                })
+                    # result=true表示需要强制钩稽，不包含该场景
+                    a.text("校验结果：销售发票需要强制钩稽，该自动化用例不包含该场景", "校验结果")
+                    
+                    # 保存结果
+                    TestArDocCreateSb.ar_info.update({
+                        "post_validation_result": "FORCE_MATCH_REQUIRED",
+                        "auto_match_required": False,
+                        "validation_response": val_result
+                    })
+                    
+                    a.json({
+                        "bil_code": bil_code,
+                        "validation_result": result_flag,
+                        "process_result": "FORCE_MATCH_REQUIRED_SKIPPED",
+                        "message": "销售发票需要强制钩稽，该自动化用例不包含该场景"
+                    }, "校验流程结果")
                 
-                a.json(TestArDocCreateSb.ar_info, "断言结果")
- 
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
 
     @ParamUtil.case_decorator(
         story="销售发票过账状态验证",
-        title="验证销售发票过账后的业务状态",
-        description="通过分页服务查询销售发票，验证过账后单据状态、钩稽状态和已钩稽金额",
+        title="验证销售发票自动钩稽后状态",
+        description="查询销售发票异步执行状态、发票状态、已钩稽金额是否正确更新",
         severity="critical",
         order=7,
         smoke=True,
-        tags=["sb", "post", "status", "verify"]
+        tags=["sb", "post_match_status", "final_verification"]
     )
-    def test_sb_post_status_verify(self):
+    def test_verify_sb_status_after_auto_match(self):
         try:
-            with a.step("获取销售发票信息"):
-                sb_id = TestArDocCreateSb.ar_info.get("sb_id")
+            with a.step("获取销售发票信息并查询状态"):
                 bil_code = TestArDocCreateSb.ar_info.get("bil_code")
-                post_result = TestArDocCreateSb.ar_info.get("post_execution_result", {})
+                expected_amount = TestArDocCreateSb.ar_info.get("total_amt")
                 
-                assert sb_id, "请先执行销售发票过账用例，确保sb_id已生成"
                 assert bil_code, "未找到bil_code，请先执行创建销售发票用例"
+                assert expected_amount, "未找到发票金额，请先执行创建销售发票用例"
                 
-                post_executed = post_result.get("post_executed", False)
-                if not post_executed:
-                    a.text("上一个用例显示无需过账，本用例将验证当前状态", "过账状态说明")
-
-            with a.step("等待过账异步任务完成"):
-                time.sleep(10)
-                a.text("等待过账异步任务处理完成...", "等待状态")
-
-            with a.step("通过分页服务查询销售发票最新状态"):
+                # 通过分页查询接口获取销售发票最新状态
                 query_result = {}
-                self._query_sb_by_paging(bil_code, query_result, max_wait=120, interval=5)
+                self._query_sb_by_paging(bil_code, query_result, max_wait=30, interval=3)
                 
                 sb_record = query_result.get("record")
                 assert sb_record, f"未查询到bil_code为[{bil_code}]的销售发票记录"
-                
-                current_status = sb_record.get("sbStatus")
-                clearing_status = sb_record.get("clearingStatus")
-                bil_doc_amt = sb_record.get("bilDocAmt", 0)
-                cleared_doc_amt = sb_record.get("clearedDocAmt", 0)
-                
-                a.json({
-                    "sbId": sb_id,
-                    "bilCode": bil_code,
-                    "当前单据状态": current_status,
-                    "钩稽状态": clearing_status,
-                    "异步执行状态": sb_record.get("asyncExecutionStatus"),
-                    "发票金额合计": bil_doc_amt,
-                    "已钩稽金额": cleared_doc_amt,
-                    "等待时间": query_result.get("waited", 0)
-                }, "销售发票状态信息")
 
-            with a.step("验证过账后的业务状态"):
-                assert current_status == "DONE", f"过账后单据状态必须为DONE，实际为：{current_status}，说明第6步过账操作异常"
-                assert clearing_status == "CLEARED", f"过账后钩稽状态必须为CLEARED，实际为：{clearing_status}，说明第6步过账操作异常"
-                assert cleared_doc_amt == bil_doc_amt, f"过账后已钩稽金额必须等于发票金额合计，已钩稽：{cleared_doc_amt}，发票总额：{bil_doc_amt}，说明第6步过账操作异常"
+            with a.step("验证销售发票关键状态"):
+                # 获取关键状态字段
+                async_status = sb_record.get("asyncExecutionStatus")
+                sb_status = sb_record.get("sbStatus") 
+                cleared_doc_amt = sb_record.get("clearedDocAmt", 0)
+                confirm_status = sb_record.get("confirmStatus")
+                
+                # 记录当前状态
+                current_status = {
+                    "bil_code": bil_code,
+                    "async_execution_status": async_status,
+                    "sb_status": sb_status,
+                    "cleared_doc_amt": cleared_doc_amt,
+                    "expected_amount": expected_amount,
+                    "confirm_status": confirm_status
+                }
+                
+                a.json(current_status, "销售发票当前状态")
+
+            with a.step("执行状态断言"):
+                # 断言1：异步执行状态必须为SUCCEEDED
+                assert async_status == "SUCCEEDED", f"异步执行状态应为SUCCEEDED，实际为：{async_status}"
+                
+                # 断言2：发票状态必须为DONE
+                assert sb_status == "DONE", f"发票状态应为DONE，实际为：{sb_status}"
+                
+                # 断言3：已钩稽金额必须等于发票金额合计
+                assert cleared_doc_amt == expected_amount, f"已钩稽金额应等于发票金额合计，已钩稽：{cleared_doc_amt}，发票金额：{expected_amount}"
 
             with a.step("保存验证结果"):
                 TestArDocCreateSb.ar_info.update({
-                    "final_sb_record": sb_record
+                    "final_async_status": async_status,
+                    "final_sb_status": sb_status,
+                    "final_cleared_amount": cleared_doc_amt,
+                    "final_confirm_status": confirm_status,
+                    "sb_status_verification": "PASSED"
                 })
+                
+                a.json({
+                    "bil_code": bil_code,
+                    "verification_result": "SUCCESS",
+                    "validation_summary": {
+                        "异步执行状态": f"{async_status} ✓",
+                        "发票状态": f"{sb_status} ✓", 
+                        "已钩稽金额": f"{cleared_doc_amt} = {expected_amount} ✓"
+                    }
+                }, "销售发票状态验证成功")
                 
                 a.json(TestArDocCreateSb.ar_info, "断言结果")
                 
@@ -836,6 +876,6 @@ if __name__ == "__main__":
     test.test_ar_billing_amt_verify()
     test.test_sb_creation_verify()
     test.test_sb_submit()
-    test.test_sb_post()
-    test.test_sb_post_status_verify()
+    test.test_sb_post_validation_and_auto_match()
+    test.test_verify_sb_status_after_auto_match()
     test.test_ar_billing_clearing_verify() 

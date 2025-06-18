@@ -311,5 +311,6 @@ class TestApEstimateOffset(ApBaseTest):
 
 if __name__ == "__main__":
     test = TestApEstimateOffset()
-    test.setup_class()
+    test.setup_class() 
+    test.test_create_prerequisite_ap_doc()
     test.test_ap_estimate_offset() 

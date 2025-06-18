@@ -217,6 +217,63 @@ class FinArFactory(FinAparBaseFactory):
             Loggers.error(f"查询销售发票信息失败，bil_code: {bil_code}, 错误: {str(e)}")
             raise Exception(f"查询销售发票信息失败: {str(e)}")
 
+    def query_sales_invoice_by_bil_code(self, bil_code: str) -> Optional[Dict[str, Any]]:
+        """根据bil_code查询销售发票完整信息，包括税额"""
+        if not bil_code:
+            Loggers.warning("bil_code参数不能为空")
+            return None
+            
+        sql = """
+            SELECT sb_head_code, id, bil_code, bil_doc_amt, bil_base_amt, 
+                   bil_doc_tax, bil_base_tax, clearing_doc_amt, clearing_base_amt,
+                   sb_status, confirm_status, created_at, updated_at
+            FROM fin_tm_sb_head_tr 
+            WHERE deleted = 0 
+            AND bil_code = %s
+            ORDER BY created_at DESC
+            LIMIT 1
+        """
+        
+        try:
+            result = DBManager.query(sql, [bil_code])
+            if result:
+                row = result[0]
+                # 手动转换数据类型
+                sb_info = {
+                    "id": row["id"],
+                    "sb_head_code": row["sb_head_code"],
+                    "bil_code": row["bil_code"],
+                    "bil_doc_amt": float(row["bil_doc_amt"]) if row["bil_doc_amt"] is not None else 0.0,
+                    "bil_base_amt": float(row["bil_base_amt"]) if row["bil_base_amt"] is not None else 0.0,
+                    "bil_doc_tax": float(row["bil_doc_tax"]) if row["bil_doc_tax"] is not None else 0.0,
+                    "bil_base_tax": float(row["bil_base_tax"]) if row["bil_base_tax"] is not None else 0.0,
+                    "clearing_doc_amt": float(row["clearing_doc_amt"]) if row["clearing_doc_amt"] is not None else 0.0,
+                    "clearing_base_amt": float(row["clearing_base_amt"]) if row["clearing_base_amt"] is not None else 0.0,
+                    "sb_status": row["sb_status"],
+                    "confirm_status": row["confirm_status"],
+                    "created_at": row["created_at"].strftime("%Y-%m-%d %H:%M:%S") if row["created_at"] else None,
+                    "updated_at": row["updated_at"].strftime("%Y-%m-%d %H:%M:%S") if row["updated_at"] else None
+                }
+                Loggers.info(f"根据bil_code[{bil_code}]查询到销售发票完整信息: {sb_info}")
+                return sb_info
+            else:
+                Loggers.warning(f"未找到bil_code为[{bil_code}]的销售发票记录")
+                return None
+                
+        except Exception as e:
+            Loggers.error(f"查询销售发票完整信息失败，bil_code: {bil_code}, 错误: {str(e)}")
+            raise Exception(f"查询销售发票完整信息失败: {str(e)}")
+
+    def get_sales_invoice_id_by_bil_code(self, bil_code: str) -> Optional[int]:
+        """根据bil_code获取销售发票ID"""
+        sb_info = self.query_sales_invoice_by_bil_code(bil_code)
+        return sb_info.get("id") if sb_info else None
+        
+    def get_sales_invoice_code_by_bil_code(self, bil_code: str) -> Optional[str]:
+        """根据bil_code获取销售发票编码"""
+        sb_info = self.query_sales_invoice_by_bil_code(bil_code)
+        return sb_info.get("sb_head_code") if sb_info else None
+
     def get_sb_info_by_ar_id(self, ar_doc_id: int) -> Optional[Dict[str, Any]]:
         """根据应收单ID查询销售发票头表信息"""
         if not ar_doc_id:

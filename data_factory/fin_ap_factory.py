@@ -428,5 +428,86 @@ class FinApFactory(FinAparBaseFactory):
         pr_info = self.query_payment_request_by_ap_id(ap_doc_id)
         return pr_info.get("pr_status") if pr_info else None
 
+    def query_purchase_invoice_by_inv_code(self, inv_code: str) -> Optional[Dict[str, Any]]:
+        """
+        根据发票号（inv_code）查询采购发票头表信息
+        :param inv_code: 发票号
+        :return: 采购发票头表信息字典，包含pi_head_code和id等信息
+        """
+        try:
+            sql = """
+                SELECT 
+                    id,
+                    pi_head_code,
+                    inv_code,
+                    pi_status,
+                    doc_type_id,
+                    com_org_id,
+                    pur_org_id,
+                    tra_par_id,
+                    tra_par_type,
+                    inv_doc_amt,
+                    inv_base_amt,
+                    pi_date,
+                    created_at,
+                    updated_at,
+                    version
+                FROM fin_tm_pi_head_tr 
+                WHERE inv_code = %s 
+                AND deleted = 0
+                ORDER BY created_at DESC
+                LIMIT 1
+            """
+            
+            result = DBManager.query(sql, [inv_code])
+            
+            if result:
+                pi_info = result[0]
+                Loggers.info(f"根据发票号 {inv_code} 查询到采购发票信息: pi_head_code={pi_info.get('pi_head_code')}, id={pi_info.get('id')}")
+                
+                # 转换数据类型以支持JSON序列化
+                return {
+                    "id": pi_info.get("id"),
+                    "pi_head_code": pi_info.get("pi_head_code"),
+                    "inv_code": pi_info.get("inv_code"),
+                    "pi_status": pi_info.get("pi_status"),
+                    "doc_type_id": pi_info.get("doc_type_id"),
+                    "com_org_id": pi_info.get("com_org_id"),
+                    "pur_org_id": pi_info.get("pur_org_id"),
+                    "tra_par_id": pi_info.get("tra_par_id"),
+                    "tra_par_type": pi_info.get("tra_par_type"),
+                    "inv_doc_amt": float(pi_info.get("inv_doc_amt")) if pi_info.get("inv_doc_amt") is not None else None,
+                    "inv_base_amt": float(pi_info.get("inv_base_amt")) if pi_info.get("inv_base_amt") is not None else None,
+                    "pi_date": pi_info.get("pi_date").strftime("%Y-%m-%d %H:%M:%S") if pi_info.get("pi_date") else None,
+                    "created_at": pi_info.get("created_at").strftime("%Y-%m-%d %H:%M:%S") if pi_info.get("created_at") else None,
+                    "updated_at": pi_info.get("updated_at").strftime("%Y-%m-%d %H:%M:%S") if pi_info.get("updated_at") else None,
+                    "version": pi_info.get("version")
+                }
+            else:
+                Loggers.warning(f"未找到发票号 {inv_code} 对应的采购发票信息")
+                return None
+                
+        except Exception as e:
+            Loggers.error(f"根据发票号 {inv_code} 查询采购发票信息失败: {str(e)}")
+            return None
+
+    def get_purchase_invoice_id_by_inv_code(self, inv_code: str) -> Optional[str]:
+        """
+        根据发票号获取采购发票ID
+        :param inv_code: 发票号
+        :return: 采购发票ID
+        """
+        pi_info = self.query_purchase_invoice_by_inv_code(inv_code)
+        return pi_info.get("id") if pi_info else None
+
+    def get_purchase_invoice_code_by_inv_code(self, inv_code: str) -> Optional[str]:
+        """
+        根据发票号获取采购发票编码
+        :param inv_code: 发票号
+        :return: 采购发票编码(pi_head_code)
+        """
+        pi_info = self.query_purchase_invoice_by_inv_code(inv_code)
+        return pi_info.get("pi_head_code") if pi_info else None
+
 if __name__ == '__main__':
     print(FinApFactory.get_or_create_ap_doc()) 
