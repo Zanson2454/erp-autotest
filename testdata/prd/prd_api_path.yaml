@@ -1,84 +1,6 @@
 version: '1.0'
-total_apis: 175
+total_apis: 153
 apis:
-  (系统)保存主数据服务:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_MasterData_SaveDataService
-    method: POST
-  (系统)根据IDS查询数据服务:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_FindDataByIdsService
-    method: POST
-  (系统)树查询数据服务:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_FindTreeDataService
-    method: POST
-  (系统)删除主数据服务:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_MasterData_DeleteDataService
-    method: POST
-  (系统)删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_DeleteDataByIdService
-    method: POST
-  (系统)查询分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_PagingDataService
-    method: POST
-  (系统)批量新增数据服务:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_BatchCreateDataService
-    method: POST
-  (系统)更新数据服务:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_UpdateDataByIdService
-    method: POST
-  (系统)反向构建树结构数据服务:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_ReverseConstructTreeService
-    method: POST
-  (系统)查询数据详情服务:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_FindDataByIdService
-    method: POST
-  (系统)批量启用主数据服务:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_MasterData_MultiEnableDataService
-    method: POST
-  (系统)保存数据服务:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_SaveDataService
-    method: POST
-  (系统)新增并启用主数据服务:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_MasterData_CreateAndEnableDataService
-    method: POST
-  (系统)转换复制数据:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_CopyDataConverterService
-    method: POST
-  (系统)新增数据服务:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_CreateDataService
-    method: POST
-  (系统)停用主数据服务:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_MasterData_DisableDataService
-    method: POST
-  (系统)批量删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_BatchDeleteDataService
-    method: POST
-  (系统)启用主数据服务:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_MasterData_EnableDataService
-    method: POST
-  (系统)查询单条数据服务:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_FindOneDataService
-    method: POST
-  (系统)调用取号规则服务:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_InvokeCodeRuleService
-    method: POST
-  (系统)新增主数据服务:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_MasterData_CreateDataService
-    method: POST
-  (系统)通过条件组查询树模型子数据列表:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_FindTreeChildrenDataService
-    method: POST
-  (系统)批量停用主数据服务:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_MasterData_MultiDisableDataService
-    method: POST
-  (系统)更新主数据服务:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_MasterData_UpdateDataService
-    method: POST
-  (系统)通过条件组查询数据列表:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_FindListDataService
-    method: POST
-  (系统)保存并启用主数据服务:
-    path: /api/trantor/service/engine/execute/ERP_PRD$SYS_MasterData_SaveAndEnableDataService
-    method: POST
   订单确认单-交货确认取消服务:
     path: /api/trantor/service/engine/execute/ERP_PRD$PRD_ORDER_DELIVERY_CANCEL_CONFIRM_EVENT_SERVICE
     method: POST
@@ -397,6 +319,9 @@ apis:
   BOM自定义导入实现:
     path: /api/trantor/service/engine/execute/ERP_PRD$BOM_CUSTOMER_IMPORT_IMPL
     method: POST
+  生产版本导入实现:
+    path: /api/trantor/service/engine/execute/ERP_PRD$PRD_VRS_IMPORT_IMPL
+    method: POST
   生产订单基础数据表-导入导出任务管理接口-提交导出任务:
     path: /api/trantor/service/engine/execute/ERP_PRD$PRD_ORDER_HEADER_TR_API_GEI_TASK_EXPORT_DIRECT_POST
     method: POST
@@ -420,6 +345,9 @@ apis:
     method: POST
   成本要素-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_PRD$PRD_COST_ELEMENT_PAGING_DATA_SERVICE
+    method: POST
+  生产版本DTO-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_PRD$PRD_PRDVRS_HEADER_MD_DTO_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
     method: POST
   生产订单-确认单抬头表-导入导出任务管理接口-提交导出任务:
     path: /api/trantor/service/engine/execute/ERP_PRD$PRD_ORDER_CONFIRM_HEADER_TR_API_GEI_TASK_EXPORT_DIRECT_POST
@@ -469,6 +397,9 @@ apis:
   用户-根据ID查找单表数据服务:
     path: /api/trantor/service/engine/execute/ERP_PRD$user_FIND_SINGLE_DATA_BY_ID_SERVICE
     method: POST
+  生产版本DTO标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_PRD$PRD_PRDVRS_HEADER_MD_DTO_GEI_IMPORT_SERVICE
+    method: POST
   计划订单单据类型-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_PRD$PRD_PLANNED_ORDER_TYPE_CF_PAGING_DATA_SERVICE
     method: POST
@@ -514,15 +445,18 @@ apis:
   报工确认-根据报工数量返回报工行需求数量:
     path: /api/trantor/service/engine/execute/ERP_PRD$PRD_ORDER_CONFIRM_RETURN_CONFIRM_ITEM_QTY_BY_HEAD
     method: POST
+  工艺路线导入实现:
+    path: /api/trantor/service/engine/execute/ERP_PRD$ROUTING_IMPORT_IMPL
+    method: POST
   生产订单头查移动类型:
     path: /api/trantor/service/engine/execute/ERP_PRD$PRD_ORDER_HEAD_QUERY_MVM_TYPE_ID_SERVERICE
     method: POST
   子成本要素-根据类别分页查:
     path: /api/trantor/service/engine/execute/ERP_PRD$PRD_COST_ELEMENT_SUB_PAGING_DATA_BY_TYPE_SERVICE
     method: POST
-  生产订单自定义导入:
-    path: /api/trantor/service/engine/execute/ERP_PRD$PRD_ORDER_CUSTOMER_IMPORT_IMPL
-    method: POST
   工艺路线复制实现:
     path: /api/trantor/service/engine/execute/ERP_PRD$ROUTING_COPY_IMPL
+    method: POST
+  生产订单自定义导入:
+    path: /api/trantor/service/engine/execute/ERP_PRD$PRD_ORDER_CUSTOMER_IMPORT_IMPL
     method: POST
