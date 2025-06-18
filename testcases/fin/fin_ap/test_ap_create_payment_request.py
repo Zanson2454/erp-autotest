@@ -17,7 +17,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
         super().setup_class()
 
     def convert_data_for_json(self, obj):
-        """数据转换方法"""
+        """数据转换方法，处理Decimal和datetime类型"""
         if obj is None:
             return None
         elif isinstance(obj, Decimal):
@@ -606,14 +606,19 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 success = result.get("success")
                 self.assert_util.assert_eq(success, True, f"付款申请单创建付款单失败，success: {success}")
                 
+                # 从API返回结果中提取付款单编码
+                pn_head_code_from_api = result.get("data", {}).get("data", {}).get("pnHeadCode")
+                self.assert_util.assert_not_empty(pn_head_code_from_api, "API返回结果中未找到付款单编码")
+                
                 TestApCreatePaymentRequest.ap_pr_info.update({
                     "convert_to_pn_success": True,
-                    "convert_result": result
+                    "convert_result": result,
+                    "pn_head_code_from_api": pn_head_code_from_api
                 })
                 
                 a.json(filtered_params, "付款申请单转付款单请求")
                 a.json(result, "付款申请单转付款单结果")
-                a.json({"success": success, "message": "付款申请单成功转换为付款单"}, "转换验证结果")
+                a.json({"success": success, "pnHeadCode": pn_head_code_from_api, "message": "付款申请单成功转换为付款单"}, "转换验证结果")
                 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -622,7 +627,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
     @ParamUtil.case_decorator(
         story="应付单创建付款申请单",
         title="付款单创建验证",
-        description="通过数据库查询验证付款单创建成功",
+        description="使用付款申请单转付款单API返回的付款单编码，通过付款单分页查询API验证付款单创建成功",
         severity="critical",
         order=8,
         smoke=True,
@@ -634,41 +639,47 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 info = TestApCreatePaymentRequest.ap_pr_info
                 self.assert_util.assert_not_empty(info.get("convert_to_pn_success"), "请先执行付款申请单创建付款单用例")
                 
-                pr_head_code = info.get("pr_head_code_from_db")
-                self.assert_util.assert_not_empty(pr_head_code, "未获取到付款申请单编码")
+                pn_head_code = info.get("pn_head_code_from_api")
+                self.assert_util.assert_not_empty(pn_head_code, "未获取到API返回的付款单编码")
                 
-                from data_factory.fin_ap_factory import FinApFactory
+                # 使用付款单分页查询API验证付款单创建成功
+                pn_query_request = {
+                    "pnHeadCode": pn_head_code,
+                    "pageable": {"page": 0, "size": 5, "sort": []}
+                }
                 
-                ap_factory = FinApFactory()
-                pn_info = ap_factory.query_payment_note_by_pr_code(pr_head_code)
+                api_path = ParamUtil.get_api_path(self.apis, "收付款单头表-分页数据服务_PmHKWs2")
+                params, url = ParamUtil.get_api_params(self.api_params, api_path)
+                filtered_params = ParamUtil.filter_post_body_fields(
+                    params, ["pnHeadCode", "pageable"], ["params", "request"]
+                )
+                ParamUtil.set_request_params(filtered_params, pn_query_request)
                 
-                self.assert_util.assert_not_empty(pn_info, f"数据库中未找到付款申请单编码 {pr_head_code} 对应的付款单记录")
+                result = self.http.post(url, json=filtered_params)
+                self.assert_util.assert_response_success(result)
                 
-                pn_head_code = pn_info.get("pn_head_code")
-                cm_pn_head_tr_id = pn_info.get("cm_pn_head_tr_id")
-                pn_status = pn_info.get("pn_status")
-                pn_doc_amt = pn_info.get("pn_doc_amt")
-                pn_base_amt = pn_info.get("pn_base_amt")
+                data_list = result.get("data", {}).get("data", {}).get("data", [])
+                self.assert_util.assert_not_empty(data_list, f"付款单分页查询结果为空，付款单可能未创建成功：{pn_head_code}")
                 
-                self.assert_util.assert_not_empty(pn_head_code, "付款单编码为空")
-                self.assert_util.assert_not_empty(cm_pn_head_tr_id, "付款单ID为空")
+                pn_record = None
+                for record in data_list:
+                    if isinstance(record, dict) and record.get("pnHeadCode") == pn_head_code:
+                        pn_record = record
+                        break
                 
-                TestApCreatePaymentRequest.ap_pr_info.update({
-                    "pn_head_code_from_db": pn_head_code,
-                    "cm_pn_head_tr_id_from_db": cm_pn_head_tr_id,
-                    "pn_status_from_db": pn_status
-                })
+                self.assert_util.assert_not_empty(pn_record, f"在分页查询结果中未找到编码为 {pn_head_code} 的付款单记录")
+                
+                # 验证付款单基本信息
+                pn_status = pn_record.get("pnStatus")
+                pn_doc_amt = pn_record.get("arApDocAmt", 0)
+                pn_base_amt = pn_record.get("arApBaseAmt", 0)
+                cm_pn_head_tr_id = pn_record.get("id")
                 
                 self.assert_util.assert_eq(pn_status, "DRAFT", 
                     f"付款单状态不正确，期望: DRAFT，实际: {pn_status}")
                 
                 expected_doc_amt = info.get("total_amt", 0)
                 expected_base_amt = info.get("gross_base_amt", 0)
-                
-                pn_doc_amt = float(pn_doc_amt) if pn_doc_amt is not None else 0.0
-                pn_base_amt = float(pn_base_amt) if pn_base_amt is not None else 0.0
-                expected_doc_amt = float(expected_doc_amt) if expected_doc_amt is not None else 0.0
-                expected_base_amt = float(expected_base_amt) if expected_base_amt is not None else 0.0
                 
                 self.assert_util.assert_eq(pn_doc_amt, expected_doc_amt, 
                     f"付款单原币金额不一致，期望: {expected_doc_amt}，实际: {pn_doc_amt}")
@@ -684,18 +695,21 @@ class TestApCreatePaymentRequest(ApBaseTest):
                     "status_check": "PASSED",
                     "amount_check": "PASSED",
                     "verification_status": "SUCCESS",
-                    "verification_method": "DATABASE_QUERY",
-                    "message": "付款单创建成功并通过数据库验证"
+                    "verification_method": "API_QUERY",
+                    "message": "付款单创建成功并通过API验证"
                 }
                 
                 TestApCreatePaymentRequest.ap_pr_info.update({
+                    "pn_head_code_from_api": pn_head_code,
+                    "cm_pn_head_tr_id_from_db": cm_pn_head_tr_id,
+                    "pn_status_from_db": pn_status,
                     "pn_verification_result": verification_result,
                     "final_pn_verification_passed": True
                 })
                 
-                a.json(self.convert_data_for_json(pn_info), "数据库查询的付款单信息")
+                a.json(filtered_params, "付款单分页查询请求")
+                a.json(pn_record, "分页查询返回的付款单记录")
                 a.json(verification_result, "付款单验证结果")
-                a.json(self.convert_data_for_json(TestApCreatePaymentRequest.ap_pr_info), "最终验证信息汇总")
                 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -716,7 +730,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 info = TestApCreatePaymentRequest.ap_pr_info
                 self.assert_util.assert_not_empty(info.get("final_pn_verification_passed"), "请先执行付款单创建验证用例")
                 
-                pn_head_code = info.get("pn_head_code_from_db")
+                pn_head_code = info.get("pn_head_code_from_api")
                 cm_pn_head_tr_id = info.get("cm_pn_head_tr_id_from_db")
                 self.assert_util.assert_not_empty(pn_head_code, "未获取到付款单编码")
                 self.assert_util.assert_not_empty(cm_pn_head_tr_id, "未获取到付款单ID")
@@ -749,201 +763,6 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 a.json(filtered_params, "付款单提交请求")
                 a.json(result, "付款单提交结果")
                 a.json({"success": success, "message": "付款单提交成功"}, "提交验证结果")
-                
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
-
-    @ParamUtil.case_decorator(
-        story="应付单创建付款申请单",
-        title="付款单过账状态验证",
-        description="验证付款单过账后状态更新为DONE，并检查异步执行状态",
-        severity="critical",
-        order=12,
-        smoke=True,
-        tags=["payment_note", "status_check"]
-    )
-    def test_verify_payment_note_post_status(self):
-        try:
-            with a.step("付款单过账状态验证"):
-                info = TestApCreatePaymentRequest.ap_pr_info
-                self.assert_util.assert_not_empty(info.get("pn_post_success"), "请先执行付款单过账用例")
-                
-                pn_head_code = info.get("pn_head_code_from_db")
-                self.assert_util.assert_not_empty(pn_head_code, "未获取到付款单编码")
-                
-                max_attempts = 8
-                interval = 2
-                verification_success = False
-                
-                for attempt in range(max_attempts):
-                    from data_factory.fin_ap_factory import FinApFactory
-                    
-                    ap_factory = FinApFactory()
-                    pn_info = ap_factory.query_payment_note_by_pr_code(info.get("pr_head_code_from_db"))
-                    
-                    if pn_info:
-                        current_pn_status = pn_info.get("pn_status")
-                        
-                        if current_pn_status == "DONE":
-                            self.assert_util.assert_eq(current_pn_status, "DONE", 
-                                f"付款单状态不正确，期望: DONE，实际: {current_pn_status}")
-                            
-                            TestApCreatePaymentRequest.ap_pr_info.update({
-                                "final_pn_status": current_pn_status,
-                                "pn_post_verification_passed": True
-                            })
-                            
-                            verification_result = {
-                                "pn_head_code": pn_head_code,
-                                "pn_status": current_pn_status,
-                                "polling_attempts": attempt + 1,
-                                "validation_result": "PASSED"
-                            }
-                            
-                            a.json(self.convert_data_for_json(pn_info), "数据库查询的付款单信息")
-                            a.json(verification_result, "付款单过账状态验证结果")
-                            
-                            verification_success = True
-                            break
-                        elif current_pn_status in ["CONFIRM", "DRAFT"] and attempt < max_attempts - 1:
-                            time.sleep(interval)
-                        else:
-                            assert False, f"付款单状态异常: {current_pn_status}"
-                    elif attempt < max_attempts - 1:
-                        time.sleep(interval)
-                
-                if not verification_success:
-                    current_pn_status = pn_info.get("pn_status") if pn_info else "未找到记录"
-                    assert False, f"轮询{max_attempts}次后，付款单状态仍未更新为DONE。当前状态: {current_pn_status}，付款单编号: {pn_head_code}"
-                
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
-
-    @ParamUtil.case_decorator(
-        story="应付单创建付款申请单",
-        title="应付单最终金额状态校验",
-        description="验证付款单过账后，应付单的金额字段正确更新，包括已付金额、未付金额等",
-        severity="critical",
-        order=13,
-        smoke=True,
-        tags=["ap", "final_check", "amount_verification"]
-    )
-    def test_verify_ap_final_amount_status(self):
-        try:
-            with a.step("应付单最终金额状态校验"):
-                info = TestApCreatePaymentRequest.ap_pr_info
-                self.assert_util.assert_not_empty(info.get("pn_post_verification_passed"), "请先执行付款单过账状态验证用例")
-                
-                ap_head_code = info.get("apHeadCode")
-                self.assert_util.assert_not_empty(ap_head_code, "未获取到应付单编码")
-                
-                max_attempts = 8
-                interval = 2
-                final_verification_success = False
-                
-                for attempt in range(max_attempts):
-                    query_request = {
-                        "apHeadCode": ap_head_code,
-                        "pageable": {"page": 0, "size": 5, "sort": []}
-                    }
-                    
-                    api_path = ParamUtil.get_api_path(self.apis, "应付单头表-分页数据服务_PmHKWs2")
-                    params, url = ParamUtil.get_api_params(self.api_params, api_path)
-                    filtered_params = ParamUtil.filter_post_body_fields(
-                        params, ["apHeadCode", "pageable"], ["params", "request"]
-                    )
-                    ParamUtil.set_request_params(filtered_params, query_request)
-                    
-                    result = self.http.post(url, json=filtered_params)
-                    self.assert_util.assert_response_success(result)
-                    
-                    records = result.get("data", {}).get("data", {}).get("data", [])
-                    ap_record = None
-                    for record in records:
-                        if record.get("apHeadCode") == ap_head_code:
-                            ap_record = record
-                            break
-                    
-                    if ap_record:
-                        paid_doc_amt = ap_record.get("paidDocAmt", 0)
-                        paid_base_amt = ap_record.get("paidBaseAmt", 0)
-                        unpaid_doc_amt = ap_record.get("unpaidDocAmt", 0)
-                        unpaid_base_amt = ap_record.get("unpaidBaseAmt", 0)
-                        paying_doc_amt = ap_record.get("payingDocAmt", 0)
-                        paying_base_amt = ap_record.get("payingBaseAmt", 0)
-                        
-                        expected_total_amt = info.get("total_amt", 0)
-                        expected_base_amt = info.get("gross_base_amt", 0)
-                        
-                        if (paid_doc_amt == expected_total_amt and 
-                            paid_base_amt == expected_base_amt and 
-                            unpaid_doc_amt == 0 and 
-                            unpaid_base_amt == 0 and
-                            paying_doc_amt == 0 and
-                            paying_base_amt == 0):
-                            
-                            self.assert_util.assert_eq(paid_doc_amt, expected_total_amt, 
-                                f"已付原币金额不正确，期望: {expected_total_amt}，实际: {paid_doc_amt}")
-                            self.assert_util.assert_eq(paid_base_amt, expected_base_amt, 
-                                f"已付本位币金额不正确，期望: {expected_base_amt}，实际: {paid_base_amt}")
-                            self.assert_util.assert_eq(unpaid_doc_amt, 0, 
-                                f"未付原币金额应为0，实际: {unpaid_doc_amt}")
-                            self.assert_util.assert_eq(unpaid_base_amt, 0, 
-                                f"未付本位币金额应为0，实际: {unpaid_base_amt}")
-                            self.assert_util.assert_eq(paying_doc_amt, 0, 
-                                f"付款中原币金额应为0，实际: {paying_doc_amt}")
-                            self.assert_util.assert_eq(paying_base_amt, 0, 
-                                f"付款中本位币金额应为0，实际: {paying_base_amt}")
-                            
-                            final_amount_status = {
-                                "apHeadCode": ap_head_code,
-                                "paidDocAmt": paid_doc_amt,
-                                "paidBaseAmt": paid_base_amt,
-                                "unpaidDocAmt": unpaid_doc_amt,
-                                "unpaidBaseAmt": unpaid_base_amt,
-                                "payingDocAmt": paying_doc_amt,
-                                "payingBaseAmt": paying_base_amt,
-                                "expectedTotalAmt": expected_total_amt,
-                                "expectedBaseAmt": expected_base_amt,
-                                "polling_attempts": attempt + 1,
-                                "validation_result": "PASSED",
-                                "message": "应付单金额状态校验通过，所有金额字段符合预期"
-                            }
-                            
-                            TestApCreatePaymentRequest.ap_pr_info.update({
-                                "final_amount_verification": final_amount_status,
-                                "all_tests_completed": True
-                            })
-                            
-                            a.json(filtered_params, "应付单查询请求")
-                            a.json(ap_record, "应付单查询结果")
-                            a.json(final_amount_status, "应付单最终金额状态验证结果")
-                            a.json(self.convert_data_for_json(TestApCreatePaymentRequest.ap_pr_info), "完整流程验证汇总")
-                            
-                            final_verification_success = True
-                            break
-                        elif attempt < max_attempts - 1:
-                            time.sleep(interval)
-                        else:
-                            amount_details = {
-                                "current_paid_doc_amt": paid_doc_amt,
-                                "current_paid_base_amt": paid_base_amt,
-                                "current_unpaid_doc_amt": unpaid_doc_amt,
-                                "current_unpaid_base_amt": unpaid_base_amt,
-                                "current_paying_doc_amt": paying_doc_amt,
-                                "current_paying_base_amt": paying_base_amt,
-                                "expected_total_amt": expected_total_amt,
-                                "expected_base_amt": expected_base_amt
-                            }
-                            a.json(amount_details, "金额状态详情")
-                            assert False, f"应付单金额状态未达到预期，详情见附件"
-                    elif attempt < max_attempts - 1:
-                        time.sleep(interval)
-                
-                if not final_verification_success:
-                    assert False, f"轮询{max_attempts}次后，应付单金额状态仍未达到预期，应付单编号: {ap_head_code}"
                 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -1013,19 +832,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
                             unpaid_doc_amt == 0 and 
                             unpaid_base_amt == 0):
                             
-                            self.assert_util.assert_eq(paid_doc_amt, expected_total_amt, 
-                                f"付款申请单已付原币金额不正确，期望: {expected_total_amt}，实际: {paid_doc_amt}")
-                            self.assert_util.assert_eq(paid_base_amt, expected_base_amt, 
-                                f"付款申请单已付本位币金额不正确，期望: {expected_base_amt}，实际: {paid_base_amt}")
-                            self.assert_util.assert_eq(unpaid_doc_amt, 0, 
-                                f"付款申请单未付原币金额应为0，实际: {unpaid_doc_amt}")
-                            self.assert_util.assert_eq(unpaid_base_amt, 0, 
-                                f"付款申请单未付本位币金额应为0，实际: {unpaid_base_amt}")
-                            self.assert_util.assert_eq(payment_request_doc_amt, expected_total_amt, 
-                                f"付款申请单原币金额不一致，期望: {expected_total_amt}，实际: {payment_request_doc_amt}")
-                            self.assert_util.assert_eq(payment_request_base_amt, expected_base_amt, 
-                                f"付款申请单本位币金额不一致，期望: {expected_base_amt}，实际: {payment_request_base_amt}")
-                            
+                            # 条件已验证金额正确，直接构建验证结果
                             paid_amount_verification = {
                                 "prHeadCode": pr_head_code,
                                 "prStatus": pr_status,
@@ -1095,7 +902,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 info = TestApCreatePaymentRequest.ap_pr_info
                 self.assert_util.assert_not_empty(info.get("pr_paid_amount_verification_passed"), "请先执行付款申请单已付款金额验证用例")
                 
-                pn_head_code = info.get("pn_head_code_from_db")
+                pn_head_code = info.get("pn_head_code_from_api")
                 cm_pn_head_tr_id = info.get("cm_pn_head_tr_id_from_db")
                 self.assert_util.assert_not_empty(pn_head_code, "未获取到付款单编码")
                 self.assert_util.assert_not_empty(cm_pn_head_tr_id, "未获取到付款单ID")
@@ -1124,6 +931,9 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 )
                 ParamUtil.set_request_params(filtered_params, post_request)
                 
+                # 转换数据类型以支持JSON序列化
+                filtered_params = self.convert_data_for_json(filtered_params)
+                
                 result = self.http.post(url, json=filtered_params)
                 self.assert_util.assert_response_success(result)
                 
@@ -1144,6 +954,203 @@ class TestApCreatePaymentRequest(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+    @ParamUtil.case_decorator(
+        story="应付单创建付款申请单",
+        title="付款单过账状态验证",
+        description="验证付款单过账后状态更新为DONE，并检查异步执行状态",
+        severity="critical",
+        order=12,
+        smoke=True,
+        tags=["payment_note", "status_check"]
+    )
+    def test_verify_payment_note_post_status(self):
+        try:
+            with a.step("付款单过账状态验证"):
+                info = TestApCreatePaymentRequest.ap_pr_info
+                self.assert_util.assert_not_empty(info.get("pn_post_success"), "请先执行付款单过账用例")
+                
+                pn_head_code = info.get("pn_head_code_from_api")  # 使用API返回的编码
+                self.assert_util.assert_not_empty(pn_head_code, "未获取到付款单编码")
+                
+                max_attempts = 8
+                interval = 2
+                verification_success = False
+                
+                for attempt in range(max_attempts):
+                    # 使用付款单分页查询API验证状态
+                    pn_query_request = {
+                        "pnHeadCode": pn_head_code,
+                        "pageable": {"page": 0, "size": 5, "sort": []}
+                    }
+                    
+                    api_path = ParamUtil.get_api_path(self.apis, "收付款单头表-分页数据服务_PmHKWs2")
+                    params, url = ParamUtil.get_api_params(self.api_params, api_path)
+                    filtered_params = ParamUtil.filter_post_body_fields(
+                        params, ["pnHeadCode", "pageable"], ["params", "request"]
+                    )
+                    ParamUtil.set_request_params(filtered_params, pn_query_request)
+                    
+                    result = self.http.post(url, json=filtered_params)
+                    self.assert_util.assert_response_success(result)
+                    
+                    records = result.get("data", {}).get("data", {}).get("data", [])
+                    pn_record = None
+                    for record in records:
+                        if record.get("pnHeadCode") == pn_head_code:
+                            pn_record = record
+                            break
+                    
+                    if pn_record:
+                        current_pn_status = pn_record.get("pnStatus")
+                        
+                        if current_pn_status == "DONE":
+                            # 状态已验证正确，直接更新结果
+                            TestApCreatePaymentRequest.ap_pr_info.update({
+                                "final_pn_status": current_pn_status,
+                                "pn_post_verification_passed": True
+                            })
+                            
+                            verification_result = {
+                                "pn_head_code": pn_head_code,
+                                "pn_status": current_pn_status,
+                                "polling_attempts": attempt + 1,
+                                "validation_result": "PASSED"
+                            }
+                            
+                            a.json(pn_record, "付款单分页查询结果")
+                            a.json(verification_result, "付款单过账状态验证结果")
+                            
+                            verification_success = True
+                            break
+                        elif current_pn_status in ["CONFIRM", "DRAFT"] and attempt < max_attempts - 1:
+                            time.sleep(interval)
+                        else:
+                            assert False, f"付款单状态异常: {current_pn_status}"
+                    elif attempt < max_attempts - 1:
+                        time.sleep(interval)
+                
+                if not verification_success:
+                    current_pn_status = pn_record.get("pnStatus") if pn_record else "未找到记录"
+                    assert False, f"轮询{max_attempts}次后，付款单状态仍未更新为DONE。当前状态: {current_pn_status}，付款单编号: {pn_head_code}"
+                
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @ParamUtil.case_decorator(
+        story="应付单创建付款申请单",
+        title="应付单最终金额状态校验",
+        description="验证付款单过账后，应付单的金额字段正确更新，包括已付金额、未付金额等",
+        severity="critical",
+        order=13,
+        smoke=True,
+        tags=["ap", "final_check", "amount_verification"]
+    )
+    def test_verify_ap_final_amount_status(self):
+        try:
+            with a.step("应付单最终金额状态校验"):
+                info = TestApCreatePaymentRequest.ap_pr_info
+                self.assert_util.assert_not_empty(info.get("pn_post_verification_passed"), "请先执行付款单过账状态验证用例")
+                
+                ap_head_code = info.get("apHeadCode")
+                self.assert_util.assert_not_empty(ap_head_code, "未获取到应付单编码")
+                
+                max_attempts = 8
+                interval = 2
+                final_verification_success = False
+                
+                for attempt in range(max_attempts):
+                    query_request = {
+                        "apHeadCode": ap_head_code,
+                        "pageable": {"page": 0, "size": 5, "sort": []}
+                    }
+                    
+                    api_path = ParamUtil.get_api_path(self.apis, "应付单头表-分页数据服务_PmHKWs2")
+                    params, url = ParamUtil.get_api_params(self.api_params, api_path)
+                    filtered_params = ParamUtil.filter_post_body_fields(
+                        params, ["apHeadCode", "pageable"], ["params", "request"]
+                    )
+                    ParamUtil.set_request_params(filtered_params, query_request)
+                    
+                    result = self.http.post(url, json=filtered_params)
+                    self.assert_util.assert_response_success(result)
+                    
+                    records = result.get("data", {}).get("data", {}).get("data", [])
+                    ap_record = None
+                    for record in records:
+                        if record.get("apHeadCode") == ap_head_code:
+                            ap_record = record
+                            break
+                    
+                    if ap_record:
+                        paid_doc_amt = ap_record.get("paidDocAmt", 0)
+                        paid_base_amt = ap_record.get("paidBaseAmt", 0)
+                        unpaid_doc_amt = ap_record.get("unpaidDocAmt", 0)
+                        unpaid_base_amt = ap_record.get("unpaidBaseAmt", 0)
+                        paying_doc_amt = ap_record.get("payingDocAmt", 0)
+                        paying_base_amt = ap_record.get("payingBaseAmt", 0)
+                        
+                        expected_total_amt = info.get("total_amt", 0)
+                        expected_base_amt = info.get("gross_base_amt", 0)
+                        
+                        if (paid_doc_amt == expected_total_amt and 
+                            paid_base_amt == expected_base_amt and 
+                            unpaid_doc_amt == 0 and 
+                            unpaid_base_amt == 0 and
+                            paying_doc_amt == 0 and
+                            paying_base_amt == 0):
+                            
+                            # 条件已验证所有金额字段正确，直接构建验证结果
+                            final_amount_status = {
+                                "apHeadCode": ap_head_code,
+                                "paidDocAmt": paid_doc_amt,
+                                "paidBaseAmt": paid_base_amt,
+                                "unpaidDocAmt": unpaid_doc_amt,
+                                "unpaidBaseAmt": unpaid_base_amt,
+                                "payingDocAmt": paying_doc_amt,
+                                "payingBaseAmt": paying_base_amt,
+                                "expectedTotalAmt": expected_total_amt,
+                                "expectedBaseAmt": expected_base_amt,
+                                "polling_attempts": attempt + 1,
+                                "validation_result": "PASSED",
+                                "message": "应付单金额状态校验通过，所有金额字段符合预期"
+                            }
+                            
+                            TestApCreatePaymentRequest.ap_pr_info.update({
+                                "final_amount_verification": final_amount_status,
+                                "all_tests_completed": True
+                            })
+                            
+                            a.json(filtered_params, "应付单查询请求")
+                            a.json(ap_record, "应付单查询结果")
+                            a.json(final_amount_status, "应付单最终金额状态验证结果")
+                            
+                            final_verification_success = True
+                            break
+                        elif attempt < max_attempts - 1:
+                            time.sleep(interval)
+                        else:
+                            amount_details = {
+                                "current_paid_doc_amt": paid_doc_amt,
+                                "current_paid_base_amt": paid_base_amt,
+                                "current_unpaid_doc_amt": unpaid_doc_amt,
+                                "current_unpaid_base_amt": unpaid_base_amt,
+                                "current_paying_doc_amt": paying_doc_amt,
+                                "current_paying_base_amt": paying_base_amt,
+                                "expected_total_amt": expected_total_amt,
+                                "expected_base_amt": expected_base_amt
+                            }
+                            a.json(amount_details, "金额状态详情")
+                            assert False, f"应付单金额状态未达到预期，详情见附件"
+                    elif attempt < max_attempts - 1:
+                        time.sleep(interval)
+                
+                if not final_verification_success:
+                    assert False, f"轮询{max_attempts}次后，应付单金额状态仍未达到预期，应付单编号: {ap_head_code}"
+                
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
 
 if __name__ == "__main__":
     test = TestApCreatePaymentRequest()

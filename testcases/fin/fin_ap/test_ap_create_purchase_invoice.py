@@ -108,7 +108,7 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
                     "invClearingStatus": "UNCLEARED",
                     "unpaidDocAmt": base_data["total_amt"],
                     "uninvoicedDocAmt": base_data["total_amt"],
-                    "unpaidBaseAmt": base_data["net_base_amt"],
+                    "unpaidBaseAmt": base_data["gross_base_amt"],
                     "uninvoicedBaseAmt": base_data["total_amt"],
                     "unoffsetDocAmt": base_data["total_amt"],
                     "unoffsetBaseAmt": base_data["total_amt"],
@@ -875,6 +875,112 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+    @ParamUtil.case_decorator(
+        story="应付单创建采购发票",
+        title="验证应付单收票钩稽状态和已收票金额更新",
+        description="查询应付单收票钩稽状态是否更新为已钩稽，已收票金额是否等于价税合计总额",
+        severity="critical",
+        order=9,
+        smoke=True,
+        tags=["ap", "invoice_clearing_status", "final_verification"]
+    )
+    def test_verify_ap_invoice_clearing_status(self):
+        try:
+            with a.step("验证应付单收票钩稽状态和已收票金额"):
+                info = TestApCreatePurchaseInvoice.ap_pi_info
+                auto_match_verification = info.get("auto_match_verification")
+                
+                # 如果采购发票是强制钩稽情况，跳过应付单状态验证
+                if info.get("post_validation_result") == "FORCE_MATCH_REQUIRED":
+                    a.json({
+                        "message": "采购发票需强制钩稽，该用例中不考虑该情形",
+                        "action": "跳过应付单收票钩稽状态验证",
+                        "result": "SKIPPED"
+                    }, "应付单状态验证结果")
+                    return
+                
+                # 验证采购发票自动钩稽已完成
+                assert auto_match_verification == "PASSED", "请先确保采购发票自动钩稽验证通过"
+                
+                ap_head_code = info.get("apHeadCode")
+                expected_amount = info.get("total_amt")
+                
+                assert ap_head_code, "未找到应付单编号"
+                assert expected_amount, "未找到应付单价税合计金额"
+                
+                # 查询应付单最新状态
+                query_request = {
+                    "apHeadCode": ap_head_code,
+                    "pageable": {"page": 0, "size": 5, "sort": []}
+                }
+                
+                api_path = ParamUtil.get_api_path(self.apis, "应付单头表-分页数据服务_PmHKWs2")
+                params, url = ParamUtil.get_api_params(self.api_params, api_path)
+                filtered_params = ParamUtil.filter_post_body_fields(
+                    params, ["apHeadCode", "pageable"], ["params", "request"]
+                )
+                ParamUtil.set_request_params(filtered_params, query_request)
+                
+                result = self.http.post(url, json=filtered_params)
+                self.assert_util.assert_response_success(result)
+                
+                records = result.get("data", {}).get("data", {}).get("data", [])
+                ap_record = None
+                for record in records:
+                    if record.get("apHeadCode") == ap_head_code:
+                        ap_record = record
+                        break
+                
+                assert ap_record, f"未查询到应付单编号 {ap_head_code} 对应的应付单记录"
+                
+                # 获取关键状态和金额字段
+                inv_clearing_status = ap_record.get("invClearingStatus")  # 收票钩稽状态
+                invoiced_doc_amt = ap_record.get("invoicedDocAmt", 0)     # 已收票金额（原币）
+                invoiced_base_amt = ap_record.get("invoicedBaseAmt", 0)   # 已收票金额（本位币）
+                
+                # 验证收票钩稽状态
+                assert inv_clearing_status == "CLEARED", \
+                    f"应付单收票钩稽状态应为CLEARED，实际为：{inv_clearing_status}"
+                
+                # 验证已收票金额（原币）等于价税合计
+                assert invoiced_doc_amt == expected_amount, \
+                    f"应付单已收票金额（原币）应等于价税合计 {expected_amount}，实际为：{invoiced_doc_amt}"
+                
+                # 验证已收票金额（本位币）等于价税合计
+                expected_base_amount = info.get("gross_base_amt")
+                assert invoiced_base_amt == expected_base_amount, \
+                    f"应付单已收票金额（本位币）应等于价税合计 {expected_base_amount}，实际为：{invoiced_base_amt}"
+                
+                # 更新保存的信息
+                TestApCreatePurchaseInvoice.ap_pi_info.update({
+                    "final_inv_clearing_status": inv_clearing_status,
+                    "final_invoiced_doc_amt": invoiced_doc_amt,
+                    "final_invoiced_base_amt": invoiced_base_amt,
+                    "ap_invoice_clearing_verification": "PASSED"
+                })
+                
+                # 记录详细的验证结果
+                a.json({
+                    "apHeadCode": ap_head_code,
+                    "invClearingStatus": inv_clearing_status,
+                    "invoicedDocAmt": invoiced_doc_amt,
+                    "invoicedBaseAmt": invoiced_base_amt,
+                    "expectedDocAmount": expected_amount,
+                    "expectedBaseAmount": expected_base_amount,
+                    "verification_result": "ALL_CONDITIONS_MET",
+                    "validation_summary": {
+                        "收票钩稽状态": f"{inv_clearing_status} (✓ 已钩稽)",
+                        "已收票金额（原币）": f"{invoiced_doc_amt} = {expected_amount} (✓ 匹配)",
+                        "已收票金额（本位币）": f"{invoiced_base_amt} = {expected_base_amount} (✓ 匹配)"
+                    }
+                }, "应付单收票钩稽状态验证结果")
+                
+                a.json(ap_record, "应付单完整记录信息")
+                
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
 
 if __name__ == "__main__":
     test = TestApCreatePurchaseInvoice()
@@ -886,4 +992,5 @@ if __name__ == "__main__":
     test.test_submit_purchase_invoice()
     test.test_verify_pi_status_after_submit()
     test.test_pi_post_validation_and_auto_match()
-    test.test_verify_pi_status_after_auto_match() 
+    test.test_verify_pi_status_after_auto_match()
+    test.test_verify_ap_invoice_clearing_status() 
