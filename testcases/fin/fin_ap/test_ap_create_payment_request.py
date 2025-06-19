@@ -4,7 +4,7 @@
 import allure
 from testcases.fin.fin_ap import ApBaseTest
 from utils.param_util import ParamUtil
-from utils.report_util import a
+from utils.report_util import a, case_decorator
 from datetime import datetime
 from decimal import Decimal
 import time
@@ -31,7 +31,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
         else:
             return obj
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单创建付款申请单",
         title="创建标准应付单并完成全流程",
         description="创建标准应付单，保存、提交、过账",
@@ -163,7 +163,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单创建付款申请单",
         title="基于应付单生成付款申请单",
         description="使用前置用例创建的应付单，生成付款申请单",
@@ -223,7 +223,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单创建付款申请单",
         title="应付单分页查询验证状态更新",
         description="查询应付单，验证异步执行状态为已成功",
@@ -309,7 +309,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单创建付款申请单",
         title="付款申请单创建成功验证",
         description="通过数据库查询获取付款申请单编码，使用分页查询API验证付款申请单创建成功",
@@ -401,7 +401,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单创建付款申请单",
         title="付款申请单过账",
         description="对创建成功的付款申请单执行过账操作",
@@ -464,7 +464,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单创建付款申请单",
         title="付款申请单过账状态验证",
         description="查询付款申请单过账后的状态，验证pr_status更新为DONE",
@@ -555,7 +555,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单创建付款申请单",
         title="付款申请单创建付款单",
         description="基于已过账的付款申请单创建付款单",
@@ -624,7 +624,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单创建付款申请单",
         title="付款单创建验证",
         description="使用付款申请单转付款单API返回的付款单编码，通过付款单分页查询API验证付款单创建成功",
@@ -715,7 +715,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单创建付款申请单",
         title="付款单提交",
         description="对创建成功的付款单执行提交操作",
@@ -768,7 +768,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单创建付款申请单",
         title="付款申请单分页查询验证已付款金额更新",
         description="付款单提交后，查询付款申请单分页数据，验证已付款金额是否正确更新",
@@ -887,7 +887,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单创建付款申请单",
         title="付款单过账",
         description="对提交成功的付款单执行过账操作",
@@ -954,7 +954,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单创建付款申请单",
         title="付款单过账状态验证",
         description="验证付款单过账后状态更新为DONE，并检查异步执行状态",
@@ -1037,7 +1037,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单创建付款申请单",
         title="应付单最终金额状态校验",
         description="验证付款单过账后，应付单的金额字段正确更新，包括已付金额、未付金额等",

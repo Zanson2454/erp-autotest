@@ -7,6 +7,8 @@ import json
 import re
 from pathlib import Path
 from contextlib import contextmanager
+import pytest
+import functools
 
 
 class TestStatus(Enum):
@@ -318,6 +320,57 @@ class AllureSimple:
 
 # 创建一个全局实例方便导入
 a = AllureSimple()
+
+
+def case_decorator(title="", story="", description="", severity="normal", order=0, smoke=False, tags=None):
+    """
+    统一的测试用例装饰器 - 修复重复执行问题
+    
+    Args:
+        title: 测试用例标题，必填
+        story: 所属故事/模块，必填
+        description: 详细描述，可选
+        severity: 严重级别，支持：blocker/critical/normal/minor/trivial，默认normal
+        order: 执行顺序，数字越小越先执行，默认0
+        smoke: 是否为冒烟测试，默认False
+        tags: 标签列表，用于分类和过滤，默认为空
+    """
+    severity_map = {
+        "blocker": allure.severity_level.BLOCKER,
+        "critical": allure.severity_level.CRITICAL,
+        "normal": allure.severity_level.NORMAL,
+        "minor": allure.severity_level.MINOR,
+        "trivial": allure.severity_level.TRIVIAL,
+    }
+    
+    def decorator(func):
+        # 使用functools.wraps保留原始函数的元数据
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            # 只在运行时设置allure信息，不在装饰时重复设置
+            if title:
+                allure.dynamic.title(title)
+            if story:
+                allure.dynamic.story(story)
+            if description:
+                allure.dynamic.description(description)
+            if severity:
+                allure.dynamic.severity(severity_map.get(severity, allure.severity_level.NORMAL))
+            if tags:
+                for tag in tags:
+                    allure.dynamic.tag(tag)
+            
+            # 调用原始函数
+            return func(*args, **kwargs)
+        
+        # 应用pytest装饰器
+        if smoke:
+            wrapper = pytest.mark.smoke(wrapper)
+        if order:
+            wrapper = pytest.mark.run(order=order)(wrapper)
+        
+        return wrapper
+    return decorator
 
 
 if __name__ == '__main__':

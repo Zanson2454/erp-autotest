@@ -4,7 +4,7 @@
 import allure
 from testcases.fin.fin_ap import ApBaseTest
 from utils.param_util import ParamUtil
-from utils.report_util import a
+from utils.report_util import a, case_decorator
 from data_factory.fin_ap_factory import FinApFactory
 from datetime import datetime
 from decimal import Decimal
@@ -34,7 +34,7 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
         else:
             return obj
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单创建采购发票",
         title="创建标准应付单并完成全流程",
         description="创建标准应付单，保存、提交、过账",
@@ -168,7 +168,7 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单创建采购发票",
         title="基于应付单生成采购发票",
         description="使用前置用例创建的应付单，生成采购发票",
@@ -250,7 +250,7 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单创建采购发票",
         title="应付单状态验证",
         description="验证应付单异步执行状态和开票中金额更新",
@@ -335,7 +335,7 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单创建采购发票",
         title="验证生成的采购发票包含正确的发票号和单据类型",
         description="验证生成的采购发票包含正确的发票号和单据类型",
@@ -418,7 +418,7 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单创建采购发票",
         title="采购发票提交",
         description="提交前面创建的采购发票，验证提交成功",
@@ -518,7 +518,7 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单创建采购发票",
         title="验证采购发票提交后状态",
         description="验证采购发票提交后状态更新为已提交",
@@ -606,7 +606,7 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单创建采购发票",
         title="采购发票过账校验与自动钩稽",
         description="校验过账金额是否与发票金额合计值一致，如果不一致则执行自动钩稽",
@@ -728,7 +728,7 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单创建采购发票",
         title="验证采购发票自动钩稽后状态",
         description="查询采购发票异步执行状态、发票状态、已钩稽金额和确认状态",
@@ -875,7 +875,7 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单创建采购发票",
         title="验证应付单收票钩稽状态和已收票金额更新",
         description="查询应付单收票钩稽状态是否更新为已钩稽，已收票金额是否等于价税合计总额",
