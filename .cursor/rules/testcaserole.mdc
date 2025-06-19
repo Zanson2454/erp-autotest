@@ -1,10 +1,11 @@
 ---
 description: 
 globs: 
-alwaysApply: true
+alwaysApply: false
 ---
 # ERP自动化测试用例生成规则
-[always]
+# [always]
+
 # [manual]
 
 ## 使用说明
@@ -25,7 +26,7 @@ alwaysApply: true
 import allure
 from testcases.<领域> import <领域>BaseTest
 from utils.param_util import ParamUtil
-from utils.allure_simple import a
+from utils.report_util import a, case_decorator
 ```
 
 **重要说明：**
@@ -75,9 +76,9 @@ class Test<功能名称>(BaseTest):  # 直接继承通用基类
 
 ## 2. 测试方法规范
 
-### 2.1 使用 ParamUtil.case_decorator 装饰器
+### 2.1 使用 case_decorator 装饰器
 ```python
-@ParamUtil.case_decorator(
+@case_decorator(
     story="<功能故事>",
     title="<测试标题>",
     description="<详细描述>",
@@ -90,7 +91,7 @@ def test_<功能点>(self):
 ```
 
 **重要说明：**
-- 使用 `@ParamUtil.case_decorator` 替代传统的 allure 装饰器
+- 使用 `@case_decorator` 替代传统的 allure 装饰器
 - 所有 allure 相关配置都在这一个装饰器中完成
 - severity 可选值：blocker, critical, normal, minor, trivial
 - order 数字越小越先执行
@@ -257,7 +258,7 @@ assert TestPartnerSimplified.partner_info.get("partner_code"), "未找到要查�
 import allure
 from testcases.gen import GenBaseTest
 from utils.param_util import ParamUtil
-from utils.allure_simple import a
+from utils.report_util import a, case_decorator
 
 @allure.epic("通用基础")
 @allure.feature("<功能模块>")
@@ -268,7 +269,7 @@ class Test<功能名称>(GenBaseTest):
     def setup_class(cls):
         super().setup_class()
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="<功能故事>",
         title="<测试标题>",
         description="<详细描述>",

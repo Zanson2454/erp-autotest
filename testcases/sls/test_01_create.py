@@ -4,7 +4,7 @@ import random
 from datetime import datetime
 from pathlib import Path
 import allure
-from utils.allure_simple import a
+from utils.report_util import a
 
 
 # 添加项目根目录到 Python 路径

@@ -6,7 +6,8 @@ alwaysApply: false
 # 业务与用例规范
 
 ## 测试用例编写规范
-[always]
+# [always]
+
 1. 所有测试用例都需要加上基础断言  assert_response_success方法,来自 utils/assert_util.py 中的AssertHelper类
 2. 所有测试文件都需要添加项目根目录到 Python 路径,例如：
    '''
@@ -24,7 +25,8 @@ alwaysApply: false
 5. 所有用例都要加上异常捕获
 
 # 测试用例命名规范
-[always]
+# [always]
+
 1. 测试文件命名：
    - 格式：test_序号_模块名_功能.py
    - 示例：test_01_create.py, test_02_orderlist_query.py
@@ -83,7 +85,8 @@ alwaysApply: false
     - 确保测试环境清理
 
 # 测试用例组织方式
-[always]
+# [always]
+
 1. 按业务模块组织测试用例
 2. 相关测试用例放在同一个测试类中
 3. 测试用例之间保持独立性

@@ -5,7 +5,7 @@
 import allure
 from testcases.fin.fin_ar import ArBaseTest, convert_decimal_to_float
 from utils.param_util import ParamUtil
-from utils.allure_simple import a
+from utils.report_util import a, case_decorator
 from datetime import datetime
 import time
 
@@ -13,7 +13,7 @@ class TestArDocumentSave(ArBaseTest):
     """应收单全流程自动化用例"""
     ar_info = {}
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应收单保存",
         title="创建标准应收单",
         description="创建标准应收单并断言成功",
@@ -44,7 +44,7 @@ class TestArDocumentSave(ArBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应收单编辑",
         title="编辑应收单",
         description="编辑应收单并保存",
@@ -75,7 +75,7 @@ class TestArDocumentSave(ArBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应收单提交",
         title="提交应收单-AR_SUBMIT_WITH_HEAD_EVENT_SERVICE",
         description="用前置用例生成的单据进行提交并断言成功",
@@ -115,7 +115,7 @@ class TestArDocumentSave(ArBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应收单过账",
         title="应收单过账-AR_POST_ASYNC_EVENT_SERVICE",
         description="用前置用例生成的单据进行过账并断言异步任务提交成功",
@@ -145,7 +145,7 @@ class TestArDocumentSave(ArBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应收单状态校验",
         title="轮询分页查询应收单状态",
         description="根据arHeadCode分页查询应收单状态，轮询直至状态为DONE",

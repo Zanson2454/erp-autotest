@@ -1,7 +1,7 @@
 import allure
 from testcases.fin.fin_ar import ArBaseTest, convert_decimal_to_float
 from utils.param_util import ParamUtil
-from utils.allure_simple import a
+from utils.report_util import a, case_decorator
 from data_factory.fin_ar_factory import FinArFactory
 from decimal import Decimal
 from datetime import datetime
@@ -338,7 +338,7 @@ class TestArDocCreateSb(ArBaseTest):
             assert cleared_base_amt == item_gross_base_amt, f"明细行{i+1}过账后已钩稽金额-本位币应等于价税合计金额-本位币，已钩稽：{cleared_base_amt}，价税合计：{item_gross_base_amt}"
             assert item_clearing_status == "CLEARED", f"明细行{i+1}过账后行钩稽状态应为CLEARED，实际为：{item_clearing_status}"
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应收单创建",
         title="创建并过账标准应收单",
         description="创建标准应收单并过账，为后续创建销售发票做准备",
@@ -393,7 +393,7 @@ class TestArDocCreateSb(ArBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="销售发票创建",
         title="基于应收单创建销售发票",
         description="使用SB_CONVERT_BY_AR_ASYNC_EVENT_SERVICE基于应收单创建销售发票",
@@ -426,7 +426,7 @@ class TestArDocCreateSb(ArBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应收单收票金额验证",
         title="验证应收单收票中金额更新",
         description="等待销售发票创建异步任务完成后，验证应收单收票中金额是否正确更新",
@@ -475,7 +475,7 @@ class TestArDocCreateSb(ArBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="销售发票生成验证",
         title="验证销售发票是否真的生成",
         description="通过分页服务查询销售发票，验证销售发票是否真的生成",
@@ -516,7 +516,7 @@ class TestArDocCreateSb(ArBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="销售发票提交",
         title="提交销售发票",
         description="使用SB_SUBMIT_WITH_HEAD_EVENT_SERVICE提交销售发票并验证提交成功",
@@ -610,7 +610,7 @@ class TestArDocCreateSb(ArBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="销售发票过账",
         title="销售发票过账校验与自动钩稽",
         description="校验过账金额是否与发票金额合计值一致，如果不一致则执行自动钩稽",
@@ -724,7 +724,7 @@ class TestArDocCreateSb(ArBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="销售发票过账状态验证",
         title="验证销售发票自动钩稽后状态",
         description="查询销售发票异步执行状态、发票状态、已钩稽金额是否正确更新",
@@ -803,7 +803,7 @@ class TestArDocCreateSb(ArBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应收单收票金额验证",
         title="验证销售发票过账后应收单收票金额和钩稽状态更新",
         description="验证销售发票过账后，应收单头表和明细行的收票金额、钩稽状态正确更新",

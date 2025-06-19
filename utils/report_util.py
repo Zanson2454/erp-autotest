@@ -3,6 +3,12 @@ from typing import Dict, Any, List, Optional
 from loguru import logger
 from datetime import datetime
 from enum import Enum
+import json
+import re
+from pathlib import Path
+from contextlib import contextmanager
+import pytest
+import functools
 
 
 class TestStatus(Enum):
@@ -171,4 +177,208 @@ class ReportEnhancer:
         return {
             **self.report_data,
             "steps": self._steps
-        } 
+        }
+
+
+def fix_report_title(report_dir: str, title: str = "ERP-AUTOTEST"):
+    """修改 Allure 报告标题
+    
+    Args:
+        report_dir: 报告目录路径
+        title: 报告标题，默认为 "ERP-AUTOTEST"
+    """
+    report_path = Path(report_dir)
+    
+    # 修改 summary.json
+    summary_file = report_path / 'widgets' / 'summary.json'
+    if summary_file.exists():
+        with open(summary_file, 'r+', encoding='utf-8') as f:
+            data = json.load(f)
+            data['reportName'] = title
+            f.seek(0)
+            json.dump(data, f, ensure_ascii=False, indent=2)
+            f.truncate()
+    
+    # 修改 index.html
+    index_file = report_path / 'index.html'
+    if index_file.exists():
+        with open(index_file, 'r+', encoding='utf-8') as f:
+            content = f.read()
+            content = re.sub(r'<title>.*?</title>', f'<title>{title}</title>', content)
+            f.seek(0)
+            f.write(content)
+            f.truncate()
+
+
+class AllureSimple:
+    """
+    极简的Allure辅助类，提供最基本的功能封装
+    
+    主要功能：
+    1. 简化JSON附件添加
+    2. 简化文本附件添加
+    3. 提供更简洁的步骤上下文管理器
+    
+    使用示例:
+        from utils.report_util import a
+        
+        # 添加JSON附件
+        a.json(data, "请求数据")
+        
+        # 添加文本附件
+        a.text("一些文本信息", "文本数据")
+        
+        # 使用步骤上下文管理器
+        with a.step("执行某个步骤"):
+            # 步骤内的代码
+            result = do_something()
+            # 添加步骤结果作为附件
+            a.json(result, "步骤结果")
+    """
+    
+    @staticmethod
+    def json(data: Dict[str, Any], name: str = "数据") -> None:
+        """
+        添加JSON数据作为附件
+        
+        Args:
+            data: 要添加的JSON数据(字典对象)
+            name: 附件名称，默认为"数据"
+        
+        说明:
+            自动将字典转换为格式化的JSON字符串，并设置正确的附件类型
+        """
+        allure.attach(
+            json.dumps(data, ensure_ascii=False, indent=2),
+            name=name,
+            attachment_type=allure.attachment_type.JSON
+        )
+    
+    @staticmethod
+    def text(text: str, name: str = "文本") -> None:
+        """
+        添加文本数据作为附件
+        
+        Args:
+            text: 要添加的文本数据
+            name: 附件名称，默认为"文本"
+        
+        说明:
+            将文本内容直接添加为附件，并设置正确的附件类型
+        """
+        allure.attach(
+            text,
+            name=name,
+            attachment_type=allure.attachment_type.TEXT
+        )
+    
+    @staticmethod
+    @contextmanager
+    def step(name: str):
+        """
+        步骤上下文管理器，简化步骤的创建
+        
+        Args:
+            name: 步骤名称
+        
+        使用示例:
+            with a.step("步骤1: 准备数据"):
+                data = prepare_data()
+        
+        说明:
+            使用Python的上下文管理器(with语句)实现步骤的自动开始和结束
+        """
+        with allure.step(name):
+            yield
+    
+    @staticmethod
+    def add_description(description: str) -> None:
+        """
+        动态添加测试描述
+        
+        Args:
+            description: Markdown格式的描述文本
+        
+        说明:
+            在测试运行时动态添加或修改测试描述
+        """
+        allure.dynamic.description(description)
+    
+    @staticmethod
+    def add_title(title: str) -> None:
+        """
+        动态添加测试标题
+        
+        Args:
+            title: 测试标题
+        
+        说明:
+            在测试运行时动态添加或修改测试标题
+        """
+        allure.dynamic.title(title)
+
+
+# 创建一个全局实例方便导入
+a = AllureSimple()
+
+
+def case_decorator(title="", story="", description="", severity="normal", order=0, smoke=False, tags=None):
+    """
+    统一的测试用例装饰器 - 修复重复执行问题
+    
+    Args:
+        title: 测试用例标题，必填
+        story: 所属故事/模块，必填
+        description: 详细描述，可选
+        severity: 严重级别，支持：blocker/critical/normal/minor/trivial，默认normal
+        order: 执行顺序，数字越小越先执行，默认0
+        smoke: 是否为冒烟测试，默认False
+        tags: 标签列表，用于分类和过滤，默认为空
+    """
+    severity_map = {
+        "blocker": allure.severity_level.BLOCKER,
+        "critical": allure.severity_level.CRITICAL,
+        "normal": allure.severity_level.NORMAL,
+        "minor": allure.severity_level.MINOR,
+        "trivial": allure.severity_level.TRIVIAL,
+    }
+    
+    def decorator(func):
+        # 使用functools.wraps保留原始函数的元数据
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            # 只在运行时设置allure信息，不在装饰时重复设置
+            if title:
+                allure.dynamic.title(title)
+            if story:
+                allure.dynamic.story(story)
+            if description:
+                allure.dynamic.description(description)
+            if severity:
+                allure.dynamic.severity(severity_map.get(severity, allure.severity_level.NORMAL))
+            if tags:
+                for tag in tags:
+                    allure.dynamic.tag(tag)
+            
+            # 调用原始函数
+            return func(*args, **kwargs)
+        
+        # 应用pytest装饰器
+        if smoke:
+            wrapper = pytest.mark.smoke(wrapper)
+        if order:
+            wrapper = pytest.mark.run(order=order)(wrapper)
+        
+        return wrapper
+    return decorator
+
+
+if __name__ == '__main__':
+    import os
+    import sys
+    
+    # 支持命令行参数
+    report_dir = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.getcwd(), 'reports/allure-report')
+    title = sys.argv[2] if len(sys.argv) > 2 else "ERP-AUTOTEST"
+    
+    fix_report_title(report_dir, title)

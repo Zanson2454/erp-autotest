@@ -1,7 +1,7 @@
 import allure
 from testcases.gen import GenBaseTest
 from utils.param_util import ParamUtil
-from utils.allure_simple import a
+from utils.report_util import a, case_decorator
 
 @allure.epic("通用基础")
 @allure.feature("合作伙伴管理")
@@ -10,7 +10,7 @@ class TestPartnerSimplified(GenBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="新增合作伙伴",
         title="新增合作伙伴流程",
         description="验证新增合作伙伴功能全流程正确性（覆盖基础信息生成、请求构造、接口发送、响应校验及数据保存）",
@@ -60,7 +60,7 @@ class TestPartnerSimplified(GenBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="查询合作伙伴",
         title="查询合作伙伴流程",
         description="验证合作伙伴查询功能正确性（覆盖查询条件构造、分页查询接口、结果校验及数据匹配验证）",
@@ -113,7 +113,7 @@ class TestPartnerSimplified(GenBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="启用合作伙伴",
         title="启用合作伙伴流程",
         description="验证合作伙伴启用功能正确性（覆盖ID传参、启用接口调用、状态变更及操作结果确认）",
@@ -146,7 +146,7 @@ class TestPartnerSimplified(GenBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="停用合作伙伴",
         title="停用合作伙伴流程",
         description="验证合作伙伴停用功能正确性（覆盖ID传参、停用接口调用、状态变更及操作结果确认）",
@@ -179,7 +179,7 @@ class TestPartnerSimplified(GenBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="删除合作伙伴",
         title="删除合作伙伴流程",
         description="验证合作伙伴删除功能正确性（覆盖ID传参、删除接口调用、数据清理及测试环境重置）",
@@ -214,12 +214,12 @@ class TestPartnerSimplified(GenBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-# if __name__ == "__main__":
-#     """直接运行测试用例的入口点"""
-#     test = TestPartnerSimplified()
-#     test.setup_class()
-#     test.test_partner_add()    # 新增合作伙伴
-#     test.test_partner_search() # 查询合作伙伴
-#     test.test_partner_enable() # 启用合作伙伴
-#     test.test_partner_disable() # 停用合作伙伴
-#     test.test_partner_delete() # 删除合作伙伴 
+if __name__ == "__main__":
+    """直接运行测试用例的入口点"""
+    test = TestPartnerSimplified()
+    test.setup_class()
+    test.test_partner_add()    # 新增合作伙伴
+    test.test_partner_search() # 查询合作伙伴
+    test.test_partner_enable() # 启用合作伙伴
+    test.test_partner_disable() # 停用合作伙伴
+    test.test_partner_delete() # 删除合作伙伴 

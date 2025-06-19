@@ -5,12 +5,12 @@
 import allure
 from testcases.fin.fin_ar import ArBaseTest
 from utils.param_util import ParamUtil
-from utils.allure_simple import a
+from utils.report_util import a, case_decorator
 
 class TestArDocumentQuery(ArBaseTest):
     ar_query_info = {}
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应收单详情查询",
         title="查询草稿态应收单详情",
         description="动态获取草稿态应收单ID，查询详情并断言成功",
@@ -46,7 +46,7 @@ class TestArDocumentQuery(ArBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应收单详情查询",
         title="查询已确认应收单详情",
         description="动态获取已确认应收单ID，查询详情并断言成功",
@@ -82,7 +82,7 @@ class TestArDocumentQuery(ArBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应收单详情查询",
         title="查询已完成应收单详情",
         description="动态获取已完成应收单ID，查询详情并断言成功",

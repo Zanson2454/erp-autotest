@@ -5,7 +5,7 @@ from pathlib import Path
 from loguru import logger
 import sys
 import allure
-from utils.allure_simple import a
+from utils.report_util import a
 
 # 添加项目根目录到 Python 路径
 project_root = Path(__file__).resolve().parent.parent.parent
