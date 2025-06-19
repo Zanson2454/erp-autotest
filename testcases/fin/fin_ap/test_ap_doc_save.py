@@ -5,7 +5,7 @@
 import allure
 from testcases.fin.fin_ap import ApBaseTest
 from utils.param_util import ParamUtil
-from utils.report_util import a
+from utils.report_util import a, case_decorator
 from datetime import datetime
 import time
 
@@ -18,7 +18,7 @@ class TestApDocumentSave(ApBaseTest):
     def setup_class(cls):
         super().setup_class()
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单保存",
         title="创建标准应付单",
         description="创建标准应付单并断言成功",
@@ -76,7 +76,7 @@ class TestApDocumentSave(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单编辑",
         title="编辑为标准暂估应付单",
         description="编辑为标准暂估应付单并保存",
@@ -119,7 +119,7 @@ class TestApDocumentSave(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单提交",
         title="提交应付单-AP_SUBMIT_WITH_HEAD_EVENT_SERVICE（动态单据）",
         description="用前置用例生成的单据进行提交并断言成功",
@@ -185,7 +185,7 @@ class TestApDocumentSave(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单过账",
         title="应付单过账-AP_POST_ASYNC_EVENT_SERVICE（动态单据）",
         description="用前置用例生成的单据进行过账并断言API调用成功",
@@ -252,7 +252,7 @@ class TestApDocumentSave(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单状态校验",
         title="根据单据编号分页查询应付单状态",
         description="用apHeadCode分页查询应付单详情并轮询等待状态变为DONE",

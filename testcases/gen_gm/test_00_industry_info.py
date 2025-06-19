@@ -1,7 +1,7 @@
 import allure
 from testcases.comm.base_test import BaseTest
 from utils.param_util import ParamUtil
-from utils.report_util import a
+from utils.report_util import a, case_decorator
 from pathlib import Path
 from utils.yaml_util import YamlUtil
 from testcases.gen_gm import init_gen_gm_config
@@ -31,7 +31,7 @@ class TestIndustryInfo(BaseTest):
         
 
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="行业信息管理",
         title="创建行业信息",
         description="测试创建行业信息的功能",
@@ -84,7 +84,7 @@ class TestIndustryInfo(BaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="行业信息管理",
         title="查询行业信息详情",
         description="测试查询行业信息详情的功能",
@@ -129,7 +129,7 @@ class TestIndustryInfo(BaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="行业信息管理",
         title="分页查询行业信息",
         description="测试分页查询行业信息的功能",
@@ -169,7 +169,7 @@ class TestIndustryInfo(BaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="行业信息管理",
         title="禁用行业信息",
         description="测试禁用行业信息的功能",
@@ -208,7 +208,7 @@ class TestIndustryInfo(BaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="行业信息管理",
         title="启用行业信息",
         description="测试启用行业信息的功能",
@@ -247,7 +247,7 @@ class TestIndustryInfo(BaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="行业信息管理",
         title="批量启用行业信息",
         description="测试批量启用行业信息的功能",
@@ -286,7 +286,7 @@ class TestIndustryInfo(BaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="行业信息管理",
         title="批量禁用行业信息",
         description="测试批量禁用行业信息的功能",
@@ -325,7 +325,7 @@ class TestIndustryInfo(BaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="行业信息管理",
         title="删除行业信息",
         description="测试删除行业信息的功能",
@@ -364,7 +364,7 @@ class TestIndustryInfo(BaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="行业信息管理",
         title="批量删除行业信息",
         description="测试批量删除行业信息的功能",

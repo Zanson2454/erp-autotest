@@ -1,7 +1,7 @@
 import allure
 from testcases.comm.base_test import BaseTest
 from utils.param_util import ParamUtil
-from utils.report_util import a
+from utils.report_util import a, case_decorator
 from testcases.gen_gm import init_gen_gm_config
 
 @allure.epic("通用基础")
@@ -17,7 +17,7 @@ class TestTenantInfo(BaseTest):
         super().setup_class()
         init_gen_gm_config(cls)
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="租户信息管理",
         title="创建租户信息",
         description="测试创建租户信息的功能",
@@ -76,7 +76,7 @@ class TestTenantInfo(BaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="租户信息管理",
         title="查询租户信息详情",
         description="测试查询租户信息详情的功能",
@@ -122,7 +122,7 @@ class TestTenantInfo(BaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="租户信息管理",
         title="分页查询租户信息",
         description="测试分页查询租户信息的功能",
@@ -162,7 +162,7 @@ class TestTenantInfo(BaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="租户信息管理",
         title="禁用租户信息",
         description="测试禁用租户信息的功能",
@@ -201,7 +201,7 @@ class TestTenantInfo(BaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="租户信息管理",
         title="启用租户信息",
         description="测试启用租户信息的功能",
@@ -240,7 +240,7 @@ class TestTenantInfo(BaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="租户信息管理",
         title="批量启用租户信息",
         description="测试批量启用租户信息的功能",
@@ -279,7 +279,7 @@ class TestTenantInfo(BaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="租户信息管理",
         title="批量禁用租户信息",
         description="测试批量禁用租户信息的功能",
@@ -318,7 +318,7 @@ class TestTenantInfo(BaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="租户信息管理",
         title="删除租户信息",
         description="测试删除租户信息的功能",
@@ -357,7 +357,7 @@ class TestTenantInfo(BaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="租户信息管理",
         title="批量删除租户信息",
         description="测试批量删除租户信息的功能",
@@ -396,7 +396,7 @@ class TestTenantInfo(BaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="租户信息管理",
         title="更换企业管理员",
         description="测试更换企业管理员的功能",
@@ -450,7 +450,7 @@ class TestTenantInfo(BaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="租户信息管理",
         title="查询租户下员工",
         description="测试查询租户下员工的功能",

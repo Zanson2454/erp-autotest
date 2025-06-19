@@ -1,7 +1,7 @@
 import allure
 from testcases.comm.base_test import BaseTest
 from utils.param_util import ParamUtil
-from utils.report_util import a
+from utils.report_util import a, case_decorator
 from testcases.gen_gm import init_gen_gm_config
 
 @allure.epic("通用基础")
@@ -14,7 +14,7 @@ class TestTenantGuideFeatureRelBatch(BaseTest):
         super().setup_class()
         init_gen_gm_config(cls)
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="租户引导配置功能点关联批量管理",
         title="批量新增租户引导配置功能点关联",
         description="验证批量新增租户引导配置功能点关联功能",
@@ -68,7 +68,7 @@ class TestTenantGuideFeatureRelBatch(BaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="租户引导配置功能点关联批量管理",
         title="批量查询租户引导配置功能点关联",
         description="验证批量查询租户引导配置功能点关联功能",
@@ -112,7 +112,7 @@ class TestTenantGuideFeatureRelBatch(BaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="租户引导配置功能点关联批量管理",
         title="批量禁用租户引导配置功能点关联",
         description="验证批量禁用租户引导配置功能点关联功能",
@@ -152,7 +152,7 @@ class TestTenantGuideFeatureRelBatch(BaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="租户引导配置功能点关联批量管理",
         title="批量删除租户引导配置功能点关联",
         description="验证批量删除租户引导配置功能点关联功能",

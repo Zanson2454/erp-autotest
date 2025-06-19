@@ -1,7 +1,7 @@
 import allure
 from testcases.fin.fin_ar import ArBaseTest, convert_decimal_to_float
 from utils.param_util import ParamUtil
-from utils.report_util import a
+from utils.report_util import a, case_decorator
 from data_factory.fin_ar_factory import FinArFactory
 from decimal import Decimal
 from datetime import datetime
@@ -16,7 +16,7 @@ class TestArDocCreatePn(ArBaseTest):
     # 类变量存储测试数据
     ar_info = {}
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应收单创建",
         title="创建并过账标准应收单",
         description="创建标准应收单并过账",
@@ -72,7 +72,7 @@ class TestArDocCreatePn(ArBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="收款单创建（异步任务）",
         title="基于应收单创建收款单",
         description="基于应收单创建收款单",
@@ -116,7 +116,7 @@ class TestArDocCreatePn(ArBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单付款中金额更新查询",
         title="查询应收单收款中金额",
         description="查询应收单收款中金额并校验与含税总额一致",
@@ -196,7 +196,7 @@ class TestArDocCreatePn(ArBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="收款单状态验证",
         title="验证收款单创建状态",
         description="通过数据工厂查询收款单信息并验证状态为DRAFT",
@@ -273,7 +273,7 @@ class TestArDocCreatePn(ArBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="收款单提交",
         title="提交收款单",
         description="使用PN_SUBMIT_WITH_HEAD_EVENT_SERVICE提交收款单",
@@ -316,7 +316,7 @@ class TestArDocCreatePn(ArBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="收款单过账",
         title="收款单过账异步任务",
         description="使用PCC_PN_REC_POST_ASYNC_EVENT_SERVICE过账收款单",
@@ -359,7 +359,7 @@ class TestArDocCreatePn(ArBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="收款单过账状态验证",
         title="验证收款单过账后状态",
         description="通过分页查询验证收款单过账后的异步执行状态和金额钩稽状态",
@@ -451,7 +451,7 @@ class TestArDocCreatePn(ArBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应收单状态验证",
         title="验证收款单过账后应收单状态更新",
         description="通过应收单头表分页查询验证收款单过账后应收单的收款金额和钩稽状态是否正确更新",
