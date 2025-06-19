@@ -10,7 +10,7 @@ import random
 import allure
 import pytest
 from pathlib import Path
-from testcases.prd import PrdBaseTest
+from testcases.prd.order import PrdBaseTest
 from utils.allure_simple import a
 from utils.param_util import ParamUtil
 
@@ -55,25 +55,22 @@ class TestPrdOrder(PrdBaseTest):
         try:
             with a.step("1. 准备请求数据"):
                 # 获取API路径
-                api_path = self.get_api_path("根据生产工厂和物料查询物料生产视图服务")
+                api_path = ParamUtil.get_api_path(self.apis, "根据生产工厂和物料查询物料生产视图服务")
                 self.logger.debug(f"查询物料生产视图API路径: {api_path}")
                 
                 # 获取请求参数
-                params, url = self.get_api_params(api_path)
+                params, url = ParamUtil.get_api_params(self.api_params, api_path)
                 
                 # 设置必要参数值
-                filtered_params = {
-                    "params": {
-                        "request": {
-                            "invOrgId": {
-                                "id": self.base_info["inv_org_info"]["id"]
-                            },
-                            "genMatMdId": {
-                                "id": self.base_info["prd_mat_info"]["id"]
-                            }
-                        }
-                    }
-                }
+                filtered_params = ParamUtil.filter_post_body_fields(
+                    params,
+                    ["invOrgId", "genMatMdId"],
+                    ["params", "request"]
+                )
+                ParamUtil.set_request_params(filtered_params, {
+                    "invOrgId": {"id": self.base_info["inv_org_info"]["id"]},
+                    "genMatMdId": {"id": self.base_info["prd_mat_info"]["id"]}
+                })
                 
                 self.logger.info(f"请求URL: {url}")
                 self.logger.info(f"请求参数: {filtered_params}")
@@ -82,7 +79,7 @@ class TestPrdOrder(PrdBaseTest):
             
             with a.step("2. 发送请求"):
                 # 发送请求
-                result = self.http.post(url, json=filtered_params, description="查询物料生产视图")
+                result = self.http.post(url, json=filtered_params)
                 # 添加响应数据到报告
                 a.json(result, "响应数据")
             
