@@ -41,7 +41,7 @@ class <功能模块>Base(BaseTest):
     # 类变量用于存储API配置
     apis = {}
     api_params = {}
-    
+    params = {"tmodule": <模块,比如GEN_MD>}  
     @classmethod
     def setup_class(cls):
         """测试类初始化
@@ -67,7 +67,6 @@ class <功能模块>Base(BaseTest):
 @allure.feature("<功能模块>")
 class Test<功能名称>(<领域>BaseTest):
     <实体>_info = {}  # 类变量存储共享数据
-    
     @classmethod
     def setup_class(cls):
         super().setup_class()  # 必须调用父类初始化
@@ -139,7 +138,7 @@ def test_<操作>_<实体>(self):
 ### 5.1 使用ParamUtil工具类处理参数
 ### 5.2 必须包含异常处理和Allure附件
 ### 5.3 类变量存储跨测试数据
-### 5.4 断言必须包含assert_response_success()
+### 5.4 断言必须包含assert_response_success(),根据实际用例需求可智能使用 assert_util.py 中的断言
 
 ## 6. 测试用例输出案例
 ```python
@@ -164,7 +163,6 @@ class TestPartnerManage(GenBaseTest):
     
     # 生成此处填写完整的测试方法
 ```
-
 ## 7. 关键优化点说明
 ### 7.1. **参数处理精准化**  
    明确要求使用 `filter_post_body_fields()` 的嵌套路径 `["params", "request"]`，与yaml参数结构完全匹配
@@ -180,3 +178,7 @@ class TestPartnerManage(GenBaseTest):
 
 ### 7.5. **动态生成与硬编码结合**  
    区分需动态生成的字段（code/name）和可硬编码字段（type.id），平衡灵活性与效率
+
+
+## 8. mock_util 使用规范
+### 8.1 根据参数字段名称，智能选择mock_util中的方法 mock 数据
