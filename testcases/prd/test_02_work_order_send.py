@@ -10,7 +10,7 @@ import allure
 import pytest
 from pathlib import Path
 from testcases.prd import PrdBaseTest
-from utils.allure_simple import a
+from utils.report_util import a
 from utils.param_util import ParamUtil
 
 # 添加项目根目录到 Python 路径

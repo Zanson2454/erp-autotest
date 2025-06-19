@@ -6,7 +6,7 @@
 import allure
 import pytest
 from testcases.prd import PrdBaseTest
-from utils.allure_simple import a
+from utils.report_util import a
 from utils.param_util import ParamUtil
 
 

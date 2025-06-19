@@ -7,7 +7,7 @@ import os
 import uuid
 import requests
 import shutil
-from utils.fix_report import fix_report_title
+from utils.report_util import fix_report_title
 import threading
 from utils.dingtalk_util import send_dingtalk_msg
 import datetime

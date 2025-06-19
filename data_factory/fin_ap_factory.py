@@ -83,6 +83,25 @@ class FinApFactory(FinAparBaseFactory):
         """初始化，调用父类初始化方法"""
         super().__init__()
 
+    def convert_data_for_json(self, obj):
+        """
+        数据转换方法，处理Decimal和datetime类型，确保JSON序列化
+        :param obj: 待转换的对象
+        :return: 转换后的对象
+        """
+        if obj is None:
+            return None
+        elif isinstance(obj, Decimal):
+            return float(obj)
+        elif isinstance(obj, datetime):
+            return obj.strftime("%Y-%m-%d %H:%M:%S")
+        elif isinstance(obj, dict):
+            return {k: self.convert_data_for_json(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [self.convert_data_for_json(item) for item in obj]
+        else:
+            return obj
+
     def _get_sett_item_type(self, type_key: str = None) -> Dict[str, Any]:
         """获取结算项目类型配置"""
         if type_key == "SECOND":
@@ -100,7 +119,7 @@ class FinApFactory(FinAparBaseFactory):
         return {
             "taxAmt": tax_amt,
             "grossBaseAmt": amount,
-            "netBaseAmt": 1,
+            "netBaseAmt": net_amt,
             "settItemTypeId": sett_item_type,
             "matId": mat_id or mat["id"],
             "grossDocAmt": amount,
@@ -148,35 +167,6 @@ class FinApFactory(FinAparBaseFactory):
         # 合并基础字段
         base_schl.update(ap_schl)
         return base_schl
-
-    # 保留原有的查询方法以保持向后兼容
-    def _query_org(self, org_code: str) -> Optional[Dict[str, Any]]:
-        """查询组织"""
-        try:
-            return self.query_single_record("org_struct_md", "org_code = %s AND deleted = 0", [org_code], f"编码为{org_code}的组织")
-        except Exception:
-            return None
-
-    def _query_currency(self, curr_code: str) -> Optional[Dict[str, Any]]:
-        """查询币种"""
-        try:
-            return self.query_single_record("gen_curr_type_cf", "curr_code = %s AND deleted = 0", [curr_code], f"编码为{curr_code}的币种")
-        except Exception:
-            return None
-
-    def _query_tax_code(self, tax: int) -> Optional[Dict[str, Any]]:
-        """查询税码"""
-        try:
-            return self.query_single_record("gen_tax_type_cf", "tax = %s AND deleted = 0", [tax], f"税率为{tax}%的税码")
-        except Exception:
-            return None
-
-    def _query_material(self, mat_code: str) -> Optional[Dict[str, Any]]:
-        """查询物料"""
-        try:
-            return self.query_single_record("gen_mat_md", "mat_code = %s AND deleted = 0", [mat_code], f"编码为{mat_code}的物料")
-        except Exception:
-            return None
 
     @classmethod
     def get_or_create_ap_doc(cls, status: str = None) -> Dict[str, Any]:
@@ -355,8 +345,8 @@ class FinApFactory(FinAparBaseFactory):
                     "rel_doc_head_id": pr_info.get("rel_doc_head_id"),
                     "pr_item_id": pr_info.get("pr_item_id"),
                     "pr_status": pr_info.get("pr_status"),
-                    "created_at": pr_info.get("created_at"),
-                    "updated_at": pr_info.get("updated_at")
+                    "created_at": self.convert_data_for_json(pr_info.get("created_at")),
+                    "updated_at": self.convert_data_for_json(pr_info.get("updated_at"))
                 }
             else:
                 Loggers.warning(f"未找到应付单ID {ap_doc_id} 对应的付款申请单信息")
@@ -403,10 +393,10 @@ class FinApFactory(FinAparBaseFactory):
                         "rel_doc_head_id": pr_info.get("rel_doc_head_id"),
                         "pr_item_id": pr_info.get("pr_item_id"),
                         "pr_status": pr_info.get("pr_status"),
-                        "pr_doc_amt": pr_info.get("pr_doc_amt"),
-                        "pr_base_amt": pr_info.get("pr_base_amt"),
-                        "created_at": pr_info.get("created_at"),
-                        "updated_at": pr_info.get("updated_at")
+                        "pr_doc_amt": self.convert_data_for_json(pr_info.get("pr_doc_amt")),
+                        "pr_base_amt": self.convert_data_for_json(pr_info.get("pr_base_amt")),
+                        "created_at": self.convert_data_for_json(pr_info.get("created_at")),
+                        "updated_at": self.convert_data_for_json(pr_info.get("updated_at"))
                     })
                 
                 Loggers.info(f"根据应付单ID {ap_doc_id} 查询到 {len(pr_list)} 条付款申请单信息")
@@ -448,6 +438,8 @@ class FinApFactory(FinAparBaseFactory):
                     tra_par_type,
                     inv_doc_amt,
                     inv_base_amt,
+                    inv_doc_tax,
+                    inv_base_tax,
                     pi_date,
                     created_at,
                     updated_at,
@@ -465,8 +457,8 @@ class FinApFactory(FinAparBaseFactory):
                 pi_info = result[0]
                 Loggers.info(f"根据发票号 {inv_code} 查询到采购发票信息: pi_head_code={pi_info.get('pi_head_code')}, id={pi_info.get('id')}")
                 
-                # 转换数据类型以支持JSON序列化
-                return {
+                # 使用统一的数据转换方法
+                return self.convert_data_for_json({
                     "id": pi_info.get("id"),
                     "pi_head_code": pi_info.get("pi_head_code"),
                     "inv_code": pi_info.get("inv_code"),
@@ -476,13 +468,15 @@ class FinApFactory(FinAparBaseFactory):
                     "pur_org_id": pi_info.get("pur_org_id"),
                     "tra_par_id": pi_info.get("tra_par_id"),
                     "tra_par_type": pi_info.get("tra_par_type"),
-                    "inv_doc_amt": float(pi_info.get("inv_doc_amt")) if pi_info.get("inv_doc_amt") is not None else None,
-                    "inv_base_amt": float(pi_info.get("inv_base_amt")) if pi_info.get("inv_base_amt") is not None else None,
-                    "pi_date": pi_info.get("pi_date").strftime("%Y-%m-%d %H:%M:%S") if pi_info.get("pi_date") else None,
-                    "created_at": pi_info.get("created_at").strftime("%Y-%m-%d %H:%M:%S") if pi_info.get("created_at") else None,
-                    "updated_at": pi_info.get("updated_at").strftime("%Y-%m-%d %H:%M:%S") if pi_info.get("updated_at") else None,
+                    "inv_doc_amt": pi_info.get("inv_doc_amt"),
+                    "inv_base_amt": pi_info.get("inv_base_amt"),
+                    "inv_doc_tax": pi_info.get("inv_doc_tax"),
+                    "inv_base_tax": pi_info.get("inv_base_tax"),
+                    "pi_date": pi_info.get("pi_date"),
+                    "created_at": pi_info.get("created_at"),
+                    "updated_at": pi_info.get("updated_at"),
                     "version": pi_info.get("version")
-                }
+                })
             else:
                 Loggers.warning(f"未找到发票号 {inv_code} 对应的采购发票信息")
                 return None

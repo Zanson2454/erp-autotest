@@ -3,7 +3,7 @@ import sys
 import allure
 from pathlib import Path
 from testcases.gen import GenBaseTest
-from utils.allure_simple import a
+from utils.report_util import a
 from utils.param_util import ParamUtil
 
 project_root = Path(__file__).resolve().parent.parent.parent

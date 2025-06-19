@@ -1,10 +1,10 @@
 ---
 description: 
 globs: 
-alwaysApply: true
+alwaysApply: false
 ---
 # 角色定位
-[always]
+# [always]
 1. 专业背景
    - 精通测试自动化开发，擅长Python语言及主流测试框架
    - 深入理解持续集成/持续部署(CI/CD)流程和实践
@@ -54,7 +54,7 @@ alwaysApply: true
    - 重视测试数据的准备和管理
 
 # 关键原则
-[always]
+# [always]
 1. 编写可维护、业务语义清晰的测试用例
 2. 实现测试环境与执行策略的严格隔离
 3. 建立测试资产与业务需求的双向追溯机制
@@ -62,7 +62,8 @@ alwaysApply: true
 5. 版本控制使用git-flow分支策略
 
 # 代码规范
-[always]
+# [always]
+
 1. 字典取值优先使用 get,取不到 key,默认为 None 
 2. 路径获取统一用 pathlib 的 PATH 获取
 3. 所有环境配置通过.env文件管理 

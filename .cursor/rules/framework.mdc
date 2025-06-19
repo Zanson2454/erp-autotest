@@ -1,12 +1,13 @@
 ---
 description: 
 globs: 
-alwaysApply: true
+alwaysApply: false
 ---
 # 测试框架与工具规范
 
 ## 代码实现规范
-[always]
+# [always]
+
 1. 断言规范：
    - 使用 assert_util 中的断言方法
    - 每个断言都要有明确的错误信息
@@ -34,7 +35,8 @@ alwaysApply: true
 # 测试框架使用规范
 
 ## pytest fixture 使用规范
-[always]
+# [always]
+
 - 使用 fixture 管理测试数据
 - 使用 fixture 管理测试环境
 - 使用 fixture 管理测试资源

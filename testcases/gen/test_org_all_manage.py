@@ -11,7 +11,7 @@ import allure
 import pytest
 from pathlib import Path
 from testcases.gen import GenBaseTest
-from utils.allure_simple import a  # 导入简化的Allure辅助类
+from utils.report_util import a  # 导入简化的Allure辅助类
 from utils.param_util import ParamUtil  # 导入参数处理工具类
 import datetime
 

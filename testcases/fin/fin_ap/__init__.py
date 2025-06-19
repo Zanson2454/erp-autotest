@@ -15,7 +15,7 @@ sys.path.append(str(project_root))
 from testcases.comm.base_test import BaseTest
 from data_factory.fin_ap_factory import FinApFactory
 from utils.param_util import ParamUtil
-from utils.allure_simple import a
+from utils.report_util import a
 
 
 class ApBaseTest(BaseTest):

@@ -5,7 +5,7 @@
 import allure
 from testcases.fin.fin_ar import ArBaseTest
 from utils.param_util import ParamUtil
-from utils.allure_simple import a
+from utils.report_util import a
 
 class TestArDocumentQuery(ArBaseTest):
     ar_query_info = {}

@@ -5,7 +5,7 @@
 import allure
 from testcases.fin.fin_ap import ApBaseTest
 from utils.param_util import ParamUtil
-from utils.allure_simple import a
+from utils.report_util import a
 from datetime import datetime
 import time
 
@@ -157,7 +157,7 @@ class TestApDocumentSave(ApBaseTest):
                     "invClearingStatus": "UNCLEARED",
                     "unpaidDocAmt": total_amt,
                     "uninvoicedDocAmt": total_amt,
-                    "unpaidBaseAmt": net_base_amt,
+                    "unpaidBaseAmt": gross_base_amt,
                     "uninvoicedBaseAmt": total_amt,
                     "unoffsetDocAmt": total_amt,
                     "unoffsetBaseAmt": total_amt,
@@ -223,7 +223,7 @@ class TestApDocumentSave(ApBaseTest):
                     "invClearingStatus": "UNCLEARED",
                     "unpaidDocAmt": TestApDocumentSave.ap_info.get("total_amt"),
                     "uninvoicedDocAmt": TestApDocumentSave.ap_info.get("total_amt"),
-                    "unpaidBaseAmt": TestApDocumentSave.ap_info.get("net_base_amt"),
+                    "unpaidBaseAmt": TestApDocumentSave.ap_info.get("gross_base_amt"),
                     "uninvoicedBaseAmt": TestApDocumentSave.ap_info.get("total_amt"),
                     "unoffsetDocAmt": TestApDocumentSave.ap_info.get("total_amt"),
                     "unoffsetBaseAmt": TestApDocumentSave.ap_info.get("total_amt"),
