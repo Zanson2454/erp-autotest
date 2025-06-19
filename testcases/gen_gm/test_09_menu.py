@@ -1,7 +1,7 @@
 import allure
 from testcases.comm.base_test import BaseTest
 from utils.param_util import ParamUtil
-from utils.report_util import a
+from utils.report_util import a, case_decorator
 from testcases.gen_gm import init_gen_gm_config
 
 @allure.epic("通用基础")
@@ -15,7 +15,7 @@ class TestMenu(BaseTest):
         super().setup_class()
         init_gen_gm_config(cls)
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="菜单管理",
         title="查询菜单树",
         description="测试查询菜单树的功能",
@@ -52,7 +52,7 @@ class TestMenu(BaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="菜单管理",
         title="查询菜单树（权限过滤）",
         description="测试查询菜单树（权限过滤）的功能",

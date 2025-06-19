@@ -1,7 +1,7 @@
 import allure
 from testcases.comm.base_test import BaseTest
 from utils.param_util import ParamUtil
-from utils.report_util import a
+from utils.report_util import a, case_decorator
 from testcases.gen_gm import init_gen_gm_config
 
 @allure.epic("通用基础")
@@ -14,7 +14,7 @@ class TestTenantGuideFeatureRelOrder(BaseTest):
         super().setup_class()
         init_gen_gm_config(cls)
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="租户引导配置功能点关联排序管理",
         title="新增租户引导配置功能点关联排序",
         description="验证新增租户引导配置功能点关联排序功能",
@@ -68,7 +68,7 @@ class TestTenantGuideFeatureRelOrder(BaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="租户引导配置功能点关联排序管理",
         title="更新租户引导配置功能点关联排序",
         description="验证更新租户引导配置功能点关联排序功能",
@@ -117,7 +117,7 @@ class TestTenantGuideFeatureRelOrder(BaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="租户引导配置功能点关联排序管理",
         title="查询租户引导配置功能点关联排序",
         description="验证查询租户引导配置功能点关联排序功能",
@@ -165,7 +165,7 @@ class TestTenantGuideFeatureRelOrder(BaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="租户引导配置功能点关联排序管理",
         title="删除租户引导配置功能点关联排序",
         description="验证删除租户引导配置功能点关联排序功能",

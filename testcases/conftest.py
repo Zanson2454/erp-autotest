@@ -186,7 +186,7 @@ def get_custom_title(item):
     优先级:
     1. 函数中使用的allure.dynamic.title
     2. @allure.title装饰器
-    3. ParamUtil.case_decorator中的title参数
+    3. case_decorator中的title参数
     """
     if not hasattr(item.function, "__code__"):
         return None
@@ -209,10 +209,10 @@ def get_custom_title(item):
         if decorator_match:
             return decorator_match.group(1)
             
-        # 最后检查ParamUtil.case_decorator中的title参数
-        param_util_match = re.search(r'@ParamUtil\.case_decorator\(.*?title=[\'"](.+?)[\'"]', func_source, re.DOTALL)
-        if param_util_match:
-            return param_util_match.group(1)
+        # 最后检查case_decorator中的title参数
+        case_decorator_match = re.search(r'@case_decorator\(.*?title=[\'"](.+?)[\'"]', func_source, re.DOTALL)
+        if case_decorator_match:
+            return case_decorator_match.group(1)
             
     except Exception as e:
         Loggers.warning(f"无法解析测试函数标题: {e}")

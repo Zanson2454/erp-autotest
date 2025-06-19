@@ -5,7 +5,7 @@
 import allure
 from testcases.fin.fin_ap import ApBaseTest
 from utils.param_util import ParamUtil
-from utils.report_util import a
+from utils.report_util import a, case_decorator
 
 @allure.epic("ERP通业财模块")
 @allure.feature("应付管理")
@@ -16,7 +16,7 @@ class TestApDocumentQuery(ApBaseTest):
     def setup_class(cls):
         super().setup_class()
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单详情查询",
         title="查询草稿态应付单详情",
         description="动态获取草稿态应付单ID，查询详情并断言成功",
@@ -48,7 +48,7 @@ class TestApDocumentQuery(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单详情查询",
         title="查询已确认应付单详情",
         description="动态获取已确认应付单ID，查询详情并断言成功",
@@ -80,7 +80,7 @@ class TestApDocumentQuery(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单详情查询",
         title="查询已完成应付单详情",
         description="动态获取已完成应付单ID，查询详情并断言成功",

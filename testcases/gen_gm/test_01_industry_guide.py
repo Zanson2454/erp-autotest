@@ -1,7 +1,7 @@
 import allure
 from testcases.comm.base_test import BaseTest
 from utils.param_util import ParamUtil
-from utils.report_util import a
+from utils.report_util import a, case_decorator
 from pathlib import Path
 from utils.yaml_util import YamlUtil
 from testcases.gen_gm import init_gen_gm_config
@@ -16,7 +16,7 @@ class TestIndustryGuide(BaseTest):
         super().setup_class()
         init_gen_gm_config(cls)
     
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="行业引导配置管理",
         title="新增行业引导配置",
         description="验证新增行业引导配置功能",
@@ -71,7 +71,7 @@ class TestIndustryGuide(BaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="行业引导配置管理",
         title="查询行业引导配置详情",
         description="验证查询行业引导配置详情功能",
@@ -115,7 +115,7 @@ class TestIndustryGuide(BaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="行业引导配置管理",
         title="分页查询行业引导配置",
         description="验证分页查询行业引导配置功能",
@@ -160,7 +160,7 @@ class TestIndustryGuide(BaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="行业引导配置管理",
         title="禁用行业引导配置",
         description="验证禁用行业引导配置功能",
@@ -200,7 +200,7 @@ class TestIndustryGuide(BaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="行业引导配置管理",
         title="删除行业引导配置",
         description="验证删除行业引导配置功能",

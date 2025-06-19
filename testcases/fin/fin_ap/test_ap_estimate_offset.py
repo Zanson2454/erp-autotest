@@ -5,7 +5,7 @@
 import allure
 from testcases.fin.fin_ap import ApBaseTest
 from utils.param_util import ParamUtil
-from utils.report_util import a
+from utils.report_util import a, case_decorator
 import time
 from datetime import datetime
 
@@ -236,7 +236,7 @@ class TestApEstimateOffset(ApBaseTest):
             a.text(f"发送暂估冲回请求失败: {str(e)}", "错误信息")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单前置数据",
         title="创建暂估应付单前置数据",
         description="创建、提交、过账暂估应付单，为暂估冲回提供前置数据",
@@ -266,7 +266,7 @@ class TestApEstimateOffset(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @ParamUtil.case_decorator(
+    @case_decorator(
         story="应付单暂估冲回",
         title="执行应付单暂估冲回",
         description="基于前置暂估应付单执行暂估冲回，调整金额并断言成功",
