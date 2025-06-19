@@ -46,13 +46,9 @@ class FinAparBaseFactory(DataFactory):
 
     def build_common_fields(self, data: Dict[str, Any], include_id: bool = False) -> Dict[str, Any]:
         """
-        构建通用字段
-        :param data: 原始数据
-        :param include_id: 是否包含ID字段
-        :return: 通用字段字典
+        构建通用字段，所有日期字段用时间戳（毫秒）
         """
         def to_timestamp(dt):
-            """统一的时间戳转换方法"""
             if isinstance(dt, datetime):
                 return int(dt.timestamp() * 1000)
             if isinstance(dt, str):
@@ -60,8 +56,9 @@ class FinAparBaseFactory(DataFactory):
                     return int(datetime.strptime(dt[:19], "%Y-%m-%d %H:%M:%S").timestamp() * 1000)
                 except:
                     return dt
-            return dt
-        
+            if isinstance(dt, int):
+                return dt
+            return None
         common_fields = {
             "createdAt": to_timestamp(data.get("created_at")),
             "updatedAt": to_timestamp(data.get("updated_at")),
@@ -71,10 +68,8 @@ class FinAparBaseFactory(DataFactory):
             "createdBy": {"id": data.get("created_by")} if data.get("created_by") else None,
             "updatedBy": {"id": data.get("updated_by")} if data.get("updated_by") else None,
         }
-        
         if include_id and data.get("id"):
             common_fields["id"] = data["id"]
-            
         return common_fields
 
     def create_org(self, org_type: str = "COM") -> Dict[str, Any]:
