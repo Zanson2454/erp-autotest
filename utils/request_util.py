@@ -7,16 +7,15 @@ import json
 import os
 import sys
 from datetime import datetime
-from loguru import logger
 from pathlib import Path
 
 
 # 添加项目根目录到 Python 路径
 project_root = Path(__file__).resolve().parent.parent
-logger.info(f"project_root: {project_root}")
 sys.path.insert(0, str(project_root))
 
 from utils.exception_util import safe_api_call, APIException
+from utils.log_util import Loggers
 
 class HttpUtil:
     """HTTP 工具类，提供增强的 HTTP 请求功能
@@ -85,47 +84,57 @@ class HttpUtil:
         # 从kwargs中移除description参数，因为requests不支持这个参数
         description = kwargs.pop('description', None)
         if description:
-            logger.info(f"请求描述: {description}")
+            Loggers.info(f"请求描述: {description}", depth=4)
         
         # 发送请求
         try:
             response = self.session.request(method, full_url, **kwargs)
             # 记录响应信息
-            logger.info(f"响应状态码: {response.status_code}")
+            Loggers.info(f"响应状态码: {response.status_code}", depth=4)
             
             try:
                 response_json = response.json()
-                logger.info(f"响应内容: {json.dumps(response_json, ensure_ascii=False, indent=2)}")
+                Loggers.info(f"响应内容: {json.dumps(response_json, ensure_ascii=False, indent=2)}", depth=4)
             except ValueError:
-                logger.info(f"响应内容: {response.text}")
+                Loggers.info(f"响应内容: {response.text}", depth=4)
             
             response.raise_for_status()  # 抛出HTTP错误
             return response.json()
         except requests.exceptions.RequestException as e:
-            logger.error(f"请求失败: {str(e)}")
+            Loggers.error(f"请求失败: {str(e)}", depth=4)
             if description:
-                logger.error(f"失败的请求: {description}")
+                Loggers.error(f"失败的请求: {description}", depth=4)
             if hasattr(e, 'response') and e.response is not None:
                 try:
                     error_detail = e.response.json()
-                    logger.error(f"错误详情: {json.dumps(error_detail, ensure_ascii=False, indent=2)}")
+                    Loggers.error(f"错误详情: {json.dumps(error_detail, ensure_ascii=False, indent=2)}", depth=4)
                 except ValueError:
-                    logger.error(f"错误响应: {e.response.text}")
+                    Loggers.error(f"错误响应: {e.response.text}", depth=4)
             raise
 
     def request_log(self, full_url, method, **kwargs):
+        """记录请求信息
+        
+        Args:
+            full_url: 完整的请求URL
+            method: 请求方法
+            **kwargs: 请求参数
+        """
         data = dict(**kwargs).get("data")
         json_data = dict(**kwargs).get("json")
         params = dict(**kwargs).get("params")
         headers = dict(**kwargs).get("headers")
-        logger.info("接口请求的地址>>>{}", full_url, stacklevel=3)
-        logger.info("接口请求的方法>>>{}", method, stacklevel=3)
+        
+        # 使用depth=4来跳过整个调用链，直接显示测试用例位置
+        Loggers.info("接口请求的地址>>>{}", full_url, depth=4)
+        Loggers.info("接口请求的方法>>>{}", method, depth=4)
+        
         if data is not None:
-            logger.info("接口请求的data参数>>>\n{}", json.dumps(data, ensure_ascii=False, indent=2), stacklevel=3)
+            Loggers.info("接口请求的data参数>>>\n{}", json.dumps(data, ensure_ascii=False, indent=2), depth=4)
         if json_data is not None:
-            logger.info("接口请求的json参数>>>\n{}", json.dumps(json_data, ensure_ascii=False, indent=2), stacklevel=3)
+            Loggers.info("接口请求的json参数>>>\n{}", json.dumps(json_data, ensure_ascii=False, indent=2), depth=4)
         if params is not None:
-            logger.info("接口请求的params参数>>>\n{}", json.dumps(params, ensure_ascii=False, indent=2), stacklevel=3)
+            Loggers.info("接口请求的params参数>>>\n{}", json.dumps(params, ensure_ascii=False, indent=2), depth=4)
         if headers is not None:
-            logger.info("接口请求的headers参数>>>\n{}", json.dumps(headers, ensure_ascii=False, indent=2), stacklevel=3)
+            Loggers.info("接口请求的headers参数>>>\n{}", json.dumps(headers, ensure_ascii=False, indent=2), depth=4)
 
