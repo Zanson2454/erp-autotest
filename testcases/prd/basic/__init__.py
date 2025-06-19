@@ -12,7 +12,7 @@
 import allure
 from testcases.base_test import BaseTest
 from utils.param_util import ParamUtil
-from utils.allure_simple import a
+from utils.report_util import a
 from .init_config import PrdConfigInitializer
 
 @allure.epic("生产管理")
