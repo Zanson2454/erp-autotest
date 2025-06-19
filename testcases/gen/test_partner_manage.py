@@ -1,7 +1,7 @@
 import allure
 from testcases.gen import GenBaseTest
 from utils.param_util import ParamUtil
-from utils.allure_simple import a
+from utils.report_util import a
 
 @allure.epic("通用基础")
 @allure.feature("合作伙伴管理")

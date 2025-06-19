@@ -1,10 +1,11 @@
 ---
 description: 
 globs: 
-alwaysApply: true
+alwaysApply: false
 ---
 # ERP自动化测试用例生成规则
-[always]
+# [always]
+
 # [manual]
 
 ## 使用说明
@@ -25,7 +26,7 @@ alwaysApply: true
 import allure
 from testcases.<领域> import <领域>BaseTest
 from utils.param_util import ParamUtil
-from utils.allure_simple import a
+from utils.report_util import a
 ```
 
 **重要说明：**
@@ -257,7 +258,7 @@ assert TestPartnerSimplified.partner_info.get("partner_code"), "未找到要查�
 import allure
 from testcases.gen import GenBaseTest
 from utils.param_util import ParamUtil
-from utils.allure_simple import a
+from utils.report_util import a
 
 @allure.epic("通用基础")
 @allure.feature("<功能模块>")

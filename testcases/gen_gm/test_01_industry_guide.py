@@ -1,7 +1,7 @@
 import allure
 from testcases.comm.base_test import BaseTest
 from utils.param_util import ParamUtil
-from utils.allure_simple import a
+from utils.report_util import a
 from pathlib import Path
 from utils.yaml_util import YamlUtil
 from testcases.gen_gm import init_gen_gm_config

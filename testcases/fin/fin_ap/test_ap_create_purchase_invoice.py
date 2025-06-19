@@ -4,7 +4,7 @@
 import allure
 from testcases.fin.fin_ap import ApBaseTest
 from utils.param_util import ParamUtil
-from utils.allure_simple import a
+from utils.report_util import a
 from data_factory.fin_ap_factory import FinApFactory
 from datetime import datetime
 from decimal import Decimal

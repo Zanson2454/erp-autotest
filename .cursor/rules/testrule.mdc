@@ -15,7 +15,7 @@ sys.path.insert(0, str(project_root))
 
 from testcases.<领域> import <领域>BaseTest  # 优先使用领域基类
 from utils.param_util import ParamUtil
-from utils.allure_simple import a
+from utils.report_util import a
 ```
 ### 1.3 用例模块下的__init__.py规范
 ```python
@@ -27,7 +27,7 @@ sys.path.insert(0, str(project_root))
 
 from testcases.comm.base_test import BaseTest
 from utils.param_util import ParamUtil
-from utils.allure_simple import a
+from utils.report_util import a
 
 class <功能模块>Base(BaseTest):
     """XXX管理测试基类
@@ -151,7 +151,7 @@ sys.path.insert(0, str(project_root))
 
 from testcases.gen import GenBaseTest
 from utils.param_util import ParamUtil
-from utils.allure_simple import a
+from utils.report_util import a
 
 @allure.epic("合作伙伴管理")
 @allure.feature("合作伙伴生命周期")

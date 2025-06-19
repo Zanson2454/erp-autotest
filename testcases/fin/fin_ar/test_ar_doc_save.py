@@ -5,7 +5,7 @@
 import allure
 from testcases.fin.fin_ar import ArBaseTest, convert_decimal_to_float
 from utils.param_util import ParamUtil
-from utils.allure_simple import a
+from utils.report_util import a
 from datetime import datetime
 import time
 
