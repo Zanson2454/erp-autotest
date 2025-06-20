@@ -286,11 +286,9 @@ class SwaggerParser:
                             param_schema = param.get('schema', {})
                             request_params[param['name']] = self._get_schema_value(param_schema)
 
-                    # 构建参数结构
+                    # 构建参数结构（不再包一层 request）
                     api_entry_data = {
-                        'params': {
-                            'request': request_params or {}  # 确保不返回 None
-                        }
+                        'params': request_params or {}  # 直接保存真实结构
                     }
                     
                     # 添加到参数字典
@@ -555,10 +553,10 @@ if __name__ == "__main__":
     )
     
     # 获取指定团队和模块的Swagger文档
-    swagger_doc = parser.fetch_swagger_doc("TERP", "ERP_SCM")
+    swagger_doc = parser.fetch_swagger_doc("TERPSAAS", "SCM_SLS")
     
     # 解析所有接口
     endpoints = parser.parse_endpoints()
     
     # 保存路径信息到gen_path.yaml
-    parser.save_paths_to_yaml(endpoints, module="ERP_SCM") 
+    parser.save_paths_to_yaml(endpoints, module="SCM_SLS") 

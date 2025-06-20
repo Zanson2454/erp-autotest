@@ -191,6 +191,25 @@ class MockData:
             raise ValidationException("候选列表不能为空")
         return random.choice(choices)
 
+    def get_mock_currency(self) -> dict:
+        """
+        生成币种对象，字段一一对应：code、name、symbol、iso_name
+        Returns:
+            dict: {code, name, symbol, iso_name}
+        """
+        currency_list = [
+            {"code": "CNY", "name": "人民币", "symbol": "¥", "iso_name": "Chinese Yuan"},
+            {"code": "USD", "name": "美元", "symbol": "$", "iso_name": "US Dollar"},
+            {"code": "EUR", "name": "欧元", "symbol": "€", "iso_name": "Euro"},
+            {"code": "JPY", "name": "日元", "symbol": "¥", "iso_name": "Japanese Yen"},
+            {"code": "GBP", "name": "英镑", "symbol": "£", "iso_name": "Pound Sterling"},
+            {"code": "AUD", "name": "澳元", "symbol": "A$", "iso_name": "Australian Dollar"},
+            {"code": "CAD", "name": "加元", "symbol": "C$", "iso_name": "Canadian Dollar"},
+            {"code": "CHF", "name": "瑞士法郎", "symbol": "Fr.", "iso_name": "Swiss Franc"},
+            {"code": "HKD", "name": "港币", "symbol": "HK$", "iso_name": "Hong Kong Dollar"},
+            {"code": "SGD", "name": "新加坡元", "symbol": "S$", "iso_name": "Singapore Dollar"},
+        ]
+        return random.choice(currency_list)
 
 if __name__ == '__main__':
     # 测试代码
@@ -210,3 +229,9 @@ if __name__ == '__main__':
     print("URL:", mock.get_mock_url())
     print("随机文本:", mock.get_mock_text())
     print("随机选择:", mock.get_mock_choice(['A', 'B', 'C', 'D']))
+    print("币种编码:", mock.get_mock_currency_code())
+    print("币种名称:", mock.get_mock_currency_name())
+    print("币种符号:", mock.get_mock_currency_symbol())
+    print("币种ISO名称:", mock.get_mock_currency_iso_name())
+    print("币种小数位:", mock.get_mock_currency_decimal_place())
+    print("币种对象:", mock.get_mock_currency())
