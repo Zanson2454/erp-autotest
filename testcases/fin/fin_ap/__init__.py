@@ -15,6 +15,7 @@ sys.path.append(str(project_root))
 from testcases.comm.base_test import BaseTest
 from data_factory.fin_ap_factory import FinApFactory
 from utils.param_util import ParamUtil
+from utils.mock_util import MockData
 from utils.report_util import a
 
 
@@ -26,6 +27,7 @@ class ApBaseTest(BaseTest):
         """初始化测试类配置"""
         super().setup_class()
         cls.ap_factory = FinApFactory()
+        cls.mock_data = MockData()
         
         # 初始化财务API配置
         project_root = Path(__file__).resolve().parent.parent.parent.parent
@@ -91,7 +93,7 @@ class ApBaseTest(BaseTest):
             "comOrgId": com_org,
             "purOrgId": pur_org,
             "payOrgId": pay_org,
-            "apHeadCode": ParamUtil.generate_unique_code("AP"),
+            "apHeadCode": self.mock_data.generate_unique_code("AP"),
             "remark": f"自动化测试创建应付单 - {now.strftime('%Y-%m-%d %H:%M:%S')}",
             "settPartnerType": "SUPPLIER",
             "settPartnerId": {"id": vend["id"]},

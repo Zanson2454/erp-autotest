@@ -1,6 +1,7 @@
 import allure
 from testcases.fin.fin_ar import ArBaseTest, convert_decimal_to_float
 from utils.param_util import ParamUtil
+from utils.mock_util import MockData
 from utils.report_util import a, case_decorator
 from data_factory.fin_ar_factory import FinArFactory
 from decimal import Decimal
@@ -10,11 +11,13 @@ import time
 
 class TestArDocCreateSb(ArBaseTest):
     ar_info = {}
+    mock_data = MockData()
     
     @classmethod
     def setup_class(cls):
         super().setup_class()
         cls.ar_factory = FinArFactory()
+        cls.mock_data = MockData()
         
         project_root = Path(__file__).resolve().parent.parent.parent.parent
         apis = cls.yaml_util.read_yaml(project_root / "testdata/fin/fin_api_path.yaml").get("apis", {})
@@ -56,7 +59,7 @@ class TestArDocCreateSb(ArBaseTest):
             "collectionClearingStatus": "UNCLEARED",
             "billingClearingStatus": "UNCLEARED",
             "headOffsetStatus": "UNOFFSET",
-            "remark": ParamUtil.generate_remark(),
+            "remark": self.mock_data.get_mock_remark(),
             "arItems": ar_items,
             "arSchls": ar_schls,
             "grossDocAmt": gross_doc_amt,
@@ -366,7 +369,7 @@ class TestArDocCreateSb(ArBaseTest):
                 })
 
             with a.step("提交并过账应收单"):
-                ar_head_code = ParamUtil.generate_unique_code("AR")
+                ar_head_code = self.mock_data.generate_unique_code("AR")
                 base_request = request_body.copy()
                 base_request.update({
                     "id": ar_doc_id,
@@ -408,7 +411,7 @@ class TestArDocCreateSb(ArBaseTest):
                 ar_doc_id = TestArDocCreateSb.ar_info.get("ar_doc_id")
                 assert ar_doc_id, "请先执行创建应收单用例，确保ar_doc_id已生成"
                 
-                bil_code = ParamUtil.generate_unique_code("auto")
+                bil_code = self.mock_data.generate_unique_code("auto")
                 result = {}
                 self._create_sb_by_ar(ar_doc_id, bil_code, result)
                 

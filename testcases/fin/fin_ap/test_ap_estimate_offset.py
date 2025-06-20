@@ -5,6 +5,7 @@
 import allure
 from testcases.fin.fin_ap import ApBaseTest
 from utils.param_util import ParamUtil
+from utils.mock_util import MockData
 from utils.report_util import a, case_decorator
 import time
 from datetime import datetime
@@ -13,10 +14,12 @@ from datetime import datetime
 @allure.feature("应付管理")
 class TestApEstimateOffset(ApBaseTest):
     ap_info = {}
+    mock_data = MockData()
     
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.mock_data = MockData()
 
     def create_prerequisite_ap_doc(self, ap_doc_info):
         """创建前置应付单，结果存储到ap_doc_info中"""
@@ -28,7 +31,7 @@ class TestApEstimateOffset(ApBaseTest):
                 base_data = ap_data["base_data"]
                 
                 # 设置暂估应付单特有字段
-                ap_head_code = ParamUtil.generate_unique_code("AP_EST")
+                ap_head_code = self.mock_data.generate_unique_code("AP_EST")
                 request_body["apHeadCode"] = ap_head_code
                 request_body["remark"] = f"暂估冲回前置应付单 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
                 
@@ -166,7 +169,7 @@ class TestApEstimateOffset(ApBaseTest):
                 # 构建暂估冲回数据
                 now_ts = int(datetime.now().timestamp() * 1000)
                 offset_data = {
-                    "apHeadCode": ParamUtil.generate_unique_code("AP_OFFSET"),
+                    "apHeadCode": self.mock_data.generate_unique_code("AP_OFFSET"),
                     "docTypeId": {"id": 2002001},  # 标准应付单类型
                     "apDate": now_ts,
                     "comOrgId": TestApEstimateOffset.ap_info["comOrgId"],

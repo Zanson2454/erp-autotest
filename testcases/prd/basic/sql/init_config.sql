@@ -203,7 +203,7 @@ WHERE NOT EXISTS (
 );
 
 -- 工艺路线类别配置
-INSERT INTO gen_routings_type_cf (
+INSERT INTO prd_routings_type_cf (
     type_code, type_name,
     created_by, updated_by, created_at, updated_at,
     version, deleted, origin_org_id
@@ -213,11 +213,11 @@ SELECT
     'SYSTEM', 'SYSTEM', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
     0, 0, 0
 WHERE NOT EXISTS (
-    SELECT 1 FROM gen_routings_type_cf 
+    SELECT 1 FROM p'r'd_routings_type_cf 
     WHERE type_name = '试制' AND deleted = 0
 );
 
-INSERT INTO gen_routings_type_cf (
+INSERT INTO prd_routings_type_cf (
     type_code, type_name,
     created_by, updated_by, created_at, updated_at,
     version, deleted, origin_org_id
@@ -227,12 +227,12 @@ SELECT
     'SYSTEM', 'SYSTEM', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
     0, 0, 0
 WHERE NOT EXISTS (
-    SELECT 1 FROM gen_routings_type_cf 
+    SELECT 1 FROM prd_routings_type_cf 
     WHERE type_name = '标准生产' AND deleted = 0
 );
 
 -- 工艺路线用途配置
-INSERT INTO gen_routings_usage_cf (
+INSERT INTO prd_routings_usage_cf (
     usage_code, usage_name, is_engineer_design, is_prd, is_qc, is_cost,
     created_by, updated_by, created_at, updated_at,
     version, deleted, origin_org_id
@@ -242,7 +242,7 @@ SELECT
     'SYSTEM', 'SYSTEM', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
     0, 0, 0
 WHERE NOT EXISTS (
-    SELECT 1 FROM gen_routings_usage_cf 
+    SELECT 1 FROM prd_routings_usage_cf 
     WHERE usage_name = '生产' AND deleted = 0
 );
 

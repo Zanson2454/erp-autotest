@@ -2,6 +2,7 @@
 import allure
 from testcases.fin.fin_ar import ArBaseTest, convert_decimal_to_float
 from utils.param_util import ParamUtil
+from utils.mock_util import MockData
 from utils.report_util import a, case_decorator
 from data_factory.fin_ar_factory import FinArFactory
 from decimal import Decimal
@@ -17,12 +18,14 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
     
     # 类变量存储测试数据
     ar_batch_info = {}
+    mock_data = MockData()
 
     @classmethod
     def setup_class(cls):
         super().setup_class()
         # 初始化应收单数据工厂
         cls.ar_factory = FinArFactory()
+        cls.mock_data = MockData()
 
     @case_decorator(
         story="应收单创建",
@@ -37,9 +40,9 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
         """创建并过账标准应收单"""
         try:
             with a.step("创建标准应收单"):
-                ar_code = ParamUtil.generate_unique_code("AR")
-                ar_name = ParamUtil.generate_test_name("BATCH_AR")
-                remark = ParamUtil.generate_remark()
+                ar_code = self.mock_data.generate_unique_code("AR")
+                ar_name = f"BATCH_AR_{self.mock_data.get_timestamp()}"
+                remark = self.mock_data.get_mock_remark()
                 
                 api_path = ParamUtil.get_api_path(self.apis, "AR-应收单保存服务")
                 params, url = ParamUtil.get_api_params(self.api_params, api_path)
@@ -159,11 +162,14 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                 val_api_path = ParamUtil.get_api_path(self.apis, "应收单批量生成收款单-校验服务")
                 val_params, val_url = ParamUtil.get_api_params(self.api_params, val_api_path)
                 
+                # 获取基础数据（包含teamId等）
+                base_data = self.ar_factory.get_base_data_for_fin_doc("AR")
+                
                 val_request = {
                     "sceneKey": "ERP_FIN$FIN_ARM_FROM_DS",
                     "viewKey": "ERP_FIN$FIN_ARM_FROM_DS:list",
                     "appId": None,
-                    "teamId": 22,
+                    "teamId": base_data.get("team_id", 22),
                     "serviceKey": "ERP_FIN$BATCH_AR_CONVERT_TO_CM_PN_VAL_SERVICE",
                     "params": {"request": {"armArSchlIds": [ar_doc_id]}}
                 }
@@ -184,7 +190,7 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                     "buttonKey": "ERP_FIN$FIN_ARM_FROM_DS-84z52frNCSGsTQu6-h_sR",
                     "buttonName": "生成收款单",
                     "appId": 0,
-                    "teamId": 22,
+                    "teamId": base_data.get("team_id", 22),
                     "serviceKey": "ERP_FIN$BATCH_AR_SCHL_CONVERT_TO_CM_PN_VAL_SERVICE",
                     "params": {"request": {"armArSchlIds": ar_schl_ids}}
                 }
@@ -196,58 +202,9 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                 save_api_path = ParamUtil.get_api_path(self.apis, "PN-收付款单-保存并更新来源-运营侧服务")
                 save_params, save_url = ParamUtil.get_api_params(self.api_params, save_api_path)
                 
+                # 使用数据工厂创建收款单请求数据
                 partial_amount = 20000
-                ar_date = int(datetime.now().timestamp() * 1000)
-                ar_schl_id = ar_schl_ids[0]
-                
-                save_request_data = {
-                    "collectedPaidDocAmt": partial_amount,
-                    "collectedPaidBaseAmt": partial_amount,
-                    "headOffsetStatus": "UNOFFSET",
-                    "relatedCreated": "RELATED",
-                    "pnClass": "REC",
-                    "pnStatus": "DRAFT",
-                    "docTypeId": {"id": 2002002},
-                    "pnDate": ar_date,
-                    "comOrgId": {"id": 14373001},
-                    "purSlsOrgId": {"id": 14579001},
-                    "payRecOrgId": {"id": 14373001},
-                    "tradingPartnerType": "CUSTOMER",
-                    "tradingPartnerId": {"id": 14103001},
-                    "payerType": "CUSTOMER",
-                    "payerId": {"id": 14103001},
-                    "currId": {"id": 2000001},
-                    "baseCurrId": {"currName": "人民币", "currCode": "CNY", "id": 2000001},
-                    "exchRate": 1,
-                    "pnItems": [{
-                        "arApDocAmt": partial_amount,
-                        "collectedPaidDocAmt": partial_amount,
-                        "arApBaseAmt": partial_amount,
-                        "collectedPaidBaseAmt": partial_amount,
-                        "clearingDocAmt": TestArBatchCreatePartialPnAndSb.ar_batch_info.get("gross_doc_amt", 40000),
-                        "clearingBaseAmt": TestArBatchCreatePartialPnAndSb.ar_batch_info.get("gross_base_amt", 40000),
-                        "relDocClass": "AR",
-                        "relDocHeadCode": ar_head_code,
-                        "relDocItemCode": f"ARS{ar_head_code[2:]}",
-                        "relDocHeadId": {"id": ar_doc_id},
-                        "relDocItemId": {"id": ar_schl_id},
-                        "settlementMethodCode": {"id": 2000003},
-                        "paymentPurposeCode": {"id": 2001001},
-                        "tradingAccountCode": {"id": 2003001}
-                    }],
-                    "pnLinks": [{
-                        "sourceType": "AR",
-                        "sourceHeadCode": ar_head_code,
-                        "sourceSchlCode": f"ARS{ar_head_code[2:]}",
-                        "sourceCurrId": {"id": 2000001},
-                        "expireDate": ar_date,
-                        "sourceArApAmt": TestArBatchCreatePartialPnAndSb.ar_batch_info.get("gross_doc_amt", 40000),
-                        "thisTimePnAmt": partial_amount,
-                        "thisTimePnBaseAmt": partial_amount,
-                        "sourceHeadId": {"id": ar_doc_id},
-                        "sourceItemId": {"id": ar_schl_id}
-                    }]
-                }
+                save_request_data = self.ar_factory.create_pn_request_data(ar_info, partial_amount)
                 
                 save_request = {
                     "sceneKey": "ERP_FIN$FIN_ARM_FROM_DS",
@@ -256,7 +213,7 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                     "buttonKey": "ERP_FIN$FIN_ARM_FROM_DS-TERP_MIGRATE$FIN_CM_PN_REC-editView-footer-save",
                     "buttonName": "保存",
                     "appId": 0,
-                    "teamId": 22,
+                    "teamId": base_data.get("team_id", 22),
                     "serviceKey": "ERP_FIN$PN_SAVE_ADMIN_SERVICE",
                     "params": {"request": save_request_data}
                 }
@@ -305,11 +262,15 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                 val_api_path = ParamUtil.get_api_path(self.apis, "应收单批量转化销售发票-校验服务")
                 val_params, val_url = ParamUtil.get_api_params(self.api_params, val_api_path)
                 
+                # 获取基础数据（如果前面没有获取的话）
+                if 'base_data' not in locals():
+                    base_data = self.ar_factory.get_base_data_for_fin_doc("AR")
+                
                 val_request = {
                     "sceneKey": "ERP_FIN$FIN_ARM_FROM_DS",
                     "viewKey": "ERP_FIN$FIN_ARM_FROM_DS:list",
                     "appId": None,
-                    "teamId": 22,
+                    "teamId": base_data.get("team_id", 22),
                     "serviceKey": "ERP_FIN$BATCH_AR_CONVERT_TO_SB_VAL_SERVICE",
                     "params": {"request": {"armArItemIds": [ar_doc_id]}}
                 }
@@ -328,7 +289,7 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                     "buttonKey": "ERP_FIN$FIN_ARM_FROM_DS-KWlwdlZ4J_QWUjN_W147O",
                     "buttonName": "生成销售发票",
                     "appId": 0,
-                    "teamId": 22,
+                    "teamId": base_data.get("team_id", 22),
                     "serviceKey": "ERP_FIN$BATCH_AR_ITEM_CONVERT_TO_SB_VAL_SERVICE",
                     "params": {"request": {"armArItemIds": ar_item_ids}}
                 }
@@ -340,61 +301,15 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                 ar_gross_amt = TestArBatchCreatePartialPnAndSb.ar_batch_info.get("gross_doc_amt", 40000)
                 # 设置部分开票金额 - 按数量比例计算 (50/100 = 50%)
                 partial_invoice_amt = ar_gross_amt / 2  # 部分开票金额: 20000
-                sb_date = int(datetime.now().timestamp() * 1000)
-                bil_code = ParamUtil.generate_unique_code("AUTO")
+                bil_code = self.mock_data.generate_unique_code("AUTO")
                 
-                # 计算税额和不含税金额 (税率13%)
-                tax_rate = 0.13
-                partial_net_doc_amt = round(partial_invoice_amt / (1 + tax_rate), 2)  # 不含税金额
-                partial_tax_doc_amt = partial_invoice_amt - partial_net_doc_amt  # 税额
-                
-                sb_request_data = {
-                    "bilCode": bil_code,
-                    "docTypeId": {"id": 20000012},
-                    "posNeg": "BLUE",
-                    "sbDate": sb_date,
-                    "pstDate": sb_date,
-                    "slsOrgId": {"id": 14579001},
-                    "comOrgId": {"id": 14373001},
-                    "traParType": "CUSTOMER",
-                    "traParId": {"id": 14103001},
-                    "docCurrId": {"id": 2000001},
-                    "baseCurrId": {"id": 2000001},
-                    "exchRate": 1,
-                    "createType": "AUTO",
-                    "bilBaseAmt": partial_invoice_amt,  # 发票总金额(本位币) - 部分金额
-                    "bilDocAmt": partial_invoice_amt,   # 发票总金额(原币) - 部分金额
-                    "unoffsetDocAmt": partial_invoice_amt,  # 未冲销金额(原币) - 部分金额
-                    "unoffsetBaseAmt": partial_invoice_amt, # 未冲销金额(本位币) - 部分金额
-                    "relatedCreated": "RELATED",
-                    "sbItems": [{
-                        "matId": {"id": 14672002},
-                        "taxCodeId": {"id": 2002002},
-                        "taxRate": 13,
-                        "valQty": 50,  # 开票数量 - 50个
-                        "grossDocPrice": partial_invoice_amt / 50,  # 单价 = 部分金额 / 部分数量
-                        "grossDocAmt": partial_invoice_amt,  # 含税金额(原币) - 部分金额
-                        "grossBaseAmt": partial_invoice_amt,  # 含税金额(本位币) - 部分金额
-                        "netDocAmt": partial_net_doc_amt,  # 不含税金额(原币) - 部分金额
-                        "netBaseAmt": partial_net_doc_amt,  # 不含税金额(本位币) - 部分金额
-                        "taxDocAmt": partial_tax_doc_amt,  # 税额(原币) - 部分金额
-                        "taxBaseAmt": partial_tax_doc_amt,  # 税额(本位币) - 部分金额
-                        "netDocPrice": partial_net_doc_amt / 50,  # 不含税单价
-                        "netBasePrice": partial_net_doc_amt / 50,  # 不含税单价(本位币)
-                        "unoffsetQty": 50,  # 未冲销数量 - 50个
-                        "unoffsetDocAmt": partial_invoice_amt,  # 未冲销金额(原币) - 部分金额
-                        "unoffsetBaseAmt": partial_invoice_amt,  # 未冲销金额(本位币) - 部分金额
-                        "relDocClass": "AR",
-                        "relDocHeadCode": ar_head_code,
-                        "relDocItemCode": f"ARI{ar_head_code[2:]}",
-                        "relDocHeadId": {"id": ar_doc_id},
-                        "relDocItemId": {"id": ar_item_ids[0]},
-                        "settItemTypeId": {"id": 12},
-                        "clearingQty": 50,  # 结算数量 - 50个 (部分结算)
-                        "clearingDocAmt": partial_invoice_amt,  # 结算金额(原币) - 部分金额
-                        "clearingBaseAmt": partial_invoice_amt   # 结算金额(本位币) - 部分金额
-                    }]
-                }
+                # 使用数据工厂创建销售发票请求数据
+                sb_request_data = self.ar_factory.create_sb_request_data(
+                    ar_info, 
+                    partial_amount=partial_invoice_amt,
+                    partial_qty=50,
+                    bil_code=bil_code
+                )
                 
                 save_api_path = ParamUtil.get_api_path(self.apis, "SB-销售发票保存并更新来源单服务")
                 save_params, save_url = ParamUtil.get_api_params(self.api_params, save_api_path)
@@ -407,6 +322,10 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                 
                 sb_head_id = ParamUtil.extract_id(save_result)
                 assert sb_head_id, "保存成功但未获取到销售发票ID"
+                
+                # 从数据工厂生成的数据中获取计算结果
+                partial_net_doc_amt = sb_request_data["sbItems"][0]["netDocAmt"]
+                partial_tax_doc_amt = sb_request_data["sbItems"][0]["taxDocAmt"]
                 
                 TestArBatchCreatePartialPnAndSb.ar_batch_info.update({
                     "sb_head_id": sb_head_id,

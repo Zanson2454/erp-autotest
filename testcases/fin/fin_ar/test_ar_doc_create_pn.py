@@ -1,6 +1,7 @@
 import allure
 from testcases.fin.fin_ar import ArBaseTest, convert_decimal_to_float
 from utils.param_util import ParamUtil
+from utils.mock_util import MockData
 from utils.report_util import a, case_decorator
 from data_factory.fin_ar_factory import FinArFactory
 from decimal import Decimal
@@ -15,6 +16,12 @@ class TestArDocCreatePn(ArBaseTest):
     
     # 类变量存储测试数据
     ar_info = {}
+    mock_data = MockData()
+
+    @classmethod
+    def setup_class(cls):
+        super().setup_class()
+        cls.mock_data = MockData()
 
     @case_decorator(
         story="应收单创建",
@@ -50,7 +57,7 @@ class TestArDocCreatePn(ArBaseTest):
                 base_request.update({
                     "id": ar_doc_id,
                     "arStatus": "CONFIRM",
-                    "arHeadCode": ParamUtil.generate_unique_code("AR")
+                    "arHeadCode": self.mock_data.generate_unique_code("AR")
                 })
                 
                 submit_result = {}

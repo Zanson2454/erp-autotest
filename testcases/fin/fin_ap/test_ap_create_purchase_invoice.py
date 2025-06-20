@@ -4,6 +4,7 @@
 import allure
 from testcases.fin.fin_ap import ApBaseTest
 from utils.param_util import ParamUtil
+from utils.mock_util import MockData
 from utils.report_util import a, case_decorator
 from data_factory.fin_ap_factory import FinApFactory
 from datetime import datetime
@@ -14,10 +15,12 @@ import time
 @allure.feature("应付单创建采购发票")
 class TestApCreatePurchaseInvoice(ApBaseTest):
     ap_pi_info = {}
+    mock_data = MockData()
 
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.mock_data = MockData()
 
     def convert_data_for_json(self, obj):
         """数据转换方法"""
@@ -46,9 +49,9 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
     def test_create_standard_ap_doc_full_process(self):
         try:
             with a.step("创建标准应付单并完成全流程"):
-                # 使用ParamUtil生成测试数据
-                ap_head_code = ParamUtil.generate_unique_code("APD")
-                remark = ParamUtil.generate_remark()
+                # 使用MockData生成测试数据
+                ap_head_code = self.mock_data.generate_unique_code("APD")
+                remark = self.mock_data.get_mock_remark()
                 
                 # 使用基类方法创建应付单请求体
                 ap_data = self.create_ap_request_body(doc_type_id=2002001, account_type="FIN")
