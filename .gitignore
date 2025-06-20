@@ -82,3 +82,6 @@ testcases/gen_md/
 testdata/cache/init_cache.json
 case_coverage_stat.json
 
+# 忽略用户输入
+userinput.py
+test.mdc
