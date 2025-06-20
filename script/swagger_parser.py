@@ -287,6 +287,11 @@ class SwaggerParser:
                         if param.get('in') == 'query':
                             param_schema = param.get('schema', {})
                             request_params[param['name']] = self._get_schema_value(param_schema)
+                            
+                     # 过滤掉 teamId 字段
+                    if 'teamId' in request_params:
+                        del request_params['teamId']
+                        logger.info(f"已过滤掉 teamId 字段")
 
                     # 构建参数结构（不再包一层 request）
                     api_entry_data = {
