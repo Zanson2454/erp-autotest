@@ -2,6 +2,7 @@
 import allure
 from testcases.fin.fin_ar import ArBaseTest, convert_decimal_to_float
 from utils.param_util import ParamUtil
+from utils.mock_util import MockData
 from utils.report_util import a, case_decorator
 from data_factory.fin_ar_factory import FinArFactory
 from decimal import Decimal
@@ -17,12 +18,14 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
     
     # 类变量存储测试数据
     ar_batch_info = {}
+    mock_data = MockData()
 
     @classmethod
     def setup_class(cls):
         super().setup_class()
         # 初始化应收单数据工厂
         cls.ar_factory = FinArFactory()
+        cls.mock_data = MockData()
 
     @case_decorator(
         story="应收单创建",
@@ -37,9 +40,9 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
         """创建并过账标准应收单"""
         try:
             with a.step("创建标准应收单"):
-                ar_code = ParamUtil.generate_unique_code("AR")
-                ar_name = ParamUtil.generate_test_name("BATCH_AR")
-                remark = ParamUtil.generate_remark()
+                ar_code = self.mock_data.generate_unique_code("AR")
+                ar_name = f"BATCH_AR_{self.mock_data.get_timestamp()}"
+                remark = self.mock_data.get_mock_remark()
                 
                 api_path = ParamUtil.get_api_path(self.apis, "AR-应收单保存服务")
                 params, url = ParamUtil.get_api_params(self.api_params, api_path)
@@ -298,7 +301,7 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                 ar_gross_amt = TestArBatchCreatePartialPnAndSb.ar_batch_info.get("gross_doc_amt", 40000)
                 # 设置部分开票金额 - 按数量比例计算 (50/100 = 50%)
                 partial_invoice_amt = ar_gross_amt / 2  # 部分开票金额: 20000
-                bil_code = ParamUtil.generate_unique_code("AUTO")
+                bil_code = self.mock_data.generate_unique_code("AUTO")
                 
                 # 使用数据工厂创建销售发票请求数据
                 sb_request_data = self.ar_factory.create_sb_request_data(

@@ -79,7 +79,7 @@ class FinAparBaseFactory(DataFactory):
         elif org_type == "PUR":
             pattern = "AUTOTEST_PUR_ORG%"
         elif org_type == "SAL":
-            pattern = "AUTOTEST_SAL_ORG%"
+            pattern = "AUTOTEST_SLS_ORG%"
         else:
             pattern = "AUTOTEST_%"
             
@@ -247,7 +247,7 @@ class FinAparBaseFactory(DataFactory):
                 bus_org_sql = """
                     SELECT * FROM org_struct_md 
                     WHERE deleted = 0 
-                    AND org_code LIKE 'AUTOTEST_SAL_ORG%'
+                    AND org_code LIKE 'AUTOTEST_SLS_ORG%'
                     LIMIT 1
                 """
             

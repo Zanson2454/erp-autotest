@@ -5,6 +5,7 @@
 import allure
 from testcases.fin.fin_ar import ArBaseTest, convert_decimal_to_float
 from utils.param_util import ParamUtil
+from utils.mock_util import MockData
 from utils.report_util import a, case_decorator
 from datetime import datetime
 import time
@@ -14,10 +15,12 @@ import time
 class TestArDocumentSave(ArBaseTest):
     """应收单全流程自动化用例"""
     ar_info = {}
+    mock_data = MockData()
     
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.mock_data = MockData()
 
     @case_decorator(
         story="应收单保存",
@@ -100,7 +103,7 @@ class TestArDocumentSave(ArBaseTest):
                 base_request["id"] = ar_doc_id
                 base_request["arStatus"] = "CONFIRM"
                 if base_request.get("arHeadCode") is None:
-                    base_request["arHeadCode"] = ParamUtil.generate_unique_code("AR")
+                    base_request["arHeadCode"] = self.mock_data.generate_unique_code("AR")
                 
                 ar_items = base_request.get("arItems", [])
                 base_request["grossDocAmt"] = sum([item.get("grossDocAmt", 0) for item in ar_items])

@@ -10,6 +10,7 @@ sys.path.append(str(project_root))
 from data_factory.fin_apar_base_factory import FinAparBaseFactory
 from utils.mysql_util import DBManager
 from utils.log_util import Loggers
+from utils.mock_util import MockData
 
 class FinArFactory(FinAparBaseFactory):
     """应收单数据工厂类，继承FinAparBaseFactory"""
@@ -17,6 +18,7 @@ class FinArFactory(FinAparBaseFactory):
     def __init__(self):
         """初始化"""
         super().__init__()
+        self.mock_data = MockData()
         self._cache = {
             'sett_item_types': {},
             'settlement_methods': {},
@@ -737,8 +739,7 @@ class FinArFactory(FinAparBaseFactory):
                 partial_qty = int(total_qty * (partial_amount / gross_doc_amt))
             
             if bil_code is None:
-                from utils.param_util import ParamUtil
-                bil_code = ParamUtil.generate_unique_code("AUTO")
+                bil_code = self.mock_data.generate_unique_code("AUTO")
             
             sb_date = int(datetime.now().timestamp() * 1000)
             
