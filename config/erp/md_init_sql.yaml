@@ -4,7 +4,7 @@ org_info:
   # 币种信息
   org_biz_type_cf:
     sql: |
-     select id,`code`,`name`,model_key from org_biz_type_cf where deleted=0
+     select id,`code`,`name` from org_business_type_cf where deleted=0
     description: "查询组织类型信息"
 
   # 组织属性

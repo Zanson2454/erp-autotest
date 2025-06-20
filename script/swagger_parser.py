@@ -187,14 +187,14 @@ class SwaggerParser:
             logger.debug(f"对象类型 properties: {properties}")
             if not properties:
                 return {}
-            # 优先处理 params.request
-            if 'params' in properties and isinstance(properties['params'], dict):
-                params_props = properties['params'].get('properties', {})
-                logger.debug(f"params properties: {params_props}")
-                if 'request' in params_props and isinstance(params_props['request'], dict):
-                    request_props = params_props['request'].get('properties', {})
-                    logger.debug(f"request properties: {request_props}")
-                    return {k: self._get_schema_value(v) for k, v in request_props.items()}
+            # # 优先处理 params.request
+            # if 'params' in properties and isinstance(properties['params'], dict):
+            #     params_props = properties['params'].get('properties', {})
+            #     logger.debug(f"params properties: {params_props}")
+            #     if 'request' in params_props and isinstance(params_props['request'], dict):
+            #         request_props = params_props['request'].get('properties', {})
+            #         logger.debug(f"request properties: {request_props}")
+            #         return {k: self._get_schema_value(v) for k, v in request_props.items()}
             # fallback: 递归所有属性
             return {k: self._get_schema_value(v) for k, v in properties.items()}
             
@@ -272,6 +272,8 @@ class SwaggerParser:
                     
                     # 获取请求体参数
                     request_params = {}
+                    # 修复点：自动设置serviceKey为接口路径最后一部分
+                   
                     if 'requestBody' in info and info['requestBody']:
                         schema = info['requestBody'].get('schema', {})
                         logger.info(f"请求体schema: {schema}")
@@ -290,6 +292,13 @@ class SwaggerParser:
                     api_entry_data = {
                         'params': request_params or {}  # 直接保存真实结构
                     }
+                    
+                    # 修复点：自动设置serviceKey为接口路径最后一部分
+                    if api_entry_data['params'] and 'serviceKey' in api_entry_data['params']:
+                        path_clean = path.rstrip('/')
+                        service_key_value = path_clean.split('/')[-1]
+                        api_entry_data['params']['serviceKey'] = service_key_value
+                        logger.info(f"自动设置 serviceKey: {service_key_value} 对于路径 {path}")
                     
                     # 添加到参数字典
                     params_dict_for_yaml[path] = api_entry_data
@@ -548,15 +557,15 @@ if __name__ == "__main__":
     }
     
     parser = SwaggerParser(
-        base_url="https://t-erp-console-dev.app.terminus.io",
+        base_url="https://t-erp-console-test.app.terminus.io",
         cookies=cookies
     )
     
     # 获取指定团队和模块的Swagger文档
-    swagger_doc = parser.fetch_swagger_doc("TERPSAAS", "SCM_SLS")
+    swagger_doc = parser.fetch_swagger_doc("TERP", "GEN_MD")
     
     # 解析所有接口
     endpoints = parser.parse_endpoints()
     
     # 保存路径信息到gen_path.yaml
-    parser.save_paths_to_yaml(endpoints, module="SCM_SLS") 
+    parser.save_paths_to_yaml(endpoints, module="GEN_MD") 

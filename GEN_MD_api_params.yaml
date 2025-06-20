@@ -1,0 +1,1123 @@
+api_params:
+  /api/trantor/service/engine/execute/GEN_MD$SYS_FindSingleDataByConditionService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_BatchCreateDataService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_MasterData_CreateAndEnableDataService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_MasterData_EnableDataService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_CreateDataService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_MasterData_SaveAndEnableDataService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_BatchDeleteDataByIdsService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_FindOneDataService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_SUM_DATA_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_BatchUpdateDataByConditionService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_PagingDataService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_BatchDeleteDataByConditionService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_FindDataByIdService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_BatchDeleteDataService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_UpdateDataByIdService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_MasterData_CreateDataService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_FindSingleDataByIdService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_MasterData_UpdateDataService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_SaveDataService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_FindListDataService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_DeleteDataByIdService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_COUNT_DATA_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_CopyDataConverterService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_InvokeCodeRuleService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_FindTreeDataService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_MasterData_MultiEnableDataService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_MasterData_DisableDataService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_TreeSearchService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_MasterData_MultiDisableDataService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_BatchSaveDataService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_MasterData_DeleteDataService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_FindDataByIdsService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_ReverseConstructTreeService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_FindTreeChildrenDataService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_MasterData_SaveDataService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SYS_BatchUpdateDataByIdsService:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MONITORING_ALERT_RESULT_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_FIND_DATA_BY_ID_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_PROCEDURE_HEAD_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CONVERSION_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_FIND_DATA_BY_ID_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_FORMULA_TYPE_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_SUPP_IND_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FIELD_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INDEX_MD_ENABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FIELD_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_TYPE_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_BATCH_SET_LABEL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BRAND_MD_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_RELATION_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MONITORING_PLAN_INFO_MD_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TIMEZONE_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MODEL_SYSTEM_QUERY_BY_IDS_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_ENABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MONITORING_ALERT_RESULT_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CUST_TAX_TYPE_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SURVEY_MISSION_RELEASE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SUB_BANK_CF_PAGING_DATA_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_HEAD_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_BUSINESS_TYPE_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_SWITCH_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_PROCEDURE_HEAD_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INDEX_MD_INVOKE_CODE_RULE_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DYNAMIC_FORM_TEMPLATE_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_BUSINESS_TYPE_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_DISABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_FIND_DATA_BY_ID_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TIMEZONE_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_STATUS_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SURVEY_MISSION_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_HEAD_MD_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CREATE_DYNAMIC_FORM_TEMPLATE_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_EMPLOYEE_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TAX_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SUB_BANK_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CUST_TAX_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_LABEL_MD_DISABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_ENABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CUST_TAX_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_LABEL_MD_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_DIMENSION_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_TYPE_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_RELATION_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_SWITCH_DISABLE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_EXPRESS_COM_MD_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_PROCEDURE_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_FIND_DATA_BY_ID_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_PROCEDURE_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DYNAMIC_FORM_TEMPLATE_MD_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_LABEL_MD_ENABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_WC_HEAD_CF_DISABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_PAGING_DATA_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_SWITCH_ENABLE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_PAGING_DATA_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_MD_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_HEAD_MD_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INDEX_MD_FIND_TREE_CHILDREN_DATA_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTR_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TIMEZONE_TYPE_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SURVEY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_BUSINESS_TYPE_ENABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INDEX_MD_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_SWITCH_LIST_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MONITORING_ALERT_RESULT_MD_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_MD_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_SWITCH_MODEL_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_BUSINESS_TYPE_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_DISABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CODE_RULE_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_BUSINESS_TYPE_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SURVEY_DETAIL_MD_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_EMPLOYEE_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_LABEL_MD_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_DIMENSION_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$menu_query_service:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_FORMULA_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_PAGING_DATA_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_GET_RATE_FROM_CURR_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTR_CF_ENABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SPI_JUDGE_MODEL_ORG_SWITCH_ENABLE_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_STATUS_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$USER_FIND_DATA_BY_ID_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INDEX_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_SWITCH_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BRAND_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_SWITCH_MODEL_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_WC_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_STATUS_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_LABEL_MD_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SUB_BANK_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INDEX_MD_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_EXPRESS_COM_MD_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_FIND_DATA_BY_ID_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TAX_TYPE_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DYNAMIC_FORM_TEMPLATE_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_SWITCH_MODEL_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_EXPRESS_COM_MD_DISABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MONITORING_ALERT_RESULT_MD_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MONITORING_ALERT_RESULT_MD_BATCH_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_LABEL_MD_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SURVEY_MISSION_MD_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_USE_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_PROCEDURE_HEAD_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SURVEY_DETAIL_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DYNAMIC_DISABLE_TEMPLATE_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_EXPRESS_COM_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_EXPRESS_COM_MD_ENABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_PROCEDURE_HEAD_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_SUPP_IND_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SURVEY_DETAIL_MD_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_DIMENSION_CF_DISABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_SWITCH_LIST_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_SUPP_IND_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_SUPP_IND_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_FILTER_PAGING_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FILED_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_TYPE_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TAX_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_FORMULA_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FIELD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BRAND_MD_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_FORMULA_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_SUPP_IND_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_HEAD_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TAX_TYPE_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INDEX_MD_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SURVEY_MISSION_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_WC_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_FIND_IMPORT_TEMPLATE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INDEX_MD_QUERY_BY_PARENT_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_PROCEDURE_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_SWITCH_MODEL_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SUB_BANK_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_COUN_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_USE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_DISABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_COUN_TYPE_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_WC_HEAD_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_PAGING_DATA_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MONITORING_PLAN_INFO_MD_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_WC_HEAD_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_FIND_DATA_BY_ID_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FROM_COM_ORG_FIELD_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_FORMULA_TYPE_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_BUSINESS_TYPE_DISABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TIMEZONE_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MONITORING_PLAN_INFO_MD_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CUST_TAX_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_WC_HEAD_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_TYPE_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_ENABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_EXPRESS_COM_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_USE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MONITORING_ALERT_RESULT_MD_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_FIND_TYPE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_SWITCH_MODEL_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_STATUS_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FILED_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_FIND_DATA_BY_ID_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_USE_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_SUPP_IND_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TAX_TYPE_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_TYPE_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_DISABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_SWITCH_LIST_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_QUERY_CURRENT_COM_ORG_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_TYPE_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_SWITCH_MODEL_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_STATUS_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MODEL_SYSTEM_PAGING_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_LABEL_MD_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_COUN_TYPE_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FILED_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_ENABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_FORMULA_TYPE_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_TYPE_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_CREATE_IMPORT_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_ENABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SURVEY_MISSION_MD_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_RELATION_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_SWITCH_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DYNAMIC_CREATE_UPDATE_TEMPLATE_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DYNAMIC_DELETE_TEMPLATE_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_FIND_DATA_BY_ID_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_BATCH_CANCEL_LABEL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_TYPE_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CUST_TAX_TYPE_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_EXPRESS_COM_MD_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_PROCEDURE_HEAD_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_ADMIN_EMPLOYEE_ORG_LINK_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TAX_TYPE_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_DIMENSION_QUERY_ENABLE_LIST_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BRAND_MD_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_PROCEDURE_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_COUN_TYPE_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SURVEY_DETAIL_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_QUERY_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_RELATION_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_DING_TALK_SYNC_ORG_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TAX_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_COUN_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SUB_BANK_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_TYPE_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_WC_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_PROCEDURE_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_QUERY_CHILD_BY_PID_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_FIND_DATA_BY_ID_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_PAGING_DATA_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DYNAMIC_ENABLE_TEMPLATE_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_FIND_BY_PID_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_MD_ENABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_SWITCH_QUERY_USER_COM_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_STATUS_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_FORMULA_TYPE_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTR_QUERY_AVAILABLE_BIND_FILED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_TYPE_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_ENABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_DIMENSION_CF_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_RELATION_CF_ENABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_EXPRESS_COM_MD_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SUB_BANK_CF_FIND_DATA_BY_ID_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INDEX_MD_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_PAGING_DATA_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_WC_HEAD_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_PROCEDURE_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SUB_BANK_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SURVEY_SCORE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$search_model:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_STATUS_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DYNAMIC_FIND_BY_ID_TEMPLATE_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_USE_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_ADMIN_EMPLOYEE_ORG_LINK_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_COUN_TYPE_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_SWITCH_MODEL_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_WC_GENERATE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_USE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_DISABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_HEAD_MD_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MONITORING_ALERT_RESULT_MD_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FIELD_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CUST_TAX_TYPE_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_QUERY_ONE_INV_ORG_INV_LOC_SERVICE_copy:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_RELATION_CF_DISABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_SUPP_IND_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_FIND_DATA_BY_ID_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_TYPE_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_RELATION_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_PROCEDURE_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_SWITCH_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_COUN_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MONITORING_ALERT_RESULT_MD_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INDEX_MD_DISABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BRAND_MD_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DYNAMIC_FORM_TEMPLATE_MD_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_LABEL_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_MD_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MONITORING_PLAN_INFO_MD_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TIMEZONE_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DYNAMIC_PAGING_TEMPLATE_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_FORMULA_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MONITORING_PLAN_INFO_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FILED_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_STATUS_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_PROCEDURE_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTR_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_PAGING_DATA_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_MD_DISABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_HEAD_MD_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_PROCEDURE_HEAD_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$sales_forecasting_service:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_PROCEDURE_HEAD_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_CLASS_MD_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_INDEX_MD_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_QUERY_BY_PARENT_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_ENABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_DISABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CODE_RULE_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_DIMENSION_CF_ENABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MONITORING_PLAN_INFO_MD_ENABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_USE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BRAND_MD_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SUB_BANK_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_PROCEDURE_HEAD_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_PAGING_DATA_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_LABEL_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTR_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_PROCEDURE_HEAD_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_HISTORY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_HEAD_MD_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_PROCEDURE_HEAD_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$SPI_JUDGE_LOGGING_USER_IN_CURRENT_ORG_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTR_CF_DISABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_PAGING_DATA_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BRAND_MD_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GAIN_WEIGHT_COEFFICIENT_EVENT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_PROCEDURE_HEAD_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_FIND_TREE_CHILDREN_DATA_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_PROCEDURE_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SUB_BANK_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_MD_DISABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_COUN_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_EXPRESS_COM_MD_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TIMEZONE_TYPE_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_USE_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SUB_BANK_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_TYPE_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TIMEZONE_TYPE_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_SWITCH_MODEL_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_WC_HEAD_CF_ENABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SURVEY_MISSION_SAVE_UPDATE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CODE_RULE_UPDATE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DYNAMIC_FIND_BY_IDS_TEMPLATE_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_UPDATE_IMPORT_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_SWITCH_LIST_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_TYPE_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_EXPRESS_COM_MD_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_BATCH_CREATE_BARCODE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_PROCEDURE_HEAD_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_PROCEDURE_HEAD_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$general_notification_service:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_HEAD_MD_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_CATE_MD_ENABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_PROCEDURE_HEAD_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MONITORING_PLAN_INFO_MD_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_SUPP_IND_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CUST_TAX_TYPE_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_DIMENSION_CF_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CUST_TAX_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MONITORING_PLAN_INFO_MD_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_DISABLE_IMPORT_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_WC_HEAD_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BANK_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TYPE_CF_PAGING_DATA_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ADDR_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TIMEZONE_TYPE_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TAX_TYPE_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTR_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_BUILD_TREE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_QUERY_ORG_AND_CHILD_ORG_EMPLOYEE_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_LABEL_MD_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_RELATION_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_PAGING_DATA_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_MD_SEARCH_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BRAND_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_GEI_EXPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_RELATION_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_ATTACHMENT_PROCEDURE_HEAD_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_FORMULA_TYPE_CF_GEI_IMPORT_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MONITORING_ALERT_RESULT_MD_SAVE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_STRUCT_QUERY_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CURR_EXCHANGE_RATE_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MONITORING_PLAN_INFO_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$ORG_EMPLOYEE_PAGE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_MD_DISABLED_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_CHARA_MD_DELETE_ACTION_SERVICE:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params: {}
+  /api/trantor/service/engine/execute/GEN_MD$GEN_MAT_TAX_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params: {}
