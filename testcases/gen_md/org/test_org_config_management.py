@@ -20,7 +20,6 @@ class TestOrgTypeQuery(GenMdBaseTest):
         api_path = self.get_api_path("ORG-组织架构-查询组织类型列表服务")
         params, url = self.get_api_params(api_path)
         # 只保留必要参数
-        params["serviceKey"] = "GEN_MD$ORG_STRUCT_MD_FIND_TYPE_ACTION_SERVICE"
         params["params"] = {
             "request": {
                 "orgDimensionCode": "SCM_ORG_GRP"

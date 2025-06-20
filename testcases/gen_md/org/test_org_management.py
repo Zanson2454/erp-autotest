@@ -4,6 +4,7 @@ from testcases.gen_md import GenMdBaseTest
 from utils.mock_util import MockData
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
+import pytest
 
 
 @allure.epic("组织管理")
@@ -41,63 +42,73 @@ class TestOrgSave(GenMdBaseTest):
                 cls.invOrgId = org_biz_type["id"]
             elif org_biz_type["code"] == "INV_LOC":
                 cls.invLocId = org_biz_type["id"]
-    @case_decorator(
-        story="保存组织信息",
-        title="测试组织保存接口",
-        description="验证组织保存接口的功能性",
-        severity="blocker",
-        order=1,
-        smoke=True,
-        tags=["组织", "保存"]
-    )
-    def test_save_org(self):
-        try:
-            # 1. 生成测试数据
-            
-            org_code = self.mock_data.generate_unique_code(tag="ComOrg")
-            org_name = self.mock_data.get_mock_company()
-            org_enable_date = self.mock_data.get_mock_date(include_time=False)
 
-            # 2. 获取API配置
+    @pytest.mark.parametrize("org_type, tag, name_prefix, type_id_attr, order, allure_title", [
+        ("com_org_info", "ComOrg", "公司组织", "comOrgId", 1, "测试公司组织保存接口"),
+        ("pur_org_info", "PurOrg", "采购组织", "purOrgId", 2, "测试采购组织保存接口"),
+        ("sls_org_info", "SlsOrg", "销售组织", "slsOrgId", 3, "测试销售组织保存接口"),
+        ("inv_org_info", "InvOrg", "库存组织", "invOrgId", 4, "测试库存组织保存接口"),
+    ])
+    def test_save_org(self, org_type, tag, name_prefix, type_id_attr, order, allure_title):
+        """
+        通用组织保存用例
+        """
+        try:
+            import allure
+            allure.dynamic.title(allure_title)
+            # 获取父公司组织信息
+            com_org_info = TestOrgSave.org_info.get("com_org_info", {})
+            org_parent_code = com_org_info.get("org_code")
+            com_org_id = com_org_info.get("id")
+            # 公司组织不需要父级
+            if org_type != "com_org_info":
+                assert org_parent_code and com_org_id, "请先执行test_save_org并成功保存公司组织"
+
+            org_code = self.mock_data.generate_unique_code(tag=tag)
+            org_name = f"{name_prefix}_{self.mock_data.get_timestamp()}"
+            org_enable_date = self.mock_data.get_mock_date(include_time=False, days_offset=1)
+
             api_path = self.get_api_path("ORG-组织架构-保存服务")
             params, url = self.get_api_params(api_path)
 
-            # 3. 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["orgCode", "orgName", "orgSort", "orgEnableDate", "orgBusinessTypeIds", "def6", "def3", "def4", "def12", "orgDimensionCode"],
-                ["params", "request"]
-            )
-            filtered_params["serviceKey"] = "GEN_MD$ORG_STRUCT_MD_SAVE_ACTION_SERVICE"
-            ParamUtil.set_request_params(filtered_params, {
+            # 组织类型ID
+            org_type_id = getattr(self, type_id_attr)
+
+            # 过滤和设置参数
+            param_keys = ["orgCode", "orgName", "orgSort", "orgEnableDate", "orgBusinessTypeIds", "orgDimensionCode"]
+            if org_type != "com_org_info":
+                param_keys += ["orgParentCode", "orgParentId", "comOrgId"]
+            filtered_params = ParamUtil.filter_post_body_fields(params, param_keys, ["params", "request"])
+            set_dict = {
                 "orgCode": org_code,
                 "orgName": org_name,
-                "orgSort": 9999,
-                "orgEnableDate": f'{org_enable_date}',
-                "orgBusinessTypeIds": [self.comOrgId],
-                "def6": self.currId, # currId 币种
-                "def3": self.counId, # counId 国家
-                "def4": self.genWcHeadId, # genWcHeadId 工作日日历
-                "def12": self.calenderId, # calenderId 期间类型
+                "orgSort": 1 if org_type != "com_org_info" else 9999,
+                "orgEnableDate": f"{org_enable_date}",
+                "orgBusinessTypeIds": [org_type_id],
                 "orgDimensionCode": "SCM_ORG_GRP"
-            })
+            }
+            if org_type != "com_org_info":
+                set_dict.update({
+                    "orgParentCode": org_parent_code,
+                    "orgParentId": com_org_id,
+                    "comOrgId": com_org_id
+                })
+            ParamUtil.set_request_params(filtered_params, set_dict)
             self.logger.info(f"filtered_params: {filtered_params}")
-            # 4. 发送请求
+
             response = self.http.post(url, json=filtered_params)
-            com_org_id = response.get("data", {}).get("data", {}).get("id")
-            # 5. 验证响应
+            org_id = response.get("data", {}).get("data", {}).get("id")
             self.assert_util.assert_response_data(response)
 
-            # 6. 保存数据
+            # 保存数据
             TestOrgSave.org_info.update({
-                "com_org_info": {
-                    "id":com_org_id,
+                org_type: {
+                    "id": org_id,
                     "org_code": org_code,
                     "org_name": org_name,
-                    } 
+                }
             })
 
-            # 7. 添加Allure附件
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
         except Exception as e:
@@ -124,19 +135,16 @@ class TestOrgSave(GenMdBaseTest):
             params, url = self.get_api_params(api_path)
 
             # 3. 设置参数
-            params["serviceKey"] = "GEN_MD$ORG_STRUCT_QUERY_CURRENT_COM_ORG_ACTION_SERVICE"
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
                 ["id"],
                 ["params", "request"]
             )
-            ParamUtil.set_request_params(filtered_params, {
-                "id": com_org_id
-            })
-            self.logger.info(f"请求参数: {params}")
+            filtered_params['params']['request']['id'] =com_org_id
+            self.logger.info(f"请求参数: {filtered_params}")
 
             # 4. 发送请求
-            response = self.http.post(url, json=params)
+            response = self.http.post(url, json=filtered_params)
             self.logger.info(f"响应: {response}")
 
             # 5. 断言
@@ -149,3 +157,4 @@ class TestOrgSave(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+    

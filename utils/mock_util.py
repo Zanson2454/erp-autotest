@@ -127,30 +127,18 @@ class MockData:
             'account_number': self.fake.chinese_bank_account()
         }
     
-    def get_mock_date(self, start_date: Optional[datetime] = None, end_date: Optional[datetime] = None, days_offset: int = 0, include_time: bool = True) -> datetime:
-        """生成随机日期，支持日期偏移和时间包含选项
+    def get_mock_date(self, days_offset: int = 0, include_time: bool = True) -> datetime:
+        """生成日期，支持日期偏移和时间包含选项
         
         Args:
-            start_date: 开始日期，默认为30天前
-            end_date: 结束日期，默认为当前日期
             days_offset: 日期偏移量，正数为未来日期，负数为过去日期
             include_time: 是否包含时分秒，默认为True
-            
         Returns:
-            datetime: 随机生成的日期
+            datetime: 生成的日期
         """
-        if not start_date:
-            start_date = datetime.now() - timedelta(days=30)
-        if not end_date:
-            end_date = datetime.now()
-
-        # 应用日期偏移
-        target_date = self.fake.date_time_between(start_date=start_date, end_date=end_date) + timedelta(days=days_offset)
-
+        target_date = datetime.now() + timedelta(days=days_offset)
         if not include_time:
-            # 只返回年月日
             return target_date.date()
-
         return target_date
     
     def get_mock_user_agent(self) -> str:
@@ -282,3 +270,4 @@ if __name__ == '__main__':
     print("时间戳:", mock.get_timestamp())
     print("唯一编码:", mock.generate_unique_code())
     print("业务组织数据:", mock.get_mock_org_info(org_type="ComOrg", org_name="某公司"))
+    print("时间戳:", mock.get_mock_date(include_time=False,days_offset=-1))
