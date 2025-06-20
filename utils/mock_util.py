@@ -127,12 +127,14 @@ class MockData:
             'account_number': self.fake.chinese_bank_account()
         }
     
-    def get_mock_date(self, start_date: Optional[datetime] = None, end_date: Optional[datetime] = None) -> datetime:
-        """生成随机日期
+    def get_mock_date(self, start_date: Optional[datetime] = None, end_date: Optional[datetime] = None, days_offset: int = 0, include_time: bool = True) -> datetime:
+        """生成随机日期，支持日期偏移和时间包含选项
         
         Args:
             start_date: 开始日期，默认为30天前
             end_date: 结束日期，默认为当前日期
+            days_offset: 日期偏移量，正数为未来日期，负数为过去日期
+            include_time: 是否包含时分秒，默认为True
             
         Returns:
             datetime: 随机生成的日期
@@ -141,7 +143,15 @@ class MockData:
             start_date = datetime.now() - timedelta(days=30)
         if not end_date:
             end_date = datetime.now()
-        return self.fake.date_time_between(start_date=start_date, end_date=end_date)
+
+        # 应用日期偏移
+        target_date = self.fake.date_time_between(start_date=start_date, end_date=end_date) + timedelta(days=days_offset)
+
+        if not include_time:
+            # 只返回年月日
+            return target_date.date()
+
+        return target_date
     
     def get_mock_user_agent(self) -> str:
         """生成用户代理字符串
@@ -212,15 +222,14 @@ class MockData:
         ]
         return random.choice(currency_list)
     
-    def generate_unique_code(self, prefix="AT", tag=None):
+    def generate_unique_code(self, prefix="AT_",tag=None):
         """
-        生成唯一编码，使用毫秒级时间戳
+        生成唯一编码
         """
-        timestamp_ms = int(time.time() * 1000)
         if tag:
-            return f"{prefix}{tag}{timestamp_ms}"
+            return f"{prefix}{tag}{time.strftime('%Y%m%d%H%M%S')}{random.randint(1000, 9999)}"
         else:
-            return f"{prefix}{timestamp_ms}"
+            return f"{prefix}{time.strftime('%Y%m%d%H%M%S')}{random.randint(1000, 9999)}"
     
     
     def get_mock_remark(self):
@@ -241,6 +250,15 @@ class MockData:
         """
         return time.strftime("%Y%m%d%H%M%S")
 
+    def get_mock_org_info(self, org_type: str, org_name: str) -> dict:
+        """
+        生成组织信息
+        """
+        return {
+            "org_code": self.generate_unique_code(tag=org_type),
+            "org_name": f"{org_name}_{random.randint(100, 999)}"
+        }
+
 if __name__ == '__main__':
     # 测试代码
     mock = MockData()
@@ -253,7 +271,7 @@ if __name__ == '__main__':
     # print("邮箱:", mock.get_mock_email())
     # print("公司:", mock.get_mock_company())
     # print("银行信息:", mock.get_mock_bank_info())
-    # print("日期:", mock.get_mock_date())
+    # print("日期:", mock.get_mock_date(include_time=False))
     # print("用户代理:", mock.get_mock_user_agent())
     # print("IP地址:", mock.get_mock_ip())
     # print("URL:", mock.get_mock_url())
@@ -262,4 +280,5 @@ if __name__ == '__main__':
     # print("币种对象:", mock.get_mock_currency())
     print("备注:", mock.get_mock_remark())
     print("时间戳:", mock.get_timestamp())
-    print("唯一编码:", mock.generate_unique_code(tag="ComOrg"))
+    print("唯一编码:", mock.generate_unique_code())
+    print("业务组织数据:", mock.get_mock_org_info(org_type="ComOrg", org_name="某公司"))
