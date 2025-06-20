@@ -6,6 +6,7 @@ import random
 import re
 from pathlib import Path
 import sys
+import time
 
 # Add project root to Python path
 current_file = Path(__file__).resolve()
@@ -210,28 +211,55 @@ class MockData:
             {"code": "SGD", "name": "新加坡元", "symbol": "S$", "iso_name": "Singapore Dollar"},
         ]
         return random.choice(currency_list)
+    
+    def generate_unique_code(self, prefix="AT", tag=None):
+        """
+        生成唯一编码，使用毫秒级时间戳
+        """
+        timestamp_ms = int(time.time() * 1000)
+        if tag:
+            return f"{prefix}{tag}{timestamp_ms}"
+        else:
+            return f"{prefix}{timestamp_ms}"
+    
+    
+    def get_mock_remark(self):
+        """
+        生成备注信息
+        
+        返回:
+            str: 生成的备注信息，包含当前时间
+        """
+        return f"自动化测试创建 - {time.strftime('%Y-%m-%d %H:%M:%S')}"
+    
+    def get_timestamp(self):
+        """
+        生成时间戳
+        
+        返回:
+            str: 生成的时间戳，格式为"YYYYMMDDHHMMSS"
+        """
+        return time.strftime("%Y%m%d%H%M%S")
 
 if __name__ == '__main__':
     # 测试代码
     mock = MockData()
     
     # 测试各种数据生成
-    print("姓名:", mock.get_mock_name())
-    print("地址:", mock.get_mock_address())
-    print("电话:", mock.get_mock_phone_number())
-    print("身份证:", mock.get_mock_ssn())
-    print("邮箱:", mock.get_mock_email())
-    print("公司:", mock.get_mock_company())
-    print("银行信息:", mock.get_mock_bank_info())
-    print("日期:", mock.get_mock_date())
-    print("用户代理:", mock.get_mock_user_agent())
-    print("IP地址:", mock.get_mock_ip())
-    print("URL:", mock.get_mock_url())
-    print("随机文本:", mock.get_mock_text())
-    print("随机选择:", mock.get_mock_choice(['A', 'B', 'C', 'D']))
-    print("币种编码:", mock.get_mock_currency_code())
-    print("币种名称:", mock.get_mock_currency_name())
-    print("币种符号:", mock.get_mock_currency_symbol())
-    print("币种ISO名称:", mock.get_mock_currency_iso_name())
-    print("币种小数位:", mock.get_mock_currency_decimal_place())
-    print("币种对象:", mock.get_mock_currency())
+    # print("姓名:", mock.get_mock_name())
+    # print("地址:", mock.get_mock_address())
+    # print("电话:", mock.get_mock_phone_number())
+    # print("身份证:", mock.get_mock_ssn())
+    # print("邮箱:", mock.get_mock_email())
+    # print("公司:", mock.get_mock_company())
+    # print("银行信息:", mock.get_mock_bank_info())
+    # print("日期:", mock.get_mock_date())
+    # print("用户代理:", mock.get_mock_user_agent())
+    # print("IP地址:", mock.get_mock_ip())
+    # print("URL:", mock.get_mock_url())
+    # print("随机文本:", mock.get_mock_text())
+    # print("随机选择:", mock.get_mock_choice(['A', 'B', 'C', 'D']))
+    # print("币种对象:", mock.get_mock_currency())
+    print("备注:", mock.get_mock_remark())
+    print("时间戳:", mock.get_timestamp())
+    print("唯一编码:", mock.generate_unique_code(tag="ComOrg"))
