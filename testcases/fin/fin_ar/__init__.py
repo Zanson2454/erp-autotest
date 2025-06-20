@@ -5,6 +5,7 @@
 import allure
 from testcases.comm.base_test import BaseTest
 from utils.param_util import ParamUtil
+from utils.mock_util import MockData
 from utils.report_util import a
 from data_factory.fin_ar_factory import FinArFactory
 from decimal import Decimal
@@ -32,6 +33,7 @@ class ArBaseTest(BaseTest):
     def setup_class(cls):
         super().setup_class()
         cls.ar_factory = FinArFactory()
+        cls.mock_data = MockData()
         
         project_root = Path(__file__).resolve().parent.parent.parent.parent
         apis = cls.yaml_util.read_yaml(project_root / "testdata/fin/fin_api_path.yaml").get("apis", {})
@@ -73,7 +75,7 @@ class ArBaseTest(BaseTest):
             "collectionClearingStatus": "UNCLEARED",
             "billingClearingStatus": "UNCLEARED",
             "headOffsetStatus": "UNOFFSET",
-            "remark": ParamUtil.generate_remark(),
+            "remark": self.mock_data.get_mock_remark(),
             "arItems": ar_items,
             "arSchls": ar_schls,
             "grossDocAmt": gross_doc_amt,
