@@ -213,47 +213,6 @@ class ParamUtil:
         for key, value in param_dict.items():
             params['params']['request'][key] = value
         return params
-
-    @staticmethod
-    def generate_unique_code(prefix: str = "TEST") -> str:
-        """
-        生成唯一编码
-        
-        参数:
-            prefix (str): 编码前缀，默认为"TEST"
-            
-        返回:
-            str: 生成的唯一编码，格式为"<prefix><时间戳><随机数>"
-        """
-        import time
-        import random
-        timestamp = time.strftime("%Y%m%d%H%M%S")
-        return f"{prefix}{timestamp}{random.randint(1000, 9999)}"
-    
-    @staticmethod
-    def generate_test_name(prefix: str = "TEST_NAME") -> str:
-        """
-        生成测试名称
-        
-        参数:
-            prefix (str): 名称前缀，默认为"TEST_NAME"
-            
-        返回:
-            str: 生成的测试名称，格式为"<prefix>_<随机数>"
-        """
-        import random
-        return f"{prefix}_{random.randint(100, 999)}"
-    
-    @staticmethod
-    def generate_remark() -> str:
-        """
-        生成备注信息
-        
-        返回:
-            str: 生成的备注信息，包含当前时间
-        """
-        import time
-        return f"自动化测试创建 - {time.strftime('%Y-%m-%d %H:%M:%S')}"
     
     @staticmethod
     def extract_id(result: dict, path: str = "data.data.id"):

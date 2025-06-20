@@ -31,7 +31,6 @@ from data_factory.base import DataFactory
 from utils.yaml_util import YamlUtil
 from utils.exception_util import safe_api_call
 from utils.mysql_util import DBManager
-from data_factory.erp_factory import ErpDataFactory
 
 
 class Login:
@@ -149,8 +148,8 @@ class BaseTest:
             cls.env_config = data_factory.get_env_config() # 获取环境基础配置
             
             # 结构化数据和ID提取通过业务工厂实现
-            cls.init_data = ErpDataFactory.get_structured_data(raw_data)
-            cls.ids = ErpDataFactory.extract_ids(cls.init_data)
+            cls.init_data = raw_data
+            # 移除ErpDataFactory.extract_ids相关逻辑
             
             # 登录 并保存 userId
             cls.login = Login(env)

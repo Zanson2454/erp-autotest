@@ -1,8 +1,7 @@
 # SCM配置数据查询定义
 base_info:
   # 基础配置数据
-
-    # 币种信息
+  # 币种信息
   currency_info:
     sql: |
       SELECT id as 'curr_id', curr_code, curr_name 
@@ -17,8 +16,8 @@ base_info:
       required_fields: ["curr_id", "curr_code", "curr_name"]
 
 
-    # 语言信息
-    language_info:
+  # 语言信息
+  language_info:
       sql: |
         SELECT id as 'language_id', language_code, language_name 
         FROM gen_language_type_cf 
@@ -48,17 +47,31 @@ base_info:
   # 时区信息
   timezone_info:
     sql: |
-      SELECT id as 'timezone_id', timezone_code, timezone_desc 
-      FROM gen_timezone_type_cf 
-      WHERE status='INACTIVE' AND deleted=0 LIMIT 1
+     select id, timezone_code, timezone_format from gen_timezone_type_cf where `status`='ENABLED' and deleted=0 limit 1
     description: "查询时区信息"
     insert_sql: |
-      INSERT INTO`gen_timezone_type_cf`(`created_by`,`updated_by`,`created_at`,`updated_at`,`version`,`deleted`,`timezone_code`,`timezone_format`,`is_summer_time`,`summer_time_start`,`summer_time_end`,`status`,`origin_org_id`,`request_id`,`timezone_desc`,`coun_id`,`timezone_district`)VALUES
-      (1,1,NOW(),NOW(),1,0,'Asia/Shanghai','UTC+8',0,NULL,NULL,'INACTIVE',0,NULL,'东八区',(SELECT id FROM`gen_coun_type_cf` WHERE coun_code='CHINA' AND deleted=0 LIMIT 1),NULL);
+      INSERT INTO `gen_timezone_type_cf`(`created_by`,`updated_by`,`created_at`,`updated_at`,`version`,`deleted`,`timezone_code`,`timezone_format`,`is_summer_time`,`summer_time_start`,`summer_time_end`,`status`,`origin_org_id`,`request_id`,`timezone_desc`,`coun_id`,`timezone_district`)
+      VALUES (1,1,NOW(),NOW(),1,0,'Asia/Shanghai','UTC+8',0,NULL,NULL,'ENABLED',0,NULL,'东八区',(SELECT id FROM `gen_coun_type_cf` WHERE coun_code='CHINA' AND deleted=0 LIMIT 1),NULL);
     validation:
       min_records: 1
-      required_fields: ["timezone_id", "timezone_code", "timezone_desc"]
+      required_fields: ["id", "timezone_code", "timezone_format"]
 
+  # 工作日日历
+  gen_wc_head_info:
+    sql: |
+      SELECT id as 'gen_wc_head_id', wc_head_code, wc_head_name 
+      FROM gen_wc_head_cf 
+      WHERE deleted=0 LIMIT 1
+    description: "查询工作日日历信息"
+
+  # 期间类型  
+  calender_info:
+    sql: |
+     SELECT id ,calendar_code,calendar_name,`status`
+      FROM fin_common_calendar_head_cf  
+      WHERE deleted=0 and `status`= 'ENABLED' LIMIT 1
+    description: "查询期间类型信息"
+  
   # 汇率类型
   exchange_rate_type_info:
     sql: |
@@ -74,22 +87,6 @@ base_info:
     validation:
       min_records: 1
       required_fields: ["exchange_rate_type_id", "exchange_rate_type_code", "exchange_rate_type_name"]
-
-  # # 物料税信息
-  # mat_tax_type_info:
-  #   sql: |
-  #     SELECT id as 'mat_tax_type_id', tax_class_code, tax_class_desc 
-  #     FROM gen_mat_tax_type_cf 
-  #     WHERE deleted=0 limit 1
-  #   description: "查询物料税信息"
-  #   insert_sql: |
-  #       INSERT INTO `gen_mat_tax_type_cf` (`created_at`, `updated_at`, `version`, `deleted`, `tax_type`, `origin_org_id`, `request_id`, `tax_class_code`, `tax_class_desc`, `coun_id`, `created_by`, `updated_by`,`tenant_id`) VALUES
-  #       (NOW(), NOW(), 0, 0, (select id from  gen_tax_type_cf  where taxcate='X' and tax=0.13 limit 1 ), 0, NULL, 'NORM', '销售或者进口货物', (select id from gen_coun_type_cf where coun_code='CHINA' limit 1), 1, 1,0),
-  #       (NOW(), NOW(), 0, 0, (select id from  gen_tax_type_cf  where taxcate='X' and tax=0.13 limit 1 ), 0, NULL, 'SERV', '服务类', (select id from gen_coun_type_cf where coun_code='CHINA' limit 1), 1, 1,0),
-  #       (NOW(), NOW(), 0, 0, (select id from  gen_tax_type_cf  where taxcate='X' and tax=0.13 limit 1 ), 0, NULL, 'EXMT', '免征税类', (select id from gen_coun_type_cf where coun_code='CHINA' limit 1), 1, 1,0);
-  #   validation:
-  #     min_records: 0
-  #     required_fields: ["mat_tax_type_id", "tax_class_code", "tax_class_desc"]
 
   # 客户税信息
   cust_tax_type_info:
@@ -124,7 +121,6 @@ base_info:
       required_fields: ["bank_id", "bank_code", "bank_name", "bank_mne_code"]
 
   # 组织信息
-
   # 公司组织
   com_org_info:
     sql: |
@@ -192,7 +188,7 @@ base_info:
       required_fields: ["id", "name"]
 
   # 销售渠道
-  sales_channel_info:
+  org_sls_dc_info:
     sql: |
       SELECT id, `code`, `name`
       FROM org_sls_dc_cf
@@ -201,17 +197,6 @@ base_info:
     validation:
       min_records: 1
       required_fields: ["id", "code", "name"]
-
-
-  # sales_channel_info:
-  #   sql: |
-  #     SELECT id, `code`, `name`
-  #     FROM sls_dc_md
-  #     WHERE `code`='AUTOTEST_SLS_DC' AND deleted=0 LIMIT 1
-  #   description: "查询销售渠道信息"
-  #   validation:
-  #     min_records: 1
-  #     required_fields: ["id", "code", "name"]
 
 
   # 库存地点
@@ -248,39 +233,6 @@ base_info:
       min_records: 1
       required_fields: ["id", "code", "name", "status"]
 
-  # 物料相关
-  # ATP检查组
-  atp_group_info:
-    sql: |
-      SELECT id 
-      FROM gen_atp_group_md 
-      WHERE code='ATP001' AND deleted=0 LIMIT 1
-    description: "查询默认ATP检查组信息"
-    validation:
-      min_records: 1
-      required_fields: ["id"]
-
-  # 库存类型
-  inv_type_info:
-    sql: |
-      SELECT id, name, code 
-      FROM inv_inv_type_cf 
-      WHERE deleted=0 LIMIT 1
-    description: "查询库存类型信息"
-    validation:
-      min_records: 1
-      required_fields: ["id", "name", "code"]
-
-  # 销售订单类型
-  so_type_info:
-    sql: |
-      SELECT id, so_type_code, so_type_name 
-      FROM sls_so_type_cf 
-      WHERE deleted=0 AND so_type_code='STND'
-    description: "查询销售订单类型信息"
-    validation:
-      min_records: 1
-      required_fields: ["id", "so_type_code", "so_type_name"]
   # 税码信息
   tax_info:
     sql: |

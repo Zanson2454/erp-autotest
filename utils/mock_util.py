@@ -6,6 +6,7 @@ import random
 import re
 from pathlib import Path
 import sys
+import time
 
 # Add project root to Python path
 current_file = Path(__file__).resolve()
@@ -126,12 +127,14 @@ class MockData:
             'account_number': self.fake.chinese_bank_account()
         }
     
-    def get_mock_date(self, start_date: Optional[datetime] = None, end_date: Optional[datetime] = None) -> datetime:
-        """生成随机日期
+    def get_mock_date(self, start_date: Optional[datetime] = None, end_date: Optional[datetime] = None, days_offset: int = 0, include_time: bool = True) -> datetime:
+        """生成随机日期，支持日期偏移和时间包含选项
         
         Args:
             start_date: 开始日期，默认为30天前
             end_date: 结束日期，默认为当前日期
+            days_offset: 日期偏移量，正数为未来日期，负数为过去日期
+            include_time: 是否包含时分秒，默认为True
             
         Returns:
             datetime: 随机生成的日期
@@ -140,7 +143,15 @@ class MockData:
             start_date = datetime.now() - timedelta(days=30)
         if not end_date:
             end_date = datetime.now()
-        return self.fake.date_time_between(start_date=start_date, end_date=end_date)
+
+        # 应用日期偏移
+        target_date = self.fake.date_time_between(start_date=start_date, end_date=end_date) + timedelta(days=days_offset)
+
+        if not include_time:
+            # 只返回年月日
+            return target_date.date()
+
+        return target_date
     
     def get_mock_user_agent(self) -> str:
         """生成用户代理字符串
@@ -210,28 +221,64 @@ class MockData:
             {"code": "SGD", "name": "新加坡元", "symbol": "S$", "iso_name": "Singapore Dollar"},
         ]
         return random.choice(currency_list)
+    
+    def generate_unique_code(self, prefix="AT_",tag=None):
+        """
+        生成唯一编码
+        """
+        if tag:
+            return f"{prefix}{tag}{time.strftime('%Y%m%d%H%M%S')}{random.randint(1000, 9999)}"
+        else:
+            return f"{prefix}{time.strftime('%Y%m%d%H%M%S')}{random.randint(1000, 9999)}"
+    
+    
+    def get_mock_remark(self):
+        """
+        生成备注信息
+        
+        返回:
+            str: 生成的备注信息，包含当前时间
+        """
+        return f"自动化测试创建 - {time.strftime('%Y-%m-%d %H:%M:%S')}"
+    
+    def get_timestamp(self):
+        """
+        生成时间戳
+        
+        返回:
+            str: 生成的时间戳，格式为"YYYYMMDDHHMMSS"
+        """
+        return time.strftime("%Y%m%d%H%M%S")
+
+    def get_mock_org_info(self, org_type: str, org_name: str) -> dict:
+        """
+        生成组织信息
+        """
+        return {
+            "org_code": self.generate_unique_code(tag=org_type),
+            "org_name": f"{org_name}_{random.randint(100, 999)}"
+        }
 
 if __name__ == '__main__':
     # 测试代码
     mock = MockData()
     
     # 测试各种数据生成
-    print("姓名:", mock.get_mock_name())
-    print("地址:", mock.get_mock_address())
-    print("电话:", mock.get_mock_phone_number())
-    print("身份证:", mock.get_mock_ssn())
-    print("邮箱:", mock.get_mock_email())
-    print("公司:", mock.get_mock_company())
-    print("银行信息:", mock.get_mock_bank_info())
-    print("日期:", mock.get_mock_date())
-    print("用户代理:", mock.get_mock_user_agent())
-    print("IP地址:", mock.get_mock_ip())
-    print("URL:", mock.get_mock_url())
-    print("随机文本:", mock.get_mock_text())
-    print("随机选择:", mock.get_mock_choice(['A', 'B', 'C', 'D']))
-    print("币种编码:", mock.get_mock_currency_code())
-    print("币种名称:", mock.get_mock_currency_name())
-    print("币种符号:", mock.get_mock_currency_symbol())
-    print("币种ISO名称:", mock.get_mock_currency_iso_name())
-    print("币种小数位:", mock.get_mock_currency_decimal_place())
-    print("币种对象:", mock.get_mock_currency())
+    # print("姓名:", mock.get_mock_name())
+    # print("地址:", mock.get_mock_address())
+    # print("电话:", mock.get_mock_phone_number())
+    # print("身份证:", mock.get_mock_ssn())
+    # print("邮箱:", mock.get_mock_email())
+    # print("公司:", mock.get_mock_company())
+    # print("银行信息:", mock.get_mock_bank_info())
+    # print("日期:", mock.get_mock_date(include_time=False))
+    # print("用户代理:", mock.get_mock_user_agent())
+    # print("IP地址:", mock.get_mock_ip())
+    # print("URL:", mock.get_mock_url())
+    # print("随机文本:", mock.get_mock_text())
+    # print("随机选择:", mock.get_mock_choice(['A', 'B', 'C', 'D']))
+    # print("币种对象:", mock.get_mock_currency())
+    print("备注:", mock.get_mock_remark())
+    print("时间戳:", mock.get_timestamp())
+    print("唯一编码:", mock.generate_unique_code())
+    print("业务组织数据:", mock.get_mock_org_info(org_type="ComOrg", org_name="某公司"))
