@@ -15,73 +15,10 @@ from utils.log_util import Loggers
 class FinApFactory(FinAparBaseFactory):
     """应付单数据工厂类，继承FinAparBaseFactory"""
     
-    # 默认结算项目类型配置
-    DEFAULT_SETT_ITEM_TYPE = {
-                "settItemTypeCode": "E_PUR_FRET_C",
-                "settItemTypeName": "外部-采购-计量运费",
-                "settClass": "EXTERNAL",
-                "btClass": "PURCHASE",
-                "priceGroupId": {"id": 2000005},
-                "priceGroupClass": "EXPENSES",
-                "accCode": None,
-                "settDocTypeCode": {"id": 2001001},
-                "affiliateSettItemTypeCode": None,
-                "isCountQty": False,
-                "exchangeRateType": {"id": 2003001},
-                "isAcqCost": False,
-                "id": 2000001,
-                "createdBy": {"id": 166382094639791},
-                "updatedBy": {"id": 479645949903493},
-                "createdAt": 1696906084000,
-                "updatedAt": 1721201191000,
-                "version": 2,
-                "deleted": 0,
-                "originOrgId": 0,
-                "requestId": None
-    }
-    
-    # 第二个结算项目类型配置
-    SECOND_SETT_ITEM_TYPE = {
-                "settItemTypeCode": "I_PUR_INSP",
-                "settItemTypeName": "内部-采购-检测费",
-                "settClass": "INSIDE",
-                "btClass": "PURCHASE",
-                "priceGroupId": {"id": 2000003},
-                "priceGroupClass": "EXPENSES",
-                "accCode": None,
-                "settDocTypeCode": {"id": 2002004},
-                "affiliateSettItemTypeCode": None,
-                "isCountQty": True,
-                "exchangeRateType": {"id": 2003001},
-                "isAcqCost": None,
-                "id": 11,
-                "createdBy": None,
-                "updatedBy": {"id": 166382094639791},
-                "createdAt": 1687778100000,
-                "updatedAt": 1696760889000,
-                "version": 1,
-                "deleted": 0,
-                "originOrgId": 0,
-                "requestId": None
-    }
-    
-    # 明细配置模板
-    ITEM_CONFIGS = [
-        {
-            "amount": 5000, "qty": 10, "price": 500, 
-            "tax_amt": 283.02, "net_amt": 4716.98, "tax_rate": 6,
-            "sett_item_type": None  # 使用默认
-        },
-        {
-            "amount": 2500, "qty": 25, "price": 100,
-            "tax_amt": 287.61, "net_amt": 2212.39, "tax_rate": 13,
-            "sett_item_type": "SECOND"  # 使用第二个类型
-        }
-    ]
-    
     def __init__(self):
         """初始化，调用父类初始化方法"""
         super().__init__()
+        self._sett_item_types_cache = {}  # 缓存结算项目类型
 
     def convert_data_for_json(self, obj):
         """
@@ -102,11 +39,213 @@ class FinApFactory(FinAparBaseFactory):
         else:
             return obj
 
+    def get_settlement_item_type_by_code(self, sett_item_type_code: str) -> Dict[str, Any]:
+        """
+        根据结算项目类型编码从数据库查询结算项目类型
+        :param sett_item_type_code: 结算项目类型编码
+        :return: 结算项目类型数据
+        """
+        # 检查缓存
+        if sett_item_type_code in self._sett_item_types_cache:
+            return self._sett_item_types_cache[sett_item_type_code].copy()
+        
+        try:
+            sql = """
+                SELECT 
+                    id, sett_item_type_code, sett_item_type_name, 
+                    sett_class, bt_class, price_group_id, price_group_class,
+                    acc_code, sett_doc_type_code, affiliate_sett_item_type_code,
+                    is_count_qty, exchange_rate_type, is_acq_cost,
+                    created_by, updated_by, created_at, updated_at, version,
+                    deleted, origin_org_id, request_id
+                FROM gen_sett_item_type_cf 
+                WHERE sett_item_type_code = %s AND deleted = 0
+                LIMIT 1
+            """
+            
+            result = DBManager.query(sql, [sett_item_type_code])
+            
+            if result:
+                row = result[0]
+                sett_item_type = {
+                    "settItemTypeCode": row.get("sett_item_type_code"),
+                    "settItemTypeName": row.get("sett_item_type_name"),
+                    "settClass": row.get("sett_class"),
+                    "btClass": row.get("bt_class"),
+                    "priceGroupId": {"id": row.get("price_group_id")} if row.get("price_group_id") else None,
+                    "priceGroupClass": row.get("price_group_class"),
+                    "accCode": row.get("acc_code"),
+                    "settDocTypeCode": {"id": row.get("sett_doc_type_code")} if row.get("sett_doc_type_code") else None,
+                    "affiliateSettItemTypeCode": row.get("affiliate_sett_item_type_code"),
+                    "isCountQty": bool(row.get("is_count_qty", 0)),
+                    "exchangeRateType": {"id": row.get("exchange_rate_type")} if row.get("exchange_rate_type") else None,
+                    "isAcqCost": bool(row.get("is_acq_cost", 0)) if row.get("is_acq_cost") is not None else None,
+                    "id": row.get("id"),
+                    "createdBy": {"id": row.get("created_by")} if row.get("created_by") else None,
+                    "updatedBy": {"id": row.get("updated_by")} if row.get("updated_by") else None,
+                    "createdAt": int(row.get("created_at").timestamp() * 1000) if row.get("created_at") else None,
+                    "updatedAt": int(row.get("updated_at").timestamp() * 1000) if row.get("updated_at") else None,
+                    "version": row.get("version"),
+                    "deleted": row.get("deleted"),
+                    "originOrgId": row.get("origin_org_id"),
+                    "requestId": row.get("request_id")
+                }
+                
+                # 缓存结果
+                self._sett_item_types_cache[sett_item_type_code] = sett_item_type
+                
+                Loggers.info(f"查询到结算项目类型[{sett_item_type_code}]: {sett_item_type.get('settItemTypeName')}")
+                return sett_item_type.copy()
+            else:
+                Loggers.warning(f"未找到结算项目类型编码为[{sett_item_type_code}]的记录")
+                return self._get_default_sett_item_type()
+                
+        except Exception as e:
+            Loggers.error(f"查询结算项目类型失败，编码: {sett_item_type_code}, 错误: {str(e)}")
+            return self._get_default_sett_item_type()
+
+    def get_purchase_settlement_item_types(self, limit: int = 2) -> List[Dict[str, Any]]:
+        """
+        查询采购相关的结算项目类型
+        :param limit: 查询数量限制
+        :return: 结算项目类型列表
+        """
+        try:
+            sql = """
+                SELECT 
+                    id, sett_item_type_code, sett_item_type_name, 
+                    sett_class, bt_class, price_group_id, price_group_class,
+                    acc_code, sett_doc_type_code, affiliate_sett_item_type_code,
+                    is_count_qty, exchange_rate_type, is_acq_cost,
+                    created_by, updated_by, created_at, updated_at, version,
+                    deleted, origin_org_id, request_id
+                FROM gen_sett_item_type_cf 
+                WHERE bt_class = 'PURCHASE' AND deleted = 0
+                ORDER BY id ASC
+                LIMIT %s
+            """
+            
+            results = DBManager.query(sql, [limit])
+            
+            if results:
+                sett_types = []
+                for row in results:
+                    sett_item_type = {
+                        "settItemTypeCode": row.get("sett_item_type_code"),
+                        "settItemTypeName": row.get("sett_item_type_name"),
+                        "settClass": row.get("sett_class"),
+                        "btClass": row.get("bt_class"),
+                        "priceGroupId": {"id": row.get("price_group_id")} if row.get("price_group_id") else None,
+                        "priceGroupClass": row.get("price_group_class"),
+                        "accCode": row.get("acc_code"),
+                        "settDocTypeCode": {"id": row.get("sett_doc_type_code")} if row.get("sett_doc_type_code") else None,
+                        "affiliateSettItemTypeCode": row.get("affiliate_sett_item_type_code"),
+                        "isCountQty": bool(row.get("is_count_qty", 0)),
+                        "exchangeRateType": {"id": row.get("exchange_rate_type")} if row.get("exchange_rate_type") else None,
+                        "isAcqCost": bool(row.get("is_acq_cost", 0)) if row.get("is_acq_cost") is not None else None,
+                        "id": row.get("id"),
+                        "createdBy": {"id": row.get("created_by")} if row.get("created_by") else None,
+                        "updatedBy": {"id": row.get("updated_by")} if row.get("updated_by") else None,
+                        "createdAt": int(row.get("created_at").timestamp() * 1000) if row.get("created_at") else None,
+                        "updatedAt": int(row.get("updated_at").timestamp() * 1000) if row.get("updated_at") else None,
+                        "version": row.get("version"),
+                        "deleted": row.get("deleted"),
+                        "originOrgId": row.get("origin_org_id"),
+                        "requestId": row.get("request_id")
+                    }
+                    sett_types.append(sett_item_type)
+                
+                Loggers.info(f"查询到{len(sett_types)}个采购结算项目类型")
+                return sett_types
+            else:
+                Loggers.warning("未找到采购相关的结算项目类型")
+                return [self._get_default_sett_item_type(), self._get_default_sett_item_type()]
+                
+        except Exception as e:
+            Loggers.error(f"查询采购结算项目类型失败: {str(e)}")
+            return [self._get_default_sett_item_type(), self._get_default_sett_item_type()]
+
+    def _get_default_sett_item_type(self) -> Dict[str, Any]:
+        """获取默认的结算项目类型（fallback）"""
+        return {
+            "settItemTypeCode": "E_PUR_FRET_C",
+            "settItemTypeName": "外部-采购-计量运费",
+            "settClass": "EXTERNAL",
+            "btClass": "PURCHASE",
+            "priceGroupId": {"id": 2000005},
+            "priceGroupClass": "EXPENSES",
+            "accCode": None,
+            "settDocTypeCode": {"id": 2001001},
+            "affiliateSettItemTypeCode": None,
+            "isCountQty": False,
+            "exchangeRateType": {"id": 2003001},
+            "isAcqCost": False,
+            "id": 2000001,
+            "createdBy": {"id": 166382094639791},
+            "updatedBy": {"id": 479645949903493},
+            "createdAt": 1696906084000,
+            "updatedAt": 1721201191000,
+            "version": 2,
+            "deleted": 0,
+            "originOrgId": 0,
+            "requestId": None
+        }
+
     def _get_sett_item_type(self, type_key: str = None) -> Dict[str, Any]:
         """获取结算项目类型配置"""
         if type_key == "SECOND":
-            return self.SECOND_SETT_ITEM_TYPE.copy()
-        return self.DEFAULT_SETT_ITEM_TYPE.copy()
+            # 尝试查询第二种类型
+            return self.get_settlement_item_type_by_code("I_PUR_INSP")
+        else:
+            # 默认查询第一种类型
+            return self.get_settlement_item_type_by_code("E_PUR_FRET_C")
+
+    def get_dynamic_item_configs(self) -> List[Dict[str, Any]]:
+        """
+        动态生成明细配置，基于数据库查询的结算项目类型
+        :return: 明细配置列表
+        """
+        try:
+            # 获取采购相关的结算项目类型
+            sett_types = self.get_purchase_settlement_item_types(2)
+            
+            # 动态生成配置
+            configs = []
+            
+            # 第一个配置：使用第一个结算项目类型
+            if len(sett_types) > 0:
+                configs.append({
+                    "amount": 5000, "qty": 10, "price": 500,
+                    "tax_amt": 283.02, "net_amt": 4716.98, "tax_rate": 6,
+                    "sett_item_type": sett_types[0]
+                })
+            
+            # 第二个配置：使用第二个结算项目类型
+            if len(sett_types) > 1:
+                configs.append({
+                    "amount": 2500, "qty": 25, "price": 100,
+                    "tax_amt": 287.61, "net_amt": 2212.39, "tax_rate": 13,
+                    "sett_item_type": sett_types[1]
+                })
+            
+            Loggers.info(f"动态生成{len(configs)}个明细配置")
+            return configs
+            
+        except Exception as e:
+            Loggers.error(f"动态生成明细配置失败: {str(e)}")
+            # 返回默认配置
+            return [
+                {
+                    "amount": 5000, "qty": 10, "price": 500,
+                    "tax_amt": 283.02, "net_amt": 4716.98, "tax_rate": 6,
+                    "sett_item_type": self._get_default_sett_item_type()
+                },
+                {
+                    "amount": 2500, "qty": 25, "price": 100,
+                    "tax_amt": 287.61, "net_amt": 2212.39, "tax_rate": 13,
+                    "sett_item_type": self._get_default_sett_item_type()
+                }
+            ]
 
     def create_ap_item(self, mat, tax_code, sett_item_type=None, amount=5000, qty=10, price=500, tax_amt=283.02, net_amt=4716.98, tax_rate=6, mat_id=None) -> Dict[str, Any]:
         """生成apItems明细，结构与页面json一致"""
@@ -135,22 +274,22 @@ class FinApFactory(FinAparBaseFactory):
         if len(mat_list) != len(tax_code_list):
             raise ValueError("物料列表和税码列表长度不匹配")
         
+        # 获取动态配置
+        item_configs = self.get_dynamic_item_configs()
+        
         items = []
         for i, (mat, tax_code) in enumerate(zip(mat_list, tax_code_list)):
-            if i < len(self.ITEM_CONFIGS):
-                config = self.ITEM_CONFIGS[i].copy()
-                # 处理结算项目类型
-                sett_type = config.pop("sett_item_type")
-                if sett_type == "SECOND":
-                    config["sett_item_type"] = self._get_sett_item_type("SECOND")
-                else:
-                    config["sett_item_type"] = self._get_sett_item_type()
+            if i < len(item_configs):
+                config = item_configs[i].copy()
+                # 使用配置中的结算项目类型
+                sett_item_type = config.pop("sett_item_type")
                 
                 items.append(self.create_ap_item(
                     mat=mat,
                     tax_code=tax_code,
                     mat_id=mat["id"],
-                    **config
+                    sett_item_type=sett_item_type,
+                    **{k: v for k, v in config.items() if k != "sett_item_type"}
                 ))
         
         return items
@@ -418,6 +557,56 @@ class FinApFactory(FinAparBaseFactory):
         pr_info = self.query_payment_request_by_ap_id(ap_doc_id)
         return pr_info.get("pr_status") if pr_info else None
 
+    def get_ap_schl_ids_by_ap_id(self, ap_doc_id: int) -> List[int]:
+        """
+        根据应付单ID查询应付计划行ID列表
+        :param ap_doc_id: 应付单ID
+        :return: 应付计划行ID列表
+        """
+        if not ap_doc_id:
+            Loggers.warning("ap_doc_id参数不能为空")
+            return []
+            
+        sql = """
+            SELECT id FROM fin_apm_ap_schl_tr 
+            WHERE apm_ap_head_tr_id = %s AND deleted = 0
+            ORDER BY created_at ASC
+        """
+        
+        try:
+            result = DBManager.query(sql, [ap_doc_id])
+            ap_schl_ids = [row['id'] for row in result] if result else []
+            Loggers.info(f"根据应付单ID[{ap_doc_id}]查询到{len(ap_schl_ids)}个计划行ID: {ap_schl_ids}")
+            return ap_schl_ids
+        except Exception as e:
+            Loggers.error(f"查询应付计划行ID失败，ap_doc_id: {ap_doc_id}, 错误: {str(e)}")
+            return []
+
+    def get_ap_item_ids_by_ap_id(self, ap_doc_id: int) -> List[int]:
+        """
+        根据应付单ID查询应付单行ID列表  
+        :param ap_doc_id: 应付单ID
+        :return: 应付单行ID列表
+        """
+        if not ap_doc_id:
+            Loggers.warning("ap_doc_id参数不能为空")
+            return []
+            
+        sql = """
+            SELECT id FROM fin_apm_ap_item_tr 
+            WHERE apm_ap_head_tr_id = %s AND deleted = 0
+            ORDER BY created_at ASC
+        """
+        
+        try:
+            result = DBManager.query(sql, [ap_doc_id])
+            ap_item_ids = [row['id'] for row in result] if result else []
+            Loggers.info(f"根据应付单ID[{ap_doc_id}]查询到{len(ap_item_ids)}个应付单行ID: {ap_item_ids}")
+            return ap_item_ids
+        except Exception as e:
+            Loggers.error(f"查询应付单行ID失败，ap_doc_id: {ap_doc_id}, 错误: {str(e)}")
+            return []
+
     def query_purchase_invoice_by_inv_code(self, inv_code: str) -> Optional[Dict[str, Any]]:
         """
         根据发票号（inv_code）查询采购发票头表信息
@@ -502,6 +691,46 @@ class FinApFactory(FinAparBaseFactory):
         """
         pi_info = self.query_purchase_invoice_by_inv_code(inv_code)
         return pi_info.get("pi_head_code") if pi_info else None
+
+    def create_material(self) -> Dict[str, Any]:
+        """创建物料，查库加ENABLED条件，查不到自动插入标准测试数据"""
+        try:
+            mat = self.query_single_record(
+                "gen_mat_md",
+                "mat_code LIKE %s AND status = %s AND deleted = 0",
+                ['AUTOTEST_MAT%', 'ENABLED'],
+                "物料数据"
+            )
+            return self.build_common_fields(mat, include_id=True)
+        except Exception as e:
+            Loggers.warning(f"未找到ENABLED状态的AUTOTEST物料，尝试插入标准测试物料: {str(e)}")
+            # 这里可补充插入逻辑，如插入后再查一次，否则抛异常
+            raise
+
+    def create_vendor(self) -> Dict[str, Any]:
+        """创建供应商，查库加ENABLED条件，查不到自动插入标准测试数据"""
+        try:
+            vend = self.query_single_record(
+                "gen_vend_info_md",
+                "vend_code LIKE %s AND status = %s AND deleted = 0",
+                ['AUTOTEST_VEND%', 'ENABLED'],
+                "供应商数据"
+            )
+            return self.build_common_fields(vend, include_id=True)
+        except Exception as e:
+            Loggers.warning(f"未找到ENABLED状态的AUTOTEST供应商，尝试插入标准测试供应商: {str(e)}")
+            # 这里可补充插入逻辑，如插入后再查一次，否则抛异常
+            raise
+
+    def get_default_user_id(self):
+        """查库获取自动化测试用户或admin用户ID，查不到自动插入标准测试用户"""
+        sql = "SELECT id FROM user WHERE (username = %s OR username = %s) AND deleted = 0 LIMIT 1"
+        result = DBManager.query(sql, ["AUTOTEST", "admin"])
+        if result:
+            return result[0]["id"]
+        Loggers.warning("未找到自动化测试用户或admin用户，建议插入标准测试用户")
+        # 这里可补充插入逻辑，如插入后再查一次，否则抛异常
+        raise Exception("未找到自动化测试用户或admin用户ID，且插入标准测试用户失败")
 
 if __name__ == '__main__':
     print(FinApFactory.get_or_create_ap_doc()) 

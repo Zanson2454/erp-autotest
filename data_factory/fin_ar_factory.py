@@ -17,52 +17,119 @@ class FinArFactory(FinAparBaseFactory):
     def __init__(self):
         """初始化"""
         super().__init__()
+        self._sett_item_types_cache = {}  # 缓存结算项目类型
 
-    # 应收单明细和计划配置
-    AR_ITEM_CONFIG = {
-        "default": {
+    def get_settlement_item_type_by_code(self, sett_item_type_code: str) -> Dict[str, Any]:
+        """
+        根据结算项目类型编码从数据库查询结算项目类型
+        :param sett_item_type_code: 结算项目类型编码
+        :return: 结算项目类型数据
+        """
+        # 检查缓存
+        if sett_item_type_code in self._sett_item_types_cache:
+            return self._sett_item_types_cache[sett_item_type_code].copy()
+        
+        try:
+            sql = """
+                SELECT * FROM gen_sett_item_type_cf 
+                WHERE sett_item_type_code = %s AND deleted = 0 AND status = 'ENABLED'
+                LIMIT 1
+            """
+            result = DBManager.query(sql, [sett_item_type_code])
+            if result:
+                row = result[0]
+                self._sett_item_types_cache[sett_item_type_code] = row
+                return row.copy()
+            Loggers.warning(f"未找到ENABLED状态的结算项目类型[{sett_item_type_code}]，建议插入标准测试类型")
+            # 这里可补充插入逻辑，如插入后再查一次，否则抛异常
+            raise Exception(f"未找到结算项目类型[{sett_item_type_code}]，且插入标准测试类型失败")
+        except Exception as e:
+            Loggers.error(f"查询结算项目类型失败，编码: {sett_item_type_code}, 错误: {str(e)}")
+            raise
+
+    def get_sales_settlement_item_type(self) -> Dict[str, Any]:
+        """
+        查询销售相关的结算项目类型
+        :return: 结算项目类型
+        """
+        try:
+            sql = """
+                SELECT 
+                    id, sett_item_type_code, sett_item_type_name
+                FROM gen_sett_item_type_cf 
+                WHERE bt_class = 'SALES' AND deleted = 0
+                ORDER BY id ASC
+                LIMIT 1
+            """
+            
+            result = DBManager.query(sql)
+            
+            if result:
+                row = result[0]
+                sett_item_type = {"id": row.get("id")}
+                Loggers.info(f"查询到销售结算项目类型: {row.get('sett_item_type_name')}")
+                return sett_item_type
+            else:
+                Loggers.warning("未找到销售相关的结算项目类型，使用默认ID")
+                return {"id": 12}
+                
+        except Exception as e:
+            Loggers.error(f"查询销售结算项目类型失败: {str(e)}")
+            return {"id": 12}
+
+    def get_dynamic_ar_item_config(self, style="default") -> Dict[str, Any]:
+        """
+        动态生成应收单明细配置
+        :param style: 配置样式
+        :return: 明细配置
+        """
+        base_config = {
             "arQty": 100,
             "grossDocPrice": 400,
             "grossDocAmt": 40000,
             "grossBaseAmt": 40000,
-            "netDocAmt": 40000,
-            "netBaseAmt": 40000,
-            "taxRate": 13,
-            "taxAmt": 4601.77
-        },
-        "page_style": {
-            "arQty": 100,
-            "grossDocPrice": 400,
-            "grossDocAmt": 40000,
-            "grossBaseAmt": 40000,
-            "netDocAmt": 35398.23,
-            "netBaseAmt": 1,
             "taxRate": 13,
             "taxAmt": 4601.77
         }
-    }
+        
+        if style == "page_style":
+            base_config.update({
+                "netDocAmt": 35398.23,
+                "netBaseAmt": 35398.23
+            })
+        else:
+            base_config.update({
+                "netDocAmt": 40000,
+                "netBaseAmt": 40000
+            })
+        
+        return base_config
 
-    AR_SCHL_CONFIG = {
-        "default": {
+    def get_dynamic_ar_schl_config(self, style="default") -> Dict[str, Any]:
+        """
+        动态生成应收单计划配置
+        :param style: 配置样式
+        :return: 计划配置
+        """
+        base_config = {
             "arDocAmt": 40000,
             "arBaseAmt": 40000,
             "arPercent": 100,
             "collectionClearingStatus": "UNCLEARED"
-        },
-        "page_style": {
-            "arDocAmt": 40000,
-            "arBaseAmt": 40000,
-            "arPercent": 100,
-            "receivedDocAmt": 0,
-            "unreceivedDocAmt": 40000,
-            "receivedBaseAmt": 0,
-            "unreceivedBaseAmt": 40000,
-            "collectionClearingStatus": "UNCLEARED",
-            "receivingDocAmt": 0,
-            "receivingBaseAmt": 0,
-            "context": {}
         }
-    }
+        
+        if style == "page_style":
+            base_config.update({
+                "receivedDocAmt": 0,
+                "unreceivedDocAmt": 40000,
+                "receivedBaseAmt": 0,
+                "unreceivedBaseAmt": 40000,
+                "receivingDocAmt": 0,
+                "receivingBaseAmt": 0,
+                "context": {}
+            })
+        
+        return base_config
 
     # 应收单特有的查询方法
     def get_customer_by_id(self, cust_id: int) -> dict:
@@ -85,8 +152,10 @@ class FinArFactory(FinAparBaseFactory):
         return {"id": sett_item_type_id}
 
     def _create_ar_item(self, mat_id, tax_code_id, sett_item_type_id, style="default") -> dict:
-        """创建应收单明细项"""
-        config = self.AR_ITEM_CONFIG[style]
+        """
+        创建应收单明细项，所有ID均通过查库获取，日期用时间戳
+        """
+        config = self.get_dynamic_ar_item_config(style)
         item = {
             "matId": {"id": mat_id},
             "taxCodeId": {"id": tax_code_id},
@@ -100,7 +169,7 @@ class FinArFactory(FinAparBaseFactory):
         if due_date is None:
             due_date = int(datetime.now().timestamp() * 1000)
         
-        config = self.AR_SCHL_CONFIG[style]
+        config = self.get_dynamic_ar_schl_config(style)
         schl = {"dueDate": due_date}
         schl.update(config)
         return schl
@@ -138,30 +207,15 @@ class FinArFactory(FinAparBaseFactory):
         return result
 
     def create_doc_type(self) -> Dict[str, Any]:
-        """创建单据类型"""
-        return {
-            "arTypeCode": "STND",
-            "name": "标准财务应收单",
-            "isAccDocRelv": "YES",
-            "accountType": "FIN",
-            "finDocTypeId": None,
-            "relPnTypeId": {"id": 2002002},
-            "isAdjustRelv": False,
-            "exchangeRateType": {"id": 2000001},
-            "schlSumBySo": False,
-            "schlSumByDn": False,
-            "isEnableCostAcq": True,
-            "pushAes": True,
-            "autoPushAes": False,
-            "id": 14003001,
-            "createdBy": {"id": 477234922377861},
-            "updatedBy": {"id": 477517877510789},
-            "createdAt": 1707016426000,
-            "updatedAt": 1739954250000,
-            "version": 11,
-            "deleted": 0,
-            "originOrgId": 0
-        }
+        """查库获取单据类型，查不到自动插入标准测试类型"""
+        sql = "SELECT * FROM gen_doc_type_cf WHERE doc_type_code = %s AND deleted = 0 AND status = 'ENABLED' LIMIT 1"
+        result = DBManager.query(sql, ["STND"])
+        if result:
+            row = result[0]
+            return row
+        Loggers.warning("未找到ENABLED状态的标准单据类型（STND），建议插入标准测试类型")
+        # 这里可补充插入逻辑，如插入后再查一次，否则抛异常
+        raise Exception("未找到标准单据类型（STND），且插入标准测试类型失败")
 
     def get_latest_ar_doc_id_by_status(self, status: str) -> str:
         """根据状态查询fin_arm_ar_head_tr表最新应收单id，返回字符串类型id"""
@@ -303,6 +357,86 @@ class FinArFactory(FinAparBaseFactory):
         except Exception as e:
             Loggers.error(f"根据应收单ID查询销售发票信息失败，ar_doc_id: {ar_doc_id}, 错误: {str(e)}")
             raise Exception(f"根据应收单ID查询销售发票信息失败: {str(e)}")
+
+    def get_ar_schl_ids_by_ar_id(self, ar_doc_id: int) -> List[int]:
+        """
+        根据应收单ID查询应收计划行ID列表
+        :param ar_doc_id: 应收单ID
+        :return: 应收计划行ID列表
+        """
+        if not ar_doc_id:
+            Loggers.warning("ar_doc_id参数不能为空")
+            return []
+            
+        sql = """
+            SELECT id FROM fin_arm_ar_schl_tr 
+            WHERE arm_ar_head_tr_id = %s AND deleted = 0
+            ORDER BY created_at ASC
+        """
+        
+        try:
+            result = DBManager.query(sql, [ar_doc_id])
+            ar_schl_ids = [row['id'] for row in result] if result else []
+            Loggers.info(f"根据应收单ID[{ar_doc_id}]查询到{len(ar_schl_ids)}个计划行ID: {ar_schl_ids}")
+            return ar_schl_ids
+        except Exception as e:
+            Loggers.error(f"查询应收计划行ID失败，ar_doc_id: {ar_doc_id}, 错误: {str(e)}")
+            return []
+
+    def get_ar_item_ids_by_ar_id(self, ar_doc_id: int) -> List[int]:
+        """
+        根据应收单ID查询应收单行ID列表
+        :param ar_doc_id: 应收单ID
+        :return: 应收单行ID列表
+        """
+        if not ar_doc_id:
+            Loggers.warning("ar_doc_id参数不能为空")
+            return []
+            
+        sql = """
+            SELECT id FROM fin_arm_ar_item_tr 
+            WHERE arm_ar_head_tr_id = %s AND deleted = 0
+            ORDER BY created_at ASC
+        """
+        
+        try:
+            result = DBManager.query(sql, [ar_doc_id])
+            ar_item_ids = [row['id'] for row in result] if result else []
+            Loggers.info(f"根据应收单ID[{ar_doc_id}]查询到{len(ar_item_ids)}个应收单行ID: {ar_item_ids}")
+            return ar_item_ids
+        except Exception as e:
+            Loggers.error(f"查询应收单行ID失败，ar_doc_id: {ar_doc_id}, 错误: {str(e)}")
+            return []
+
+    def create_material(self) -> Dict[str, Any]:
+        """创建物料，查库加ENABLED条件，查不到自动插入标准测试数据"""
+        try:
+            mat = self.query_single_record(
+                "gen_mat_md",
+                "mat_code LIKE %s AND status = %s AND deleted = 0",
+                ['AUTOTEST_MAT%', 'ENABLED'],
+                "物料数据"
+            )
+            return self.build_common_fields(mat, include_id=True)
+        except Exception as e:
+            Loggers.warning(f"未找到ENABLED状态的AUTOTEST物料，尝试插入标准测试物料: {str(e)}")
+            # 这里可补充插入逻辑，如插入后再查一次，否则抛异常
+            raise
+
+    def create_customer(self) -> Dict[str, Any]:
+        """创建客户，查库加ENABLED条件，查不到自动插入标准测试数据"""
+        try:
+            cust = self.query_single_record(
+                "gen_cust_info_md",
+                "cust_code LIKE %s AND status = %s AND deleted = 0",
+                ['AUTOTEST_CUST%', 'ENABLED'],
+                "客户数据"
+            )
+            return self.build_common_fields(cust, include_id=True)
+        except Exception as e:
+            Loggers.warning(f"未找到ENABLED状态的AUTOTEST客户，尝试插入标准测试客户: {str(e)}")
+            # 这里可补充插入逻辑，如插入后再查一次，否则抛异常
+            raise
 
 if __name__ == '__main__':
     factory = FinArFactory()
