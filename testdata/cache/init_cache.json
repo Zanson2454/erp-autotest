@@ -42,6 +42,11 @@
       "status": "ENABLED"
     }
   ],
+  "addr_info": [
+    {
+      "id": 1002
+    }
+  ],
   "exchange_rate_type_info": [
     {
       "exchange_rate_type_id": 2000001,

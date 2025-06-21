@@ -25,6 +25,7 @@ class TestBizOrgManagement(GenMdBaseTest):
         cls.counId = cls.init_data["country_info"][0]["coun_id"] if cls.init_data.get("country_info") else None
         cls.genWcHeadId = cls.init_data["gen_wc_head_info"][0]["gen_wc_head_id"] if cls.init_data.get("gen_wc_head_info") else None
         cls.calenderId = cls.init_data["calender_info"][0]["id"] if cls.init_data.get("calender_info") else None
+        cls.addrId = cls.init_data["addr_info"][0]["id"] if cls.init_data.get("addr_info") else None
      
         
         # 获取md_cache_data中的第一个数据
@@ -276,6 +277,7 @@ class TestBizOrgManagement(GenMdBaseTest):
             set_dict = {
                 "orgCode": org_code,
                 "orgName": org_name,
+                "def14":self.addrId,
                 "orgSort": 1,
                 "orgEnableDate": f"{org_enable_date}",
                 "orgBusinessTypeIds": [self.invOrgTypeId],
