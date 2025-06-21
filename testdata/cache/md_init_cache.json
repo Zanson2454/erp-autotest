@@ -158,6 +158,15 @@
         "attr_code": "slsDcIds",
         "attr_name": "销售渠道"
       }
+    ],
+    "sls_dc_md": [
+      {
+        "id": 2000002,
+        "code": "AT_OFFLINE",
+        "name": "线下渠道(自动化)",
+        "is_online": 0,
+        "status": "ENABLED"
+      }
     ]
   },
   "mat_info": {

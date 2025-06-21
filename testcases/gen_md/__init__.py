@@ -5,7 +5,7 @@
 import sys
 from pathlib import Path
 
-# 获取项目根目录 (例如: /Users/shengqiaowei/Desktop/erp-autotest)
+# 获取项目根目录
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
 
@@ -45,6 +45,8 @@ class GenMdBaseTest(BaseTest):
         cache_dir="testdata/cache" # 缓存目录
         )
         cls.md_cache_data = CacheUtil.get('md_init_cache')
+        
+        cls.path_params = {"tmodule":"GEN_MD"}
     
     def get_api_path(self, api_key):
         """

@@ -9,7 +9,7 @@ import pytest
 
 @allure.epic("组织管理")
 @allure.feature("组织保存")
-class TestOrgSave(GenMdBaseTest):
+class TestBizOrgManagement(GenMdBaseTest):
 
     @classmethod
     def setup_class(cls):
@@ -25,74 +25,66 @@ class TestOrgSave(GenMdBaseTest):
         cls.counId = cls.init_data["country_info"][0]["coun_id"] if cls.init_data.get("country_info") else None
         cls.genWcHeadId = cls.init_data["gen_wc_head_info"][0]["gen_wc_head_id"] if cls.init_data.get("gen_wc_head_info") else None
         cls.calenderId = cls.init_data["calender_info"][0]["id"] if cls.init_data.get("calender_info") else None
+     
         
         # 获取md_cache_data中的第一个数据
         cls.orgBusinessTypeIds = cls.md_cache_data["org_info"]["org_biz_type_cf"] if cls.md_cache_data.get("org_info") else None
+        cls.slsDcId = cls.md_cache_data.get("org_info", {}).get("sls_dc_md", [])[0]["id"] if cls.md_cache_data.get("org_info", {}).get("sls_dc_md") else None
+        cls.logger.debug(f"slsDcId:{cls.slsDcId}")
         cls.logger.info(f"orgBusinessTypeIds: {cls.orgBusinessTypeIds}")
         for org_biz_type in  cls.orgBusinessTypeIds:
             if org_biz_type["code"] == "COM_ORG":
-                cls.comOrgId = org_biz_type["id"]
+                cls.comOrgTypeId = org_biz_type["id"]
             elif org_biz_type["code"] == "PUR_ORG":
-                cls.purOrgId = org_biz_type["id"]
+                cls.purOrgTypeId = org_biz_type["id"]
             elif org_biz_type["code"] == "SLS_ORG":
-                cls.slsOrgId = org_biz_type["id"]
+                cls.slsOrgTypeId  = org_biz_type["id"]
             elif org_biz_type["code"] == "SLS_DC":
-                cls.slsDcId = org_biz_type["id"]
+                cls.slsDcTypeId = org_biz_type["id"]
             elif org_biz_type["code"] == "INV_ORG":
-                cls.invOrgId = org_biz_type["id"]
+                cls.invOrgTypeId = org_biz_type["id"]
             elif org_biz_type["code"] == "INV_LOC":
-                cls.invLocId = org_biz_type["id"]
+                cls.invLocTypeId = org_biz_type["id"]
 
-    @pytest.mark.parametrize("org_type, tag, name_prefix, type_id_attr, order, allure_title", [
-        ("com_org_info", "ComOrg", "公司组织", "comOrgId", 1, "测试公司组织保存接口"),
-        ("pur_org_info", "PurOrg", "采购组织", "purOrgId", 2, "测试采购组织保存接口"),
-        ("sls_org_info", "SlsOrg", "销售组织", "slsOrgId", 3, "测试销售组织保存接口"),
-        ("inv_org_info", "InvOrg", "库存组织", "invOrgId", 4, "测试库存组织保存接口"),
-    ])
-    def test_save_org(self, org_type, tag, name_prefix, type_id_attr, order, allure_title):
+    @case_decorator(
+        story="保存组织",
+        title="测试保存公司组织",
+        description="验证保存公司组织接口的功能性",
+        severity="blocker",
+        order=1,
+        smoke=True,
+        tags=["组织", "保存组织"]
+    )
+    def test_save_com_org(self):
         """
-        通用组织保存用例
+        保存公司组织用例
         """
         try:
-            import allure
-            allure.dynamic.title(allure_title)
-            # 获取父公司组织信息
-            com_org_info = TestOrgSave.org_info.get("com_org_info", {})
-            org_parent_code = com_org_info.get("org_code")
-            com_org_id = com_org_info.get("id")
-            # 公司组织不需要父级
-            if org_type != "com_org_info":
-                assert org_parent_code and com_org_id, "请先执行test_save_org并成功保存公司组织"
-
-            org_code = self.mock_data.generate_unique_code(tag=tag)
-            org_name = f"{name_prefix}_{self.mock_data.get_timestamp()}"
+            org_code = self.mock_data.generate_unique_code(tag="ComOrg")
+            org_name = self.mock_data.get_mock_company()
             org_enable_date = self.mock_data.get_mock_date(include_time=False, days_offset=1)
 
             api_path = self.get_api_path("ORG-组织架构-保存服务")
             params, url = self.get_api_params(api_path)
 
-            # 组织类型ID
-            org_type_id = getattr(self, type_id_attr)
-
             # 过滤和设置参数
-            param_keys = ["orgCode", "orgName", "orgSort", "orgEnableDate", "orgBusinessTypeIds", "orgDimensionCode"]
-            if org_type != "com_org_info":
-                param_keys += ["orgParentCode", "orgParentId", "comOrgId"]
-            filtered_params = ParamUtil.filter_post_body_fields(params, param_keys, ["params", "request"])
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["orgCode", "orgName", "orgSort", "orgEnableDate", "orgBusinessTypeIds", "orgDimensionCode", "def3", "def4", "def6", "def12"],
+                ["params", "request"]
+            )
             set_dict = {
                 "orgCode": org_code,
                 "orgName": org_name,
-                "orgSort": 1 if org_type != "com_org_info" else 9999,
+                "orgSort": 9999,
                 "orgEnableDate": f"{org_enable_date}",
-                "orgBusinessTypeIds": [org_type_id],
-                "orgDimensionCode": "SCM_ORG_GRP"
+                "orgBusinessTypeIds": [self.comOrgTypeId],
+                "orgDimensionCode": "SCM_ORG_GRP",
+                "def3": self.counId,
+                "def4": self.genWcHeadId,
+                "def6": self.currId,
+                "def12": self.calenderId
             }
-            if org_type != "com_org_info":
-                set_dict.update({
-                    "orgParentCode": org_parent_code,
-                    "orgParentId": com_org_id,
-                    "comOrgId": com_org_id
-                })
             ParamUtil.set_request_params(filtered_params, set_dict)
             self.logger.info(f"filtered_params: {filtered_params}")
 
@@ -101,8 +93,207 @@ class TestOrgSave(GenMdBaseTest):
             self.assert_util.assert_response_data(response)
 
             # 保存数据
-            TestOrgSave.org_info.update({
-                org_type: {
+            TestBizOrgManagement.org_info.update({
+                "com_org_info": {
+                    "id": org_id,
+                    "org_code": org_code,
+                    "org_name": org_name,
+                }
+            })
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="保存组织",
+        title="测试保存采购组织",
+        description="验证保存采购组织接口的功能性",
+        severity="blocker",
+        order=2,
+        smoke=True,
+        tags=["组织", "保存组织"]
+    )
+    def test_save_pur_org(self):
+        """
+        保存采购组织用例
+        """
+        try:
+            # 获取父公司组织信息
+            com_org_info = TestBizOrgManagement.org_info.get("com_org_info", {})
+            org_parent_code = com_org_info.get("org_code")
+            com_org_id = com_org_info.get("id")
+            assert org_parent_code and com_org_id, "请先执行test_save_com_org并成功保存公司组织"
+
+            org_code = self.mock_data.generate_unique_code(tag="PurOrg")
+            org_name = f"采购组织_{self.mock_data.get_timestamp()}"
+            org_enable_date = self.mock_data.get_mock_date(include_time=False, days_offset=1)
+
+            api_path = self.get_api_path("ORG-组织架构-保存服务")
+            params, url = self.get_api_params(api_path)
+
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["orgCode", "orgName", "orgSort", "orgEnableDate", "orgBusinessTypeIds", "orgDimensionCode", "orgParentCode", "orgParentId", "comOrgId"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "orgCode": org_code,
+                "orgName": org_name,
+                "orgSort": 1,
+                "orgEnableDate": f"{org_enable_date}",
+                "orgBusinessTypeIds": [self.purOrgTypeId],
+                "orgDimensionCode": "SCM_ORG_GRP",
+                "orgParentCode": org_parent_code,
+                "orgParentId": com_org_id,
+                "comOrgId": com_org_id
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"filtered_params: {filtered_params}")
+
+            response = self.http.post(url, json=filtered_params)
+            org_id = response.get("data", {}).get("data", {}).get("id")
+            self.assert_util.assert_response_data(response)
+
+            # 保存数据
+            TestBizOrgManagement.org_info.update({
+                "pur_org_info": {
+                    "id": org_id,
+                    "org_code": org_code,
+                    "org_name": org_name,
+                }
+            })
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="保存组织",
+        title="测试保存销售组织",
+        description="验证保存销售组织接口的功能性",
+        severity="blocker",
+        order=3,
+        smoke=True,
+        tags=["组织", "保存组织"]
+    )
+    def test_save_sls_org(self):
+        """
+        保存销售组织用例
+        """
+        try:
+            # 获取父公司组织信息
+            com_org_info = TestBizOrgManagement.org_info.get("com_org_info", {})
+            org_parent_code = com_org_info.get("org_code")
+            com_org_id = com_org_info.get("id")
+            assert org_parent_code and com_org_id, "请先执行test_save_com_org并成功保存公司组织"
+
+            org_code = self.mock_data.generate_unique_code(tag="SlsOrg")
+            org_name = f"销售组织_{self.mock_data.get_timestamp()}"
+            org_enable_date = self.mock_data.get_mock_date(include_time=False, days_offset=1)
+
+            api_path = self.get_api_path("ORG-组织架构-保存服务")
+            params, url = self.get_api_params(api_path)
+
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["orgCode", "orgName", "orgSort", "orgEnableDate", "orgBusinessTypeIds", "orgDimensionCode", "orgParentCode", "orgParentId", "comOrgId","def13"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "orgCode": org_code,
+                "orgName": org_name,
+                "orgSort": 1,
+                "def13":[self.slsDcId],
+                "orgEnableDate": f"{org_enable_date}",
+                "orgBusinessTypeIds": [self.slsOrgTypeId],
+                "orgDimensionCode": "SCM_ORG_GRP",
+                "orgParentCode": org_parent_code,
+                "orgParentId": com_org_id,
+                "comOrgId": com_org_id
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"filtered_params: {filtered_params}")
+
+            response = self.http.post(url, json=filtered_params)
+            org_id = response.get("data", {}).get("data", {}).get("id")
+            self.assert_util.assert_response_data(response)
+
+            # 保存数据
+            TestBizOrgManagement.org_info.update({
+                "sls_org_info": {
+                    "id": org_id,
+                    "org_code": org_code,
+                    "org_name": org_name,
+                }
+            })
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="保存组织",
+        title="测试保存库存组织",
+        description="验证保存库存组织接口的功能性",
+        severity="blocker",
+        order=4,
+        smoke=True,
+        tags=["组织", "保存组织"]
+    )
+    def test_save_inv_org(self):
+        """
+        保存库存组织用例
+        """
+        try:
+            # 获取父公司组织信息
+            com_org_info = TestBizOrgManagement.org_info.get("com_org_info", {})
+            org_parent_code = com_org_info.get("org_code")
+            com_org_id = com_org_info.get("id")
+            assert org_parent_code and com_org_id, "请先执行test_save_com_org并成功保存公司组织"
+
+            org_code = self.mock_data.generate_unique_code(tag="InvOrg")
+            org_name = f"库存组织_{self.mock_data.get_timestamp()}"
+            org_enable_date = self.mock_data.get_mock_date(include_time=False, days_offset=1)
+
+            api_path = self.get_api_path("ORG-组织架构-保存服务")
+            params, url = self.get_api_params(api_path)
+
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["orgCode", "orgName", "orgSort", "orgEnableDate", "orgBusinessTypeIds", "orgDimensionCode", "orgParentCode", "orgParentId", "comOrgId"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "orgCode": org_code,
+                "orgName": org_name,
+                "orgSort": 1,
+                "orgEnableDate": f"{org_enable_date}",
+                "orgBusinessTypeIds": [self.invOrgTypeId],
+                "orgDimensionCode": "SCM_ORG_GRP",
+                "orgParentCode": org_parent_code,
+                "orgParentId": com_org_id,
+                "comOrgId": com_org_id
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"filtered_params: {filtered_params}")
+
+            response = self.http.post(url, json=filtered_params)
+            org_id = response.get("data", {}).get("data", {}).get("id")
+            self.assert_util.assert_response_data(response)
+
+            # 保存数据
+            TestBizOrgManagement.org_info.update({
+                "inv_org_info": {
                     "id": org_id,
                     "org_code": org_code,
                     "org_name": org_name,
@@ -127,7 +318,7 @@ class TestOrgSave(GenMdBaseTest):
     def test_query_current_com_org(self):
         try:
             # 1. 获取公司ID
-            com_org_id = TestOrgSave.org_info.get("com_org_info", {}).get("id")
+            com_org_id = TestBizOrgManagement.org_info.get("com_org_info", {}).get("id")
             assert com_org_id, "请先执行test_save_org并成功保存公司组织"
 
             # 2. 获取API配置
@@ -152,6 +343,71 @@ class TestOrgSave(GenMdBaseTest):
 
             # 6. Allure 附件
             a.json(params, "请求数据")
+            a.json(response, "响应数据")
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @pytest.mark.parametrize("org_parent_id, title", [
+        (None, "测试查询根节点组织树"),
+        ("db_query", "测试查询指定节点下级组织树")
+    ])
+    @case_decorator(
+        story="查询组织树",
+        title="测试组织树查询接口",
+        description="验证组织树查询接口的功能性",
+        severity="critical",
+        order=3,
+        smoke=True,
+        tags=["组织", "组织树查询"]
+    )
+    def test_query_org_tree(self, org_parent_id, title):
+        try:
+            import allure
+            allure.dynamic.title(title)
+            
+            # 1. 如果需要查询数据库获取组织ID
+            if org_parent_id == "db_query":
+                sql = """
+                    SELECT id, org_code, org_name 
+                    FROM org_struct_md 
+                    WHERE org_status = 'ENABLED' 
+                        AND org_dimension_code = 'SCM_ORG_GRP'
+                        AND deleted = 0 
+                    ORDER BY org_sort DESC
+                    LIMIT 1
+                """
+                result = self.db.query(sql)
+                self.assert_util.assert_not_empty(result, "组织列表")
+                org_parent_id = result[0]["id"]
+                self.logger.info(f"查询到的组织ID: {org_parent_id}")
+
+            # 2. 获取API配置
+            api_path = self.get_api_path("ORG-组织架构-查询下级服务")
+            params, url = self.get_api_params(api_path)
+
+            # 3. 设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["orgParentId", "orgStatus", "orgDimensionCode"],
+                ["params", "request"]
+            )
+            filtered_params['params']['request'].update({
+                "orgParentId": org_parent_id,
+                "orgStatus": ["ENABLED", "INACTIVE", "DRAFT"],
+                "orgDimensionCode": "SCM_ORG_GRP"
+            })
+            self.logger.info(f"请求参数: {filtered_params}")
+
+            # 4. 发送请求
+            response = self.http.post(url, json=filtered_params)
+            self.logger.info(f"响应: {response}")
+
+            # 5. 断言
+            self.assert_util.assert_response_data(response)
+
+            # 6. Allure 附件
+            a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
         except Exception as e:
             a.text(str(e), "失败原因")

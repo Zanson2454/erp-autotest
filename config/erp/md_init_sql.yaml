@@ -1,5 +1,4 @@
-
-# SCM配置数据查询定义
+# MD配置数据查询定义
 org_info:
   # 币种信息
   org_biz_type_cf:
@@ -12,6 +11,13 @@ org_info:
     sql: |
       select attr_field, attr_code,attr_name from  gen_attr_cf where attr_class_code='ORG' and `status` = 'ENABLED' and deleted=0;
     description: "查询组织属性信息"
+
+
+  # 销售渠道
+  sls_dc_md:
+    sql: |
+      select id,`code`,`name`,is_online,`status`  from sls_dc_md where `code` like 'AT_%' and deleted=0 and `status`	='ENABLED'; 
+    description: "查询销售渠道信息"
 
 mat_info:
   # 物料税信息
