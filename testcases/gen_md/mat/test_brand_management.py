@@ -18,6 +18,23 @@ class TestBrandManagement(GenMdBaseTest):
         cls.brand_info = {}
         cls.logger.info("品牌管理测试类初始化完成")
 
+    @classmethod
+    def teardown_class(cls):
+        """
+        测试类结束后执行清理
+        清理所有测试过程中创建的品牌数据
+        """
+        try:
+            # 使用SQL删除测试数据
+            cls.db.delete(
+                table="gen_brand_md",
+                where="brand_code like %s",
+                params=["AT_%"]
+            )
+            cls.logger.info("测试数据清理完成")
+        except Exception as e:
+            cls.logger.error(f"测试数据清理失败: {str(e)}")
+
     @case_decorator(
         story="品牌管理",
         title="测试新增品牌",

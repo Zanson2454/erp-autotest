@@ -26,11 +26,24 @@ org_info:
     description: "查询仓库信息"
 
 mat_info:
-  # 物料税信息
-  mat_tax_type_cf:
+  # 物料类目
+  mat_cate_md:
     sql: |
-      select id,tax_class_code,tax_class_desc from  gen_mat_tax_type_cf where deleted=0;
-    description: "查询物料税信息"
+      select id,`mat_cate_code`,`mat_cate_name` from gen_mat_cate_md where deleted=0 and `status`="ENABLED" and mat_cate_code like 'AUTOTEST_%'  limit 1
+    description: "查询物料类目信息"
+  # 物料品牌
+  mat_brand_md:
+    sql: |
+      select id,`brand_code`,	`brand_name` from gen_brand_md where deleted=0 and brand_code like 'AUTOTEST_%'  limit 1
+    description: "查询物料品牌信息"
+
+  # 物料类型
+  mat_type_cf
+    sql: |
+      select id,	`mat_type_code`,`mat_type_name` from gen_mat_type_cf where deleted=0
+    description: "查询物料类型信息"
+
+  
 
 # partner_info:
 #   # 客户信息
