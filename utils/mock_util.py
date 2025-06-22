@@ -247,6 +247,19 @@ class MockData:
             "org_name": f"{org_name}_{random.randint(100, 999)}"
         }
 
+    def get_mock_coordinates(self) -> Dict[str, float]:
+        """生成随机经纬度坐标
+        
+        Returns:
+            Dict[str, float]: 包含经度和纬度的字典
+                - latitude: 纬度 (-90 到 90)
+                - longitude: 经度 (-180 到 180)
+        """
+        return {
+            'latitude': round(random.uniform(-90, 90), 6),
+            'longitude': round(random.uniform(-180, 180), 6)
+        }
+
 if __name__ == '__main__':
     # 测试代码
     mock = MockData()
@@ -266,8 +279,9 @@ if __name__ == '__main__':
     # print("随机文本:", mock.get_mock_text())
     # print("随机选择:", mock.get_mock_choice(['A', 'B', 'C', 'D']))
     # print("币种对象:", mock.get_mock_currency())
-    print("备注:", mock.get_mock_remark())
-    print("时间戳:", mock.get_timestamp())
-    print("唯一编码:", mock.generate_unique_code())
-    print("业务组织数据:", mock.get_mock_org_info(org_type="ComOrg", org_name="某公司"))
-    print("时间戳:", mock.get_mock_date(include_time=False,days_offset=-1))
+    # print("备注:", mock.get_mock_remark())
+    # print("时间戳:", mock.get_timestamp())
+    # print("唯一编码:", mock.generate_unique_code())
+    # print("业务组织数据:", mock.get_mock_org_info(org_type="ComOrg", org_name="某公司"))
+    # print("时间戳:", mock.get_mock_date(include_time=False,days_offset=-1))
+    print("坐标:", mock.get_mock_coordinates())

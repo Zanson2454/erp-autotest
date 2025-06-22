@@ -31,6 +31,8 @@ class TestBizOrgManagement(GenMdBaseTest):
         # 获取md_cache_data中的第一个数据
         cls.orgBusinessTypeIds = cls.md_cache_data["org_info"]["org_biz_type_cf"] if cls.md_cache_data.get("org_info") else None
         cls.slsDcId = cls.md_cache_data.get("org_info", {}).get("sls_dc_md", [])[0]["id"] if cls.md_cache_data.get("org_info", {}).get("sls_dc_md") else None
+        cls.whId = cls.md_cache_data.get("org_info", {}).get("inv_wh_md", [])[0]["id"] if cls.md_cache_data.get("org_info", {}).get("inv_wh_md") else None
+
         cls.logger.debug(f"slsDcId:{cls.slsDcId}")
         cls.logger.info(f"orgBusinessTypeIds: {cls.orgBusinessTypeIds}")
         for org_biz_type in  cls.orgBusinessTypeIds:
@@ -296,6 +298,81 @@ class TestBizOrgManagement(GenMdBaseTest):
             # 保存数据
             TestBizOrgManagement.org_info.update({
                 "inv_org_info": {
+                    "id": org_id,
+                    "org_code": org_code,
+                    "org_name": org_name,
+                }
+            })
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="保存组织",
+        title="测试保存库存地点",
+        description="验证保存库存地点接口的功能性",
+        severity="blocker",
+        order=5,
+        smoke=True,
+        tags=["组织", "保存组织"]
+    )
+    def test_save_inv_loc(self):
+        """
+        保存库存地点用例
+        """
+        try:
+            # 获取父库存组织信息
+            inv_org_info = TestBizOrgManagement.org_info.get("inv_org_info", {})
+            org_parent_code = inv_org_info.get("org_code")
+            inv_org_id = inv_org_info.get("id")
+            assert org_parent_code and inv_org_id, "请先执行test_save_inv_org并成功保存库存组织"
+
+            org_code = self.mock_data.generate_unique_code(tag="InvLoc")
+            org_name = f"库存地点_{self.mock_data.get_timestamp()}"
+            org_enable_date = self.mock_data.get_mock_date(include_time=False, days_offset=1)
+
+            api_path = self.get_api_path("ORG-组织架构-保存服务")
+            params, url = self.get_api_params(api_path)
+
+            
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["orgCode", "orgName", "orgSort", "orgEnableDate", "orgBusinessTypeIds", "orgDimensionCode", "orgParentCode", "orgParentId", "def2", "def7", "def8", "def9","def10"],
+                ["params", "request"]
+            )
+            
+            contact_phone = self.mock_data.get_mock_phone_number()
+            contact_name = self.mock_data.get_mock_name()
+            
+            set_dict = {
+                "orgCode": org_code,
+                "orgName": org_name,
+                "orgSort": 9999,
+                "orgEnableDate": f"{org_enable_date}",
+                "orgBusinessTypeIds": [self.invLocTypeId],
+                "orgDimensionCode": "SCM_ORG_GRP",
+                "orgParentCode": org_parent_code,
+                "orgParentId": inv_org_id,
+                "def2": self.addrId,  # 库存地点地址
+                "def7": contact_name,    # 库存地点负责人
+                "def8": contact_phone,  # 联系电话
+                "def9": "详细地址信息",  # 详细地址
+                "def10": self.whId # 仓库ID
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"filtered_params: {filtered_params}")
+
+            response = self.http.post(url, json=filtered_params)
+            org_id = response.get("data", {}).get("data", {}).get("id")
+            self.assert_util.assert_response_data(response)
+
+            # 保存数据
+            TestBizOrgManagement.org_info.update({
+                "inv_loc_info": {
                     "id": org_id,
                     "org_code": org_code,
                     "org_name": org_name,

@@ -167,6 +167,13 @@
         "is_online": 0,
         "status": "ENABLED"
       }
+    ],
+    "inv_wh_md": [
+      {
+        "id": 2000001,
+        "code": "WH01",
+        "name": "测试仓库"
+      }
     ]
   },
   "mat_info": {

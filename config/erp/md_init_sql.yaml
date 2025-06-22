@@ -19,6 +19,12 @@ org_info:
       select id,`code`,`name`,is_online,`status`  from sls_dc_md where `code` like 'AT_%' and deleted=0 and `status`	='ENABLED'; 
     description: "查询销售渠道信息"
 
+  # 仓库信息
+  inv_wh_md:
+    sql: |
+      select id,`code`,`name` from inv_wh_md where deleted=0 and `status`="ENABLED" limit 1
+    description: "查询仓库信息"
+
 mat_info:
   # 物料税信息
   mat_tax_type_cf:

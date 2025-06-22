@@ -76,7 +76,7 @@ base_info:
   # 地址信息，四级地址ID
   addr_info:
     sql: |
-      SELECT id FROM gen_addr_type_cf  WHERE addr_name like '%街道'and deleted=0  and  is_leaf=1 and level=4 limit 1
+      SELECT id FROM gen_addr_type_cf  WHERE addr_name ='转塘街道'and deleted=0  and  is_leaf=1 and level=4 limit 1
     description: "查询地址信息"
   
   # 汇率类型
