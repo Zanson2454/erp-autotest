@@ -1,0 +1,198 @@
+{
+  "org_info": {
+    "org_biz_type_cf": [
+      {
+        "id": 2000001,
+        "code": "0001",
+        "name": "企业"
+      },
+      {
+        "id": 2001001,
+        "code": "WH_NUM",
+        "name": "仓库编码"
+      },
+      {
+        "id": 2002001,
+        "code": "WH_AREA",
+        "name": "仓库区域"
+      },
+      {
+        "id": 2003001,
+        "code": "PLN_ORG",
+        "name": "计划组织"
+      },
+      {
+        "id": 2004001,
+        "code": "cj_test002",
+        "name": "cj测试使用"
+      },
+      {
+        "id": 2005001,
+        "code": "GR_ORG",
+        "name": "集团组织"
+      },
+      {
+        "id": 2006001,
+        "code": "CREDIT_ORG",
+        "name": "信用组织"
+      },
+      {
+        "id": 2008001,
+        "code": "DEPT_ORG",
+        "name": "部门组织"
+      },
+      {
+        "id": 2009001,
+        "code": "PUR_GRP",
+        "name": "采购组"
+      },
+      {
+        "id": 2010001,
+        "code": "ADM_ORG",
+        "name": "行政组织"
+      },
+      {
+        "id": 2015003,
+        "code": "INV_ORG",
+        "name": "库存组织"
+      },
+      {
+        "id": 2015004,
+        "code": "INV_LOC",
+        "name": "库存地点"
+      },
+      {
+        "id": 2015005,
+        "code": "SLS_ORG",
+        "name": "销售组织"
+      },
+      {
+        "id": 2015006,
+        "code": "PUR_ORG",
+        "name": "采购组织"
+      },
+      {
+        "id": 2015007,
+        "code": "COM_ORG",
+        "name": "公司组织"
+      },
+      {
+        "id": 2015008,
+        "code": "BDG_ORG",
+        "name": "预算组织"
+      },
+      {
+        "id": 2015009,
+        "code": "SLS_DC",
+        "name": "销售渠道"
+      },
+      {
+        "id": 2015010,
+        "code": "ACC_ORG",
+        "name": "核算组织"
+      }
+    ],
+    "org_attr_cf": [
+      {
+        "attr_field": "def14",
+        "attr_code": "invOrgAddressId",
+        "attr_name": "库存组织地址"
+      },
+      {
+        "attr_field": "def1",
+        "attr_code": "planLevel",
+        "attr_name": "组织层级"
+      },
+      {
+        "attr_field": "def2",
+        "attr_code": "addressId",
+        "attr_name": "地址"
+      },
+      {
+        "attr_field": "def3",
+        "attr_code": "counId",
+        "attr_name": "国家"
+      },
+      {
+        "attr_field": "def4",
+        "attr_code": "genWcHeadId",
+        "attr_name": "工作日日历"
+      },
+      {
+        "attr_field": "def5",
+        "attr_code": "invOrgId",
+        "attr_name": "库存组织"
+      },
+      {
+        "attr_field": "def6",
+        "attr_code": "cur",
+        "attr_name": "币种"
+      },
+      {
+        "attr_field": "def7",
+        "attr_code": "delPersonName",
+        "attr_name": "收货联系人"
+      },
+      {
+        "attr_field": "def8",
+        "attr_code": "delPhone",
+        "attr_name": "收货联系方式"
+      },
+      {
+        "attr_field": "def9",
+        "attr_code": "addressDetail",
+        "attr_name": "详细地址"
+      },
+      {
+        "attr_field": "def10",
+        "attr_code": "invWhId",
+        "attr_name": "仓库"
+      },
+      {
+        "attr_field": "def12",
+        "attr_code": "calender",
+        "attr_name": "期间类型"
+      },
+      {
+        "attr_field": "def13",
+        "attr_code": "slsDcIds",
+        "attr_name": "销售渠道"
+      }
+    ],
+    "sls_dc_md": [
+      {
+        "id": 2000002,
+        "code": "AT_OFFLINE",
+        "name": "线下渠道(自动化)",
+        "is_online": 0,
+        "status": "ENABLED"
+      }
+    ],
+    "inv_wh_md": [
+      {
+        "id": 2000001,
+        "code": "WH01",
+        "name": "测试仓库"
+      }
+    ]
+  },
+  "mat_info": {
+    "mat_tax_type_cf": [
+      {
+        "id": 2001001,
+        "tax_class_code": "NORM",
+        "tax_class_desc": "销售或者进口货物"
+      },
+      {
+        "id": 2003001,
+        "tax_class_code": "SERV",
+        "tax_class_desc": "服务类"
+      },
+      {
+        "id": 2003002,
+        "tax_class_code": "EXMT",
+        "tax_class_desc": "免征税类"
+      }
+    ]
+  }
+}

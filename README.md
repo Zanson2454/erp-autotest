@@ -196,7 +196,6 @@ db_host = config.get('database.erp_db.host')
 ```
 config/
   erp/
-    id_mappings.yaml
     category_rules.yaml
     sql_templates.yaml
   other_project/

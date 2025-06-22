@@ -1,0 +1,47 @@
+# MD配置数据查询定义
+org_info:
+  # 币种信息
+  org_biz_type_cf:
+    sql: |
+     select id,`code`,`name` from org_business_type_cf where deleted=0
+    description: "查询组织类型信息"
+
+  # 组织属性
+  org_attr_cf:  
+    sql: |
+      select attr_field, attr_code,attr_name from  gen_attr_cf where attr_class_code='ORG' and `status` = 'ENABLED' and deleted=0;
+    description: "查询组织属性信息"
+
+
+  # 销售渠道
+  sls_dc_md:
+    sql: |
+      select id,`code`,`name`,is_online,`status`  from sls_dc_md where `code` like 'AT_%' and deleted=0 and `status`	='ENABLED'; 
+    description: "查询销售渠道信息"
+
+  # 仓库信息
+  inv_wh_md:
+    sql: |
+      select id,`code`,`name` from inv_wh_md where deleted=0 and `status`="ENABLED" limit 1
+    description: "查询仓库信息"
+
+mat_info:
+  # 物料税信息
+  mat_tax_type_cf:
+    sql: |
+      select id,tax_class_code,tax_class_desc from  gen_mat_tax_type_cf where deleted=0;
+    description: "查询物料税信息"
+
+# partner_info:
+#   # 客户信息
+#   cust_info:
+#     sql: |
+#       select id,cust_code,cust_name from  gen_cust_md where deleted=0;
+#     description: "查询客户信息"
+
+#   # 供应商信息
+#   vend_info:
+#     sql: |
+#       select id,vend_code,vend_name from  gen_vend_md where deleted=0;
+#     description: "查询供应商信息"
+

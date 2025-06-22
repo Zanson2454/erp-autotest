@@ -20,7 +20,7 @@ class SQLInitializer:
     @classmethod
     def init_sql(cls, sql_config: dict, db_config: Dict[str, Any], cache_key: str = None) -> Dict[str, Any]:
         """
-        初始化SQL数据，优先从缓存获取，否则执行SQL并写入缓存。
+        初始化SQL数据，递归遍历yaml，遇到sql字段就执行，最终返回结构与yaml一致。
         :param sql_config: SQL配置（已加载的dict）
         :param db_config: 数据库连接配置
         :param cache_key: 缓存key（可选）
@@ -34,25 +34,31 @@ class SQLInitializer:
                 return cache_data
             Loggers.info("缓存数据不存在或已过期，开始初始化数据")
         DBManager.init(db_config)
-        result_data = {}
-        for key, item in sql_config.items():
-            sql = item.get('sql', '')
-            Loggers.info(f"准备执行SQL: {key} -> {sql}")
-            if not sql:
-                continue
-            try:
-                result = DBManager.query(sql)
-                Loggers.info(f"SQL执行结果: {key} -> {result}")
-                result_data[key] = result
-            except Exception as e:
-                Loggers.error(f"执行查询 {key} 时出错: {str(e)}")
-                result_data[key] = None
+        result_data = cls._execute_sql_recursive(sql_config)
         if not result_data:
             Loggers.warning("所有SQL查询均未返回数据，请检查数据库连接和SQL配置！")
         if cache_key:
             CacheUtil.set(cache_key, result_data)
             Loggers.info(f"数据初始化完成并写入缓存: testdata/cache/{cache_key}.json")
         return result_data
+
+    @classmethod
+    def _execute_sql_recursive(cls, config):
+        result = {}
+        for key, value in config.items():
+            if isinstance(value, dict) and 'sql' in value:
+                sql = value['sql']
+                try:
+                    query_result = DBManager.query(sql)
+                    result[key] = query_result
+                    Loggers.info(f"SQL执行结果: {key} -> {query_result}")
+                except Exception as e:
+                    Loggers.error(f"执行查询 {key} 时出错: {str(e)}")
+                    result[key] = None
+            elif isinstance(value, dict):
+                # 递归处理
+                result[key] = cls._execute_sql_recursive(value)
+        return result
 
 class DataFactory:
     """
@@ -153,6 +159,32 @@ class DataFactory:
         :param data: 要写入的数据
         """
         CacheUtil.set(cache_key, data)
+
+    @classmethod
+    def init_sql_cache(
+        cls,
+        sql_config_path: str,
+        db_config_name: str = "erp_db",
+        cache_key: str = "init_cache",
+        cache_dir: str = "testdata/cache"
+    ) -> dict:
+        """
+        通用SQL缓存初始化入口
+        :param sql_config_path: SQL配置文件路径（绝对或相对）
+        :param db_config_name: 数据库配置名
+        :param cache_key: 缓存key
+        :param cache_dir: 缓存目录
+        :return: 查询结果
+        """
+        # 1. 读取SQL配置
+        sql_config = YamlUtil.read_yaml(sql_config_path)
+        # 2. 获取数据库配置
+        env_config = cls.get_env_config()
+        db_config = env_config["database"][db_config_name]
+        # 3. 初始化缓存目录
+        CacheUtil.init(cache_dir)
+        # 4. 初始化SQL并缓存
+        return SQLInitializer.init_sql(sql_config, db_config, cache_key=cache_key)
 
 if __name__ == "__main__":
     # 示例：初始化数据工厂并获取基础数据
