@@ -25,7 +25,7 @@ class TestAdmOrgManagement(GenMdBaseTest):
         cls.genWcHeadId = cls.init_data["gen_wc_head_info"][0]["gen_wc_head_id"] if cls.init_data.get("gen_wc_head_info") else None
         cls.calenderId = cls.init_data["calender_info"][0]["id"] if cls.init_data.get("calender_info") else None
         cls.addrId = cls.init_data["addr_info"][0]["id"] if cls.init_data.get("addr_info") else None
-     
+        
         # 获取md_cache_data中的第一个数据
         cls.orgBusinessTypeIds = cls.md_cache_data["org_info"]["org_biz_type_cf"] if cls.md_cache_data.get("org_info") else None
         cls.logger.info(f"orgBusinessTypeIds: {cls.orgBusinessTypeIds}")
