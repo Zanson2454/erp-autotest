@@ -10,13 +10,13 @@ from utils.report_util import a, case_decorator
 @allure.feature("物料类目管理")
 class TestMatCateManagement(GenMdBaseTest):
     """物料类目管理测试类"""
-
+    
     @classmethod
     def setup_class(cls):
         super().setup_class()
         cls.mock_data = MockData()
-        cls.cate_info = {}
         cls.logger.info("物料类目管理测试类初始化完成")
+        cls.cateId = None
 
     @classmethod
     def teardown_class(cls):
@@ -34,7 +34,7 @@ class TestMatCateManagement(GenMdBaseTest):
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
-
+            
     @case_decorator(
         story="物料类目管理",
         title="测试新增根类目",
@@ -82,11 +82,7 @@ class TestMatCateManagement(GenMdBaseTest):
             cate_id = response.get("data", {}).get("data", {})
 
             # 保存类目信息供后续用例使用
-            TestMatCateManagement.cate_info = {
-                "id": cate_id,
-                "cate_code": cate_code,
-                "cate_name": cate_name
-            }
+            self.cateId = cate_id
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -94,6 +90,7 @@ class TestMatCateManagement(GenMdBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
+
 
     @case_decorator(
         story="物料类目管理",
@@ -109,9 +106,8 @@ class TestMatCateManagement(GenMdBaseTest):
         查询类目详情用例
         """
         try:
-            # 获取类目ID
-            cate_id = TestMatCateManagement.cate_info.get("id")
-            assert cate_id, "请先执行test_save_root_cate并成功保存类目"
+            if not self.cateId:
+                self.test_save_root_cate()
 
             # 调用详情查询接口
             api_path = self.get_api_path("GEN-类目配置-查询详情服务")
@@ -123,7 +119,7 @@ class TestMatCateManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": cate_id}
+            set_dict = {"id": self.cateId}
             ParamUtil.set_request_params(filtered_params, set_dict)
             self.logger.info(f"请求参数: {filtered_params}")
 
@@ -145,6 +141,7 @@ class TestMatCateManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+
     @case_decorator(
         story="物料类目管理",
         title="测试新增子类目",
@@ -160,8 +157,8 @@ class TestMatCateManagement(GenMdBaseTest):
         """
         try:
             # 获取父类目ID
-            parent_id = TestMatCateManagement.cate_info.get("id")
-            assert parent_id, "请先执行test_save_root_cate并成功保存父类目"
+            if not self.cateId:
+                self.test_save_root_cate()
 
             # 准备子类目数据
             sub_cate_code = self.mock_data.generate_unique_code(tag="CateSub")
@@ -186,7 +183,7 @@ class TestMatCateManagement(GenMdBaseTest):
                 "isLimitPoQualifications": False,
                 "isLimitSoQualifications": False,
                 "path": None,
-                "matCateParent": {"id": parent_id}
+                "matCateParent": {"id": self.cateId}
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             self.logger.info(f"请求参数: {filtered_params}")
@@ -216,8 +213,8 @@ class TestMatCateManagement(GenMdBaseTest):
         """
         try:
             # 获取类目ID
-            cate_id = TestMatCateManagement.cate_info.get("id")
-            assert cate_id, "请先执行test_save_root_cate并成功保存类目"
+            if not self.cateId:
+                self.test_save_root_cate()
 
             # 调用启用接口
             api_path = self.get_api_path("GEN-类目配置-启用服务")
@@ -229,7 +226,7 @@ class TestMatCateManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": cate_id}
+            set_dict = {"id": self.cateId}
             ParamUtil.set_request_params(filtered_params, set_dict)
             self.logger.info(f"请求参数: {filtered_params}")
 
@@ -242,6 +239,7 @@ class TestMatCateManagement(GenMdBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
+
 
     @case_decorator(
         story="物料类目管理",
@@ -258,8 +256,8 @@ class TestMatCateManagement(GenMdBaseTest):
         """
         try:
             # 获取类目ID
-            cate_id = TestMatCateManagement.cate_info.get("id")
-            assert cate_id, "请先执行test_save_root_cate并成功保存类目"
+            if not self.cateId:
+                self.test_save_root_cate()
 
             # 调用禁用接口
             api_path = self.get_api_path("GEN-类目配置-禁用服务")
@@ -271,7 +269,7 @@ class TestMatCateManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": cate_id}
+            set_dict = {"id": self.cateId}
             ParamUtil.set_request_params(filtered_params, set_dict)
             self.logger.info(f"请求参数: {filtered_params}")
 

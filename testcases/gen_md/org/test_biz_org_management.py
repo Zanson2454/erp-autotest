@@ -48,6 +48,17 @@ class TestBizOrgManagement(GenMdBaseTest):
                 cls.invOrgTypeId = org_biz_type["id"]
             elif org_biz_type["code"] == "INV_LOC":
                 cls.invLocTypeId = org_biz_type["id"]
+                
+    def teardown_class(cls):
+        try:
+            cls.db.delete(
+            table="org_struct_md",
+            where="org_code like %s",
+            params=["AT_%"]
+        )
+            cls.logger.info("测试数据清理完成")
+        except Exception as e:
+            cls.logger.error(f"测试数据清理失败: {str(e)}")
 
     @case_decorator(
         story="保存组织",

@@ -15,7 +15,8 @@ class TestBrandManagement(GenMdBaseTest):
     def setup_class(cls):
         super().setup_class()
         cls.mock_data = MockData()
-        cls.brand_info = {}
+        cls.brandId = None
+        cls.brandCode = None
         cls.logger.info("品牌管理测试类初始化完成")
 
     @classmethod
@@ -76,11 +77,7 @@ class TestBrandManagement(GenMdBaseTest):
             brand_id = response.get("data", {}).get("data", {})
 
             # 保存品牌信息供后续用例使用
-            TestBrandManagement.brand_info = {
-                "id": brand_id,
-                "brand_code": brand_code,
-                "brand_name": brand_name
-            }
+            self.brandId = brand_id
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -156,8 +153,8 @@ class TestBrandManagement(GenMdBaseTest):
         """
         try:
             # 获取品牌ID
-            brand_id = TestBrandManagement.brand_info.get("id")
-            assert brand_id, "请先执行test_save_brand并成功保存品牌"
+            if not self.brandId:
+                self.test_save_brand()
 
             # 调用详情查询接口
             api_path = self.get_api_path("GEN-品牌-查询详情服务")
@@ -169,7 +166,7 @@ class TestBrandManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": brand_id}
+            set_dict = {"id": self.brandId}
             ParamUtil.set_request_params(filtered_params, set_dict)
             self.logger.info(f"请求参数: {filtered_params}")
 
@@ -178,9 +175,10 @@ class TestBrandManagement(GenMdBaseTest):
 
             # 验证返回的品牌信息
             brand_detail = response.get("data", {}).get("data", {})
+            self.brandCode = brand_detail.get("brandCode")
             self.assert_util.assert_eq(
-                brand_detail.get("brandCode"),
-                TestBrandManagement.brand_info.get("brand_code"),
+                brand_detail.get("id"),
+                self.brandId,
                 "品牌编码不匹配"
             )
 
@@ -206,9 +204,8 @@ class TestBrandManagement(GenMdBaseTest):
         """
         try:
             # 获取品牌信息
-            brand_id = TestBrandManagement.brand_info.get("id")
-            brand_code = TestBrandManagement.brand_info.get("brand_code")
-            assert brand_id and brand_code, "请先执行test_save_brand并成功保存品牌"
+            if not self.brandId:
+                self.test_save_brand()
 
             # 调用修改接口
             api_path = self.get_api_path("GEN-品牌-保存服务")
@@ -221,8 +218,8 @@ class TestBrandManagement(GenMdBaseTest):
                 ["params", "request"]
             )
             set_dict = {
-                "id": brand_id,
-                "brandCode": brand_code,
+                "id": self.brandId,
+                "brandCode": self.brandCode,
                 "brandName": f"品牌_{self.mock_data.get_timestamp()}_修改",
                 "brandImage": None
             }
@@ -254,8 +251,8 @@ class TestBrandManagement(GenMdBaseTest):
         """
         try:
             # 获取品牌ID
-            brand_id = TestBrandManagement.brand_info.get("id")
-            assert brand_id, "请先执行test_save_brand并成功保存品牌"
+            if not self.brandId:
+                self.test_save_brand()
 
             # 调用删除接口
             api_path = self.get_api_path("GEN-品牌-删除服务")
@@ -267,7 +264,7 @@ class TestBrandManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": brand_id}
+            set_dict = {"id": self.brandId}
             ParamUtil.set_request_params(filtered_params, set_dict)
             self.logger.info(f"请求参数: {filtered_params}")
 

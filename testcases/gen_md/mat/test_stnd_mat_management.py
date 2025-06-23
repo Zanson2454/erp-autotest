@@ -125,7 +125,7 @@ class TestStndMatManagement(GenMdBaseTest):
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response,"保存失败")
 
-            TestStndMatManagement.matId = response.get("data",{}).get("data",{})
+            self.matId = response.get("data",{}).get("data",{})
             self.logger.info(f"保存成功，物料ID: {TestStndMatManagement.matId}")
 
             # 4. 断言与附件
@@ -200,19 +200,19 @@ class TestStndMatManagement(GenMdBaseTest):
         物料详情查询用例，依赖 test_save_mat 先执行
         """
         try:
-
+            if not self.matId:
+                self.test_save_mat()
             # 获取接口路径和参数模板
             api_path = self.get_api_path("GEN-物料主数据-查询详情服务")
             params, url = self.get_api_params(api_path)
          
             # 构造请求参数
-            mat_id = TestStndMatManagement.matId
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": mat_id}
+            set_dict = {"id": self.matId}
             
             ParamUtil.set_request_params(filtered_params, set_dict)
             self.logger.info(f"详情请求参数: {filtered_params}")
