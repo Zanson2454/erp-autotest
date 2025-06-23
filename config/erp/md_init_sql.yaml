@@ -39,9 +39,18 @@ mat_info:
 
   # 物料类型
   mat_type_cf:
-    sql: |
-      select id,	`mat_type_code`,`mat_type_name` from gen_mat_type_cf where deleted=0;
-    description: "查询物料类型信息"
+    FINP:
+      sql: |
+        select id,	`mat_type_code`,`mat_type_name` from gen_mat_type_cf where deleted=0 and `mat_type_code`='FINP' limit 1;
+      description: "查询成品物料类型信息"
+    SERV:
+      sql: |
+        select id,	`mat_type_code`,`mat_type_name` from gen_mat_type_cf where deleted=0 and `mat_type_code`='SERV' limit 1;
+      description: "查询服务物料类型信息"
+    RAW:
+      sql: |
+        select id,	`mat_type_code`,`mat_type_name` from gen_mat_type_cf where deleted=0 and `mat_type_code`='RAW' limit 1;
+      description: "查询原材料物料类型信息"
 
   # ATP检查组
   inv_atp_group_md:

@@ -101,25 +101,25 @@ base_info:
       sql: |
         SELECT id as 'uom_id', uom_code, uom_type, uom_desc 
         FROM gen_uom_type_cf 
-        WHERE deleted=0 and uom_type='QTY'
+        WHERE deleted=0 and uom_type='QTY' and uom_code='QTY' limit 1;
       description: "查询数量计量单位信息"
     mass_uom_info:
       sql: |
         SELECT id as 'uom_id', uom_code, uom_type, uom_desc 
         FROM gen_uom_type_cf 
-        WHERE deleted=0 and uom_type='MASS'
+        WHERE deleted=0 and uom_type='MASS'and uom_code='KG' limit 1;
       description: "查询质量计量单位信息"
     len_uom_info:
       sql: |
         SELECT id as 'uom_id', uom_code, uom_type, uom_desc 
         FROM gen_uom_type_cf 
-        WHERE deleted=0 and uom_type='L'
+        WHERE deleted=0 and uom_type='L' limit 1;
       description: "查询长度计量单位信息"
     volume_uom_info:
       sql: |
         SELECT id as 'uom_id', uom_code, uom_type, uom_desc 
         FROM gen_uom_type_cf 
-        WHERE deleted=0 and uom_type='VOLUME'
+        WHERE deleted=0 and uom_type='VOL' limit 1;
       description: "查询体积计量单位信息"
 
 

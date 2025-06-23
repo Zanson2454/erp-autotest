@@ -191,38 +191,23 @@
         "brand_name": "品牌(自动化)"
       }
     ],
-    "mat_type_cf": [
-      {
-        "id": 2000001,
-        "mat_type_code": "FINP",
-        "mat_type_name": "成品"
-      },
-      {
-        "id": 2004001,
-        "mat_type_code": "ELECTRON",
-        "mat_type_name": "电子产品"
-      },
-      {
-        "id": 2503001,
-        "mat_type_code": "SERV",
-        "mat_type_name": "服务"
-      },
-      {
-        "id": 2503002,
-        "mat_type_code": "RAWM",
-        "mat_type_name": "原材料"
-      },
-      {
-        "id": 2503003,
-        "mat_type_code": "PCKG",
-        "mat_type_name": "包装品"
-      },
-      {
-        "id": 14008001,
-        "mat_type_code": "BPBJ",
-        "mat_type_name": "备品备件"
-      }
-    ],
+    "mat_type_cf": {
+      "FINP": [
+        {
+          "id": 2000001,
+          "mat_type_code": "FINP",
+          "mat_type_name": "成品"
+        }
+      ],
+      "SERV": [
+        {
+          "id": 2503001,
+          "mat_type_code": "SERV",
+          "mat_type_name": "服务"
+        }
+      ],
+      "RAW": []
+    },
     "inv_atp_group_md": [
       {
         "id": 2000001,
