@@ -15,7 +15,6 @@ base_info:
       min_records: 1
       required_fields: ["curr_id", "curr_code", "curr_name"]
 
-
   # 语言信息
   language_info:
       sql: |
@@ -95,26 +94,34 @@ base_info:
       min_records: 1
       required_fields: ["exchange_rate_type_id", "exchange_rate_type_code", "exchange_rate_type_name"]
 
-  # 客户税信息
-  cust_tax_type_info:
-    sql: |
-      SELECT id as 'cust_tax_type_id', tax_class_code, tax_class_desc 
-      FROM gen_cust_tax_type_cf 
-      WHERE deleted=0
-    description: "查询客户税信息"
-    validation:
-      min_records: 0
-      required_fields: ["cust_tax_type_id", "tax_class_code", "tax_class_desc"]
+  # 计量单位信息
   # 计量单位信息
   uom_info:
-    sql: |
-      SELECT id as 'uom_id', uom_code, uom_type, uom_desc 
-      FROM gen_uom_type_cf 
-      WHERE deleted=0
-    description: "查询计量单位信息"
-    validation:
-      min_records: 0
-      required_fields: ["uom_id", "uom_code", "uom_type", "uom_desc"]
+    qty_uom_info:
+      sql: |
+        SELECT id as 'uom_id', uom_code, uom_type, uom_desc 
+        FROM gen_uom_type_cf 
+        WHERE deleted=0 and uom_type='QTY'
+      description: "查询数量计量单位信息"
+    mass_uom_info:
+      sql: |
+        SELECT id as 'uom_id', uom_code, uom_type, uom_desc 
+        FROM gen_uom_type_cf 
+        WHERE deleted=0 and uom_type='MASS'
+      description: "查询质量计量单位信息"
+    len_uom_info:
+      sql: |
+        SELECT id as 'uom_id', uom_code, uom_type, uom_desc 
+        FROM gen_uom_type_cf 
+        WHERE deleted=0 and uom_type='L'
+      description: "查询长度计量单位信息"
+    volume_uom_info:
+      sql: |
+        SELECT id as 'uom_id', uom_code, uom_type, uom_desc 
+        FROM gen_uom_type_cf 
+        WHERE deleted=0 and uom_type='VOLUME'
+      description: "查询体积计量单位信息"
+
 
   # 银行信息
   bank_info:

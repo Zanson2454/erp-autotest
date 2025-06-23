@@ -38,10 +38,24 @@ mat_info:
     description: "查询物料品牌信息"
 
   # 物料类型
-  mat_type_cf
+  mat_type_cf:
     sql: |
-      select id,	`mat_type_code`,`mat_type_name` from gen_mat_type_cf where deleted=0
+      select id,	`mat_type_code`,`mat_type_name` from gen_mat_type_cf where deleted=0;
     description: "查询物料类型信息"
+
+  # ATP检查组
+  inv_atp_group_md:
+    sql: |
+      select id,`code`,`name` from inv_atp_group_md where deleted=0 limit 1
+    description: "查询ATP检查组信息"
+
+  # 标签
+  gen_label_md:
+    sql: |
+      select id,`name`,usage_type from gen_label_md where usage_type='MAT'  and `name`='自动化' and `status`="ENABLED" limit 1
+    description: "查询标签信息"
+
+
 
   
 

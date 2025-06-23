@@ -21,12 +21,19 @@ class TestStndMatManagement(GenMdBaseTest):
         cls.currId = cls.init_data["currency_info"][0]["curr_id"] if cls.init_data.get("currency_info") else None
         cls.counId = cls.init_data["country_info"][0]["coun_id"] if cls.init_data.get("country_info") else None
         cls.addrId = cls.init_data["addr_info"][0]["id"] if cls.init_data.get("addr_info") else None
-     
+        cls.uom_info = cls.init_data["uom_info"] if cls.init_data.get("uom_info") else None
+        cls.qty_uomId= cls.uom_info["qty_uom_info"][0]["id"] if cls.uom_info.get("qty_uom_info") else None
+        cls.mass_uomId = cls.uom_info["mass_uom_info"][0]["id"] if cls.uom_info.get("mass_uom_info") else None
+        cls.len_uomId = cls.uom_info["len_uom_info"][0]["id"] if cls.uom_info.get("len_uom_info") else None
+        cls.volume_uomId = cls.uom_info["volume_uom_info"][0]["id"] if cls.uom_info.get("volume_uom_info") else None
+
         
         # 获取md_cache_data中的第一个数据
         cls.brandId = cls.md_cache_data.get("mat_info",{}).get("mat_brand_md",[])[0]["id"] if cls.md_cache_data.get("mat_info") else None
         cls.mat_cateId = cls.md_cache_data.get("mat_info", {}).get("mat_cate_md", [])[0]["id"] if cls.md_cache_data.get("mat_info", {}).get("sls_dc_md") else None
         cls.matTypeId = cls.md_cache_data.get("mat_info", {}).get("mat_type_cf", [])[0]["id"] if cls.md_cache_data.get("mat_info", {}).get("sls_dc_md") else None
+        cls.atpGroupId = cls.md_cache_data.get("mat_info", {}).get("inv_atp_group_md", [])[0]["id"] if cls.md_cache_data.get("mat_info", {}).get("sls_dc_md") else None
+        cls.labelId = cls.md_cache_data.get("mat_info", {}).get("gen_label_md", [])[0]["id"] if cls.md_cache_data.get("mat_info", {}).get("sls_dc_md") else None
         
         cls.logger.info("标准物料管理测试类初始化完成")
 
@@ -102,6 +109,86 @@ class TestStndMatManagement(GenMdBaseTest):
                 self.assert_util.assert_not_none(first_item.get("matCateId"), "物料类目ID为空")
 
             a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="标准物料管理",
+        title="测试新增物料主数据保存",
+        description="验证新增物料主数据保存接口功能",
+        severity="critical",
+        order=2,
+        tags=["标准物料管理", "新增", "保存"]
+    )
+    def test_save_mat(self):
+        """
+        新增物料主数据保存用例
+        """
+        try:
+            # 1. 获取接口路径和参数模板
+            api_path = self.get_api_path("GEN-物料主数据-保存服务")  # 建议配置到md_api_path.yaml
+            params, url = self.get_api_params(api_path)
+
+        
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["matCode", "matName", "cateId", "genMatTypeCfId", "baseUomId", "matAbbr", "outerCode", "brandId", "isKitSls", "bomUseId", "isCompleteSetDel", "specModel", "bizStatus", "remark", "customMat", "labelList", "id", "weightUomId", "grossWeight", "netWeight", "volumeUomId", "matVolume", "lengthUnitId", "length", "width", "height", "purchaseReferPrice", "saleReferPrice", "shelfLife", "costPrice", "atpGroupId", "matPurList", "matSlsList", "matInvList", "matWmList"],
+                ["params", "request"]
+            )
+            # 2. 构造请求参数，补充更多字段
+            mat_code = self.mock_data.generate_unique_code(tag="MAT")
+            set_dict = {
+                        "imageUrl": None,
+                        "matCode": mat_code,
+                        "matName": f"测试物料_{mat_code}",
+                        "cateId": self.mat_cateId ,
+                        "genMatTypeCfId": self.matTypeId ,
+                        "baseUomId": {"id": self.qty_uomId},
+                        "matAbbr": f"测试物料_{self.mock_data.get_timestamp()}",
+                        "outerCode": f"OUTCODE_{self.mock_data.get_timestamp()}",
+                        "brandId": self.brandId ,
+                        "isKitSls": False,
+                        "bomUseId": None,
+                        "isCompleteSetDel": False,
+                        "specModel": mat_code,
+                        "bizStatus": "SALE",
+                        "remark": f"自动化测试_{self.mock_data.get_mock_date(include_time=True)}",
+                        "customMat": False,
+                        "labelList": [{"id": self.labelId}],
+                        "id": None,
+                        "weightUomId": {"id": self.mass_uomId},
+                        "grossWeight": 10,
+                        "netWeight": 8.88,
+                        "volumeUomId": {"id": self.volume_uomId},
+                        "matVolume": 1.23,
+                        "lengthUnitId": {"id": self.len_uomId},
+                        "length": 999,
+                        "width": 888,
+                        "height": 666,
+                        "purchaseReferPrice": 999.99,
+                        "saleReferPrice": 10000,
+                        "shelfLife": "1",
+                        "costPrice": 999.99,
+                        "atpGroupId": { "id": self.atpGroupId},
+                        "matPurList": [],
+                        "matSlsList": [],
+                        "matInvList": [],
+                        "matWmList": []
+                    }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"请求参数: {params}")
+
+            # 3. 发起请求
+            response = self.http.post(url, json=params)
+            self.assert_util.assert_response_data(response)
+
+            # 4. 断言与附件
+            data = response.get("data", {})
+            assert data, "接口未返回data字段"
+            a.json(params, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
