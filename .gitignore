@@ -77,8 +77,6 @@ reports/allure-report/*
 !reports/allure-report/.gitkeep
 
 # 忽略正在调试的用例
-testcases/gen_gm/
-testcases/gen_md/
 testdata/cache/init_cache.json
 case_coverage_stat.json
 

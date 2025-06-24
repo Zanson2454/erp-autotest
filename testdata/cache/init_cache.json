@@ -1,18 +1,6 @@
 {
-  "currency_info": [
-    {
-      "curr_id": 2000001,
-      "curr_code": "CNY",
-      "curr_name": "人民币"
-    }
-  ],
-  "language_info": [
-    {
-      "language_id": 2000001,
-      "language_code": "CHINESE",
-      "language_name": "中文"
-    }
-  ],
+  "currency_info": null,
+  "language_info": null,
   "country_info": [
     {
       "coun_id": 14037001,
@@ -42,6 +30,11 @@
       "status": "ENABLED"
     }
   ],
+  "addr_info": [
+    {
+      "id": 70028089
+    }
+  ],
   "exchange_rate_type_info": [
     {
       "exchange_rate_type_id": 2000001,
@@ -49,127 +42,40 @@
       "exchange_rate_type_name": "固定汇率"
     }
   ],
-  "cust_tax_type_info": [
-    {
-      "cust_tax_type_id": 2000001,
-      "tax_class_code": "SMB",
-      "tax_class_desc": "小规模纳税人"
-    },
-    {
-      "cust_tax_type_id": 2001001,
-      "tax_class_code": "NORM",
-      "tax_class_desc": "一般纳税人"
-    },
-    {
-      "cust_tax_type_id": 2002001,
-      "tax_class_code": "EXMT",
-      "tax_class_desc": "免征税对象"
-    }
-  ],
-  "uom_info": [
-    {
-      "uom_id": 2000001,
-      "uom_code": "PC",
-      "uom_type": "QTY",
-      "uom_desc": "个"
-    },
-    {
-      "uom_id": 2001001,
-      "uom_code": "PAC",
-      "uom_type": "OTHER",
-      "uom_desc": "套"
-    },
-    {
-      "uom_id": 2002009,
-      "uom_code": "BOX",
-      "uom_type": "QTY",
-      "uom_desc": "箱"
-    },
-    {
-      "uom_id": 2002011,
-      "uom_code": "TON",
-      "uom_type": "MASS",
-      "uom_desc": "吨"
-    },
-    {
-      "uom_id": 2002012,
-      "uom_code": "TIME",
-      "uom_type": "MASS",
-      "uom_desc": "次"
-    },
-    {
-      "uom_id": 2004001,
-      "uom_code": "QTY",
-      "uom_type": "QTY",
-      "uom_desc": "件"
-    },
-    {
-      "uom_id": 2004002,
-      "uom_code": "DAY",
-      "uom_type": "TIME",
-      "uom_desc": "天"
-    },
-    {
-      "uom_id": 2004003,
-      "uom_code": "M2",
-      "uom_type": "AREA",
-      "uom_desc": "平方米"
-    },
-    {
-      "uom_id": 2006001,
-      "uom_code": "MON",
-      "uom_type": "TIME",
-      "uom_desc": "月"
-    },
-    {
-      "uom_id": 2007001,
-      "uom_code": "KG",
-      "uom_type": "MASS",
-      "uom_desc": "千克"
-    },
-    {
-      "uom_id": 2009001,
-      "uom_code": "BOTTLE",
-      "uom_type": "QTY",
-      "uom_desc": "瓶"
-    },
-    {
-      "uom_id": 2010001,
-      "uom_code": "MIN",
-      "uom_type": "TIME",
-      "uom_desc": "分钟"
-    },
-    {
-      "uom_id": 2010002,
-      "uom_code": "HOUR",
-      "uom_type": "TIME",
-      "uom_desc": "小时"
-    },
-    {
-      "uom_id": 14047001,
-      "uom_code": "PAIR",
-      "uom_type": "QTY",
-      "uom_desc": "双"
-    },
-    {
-      "uom_id": 14048001,
-      "uom_code": "HANDLE",
-      "uom_type": "QTY",
-      "uom_desc": "把"
-    },
-    {
-      "uom_id": 14049001,
-      "uom_code": "MTQ",
-      "uom_type": "VOL",
-      "uom_desc": "立方米"
-    },
-    {
-      "uom_id": 14050001,
-      "uom_code": "CMT",
-      "uom_type": "L",
-      "uom_desc": "厘米"
-    }
-  ],
+  "uom_info": {
+    "qty_uom_info": [
+      {
+        "uom_id": 2004001,
+        "uom_code": "QTY",
+        "uom_type": "QTY",
+        "uom_desc": "件"
+      }
+    ],
+    "mass_uom_info": [
+      {
+        "uom_id": 2007001,
+        "uom_code": "KG",
+        "uom_type": "MASS",
+        "uom_desc": "千克"
+      }
+    ],
+    "len_uom_info": [
+      {
+        "uom_id": 14050001,
+        "uom_code": "CMT",
+        "uom_type": "L",
+        "uom_desc": "厘米"
+      }
+    ],
+    "volume_uom_info": [
+      {
+        "uom_id": 14049001,
+        "uom_code": "MTQ",
+        "uom_type": "VOL",
+        "uom_desc": "立方米"
+      }
+    ]
+  },
   "bank_info": [
     {
       "bank_id": 1000001,

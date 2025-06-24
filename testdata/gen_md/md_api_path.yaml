@@ -1,5 +1,5 @@
 version: '1.0'
-total_apis: 524
+total_apis: 525
 apis:
   监控预警结果信息-导入导出任务管理接口-提交导出任务:
     path: /api/trantor/service/engine/execute/GEN_MD$GEN_MONITORING_ALERT_RESULT_MD_API_GEI_TASK_EXPORT_DIRECT_POST
@@ -501,6 +501,9 @@ apis:
     method: POST
   物料数量价值更新配置标准导出服务:
     path: /api/trantor/service/engine/execute/GEN_MD$GEN_INV_ORG_MAT_TYPE_LINK_CF_GEI_EXPORT_SERVICE
+    method: POST
+  GEN-合作伙伴类型-分页查询(根据角色过滤):
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_FILTER_PAGING_SERVICE
     method: POST
   GEN-条码字段-查询详情服务:
     path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_FILED_CF_QUERY_DETAIL_ACTION_SERVICE

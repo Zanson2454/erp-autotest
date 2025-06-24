@@ -115,6 +115,21 @@ class AssertHelper:
         assert value, message
         if isinstance(value, (list, dict, str)):
             assert len(value) > 0, message
+
+    @staticmethod
+    def assert_all_in(expected_list: List[Any], actual_list: List[Any], message: str = None) -> None:
+        """
+        断言所有期望的值都在实际列表中存在
+        
+        Args:
+            expected_list: 期望值列表
+            actual_list: 实际值列表
+            message: 自定义错误消息
+        """
+        missing = [item for item in expected_list if item not in actual_list]
+        if message is None:
+            message = f"以下期望值在实际列表中未找到: {missing}"
+        assert not missing, message
             
             
             

@@ -1,10 +1,9 @@
-
-# SCM配置数据查询定义
+# MD配置数据查询定义
 org_info:
   # 币种信息
   org_biz_type_cf:
     sql: |
-     select id,`code`,`name`,model_key from org_biz_type_cf where deleted=0
+     select id,`code`,`name` from org_business_type_cf where deleted=0
     description: "查询组织类型信息"
 
   # 组织属性
@@ -13,12 +12,61 @@ org_info:
       select attr_field, attr_code,attr_name from  gen_attr_cf where attr_class_code='ORG' and `status` = 'ENABLED' and deleted=0;
     description: "查询组织属性信息"
 
-mat_info:
-  # 物料税信息
-  mat_tax_type_cf:
+
+  # 销售渠道
+  sls_dc_md:
     sql: |
-      select id,tax_class_code,tax_class_desc from  gen_mat_tax_type_cf where deleted=0;
-    description: "查询物料税信息"
+      select id,`code`,`name`,is_online,`status`  from sls_dc_md where `code` like 'AT_%' and deleted=0 and `status`	='ENABLED'; 
+    description: "查询销售渠道信息"
+
+  # 仓库信息
+  inv_wh_md:
+    sql: |
+      select id,`code`,`name` from inv_wh_md where deleted=0 and `status`="ENABLED" limit 1
+    description: "查询仓库信息"
+
+mat_info:
+  # 物料类目
+  mat_cate_md:
+    sql: |
+      select id,`mat_cate_code`,`mat_cate_name` from gen_mat_cate_md where deleted=0 and `status`="ENABLED" and mat_cate_code like 'AUTOTEST_%'  limit 1
+    description: "查询物料类目信息"
+  # 物料品牌
+  mat_brand_md:
+    sql: |
+      select id,`brand_code`,	`brand_name` from gen_brand_md where deleted=0 and brand_code like 'AUTOTEST_%'  limit 1
+    description: "查询物料品牌信息"
+
+  # 物料类型
+  mat_type_cf:
+    FINP:
+      sql: |
+        select id,	`mat_type_code`,`mat_type_name` from gen_mat_type_cf where deleted=0 and `mat_type_code`='FINP' limit 1;
+      description: "查询成品物料类型信息"
+    SERV:
+      sql: |
+        select id,	`mat_type_code`,`mat_type_name` from gen_mat_type_cf where deleted=0 and `mat_type_code`='SERV' limit 1;
+      description: "查询服务物料类型信息"
+    RAW:
+      sql: |
+        select id,	`mat_type_code`,`mat_type_name` from gen_mat_type_cf where deleted=0 and `mat_type_code`='RAW' limit 1;
+      description: "查询原材料物料类型信息"
+
+  # ATP检查组
+  inv_atp_group_md:
+    sql: |
+      select id,`code`,`name` from inv_atp_group_md where deleted=0 limit 1
+    description: "查询ATP检查组信息"
+
+  # 标签
+  gen_label_md:
+    sql: |
+      select id,`name`,usage_type from gen_label_md where usage_type='MAT'  and `name`='自动化' and `status`="ENABLED" limit 1
+    description: "查询标签信息"
+
+
+
+  
 
 # partner_info:
 #   # 客户信息

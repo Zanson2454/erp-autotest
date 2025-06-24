@@ -11,7 +11,6 @@ from utils.report_util import a
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from testcases.comm.base_test import BaseTest
 from utils.yaml_util import YamlUtil
 from utils.exception_util import safe_api_call
 from testcases.sls import SlsBase

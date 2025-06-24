@@ -21,7 +21,7 @@ class SlsBase(BaseTest):
         cls.sls_cache_dir = cls.sls_cache_path.parent
 
         # 读取API配置
-        cls.sls_api_paths = YamlUtil.read_yaml(str(cls.sls_api_path_yaml))["销售订单"]
+        cls.sls_api_paths = YamlUtil.read_yaml(str(cls.sls_api_path_yaml))["apis"]
         cls.sls_api_params = YamlUtil.read_yaml(str(cls.sls_prams_path_yaml))["api_params"]
 
         # 缓存初始化
