@@ -15,15 +15,15 @@
 """
 import os
 from pathlib import Path
-from utils.db_util import DBUtil
-from utils.logger_util import logger
+from utils.mysql_util import DBManager
+from utils.log_util import logger
 
 class PrdConfigInitializer:
     """生产配置初始化器"""
     
     def __init__(self):
         """初始化数据库连接"""
-        self.db = DBUtil()
+        self.db = DBManager()
         self.logger = logger
         
     def ensure_configs_exist(self):
