@@ -25,21 +25,6 @@ logger = Loggers()
 logger
 class AssertHelper:
     """断言辅助类，提供通用的断言方法"""
-    
-    @staticmethod
-    def assert_id_exists(id_value: Union[int, str], field_name: str = "id") -> None:
-        """断言 ID 存在且有效"""
-        assert id_value, f"{field_name} 不能为空"
-
-    @staticmethod
-    def assert_eq(actual: Any, expected: Any, message: str = None) -> None:
-        """断言相等"""
-        assert actual == expected, message or f"实际值 {actual} 不等于预期值 {expected}"
-
-    @staticmethod
-    def assert_not_eq(actual: Any, expected: Any, message: str = None) -> None:
-        """断言不相等"""
-        assert actual != expected, message or f"实际值 {actual} 等于预期值 {expected}"
 
     @staticmethod
     def assert_response_success(response: Dict[str, Any], message: str = None) -> None:
@@ -68,15 +53,6 @@ class AssertHelper:
         
         return result
 
-    @staticmethod
-    def assert_contains(container: Union[List, str], item: Any, message: str = None) -> None:
-        """断言包含"""
-        assert item in container, message or f"元素 {item} 不在容器中（容器类型：{type(container).__name__}）"
-
-    @staticmethod
-    def assert_not_contains(container: Union[List, str], item: Any, message: str = None) -> None:
-        """断言不包含"""
-        assert item not in container, message or f"元素 {item} 在容器中找到（容器类型：{type(container).__name__}）"
 
     @staticmethod
     def assert_response_time(response: Union[Dict[str, Any], Any], max_time: int = 1000, unit: str = 'ms'):
@@ -102,21 +78,6 @@ class AssertHelper:
             logger.warning("响应对象中没有elapsed属性，无法验证响应时间")
 
     @staticmethod
-    def assert_not_empty(value: Any, message: str = None) -> None:
-        """
-        断言值不为空（None/空列表/空字典/空字符串等）
-        
-        Args:
-            value: 要检查的值
-            message: 自定义错误消息
-        """
-        if message is None:
-            message = f"期望值不为空，但实际值为: {value}"
-        assert value, message
-        if isinstance(value, (list, dict, str)):
-            assert len(value) > 0, message
-
-    @staticmethod
     def assert_all_in(expected_list: List[Any], actual_list: List[Any], message: str = None) -> None:
         """
         断言所有期望的值都在实际列表中存在
@@ -130,15 +91,69 @@ class AssertHelper:
         if message is None:
             message = f"以下期望值在实际列表中未找到: {missing}"
         assert not missing, message
-            
-            
-            
+
+    @staticmethod
+    def assert_by_operator(actual: Any, operator: str, expected: Any = None) -> None:
+        """
+        通用运算符断言
+        :param actual: 实际值
+        :param operator: 运算符（=, !=, in, not_in, contain, empty, not_empty）
+        :param expected: 期望值（部分运算符可为 None）
+        :return: None，断言失败抛出 AssertionError
+        """
+        result = False
+        log = {
+            "expect_value": expected,
+            "actual_value": actual,
+            "assert_symbol": operator
+        }
+        try:
+            if operator == "=":
+                result = actual == expected
+            elif operator == ">":
+                result = actual > expected
+            elif operator == ">=":
+                result = actual >= expected
+            elif operator == "<":
+                result = actual < expected
+            elif operator == "<=":
+                result = actual <= expected
+            elif operator == "!=":
+                result = actual != expected
+            elif operator == "in":
+                result = actual in expected
+            elif operator == "not_in":
+                result = actual not in expected
+            elif operator == "contain":
+                # contain: expected in actual
+                result = expected in actual
+            elif operator == "empty":
+                result = not actual or (hasattr(actual, '__len__') and len(actual) == 0)
+            elif operator == "not_empty":
+                result = actual is not None and (not hasattr(actual, '__len__') or len(actual) > 0)
+            else:
+                raise ValueError(f"不支持的断言运算符: {operator}")
+        except Exception as e:
+            log["assert_result"] = "fail"
+            logger.error(f"断言异常: {e}, 日志: {log}")
+            raise AssertionError(f"断言异常: {e}, 日志: {log}")
+        if result:
+            log["assert_result"] = "success"
+            logger.info(f"断言通过: {log}")
+        else:
+            log["assert_result"] = "fail"
+            logger.error(f"断言失败: {log}")
+            raise AssertionError(f"断言失败: {log}")
+
 if __name__ == "__main__":
     assert_helper = AssertHelper()
-    assert_helper.assert_id_exists(1, "id")
-    assert_helper.assert_eq(1, 1)
-    assert_helper.assert_not_eq(1, 2)
-    # assert_helper.assert_response_success({"status_code": 200, "json": {"success": True}})
-    assert_helper.assert_contains([1, 2, 3], 2)
-    assert_helper.assert_not_contains([1, 2, 3], 4)
+    assert_helper.assert_response_success({"success": True}) # 断言响应成功
+    assert_helper.assert_response_time({"elapsed": 1000}) # 断言响应时间
+    assert_helper.assert_all_in([1, 2, 3], [1, 2, 3]) # 断言所有期望的值都在实际列表中存在
+    assert_helper.assert_by_operator(1, "=", 1) # 断言相等
+    assert_helper.assert_by_operator(1, "!=", 2) # 断言不相等
+    assert_helper.assert_by_operator(1, "in", [1, 2, 3]) # 断言包含
+    assert_helper.assert_by_operator(1, "not_in", [4, 5, 6]) # 断言不包含
+    assert_helper.assert_by_operator([], "empty", []) # 断言为空
+    assert_helper.assert_by_operator(1, "not_empty", [1]) # 断言不为空含
     # assert_helper.assert_response_time({"elapsed": 1000})

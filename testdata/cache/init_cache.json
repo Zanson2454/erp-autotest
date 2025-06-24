@@ -1,6 +1,18 @@
 {
-  "currency_info": null,
-  "language_info": null,
+  "currency_info": [
+    {
+      "curr_id": 2000001,
+      "curr_code": "CNY",
+      "curr_name": "人民币"
+    }
+  ],
+  "language_info": [
+    {
+      "language_id": 2000001,
+      "language_code": "CHINESE",
+      "language_name": "中文"
+    }
+  ],
   "country_info": [
     {
       "coun_id": 14037001,

@@ -127,12 +127,9 @@ class TestMatCateManagement(GenMdBaseTest):
             self.assert_util.assert_response_data(response)
 
             # 验证返回的类目信息
-            cate_detail = response.get("data", {}).get("data", {})
-            self.assert_util.assert_eq(
-                cate_detail.get("status"),
-                "ENABLED",
-                "类目状态未启用"
-            )
+            status = response.get("data", {}).get("data", {}).get("status")
+            
+            self.assert_util.assert_by_operator(status,"=","ENABLED")
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
