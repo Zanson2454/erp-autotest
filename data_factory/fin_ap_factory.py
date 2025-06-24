@@ -113,7 +113,7 @@ class FinApFactory(FinAparBaseFactory):
             return self._get_cached_or_query(
                 "settlement_method",
                 self._query_basic_config_table,
-                "gen_settlement_method_cf", "settlement_method_name", "settlement_method_code"
+                "fin_sett_type_cf", "name", "code"
             )
         except Exception as e:
             Loggers.warning(f"结算方式配置表不存在，使用默认值: {str(e)}")

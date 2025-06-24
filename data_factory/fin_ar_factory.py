@@ -112,9 +112,9 @@ class FinArFactory(FinAparBaseFactory):
         return self._get_cached_or_query(
             'settlement_methods',
             self._query_basic_config_table,
-            'gen_settlement_method_cf',
-            'settlement_method_name',
-            'settlement_method_code'
+            'fin_sett_type_cf',
+            'name',
+            'code'
         )
 
     def get_payment_purpose(self) -> Dict[str, Any]:
@@ -141,30 +141,41 @@ class FinArFactory(FinAparBaseFactory):
         """根据单据类型编码获取单据类型"""
         def _query_doc_type(doc_type_code: str) -> Dict[str, Any]:
             try:
-                # 首先尝试精确匹配
-                result = self._query_basic_config_table(
-                    'gen_doc_type_cf',
-                    'doc_type_name',
-                    'doc_type_code',
-                    'doc_type_code = %s',
-                    [doc_type_code]
-                )
-                return result
-            except:
+                # fin_cm_pn_type_md表专用查询（没有status字段）
+                sql = """
+                    SELECT id, pn_type_code, name
+                    FROM fin_cm_pn_type_md 
+                    WHERE deleted = 0 AND pn_type_code = %s
+                    ORDER BY id ASC
+                    LIMIT 1
+                """
+                result = DBManager.query(sql, [doc_type_code])
+                if result:
+                    row = result[0]
+                    Loggers.info(f"获取到收付款单据类型: {row.get('name')}")
+                    return {"id": row.get("id")}
+                
                 # 如果精确匹配失败，尝试模糊匹配
-                try:
-                    Loggers.warning(f"精确匹配{doc_type_code}失败，尝试模糊匹配")
-                    pattern = f"%{doc_type_code.split('_')[0]}%"
-                    result = self._query_basic_config_table(
-                        'gen_doc_type_cf',
-                        'doc_type_name',
-                        'doc_type_code',
-                        'doc_type_code LIKE %s',
-                        [pattern]
-                    )
-                    return result
-                except:
-                    raise Exception(f"未找到任何匹配{doc_type_code}的单据类型")
+                Loggers.warning(f"精确匹配{doc_type_code}失败，尝试模糊匹配")
+                pattern = f"%{doc_type_code.split('_')[0]}%"
+                fallback_sql = """
+                    SELECT id, pn_type_code, name
+                    FROM fin_cm_pn_type_md 
+                    WHERE deleted = 0 AND pn_type_code LIKE %s
+                    ORDER BY id ASC
+                    LIMIT 1
+                """
+                fallback_result = DBManager.query(fallback_sql, [pattern])
+                if fallback_result:
+                    row = fallback_result[0]
+                    Loggers.info(f"使用模糊匹配的收付款单据类型: {row.get('name')}")
+                    return {"id": row.get("id")}
+                
+                raise Exception(f"未找到任何匹配{doc_type_code}的单据类型")
+                
+            except Exception as e:
+                Loggers.error(f"查询收付款单据类型失败: {str(e)}")
+                raise Exception(f"未找到任何匹配{doc_type_code}的单据类型")
         
         return self._get_cached_or_query(
             'doc_types',
@@ -592,10 +603,70 @@ class FinArFactory(FinAparBaseFactory):
             raise
 
     def get_base_data_for_fin_doc(self, doc_type: str = "AR") -> Dict[str, Any]:
-        """获取财务单据基础数据，使用父类方法"""
+        """获取财务单据基础数据，扩展应收模块所需数据"""
         if self._cache['base_data'] is None:
             # 使用父类的基础数据获取方法
-            self._cache['base_data'] = super().get_base_data_for_fin_doc(doc_type)
+            base_data = super().get_base_data_for_fin_doc(doc_type)
+            
+            # 为应收模块添加兼容性映射和额外数据
+            try:
+                # 1. 添加销售组织映射（向后兼容）
+                if 'bus_org' in base_data:
+                    base_data['sls_org'] = base_data['bus_org']
+                
+                # 2. 添加客户数据
+                customer_sql = """
+                    SELECT * FROM gen_vend_info_md 
+                    WHERE deleted = 0 
+                    AND vend_code LIKE 'AUTOTEST_VEND%'
+                    LIMIT 1
+                """
+                customer_result = DBManager.query(customer_sql)
+                if customer_result:
+                    customer = customer_result[0]
+                    base_data['customer'] = {
+                        'id': customer['id'],
+                        'code': customer['vend_code'],
+                        'name': customer.get('name', customer.get('vend_name', '供应商(自动化)'))
+                    }
+                else:
+                    # 如果没有供应商数据，尝试查找客户数据
+                    customer_sql = """
+                        SELECT * FROM gen_cust_info_md 
+                        WHERE deleted = 0 
+                        AND cust_code LIKE 'AUTOTEST_CUST%'
+                        LIMIT 1
+                    """
+                    customer_result = DBManager.query(customer_sql)
+                    if customer_result:
+                        customer = customer_result[0]
+                        base_data['customer'] = {
+                            'id': customer['id'],
+                            'code': customer['cust_code'],
+                            'name': customer.get('name', customer.get('cust_name', '客户(自动化)'))
+                        }
+                    else:
+                        Loggers.warning("未找到自动化测试的客户或供应商数据，使用默认值")
+                        base_data['customer'] = {'id': 1, 'code': 'DEFAULT', 'name': '默认客户'}
+                
+                # 3. 确保货币数据有正确的字段名
+                if 'currency' in base_data:
+                    currency = base_data['currency']
+                    # 添加兼容性字段名
+                    if 'curr_name' in currency and 'currName' not in currency:
+                        currency['currName'] = currency['curr_name']
+                    if 'curr_code' in currency and 'currCode' not in currency:
+                        currency['currCode'] = currency['curr_code']
+                
+            except Exception as e:
+                Loggers.warning(f"扩展应收基础数据时出错: {str(e)}")
+                # 确保至少有基本的默认数据
+                if 'customer' not in base_data:
+                    base_data['customer'] = {'id': 1, 'code': 'DEFAULT', 'name': '默认客户'}
+                if 'bus_org' in base_data and 'sls_org' not in base_data:
+                    base_data['sls_org'] = base_data['bus_org']
+            
+            self._cache['base_data'] = base_data
         return self._cache['base_data']
 
     def clear_cache(self, cache_type: str = None) -> None:
