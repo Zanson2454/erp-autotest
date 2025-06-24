@@ -10,7 +10,7 @@
 4. 集成 Allure 报告
 """
 import allure
-from testcases.base_test import BaseTest
+from testcases.comm.base_test import BaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a
 from .init_config import PrdConfigInitializer

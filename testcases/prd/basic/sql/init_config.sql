@@ -247,7 +247,7 @@ WHERE NOT EXISTS (
 );
 
 -- 工艺路线状态配置
-INSERT INTO gen_routings_status_cf (
+INSERT INTO prd_routings_status_cf (
     status_code, status_name, is_prd, is_qc, is_cost,
     created_by, updated_by, created_at, updated_at,
     version, deleted, origin_org_id
@@ -257,12 +257,12 @@ SELECT
     'SYSTEM', 'SYSTEM', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
     0, 0, 0
 WHERE NOT EXISTS (
-    SELECT 1 FROM gen_routings_status_cf 
+    SELECT 1 FROM prd_routings_status_cf 
     WHERE status_name = '下达' AND deleted = 0
 );
 
 -- 工序控制码配置
-INSERT INTO gen_control_keys_cf (
+INSERT INTO prd_control_keys_cf (
     control_key_code, control_key_name, 
     is_subcontracting_operation, is_key_operation, is_aut_receipt,
     created_by, updated_by, created_at, updated_at,
@@ -273,11 +273,11 @@ SELECT
     'SYSTEM', 'SYSTEM', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
     0, 0, 0
 WHERE NOT EXISTS (
-    SELECT 1 FROM gen_control_keys_cf 
+    SELECT 1 FROM prd_control_keys_cf 
     WHERE control_key_name = '普通工序' AND deleted = 0
 );
 
-INSERT INTO gen_control_keys_cf (
+INSERT INTO prd_control_keys_cf (
     control_key_code, control_key_name, 
     is_subcontracting_operation, is_key_operation, is_aut_receipt,
     created_by, updated_by, created_at, updated_at,
@@ -288,11 +288,11 @@ SELECT
     'SYSTEM', 'SYSTEM', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
     0, 0, 0
 WHERE NOT EXISTS (
-    SELECT 1 FROM gen_control_keys_cf 
+    SELECT 1 FROM prd_control_keys_cf 
     WHERE control_key_name = '关键工序' AND deleted = 0
 );
 
-INSERT INTO gen_control_keys_cf (
+INSERT INTO prd_control_keys_cf (
     control_key_code, control_key_name, 
     is_subcontracting_operation, is_key_operation, is_aut_receipt,
     created_by, updated_by, created_at, updated_at,
@@ -303,11 +303,11 @@ SELECT
     'SYSTEM', 'SYSTEM', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
     0, 0, 0
 WHERE NOT EXISTS (
-    SELECT 1 FROM gen_control_keys_cf 
+    SELECT 1 FROM prd_control_keys_cf 
     WHERE control_key_name = '入库工序' AND deleted = 0
 );
 
-INSERT INTO gen_control_keys_cf (
+INSERT INTO prd_control_keys_cf (
     control_key_code, control_key_name, 
     is_subcontracting_operation, is_key_operation, is_aut_receipt,
     created_by, updated_by, created_at, updated_at,
@@ -318,7 +318,7 @@ SELECT
     'SYSTEM', 'SYSTEM', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
     0, 0, 0
 WHERE NOT EXISTS (
-    SELECT 1 FROM gen_control_keys_cf 
+    SELECT 1 FROM prd_control_keys_cf 
     WHERE control_key_name = '委外工序' AND deleted = 0
 );
 

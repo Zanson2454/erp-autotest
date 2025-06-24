@@ -9,6 +9,8 @@ from enum import Enum
 from typing import List, Dict, Optional
 from utils.mysql_util import DBManager
 import time
+from datetime import datetime
+from testcases.prd.basic.init_config import PrdConfigInitializer
 
 class MaterialType(Enum):
     """物料类型"""
@@ -27,17 +29,35 @@ class PrdMasterBaseTest(PrdBaseTest):
         MaterialType.PACKAGE: 2503003,    # 包装品
     }
     
+    # 物料编码序号计数器
+    _material_code_counter = 0
+    
     @classmethod
     def setup_class(cls):
         """测试类初始化"""
         super().setup_class()
         cls.logger.info("生产主数据管理测试基类初始化完成")
         
-        # 初始化测试数据
-        cls.test_data = cls._init_test_data()
+        # 初始化配置管理器
+        cls.config_initializer = PrdConfigInitializer()
+        
         
         # 准备基础物料数据
         cls._prepare_base_materials()
+    
+    @classmethod
+    def _generate_material_code_suffix(cls) -> str:
+        """
+        生成物料编码后缀：月日+6位时间戳
+        例如：623_123456
+        """
+        # 获取当前月日
+        current_date = datetime.now().strftime("%m%d").lstrip("0")  # 去掉前导0
+        
+        # 获取6位时间戳（使用毫秒级时间戳的后6位）
+        timestamp = str(int(time.time() * 1000))[-6:]
+        
+        return f"{current_date}_{timestamp}"
     
     def teardown_method(self, method):
         """测试方法执行后的清理工作"""
@@ -46,17 +66,6 @@ class PrdMasterBaseTest(PrdBaseTest):
             self.logger.info("开始创建BOM数据")
             self.bom_data = self._create_bom()
             self.logger.info("BOM数据创建完成")
-    
-    @classmethod
-    def _init_test_data(cls):
-        """初始化测试数据"""
-        return {
-            # 组织信息
-            "org_info": {
-                "inv_org_code": "ORG001",  # 库存组织编码
-                "inv_org_name": "测试库存组织",  # 库存组织名称
-            }
-        }
     
     def _create_bom(self) -> Dict:
         """
@@ -205,11 +214,11 @@ class PrdMasterBaseTest(PrdBaseTest):
             物料数据字典
         """
         # 生成唯一物料编码和名称
-        timestamp = int(time.time())
-        unique_mat_code = f"{mat_code}_{timestamp}"
-        unique_mat_name = f"{mat_name}_{timestamp}"
+        code_suffix = cls._generate_material_code_suffix()
+        unique_mat_code = f"{mat_code}_{code_suffix}"
+        unique_mat_name = f"{mat_name}_{code_suffix}"
         
-        # 准备物料数据先硬编码，后续通过数据工厂创建物料
+        # 准备物料数据，分类和单位先硬编码
         material_data = {
             "params": {
                 "request": {
@@ -301,9 +310,71 @@ class PrdMasterBaseTest(PrdBaseTest):
         """
         return self.test_data["version_info"]
     
-    def get_test_work_center(self):
+    def get_test_work_center(self) -> Dict:
         """
-        获取测试工作中心数据
-        后续可以改为从数据工厂获取
+        获取不同类型的工作中心信息
+        按照工作中心类型（下料、组件、打包）获取最新创建的工作中心
+        
+        Returns:
+            dict: 包含三种类型工作中心ID的字典
+                {
+                    "cutting": {"id": xxx},
+                    "assembly": {"id": xxx},
+                    "packing": {"id": xxx}
+                }
         """
-        return self.test_data["work_center_info"] 
+        try:
+            # 查询三种类型的工作中心
+            sql = """
+                SELECT id, wc_code, wc_name
+                FROM prd_work_centor_header_md
+                WHERE deleted = 0
+                AND inv_org = %(inv_org)s
+                AND wc_name LIKE %(wc_name_pattern)s
+                ORDER BY id DESC
+                LIMIT 1
+            """
+            
+            # 查询下料工作中心
+            cutting_wc = self.db.query_one(
+                sql,
+                {
+                    "inv_org": self.test_org,
+                    "wc_name_pattern": "%下料工作中心%"
+                }
+            )
+            if not cutting_wc:
+                raise Exception("未找到下料工作中心")
+                
+            # 查询组件工作中心
+            assembly_wc = self.db.query_one(
+                sql,
+                {
+                    "inv_org": self.test_org,
+                    "wc_name_pattern": "%组件工作中心%"
+                }
+            )
+            if not assembly_wc:
+                raise Exception("未找到组件工作中心")
+                
+            # 查询打包工作中心
+            packing_wc = self.db.query_one(
+                sql,
+                {
+                    "inv_org": self.test_org,
+                    "wc_name_pattern": "%打包工作中心%"
+                }
+            )
+            if not packing_wc:
+                raise Exception("未找到打包工作中心")
+            
+            # 返回工作中心信息
+            return {
+                "cutting": {"id": cutting_wc["id"]},
+                "assembly": {"id": assembly_wc["id"]},
+                "packing": {"id": packing_wc["id"]}
+            }
+            
+        except Exception as e:
+            self.logger.error(f"获取工作中心信息失败: {str(e)}")
+            raise 

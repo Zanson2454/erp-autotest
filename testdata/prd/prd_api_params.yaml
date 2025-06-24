@@ -1,982 +1,1217 @@
 api_params:
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ROUTING_QUERY_WORK_CENTER_EVENT_SERVICE:
     params:
-      invOrg: {}
-      isBackflush: false
-      updatedBy: {}
-      originOrgId: 0
-      version: 0
-      prdWorkCenterActivityItemMd:
-      - {}
-      createdAt: 0
-      deleted: 0
-      createdBy: {}
-      requestId: null
-      wcCode: null
-      id: 0
-      wcName: null
-      updatedAt: 0
+      params:
+        request:
+          invOrg: {}
+          isBackflush: false
+          updatedBy: {}
+          originOrgId: 0
+          version: 0
+          prdWorkCenterActivityItemMd:
+          - {}
+          createdAt: 0
+          deleted: 0
+          createdBy: {}
+          requestId: null
+          wcCode: null
+          id: 0
+          wcName: null
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_ROUTING_QUERY_WORK_CENTER_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_BATCH_FIND_BY_ID_EVENT_SERVICE:
     params:
-      ids: null
+      params:
+        request:
+          ids: null
+      serviceKey: SCM_PRD$PRD_ORDER_BATCH_FIND_BY_ID_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_FIND_ROUTINGS_ITEMS_EVENT_SERVICE:
     params:
-      prdMatId: {}
-      prdOrderCostItemTr:
-      - {}
-      plannedEndDate: 0
-      bomList:
-      - {}
-      prdVrsId: {}
-      mvmTypeId: {}
-      createdAt: 0
-      soItemId: {}
-      shipmentUom: {}
-      slsOrderCode: null
-      woTypeId: {}
-      actualStartDate: 0
-      confirmStatus: null
-      id: 0
-      prdUomId: {}
-      invOrgId: {}
-      dataSources: null
-      sourcesOrderCode: null
-      locId: {}
-      insufficientDeliveryTolerance: 0
-      updatedAt: 0
-      actualEndDate: 0
-      soId: {}
-      unlimitedOverDelivery: false
-      updatedBy: {}
-      originOrgId: 0
-      expectedDeliveryDate: 0
-      excessiveDeliveryTolerance: 0
-      woCode: null
-      prdManger: null
-      version: 0
-      prdOrderBatchTr:
-      - {}
-      printed: false
-      receivedQty: 0
-      postInvTypeId: {}
-      deleted: 0
-      plannedStartDate: 0
-      routingList:
-      - {}
-      createdBy: {}
-      matId: {}
-      qty: 0
-      postInspection: false
-      deliveredStatus: null
-      slsOrderItemCode: null
-      plnInvOrgId: {}
-      status: null
+      params:
+        request:
+          prdMatId: {}
+          prdOrderCostItemTr:
+          - {}
+          plannedEndDate: 0
+          bomList:
+          - {}
+          prdVrsId: {}
+          mvmTypeId: {}
+          createdAt: 0
+          soItemId: {}
+          shipmentUom: {}
+          slsOrderCode: null
+          woTypeId: {}
+          actualStartDate: 0
+          confirmStatus: null
+          id: 0
+          prdUomId: {}
+          invOrgId: {}
+          dataSources: null
+          sourcesOrderCode: null
+          locId: {}
+          insufficientDeliveryTolerance: 0
+          updatedAt: 0
+          actualEndDate: 0
+          soId: {}
+          unlimitedOverDelivery: false
+          updatedBy: {}
+          originOrgId: 0
+          expectedDeliveryDate: 0
+          excessiveDeliveryTolerance: 0
+          woCode: null
+          prdManger: null
+          version: 0
+          prdOrderBatchTr:
+          - {}
+          printed: false
+          receivedQty: 0
+          postInvTypeId: {}
+          deleted: 0
+          plannedStartDate: 0
+          routingList:
+          - {}
+          createdBy: {}
+          matId: {}
+          qty: 0
+          postInspection: false
+          deliveredStatus: null
+          slsOrderItemCode: null
+          plnInvOrgId: {}
+          status: null
+      serviceKey: SCM_PRD$PRD_ORDER_FIND_ROUTINGS_ITEMS_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_CANCEL_SEND_OUT_EVENT_SERVICE:
     params:
-      ids: null
+      params:
+        request:
+          ids: null
+      serviceKey: SCM_PRD$PRD_ORDER_CANCEL_SEND_OUT_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_DELIVERY_CONFIRM_FAIL_BATCH_EVENT_SERVICE:
     params:
-      ids: null
+      params:
+        request:
+          ids: null
+      serviceKey: SCM_PRD$PRD_ORDER_DELIVERY_CONFIRM_FAIL_BATCH_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_DELETE_EVENT_SERVICE:
     params:
-      id: 0
+      params:
+        request:
+          id: 0
+      serviceKey: SCM_PRD$PRD_ISSUE_DELETE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_QUERY_ORDER_BATCH_PRINT_INFO_BY_BATCH_IDS_EVENT_SERVICE:
     params:
-      ids: null
+      params:
+        request:
+          ids: null
+      serviceKey: SCM_PRD$PRD_ORDER_QUERY_ORDER_BATCH_PRINT_INFO_BY_BATCH_IDS_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_PLN_CLOSE_EVENT_SERVICE:
     params:
-      ids: null
+      params:
+        request:
+          ids: null
+      serviceKey: SCM_PRD$PRD_PLN_CLOSE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_DELIVERY_CANCEL_CONFIRM_EVENT_SERVICE:
     params:
-      ids: null
+      params:
+        request:
+          ids: null
+      serviceKey: SCM_PRD$PRD_ORDER_DELIVERY_CANCEL_CONFIRM_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_PLN_CANCEL_CONFIRMED_EVENT_SERVICE:
     params:
-      ids: null
+      params:
+        request:
+          ids: null
+      serviceKey: SCM_PRD$PRD_PLN_CANCEL_CONFIRMED_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_ATP_CHECK_NO_INV_MATERIAL_EVENT:
     params:
       params:
         woCodeRequest:
           value: null
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_ORDER_ATP_CHECK_NO_INV_MATERIAL_EVENT
   /api/trantor/service/engine/execute/SCM_PRD$PRD_VRS_MD_DETAIL_EVENT_SERVICE:
     params:
-      matId: {}
-      opType: null
-      itemList:
-      - {}
-      invOrgId: {}
+      params:
+        request:
+          matId: {}
+          opType: null
+          itemList:
+          - {}
+          invOrgId: {}
+      serviceKey: SCM_PRD$PRD_VRS_MD_DETAIL_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_ROUTINGS_CONFIRM_RENDER_EVENT_SERVICE:
     params:
-      id: 0
+      params:
+        request:
+          id: 0
+      serviceKey: SCM_PRD$PRD_ORDER_ROUTINGS_CONFIRM_RENDER_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_MAT_FIND_GEN_MAT_BY_ORG_EVENT_SERVICE:
     params:
-      specialized: false
-      componentCostElementId: {}
-      invLocId: {}
-      individualColl: null
-      createdAt: 0
-      outputCostElementId: {}
-      requestId: null
-      scrapType: null
-      id: 0
-      prdUomId: {}
-      invOrgId: {}
-      inspectionCycle: 0
-      productionCycle: 0
-      insufficientDeliveryTolerance: 0
-      updatedAt: 0
-      unlimitedOverDelivery: false
-      prdvrsList:
-      - {}
-      updatedBy: {}
-      originOrgId: 0
-      fixedScrap: 0
-      excessiveDeliveryTolerance: 0
-      componentScrap: 0
-      backFlush: null
-      version: 0
-      prdMangerId: 0
-      postInvTypeId: {}
-      deleted: 0
-      createdBy: {}
-      postInspection: false
-      genMatMdId: {}
-      batchParaId: 0
-      procurementType: null
-      genMatPrdStepScrapMd:
-      - {}
-      plannedCalendarId: {}
-      serialParaId: 0
+      params:
+        request:
+          specialized: false
+          componentCostElementId: {}
+          invLocId: {}
+          individualColl: null
+          createdAt: 0
+          outputCostElementId: {}
+          requestId: null
+          scrapType: null
+          id: 0
+          prdUomId: {}
+          invOrgId: {}
+          inspectionCycle: 0
+          productionCycle: 0
+          insufficientDeliveryTolerance: 0
+          updatedAt: 0
+          unlimitedOverDelivery: false
+          prdvrsList:
+          - {}
+          updatedBy: {}
+          originOrgId: 0
+          fixedScrap: 0
+          excessiveDeliveryTolerance: 0
+          componentScrap: 0
+          backFlush: null
+          version: 0
+          prdMangerId: 0
+          postInvTypeId: {}
+          deleted: 0
+          createdBy: {}
+          postInspection: false
+          genMatMdId: {}
+          batchParaId: 0
+          procurementType: null
+          genMatPrdStepScrapMd:
+          - {}
+          plannedCalendarId: {}
+          serialParaId: 0
+      serviceKey: SCM_PRD$PRD_MAT_FIND_GEN_MAT_BY_ORG_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_DELETE_EVENT_SERVICE:
     params:
-      prdMatId: {}
-      prdOrderCostItemTr:
-      - {}
-      plannedEndDate: 0
-      bomList:
-      - {}
-      prdVrsId: {}
-      mvmTypeId: {}
-      createdAt: 0
-      soItemId: {}
-      shipmentUom: {}
-      slsOrderCode: null
-      woTypeId: {}
-      actualStartDate: 0
-      confirmStatus: null
-      id: 0
-      prdUomId: {}
-      invOrgId: {}
-      dataSources: null
-      sourcesOrderCode: null
-      locId: {}
-      insufficientDeliveryTolerance: 0
-      updatedAt: 0
-      actualEndDate: 0
-      soId: {}
-      unlimitedOverDelivery: false
-      updatedBy: {}
-      originOrgId: 0
-      expectedDeliveryDate: 0
-      excessiveDeliveryTolerance: 0
-      woCode: null
-      prdManger: null
-      version: 0
-      prdOrderBatchTr:
-      - {}
-      printed: false
-      receivedQty: 0
-      postInvTypeId: {}
-      deleted: 0
-      plannedStartDate: 0
-      routingList:
-      - {}
-      createdBy: {}
-      matId: {}
-      qty: 0
-      postInspection: false
-      deliveredStatus: null
-      slsOrderItemCode: null
-      plnInvOrgId: {}
-      status: null
+      params:
+        request:
+          prdMatId: {}
+          prdOrderCostItemTr:
+          - {}
+          plannedEndDate: 0
+          bomList:
+          - {}
+          prdVrsId: {}
+          mvmTypeId: {}
+          createdAt: 0
+          soItemId: {}
+          shipmentUom: {}
+          slsOrderCode: null
+          woTypeId: {}
+          actualStartDate: 0
+          confirmStatus: null
+          id: 0
+          prdUomId: {}
+          invOrgId: {}
+          dataSources: null
+          sourcesOrderCode: null
+          locId: {}
+          insufficientDeliveryTolerance: 0
+          updatedAt: 0
+          actualEndDate: 0
+          soId: {}
+          unlimitedOverDelivery: false
+          updatedBy: {}
+          originOrgId: 0
+          expectedDeliveryDate: 0
+          excessiveDeliveryTolerance: 0
+          woCode: null
+          prdManger: null
+          version: 0
+          prdOrderBatchTr:
+          - {}
+          printed: false
+          receivedQty: 0
+          postInvTypeId: {}
+          deleted: 0
+          plannedStartDate: 0
+          routingList:
+          - {}
+          createdBy: {}
+          matId: {}
+          qty: 0
+          postInspection: false
+          deliveredStatus: null
+          slsOrderItemCode: null
+          plnInvOrgId: {}
+          status: null
+      serviceKey: SCM_PRD$PRD_ORDER_DELETE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_QUERY_EXECUTION_TRACKING_EVENT_SERVICE:
     params:
-      prdMatId: {}
-      prdOrderCostItemTr:
-      - {}
-      plannedEndDate: 0
-      bomList:
-      - {}
-      prdVrsId: {}
-      mvmTypeId: {}
-      createdAt: 0
-      soItemId: {}
-      shipmentUom: {}
-      slsOrderCode: null
-      woTypeId: {}
-      actualStartDate: 0
-      confirmStatus: null
-      id: 0
-      prdUomId: {}
-      invOrgId: {}
-      dataSources: null
-      sourcesOrderCode: null
-      locId: {}
-      insufficientDeliveryTolerance: 0
-      updatedAt: 0
-      actualEndDate: 0
-      soId: {}
-      unlimitedOverDelivery: false
-      updatedBy: {}
-      originOrgId: 0
-      expectedDeliveryDate: 0
-      excessiveDeliveryTolerance: 0
-      woCode: null
-      prdManger: null
-      version: 0
-      prdOrderBatchTr:
-      - {}
-      printed: false
-      receivedQty: 0
-      postInvTypeId: {}
-      deleted: 0
-      plannedStartDate: 0
-      routingList:
-      - {}
-      createdBy: {}
-      matId: {}
-      qty: 0
-      postInspection: false
-      deliveredStatus: null
-      slsOrderItemCode: null
-      plnInvOrgId: {}
-      status: null
+      params:
+        request:
+          prdMatId: {}
+          prdOrderCostItemTr:
+          - {}
+          plannedEndDate: 0
+          bomList:
+          - {}
+          prdVrsId: {}
+          mvmTypeId: {}
+          createdAt: 0
+          soItemId: {}
+          shipmentUom: {}
+          slsOrderCode: null
+          woTypeId: {}
+          actualStartDate: 0
+          confirmStatus: null
+          id: 0
+          prdUomId: {}
+          invOrgId: {}
+          dataSources: null
+          sourcesOrderCode: null
+          locId: {}
+          insufficientDeliveryTolerance: 0
+          updatedAt: 0
+          actualEndDate: 0
+          soId: {}
+          unlimitedOverDelivery: false
+          updatedBy: {}
+          originOrgId: 0
+          expectedDeliveryDate: 0
+          excessiveDeliveryTolerance: 0
+          woCode: null
+          prdManger: null
+          version: 0
+          prdOrderBatchTr:
+          - {}
+          printed: false
+          receivedQty: 0
+          postInvTypeId: {}
+          deleted: 0
+          plannedStartDate: 0
+          routingList:
+          - {}
+          createdBy: {}
+          matId: {}
+          qty: 0
+          postInspection: false
+          deliveredStatus: null
+          slsOrderItemCode: null
+          plnInvOrgId: {}
+          status: null
+      serviceKey: SCM_PRD$PRD_ORDER_QUERY_EXECUTION_TRACKING_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_PLN_MERGE_EVENT_SERVICE:
     params:
-      ids: null
+      params:
+        request:
+          ids: null
+      serviceKey: SCM_PRD$PRD_PLN_MERGE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_QUERY_DAILY_REPORT_EVENT_SERVICE:
     params:
-      headerText: null
-      movAssignCfId: 0
-      dnCode: null
-      postingDate: 0
-      invLocId: {}
-      createdAt: 0
-      soItemId: {}
-      requestId: null
-      prdReturnRoutingItem:
-      - {}
-      operationId: {}
-      failReason: null
-      id: 0
-      invOrgId: {}
-      updatedAt: 0
-      operationUomId: {}
-      updatedBy: {}
-      originOrgId: 0
-      woId: {}
-      returnQty: 0
-      prdOrderConfirmActivityItemMd:
-      - {}
-      prdOrderConfirmHeadBatchTr:
-      - {}
-      uomId: {}
-      docDate: 0
-      cancelIs: false
-      version: 0
-      referDocId: {}
-      movTypeId: {}
-      confirmCode: null
-      postInvTypeId: {}
-      deleted: 0
-      createdBy: {}
-      matId: {}
-      qty: 0
-      itemList:
-      - {}
-      prdOrderConfirmBussinessTrId: {}
-      scrappedQty: 0
-      moveVoucherId: 0
-      yieldQty: 0
-      status: null
+      params:
+        request:
+          headerText: null
+          movAssignCfId: 0
+          dnCode: null
+          postingDate: 0
+          invLocId: {}
+          createdAt: 0
+          soItemId: {}
+          requestId: null
+          prdReturnRoutingItem:
+          - {}
+          operationId: {}
+          failReason: null
+          id: 0
+          invOrgId: {}
+          updatedAt: 0
+          operationUomId: {}
+          updatedBy: {}
+          originOrgId: 0
+          woId: {}
+          returnQty: 0
+          prdOrderConfirmActivityItemMd:
+          - {}
+          prdOrderConfirmHeadBatchTr:
+          - {}
+          uomId: {}
+          docDate: 0
+          cancelIs: false
+          version: 0
+          referDocId: {}
+          movTypeId: {}
+          confirmCode: null
+          postInvTypeId: {}
+          deleted: 0
+          createdBy: {}
+          matId: {}
+          qty: 0
+          itemList:
+          - {}
+          prdOrderConfirmBussinessTrId: {}
+          scrappedQty: 0
+          moveVoucherId: 0
+          yieldQty: 0
+          status: null
+      serviceKey: SCM_PRD$PRD_ORDER_QUERY_DAILY_REPORT_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_SAVE_EVENT_SERVICE:
     params:
-      updatedBy: {}
-      originOrgId: 0
-      remark: null
-      postingDate: 0
-      version: 0
-      issueType: null
-      createdAt: 0
-      deleted: 0
-      issueItemList:
-      - {}
-      createdBy: {}
-      issueDocTypeId: {}
-      id: 0
-      issueDate: 0
-      issueCode: null
-      status: null
-      updatedAt: 0
+      params:
+        request:
+          updatedBy: {}
+          originOrgId: 0
+          remark: null
+          postingDate: 0
+          version: 0
+          issueType: null
+          createdAt: 0
+          deleted: 0
+          issueItemList:
+          - {}
+          createdBy: {}
+          issueDocTypeId: {}
+          id: 0
+          issueDate: 0
+          issueCode: null
+          status: null
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_ISSUE_SAVE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_MAT_CREATE_EVENT_SERVICE:
     params:
-      specialized: false
-      componentCostElementId: {}
-      invLocId: {}
-      individualColl: null
-      createdAt: 0
-      outputCostElementId: {}
-      requestId: null
-      scrapType: null
-      id: 0
-      prdUomId: {}
-      invOrgId: {}
-      inspectionCycle: 0
-      productionCycle: 0
-      insufficientDeliveryTolerance: 0
-      updatedAt: 0
-      unlimitedOverDelivery: false
-      prdvrsList:
-      - {}
-      updatedBy: {}
-      originOrgId: 0
-      fixedScrap: 0
-      excessiveDeliveryTolerance: 0
-      componentScrap: 0
-      backFlush: null
-      version: 0
-      prdMangerId: 0
-      postInvTypeId: {}
-      deleted: 0
-      createdBy: {}
-      postInspection: false
-      genMatMdId: {}
-      batchParaId: 0
-      procurementType: null
-      genMatPrdStepScrapMd:
-      - {}
-      plannedCalendarId: {}
-      serialParaId: 0
+      params:
+        request:
+          specialized: false
+          componentCostElementId: {}
+          invLocId: {}
+          individualColl: null
+          createdAt: 0
+          outputCostElementId: {}
+          requestId: null
+          scrapType: null
+          id: 0
+          prdUomId: {}
+          invOrgId: {}
+          inspectionCycle: 0
+          productionCycle: 0
+          insufficientDeliveryTolerance: 0
+          updatedAt: 0
+          unlimitedOverDelivery: false
+          prdvrsList:
+          - {}
+          updatedBy: {}
+          originOrgId: 0
+          fixedScrap: 0
+          excessiveDeliveryTolerance: 0
+          componentScrap: 0
+          backFlush: null
+          version: 0
+          prdMangerId: 0
+          postInvTypeId: {}
+          deleted: 0
+          createdBy: {}
+          postInspection: false
+          genMatMdId: {}
+          batchParaId: 0
+          procurementType: null
+          genMatPrdStepScrapMd:
+          - {}
+          plannedCalendarId: {}
+          serialParaId: 0
+      serviceKey: SCM_PRD$PRD_MAT_CREATE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_CANCEL_CLOSE_EVENT_SERVICE:
     params:
-      ids: null
+      params:
+        request:
+          ids: null
+      serviceKey: SCM_PRD$PRD_ORDER_CANCEL_CLOSE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_APP_SELECT_BOM_ITEM_BY_WORK_CENTER_EVENT_SERVICE:
     params:
-      issueMatTypeCount: 0
-      plannedStartDate: 0
-      prdOrderIds: null
-      id: {}
-      workCenterName: null
-      locId: {}
-      woCodeText: null
+      params:
+        request:
+          issueMatTypeCount: 0
+          plannedStartDate: 0
+          prdOrderIds: null
+          id: {}
+          workCenterName: null
+          locId: {}
+          woCodeText: null
+      serviceKey: SCM_PRD$PRD_ISSUE_APP_SELECT_BOM_ITEM_BY_WORK_CENTER_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_CREATE_EVENT_SERVICE:
     params:
-      prdMatId: {}
-      prdOrderCostItemTr:
-      - {}
-      plannedEndDate: 0
-      bomList:
-      - {}
-      prdVrsId: {}
-      mvmTypeId: {}
-      createdAt: 0
-      soItemId: {}
-      shipmentUom: {}
-      slsOrderCode: null
-      woTypeId: {}
-      actualStartDate: 0
-      confirmStatus: null
-      id: 0
-      prdUomId: {}
-      invOrgId: {}
-      dataSources: null
-      sourcesOrderCode: null
-      locId: {}
-      insufficientDeliveryTolerance: 0
-      updatedAt: 0
-      actualEndDate: 0
-      soId: {}
-      unlimitedOverDelivery: false
-      updatedBy: {}
-      originOrgId: 0
-      expectedDeliveryDate: 0
-      excessiveDeliveryTolerance: 0
-      woCode: null
-      prdManger: null
-      version: 0
-      prdOrderBatchTr:
-      - {}
-      printed: false
-      receivedQty: 0
-      postInvTypeId: {}
-      deleted: 0
-      plannedStartDate: 0
-      routingList:
-      - {}
-      createdBy: {}
-      matId: {}
-      qty: 0
-      postInspection: false
-      deliveredStatus: null
-      slsOrderItemCode: null
-      plnInvOrgId: {}
-      status: null
+      params:
+        request:
+          prdMatId: {}
+          prdOrderCostItemTr:
+          - {}
+          plannedEndDate: 0
+          bomList:
+          - {}
+          prdVrsId: {}
+          mvmTypeId: {}
+          createdAt: 0
+          soItemId: {}
+          shipmentUom: {}
+          slsOrderCode: null
+          woTypeId: {}
+          actualStartDate: 0
+          confirmStatus: null
+          id: 0
+          prdUomId: {}
+          invOrgId: {}
+          dataSources: null
+          sourcesOrderCode: null
+          locId: {}
+          insufficientDeliveryTolerance: 0
+          updatedAt: 0
+          actualEndDate: 0
+          soId: {}
+          unlimitedOverDelivery: false
+          updatedBy: {}
+          originOrgId: 0
+          expectedDeliveryDate: 0
+          excessiveDeliveryTolerance: 0
+          woCode: null
+          prdManger: null
+          version: 0
+          prdOrderBatchTr:
+          - {}
+          printed: false
+          receivedQty: 0
+          postInvTypeId: {}
+          deleted: 0
+          plannedStartDate: 0
+          routingList:
+          - {}
+          createdBy: {}
+          matId: {}
+          qty: 0
+          postInspection: false
+          deliveredStatus: null
+          slsOrderItemCode: null
+          plnInvOrgId: {}
+          status: null
+      serviceKey: SCM_PRD$PRD_ORDER_CREATE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_BATCH_POSTING_EVENT_SERVICE:
     params:
-      ids: null
+      params:
+        request:
+          ids: null
+      serviceKey: SCM_PRD$PRD_ISSUE_BATCH_POSTING_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_PLN_RENDER_CREATE_EVENT_SERVICE:
     params:
-      orderType: {}
-      releaseOrderType: 0
-      remark: null
-      plannedEndDate: 0
-      prdVrsId: {}
-      supplyInvOrgId: {}
-      createdAt: 0
-      supplyType: null
-      releaseOrderItemType: {}
-      failReason: null
-      prdPlannedOrderRoutingItemTrId:
-      - {}
-      id: 0
-      dataSources: null
-      locId: {}
-      prdPlannedOrderBomItemTrId:
-      - {}
-      updatedAt: 0
-      updatedBy: {}
-      originOrgId: 0
-      uomId: {}
-      version: 0
-      demandInvOrgId: {}
-      deleted: 0
-      plannedStartDate: 0
-      dataSourcesCode: null
-      releaseOrderCode: null
-      createdBy: {}
-      matId: {}
-      qty: 0
-      plannedOrderCode: null
-      status: null
+      params:
+        request:
+          orderType: {}
+          releaseOrderType: 0
+          remark: null
+          plannedEndDate: 0
+          prdVrsId: {}
+          supplyInvOrgId: {}
+          createdAt: 0
+          supplyType: null
+          releaseOrderItemType: {}
+          failReason: null
+          prdPlannedOrderRoutingItemTrId:
+          - {}
+          id: 0
+          dataSources: null
+          locId: {}
+          prdPlannedOrderBomItemTrId:
+          - {}
+          updatedAt: 0
+          updatedBy: {}
+          originOrgId: 0
+          uomId: {}
+          version: 0
+          demandInvOrgId: {}
+          deleted: 0
+          plannedStartDate: 0
+          dataSourcesCode: null
+          releaseOrderCode: null
+          createdBy: {}
+          matId: {}
+          qty: 0
+          plannedOrderCode: null
+          status: null
+      serviceKey: SCM_PRD$PRD_PLN_RENDER_CREATE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_BATCH_SAVE_EVENT_SERVICE:
-    params: {}
+    params:
+      params:
+        request:
+        - updatedBy: {}
+          originOrgId: 0
+          remark: null
+          postingDate: 0
+          version: 0
+          issueType: null
+          createdAt: 0
+          deleted: 0
+          issueItemList:
+          - {}
+          createdBy: {}
+          issueDocTypeId: {}
+          id: 0
+          issueDate: 0
+          issueCode: null
+          status: null
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_ISSUE_BATCH_SAVE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_BOM_CREATE_EVENT_SERVICE:
     params:
-      bomItems:
-      - {}
-      vrsName: null
-      updatedBy: {}
-      originOrgId: 0
-      batchFrom: 0
-      bomUseId: {}
-      baseQty: 0
-      uomId: {}
-      dateFrom: 0
-      batchTo: 0
-      version: 0
-      createdAt: 0
-      deleted: 0
-      statusId: {}
-      createdBy: {}
-      matId: {}
-      requestId: null
-      dateTo: 0
-      vrsCode: null
-      tenantId: 0
-      id: 0
-      invOrgId: {}
-      updatedAt: 0
+      params:
+        request:
+          bomItems:
+          - {}
+          vrsName: null
+          updatedBy: {}
+          originOrgId: 0
+          batchFrom: 0
+          bomUseId: {}
+          baseQty: 0
+          uomId: {}
+          dateFrom: 0
+          batchTo: 0
+          version: 0
+          createdAt: 0
+          deleted: 0
+          statusId: {}
+          createdBy: {}
+          matId: {}
+          requestId: null
+          dateTo: 0
+          vrsCode: null
+          tenantId: 0
+          id: 0
+          invOrgId: {}
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_BOM_CREATE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_PAGING_ORDER_BATCH_DETAIL_EVENT_SERVICE:
     params:
-      id: 0
+      params:
+        request:
+          id: 0
+      serviceKey: SCM_PRD$PRD_ORDER_PAGING_ORDER_BATCH_DETAIL_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_VRS_MD_DELETE_EVENT_SERVICE:
     params:
-      matId: {}
-      opType: null
-      itemList:
-      - {}
-      invOrgId: {}
+      params:
+        request:
+          matId: {}
+          opType: null
+          itemList:
+          - {}
+          invOrgId: {}
+      serviceKey: SCM_PRD$PRD_VRS_MD_DELETE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_ROUTINGS_CONFIRM_BATCH_RENDER_EVENT_SERVICE:
-    params: {}
+    params:
+      params:
+        request:
+        - prdOrderRoutingActivityItemMd:
+          - {}
+          operationCode: 0
+          plannedEndDate: 0
+          createdAt: 0
+          uom: {}
+          workCenterId: {}
+          confirmedQty: 0
+          confirmStatus: null
+          prdOrderConfirmHeaderTrId: {}
+          id: 0
+          invOrgId: {}
+          controlKeyId: {}
+          updatedAt: 0
+          updatedBy: {}
+          originOrgId: 0
+          operationQty: 0
+          purPrHeadTrId: {}
+          operationName: null
+          prdOrderHeaderTrId: {}
+          currentQty: 0
+          version: 0
+          deleted: 0
+          plannedStartDate: 0
+          createdBy: {}
+          outsourcingMat: {}
+      serviceKey: SCM_PRD$PRD_ORDER_ROUTINGS_CONFIRM_BATCH_RENDER_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_ROUTINGS_CONFIRM_RENDER_ORDER_BOM_ITEM_EVENT_SERVICE:
     params:
-      headerText: null
-      movAssignCfId: 0
-      dnCode: null
-      postingDate: 0
-      invLocId: {}
-      createdAt: 0
-      soItemId: {}
-      requestId: null
-      prdReturnRoutingItem:
-      - {}
-      operationId: {}
-      failReason: null
-      id: 0
-      invOrgId: {}
-      updatedAt: 0
-      operationUomId: {}
-      updatedBy: {}
-      originOrgId: 0
-      woId: {}
-      returnQty: 0
-      prdOrderConfirmActivityItemMd:
-      - {}
-      prdOrderConfirmHeadBatchTr:
-      - {}
-      uomId: {}
-      docDate: 0
-      cancelIs: false
-      version: 0
-      referDocId: {}
-      movTypeId: {}
-      confirmCode: null
-      postInvTypeId: {}
-      deleted: 0
-      createdBy: {}
-      matId: {}
-      qty: 0
-      itemList:
-      - {}
-      prdOrderConfirmBussinessTrId: {}
-      scrappedQty: 0
-      moveVoucherId: 0
-      yieldQty: 0
-      status: null
+      params:
+        request:
+          headerText: null
+          movAssignCfId: 0
+          dnCode: null
+          postingDate: 0
+          invLocId: {}
+          createdAt: 0
+          soItemId: {}
+          requestId: null
+          prdReturnRoutingItem:
+          - {}
+          operationId: {}
+          failReason: null
+          id: 0
+          invOrgId: {}
+          updatedAt: 0
+          operationUomId: {}
+          updatedBy: {}
+          originOrgId: 0
+          woId: {}
+          returnQty: 0
+          prdOrderConfirmActivityItemMd:
+          - {}
+          prdOrderConfirmHeadBatchTr:
+          - {}
+          uomId: {}
+          docDate: 0
+          cancelIs: false
+          version: 0
+          referDocId: {}
+          movTypeId: {}
+          confirmCode: null
+          postInvTypeId: {}
+          deleted: 0
+          createdBy: {}
+          matId: {}
+          qty: 0
+          itemList:
+          - {}
+          prdOrderConfirmBussinessTrId: {}
+          scrappedQty: 0
+          moveVoucherId: 0
+          yieldQty: 0
+          status: null
+      serviceKey: SCM_PRD$PRD_ORDER_ROUTINGS_CONFIRM_RENDER_ORDER_BOM_ITEM_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_FIND_ORDER_ITEM_BY_VRS_EVENT_SERVICE:
     params:
-      prdMatId: {}
-      prdOrderCostItemTr:
-      - {}
-      plannedEndDate: 0
-      bomList:
-      - {}
-      prdVrsId: {}
-      mvmTypeId: {}
-      createdAt: 0
-      soItemId: {}
-      shipmentUom: {}
-      slsOrderCode: null
-      woTypeId: {}
-      actualStartDate: 0
-      confirmStatus: null
-      id: 0
-      prdUomId: {}
-      invOrgId: {}
-      dataSources: null
-      sourcesOrderCode: null
-      locId: {}
-      insufficientDeliveryTolerance: 0
-      updatedAt: 0
-      actualEndDate: 0
-      soId: {}
-      unlimitedOverDelivery: false
-      updatedBy: {}
-      originOrgId: 0
-      expectedDeliveryDate: 0
-      excessiveDeliveryTolerance: 0
-      woCode: null
-      prdManger: null
-      version: 0
-      prdOrderBatchTr:
-      - {}
-      printed: false
-      receivedQty: 0
-      postInvTypeId: {}
-      deleted: 0
-      plannedStartDate: 0
-      routingList:
-      - {}
-      createdBy: {}
-      matId: {}
-      qty: 0
-      postInspection: false
-      deliveredStatus: null
-      slsOrderItemCode: null
-      plnInvOrgId: {}
-      status: null
+      params:
+        request:
+          prdMatId: {}
+          prdOrderCostItemTr:
+          - {}
+          plannedEndDate: 0
+          bomList:
+          - {}
+          prdVrsId: {}
+          mvmTypeId: {}
+          createdAt: 0
+          soItemId: {}
+          shipmentUom: {}
+          slsOrderCode: null
+          woTypeId: {}
+          actualStartDate: 0
+          confirmStatus: null
+          id: 0
+          prdUomId: {}
+          invOrgId: {}
+          dataSources: null
+          sourcesOrderCode: null
+          locId: {}
+          insufficientDeliveryTolerance: 0
+          updatedAt: 0
+          actualEndDate: 0
+          soId: {}
+          unlimitedOverDelivery: false
+          updatedBy: {}
+          originOrgId: 0
+          expectedDeliveryDate: 0
+          excessiveDeliveryTolerance: 0
+          woCode: null
+          prdManger: null
+          version: 0
+          prdOrderBatchTr:
+          - {}
+          printed: false
+          receivedQty: 0
+          postInvTypeId: {}
+          deleted: 0
+          plannedStartDate: 0
+          routingList:
+          - {}
+          createdBy: {}
+          matId: {}
+          qty: 0
+          postInspection: false
+          deliveredStatus: null
+          slsOrderItemCode: null
+          plnInvOrgId: {}
+          status: null
+      serviceKey: SCM_PRD$PRD_FIND_ORDER_ITEM_BY_VRS_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_RENDER_MOV_TYPE_EVENT_SERVICE:
     params:
-      allReturned: false
-      issuedQty: 0
-      planQty: 0
-      componentId: {}
-      dnCode: null
-      itemCode: 0
-      prdIssueHeadTrId: {}
-      invLocId: {}
-      returnedQty: 0
-      createdAt: 0
-      soItemId: {}
-      costElementId: {}
-      workCenterId: {}
-      operationId: {}
-      id: 0
-      invOrgId: {}
-      updatedAt: 0
-      invTypeId: {}
-      updatedBy: {}
-      originOrgId: 0
-      issueItemId: {}
-      version: 0
-      movTypeId: {}
-      deleted: 0
-      createdBy: {}
-      matId: {}
-      prdOrderHeadId: {}
-      status: null
+      params:
+        request:
+          allReturned: false
+          issuedQty: 0
+          planQty: 0
+          componentId: {}
+          dnCode: null
+          itemCode: 0
+          prdIssueHeadTrId: {}
+          invLocId: {}
+          returnedQty: 0
+          createdAt: 0
+          soItemId: {}
+          costElementId: {}
+          workCenterId: {}
+          operationId: {}
+          id: 0
+          invOrgId: {}
+          updatedAt: 0
+          invTypeId: {}
+          updatedBy: {}
+          originOrgId: 0
+          issueItemId: {}
+          version: 0
+          movTypeId: {}
+          deleted: 0
+          createdBy: {}
+          matId: {}
+          prdOrderHeadId: {}
+          status: null
+      serviceKey: SCM_PRD$PRD_ISSUE_RENDER_MOV_TYPE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_PAGING_ORDER_BOM_ITEM_BATCH_DETAIL_EVENT_SERVICE:
     params:
-      id: 0
+      params:
+        request:
+          id: 0
+      serviceKey: SCM_PRD$PRD_ORDER_PAGING_ORDER_BOM_ITEM_BATCH_DETAIL_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_SEND_OUT_EVENT_SERVICE:
     params:
-      ids: null
+      params:
+        request:
+          ids: null
+      serviceKey: SCM_PRD$PRD_ORDER_SEND_OUT_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_ITEM_UPDATE_EVENT_SERVICE:
-    params: {}
+    params:
+      params:
+        request:
+        - allReturned: false
+          issuedQty: 0
+          planQty: 0
+          componentId: {}
+          dnCode: null
+          itemCode: 0
+          prdIssueHeadTrId: {}
+          invLocId: {}
+          returnedQty: 0
+          createdAt: 0
+          soItemId: {}
+          costElementId: {}
+          workCenterId: {}
+          operationId: {}
+          id: 0
+          invOrgId: {}
+          updatedAt: 0
+          invTypeId: {}
+          updatedBy: {}
+          originOrgId: 0
+          issueItemId: {}
+          version: 0
+          movTypeId: {}
+          deleted: 0
+          createdBy: {}
+          matId: {}
+          prdOrderHeadId: {}
+          status: null
+      serviceKey: SCM_PRD$PRD_ISSUE_ITEM_UPDATE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_PLN_RENDER_CREATE_ROUTING_ITEMS_EVENT_SERVICE:
     params:
-      orderType: {}
-      releaseOrderType: 0
-      remark: null
-      plannedEndDate: 0
-      prdVrsId: {}
-      supplyInvOrgId: {}
-      createdAt: 0
-      supplyType: null
-      releaseOrderItemType: {}
-      failReason: null
-      prdPlannedOrderRoutingItemTrId:
-      - {}
-      id: 0
-      dataSources: null
-      locId: {}
-      prdPlannedOrderBomItemTrId:
-      - {}
-      updatedAt: 0
-      updatedBy: {}
-      originOrgId: 0
-      uomId: {}
-      version: 0
-      demandInvOrgId: {}
-      deleted: 0
-      plannedStartDate: 0
-      dataSourcesCode: null
-      releaseOrderCode: null
-      createdBy: {}
-      matId: {}
-      qty: 0
-      plannedOrderCode: null
-      status: null
+      params:
+        request:
+          orderType: {}
+          releaseOrderType: 0
+          remark: null
+          plannedEndDate: 0
+          prdVrsId: {}
+          supplyInvOrgId: {}
+          createdAt: 0
+          supplyType: null
+          releaseOrderItemType: {}
+          failReason: null
+          prdPlannedOrderRoutingItemTrId:
+          - {}
+          id: 0
+          dataSources: null
+          locId: {}
+          prdPlannedOrderBomItemTrId:
+          - {}
+          updatedAt: 0
+          updatedBy: {}
+          originOrgId: 0
+          uomId: {}
+          version: 0
+          demandInvOrgId: {}
+          deleted: 0
+          plannedStartDate: 0
+          dataSourcesCode: null
+          releaseOrderCode: null
+          createdBy: {}
+          matId: {}
+          qty: 0
+          plannedOrderCode: null
+          status: null
+      serviceKey: SCM_PRD$PRD_PLN_RENDER_CREATE_ROUTING_ITEMS_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_DELIVERY_CONFIRM_EVENT_SERVICE:
     params:
-      confirmDate: 0
-      createdAt: 0
-      updatedBy: {}
-      deleted: 0
-      originOrgId: 0
-      createdBy: {}
-      confirmHeaderList:
-      - {}
-      remark: null
-      postingDate: 0
-      id: 0
-      version: 0
-      updatedAt: 0
+      params:
+        request:
+          confirmDate: 0
+          createdAt: 0
+          updatedBy: {}
+          deleted: 0
+          originOrgId: 0
+          createdBy: {}
+          confirmHeaderList:
+          - {}
+          remark: null
+          postingDate: 0
+          id: 0
+          version: 0
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_ORDER_DELIVERY_CONFIRM_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_APP_SELECT_WORK_CENTER_LIST_EVENT_SERVICE:
     params:
-      issueMatTypeCount: 0
-      plannedStartDate: 0
-      prdOrderIds: null
-      id: {}
-      workCenterName: null
-      locId: {}
-      woCodeText: null
+      params:
+        request:
+          issueMatTypeCount: 0
+          plannedStartDate: 0
+          prdOrderIds: null
+          id: {}
+          workCenterName: null
+          locId: {}
+          woCodeText: null
+      serviceKey: SCM_PRD$PRD_ISSUE_APP_SELECT_WORK_CENTER_LIST_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_APP_SELECT_PRD_ORDER_HEAD_LIST_EVENT_SERVICE:
     params:
-      plannedStartDate: 0
-      woCode:
-      - {}
-      invOrgId:
-      - {}
-      invLocId:
-      - {}
+      params:
+        request:
+          plannedStartDate: 0
+          woCode:
+          - {}
+          invOrgId:
+          - {}
+          invLocId:
+          - {}
+      serviceKey: SCM_PRD$PRD_ISSUE_APP_SELECT_PRD_ORDER_HEAD_LIST_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_APP_PAGING_OPERATION_CONFIRM_LIST_EVENT_SERVICE:
     params:
-      prdMatId: {}
-      prdOrderCostItemTr:
-      - {}
-      plannedEndDate: 0
-      bomList:
-      - {}
-      prdVrsId: {}
-      mvmTypeId: {}
-      createdAt: 0
-      soItemId: {}
-      shipmentUom: {}
-      slsOrderCode: null
-      woTypeId: {}
-      actualStartDate: 0
-      confirmStatus: null
-      id: 0
-      prdUomId: {}
-      invOrgId: {}
-      dataSources: null
-      sourcesOrderCode: null
-      locId: {}
-      insufficientDeliveryTolerance: 0
-      updatedAt: 0
-      actualEndDate: 0
-      soId: {}
-      unlimitedOverDelivery: false
-      updatedBy: {}
-      originOrgId: 0
-      expectedDeliveryDate: 0
-      excessiveDeliveryTolerance: 0
-      woCode: null
-      prdManger: null
-      version: 0
-      prdOrderBatchTr:
-      - {}
-      printed: false
-      receivedQty: 0
-      postInvTypeId: {}
-      deleted: 0
-      plannedStartDate: 0
-      routingList:
-      - {}
-      createdBy: {}
-      matId: {}
-      qty: 0
-      postInspection: false
-      deliveredStatus: null
-      slsOrderItemCode: null
-      plnInvOrgId: {}
-      status: null
+      params:
+        request:
+          prdMatId: {}
+          prdOrderCostItemTr:
+          - {}
+          plannedEndDate: 0
+          bomList:
+          - {}
+          prdVrsId: {}
+          mvmTypeId: {}
+          createdAt: 0
+          soItemId: {}
+          shipmentUom: {}
+          slsOrderCode: null
+          woTypeId: {}
+          actualStartDate: 0
+          confirmStatus: null
+          id: 0
+          prdUomId: {}
+          invOrgId: {}
+          dataSources: null
+          sourcesOrderCode: null
+          locId: {}
+          insufficientDeliveryTolerance: 0
+          updatedAt: 0
+          actualEndDate: 0
+          soId: {}
+          unlimitedOverDelivery: false
+          updatedBy: {}
+          originOrgId: 0
+          expectedDeliveryDate: 0
+          excessiveDeliveryTolerance: 0
+          woCode: null
+          prdManger: null
+          version: 0
+          prdOrderBatchTr:
+          - {}
+          printed: false
+          receivedQty: 0
+          postInvTypeId: {}
+          deleted: 0
+          plannedStartDate: 0
+          routingList:
+          - {}
+          createdBy: {}
+          matId: {}
+          qty: 0
+          postInspection: false
+          deliveredStatus: null
+          slsOrderItemCode: null
+          plnInvOrgId: {}
+          status: null
+      serviceKey: SCM_PRD$PRD_APP_PAGING_OPERATION_CONFIRM_LIST_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ROUTING_RENDER_MATERIAL_COMPONENT_EVENT_SERVICE:
     params:
-      matId: 0
-      routingHeadId: 0
-      invOrgId: 0
-      isBackFlush: false
-      bomVrs: null
+      params:
+        request:
+          matId: 0
+          routingHeadId: 0
+          invOrgId: 0
+          isBackFlush: false
+          bomVrs: null
+      serviceKey: SCM_PRD$PRD_ROUTING_RENDER_MATERIAL_COMPONENT_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_CREATE_RETURN_ISSUE_ORDER_BY_ISSUE_EVENT_SERVICE:
     params:
-      issueRule: {}
-      ids:
-      - {}
+      params:
+        request:
+          issueRule: {}
+          ids:
+          - {}
+      serviceKey: SCM_PRD$PRD_ISSUE_CREATE_RETURN_ISSUE_ORDER_BY_ISSUE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_APP_WORK_CENTER_DISTRIBUTION_FINISH_EVENT_SERVICE:
     params:
-      orderHeadMatCode: null
-      orderId: {}
-      orderHeadMatId: {}
-      orderQty: 0
-      orderBomItemId: {}
-      orderCode: null
+      params:
+        request:
+          orderHeadMatCode: null
+          orderId: {}
+          orderHeadMatId: {}
+          orderQty: 0
+          orderBomItemId: {}
+          orderCode: null
+      serviceKey: SCM_PRD$PRD_ISSUE_APP_WORK_CENTER_DISTRIBUTION_FINISH_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_PLN_CONFIRM_EVENT_SERVICE:
     params:
-      ids: null
+      params:
+        request:
+          ids: null
+      serviceKey: SCM_PRD$PRD_PLN_CONFIRM_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_PLN_TRANSFER_EVENT_SERVICE:
     params:
-      ids: null
+      params:
+        request:
+          ids: null
+      serviceKey: SCM_PRD$PRD_PLN_TRANSFER_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_CREATE_BY_PRD_ORDER_BOM_LIST_EVENT_SERVICE:
     params:
-      bomItems:
-      - {}
-      issueRule: {}
-      ids:
-      - {}
-      reverse: false
+      params:
+        request:
+          bomItems:
+          - {}
+          issueRule: {}
+          ids:
+          - {}
+          reverse: false
+      serviceKey: SCM_PRD$PRD_ISSUE_CREATE_BY_PRD_ORDER_BOM_LIST_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_BOM_QUERY_STEP_SCRAP_BY_BOM_ID_EVENT_SERVICE:
     params:
-      id: 0
+      params:
+        request:
+          id: 0
+      serviceKey: SCM_PRD$PRD_BOM_QUERY_STEP_SCRAP_BY_BOM_ID_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_VRS_MD_PAGING_EVENT_SERVICE:
     params:
-      matId: {}
-      opType: null
-      itemList:
-      - {}
-      invOrgId: {}
+      params:
+        request:
+          matId: {}
+          opType: null
+          itemList:
+          - {}
+          invOrgId: {}
+      serviceKey: SCM_PRD$PRD_VRS_MD_PAGING_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_SINGLE_POSTING_EVENT_SERVICE:
     params:
-      id: 0
+      params:
+        request:
+          id: 0
+      serviceKey: SCM_PRD$PRD_ISSUE_SINGLE_POSTING_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_PLN_CANCEL_CLOSE_EVENT_SERVICE:
     params:
-      ids: null
+      params:
+        request:
+          ids: null
+      serviceKey: SCM_PRD$PRD_PLN_CANCEL_CLOSE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_POSTING_EVENT_SERVICE:
     params:
-      updatedBy: {}
-      originOrgId: 0
-      remark: null
-      postingDate: 0
-      version: 0
-      issueType: null
-      createdAt: 0
-      deleted: 0
-      issueItemList:
-      - {}
-      createdBy: {}
-      issueDocTypeId: {}
-      id: 0
-      issueDate: 0
-      issueCode: null
-      status: null
-      updatedAt: 0
+      params:
+        request:
+          updatedBy: {}
+          originOrgId: 0
+          remark: null
+          postingDate: 0
+          version: 0
+          issueType: null
+          createdAt: 0
+          deleted: 0
+          issueItemList:
+          - {}
+          createdBy: {}
+          issueDocTypeId: {}
+          id: 0
+          issueDate: 0
+          issueCode: null
+          status: null
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_ISSUE_POSTING_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_ROUTINGS_CONFIRM_FIND_YIELD_QTY_EVENT_SERVICE:
     params:
-      headerText: null
-      movAssignCfId: 0
-      dnCode: null
-      postingDate: 0
-      invLocId: {}
-      createdAt: 0
-      soItemId: {}
-      requestId: null
-      prdReturnRoutingItem:
-      - {}
-      operationId: {}
-      failReason: null
-      id: 0
-      invOrgId: {}
-      updatedAt: 0
-      operationUomId: {}
-      updatedBy: {}
-      originOrgId: 0
-      woId: {}
-      returnQty: 0
-      prdOrderConfirmActivityItemMd:
-      - {}
-      prdOrderConfirmHeadBatchTr:
-      - {}
-      uomId: {}
-      docDate: 0
-      cancelIs: false
-      version: 0
-      referDocId: {}
-      movTypeId: {}
-      confirmCode: null
-      postInvTypeId: {}
-      deleted: 0
-      createdBy: {}
-      matId: {}
-      qty: 0
-      itemList:
-      - {}
-      prdOrderConfirmBussinessTrId: {}
-      scrappedQty: 0
-      moveVoucherId: 0
-      yieldQty: 0
-      status: null
+      params:
+        request:
+          headerText: null
+          movAssignCfId: 0
+          dnCode: null
+          postingDate: 0
+          invLocId: {}
+          createdAt: 0
+          soItemId: {}
+          requestId: null
+          prdReturnRoutingItem:
+          - {}
+          operationId: {}
+          failReason: null
+          id: 0
+          invOrgId: {}
+          updatedAt: 0
+          operationUomId: {}
+          updatedBy: {}
+          originOrgId: 0
+          woId: {}
+          returnQty: 0
+          prdOrderConfirmActivityItemMd:
+          - {}
+          prdOrderConfirmHeadBatchTr:
+          - {}
+          uomId: {}
+          docDate: 0
+          cancelIs: false
+          version: 0
+          referDocId: {}
+          movTypeId: {}
+          confirmCode: null
+          postInvTypeId: {}
+          deleted: 0
+          createdBy: {}
+          matId: {}
+          qty: 0
+          itemList:
+          - {}
+          prdOrderConfirmBussinessTrId: {}
+          scrappedQty: 0
+          moveVoucherId: 0
+          yieldQty: 0
+          status: null
+      serviceKey: SCM_PRD$PRD_ORDER_ROUTINGS_CONFIRM_FIND_YIELD_QTY_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_BOM_QUERY_EVENT_SERVICE:
     params:
-      bomItems:
-      - {}
-      vrsName: null
-      updatedBy: {}
-      originOrgId: 0
-      batchFrom: 0
-      bomUseId: {}
-      baseQty: 0
-      uomId: {}
-      dateFrom: 0
-      batchTo: 0
-      version: 0
-      createdAt: 0
-      deleted: 0
-      statusId: {}
-      createdBy: {}
-      matId: {}
-      requestId: null
-      dateTo: 0
-      vrsCode: null
-      tenantId: 0
-      id: 0
-      invOrgId: {}
-      updatedAt: 0
+      params:
+        request:
+          bomItems:
+          - {}
+          vrsName: null
+          updatedBy: {}
+          originOrgId: 0
+          batchFrom: 0
+          bomUseId: {}
+          baseQty: 0
+          uomId: {}
+          dateFrom: 0
+          batchTo: 0
+          version: 0
+          createdAt: 0
+          deleted: 0
+          statusId: {}
+          createdBy: {}
+          matId: {}
+          requestId: null
+          dateTo: 0
+          vrsCode: null
+          tenantId: 0
+          id: 0
+          invOrgId: {}
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_BOM_QUERY_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_MAT_DELETE_EVENT_SERVICE:
     params:
-      specialized: false
-      componentCostElementId: {}
-      invLocId: {}
-      individualColl: null
-      createdAt: 0
-      outputCostElementId: {}
-      requestId: null
-      scrapType: null
-      id: 0
-      prdUomId: {}
-      invOrgId: {}
-      inspectionCycle: 0
-      productionCycle: 0
-      insufficientDeliveryTolerance: 0
-      updatedAt: 0
-      unlimitedOverDelivery: false
-      prdvrsList:
-      - {}
-      updatedBy: {}
-      originOrgId: 0
-      fixedScrap: 0
-      excessiveDeliveryTolerance: 0
-      componentScrap: 0
-      backFlush: null
-      version: 0
-      prdMangerId: 0
-      postInvTypeId: {}
-      deleted: 0
-      createdBy: {}
-      postInspection: false
-      genMatMdId: {}
-      batchParaId: 0
-      procurementType: null
-      genMatPrdStepScrapMd:
-      - {}
-      plannedCalendarId: {}
-      serialParaId: 0
+      params:
+        request:
+          specialized: false
+          componentCostElementId: {}
+          invLocId: {}
+          individualColl: null
+          createdAt: 0
+          outputCostElementId: {}
+          requestId: null
+          scrapType: null
+          id: 0
+          prdUomId: {}
+          invOrgId: {}
+          inspectionCycle: 0
+          productionCycle: 0
+          insufficientDeliveryTolerance: 0
+          updatedAt: 0
+          unlimitedOverDelivery: false
+          prdvrsList:
+          - {}
+          updatedBy: {}
+          originOrgId: 0
+          fixedScrap: 0
+          excessiveDeliveryTolerance: 0
+          componentScrap: 0
+          backFlush: null
+          version: 0
+          prdMangerId: 0
+          postInvTypeId: {}
+          deleted: 0
+          createdBy: {}
+          postInspection: false
+          genMatMdId: {}
+          batchParaId: 0
+          procurementType: null
+          genMatPrdStepScrapMd:
+          - {}
+          plannedCalendarId: {}
+          serialParaId: 0
+      serviceKey: SCM_PRD$PRD_MAT_DELETE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_RENDER_CONFIRM_HEAD_BY_ORDER_EVENT_SERVICE:
     params:
-      headerText: null
-      movAssignCfId: 0
-      dnCode: null
-      postingDate: 0
-      invLocId: {}
-      createdAt: 0
-      soItemId: {}
-      requestId: null
-      prdReturnRoutingItem:
-      - {}
-      operationId: {}
-      failReason: null
-      id: 0
-      invOrgId: {}
-      updatedAt: 0
-      operationUomId: {}
-      updatedBy: {}
-      originOrgId: 0
-      woId: {}
-      returnQty: 0
-      prdOrderConfirmActivityItemMd:
-      - {}
-      prdOrderConfirmHeadBatchTr:
-      - {}
-      uomId: {}
-      docDate: 0
-      cancelIs: false
-      version: 0
-      referDocId: {}
-      movTypeId: {}
-      confirmCode: null
-      postInvTypeId: {}
-      deleted: 0
-      createdBy: {}
-      matId: {}
-      qty: 0
-      itemList:
-      - {}
-      prdOrderConfirmBussinessTrId: {}
-      scrappedQty: 0
-      moveVoucherId: 0
-      yieldQty: 0
-      status: null
+      params:
+        request:
+          headerText: null
+          movAssignCfId: 0
+          dnCode: null
+          postingDate: 0
+          invLocId: {}
+          createdAt: 0
+          soItemId: {}
+          requestId: null
+          prdReturnRoutingItem:
+          - {}
+          operationId: {}
+          failReason: null
+          id: 0
+          invOrgId: {}
+          updatedAt: 0
+          operationUomId: {}
+          updatedBy: {}
+          originOrgId: 0
+          woId: {}
+          returnQty: 0
+          prdOrderConfirmActivityItemMd:
+          - {}
+          prdOrderConfirmHeadBatchTr:
+          - {}
+          uomId: {}
+          docDate: 0
+          cancelIs: false
+          version: 0
+          referDocId: {}
+          movTypeId: {}
+          confirmCode: null
+          postInvTypeId: {}
+          deleted: 0
+          createdBy: {}
+          matId: {}
+          qty: 0
+          itemList:
+          - {}
+          prdOrderConfirmBussinessTrId: {}
+          scrappedQty: 0
+          moveVoucherId: 0
+          yieldQty: 0
+          status: null
+      serviceKey: SCM_PRD$PRD_RENDER_CONFIRM_HEAD_BY_ORDER_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_BOM_ALTERNATE_INVOKE_EVENT:
     params:
       params:
@@ -1031,170 +1266,193 @@ api_params:
           slsOrderItemCode: null
           plnInvOrgId: {}
           status: null
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_BOM_ALTERNATE_INVOKE_EVENT
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ROUTING_QUERY_ROUTING_ITEM_BY_HEAD_EVENT_SERVICE:
     params:
-      id: 0
+      params:
+        request:
+          id: 0
+      serviceKey: SCM_PRD$PRD_ROUTING_QUERY_ROUTING_ITEM_BY_HEAD_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_RULE_RENDER_DEFAULT_EVENT_SERVICE:
     params:
-      createdAt: 0
-      code: null
-      updatedBy: {}
-      deleted: 0
-      originOrgId: 0
-      createdBy: {}
-      defaultValue: false
-      name: null
-      id: 0
-      ruleItems:
-      - {}
-      version: 0
-      updatedAt: 0
+      params:
+        request:
+          createdAt: 0
+          code: null
+          updatedBy: {}
+          deleted: 0
+          originOrgId: 0
+          createdBy: {}
+          defaultValue: false
+          name: null
+          id: 0
+          ruleItems:
+          - {}
+          version: 0
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_ISSUE_RULE_RENDER_DEFAULT_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_ROUTINGS_CONFIRM_EVENT_SERVICE:
     params:
-      headerText: null
-      movAssignCfId: 0
-      dnCode: null
-      postingDate: 0
-      invLocId: {}
-      createdAt: 0
-      soItemId: {}
-      requestId: null
-      prdReturnRoutingItem:
-      - {}
-      operationId: {}
-      failReason: null
-      id: 0
-      invOrgId: {}
-      updatedAt: 0
-      operationUomId: {}
-      updatedBy: {}
-      originOrgId: 0
-      woId: {}
-      returnQty: 0
-      prdOrderConfirmActivityItemMd:
-      - {}
-      prdOrderConfirmHeadBatchTr:
-      - {}
-      uomId: {}
-      docDate: 0
-      cancelIs: false
-      version: 0
-      referDocId: {}
-      movTypeId: {}
-      confirmCode: null
-      postInvTypeId: {}
-      deleted: 0
-      createdBy: {}
-      matId: {}
-      qty: 0
-      itemList:
-      - {}
-      prdOrderConfirmBussinessTrId: {}
-      scrappedQty: 0
-      moveVoucherId: 0
-      yieldQty: 0
-      status: null
+      params:
+        request:
+          headerText: null
+          movAssignCfId: 0
+          dnCode: null
+          postingDate: 0
+          invLocId: {}
+          createdAt: 0
+          soItemId: {}
+          requestId: null
+          prdReturnRoutingItem:
+          - {}
+          operationId: {}
+          failReason: null
+          id: 0
+          invOrgId: {}
+          updatedAt: 0
+          operationUomId: {}
+          updatedBy: {}
+          originOrgId: 0
+          woId: {}
+          returnQty: 0
+          prdOrderConfirmActivityItemMd:
+          - {}
+          prdOrderConfirmHeadBatchTr:
+          - {}
+          uomId: {}
+          docDate: 0
+          cancelIs: false
+          version: 0
+          referDocId: {}
+          movTypeId: {}
+          confirmCode: null
+          postInvTypeId: {}
+          deleted: 0
+          createdBy: {}
+          matId: {}
+          qty: 0
+          itemList:
+          - {}
+          prdOrderConfirmBussinessTrId: {}
+          scrappedQty: 0
+          moveVoucherId: 0
+          yieldQty: 0
+          status: null
+      serviceKey: SCM_PRD$PRD_ORDER_ROUTINGS_CONFIRM_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_UPDATE_ORDER_ITEM_BY_VRS_EVENT_SERVICE:
     params:
-      prdMatId: {}
-      prdOrderCostItemTr:
-      - {}
-      plannedEndDate: 0
-      bomList:
-      - {}
-      prdVrsId: {}
-      mvmTypeId: {}
-      createdAt: 0
-      soItemId: {}
-      shipmentUom: {}
-      slsOrderCode: null
-      woTypeId: {}
-      actualStartDate: 0
-      confirmStatus: null
-      id: 0
-      prdUomId: {}
-      invOrgId: {}
-      dataSources: null
-      sourcesOrderCode: null
-      locId: {}
-      insufficientDeliveryTolerance: 0
-      updatedAt: 0
-      actualEndDate: 0
-      soId: {}
-      unlimitedOverDelivery: false
-      updatedBy: {}
-      originOrgId: 0
-      expectedDeliveryDate: 0
-      excessiveDeliveryTolerance: 0
-      woCode: null
-      prdManger: null
-      version: 0
-      prdOrderBatchTr:
-      - {}
-      printed: false
-      receivedQty: 0
-      postInvTypeId: {}
-      deleted: 0
-      plannedStartDate: 0
-      routingList:
-      - {}
-      createdBy: {}
-      matId: {}
-      qty: 0
-      postInspection: false
-      deliveredStatus: null
-      slsOrderItemCode: null
-      plnInvOrgId: {}
-      status: null
+      params:
+        request:
+          prdMatId: {}
+          prdOrderCostItemTr:
+          - {}
+          plannedEndDate: 0
+          bomList:
+          - {}
+          prdVrsId: {}
+          mvmTypeId: {}
+          createdAt: 0
+          soItemId: {}
+          shipmentUom: {}
+          slsOrderCode: null
+          woTypeId: {}
+          actualStartDate: 0
+          confirmStatus: null
+          id: 0
+          prdUomId: {}
+          invOrgId: {}
+          dataSources: null
+          sourcesOrderCode: null
+          locId: {}
+          insufficientDeliveryTolerance: 0
+          updatedAt: 0
+          actualEndDate: 0
+          soId: {}
+          unlimitedOverDelivery: false
+          updatedBy: {}
+          originOrgId: 0
+          expectedDeliveryDate: 0
+          excessiveDeliveryTolerance: 0
+          woCode: null
+          prdManger: null
+          version: 0
+          prdOrderBatchTr:
+          - {}
+          printed: false
+          receivedQty: 0
+          postInvTypeId: {}
+          deleted: 0
+          plannedStartDate: 0
+          routingList:
+          - {}
+          createdBy: {}
+          matId: {}
+          qty: 0
+          postInspection: false
+          deliveredStatus: null
+          slsOrderItemCode: null
+          plnInvOrgId: {}
+          status: null
+      serviceKey: SCM_PRD$PRD_UPDATE_ORDER_ITEM_BY_VRS_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_RULE_INIT_EVENT_SERVICE:
     params:
-      createdAt: 0
-      code: null
-      updatedBy: {}
-      deleted: 0
-      originOrgId: 0
-      createdBy: {}
-      defaultValue: false
-      name: null
-      id: 0
-      ruleItems:
-      - {}
-      version: 0
-      updatedAt: 0
+      params:
+        request:
+          createdAt: 0
+          code: null
+          updatedBy: {}
+          deleted: 0
+          originOrgId: 0
+          createdBy: {}
+          defaultValue: false
+          name: null
+          id: 0
+          ruleItems:
+          - {}
+          version: 0
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_ISSUE_RULE_INIT_EVENT_SERVICE
   ? /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_CONFIRM_QUERY_ORDER_CONFIRM_BATCH_PRINT_INFO_BY_BATCH_IDS_EVENT_SERVICE
   : params:
-      ids: null
+      params:
+        request:
+          ids: null
+      serviceKey: SCM_PRD$PRD_ORDER_CONFIRM_QUERY_ORDER_CONFIRM_BATCH_PRINT_INFO_BY_BATCH_IDS_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_MAT_PAGING_GEN_MAT_BY_ORG_EVENT_SERVICE:
     params:
-      invOrgId: 0
+      params:
+        request:
+          invOrgId: 0
+      serviceKey: SCM_PRD$PRD_MAT_PAGING_GEN_MAT_BY_ORG_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_BOM_ITEM_QUERY_BY_HEAD_EVENT_SERVICE:
     params:
-      bomItems:
-      - {}
-      vrsName: null
-      updatedBy: {}
-      originOrgId: 0
-      batchFrom: 0
-      bomUseId: {}
-      baseQty: 0
-      uomId: {}
-      dateFrom: 0
-      batchTo: 0
-      version: 0
-      createdAt: 0
-      deleted: 0
-      statusId: {}
-      createdBy: {}
-      matId: {}
-      requestId: null
-      dateTo: 0
-      vrsCode: null
-      tenantId: 0
-      id: 0
-      invOrgId: {}
-      updatedAt: 0
+      params:
+        request:
+          bomItems:
+          - {}
+          vrsName: null
+          updatedBy: {}
+          originOrgId: 0
+          batchFrom: 0
+          bomUseId: {}
+          baseQty: 0
+          uomId: {}
+          dateFrom: 0
+          batchTo: 0
+          version: 0
+          createdAt: 0
+          deleted: 0
+          statusId: {}
+          createdBy: {}
+          matId: {}
+          requestId: null
+          dateTo: 0
+          vrsCode: null
+          tenantId: 0
+          id: 0
+          invOrgId: {}
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_BOM_ITEM_QUERY_BY_HEAD_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_BOM_ALTERNATE_SAVE_ALTERNATE_PLANE_EVENT:
     params:
       params:
@@ -1221,692 +1479,936 @@ api_params:
           invOrgId: {}
           status: null
           updatedAt: 0
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_BOM_ALTERNATE_SAVE_ALTERNATE_PLANE_EVENT
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_ROUTINGS_CONFIRM_FIND_INV_INFO_EVENT_SERVICE:
     params:
-      headerText: null
-      movAssignCfId: 0
-      dnCode: null
-      postingDate: 0
-      invLocId: {}
-      createdAt: 0
-      soItemId: {}
-      requestId: null
-      prdReturnRoutingItem:
-      - {}
-      operationId: {}
-      failReason: null
-      id: 0
-      invOrgId: {}
-      updatedAt: 0
-      operationUomId: {}
-      updatedBy: {}
-      originOrgId: 0
-      woId: {}
-      returnQty: 0
-      prdOrderConfirmActivityItemMd:
-      - {}
-      prdOrderConfirmHeadBatchTr:
-      - {}
-      uomId: {}
-      docDate: 0
-      cancelIs: false
-      version: 0
-      referDocId: {}
-      movTypeId: {}
-      confirmCode: null
-      postInvTypeId: {}
-      deleted: 0
-      createdBy: {}
-      matId: {}
-      qty: 0
-      itemList:
-      - {}
-      prdOrderConfirmBussinessTrId: {}
-      scrappedQty: 0
-      moveVoucherId: 0
-      yieldQty: 0
-      status: null
+      params:
+        request:
+          headerText: null
+          movAssignCfId: 0
+          dnCode: null
+          postingDate: 0
+          invLocId: {}
+          createdAt: 0
+          soItemId: {}
+          requestId: null
+          prdReturnRoutingItem:
+          - {}
+          operationId: {}
+          failReason: null
+          id: 0
+          invOrgId: {}
+          updatedAt: 0
+          operationUomId: {}
+          updatedBy: {}
+          originOrgId: 0
+          woId: {}
+          returnQty: 0
+          prdOrderConfirmActivityItemMd:
+          - {}
+          prdOrderConfirmHeadBatchTr:
+          - {}
+          uomId: {}
+          docDate: 0
+          cancelIs: false
+          version: 0
+          referDocId: {}
+          movTypeId: {}
+          confirmCode: null
+          postInvTypeId: {}
+          deleted: 0
+          createdBy: {}
+          matId: {}
+          qty: 0
+          itemList:
+          - {}
+          prdOrderConfirmBussinessTrId: {}
+          scrappedQty: 0
+          moveVoucherId: 0
+          yieldQty: 0
+          status: null
+      serviceKey: SCM_PRD$PRD_ORDER_ROUTINGS_CONFIRM_FIND_INV_INFO_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_PLN_DELETE_EVENT_SERVICE:
     params:
-      ids: null
+      params:
+        request:
+          ids: null
+      serviceKey: SCM_PRD$PRD_PLN_DELETE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_DELIVERY_CONFIRM_BATCH_EVENT_SERVICE:
-    params: {}
+    params:
+      params:
+        request:
+        - headerText: null
+          movAssignCfId: 0
+          dnCode: null
+          postingDate: 0
+          invLocId: {}
+          createdAt: 0
+          soItemId: {}
+          requestId: null
+          prdReturnRoutingItem:
+          - {}
+          operationId: {}
+          failReason: null
+          id: 0
+          invOrgId: {}
+          updatedAt: 0
+          operationUomId: {}
+          updatedBy: {}
+          originOrgId: 0
+          woId: {}
+          returnQty: 0
+          prdOrderConfirmActivityItemMd:
+          - {}
+          prdOrderConfirmHeadBatchTr:
+          - {}
+          uomId: {}
+          docDate: 0
+          cancelIs: false
+          version: 0
+          referDocId: {}
+          movTypeId: {}
+          confirmCode: null
+          postInvTypeId: {}
+          deleted: 0
+          createdBy: {}
+          matId: {}
+          qty: 0
+          itemList:
+          - {}
+          prdOrderConfirmBussinessTrId: {}
+          scrappedQty: 0
+          moveVoucherId: 0
+          yieldQty: 0
+          status: null
+      serviceKey: SCM_PRD$PRD_ORDER_DELIVERY_CONFIRM_BATCH_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_APP_ORDER_DETAIL_EVENT_SERVICE:
     params:
-      id: 0
+      params:
+        request:
+          id: 0
+      serviceKey: SCM_PRD$PRD_ISSUE_APP_ORDER_DETAIL_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_QUERY_ORDER_BOM_BATCH_BY_ORDER_BOM_ID_EVENT_SERVICE:
     params:
-      id: 0
+      params:
+        request:
+          id: 0
+      serviceKey: SCM_PRD$PRD_ORDER_QUERY_ORDER_BOM_BATCH_BY_ORDER_BOM_ID_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_BOM_QUERY_BY_ROUTING_EVENT_SERVICE:
-    params: {}
+    params:
+      params:
+        request: {}
+      serviceKey: SCM_PRD$PRD_BOM_QUERY_BY_ROUTING_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ROUTING_SAVE_EVENT_SERVICE:
-    params: {}
+    params:
+      params:
+        request: {}
+      serviceKey: SCM_PRD$PRD_ROUTING_SAVE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_RETURNED_BATCH_POSTING_EVENT_SERVICE:
     params:
-      ids: null
+      params:
+        request:
+          ids: null
+      serviceKey: SCM_PRD$PRD_ISSUE_RETURNED_BATCH_POSTING_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_POSTING_BY_HEAD_EVENT_SERVICE:
     params:
-      id: 0
+      params:
+        request:
+          id: 0
+      serviceKey: SCM_PRD$PRD_ISSUE_POSTING_BY_HEAD_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_MAT_FIND_BY_ORG_AND_GEN_MAR_EVENT_SERVICE:
     params:
-      specialized: false
-      componentCostElementId: {}
-      invLocId: {}
-      individualColl: null
-      createdAt: 0
-      outputCostElementId: {}
-      requestId: null
-      scrapType: null
-      id: 0
-      prdUomId: {}
-      invOrgId: {}
-      inspectionCycle: 0
-      productionCycle: 0
-      insufficientDeliveryTolerance: 0
-      updatedAt: 0
-      unlimitedOverDelivery: false
-      prdvrsList:
-      - {}
-      updatedBy: {}
-      originOrgId: 0
-      fixedScrap: 0
-      excessiveDeliveryTolerance: 0
-      componentScrap: 0
-      backFlush: null
-      version: 0
-      prdMangerId: 0
-      postInvTypeId: {}
-      deleted: 0
-      createdBy: {}
-      postInspection: false
-      genMatMdId: {}
-      batchParaId: 0
-      procurementType: null
-      genMatPrdStepScrapMd:
-      - {}
-      plannedCalendarId: {}
-      serialParaId: 0
+      params:
+        request:
+          specialized: false
+          componentCostElementId: {}
+          invLocId: {}
+          individualColl: null
+          createdAt: 0
+          outputCostElementId: {}
+          requestId: null
+          scrapType: null
+          id: 0
+          prdUomId: {}
+          invOrgId: {}
+          inspectionCycle: 0
+          productionCycle: 0
+          insufficientDeliveryTolerance: 0
+          updatedAt: 0
+          unlimitedOverDelivery: false
+          prdvrsList:
+          - {}
+          updatedBy: {}
+          originOrgId: 0
+          fixedScrap: 0
+          excessiveDeliveryTolerance: 0
+          componentScrap: 0
+          backFlush: null
+          version: 0
+          prdMangerId: 0
+          postInvTypeId: {}
+          deleted: 0
+          createdBy: {}
+          postInspection: false
+          genMatMdId: {}
+          batchParaId: 0
+          procurementType: null
+          genMatPrdStepScrapMd:
+          - {}
+          plannedCalendarId: {}
+          serialParaId: 0
+      serviceKey: SCM_PRD$PRD_MAT_FIND_BY_ORG_AND_GEN_MAR_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_TYPE_SAVE_EVENT_SERVICE:
     params:
-      isCreatedByPush: false
-      updatedBy: {}
-      originOrgId: 0
-      typeName: null
-      isIssue: false
-      version: 0
-      typeCode: null
-      createdAt: 0
-      deleted: 0
-      createdBy: {}
-      codeRules: null
-      id: 0
-      updatedAt: 0
+      params:
+        request:
+          isCreatedByPush: false
+          updatedBy: {}
+          originOrgId: 0
+          typeName: null
+          isIssue: false
+          version: 0
+          typeCode: null
+          createdAt: 0
+          deleted: 0
+          createdBy: {}
+          codeRules: null
+          id: 0
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_ISSUE_TYPE_SAVE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_BOM_RENDER_ITEM_EVENT_SERVICE:
-    params: {}
+    params:
+      params:
+        request:
+        - specialized: false
+          isMainItem: false
+          isByproduct: false
+          faxQtyIs: false
+          itemCode: 0
+          genBomHeadMdId: {}
+          invLocId: {}
+          provisionIndId: {}
+          substitutedComponent: {}
+          groupSubstituteCode: 0
+          createdAt: 0
+          soIs: false
+          costElementId: 0
+          costIs: false
+          requestId: null
+          isKeyItem: false
+          scrapType: null
+          id: 0
+          itemTypeId: {}
+          invOrgId: {}
+          substituteSequence: 0
+          isCoproduct: false
+          bomItemStepScrapList:
+          - {}
+          updatedAt: 0
+          componentType: null
+          updatedBy: {}
+          originOrgId: 0
+          fixedScrap: 0
+          componentScrap: 0
+          isGroupSubstitute: false
+          uomId: {}
+          dateFrom: 0
+          parentMatId: {}
+          version: 0
+          substituteType: null
+          prdIs: false
+          qtyPercent: 0
+          deleted: 0
+          createdBy: {}
+          matId: {}
+          qty: 0
+          dateTo: 0
+          tenantId: 0
+          matQty: 0
+          engineerDesignIs: false
+          scrapRate: 0
+      serviceKey: SCM_PRD$PRD_BOM_RENDER_ITEM_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_ROUTINGS_CONFIRM_VERIFY_RENDER_EVENT_SERVICE:
     params:
-      ids: null
+      params:
+        request:
+          ids: null
+      serviceKey: SCM_PRD$PRD_ORDER_ROUTINGS_CONFIRM_VERIFY_RENDER_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_PLN_SPLIT_EVENT_SERVICE:
     params:
-      orderType: {}
-      releaseOrderType: 0
-      remark: null
-      plannedEndDate: 0
-      prdVrsId: {}
-      supplyInvOrgId: {}
-      createdAt: 0
-      supplyType: null
-      releaseOrderItemType: {}
-      failReason: null
-      prdPlannedOrderRoutingItemTrId:
-      - {}
-      id: 0
-      dataSources: null
-      locId: {}
-      prdPlannedOrderBomItemTrId:
-      - {}
-      updatedAt: 0
-      updatedBy: {}
-      originOrgId: 0
-      uomId: {}
-      version: 0
-      demandInvOrgId: {}
-      deleted: 0
-      plannedStartDate: 0
-      dataSourcesCode: null
-      releaseOrderCode: null
-      createdBy: {}
-      matId: {}
-      qty: 0
-      plannedOrderCode: null
-      status: null
+      params:
+        request:
+          orderType: {}
+          releaseOrderType: 0
+          remark: null
+          plannedEndDate: 0
+          prdVrsId: {}
+          supplyInvOrgId: {}
+          createdAt: 0
+          supplyType: null
+          releaseOrderItemType: {}
+          failReason: null
+          prdPlannedOrderRoutingItemTrId:
+          - {}
+          id: 0
+          dataSources: null
+          locId: {}
+          prdPlannedOrderBomItemTrId:
+          - {}
+          updatedAt: 0
+          updatedBy: {}
+          originOrgId: 0
+          uomId: {}
+          version: 0
+          demandInvOrgId: {}
+          deleted: 0
+          plannedStartDate: 0
+          dataSourcesCode: null
+          releaseOrderCode: null
+          createdBy: {}
+          matId: {}
+          qty: 0
+          plannedOrderCode: null
+          status: null
+      serviceKey: SCM_PRD$PRD_PLN_SPLIT_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_ORDER_DETAILS_EVENT_SERVICE:
     params:
-      id: 0
+      params:
+        request:
+          id: 0
+      serviceKey: SCM_PRD$PRD_ISSUE_ORDER_DETAILS_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_PLN_RENDER_CREATE_BOM_ITEMS_EVENT_SERVICE:
     params:
-      orderType: {}
-      releaseOrderType: 0
-      remark: null
-      plannedEndDate: 0
-      prdVrsId: {}
-      supplyInvOrgId: {}
-      createdAt: 0
-      supplyType: null
-      releaseOrderItemType: {}
-      failReason: null
-      prdPlannedOrderRoutingItemTrId:
-      - {}
-      id: 0
-      dataSources: null
-      locId: {}
-      prdPlannedOrderBomItemTrId:
-      - {}
-      updatedAt: 0
-      updatedBy: {}
-      originOrgId: 0
-      uomId: {}
-      version: 0
-      demandInvOrgId: {}
-      deleted: 0
-      plannedStartDate: 0
-      dataSourcesCode: null
-      releaseOrderCode: null
-      createdBy: {}
-      matId: {}
-      qty: 0
-      plannedOrderCode: null
-      status: null
+      params:
+        request:
+          orderType: {}
+          releaseOrderType: 0
+          remark: null
+          plannedEndDate: 0
+          prdVrsId: {}
+          supplyInvOrgId: {}
+          createdAt: 0
+          supplyType: null
+          releaseOrderItemType: {}
+          failReason: null
+          prdPlannedOrderRoutingItemTrId:
+          - {}
+          id: 0
+          dataSources: null
+          locId: {}
+          prdPlannedOrderBomItemTrId:
+          - {}
+          updatedAt: 0
+          updatedBy: {}
+          originOrgId: 0
+          uomId: {}
+          version: 0
+          demandInvOrgId: {}
+          deleted: 0
+          plannedStartDate: 0
+          dataSourcesCode: null
+          releaseOrderCode: null
+          createdBy: {}
+          matId: {}
+          qty: 0
+          plannedOrderCode: null
+          status: null
+      serviceKey: SCM_PRD$PRD_PLN_RENDER_CREATE_BOM_ITEMS_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_VRS_AUTO_RENDER_EVENT_SERVICE:
     params:
-      prdMatId: {}
-      prdOrderCostItemTr:
-      - {}
-      plannedEndDate: 0
-      bomList:
-      - {}
-      prdVrsId: {}
-      mvmTypeId: {}
-      createdAt: 0
-      soItemId: {}
-      shipmentUom: {}
-      slsOrderCode: null
-      woTypeId: {}
-      actualStartDate: 0
-      confirmStatus: null
-      id: 0
-      prdUomId: {}
-      invOrgId: {}
-      dataSources: null
-      sourcesOrderCode: null
-      locId: {}
-      insufficientDeliveryTolerance: 0
-      updatedAt: 0
-      actualEndDate: 0
-      soId: {}
-      unlimitedOverDelivery: false
-      updatedBy: {}
-      originOrgId: 0
-      expectedDeliveryDate: 0
-      excessiveDeliveryTolerance: 0
-      woCode: null
-      prdManger: null
-      version: 0
-      prdOrderBatchTr:
-      - {}
-      printed: false
-      receivedQty: 0
-      postInvTypeId: {}
-      deleted: 0
-      plannedStartDate: 0
-      routingList:
-      - {}
-      createdBy: {}
-      matId: {}
-      qty: 0
-      postInspection: false
-      deliveredStatus: null
-      slsOrderItemCode: null
-      plnInvOrgId: {}
-      status: null
+      params:
+        request:
+          prdMatId: {}
+          prdOrderCostItemTr:
+          - {}
+          plannedEndDate: 0
+          bomList:
+          - {}
+          prdVrsId: {}
+          mvmTypeId: {}
+          createdAt: 0
+          soItemId: {}
+          shipmentUom: {}
+          slsOrderCode: null
+          woTypeId: {}
+          actualStartDate: 0
+          confirmStatus: null
+          id: 0
+          prdUomId: {}
+          invOrgId: {}
+          dataSources: null
+          sourcesOrderCode: null
+          locId: {}
+          insufficientDeliveryTolerance: 0
+          updatedAt: 0
+          actualEndDate: 0
+          soId: {}
+          unlimitedOverDelivery: false
+          updatedBy: {}
+          originOrgId: 0
+          expectedDeliveryDate: 0
+          excessiveDeliveryTolerance: 0
+          woCode: null
+          prdManger: null
+          version: 0
+          prdOrderBatchTr:
+          - {}
+          printed: false
+          receivedQty: 0
+          postInvTypeId: {}
+          deleted: 0
+          plannedStartDate: 0
+          routingList:
+          - {}
+          createdBy: {}
+          matId: {}
+          qty: 0
+          postInspection: false
+          deliveredStatus: null
+          slsOrderItemCode: null
+          plnInvOrgId: {}
+          status: null
+      serviceKey: SCM_PRD$PRD_VRS_AUTO_RENDER_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_MAT_FIND_BY_ORG_EVENT_SERVICE:
     params:
-      specialized: false
-      componentCostElementId: {}
-      invLocId: {}
-      individualColl: null
-      createdAt: 0
-      outputCostElementId: {}
-      requestId: null
-      scrapType: null
-      id: 0
-      prdUomId: {}
-      invOrgId: {}
-      inspectionCycle: 0
-      productionCycle: 0
-      insufficientDeliveryTolerance: 0
-      updatedAt: 0
-      unlimitedOverDelivery: false
-      prdvrsList:
-      - {}
-      updatedBy: {}
-      originOrgId: 0
-      fixedScrap: 0
-      excessiveDeliveryTolerance: 0
-      componentScrap: 0
-      backFlush: null
-      version: 0
-      prdMangerId: 0
-      postInvTypeId: {}
-      deleted: 0
-      createdBy: {}
-      postInspection: false
-      genMatMdId: {}
-      batchParaId: 0
-      procurementType: null
-      genMatPrdStepScrapMd:
-      - {}
-      plannedCalendarId: {}
-      serialParaId: 0
+      params:
+        request:
+          specialized: false
+          componentCostElementId: {}
+          invLocId: {}
+          individualColl: null
+          createdAt: 0
+          outputCostElementId: {}
+          requestId: null
+          scrapType: null
+          id: 0
+          prdUomId: {}
+          invOrgId: {}
+          inspectionCycle: 0
+          productionCycle: 0
+          insufficientDeliveryTolerance: 0
+          updatedAt: 0
+          unlimitedOverDelivery: false
+          prdvrsList:
+          - {}
+          updatedBy: {}
+          originOrgId: 0
+          fixedScrap: 0
+          excessiveDeliveryTolerance: 0
+          componentScrap: 0
+          backFlush: null
+          version: 0
+          prdMangerId: 0
+          postInvTypeId: {}
+          deleted: 0
+          createdBy: {}
+          postInspection: false
+          genMatMdId: {}
+          batchParaId: 0
+          procurementType: null
+          genMatPrdStepScrapMd:
+          - {}
+          plannedCalendarId: {}
+          serialParaId: 0
+      serviceKey: SCM_PRD$PRD_MAT_FIND_BY_ORG_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_APP_CREATE_BY_PRD_ORDER_BOM_LIST_EVENT_SERVICE:
     params:
-      bomItems:
-      - {}
-      issueRule: {}
-      ids:
-      - {}
-      reverse: false
+      params:
+        request:
+          bomItems:
+          - {}
+          issueRule: {}
+          ids:
+          - {}
+          reverse: false
+      serviceKey: SCM_PRD$PRD_ISSUE_APP_CREATE_BY_PRD_ORDER_BOM_LIST_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ROUTING_RENDER_BACK_FLUSH_EVENT_SERVICE:
-    params: {}
+    params:
+      params:
+        request:
+        - matId: 0
+          routingHeadId: 0
+          invOrgId: 0
+          isBackFlush: false
+          bomVrs: null
+      serviceKey: SCM_PRD$PRD_ROUTING_RENDER_BACK_FLUSH_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_APP_PAGING_EVENT_SERVICE:
     params:
-      issueItemWorkCenter:
-      - {}
-      issueDate: 0
-      issueCode:
-      - {}
-      issueItemInvOrgId:
-      - {}
+      params:
+        request:
+          issueItemWorkCenter:
+          - {}
+          issueDate: 0
+          issueCode:
+          - {}
+          issueItemInvOrgId:
+          - {}
+      serviceKey: SCM_PRD$PRD_ISSUE_APP_PAGING_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_PLANNED_END_INIT_EVENT_SERVICE:
     params:
-      prdMatId: {}
-      prdOrderCostItemTr:
-      - {}
-      plannedEndDate: 0
-      bomList:
-      - {}
-      prdVrsId: {}
-      mvmTypeId: {}
-      createdAt: 0
-      soItemId: {}
-      shipmentUom: {}
-      slsOrderCode: null
-      woTypeId: {}
-      actualStartDate: 0
-      confirmStatus: null
-      id: 0
-      prdUomId: {}
-      invOrgId: {}
-      dataSources: null
-      sourcesOrderCode: null
-      locId: {}
-      insufficientDeliveryTolerance: 0
-      updatedAt: 0
-      actualEndDate: 0
-      soId: {}
-      unlimitedOverDelivery: false
-      updatedBy: {}
-      originOrgId: 0
-      expectedDeliveryDate: 0
-      excessiveDeliveryTolerance: 0
-      woCode: null
-      prdManger: null
-      version: 0
-      prdOrderBatchTr:
-      - {}
-      printed: false
-      receivedQty: 0
-      postInvTypeId: {}
-      deleted: 0
-      plannedStartDate: 0
-      routingList:
-      - {}
-      createdBy: {}
-      matId: {}
-      qty: 0
-      postInspection: false
-      deliveredStatus: null
-      slsOrderItemCode: null
-      plnInvOrgId: {}
-      status: null
+      params:
+        request:
+          prdMatId: {}
+          prdOrderCostItemTr:
+          - {}
+          plannedEndDate: 0
+          bomList:
+          - {}
+          prdVrsId: {}
+          mvmTypeId: {}
+          createdAt: 0
+          soItemId: {}
+          shipmentUom: {}
+          slsOrderCode: null
+          woTypeId: {}
+          actualStartDate: 0
+          confirmStatus: null
+          id: 0
+          prdUomId: {}
+          invOrgId: {}
+          dataSources: null
+          sourcesOrderCode: null
+          locId: {}
+          insufficientDeliveryTolerance: 0
+          updatedAt: 0
+          actualEndDate: 0
+          soId: {}
+          unlimitedOverDelivery: false
+          updatedBy: {}
+          originOrgId: 0
+          expectedDeliveryDate: 0
+          excessiveDeliveryTolerance: 0
+          woCode: null
+          prdManger: null
+          version: 0
+          prdOrderBatchTr:
+          - {}
+          printed: false
+          receivedQty: 0
+          postInvTypeId: {}
+          deleted: 0
+          plannedStartDate: 0
+          routingList:
+          - {}
+          createdBy: {}
+          matId: {}
+          qty: 0
+          postInspection: false
+          deliveredStatus: null
+          slsOrderItemCode: null
+          plnInvOrgId: {}
+          status: null
+      serviceKey: SCM_PRD$PRD_ORDER_PLANNED_END_INIT_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_CONVERT_BY_SO_ORDER_EVENT_SERVICE:
-    params: {}
+    params:
+      params:
+        request:
+        - id: 0
+      serviceKey: SCM_PRD$PRD_ORDER_CONVERT_BY_SO_ORDER_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_ROUTING_CONFIRM_RENDER_BY_PRD_ORDER_CODE_EVENT_SERVICE:
     params:
-      value: null
+      params:
+        request:
+          value: null
+      serviceKey: SCM_PRD$PRD_ORDER_ROUTING_CONFIRM_RENDER_BY_PRD_ORDER_CODE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_CONFIRM_TEST_EVENT_SERVICE:
     params:
-      approveStatus: null
-      planSendDate: 0
-      matTypeQty: 0
-      salesmanPhone: null
-      planRecvDate: 0
-      logisticNum: null
-      postingDate: 0
-      sumQty: 0
-      invLocId: {}
-      packageStatus: null
-      createdAt: 0
-      invExecutedCleanCount: 0
-      uk: null
-      invWhId: 0
-      promptMsg: null
-      serviceVendId: {}
-      freezeStatus: null
-      transCode: null
-      id: 0
-      delProcessList:
-      - {}
-      invOrgId: {}
-      bizStatus: null
-      updatedAt: 0
-      outerCode: null
-      whseNum: 0
-      updatedBy: {}
-      originOrgId: 0
-      delTextList:
-      - {}
-      expressComId: {}
-      dnParent: {}
-      docCode: null
-      version: 0
-      relationDnId: {}
-      recvContactInfo: null
-      btClass: null
-      sendAddrDesc: null
-      cleanCount: 0
-      sourceType: null
-      vendPrtnId: {}
-      delStatus: null
-      salesman: null
-      docCreateFinal: false
-      dnType: {}
-      delPartnerList:
-      - {}
-      delAttachmentList:
-      - {}
-      custPrtnId: {}
-      dnCode: null
-      recvAddrDesc: null
-      expressList:
-      - {}
-      isEnableWel: false
-      dnCreatedy: null
-      remark: null
-      title: null
-      orgId: 0
-      dnDelStatus:
-      - null
-      sendContactInfo: null
-      delClass: null
-      printCount: 0
-      sendAddrId: {}
-      productType: null
-      groupConditionKey: null
-      dnItemList:
-      - {}
-      sendContactPhone: null
-      isEnablePackage: false
-      isInvExecuted: false
-      label: null
-      parentDnId: {}
-      recvAddrId: {}
-      deleted: 0
-      outerDocCode: null
-      createdBy: {}
-      recvContactPhone: null
-      delDnSlspurCode: null
-      wmEnabled: false
-      payStatus: null
-      moveVoucherId: {}
+      params:
+        request:
+          approveStatus: null
+          planSendDate: 0
+          matTypeQty: 0
+          salesmanPhone: null
+          planRecvDate: 0
+          logisticNum: null
+          postingDate: 0
+          sumQty: 0
+          invLocId: {}
+          packageStatus: null
+          createdAt: 0
+          invExecutedCleanCount: 0
+          uk: null
+          invWhId: 0
+          promptMsg: null
+          serviceVendId: {}
+          freezeStatus: null
+          transCode: null
+          id: 0
+          delProcessList:
+          - {}
+          invOrgId: {}
+          bizStatus: null
+          updatedAt: 0
+          outerCode: null
+          whseNum: 0
+          updatedBy: {}
+          originOrgId: 0
+          delTextList:
+          - {}
+          expressComId: {}
+          dnParent: {}
+          docCode: null
+          version: 0
+          relationDnId: {}
+          recvContactInfo: null
+          btClass: null
+          sendAddrDesc: null
+          cleanCount: 0
+          sourceType: null
+          vendPrtnId: {}
+          delStatus: null
+          salesman: null
+          docCreateFinal: false
+          dnType: {}
+          delPartnerList:
+          - {}
+          delAttachmentList:
+          - {}
+          custPrtnId: {}
+          dnCode: null
+          recvAddrDesc: null
+          expressList:
+          - {}
+          isEnableWel: false
+          dnCreatedy: null
+          remark: null
+          title: null
+          orgId: 0
+          dnDelStatus:
+          - null
+          sendContactInfo: null
+          delClass: null
+          printCount: 0
+          sendAddrId: {}
+          productType: null
+          groupConditionKey: null
+          dnItemList:
+          - {}
+          sendContactPhone: null
+          isEnablePackage: false
+          isInvExecuted: false
+          label: null
+          parentDnId: {}
+          recvAddrId: {}
+          deleted: 0
+          outerDocCode: null
+          createdBy: {}
+          recvContactPhone: null
+          delDnSlspurCode: null
+          wmEnabled: false
+          payStatus: null
+          moveVoucherId: {}
+      serviceKey: SCM_PRD$PRD_ORDER_CONFIRM_TEST_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_PLN_DETAIL_EVENT_SERVICE:
     params:
-      id: 0
+      params:
+        request:
+          id: 0
+      serviceKey: SCM_PRD$PRD_PLN_DETAIL_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_BATCH_PRINT_EVENT_SERVICE:
     params:
-      ids: null
+      params:
+        request:
+          ids: null
+      serviceKey: SCM_PRD$PRD_ORDER_BATCH_PRINT_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_CLOSE_EVENT_SERVICE:
     params:
-      ids: null
+      params:
+        request:
+          ids: null
+      serviceKey: SCM_PRD$PRD_ORDER_CLOSE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_APP_SAVE_EVENT_SERVICE:
     params:
-      updatedBy: {}
-      originOrgId: 0
-      remark: null
-      postingDate: 0
-      version: 0
-      issueType: null
-      createdAt: 0
-      deleted: 0
-      issueItemList:
-      - {}
-      createdBy: {}
-      issueDocTypeId: {}
-      id: 0
-      issueDate: 0
-      issueCode: null
-      status: null
-      updatedAt: 0
+      params:
+        request:
+          updatedBy: {}
+          originOrgId: 0
+          remark: null
+          postingDate: 0
+          version: 0
+          issueType: null
+          createdAt: 0
+          deleted: 0
+          issueItemList:
+          - {}
+          createdBy: {}
+          issueDocTypeId: {}
+          id: 0
+          issueDate: 0
+          issueCode: null
+          status: null
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_ISSUE_APP_SAVE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_CONFIRM_PAGING_ORDER_CONFIRM_BATCH_BY_HEAD_IDS_EVENT_SERVICE:
     params:
-      ids: null
+      params:
+        request:
+          ids: null
+      serviceKey: SCM_PRD$PRD_ORDER_CONFIRM_PAGING_ORDER_CONFIRM_BATCH_BY_HEAD_IDS_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_QUERY_ORDER_BATCH_BY_ORDER_ID_EVENTT_SERVICE:
     params:
-      id: 0
+      params:
+        request:
+          id: 0
+      serviceKey: SCM_PRD$PRD_ORDER_QUERY_ORDER_BATCH_BY_ORDER_ID_EVENTT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_VRS_FIND_BY_MAT_ID_EVENT_SERVICE:
     params:
-      prdMatId: {}
-      prdOrderCostItemTr:
-      - {}
-      plannedEndDate: 0
-      bomList:
-      - {}
-      prdVrsId: {}
-      mvmTypeId: {}
-      createdAt: 0
-      soItemId: {}
-      shipmentUom: {}
-      slsOrderCode: null
-      woTypeId: {}
-      actualStartDate: 0
-      confirmStatus: null
-      id: 0
-      prdUomId: {}
-      invOrgId: {}
-      dataSources: null
-      sourcesOrderCode: null
-      locId: {}
-      insufficientDeliveryTolerance: 0
-      updatedAt: 0
-      actualEndDate: 0
-      soId: {}
-      unlimitedOverDelivery: false
-      updatedBy: {}
-      originOrgId: 0
-      expectedDeliveryDate: 0
-      excessiveDeliveryTolerance: 0
-      woCode: null
-      prdManger: null
-      version: 0
-      prdOrderBatchTr:
-      - {}
-      printed: false
-      receivedQty: 0
-      postInvTypeId: {}
-      deleted: 0
-      plannedStartDate: 0
-      routingList:
-      - {}
-      createdBy: {}
-      matId: {}
-      qty: 0
-      postInspection: false
-      deliveredStatus: null
-      slsOrderItemCode: null
-      plnInvOrgId: {}
-      status: null
+      params:
+        request:
+          prdMatId: {}
+          prdOrderCostItemTr:
+          - {}
+          plannedEndDate: 0
+          bomList:
+          - {}
+          prdVrsId: {}
+          mvmTypeId: {}
+          createdAt: 0
+          soItemId: {}
+          shipmentUom: {}
+          slsOrderCode: null
+          woTypeId: {}
+          actualStartDate: 0
+          confirmStatus: null
+          id: 0
+          prdUomId: {}
+          invOrgId: {}
+          dataSources: null
+          sourcesOrderCode: null
+          locId: {}
+          insufficientDeliveryTolerance: 0
+          updatedAt: 0
+          actualEndDate: 0
+          soId: {}
+          unlimitedOverDelivery: false
+          updatedBy: {}
+          originOrgId: 0
+          expectedDeliveryDate: 0
+          excessiveDeliveryTolerance: 0
+          woCode: null
+          prdManger: null
+          version: 0
+          prdOrderBatchTr:
+          - {}
+          printed: false
+          receivedQty: 0
+          postInvTypeId: {}
+          deleted: 0
+          plannedStartDate: 0
+          routingList:
+          - {}
+          createdBy: {}
+          matId: {}
+          qty: 0
+          postInspection: false
+          deliveredStatus: null
+          slsOrderItemCode: null
+          plnInvOrgId: {}
+          status: null
+      serviceKey: SCM_PRD$PRD_VRS_FIND_BY_MAT_ID_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_PAGING_ORDER_BATCH_BY_HEAD_IDS_EVENT_SERVICE:
     params:
-      ids: null
+      params:
+        request:
+          ids: null
+      serviceKey: SCM_PRD$PRD_ORDER_PAGING_ORDER_BATCH_BY_HEAD_IDS_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_PLN_SAVE_EVENT_SERVICE:
     params:
-      orderType: {}
-      releaseOrderType: 0
-      remark: null
-      plannedEndDate: 0
-      prdVrsId: {}
-      supplyInvOrgId: {}
-      createdAt: 0
-      supplyType: null
-      releaseOrderItemType: {}
-      failReason: null
-      prdPlannedOrderRoutingItemTrId:
-      - {}
-      id: 0
-      dataSources: null
-      locId: {}
-      prdPlannedOrderBomItemTrId:
-      - {}
-      updatedAt: 0
-      updatedBy: {}
-      originOrgId: 0
-      uomId: {}
-      version: 0
-      demandInvOrgId: {}
-      deleted: 0
-      plannedStartDate: 0
-      dataSourcesCode: null
-      releaseOrderCode: null
-      createdBy: {}
-      matId: {}
-      qty: 0
-      plannedOrderCode: null
-      status: null
+      params:
+        request:
+          orderType: {}
+          releaseOrderType: 0
+          remark: null
+          plannedEndDate: 0
+          prdVrsId: {}
+          supplyInvOrgId: {}
+          createdAt: 0
+          supplyType: null
+          releaseOrderItemType: {}
+          failReason: null
+          prdPlannedOrderRoutingItemTrId:
+          - {}
+          id: 0
+          dataSources: null
+          locId: {}
+          prdPlannedOrderBomItemTrId:
+          - {}
+          updatedAt: 0
+          updatedBy: {}
+          originOrgId: 0
+          uomId: {}
+          version: 0
+          demandInvOrgId: {}
+          deleted: 0
+          plannedStartDate: 0
+          dataSourcesCode: null
+          releaseOrderCode: null
+          createdBy: {}
+          matId: {}
+          qty: 0
+          plannedOrderCode: null
+          status: null
+      serviceKey: SCM_PRD$PRD_PLN_SAVE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ROUTING_RENDER_BACK_FLUSH_NEW_EVENT_SERVICE:
-    params: {}
+    params:
+      params:
+        request:
+        - matId: 0
+          routingHeadId: 0
+          invOrgId: 0
+          isBackFlush: false
+          bomVrs: null
+      serviceKey: SCM_PRD$PRD_ROUTING_RENDER_BACK_FLUSH_NEW_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_VRS_MD_SAVE_EVENT_SERVICE:
     params:
-      matId: {}
-      opType: null
-      itemList:
-      - {}
-      invOrgId: {}
+      params:
+        request:
+          matId: {}
+          opType: null
+          itemList:
+          - {}
+          invOrgId: {}
+      serviceKey: SCM_PRD$PRD_VRS_MD_SAVE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_RULE_SAVE_EVENT_SERVICE:
     params:
-      createdAt: 0
-      code: null
-      updatedBy: {}
-      deleted: 0
-      originOrgId: 0
-      createdBy: {}
-      defaultValue: false
-      name: null
-      id: 0
-      ruleItems:
-      - {}
-      version: 0
-      updatedAt: 0
+      params:
+        request:
+          createdAt: 0
+          code: null
+          updatedBy: {}
+          deleted: 0
+          originOrgId: 0
+          createdBy: {}
+          defaultValue: false
+          name: null
+          id: 0
+          ruleItems:
+          - {}
+          version: 0
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_ISSUE_RULE_SAVE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_COST_ANALYSIS_EVENT_SERVICE:
     params:
-      id: 0
+      params:
+        request:
+          id: 0
+      serviceKey: SCM_PRD$PRD_ORDER_COST_ANALYSIS_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_CONFIRM_QUERY_ORDER_BATCH_BY_ORDER_CONFIRM_ID_EVENT_SERVICE:
     params:
-      id: 0
+      params:
+        request:
+          id: 0
+      serviceKey: SCM_PRD$PRD_ORDER_CONFIRM_QUERY_ORDER_BATCH_BY_ORDER_CONFIRM_ID_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$user_FIND_SINGLE_DATA_BY_ID_SERVICE:
     params:
-      createdAt: 0
-      deleted: 0
-      nickname: null
-      mobile: null
-      id: 0
-      version: 0
-      email: null
-      updatedAt: 0
-      username: null
+      params:
+        request:
+          createdAt: 0
+          deleted: 0
+          nickname: null
+          mobile: null
+          id: 0
+          version: 0
+          email: null
+          updatedAt: 0
+          username: null
+      serviceKey: SCM_PRD$user_FIND_SINGLE_DATA_BY_ID_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ROUTINGS_STATUS_CF_FIND_DATA_BY_ID_SERVICE:
     params:
-      updatedBy: {}
-      originOrgId: 0
-      isPrd: false
-      isQc: false
-      version: 0
-      createdAt: 0
-      deleted: 0
-      createdBy: {}
-      isCost: false
-      requestId: null
-      statusName: null
-      id: 0
-      statusCode: null
-      updatedAt: 0
+      params:
+        request:
+          updatedBy: {}
+          originOrgId: 0
+          isPrd: false
+          isQc: false
+          version: 0
+          createdAt: 0
+          deleted: 0
+          createdBy: {}
+          isCost: false
+          requestId: null
+          statusName: null
+          id: 0
+          statusCode: null
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_ROUTINGS_STATUS_CF_FIND_DATA_BY_ID_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_WO_TYPE_CF_FIND_SINGLE_DATA_BY_ID_SERVICE:
     params:
-      invTypeCfId: {}
-      vrsSelectMode: null
-      updatedBy: {}
-      originOrgId: 0
-      plnCostVariation: null
-      prdReturnOrderTypeCfId: {}
-      typeName: null
-      actualCostVariation: null
-      version: 0
-      typeCode: null
-      externalCodeIs: false
-      createdAt: 0
-      routeTypeList:
-      - {}
-      deleted: 0
-      createdBy: {}
-      codeRules: null
-      checkPrdVrsExist: false
-      id: 0
-      businessType: null
-      purPrHeadTypeCfId: {}
-      updatedAt: 0
+      params:
+        request:
+          invTypeCfId: {}
+          vrsSelectMode: null
+          updatedBy: {}
+          originOrgId: 0
+          plnCostVariation: null
+          prdReturnOrderTypeCfId: {}
+          typeName: null
+          actualCostVariation: null
+          version: 0
+          typeCode: null
+          externalCodeIs: false
+          createdAt: 0
+          routeTypeList:
+          - {}
+          deleted: 0
+          createdBy: {}
+          codeRules: null
+          checkPrdVrsExist: false
+          id: 0
+          businessType: null
+          purPrHeadTypeCfId: {}
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_WO_TYPE_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ROUTINGS_TYPE_CF_DELETE_DATA_BY_ID_SERVICE:
     params:
-      createdAt: 0
-      updatedBy: {}
-      deleted: 0
-      originOrgId: 0
-      createdBy: {}
-      requestId: null
-      typeName: null
-      id: 0
-      version: 0
-      typeCode: null
-      updatedAt: 0
+      params:
+        request:
+          createdAt: 0
+          updatedBy: {}
+          deleted: 0
+          originOrgId: 0
+          createdBy: {}
+          requestId: null
+          typeName: null
+          id: 0
+          version: 0
+          typeCode: null
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_ROUTINGS_TYPE_CF_DELETE_DATA_BY_ID_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_HEAD_IMPORT_DTO_GEI_IMPORT_SERVICE:
     params:
-      sliceData:
-      - {}
-      context:
-        importMode: null
+      params:
+        request:
+          sliceData:
+          - {}
+          context:
+            importMode: null
+      serviceKey: SCM_PRD$PRD_ORDER_HEAD_IMPORT_DTO_GEI_IMPORT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_SAVE_STANDARD_RATE_ACTION_SERVICE:
-    params: {}
+    params:
+      params:
+        request: {}
+      serviceKey: SCM_PRD$PRD_SAVE_STANDARD_RATE_ACTION_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_WO_TYPE_CF_GEI_EXPORT_SERVICE:
-    params: {}
+    params:
+      params:
+        request: {}
+        selectFields:
+        - {}
+        modelKey: null
+      serviceKey: SCM_PRD$PRD_WO_TYPE_CF_GEI_EXPORT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_WORK_CENTOR_HEADER_MD_PAGING_DATA_SERVICE:
     params:
-      pageable:
-        sortOrders:
-        - {}
-        conditionItems: {}
-        pageNo: 1
-        conditionGroup: {}
-        pageSize: 20
+      params:
+        request:
+          pageable:
+            sortOrders:
+            - {}
+            conditionItems: {}
+            pageNo: 1
+            conditionGroup: {}
+            pageSize: 20
+      serviceKey: SCM_PRD$PRD_WORK_CENTOR_HEADER_MD_PAGING_DATA_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_RULE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       params:
@@ -1929,34 +2431,42 @@ api_params:
         namespace: null
         taskName: null
         selfRelationModel: false
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_ISSUE_RULE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_CONFIRM_HEADER_TR_GEI_EXPORT_SERVICE:
-    params: {}
+    params:
+      params:
+        request: {}
+        selectFields:
+        - {}
+        modelKey: null
+      serviceKey: SCM_PRD$PRD_ORDER_CONFIRM_HEADER_TR_GEI_EXPORT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_BOM_HEADER_MD_FIND_SINGLE_DATA_BY_ID_SERVICE:
     params:
-      bomCode: null
-      invOrg: {}
-      item:
-      - {}
-      updatedBy: {}
-      originOrgId: 0
-      batchFrom: 0
-      baseQty: 0
-      batchTo: 0
-      version: 0
-      createdAt: 0
-      validityPeriodFrom: 0
-      deleted: 0
-      vrsDesc: null
-      createdBy: {}
-      vrsNum: null
-      validityPeriodTo: 0
-      id: 0
-      matCode: {}
-      bomUser: {}
-      status: {}
-      updatedAt: 0
+      params:
+        request:
+          bomCode: null
+          invOrg: {}
+          item:
+          - {}
+          updatedBy: {}
+          originOrgId: 0
+          batchFrom: 0
+          baseQty: 0
+          batchTo: 0
+          version: 0
+          createdAt: 0
+          validityPeriodFrom: 0
+          deleted: 0
+          vrsDesc: null
+          createdBy: {}
+          vrsNum: null
+          validityPeriodTo: 0
+          id: 0
+          matCode: {}
+          bomUser: {}
+          status: {}
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_BOM_HEADER_MD_FIND_SINGLE_DATA_BY_ID_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$FIND_PRD_MAT_UOM_BY_INV_ORG_AND_MAT_ID_SERVICE:
     params:
       params:
@@ -2073,17 +2583,19 @@ api_params:
           def8: null
           def5: null
           def6: null
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$FIND_PRD_MAT_UOM_BY_INV_ORG_AND_MAT_ID_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_COST_ELEMENT_PAGING_DATA_SERVICE_oyQmuH3:
     params:
-      pageable:
-        sortOrders:
-        - {}
-        conditionItems: {}
-        pageNo: 1
-        conditionGroup: {}
-        pageSize: 20
+      params:
+        request:
+          pageable:
+            sortOrders:
+            - {}
+            conditionItems: {}
+            pageNo: 1
+            conditionGroup: {}
+            pageSize: 20
+      serviceKey: SCM_PRD$PRD_COST_ELEMENT_PAGING_DATA_SERVICE_oyQmuH3
   /api/trantor/service/engine/execute/SCM_PRD$PRD_CONFIRM_RETURN_ACTUAL_BY_YIELDQTY_RATE_SERVICE:
     params:
       params:
@@ -2146,8 +2658,7 @@ api_params:
           id: 0
           genActivityTypeHeadMdId: {}
           updatedAt: 0
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_CONFIRM_RETURN_ACTUAL_BY_YIELDQTY_RATE_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       params:
@@ -2170,35 +2681,46 @@ api_params:
         namespace: null
         taskName: null
         selfRelationModel: false
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_ISSUE_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ROUTINGS_HEADER_MD_GEI_EXPORT_SERVICE:
-    params: {}
+    params:
+      params:
+        request: {}
+        selectFields:
+        - {}
+        modelKey: null
+      serviceKey: SCM_PRD$PRD_ROUTINGS_HEADER_MD_GEI_EXPORT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_CONTROL_KEYS_CF_SAVE_DATA_SERVICE:
     params:
-      updatedBy: {}
-      originOrgId: 0
-      controlKeyName: null
-      isAutReceipt: false
-      version: 0
-      controlKeyCode: null
-      isKeyOperation: false
-      createdAt: 0
-      deleted: 0
-      isSubcontractingOperation: false
-      createdBy: {}
-      requestId: null
-      id: 0
-      updatedAt: 0
+      params:
+        request:
+          updatedBy: {}
+          originOrgId: 0
+          controlKeyName: null
+          isAutReceipt: false
+          version: 0
+          controlKeyCode: null
+          isKeyOperation: false
+          createdAt: 0
+          deleted: 0
+          isSubcontractingOperation: false
+          createdBy: {}
+          requestId: null
+          id: 0
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_CONTROL_KEYS_CF_SAVE_DATA_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_COST_ELEMENT_SUB_PAGING_DATA_BY_L_P_SERVICE:
     params:
-      pageable:
-        sortOrders:
-        - {}
-        conditionItems: {}
-        pageNo: 1
-        conditionGroup: {}
-        pageSize: 20
+      params:
+        request:
+          pageable:
+            sortOrders:
+            - {}
+            conditionItems: {}
+            pageNo: 1
+            conditionGroup: {}
+            pageSize: 20
+      serviceKey: SCM_PRD$PRD_COST_ELEMENT_SUB_PAGING_DATA_BY_L_P_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_ITEM_TR_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       params:
@@ -2221,35 +2743,40 @@ api_params:
         namespace: null
         taskName: null
         selfRelationModel: false
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_ISSUE_ITEM_TR_API_GEI_TASK_EXPORT_DIRECT_POST
   /api/trantor/service/engine/execute/SCM_PRD$PRD_STANDARD_RATE_MD_FIND_DATA_BY_ID_SERVICE:
     params:
-      periodId: {}
-      updatedBy: {}
-      originOrgId: 0
-      variablePrice: 0
-      uomId: {}
-      fixedPrice: 0
-      version: 0
-      createdAt: 0
-      deleted: 0
-      costElementId: {}
-      createdBy: {}
-      matId: {}
-      requestId: null
-      genWorkCenterHeaderMdId: {}
-      currId: {}
-      id: 0
-      invOrgId: {}
-      genActivityTypeHeadMdId: {}
-      updatedAt: 0
+      params:
+        request:
+          periodId: {}
+          updatedBy: {}
+          originOrgId: 0
+          variablePrice: 0
+          uomId: {}
+          fixedPrice: 0
+          version: 0
+          createdAt: 0
+          deleted: 0
+          costElementId: {}
+          createdBy: {}
+          matId: {}
+          requestId: null
+          genWorkCenterHeaderMdId: {}
+          currId: {}
+          id: 0
+          invOrgId: {}
+          genActivityTypeHeadMdId: {}
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_STANDARD_RATE_MD_FIND_DATA_BY_ID_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ROUTINGS_HEADER_MD_GEI_IMPORT_SERVICE:
     params:
-      sliceData:
-      - {}
-      context:
-        importMode: null
+      params:
+        request:
+          sliceData:
+          - {}
+          context:
+            importMode: null
+      serviceKey: SCM_PRD$PRD_ROUTINGS_HEADER_MD_GEI_IMPORT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ROUTINGS_HEADER_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       params:
@@ -2272,10 +2799,12 @@ api_params:
         namespace: null
         taskName: null
         selfRelationModel: false
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_ROUTINGS_HEADER_MD_API_GEI_TASK_EXPORT_DIRECT_POST
   /api/trantor/service/engine/execute/SCM_PRD$BOM_COPY:
-    params: {}
+    params:
+      params:
+        request: {}
+      serviceKey: SCM_PRD$BOM_COPY
   /api/trantor/service/engine/execute/SCM_PRD$PRD_MOV_ASSIGN_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       params:
@@ -2298,16 +2827,20 @@ api_params:
         namespace: null
         taskName: null
         selfRelationModel: false
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_MOV_ASSIGN_CF_API_GEI_TASK_EXPORT_DIRECT_POST
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_HEADER_TR_GEI_EXPORT_SERVICE:
-    params: {}
+    params:
+      params:
+        request: {}
+        selectFields:
+        - {}
+        modelKey: null
+      serviceKey: SCM_PRD$PRD_ORDER_HEADER_TR_GEI_EXPORT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$ROUTING_COPY_IMPL:
     params:
       params:
         id: 0
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$ROUTING_COPY_IMPL
   /api/trantor/service/engine/execute/SCM_PRD$PRD_PRDVRS_HEADER_MD_DTO_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
     params:
       params:
@@ -2332,28 +2865,36 @@ api_params:
         namespace: null
         taskName: null
         selfRelationModel: false
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_PRDVRS_HEADER_MD_DTO_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
   /api/trantor/service/engine/execute/SCM_PRD$PRD_COST_ELEMENT_FIND_DATA_BY_ID_SERVICE:
     params:
-      code: null
-      updatedBy: {}
-      originOrgId: 0
-      parentCostElement: {}
-      version: 0
-      createdAt: 0
-      costCategory: null
-      deleted: 0
-      createdBy: {}
-      name: null
-      id: 0
-      leafNode: false
-      updatedAt: 0
+      params:
+        request:
+          code: null
+          updatedBy: {}
+          originOrgId: 0
+          parentCostElement: {}
+          version: 0
+          createdAt: 0
+          costCategory: null
+          deleted: 0
+          createdBy: {}
+          name: null
+          id: 0
+          leafNode: false
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_COST_ELEMENT_FIND_DATA_BY_ID_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_HEAD_FIND_DATA_BY_ID_SERVICE:
     params:
-      id: 0
+      params:
+        request:
+          id: 0
+      serviceKey: SCM_PRD$PRD_ORDER_HEAD_FIND_DATA_BY_ID_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_VRS_IMPORT_IMPL:
-    params: {}
+    params:
+      params:
+        request: {}
+      serviceKey: SCM_PRD$PRD_VRS_IMPORT_IMPL
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_ROUTINGS_ITEM_TR_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       params:
@@ -2376,23 +2917,31 @@ api_params:
         namespace: null
         taskName: null
         selfRelationModel: false
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_ORDER_ROUTINGS_ITEM_TR_API_GEI_TASK_EXPORT_DIRECT_POST
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ROUTINGS_TYPE_CF_SAVE_DATA_SERVICE:
     params:
-      createdAt: 0
-      updatedBy: {}
-      deleted: 0
-      originOrgId: 0
-      createdBy: {}
-      requestId: null
-      typeName: null
-      id: 0
-      version: 0
-      typeCode: null
-      updatedAt: 0
+      params:
+        request:
+          createdAt: 0
+          updatedBy: {}
+          deleted: 0
+          originOrgId: 0
+          createdBy: {}
+          requestId: null
+          typeName: null
+          id: 0
+          version: 0
+          typeCode: null
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_ROUTINGS_TYPE_CF_SAVE_DATA_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_RULE_CF_GEI_EXPORT_SERVICE:
-    params: {}
+    params:
+      params:
+        request: {}
+        selectFields:
+        - {}
+        modelKey: null
+      serviceKey: SCM_PRD$PRD_ISSUE_RULE_CF_GEI_EXPORT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ROUTINGS_HEADER_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
     params:
       params:
@@ -2417,62 +2966,79 @@ api_params:
         namespace: null
         taskName: null
         selfRelationModel: false
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_ROUTINGS_HEADER_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_HEADER_TR_GEI_IMPORT_SERVICE:
     params:
-      sliceData:
-      - {}
-      context:
-        importMode: null
+      params:
+        request:
+          sliceData:
+          - {}
+          context:
+            importMode: null
+      serviceKey: SCM_PRD$PRD_ORDER_HEADER_TR_GEI_IMPORT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_MAT_PAGING_PRD_UOM_BY_ORG_AND_GEN_MAR_ACTION_SERVICE:
     params:
-      matId: 0
-      pageable:
-        needTotal: false
-        sortOrders:
-        - {}
-        conditionItems: null
-        pageNo: 1
-        conditionGroup: null
-        pageSize: 20
-        keyword: null
-      invOrgId: 0
+      params:
+        request:
+          matId: 0
+          pageable:
+            needTotal: false
+            sortOrders:
+            - {}
+            conditionItems: null
+            pageNo: 1
+            conditionGroup: null
+            pageSize: 20
+            keyword: null
+          invOrgId: 0
+      serviceKey: SCM_PRD$PRD_MAT_PAGING_PRD_UOM_BY_ORG_AND_GEN_MAR_ACTION_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_TYPE_CF_GEI_EXPORT_SERVICE:
-    params: {}
+    params:
+      params:
+        request: {}
+        selectFields:
+        - {}
+        modelKey: null
+      serviceKey: SCM_PRD$PRD_ISSUE_TYPE_CF_GEI_EXPORT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_BOM_HEADER_MD_PAGING_DATA_SERVICE:
     params:
-      pageable:
-        sortOrders:
-        - {}
-        conditionItems: {}
-        pageNo: 1
-        conditionGroup: {}
-        pageSize: 20
+      params:
+        request:
+          pageable:
+            sortOrders:
+            - {}
+            conditionItems: {}
+            pageNo: 1
+            conditionGroup: {}
+            pageSize: 20
+      serviceKey: SCM_PRD$PRD_BOM_HEADER_MD_PAGING_DATA_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_BOM_HEADER_MD_FIND_DATA_BY_ID_SERVICE:
     params:
-      bomCode: null
-      invOrg: {}
-      item:
-      - {}
-      updatedBy: {}
-      originOrgId: 0
-      batchFrom: 0
-      baseQty: 0
-      batchTo: 0
-      version: 0
-      createdAt: 0
-      validityPeriodFrom: 0
-      deleted: 0
-      vrsDesc: null
-      createdBy: {}
-      vrsNum: null
-      validityPeriodTo: 0
-      id: 0
-      matCode: {}
-      bomUser: {}
-      status: {}
-      updatedAt: 0
+      params:
+        request:
+          bomCode: null
+          invOrg: {}
+          item:
+          - {}
+          updatedBy: {}
+          originOrgId: 0
+          batchFrom: 0
+          baseQty: 0
+          batchTo: 0
+          version: 0
+          createdAt: 0
+          validityPeriodFrom: 0
+          deleted: 0
+          vrsDesc: null
+          createdBy: {}
+          vrsNum: null
+          validityPeriodTo: 0
+          id: 0
+          matCode: {}
+          bomUser: {}
+          status: {}
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_BOM_HEADER_MD_FIND_DATA_BY_ID_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_MAT_PRD_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       params:
@@ -2495,12 +3061,20 @@ api_params:
         namespace: null
         taskName: null
         selfRelationModel: false
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_MAT_PRD_MD_API_GEI_TASK_EXPORT_DIRECT_POST
   /api/trantor/service/engine/execute/SCM_PRD$BOM_CUSTOMER_IMPORT_IMPL:
-    params: {}
+    params:
+      params:
+        request: {}
+      serviceKey: SCM_PRD$BOM_CUSTOMER_IMPORT_IMPL
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ACTIVITY_TYPE_HEAD_MD_GEI_EXPORT_SERVICE:
-    params: {}
+    params:
+      params:
+        request: {}
+        selectFields:
+        - {}
+        modelKey: null
+      serviceKey: SCM_PRD$PRD_ACTIVITY_TYPE_HEAD_MD_GEI_EXPORT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_BOM_ITEM_QUERY_MVM_TYPE_ID_SERVICE:
     params:
       params:
@@ -2508,44 +3082,47 @@ api_params:
         woTypeId: 0
         is_byproduct: false
         is_coproduct: false
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_ORDER_BOM_ITEM_QUERY_MVM_TYPE_ID_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ROUTINGS_TYPE_CF_FIND_DATA_BY_ID_SERVICE:
     params:
-      createdAt: 0
-      updatedBy: {}
-      deleted: 0
-      originOrgId: 0
-      createdBy: {}
-      requestId: null
-      typeName: null
-      id: 0
-      version: 0
-      typeCode: null
-      updatedAt: 0
+      params:
+        request:
+          createdAt: 0
+          updatedBy: {}
+          deleted: 0
+          originOrgId: 0
+          createdBy: {}
+          requestId: null
+          typeName: null
+          id: 0
+          version: 0
+          typeCode: null
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_ROUTINGS_TYPE_CF_FIND_DATA_BY_ID_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_COST_ELEMENT_SUB_PAGING_DATA_BY_TYPE_SERVICE:
     params:
-      pageable:
-        sortOrders:
-        - {}
-        conditionItems: {}
-        pageNo: 1
-        conditionGroup: {}
-        pageSize: 20
+      params: {}
+      serviceKey: SCM_PRD$PRD_COST_ELEMENT_SUB_PAGING_DATA_BY_TYPE_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_MAT_PAGING_GEN_MAT_BY_ORG_AND_GEN_MAR_ACTION_SERVICE:
     params:
-      pageable:
-        needTotal: false
-        sortOrders:
-        - {}
-        conditionItems: null
-        pageNo: 1
-        conditionGroup: null
-        pageSize: 20
-        keyword: null
-      invOrgId: 0
+      params:
+        request:
+          pageable:
+            needTotal: false
+            sortOrders:
+            - {}
+            conditionItems: null
+            pageNo: 1
+            conditionGroup: null
+            pageSize: 20
+            keyword: null
+          invOrgId: 0
+      serviceKey: SCM_PRD$PRD_MAT_PAGING_GEN_MAT_BY_ORG_AND_GEN_MAR_ACTION_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_CUSTOMER_IMPORT_IMPL:
-    params: {}
+    params:
+      params:
+        request: {}
+      serviceKey: SCM_PRD$PRD_ORDER_CUSTOMER_IMPORT_IMPL
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_HEADER_TR_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       params:
@@ -2568,67 +3145,90 @@ api_params:
         namespace: null
         taskName: null
         selfRelationModel: false
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_ORDER_HEADER_TR_API_GEI_TASK_EXPORT_DIRECT_POST
   /api/trantor/service/engine/execute/SCM_PRD$PRD_MAT_PRD_MD_FIND_DATA_BY_ID_SERVICE:
     params:
-      specialized: false
-      componentCostElementId: {}
-      invLocId: {}
-      individualColl: null
-      createdAt: 0
-      outputCostElementId: {}
-      requestId: null
-      scrapType: null
-      id: 0
-      prdUomId: {}
-      invOrgId: {}
-      inspectionCycle: 0
-      productionCycle: 0
-      insufficientDeliveryTolerance: 0
-      updatedAt: 0
-      unlimitedOverDelivery: false
-      prdvrsList:
-      - {}
-      updatedBy: {}
-      originOrgId: 0
-      fixedScrap: 0
-      excessiveDeliveryTolerance: 0
-      componentScrap: 0
-      backFlush: null
-      version: 0
-      prdMangerId: 0
-      postInvTypeId: {}
-      deleted: 0
-      createdBy: {}
-      postInspection: false
-      genMatMdId: {}
-      batchParaId: 0
-      procurementType: null
-      genMatPrdStepScrapMd:
-      - {}
-      plannedCalendarId: {}
-      serialParaId: 0
+      params:
+        request:
+          specialized: false
+          componentCostElementId: {}
+          invLocId: {}
+          individualColl: null
+          createdAt: 0
+          outputCostElementId: {}
+          requestId: null
+          scrapType: null
+          id: 0
+          prdUomId: {}
+          invOrgId: {}
+          inspectionCycle: 0
+          productionCycle: 0
+          insufficientDeliveryTolerance: 0
+          updatedAt: 0
+          unlimitedOverDelivery: false
+          prdvrsList:
+          - {}
+          updatedBy: {}
+          originOrgId: 0
+          fixedScrap: 0
+          excessiveDeliveryTolerance: 0
+          componentScrap: 0
+          backFlush: null
+          version: 0
+          prdMangerId: 0
+          postInvTypeId: {}
+          deleted: 0
+          createdBy: {}
+          postInspection: false
+          genMatMdId: {}
+          batchParaId: 0
+          procurementType: null
+          genMatPrdStepScrapMd:
+          - {}
+          plannedCalendarId: {}
+          serialParaId: 0
+      serviceKey: SCM_PRD$PRD_MAT_PRD_MD_FIND_DATA_BY_ID_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$ROUTINGS_CONFIRM_LIST_PAGING:
     params:
-      pageable:
-        sortOrders:
-        - {}
-        conditionItems: {}
-        pageNo: 1
-        conditionGroup: {}
-        pageSize: 20
+      params:
+        request:
+          pageable:
+            sortOrders:
+            - {}
+            conditionItems: {}
+            pageNo: 1
+            conditionGroup: {}
+            pageSize: 20
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems:
+            conditionItems.conditions: {}
+            conditionItems.logicOperator: null
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+      serviceKey: SCM_PRD$ROUTINGS_CONFIRM_LIST_PAGING
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ROUTINGS_HEADER_MD_PAGING_DATA_SERVICE:
     params:
-      pageable:
-        sortOrders:
-        - {}
-        conditionItems: {}
-        pageNo: 1
-        conditionGroup: {}
-        pageSize: 20
+      params:
+        request:
+          pageable:
+            sortOrders:
+            - {}
+            conditionItems: {}
+            pageNo: 1
+            conditionGroup: {}
+            pageSize: 20
+      serviceKey: SCM_PRD$PRD_ROUTINGS_HEADER_MD_PAGING_DATA_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_HEAD_TR_GEI_EXPORT_SERVICE:
-    params: {}
+    params:
+      params:
+        request: {}
+        selectFields:
+        - {}
+        modelKey: null
+      serviceKey: SCM_PRD$PRD_ISSUE_HEAD_TR_GEI_EXPORT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_PAGING_PRD_ISSUE_ITME_TR:
     params:
       params:
@@ -2640,10 +3240,12 @@ api_params:
           conditionGroup: null
           pageSize: 20
           keyword: null
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_PAGING_PRD_ISSUE_ITME_TR
   /api/trantor/service/engine/execute/SCM_PRD$ROUTING_IMPORT_IMPL:
-    params: {}
+    params:
+      params:
+        request: {}
+      serviceKey: SCM_PRD$ROUTING_IMPORT_IMPL
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_CONFIRM_RETURN_CONFIRM_ITEM_QTY_BY_HEAD:
     params:
       params:
@@ -2719,8 +3321,7 @@ api_params:
           qty: 0
           demandQty: 0
           vendId: {}
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_ORDER_CONFIRM_RETURN_CONFIRM_ITEM_QTY_BY_HEAD
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_HEAD_IMPORT_DTO_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
     params:
       params:
@@ -2745,25 +3346,27 @@ api_params:
         namespace: null
         taskName: null
         selfRelationModel: false
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_ORDER_HEAD_IMPORT_DTO_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
   /api/trantor/service/engine/execute/SCM_PRD$PRD_WORK_CENTOR_HEADER_MD_SAVE_DATA_SERVICE:
     params:
-      invOrg: {}
-      isBackflush: false
-      updatedBy: {}
-      originOrgId: 0
-      version: 0
-      prdWorkCenterActivityItemMd:
-      - {}
-      createdAt: 0
-      deleted: 0
-      createdBy: {}
-      requestId: null
-      wcCode: null
-      id: 0
-      wcName: null
-      updatedAt: 0
+      params:
+        request:
+          invOrg: {}
+          isBackflush: false
+          updatedBy: {}
+          originOrgId: 0
+          version: 0
+          prdWorkCenterActivityItemMd:
+          - {}
+          createdAt: 0
+          deleted: 0
+          createdBy: {}
+          requestId: null
+          wcCode: null
+          id: 0
+          wcName: null
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_WORK_CENTOR_HEADER_MD_SAVE_DATA_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ACTIVITY_TYPE_HEAD_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       params:
@@ -2786,15 +3389,13 @@ api_params:
         namespace: null
         taskName: null
         selfRelationModel: false
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_ACTIVITY_TYPE_HEAD_MD_API_GEI_TASK_EXPORT_DIRECT_POST
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_HEAD_QUERY_MVM_TYPE_ID_SERVERICE:
     params:
       params:
         postInvTypeId: 0
         woTypeId: 0
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_ORDER_HEAD_QUERY_MVM_TYPE_ID_SERVERICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_CONFIRM_HEADER_TR_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       params:
@@ -2817,72 +3418,92 @@ api_params:
         namespace: null
         taskName: null
         selfRelationModel: false
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_ORDER_CONFIRM_HEADER_TR_API_GEI_TASK_EXPORT_DIRECT_POST
   /api/trantor/service/engine/execute/SCM_PRD$PRD_MAT_PRD_MD_GEI_EXPORT_SERVICE:
-    params: {}
+    params:
+      params:
+        request: {}
+        selectFields:
+        - {}
+        modelKey: null
+      serviceKey: SCM_PRD$PRD_MAT_PRD_MD_GEI_EXPORT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ROUTINGS_HEADER_MD_FIND_DATA_BY_ID_SERVICE:
     params:
-      bomHeaderId: {}
-      vrsName: null
-      importSeqNo: null
-      routingsName: null
-      baseQty: 0
-      validFrom: 0
-      routingsStatusId: {}
-      createdAt: 0
-      requestId: null
-      vrsCode: null
-      id: 0
-      invOrgId: {}
-      validTo: 0
-      sequenceList:
-      - {}
-      updatedAt: 0
-      componentsList:
-      - {}
-      importBomHeadCode: null
-      updatedBy: {}
-      originOrgId: 0
-      batchFrom: 0
-      routingsType: {}
-      uomId: {}
-      batchTo: 0
-      routingsUsageId: {}
-      version: 0
-      deleted: 0
-      createdBy: {}
-      matId: {}
-      itemList:
-      - {}
-      importInvOrgName: null
+      params:
+        request:
+          bomHeaderId: {}
+          vrsName: null
+          importSeqNo: null
+          routingsName: null
+          baseQty: 0
+          validFrom: 0
+          routingsStatusId: {}
+          createdAt: 0
+          requestId: null
+          vrsCode: null
+          id: 0
+          invOrgId: {}
+          validTo: 0
+          sequenceList:
+          - {}
+          updatedAt: 0
+          componentsList:
+          - {}
+          importBomHeadCode: null
+          updatedBy: {}
+          originOrgId: 0
+          batchFrom: 0
+          routingsType: {}
+          uomId: {}
+          batchTo: 0
+          routingsUsageId: {}
+          version: 0
+          deleted: 0
+          createdBy: {}
+          matId: {}
+          itemList:
+          - {}
+          importInvOrgName: null
+      serviceKey: SCM_PRD$PRD_ROUTINGS_HEADER_MD_FIND_DATA_BY_ID_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_PLANNED_ORDER_TYPE_CF_FIND_SINGLE_DATA_BY_ID_SERVICE:
     params:
-      updatedBy: {}
-      originOrgId: 0
-      typeName: null
-      version: 0
-      typeCode: null
-      createdAt: 0
-      deleted: 0
-      createdBy: {}
-      prdWoTypeCfId: {}
-      purPrItemTypeCfId: {}
-      id: 0
-      businessType: null
-      purPrHeadTypeCfId: {}
-      updatedAt: 0
+      params:
+        request:
+          updatedBy: {}
+          originOrgId: 0
+          typeName: null
+          version: 0
+          typeCode: null
+          createdAt: 0
+          deleted: 0
+          createdBy: {}
+          prdWoTypeCfId: {}
+          purPrItemTypeCfId: {}
+          id: 0
+          businessType: null
+          purPrHeadTypeCfId: {}
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_PLANNED_ORDER_TYPE_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_ROUTINGS_ITEM_TR_GEI_EXPORT_SERVICE:
-    params: {}
+    params:
+      params:
+        request: {}
+        selectFields:
+        - {}
+        modelKey: null
+      serviceKey: SCM_PRD$PRD_ORDER_ROUTINGS_ITEM_TR_GEI_EXPORT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ROUTINGS_STATUS_CF_PAGING_DATA_SERVICE:
     params:
-      pageable:
-        sortOrders:
-        - {}
-        conditionItems: {}
-        pageNo: 1
-        conditionGroup: {}
-        pageSize: 20
+      params:
+        request:
+          pageable:
+            sortOrders:
+            - {}
+            conditionItems: {}
+            pageNo: 1
+            conditionGroup: {}
+            pageSize: 20
+      serviceKey: SCM_PRD$PRD_ROUTINGS_STATUS_CF_PAGING_DATA_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       params:
@@ -2905,20 +3526,22 @@ api_params:
         namespace: null
         taskName: null
         selfRelationModel: false
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_ISSUE_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST
   /api/trantor/service/engine/execute/SCM_PRD$PRD_MAT_FIND_BY_ORG_AND_GEN_MAR_ACTION_SERVICE:
     params:
-      pageable:
-        needTotal: false
-        sortOrders:
-        - {}
-        conditionItems: null
-        pageNo: 1
-        conditionGroup: null
-        pageSize: 20
-        keyword: null
-      invOrgId: 0
+      params:
+        request:
+          pageable:
+            needTotal: false
+            sortOrders:
+            - {}
+            conditionItems: null
+            pageNo: 1
+            conditionGroup: null
+            pageSize: 20
+            keyword: null
+          invOrgId: 0
+      serviceKey: SCM_PRD$PRD_MAT_FIND_BY_ORG_AND_GEN_MAR_ACTION_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_CONFIRM_RETURN_QTY_BY_YIELDQTY_RATE_SERVICE:
     params:
       params:
@@ -2966,17 +3589,19 @@ api_params:
           moveVoucherId: 0
           yieldQty: 0
           status: null
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_CONFIRM_RETURN_QTY_BY_YIELDQTY_RATE_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ACTIVITY_TYPE_HEAD_MD_PAGING_DATA_SERVICE:
     params:
-      pageable:
-        sortOrders:
-        - {}
-        conditionItems: {}
-        pageNo: 1
-        conditionGroup: {}
-        pageSize: 20
+      params:
+        request:
+          pageable:
+            sortOrders:
+            - {}
+            conditionItems: {}
+            pageNo: 1
+            conditionGroup: {}
+            pageSize: 20
+      serviceKey: SCM_PRD$PRD_ACTIVITY_TYPE_HEAD_MD_PAGING_DATA_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_HEADER_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
     params:
       params:
@@ -3001,109 +3626,140 @@ api_params:
         namespace: null
         taskName: null
         selfRelationModel: false
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_ORDER_HEADER_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
   /api/trantor/service/engine/execute/SCM_PRD$PRD_WORK_CENTOR_HEADER_MD_FIND_DATA_BY_ID_SERVICE:
     params:
-      invOrg: {}
-      isBackflush: false
-      updatedBy: {}
-      originOrgId: 0
-      version: 0
-      prdWorkCenterActivityItemMd:
-      - {}
-      createdAt: 0
-      deleted: 0
-      createdBy: {}
-      requestId: null
-      wcCode: null
-      id: 0
-      wcName: null
-      updatedAt: 0
+      params:
+        request:
+          invOrg: {}
+          isBackflush: false
+          updatedBy: {}
+          originOrgId: 0
+          version: 0
+          prdWorkCenterActivityItemMd:
+          - {}
+          createdAt: 0
+          deleted: 0
+          createdBy: {}
+          requestId: null
+          wcCode: null
+          id: 0
+          wcName: null
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_WORK_CENTOR_HEADER_MD_FIND_DATA_BY_ID_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_PRDVRS_HEADER_MD_DTO_GEI_IMPORT_SERVICE:
     params:
-      sliceData:
-      - {}
-      context:
-        importMode: null
+      params:
+        request:
+          sliceData:
+          - {}
+          context:
+            importMode: null
+      serviceKey: SCM_PRD$PRD_PRDVRS_HEADER_MD_DTO_GEI_IMPORT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_MOV_ASSIGN_CF_GEI_EXPORT_SERVICE:
-    params: {}
+    params:
+      params:
+        request: {}
+        selectFields:
+        - {}
+        modelKey: null
+      serviceKey: SCM_PRD$PRD_MOV_ASSIGN_CF_GEI_EXPORT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_COST_ELEMENT_FIND_SINGLE_DATA_BY_ID_SERVICE:
     params:
-      code: null
-      updatedBy: {}
-      originOrgId: 0
-      parentCostElement: {}
-      version: 0
-      createdAt: 0
-      costCategory: null
-      deleted: 0
-      createdBy: {}
-      name: null
-      id: 0
-      leafNode: false
-      updatedAt: 0
+      params:
+        request:
+          code: null
+          updatedBy: {}
+          originOrgId: 0
+          parentCostElement: {}
+          version: 0
+          createdAt: 0
+          costCategory: null
+          deleted: 0
+          createdBy: {}
+          name: null
+          id: 0
+          leafNode: false
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_COST_ELEMENT_FIND_SINGLE_DATA_BY_ID_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_PLANNED_ORDER_TYPE_CF_BATCH_DELETE_DATA_SERVICE:
     params:
-      ids:
-      - 0
+      params:
+        request:
+          ids:
+          - 0
+      serviceKey: SCM_PRD$PRD_PLANNED_ORDER_TYPE_CF_BATCH_DELETE_DATA_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_PLANNED_ORDER_TYPE_CF_PAGING_DATA_SERVICE:
     params:
-      pageable:
-        sortOrders:
-        - {}
-        conditionItems: {}
-        pageNo: 1
-        conditionGroup: {}
-        pageSize: 20
+      params:
+        request:
+          pageable:
+            sortOrders:
+            - {}
+            conditionItems: {}
+            pageNo: 1
+            conditionGroup: {}
+            pageSize: 20
+      serviceKey: SCM_PRD$PRD_PLANNED_ORDER_TYPE_CF_PAGING_DATA_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PAGING_PRD_MAT_PRD_MD_SERVICE:
     params:
-      pageable:
-        sortOrders:
-        - {}
-        conditionItems: {}
-        pageNo: 1
-        conditionGroup: {}
-        pageSize: 20
+      params:
+        request:
+          pageable:
+            sortOrders:
+            - {}
+            conditionItems: {}
+            pageNo: 1
+            conditionGroup: {}
+            pageSize: 20
+      serviceKey: SCM_PRD$PAGING_PRD_MAT_PRD_MD_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_PLANNED_ORDER_TYPE_CF_DELETE_DATA_BY_ID_SERVICE:
     params:
-      updatedBy: {}
-      originOrgId: 0
-      typeName: null
-      version: 0
-      typeCode: null
-      createdAt: 0
-      deleted: 0
-      createdBy: {}
-      prdWoTypeCfId: {}
-      purPrItemTypeCfId: {}
-      id: 0
-      businessType: null
-      purPrHeadTypeCfId: {}
-      updatedAt: 0
+      params:
+        request:
+          updatedBy: {}
+          originOrgId: 0
+          typeName: null
+          version: 0
+          typeCode: null
+          createdAt: 0
+          deleted: 0
+          createdBy: {}
+          prdWoTypeCfId: {}
+          purPrItemTypeCfId: {}
+          id: 0
+          businessType: null
+          purPrHeadTypeCfId: {}
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_PLANNED_ORDER_TYPE_CF_DELETE_DATA_BY_ID_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_GET_FIRST_PROCESS_ROUTING_STATUS_SERVICE:
     params:
       params: {}
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_GET_FIRST_PROCESS_ROUTING_STATUS_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$user_PAGING_DATA_SERVICE:
     params:
-      pageable:
-        sortOrders:
-        - {}
-        conditionItems: {}
-        pageNo: 1
-        conditionGroup: {}
-        pageSize: 20
+      params:
+        request:
+          pageable:
+            sortOrders:
+            - {}
+            conditionItems: {}
+            pageNo: 1
+            conditionGroup: {}
+            pageSize: 20
+      serviceKey: SCM_PRD$user_PAGING_DATA_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_WO_TYPE_CF_PAGING_DATA_SERVICE:
     params:
-      pageable:
-        sortOrders:
-        - {}
-        conditionItems: {}
-        pageNo: 1
-        conditionGroup: {}
-        pageSize: 20
+      params:
+        request:
+          pageable:
+            sortOrders:
+            - {}
+            conditionItems: {}
+            pageNo: 1
+            conditionGroup: {}
+            pageSize: 20
+      serviceKey: SCM_PRD$PRD_WO_TYPE_CF_PAGING_DATA_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ORDER_MTO_PAGING_SO_ITEMS:
     params:
       params:
@@ -3114,8 +3770,7 @@ api_params:
           pageNo: 1
           conditionGroup: null
           pageSize: 20
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_ORDER_MTO_PAGING_SO_ITEMS
   /api/trantor/service/engine/execute/SCM_PRD$PRD_WO_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       params:
@@ -3138,32 +3793,43 @@ api_params:
         namespace: null
         taskName: null
         selfRelationModel: false
-      serviceKey: null
-      teamId: 0
+      serviceKey: SCM_PRD$PRD_WO_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
   /api/trantor/service/engine/execute/SCM_PRD$PRD_COST_ELEMENT_PAGING_DATA_SERVICE:
     params:
-      pageable:
-        sortOrders:
-        - {}
-        conditionItems: {}
-        pageNo: 1
-        conditionGroup: {}
-        pageSize: 20
+      params:
+        request:
+          pageable:
+            sortOrders:
+            - {}
+            conditionItems: {}
+            pageNo: 1
+            conditionGroup: {}
+            pageSize: 20
+      serviceKey: SCM_PRD$PRD_COST_ELEMENT_PAGING_DATA_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ISSUE_ITEM_TR_GEI_EXPORT_SERVICE:
-    params: {}
+    params:
+      params:
+        request: {}
+        selectFields:
+        - {}
+        modelKey: null
+      serviceKey: SCM_PRD$PRD_ISSUE_ITEM_TR_GEI_EXPORT_SERVICE
   /api/trantor/service/engine/execute/SCM_PRD$PRD_ROUTINGS_STATUS_CF_SAVE_DATA_SERVICE:
     params:
-      updatedBy: {}
-      originOrgId: 0
-      isPrd: false
-      isQc: false
-      version: 0
-      createdAt: 0
-      deleted: 0
-      createdBy: {}
-      isCost: false
-      requestId: null
-      statusName: null
-      id: 0
-      statusCode: null
-      updatedAt: 0
+      params:
+        request:
+          updatedBy: {}
+          originOrgId: 0
+          isPrd: false
+          isQc: false
+          version: 0
+          createdAt: 0
+          deleted: 0
+          createdBy: {}
+          isCost: false
+          requestId: null
+          statusName: null
+          id: 0
+          statusCode: null
+          updatedAt: 0
+      serviceKey: SCM_PRD$PRD_ROUTINGS_STATUS_CF_SAVE_DATA_SERVICE

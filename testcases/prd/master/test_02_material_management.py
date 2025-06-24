@@ -15,6 +15,9 @@ from utils.param_util import ParamUtil
 class TestMaterialManagement(PrdMasterBaseTest):
     """物料生产视图管理测试类"""
     
+    # 保存测试过程中的数据
+    material_data = {}
+    
     @classmethod
     def setup_class(cls):
         """测试类初始化"""
@@ -37,6 +40,7 @@ class TestMaterialManagement(PrdMasterBaseTest):
     
     @allure.title("创建物料生产视图")
     @allure.severity(allure.severity_level.BLOCKER)
+    @pytest.mark.run(order=1)
     def test_01_create_material_view(self):
         """测试创建物料生产视图"""
         try:
@@ -94,6 +98,12 @@ class TestMaterialManagement(PrdMasterBaseTest):
                         self.assert_util.assert_response_success(result)
                         self.logger.info(f"物料 {material['id']} 生产视图创建成功")
                         a.text(f"物料 {material['id']} 生产视图创建成功", "验证结果")
+                        
+                        # 保存创建结果到类变量
+                        TestMaterialManagement.material_data[material['id']] = {
+                            'procurement_type': procurement_type,
+                            'base_uom_id': base_uom_id
+                        }
                 
             self.logger.info("所有物料的生产视图创建完成")
             
