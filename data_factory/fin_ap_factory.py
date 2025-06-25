@@ -110,35 +110,112 @@ class FinApFactory(FinAparBaseFactory):
     def get_settlement_method(self) -> Dict[str, Any]:
         """获取结算方式配置"""
         try:
-            return self._get_cached_or_query(
+            result = self._get_cached_or_query(
                 "settlement_method",
                 self._query_basic_config_table,
                 "fin_sett_type_cf", "name", "code"
             )
+            # 如果数据库有数据，补充完整的结构
+            if result and result.get("id"):
+                # 查询完整数据
+                full_data_sql = """
+                    SELECT id, code, name, type, status, created_by, updated_by, 
+                           created_at, updated_at, version, deleted, origin_org_id
+                    FROM fin_sett_type_cf 
+                    WHERE id = %s AND deleted = 0
+                    LIMIT 1
+                """
+                full_result = DBManager.query(full_data_sql, [result["id"]])
+                if full_result:
+                    row = full_result[0]
+                    return {
+                        "code": row.get("code", "auto_test_settlement"),
+                        "name": row.get("name", "现金（自动化）"),
+                        "type": row.get("type", "CASH"),
+                        "status": row.get("status", "ENABLED"),
+                        "id": row["id"],
+                        "createdBy": {"id": row.get("created_by", 477968618361477)},
+                        "updatedBy": {"id": row.get("updated_by", 477968618361477)},
+                        "createdAt": int(datetime.now().timestamp() * 1000),
+                        "updatedAt": int(datetime.now().timestamp() * 1000),
+                        "version": row.get("version", 3),
+                        "deleted": row.get("deleted", 0),
+                        "originOrgId": row.get("origin_org_id", 0)
+                    }
+            return result
         except Exception as e:
-            Loggers.warning(f"结算方式配置表不存在，使用默认值: {str(e)}")
+            Loggers.warning(f"结算方式配置表查询失败，使用默认值: {str(e)}")
             # 返回默认的结算方式配置
             return {
-                "id": 1,
-                "settlement_method_code": "BANK_TRANSFER",
-                "settlement_method_name": "银行转账"
+                "code": "auto_test_settlement",
+                "name": "现金（自动化）",
+                "type": "CASH",
+                "status": "ENABLED",
+                "id": 2000001,
+                "createdBy": {"id": 477968618361477},
+                "updatedBy": {"id": 477968618361477},
+                "createdAt": int(datetime.now().timestamp() * 1000),
+                "updatedAt": int(datetime.now().timestamp() * 1000),
+                "version": 3,
+                "deleted": 0,
+                "originOrgId": 0
             }
 
     def get_payment_purpose(self) -> Dict[str, Any]:
         """获取付款目的配置"""
         try:
-            return self._get_cached_or_query(
+            result = self._get_cached_or_query(
                 "payment_purpose",
                 self._query_basic_config_table,
                 "gen_payment_purpose_cf", "payment_purpose_name", "payment_purpose_code"
             )
+            # 如果数据库有数据，补充完整的结构
+            if result and result.get("id"):
+                # 查询完整数据
+                full_data_sql = """
+                    SELECT id, payment_purpose_code as pp_code, payment_purpose_name as pp_name, 
+                           pay_type, business_type, is_prepayment, created_by, updated_by,
+                           created_at, updated_at, version, deleted, origin_org_id
+                    FROM gen_payment_purpose_cf 
+                    WHERE id = %s AND deleted = 0
+                    LIMIT 1
+                """
+                full_result = DBManager.query(full_data_sql, [result["id"]])
+                if full_result:
+                    row = full_result[0]
+                    return {
+                        "id": row["id"],
+                        "createdBy": {"id": row.get("created_by", 479645949903493)},
+                        "updatedBy": {"id": row.get("updated_by", 479645949903493)},
+                        "createdAt": int(datetime.now().timestamp() * 1000),
+                        "updatedAt": int(datetime.now().timestamp() * 1000),
+                        "version": row.get("version", 0),
+                        "deleted": row.get("deleted", 0),
+                        "ppCode": row.get("pp_code", "SLS_0001"),
+                        "ppName": row.get("pp_name", "销售收款"),
+                        "payType": row.get("pay_type", "REC"),
+                        "businessType": row.get("business_type", "SLS"),
+                        "isPrepayment": row.get("is_prepayment", False),
+                        "originOrgId": row.get("origin_org_id", 0)
+                    }
+            return result
         except Exception as e:
-            Loggers.warning(f"付款目的配置表不存在，使用默认值: {str(e)}")
+            Loggers.warning(f"付款目的配置表查询失败，使用默认值: {str(e)}")
             # 返回默认的付款目的配置
             return {
-                "id": 1,
-                "payment_purpose_code": "PAYMENT",
-                "payment_purpose_name": "付款"
+                "id": 2001001,
+                "createdBy": {"id": 479645949903493},
+                "updatedBy": {"id": 479645949903493},
+                "createdAt": 1727402586000,
+                "updatedAt": int(datetime.now().timestamp() * 1000),
+                "version": 0,
+                "deleted": 0,
+                "ppCode": "SLS_0001",
+                "ppName": "销售收款",
+                "payType": "REC",
+                "businessType": "SLS",
+                "isPrepayment": False,
+                "originOrgId": 0
             }
 
     def get_trading_account(self) -> Dict[str, Any]:
@@ -169,12 +246,61 @@ class FinApFactory(FinAparBaseFactory):
                 )
             except Exception as e:
                 Loggers.warning(f"单据类型配置表不存在，使用默认值: {str(e)}")
-                # 返回默认的单据类型配置
-                return {
-                    "id": 2002001,
-                    "doc_type_code": doc_type_code,
-                    "doc_type_name": "采购发票"
-                }
+                # 根据单据类型编码返回相应的默认配置
+                if doc_type_code == "PR_PAYMENT_REQUEST":
+                    return {
+                        "id": 20000014,
+                        "doc_type_code": doc_type_code,
+                        "doc_type_name": "采购付款申请",
+                        "prTypeCode": "test",
+                        "name": "采购付款申请",
+                        "relPnTypeId": {"id": 2003002},
+                        "whetherEnableApproval": False,
+                        "updatedBy": {"id": 479645949903493},
+                        "createdAt": 1705981878000,
+                        "updatedAt": int(datetime.now().timestamp() * 1000),
+                        "version": 9,
+                        "deleted": 0,
+                        "originOrgId": 0
+                    }
+                elif doc_type_code == "PN_PAY":
+                    return {
+                        "id": 2003001,
+                        "doc_type_code": doc_type_code,
+                        "doc_type_name": "付款单",
+                        "pnTypeCode": "PN_PAY",
+                        "name": "付款单",
+                        "pnClass": "PAY",
+                        "whetherEnableApproval": False,
+                        "updatedBy": {"id": 479645949903493},
+                        "createdAt": 1705981878000,
+                        "updatedAt": int(datetime.now().timestamp() * 1000),
+                        "version": 0,
+                        "deleted": 0,
+                        "originOrgId": 0
+                    }
+                elif doc_type_code == "PN_REC":
+                    return {
+                        "id": 2003002,
+                        "doc_type_code": doc_type_code,
+                        "doc_type_name": "收款单",
+                        "pnTypeCode": "PN_REC",
+                        "name": "收款单",
+                        "pnClass": "REC",
+                        "whetherEnableApproval": False,
+                        "updatedBy": {"id": 479645949903493},
+                        "createdAt": 1705981878000,
+                        "updatedAt": int(datetime.now().timestamp() * 1000),
+                        "version": 0,
+                        "deleted": 0,
+                        "originOrgId": 0
+                    }
+                else:
+                    return {
+                        "id": 2002001,
+                        "doc_type_code": doc_type_code,
+                        "doc_type_name": "采购发票"
+                    }
 
         return self._get_cached_or_query(
             f"doc_type_{doc_type_code}",
@@ -218,6 +344,80 @@ class FinApFactory(FinAparBaseFactory):
             Loggers.info(f"已清除{cache_type}缓存")
         else:
             Loggers.warning(f"未知的缓存类型: {cache_type}")
+
+    def create_payment_request_data(self, payment_amount: float = 4600.0, remark: str = None) -> Dict[str, Any]:
+        """
+        创建付款申请单完整请求数据
+        :param payment_amount: 付款金额
+        :param remark: 备注
+        :return: 完整的付款申请单请求数据
+        """
+        try:
+            # 1. 获取基础数据
+            base_data = self.get_base_data_for_fin_doc("PR")
+            
+            # 2. 获取配置数据
+            settlement_method = self.get_settlement_method()
+            payment_purpose = self.get_payment_purpose()
+            pr_doc_type = self.get_doc_type_by_code("PR_PAYMENT_REQUEST")
+            
+            # 3. 生成动态数据
+            pr_date = int(datetime.now().timestamp() * 1000)
+            if not remark:
+                remark = f"自动化测试付款申请单 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+            
+            # 4. 构建完整的请求数据结构
+            request_data = {
+                "sceneKey": "ERP_FIN$FIN_CM_PR",
+                "viewKey": "ERP_FIN$FIN_CM_PR:edit",
+                "viewTitle": "edit",
+                "buttonKey": "TERP_MIGRATE$FIN_CM_PR-editView-footer-save",
+                "buttonName": "保存",
+                "appId": 0,
+                "teamId": 22,
+                "serviceKey": "ERP_FIN$PR_SAVE_EVENT_SERVICE",
+                "params": {
+                    "request": {
+                        "docTypeId": pr_doc_type,
+                        "prDate": pr_date,
+                        "comOrgId": base_data["com_org"],
+                        "purOrgId": base_data["pur_org"],
+                        "payOrgId": base_data["pay_org"],
+                        "vendorCode": base_data["vend"],
+                        "payerCode": base_data["vend"],
+                        "docCurrId": {
+                            "currName": "人民币",
+                            "currCode": "CNY",
+                            "id": base_data["currency"].get("id", 2000001)
+                        },
+                        "baseCurrId": {
+                            "currName": "人民币",
+                            "currCode": "CNY",
+                            "id": base_data["currency"].get("id", 2000001)
+                        },
+                        "exchRate": 0,
+                        "remark": None,
+                        "prItems": [{
+                            "settlementMethodCode": settlement_method,
+                            "paymentPurposeCode": payment_purpose,
+                            "paymentRequestDocAmt": payment_amount,
+                            "paymentRequestBaseAmt": payment_amount
+                        }],
+                        "paidBaseAmt": None,
+                        "paidDocAmt": None,
+                        "unpaidDocAmt": None,
+                        "paymentRequestBaseAmt": None,
+                        "paymentRequestDocAmt": None,
+                        "unpaidBaseAmt": None
+                    }
+                }
+            }
+            
+            return request_data
+            
+        except Exception as e:
+            Loggers.error(f"创建付款申请单请求数据失败: {str(e)}")
+            raise
 
     def create_pr_request_data(self, ap_info: Dict[str, Any], partial_amount: float = None) -> Dict[str, Any]:
         """
@@ -485,7 +685,7 @@ class FinApFactory(FinAparBaseFactory):
             if results:
                 sett_types = []
                 for row in results:
-                    # 简化数据结构，避免服务器端解析复杂关联对象时出错
+                    # 极度简化数据结构，只保留必要字段避免服务器端解析错误
                     sett_item_type = {
                         "settItemTypeCode": row.get("sett_item_type_code"),
                         "settItemTypeName": row.get("sett_item_type_name"),
@@ -498,7 +698,7 @@ class FinApFactory(FinAparBaseFactory):
                         "affiliateSettItemTypeCode": row.get("affiliate_sett_item_type_code"),
                         "isCountQty": bool(row.get("is_count_qty", 0)),
                         "exchangeRateType": {"id": row.get("exchange_rate_type")} if row.get("exchange_rate_type") else None,
-                        "isAcqCost": bool(row.get("is_acq_cost", 0)) if row.get("is_acq_cost") is not None else None,
+                        "isAcqCost": row.get("is_acq_cost"),
                         "id": row.get("id"),
                         "createdBy": {"id": row.get("created_by")} if row.get("created_by") else None,
                         "updatedBy": {"id": row.get("updated_by")} if row.get("updated_by") else None,

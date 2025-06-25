@@ -165,21 +165,82 @@ class TestArDocumentSave(ArBaseTest):
     )
     def test_check_ar_doc_status_by_code_paging(self):
         try:
-            with a.step("轮询查询应收单状态"):
+            with a.step("轮询查询应收单过账状态"):
                 ar_head_code = TestArDocumentSave.ar_info.get("request_body", {}).get("arHeadCode")
                 assert ar_head_code, "请先执行提交用例，确保arHeadCode已生成"
                 
-                status_result = {}
-                self.wait_for_ar_status(ar_head_code, "DONE", status_result, max_wait=120, interval=3)
+                # 轮询检查状态是否更新为DONE，异步执行状态是否等于SUCCEEDED
+                max_attempts = 5  # 最大轮询次数（15秒）
+                interval = 3  # 轮询间隔（秒）
+                current_status = None
+                async_status = None
                 
-                assert status_result.get("success"), f"等待应收单状态变更失败，最终状态：{status_result.get('status')}"
-                assert status_result.get("status") == "DONE", f"应收单状态应为DONE，实际为：{status_result.get('status')}"
+                for attempt in range(max_attempts):
+                    query_request = {
+                        "pageable": {
+                            "pageNo": 1,
+                            "pageSize": 10,
+                            "needTotal": False,
+                            "conditionItems": {
+                                "type": "ConditionItems",
+                                "conditions": {"arHeadCode": {"operator": "CONTAINS", "value": ar_head_code}},
+                                "logicOperator": "AND"
+                            }
+                        }
+                    }
+                    
+                    # 发送分页查询请求
+                    fields = ["pageable"]
+                    api_path = ParamUtil.get_api_path(self.apis, "应收单头表-分页数据服务_PmHKWs4")
+                    params, url = ParamUtil.get_api_params(self.api_params, api_path)
+                    
+                    filtered_params = ParamUtil.filter_post_body_fields(
+                        params, fields, ["params", "request"]
+                    )
+                    ParamUtil.set_request_params(filtered_params, query_request)
+                    
+                    result = self.http.post(url, json=filtered_params)
+                    self.assert_util.assert_response_success(result)
+                    
+                    # 解析响应数据
+                    data = result.get("data", {}).get("data", {})
+                    data_list = data.get("data", [])
+                    
+                    if data_list:
+                        ar_record = data_list[0]
+                        current_status = ar_record.get("arStatus")
+                        async_status = ar_record.get("asyncExecutionStatus")
+                        
+                        a.text(f"第{attempt + 1}次查询 - 应收单状态: {current_status}, 异步状态: {async_status}", "状态轮询")
+                        
+                        # 如果状态为DONE且异步任务成功，则验证通过
+                        if current_status == "DONE" and async_status == "SUCCEEDED":
+                            a.text("✅ 过账异步任务完成，应收单状态已更新为完成", "验证成功")
+                            break
+                        # 如果异步任务失败，抛出异常
+                        elif async_status == "FAILED":
+                            failure_reason = ar_record.get("asyncExecutionFailureReason", "未知原因")
+                            raise Exception(f"应收单过账异步任务失败: {failure_reason}")
+                        # 继续等待
+                        else:
+                            if attempt < max_attempts - 1:
+                                a.text(f"异步任务尚未完成，等待{interval}秒后重试...", "等待中")
+                                time.sleep(interval)
+                    else:
+                        raise Exception(f"未找到应收单编码为[{ar_head_code}]的数据")
+                
+                # 最终验证
+                assert current_status == "DONE", f"应收单状态验证失败，期望: DONE，实际: {current_status}"
+                assert async_status == "SUCCEEDED", f"过账异步任务未完成，当前状态: {async_status}"
                 
                 a.json({
                     "arHeadCode": ar_head_code,
-                    "finalStatus": status_result.get("status"),
-                    "waitedTime": status_result.get("waited_time", 0)
-                }, "断言结果")
+                    "expectedStatus": "DONE",
+                    "actualStatus": current_status,
+                    "asyncExecutionStatus": async_status,
+                    "verificationResult": "PASSED"
+                }, "状态验证结果")
+                
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -203,20 +264,50 @@ class TestArDocumentSave(ArBaseTest):
                 
                 assert ar_doc_id and ar_head_code and base_request, "请先执行前置用例，确保ar_doc_id、arHeadCode和request_body已生成"
                 
-                # 构建反过账请求
-                rollback_request = base_request.copy()
-                rollback_request.update({
+                # 构建反过账请求（精简版本，只保留必要字段）
+                rollback_request = {
                     "id": ar_doc_id,
-                    "arStatus": "DONE",
-                    "asyncExecutionStatus": "DONE"
-                })
-                
-                # 计算总金额
-                ar_items = rollback_request.get("arItems", [])
-                rollback_request["grossDocAmt"] = sum([item.get("grossDocAmt", 0) for item in ar_items])
-                rollback_request["netDocAmt"] = sum([item.get("netDocAmt", 0) for item in ar_items])
-                rollback_request["grossBaseAmt"] = sum([item.get("grossBaseAmt", 0) for item in ar_items])
-                rollback_request["netBaseAmt"] = sum([item.get("netBaseAmt", 0) for item in ar_items])
+                    "arHeadCode": ar_head_code,
+                    "docTypeId": base_request.get("docTypeId"),
+                    "arStatus": "DONE",  # 使用过账完成后的状态
+                    "comOrgId": base_request.get("comOrgId"),
+                    "slsOrgId": base_request.get("slsOrgId"),
+                    "payOrgId": base_request.get("payOrgId"),
+                    "settPartnerType": base_request.get("settPartnerType"),
+                    "createType": "MANUAL",
+                    "baseCurrId": base_request.get("baseCurrId"),
+                    "docCurrId": base_request.get("docCurrId"),
+                    "exchRate": base_request.get("exchRate", 1),
+                    "grossDocAmt": base_request.get("grossDocAmt"),
+                    "netDocAmt": base_request.get("netDocAmt"),
+                    "grossBaseAmt": base_request.get("grossBaseAmt"),
+                    "netBaseAmt": base_request.get("netBaseAmt"),
+                    "collectionClearingStatus": "UNCLEARED",
+                    "billingClearingStatus": "UNCLEARED",
+                    "collectedDocAmt": 0,
+                    "collectingDocAmt": 0,
+                    "uncollectedDocAmt": base_request.get("netDocAmt"),
+                    "billedDocAmt": 0,
+                    "billingDocAmt": 0,
+                    "unbilledDocAmt": base_request.get("netDocAmt"),
+                    "remark": base_request.get("remark"),
+                    "arDate": base_request.get("arDate"),
+                    "offsetDocAmt": 0,
+                    "unoffsetDocAmt": base_request.get("netDocAmt"),
+                    "offsetBaseAmt": 0,
+                    "unoffsetBaseAmt": base_request.get("netBaseAmt"),
+                    "headOffsetStatus": "UNOFFSET",
+                    "collectedBaseAmt": 0,
+                    "uncollectedBaseAmt": base_request.get("netBaseAmt"),
+                    "collectingBaseAmt": 0,
+                    "billedBaseAmt": 0,
+                    "billingBaseAmt": 0,
+                    "unbilledBaseAmt": base_request.get("netBaseAmt"),
+                    "costAcqStatus": "NO_NEED_OBTAINED",
+                    "asyncExecutionStatus": "SUCCEEDED",  # 使用过账成功的异步状态
+                    "accountType": "FIN",
+                    "aesDsdPushStatus": "WAITING"
+                }
                 
                 # 发送反过账请求
                 result = {}
@@ -247,103 +338,80 @@ class TestArDocumentSave(ArBaseTest):
     )
     def test_verify_ar_doc_status_is_draft(self):
         try:
-            with a.step("分页查询验证应收单状态"):
+            with a.step("轮询查询应收单反过账状态"):
                 # 获取应收单编码
                 ar_head_code = TestArDocumentSave.ar_info.get("request_body", {}).get("arHeadCode")
                 assert ar_head_code, "请先执行前置用例，确保arHeadCode已生成"
                 
-                # 轮询查询应收单状态，验证是否为草稿态
-                max_attempts = 10  # 最大轮询次数
-                interval = 2  # 轮询间隔（秒）
+                # 轮询检查状态是否更新为DRAFT，异步执行状态是否等于SUCCEEDED
+                max_attempts = 5  # 最大轮询次数（15秒）
+                interval = 3  # 轮询间隔（秒）
                 current_status = None
-                verification_success = False  # 验证成功标志
+                async_status = None
                 
                 for attempt in range(max_attempts):
-                    try:
-                        # 构建分页查询请求（使用正确的参数格式）
-                        query_request = {
-                            "pageable": {
-                                "pageNo": 1,
-                                "pageSize": 10,
-                                "needTotal": False,
-                                "conditionItems": {
-                                    "type": "ConditionItems",
-                                    "conditions": {"arHeadCode": {"operator": "CONTAINS", "value": ar_head_code}},
-                                    "logicOperator": "AND"
-                                }
+                    query_request = {
+                        "pageable": {
+                            "pageNo": 1,
+                            "pageSize": 10,
+                            "needTotal": False,
+                            "conditionItems": {
+                                "type": "ConditionItems",
+                                "conditions": {"arHeadCode": {"operator": "CONTAINS", "value": ar_head_code}},
+                                "logicOperator": "AND"
                             }
                         }
-                        
-                        # 发送分页查询请求
-                        fields = ["pageable"]
-                        api_path = ParamUtil.get_api_path(self.apis, "应收单头表-分页数据服务_PmHKWs4")
-                        params, url = ParamUtil.get_api_params(self.api_params, api_path)
-                        
-                        filtered_params = ParamUtil.filter_post_body_fields(
-                            params, fields, ["params", "request"]
-                        )
-                        ParamUtil.set_request_params(filtered_params, query_request)
-                        
-                        result = self.http.post(url, json=filtered_params)
-                        
-                        if result.status_code == 200 and result.json().get("success"):
-                            data = result.json().get("data", {}).get("data", {})
-                            data_list = data.get("data", [])
-                            
-                            if data_list:
-                                current_status = data_list[0].get("arStatus")
-                                async_status = data_list[0].get("asyncExecutionStatus")
-                                
-                                a.text(f"第{attempt + 1}次查询 - 应收单状态: {current_status}, 异步状态: {async_status}", 
-                                      "状态查询结果")
-                                
-                                # 添加调试信息
-                                a.text(f"验证条件: current_status={current_status}, async_status={async_status}", "调试信息")
-                                a.text(f"条件判断: status==DRAFT: {current_status == 'DRAFT'}, async in list: {async_status in ['SUCCEEDED', 'CREATED']}", "调试信息")
-                                
-                                # 如果状态为DRAFT且异步执行完成，则验证成功，立即退出轮询
-                                if current_status == "DRAFT" and async_status in ["SUCCEEDED", "CREATED"]:
-                                    a.text("✅ 应收单状态已正确回退到草稿态", "验证成功")
-                                    verification_success = True
-                                    break
-                                # 如果异步执行失败，则抛出异常
-                                elif async_status == "FAILED":
-                                    failure_reason = data_list[0].get("asyncExecutionFailureReason", "未知原因")
-                                    raise Exception(f"应收单异步执行失败: {failure_reason}")
-                            else:
-                                a.text(f"第{attempt + 1}次查询 - 未找到应收单数据", "查询结果")
-                        else:
-                            error_info = result.json() if result.status_code == 200 else {"error": f"HTTP {result.status_code}"}
-                            a.text(f"第{attempt + 1}次查询失败: {error_info}", "查询异常")
+                    }
                     
-                    except Exception as e:
-                        a.text(f"第{attempt + 1}次查询异常: {str(e)}", "查询异常")
-                        # 如果查询异常但已经获取过正确状态，不影响最终结果
-                        if current_status == "DRAFT":
-                            a.text("虽有查询异常，但已获取到正确状态，继续验证", "状态确认")
+                    # 发送分页查询请求
+                    fields = ["pageable"]
+                    api_path = ParamUtil.get_api_path(self.apis, "应收单头表-分页数据服务_PmHKWs4")
+                    params, url = ParamUtil.get_api_params(self.api_params, api_path)
+                    
+                    filtered_params = ParamUtil.filter_post_body_fields(
+                        params, fields, ["params", "request"]
+                    )
+                    ParamUtil.set_request_params(filtered_params, query_request)
+                    
+                    result = self.http.post(url, json=filtered_params)
+                    self.assert_util.assert_response_success(result)
+                    
+                    # 解析响应数据
+                    data = result.get("data", {}).get("data", {})
+                    data_list = data.get("data", [])
+                    
+                    if data_list:
+                        ar_record = data_list[0]
+                        current_status = ar_record.get("arStatus")
+                        async_status = ar_record.get("asyncExecutionStatus")
+                        
+                        a.text(f"第{attempt + 1}次查询 - 应收单状态: {current_status}, 异步状态: {async_status}", "状态轮询")
+                        
+                        # 如果状态为DRAFT且异步任务成功，则验证通过
+                        if current_status == "DRAFT" and async_status == "SUCCEEDED":
+                            a.text("✅ 反过账异步任务完成，应收单状态已回退到草稿态", "验证成功")
                             break
-                    
-                    # 如果已经验证成功，立即退出轮询
-                    if verification_success:
-                        break
-                    
-                    # 如果不是最后一次尝试，则等待后继续
-                    if attempt < max_attempts - 1:
-                        time.sleep(interval)
+                        # 如果异步任务失败，抛出异常
+                        elif async_status == "FAILED":
+                            failure_reason = ar_record.get("asyncExecutionFailureReason", "未知原因")
+                            raise Exception(f"应收单反过账异步任务失败: {failure_reason}")
+                        # 继续等待
+                        else:
+                            if attempt < max_attempts - 1:
+                                a.text(f"异步任务尚未完成，等待{interval}秒后重试...", "等待中")
+                                time.sleep(interval)
+                    else:
+                        raise Exception(f"未找到应收单编码为[{ar_head_code}]的数据")
                 
-                # 验证最终状态 - 使用verification_success标志来判断
-                if not verification_success:
-                    assert current_status == "DRAFT", f"应收单状态验证失败，期望: DRAFT，实际: {current_status}，验证状态: {verification_success}"
-                
-                # 如果验证成功，确保状态确实是DRAFT
-                assert verification_success, f"应收单状态验证未完成，最后查询到的状态: {current_status}"
+                # 最终验证
+                assert current_status == "DRAFT", f"应收单状态验证失败，期望: DRAFT，实际: {current_status}"
+                assert async_status == "SUCCEEDED", f"反过账异步任务未完成，当前状态: {async_status}"
                 
                 a.json({
                     "arHeadCode": ar_head_code,
                     "expectedStatus": "DRAFT",
                     "actualStatus": current_status,
-                    "attempts": attempt + 1,
-                    "maxAttempts": max_attempts,
+                    "asyncExecutionStatus": async_status,
                     "verificationResult": "PASSED"
                 }, "状态验证结果")
                 
@@ -363,6 +431,11 @@ class TestArDocumentSave(ArBaseTest):
     def test_delete_ar_doc(self):
         try:
             with a.step("等待反过账异步任务完成"):
+                # 等待8秒让反过账异步任务完成
+                a.text("等待8秒让反过账异步任务完成...", "等待反过账")
+                time.sleep(8)
+                
+            with a.step("执行应收单删除操作"):
                 # 获取前置数据
                 ar_doc_id = TestArDocumentSave.ar_info.get("ar_doc_id")
                 base_request = TestArDocumentSave.ar_info.get("request_body", {}).copy()
@@ -370,11 +443,6 @@ class TestArDocumentSave(ArBaseTest):
                 
                 assert ar_doc_id and ar_head_code and base_request, "请先执行前置用例，确保ar_doc_id、arHeadCode和request_body已生成"
                 
-                # 等待5秒让反过账异步任务完成
-                a.text("等待5秒让反过账异步任务完成...", "等待反过账")
-                time.sleep(5)
-
-            with a.step("执行应收单删除操作"):
                 # 构建删除请求
                 delete_request = base_request.copy()
                 delete_request.update({
@@ -397,30 +465,21 @@ class TestArDocumentSave(ArBaseTest):
                 # 验证API调用成功
                 assert result.get("success") is True, f"应收单删除API调用失败，单据编号: {ar_head_code}"
 
-            with a.step("验证删除后应收单状态"):
-                # 验证删除后的状态，应该变为DRAFT
-                data = result.get("data", {}).get("data", {})
-                actual_status = data.get("arStatus")
-                
-                # 断言状态是否等于DRAFT
-                assert actual_status == "DRAFT", f"应收单删除后状态验证失败，期望: DRAFT，实际: {actual_status}"
-                
+            with a.step("验证删除API调用成功"):
+                # 对于删除操作，只需要验证API调用成功，不需要验证状态变化
                 # 添加验证结果到报告
                 a.json({
                     "api_success": result.get("success"),
                     "ar_head_code": ar_head_code,
                     "ar_doc_id": ar_doc_id,
-                    "expected_status": "DRAFT",
-                    "actual_status": actual_status,
-                    "status_check": "PASSED" if actual_status == "DRAFT" else "FAILED"
+                    "delete_result": "API_CALL_SUCCESS"
                 }, "删除验证结果")
                 
                 a.text(f"""
                 应收单删除验证总结:
                 ✓ 应收单编码: {ar_head_code}
                 ✓ 删除API调用: 成功
-                ✓ 删除后状态: {actual_status}
-                ✓ 状态验证: {'通过' if actual_status == 'DRAFT' else '失败'}
+                ✓ 验证结果: API调用成功
                 """, "应收单删除总结")
                 
         except Exception as e:

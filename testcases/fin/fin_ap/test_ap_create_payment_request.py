@@ -1064,21 +1064,38 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 
                 for attempt in range(max_attempts):
                     query_request = {
-                        "apHeadCode": ap_head_code,
-                        "pageable": {"page": 0, "size": 5, "sort": []}
+                        "pageable": {
+                            "pageNo": 1,
+                            "pageSize": 20,
+                            "needTotal": True,
+                            "sortOrders": None,
+                            "conditionItems": {
+                                "type": "ConditionItems",
+                                "conditions": {
+                                    "apHeadCode": {
+                                        "operator": "CONTAINS",
+                                        "value": ap_head_code
+                                    }
+                                },
+                                "logicOperator": "AND"
+                            }
+                        },
+                        "modelKey": "ERP_FIN$fin_apm_ap_head_tr"
                     }
                     
                     api_path = ParamUtil.get_api_path(self.apis, "应付单头表-分页数据服务_PmHKWs2")
                     params, url = ParamUtil.get_api_params(self.api_params, api_path)
                     filtered_params = ParamUtil.filter_post_body_fields(
-                        params, ["apHeadCode", "pageable"], ["params", "request"]
+                        params, ["pageable"], ["params", "request"]
                     )
                     ParamUtil.set_request_params(filtered_params, query_request)
                     
                     result = self.http.post(url, json=filtered_params)
                     self.assert_util.assert_response_success(result)
                     
-                    records = result.get("data", {}).get("data", {}).get("data", [])
+                    query_data = result.get("data", {})
+                    data_wrapper = query_data.get("data", {})
+                    records = data_wrapper.get("data", [])
                     ap_record = None
                     for record in records:
                         if record.get("apHeadCode") == ap_head_code:
@@ -1086,8 +1103,8 @@ class TestApCreatePaymentRequest(ApBaseTest):
                             break
                     
                     if ap_record:
-                        paid_doc_amt = ap_record.get("paidDocAmt", 0)
-                        paid_base_amt = ap_record.get("paidBaseAmt", 0)
+                        paid_doc_amt = ap_record.get("paypaidDocAmt", 0)
+                        paid_base_amt = ap_record.get("paypaidBaseAmt", 0)
                         unpaid_doc_amt = ap_record.get("unpaidDocAmt", 0)
                         unpaid_base_amt = ap_record.get("unpaidBaseAmt", 0)
                         paying_doc_amt = ap_record.get("payingDocAmt", 0)

@@ -27,10 +27,16 @@ class TestArDocCreateSb(ArBaseTest):
 
     def _create_ar_request_body(self, now_ts, output_dict):
         """创建应收单请求体"""
-        com_org_id = self.ar_factory.get_org_by_id(14373001)["id"]
-        sls_org_id = self.ar_factory.get_org_by_id(14579001)["id"]
-        curr_id = self.ar_factory.create_currency()["id"]
-        customer_id = self.ar_factory.get_customer_by_id(14103001)["id"]
+        # 使用数据工厂获取完整的基础数据
+        base_data = self.ar_factory.get_base_data_for_fin_doc("AR")
+        
+        # 从基础数据中获取必要信息
+        com_org_id = base_data["com_org"]["id"]
+        sls_org_id = base_data["sls_org"]["id"]
+        curr_id = base_data["currency"]["id"]
+        customer_info = base_data["customer"]  # 获取完整的客户信息
+        
+        # 获取其他必要的数据
         mat_id = self.ar_factory.get_material_by_id(14672002)["id"]
         tax_code_id = self.ar_factory.get_tax_code_by_id(2002002)["id"]
         sett_item_type_id = self.ar_factory.get_sett_item_type_by_id(12)["id"]
@@ -54,7 +60,7 @@ class TestArDocCreateSb(ArBaseTest):
             "baseCurrId": {"id": curr_id},
             "exchRate": 1,
             "settPartnerType": "CUSTOMER",
-            "settPartnerId": {"id": customer_id},
+            "settPartnerId": customer_info,  # 使用完整的客户信息
             "arStatus": "DRAFT",
             "collectionClearingStatus": "UNCLEARED",
             "billingClearingStatus": "UNCLEARED",
@@ -94,7 +100,7 @@ class TestArDocCreateSb(ArBaseTest):
         
         result_dict.update(result)
 
-    def _wait_for_ar_status(self, ar_head_code, target_status, status_result, max_wait=60, interval=2):
+    def _wait_for_ar_status(self, ar_head_code, target_status, status_result, max_wait=15, interval=2):
         """等待应收单状态变更"""
         api_path = ParamUtil.get_api_path(self.apis, "应收单头表-分页数据服务_PmHKWs4")
         params, url = ParamUtil.get_api_params(self.api_params, api_path)
@@ -150,7 +156,7 @@ class TestArDocCreateSb(ArBaseTest):
         
         sb_result.update(result)
 
-    def _wait_for_sb_task_completion(self, ar_doc_id, task_result, max_wait=60, interval=3):
+    def _wait_for_sb_task_completion(self, ar_doc_id, task_result, max_wait=15, interval=3):
         """等待销售发票创建异步任务完成，结果存储到task_result中"""
         waited = 0
         ar_detail = {}
@@ -226,7 +232,7 @@ class TestArDocCreateSb(ArBaseTest):
             }
         })
 
-    def _query_sb_by_paging(self, bil_code, query_result, max_wait=120, interval=5):
+    def _query_sb_by_paging(self, bil_code, query_result, max_wait=15, interval=2):
         """通过分页服务查询销售发票，结果存储到query_result中"""
         api_path = ParamUtil.get_api_path(self.apis, "销售发票头表-分页数据服务_PmHKWs1")
         params, url = ParamUtil.get_api_params(self.api_params, api_path)
@@ -584,7 +590,7 @@ class TestArDocCreateSb(ArBaseTest):
                 time.sleep(2)
                 
                 query_result = {}
-                self._query_sb_by_paging(bil_code, query_result, max_wait=30, interval=2)
+                self._query_sb_by_paging(bil_code, query_result, max_wait=15, interval=2)
                 
                 updated_sb_record = query_result.get("record")
                 assert updated_sb_record, f"提交后未能查询到bil_code为[{bil_code}]的销售发票记录"
@@ -747,7 +753,7 @@ class TestArDocCreateSb(ArBaseTest):
                 
                 # 通过分页查询接口获取销售发票最新状态
                 query_result = {}
-                self._query_sb_by_paging(bil_code, query_result, max_wait=30, interval=3)
+                self._query_sb_by_paging(bil_code, query_result, max_wait=15, interval=3)
                 
                 sb_record = query_result.get("record")
                 assert sb_record, f"未查询到bil_code为[{bil_code}]的销售发票记录"

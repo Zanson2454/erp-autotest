@@ -13,14 +13,18 @@ from utils.mock_util import MockData
 from utils.report_util import a, case_decorator
 
 
-def convert_decimal_to_float(obj):
-    """递归将字典/列表中的 Decimal 转为 float"""
-    if isinstance(obj, dict):
-        return {k: convert_decimal_to_float(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [convert_decimal_to_float(i) for i in obj]
+def convert_data_for_json(obj):
+    """数据转换方法，处理Decimal和datetime类型"""
+    if obj is None:
+        return None
     elif isinstance(obj, Decimal):
         return float(obj)
+    elif isinstance(obj, datetime):
+        return obj.strftime("%Y-%m-%d %H:%M:%S")
+    elif isinstance(obj, dict):
+        return {k: convert_data_for_json(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [convert_data_for_json(item) for item in obj]
     else:
         return obj
 
@@ -66,7 +70,7 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
                 })
                 
                 # 先转换数据类型再显示
-                request_body_json = convert_decimal_to_float(request_body)
+                request_body_json = convert_data_for_json(request_body)
                 a.json(request_body_json, "应付单创建请求数据")
 
             with a.step("执行应付单保存服务"):
@@ -82,7 +86,7 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
                     save_params, save_fields, ["params", "request"]
                 )
                 ParamUtil.set_request_params(save_filtered_params, request_body)
-                save_filtered_params = convert_decimal_to_float(save_filtered_params)
+                save_filtered_params = convert_data_for_json(save_filtered_params)
                 
                 save_result = self.http.post(save_url, json=save_filtered_params)
                 self.assert_util.assert_response_success(save_result)
@@ -127,7 +131,7 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
                     submit_params, list(submit_data.keys()), ["params", "request"]
                 )
                 ParamUtil.set_request_params(submit_filtered_params, submit_data)
-                submit_filtered_params = convert_decimal_to_float(submit_filtered_params)
+                submit_filtered_params = convert_data_for_json(submit_filtered_params)
                 
                 submit_result = self.http.post(submit_url, json=submit_filtered_params)
                 self.assert_util.assert_response_success(submit_result)
@@ -148,7 +152,7 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
                     post_params, list(post_data.keys()), ["params", "request"]
                 )
                 ParamUtil.set_request_params(post_filtered_params, post_data)
-                post_filtered_params = convert_decimal_to_float(post_filtered_params)
+                post_filtered_params = convert_data_for_json(post_filtered_params)
                 
                 post_result = self.http.post(post_url, json=post_filtered_params)
                 self.assert_util.assert_response_success(post_result)
@@ -443,7 +447,7 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
                 )
                 
                 save_filtered_params = {"params": {"request": pi_request_data}}
-                save_filtered_params = convert_decimal_to_float(save_filtered_params)
+                save_filtered_params = convert_data_for_json(save_filtered_params)
                 
                 save_result = self.http.post(save_url, json=save_filtered_params)
                 self.assert_util.assert_response_success(save_result)
@@ -529,63 +533,71 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
             assert ap_head_code, "未获取到应付单编号，请确保前面的测试用例已成功运行"
             
             with a.step("等待异步任务完成"):
-                # 等待付款申请单和采购发票的创建及过账完成
-                time.sleep(8)  
-                a.text("已等待8秒，确保异步任务完成", "等待说明")
+                # 等待付款申请单和采购发票的创建及过账完成，并等待ES索引同步
+                time.sleep(15)  # 增加等待时间以确保ES索引同步
+                a.text("已等待15秒，确保异步任务和ES索引同步完成", "等待说明")
 
             with a.step("执行应付单分页查询"):
                 # 获取应付单分页查询API配置
-                query_api_path = ParamUtil.get_api_path(self.apis, "应付单头-ES数据分页查询服务")
+                query_api_path = ParamUtil.get_api_path(self.apis, "应付单头表-分页数据服务_PmHKWs2")
                 query_params, query_url = ParamUtil.get_api_params(self.api_params, query_api_path)
                 
-                # 构建查询条件：按应付单编号精确查询
-                query_condition = {
-                    "apHeadCode": ap_head_code,
-                    "id": ap_doc_id,
-                    "comOrgId": TestApBatchCreatePartialPrAndPi.ap_batch_info.get("com_org_id")
-                }
-                
-                # 设置分页参数
-                pageable = {
-                    "pageNo": 1,
-                    "pageSize": 20,
-                    "sortOrders": [
-                        {
-                            "fieldAlias": "updatedAt",
-                            "sortType": "DESC"
-                        }
-                    ]
-                }
-                
-                # 构建请求参数
+                # 构建分页查询参数（使用真实的入参格式进行精确查询）
                 query_request = {
-                    "pageable": pageable
+                    "pageable": {
+                        "pageNo": 1,
+                        "pageSize": 20,
+                        "needTotal": True,
+                        "sortOrders": None,
+                        "conditionItems": {
+                            "type": "ConditionItems",
+                            "conditions": {
+                                "apHeadCode": {
+                                    "operator": "CONTAINS",  # 使用CONTAINS操作符
+                                    "value": ap_head_code
+                                }
+                            },
+                            "logicOperator": "AND"
+                        }
+                    },
+                    "modelKey": "ERP_FIN$fin_apm_ap_head_tr"
                 }
-                
-                # 使用应付单头编号作为查询条件
-                for key in query_condition:
-                    if key in query_params.get("params", {}).get("request", {}):
-                        query_request[key] = query_condition[key]
                 
                 # 更新请求参数
                 query_filtered_params = ParamUtil.filter_post_body_fields(
-                    query_params, list(query_request.keys()), ["params", "request"]
+                    query_params, ["pageable"], ["params", "request"]
                 )
                 ParamUtil.set_request_params(query_filtered_params, query_request)
                 
                 a.json(query_filtered_params, "应付单分页查询请求参数")
                 
-                # 执行查询
-                query_result = self.http.post(query_url, json=query_filtered_params)
-                self.assert_util.assert_response_success(query_result)
+                # 轮询查询，最多尝试3次
+                max_attempts = 3
+                records = []
                 
-                query_data = query_result.get("data", {}).get("data", {})
-                records = query_data.get("records", [])
-                
-                a.json(query_result, "应付单分页查询结果")
+                for attempt in range(max_attempts):
+                    # 执行查询
+                    query_result = self.http.post(query_url, json=query_filtered_params)
+                    self.assert_util.assert_response_success(query_result)
+                    
+                    query_data = query_result.get("data", {})
+                    data_wrapper = query_data.get("data", {})
+                    records = data_wrapper.get("data", [])
+                    
+                    a.json(query_result, f"应付单分页查询结果(第{attempt+1}次)")
+                    
+                    if records:
+                        a.text(f"✅ 第{attempt+1}次查询成功，找到{len(records)}条记录", "查询成功")
+                        break
+                    else:
+                        if attempt < max_attempts - 1:
+                            a.text(f"⚠️ 第{attempt+1}次查询为空，等待3秒后重试", "查询重试")
+                            time.sleep(3)
+                        else:
+                            a.text(f"❌ 已尝试{max_attempts}次查询，均未找到数据", "查询失败")
                 
                 # 验证查询结果
-                assert records, f"未查询到应付单数据，单据编号: {ap_head_code}"
+                assert records, f"经过{max_attempts}次查询仍未找到应付单数据，单据编号: {ap_head_code}"
                 
                 # 找到目标应付单记录
                 target_ap_record = None

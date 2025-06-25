@@ -43,17 +43,17 @@ class TestPnCreateManual(ArBaseTest):
                 "name": base_data["customer"]["name"]
             }
             
-            # 构建组织信息（使用数据库原始字段名）
+            # 构建组织信息（使用正确的字段名）
             com_org_info = {
                 "id": base_data["com_org"]["id"],
-                "orgCode": base_data["com_org"]["org_code"],
-                "orgName": base_data["com_org"]["org_name"]
+                "orgCode": base_data["com_org"]["orgCode"],
+                "orgName": base_data["com_org"]["orgName"]
             }
             
             sls_org_info = {
                 "id": base_data["sls_org"]["id"],
-                "orgCode": base_data["sls_org"]["org_code"], 
-                "orgName": base_data["sls_org"]["org_name"]
+                "orgCode": base_data["sls_org"]["orgCode"], 
+                "orgName": base_data["sls_org"]["orgName"]
             }
             
             # 生成收款单编码

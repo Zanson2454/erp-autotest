@@ -220,7 +220,7 @@ class FinAparBaseFactory(DataFactory):
     def get_base_data_for_fin_doc(self, doc_type: str = "AP") -> Dict[str, Any]:
         """
         获取创建财务单据所需的基础数据
-        :param doc_type: 单据类型 AP-应付单, AR-应收单
+        :param doc_type: 单据类型 AP-应付单, AR-应收单, PR-付款申请单
         :return: 基础数据字典
         """
         try:
@@ -231,11 +231,11 @@ class FinAparBaseFactory(DataFactory):
                 AND org_code LIKE 'AUTOTEST_COM_ORG%'
                 LIMIT 1
             """
-            com_org = DBManager.query(com_org_sql)[0]
+            com_org_raw = DBManager.query(com_org_sql)[0]
             
             # 2. 根据单据类型获取业务组织
-            if doc_type == "AP":
-                # 应付单需要采购组织
+            if doc_type in ["AP", "PR"]:
+                # 应付单和付款申请单需要采购组织
                 bus_org_sql = """
                     SELECT * FROM org_struct_md 
                     WHERE deleted = 0 
@@ -251,7 +251,7 @@ class FinAparBaseFactory(DataFactory):
                     LIMIT 1
                 """
             
-            bus_org = DBManager.query(bus_org_sql)[0]
+            bus_org_raw = DBManager.query(bus_org_sql)[0]
             
             # 3. 获取币种
             currency_sql = """
@@ -260,18 +260,180 @@ class FinAparBaseFactory(DataFactory):
                 AND curr_name = '人民币'
                 LIMIT 1
             """
-            currency = DBManager.query(currency_sql)[0]
+            currency_raw = DBManager.query(currency_sql)[0]
+            
+            # 4. 获取供应商
+            vend_sql = """
+                SELECT * FROM gen_business_partner_md 
+                WHERE deleted = 0 
+                AND code LIKE 'AUTOTEST_VEND%'
+                AND status = 'ENABLED'
+                LIMIT 1
+            """
+            vend_raw = DBManager.query(vend_sql)[0]
+            
+            # 构建完整的组织对象结构
+            com_org = self._build_complete_org_structure(com_org_raw)
+            pur_org = self._build_complete_org_structure(bus_org_raw)
+            
+            # 构建完整的币种对象
+            currency = {
+                "currName": currency_raw["curr_name"],
+                "currCode": currency_raw["curr_code"],
+                "id": currency_raw["id"]
+            }
+            
+            # 构建完整的供应商对象
+            vend = self._build_complete_vendor_structure(vend_raw)
+            
+            # 5. 获取结算方式
+            settlement_method_sql = """
+                SELECT * FROM fin_sett_type_cf 
+                WHERE deleted = 0 
+                AND status = 'ENABLED'
+                AND type = 'CASH'
+                LIMIT 1
+            """
+            settlement_method_raw = DBManager.query(settlement_method_sql)[0]
+            settlement_method = {
+                "id": settlement_method_raw["id"],
+                "code": settlement_method_raw["code"],
+                "name": settlement_method_raw["name"],
+                "type": settlement_method_raw["type"],
+                "status": settlement_method_raw["status"]
+            }
             
             return {
                 'com_org': com_org,
-                'bus_org': bus_org,  # 业务组织（采购组织或销售组织）
-                'pay_org': com_org,  # 使用公司组织作为付款/收款组织
+                'pur_org': pur_org,  # 采购组织
+                'pay_org': com_org,  # 使用公司组织作为付款组织
                 'currency': currency,
+                'vend': vend,
+                'settlement_method': settlement_method,
                 'doc_type': doc_type
             }
         except Exception as e:
             Loggers.error(f"获取{doc_type}单据基础数据失败: {str(e)}")
             raise
+
+    def _build_complete_org_structure(self, org_raw: Dict[str, Any]) -> Dict[str, Any]:
+        """构建完整的组织对象结构，匹配实际API入参格式"""
+        return {
+            "orgCode": org_raw["org_code"],
+            "orgName": org_raw["org_name"],
+            "orgEnableDate": int(datetime.now().timestamp() * 1000),
+            "orgStatus": "ENABLED",
+            "isLeaf": org_raw.get("is_leaf", False),
+            "def1": org_raw.get("def1"),
+            "def2": org_raw.get("def2"),
+            "def3": org_raw.get("def3"),
+            "def4": org_raw.get("def4"),
+            "def5": org_raw.get("def5"),
+            "def6": org_raw.get("def6"),
+            "def7": org_raw.get("def7"),
+            "def8": org_raw.get("def8"),
+            "def9": org_raw.get("def9"),
+            "def10": org_raw.get("def10"),
+            "def11": org_raw.get("def11"),
+            "def12": org_raw.get("def12"),
+            "def13": org_raw.get("def13"),
+            "def14": org_raw.get("def14"),
+            "def15": org_raw.get("def15"),
+            "def16": org_raw.get("def16"),
+            "def17": org_raw.get("def17"),
+            "def18": org_raw.get("def18"),
+            "def19": org_raw.get("def19"),
+            "def20": org_raw.get("def20"),
+            "def21": org_raw.get("def21"),
+            "def22": org_raw.get("def22"),
+            "def23": org_raw.get("def23"),
+            "def24": org_raw.get("def24"),
+            "def25": org_raw.get("def25"),
+            "def26": org_raw.get("def26"),
+            "def27": org_raw.get("def27"),
+            "def28": org_raw.get("def28"),
+            "def29": org_raw.get("def29"),
+            "def30": org_raw.get("def30"),
+            "def31": org_raw.get("def31"),
+            "def32": org_raw.get("def32"),
+            "def33": org_raw.get("def33"),
+            "def34": org_raw.get("def34"),
+            "def35": org_raw.get("def35"),
+            "def36": org_raw.get("def36"),
+            "def37": org_raw.get("def37"),
+            "def38": org_raw.get("def38"),
+            "def39": org_raw.get("def39"),
+            "def40": org_raw.get("def40"),
+            "orgDimensionCode": org_raw.get("org_dimension_code", "SCM_ORG_GRP"),
+            "attachment1": [],
+            "attachment2": [],
+            "orgSort": org_raw.get("org_sort", 1),
+            "orgBusinessTypeCode": org_raw.get("org_business_type_code"),
+            "orgBusinessTypeId": {"id": org_raw.get("org_business_type_id")} if org_raw.get("org_business_type_id") else None,
+            "orgDimensionId": {"id": org_raw.get("org_dimension_id")} if org_raw.get("org_dimension_id") else None,
+            "orgParentId": {"id": org_raw.get("org_parent_id")} if org_raw.get("org_parent_id") else None,
+            "partnerId": org_raw.get("partner_id"),
+            "comOrgId": {"id": org_raw.get("com_org_id")} if org_raw.get("com_org_id") else None,
+            "orgBusinessTypeIds": org_raw.get("org_business_type_ids"),
+            "orgBusinessTypeCodes": org_raw.get("org_business_type_codes"),
+            "path": org_raw.get("path"),
+            "id": org_raw["id"],
+            "createdBy": {"id": org_raw.get("created_by")} if org_raw.get("created_by") else None,
+            "updatedBy": {"id": org_raw.get("updated_by")} if org_raw.get("updated_by") else None,
+            "createdAt": int(datetime.fromisoformat(str(org_raw.get("created_at", datetime.now()))).timestamp() * 1000) if org_raw.get("created_at") else int(datetime.now().timestamp() * 1000),
+            "updatedAt": int(datetime.fromisoformat(str(org_raw.get("updated_at", datetime.now()))).timestamp() * 1000) if org_raw.get("updated_at") else int(datetime.now().timestamp() * 1000),
+            "version": org_raw.get("version", 1),
+            "deleted": org_raw.get("deleted", 0),
+            "originOrgId": org_raw.get("origin_org_id", 0)
+        }
+
+    def _build_complete_vendor_structure(self, vend_raw: Dict[str, Any]) -> Dict[str, Any]:
+        """构建完整的供应商对象结构，匹配实际API入参格式"""
+        return {
+            "id": vend_raw["id"],
+            "context": {},
+            "version": vend_raw.get("version", 1),
+            "deleted": vend_raw.get("deleted", 0),
+            "createdAt": int(datetime.fromisoformat(str(vend_raw.get("created_at", datetime.now()))).timestamp() * 1000) if vend_raw.get("created_at") else int(datetime.now().timestamp() * 1000),
+            "updatedAt": int(datetime.fromisoformat(str(vend_raw.get("updated_at", datetime.now()))).timestamp() * 1000) if vend_raw.get("updated_at") else int(datetime.now().timestamp() * 1000),
+            "createdBy": vend_raw.get("created_by"),
+            "updatedBy": vend_raw.get("updated_by"),
+            "code": vend_raw["code"],
+            "status": vend_raw.get("status", "ENABLED"),
+            "name": vend_raw["name"],
+            "partnerIdentity": ["SUPPLIER"],
+            "partnerTypeId": {
+                "id": vend_raw.get("partner_type_id", 2001001),
+                "context": {},
+                "version": 7,
+                "deleted": 0,
+                "createdAt": 1713247472000,
+                "updatedAt": 1742799310000,
+                "createdBy": 100010583,
+                "updatedBy": 540175374525637,
+                "code": "01",
+                "name": "集团内合作伙伴-国内",
+                "classType": "COMPANY",
+                "isInternal": True,
+                "isAddrRequired": False,
+                "isBankRequired": False,
+                "status": "DISABLED",
+                "isOverseasPartner": False,
+                "isNeedMaintainService": False,
+                "role": "SUPPLIER"
+            },
+            "comCorporation": vend_raw.get("com_corporation", "崔月"),
+            "bizLicenseNo": vend_raw.get("biz_license_no", "91441900MA56J2K400"),
+            "enterpriseType": "VENDOR",
+            "registeredCapital": vend_raw.get("registered_capital", "1000"),
+            "socialCreditCode": vend_raw.get("social_credit_code", "91441900MA56J2K400"),
+            "taxpayersNum": vend_raw.get("taxpayers_num", "91441900MA56J2K400"),
+            "bizScope": vend_raw.get("biz_scope", "采购代理服务；政府采购代理服务；集贸市场管理服务；供应链管理服务"),
+            "intro": vend_raw.get("intro", "自动化测试供应商"),
+            "addressDetail": vend_raw.get("address_detail", "广东省东莞市"),
+            "classType": "COMPANY",
+            "isInternal": True
+        }
 
     def create_fin_doc_schedule_base(self, amount: float = 1000.0, due_date: int = None) -> Dict[str, Any]:
         """
