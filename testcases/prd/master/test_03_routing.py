@@ -12,6 +12,7 @@ from testcases.prd import PrdBaseTest
 from utils.report_util import a
 from utils.param_util import ParamUtil
 from utils.mysql_util import DBManager
+from testcases.prd.basic.init_config import PrdConfigInitializer
 
 @allure.epic("生产管理")
 @allure.feature("主数据管理")
@@ -27,6 +28,10 @@ class TestRouting(PrdBaseTest):
         """测试类初始化"""
         super().setup_class()
         cls.logger.info("工艺路线管理测试类初始化")
+        
+        # 初始化配置管理器并确保基础配置存在
+        cls.config_initializer = PrdConfigInitializer()
+        cls.config_initializer.ensure_configs_exist()
         
         # 获取测试数据
         cls.test_org = cls.base_info["inv_org_info"]
@@ -609,6 +614,14 @@ class TestRouting(PrdBaseTest):
             self.logger.error(f"工艺路线工序分配保存失败: {str(e)}")
             a.text(str(e), "失败原因")
             raise
+
+    def setup_method(self, method):
+        """测试方法初始化
+        在每个测试方法执行前都确保基础配置存在
+        """
+        super().setup_method(method)
+        # 确保基础配置数据存在
+        self.config_initializer.ensure_configs_exist()
 
 if __name__ == "__main__":
     """直接运行测试用例的入口点"""

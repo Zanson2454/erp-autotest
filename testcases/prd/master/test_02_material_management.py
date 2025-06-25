@@ -8,6 +8,7 @@ import pytest
 from testcases.prd.master import PrdMasterBaseTest, MaterialType
 from utils.report_util import a
 from utils.param_util import ParamUtil
+from testcases.prd.basic.init_config import PrdConfigInitializer
 
 @allure.epic("生产管理")
 @allure.feature("主数据管理")
@@ -24,6 +25,10 @@ class TestMaterialManagement(PrdMasterBaseTest):
         super().setup_class()
         cls.logger.info("物料生产视图管理测试类初始化完成")
         
+        # 初始化配置管理器并确保基础配置存在
+        cls.config_initializer = PrdConfigInitializer()
+        cls.config_initializer.ensure_configs_exist()
+        
         # 获取测试数据
         cls.test_org = cls.base_info["inv_org_info"]
         cls.test_inv_loc = cls.base_info["inv_loc_info"]
@@ -34,6 +39,14 @@ class TestMaterialManagement(PrdMasterBaseTest):
             *cls.raw_materials     # 原材料列表
         ]
         cls.logger.info(f"测试物料列表: {cls.test_materials}")
+    
+    def setup_method(self, method):
+        """测试方法初始化
+        在每个测试方法执行前都确保基础配置存在
+        """
+        super().setup_method(method)
+        # 确保基础配置数据存在
+        self.config_initializer.ensure_configs_exist()
     
     def _get_procurement_type(self, material):
         """根据物料类型获取采购类型"""
