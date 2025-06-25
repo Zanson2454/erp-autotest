@@ -67,7 +67,7 @@ class PrdBaseTest(BaseTest):
                 FROM org_struct_md 
                 WHERE org_status='ENABLED' 
                 AND org_dimension_code='SCM_ORG_GRP' 
-                AND org_code LIKE 'C100%' 
+                AND org_code LIKE 'AUTOTEST%' 
                 AND org_business_type_codes = '["INV_ORG"]' 
                 AND deleted=0 
                 LIMIT 1
@@ -78,7 +78,8 @@ class PrdBaseTest(BaseTest):
             prd_mat_sql = """
                 SELECT id, mat_code, mat_name
                 FROM gen_mat_md
-                WHERE deleted = 0 AND mat_code = 'W1790'
+                WHERE deleted = 0 AND mat_code LIKE 'FG_TEST_001%'
+                ORDER BY id DESC
                 LIMIT 1
             """
             prd_mat_info = DBManager.query(prd_mat_sql)[0]

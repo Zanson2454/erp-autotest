@@ -26,6 +26,8 @@ class TestMaterialManagement(PrdMasterBaseTest):
         
         # 获取测试数据
         cls.test_org = cls.base_info["inv_org_info"]
+        cls.test_inv_loc = cls.base_info["inv_loc_info"]
+        cls.test_inv_type = cls.base_info["inv_type_info"]
         # 获取所有测试物料（成品和原材料）
         cls.test_materials = [
             cls.finished_material,  # 成品
@@ -65,8 +67,8 @@ class TestMaterialManagement(PrdMasterBaseTest):
                         "invOrgId": self.test_org["id"],      # 库存组织ID
                         "prdUomId": base_uom_id,              # 生产单位ID，从物料数据中获取
                         "factoryStatusId": None,              # 工厂状态ID
-                        "invLocId": None,                     # 库存地点ID
-                        "productionCycle": None,              # 生产周期
+                        "invLocId": {"id": self.test_inv_loc["id"]},  # 库存地点ID
+                        "productionCycle": 2,              # 生产周期
                         "inspectionCycle": None,              # 检验周期
                         "componentScrap": None,               # 组件损耗
                         "procurementType": procurement_type,   # 采购类型：成品为E，原材料为F
@@ -76,7 +78,8 @@ class TestMaterialManagement(PrdMasterBaseTest):
                         "excessiveDeliveryTolerance": None,   # 超交容差
                         "componentCostElementId": None,       # 组件成本要素ID
                         "outputCostElementId": None,          # 产出成本要素ID
-                        "prdvrsList": []                      # 生产版本列表
+                        "prdvrsList": [],                      # 生产版本列表
+                        "postInvTypeId": {"id": self.test_inv_type["id"]}  # 库存类型（非限制）
                     }
                     
                     filtered_params = ParamUtil.filter_post_body_fields(
