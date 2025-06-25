@@ -1,8 +1,8 @@
 import argparse
-import yaml
 import re
 import json
 from pathlib import Path
+import yaml
 
 def parse_args():
     parser = argparse.ArgumentParser(description="统计ERP自动化用例接口覆盖率")
