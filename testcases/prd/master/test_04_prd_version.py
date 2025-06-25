@@ -11,11 +11,13 @@ from testcases.prd import PrdBaseTest
 from utils.report_util import a
 from utils.param_util import ParamUtil
 from utils.mysql_util import DBManager
+from testcases.prd.master import PrdMasterBaseTest
+from testcases.prd.basic.init_config import PrdConfigInitializer
 
 @allure.epic("生产管理")
 @allure.feature("主数据管理")
 @allure.story("生产版本管理")
-class TestPrdVersion(PrdBaseTest):
+class TestPrdVersion(PrdMasterBaseTest):
     """生产版本管理测试类"""
     
     # 保存测试过程中的数据
@@ -25,11 +27,23 @@ class TestPrdVersion(PrdBaseTest):
     def setup_class(cls):
         """测试类初始化"""
         super().setup_class()
-        cls.logger.info("生产版本管理测试类初始化")
+        cls.logger.info("生产版本管理测试类初始化完成")
+        
+        # 初始化配置管理器并确保基础配置存在
+        cls.config_initializer = PrdConfigInitializer()
+        cls.config_initializer.ensure_configs_exist()
         
         # 获取测试数据
         cls.test_org = cls.base_info["inv_org_info"]
         cls.test_material = cls.base_info["prd_mat_info"]
+    
+    def setup_method(self, method):
+        """测试方法初始化
+        在每个测试方法执行前都确保基础配置存在
+        """
+        super().setup_method(method)
+        # 确保基础配置数据存在
+        self.config_initializer.ensure_configs_exist()
     
     @allure.title("创建生产版本")
     @allure.severity(allure.severity_level.BLOCKER)

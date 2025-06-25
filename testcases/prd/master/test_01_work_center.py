@@ -11,6 +11,7 @@ from utils.param_util import ParamUtil
 from datetime import datetime
 import time
 from enum import Enum
+from testcases.prd.basic.init_config import PrdConfigInitializer
 
 class WorkCenterType(Enum):
     """工作中心类型"""
@@ -33,9 +34,21 @@ class TestWorkCenter(PrdBaseTest):
         super().setup_class()
         cls.logger.info("工作中心管理测试类初始化完成")
         
+        # 初始化配置管理器并确保基础配置存在
+        cls.config_initializer = PrdConfigInitializer()
+        cls.config_initializer.ensure_configs_exist()
+        
         # 获取测试数据
         cls.test_org = cls.base_info["inv_org_info"]
         
+    def setup_method(self, method):
+        """测试方法初始化
+        在每个测试方法执行前都确保基础配置存在
+        """
+        super().setup_method(method)
+        # 确保基础配置数据存在
+        self.config_initializer.ensure_configs_exist()
+    
     def _generate_work_center_code(self, wc_type: WorkCenterType) -> str:
         """
         生成工作中心编码：AUTO_月日_6位时间戳
