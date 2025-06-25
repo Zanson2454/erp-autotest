@@ -278,6 +278,12 @@ class BaseTest:
             # 数据库初始化
             cls.db = initializer.initialize_database(cls.env_config) # 获取数据库连接
             
+            # mock工具初始化
+            cls.mock_util = MockData() # 获取mock工具类
+            
+            # 缓存工具初始化
+            cls.cache = CacheUtil() # 获取缓存工具类
+            
             # 工具类初始化
             utilities = initializer.initialize_utilities() # 获取工具类
             for name, util in utilities.items(): # 设置工具类

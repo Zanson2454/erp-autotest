@@ -221,7 +221,7 @@ class TestStndMatManagement(GenMdBaseTest):
             response = self.http.post(url, json=filtered_params)
             status = response.get("data",{}).get("data",{}).get("status",{})
             self.assert_util.assert_response_data(response, "详情查询失败")
-            self.assert_util.assert_eq(status, "INACTIVE", "物料状态不正确")
+            self.assert_util.assert_by_operator(status, "=", "INACTIVE")
             
             
             a.json(filtered_params, "详情请求数据")

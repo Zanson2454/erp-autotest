@@ -60,6 +60,7 @@ class TestBizOrgManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+    @pytest.mark.run(order=1)
     @case_decorator(
         story="保存组织",
         title="测试保存公司组织",
@@ -468,7 +469,7 @@ class TestBizOrgManagement(GenMdBaseTest):
                     LIMIT 1
                 """
                 result = self.db.query(sql)
-                self.assert_util.assert_not_empty(result, "组织列表")
+                self.assert_util.assert_by_operator(result,"not_empty")
                 org_parent_id = result[0]["id"]
                 self.logger.info(f"查询到的组织ID: {org_parent_id}")
 

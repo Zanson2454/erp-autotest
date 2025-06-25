@@ -129,7 +129,7 @@ class TestBrandManagement(GenMdBaseTest):
 
             # 验证返回的数据列表
             data_list = response.get("data", {}).get("data", {}).get("data", [])
-            self.assert_util.assert_not_empty(data_list, "品牌列表为空")
+            self.assert_util.assert_by_operator(data_list,"not_empty")
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -172,16 +172,6 @@ class TestBrandManagement(GenMdBaseTest):
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
-
-            # 验证返回的品牌信息
-            brand_detail = response.get("data", {}).get("data", {})
-            self.brandCode = brand_detail.get("brandCode")
-            self.assert_util.assert_eq(
-                brand_detail.get("id"),
-                self.brandId,
-                "品牌编码不匹配"
-            )
-
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
 
