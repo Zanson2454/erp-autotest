@@ -143,6 +143,7 @@ class PrdMasterBaseTest(PrdBaseTest):
                     "uomDesc": "把"
                 },
                 "invOrgId": self.base_info["inv_org_info"],
+                "invLocId": self.base_info["inv_loc_info"],
                 "scrapType": "SINGLE",
                 "costElementId": 2007003
             }
@@ -259,18 +260,74 @@ class PrdMasterBaseTest(PrdBaseTest):
         WHERE mat_code = %(mat_code)s AND deleted = 0
         """
         db_result = DBManager.query(query_sql, {"mat_code": unique_mat_code})
-        if db_result:
-            material_data["id"] = db_result[0]["id"]
-            material_data["mat_code"] = unique_mat_code
-            material_data["mat_name"] = unique_mat_name
-            material_data["mat_type"] = mat_type.value
-            material_data["uom_code"] = uom_code
-            material_data["status"] = "ENABLED"
-            material_data["is_manufactured"] = mat_type == MaterialType.FINISHED
-            material_data["is_purchased"] = mat_type == MaterialType.RAW
-            return material_data
-        else:
+        if not db_result:
             raise Exception(f"物料创建失败: {unique_mat_code}")
+            
+        material_data["id"] = db_result[0]["id"]
+        material_data["mat_code"] = unique_mat_code
+        material_data["mat_name"] = unique_mat_name
+        material_data["mat_type"] = mat_type.value
+        material_data["uom_code"] = uom_code
+        material_data["status"] = "ENABLED"
+        material_data["is_manufactured"] = mat_type == MaterialType.FINISHED
+        material_data["is_purchased"] = mat_type == MaterialType.RAW
+        
+        # 只为原材料设置价格
+        if mat_type == MaterialType.RAW:
+            try:
+                # 准备价格数据
+                price_data = {
+                    "sceneKey": "ERP_FIN$IV_PRICE_MD_VIEW",
+                    "viewKey": "ERP_FIN$IV_PRICE_MD_VIEW:edit",
+                    "viewTitle": "edit",
+                    "buttonKey": "ERP_FIN$IV_PRICE_MD_VIEW-editView-footer-save",
+                    "buttonName": "保存",
+                    "appId": 0,
+                    "teamId": 22,
+                    "serviceKey": "ERP_FIN$IV_PRICE_SUBMIT_EVENT_SERVICE",
+                    "params": {
+                        "request": {
+                            "comOrgId": cls.base_info["com_org_info"],
+                            "invOrgId": cls.base_info["inv_org_info"],
+                            "matId": {
+                                "id": material_data["id"],
+                                "matCode": unique_mat_code,
+                                "matName": unique_mat_name,
+                                "genMatTypeCfId": material_data["params"]["request"]["genMatTypeCfId"],
+                                "baseUomId": material_data["params"]["request"]["baseUomId"],
+                                "cateId": material_data["params"]["request"]["cateId"],
+                                "status": "INACTIVE"
+                            },
+                            "batchCode": None,
+                            "currId": None,
+                            "costPrice": 100.00,  # 设置成本价格
+                            "enableStatus": "ENABLE",
+                            "id": None,
+                            "createdBy": None,
+                            "updatedBy": None,
+                            "createdAt": None,
+                            "updatedAt": None,
+                            "version": 0,
+                            "deleted": 0,
+                            "originOrgId": 0
+                        }
+                    }
+                }
+                
+                # 调用API设置价格
+                price_url = "/api/trantor/service/engine/execute/ERP_FIN$IV_PRICE_SUBMIT_EVENT_SERVICE?tmodule=ERP_FIN"
+                price_result = cls.http.post(price_url, json=price_data)
+                if not price_result.get("success"):
+                    cls.logger.warning(f"设置物料 {unique_mat_code} 价格失败: {price_result.get('message')}")
+                else:
+                    cls.logger.info(f"成功设置物料 {unique_mat_code} 的价格")
+                    
+            except Exception as e:
+                cls.logger.error(f"设置物料 {unique_mat_code} 价格失败: {str(e)}")
+                # 不抛出异常，继续执行
+                pass
+            
+        return material_data
     
     @classmethod
     def get_test_material(cls, mat_type: Optional[MaterialType] = None) -> Dict:

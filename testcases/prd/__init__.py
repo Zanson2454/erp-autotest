@@ -8,6 +8,7 @@ from testcases.comm.base_test import BaseTest
 from utils.yaml_util import YamlUtil
 from utils.mysql_util import DBManager
 import allure
+from typing import Dict
 
 # 获取项目根目录
 project_root = Path(__file__).resolve().parent.parent.parent
@@ -49,20 +50,19 @@ class PrdBaseTest(BaseTest):
         cls.logger.info("PrdBaseTest初始化完成")
     
     @classmethod
-    def _init_base_info(cls):
+    def _init_base_info(cls) -> Dict:
         """初始化基础配置数据"""
-        try:
-            # 查询工单类型配置
-            wo_type_sql = """
+        # 获取工单类型配置
+        wo_type_sql = """
                 SELECT id, type_code, type_name 
                 FROM prd_wo_type_cf 
                 WHERE deleted = 0 AND type_name = '量产生产订单'
                 LIMIT 1
             """
-            wo_type_info = DBManager.query(wo_type_sql)[0]
-            
-            # 查询库存组织配置
-            inv_org_sql = """
+        wo_type_info = DBManager.query(wo_type_sql)[0]
+        
+        # 获取库存组织配置
+        inv_org_sql = """
                 SELECT id, org_code, org_name 
                 FROM org_struct_md 
                 WHERE org_status='ENABLED' 
@@ -72,30 +72,65 @@ class PrdBaseTest(BaseTest):
                 AND deleted=0 
                 LIMIT 1
             """
-            inv_org_info = DBManager.query(inv_org_sql)[0]
-
-            # 查询生产物料配置
-            prd_mat_sql = """
+        inv_org_info = DBManager.query(inv_org_sql)[0]
+        
+        # 获取集团组织配置
+        com_org_sql = """
+                SELECT id, org_code, org_name 
+                FROM org_struct_md 
+                WHERE org_status='ENABLED' 
+                AND org_dimension_code='SCM_ORG_GRP' 
+                AND org_code = 'AUTOTEST_GR_ORG' 
+                AND deleted=0 
+                LIMIT 1
+            """
+        com_org_info = DBManager.query(com_org_sql)[0]
+        
+        # 获取生产物料配置
+        prd_mat_sql = """
                 SELECT id, mat_code, mat_name
                 FROM gen_mat_md
                 WHERE deleted = 0 AND mat_code LIKE 'FG_TEST_001%'
                 ORDER BY id DESC
                 LIMIT 1
             """
-            prd_mat_info = DBManager.query(prd_mat_sql)[0]
-            
-            # 保存配置信息
-            cls.base_info = {
-                "wo_type_info": wo_type_info,
-                "inv_org_info": inv_org_info,
-                "prd_mat_info": prd_mat_info
-            }
-            
-            cls.logger.info(f"基础配置数据初始化成功: {cls.base_info}")
-            
-        except Exception as e:
-            cls.logger.error(f"基础配置数据初始化失败: {str(e)}")
-            raise
+        prd_mat_info = DBManager.query(prd_mat_sql)[0]
+
+        # 获取库存地点配置
+        inv_loc_sql = """
+                SELECT id, org_code, org_name 
+                FROM org_struct_md 
+                WHERE org_status='ENABLED' 
+                AND org_dimension_code='SCM_ORG_GRP' 
+                AND org_code ='AUTOTEST_INV_LOC_ORG' 
+                AND org_business_type_codes = '["INV_LOC"]' 
+                AND deleted=0 
+                LIMIT 1
+            """
+        inv_loc_info = DBManager.query(inv_loc_sql)[0]
+
+        # 获取非限制库存类型配置
+        inv_type_sql = """
+                SELECT id, name as type_name
+                FROM inv_inv_type_cf
+                WHERE name = '非限制'
+                AND deleted = 0
+                LIMIT 1
+            """
+        inv_type_info = DBManager.query(inv_type_sql)[0]
+        
+        # 保存配置信息
+        cls.base_info = {
+            "wo_type_info": wo_type_info,
+            "inv_org_info": inv_org_info,
+            "com_org_info": com_org_info,
+            "prd_mat_info": prd_mat_info,
+            "inv_loc_info": inv_loc_info,
+            "inv_type_info": inv_type_info
+        }
+        
+        cls.logger.info(f"基础配置数据初始化成功: {cls.base_info}")
+        return cls.base_info
     
     def get_api_path(self, api_key):
         """

@@ -62,15 +62,14 @@ class TestPrdOrder(PrdBaseTest):
                 params, url = ParamUtil.get_api_params(self.api_params, api_path)
                 
                 # 设置必要参数值
-                filtered_params = ParamUtil.filter_post_body_fields(
-                    params,
-                    ["invOrgId", "genMatMdId"],
-                    ["params", "request"]
-                )
-                ParamUtil.set_request_params(filtered_params, {
-                    "invOrgId": {"id": self.base_info["inv_org_info"]["id"]},
-                    "genMatMdId": {"id": self.base_info["prd_mat_info"]["id"]}
-                })
+                filtered_params = {
+                    "params": {
+                        "request": {
+                            "invOrgId": self.base_info["inv_org_info"]["id"],
+                            "genMatMdId": self.base_info["prd_mat_info"]["id"]
+                        }
+                    }
+                }
                 
                 self.logger.info(f"请求URL: {url}")
                 self.logger.info(f"请求参数: {filtered_params}")
