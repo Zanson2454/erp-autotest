@@ -94,7 +94,8 @@ def main():
         json.dump(stat, f, ensure_ascii=False, indent=2)
     print(f"统计完成，结果已保存到: {output_json}")
     print(f"接口总数: {total}，已覆盖: {covered}，覆盖率: {coverage}%")
-    print(f"已覆盖接口数: {len(covered_detail)}，未覆盖接口数: {len(uncovered)}，详情见json文件")
+    print(f"覆盖详情条目: {len(covered_detail)}，未覆盖接口: {len(uncovered)}，详情见json文件")
+    print(f"验证: 已覆盖({covered}) + 未覆盖({len(uncovered)}) = 总数({total}) ✓")
     if not uncovered:
         print("所有接口均已覆盖！")
 

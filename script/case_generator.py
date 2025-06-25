@@ -62,21 +62,115 @@ class CaseGenerator:
             'import_export': []
         }
         
-        entity_keywords = [self.entity.lower(), self.entity.upper(), self.entity.title()]
+        # 创建实体名称到中文术语的映射
+        entity_keyword_map = {
+            # 计量单位相关
+            'uom': ['计量单位', 'UOM'],
+            'uom_formula': ['计量单位转换', '单位转换'],
+            'uom_conversion': ['计量单位转换', '单位转换'],
+            
+            # 财务配置相关
+            'curr': ['币种', '货币'],
+            'exchange_rate': ['汇率'],
+            'tax': ['税', '税配置'],
+            'cust_tax': ['客户税', '客户税分类'],
+            'mat_tax': ['物料税', '物料税分类'],
+            
+            # 地址银行相关
+            'addr': ['地址'],
+            'country': ['国家'],
+            'bank': ['银行'],
+            'sub_bank': ['银行支行', '支行'],
+            'timezone': ['时区'],
+            
+            # 其他配置
+            'attr': ['特征', '属性'],
+            'brand': ['品牌'],
+            'mat_cate': ['类目', '物料类目'],
+            'mat_type': ['物料类型'],
+            'partner': ['合作伙伴', '相关方'],
+            'org': ['组织'],
+            'business_partner_type': ['合作伙伴类型'],
+            'qualifications': ['资质'],
+            'attachment': ['附件'],
+            'barcode': ['条码'],
+            'dict': ['数据字典'],
+            'label': ['标签'],
+            'monitoring': ['监控'],
+            'calendar': ['日历'],
+            'bom': ['BOM'],
+            
+            # 第一阶段新增实体映射
+            # 物料扩展
+            'mat_value': ['物料价值', '价值配置'],
+            'mat_unit_conversion': ['物料单位转换', '单位转换'],
+            'mat_price': ['物料价格', '价格'],
+            
+            # 组织扩展  
+            'org_relation': ['组织关联', '组织关系'],
+            'org_dimension': ['组织维度'],
+            'org_switch': ['组织切换', '多组织'],
+            'org_type': ['组织类型'],
+            
+            # 员工管理
+            'employee': ['员工'],
+            
+            # 快递物流
+            'express': ['快递'],
+            
+            # 文本管理
+            'text_type': ['文本类型'],
+            'text_group': ['文本组'],
+            
+            # 第二阶段新增实体映射
+            # 动态表单
+            'dynamic_form': ['动态表单', '表单'],
+            'form_template': ['表单模板', '模板'],
+            
+            # 指标中心
+            'indicator': ['指标'],
+            'indicator_config': ['指标配置'],
+            
+            # 评分问卷
+            'questionnaire': ['问卷', '调查问卷'],
+            'survey_template': ['调查模板', '问卷模板'],
+            
+            # 模型系统
+            'model_config': ['模型配置', '模型'],
+            'model_template': ['模型模板'],
+            
+            # 取号规则
+            'number_rule': ['取号规则', '编号规则', '编码规则'],
+            'number_sequence': ['序号', '序列号'],
+            'barcode_rule': ['条码规则'],
+            
+            # 评分系统
+            'score_task': ['评分任务'],
+            'score_detail': ['评分详情'],
+            
+            # 导入导出系统
+            'import_export': ['导入导出', '导入', '导出'],
+        }
+        
+        # 获取当前实体的关键词
+        keywords = entity_keyword_map.get(self.entity.lower(), [self.entity.lower(), self.entity.upper(), self.entity.title()])
+        
+        # 添加原始实体名称作为备选关键词
+        all_keywords = keywords + [self.entity.lower(), self.entity.upper(), self.entity.title()]
         
         for api_name, api_info in apis.items():
             api_lower = api_name.lower()
             
             # 检查是否包含实体关键词
-            if not any(keyword in api_name for keyword in entity_keywords):
+            if not any(keyword in api_name for keyword in all_keywords):
                 continue
                 
             # 分类API
             if any(word in api_lower for word in ['保存', 'save', '新增', 'create']):
                 entity_apis['create'].append({'name': api_name, **api_info})
-            elif any(word in api_lower for word in ['查询分页', 'query_page', 'paging']):
+            elif any(word in api_lower for word in ['查询分页', 'query_page', 'paging', '分页数据']):
                 entity_apis['query'].append({'name': api_name, **api_info})
-            elif any(word in api_lower for word in ['查询详情', 'query_detail', 'find_by_id']):
+            elif any(word in api_lower for word in ['查询详情', 'query_detail', 'find_by_id', '根据id查找']):
                 entity_apis['detail'].append({'name': api_name, **api_info})
             elif any(word in api_lower for word in ['修改', 'update', '编辑']):
                 entity_apis['update'].append({'name': api_name, **api_info})
@@ -438,11 +532,93 @@ class Test{self.entity.title()}Management({self._get_base_test_class()}):
     def _get_feature_name(self) -> str:
         """获取Feature名称"""
         entity_map = {
+            # 计量单位相关
+            "uom": "计量单位管理",
+            "uom_formula": "计量单位转换管理", 
+            "uom_conversion": "计量单位换算管理",
+            
+            # 财务配置相关
+            "curr": "币种管理",
+            "exchange_rate": "汇率管理",
+            "tax": "税配置管理",
+            "cust_tax": "客户税分类管理",
+            "mat_tax": "物料税分类管理",
+            
+            # 地址银行相关
+            "addr": "地址管理",
+            "country": "国家管理",
+            "bank": "银行管理",
+            "sub_bank": "银行支行管理",
+            "timezone": "时区管理",
+            
+            # 其他配置
+            "attr": "属性管理",
             "brand": "品牌管理",
             "mat_cate": "类目管理", 
             "mat": "物料管理",
+            "mat_type": "物料类型管理",
             "partner": "合作伙伴管理",
-            "org": "组织管理"
+            "org": "组织管理",
+            "business_partner_type": "合作伙伴类型管理",
+            "qualifications": "资质管理",
+            "attachment": "附件管理",
+            "barcode": "条码管理",
+            "dict": "数据字典管理",
+            "label": "标签管理",
+            "monitoring": "监控管理",
+            "calendar": "日历管理",
+            "bom": "BOM管理",
+            
+            # 第一阶段新增实体功能映射
+            # 物料扩展
+            "mat_value": "物料价值管理",
+            "mat_unit_conversion": "物料单位转换管理",
+            "mat_price": "物料价格管理",
+            
+            # 组织扩展
+            "org_relation": "组织关联管理",
+            "org_dimension": "组织维度管理", 
+            "org_switch": "组织切换管理",
+            "org_type": "组织类型管理",
+            
+            # 员工管理
+            "employee": "员工管理",
+            
+            # 快递物流
+            "express": "快递公司管理",
+            
+            # 文本管理
+            "text_type": "文本类型管理",
+            "text_group": "文本组管理",
+            
+            # 第二阶段新增实体映射
+            # 动态表单
+            "dynamic_form": "动态表单管理",
+            "form_template": "表单模板管理",
+            
+            # 指标中心
+            "indicator": "指标管理",
+            "indicator_config": "指标配置管理",
+            
+            # 评分问卷
+            "questionnaire": "问卷管理",
+            "survey_template": "调查模板管理",
+            
+            # 模型系统
+            "model_config": "模型配置管理",
+            "model_template": "模型模板管理",
+            
+            # 取号规则
+            "number_rule": "取号规则管理",
+            "number_sequence": "序号管理",
+            "barcode_rule": "条码规则管理",
+            
+            # 评分系统
+            "score_task": "评分任务管理",
+            "score_detail": "评分详情管理",
+            
+            # 导入导出系统
+            "import_export": "导入导出管理",
         }
         return entity_map.get(self.entity.lower(), f"{self.entity.title()}管理")
         
@@ -573,18 +749,280 @@ class Test{self.entity.title()}ConfigCheck({self._get_base_test_class()}):
                 print(f"\n{operation.upper()}操作: 未找到相关API")
 
 
-def parse_args():
-    parser = argparse.ArgumentParser(description="ERP自动化测试用例生成器")
-    parser.add_argument('--module', required=True, help='模块名称，如: gen_md, prd, fin, scm')
-    parser.add_argument('--entity', required=True, help='业务实体名称，如: brand, mat_cate, partner')
-    parser.add_argument('--output', required=True, help='输出目录，如: testcases/gen_md/mat/')
+class BatchGenerator:
+    """批量用例生成器"""
+    
+    def __init__(self, module: str):
+        self.module = module
+        self.project_root = Path(__file__).parent.parent
+        
+        # 预定义的实体组配置
+        self.entity_groups = {
+            "gen_md": {
+                # 核心业务实体
+                "core": {
+                    "description": "核心业务实体",
+                    "entities": [
+                        {"name": "brand", "output": "mat", "desc": "品牌管理"},
+                        {"name": "mat_cate", "output": "mat", "desc": "物料类目管理"},
+                        {"name": "mat", "output": "mat", "desc": "标准物料管理"},
+                        {"name": "partner", "output": "partner", "desc": "合作伙伴管理"},
+                        {"name": "org", "output": "org", "desc": "组织管理"},
+                    ]
+                },
+                
+                # 第一阶段：核心业务扩展
+                "phase1": {
+                    "description": "核心业务扩展",
+                    "entities": [
+                        {"name": "mat_value", "output": "mat", "desc": "物料价值管理"},
+                        {"name": "mat_unit_conversion", "output": "mat", "desc": "物料单位转换管理"},
+                        {"name": "mat_price", "output": "mat", "desc": "物料价格管理"},
+                        {"name": "org_relation", "output": "org", "desc": "组织关联管理"},
+                        {"name": "org_dimension", "output": "org", "desc": "组织维度管理"},
+                        {"name": "org_switch", "output": "org", "desc": "组织切换管理"},
+                        {"name": "org_type", "output": "org", "desc": "组织类型管理"},
+                        {"name": "employee", "output": "org", "desc": "员工管理"},
+                        {"name": "express", "output": "cf_logistics", "desc": "快递公司管理"},
+                        {"name": "text_type", "output": "cf_text", "desc": "文本类型管理"},
+                        {"name": "text_group", "output": "cf_text", "desc": "文本组管理"},
+                    ]
+                },
+                
+                # 第二阶段：系统功能
+                "phase2": {
+                    "description": "系统功能接口",
+                    "entities": [
+                        {"name": "dynamic_form", "output": "cf_form", "desc": "动态表单管理"},
+                        {"name": "score_task", "output": "cf_score", "desc": "评分任务管理"},
+                        {"name": "score_detail", "output": "cf_score", "desc": "评分详情管理"},
+                        {"name": "number_rule", "output": "cf_rule", "desc": "编码规则管理"},
+                        {"name": "barcode_rule", "output": "cf_rule", "desc": "条码规则管理"},
+                        {"name": "indicator", "output": "cf_indicator", "desc": "指标管理"},
+                        {"name": "import_export", "output": "cf_import", "desc": "导入导出管理"},
+                    ]
+                },
+                
+                # 配置模块：按功能分组
+                "config": {
+                    "description": "配置管理模块",
+                    "entities": [
+                        # 计量单位
+                        {"name": "uom", "output": "cf_measurement", "desc": "计量单位管理"},
+                        {"name": "uom_formula", "output": "cf_measurement", "desc": "计量单位转换管理"},
+                        {"name": "uom_conversion", "output": "cf_measurement", "desc": "计量单位换算管理"},
+                        
+                        # 财务配置
+                        {"name": "curr", "output": "cf_finance", "desc": "币种管理"},
+                        {"name": "exchange_rate", "output": "cf_finance", "desc": "汇率管理"},
+                        {"name": "tax", "output": "cf_finance", "desc": "税配置管理"},
+                        {"name": "cust_tax", "output": "cf_finance", "desc": "客户税分类管理"},
+                        {"name": "mat_tax", "output": "cf_finance", "desc": "物料税分类管理"},
+                        
+                        # 地址银行
+                        {"name": "addr", "output": "cf_location_bank", "desc": "地址管理"},
+                        {"name": "country", "output": "cf_location_bank", "desc": "国家管理"},
+                        {"name": "bank", "output": "cf_location_bank", "desc": "银行管理"},
+                        {"name": "sub_bank", "output": "cf_location_bank", "desc": "银行支行管理"},
+                        {"name": "timezone", "output": "cf_location_bank", "desc": "时区管理"},
+                        
+                        # 其他配置
+                        {"name": "bom", "output": "cf_bom", "desc": "BOM管理"},
+                        {"name": "barcode", "output": "cf_barcode", "desc": "条码管理"},
+                        {"name": "dict", "output": "cf_data_dict", "desc": "数据字典管理"},
+                        {"name": "label", "output": "cf_label_attr", "desc": "标签管理"},
+                        {"name": "attr", "output": "cf_label_attr", "desc": "属性管理"},
+                        {"name": "attachment", "output": "cf_attachment", "desc": "附件管理"},
+                        {"name": "qualifications", "output": "cf_qualification", "desc": "资质管理"},
+                        {"name": "monitoring", "output": "cf_monitoring", "desc": "监控管理"},
+                        {"name": "calendar", "output": "cf_calendar", "desc": "日历管理"},
+                        {"name": "business_partner_type", "output": "cf_business_partner", "desc": "业务伙伴类型管理"},
+                    ]
+                }
+            }
+        }
+    
+    def list_groups(self):
+        """列出可用的实体组"""
+        if self.module not in self.entity_groups:
+            print(f"❌ 模块 {self.module} 没有预定义的实体组")
+            return
+            
+        groups = self.entity_groups[self.module]
+        print(f"\n📋 {self.module.upper()} 模块可用的实体组:")
+        
+        for group_name, group_config in groups.items():
+            entity_count = len(group_config["entities"])
+            print(f"\n📁 {group_name} - {group_config['description']}")
+            print(f"   实体数量: {entity_count}个")
+            
+            # 按输出目录分组显示
+            by_output = {}
+            for entity in group_config["entities"]:
+                output = entity["output"]
+                if output not in by_output:
+                    by_output[output] = []
+                by_output[output].append(entity)
+            
+            for output_dir, entities in by_output.items():
+                print(f"   📂 {output_dir}/ ({len(entities)}个)")
+                for entity in entities[:3]:  # 只显示前3个
+                    print(f"      - {entity['desc']}")
+                if len(entities) > 3:
+                    print(f"      ... 还有{len(entities)-3}个")
+    
+    def analyze_group(self, group_name: str):
+        """分析实体组的API"""
+        if self.module not in self.entity_groups:
+            print(f"❌ 模块 {self.module} 没有预定义的实体组")
+            return
+            
+        groups = self.entity_groups[self.module]
+        if group_name not in groups:
+            print(f"❌ 实体组 {group_name} 不存在")
+            print(f"可用组: {', '.join(groups.keys())}")
+            return
+            
+        group_config = groups[group_name]
+        print(f"\n🔍 分析实体组: {group_name} - {group_config['description']}")
+        
+        for entity in group_config["entities"]:
+            print(f"\n--- 分析 {entity['desc']} ({entity['name']}) ---")
+            
+            generator = CaseGenerator(self.module, entity["name"], f"testcases/{self.module}/{entity['output']}")
+            generator.analyze_apis()
+    
+    def generate_group(self, group_name: str, case_type: str = "crud", with_config: bool = False):
+        """生成实体组的用例"""
+        if self.module not in self.entity_groups:
+            print(f"❌ 模块 {self.module} 没有预定义的实体组")
+            return
+            
+        groups = self.entity_groups[self.module]
+        if group_name not in groups:
+            print(f"❌ 实体组 {group_name} 不存在")
+            print(f"可用组: {', '.join(groups.keys())}")
+            return
+            
+        group_config = groups[group_name]
+        print(f"\n🚀 生成实体组: {group_name} - {group_config['description']}")
+        
+        success_count = 0
+        fail_count = 0
+        
+        # 按输出目录分组处理
+        by_output = {}
+        for entity in group_config["entities"]:
+            output = entity["output"]
+            if output not in by_output:
+                by_output[output] = []
+            by_output[output].append(entity)
+        
+        for output_dir, entities in by_output.items():
+            print(f"\n--- 生成 {output_dir}/ 目录的用例 ---")
+            
+            # 创建输出目录
+            output_path = Path(f"testcases/{self.module}/{output_dir}")
+            output_path.mkdir(parents=True, exist_ok=True)
+            
+            # 生成配置检查用例
+            if with_config:
+                config_file = output_path / f"test_00_{output_dir}_config_check.py"
+                if not config_file.exists() and entities:
+                    print(f"📝 生成配置检查用例 - {config_file.name}")
+                    try:
+                        generator = CaseGenerator(self.module, entities[0]["name"], str(output_path))
+                        content = generator.generate_config_check_case()
+                        generator.save_to_file(content, config_file.name)
+                        success_count += 1
+                    except Exception as e:
+                        print(f"❌ 配置检查用例生成失败: {str(e)}")
+                        fail_count += 1
+            
+            # 生成CRUD用例
+            for entity in entities:
+                file_name = f"test_{entity['name']}_management.py"
+                file_path = output_path / file_name
+                
+                if file_path.exists():
+                    print(f"⏭️  跳过 {file_name} - 文件已存在")
+                    continue
+                
+                print(f"📝 生成 {entity['desc']} - {file_name}")
+                
+                try:
+                    generator = CaseGenerator(self.module, entity["name"], str(output_path))
+                    content = generator.generate(case_type)
+                    generator.save_to_file(content, file_name)
+                    print(f"✅ 生成成功: {file_name}")
+                    success_count += 1
+                except Exception as e:
+                    print(f"❌ 生成失败: {str(e)}")
+                    fail_count += 1
+        
+        print(f"\n📊 实体组 {group_name} 生成完成: 成功{success_count}个，失败{fail_count}个")
+        
+        if success_count > 0:
+            print(f"\n🎉 建议下一步:")
+            print(f"1. 运行覆盖率统计:")
+            print(f"   python script/case_coverage_stat.py --api_path_yaml testdata/{self.module}/{self.module.split('_')[-1]}_api_path.yaml --case_dir testcases/{self.module} --output_json reports/{self.module}_coverage_{group_name}.json")
+            print(f"2. 检查和调试生成的用例")
+
+
+def parse_args_enhanced():
+    """增强的参数解析"""
+    parser = argparse.ArgumentParser(description="ERP自动化测试用例生成器（增强版）")
+    
+    # 原有的单个用例生成参数
+    parser.add_argument('--module', help='模块名称，如: gen_md, prd, fin, scm')
+    parser.add_argument('--entity', help='业务实体名称，如: brand, mat_cate, partner')
+    parser.add_argument('--output', help='输出目录，如: testcases/gen_md/mat/')
     parser.add_argument('--type', default='crud', choices=['crud', 'config'], help='用例类型: crud(增删改查) 或 config(配置检查)')
     parser.add_argument('--analyze', action='store_true', help='只分析API，不生成用例')
+    
+    # 新增的批量生成参数
+    parser.add_argument('--batch', help='批量模式，可选: list, analyze, generate')
+    parser.add_argument('--group', help='实体组名称，如: core, phase1, phase2, config')
+    parser.add_argument('--with-config', action='store_true', help='同时生成配置检查用例')
+    
     return parser.parse_args()
 
 
-def main():
-    args = parse_args()
+def main_enhanced():
+    """增强的主函数"""
+    args = parse_args_enhanced()
+    
+    # 批量模式
+    if args.batch:
+        if not args.module:
+            print("❌ 批量模式需要指定 --module 参数")
+            return
+            
+        batch_generator = BatchGenerator(args.module)
+        
+        if args.batch == "list":
+            batch_generator.list_groups()
+        elif args.batch == "analyze":
+            if not args.group:
+                print("❌ 分析模式需要指定 --group 参数")
+                return
+            batch_generator.analyze_group(args.group)
+        elif args.batch == "generate":
+            if not args.group:
+                print("❌ 生成模式需要指定 --group 参数")
+                return
+            batch_generator.generate_group(args.group, args.type, args.with_config)
+        else:
+            print(f"❌ 不支持的批量模式: {args.batch}")
+            print("支持的批量模式: list, analyze, generate")
+        return
+    
+    # 单个用例生成模式（原有逻辑）
+    if not all([args.module, args.entity, args.output]):
+        print("❌ 单个用例生成模式需要指定 --module, --entity, --output 参数")
+        print("\n💡 提示: 使用批量模式可以快速生成多个用例:")
+        print("   python script/case_generator.py --module gen_md --batch list")
+        return
     
     try:
         generator = CaseGenerator(args.module, args.entity, args.output)
@@ -617,4 +1055,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # 使用增强的主函数
+    main_enhanced()

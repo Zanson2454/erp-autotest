@@ -46,15 +46,6 @@ reports/
 allure-results/
 allure-report/
 
-# # 忽略测试数据
-# data/
-# testdata/
-# *.json
-# *.yaml
-# *.yml
-# *.csv
-# *.xlsx
-# *.xls
 
 # 忽略缓存文件
 .cache/
