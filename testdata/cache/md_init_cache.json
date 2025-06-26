@@ -159,6 +159,47 @@
         "attr_name": "销售渠道"
       }
     ],
+    "com_org_info": [
+      {
+        "id": 14373001,
+        "org_code": "AUTOTEST_COM_ORG",
+        "org_name": "公司组织(自动化)",
+        "org_status": "ENABLED",
+        "org_dimension_code": "SCM_ORG_GRP",
+        "org_business_type_code": "COM_ORG"
+      }
+    ],
+    "pur_org_info": [
+      {
+        "id": 14376001,
+        "org_code": "AUTOTEST_PUR_ORG",
+        "org_name": "采购组织(自动化)",
+        "org_status": "ENABLED",
+        "org_dimension_code": "SCM_ORG_GRP",
+        "org_business_type_code": "PUR_ORG"
+      }
+    ],
+    "inv_org_info": [
+      {
+        "id": 14375002,
+        "org_code": "AUTOTEST_INV_ORG",
+        "org_name": "库存组织(自动化)",
+        "org_status": "ENABLED",
+        "org_dimension_code": "SCM_ORG_GRP",
+        "org_business_type_code": "INV_ORG"
+      }
+    ],
+    "sls_org_info": [
+      {
+        "id": 14377001,
+        "org_code": "AUTOTEST_SLS_ORG",
+        "org_name": "销售组织(自动化)",
+        "org_status": "ENABLED",
+        "org_dimension_code": "SCM_ORG_GRP",
+        "org_business_type_code": "SLS_ORG"
+      }
+    ],
+    "pln_org_info": [],
     "sls_dc_md": [
       {
         "id": 2000002,

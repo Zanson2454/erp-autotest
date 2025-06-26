@@ -84,12 +84,10 @@ class MockData:
         """生成手机号
         
         Returns:
-            str: 随机生成的手机号
+            str: 基于时间戳生成的手机号
         """
-        phone = self.fake.phone_number()
-        # 确保生成的是有效的手机号
-        if not re.match(r'^1[3-9]\d{9}$', phone):
-            return f"1{random.choice(['3', '5', '7', '8', '9'])}{''.join([str(random.randint(0, 9)) for _ in range(9)])}"
+        phone = int(time.time()*10)
+ 
         return phone
     
     def get_mock_ssn(self) -> str:
@@ -229,13 +227,12 @@ class MockData:
         """
         return f"自动化测试创建 - {time.strftime('%Y-%m-%d %H:%M:%S')}"
     
-    def get_timestamp(self):
+    def get_timestamp(self, timestamp=False):
         """
         生成时间戳
-        
-        返回:
-            str: 生成的时间戳，格式为"YYYYMMDDHHMMSS"
         """
+        if timestamp:
+            return int(time.time() * 1000)
         return time.strftime("%Y%m%d%H%M%S")
 
     def get_mock_org_info(self, org_type: str, org_name: str) -> dict:
@@ -280,8 +277,8 @@ if __name__ == '__main__':
     # print("随机选择:", mock.get_mock_choice(['A', 'B', 'C', 'D']))
     # print("币种对象:", mock.get_mock_currency())
     # print("备注:", mock.get_mock_remark())
-    # print("时间戳:", mock.get_timestamp())
+    print("时间戳:", mock.get_timestamp(timestamp=True))
     # print("唯一编码:", mock.generate_unique_code())
     # print("业务组织数据:", mock.get_mock_org_info(org_type="ComOrg", org_name="某公司"))
     # print("时间戳:", mock.get_mock_date(include_time=False,days_offset=-1))
-    print("坐标:", mock.get_mock_coordinates())
+    # print("坐标:", mock.get_mock_coordinates())
