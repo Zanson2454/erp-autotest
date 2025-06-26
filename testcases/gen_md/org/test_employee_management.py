@@ -1,5 +1,6 @@
 import allure
 import pytest
+from pathlib import Path
 from testcases.gen_md import GenMdBaseTest
 from utils.mock_util import MockData
 from utils.param_util import ParamUtil
@@ -17,6 +18,12 @@ class TestEmployeeManagement(GenMdBaseTest):
         cls.mock_data = MockData()
         cls.employee_id = None
         cls.com_org_id = cls.md_cache_data.get("org_info",{}).get("com_org_info",[])[0].get("id",None)
+        cls.mobile = cls.mock_data.get_mock_phone_number()
+        cls.email = cls.mock_data.get_mock_email()
+        cls.user_name = cls.mock_data.generate_unique_code(tag="user")
+        cls.id_card = cls.mock_data.get_mock_ssn()
+        cls.entry_date = cls.mock_data.get_timestamp(timestamp =True)
+        cls.employee_name = cls.mock_data.get_mock_name()
         
     # @classmethod
     # def teardown_class(cls):
@@ -51,12 +58,8 @@ class TestEmployeeManagement(GenMdBaseTest):
         try:
             # 准备员工管理数据
             employee_code = self.mock_data.generate_unique_code(tag="Employee")
-            employee_name = self.mock_data.get_mock_name()
-            mobile = self.mock_data.get_mock_phone_number()
-            email = self.mock_data.get_mock_email()
-            user_name = self.mock_data.generate_unique_code(tag="user")
-            id_card = self.mock_data.get_mock_ssn()
-            entry_date = self.mock_data.get_timestamp(timestamp =True)
+            
+
 
             # 调用保存接口
             api_path = self.get_api_path("ORG-员工-保存服务")
@@ -72,15 +75,15 @@ class TestEmployeeManagement(GenMdBaseTest):
             )
             set_dict = {
                 "code": employee_code,
-                "name": employee_name,
+                "name": self.employee_name,
                 "type": "FORMAL",  # 正式员工
                 "orgStructId": self.com_org_id,
-                "mobile": mobile,
-                "email": email,
-                "userName": user_name,
-                "entryAt": entry_date,
+                "mobile": self.mobile,
+                "email": self.email,
+                "userName": self.user_name,
+                "entryAt": self.entry_date,
                 "resignationAt": None,
-                "idCard": id_card,
+                "idCard": self.id_card,
                 "addressId": None,
                 "addressDetail": None,  
             }
@@ -146,10 +149,194 @@ class TestEmployeeManagement(GenMdBaseTest):
 
     @case_decorator(
         story="员工管理",
+        title="测试员工分页查询",
+        description="验证员工分页查询功能",
+        severity="normal",
+        order=3,
+        smoke=True,
+        tags=["员工管理", "分页查询"]
+    )
+    def test_employee_paging_query(self):
+        """
+        员工分页查询用例
+        """
+        try:
+            # 调用分页查询接口
+            api_path = self.get_api_path("员工信息表-分页数据服务")
+            params, url = self.get_api_path(api_path)
+
+
+            # 构建请求参数
+            filtered_params = {
+                "sceneKey": "GEN_MD$ORG_EMPLOYEE_NEW_VIEW",
+                "viewKey": "GEN_MD$ORG_EMPLOYEE_NEW_VIEW:list",
+                "serviceKey": "sys_common$ORG_EMPLOYEE_MD_PAGING_DATA_SERVICE",
+                "params": {
+                    "request": {
+                        "pageable": {
+                            "pageNo": 1,
+                            "pageSize": 20,
+                            "needTotal": True,
+                            "sortOrders": None,
+                            "conditionItems": None
+                        }
+                    }
+                }
+            }
+            self.logger.info(f"请求参数: {filtered_params}")
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            # 验证分页数据
+            page_data = response.get("data", {})
+            assert "content" in page_data, "分页数据中缺少content字段"
+            assert "totalElements" in page_data, "分页数据中缺少totalElements字段"
+            self.logger.info(f"员工分页查询成功，总记录数: {page_data.get('totalElements', 0)}")
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="员工管理",
+        title="测试员工条件查询-按手机号",
+        description="验证员工按手机号条件查询功能",
+        severity="normal",
+        order=4,
+        smoke=True,
+        tags=["员工管理", "条件查询", "手机号查询"]
+    )
+    def test_employee_query_by_mobile(self):
+        """
+        员工按手机号条件查询用例
+        """
+        try:
+            # 调用分页查询接口
+            api_path = self.get_sys_common_api_path("员工信息表-分页数据服务")
+            params, url = self.get_sys_common_api_params(api_path)
+            # 添加查询参数
+            url = f"{api_path}?tmodule=GEN_MD"
+
+            # 构建请求参数 - 按手机号查询
+            filtered_params = {
+                "sceneKey": "GEN_MD$ORG_EMPLOYEE_NEW_VIEW",
+                "viewKey": "GEN_MD$ORG_EMPLOYEE_NEW_VIEW:list",
+                "appId": 0,
+                "teamId": 22,
+                "serviceKey": "sys_common$ORG_EMPLOYEE_MD_PAGING_DATA_SERVICE",
+                "params": {
+                    "request": {
+                        "pageable": {
+                            "pageNo": 1,
+                            "pageSize": 20,
+                            "needTotal": True,
+                            "sortOrders": None,
+                            "conditionItems": {
+                                "type": "ConditionItems",
+                                "conditions": {
+                                    "mobile": {
+                                        "operator": "CONTAINS",
+                                        "value": self.mobile
+                                    }
+                                },
+                                "logicOperator": "AND"
+                            }
+                        }
+                    }
+                }
+            }
+            self.logger.info(f"请求参数: {filtered_params}")
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            # 验证查询结果
+            page_data = response.get("data", {})
+            assert "content" in page_data, "分页数据中缺少content字段"
+            self.logger.info(f"按手机号查询员工成功，匹配记录数: {len(page_data.get('content', []))}")
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="员工管理",
+        title="测试员工条件查询-按姓名",
+        description="验证员工按姓名条件查询功能",
+        severity="normal",
+        order=5,
+        smoke=True,
+        tags=["员工管理", "条件查询", "姓名查询"]
+    )
+    def test_employee_query_by_name(self):
+        """
+        员工按姓名条件查询用例
+        """
+        try:
+            # 调用分页查询接口
+            api_path = self.get_sys_common_api_path("员工信息表-分页数据服务")
+            params, url = self.get_sys_common_api_params(api_path)
+            # 添加查询参数
+            url = f"{api_path}?tmodule=GEN_MD"
+
+            # 构建请求参数 - 按姓名查询
+            filtered_params = {
+                "sceneKey": "GEN_MD$ORG_EMPLOYEE_NEW_VIEW",
+                "viewKey": "GEN_MD$ORG_EMPLOYEE_NEW_VIEW:list",
+                "appId": 0,
+                "teamId": 22,
+                "serviceKey": "sys_common$ORG_EMPLOYEE_MD_PAGING_DATA_SERVICE",
+                "params": {
+                    "request": {
+                        "pageable": {
+                            "pageNo": 1,
+                            "pageSize": 20,
+                            "needTotal": True,
+                            "sortOrders": None,
+                            "conditionItems": {
+                                "type": "ConditionItems",
+                                "conditions": {
+                                    "name": {
+                                        "operator": "CONTAINS",
+                                        "value": self.employee_name
+                                    }
+                                },
+                                "logicOperator": "AND"
+                            }
+                        }
+                    }
+                }
+            }
+            self.logger.info(f"请求参数: {filtered_params}")
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            # 验证查询结果
+            page_data = response.get("data", {})
+            assert "content" in page_data, "分页数据中缺少content字段"
+            self.logger.info(f"按姓名查询员工成功，匹配记录数: {len(page_data.get('content', []))}")
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="员工管理",
         title="测试删除员工组织关联关系",
         description="验证删除员工组织关联关系功能",
         severity="normal",
-        order=5,
+        order=6,
         smoke=True,
         tags=["员工管理", "删除关联"]
     )

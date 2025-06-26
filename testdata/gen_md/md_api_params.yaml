@@ -1321,6 +1321,12 @@ api_params:
       params:
         request: {}
       serviceKey: GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_QUERY_PAGE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_QUERY_PARTNER_PAGE_ACTION_SERVICE:
+    params:
+      params:
+        request:
+          partnerTypeId: 0
+      serviceKey: GEN_MD$GEN_PARTNER_TYPE_CF_QUERY_PARTNER_PAGE_ACTION_SERVICE
   /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_STATUS_CF_QUERY_PAGE_ACTION_SERVICE:
     params:
       params:
@@ -3831,6 +3837,11 @@ api_params:
       params:
         request: {}
       serviceKey: GEN_MD$GEN_BOM_ITEM_SUPP_IND_CF_QUERY_DETAIL_ACTION_SERVICE
+  /api/trantor/service/engine/execute/GEN_MD$ORG_IDENTITY_TYPE_DISABLED_ACTION_SERVICE:
+    params:
+      params:
+        request: {}
+      serviceKey: GEN_MD$ORG_IDENTITY_TYPE_DISABLED_ACTION_SERVICE
   /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE:
     params:
       params:
@@ -5373,6 +5384,11 @@ api_params:
             conditionGroup: {}
             pageSize: 20
       serviceKey: GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/GEN_MD$ORG_IDENTITY_TYPE_ENABLED_ACTION_SERVICE:
+    params:
+      params:
+        request: {}
+      serviceKey: GEN_MD$ORG_IDENTITY_TYPE_ENABLED_ACTION_SERVICE
   /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       params:

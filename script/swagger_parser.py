@@ -562,15 +562,15 @@ if __name__ == "__main__":
     }
     
     parser = SwaggerParser(
-        base_url="https://t-erp-console-dev.app.terminus.io",
+        base_url="https://t-erp-console-test.app.terminus.io",
         cookies=cookies
     )
     
     # 获取指定团队和模块的Swagger文档
-    swagger_doc = parser.fetch_swagger_doc("TERPSAAS", "SCM_SLS")
+    swagger_doc = parser.fetch_swagger_doc("TERP", "GEN_MD")
     
     # 解析所有接口
     endpoints = parser.parse_endpoints()
     
     # 保存路径信息到gen_path.yaml
-    parser.save_paths_to_yaml(endpoints, module="SCM_SLS") 
+    parser.save_paths_to_yaml(endpoints, module="GEN_MD") 

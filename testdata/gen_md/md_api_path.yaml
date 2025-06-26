@@ -1,5 +1,5 @@
 version: '1.0'
-total_apis: 525
+total_apis: 528
 apis:
   监控预警结果信息-导入导出任务管理接口-提交导出任务:
     path: /api/trantor/service/engine/execute/GEN_MD$GEN_MONITORING_ALERT_RESULT_MD_API_GEI_TASK_EXPORT_DIRECT_POST
@@ -388,6 +388,9 @@ apis:
   GEN-文本组-查询分页服务:
     path: /api/trantor/service/engine/execute/GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_QUERY_PAGE_ACTION_SERVICE
     method: POST
+  GEN-相关方类型-根据类型查询相关方分页服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_PARTNER_TYPE_CF_QUERY_PARTNER_PAGE_ACTION_SERVICE
+    method: POST
   GEN-BOM状态配置表-查询分页服务:
     path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_STATUS_CF_QUERY_PAGE_ACTION_SERVICE
     method: POST
@@ -709,6 +712,9 @@ apis:
   GEN-BOM 行项目供应标识配置表-查询详情服务:
     path: /api/trantor/service/engine/execute/GEN_MD$GEN_BOM_ITEM_SUPP_IND_CF_QUERY_DETAIL_ACTION_SERVICE
     method: POST
+  ORG-组织身份-禁用服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_IDENTITY_TYPE_DISABLED_ACTION_SERVICE
+    method: POST
   GEN-数据字典类别-查询详情服务:
     path: /api/trantor/service/engine/execute/GEN_MD$GEN_DICT_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE
     method: POST
@@ -1020,6 +1026,9 @@ apis:
     method: POST
   合作伙伴类型-分页数据服务:
     path: /api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_TYPE_CF_PAGING_DATA_SERVICE
+    method: POST
+  ORG-组织身份-启用服务:
+    path: /api/trantor/service/engine/execute/GEN_MD$ORG_IDENTITY_TYPE_ENABLED_ACTION_SERVICE
     method: POST
   条码规则-导入导出任务管理接口-提交导出任务:
     path: /api/trantor/service/engine/execute/GEN_MD$GEN_BARCODE_RULE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
