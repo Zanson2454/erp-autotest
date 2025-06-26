@@ -179,14 +179,95 @@ class TestOrg_TypeManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+    @case_decorator(
+        story="组织类型管理",
+        title="测试查询组织架构类型列表",
+        description="验证组织架构类型列表查询功能",
+        severity="normal",
+        order=4,
+        smoke=True,
+        tags=["组织类型管理", "架构查询"]
+    )
+    def test_query_org_structure_type_list(self):
+        """
+        查询组织架构类型列表用例
+        """
+        try:
+            # 调用查询接口
+            api_path = self.get_api_path("ORG-组织架构-查询组织类型列表服务")
+            params, url = self.get_api_params(api_path)
 
+            # 设置参数
+            params["params"] = {
+                "request": {
+                    "orgDimensionCode": "SCM_ORG_GRP"
+                }
+            }
+            self.logger.info(f"请求参数: {params}")
+
+            response = self.http.post(url, json=params)
+            self.assert_util.assert_response_data(response, "组织类型列表为空")
+
+            a.json(params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="组织类型管理", 
+        title="测试查询组织业务类型分页",
+        description="验证组织业务类型分页查询功能",
+        severity="normal",
+        order=5,
+        smoke=True,
+        tags=["组织类型管理", "业务类型查询"]
+    )
+    def test_query_org_business_type_paging(self):
+        """
+        查询组织业务类型分页用例
+        """
+        try:
+            # 调用查询接口
+            api_path = self.get_api_path("GEN-组织类型-查询分页服务")
+            params, url = self.get_api_params(api_path)
+            
+            # 设置参数
+            params["params"]["request"] = {
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": None
+                },
+                "fields": [
+                    {"name": "code", "type": "TEXT"},
+                    {"name": "name", "type": "TEXT"},
+                    {"name": "status", "type": "SELECT"}
+                ],
+                "systemParams": None
+            }
+            self.logger.info(f"请求参数: {params}")
+
+            # 发送请求，添加查询参数
+            response = self.http.post(url, params={"tmodule": "GEN_MD"}, json=params)
+            self.assert_util.assert_response_data(response, "组织业务类型列表不为空")
+
+            a.json(params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
 
     @case_decorator(
         story="组织类型管理",
         title="测试删除组织类型管理",
         description="验证删除组织类型管理功能",
         severity="normal",
-        order=5,
+        order=6,
         smoke=True,
         tags=["组织类型管理", "删除"]
     )
