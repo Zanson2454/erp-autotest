@@ -504,4 +504,717 @@ class TestBizOrgManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+    @case_decorator(
+        story="查询组织架构",
+        title="测试组织架构分页查询",
+        description="验证组织架构分页查询接口的功能性",
+        severity="critical",
+        order=4,
+        smoke=True,
+        tags=["组织", "分页查询"]
+    )
+    @pytest.mark.parametrize("orgBusinessTypeCode", ["SLS_ORG", "PUR_ORG", "INV_ORG", "INV_LOC"])
+    def test_query_org_struct_page(self,orgBusinessTypeCode):
+        """
+        组织架构分页查询用例
+        """
+        try:
+            # 获取API配置
+            api_path = self.get_api_path("ORG-组织架构-分页查询服务")
+            params, url = self.get_api_params(api_path)
+
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["orgStatus", "orgBusinessTypeCode", "pageable"],
+                ["params", "request"]
+            )
+            
+            # 设置查询参数
+            set_dict = {
+                "orgStatus": "ENABLED",
+                "orgBusinessTypeCode": orgBusinessTypeCode,
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "keyword": True,
+                    "sortOrders": [],
+                    "conditionGroup": None
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"请求参数: {filtered_params}")
+
+            # 发送请求
+            response = self.http.post(url, json=filtered_params)
+            # 断言
+            self.assert_util.assert_response_data(response)
+            
+            # Allure 附件
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="搜索组织",
+        title="测试组织架构搜索",
+        description="验证组织架构搜索接口的功能性",
+        severity="critical",
+        order=5,
+        smoke=True,
+        tags=["组织", "组织搜索"]
+    )
+    def test_search_org_struct(self):
+        """
+        组织架构搜索用例
+        """
+        try:
+            # 获取API配置
+            api_path = self.get_api_path("ORG-组织架构-新组织搜索服务")
+            params, url = self.get_api_params(api_path)
+
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["orgName", "orgStatus", "orgDimensionCode"],
+                ["params", "request"]
+            )
+            
+            # 设置搜索参数
+            set_dict = {
+                "orgName": "自动化",
+                "orgStatus": ["ENABLED", "INACTIVE", "DRAFT"],
+                "orgDimensionCode": "SCM_ORG_GRP"
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"请求参数: {filtered_params}")
+
+            # 发送请求
+            response = self.http.post(url, json=filtered_params)
+            self.logger.info(f"响应: {response}")
+
+            # 断言查询到数据
+            self.assert_util.assert_response_data(response)
+            org_list = response.get("data",{}).get("data",[])
+            self.assert_util.assert_by_operator(org_list,"not_empty")
+            for org in org_list:
+                self.assert_util.assert_by_operator(org.get("orgName"),"contain","自动化")
+            # Allure 附件
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @pytest.mark.skip(reason="暂时跳过，实际没有页面引用")
+    @case_decorator(
+        story="构建组织树",
+        title="测试根据维度构建组织树",
+        description="验证根据维度构建组织树接口的功能性",
+        severity="critical",
+        order=6,
+        smoke=True,
+        tags=["组织", "组织树构建"]
+    )
+    def test_build_org_tree_by_dimension(self, orgDimensionCode="SCM_ORG_GRP"):
+        """
+        根据维度构建组织树用例
+        """
+        try:
+            # 获取API配置
+            api_path = self.get_api_path("ORG-组织架构-根据维度构建一个组织树服务")
+            params, url = self.get_api_params(api_path)
+
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["orgDimensionCode", "orgStatus"],
+                ["params", "request"]
+            )
+            
+            # 设置查询参数
+            set_dict = {
+               # todo
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"请求参数: {filtered_params}")
+
+            # 发送请求
+            response = self.http.post(url, json=filtered_params)
+            self.logger.info(f"响应: {response}")
+
+            # 断言
+            self.assert_util.assert_response_data(response)
+            
+            # 验证返回的组织树数据
+            data_result = response.get("data", {}).get("data", [])
+            self.assert_util.assert_by_operator(data_result, "is_list")
+
+            # Allure 附件
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @pytest.mark.skip(reason="暂时跳过，实际没有页面引用")
+    @case_decorator(
+        story="组织导入",
+        title="测试组织调整导入",
+        description="验证组织调整导入接口的功能性",
+        severity="normal",
+        order=7,
+        smoke=False,
+        tags=["组织", "组织导入", "调整导入"]
+    )
+    def test_org_struct_update_import(self):
+        """
+        组织调整导入用例
+        """
+        try:
+            # 获取API配置
+            api_path = self.get_api_path("ORG-组织架构-组织调整导入服务")
+            params, url = self.get_api_params(api_path)
+
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["sliceData", "context"],
+                ["params", "request"]
+            )
+            
+            # 设置导入参数（模拟数据）
+            set_dict = {
+                "sliceData": [
+                    {
+                        "id": "test_org_id",
+                        "orgCode": "TEST_ORG_001",
+                        "orgName": "测试组织001",
+                        "orgDimensionCode": "SCM_ORG_GRP",
+                        "orgStatus": "ENABLED"
+                    }
+                ],
+                "context": {
+                    "importMode": "UPDATE"
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"请求参数: {filtered_params}")
+
+            # 发送请求
+            response = self.http.post(url, json=filtered_params)
+            self.logger.info(f"响应: {response}")
+
+            # 断言
+            self.assert_util.assert_response_data(response)
+            
+            # Allure 附件
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @pytest.mark.skip(reason="暂时跳过，实际没有页面引用")
+    @case_decorator(
+        story="组织导入",
+        title="测试组织禁用导入",
+        description="验证组织禁用导入接口的功能性",
+        severity="normal",
+        order=8,
+        smoke=False,
+        tags=["组织", "组织导入", "禁用导入"]
+    )
+    def test_org_struct_disable_import(self):
+        """
+        组织禁用导入用例
+        """
+        try:
+            # 获取API配置
+            api_path = self.get_api_path("ORG-组织架构-组织禁用导入服务")
+            params, url = self.get_api_params(api_path)
+
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["sliceData", "context"],
+                ["params", "request"]
+            )
+            
+            # 设置导入参数（模拟数据）
+            set_dict = {
+                "sliceData": [
+                    {
+                        "id": "test_org_id",
+                        "orgCode": "TEST_ORG_001",
+                        "orgName": "测试组织001",
+                        "orgDimensionCode": "SCM_ORG_GRP",
+                        "orgStatus": "DISABLED"
+                    }
+                ],
+                "context": {
+                    "importMode": "DISABLE"
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"请求参数: {filtered_params}")
+
+            # 发送请求
+            response = self.http.post(url, json=filtered_params)
+            self.logger.info(f"响应: {response}")
+
+            # 断言
+            self.assert_util.assert_response_data(response)
+            
+            # Allure 附件
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="组织详情",
+        title="测试查询组织单元详情",
+        description="验证查询组织单元详情接口的功能性",
+        severity="critical",
+        order=9,
+        smoke=True,
+        tags=["组织", "详情查询"]
+    )
+    def test_query_org_struct_detail(self):
+        """
+        查询组织单元详情用例
+        """
+        try:
+            # 获取已创建的组织ID
+           
+            sql = "select id from org_struct_md where deleted=0 and  org_dimension_code = 'SCM_ORG_GRP' and org_status = 'ENABLED' limit 1"
+            org_id = self.db.query(sql)[0].get("id")
+            # 获取API配置
+            api_path = self.get_api_path("ORG-组织架构-查询组织单元详情服务")
+            params, url = self.get_api_params(api_path)
+
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["id","historyId"],
+                ["params", "request"]
+            )
+            
+            # 设置查询参数
+            set_dict = {
+                "id": org_id,
+                "historyId": None
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"请求参数: {filtered_params}")
+
+            # 发送请求
+            response = self.http.post(url, json=filtered_params)
+            self.logger.info(f"响应: {response}")
+
+            # 断言
+            self.assert_util.assert_response_data(response)
+            
+            
+            # Allure 附件
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+
+    @pytest.mark.skip(reason="暂时跳过，实际没有页面引用")           
+    @case_decorator(
+        story="组织历史",
+        title="测试查询组织历史版本",
+        description="验证查询组织历史版本接口的功能性",
+        severity="normal",
+        order=10,
+        smoke=False,
+        tags=["组织", "历史版本"]
+    )
+    def test_query_org_struct_history(self):
+        """
+        查询组织历史版本用例
+        """
+        try:
+            # 获取已创建的组织ID
+            com_org_info = TestBizOrgManagement.org_info.get("com_org_info", {})
+            org_id = com_org_info.get("id")
+            assert org_id, "请先执行test_save_com_org并成功保存公司组织"
+
+            # 获取API配置
+            api_path = self.get_api_path("ORG-组织架构-组织历史版本查看服务")
+            params, url = self.get_api_params(api_path)
+
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["id"],
+                ["params", "request"]
+            )
+            
+            # 设置查询参数
+            set_dict = {
+                "id": org_id
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"请求参数: {filtered_params}")
+
+            # 发送请求
+            response = self.http.post(url, json=filtered_params)
+            self.logger.info(f"响应: {response}")
+
+            # 断言
+            self.assert_util.assert_response_data(response)
+            
+            # 验证返回的历史版本数据
+            data_result = response.get("data", {}).get("data", [])
+            self.assert_util.assert_by_operator(data_result, "is_list")
+            
+            self.logger.info(f"查询到组织历史版本数量: {len(data_result)}")
+            
+            # Allure 附件
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="组织管理",
+        title="测试启用组织单元",
+        description="验证启用组织单元接口的功能性",
+        severity="normal",
+        order=11,
+        smoke=False,
+        tags=["组织", "启用组织"]
+    )
+    def test_enable_org_struct(self):
+        """
+        启用组织单元用例
+        """
+        try:
+            # 获取已创建的组织ID
+            sql = "select id from org_struct_md where deleted=0 and  org_dimension_code = 'SCM_ORG_GRP' and org_status != 'ENABLED' limit 1"
+            org_id = self.db.query(sql)[0].get("id")
+
+            # 获取API配置
+            api_path = self.get_api_path("ORG-组织架构-启用组织单元服务")
+            params, url = self.get_api_params(api_path)
+
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["id"],
+                ["params", "request"]
+            )
+            
+            # 设置启用参数
+            set_dict = {
+                "id": org_id
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"请求参数: {filtered_params}")
+
+            # 发送请求
+            response = self.http.post(url, json=filtered_params)
+            self.logger.info(f"响应: {response}")
+
+            # 断言
+            self.assert_util.assert_response_success(response)
+            
+            sql = f"select org_status from org_struct_md where id = {org_id}"
+            org_status = self.db.query(sql)[0].get("org_status")
+            self.assert_util.assert_by_operator(org_status,"=","ENABLED")
+            self.logger.info(f"成功启用组织: {org_id}")
+            
+            # Allure 附件
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="组织管理",
+        title="测试停用组织单元",
+        description="验证停用组织单元接口的功能性",
+        severity="normal",
+        order=12,
+        smoke=False,
+        tags=["组织", "停用组织"]
+    )
+    def test_disable_org_struct(self):
+        """
+        停用组织单元用例
+        """
+        try:
+            # 获取已创建的组织ID
+              # 获取已创建的组织ID
+            sql = "select id from org_struct_md where deleted=0 and  org_dimension_code = 'SCM_ORG_GRP' and org_status = 'ENABLED' limit 1"
+            org_id = self.db.query(sql)[0].get("id")
+
+
+            # 获取API配置
+            api_path = self.get_api_path("ORG-组织架构-停用组织单元服务")
+            params, url = self.get_api_params(api_path)
+
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["id"],
+                ["params", "request"]
+            )
+            
+            # 设置停用参数
+            set_dict = {
+                "id": org_id
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"请求参数: {filtered_params}")
+
+            # 发送请求
+            response = self.http.post(url, json=filtered_params)
+            self.logger.info(f"响应: {response}")
+
+            # 断言
+            self.assert_util.assert_response_success(response)
+            sql = f"select org_status from org_struct_md where id = {org_id}"
+            org_status = self.db.query(sql)[0].get("org_status")
+            self.assert_util.assert_by_operator(org_status,"=","DISABLED")
+            self.logger.info(f"成功停用组织: {org_id}")
+            
+            # Allure 附件
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="组织管理",
+        title="测试删除组织单元",
+        description="验证删除组织单元接口的功能性",
+        severity="critical",
+        order=13,
+        smoke=False,
+        tags=["组织", "删除组织"]
+    )
+    def test_delete_org_struct(self):
+        """
+        删除组织单元用例
+        """
+        try:
+            # 获取已停用的组织ID
+            sql = "select id from org_struct_md where deleted=0 and  org_dimension_code = 'SCM_ORG_GRP'  limit 1"
+            org_id = self.db.query(sql)[0].get("id")
+            # 获取API配置
+            api_path = self.get_api_path("ORG-组织架构-删除组织单元服务")
+            params, url = self.get_api_params(api_path)
+
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["id"],
+                ["params", "request"]
+            )
+            
+            # 设置删除参数
+            set_dict = {
+                "id": org_id
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"请求参数: {filtered_params}")
+
+            # 发送请求
+            response = self.http.post(url, json=filtered_params)
+            self.logger.info(f"响应: {response}")
+
+            # 断言
+            self.assert_util.assert_response_success(response)
+            sql = f"select deleted from org_struct_md where id = {org_id}"
+            deleted = self.db.query(sql)[0].get("deleted")
+            self.assert_util.assert_by_operator(deleted,"!=",0)
+            self.logger.info(f"成功删除组织: {org_id}")
+            
+            # Allure 附件
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="组织类型",
+        title="测试查询组织类型列表",
+        description="验证查询组织类型列表接口的功能性",
+        severity="normal",
+        order=14,
+        smoke=True,
+        tags=["组织", "类型查询"]
+    )
+    def test_query_org_type_list(self):
+        """
+        查询组织类型列表用例
+        """
+        try:
+            # 获取API配置
+            api_path = self.get_api_path("ORG-组织架构-查询组织类型列表服务")
+            params, url = self.get_api_params(api_path)
+
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["orgDimensionCode"],
+                ["params", "request"]
+            )
+            
+            set_dict = {
+                "orgDimensionCode": "SCM_ORG_GRP"
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"请求参数: {filtered_params}")
+
+            # 发送请求
+            response = self.http.post(url, json=filtered_params)
+            self.logger.info(f"响应: {response}")
+
+            # 断言
+            self.assert_util.assert_response_data(response)
+            org_type_list = response.get("data",{}).get("data",[])
+            self.assert_util.assert_by_operator(org_type_list,"not_empty")
+            org_type_codes=[]
+            for org_type in org_type_list:
+                 org_type_codes.append(org_type.get("code"))
+            self.assert_util.assert_all_in(["COM_ORG","SLS_ORG","PUR_ORG","INV_ORG","INV_LOC"],org_type_codes)
+
+            # Allure 附件
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="组织导入",
+        title="测试获取组织导入模版",
+        description="验证获取组织导入模版接口的功能性",
+        severity="normal",
+        order=15,
+        smoke=False,
+        tags=["组织", "导入模版"]
+    )
+    def test_get_org_import_template(self):
+        """
+        获取组织导入模版用例
+        """
+        try:
+            # 获取API配置
+            api_path = self.get_api_path("ORG-组织架构-获取组织导入的模版服务")
+            params, url = self.get_api_params(api_path)
+
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["orgDimensionCode","templateType"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "orgDimensionCode": "SCM_ORG_GRP",
+                "templateType": "ORG_CREATE"
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"请求参数: {filtered_params}")
+
+            # 发送请求
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            template_data = response.get("data",{}).get("data",{})
+            self.assert_util.assert_by_operator(template_data.get("templateUrl"),"not_empty")
+            self.assert_util.assert_by_operator(template_data.get("importHeaderContextList"),"not_empty")
+            
+            # Allure 附件
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @pytest.mark.skip(reason="暂时跳过，实际没有页面引用")
+    @case_decorator(
+        story="组织导入",
+        title="测试组织新增导入",
+        description="验证组织新增导入接口的功能性",
+        severity="normal",
+        order=16,
+        smoke=False,
+        tags=["组织", "组织导入", "新增导入"]
+    )
+    def test_org_struct_create_import(self):
+        """
+        组织新增导入用例
+        """
+        try:
+            # 获取API配置
+            api_path = self.get_api_path("ORG-组织架构-组织新增导入服务")
+            params, url = self.get_api_params(api_path)
+
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["sliceData", "context"],
+                ["params", "request"]
+            )
+            
+            # 设置导入参数（模拟数据）
+            set_dict = {
+                "sliceData": [
+                    {
+                        "orgCode": "NEW_ORG_001",
+                        "orgName": "新增组织001",
+                        "orgDimensionCode": "SCM_ORG_GRP",
+                        "orgStatus": "ENABLED",
+                        "orgBusinessTypeIds": [self.comOrgTypeId]
+                    }
+                ],
+                "context": {
+                    "importMode": "CREATE"
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"请求参数: {filtered_params}")
+
+            # 发送请求
+            response = self.http.post(url, json=filtered_params)
+            self.logger.info(f"响应: {response}")
+
+            # 断言
+            self.assert_util.assert_response_data(response)
+            
+            # Allure 附件
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
     
