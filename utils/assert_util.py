@@ -35,7 +35,14 @@ class AssertHelper:
             response: 响应数据字典
             message: 自定义错误消息
         """
-        assert response.get("success", False), message or "响应未成功"
+        success = response.get("success", False)
+        if not success:
+            error_msg = message or "响应未成功"
+            # 添加response原始报文到错误信息中
+            logger.error(f"断言失败 - {error_msg}，原始响应: {response}")
+            raise AssertionError(f"{error_msg}，原始响应: {response}")
+        else:
+            logger.info(f"响应成功断言通过: success={success}")
 
     @staticmethod
     def assert_response_data(response: Dict[str, Any], message: str = None) -> Any:

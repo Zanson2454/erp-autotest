@@ -16,8 +16,6 @@ class TestAdmOrgManagement(GenMdBaseTest):
         super().setup_class()
         cls.org_info = {}
         cls.mock_data = MockData()
-        cls.logger.info(f"init_data: {cls.init_data}")
-        cls.logger.info(f"md_cache_data: {cls.md_cache_data}")
         
         # 获取初始化数据中的第一个数据
         cls.currId = cls.init_data["currency_info"][0]["curr_id"] if cls.init_data.get("currency_info") else None
@@ -51,7 +49,7 @@ class TestAdmOrgManagement(GenMdBaseTest):
             org_name = self.mock_data.get_mock_company()
             org_enable_date = self.mock_data.get_mock_date(include_time=False, days_offset=1)
 
-            api_path = self.get_api_path("ORG-组织管理-保存EHR组织单元服务")
+            api_path = self.get_api_path("ORG-组织架构-保存服务")
             params, url = self.get_api_params(api_path)
 
             # 过滤和设置参数
@@ -72,11 +70,9 @@ class TestAdmOrgManagement(GenMdBaseTest):
             self.logger.info(f"filtered_params: {filtered_params}")
 
             response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
             org_id = response.get("data", {}).get("data", {}).get("id")
-            self.assert_util.assert_response_data(response)
-
-            # 保存数据
-            TestAdmOrgManagement.org_info.update({
+            self.org_info.update({
                 "adm_org_info": {
                     "id": org_id,
                     "org_code": org_code,
@@ -109,7 +105,7 @@ class TestAdmOrgManagement(GenMdBaseTest):
             org_id = adm_org_info.get("id")
             assert org_id, "请先执行test_save_adm_org并成功保存行政组织"
 
-            api_path = self.get_api_path("ORG-组织管理-启动EHR组织单元服务")
+            api_path = self.get_api_path("ORG-组织架构-启用组织单元服务")
             params, url = self.get_api_params(api_path)
 
             # 过滤和设置参数
@@ -125,7 +121,7 @@ class TestAdmOrgManagement(GenMdBaseTest):
             self.logger.info(f"filtered_params: {filtered_params}")
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -152,7 +148,7 @@ class TestAdmOrgManagement(GenMdBaseTest):
             org_id = adm_org_info.get("id")
             assert org_id, "请先执行test_save_adm_org并成功保存行政组织"
 
-            api_path = self.get_api_path("ORG-组织管理-停用组织EHR组织单元服务")
+            api_path = self.get_api_path("ORG-组织架构-停用组织单元服务")
             params, url = self.get_api_params(api_path)
 
             # 过滤和设置参数
@@ -168,7 +164,7 @@ class TestAdmOrgManagement(GenMdBaseTest):
             self.logger.info(f"filtered_params: {filtered_params}")
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -191,11 +187,19 @@ class TestAdmOrgManagement(GenMdBaseTest):
         """
         try:
             # 获取行政组织信息
-            adm_org_info = TestAdmOrgManagement.org_info.get("adm_org_info", {})
-            org_id = adm_org_info.get("id")
-            assert org_id, "请先执行test_save_adm_org并成功保存行政组织"
+            sql ="""
+                select id  from org_struct_md where org_status="DRAFT" and org_dimension_code="ADM_ORG_GRP" and deleted=0 limit 1;
+            """
+            result = self.db.query(sql)
+            if not result:
+                self.test_save_adm_org()
+                org_id = self.org_info.get("adm_org_info", {}).get("id")
+            else:
+                org_id = result[0]["id"]
 
-            api_path = self.get_api_path("ORG-组织管理-删除EHR组织单元服务")
+      
+            
+            api_path = self.get_api_path("ORG-组织架构-删除组织单元服务")
             params, url = self.get_api_params(api_path)
 
             # 过滤和设置参数
@@ -211,7 +215,7 @@ class TestAdmOrgManagement(GenMdBaseTest):
             self.logger.info(f"filtered_params: {filtered_params}")
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             # 清除组织信息
             TestAdmOrgManagement.org_info = {}
@@ -236,7 +240,7 @@ class TestAdmOrgManagement(GenMdBaseTest):
         查询行政组织用例
         """
         try:
-            api_path = self.get_api_path("ORG-新版组织-搜索服务")
+            api_path = self.get_api_path("ORG-组织架构-新组织搜索服务")
             params, url = self.get_api_params(api_path)
 
             # 过滤和设置参数
