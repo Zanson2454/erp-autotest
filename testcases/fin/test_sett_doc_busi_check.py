@@ -33,7 +33,7 @@ class TestSettDocBusiCheck(BaseTest):
         """获取不同状态的结算单ID 已创建，已确认 """
         created_sett_doc = FinSettlementFactory.get_or_create_settlement_doc("CREATED")
         created_sett_doc_id = created_sett_doc.get("id")
-        Loggers.debug(f"已创建结算单ID: {created_sett_doc_id}")
+        # Loggers.debug(f"已创建结算单ID: {created_sett_doc_id}")
         
         sql = """
         SELECT * FROM sett_doc_tr
@@ -55,9 +55,9 @@ class TestSettDocBusiCheck(BaseTest):
         sett_doc_id  = self.get_sett_doc_id()[0]
         filtered_data["params"]["request"]["id"] = sett_doc_id
         result = self.http.post(url, json=filtered_data, description=f"结算单修改备注操作 - ID: {sett_doc_id}")
-        Loggers.debug(f"结算单修改备注操作结果: {result}")
+        # Loggers.debug(f"结算单修改备注操作结果: {result}")
         self.assert_util.assert_response_success(result)
-        self.assert_util.assert_eq(result.get("data",{}).get("data",{}).get("id",{}),sett_doc_id)
+        self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("id",{}),"=",sett_doc_id)
         
     def test_sett_doc_remark_save(self):
         """测试结算单修改备注保存操作"""
@@ -89,12 +89,12 @@ class TestSettDocBusiCheck(BaseTest):
         filtered_data["params"]["request"]["settDocTypeId"] = sql_result[0]["sett_doc_type_id"]
         filtered_data["params"]["request"]["tradingDocCode"] = sql_result[0]["trading_doc_code"]
         filtered_data["params"]["request"]["tradingDocStatus"] = sql_result[0]["trading_doc_status"]
-        Loggers.debug(filtered_data["params"]["request"])
+        # Loggers.debug(filtered_data["params"]["request"])
         result = self.http.post(url, json=filtered_data, description=f"结算单修改备注保存操作 - ID: {sett_doc_id}")
-        Loggers.debug(f"结算单修改备注保存操作结果: {result}")
+        # Loggers.debug(f"结算单修改备注保存操作结果: {result}")
         self.assert_util.assert_response_success(result)
-        self.assert_util.assert_eq(result.get("data",{}).get("data",{}).get("id",{}),sett_doc_id)
-        self.assert_util.assert_eq(result.get("data",{}).get("data",{}).get("remark",{}),"AUTOTEST-remark")
+        self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("id",{}),"=",sett_doc_id)
+        self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("remark",{}),"=","AUTOTEST-remark")
         
         
 
@@ -116,12 +116,12 @@ class TestSettDocBusiCheck(BaseTest):
                 """
                 sql_result = self.db.query(sql)
                 self.assert_util.assert_response_success(result)
-                self.assert_util.assert_eq(sql_result[0]["sett_doc_status"], "CONFIRMED")
-                self.assert_util.assert_eq(sql_result[0]["async_execution_status"], "SUCCEEDED")
-                self.assert_util.assert_not_empty(sql_result[0]["trading_doc_id"], "往来单号id为空")
-                self.assert_util.assert_eq(sql_result[0]["trading_doc_status"], "CREATED")
-                self.assert_util.assert_not_empty(sql_result[0]["trading_doc_code"], "往来单号code为空")
-                self.assert_util.assert_eq(sql_result[0]["client_side_confirm_status"], "CONFIRMED")
+                self.assert_util.assert_by_operator(sql_result[0]["sett_doc_status"], "=", "CONFIRMED")
+                self.assert_util.assert_by_operator(sql_result[0]["async_execution_status"], "=", "SUCCEEDED")
+                self.assert_util.assert_by_operator(sql_result[0]["trading_doc_id"], "not_empty")
+                self.assert_util.assert_by_operator(sql_result[0]["trading_doc_status"], "=", "CREATED")
+                self.assert_util.assert_by_operator(sql_result[0]["trading_doc_code"], "not_empty")
+                self.assert_util.assert_by_operator(sql_result[0]["client_side_confirm_status"], "=", "CONFIRMED")
             elif index == 1:
                 assert result.get("success",{}) == False
                 assert result.get("err",{}).get("msg",{}) == "结算单异步任务提交失败，请确认结算单异步执行状态！"
@@ -160,10 +160,10 @@ class TestSettDocBusiCheck(BaseTest):
             
             if index == 0:
                 self.assert_util.assert_response_success(result)
-                self.assert_util.assert_not_eq(sql_result[0]["deleted"], 0)
-                self.assert_util.assert_eq(sett_sql_result[0]["sett_item_status"], "RECONCILED")
-                self.assert_util.assert_eq(sett_sql_result[0]["sett_doc_id"], None)
-                self.assert_util.assert_eq(sett_sql_result[0]["is_sdc_cancel_relv"], 1)
+                self.assert_util.assert_by_operator(sql_result[0]["deleted"], "!=", 0)  
+                self.assert_util.assert_by_operator(sett_sql_result[0]["sett_item_status"], "=", "RECONCILED")
+                self.assert_util.assert_by_operator(sett_sql_result[0]["sett_doc_id"], "empty")
+                self.assert_util.assert_by_operator(sett_sql_result[0]["is_sdc_cancel_relv"], "=", 1)
             elif index == 1:
                 assert result.get("success",{}) == False
                 assert result.get("err",{}).get("msg",{}) == "存在已确认的结算单，请重新选择后再进行操作"
@@ -179,7 +179,7 @@ class TestSettDocBusiCheck(BaseTest):
         filtered_data["params"]["request"]["id"] = FinSettlementFactory.get_or_create_settlement_doc("CREATED").get("id")
         result = self.http.post(url, json=filtered_data, description=f"修改结算单")
         self.assert_util.assert_response_success(result)   
-        self.assert_util.assert_eq(result.get("data",{}).get("data",{}).get("id",{}),filtered_data["params"]["request"]["id"])
+        self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("id",{}),"=",filtered_data["params"]["request"]["id"])
         
     @allure.title("结算单修改保存操作")
     @allure.description("测试步骤：1结算单修改保存")
@@ -270,9 +270,9 @@ class TestSettDocBusiCheck(BaseTest):
             
             total_sett_doc_amt += filtered_data["params"]["request"]["settItems"][i]["settDocAmt"]
             all_sett_item_code.append(filtered_data["params"]["request"]["settItems"][i]["settItemCode"])
-        Loggers.debug(f"total_sett_doc_amt: {total_sett_doc_amt}")
-        Loggers.debug(f"sett_doc.get('sett_doc_amt'): {sett_doc.get('sett_doc_amt')}")
-        Loggers.debug(sett_doc)
+        # Loggers.debug(f"total_sett_doc_amt: {total_sett_doc_amt}")
+        # Loggers.debug(f"sett_doc.get('sett_doc_amt'): {sett_doc.get('sett_doc_amt')}")
+        # Loggers.debug(sett_doc)
         # 转换Decimal为字符串
         def convert_decimal_to_str(obj):
             if isinstance(obj, Decimal):
@@ -301,8 +301,8 @@ class TestSettDocBusiCheck(BaseTest):
         sql_sett_item_code_result = self.db.query(sql_sett_item_code)
         # 断言所有结算项的状态都是SETT_DOC_CREATED
         for item in sql_sett_item_code_result:
-            self.assert_util.assert_eq(item["sett_item_status"], "SETT_DOC_CREATED")
-            self.assert_util.assert_eq(item["sett_doc_id"], filtered_data["params"]["request"]["id"])
+            self.assert_util.assert_by_operator(item["sett_item_status"], "=", "SETT_DOC_CREATED")
+            self.assert_util.assert_by_operator(item["sett_doc_id"], "=", filtered_data["params"]["request"]["id"])
         
         
         

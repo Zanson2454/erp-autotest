@@ -132,7 +132,6 @@ class AssertHelper:
             elif operator == "not_in":
                 result = actual not in expected
             elif operator == "contain":
-                # contain: expected in actual
                 result = expected in actual
             elif operator == "empty":
                 result = not actual or (hasattr(actual, '__len__') and len(actual) == 0)

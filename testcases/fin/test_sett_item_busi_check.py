@@ -83,14 +83,14 @@ class TestSettItemBusiCheck(BaseTest):
             #已创建、已对账结算项可以汇单
             if index == 0 or index == 2:  # 第一个ID的断言
                 self.assert_util.assert_response_success(result)
-                self.assert_util.assert_eq(sql_result[0]["sett_item_status"], "SETT_DOC_CREATED")
-                self.assert_util.assert_eq(sql_result[0]["async_execution_status"], "SUCCEEDED")
-                self.assert_util.assert_not_empty(sql_result[0]["sett_doc_id"], "结算单号为空")
+                self.assert_util.assert_by_operator(sql_result[0]["sett_item_status"], "=", "SETT_DOC_CREATED")
+                self.assert_util.assert_by_operator(sql_result[0]["async_execution_status"], "=", "SUCCEEDED")
+                self.assert_util.assert_by_operator(sql_result[0]["sett_doc_id"], "not_empty")
             elif index == 1:  # 第二个ID的断言
                 assert result.get("success",{}) == False
                 assert result.get("err",{}).get("msg",{}) == "结算单异步任务提交失败，请确认结算单异步执行状态！"
-                self.assert_util.assert_eq(sql_result[0]["sett_item_status"], "SETT_DOC_CREATED")
-                self.assert_util.assert_not_empty(sql_result[0]["sett_doc_id"], "结算单号为空")
+                self.assert_util.assert_by_operator(sql_result[0]["sett_item_status"], "=", "SETT_DOC_CREATED")
+                self.assert_util.assert_by_operator(sql_result[0]["sett_doc_id"], "not_empty")
                 
     def test_sett_item_manual_remittance(self):
         """测试结算项手工汇单"""
@@ -114,9 +114,9 @@ class TestSettItemBusiCheck(BaseTest):
                 assert result.get("err",{}).get("msg",{}) == "结算单异步任务提交失败，请确认结算单异步执行状态！"
             elif index == 2:  # 第3个ID的断言 已对账结算项可以手工汇单
                 self.assert_util.assert_response_success(result)
-                self.assert_util.assert_eq(sql_result[0]["sett_item_status"], "SETT_DOC_CREATED")
-                self.assert_util.assert_eq(sql_result[0]["async_execution_status"], "SUCCEEDED")
-                self.assert_util.assert_not_empty(sql_result[0]["sett_doc_id"], "结算单号为空")
+                self.assert_util.assert_by_operator(sql_result[0]["sett_item_status"], "=", "SETT_DOC_CREATED")
+                self.assert_util.assert_by_operator(sql_result[0]["async_execution_status"], "=", "SUCCEEDED")
+                self.assert_util.assert_by_operator(sql_result[0]["sett_doc_id"], "not_empty")
                 
     def test_batch_task_record(self):
         """批量任务记录"""

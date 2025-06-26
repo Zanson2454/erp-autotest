@@ -52,6 +52,21 @@
         "name": "行政组织"
       },
       {
+        "id": 2010002,
+        "code": null,
+        "name": null
+      },
+      {
+        "id": 2010003,
+        "code": null,
+        "name": null
+      },
+      {
+        "id": 2010004,
+        "code": null,
+        "name": null
+      },
+      {
         "id": 2015003,
         "code": "INV_ORG",
         "name": "库存组织"
@@ -161,12 +176,12 @@
     ],
     "com_org_info": [
       {
-        "id": 14373001,
+        "id": 14617078,
         "org_code": "AUTOTEST_COM_ORG",
         "org_name": "公司组织(自动化)",
         "org_status": "ENABLED",
         "org_dimension_code": "SCM_ORG_GRP",
-        "org_business_type_code": "COM_ORG"
+        "org_business_type_code": null
       }
     ],
     "pur_org_info": [
@@ -187,6 +202,16 @@
         "org_status": "ENABLED",
         "org_dimension_code": "SCM_ORG_GRP",
         "org_business_type_code": "INV_ORG"
+      }
+    ],
+    "inv_loc_info": [
+      {
+        "id": 14376002,
+        "org_code": "AUTOTEST_INV_LOC_ORG",
+        "org_name": "库存地点(自动化)",
+        "org_status": "ENABLED",
+        "org_dimension_code": "SCM_ORG_GRP",
+        "org_business_type_code": "INV_LOC"
       }
     ],
     "sls_org_info": [
@@ -214,6 +239,12 @@
         "id": 2000001,
         "code": "WH01",
         "name": "测试仓库"
+      }
+    ],
+    "employee_info": [
+      {
+        "id": 14082001,
+        "name": "admin"
       }
     ]
   },
@@ -261,6 +292,24 @@
         "id": 2005001,
         "name": "自动化",
         "usage_type": "MAT"
+      }
+    ]
+  },
+  "partner_info": {
+    "vend_info": [
+      {
+        "id": 2058001,
+        "code": "AUTOTEST_VEND",
+        "name": "供应商(自动化)",
+        "status": "ENABLED"
+      }
+    ],
+    "cust_info": [
+      {
+        "id": 2059001,
+        "code": "AUTOTEST_CUST",
+        "name": "客户(自动化)",
+        "status": "ENABLED"
       }
     ]
   }

@@ -46,6 +46,18 @@ org_info:
       min_records: 1
       required_fields: ["id", "org_code", "org_name", "org_status", "org_dimension_code", "org_business_type_code"]
 
+  # 库存地点
+  inv_loc_info:
+    sql: |
+      SELECT id, org_code, org_name, org_status, org_dimension_code, org_business_type_code
+      FROM org_struct_md
+      WHERE org_status='ENABLED' AND org_dimension_code='SCM_ORG_GRP' AND org_code LIKE 'AUTOTEST%' AND org_business_type_codes = '[\"INV_LOC\"]' LIMIT 1
+    description: "查询库存地点信息"
+    validation:
+      min_records: 1
+      required_fields: ["id", "org_code", "org_name", "org_status", "org_dimension_code", "org_business_type_code"]
+
+
   # 销售组织
   sls_org_info:
     sql: |
@@ -79,6 +91,17 @@ org_info:
     sql: |
       select id,`code`,`name` from inv_wh_md where deleted=0 and `status`="ENABLED" limit 1
     description: "查询仓库信息"
+
+  # 默认员工
+  employee_info:
+    sql: |
+      SELECT id, name
+      FROM org_employee_md
+      WHERE name='admin' LIMIT 1
+    description: "查询默认员工信息"
+    validation:
+      min_records: 1
+      required_fields: ["id", "name"]
 
 mat_info:
   # 物料类目
@@ -118,21 +141,26 @@ mat_info:
     sql: |
       select id,`name`,usage_type from gen_label_md where usage_type='MAT'  and `name`='自动化' and `status`="ENABLED" limit 1
     description: "查询标签信息"
-
-
-
   
+partner_info:
+  # 供应商
+  vend_info:
+    sql: |
+      SELECT id, `code`, `name`, `status`
+      FROM gen_business_partner_md
+      WHERE `status` = 'ENABLED' AND JSON_CONTAINS(partner_identity, '"SUPPLIER"') AND `code`='AUTOTEST_VEND' LIMIT 1
+    description: "查询供应商信息"
+    validation:
+      min_records: 1
+      required_fields: ["id", "code", "name", "status"]
 
-# partner_info:
-#   # 客户信息
-#   cust_info:
-#     sql: |
-#       select id,cust_code,cust_name from  gen_cust_md where deleted=0;
-#     description: "查询客户信息"
-
-#   # 供应商信息
-#   vend_info:
-#     sql: |
-#       select id,vend_code,vend_name from  gen_vend_md where deleted=0;
-#     description: "查询供应商信息"
-
+  # 客户
+  cust_info:
+    sql: |
+      SELECT id, `code`, `name`, `status`
+      FROM gen_business_partner_md
+      WHERE `status` = 'ENABLED' AND JSON_CONTAINS(partner_identity, '"CUSTOMER"') AND `code`='AUTOTEST_CUST' LIMIT 1
+    description: "查询客户信息"
+    validation:
+      min_records: 1
+      required_fields: ["id", "code", "name", "status"]

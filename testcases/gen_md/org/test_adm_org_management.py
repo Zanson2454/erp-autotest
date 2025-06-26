@@ -30,6 +30,17 @@ class TestAdmOrgManagement(GenMdBaseTest):
         for org_biz_type in cls.orgBusinessTypeIds:
             if org_biz_type["code"] == "ADM_ORG":  # 行政组织类型
                 cls.admOrgTypeId = org_biz_type["id"]
+    @classmethod
+    def teardown_class(cls):
+        try:
+            cls.db.delete(
+            table="org_struct_md",
+            where="org_code like %s and org_dimension_code = 'ADM_ORG_GRP'",
+            params=["AT_%"]
+        )
+            cls.logger.info("测试数据清理完成")
+        except Exception as e:
+            cls.logger.error(f"测试数据清理失败: {str(e)}")
 
     @case_decorator(
         story="保存行政组织",
@@ -188,7 +199,7 @@ class TestAdmOrgManagement(GenMdBaseTest):
         try:
             # 获取行政组织信息
             sql ="""
-                select id  from org_struct_md where org_status="DRAFT" and org_dimension_code="ADM_ORG_GRP" and deleted=0 limit 1;
+                select id  from org_struct_md where org_status="DRAFT" and org_dimension_code="ADM_ORG_GRP" and org_code like "AT_%" and deleted=0 limit 1;
             """
             result = self.db.query(sql)
             if not result:

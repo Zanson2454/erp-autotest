@@ -78,7 +78,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 self.assert_util.assert_response_success(result)
                 
                 ap_doc_id = ParamUtil.extract_id(result)
-                self.assert_util.assert_not_empty(ap_doc_id, "创建应付单失败：未获取到单据ID")
+                self.assert_util.assert_by_operator(ap_doc_id, "not_empty", "创建应付单失败：未获取到单据ID")
                 
                 TestApCreatePaymentRequest.ap_pr_info = {
                     "ap_doc_id": ap_doc_id,
@@ -136,7 +136,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 self.assert_util.assert_response_success(submit_result)
                 
                 submit_success = submit_result.get("success")
-                self.assert_util.assert_eq(submit_success, True, f"应付单提交API调用失败，单据编号: {ap_head_code}")
+                self.assert_util.assert_by_operator(submit_success, "=", True, f"应付单提交API调用失败，单据编号: {ap_head_code}")
                 
                 # 应付单过账 - 使用标准API调用方式
                 post_data = {**common_data, "apStatus": "DONE"}
@@ -154,7 +154,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 self.assert_util.assert_response_success(post_result)
                 
                 success = post_result.get("success")
-                self.assert_util.assert_eq(success, True, f"应付单过账API调用失败，单据编号: {ap_head_code}")
+                self.assert_util.assert_by_operator(success, "=", True, f"应付单过账API调用失败，单据编号: {ap_head_code}")
                 
                 self.wait_for_ap_status(ap_head_code, "DONE", max_wait=15)
                 
@@ -179,7 +179,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
         try:
             with a.step("基于应付单生成付款申请单"):
                 info = TestApCreatePaymentRequest.ap_pr_info
-                self.assert_util.assert_not_empty(info.get("ap_doc_id"), "请先执行创建标准应付单用例")
+                self.assert_util.assert_by_operator(info.get("ap_doc_id"), "not_empty", "请先执行创建标准应付单用例")
                 
                 pr_create_request = {
                     "apHeadCode": info["apHeadCode"],
@@ -211,7 +211,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 self.assert_util.assert_response_success(result)
                 
                 success = result.get("success")
-                self.assert_util.assert_eq(success, True, f"应付单创建付款申请单失败，应付单编号: {info['apHeadCode']}")
+                self.assert_util.assert_by_operator(success, "=", True, f"应付单创建付款申请单失败，应付单编号: {info['apHeadCode']}")
                 
                 TestApCreatePaymentRequest.ap_pr_info.update({
                     "pr_create_success": True,
@@ -239,8 +239,8 @@ class TestApCreatePaymentRequest(ApBaseTest):
         try:
             with a.step("应付单分页查询验证状态更新"):
                 info = TestApCreatePaymentRequest.ap_pr_info
-                self.assert_util.assert_not_empty(info.get("apHeadCode"), "请先执行前置用例")
-                self.assert_util.assert_not_empty(info.get("pr_create_success"), "请先执行付款申请单创建用例")
+                self.assert_util.assert_by_operator(info.get("apHeadCode"), "not_empty", "请先执行前置用例")
+                self.assert_util.assert_by_operator(info.get("pr_create_success"), "not_empty", "请先执行付款申请单创建用例")
                 
                 ap_head_code = info["apHeadCode"]
                 max_attempts = 8
@@ -277,9 +277,9 @@ class TestApCreatePaymentRequest(ApBaseTest):
                             paying_doc_amt = ap_record.get("payingDocAmt", 0)
                             paying_base_amt = ap_record.get("payingBaseAmt", 0)
                             
-                            self.assert_util.assert_eq(paying_doc_amt, info["total_amt"], 
+                            self.assert_util.assert_by_operator(paying_doc_amt, "=", info["total_amt"], 
                                 f"付款中金额不正确，期望: {info['total_amt']}，实际: {paying_doc_amt}")
-                            self.assert_util.assert_eq(paying_base_amt, info["gross_base_amt"], 
+                            self.assert_util.assert_by_operator(paying_base_amt, "=", info["gross_base_amt"], 
                                 f"付款中本位币金额不正确，期望: {info['gross_base_amt']}，实际: {paying_base_amt}")
                             
                             a.json({
@@ -325,18 +325,18 @@ class TestApCreatePaymentRequest(ApBaseTest):
         try:
             with a.step("付款申请单创建成功验证"):
                 info = TestApCreatePaymentRequest.ap_pr_info
-                self.assert_util.assert_not_empty(info.get("ap_doc_id"), "请先执行前置用例")
-                self.assert_util.assert_not_empty(info.get("pr_create_success"), "请先执行付款申请单创建用例")
+                self.assert_util.assert_by_operator(info.get("ap_doc_id"), "not_empty", "请先执行前置用例")
+                self.assert_util.assert_by_operator(info.get("pr_create_success"), "not_empty", "请先执行付款申请单创建用例")
                 
                 from data_factory.fin_ap_factory import FinApFactory
                 
                 ap_factory = FinApFactory()
                 pr_info = ap_factory.query_payment_request_by_ap_id(info["ap_doc_id"])
                 
-                self.assert_util.assert_not_empty(pr_info, f"数据库中未找到应付单ID {info['ap_doc_id']} 对应的付款申请单记录")
+                self.assert_util.assert_by_operator(pr_info, "not_empty", f"数据库中未找到应付单ID {info['ap_doc_id']} 对应的付款申请单记录")
                 
                 pr_head_code = pr_info.get("pr_head_code")
-                self.assert_util.assert_not_empty(pr_head_code, "付款申请单编码为空")
+                self.assert_util.assert_by_operator(pr_head_code, "not_empty", "付款申请单编码为空")
                 
                 TestApCreatePaymentRequest.ap_pr_info.update({
                     "cm_pr_head_tr_id": pr_info.get("cm_pr_head_tr_id"),
@@ -362,7 +362,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 self.assert_util.assert_response_success(result)
                 
                 data_list = result.get("data", {}).get("data", {}).get("data", [])
-                self.assert_util.assert_not_empty(data_list, f"付款申请单分页查询结果为空，付款申请单可能未创建成功：{pr_head_code}")
+                self.assert_util.assert_by_operator(data_list, "not_empty", f"付款申请单分页查询结果为空，付款申请单可能未创建成功：{pr_head_code}")
                 
                 pr_record = None
                 for record in data_list:
@@ -370,14 +370,14 @@ class TestApCreatePaymentRequest(ApBaseTest):
                         pr_record = record
                         break
                 
-                self.assert_util.assert_not_empty(pr_record, f"在分页查询结果中未找到编码为 {pr_head_code} 的付款申请单记录")
+                self.assert_util.assert_by_operator(pr_record, "not_empty", f"在分页查询结果中未找到编码为 {pr_head_code} 的付款申请单记录")
                 
                 pr_doc_amt = pr_record.get("paymentRequestDocAmt", 0)
                 pr_base_amt = pr_record.get("paymentRequestBaseAmt", 0)
                 
-                self.assert_util.assert_eq(pr_doc_amt, info.get("total_amt", 0), 
+                self.assert_util.assert_by_operator(pr_doc_amt, "=", info.get("total_amt", 0), 
                     f"付款申请单原币金额不一致，期望: {info.get('total_amt', 0)}，实际: {pr_doc_amt}")
-                self.assert_util.assert_eq(pr_base_amt, info.get("gross_base_amt", 0), 
+                self.assert_util.assert_by_operator(pr_base_amt, "=", info.get("gross_base_amt", 0), 
                     f"付款申请单本位币金额不一致，期望: {info.get('gross_base_amt', 0)}，实际: {pr_base_amt}")
                 
                 verification_result = {
@@ -417,11 +417,11 @@ class TestApCreatePaymentRequest(ApBaseTest):
         try:
             with a.step("付款申请单过账"):
                 info = TestApCreatePaymentRequest.ap_pr_info
-                self.assert_util.assert_not_empty(info.get("final_verification_passed"), "请先执行付款申请单验证用例")
-                self.assert_util.assert_not_empty(info.get("cm_pr_head_tr_id"), "未获取到付款申请单ID")
+                self.assert_util.assert_by_operator(info.get("final_verification_passed"), "not_empty", "请先执行付款申请单验证用例")
+                self.assert_util.assert_by_operator(info.get("cm_pr_head_tr_id"), "not_empty", "未获取到付款申请单ID")
                 
                 pr_head_code = info.get("pr_head_code_from_db")
-                self.assert_util.assert_not_empty(pr_head_code, "未获取到付款申请单编码")
+                self.assert_util.assert_by_operator(pr_head_code, "not_empty", "未获取到付款申请单编码")
                 
                 pr_post_request = {
                     "id": info["cm_pr_head_tr_id"],
@@ -452,7 +452,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 self.assert_util.assert_response_success(result)
                 
                 success = result.get("success")
-                self.assert_util.assert_eq(success, True, f"付款申请单过账失败，付款申请单编号: {pr_head_code}")
+                self.assert_util.assert_by_operator(success, "=", True, f"付款申请单过账失败，付款申请单编号: {pr_head_code}")
                 
                 TestApCreatePaymentRequest.ap_pr_info.update({
                     "pr_post_success": True,
@@ -480,10 +480,10 @@ class TestApCreatePaymentRequest(ApBaseTest):
         try:
             with a.step("付款申请单过账状态验证"):
                 info = TestApCreatePaymentRequest.ap_pr_info
-                self.assert_util.assert_not_empty(info.get("pr_post_success"), "请先执行付款申请单过账用例")
+                self.assert_util.assert_by_operator(info.get("pr_post_success"), "not_empty", "请先执行付款申请单过账用例")
                 
                 pr_head_code = info.get("pr_head_code_from_db")
-                self.assert_util.assert_not_empty(pr_head_code, "未获取到付款申请单编码")
+                self.assert_util.assert_by_operator(pr_head_code, "not_empty", "未获取到付款申请单编码")
                 
                 max_attempts = 8
                 interval = 2
@@ -517,9 +517,9 @@ class TestApCreatePaymentRequest(ApBaseTest):
                         current_async_status = pr_record.get("asyncExecutionStatus")
                         
                         if current_pr_status == "DONE" and current_async_status == "SUCCEEDED":
-                            self.assert_util.assert_eq(current_pr_status, "DONE", 
+                            self.assert_util.assert_by_operator(current_pr_status, "=", "DONE", 
                                 f"付款申请单状态不正确，期望: DONE，实际: {current_pr_status}")
-                            self.assert_util.assert_eq(current_async_status, "SUCCEEDED", 
+                            self.assert_util.assert_by_operator(current_async_status, "=", "SUCCEEDED", 
                                 f"付款申请单异步执行状态不正确，期望: SUCCEEDED，实际: {current_async_status}")
                             
                             TestApCreatePaymentRequest.ap_pr_info.update({
@@ -571,11 +571,11 @@ class TestApCreatePaymentRequest(ApBaseTest):
         try:
             with a.step("付款申请单创建付款单"):
                 info = TestApCreatePaymentRequest.ap_pr_info
-                self.assert_util.assert_not_empty(info.get("pr_post_verification_passed"), "请先执行付款申请单过账状态验证用例")
-                self.assert_util.assert_not_empty(info.get("cm_pr_head_tr_id"), "未获取到付款申请单ID")
+                self.assert_util.assert_by_operator(info.get("pr_post_verification_passed"), "not_empty", "请先执行付款申请单过账状态验证用例")
+                self.assert_util.assert_by_operator(info.get("cm_pr_head_tr_id"), "not_empty", "未获取到付款申请单ID")
                 
                 pr_head_code = info.get("pr_head_code_from_db")
-                self.assert_util.assert_not_empty(pr_head_code, "未获取到付款申请单编码")
+                self.assert_util.assert_by_operator(pr_head_code, "not_empty", "未获取到付款申请单编码")
                 
                 convert_request = {
                     "id": info["cm_pr_head_tr_id"],
@@ -607,11 +607,11 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 self.assert_util.assert_response_success(result)
                 
                 success = result.get("success")
-                self.assert_util.assert_eq(success, True, f"付款申请单创建付款单失败，success: {success}")
+                self.assert_util.assert_by_operator(success, "=", True, f"付款申请单创建付款单失败，success: {success}")
                 
                 # 从API返回结果中提取付款单编码
                 pn_head_code_from_api = result.get("data", {}).get("data", {}).get("pnHeadCode")
-                self.assert_util.assert_not_empty(pn_head_code_from_api, "API返回结果中未找到付款单编码")
+                self.assert_util.assert_by_operator(pn_head_code_from_api, "not_empty", "API返回结果中未找到付款单编码")
                 
                 TestApCreatePaymentRequest.ap_pr_info.update({
                     "convert_to_pn_success": True,
@@ -640,10 +640,10 @@ class TestApCreatePaymentRequest(ApBaseTest):
         try:
             with a.step("付款单创建验证"):
                 info = TestApCreatePaymentRequest.ap_pr_info
-                self.assert_util.assert_not_empty(info.get("convert_to_pn_success"), "请先执行付款申请单创建付款单用例")
+                self.assert_util.assert_by_operator(info.get("convert_to_pn_success"), "not_empty", "请先执行付款申请单创建付款单用例")
                 
                 pn_head_code = info.get("pn_head_code_from_api")
-                self.assert_util.assert_not_empty(pn_head_code, "未获取到API返回的付款单编码")
+                self.assert_util.assert_by_operator(pn_head_code, "not_empty", "未获取到API返回的付款单编码")
                 
                 # 使用付款单分页查询API验证付款单创建成功
                 pn_query_request = {
@@ -662,7 +662,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 self.assert_util.assert_response_success(result)
                 
                 data_list = result.get("data", {}).get("data", {}).get("data", [])
-                self.assert_util.assert_not_empty(data_list, f"付款单分页查询结果为空，付款单可能未创建成功：{pn_head_code}")
+                self.assert_util.assert_by_operator(data_list, "not_empty", f"付款单分页查询结果为空，付款单可能未创建成功：{pn_head_code}")
                 
                 pn_record = None
                 for record in data_list:
@@ -670,7 +670,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
                         pn_record = record
                         break
                 
-                self.assert_util.assert_not_empty(pn_record, f"在分页查询结果中未找到编码为 {pn_head_code} 的付款单记录")
+                self.assert_util.assert_by_operator(pn_record, "not_empty", f"在分页查询结果中未找到编码为 {pn_head_code} 的付款单记录")
                 
                 # 验证付款单基本信息
                 pn_status = pn_record.get("pnStatus")
@@ -678,15 +678,15 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 pn_base_amt = pn_record.get("arApBaseAmt", 0)
                 cm_pn_head_tr_id = pn_record.get("id")
                 
-                self.assert_util.assert_eq(pn_status, "DRAFT", 
+                self.assert_util.assert_by_operator(pn_status, "=", "DRAFT", 
                     f"付款单状态不正确，期望: DRAFT，实际: {pn_status}")
                 
                 expected_doc_amt = info.get("total_amt", 0)
                 expected_base_amt = info.get("gross_base_amt", 0)
                 
-                self.assert_util.assert_eq(pn_doc_amt, expected_doc_amt, 
+                self.assert_util.assert_by_operator(pn_doc_amt, "=", expected_doc_amt, 
                     f"付款单原币金额不一致，期望: {expected_doc_amt}，实际: {pn_doc_amt}")
-                self.assert_util.assert_eq(pn_base_amt, expected_base_amt, 
+                self.assert_util.assert_by_operator(pn_base_amt, "=", expected_base_amt, 
                     f"付款单本位币金额不一致，期望: {expected_base_amt}，实际: {pn_base_amt}")
                 
                 verification_result = {
@@ -731,12 +731,12 @@ class TestApCreatePaymentRequest(ApBaseTest):
         try:
             with a.step("付款单提交"):
                 info = TestApCreatePaymentRequest.ap_pr_info
-                self.assert_util.assert_not_empty(info.get("final_pn_verification_passed"), "请先执行付款单创建验证用例")
+                self.assert_util.assert_by_operator(info.get("final_pn_verification_passed"), "not_empty", "请先执行付款单创建验证用例")
                 
                 pn_head_code = info.get("pn_head_code_from_api")
                 cm_pn_head_tr_id = info.get("cm_pn_head_tr_id_from_db")
-                self.assert_util.assert_not_empty(pn_head_code, "未获取到付款单编码")
-                self.assert_util.assert_not_empty(cm_pn_head_tr_id, "未获取到付款单ID")
+                self.assert_util.assert_by_operator(pn_head_code, "not_empty", "未获取到付款单编码")
+                self.assert_util.assert_by_operator(cm_pn_head_tr_id, "not_empty", "未获取到付款单ID")
                 
                 submit_request = {
                     "id": cm_pn_head_tr_id,
@@ -755,7 +755,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 self.assert_util.assert_response_success(result)
                 
                 success = result.get("success")
-                self.assert_util.assert_eq(success, True, f"付款单提交失败，success: {success}")
+                self.assert_util.assert_by_operator(success, "=", True, f"付款单提交失败，success: {success}")
                 
                 TestApCreatePaymentRequest.ap_pr_info.update({
                     "pn_submit_success": True,
@@ -784,10 +784,10 @@ class TestApCreatePaymentRequest(ApBaseTest):
         try:
             with a.step("付款申请单分页查询验证已付款金额更新"):
                 info = TestApCreatePaymentRequest.ap_pr_info
-                self.assert_util.assert_not_empty(info.get("pn_submit_success"), "请先执行付款单提交用例")
+                self.assert_util.assert_by_operator(info.get("pn_submit_success"), "not_empty", "请先执行付款单提交用例")
                 
                 pr_head_code = info.get("pr_head_code_from_db")
-                self.assert_util.assert_not_empty(pr_head_code, "未获取到付款申请单编码")
+                self.assert_util.assert_by_operator(pr_head_code, "not_empty", "未获取到付款申请单编码")
                 
                 max_attempts = 8
                 interval = 2
@@ -903,12 +903,12 @@ class TestApCreatePaymentRequest(ApBaseTest):
         try:
             with a.step("付款单过账"):
                 info = TestApCreatePaymentRequest.ap_pr_info
-                self.assert_util.assert_not_empty(info.get("pr_paid_amount_verification_passed"), "请先执行付款申请单已付款金额验证用例")
+                self.assert_util.assert_by_operator(info.get("pr_paid_amount_verification_passed"), "not_empty", "请先执行付款申请单已付款金额验证用例")
                 
                 pn_head_code = info.get("pn_head_code_from_api")
                 cm_pn_head_tr_id = info.get("cm_pn_head_tr_id_from_db")
-                self.assert_util.assert_not_empty(pn_head_code, "未获取到付款单编码")
-                self.assert_util.assert_not_empty(cm_pn_head_tr_id, "未获取到付款单ID")
+                self.assert_util.assert_by_operator(pn_head_code, "not_empty", "未获取到付款单编码")
+                self.assert_util.assert_by_operator(cm_pn_head_tr_id, "not_empty", "未获取到付款单ID")
                 
                 post_request = {
                     "id": cm_pn_head_tr_id,
@@ -941,7 +941,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 self.assert_util.assert_response_success(result)
                 
                 success = result.get("success")
-                self.assert_util.assert_eq(success, True, f"付款单过账失败，success: {success}")
+                self.assert_util.assert_by_operator(success, "=", True, f"付款单过账失败，success: {success}")
                 
                 TestApCreatePaymentRequest.ap_pr_info.update({
                     "pn_post_success": True,
@@ -970,10 +970,10 @@ class TestApCreatePaymentRequest(ApBaseTest):
         try:
             with a.step("付款单过账状态验证"):
                 info = TestApCreatePaymentRequest.ap_pr_info
-                self.assert_util.assert_not_empty(info.get("pn_post_success"), "请先执行付款单过账用例")
+                self.assert_util.assert_by_operator(info.get("pn_post_success"), "not_empty", "请先执行付款单过账用例")
                 
                 pn_head_code = info.get("pn_head_code_from_api")  # 使用API返回的编码
-                self.assert_util.assert_not_empty(pn_head_code, "未获取到付款单编码")
+                self.assert_util.assert_by_operator(pn_head_code, "not_empty", "未获取到付款单编码")
                 
                 max_attempts = 8
                 interval = 2
@@ -1053,10 +1053,10 @@ class TestApCreatePaymentRequest(ApBaseTest):
         try:
             with a.step("应付单最终金额状态校验"):
                 info = TestApCreatePaymentRequest.ap_pr_info
-                self.assert_util.assert_not_empty(info.get("pn_post_verification_passed"), "请先执行付款单过账状态验证用例")
+                self.assert_util.assert_by_operator(info.get("pn_post_verification_passed"), "not_empty", "请先执行付款单过账状态验证用例")
                 
                 ap_head_code = info.get("apHeadCode")
-                self.assert_util.assert_not_empty(ap_head_code, "未获取到应付单编码")
+                self.assert_util.assert_by_operator(ap_head_code, "not_empty", "未获取到应付单编码")
                 
                 max_attempts = 8
                 interval = 2
