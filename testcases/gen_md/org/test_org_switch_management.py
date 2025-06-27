@@ -1,5 +1,5 @@
 import allure
-
+import pytest
 from testcases.gen_md import GenMdBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
@@ -180,140 +180,146 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    # @case_decorator(
-    #     story="组织切换管理",
-    #     title="测试查询组织切换模型详情",
-    #     description="验证查询组织切换模型详情功能",
-    #     severity="normal",
-    #     order=3,
-    #     smoke=True,
-    #     tags=["组织切换管理", "模型详情查询"]
-    # )
-    # def test_query_org_switch_model_detail(self):
-    #     """
-    #     查询组织切换模型详情用例
-    #     """
-    #     try:
-    #         # 获取组织切换模型信息
-    #         if not self.org_switch_model_id:
-    #             self.test_save_org_switch_model()
+    @case_decorator(
+        story="组织切换管理",
+        title="测试查询组织切换模型详情",
+        description="验证查询组织切换模型详情功能",
+        severity="normal",
+        order=3,
+        smoke=True,
+        tags=["组织切换管理", "模型详情查询"]
+    )
+    def test_query_org_switch_model_detail(self):
+        """
+        查询组织切换模型详情用例
+        """
+        try:
+            # 获取组织切换模型信息
+            if not self.org_switch_model_id:
+                self.test_save_org_switch_model()
 
-    #         # 调用详情查询接口
-    #         api_path = self.get_api_path("ORG-多组织-查询组织切换模型详情服务")
-    #         params, url = self.get_api_params(api_path)
+            # 调用详情查询接口
+            api_path = self.get_api_path("ORG-多组织-查询组织切换模型详情服务")
+            params, url = self.get_api_params(api_path)
 
-    #         # 过滤和设置参数
-    #         filtered_params = ParamUtil.filter_post_body_fields(
-    #             params,
-    #             ["id"],
-    #             ["params", "request"]
-    #         )
-    #         set_dict = {"id": self.org_switch_model_id}
-    #         ParamUtil.set_request_params(filtered_params, set_dict)
-    #         self.logger.info(f"请求参数: {filtered_params}")
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["id"],
+                ["params", "request"]
+            )
+            set_dict = {"id": self.org_switch_model_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"请求参数: {filtered_params}")
 
-    #         response = self.http.post(url, json=filtered_params)
-    #         self.assert_util.assert_response_data(response)
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
 
-    #         a.json(filtered_params, "请求数据")
-    #         a.json(response, "响应数据")
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
 
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
 
-    # @case_decorator(
-    #     story="组织切换管理",
-    #     title="测试模型是否开启了组织切换",
-    #     description="验证模型是否开启了组织切换功能",
-    #     severity="normal",
-    #     order=4,
-    #     smoke=True,
-    #     tags=["组织切换管理", "模型开启判断"]
-    # )
-    # def test_judge_model_org_switch_enable(self):
-    #     """
-    #     判断模型是否开启了组织切换用例
-    #     """
-    #     try:
-    #         # 调用判断接口
-    #         api_path = self.get_api_path("ORG-多组织-模型是否开启了组织切换服务")
-    #         params, url = self.get_api_params(api_path)
 
-    #         # 过滤和设置参数
-    #         filtered_params = ParamUtil.filter_post_body_fields(
-    #             params,
-    #             ["model_key"],
-    #             ["params", "request"]
-    #         )
-    #         set_dict = {"model_key": "GEN_MD$ORG_SWITCH_MODEL_CF"}
-    #         ParamUtil.set_request_params(filtered_params, set_dict)
-    #         self.logger.info(f"请求参数: {filtered_params}")
 
-    #         response = self.http.post(url, json=filtered_params)
-    #         self.assert_util.assert_response_data(response)
 
-    #         a.json(filtered_params, "请求数据")
-    #         a.json(response, "响应数据")
+    @pytest.mark.skip(
+        reason="实际未引用"
+    )
+    @case_decorator(
+        story="组织切换管理",
+        title="测试模型是否开启了组织切换",
+        description="验证模型是否开启了组织切换功能",
+        severity="normal",
+        order=4,
+        smoke=True,
+        tags=["组织切换管理", "模型开启判断"]
+    )
+    def test_judge_model_org_switch_enable(self):
+        """
+        判断模型是否开启了组织切换用例
+        """
+        try:
+            # 调用判断接口
+            api_path = self.get_api_path("ORG-多组织-模型是否开启了组织切换服务")
+            params, url = self.get_api_params(api_path)
 
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["model_key"],
+                ["params", "request"]
+            )
+            set_dict = {"model_key": "GEN_MD$ORG_SWITCH_MODEL_CF"}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"请求参数: {filtered_params}")
 
-    # @case_decorator(
-    #     story="组织切换管理",
-    #     title="测试新增组织切换",
-    #     description="验证新增组织切换功能",
-    #     severity="blocker",
-    #     order=5,
-    #     smoke=True,
-    #     tags=["组织切换管理", "新增"]
-    # )
-    # def test_save_org_switch(self):
-    #     """
-    #     新增组织切换用例
-    #     """
-    #     try:
-    #         # 获取组织切换模型信息
-    #         if not self.org_switch_model_id:
-    #             self.test_save_org_switch_model()
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
 
-    #         # 准备组织切换数据
-    #         org_switch_des = self.mock_util.generate_unique_code(tag="OrgSwitch")
-#         org_switch_name = f"组织切换_{self.mock_util.get_timestamp()}"
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
 
-    #         # 调用保存接口
-    #         api_path = self.get_api_path("ORG-多组织-保存组织切换服务")
-    #         params, url = self.get_api_params(api_path)
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
 
-    #         # 过滤和设置参数
-    #         filtered_params = ParamUtil.filter_post_body_fields(
-    #             params,
-    #             ["switchName","switchOrgId","orgDimensionId","switchStatus","switchName","switchDesc"],
-    #             ["params", "request"]
-    #         )
-    #         set_dict = {
-    #             "switchName": org_switch_name,
-    #             "switchDescribe": org_switch_des,
-    #             "switchOrgId": {"id": self.com_org_id},
-    #             "switchStatus": "ENABLED", 
-    #             "orgDimensionId": {"id": self.orgDimensionId}
-    #         }
-    #         ParamUtil.set_request_params(filtered_params, set_dict)
-    #         self.logger.info(f"请求参数: {filtered_params}")
+    @case_decorator(
+        story="组织切换管理",
+        title="测试新增组织切换",
+        description="验证新增组织切换功能",
+        severity="blocker",
+        order=5,
+        smoke=True,
+        tags=["组织切换管理", "新增"]
+    )
+    def test_save_org_switch(self):
+        """
+        新增组织切换用例
+        """
+        try:
+            # 获取组织切换模型信息
+            if not self.org_switch_model_id:
+                self.test_save_org_switch_model()
 
-    #         response = self.http.post(url, json=filtered_params)
-    #         self.assert_util.assert_response_data(response)
+            # 准备组织切换数据
+            org_switch_des = self.mock_util.generate_unique_code(tag="OrgSwitch")
+            org_switch_name = f"组织切换_{self.mock_util.get_timestamp(timestamp=True)}"
 
-    #         sql = f"select id from org_switch_list_cf where org_switch_des = '{org_switch_des}'"
-    #         self.org_switch_id = self.db.query(sql)[0]["id"]
+            # 调用保存接口
+            api_path = self.get_api_path("ORG-多组织-保存组织切换服务")
+            params, url = self.get_api_params(api_path)
 
-    #         a.json(filtered_params, "请求数据")
-    #         a.json(response, "响应数据")
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["switchName","switchOrgId","orgDimensionId","switchStatus","switchName","switchDesc"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "switchName": org_switch_name,
+                "switchDescribe": org_switch_des,
+                "switchOrgId": {"id": self.com_org_id},
+                "switchStatus": "ENABLED", 
+                "orgDimensionId": {"id": self.orgDimensionId}
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"请求参数: {filtered_params}")
 
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            sql = f"select id from org_switch_list_cf where org_switch_des = '{org_switch_des}'"
+            self.org_switch_id = self.db.query(sql)[0]["id"]
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
 
     # @case_decorator(
     #     story="组织切换管理",
