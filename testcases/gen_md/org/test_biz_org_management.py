@@ -19,6 +19,7 @@ class TestBizOrgManagement(GenMdBaseTest):
         cls.mock_data = MockData()
         cls.logger.info(f"init_data: {cls.init_data}")
         cls.logger.info(f"md_cache_data: {cls.md_cache_data}")
+        cls.enabled_org_id = None
         
         # 获取初始化数据中的第一个数据
         cls.currId = cls.init_data["currency_info"][0]["curr_id"] if cls.init_data.get("currency_info") else None
@@ -913,18 +914,9 @@ class TestBizOrgManagement(GenMdBaseTest):
         启用组织单元用例
         """
         try:
-            # 获取已创建的组织ID（优先选择非ENABLED状态的组织）
-            sql = "select id, org_status from org_struct_md where deleted=0 and org_dimension_code = 'SCM_ORG_GRP' and org_code like 'AT_%' order by case when org_status != 'ENABLED' then 1 else 2 end limit 1"
-            result = self.db.query(sql)
-            
-            if not result:
-                # 如果没有找到测试组织，先创建一个
+            if not self.org_info.get("com_org_info"):
                 self.test_save_com_org()
-                org_id = self.org_info.get("com_org_info", {}).get("id")
-            else:
-                org_id = result[0]["id"]
-                current_status = result[0]["org_status"]
-                self.logger.info(f"找到组织ID: {org_id}, 当前状态: {current_status}")
+            org_id = self.org_info.get("com_org_info", {}).get("id")
             
             # 获取API配置
             api_path = self.get_api_path("ORG-组织架构-启用组织单元服务")
@@ -953,6 +945,7 @@ class TestBizOrgManagement(GenMdBaseTest):
             
             sql = f"select org_status from org_struct_md where id = {org_id}"
             org_status = self.db.query(sql)[0].get("org_status")
+            self.enabled_org_id = org_id
             self.assert_util.assert_by_operator(org_status,"=","ENABLED")
             self.logger.info(f"成功启用组织: {org_id}")
             
@@ -978,45 +971,9 @@ class TestBizOrgManagement(GenMdBaseTest):
         停用组织单元用例
         """
         try:
-            # 获取已创建的组织ID
-            sql = "select id, org_status from org_struct_md where deleted=0 and  org_dimension_code = 'SCM_ORG_GRP' and org_code like 'AT_%' limit 1"
-            result = self.db.query(sql)
-            
-            if not result:
-                # 如果没有找到测试组织，先创建一个
-                self.test_save_com_org()
-                org_id = self.org_info.get("com_org_info", {}).get("id")
-                
-                # 如果新创建的组织不是ENABLED状态，先启用它
-                status_check_sql = f"select org_status from org_struct_md where id = {org_id}"
-                current_status = self.db.query(status_check_sql)[0].get("org_status")
-                if current_status != "ENABLED":
-                    # 直接调用启用API，而不是调用test_enable_org_struct方法
-                    enable_api_path = self.get_api_path("ORG-组织架构-启用组织单元服务")
-                    enable_params, enable_url = self.get_api_params(enable_api_path)
-                    enable_filtered_params = ParamUtil.filter_post_body_fields(
-                        enable_params, ["id"], ["params", "request"]
-                    )
-                    ParamUtil.set_request_params(enable_filtered_params, {"id": org_id})
-                    enable_response = self.http.post(enable_url, json=enable_filtered_params)
-                    self.assert_util.assert_response_success(enable_response)
-                    self.logger.info(f"已启用组织: {org_id}")
-            else:
-                org_id = result[0]["id"]
-                current_status = result[0]["org_status"]
-                
-                # 如果找到的组织不是ENABLED状态，先启用它
-                if current_status != "ENABLED":
-                    # 直接调用启用API
-                    enable_api_path = self.get_api_path("ORG-组织架构-启用组织单元服务")
-                    enable_params, enable_url = self.get_api_params(enable_api_path)
-                    enable_filtered_params = ParamUtil.filter_post_body_fields(
-                        enable_params, ["id"], ["params", "request"]
-                    )
-                    ParamUtil.set_request_params(enable_filtered_params, {"id": org_id})
-                    enable_response = self.http.post(enable_url, json=enable_filtered_params)
-                    self.assert_util.assert_response_success(enable_response)
-                    self.logger.info(f"已启用组织: {org_id}")
+            if not self.enabled_org_id:
+                self.test_enable_org_struct()
+            org_id = self.enabled_org_id
 
             # 获取停用API配置
             api_path = self.get_api_path("ORG-组织架构-停用组织单元服务")

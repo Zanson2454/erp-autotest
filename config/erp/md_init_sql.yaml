@@ -12,7 +12,12 @@ org_info:
       select attr_field, attr_code,attr_name from  gen_attr_cf where attr_class_code='ORG' and `status` = 'ENABLED' and deleted=0;
     description: "查询组织属性信息"
 
-# 组织信息
+  # 组织身份
+  org_identity_cf:
+    sql: |
+     select id,`code`,`name`  from org_identity_cf where `code`= "AUTOTEST_ORG_IDENTITY"  and  `status`="ENABLED" and deleted=0
+    description: "查询组织身份信息"
+
   # 公司组织
   com_org_info:
     sql: |
@@ -20,9 +25,6 @@ org_info:
       FROM org_struct_md
       WHERE org_status="ENABLED" AND org_dimension_code="SCM_ORG_GRP" AND org_code="AUTOTEST_COM_ORG" AND org_business_type_codes= '[\"COM_ORG\"]' LIMIT 1
     description: "查询公司组织信息"
-    validation:
-      min_records: 1
-      required_fields: ["id", "org_code", "org_name", "org_status", "org_dimension_code", "org_business_type_code"]
 
   # 采购组织
   pur_org_info:

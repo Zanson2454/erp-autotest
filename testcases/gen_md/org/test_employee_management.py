@@ -15,9 +15,9 @@ class TestEmployeeManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
-        cls.mock_data = MockData()
-        cls.employee_id = None
-        cls.com_org_id = cls.md_cache_data.get("org_info",{}).get("com_org_info",[])[0].get("id",None)
+        
+        
+
         # 用于存储创建员工时的实际数据，供查询测试用例使用
         cls.mobile = None
         cls.email = None
@@ -25,7 +25,12 @@ class TestEmployeeManagement(GenMdBaseTest):
         cls.id_card = None
         cls.entry_date = None
         cls.employee_name = None
+        cls.employee_id = None
         
+        # 依赖组织
+        cls.pur_org_id = cls.md_cache_data.get("org_info",{}).get("pur_org_info",[])[0].get("id",None)
+        cls.com_org_id = cls.md_cache_data.get("org_info",{}).get("com_org_info",[])[0].get("id",None)
+        cls.identityId = cls.md_cache_data.get("org_info",{}).get("org_identity_cf",[])[0].get("id",None)
     @classmethod
     def teardown_class(cls):
         """
@@ -58,13 +63,13 @@ class TestEmployeeManagement(GenMdBaseTest):
         """
         try:
             # 每次新增都生成新的员工数据
-            employee_code = self.mock_data.generate_unique_code(tag="Employee")
-            mobile = self.mock_data.get_mock_phone_number()
-            email = self.mock_data.get_mock_email()
-            user_name = self.mock_data.generate_unique_code(tag="user")
-            id_card = self.mock_data.get_mock_ssn()
-            entry_date = self.mock_data.get_timestamp(timestamp=True)
-            employee_name = self.mock_data.get_mock_name()
+            employee_code = self.mock_util.generate_unique_code(tag="Employee")
+            mobile = self.mock_util.get_mock_phone_number()
+            email = self.mock_util.get_mock_email()
+            user_name = self.mock_util.generate_unique_code(tag="user")
+            id_card = self.mock_util.get_mock_ssn()
+            entry_date = self.mock_util.get_timestamp(timestamp=True)
+            employee_name = self.mock_util.get_mock_name()
             
             # 保存创建的数据供其他测试用例使用
             TestEmployeeManagement.mobile = mobile
@@ -350,12 +355,14 @@ class TestEmployeeManagement(GenMdBaseTest):
             # 过滤和设置参数
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["employeeId", "orgId"],
+                ["employeeId", "identityId","orgUnitId","isMainOrg"],
                 ["params", "request"]
             )
             set_dict = {
-                "employeeId": TestEmployeeManagement.employee_id,
-                "orgId": self.com_org_id
+                "employeeId":  {"id":TestEmployeeManagement.employee_id},
+                "identityId": {"id":self.identityId },
+                "orgUnitId":  self.pur_org_id,
+                "isMainOrg": True
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             self.logger.info(f"请求参数: {filtered_params}")
@@ -370,12 +377,68 @@ class TestEmployeeManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+   
+
+    @case_decorator(
+        story="员工管理",
+        title="测试查询指定组织和下级组织的员工信息",
+        description="验证查询指定组织和下级组织的员工信息功能",
+        severity="normal",
+        order=7,
+        smoke=True,
+        tags=["员工管理", "组织查询", "下级组织"]
+    )
+    def test_query_org_and_child_org_employee(self):
+        """
+        查询指定组织和下级组织的员工信息用例
+        """
+        try:
+            # 调用查询指定组织和下级组织的员工信息接口
+            api_path = self.get_api_path("ORG-组织-查询指定组织和下级组织的员工信息")
+            params, url = self.get_api_params(api_path)
+
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["orgId", "pageable"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "orgId": self.pur_org_id,
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "conditionGroup": None,
+                    "sortOrders": None,
+                    "keyword": None
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"请求参数: {filtered_params}")
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            # 验证返回的员工信息列表
+            employee_list = response.get("data", {}).get("data", {}).get("data", [])
+            self.assert_util.assert_by_operator(len(employee_list), ">=", 0)
+            self.assert_util.assert_by_operator(employee_list[0].get("id"), "=", TestEmployeeManagement.employee_id)
+           
+            
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
     @case_decorator(
         story="员工管理",
         title="测试删除员工组织关联关系",
         description="验证删除员工组织关联关系功能",
         severity="normal",
-        order=7,
+        order=8,
         smoke=True,
         tags=["员工管理", "删除关联"]
     )
@@ -385,9 +448,13 @@ class TestEmployeeManagement(GenMdBaseTest):
         """
         try:
             # 获取员工管理信息
-            if not TestEmployeeManagement.employee_id:
-                self.test_save_employee()
-
+            sql = f"select id  from org_employee_org_link_cf where employee_id={TestEmployeeManagement.employee_id}  and  identity_id={self.identityId} and org_unit_id={self.pur_org_id}"
+            result = self.db.query(sql)
+            if not result:
+                self.test_save_employee_org_relation()
+                result = self.db.query(sql)
+            
+            employee_org_relationId = result[0].get("id")
             # 调用删除员工组织关联关系接口
             api_path = self.get_api_path("ORG-组织-删除员工组织关联关系服务")
             params, url = self.get_api_params(api_path)
@@ -398,7 +465,7 @@ class TestEmployeeManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": TestEmployeeManagement.employee_id}
+            set_dict = {"id": employee_org_relationId}
             ParamUtil.set_request_params(filtered_params, set_dict)
             self.logger.info(f"请求参数: {filtered_params}")
 
