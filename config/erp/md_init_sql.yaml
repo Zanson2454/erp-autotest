@@ -9,7 +9,7 @@ org_info:
   # 组织属性
   org_attr_cf:  
     sql: |
-      select attr_field, attr_code,attr_name from  gen_attr_cf where attr_class_code='ORG' and `status` = 'ENABLED' and deleted=0;
+      select id,attr_field, attr_code,attr_name from  gen_attr_cf where attr_class_code='ORG' and `status` = 'ENABLED' and deleted=0;
     description: "查询组织属性信息"
 
   # 组织身份

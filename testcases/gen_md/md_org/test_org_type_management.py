@@ -14,11 +14,16 @@ class TestOrg_TypeManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
-        cls.mock_data = MockData()
         cls.org_type_id = None
         cls.org_type_code = None
+     
         cls.logger.info("组织类型管理测试类初始化完成")
+        
+        org_attr_list = cls.md_cache_data["org_info"]["org_attr_cf"]
+        cls.org_attr_id = cls.mock_util.get_mock_choice(org_attr_list)["id"]
+        cls.logger.info(f"org_attr_id: {cls.org_attr_id}")
 
+        
     @classmethod
     def teardown_class(cls):
         """
@@ -28,9 +33,9 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         try:
             # 使用SQL删除测试数据
             cls.db.delete(
-                table="gen_org_type_md",
-                where="org_type_code like %s",
-                params=["AT_%"]
+                table="org_business_type_cf",
+                where="code like %s",
+                params=["AT_OrgType%"]
             )
             cls.logger.info("测试数据清理完成")
         except Exception as e:
@@ -51,8 +56,8 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         """
         try:
             # 准备组织类型管理数据
-            org_type_code = self.mock_data.generate_unique_code(tag="Org_Type")
-            org_type_name = f"组织类型管理_{self.mock_data.get_timestamp()}"
+            org_type_code = self.mock_util.generate_unique_code(tag="OrgType")
+            org_type_name = f"组织类型管理_{self.mock_util.get_timestamp()}"
 
             # 调用保存接口
             api_path = self.get_api_path("ORG-组织类型-保存服务")
@@ -61,23 +66,31 @@ class TestOrg_TypeManagement(GenMdBaseTest):
             # 过滤和设置参数
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["org_type_code", "org_type_name"],
+                ["org_type_code", "org_type_name","attrList"],
                 ["params", "request"]
             )
             set_dict = {
-                "org_type_code": org_type_code,
-                "org_type_name": org_type_name
+                "code": org_type_code,
+                "name": org_type_name,
+                "attrList": [
+                    {
+                        "attrId": {
+                            "id": self.org_attr_id
+                        },
+                        "attrIsMulti": True,
+                        "attrIsRequired": False,
+                        "attrSort": 1,
+                        "attrValue": "测试组织类型"
+                    }
+                ]
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             self.logger.info(f"请求参数: {filtered_params}")
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
-            org_type_id = response.get("data", {}).get("data", {})
+            self.org_type_id = response.get("data", {}).get("data", {}).get("id", None)
 
-            # 保存组织类型管理信息供后续用例使用
-            self.org_type_id = org_type_id
-            self.org_type_code = org_type_code
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -181,10 +194,102 @@ class TestOrg_TypeManagement(GenMdBaseTest):
 
     @case_decorator(
         story="组织类型管理",
+        title="测试启用组织类型管理",
+        description="验证启用组织类型管理功能",
+        severity="normal",
+        order=4,
+        smoke=True,
+        tags=["组织类型管理", "启用"]
+    )
+    def test_enabled_org_type(self):
+        """
+        启用组织类型管理用例
+        """
+        try:
+            # 获取组织类型管理信息
+            if not self.org_type_id:
+                self.test_save_org_type()
+
+            # 调用启用接口
+            api_path = self.get_api_path("ORG-组织类型-启用服务")
+            params, url = self.get_api_params(api_path)
+
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["id"],
+                ["params", "request"]
+            )
+            set_dict = {"id": self.org_type_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"请求参数: {filtered_params}")
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            sql = f"select status from org_business_type_cf where id ={self.org_type_id}"
+            status = self.db.query(sql)[0]["status"]
+            self.assert_util.assert_by_operator(status, "=", "ENABLED")
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="组织类型管理",
+        title="测试禁用组织类型管理",
+        description="验证禁用组织类型管理功能",
+        severity="normal",
+        order=5,
+        smoke=True,
+        tags=["组织类型管理", "禁用"]
+    )
+    def test_disabled_org_type(self):
+        """
+        禁用组织类型管理用例
+        """
+        try:
+            # 获取组织类型管理信息
+            if not self.org_type_id:
+                self.test_enabled_org_type()
+
+            # 调用禁用接口
+            api_path = self.get_api_path("ORG-组织类型-禁用服务")
+            params, url = self.get_api_params(api_path)
+
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["id"],
+                ["params", "request"]
+            )
+            set_dict = {"id": self.org_type_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"请求参数: {filtered_params}")
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            sql = f"select status from org_business_type_cf where id ={self.org_type_id}"
+            status = self.db.query(sql)[0]["status"]
+            self.assert_util.assert_by_operator(status, "=", "DISABLED")
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="组织类型管理",
         title="测试查询组织架构类型列表",
         description="验证组织架构类型列表查询功能",
         severity="normal",
-        order=4,
+        order=6,
         smoke=True,
         tags=["组织类型管理", "架构查询"]
     )
@@ -220,7 +325,7 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         title="测试查询组织业务类型分页",
         description="验证组织业务类型分页查询功能",
         severity="normal",
-        order=5,
+        order=7,
         smoke=True,
         tags=["组织类型管理", "业务类型查询"]
     )
@@ -267,7 +372,7 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         title="测试删除组织类型管理",
         description="验证删除组织类型管理功能",
         severity="normal",
-        order=6,
+        order=8,
         smoke=True,
         tags=["组织类型管理", "删除"]
     )
@@ -287,15 +392,19 @@ class TestOrg_TypeManagement(GenMdBaseTest):
             # 过滤和设置参数
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["ids"],
+                ["id"],
                 ["params", "request"]
             )
-            set_dict = {"ids": [self.org_type_id]}
+            set_dict = {"id": self.org_type_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
             self.logger.info(f"请求参数: {filtered_params}")
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
+
+            sql = f"select deleted from org_business_type_cf where id ={self.org_type_id}"
+            deleted = self.db.query(sql)[0]["deleted"]
+            self.assert_util.assert_by_operator(deleted, "!=", 0)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")

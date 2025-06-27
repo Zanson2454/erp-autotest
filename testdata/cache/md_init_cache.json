@@ -52,6 +52,11 @@
         "name": "行政组织"
       },
       {
+        "id": 2011001,
+        "code": "123",
+        "name": "23"
+      },
+      {
         "id": 2015003,
         "code": "INV_ORG",
         "name": "库存组织"
@@ -94,66 +99,79 @@
     ],
     "org_attr_cf": [
       {
+        "id": 2014001,
         "attr_field": "def14",
         "attr_code": "invOrgAddressId",
         "attr_name": "库存组织地址"
       },
       {
+        "id": 2021001,
         "attr_field": "def1",
         "attr_code": "planLevel",
         "attr_name": "组织层级"
       },
       {
+        "id": 2022001,
         "attr_field": "def2",
         "attr_code": "addressId",
         "attr_name": "地址"
       },
       {
+        "id": 2023001,
         "attr_field": "def3",
         "attr_code": "counId",
         "attr_name": "国家"
       },
       {
+        "id": 2023002,
         "attr_field": "def4",
         "attr_code": "genWcHeadId",
         "attr_name": "工作日日历"
       },
       {
+        "id": 2023004,
         "attr_field": "def5",
         "attr_code": "invOrgId",
         "attr_name": "库存组织"
       },
       {
+        "id": 2035001,
         "attr_field": "def6",
         "attr_code": "cur",
         "attr_name": "币种"
       },
       {
+        "id": 14044002,
         "attr_field": "def7",
         "attr_code": "delPersonName",
         "attr_name": "收货联系人"
       },
       {
+        "id": 14044003,
         "attr_field": "def8",
         "attr_code": "delPhone",
         "attr_name": "收货联系方式"
       },
       {
+        "id": 14129001,
         "attr_field": "def9",
         "attr_code": "addressDetail",
         "attr_name": "详细地址"
       },
       {
+        "id": 14140002,
         "attr_field": "def10",
         "attr_code": "invWhId",
         "attr_name": "仓库"
       },
       {
+        "id": 14170001,
         "attr_field": "def12",
         "attr_code": "calender",
         "attr_name": "期间类型"
       },
       {
+        "id": 14203001,
         "attr_field": "def13",
         "attr_code": "slsDcIds",
         "attr_name": "销售渠道"
