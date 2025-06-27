@@ -77,11 +77,11 @@ reports/allure-report/*
 !reports/allure-report/.gitkeep
 
 # 忽略正在调试的用例
-testdata/cache/init_cache.json
+testdata/cache/*
 case_coverage_stat.json
 
 # 忽略用户输入
 userinput.py
 test.mdc
 
-reports/*_case_coverage.json
+reports/fin_case_coverage.json

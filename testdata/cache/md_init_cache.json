@@ -52,21 +52,6 @@
         "name": "行政组织"
       },
       {
-        "id": 2010002,
-        "code": null,
-        "name": null
-      },
-      {
-        "id": 2010003,
-        "code": null,
-        "name": null
-      },
-      {
-        "id": 2010004,
-        "code": null,
-        "name": null
-      },
-      {
         "id": 2015003,
         "code": "INV_ORG",
         "name": "库存组织"
