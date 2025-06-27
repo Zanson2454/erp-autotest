@@ -62,7 +62,7 @@ class TestPartnerTypeConfigCheck(GenMdBaseTest):
             self.logger.info(f"请求参数: {filtered_params}")
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_by_operator(response.get("success"), "=", True)
+            self.assert_util.assert_response_success(response)
             customer_type_id = response.get("data", {}).get("data", {})
             self.assert_util.assert_by_operator(customer_type_id is not None, "=", True)
             self.partnerType_info["customer_type_id"] = customer_type_id
