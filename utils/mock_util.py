@@ -227,12 +227,12 @@ class MockData:
         """
         return f"自动化测试创建 - {time.strftime('%Y-%m-%d %H:%M:%S')}"
     
-    def get_timestamp(self, timestamp=False):
+    def get_timestamp(self, timestamp=False,day_offset=0):
         """
         生成时间戳
         """
         if timestamp:
-            return int(time.time() * 1000)
+            return int(time.time() * 1000 + day_offset * 24 * 60 * 60 * 1000)
         return time.strftime("%Y%m%d%H%M%S")
 
     def get_mock_org_info(self, org_type: str, org_name: str) -> dict:

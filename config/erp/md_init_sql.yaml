@@ -18,6 +18,13 @@ org_info:
      select id,`code`,`name`  from org_identity_cf where `code`= "AUTOTEST_ORG_IDENTITY"  and  `status`="ENABLED" and deleted=0
     description: "查询组织身份信息"
 
+  # 组织维度
+  org_dimension_cf:
+    sql: |
+      select id,org_dimension_code,org_dimension_name from org_dimension_cf  where `org_dimension_code`= "SCM_ORG_GRP" and deleted =0  and `status`="ENABLED" limit 2
+    description: "查询组织维度信息"
+
+  # 组织单位
   # 公司组织
   com_org_info:
     sql: |

@@ -181,6 +181,13 @@
         "name": "测试组织身份(自动化)"
       }
     ],
+    "org_dimension_cf": [
+      {
+        "id": 2014001,
+        "org_dimension_code": "SCM_ORG_GRP",
+        "org_dimension_name": "供应链组织树"
+      }
+    ],
     "com_org_info": [
       {
         "id": 14617078,
