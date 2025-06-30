@@ -36,7 +36,7 @@ class TestPrdOrderIssueReturn(PrdBaseTest):
         super().setup_class()
         cls.logger.info("生产订单退料测试类初始化完成")
 
-    @pytest.mark.run(order=1)
+    @pytest.mark.run(order=14)
     @allure.story("获取默认领料分单规则")
     @allure.title("获取默认领料分单规则-接口校验")
     @allure.severity(allure.severity_level.CRITICAL)
@@ -89,7 +89,7 @@ class TestPrdOrderIssueReturn(PrdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.run(order=2)
+    @pytest.mark.run(order=15)
     @allure.story("获取领料分单规则明细")
     @allure.title("获取领料分单规则明细-接口校验")
     @allure.severity(allure.severity_level.CRITICAL)
@@ -151,7 +151,7 @@ class TestPrdOrderIssueReturn(PrdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.run(order=3)
+    @pytest.mark.run(order=16)
     @allure.story("创建待提交生产订单退料单")
     @allure.description("""
     ## 测试步骤
@@ -264,7 +264,7 @@ class TestPrdOrderIssueReturn(PrdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.run(order=4)
+    @pytest.mark.run(order=17)
     @allure.story("提交生产订单退料单")
     @allure.description("""
     ## 测试步骤
@@ -356,7 +356,7 @@ class TestPrdOrderIssueReturn(PrdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.run(order=5)
+    @pytest.mark.run(order=18)
     @allure.story("验证退料相关单据生成")
     @allure.description("""
     ## 测试步骤
@@ -395,15 +395,38 @@ class TestPrdOrderIssueReturn(PrdBaseTest):
 
             with a.step("2. 验证退料单头表信息"):
                 # 查询退料单头表信息
-                sql = f"""
-                    SELECT id, issue_code, issue_type, status, deleted,
-                           posting_date, issue_date, issue_doc_type_id
-                    FROM prd_issue_head_tr 
-                    WHERE issue_code IN ({','.join(issue_codes)})
-                    AND deleted = 0
-                """
-                self.logger.debug(f"执行SQL: {sql}")
-                head_results = self.db.query(sql)
+                max_retries = 10  # 最大重试次数
+                retry_interval = 1  # 重试间隔（秒）
+                head_results = []
+                
+                for attempt in range(max_retries):
+                    sql = f"""
+                        SELECT id, issue_code, issue_type, status, deleted,
+                               posting_date, issue_date, issue_doc_type_id
+                        FROM prd_issue_head_tr 
+                        WHERE issue_code IN ({','.join(issue_codes)})
+                        AND deleted = 0
+                    """
+                    self.logger.debug(f"执行SQL: {sql}")
+                    head_results = self.db.query(sql)
+                    
+                    # 检查所有数据是否都已更新为POSTED状态
+                    all_posted = True
+                    for head in head_results:
+                        if head["status"] != "POSTED":
+                            all_posted = False
+                            self.logger.info(f"退料单 {head['issue_code']} 状态为 {head['status']}，等待更新...")
+                            break
+                    
+                    if all_posted:
+                        self.logger.info(f"所有退料单状态已更新为POSTED，共 {len(head_results)} 条数据")
+                        break
+                    else:
+                        if attempt < max_retries - 1:
+                            self.logger.info(f"等待 {retry_interval} 秒后重试...")
+                            time.sleep(retry_interval)
+                        else:
+                            self.logger.warning(f"达到最大重试次数，使用当前状态数据进行验证")
                 
                 # 验证是否查询到数据
                 assert len(head_results) > 0, f"未找到退料单信息: {','.join(issue_codes)}"
@@ -480,15 +503,38 @@ class TestPrdOrderIssueReturn(PrdBaseTest):
                     raise ValueError("未找到关联的入库单号")
                 
                 # 查询入库单头表信息
-                sql = f"""
-                    SELECT id, dn_code, deleted, 
-                           posting_date, bt_class
-                    FROM del_dn_head_tr 
-                    WHERE dn_code IN ({','.join(dn_codes)})
-                    AND deleted = 0
-                """
-                self.logger.debug(f"执行SQL: {sql}")
-                dn_head_results = self.db.query(sql)
+                max_retries = 10  # 最大重试次数
+                retry_interval = 1  # 重试间隔（秒）
+                dn_head_results = []
+                
+                for attempt in range(max_retries):
+                    sql = f"""
+                        SELECT id, dn_code, deleted, biz_status,
+                               posting_date, bt_class
+                        FROM del_dn_head_tr 
+                        WHERE dn_code IN ({','.join(dn_codes)})
+                        AND deleted = 0
+                    """
+                    self.logger.debug(f"执行SQL: {sql}")
+                    dn_head_results = self.db.query(sql)
+                    
+                    # 检查所有数据是否都已更新为POSTED状态
+                    all_posted = True
+                    for head in dn_head_results:
+                        if head["biz_status"] not in ["POSTED", "SUBMITTED"]:
+                            all_posted = False
+                            self.logger.info(f"入库单 {head['dn_code']} 状态为 {head['biz_status']}，等待更新...")
+                            break
+                    
+                    if all_posted:
+                        self.logger.info(f"所有入库单状态已更新为POSTED或SUBMITTED，共 {len(dn_head_results)} 条数据")
+                        break
+                    else:
+                        if attempt < max_retries - 1:
+                            self.logger.info(f"等待 {retry_interval} 秒后重试...")
+                            time.sleep(retry_interval)
+                        else:
+                            self.logger.warning(f"达到最大重试次数，使用当前状态数据进行验证")
                 
                 # 验证是否查询到数据
                 assert len(dn_head_results) > 0, f"未找到入库单信息: {','.join(dn_codes)}"
