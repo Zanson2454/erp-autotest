@@ -31,7 +31,7 @@ class TestWorkOrderClose(PrdBaseTest):
         self.logger.info("开始初始化生产订单关闭测试数据")
         pass
     
-    @pytest.mark.run(order=1)
+    @pytest.mark.run(order=29)
     def test_query_closeable_orders(self):
         """查询可关闭的生产订单列表
         
@@ -81,7 +81,7 @@ class TestWorkOrderClose(PrdBaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @pytest.mark.run(order=2)
+    @pytest.mark.run(order=30)
     def test_execute_order_close(self):
         """执行生产订单关闭操作
         
@@ -162,7 +162,7 @@ class TestWorkOrderClose(PrdBaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @pytest.mark.run(order=3)
+    @pytest.mark.run(order=31)
     def test_execute_cancel_close(self):
         """执行生产订单取消关闭操作
         
