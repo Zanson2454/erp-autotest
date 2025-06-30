@@ -351,6 +351,7 @@ class TestMatTypeManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+    @pytest.mark.skip(reason="实际业务未调用")
     @case_decorator(
         story="物料类型管理",
         title="测试物料类型标准导出",

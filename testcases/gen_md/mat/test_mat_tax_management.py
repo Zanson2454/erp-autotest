@@ -16,6 +16,7 @@ class TestMatTaxManagement(GenMdBaseTest):
         cls.mat_tax_id = None
         cls.mat_tax_code = None
         cls.logger.info("物料税分类管理测试类初始化完成")
+        cls.counId =  cls.init_data.get("country_info")[0].get("coun_id")
 
     @classmethod
     def teardown_class(cls):
@@ -27,7 +28,7 @@ class TestMatTaxManagement(GenMdBaseTest):
             # 使用SQL删除测试数据
             cls.db.delete(
                 table="gen_mat_tax_type_cf",
-                where="mat_tax_code like %s",
+                where="tax_class_code like %s",
                 params=["AT_%"]
             )
             cls.logger.info("测试数据清理完成")
@@ -50,20 +51,19 @@ class TestMatTaxManagement(GenMdBaseTest):
         try:
             # 准备物料税分类数据
             mat_tax_code = self.mock_util.generate_unique_code(tag="MatTax")
-            mat_tax_name = f"物料税分类_{self.mock_util.get_timestamp()}"
 
             api_path = self.get_api_path("GEN-物料税分类-保存服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["matTaxCode", "matTaxName", "remark"],
+                ["taxClassCode", "taxClassDesc", "counId"],
                 ["params", "request"]
             )
             set_dict = {
-                "matTaxCode": mat_tax_code,
-                "matTaxName": mat_tax_name,
-                "remark": f"自动化测试物料税分类-{self.mock_util.get_timestamp()}"
+                "taxClassCode": mat_tax_code,
+                "taxClassDesc": f"自动化测试物料税分类-{self.mock_util.get_timestamp()}",
+                "counId": {"id": self.counId}
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -162,6 +162,7 @@ class TestMatTaxManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+    @pytest.mark.skip(reason="实际业务未调用")
     @case_decorator(
         story="物料税分类管理",
         title="测试物料税分类标准导出",
@@ -214,7 +215,37 @@ class TestMatTaxManagement(GenMdBaseTest):
         """
         物料税分类标准导入用例（需要文件上传）
         """
-        pass
+        try:
+            # 调用标准导入接口
+            api_path = self.get_api_path("物料税分类标准导入服务")
+            params, url = self.get_api_params(api_path)
+
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["file", "importConfig"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "file": f"物料税分类导入模板_{self.mock_util.get_timestamp()}.xlsx",
+                "importConfig": {
+                    "sheetName": "物料税分类",
+                    "startRow": 2,
+                    "validateOnly": False
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"请求参数: {filtered_params}")
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
 
     @case_decorator(
         story="物料税分类管理",
@@ -232,24 +263,76 @@ class TestMatTaxManagement(GenMdBaseTest):
             api_path = self.get_api_path("物料税分类-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["taskName", "exportConfig"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "taskName": f"物料税分类导出任务_{self.mock_util.get_timestamp()}",
-                "exportConfig": {
-                    "fileName": f"物料税分类_{self.mock_util.get_timestamp()}",
-                    "format": "EXCEL"
+            params = {
+                "serviceKey": "GEN_MD$GEN_MAT_TAX_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
+                "teamId": 22,
+                "params": {
+                    "taskName": f"物料税分类-自动化测试-{self.mock_util.get_timestamp()}-导出",
+                    "multiSheetConfig": [
+                        {
+                            "modelKey": "GEN_MD$gen_mat_tax_type_cf",
+                            "modelName": "物料税分类",
+                            "sheetNo": 0,
+                            "sheetName": "物料税分类",
+                            "headerConfigList": [
+                                {
+                                    "name": "物料税分类编码",
+                                    "type": "TEXT",
+                                    "field": "taxClassCode"
+                                },
+                                {
+                                    "name": "国家",
+                                    "type": "TEXT",
+                                    "field": "counId.counName"
+                                },
+                                {
+                                    "name": "物料分类描述",
+                                    "type": "TEXT",
+                                    "field": "taxClassDesc"
+                                }
+                            ]
+                        }
+                    ],
+                    "queryData": {
+                        "appId": 0,
+                        "teamId": 22,
+                        "containerKey": "GEN_MD$GEN_MAT_TAX_VIEW-table-container-GEN_MD$gen_mat_tax_type_cf",
+                        "viewKey": "GEN_MD$GEN_MAT_TAX_VIEW:list",
+                        "sceneKey": "GEN_MD$GEN_MAT_TAX_VIEW",
+                        "params": {
+                            "request": {
+                                "pageable": {}
+                            },
+                            "selectFields": [
+                                {"field": "taxClassCode"},
+                                {"field": "taxClassDesc"},
+                                {
+                                    "field": "counId",
+                                    "selectFields": [
+                                        {"field": "counName"}
+                                    ]
+                                }
+                            ],
+                            "modelKey": "GEN_MD$gen_mat_tax_type_cf"
+                        }
+                    },
+                    "processConfig": {
+                        "processType": "TRANTOR",
+                        "appId": 0,
+                        "teamId": 22,
+                        "model": "GEN_MD$gen_mat_tax_type_cf",
+                        "modelName": "物料税分类",
+                        "containerKey": "GEN_MD$GEN_MAT_TAX_VIEW-table-container-GEN_MD$gen_mat_tax_type_cf",
+                        "viewKey": "GEN_MD$GEN_MAT_TAX_VIEW:list",
+                        "sceneKey": "GEN_MD$GEN_MAT_TAX_VIEW"
+                    }
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response = self.http.post(url, json=params)
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(params, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -269,7 +352,42 @@ class TestMatTaxManagement(GenMdBaseTest):
         """
         通过OSS提交物料税分类导入任务用例（需要OSS配置）
         """
-        pass
+        try:
+            # 调用OSS导入任务接口
+            api_path = self.get_api_path("物料税分类-导入导出任务管理接口-通过OSS提交导入任务")
+            params, url = self.get_api_params(api_path)
+
+            # 过滤和设置参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["ossPath", "fileName", "importConfig"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "ossPath": f"mat_tax_import_{self.mock_util.get_timestamp()}.xlsx",
+                "fileName": f"物料税分类导入_{self.mock_util.get_timestamp()}.xlsx",
+                "importConfig": {
+                    "sheetName": "物料税分类数据",
+                    "startRow": 2,
+                    "mapping": {
+                        "taxClassCode": "A",
+                        "taxClassDesc": "B",
+                        "counId": "C"
+                    }
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"请求参数: {filtered_params}")
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
 
     @case_decorator(
         story="物料税分类管理",
@@ -292,10 +410,10 @@ class TestMatTaxManagement(GenMdBaseTest):
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["ids"],
+                ["id"],
                 ["params", "request"]
             )
-            set_dict = {"ids": [self.mat_tax_id]}
+            set_dict = {"id": self.mat_tax_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
