@@ -179,8 +179,6 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-
-
     @case_decorator(
         story="物料单位转换管理",
         title="测试删除物料单位转换管理",
@@ -222,3 +220,112 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
+
+    @case_decorator(
+        story="物料单位转换管理",
+        title="测试物料单位转换标准导出",
+        description="验证物料单位转换标准导出功能",
+        severity="normal",
+        order=6,
+        tags=["物料单位转换管理", "导出"]
+    )
+    def test_export_mat_unit_conversion(self):
+        """
+        物料单位转换标准导出用例
+        """
+        try:
+            api_path = self.get_api_path("物料单位转换标准导出服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["exportConfig"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "exportConfig": {
+                    "fileName": f"物料单位转换导出_{self.mock_data.get_timestamp()}",
+                    "sheetName": "物料单位转换"
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
+    @case_decorator(
+        story="物料单位转换管理",
+        title="测试物料单位转换标准导入",
+        description="验证物料单位转换标准导入功能",
+        severity="normal",
+        order=7,
+        tags=["物料单位转换管理", "导入"]
+    )
+    def test_import_mat_unit_conversion(self):
+        """
+        物料单位转换标准导入用例（需要文件上传）
+        """
+        pass
+
+    @case_decorator(
+        story="物料单位转换管理",
+        title="测试提交物料单位转换导出任务",
+        description="验证提交物料单位转换导出任务功能",
+        severity="normal",
+        order=8,
+        tags=["物料单位转换管理", "导出任务"]
+    )
+    def test_submit_export_task(self):
+        """
+        提交物料单位转换导出任务用例
+        """
+        try:
+            api_path = self.get_api_path("物料单位转换-导入导出任务管理接口-提交导出任务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["taskName", "exportConfig"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "taskName": f"物料单位转换导出任务_{self.mock_data.get_timestamp()}",
+                "exportConfig": {
+                    "fileName": f"物料单位转换_{self.mock_data.get_timestamp()}",
+                    "format": "EXCEL"
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
+    @case_decorator(
+        story="物料单位转换管理",
+        title="测试通过OSS提交物料单位转换导入任务",
+        description="验证通过OSS提交物料单位转换导入任务功能",
+        severity="normal",
+        order=9,
+        tags=["物料单位转换管理", "OSS导入"]
+    )
+    def test_submit_import_task_by_oss(self):
+        """
+        通过OSS提交物料单位转换导入任务用例（需要OSS配置）
+        """
+        pass

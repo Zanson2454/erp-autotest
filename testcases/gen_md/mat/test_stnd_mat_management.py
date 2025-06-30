@@ -234,3 +234,414 @@ class TestStndMatManagement(GenMdBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
+
+    @case_decorator(
+        story="标准物料管理",
+        title="测试根据ID查找物料数据",
+        description="验证根据ID查找物料数据服务",
+        severity="normal",
+        order=4,
+        tags=["标准物料管理", "查找", "ID"]
+    )
+    def test_find_mat_by_id(self):
+        """
+        根据ID查找物料数据用例
+        """
+        try:
+            if not self.matId:
+                self.test_save_mat()
+
+            api_path = self.get_api_path("物料主数据-根据ID查找数据服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["id"],
+                ["params", "request"]
+            )
+            set_dict = {"id": self.matId}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="标准物料管理",
+        title="测试启用物料",
+        description="验证物料启用功能",
+        severity="normal",
+        order=5,
+        tags=["标准物料管理", "启用"]
+    )
+    def test_enable_mat(self):
+        """
+        启用物料用例
+        """
+        try:
+            if not self.matId:
+                self.test_save_mat()
+
+            api_path = self.get_api_path("GEN-物料主数据-启用服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["id"],
+                ["params", "request"]
+            )
+            set_dict = {"id": self.matId}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="标准物料管理",
+        title="测试禁用物料",
+        description="验证物料禁用功能",
+        severity="normal",
+        order=6,
+        tags=["标准物料管理", "禁用"]
+    )
+    def test_disable_mat(self):
+        """
+        禁用物料用例
+        """
+        try:
+            if not self.matId:
+                self.test_save_mat()
+
+            api_path = self.get_api_path("GEN-物料主数据-禁用服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["id"],
+                ["params", "request"]
+            )
+            set_dict = {"id": self.matId}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="标准物料管理",
+        title="测试批量生成物料条码",
+        description="验证批量生成物料条码功能",
+        severity="normal",
+        order=7,
+        tags=["标准物料管理", "批量", "条码"]
+    )
+    def test_batch_create_barcode(self):
+        """
+        批量生成物料条码用例
+        """
+        try:
+            if not self.matId:
+                self.test_save_mat()
+
+            api_path = self.get_api_path("GEN-物料主数据-批量生成条码服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["ids"],
+                ["params", "request"]
+            )
+            set_dict = {"ids": [self.matId]}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="标准物料管理",
+        title="测试批量物料打标",
+        description="验证批量物料打标功能",
+        severity="normal",
+        order=8,
+        tags=["标准物料管理", "批量", "打标"]
+    )
+    def test_batch_set_label(self):
+        """
+        批量物料打标用例
+        """
+        try:
+            if not self.matId:
+                self.test_save_mat()
+
+            api_path = self.get_api_path("GEN-物料主数据-批量打标服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["ids", "labelId"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "ids": [self.matId],
+                "labelId": self.labelId
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="标准物料管理",
+        title="测试批量取消物料打标",
+        description="验证批量取消物料打标功能",
+        severity="normal",
+        order=9,
+        tags=["标准物料管理", "批量", "取消打标"]
+    )
+    def test_batch_cancel_label(self):
+        """
+        批量取消物料打标用例
+        """
+        try:
+            if not self.matId:
+                self.test_save_mat()
+
+            api_path = self.get_api_path("GEN-物料主数据-批量取消打标服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["ids", "labelId"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "ids": [self.matId],
+                "labelId": self.labelId
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="标准物料管理",
+        title="测试物料标准导出",
+        description="验证物料标准导出功能",
+        severity="normal",
+        order=10,
+        tags=["标准物料管理", "导出"]
+    )
+    def test_export_mat(self):
+        """
+        物料标准导出用例
+        """
+        try:
+            api_path = self.get_api_path("物料主数据标准导出服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["exportConfig"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "exportConfig": {
+                    "fileName": f"物料主数据导出_{self.mock_data.get_timestamp()}",
+                    "sheetName": "物料主数据"
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
+    @case_decorator(
+        story="标准物料管理",
+        title="测试物料标准导入",
+        description="验证物料标准导入功能",
+        severity="normal",
+        order=11,
+        tags=["标准物料管理", "导入"]
+    )
+    def test_import_mat(self):
+        """
+        物料标准导入用例（需要文件上传）
+        """
+        pass
+
+    @case_decorator(
+        story="标准物料管理",
+        title="测试提交物料导出任务",
+        description="验证提交物料导出任务功能",
+        severity="normal",
+        order=12,
+        tags=["标准物料管理", "导出任务"]
+    )
+    def test_submit_export_task(self):
+        """
+        提交物料导出任务用例
+        """
+        try:
+            api_path = self.get_api_path("物料主数据-导入导出任务管理接口-提交导出任务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["taskName", "exportConfig"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "taskName": f"物料主数据导出任务_{self.mock_data.get_timestamp()}",
+                "exportConfig": {
+                    "fileName": f"物料主数据_{self.mock_data.get_timestamp()}",
+                    "format": "EXCEL"
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
+    @case_decorator(
+        story="标准物料管理",
+        title="测试通过OSS提交物料导入任务",
+        description="验证通过OSS提交物料导入任务功能",
+        severity="normal",
+        order=13,
+        tags=["标准物料管理", "OSS导入"]
+    )
+    def test_submit_import_task_by_oss(self):
+        """
+        通过OSS提交物料导入任务用例（需要OSS配置）
+        """
+        pass
+
+    @case_decorator(
+        story="标准物料管理",
+        title="测试物料主数据分页数据服务",
+        description="验证物料主数据分页数据服务",
+        severity="normal",
+        order=13,
+        tags=["标准物料管理", "分页数据"]
+    )
+    def test_mat_paging_data(self):
+        """
+        物料主数据分页数据服务用例
+        """
+        try:
+            api_path = self.get_api_path("物料主数据-分页数据服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["pageNo", "pageSize"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "pageNo": 1,
+                "pageSize": 20
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="标准物料管理",
+        title="测试删除物料",
+        description="验证删除物料功能",
+        severity="normal",
+        order=14,
+        tags=["标准物料管理", "删除"]
+    )
+    def test_delete_mat(self):
+        """
+        删除物料用例
+        """
+        try:
+            if not self.matId:
+                self.test_save_mat()
+
+            api_path = self.get_api_path("GEN-物料主数据-删除服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["ids"],
+                ["params", "request"]
+            )
+            set_dict = {"ids": [self.matId]}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
