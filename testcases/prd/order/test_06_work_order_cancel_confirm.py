@@ -42,7 +42,7 @@ class TestWorkOrderCancelConfirm(PrdBaseTest):
         # 不再需要获取生产订单信息
         pass
     
-    @pytest.mark.run(order=1)
+    @pytest.mark.run(order=25)
     def test_query_cancel_confirm_list(self):
         """查询测试物料待取消确认的工单列表
         
@@ -112,7 +112,7 @@ class TestWorkOrderCancelConfirm(PrdBaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @pytest.mark.run(order=2)
+    @pytest.mark.run(order=26)
     def test_query_posted_dn_detail(self):
         """查询已过账入库工序送货单详情
         
@@ -202,7 +202,7 @@ class TestWorkOrderCancelConfirm(PrdBaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @pytest.mark.run(order=3)
+    @pytest.mark.run(order=27)
     def test_execute_dn_cancel_posting(self):
         """执行送货单冲销操作
         
@@ -366,7 +366,7 @@ class TestWorkOrderCancelConfirm(PrdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.run(order=4)
+    @pytest.mark.run(order=28)
     def test_execute_cancel_confirm(self):
         """执行工单取消确认操作
         

@@ -55,7 +55,7 @@ class TestMaterialManagement(PrdMasterBaseTest):
     
     @allure.title("创建物料生产视图")
     @allure.severity(allure.severity_level.BLOCKER)
-    @pytest.mark.run(order=1)
+    @pytest.mark.run(order=2)
     def test_01_create_material_view(self):
         """测试创建物料生产视图"""
         try:

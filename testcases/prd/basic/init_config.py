@@ -126,7 +126,7 @@ class PrdConfigInitializer:
             # 检查生产领料规则配置
             issue_rules = self.db.query("""
                 SELECT id, name, is_default
-                FROM prd_issue_rule_cf
+                FROM prd_issue_rule_cf 
                 WHERE name = 'DEFAULT_RULE'
                 AND deleted = 0
                 """)
@@ -151,7 +151,7 @@ class PrdConfigInitializer:
             # 检查生产工单类型配置
             wo_types = self.db.query("""
                 SELECT id, type_code, type_name
-                FROM prd_wo_type_cf
+                FROM prd_wo_type_cf 
                 WHERE deleted = 0
                 """)
             self.logger.debug(f"生产工单类型配置: {wo_types}")
@@ -162,7 +162,7 @@ class PrdConfigInitializer:
             # 检查工艺路线类型配置
             routing_types = self.db.query("""
                 SELECT id, type_code, type_name
-                FROM gen_routings_type_cf
+                FROM gen_routings_type_cf 
                 WHERE deleted = 0
                 """)
             self.logger.debug(f"工艺路线类型配置: {routing_types}")

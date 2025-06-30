@@ -209,7 +209,7 @@ class TestRouting(PrdBaseTest):
             cls.logger.error(f"初始化工序信息失败: {str(e)}")
             raise
 
-    @pytest.mark.run(order=1)
+    @pytest.mark.run(order=3)
     @allure.title("查询BOM信息")
     @allure.severity(allure.severity_level.NORMAL)
     def test_01_query_bom(self):
@@ -302,7 +302,7 @@ class TestRouting(PrdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.run(order=2)
+    @pytest.mark.run(order=4)
     @allure.title("获取物料组件")
     @allure.severity(allure.severity_level.NORMAL)
     def test_02_get_material_components(self):
@@ -366,7 +366,7 @@ class TestRouting(PrdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.run(order=3)
+    @pytest.mark.run(order=5)
     @allure.title("创建工艺路线")
     @allure.severity(allure.severity_level.BLOCKER)
     def test_03_create_routing(self):
@@ -454,7 +454,7 @@ class TestRouting(PrdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.run(order=4)
+    @pytest.mark.run(order=6)
     @allure.title("查询工艺路线详情")
     @allure.severity(allure.severity_level.NORMAL)
     def test_04_get_routing_detail(self):
@@ -543,7 +543,7 @@ class TestRouting(PrdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.run(order=5)
+    @pytest.mark.run(order=7)
     @allure.title("分配工序并保存")
     @allure.severity(allure.severity_level.NORMAL)
     def test_05_assign_operation(self):

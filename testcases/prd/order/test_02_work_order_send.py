@@ -41,7 +41,7 @@ class TestPrdOrderSend(PrdBaseTest):
         self.prd_order_info.update(order_info)
         self.logger.info(f"获取到生产订单ID: {self.prd_order_info['id']}, 编号: {self.prd_order_info['wo_code']}, 状态: {self.prd_order_info['status']}")
 
-    @pytest.mark.run(order=1)
+    @pytest.mark.run(order=8)
     @allure.story("生产订单下达")
     @allure.description("""
     ## 测试步骤

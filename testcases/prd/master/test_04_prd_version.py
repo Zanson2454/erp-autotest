@@ -11,13 +11,12 @@ from testcases.prd import PrdBaseTest
 from utils.report_util import a
 from utils.param_util import ParamUtil
 from utils.mysql_util import DBManager
-from testcases.prd.master import PrdMasterBaseTest
 from testcases.prd.basic.init_config import PrdConfigInitializer
 
 @allure.epic("生产管理")
 @allure.feature("主数据管理")
 @allure.story("生产版本管理")
-class TestPrdVersion(PrdMasterBaseTest):
+class TestPrdVersion(PrdBaseTest):
     """生产版本管理测试类"""
     
     # 保存测试过程中的数据
@@ -47,7 +46,7 @@ class TestPrdVersion(PrdMasterBaseTest):
     
     @allure.title("创建生产版本")
     @allure.severity(allure.severity_level.BLOCKER)
-    @pytest.mark.run(order=1)
+    @pytest.mark.run(order=8)
     def test_01_create_prd_version(self):
         """测试创建生产版本"""
         try:

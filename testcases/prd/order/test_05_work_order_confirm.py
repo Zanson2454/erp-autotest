@@ -48,7 +48,7 @@ class TestWorkOrderConfirm(PrdBaseTest):
         self.confirm_info.update(order_info)
         self.logger.info(f"获取到生产订单ID: {self.confirm_info['id']}, 编号: {self.confirm_info['wo_code']}, 状态: {self.confirm_info['status']}")
     
-    @pytest.mark.run(order=1)
+    @pytest.mark.run(order=19)  
     def test_query_confirm_list(self):
         """查询工序报工列表
         
@@ -132,8 +132,8 @@ class TestWorkOrderConfirm(PrdBaseTest):
                 
                 # 保存数据
                 self.confirm_info.update({
-                    "total": result.get("data", {}).get("data", {}).get("total", 0),
-                    "records": result.get("data", {}).get("data", {}).get("data", [])
+                    "total": result.get("data", {}).get("total", 0),
+                    "records": result.get("data", {}).get("data", [])
                 })
                 
                 # 打印工序ID列表用于调试
@@ -149,7 +149,7 @@ class TestWorkOrderConfirm(PrdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.run(order=2)
+    @pytest.mark.run(order=20)
     def test_batch_confirm_routings(self):
         """批量确认工序
         
@@ -194,7 +194,7 @@ class TestWorkOrderConfirm(PrdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.run(order=3)
+    @pytest.mark.run(order=21)
     def test_delivery_confirm_batch(self):
         """批量报工确认
         
@@ -303,7 +303,7 @@ class TestWorkOrderConfirm(PrdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.run(order=4)
+    @pytest.mark.run(order=22)
     def test_query_dn_status(self):
         """查询送货单状态验证过账情况
         
@@ -497,7 +497,7 @@ class TestWorkOrderConfirm(PrdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.run(order=5)
+    @pytest.mark.run(order=23)
     def test_query_inbound_dn_post_detail(self):
         """查询待过账入库工序送货单详情
         
@@ -614,7 +614,7 @@ class TestWorkOrderConfirm(PrdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.run(order=6)
+    @pytest.mark.run(order=24)
     def test_execute_dn_posting(self):
         """执行送货单过账操作
         
