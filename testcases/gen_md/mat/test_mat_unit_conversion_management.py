@@ -14,9 +14,10 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
-        cls.mock_data = MockData()
         cls.mat_unit_conversion_id = None
-        cls.mat_unit_conversion_code = None
+        cls.uomId = cls.init_data.get("uom_info",{}).get("qty_uom_info",[])[0].get("uom_id")
+        cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
+        cls.user_id = cls.init_data["user_info"]['user_info']["id"]
         cls.logger.info("物料单位转换管理测试类初始化完成")
 
     @classmethod
@@ -28,9 +29,9 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
         try:
             # 使用SQL删除测试数据
             cls.db.delete(
-                table="gen_mat_unit_conversion_md",
-                where="mat_unit_conversion_code like %s",
-                params=["AT_%"]
+                table="gen_uom_formula_type_cf",
+                where="created_by = %s",
+                params={cls.user_id}
             )
             cls.logger.info("测试数据清理完成")
         except Exception as e:
@@ -51,8 +52,8 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
         """
         try:
             # 准备物料单位转换管理数据
-            mat_unit_conversion_code = self.mock_data.generate_unique_code(tag="Mat_Unit_Conversion")
-            mat_unit_conversion_name = f"物料单位转换管理_{self.mock_data.get_timestamp()}"
+            mat_unit_conversion_code = self.mock_util.generate_unique_code(tag="Mat_Unit_Conversion")
+            mat_unit_conversion_name = f"物料单位转换管理_{self.mock_util.get_timestamp()}"
 
             # 调用保存接口
             api_path = self.get_api_path("GEN-计量单位转换-保存服务")
@@ -61,23 +62,22 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
             # 过滤和设置参数
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["mat_unit_conversion_code", "mat_unit_conversion_name"],
+                ["targetUnitFactor", "targetUnitId","baseUnitFactor","unitId","genMatMdId"],
                 ["params", "request"]
             )
             set_dict = {
-                "mat_unit_conversion_code": mat_unit_conversion_code,
-                "mat_unit_conversion_name": mat_unit_conversion_name
+                "targetUnitFactor": 1,
+                "baseUnitFactor": 1,
+                "targetUnitId": {"id": self.uomId},
+                "unitId": {"id": self.uomId},
+                "genMatMdId": None
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             self.logger.info(f"请求参数: {filtered_params}")
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
-            mat_unit_conversion_id = response.get("data", {}).get("data", {})
-
-            # 保存物料单位转换管理信息供后续用例使用
-            self.mat_unit_conversion_id = mat_unit_conversion_id
-            self.mat_unit_conversion_code = mat_unit_conversion_code
+            self.mat_unit_conversion_id = response.get("data", {}).get("data", {})
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -170,7 +170,7 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             self.logger.info(f"请求参数: {filtered_params}")
 
-            response = self.http.post(url, json=filtered_params)
+            response = self.http.post(url,params=self.path_params,json=filtered_params)
             self.assert_util.assert_response_data(response)
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -204,14 +204,15 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
             # 过滤和设置参数
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["ids"],
+                ["id"],
                 ["params", "request"]
             )
-            set_dict = {"ids": [self.mat_unit_conversion_id]}
+            set_dict = {"id": self.mat_unit_conversion_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
+            filtered_params['serviceKey'] = "GEN_MD$GEN_UOM_FORMULA_TYPE_CF_DELETE_ACTION_SERVICE"
             self.logger.info(f"请求参数: {filtered_params}")
 
-            response = self.http.post(url, json=filtered_params)
+            response = self.http.post(url,params=self.path_params, json=filtered_params)
             self.assert_util.assert_response_data(response)
 
             a.json(filtered_params, "请求数据")
@@ -221,6 +222,7 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="物料单位转换管理",
         title="测试物料单位转换标准导出",
@@ -244,7 +246,7 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
             )
             set_dict = {
                 "exportConfig": {
-                    "fileName": f"物料单位转换导出_{self.mock_data.get_timestamp()}",
+                    "fileName": f"物料单位转换导出_{self.mock_util.get_timestamp()}",
                     "sheetName": "物料单位转换"
                 }
             }
@@ -275,6 +277,7 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
         """
         pass
 
+
     @case_decorator(
         story="物料单位转换管理",
         title="测试提交物料单位转换导出任务",
@@ -291,24 +294,103 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
             api_path = self.get_api_path("物料单位转换-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["taskName", "exportConfig"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "taskName": f"物料单位转换导出任务_{self.mock_data.get_timestamp()}",
-                "exportConfig": {
-                    "fileName": f"物料单位转换_{self.mock_data.get_timestamp()}",
-                    "format": "EXCEL"
+            params['params']={
+                "taskName": f"单位转换-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
+                "multiSheetConfig": [
+                    {
+                        "modelKey": "GEN_MD$gen_uom_formula_type_cf",
+                        "modelName": "物料单位转换",
+                        "sheetNo": 0,
+                        "sheetName": "物料单位转换",
+                        "headerConfigList": [
+                            {
+                                "name": "物料",
+                                "type": "TEXT",
+                                "field": "genMatMdId.matName"
+                            },
+                            {
+                                "name": "目标单位系数",
+                                "type": "NUMBER",
+                                "field": "targetUnitFactor",
+                                "precisionDisplayType": "FILL_ROUND"
+                            },
+                            {
+                                "name": "目标单位",
+                                "type": "TEXT",
+                                "field": "targetUnitId.uomDesc"
+                            },
+                            {
+                                "name": "基本单位系数",
+                                "type": "NUMBER",
+                                "field": "baseUnitFactor"
+                            },
+                            {
+                                "name": "基础单位",
+                                "type": "TEXT",
+                                "field": "unitId.uomDesc"
+                            }
+                        ]
+                    }
+                ],
+                "queryData": {
+                    "containerKey": "GEN_MD$GEN_UOM_FORMULA_VIEW-table-container-GEN_MD$gen_uom_formula_type_cf",
+                    "viewKey": "GEN_MD$GEN_UOM_FORMULA_VIEW:list",
+                    "sceneKey": "GEN_MD$GEN_UOM_FORMULA_VIEW",
+                    "params": {
+                        "request": {
+                            "pageable": {
+
+                            }
+                        },
+                        "selectFields": [
+                            {
+                                "field": "targetUnitFactor"
+                            },
+                            {
+                                "field": "baseUnitFactor"
+                            },
+                            {
+                                "field": "genMatMdId",
+                                "selectFields": [
+                                    {
+                                        "field": "matName"
+                                    }
+                                ]
+                            },
+                            {
+                                "field": "targetUnitId",
+                                "selectFields": [
+                                    {
+                                        "field": "uomDesc"
+                                    }
+                                ]
+                            },
+                            {
+                                "field": "unitId",
+                                "selectFields": [
+                                    {
+                                        "field": "uomDesc"
+                                    }
+                                ]
+                            }
+                        ],
+                        "modelKey": "GEN_MD$gen_uom_formula_type_cf"
+                    }
+                },
+                "processConfig": {
+                    "processType": "TRANTOR",
+                    "model": "GEN_MD$gen_uom_formula_type_cf",
+                    "modelName": "物料单位转换",
+                    "containerKey": "GEN_MD$GEN_UOM_FORMULA_VIEW-table-container-GEN_MD$gen_uom_formula_type_cf",
+                    "viewKey": "GEN_MD$GEN_UOM_FORMULA_VIEW:list",
+                    "sceneKey": "GEN_MD$GEN_UOM_FORMULA_VIEW"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response = self.http.post(url, json=params)
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(params, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
