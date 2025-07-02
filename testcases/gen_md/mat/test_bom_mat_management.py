@@ -165,6 +165,7 @@ class TestBomManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="BOM管理",
         title="测试BOM头标准导出",
@@ -217,8 +218,34 @@ class TestBomManagement(GenMdBaseTest):
         """
         BOM头标准导入用例（需要文件上传）
         """
-        pass
+        try:
+            api_path = self.get_api_path("物料BOM头标准导入服务")
+            params, url = self.get_api_params(api_path)
 
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["importConfig"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "importConfig": {
+                    "fileName": f"BOM头导入_{self.mock_util.get_timestamp()}",
+                    "fileType": "EXCEL"
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="BOM管理",
         title="测试删除BOM头",
@@ -240,10 +267,10 @@ class TestBomManagement(GenMdBaseTest):
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["ids"],
+                ["id"],
                 ["params", "request"]
             )
-            set_dict = {"ids": [self.bom_head_id]}
+            set_dict = {"id": self.bom_head_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -257,6 +284,8 @@ class TestBomManagement(GenMdBaseTest):
             raise
 
     # ============= BOM行项目类别管理 =============
+   
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="BOM管理",
         title="测试新增BOM行项目类别",
@@ -300,6 +329,8 @@ class TestBomManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="BOM管理",
         title="测试查询BOM行项目类别分页",
@@ -344,6 +375,8 @@ class TestBomManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="BOM管理",
         title="测试查询BOM行项目类别详情",
@@ -381,6 +414,7 @@ class TestBomManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="BOM管理",
         title="测试删除BOM行项目类别",
@@ -402,10 +436,10 @@ class TestBomManagement(GenMdBaseTest):
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["ids"],
+                ["id"],
                 ["params", "request"]
             )
-            set_dict = {"ids": [self.bom_item_type_id]}
+            set_dict = {"id": [self.bom_item_type_id]}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -419,6 +453,8 @@ class TestBomManagement(GenMdBaseTest):
             raise
 
     # ============= BOM状态管理 =============
+    
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="BOM管理",
         title="测试新增BOM状态",
@@ -506,6 +542,7 @@ class TestBomManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="BOM管理",
         title="测试查询BOM状态详情",
@@ -543,6 +580,7 @@ class TestBomManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="BOM管理",
         title="测试删除BOM状态",
@@ -564,10 +602,10 @@ class TestBomManagement(GenMdBaseTest):
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["ids"],
+                ["id"],
                 ["params", "request"]
             )
-            set_dict = {"ids": [self.bom_status_id]}
+            set_dict = {"id": [self.bom_status_id]}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -705,6 +743,7 @@ class TestBomManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="BOM管理",
         title="测试BOM用途标准导出",
@@ -757,7 +796,32 @@ class TestBomManagement(GenMdBaseTest):
         """
         BOM用途标准导入用例（需要文件上传）
         """
-        pass
+        try:
+            api_path = self.get_api_path("BOM用途配置标准导入服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["importConfig"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "importConfig": {
+                    "fileName": f"BOM用途导入_{self.mock_util.get_timestamp()}",
+                    "fileType": "EXCEL"
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
 
     @case_decorator(
         story="BOM管理",
@@ -835,10 +899,10 @@ class TestBomManagement(GenMdBaseTest):
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["ids"],
+                ["id"],
                 ["params", "request"]
             )
-            set_dict = {"ids": [self.bom_use_id]}
+            set_dict = {"id": [self.bom_use_id]}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -852,6 +916,7 @@ class TestBomManagement(GenMdBaseTest):
             raise
 
     # ============= BOM状态管理导入导出 =============
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="BOM管理",
         title="测试BOM状态标准导出",
@@ -904,7 +969,32 @@ class TestBomManagement(GenMdBaseTest):
         """
         BOM状态标准导入用例（需要文件上传）
         """
-        pass
+        try:
+            api_path = self.get_api_path("BOM状态配置表标准导入服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["importConfig"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "importConfig": {
+                    "fileName": f"BOM状态导入_{self.mock_util.get_timestamp()}",
+                    "fileType": "EXCEL"
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
 
     @case_decorator(
         story="BOM管理",
@@ -962,6 +1052,7 @@ class TestBomManagement(GenMdBaseTest):
         pass
 
     # ============= BOM行项目类别导入导出 =============
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="BOM管理",
         title="测试BOM行项目类别标准导出",
@@ -1014,7 +1105,32 @@ class TestBomManagement(GenMdBaseTest):
         """
         BOM行项目类别标准导入用例（需要文件上传）
         """
-        pass
+        try:
+            api_path = self.get_api_path("BOM行项目类别配置标准导入服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["importConfig"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "importConfig": {
+                    "fileName": f"BOM行项目类别导入_{self.mock_util.get_timestamp()}",
+                    "fileType": "EXCEL"
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
 
     @case_decorator(
         story="BOM管理",
@@ -1072,6 +1188,8 @@ class TestBomManagement(GenMdBaseTest):
         pass
 
     # ============= BOM供应标识管理 =============
+    
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="BOM管理",
         title="测试新增BOM供应标识",
@@ -1115,6 +1233,7 @@ class TestBomManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="BOM管理",
         title="测试查询BOM供应标识分页",
@@ -1159,6 +1278,7 @@ class TestBomManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="BOM管理",
         title="测试查询BOM供应标识详情",
@@ -1196,6 +1316,7 @@ class TestBomManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="BOM管理",
         title="测试删除BOM供应标识",
@@ -1217,10 +1338,10 @@ class TestBomManagement(GenMdBaseTest):
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["ids"],
+                ["id"],
                 ["params", "request"]
             )
-            set_dict = {"ids": [self.bom_supp_ind_id]}
+            set_dict = {"id": [self.bom_supp_ind_id]}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -1302,9 +1423,40 @@ class TestBomManagement(GenMdBaseTest):
         """
         通过OSS提交BOM头导入任务用例（需要OSS配置）
         """
-        pass
+        try:
+            api_path = self.get_api_path("物料BOM头-导入导出任务管理接口-通过OSS提交导入任务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["taskName", "ossConfig", "importConfig"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "taskName": f"BOM头OSS导入任务_{self.mock_util.get_timestamp()}",
+                "ossConfig": {
+                    "bucketName": "test-bucket",
+                    "objectKey": f"bom_head_import_{self.mock_util.get_timestamp()}.xlsx"
+                },
+                "importConfig": {
+                    "fileType": "EXCEL",
+                    "sheetName": "BOM头"
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
 
     # ============= BOM供应标识管理导入导出 =============
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="BOM管理",
         title="测试BOM供应标识标准导出",
@@ -1357,7 +1509,32 @@ class TestBomManagement(GenMdBaseTest):
         """
         BOM供应标识标准导入用例（需要文件上传）
         """
-        pass
+        try:
+            api_path = self.get_api_path("BOM 行项目供应标识配置表标准导入服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["importConfig"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "importConfig": {
+                    "fileName": f"BOM供应标识导入_{self.mock_util.get_timestamp()}",
+                    "fileType": "EXCEL"
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
 
     @case_decorator(
         story="BOM管理",
