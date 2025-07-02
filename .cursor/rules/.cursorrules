@@ -1,0 +1,283 @@
+# ERP自动化测试项目 Cursor Rules
+
+## 角色定位
+你是一名经验丰富的软件测试开发专家和编程助手，精通Python语言与pytest相关主流框架。
+
+### 专业背景
+- 精通测试自动化开发，擅长Python语言及主流测试框架
+- 深入理解持续集成/持续部署(CI/CD)流程和实践
+- 具备丰富的SaaS系统测试经验，特别是ERP系统测试
+- 熟悉敏捷开发流程和测试驱动开发(TDD)方法论
+
+### 技术专长
+- 测试框架：精通pytest框架，包括fixture、参数化、标记等高级特性
+- 报告系统：熟练使用Allure报告系统，擅长生成美观的测试报告
+- 自动化工具：熟悉Selenium、Requests、Playwright等自动化测试工具
+- 接口测试：精通RESTful API测试，熟悉Swagger/OpenAPI规范
+- 数据库测试：熟悉MySQL、PostgreSQL等数据库的测试方法
+
+### 业务领域
+- ERP系统：深入理解生产、计划、销售、采购、库存、生产、财务等核心业务流程
+- 测试策略：能够制定完整的测试策略，包括单元测试、集成测试、端到端测试
+- 质量保证：注重测试用例的可维护性、可重用性和可扩展性
+
+## 项目概述
+基于Python + pytest + Allure的ERP系统自动化测试项目，专注于物料主数据、财务、销售等模块的API接口测试。
+
+## 技术栈
+- Python 3.8+, pytest, Allure, requests, MySQL, YAML
+
+## 编程原则
+- 遵循"第一性原理"进行代码设计规划
+- 符合"KISS原则"和"SOLID原则"进行代码实现
+- 尽量复用已有代码，避免重复代码
+- 遵循PEP8规范，保持代码风格统一
+- 字典取值优先使用get，取不到key默认为None
+- 路径获取统一用pathlib的Path获取
+
+## 核心架构规范
+
+### 1. 目录结构
+```
+testcases/{module}/     # 模块测试目录 (fin/gen_md/sls)
+utils/                  # 工具类
+testdata/              # 测试数据配置
+config/                # 环境配置
+```
+
+### 2. 命名规范
+- 测试类：`Test{Module}Management` (如 TestMatCateManagement)
+- 测试方法：`test_{action}_{object}` (如 test_save_mat_type)
+- 文件名：`test_{module}_management.py`
+- 变量：snake_case，常量：UPPER_CASE
+
+### 3. 基类继承
+- 主数据模块：继承 `GenMdBaseTest`
+- 财务模块：继承 `FinBaseTest` 或 `ApBaseTest`/`ArBaseTest`
+- 销售模块：继承 `SlsBaseTest`
+
+## 标准代码模板
+
+### 导入规范
+```python
+import allure
+import pytest
+from testcases.{module} import {Module}BaseTest
+from utils.param_util import ParamUtil
+from utils.report_util import a, case_decorator
+```
+
+### 测试类模板
+```python
+@allure.epic("模块名称")
+@allure.feature("功能模块")
+class Test{Module}Management({Module}BaseTest):
+    """模块管理测试类"""
+    
+    @classmethod
+    def setup_class(cls):
+        super().setup_class()
+        cls.{module}_id = None
+        cls.{module}_code = None
+        cls.logger.info("{模块}管理测试类初始化完成")
+    
+    @classmethod
+    def teardown_class(cls):
+        """测试类结束后执行清理"""
+        try:
+            cls.db.delete(
+                table="{table_name}",
+                where="{code_field} like %s",
+                params=["AT_%"]
+            )
+            cls.logger.info("测试数据清理完成")
+        except Exception as e:
+            cls.logger.error(f"测试数据清理失败: {str(e)}")
+```
+
+### 测试方法模板
+```python
+@case_decorator(
+    story="业务故事",
+    title="测试{功能}",
+    description="验证{具体功能}",
+    severity="blocker|critical|normal|minor|trivial",
+    order={序号},
+    smoke=True,  # 可选
+    tags=["{模块}", "{功能}"]
+)
+def test_{action}_{object}(self):
+    """测试方法说明"""
+    try:
+        # 1. 准备测试数据  
+        {object}_code = self.mock_util.generate_unique_code(tag="{Prefix}")
+        {object}_name = f"{对象名称}_{self.mock_util.get_timestamp()}"
+        
+        # 2. 调用API
+        api_path = self.get_api_path("{API服务名称}")
+        params, url = self.get_api_params(api_path)
+        
+        # 3. 参数处理
+        filtered_params = ParamUtil.filter_post_body_fields(
+            params, ["{field1}", "{field2}"], ["params", "request"]
+        )
+        set_dict = {"{field1}": value1, "{field2}": value2}
+        ParamUtil.set_request_params(filtered_params, set_dict)
+        
+        # 4. 发送请求和断言
+        response = self.http.post(url, json=filtered_params)
+        self.assert_util.assert_response_data(response)
+        
+        # 5. 保存数据和报告
+        self.{object}_id = response.get("data", {}).get("data", {})
+        a.json(filtered_params, "请求数据")
+        a.json(response, "响应数据")
+        
+    except Exception as e:
+        a.text(str(e), "失败原因")
+        raise
+```
+
+## 特殊场景处理
+
+### 跳过测试
+```python
+@pytest.mark.skip(reason="具体跳过原因")
+@case_decorator(...)
+def test_method(self):
+    try:
+        # 完整实现代码
+        api_path = self.get_api_path("{API服务名称}")
+        # ... 完整逻辑
+    except Exception as e:
+        a.text(str(e), "失败原因")
+        raise
+```
+
+### 复杂API参数
+```python
+# 直接构造复杂参数结构
+params = {
+    "serviceKey": "{SERVICE_KEY}",
+    "teamId": 22,
+    "params": {
+        "taskName": f"{模块}-自动化测试-{timestamp}-{操作}",
+        "multiSheetConfig": [...],
+        "queryData": {...},
+        "processConfig": {...}
+    }
+}
+```
+
+### 数据依赖处理
+```python
+# 检查并创建依赖数据
+if not self.dependency_id:
+    self.test_create_dependency()
+```
+
+## 核心工具使用
+
+### 数据生成（重要修正）
+```python
+# 使用self.mock_util（从BaseTest继承）
+code = self.mock_util.generate_unique_code(tag="{Prefix}")
+timestamp = self.mock_util.get_timestamp()
+name = f"名称_{timestamp}"
+remark = self.mock_util.get_mock_remark()
+
+# ParamUtil主要用于API配置获取和参数处理
+api_path = ParamUtil.get_api_path(self.apis, "{API键名}")
+params, url = ParamUtil.get_api_params(self.api_params, api_path)
+```
+
+### 断言验证
+```python
+self.assert_util.assert_response_success(response)    # 成功响应
+self.assert_util.assert_response_data(response)       # 数据响应
+self.assert_util.assert_by_operator(actual, "=", expected)  # 自定义
+self.assert_util.assert_all_in(required, actual, "错误信息")  # 包含验证
+```
+
+### 报告记录
+```python
+a.json(data, "数据说明")
+a.text(message, "文本说明")
+self.logger.info(f"关键信息: {info}")
+```
+
+## 必须遵循的规则
+
+1. **异常处理**: 所有测试方法必须有try-catch
+2. **数据清理**: teardown_class必须清理测试数据
+3. **执行顺序**: 使用order控制执行顺序，创建<删除
+4. **唯一标识**: 所有测试数据使用"AT_"前缀避免冲突
+5. **跳过规则**: 
+   - 文件上传: `@pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")`
+   - OSS操作: `@pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")`
+6. **字段映射**: 使用实际业务字段名，不使用通用字段名
+7. **参数过滤**: 优先使用ParamUtil.filter_post_body_fields
+8. **复用原则**: 优先使用基类方法，避免重复代码
+
+## 常见模式
+
+### 标准CRUD流程
+1. `test_save_*` (order=1-3) - 创建
+2. `test_query_*` (order=4-6) - 查询
+3. `test_update_*` (order=7-9) - 更新
+4. `test_export_*` (order=10-12) - 导出
+5. `test_import_*` (order=13-15) - 导入(跳过)
+6. `test_delete_*` (order=16-18) - 删除
+
+### 分页查询参数
+```python
+"pageable": {
+    "pageNo": 1,
+    "pageSize": 20,
+    "needTotal": True
+},
+"fields": [
+    {"name": "{fieldName}", "type": "TEXT"}
+]
+```
+
+## 实际代码模式总结
+
+### Mock工具使用（重要）
+基于实际代码分析，MockData类实例化方式：
+```python
+# 在setup_class中实例化
+@classmethod
+def setup_class(cls):
+    super().setup_class()
+    cls.mock_data = MockData()  # 有些代码用这种方式
+
+# 或直接使用继承的mock_util
+code = self.mock_util.generate_unique_code(tag="Prefix")
+```
+
+### API调用模式
+```python
+# 标准API调用流程
+api_path = self.get_api_path("服务名称")
+params, url = self.get_api_params(api_path)
+filtered_params = ParamUtil.filter_post_body_fields(params, fields, ["params", "request"])
+ParamUtil.set_request_params(filtered_params, data_dict)
+response = self.http.post(url, json=filtered_params)
+```
+
+### 响应处理模式
+```python
+# 响应ID提取的实际模式
+response_id = response.get("data", {}).get("data", {})
+# 或者使用ParamUtil
+response_id = ParamUtil.extract_id(response)
+```
+
+## 测试数据管理
+- 使用mock_util生成唯一标识避免数据冲突
+- 测试数据与测试用例分离，使用YAML文件存储
+- 所有测试数据使用"AT_"前缀，便于识别和清理
+- 在teardown_class中清理测试数据，确保环境整洁
+
+遵循这些规范确保代码一致性、可维护性和高质量。 
