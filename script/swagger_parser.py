@@ -293,16 +293,14 @@ class SwaggerParser:
                         del request_params['teamId']
                         logger.info(f"已过滤掉 teamId 字段")
 
-                    # 构建参数结构（不再包一层 request）
-                    api_entry_data = {
-                        'params': request_params or {}  # 直接保存真实结构
-                    }
+                    # 构建参数结构（直接使用解析后的参数，不再包装）
+                    api_entry_data = request_params or {}  # 直接保存真实结构
                     
                     # 修复点：自动设置serviceKey为接口路径最后一部分
-                    if api_entry_data['params'] and 'serviceKey' in api_entry_data['params']:
+                    if api_entry_data and 'serviceKey' in api_entry_data:
                         path_clean = path.rstrip('/')
                         service_key_value = path_clean.split('/')[-1]
-                        api_entry_data['params']['serviceKey'] = service_key_value
+                        api_entry_data['serviceKey'] = service_key_value
                         logger.info(f"自动设置 serviceKey: {service_key_value} 对于路径 {path}")
                     
                     # 添加到参数字典
@@ -567,10 +565,10 @@ if __name__ == "__main__":
     )
     
     # 获取指定团队和模块的Swagger文档
-    swagger_doc = parser.fetch_swagger_doc("TERP", "ERP_FIN")
+    swagger_doc = parser.fetch_swagger_doc("TERP", "GEN_MD")
     
     # 解析所有接口
     endpoints = parser.parse_endpoints()
     
     # 保存路径信息到gen_path.yaml
-    parser.save_paths_to_yaml(endpoints, module="ERP_FIN") 
+    parser.save_paths_to_yaml(endpoints, module="GEN_MD") 

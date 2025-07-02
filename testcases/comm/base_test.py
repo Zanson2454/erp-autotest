@@ -378,7 +378,7 @@ if __name__ == "__main__":
     BaseTest.setup_class()
     print(BaseTest.env_config)
     print(BaseTest.init_data)
-    print(BaseTest.user_info)
+    print(BaseTest.user_info['nickname'])
     print(BaseTest.session)
     print(BaseTest.base_headers)
     print(BaseTest.db)

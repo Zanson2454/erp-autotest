@@ -17,7 +17,7 @@ class TestStndMatManagement(GenMdBaseTest):
         cls.mock_data = MockData()
         cls.matId = None
         
-         # 获取初始化数据中的第一个数据
+         # 获取初始化数据
         cls.currId = cls.init_data["currency_info"][0]["curr_id"] if cls.init_data.get("currency_info") else None
         cls.counId = cls.init_data["country_info"][0]["coun_id"] if cls.init_data.get("country_info") else None
         cls.addrId = cls.init_data["addr_info"][0]["id"] if cls.init_data.get("addr_info") else None
@@ -26,9 +26,12 @@ class TestStndMatManagement(GenMdBaseTest):
         cls.mass_uomId = cls.uom_info.get("mass_uom_info",[])[0]["uom_id"] if cls.uom_info.get("mass_uom_info") else None
         cls.len_uomId = cls.uom_info.get("len_uom_info",[])[0]["uom_id"] if cls.uom_info.get("len_uom_info") else None
         cls.volume_uomId = cls.uom_info.get("volume_uom_info",[])[0]["uom_id"] if cls.uom_info.get("volume_uom_info") else None
+        cls.logger.info(f'init_data: {cls.init_data}')
+        cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
+      
 
         
-        # 获取md_cache_data中的第一个数据
+        # 获取md_cache_data缓存数据
         cls.brandId = cls.md_cache_data.get("mat_info",{}).get("mat_brand_md",[])[0]["id"] if cls.md_cache_data.get("mat_info") else None
         cls.mat_cateId = cls.md_cache_data.get("mat_info", {}).get("mat_cate_md", [])[0]["id"] if cls.md_cache_data.get("mat_info", {}).get("mat_cate_md") else None
         cls.finp_matTypeId = cls.md_cache_data.get("mat_info", {}).get("mat_type_cf", {}).get("FINP",[])[0]["id"] if cls.md_cache_data.get("mat_info", []).get("mat_type_cf") else None
@@ -119,7 +122,6 @@ class TestStndMatManagement(GenMdBaseTest):
                         "matWmList": None
                     }
             ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {params}")
 
             # 3. 发起请求
             response = self.http.post(url, json=filtered_params)
@@ -162,7 +164,7 @@ class TestStndMatManagement(GenMdBaseTest):
                 ["params", "request"]
             )
             set_dict = {
-                "cateId": 14082001,  # 使用指定的类目ID
+                "cateId": self.mat_cateId,  # 使用指定的类目ID
                 "pageable": {
                     "pageNo": 1,
                     "pageSize": 20,
@@ -227,9 +229,6 @@ class TestStndMatManagement(GenMdBaseTest):
             a.json(filtered_params, "详情请求数据")
             a.json(response, "详情响应数据")
             a.text(f"物料详情查询成功", "在库状态")
-
-            # 字段一致性校验（与保存时部分字段比对）
-    
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -365,18 +364,14 @@ class TestStndMatManagement(GenMdBaseTest):
             api_path = self.get_api_path("GEN-物料主数据-批量生成条码服务")
             params, url = self.get_api_params(api_path)
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["ids"],
-                ["params", "request"]
-            )
-            set_dict = {"ids": [self.matId]}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            
+            self.logger.info(f"原始请求参数: {params}")
+            params['params']['request'] = [{"id": self.matId}]
+            self.logger.info(f"修改后的请求参数: {params}")
+            response = self.http.post(url, json=params)
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(params, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -404,12 +399,12 @@ class TestStndMatManagement(GenMdBaseTest):
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["ids", "labelId"],
+                ["mat_ids", "label_list"],
                 ["params", "request"]
             )
             set_dict = {
-                "ids": [self.matId],
-                "labelId": self.labelId
+                "mat_ids": [self.matId],
+                "label_list": [{"id":self.labelId}]
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -444,12 +439,12 @@ class TestStndMatManagement(GenMdBaseTest):
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["ids", "labelId"],
+                ["mat_ids", "label_list"],
                 ["params", "request"]
             )
             set_dict = {
-                "ids": [self.matId],
-                "labelId": self.labelId
+                "mat_ids": [self.matId],
+                "label_list": [{"id":self.labelId}]
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -463,6 +458,8 @@ class TestStndMatManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="标准物料管理",
         title="测试物料标准导出",
@@ -502,7 +499,7 @@ class TestStndMatManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="标准物料管理",
         title="测试物料标准导入",
@@ -515,7 +512,32 @@ class TestStndMatManagement(GenMdBaseTest):
         """
         物料标准导入用例（需要文件上传）
         """
-        pass
+        try:
+            api_path = self.get_api_path("物料主数据标准导入服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["exportConfig"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "exportConfig": {
+                    "fileName": f"物料主数据导入_{self.mock_data.get_timestamp()}",
+                    "sheetName": "物料主数据"
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
 
     @case_decorator(
         story="标准物料管理",
@@ -532,32 +554,179 @@ class TestStndMatManagement(GenMdBaseTest):
         try:
             api_path = self.get_api_path("物料主数据-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
+    
+            params = {
+                "serviceKey": "GEN_MD$GEN_MAT_MD_API_GEI_TASK_EXPORT_DIRECT_POST",
+                "params":{
+                    "taskName": f"物料_{self.nickname}_{self.mock_data.get_timestamp()}",
+                    "multiSheetConfig": [
+                        {
+                            "modelKey": "GEN_MD$gen_mat_md",
+                            "modelName": "物料主数据",
+                            "sheetNo": 0,
+                            "sheetName": "物料主数据",
+                            "headerConfigList": [
+                                {
+                                    "name": "物料图片",
+                                    "type": "ATTACHMENT",
+                                    "field": "imageUrl"
+                                },
+                                {
+                                    "name": "物料编码",
+                                    "type": "TEXT",
+                                    "field": "matCode"
+                                },
+                                {
+                                    "name": "物料名称",
+                                    "type": "TEXT",
+                                    "field": "matName"
+                                },
+                                {
+                                    "name": "物料类型",
+                                    "type": "TEXT",
+                                    "field": "genMatTypeCfId.matTypeName"
+                                },
+                                {
+                                    "name": "类目",
+                                    "type": "TEXT",
+                                    "field": "cateId.matCateName"
+                                },
+                                {
+                                    "name": "品牌",
+                                    "type": "TEXT",
+                                    "field": "brandId.brandName"
+                                },
+                                {
+                                    "name": "状态",
+                                    "type": "ENUM",
+                                    "field": "status",
+                                    "multiSelect": False,
+                                    "dictValues": [
+                                        {
+                                            "_row_id_": "未启用",
+                                            "label": "未启用",
+                                            "value": "INACTIVE"
+                                        },
+                                        {
+                                            "_row_id_": "已启用",
+                                            "label": "已启用",
+                                            "value": "ENABLED"
+                                        },
+                                        {
+                                            "_row_id_": "已停用",
+                                            "label": "已停用",
+                                            "value": "DISABLED"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "业务状态",
+                                    "type": "ENUM",
+                                    "field": "bizStatus",
+                                    "multiSelect": False,
+                                    "dictValues": [
+                                        {
+                                            "_row_id_": "SALE",
+                                            "label": "可销售",
+                                            "value": "SALE"
+                                        },
+                                        {
+                                            "_row_id_": "OFF_SALE",
+                                            "label": "已停售",
+                                            "value": "OFF_SALE"
+                                        },
+                                        {
+                                            "_row_id_": "STOP_PRODUCT",
+                                            "label": "已停产",
+                                            "value": "STOP_PRODUCT"
+                                        },
+                                        {
+                                            "_row_id_": "UNSALE",
+                                            "label": "不可销售",
+                                            "value": "UNSALE"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "queryData": {
+                        "containerKey": "ERP_SCM$GEN_MAT_NEW_VIEW-r8WLZs8B_0Zu8fIHUDWOu",
+                        "viewKey": "GEN_MD$GNE_MAT_VIEW:list",
+                        "sceneKey": "GEN_MD$GNE_MAT_VIEW",
+                        "params": {
+                            "request": {
+                                "pageable": {
+                                    "sortOrders": [
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["taskName", "exportConfig"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "taskName": f"物料主数据导出任务_{self.mock_data.get_timestamp()}",
-                "exportConfig": {
-                    "fileName": f"物料主数据_{self.mock_data.get_timestamp()}",
-                    "format": "EXCEL"
-                }
+                                    ]
+                                }
+                            },
+                            "selectFields": [
+                                {
+                                    "field": "imageUrl"
+                                },
+                                {
+                                    "field": "matCode"
+                                },
+                                {
+                                    "field": "matName"
+                                },
+                                {
+                                    "field": "status"
+                                },
+                                {
+                                    "field": "bizStatus"
+                                },
+                                {
+                                    "field": "genMatTypeCfId",
+                                    "selectFields": [
+                                        {
+                                            "field": "matTypeName"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "field": "cateId",
+                                    "selectFields": [
+                                        {
+                                            "field": "matCateName"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "field": "brandId",
+                                    "selectFields": [
+                                        {
+                                            "field": "brandName"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "modelKey": "GEN_MD$gen_mat_md"
+                        }
+                    },
+                    "processConfig": {
+                        "processType": "TRANTOR",
+                        "model": "GEN_MD$gen_mat_md",
+                        "modelName": "物料主数据",
+                        "containerKey": "ERP_SCM$GEN_MAT_NEW_VIEW-r8WLZs8B_0Zu8fIHUDWOu",
+                        "viewKey": "GEN_MD$GNE_MAT_VIEW:list",
+                        "sceneKey": "GEN_MD$GNE_MAT_VIEW"
+                        }
+                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response = self.http.post(url, json=params)
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(params, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
+    @pytest.mark.skip(reason="暂时未配置，先跳过")
     @case_decorator(
         story="标准物料管理",
         title="测试通过OSS提交物料导入任务",
@@ -594,9 +763,13 @@ class TestStndMatManagement(GenMdBaseTest):
                 ["params", "request"]
             )
             set_dict = {
+            "pageable": {
                 "pageNo": 1,
-                "pageSize": 20
-            }
+                "pageSize": 20,
+                "conditionGroup": None,
+                "sortOrders": None,
+                "keyword": None
+            }}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -630,10 +803,10 @@ class TestStndMatManagement(GenMdBaseTest):
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["ids"],
+                ["id"],
                 ["params", "request"]
             )
-            set_dict = {"ids": [self.matId]}
+            set_dict = {"id": self.matId}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
