@@ -7,25 +7,27 @@ from utils.report_util import a, case_decorator
 
 
 @allure.epic("通用基础数据")
-@allure.feature("财务配置管理")
-class TestFinanceConfigManagement(GenMdBaseTest):
-    """财务配置管理测试类 - 整合币种、汇率等财务功能"""
+@allure.feature("税务系统管理")
+class TestTaxSystemManagement(GenMdBaseTest):
+    """税务系统管理测试类 - 整合税配置、客户税分类、物料税分类等功能"""
 
     @classmethod
     def setup_class(cls):
         super().setup_class()
         cls.mock_data = MockData()
-        cls.curr_id = None
-        cls.curr_code = None
-        cls.exchange_rate_id = None
-        cls.exchange_rate_code = None
-        cls.logger.info("财务配置管理测试类初始化完成")
+        cls.tax_id = None
+        cls.tax_code = None
+        cls.cust_tax_id = None
+        cls.cust_tax_code = None
+        cls.mat_tax_id = None
+        cls.mat_tax_code = None
+        cls.logger.info("税务系统管理测试类初始化完成")
 
     @classmethod
     def teardown_class(cls):
         """测试类结束后执行清理"""
         try:
-            tables = ["gen_curr_md", "gen_exchange_rate_md"]
+            tables = ["gen_tax_md", "gen_cust_tax_md", "gen_mat_tax_md"]
             for table in tables:
                 try:
                     cls.db.delete(table=table, where="code like %s", params=["AT_%"])
@@ -35,36 +37,36 @@ class TestFinanceConfigManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
-    # ================ 币种管理 ================
+    # ================ 税配置管理 ================
     @case_decorator(
-        story="币种管理",
-        title="测试新增币种",
-        description="验证新增币种功能",
+        story="税配置管理",
+        title="测试新增税配置",
+        description="验证新增税配置功能",
         severity="blocker",
         order=1,
         smoke=True,
-        tags=["币种管理", "新增"]
+        tags=["税配置管理", "新增"]
     )
-    def test_save_curr(self):
-        """新增币种用例"""
+    def test_save_tax(self):
+        """新增税配置用例"""
         try:
-            curr_code = self.mock_data.generate_unique_code(tag="Curr")
-            curr_name = f"币种_{self.mock_data.get_timestamp()}"
+            tax_code = self.mock_data.generate_unique_code(tag="Tax")
+            tax_name = f"税配置_{self.mock_data.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-币种配置-保存服务")
+            api_path = self.get_api_path("GEN-物料税分类-保存服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["curr_code", "curr_name"], ["params", "request"]
+                params, ["tax_code", "tax_name"], ["params", "request"]
             )
-            set_dict = {"curr_code": curr_code, "curr_name": curr_name}
+            set_dict = {"tax_code": tax_code, "tax_name": tax_name}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
             
-            self.curr_id = response.get("data", {}).get("data", {})
-            self.curr_code = curr_code
+            self.tax_id = response.get("data", {}).get("data", {})
+            self.tax_code = tax_code
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -74,17 +76,17 @@ class TestFinanceConfigManagement(GenMdBaseTest):
             raise
 
     @case_decorator(
-        story="币种管理",
-        title="测试查询币种列表",
-        description="验证币种列表查询功能",
+        story="税配置管理",
+        title="测试查询税配置列表",
+        description="验证税配置列表查询功能",
         severity="normal",
         order=2,
-        tags=["币种管理", "查询"]
+        tags=["税配置管理", "查询"]
     )
-    def test_query_curr_list(self):
-        """查询币种列表用例"""
+    def test_query_tax_list(self):
+        """查询税配置列表用例"""
         try:
-            api_path = self.get_api_path("币种配置-分页数据服务")
+            api_path = self.get_api_path("GEN-税配置-查询分页服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -93,8 +95,8 @@ class TestFinanceConfigManagement(GenMdBaseTest):
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
                 "fields": [
-                    {"name": "curr_code", "type": "TEXT"},
-                    {"name": "curr_name", "type": "TEXT"}
+                    {"name": "tax_code", "type": "TEXT"},
+                    {"name": "tax_name", "type": "TEXT"}
                 ]
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
@@ -113,26 +115,26 @@ class TestFinanceConfigManagement(GenMdBaseTest):
             raise
 
     @case_decorator(
-        story="币种管理",
-        title="测试查询币种详情",
-        description="验证币种详情查询功能",
+        story="税配置管理",
+        title="测试查询税配置详情",
+        description="验证税配置详情查询功能",
         severity="normal",
         order=3,
-        tags=["币种管理", "查询"]
+        tags=["税配置管理", "查询"]
     )
-    def test_query_curr_detail(self):
-        """查询币种详情用例"""
+    def test_query_tax_detail(self):
+        """查询税配置详情用例"""
         try:
-            if not self.curr_id:
-                self.test_save_curr()
+            if not self.tax_id:
+                self.test_save_tax()
 
-            api_path = self.get_api_path("币种配置-根据ID查找数据服务")
+            api_path = self.get_api_path("GEN-物料税分类-查询详情服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params, ["id"], ["params", "request"]
             )
-            set_dict = {"id": self.curr_id}
+            set_dict = {"id": self.tax_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -146,26 +148,26 @@ class TestFinanceConfigManagement(GenMdBaseTest):
             raise
 
     @case_decorator(
-        story="币种管理",
-        title="测试删除币种",
-        description="验证删除币种功能",
+        story="税配置管理",
+        title="测试删除税配置",
+        description="验证删除税配置功能",
         severity="normal",
         order=4,
-        tags=["币种管理", "删除"]
+        tags=["税配置管理", "删除"]
     )
-    def test_delete_curr(self):
-        """删除币种用例"""
+    def test_delete_tax(self):
+        """删除税配置用例"""
         try:
-            if not self.curr_id:
-                self.test_save_curr()
+            if not self.tax_id:
+                self.test_save_tax()
 
-            api_path = self.get_api_path("GEN-币种配置-删除服务")
+            api_path = self.get_api_path("GEN-客户税分类-删除服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params, ["ids"], ["params", "request"]
             )
-            set_dict = {"ids": [self.curr_id]}
+            set_dict = {"ids": [self.tax_id]}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -178,36 +180,36 @@ class TestFinanceConfigManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    # ================ 汇率管理 ================
+    # ================ 客户税分类管理 ================
     @case_decorator(
-        story="汇率管理",
-        title="测试新增汇率",
-        description="验证新增汇率功能",
+        story="客户税分类管理",
+        title="测试新增客户税分类",
+        description="验证新增客户税分类功能",
         severity="blocker",
         order=5,
         smoke=True,
-        tags=["汇率管理", "新增"]
+        tags=["客户税分类管理", "新增"]
     )
-    def test_save_exchange_rate(self):
-        """新增汇率用例"""
+    def test_save_cust_tax(self):
+        """新增客户税分类用例"""
         try:
-            exchange_rate_code = self.mock_data.generate_unique_code(tag="ExchangeRate")
-            exchange_rate_name = f"汇率_{self.mock_data.get_timestamp()}"
+            cust_tax_code = self.mock_data.generate_unique_code(tag="CustTax")
+            cust_tax_name = f"客户税分类_{self.mock_data.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-汇率定义-保存服务")
+            api_path = self.get_api_path("GEN-客户税分类配置-保存服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["exchange_rate_code", "exchange_rate_name"], ["params", "request"]
+                params, ["cust_tax_code", "cust_tax_name"], ["params", "request"]
             )
-            set_dict = {"exchange_rate_code": exchange_rate_code, "exchange_rate_name": exchange_rate_name}
+            set_dict = {"cust_tax_code": cust_tax_code, "cust_tax_name": cust_tax_name}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
             
-            self.exchange_rate_id = response.get("data", {}).get("data", {})
-            self.exchange_rate_code = exchange_rate_code
+            self.cust_tax_id = response.get("data", {}).get("data", {})
+            self.cust_tax_code = cust_tax_code
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -217,17 +219,17 @@ class TestFinanceConfigManagement(GenMdBaseTest):
             raise
 
     @case_decorator(
-        story="汇率管理",
-        title="测试查询汇率列表",
-        description="验证汇率列表查询功能",
+        story="客户税分类管理",
+        title="测试查询客户税分类列表",
+        description="验证客户税分类列表查询功能",
         severity="normal",
         order=6,
-        tags=["汇率管理", "查询"]
+        tags=["客户税分类管理", "查询"]
     )
-    def test_query_exchange_rate_list(self):
-        """查询汇率列表用例"""
+    def test_query_cust_tax_list(self):
+        """查询客户税分类列表用例"""
         try:
-            api_path = self.get_api_path("GEN-汇率定义-查询分页服务")
+            api_path = self.get_api_path("客户税分类配置-分页数据服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -236,8 +238,8 @@ class TestFinanceConfigManagement(GenMdBaseTest):
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
                 "fields": [
-                    {"name": "exchange_rate_code", "type": "TEXT"},
-                    {"name": "exchange_rate_name", "type": "TEXT"}
+                    {"name": "cust_tax_code", "type": "TEXT"},
+                    {"name": "cust_tax_name", "type": "TEXT"}
                 ]
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
@@ -255,31 +257,36 @@ class TestFinanceConfigManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+    # ================ 物料税分类管理 ================
     @case_decorator(
-        story="汇率管理",
-        title="测试查询汇率详情",
-        description="验证汇率详情查询功能",
-        severity="normal",
+        story="物料税分类管理",
+        title="测试新增物料税分类",
+        description="验证新增物料税分类功能",
+        severity="blocker",
         order=7,
-        tags=["汇率管理", "查询"]
+        smoke=True,
+        tags=["物料税分类管理", "新增"]
     )
-    def test_query_exchange_rate_detail(self):
-        """查询汇率详情用例"""
+    def test_save_mat_tax(self):
+        """新增物料税分类用例"""
         try:
-            if not self.exchange_rate_id:
-                self.test_save_exchange_rate()
+            mat_tax_code = self.mock_data.generate_unique_code(tag="MatTax")
+            mat_tax_name = f"物料税分类_{self.mock_data.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-汇率定义-查询详情服务")
+            api_path = self.get_api_path("GEN-物料税分类配置-保存服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
+                params, ["mat_tax_code", "mat_tax_name"], ["params", "request"]
             )
-            set_dict = {"id": self.exchange_rate_id}
+            set_dict = {"mat_tax_code": mat_tax_code, "mat_tax_name": mat_tax_name}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
+            
+            self.mat_tax_id = response.get("data", {}).get("data", {})
+            self.mat_tax_code = mat_tax_code
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -289,30 +296,36 @@ class TestFinanceConfigManagement(GenMdBaseTest):
             raise
 
     @case_decorator(
-        story="汇率管理",
-        title="测试删除汇率",
-        description="验证删除汇率功能",
+        story="物料税分类管理",
+        title="测试查询物料税分类列表",
+        description="验证物料税分类列表查询功能",
         severity="normal",
         order=8,
-        tags=["汇率管理", "删除"]
+        tags=["物料税分类管理", "查询"]
     )
-    def test_delete_exchange_rate(self):
-        """删除汇率用例"""
+    def test_query_mat_tax_list(self):
+        """查询物料税分类列表用例"""
         try:
-            if not self.exchange_rate_id:
-                self.test_save_exchange_rate()
-
-            api_path = self.get_api_path("GEN-汇率定义-删除服务")
+            api_path = self.get_api_path("物料税分类配置-分页数据服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ids"], ["params", "request"]
+                params, ["pageable", "fields"], ["params", "request"]
             )
-            set_dict = {"ids": [self.exchange_rate_id]}
+            set_dict = {
+                "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
+                "fields": [
+                    {"name": "mat_tax_code", "type": "TEXT"},
+                    {"name": "mat_tax_name", "type": "TEXT"}
+                ]
+            }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
+
+            data_list = response.get("data", {}).get("data", {}).get("data", [])
+            self.assert_util.assert_by_operator(data_list, "not_empty")
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
