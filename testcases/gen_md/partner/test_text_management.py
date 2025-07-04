@@ -16,19 +16,24 @@ class TestTextManagement(GenMdBaseTest):
         cls.text_type_id = None
         cls.text_group_id = None
         cls.logger.info("文本管理测试类初始化完成")
+        cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
+        
+        cls.call_times=0
+        
 
     @classmethod
     def teardown_class(cls):
         """测试类结束后执行清理"""
         try:
+        
             cls.db.delete(
                 table="gen_text_type_cf", 
-                where="type_code like %s", 
+                where="text_code like %s", 
                 params=["AT_%"]
             )
             cls.db.delete(
                 table="gen_text_procedure_head_cf", 
-                where="group_code like %s", 
+                where="code like %s", 
                 params=["AT_%"]
             )
             cls.logger.info("测试数据清理完成")
@@ -48,30 +53,32 @@ class TestTextManagement(GenMdBaseTest):
     def test_save_text_type(self):
         """新增文本类型用例"""
         try:
-            type_code = self.mock_util.generate_unique_code(tag="TXT")
-            type_name = f"文本类型_{self.mock_util.get_timestamp()}"
+            # 每次都生成新的唯一标识，避免重复键错误
+            text_code = self.mock_util.generate_unique_code(tag="TXT")
+            text_name = f"文本类型_{self.mock_util.get_timestamp()}"
 
             api_path = self.get_api_path("GEN-文本类型-保存服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["typeCode", "typeName", "category", "maxLength", "remark"],
+                ["textCode", "textName", "btClass", "desc"],
                 ["params", "request"]
             )
             set_dict = {
-                "typeCode": type_code,
-                "typeName": type_name,
-                "category": "GENERAL",
-                "maxLength": 1000,
-                "remark": f"自动化测试文本类型-{self.mock_util.get_timestamp()}"
+                "textCode": text_code,
+                "textName": text_name,
+                "btClass": 'SLS',
+                "desc": f"自动化文本-{self.mock_util.get_timestamp()}"
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
             
-            self.text_type_id = response.get("data", {}).get("data", {})
+            # 赋值
+            self.text_type_id  = response.get("data", {}).get("data", {})
+            
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -96,24 +103,37 @@ class TestTextManagement(GenMdBaseTest):
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["pageable", "fields"],
+                ["pageable", "fields", "systemParams"],
                 ["params", "request"]
             )
-            set_dict = {
+            set_dict =  {
                 "pageable": {
                     "pageNo": 1,
                     "pageSize": 20,
-                    "needTotal": True
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": None
                 },
                 "fields": [
-                    {"name": "typeCode", "type": "TEXT"},
-                    {"name": "typeName", "type": "TEXT"}
-                ]
+                    {
+                        "name": "btClass",
+                        "type": "SELECT"
+                    },
+                    {
+                        "name": "textCode",
+                        "type": "TEXT"
+                    },
+                    {
+                        "name": "textName",
+                        "type": "TEXT"
+                    }
+                ],
+                "systemParams": None
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -171,24 +191,97 @@ class TestTextManagement(GenMdBaseTest):
             api_path = self.get_api_path("文本类型-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["taskName", "exportConfig"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "taskName": f"文本类型导出任务_{self.mock_util.get_timestamp()}",
-                "exportConfig": {
-                    "fileName": f"文本类型_{self.mock_util.get_timestamp()}",
-                    "format": "EXCEL"
+            params = {
+                "serviceKey": "GEN_MD$GEN_TEXT_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
+                "params": {
+                    "taskName": f"文本类型导出-{self.nickname}-{self.mock_util.get_timestamp()}",
+                    "multiSheetConfig": [
+                        {
+                            "modelKey": "GEN_MD$gen_text_type_cf",
+                            "modelName": "文本类型",
+                            "sheetNo": 0,
+                            "sheetName": "文本类型",
+                            "headerConfigList": [
+                                {
+                                    "name": "文本编码",
+                                    "type": "TEXT",
+                                    "field": "textCode"
+                                },
+                                {
+                                    "name": "业务类别",
+                                    "type": "ENUM",
+                                    "field": "btClass",
+                                    "multiSelect": False,
+                                    "dictValues": [
+                                        {
+                                            "_row_id_": "销售",
+                                            "label": "销售",
+                                            "value": "SLS"
+                                        },
+                                        {
+                                            "_row_id_": "采购",
+                                            "label": "采购",
+                                            "value": "PUR"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "文本名称",
+                                    "type": "TEXT",
+                                    "field": "textName"
+                                },
+                                {
+                                    "name": "说明",
+                                    "type": "TEXT",
+                                    "field": "desc"
+                                }
+                            ]
+                        }
+                    ],
+                    "queryData": {
+                        "containerKey": "GEN_MD$GEN_TEXT_TYPE_VIEW-table-container-GEN_MD$gen_text_type_cf",
+                        "viewKey": "GEN_MD$GEN_TEXT_TYPE_VIEW:list",
+                        "sceneKey": "GEN_MD$GEN_TEXT_TYPE_VIEW",
+                        "params": {
+                            "request": {
+                                "pageable": {
+
+                                }
+                            },
+                            "selectFields": [
+                                {
+                                    "field": "textCode"
+                                },
+                                {
+                                    "field": "btClass"
+                                },
+                                {
+                                    "field": "textName"
+                                },
+                                {
+                                    "field": "desc"
+                                }
+                            ],
+                            "modelKey": "GEN_MD$gen_text_type_cf"
+                        }
+                    },
+                    "processConfig": {
+                        "processType": "TRANTOR",
+                        "model": "GEN_MD$gen_text_type_cf",
+                        "modelName": "文本类型",
+                        "containerKey": "GEN_MD$GEN_TEXT_TYPE_VIEW-table-container-GEN_MD$gen_text_type_cf",
+                        "viewKey": "GEN_MD$GEN_TEXT_TYPE_VIEW:list",
+                        "sceneKey": "GEN_MD$GEN_TEXT_TYPE_VIEW"
+                    }
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response = self.http.post(url, json=params)
             self.assert_util.assert_response_success(response)
+            self.export_task_id = response.get("data", {}).get("data", {}).get("mainTaskId")
+            self.assert_util.assert_by_operator(self.export_task_id, "!=", None)
 
-            a.json(filtered_params, "请求数据")
+            a.json(params, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -217,7 +310,7 @@ class TestTextManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": [self.text_type_id]}
+            set_dict = {"id": self.text_type_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -230,7 +323,7 @@ class TestTextManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    # ============= 文本组管理 =============
+    # # ============= 文本组管理 =============
     @case_decorator(
         story="文本管理",
         title="测试新增文本组",
@@ -242,22 +335,29 @@ class TestTextManagement(GenMdBaseTest):
     def test_save_text_group(self):
         """新增文本组用例"""
         try:
-            group_code = self.mock_util.generate_unique_code(tag="TXTG")
-            group_name = f"文本组_{self.mock_util.get_timestamp()}"
+            if not self.text_type_id:
+                self.test_save_text_type()
+
+            code = self.mock_util.generate_unique_code(tag="TXTGROUP")
+            name = f"文本组_{self.mock_util.get_timestamp()}"
 
             api_path = self.get_api_path("GEN-文本组-保存服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["groupCode", "groupName", "description", "remark"],
+                ["code", "name", "itemList"],
                 ["params", "request"]
             )
             set_dict = {
-                "groupCode": group_code,
-                "groupName": group_name,
-                "description": "文本组描述",
-                "remark": f"自动化测试文本组-{self.mock_util.get_timestamp()}"
+                "code": code,
+                "name": name,
+                "itemList": [
+                    {
+                        "id": self.text_type_id,
+                        "isRequired": False
+                    }
+                ]
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -289,24 +389,34 @@ class TestTextManagement(GenMdBaseTest):
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["pageable", "fields"],
+                ["pageable", "fields", "systemParams"],
                 ["params", "request"]
             )
-            set_dict = {
+            set_dict =  {
                 "pageable": {
                     "pageNo": 1,
                     "pageSize": 20,
-                    "needTotal": True
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": None
                 },
                 "fields": [
-                    {"name": "groupCode", "type": "TEXT"},
-                    {"name": "groupName", "type": "TEXT"}
-                ]
+                    {
+                        "name": "code",
+                        "type": "TEXT"
+                    },
+                    {
+                        "name": "name",
+                        "type": "TEXT"
+                    }
+                ],
+                "systemParams": None
             }
+   
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -326,6 +436,7 @@ class TestTextManagement(GenMdBaseTest):
     def test_query_text_group_detail(self):
         """查询文本组详情用例"""
         try:
+            
             if not self.text_group_id:
                 self.test_save_text_group()
 
@@ -364,24 +475,74 @@ class TestTextManagement(GenMdBaseTest):
             api_path = self.get_api_path("文本组-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["taskName", "exportConfig"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "taskName": f"文本组导出任务_{self.mock_util.get_timestamp()}",
-                "exportConfig": {
-                    "fileName": f"文本组_{self.mock_util.get_timestamp()}",
-                    "format": "EXCEL"
+            params = {
+                "serviceKey": "GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
+                "params": {
+                    "taskName": f"文本组导出-{self.nickname}-{self.mock_util.get_timestamp()}",
+                    "multiSheetConfig": [
+                        {
+                            "modelKey": "GEN_MD$gen_text_procedure_head_cf",
+                            "modelName": "文本组",
+                            "sheetNo": 0,
+                            "sheetName": "文本组",
+                            "headerConfigList": [
+                                {
+                                    "name": "文本组编码",
+                                    "type": "TEXT",
+                                    "field": "code"
+                                },
+                                {
+                                    "name": "文本组名称",
+                                    "type": "TEXT",
+                                    "field": "name"
+                                },
+                                {
+                                    "name": "创建时间",
+                                    "type": "DATE",
+                                    "field": "createdAt"
+                                }
+                            ]
+                        }
+                    ],
+                    "queryData": {
+                        "containerKey": "GEN_MD$GEN_TEXT_GROUP_VIEW-table-container-GEN_MD$gen_text_procedure_head_cf",
+                        "viewKey": "GEN_MD$GEN_TEXT_GROUP_VIEW:list",
+                        "sceneKey": "GEN_MD$GEN_TEXT_GROUP_VIEW",
+                        "params": {
+                            "request": {
+                                "pageable": {
+
+                                }
+                            },
+                            "selectFields": [
+                                {
+                                    "field": "code"
+                                },
+                                {
+                                    "field": "name"
+                                },
+                                {
+                                    "field": "createdAt"
+                                }
+                            ],
+                            "modelKey": "GEN_MD$gen_text_procedure_head_cf"
+                        }
+                    },
+                    "processConfig": {
+                        "processType": "TRANTOR",
+                        "model": "GEN_MD$gen_text_procedure_head_cf",
+                        "modelName": "文本组",
+                        "containerKey": "GEN_MD$GEN_TEXT_GROUP_VIEW-table-container-GEN_MD$gen_text_procedure_head_cf",
+                        "viewKey": "GEN_MD$GEN_TEXT_GROUP_VIEW:list",
+                        "sceneKey": "GEN_MD$GEN_TEXT_GROUP_VIEW"
+                    }
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response = self.http.post(url, json=params)
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(params, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -410,7 +571,7 @@ class TestTextManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": [self.text_group_id]}
+            set_dict = {"id": self.text_group_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)

@@ -7,6 +7,9 @@ import re
 from pathlib import Path
 import sys
 import time
+import threading
+import uuid
+import os
 
 # Add project root to Python path
 current_file = Path(__file__).resolve()
@@ -53,6 +56,10 @@ class MockData:
     company = mock.get_mock_company()
     ```
     """
+    
+    # 类级别的计数器，用于确保唯一性
+    _counter = 0
+    _counter_lock = threading.Lock()
     
     def __init__(self, locale: str = 'zh_CN'):
         """初始化模拟数据生成器
@@ -208,14 +215,25 @@ class MockData:
         ]
         return random.choice(currency_list)
     
-    def generate_unique_code(self, prefix="AT_",tag=None):
+    def generate_unique_code(self, prefix="AT_", tag=None):
         """
-        生成唯一编码
+        生成唯一编码，使用简化格式确保唯一性
         """
+        with self._counter_lock:
+            # 原子递增计数器
+            MockData._counter += 1
+            if MockData._counter > 999:  # 3位计数器
+                MockData._counter = 1
+            counter = MockData._counter
+        
+        # 使用时间戳的后8位 + 计数器 + 随机数
+        timestamp = int(time.time() * 1000) % 100000000  # 8位时间戳
+        random_num = random.randint(100, 999)  # 3位随机数
+        
         if tag:
-            return f"{prefix}{tag}{time.strftime('%Y%m%d%H%M%S')}{random.randint(1000, 9999)}"
+            return f"{prefix}{tag}{timestamp}{counter:03d}{random_num}"
         else:
-            return f"{prefix}{time.strftime('%Y%m%d%H%M%S')}{random.randint(1000, 9999)}"
+            return f"{prefix}{timestamp}{counter:03d}{random_num}"
     
     
     def get_mock_remark(self):
@@ -277,8 +295,8 @@ if __name__ == '__main__':
     # print("随机选择:", mock.get_mock_choice(['A', 'B', 'C', 'D']))
     # print("币种对象:", mock.get_mock_currency())
     # print("备注:", mock.get_mock_remark())
-    print("时间戳:", mock.get_timestamp(timestamp=True))
-    # print("唯一编码:", mock.generate_unique_code())
+    # print("时间戳:", mock.get_timestamp(timestamp=True))
+    print("唯一编码:", mock.generate_unique_code())
     # print("业务组织数据:", mock.get_mock_org_info(org_type="ComOrg", org_name="某公司"))
     # print("时间戳:", mock.get_mock_date(include_time=False,days_offset=-1))
     # print("坐标:", mock.get_mock_coordinates())
