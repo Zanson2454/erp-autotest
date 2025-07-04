@@ -114,7 +114,9 @@ class TestAdmOrgManagement(GenMdBaseTest):
             # 获取行政组织信息
             adm_org_info = TestAdmOrgManagement.org_info.get("adm_org_info", {})
             org_id = adm_org_info.get("id")
-            assert org_id, "请先执行test_save_adm_org并成功保存行政组织"
+            if not org_id:
+                self.test_save_adm_org()
+                org_id = TestAdmOrgManagement.org_info.get("adm_org_info", {}).get("id")
 
             api_path = self.get_api_path("ORG-组织架构-启用组织单元服务")
             params, url = self.get_api_params(api_path)
@@ -157,7 +159,9 @@ class TestAdmOrgManagement(GenMdBaseTest):
             # 获取行政组织信息
             adm_org_info = TestAdmOrgManagement.org_info.get("adm_org_info", {})
             org_id = adm_org_info.get("id")
-            assert org_id, "请先执行test_save_adm_org并成功保存行政组织"
+            if not org_id:
+                self.test_save_adm_org()
+                org_id = TestAdmOrgManagement.org_info.get("adm_org_info", {}).get("id")
 
             api_path = self.get_api_path("ORG-组织架构-停用组织单元服务")
             params, url = self.get_api_params(api_path)

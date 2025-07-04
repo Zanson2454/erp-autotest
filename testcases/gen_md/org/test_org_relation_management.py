@@ -177,9 +177,11 @@ class TestOrg_RelationManagement(GenMdBaseTest):
         """
         try:
             sql = f"select id from org_relation_cf where {self.query_condition}"
-            if not self.db.query(sql)[0].get("id",None):
+            result = self.db.query(sql)
+            if not result or not result[0].get("id",None):
                 self.test_save_org_relation()
-            self.org_relation_id = self.db.query(sql)[0].get("id",None)
+                result = self.db.query(sql)
+            self.org_relation_id = result[0].get("id",None)
 
             # 调用详情查询接口
             api_path = self.get_api_path("GEN-组织关联-查询详情服务")
@@ -221,9 +223,11 @@ class TestOrg_RelationManagement(GenMdBaseTest):
         try:
             # 获取组织关联管理ID
             sql = f"select id,org_relation_status from org_relation_cf where {self.query_condition}"
-            if not self.db.query(sql)[0].get("id",None):
+            result = self.db.query(sql)
+            if not result or not result[0].get("id",None):
                 self.test_save_org_relation()
-            self.org_relation_id = self.db.query(sql)[0].get("id",None)
+                result = self.db.query(sql)
+            self.org_relation_id = result[0].get("id",None)
             # 调用启用接口
             api_path = self.get_api_path("ORG-组织关联-启用服务")
             params, url = self.get_api_params(api_path)
@@ -268,9 +272,11 @@ class TestOrg_RelationManagement(GenMdBaseTest):
         try:
             # 获取组织关联管理ID
             sql = f"select id,org_relation_status from org_relation_cf where {self.query_condition}"
-            if not self.db.query(sql)[0].get("id",None):
+            result = self.db.query(sql)
+            if not result or not result[0].get("id",None):
                 self.test_enable_org_relation()
-            self.org_relation_id = self.db.query(sql)[0].get("id",None)
+                result = self.db.query(sql)
+            self.org_relation_id = result[0].get("id",None)
 
             # 调用禁用接口
             api_path = self.get_api_path("ORG-组织关联-禁用服务")
@@ -354,7 +360,6 @@ class TestOrg_RelationManagement(GenMdBaseTest):
             api_path = self.get_api_path("组织关联关系表-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
 
-            name = self.init_data.get("user_info",{}).get("username",None)
             # 过滤和设置参数
             params = {
                 "serviceKey": "GEN_MD$ORG_RELATION_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
@@ -659,7 +664,7 @@ class TestOrg_RelationManagement(GenMdBaseTest):
             )
             set_dict = {
                 "ossFileUrl": "test_oss_file_url",
-                "fileName": f"组织关联导入_{self.mock_util.get_timestamp()}.xlsx",
+                "fileName": f"组织关联导入_{self.nickname}_{self.mock_util.get_timestamp()}.xlsx",
                 "importConfig": {
                     "importType": "EXCEL",
                     "skipFirstRow": True

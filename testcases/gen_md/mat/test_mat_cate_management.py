@@ -398,6 +398,8 @@ class TestMatCateManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+
+    @pytest.mark.skip(reason="实际业务未调用")
     @case_decorator(
         story="物料类目管理",
         title="测试根据ID查找类目数据",

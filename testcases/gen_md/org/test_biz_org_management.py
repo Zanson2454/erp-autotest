@@ -17,8 +17,8 @@ class TestBizOrgManagement(GenMdBaseTest):
         super().setup_class()
         cls.org_info = {}
         cls.mock_data = MockData()
-        cls.logger.info(f"init_data: {cls.init_data}")
-        cls.logger.info(f"md_cache_data: {cls.md_cache_data}")
+        # cls.logger.info(f"init_data: {cls.init_data}")
+        # cls.logger.info(f"md_cache_data: {cls.md_cache_data}")
         cls.enabled_org_id = None
         
         # 获取初始化数据中的第一个数据
@@ -34,8 +34,8 @@ class TestBizOrgManagement(GenMdBaseTest):
         cls.slsDcId = cls.md_cache_data.get("org_info", {}).get("sls_dc_md", [])[0]["id"] if cls.md_cache_data.get("org_info", {}).get("sls_dc_md") else None
         cls.whId = cls.md_cache_data.get("org_info", {}).get("inv_wh_md", [])[0]["id"] if cls.md_cache_data.get("org_info", {}).get("inv_wh_md") else None
 
-        cls.logger.debug(f"slsDcId:{cls.slsDcId}")
-        cls.logger.info(f"orgBusinessTypeIds: {cls.orgBusinessTypeIds}")
+        # cls.logger.info(f"slsDcId:{cls.slsDcId}")
+        # cls.logger.info(f"orgBusinessTypeIds: {cls.orgBusinessTypeIds}")
         for org_biz_type in  cls.orgBusinessTypeIds:
             if org_biz_type["code"] == "COM_ORG":
                 cls.comOrgTypeId = org_biz_type["id"]
@@ -103,7 +103,7 @@ class TestBizOrgManagement(GenMdBaseTest):
                 "def12": self.calenderId
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"filtered_params: {filtered_params}")
+            # self.logger.info(f"filtered_params: {filtered_params}")
 
             response = self.http.post(url, json=filtered_params)
             org_id = response.get("data", {}).get("data", {}).get("id")
@@ -142,7 +142,10 @@ class TestBizOrgManagement(GenMdBaseTest):
             com_org_info = TestBizOrgManagement.org_info.get("com_org_info", {})
             org_parent_code = com_org_info.get("org_code")
             com_org_id = com_org_info.get("id")
-            assert org_parent_code and com_org_id, "请先执行test_save_com_org并成功保存公司组织"
+            if not org_parent_code and not com_org_id:
+                self.test_save_com_org()
+                org_parent_code = TestBizOrgManagement.org_info.get("com_org_info", {}).get("org_code")
+                com_org_id = TestBizOrgManagement.org_info.get("com_org_info", {}).get("id")
 
             org_code = self.mock_data.generate_unique_code(tag="PurOrg")
             org_name = f"采购组织_{self.mock_data.get_timestamp()}"
@@ -169,7 +172,7 @@ class TestBizOrgManagement(GenMdBaseTest):
                 "comOrgId": com_org_id
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"filtered_params: {filtered_params}")
+            # self.logger.info(f"filtered_params: {filtered_params}")
 
             response = self.http.post(url, json=filtered_params)
             org_id = response.get("data", {}).get("data", {}).get("id")
@@ -208,7 +211,11 @@ class TestBizOrgManagement(GenMdBaseTest):
             com_org_info = TestBizOrgManagement.org_info.get("com_org_info", {})
             org_parent_code = com_org_info.get("org_code")
             com_org_id = com_org_info.get("id")
-            assert org_parent_code and com_org_id, "请先执行test_save_com_org并成功保存公司组织"
+            
+            if not org_parent_code and not com_org_id:
+                self.test_save_com_org()
+                org_parent_code = TestBizOrgManagement.org_info.get("com_org_info", {}).get("org_code")
+                com_org_id = TestBizOrgManagement.org_info.get("com_org_info", {}).get("id")
 
             org_code = self.mock_data.generate_unique_code(tag="SlsOrg")
             org_name = f"销售组织_{self.mock_data.get_timestamp()}"
@@ -236,7 +243,7 @@ class TestBizOrgManagement(GenMdBaseTest):
                 "comOrgId": com_org_id
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"filtered_params: {filtered_params}")
+            # self.logger.info(f"filtered_params: {filtered_params}")
 
             response = self.http.post(url, json=filtered_params)
             org_id = response.get("data", {}).get("data", {}).get("id")
@@ -275,7 +282,10 @@ class TestBizOrgManagement(GenMdBaseTest):
             com_org_info = TestBizOrgManagement.org_info.get("com_org_info", {})
             org_parent_code = com_org_info.get("org_code")
             com_org_id = com_org_info.get("id")
-            assert org_parent_code and com_org_id, "请先执行test_save_com_org并成功保存公司组织"
+            if not org_parent_code and not com_org_id:
+                self.test_save_com_org()
+                org_parent_code = TestBizOrgManagement.org_info.get("com_org_info", {}).get("org_code")
+                com_org_id = TestBizOrgManagement.org_info.get("com_org_info", {}).get("id")
 
             org_code = self.mock_data.generate_unique_code(tag="InvOrg")
             org_name = f"库存组织_{self.mock_data.get_timestamp()}"
@@ -342,7 +352,10 @@ class TestBizOrgManagement(GenMdBaseTest):
             inv_org_info = TestBizOrgManagement.org_info.get("inv_org_info", {})
             org_parent_code = inv_org_info.get("org_code")
             inv_org_id = inv_org_info.get("id")
-            assert org_parent_code and inv_org_id, "请先执行test_save_inv_org并成功保存库存组织"
+            if not org_parent_code and not inv_org_id:
+                self.test_save_inv_org()
+                org_parent_code = TestBizOrgManagement.org_info.get("inv_org_info", {}).get("org_code")
+                inv_org_id = TestBizOrgManagement.org_info.get("inv_org_info", {}).get("id")
 
             org_code = self.mock_data.generate_unique_code(tag="InvLoc")
             org_name = f"库存地点_{self.mock_data.get_timestamp()}"
@@ -412,7 +425,9 @@ class TestBizOrgManagement(GenMdBaseTest):
         try:
             # 1. 获取公司ID
             com_org_id = TestBizOrgManagement.org_info.get("com_org_info", {}).get("id")
-            assert com_org_id, "请先执行test_save_org并成功保存公司组织"
+            if not com_org_id:
+                self.test_save_com_org()
+                com_org_id = TestBizOrgManagement.org_info.get("com_org_info", {}).get("id")
 
             # 2. 获取API配置
             api_path = self.get_api_path("ORG-组织架构-查询当前组织的公司组织服务")  # key以md_api_path.yaml为准
@@ -425,11 +440,11 @@ class TestBizOrgManagement(GenMdBaseTest):
                 ["params", "request"]
             )
             filtered_params['params']['request']['id'] =com_org_id
-            self.logger.info(f"请求参数: {filtered_params}")
+            # self.logger.info(f"请求参数: {filtered_params}")
 
             # 4. 发送请求
             response = self.http.post(url, json=filtered_params)
-            self.logger.info(f"响应: {response}")
+            # self.logger.info(f"响应: {response}")
 
             # 5. 断言
             self.assert_util.assert_response_data(response)
@@ -859,7 +874,9 @@ class TestBizOrgManagement(GenMdBaseTest):
             # 获取已创建的组织ID
             com_org_info = TestBizOrgManagement.org_info.get("com_org_info", {})
             org_id = com_org_info.get("id")
-            assert org_id, "请先执行test_save_com_org并成功保存公司组织"
+            if not org_id:
+                self.test_save_com_org()
+                org_id = TestBizOrgManagement.org_info.get("com_org_info", {}).get("id")
 
             # 获取API配置
             api_path = self.get_api_path("ORG-组织架构-组织历史版本查看服务")
@@ -1105,11 +1122,11 @@ class TestBizOrgManagement(GenMdBaseTest):
                 "orgDimensionCode": "SCM_ORG_GRP"
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            # self.logger.info(f"请求参数: {filtered_params}")
 
             # 发送请求
             response = self.http.post(url, json=filtered_params)
-            self.logger.info(f"响应: {response}")
+            # self.logger.info(f"响应: {response}")
 
             # 断言
             self.assert_util.assert_response_data(response)

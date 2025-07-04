@@ -21,7 +21,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         cls.modelKey = None
         cls.modelName = None
         cls.logger.info("组织切换管理测试类初始化完成")
-        
+        cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
         
         cls.orgDimensionId = cls.md_cache_data["org_info"].get("org_dimension_cf",[])[0]["id"]
         cls.com_org_id = cls.md_cache_data["org_info"].get("com_org_info",[])[0]["id"]
@@ -801,7 +801,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
             export_params = {
                 "serviceKey": "GEN_MD$ORG_SWITCH_LIST_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
                 "params": {
-                    "taskName": f"切换公司列表-{user_name}-{self.mock_util.get_timestamp()}-导出",
+                    "taskName": f"切换公司列表-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
                     "multiSheetConfig": [
                         {
                             "sheetName": "切换公司列表",
@@ -860,21 +860,44 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
             api_path = self.get_api_path("切换公司模型表-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
 
-            # 获取用户信息
-            user_name = self.md_cache_data.get("user_info", {}).get("username", "AutoTest")
-
             # 构建导出任务参数
             export_params = {
                 "serviceKey": "GEN_MD$ORG_SWITCH_MODEL_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
                 "params": {
-                    "taskName": f"切换公司模型表-{user_name}-{self.mock_util.get_timestamp()}-导出",
+                    "taskName": f"子公司模型切换-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
                     "multiSheetConfig": [
                         {
+                            "modelKey": "GEN_MD$org_switch_model_cf",
+                            "modelName": "切换公司模型表",
+                            "sheetNo": 0,
                             "sheetName": "切换公司模型表",
-                            "exportConfig": {
-                                "exportType": "EXCEL",
-                                "conditions": {}
-                            }
+                            "headerConfigList": [
+                                {
+                                    "name": "菜单名称",
+                                    "type": "TEXT",
+                                    "field": "menu"
+                                },
+                                {
+                                    "name": "模型表名",
+                                    "type": "TEXT",
+                                    "field": "modelKey"
+                                },
+                                {
+                                    "name": "模型表中文名",
+                                    "type": "TEXT",
+                                    "field": "modelName"
+                                },
+                                {
+                                    "name": "是否切换开关",
+                                    "type": "BOOL",
+                                    "field": "isOpen"
+                                },
+                                {
+                                    "name": "功能说明",
+                                    "type": "TEXT",
+                                    "field": "describe"
+                                }
+                            ]
                         }
                     ],
                     "queryData": {
@@ -883,19 +906,41 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
                         "sceneKey": "GEN_MD$ORG_SWITCH_MODEL_VIEW",
                         "params": {
                             "request": {
-                                "pageable": {}
+                                "pageable": {
+
+                                }
                             },
                             "selectFields": [
-                                "model_code",
-                                "model_name",
-                                "description",
-                                "status"
-                            ]
+                                {
+                                    "field": "menu"
+                                },
+                                {
+                                    "field": "modelKey"
+                                },
+                                {
+                                    "field": "modelName"
+                                },
+                                {
+                                    "field": "isOpen"
+                                },
+                                {
+                                    "field": "describe"
+                                }
+                            ],
+                            "modelKey": "GEN_MD$org_switch_model_cf"
                         }
+                    },
+                    "processConfig": {
+                        "processType": "TRANTOR",
+                        "model": "GEN_MD$org_switch_model_cf",
+                        "modelName": "切换公司模型表",
+                        "containerKey": "GEN_MD$ORG_SWITCH_MODEL_VIEW-table-container-GEN_MD$org_switch_model_cf",
+                        "viewKey": "GEN_MD$ORG_SWITCH_MODEL_VIEW:list",
+                        "sceneKey": "GEN_MD$ORG_SWITCH_MODEL_VIEW"
                     }
                 }
             }
-
+                        
             self.logger.info(f"请求参数: {export_params}")
             response = self.http.post(url, json=export_params)
             self.assert_util.assert_response_success(response)
