@@ -23,7 +23,7 @@ class TestOrg_RelationManagement(GenMdBaseTest):
         # 获取组织维度管理ID
         cls.org_head_dimension_id = cls.md_cache_data.get("org_info",{}).get("org_dimension_cf",[])[0].get("id",None)
         cls.org_head_unit_id = cls.md_cache_data.get("org_info",{}).get("com_org_info",[])[0].get("id",None)
-        
+        cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
         # 查询条件
         cls.query_condition = f"org_head_dimension_id = {cls.org_head_dimension_id} and org_head_unit_id = {cls.org_head_unit_id} and org_relation_dimension_id = {cls.org_head_dimension_id} and org_relation_unit_id = {cls.org_head_unit_id}"
 
@@ -359,7 +359,7 @@ class TestOrg_RelationManagement(GenMdBaseTest):
             params = {
                 "serviceKey": "GEN_MD$ORG_RELATION_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
                 "params": {
-                    "taskName": f"组织关联-{name}-{self.mock_util.get_timestamp()}-导出",
+                    "taskName": f"组织关联-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
                     "multiSheetConfig": [
                         {
                             "modelKey": "GEN_MD$org_relation_cf",
