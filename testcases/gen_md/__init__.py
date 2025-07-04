@@ -47,6 +47,7 @@ class GenMdBaseTest(BaseTest):
         cls.md_cache_data = CacheUtil.get('md_init_cache')
         
         cls.path_params = {"tmodule":"GEN_MD"}
+        cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
     
     def get_api_path(self, api_key):
         """

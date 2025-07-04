@@ -16,7 +16,6 @@ class TestTextManagement(GenMdBaseTest):
         cls.text_type_id = None
         cls.text_group_id = None
         cls.logger.info("文本管理测试类初始化完成")
-        cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
         
         cls.call_times=0
         
