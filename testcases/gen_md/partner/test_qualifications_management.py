@@ -28,7 +28,7 @@ class TestQualificationsManagement(GenMdBaseTest):
             )
             cls.db.delete(
                 table="gen_qualifications_procedure_head_cf", 
-                where="group_code like %s", 
+                where="code like %s", 
                 params=["AT_%"]
             )
             cls.logger.info("测试数据清理完成")
@@ -178,8 +178,8 @@ class TestQualificationsManagement(GenMdBaseTest):
             api_path = self.get_api_path("资质类型-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
 
-            params =  {
-                    "serviceKey": "GEN_MD$GEN_QUALIFICATIONS_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
+            params["params"] = {
+                    
                     "taskName": f"资质类型-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
                     "multiSheetConfig": [
                         {
@@ -298,6 +298,9 @@ class TestQualificationsManagement(GenMdBaseTest):
     def test_save_qualification_group(self):
         """新增资质组用例"""
         try:
+            if not self.qualification_type_id:
+                self.test_save_qualification_type()
+
             # 使用优化后的generate_unique_code方法，确保编码唯一性
             group_code = self.mock_util.generate_unique_code(tag="QG")
             group_name = f"资质组_{self.mock_util.get_timestamp()}"
@@ -307,14 +310,20 @@ class TestQualificationsManagement(GenMdBaseTest):
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["groupCode", "groupName", "description", "remark"],
+                ["code", "name", "itemList"],
                 ["params", "request"]
             )
             set_dict = {
-                "groupCode": group_code,
-                "groupName": group_name,
-                "description": "资质组描述",
-                "remark": f"自动化测试资质组-{self.mock_util.get_timestamp()}"
+                "code": group_code,
+                "name": group_name,
+                "itemList": [
+                    {
+                        "qualificationsType": {
+                            "id": self.qualification_type_id 
+                        },
+                        "isRequired": True
+                    }
+                ]
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -422,24 +431,80 @@ class TestQualificationsManagement(GenMdBaseTest):
             api_path = self.get_api_path("资质组-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["taskName", "exportConfig"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "taskName": f"资质组导出任务_{self.mock_util.get_timestamp()}",
-                "exportConfig": {
-                    "fileName": f"资质组_{self.mock_util.get_timestamp()}",
-                    "format": "EXCEL"
+            params["params"] =  {
+                "taskName": f"资质组-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
+                "multiSheetConfig": [
+                    {
+                        "modelKey": "GEN_MD$gen_qualifications_procedure_head_cf",
+                        "modelName": "资质组",
+                        "sheetNo": 0,
+                        "sheetName": "资质组",
+                        "headerConfigList": [
+                            {
+                                "name": "资质组编码",
+                                "type": "TEXT",
+                                "field": "name"
+                            },
+                            {
+                                "name": "资质组名称",
+                                "type": "TEXT",
+                                "field": "code"
+                            },
+                            {
+                                "name": "创建时间",
+                                "type": "DATE",
+                                "field": "createdAt"
+                            },
+                            {
+                                "name": "更新时间",
+                                "type": "DATE",
+                                "field": "updatedAt"
+                            }
+                        ]
+                    }
+                ],
+                "queryData": {
+                    "containerKey": "GEN_MD$GEN_QUALIFICATIONS_GROUP_VIEW-table-container-GEN_MD$gen_qualifications_procedure_head_cf",
+                    "viewKey": "GEN_MD$GEN_QUALIFICATIONS_GROUP_VIEW:list",
+                    "sceneKey": "GEN_MD$GEN_QUALIFICATIONS_GROUP_VIEW",
+                    "params": {
+                        "request": {
+                            "pageable": {
+
+                            }
+                        },
+                        "selectFields": [
+                            {
+                                "field": "name"
+                            },
+                            {
+                                "field": "code"
+                            },
+                            {
+                                "field": "createdAt"
+                            },
+                            {
+                                "field": "updatedAt"
+                            }
+                        ],
+                        "modelKey": "GEN_MD$gen_qualifications_procedure_head_cf"
+                    }
+                },
+                "processConfig": {
+                    "processType": "TRANTOR",
+                    "model": "GEN_MD$gen_qualifications_procedure_head_cf",
+                    "modelName": "资质组",
+                    "containerKey": "GEN_MD$GEN_QUALIFICATIONS_GROUP_VIEW-table-container-GEN_MD$gen_qualifications_procedure_head_cf",
+                    "viewKey": "GEN_MD$GEN_QUALIFICATIONS_GROUP_VIEW:list",
+                    "sceneKey": "GEN_MD$GEN_QUALIFICATIONS_GROUP_VIEW"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+
+            response = self.http.post(url, json=params)
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(params, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
