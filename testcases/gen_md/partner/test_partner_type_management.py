@@ -23,7 +23,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         try:
             cls.db.delete(
                 table="gen_partner_type_cf", 
-                where="type_code like %s", 
+                where="partner_code like %s", 
                 params=["AT_%"]
             )
             cls.logger.info("测试数据清理完成")
@@ -40,34 +40,39 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         smoke=True,
         tags=["相关方类型", "新增"]
     )
-    def test_save_partner_type(self):
+    @pytest.mark.parametrize("btClass, partnerClass", [
+        ("SLS_ORG", "CUSTOMER"),
+        ("PUR_ORG", "SUPPLIER")
+    ])
+    def test_save_partner_type(self, btClass, partnerClass):
         """新增相关方类型用例"""
         try:
-            type_code = self.mock_util.generate_unique_code(tag="PT")
-            type_name = f"相关方类型_{self.mock_util.get_timestamp()}"
+            # 使用优化后的generate_unique_code方法，确保编码唯一性
+            partnerCode = self.mock_util.generate_unique_code(tag="PT")
+            partnerName = f"相关方类型_{self.mock_util.get_timestamp()}"
 
             api_path = self.get_api_path("GEN-相关方类型-保存服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["typeCode", "typeName", "category", "status", "remark"],
+                ["btClass", "partnerClass", "partnerCode", "partnerName", "desc"],
                 ["params", "request"]
             )
             set_dict = {
-                "typeCode": type_code,
-                "typeName": type_name,
-                "category": "BUSINESS",
-                "status": "ENABLED",
-                "remark": f"自动化测试相关方类型-{self.mock_util.get_timestamp()}"
+                "btClass": btClass,
+                "partnerClass": partnerClass,
+                "partnerCode": partnerCode,
+                "partnerName": partnerName,
+                "desc": f"自动化测试相关方类型-{self.mock_util.get_timestamp()}"
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
             
+            # 保存返回的ID供后续测试方法使用
             self.partner_type_id = response.get("data", {}).get("data", {})
-            self.partner_type_code = type_code
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -92,20 +97,33 @@ class TestPartnerTypeManagement(GenMdBaseTest):
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["pageable", "fields"],
+                ["pageable", "fields", "systemParams"],
                 ["params", "request"]
             )
             set_dict = {
-                "pageable": {
-                    "pageNo": 1,
-                    "pageSize": 20,
-                    "needTotal": True
+            "pageable": {
+                "pageNo": 1,
+                "pageSize": 20,
+                "needTotal": True,
+                "sortOrders": None,
+                "conditionItems": None
+            },
+            "fields": [
+                {
+                    "name": "partnerName",
+                    "type": "TEXT"
                 },
-                "fields": [
-                    {"name": "typeCode", "type": "TEXT"},
-                    {"name": "typeName", "type": "TEXT"}
-                ]
-            }
+                {
+                    "name": "btClass",
+                    "type": "SELECT"
+                },
+                {
+                    "name": "partnerCode",
+                    "type": "TEXT"
+                }
+            ],
+            "systemParams": None
+        }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -130,7 +148,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         """查询相关方类型详情用例"""
         try:
             if not self.partner_type_id:
-                self.test_save_partner_type()
+                self.test_save_partner_type(btClass="SLS_ORG", partnerClass="CUSTOMER")
 
             api_path = self.get_api_path("GEN-相关方类型-查询详情服务")
             params, url = self.get_api_params(api_path)
@@ -165,7 +183,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         """根据ID查找相关方类型数据用例"""
         try:
             if not self.partner_type_id:
-                self.test_save_partner_type()
+                self.test_save_partner_type(btClass="SLS_ORG", partnerClass="CUSTOMER")
 
             api_path = self.get_api_path("GEN-相关方类型定义配置表-根据ID查找数据服务")
             params, url = self.get_api_params(api_path)
@@ -227,12 +245,70 @@ class TestPartnerTypeManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+
+
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
+    @case_decorator(
+        story="相关方类型配置",
+        title="测试合作伙伴类型分页查询(根据角色过滤)",
+        description="验证合作伙伴类型分页查询(根据角色过滤)功能",
+        severity="normal",
+        order=6,
+        tags=["相关方类型", "角色过滤"]
+    )
+    def test_partner_type_filter_paging(self):
+        """合作伙伴类型分页查询(根据角色过滤)用例"""
+        try:
+            api_path = self.get_api_path("GEN-合作伙伴类型-分页查询(根据角色过滤)")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["pageable", "fields", "systemParams"],
+                ["params", "request"]
+            )
+            set_dict =  {
+            "pageable": {
+                "pageNo": 1,
+                "pageSize": 20,
+                "needTotal": True,
+                "sortOrders": None,
+                "conditionItems": None
+            },
+            "fields": [
+                {
+                    "name": "partnerName",
+                    "type": "TEXT"
+                },
+                {
+                    "name": "btClass",
+                    "type": "SELECT"
+                },
+                {
+                    "name": "partnerCode",
+                    "type": "TEXT"
+                }
+            ],
+            "systemParams": None
+        }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
     @case_decorator(
         story="相关方类型配置",
         title="测试提交相关方类型导出任务",
         description="验证提交相关方类型导出任务功能",
         severity="normal",
-        order=6,
+        order=7,
         tags=["相关方类型", "导出任务"]
     )
     def test_submit_partner_type_export_task(self):
@@ -241,24 +317,75 @@ class TestPartnerTypeManagement(GenMdBaseTest):
             api_path = self.get_api_path("相关方类型-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["taskName", "exportConfig"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "taskName": f"相关方类型导出任务_{self.mock_util.get_timestamp()}",
-                "exportConfig": {
-                    "fileName": f"相关方类型_{self.mock_util.get_timestamp()}",
-                    "format": "EXCEL"
+            params["params"] = {
+                "taskName": f"相关方类型-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
+                "multiSheetConfig": [
+                    {
+                        "modelKey": "GEN_MD$gen_partner_type_cf",
+                        "modelName": "相关方类型",
+                        "sheetNo": 0,
+                        "sheetName": "相关方类型",
+                        "headerConfigList": [
+                            {
+                                "name": "类型编码",
+                                "type": "TEXT",
+                                "field": "typeCode"
+                            },
+                            {
+                                "name": "类型名称",
+                                "type": "TEXT",
+                                "field": "typeName"
+                            },
+                            {
+                                "name": "类别",
+                                "type": "TEXT",
+                                "field": "category"
+                            },
+                            {
+                                "name": "状态",
+                                "type": "TEXT",
+                                "field": "status"
+                            },
+                            {
+                                "name": "备注",
+                                "type": "TEXT",
+                                "field": "remark"
+                            }
+                        ]
+                    }
+                ],
+                "queryData": {
+                    "containerKey": "GEN_MD$GEN_PARTNER_TYPE_VIEW-table-container-GEN_MD$gen_partner_type_cf",
+                    "viewKey": "GEN_MD$GEN_PARTNER_TYPE_VIEW:list",
+                    "sceneKey": "GEN_MD$GEN_PARTNER_TYPE_VIEW",
+                    "params": {
+                        "request": {
+                            "pageable": {}
+                        },
+                        "selectFields": [
+                            {"field": "typeCode"},
+                            {"field": "typeName"},
+                            {"field": "category"},
+                            {"field": "status"},
+                            {"field": "remark"}
+                        ],
+                        "modelKey": "GEN_MD$gen_partner_type_cf"
+                    }
+                },
+                "processConfig": {
+                    "processType": "TRANTOR",
+                    "model": "GEN_MD$gen_partner_type_cf",
+                    "modelName": "相关方类型",
+                    "containerKey": "GEN_MD$GEN_PARTNER_TYPE_VIEW-table-container-GEN_MD$gen_partner_type_cf",
+                    "viewKey": "GEN_MD$GEN_PARTNER_TYPE_VIEW:list",
+                    "sceneKey": "GEN_MD$GEN_PARTNER_TYPE_VIEW"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response = self.http.post(url, json=params)
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(params, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -270,14 +397,14 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         title="测试删除相关方类型",
         description="验证删除相关方类型功能",
         severity="normal",
-        order=7,
+        order=8,
         tags=["相关方类型", "删除"]
     )
     def test_delete_partner_type(self):
         """删除相关方类型用例"""
         try:
             if not self.partner_type_id:
-                self.test_save_partner_type()
+                self.test_save_partner_type(btClass="SLS_ORG", partnerClass="CUSTOMER")
 
             api_path = self.get_api_path("GEN-相关方类型-删除服务")
             params, url = self.get_api_params(api_path)
@@ -287,7 +414,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": [self.partner_type_id]}
+            set_dict = {"id": self.partner_type_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -307,7 +434,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         title="测试相关方类型标准导出",
         description="验证相关方类型标准导出功能",
         severity="normal",
-        order=8,
+        order=9,
         tags=["相关方类型", "导出"]
     )
     def test_export_partner_type(self):
@@ -345,7 +472,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         title="测试相关方类型标准导入",
         description="验证相关方类型标准导入功能",
         severity="normal",
-        order=9,
+        order=10,
         tags=["相关方类型", "导入"]
     )
     def test_import_partner_type(self):
@@ -383,7 +510,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         title="测试通过OSS提交相关方类型导入任务",
         description="验证通过OSS提交相关方类型导入任务功能",
         severity="normal",
-        order=10,
+        order=11,
         tags=["相关方类型", "OSS导入"]
     )
     def test_submit_partner_type_import_task_by_oss(self):
