@@ -73,7 +73,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
     # ============= 核心功能测试 =============
     @case_decorator(
         story="合作伙伴主数据",
-        title="测试新增合作伙伴",
+        title="测试新增外部客户",
         description="验证新增合作伙伴功能",
         severity="blocker",
         order=1,
@@ -160,6 +160,196 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
                         "prtnId": {"id": self.sls_org_id}
                     }
                 ],
+                "cateList": [
+                    {
+                        "matCateId": {"id": self.mat_cate_id}
+                    }
+                ]
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            self.partner_id = response.get("data", {}).get("data", {})
+            self.partner_code = code
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+        
+    @case_decorator(
+        story="合作伙伴主数据",
+        title="测试新增内部客户",
+        description="验证新增合作伙伴功能",
+        severity="blocker",
+        order=1,
+        smoke=True,
+        tags=["合作伙伴", "新增"]
+    )
+    def test_save_inner_cust(self):
+        """新增合作伙伴用例"""
+        try:
+            code = self.mock_util.generate_unique_code(tag="INNER_CUST")
+            bizLicenseNo = self.mock_util.get_mock_enterprise_credentials()
+
+            api_path = self.get_api_path("GEN-合作伙伴-保存服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["code","name","addrList", "addressDetail", "addressId", "attachmentList", "bankList","textList","userList","contactList","contactNum","counId","enterpriseType",
+                 "cateList","bizLicenseNo","socialCreditCode","taxpayersNum","bizScope","classType","comCorporation","intro","outerCode","partiesList","partnerIdentity","partnerTypeId","qualificationsList",
+                 "registeredCapital",],
+                ["params", "request"]
+            )
+            set_dict = {
+                "partnerIdentity":["CUSTOMER"], #客户
+                "partnerTypeId": {"id":self.inter_cust_type_id},
+                "classType": "COMPANY",
+                "code": code,
+                "name": self.mock_util.get_mock_company(),
+                "outerCode": f"outcode{self.mock_util.get_timestamp()}",
+                "contactNum": str(self.mock_util.get_mock_phone_number()),
+                "comCorporation": self.mock_util.get_mock_name(),
+                "bizLicenseNo": bizLicenseNo,
+                "socialCreditCode": bizLicenseNo,
+                "taxpayersNum": bizLicenseNo,
+                "enterpriseType": "INTERNAL",
+                "registeredCapital": 100,
+                "counId": {"id": self.coun_id},
+                "addressId": {"id": self.addr_id},
+                "addressDetail": "自动化测试详细地址",
+                "bizScope": self.mock_util.get_mock_business_scope(),
+                "intro": self.mock_util.get_mock_company_intro(),
+                "addrList": [
+                    {
+                        "addrDetail": "自动化测试地址",
+                        "addrId": {"id": self.addr_id},
+                        "addrUsage":"REC_ADDR",
+                        "contactName": self.mock_util.get_mock_name(),
+                        "contactPhone": self.mock_util.get_mock_phone_number(),
+                        "isDefault": True,
+                    }
+                ],
+                "bankList": [
+                    {
+                        "accountName": self.mock_util.get_mock_bank_info()['bank_name'],
+                        "bankAccount": self.mock_util.get_mock_bank_info()['account_number'],
+                        "isDefault": True,
+                        "usage": "PAYMENT",
+                        "bankId": {"id": self.bank_id},
+                        "subBankId": {"id": self.sub_bank_id},   
+                    }
+                ],
+                "attachmentList": [],
+                "textList": [{
+                    "textType": {"id": self.sls_text_type_id},
+                    "textContent": f"自动化测试文本_{self.mock_util.get_timestamp()}"
+                }],
+                "qualificationsList": [],
+                "contactList": [
+                    {
+                        "contactName": self.mock_util.get_mock_name(),
+                        "contactPhone": self.mock_util.get_mock_phone_number(),
+                        "isDefault": True,
+                    }
+                ],
+                "userList": [
+                    {
+                        "employeeId": {"id": self.employee_id},
+                        "isManager": True,
+                    }
+                ],
+                "partiesList": [
+                    {
+                        "prtnTypeId": {"id": self.sls_partner_type_id},
+                        "prtnId": {"id": self.sls_org_id}
+                    }
+                ],
+                "cateList": [
+                    {
+                        "matCateId": {"id": self.mat_cate_id}
+                    }
+                ]
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            self.partner_id = response.get("data", {}).get("data", {})
+            self.partner_code = code
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+        
+    @case_decorator(
+        story="合作伙伴主数据",
+        title="测试新增个人客户",
+        description="验证新增合作伙伴功能",
+        severity="blocker",
+        order=1,
+        smoke=True,
+        tags=["合作伙伴", "新增"]
+    )
+    def test_save_person_cust(self):
+        """新增合作伙伴用例"""
+        try:
+            code = self.mock_util.generate_unique_code(tag="PERSON_CUST")
+            name = self.mock_util.get_mock_name()
+
+            api_path = self.get_api_path("GEN-合作伙伴-保存服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["code","name","personName","idCard","addrList", "addressDetail", "addressId", "attachmentList", "bankList","textList","userList","contactList","contactNum","counId","enterpriseType",
+                 "cateList","outerCode","partiesList","partnerIdentity","partnerTypeId","qualificationsList"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "partnerIdentity":["CUSTOMER"], #客户
+                "partnerTypeId": {"id":self.person_cust_type_id},
+                "classType": "PERSON",
+                "code": code,
+                "name": name,
+                "personName": name,
+                "idCard": self.mock_util.get_mock_ssn(),
+                "outerCode": f"outcode{self.mock_util.get_timestamp()}",
+                "contactNum": str(self.mock_util.get_mock_phone_number()),
+                "addressId": {"id": self.addr_id},
+                "addressDetail": "自动化测试详细地址",
+                "addrList": [
+                    {
+                        "addrDetail": "自动化测试地址",
+                        "addrId": {"id": self.addr_id},
+                        "addrUsage":"REC_ADDR",
+                        "contactName": self.mock_util.get_mock_name(),
+                        "contactPhone": self.mock_util.get_mock_phone_number(),
+                        "isDefault": True,
+                    }
+                ],
+                "bankList": [],
+                "attachmentList": [],
+                "textList": [],
+                "qualificationsList": [],
+                "contactList": [
+                    {
+                        "contactName": self.mock_util.get_mock_name(),
+                        "contactPhone": self.mock_util.get_mock_phone_number(),
+                        "isDefault": True,
+                    }
+                ],
+                "userList": [],
+                "partiesList": [],
                 "cateList": [
                     {
                         "matCateId": {"id": self.mat_cate_id}
@@ -706,4 +896,4 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
 
         except Exception as e:
             a.text(str(e), "失败原因")
-            raise 
+            raise idCard
