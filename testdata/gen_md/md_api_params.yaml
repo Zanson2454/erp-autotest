@@ -907,6 +907,12 @@ api_params:
     params:
       request: {}
     serviceKey: GEN_MD$GEN_SURVEY_DETAIL_ACTION_SERVICE
+  /api/trantor/service/engine/execute/GEN_MD$GEN_SURVERY_QUERY_TEMPLATE_ACTION:
+    params:
+      request:
+        templateId: 0
+        templateType: null
+    serviceKey: GEN_MD$GEN_SURVERY_QUERY_TEMPLATE_ACTION
   /api/trantor/service/engine/execute/GEN_MD$ORG_BUSINESS_TYPE_ENABLED_ACTION_SERVICE:
     params:
       request: {}

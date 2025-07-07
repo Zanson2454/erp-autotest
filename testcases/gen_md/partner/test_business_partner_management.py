@@ -16,7 +16,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
         cls.partner_id = None
         cls.partner_code = None
         cls.logger.info("合作伙伴主数据管理测试类初始化完成")
-        
+
         # 合作伙伴类型
         cls.business_partner_type_cf = cls.md_cache_data.get("partner_info", {}).get("business_partner_type_cf", {})
         cls.out_cust_type_id = cls.business_partner_type_cf.get("out_cust", [{}])[0].get("id", None)
@@ -896,4 +896,41 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
 
         except Exception as e:
             a.text(str(e), "失败原因")
-            raise idCard
+            raise 
+
+    # ============= 跳过的特殊功能测试用例 =============
+    @pytest.mark.skip(reason="评分查询模板信息接口业务功能暂未明确，跳过测试")
+    @case_decorator(
+        story="合作伙伴主数据",
+        title="测试评分查询模板信息",
+        description="验证评分查询模板信息功能",
+        severity="normal",
+        order=13,
+        tags=["合作伙伴", "评分模板"]
+    )
+    def test_survey_query_template(self):
+        """评分查询模板信息用例"""
+        try:
+            api_path = self.get_api_path("GEN-评分查询模板信息")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["templateId", "templateType"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "templateId": 1,
+                "templateType": "SURVEY_TEMPLATE"
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise

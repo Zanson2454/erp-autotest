@@ -265,6 +265,9 @@ apis:
   GEN-评分详情-查询评分详情服务:
     path: /api/trantor/service/engine/execute/GEN_MD$GEN_SURVEY_DETAIL_ACTION_SERVICE
     method: POST
+  GEN-评分查询模板信息:
+    path: /api/trantor/service/engine/execute/GEN_MD$GEN_SURVERY_QUERY_TEMPLATE_ACTION
+    method: POST
   ORG-组织类型-启用服务:
     path: /api/trantor/service/engine/execute/GEN_MD$ORG_BUSINESS_TYPE_ENABLED_ACTION_SERVICE
     method: POST
