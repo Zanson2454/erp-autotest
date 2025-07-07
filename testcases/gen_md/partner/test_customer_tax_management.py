@@ -19,11 +19,15 @@ class TestCustomerTaxManagement(GenMdBaseTest):
     def teardown_class(cls):
         """测试类结束后执行清理"""
         try:
-            cls.logger.info("客户税分类管理测试类清理完成")
+            cls.db.delete(
+                table="gen_cust_tax_type_cf", 
+                where="tax_class_code like %s", 
+                params=["AT_%"]
+            )
+            cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
-    # ============= 跳过的测试用例 =============
     @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="客户税分类管理",
@@ -47,7 +51,8 @@ class TestCustomerTaxManagement(GenMdBaseTest):
             set_dict = {
                 "exportConfig": {
                     "fileName": f"客户税分类导出_{self.mock_util.get_timestamp()}",
-                    "sheetName": "客户税分类"
+                    "sheetName": "客户税分类",
+                    "format": "EXCEL"
                 }
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
@@ -85,7 +90,8 @@ class TestCustomerTaxManagement(GenMdBaseTest):
             set_dict = {
                 "importConfig": {
                     "fileName": f"客户税分类导入_{self.mock_util.get_timestamp()}",
-                    "fileType": "EXCEL"
+                    "fileType": "EXCEL",
+                    "sheetName": "客户税分类"
                 }
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
@@ -100,7 +106,6 @@ class TestCustomerTaxManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="客户税分类管理",
         title="测试提交客户税分类导出任务",
@@ -115,24 +120,75 @@ class TestCustomerTaxManagement(GenMdBaseTest):
             api_path = self.get_api_path("客户税分类-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["taskName", "exportConfig"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "taskName": f"客户税分类导出任务_{self.mock_util.get_timestamp()}",
-                "exportConfig": {
-                    "fileName": f"客户税分类_{self.mock_util.get_timestamp()}",
-                    "format": "EXCEL"
+            params["params"] =  {
+                "taskName": f"客户税分类-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
+                "multiSheetConfig": [
+                    {
+                        "modelKey": "GEN_MD$gen_cust_tax_type_cf",
+                        "modelName": "客户税分类",
+                        "sheetNo": 0,
+                        "sheetName": "客户税分类",
+                        "headerConfigList": [
+                            {
+                                "name": "客户税分类编码",
+                                "type": "TEXT",
+                                "field": "taxClassCode"
+                            },
+                            {
+                                "name": "国家",
+                                "type": "TEXT",
+                                "field": "counId.counName"
+                            },
+                            {
+                                "name": "客户分类描述",
+                                "type": "TEXT",
+                                "field": "taxClassDesc"
+                            }
+                        ]
+                    }
+                ],
+                "queryData": {
+                    "containerKey": "GEN_MD$GEN_CUST_TAX_TYPE_VIEW-table-container-GEN_MD$gen_cust_tax_type_cf",
+                    "viewKey": "GEN_MD$GEN_CUST_TAX_TYPE_VIEW:list",
+                    "sceneKey": "GEN_MD$GEN_CUST_TAX_TYPE_VIEW",
+                    "params": {
+                        "request": {
+                            "pageable": {
+
+                            }
+                        },
+                        "selectFields": [
+                            {
+                                "field": "taxClassCode"
+                            },
+                            {
+                                "field": "taxClassDesc"
+                            },
+                            {
+                                "field": "counId",
+                                "selectFields": [
+                                    {
+                                        "field": "counName"
+                                    }
+                                ]
+                            }
+                        ],
+                        "modelKey": "GEN_MD$gen_cust_tax_type_cf"
+                    }
+                },
+                "processConfig": {
+                    "processType": "TRANTOR",
+                    "model": "GEN_MD$gen_cust_tax_type_cf",
+                    "modelName": "客户税分类",
+                    "containerKey": "GEN_MD$GEN_CUST_TAX_TYPE_VIEW-table-container-GEN_MD$gen_cust_tax_type_cf",
+                    "viewKey": "GEN_MD$GEN_CUST_TAX_TYPE_VIEW:list",
+                    "sceneKey": "GEN_MD$GEN_CUST_TAX_TYPE_VIEW"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response = self.http.post(url, json=params)
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(params, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
