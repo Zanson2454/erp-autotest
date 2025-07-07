@@ -17,15 +17,45 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
         cls.partner_code = None
         cls.logger.info("合作伙伴主数据管理测试类初始化完成")
         
-        cls.business_partner_type_cf = cls.md_init_cache.get("partner_info", {}).get("business_partner_type_cf", {})
-        cls.out_cust_type_id = cls.business_partner_type_cf.get("out_cust", {}).get("id", None)
-        cls.inter_cust_type_id = cls.business_partner_type_cf.get("inter_cust", {}).get("id", None)
-        cls.person_cust_type_id = cls.business_partner_type_cf.get("person_cust", {}).get("id", None)
-        cls.out_supplier_type_id = cls.business_partner_type_cf.get("out_supplier", {}).get("id", None)
-        cls.outsea_supplier_type_id = cls.business_partner_type_cf.get("outsea_supplier", {}).get("id", None)
-        cls.inter_supplier_type_id = cls.business_partner_type_cf.get("inter_supplier", {}).get("id", None)
-        cls.serv_supplier_type_id = cls.business_partner_type_cf.get("serv_supplier", {}).get("id", None)
+        # 合作伙伴类型
+        cls.business_partner_type_cf = cls.md_cache_data.get("partner_info", {}).get("business_partner_type_cf", {})
+        cls.out_cust_type_id = cls.business_partner_type_cf.get("out_cust", [{}])[0].get("id", None)
+        cls.inter_cust_type_id = cls.business_partner_type_cf.get("inter_cust", [{}])[0].get("id", None)
+        cls.person_cust_type_id = cls.business_partner_type_cf.get("person_cust", [{}])[0].get("id", None)
+        cls.out_supplier_type_id = cls.business_partner_type_cf.get("out_supplier", [{}])[0].get("id", None)
+        cls.outsea_supplier_type_id = cls.business_partner_type_cf.get("outsea_supplier", [{}])[0].get("id", None)
+        cls.inter_supplier_type_id = cls.business_partner_type_cf.get("inter_supplier", [{}])[0].get("id", None)
+        cls.serv_supplier_type_id = cls.business_partner_type_cf.get("serv_supplier", [{}])[0].get("id", None)
         
+        # 相关方信息 - 从partner_info下获取
+        partner_type_cf = cls.md_cache_data.get("partner_info", {}).get("partner_type_cf", {})
+        cls.sls_partner_type_id = partner_type_cf.get("sls_partner_type", [{}])[0].get("id", None)  # 销售相关方类型
+        cls.pur_partner_type_id = partner_type_cf.get("pur_partner_type", [{}])[0].get("id", None) # 采购相关方类型
+        
+        # 组织信息
+        org_info = cls.md_cache_data.get("org_info", {})
+        cls.sls_org_id = org_info.get("sls_org_info", [{}])[0].get("id", None)  # 销售组织作为相关方
+        cls.pur_org_id = org_info.get("pur_org_info", [{}])[0].get("id", None)  # 采购组织作为相关方
+        
+        # 文本类型 - 从partner_info下获取
+        text_type_cf = cls.md_cache_data.get("partner_info", {}).get("text_type_cf", {})
+        cls.sls_text_type_id = text_type_cf.get("sls_text_type", [{}])[0].get("id", None)
+        cls.pur_text_type_id = text_type_cf.get("pur_text_type", [{}])[0].get("id", None)
+        
+        # 类目信息 - 从mat_info下获取，注意是列表结构
+        mat_info = cls.md_cache_data.get("mat_info", {})
+        cls.mat_cate_id = mat_info.get("mat_cate_md", [{}])[0].get("id", None)
+        
+        # 用户及员工信息 - 从org_info下获取
+        cls.employee_id = org_info.get("employee_info", [{}])[0].get("id", None)
+    
+        # 基础数据 - 从init_cache获取
+        cls.coun_id = cls.init_data.get("country_info", [])[0].get("coun_id", None)
+        cls.addr_id = cls.init_data.get("addr_info", [])[0].get("id", None)
+        cls.bank_id = cls.init_data.get("bank_info", [])[0].get("bank_id", None)
+        cls.sub_bank_id = cls.init_data.get("bank_info", [])[0].get("sub_bank_id", None)
+       
+       
 
     @classmethod
     def teardown_class(cls):
@@ -53,23 +83,88 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
     def test_save_business_partner(self):
         """新增合作伙伴用例"""
         try:
-            partner_code = self.mock_util.generate_unique_code(tag="BP")
-            partner_name = f"合作伙伴_{self.mock_util.get_timestamp()}"
+            code = self.mock_util.generate_unique_code(tag="OUT_CUST")
+            bizLicenseNo = self.mock_util.get_mock_enterprise_credentials()
 
             api_path = self.get_api_path("GEN-合作伙伴-保存服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["partnerCode", "partnerName", "partnerType", "status", "remark"],
+                ["code","name","addrList", "addressDetail", "addressId", "attachmentList", "bankList","textList","userList","contactList","contactNum","counId","enterpriseType",
+                 "cateList","bizLicenseNo","socialCreditCode","taxpayersNum","bizScope","classType","comCorporation","intro","outerCode","partiesList","partnerIdentity","partnerTypeId","qualificationsList",
+                 "registeredCapital",],
                 ["params", "request"]
             )
             set_dict = {
-                "partnerCode": partner_code,
-                "partnerName": partner_name,
-                "partnerType": "CUSTOMER",
-                "status": "ENABLED",
-                "remark": f"自动化测试合作伙伴-{self.mock_util.get_timestamp()}"
+                "partnerIdentity":["CUSTOMER"], #客户
+                "partnerTypeId": {"id":self.out_cust_type_id},
+                "classType": "COMPANY",
+                "code": code,
+                "name": self.mock_util.get_mock_company(),
+                "outerCode": f"outcode{self.mock_util.get_timestamp()}",
+                "contactNum": str(self.mock_util.get_mock_phone_number()),
+                "comCorporation": self.mock_util.get_mock_name(),
+                "bizLicenseNo": bizLicenseNo,
+                "socialCreditCode": bizLicenseNo,
+                "taxpayersNum": bizLicenseNo,
+                "enterpriseType": "EXTERNAL",
+                "registeredCapital": 100,
+                "counId": {"id": self.coun_id},
+                "addressId": {"id": self.addr_id},
+                "addressDetail": "自动化测试详细地址",
+                "bizScope": self.mock_util.get_mock_business_scope(),
+                "intro": self.mock_util.get_mock_company_intro(),
+                "addrList": [
+                    {
+                        "addrDetail": "自动化测试地址",
+                        "addrId": {"id": self.addr_id},
+                        "addrUsage":"REC_ADDR",
+                        "contactName": self.mock_util.get_mock_name(),
+                        "contactPhone": self.mock_util.get_mock_phone_number(),
+                        "isDefault": True,
+                    }
+                ],
+                "bankList": [
+                    {
+                        "accountName": self.mock_util.get_mock_bank_info()['bank_name'],
+                        "bankAccount": self.mock_util.get_mock_bank_info()['account_number'],
+                        "isDefault": True,
+                        "usage": "PAYMENT",
+                        "bankId": {"id": self.bank_id},
+                        "subBankId": {"id": self.sub_bank_id},   
+                    }
+                ],
+                "attachmentList": [],
+                "textList": [{
+                    "textType": {"id": self.sls_text_type_id},
+                    "textContent": f"自动化测试文本_{self.mock_util.get_timestamp()}"
+                }],
+                "qualificationsList": [],
+                "contactList": [
+                    {
+                        "contactName": self.mock_util.get_mock_name(),
+                        "contactPhone": self.mock_util.get_mock_phone_number(),
+                        "isDefault": True,
+                    }
+                ],
+                "userList": [
+                    {
+                        "employeeId": {"id": self.employee_id},
+                        "isManager": True,
+                    }
+                ],
+                "partiesList": [
+                    {
+                        "prtnTypeId": {"id": self.sls_partner_type_id},
+                        "prtnId": {"id": self.sls_org_id}
+                    }
+                ],
+                "cateList": [
+                    {
+                        "matCateId": {"id": self.mat_cate_id}
+                    }
+                ]
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -77,7 +172,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
             self.assert_util.assert_response_data(response)
             
             self.partner_id = response.get("data", {}).get("data", {})
-            self.partner_code = partner_code
+            self.partner_code = code
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -85,6 +180,9 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
+        
+        
+    
 
     @case_decorator(
         story="合作伙伴主数据",
@@ -323,24 +421,131 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
             api_path = self.get_api_path("合作伙伴-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["taskName", "exportConfig"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "taskName": f"合作伙伴导出任务_{self.mock_util.get_timestamp()}",
-                "exportConfig": {
-                    "fileName": f"合作伙伴_{self.mock_util.get_timestamp()}",
-                    "format": "EXCEL"
+            params['params'] =  {
+                "taskName": f"合作伙伴-章昂-{self.mock_util.get_timestamp()}-导出",
+                "multiSheetConfig": [
+                    {
+                        "modelKey": "GEN_MD$gen_business_partner_md",
+                        "modelName": "合作伙伴",
+                        "sheetNo": 0,
+                        "sheetName": "合作伙伴",
+                        "headerConfigList": [
+                            {
+                                "name": "伙伴编码",
+                                "type": "TEXT",
+                                "field": "code"
+                            },
+                            {
+                                "name": "伙伴名称",
+                                "type": "TEXT",
+                                "field": "name"
+                            },
+                            {
+                                "name": "伙伴身份",
+                                "type": "ENUM",
+                                "field": "partnerIdentity",
+                                "multiSelect": True,
+                                "dictValues": [
+                                    {
+                                        "_row_id_": "SUPPLIER",
+                                        "label": "供应商",
+                                        "value": "SUPPLIER"
+                                    },
+                                    {
+                                        "_row_id_": "CUSTOMER",
+                                        "label": "客户",
+                                        "value": "CUSTOMER"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "伙伴类型",
+                                "type": "TEXT",
+                                "field": "partnerTypeId.name"
+                            },
+                            {
+                                "name": "状态",
+                                "type": "ENUM",
+                                "field": "status",
+                                "multiSelect": False,
+                                "dictValues": [
+                                    {
+                                        "_row_id_": "未启用",
+                                        "label": "未启用",
+                                        "value": "INACTIVE"
+                                    },
+                                    {
+                                        "_row_id_": "已启用",
+                                        "label": "已启用",
+                                        "value": "ENABLED"
+                                    },
+                                    {
+                                        "_row_id_": "已停用",
+                                        "label": "已停用",
+                                        "value": "DISABLED"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "更新时间",
+                                "type": "DATE",
+                                "field": "updatedAt"
+                            }
+                        ]
+                    }
+                ],
+                "queryData": {
+                    "containerKey": "GEN_MD$GEN_BUSINESS_PARTNER_VIEW-table-container-GEN_MD$gen_business_partner_md",
+                    "viewKey": "GEN_MD$GEN_BUSINESS_PARTNER_VIEW:list",
+                    "sceneKey": "GEN_MD$GEN_BUSINESS_PARTNER_VIEW",
+                    "params": {
+                        "request": {
+                            "pageable": {
+
+                            }
+                        },
+                        "selectFields": [
+                            {
+                                "field": "code"
+                            },
+                            {
+                                "field": "name"
+                            },
+                            {
+                                "field": "partnerIdentity"
+                            },
+                            {
+                                "field": "status"
+                            },
+                            {
+                                "field": "updatedAt"
+                            },
+                            {
+                                "field": "partnerTypeId",
+                                "selectFields": [
+                                    {
+                                        "field": "name"
+                                    }
+                                ]
+                            }
+                        ],
+                        "modelKey": "GEN_MD$gen_business_partner_md"
+                    }
+                },
+                "processConfig": {
+                    "processType": "TRANTOR",
+                    "model": "GEN_MD$gen_business_partner_md",
+                    "modelName": "合作伙伴",
+                    "containerKey": "GEN_MD$GEN_BUSINESS_PARTNER_VIEW-table-container-GEN_MD$gen_business_partner_md",
+                    "viewKey": "GEN_MD$GEN_BUSINESS_PARTNER_VIEW:list",
+                    "sceneKey": "GEN_MD$GEN_BUSINESS_PARTNER_VIEW"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response = self.http.post(url, json=params)
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(params, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:

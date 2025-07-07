@@ -37,6 +37,44 @@ class ChineseProvider(BaseProvider):
     def chinese_bank_account(self) -> str:
         """生成银行账号"""
         return ''.join([str(random.randint(0, 9)) for _ in range(19)])
+    
+    def business_scope(self, max_length: int = 200) -> str:
+        """生成经营范围（200字内）"""
+        scopes = [
+            '软件开发', '信息技术咨询', '计算机系统集成', '网络技术服务', '数据处理服务',
+            '电子商务', '互联网信息服务', '技术推广服务', '企业管理咨询', '市场营销策划',
+            '广告设计制作', '会议服务', '展览展示服务', '商务信息咨询', '财务咨询',
+            '人力资源服务', '物业管理', '设备租赁', '货物进出口', '技术进出口',
+            '代理进出口', '销售电子产品', '销售计算机软硬件', '销售通讯设备', '销售办公用品'
+        ]
+        # 随机选择3-6个经营范围
+        selected_scopes = random.sample(scopes, random.randint(3, 6))
+        # 添加常见的结尾
+        scope_text = '；'.join(selected_scopes)
+        endings = ['等', '；法律、法规禁止的不得经营', '；依法须经批准的项目，经相关部门批准后方可开展经营活动']
+        result = scope_text + random.choice(endings)
+        
+        # 如果超过最大长度，截取前面部分
+        if len(result) > max_length:
+            result = result[:max_length-3] + '等'
+        return result
+    
+    def company_introduction(self, max_length: int = 200) -> str:
+        """生成公司简介（200字内）"""
+        intros = [
+            f"我公司成立于{random.randint(2000, 2020)}年，是一家专业从事{random.choice(['软件开发', '信息技术', '电子商务', '技术服务'])}的现代化企业。",
+            f"公司拥有{random.choice(['专业', '优秀', '资深', '高素质'])}的技术团队和{random.choice(['完善', '先进', '成熟'])}的管理体系。",
+            f"我们致力于为客户提供{random.choice(['优质', '专业', '高效', '全方位'])}的{random.choice(['技术服务', '解决方案', '产品服务', '咨询服务'])}。",
+            f"公司秉承{random.choice(['诚信经营', '客户至上', '创新发展', '质量第一'])}的理念，{random.choice(['不断创新', '持续发展', '精益求精', '追求卓越'])}。"
+        ]
+        # 随机选择2-3个句子组成简介
+        selected_intros = random.sample(intros, random.randint(2, 3))
+        result = ''.join(selected_intros)
+        
+        # 如果超过最大长度，截取前面部分
+        if len(result) > max_length:
+            result = result[:max_length-1] + '。'
+        return result
 
 class MockData:
     """模拟数据生成工具类
@@ -275,6 +313,69 @@ class MockData:
             'longitude': round(random.uniform(-180, 180), 6)
         }
 
+    def get_mock_business_scope(self, max_length: int = 200) -> str:
+        """生成经营范围（200字内）
+        
+        Args:
+            max_length: 最大长度限制，默认200字
+            
+        Returns:
+            str: 生成的经营范围
+        """
+        return self.fake.business_scope(max_length)
+
+    def get_mock_company_intro(self, max_length: int = 200) -> str:
+        """生成公司简介（200字内）
+        
+        Args:
+            max_length: 最大长度限制，默认200字
+            
+        Returns:
+            str: 生成的公司简介
+        """
+        return self.fake.company_introduction(max_length)
+
+    def get_mock_enterprise_credentials(self) -> Dict[str, str]:
+        """生成企业证照信息（营业执照号、纳税人识别号、统一社会信用代码）
+        
+        现在企业通常使用统一社会信用代码作为营业执照号和纳税人识别号，
+        但有些老企业可能还有独立的纳税人识别号。
+        
+        统一社会信用代码由18位数字和字母组成：
+        - 第1位：登记管理部门代码（1-事业单位，5-社会团体，9-企业，Y-其他组织）
+        - 第2位：机构类别代码
+        - 第3-8位：登记管理机关行政区划码
+        - 第9-17位：主体标识码（组织机构代码）
+        - 第18位：校验码
+        
+        Returns:
+            Dict[str, str]: 包含营业执照号、纳税人识别号、统一社会信用代码的字典
+        """
+        # 生成统一社会信用代码
+        # 登记管理部门代码，企业使用9
+        dept_code = '9'
+        
+        # 机构类别代码，企业法人使用1
+        org_type = '1'
+        
+        # 行政区划码（6位），使用faker生成的随机数字
+        area_code = self.fake.numerify('######')
+        
+        # 主体标识码（9位），使用faker生成随机字母数字组合
+        main_code = self.fake.bothify('#########').upper()
+        
+        # 校验码，使用faker随机选择
+        check_code = self.fake.random_element(['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'])
+        
+        # 统一社会信用代码
+        business_license_no = f"{dept_code}{org_type}{area_code}{main_code}{check_code}"
+        
+        # 现在大部分企业的营业执照号和纳税人识别号都是统一社会信用代码
+        # 但也提供独立的15位纳税人识别号选项，使用faker生成
+        taxpayer_number_15 = self.fake.numerify('###############')
+        
+        return business_license_no
+
 if __name__ == '__main__':
     # 测试代码
     mock = MockData()
@@ -296,7 +397,11 @@ if __name__ == '__main__':
     # print("币种对象:", mock.get_mock_currency())
     # print("备注:", mock.get_mock_remark())
     # print("时间戳:", mock.get_timestamp(timestamp=True))
-    print("唯一编码:", mock.generate_unique_code())
+    # print("唯一编码:", mock.generate_unique_code())
+    print("企业证照信息:", mock.get_mock_enterprise_credentials())
+    print("经营范围:", mock.get_mock_business_scope())
+    print("公司简介:", mock.get_mock_company_intro())
+    
     # print("业务组织数据:", mock.get_mock_org_info(org_type="ComOrg", org_name="某公司"))
     # print("时间戳:", mock.get_mock_date(include_time=False,days_offset=-1))
     # print("坐标:", mock.get_mock_coordinates())

@@ -90,10 +90,12 @@
   },
   "bank_info": [
     {
-      "bank_id": 1000001,
-      "bank_code": "HB",
-      "bank_name": "湖北银行",
-      "bank_mne_code": null
+      "bank_id": 2000005,
+      "bank_code": "CMB",
+      "bank_name": "招商银行",
+      "sub_bank_id": 1000006,
+      "sub_bank_code": "308902839019",
+      "sub_bank_name": "招商银行深圳红山支行"
     }
   ],
   "tax_info": [

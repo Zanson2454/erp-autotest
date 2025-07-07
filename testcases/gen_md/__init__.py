@@ -48,6 +48,7 @@ class GenMdBaseTest(BaseTest):
         
         cls.path_params = {"tmodule":"GEN_MD"}
         cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
+        cls.user_id = cls.init_data["user_info"]['user_info']["id"]
     
     def get_api_path(self, api_key):
         """
