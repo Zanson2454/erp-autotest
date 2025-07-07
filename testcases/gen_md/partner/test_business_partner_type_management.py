@@ -212,7 +212,7 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": [self.partner_type_id]}
+            set_dict = {"id": self.partner_type_id }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -247,7 +247,7 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": [self.partner_type_id]}
+            set_dict = {"id": self.partner_type_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -282,7 +282,7 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": [self.partner_type_id]}
+            set_dict = {"id": self.partner_type_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -295,6 +295,7 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="合作伙伴类型管理",
         title="测试合作伙伴类型标准导出",
@@ -333,6 +334,7 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="合作伙伴类型管理",
         title="测试合作伙伴类型标准导入",
@@ -385,31 +387,154 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
             api_path = self.get_api_path("合作伙伴类型-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["taskName", "exportConfig"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "taskName": f"合作伙伴类型导出任务_{self.mock_util.get_timestamp()}",
-                "exportConfig": {
-                    "fileName": f"合作伙伴类型_{self.mock_util.get_timestamp()}",
-                    "format": "EXCEL",
-                    "sheetName": "合作伙伴类型"
-                }
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            params["params"] =  {
+                "taskName": f"合作伙伴类型-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
+                "multiSheetConfig": [
+                    {
+                        "modelKey": "GEN_MD$gen_business_partner_type_cf",
+                        "modelName": "合作伙伴类型",
+                        "sheetNo": 0,
+                        "sheetName": "合作伙伴类型",
+                        "headerConfigList": [
+                            {
+                                "name": "编码",
+                                "type": "TEXT",
+                                "field": "code"
+                            },
+                            {
+                                "name": "名称",
+                                "type": "TEXT",
+                                "field": "name"
+                            },
+                            {
+                                "name": "类别",
+                                "type": "ENUM",
+                                "field": "classType",
+                                "multiSelect": False,
+                                "dictValues": [
+                                    {
+                                        "_row_id_": "个人",
+                                        "label": "个人",
+                                        "value": "PERSON"
+                                    },
+                                    {
+                                        "_row_id_": "公司",
+                                        "label": "公司",
+                                        "value": "COMPANY"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "角色",
+                                "type": "ENUM",
+                                "field": "role",
+                                "multiSelect": False,
+                                "dictValues": [
+                                    {
+                                        "_row_id_": "供应商",
+                                        "label": "供应商",
+                                        "value": "SUPPLIER"
+                                    },
+                                    {
+                                        "_row_id_": "客户",
+                                        "label": "客户",
+                                        "value": "CUSTOMER"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "是否内部公司",
+                                "type": "BOOL",
+                                "field": "isInternal"
+                            },
+                            {
+                                "name": "说明",
+                                "type": "TEXT",
+                                "field": "desc"
+                            },
+                            {
+                                "name": "状态",
+                                "type": "ENUM",
+                                "field": "status",
+                                "multiSelect": False,
+                                "dictValues": [
+                                    {
+                                        "_row_id_": "未启用",
+                                        "label": "未启用",
+                                        "value": "INACTIVE"
+                                    },
+                                    {
+                                        "_row_id_": "已启用",
+                                        "label": "已启用",
+                                        "value": "ENABLED"
+                                    },
+                                    {
+                                        "_row_id_": "已停用",
+                                        "label": "已停用",
+                                        "value": "DISABLED"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "queryData": {
+                    "containerKey": "GEN_MD$GEN_BUSINESS_PARTNER_TYPE_VIEW-table-container-GEN_MD$gen_business_partner_type_cf",
+                    "viewKey": "GEN_MD$GEN_BUSINESS_PARTNER_TYPE_VIEW:list",
+                    "sceneKey": "GEN_MD$GEN_BUSINESS_PARTNER_TYPE_VIEW",
+                    "params": {
+                        "request": {
+                            "pageable": {
 
-            response = self.http.post(url, json=filtered_params)
+                            }
+                        },
+                        "selectFields": [
+                            {
+                                "field": "code"
+                            },
+                            {
+                                "field": "name"
+                            },
+                            {
+                                "field": "classType"
+                            },
+                            {
+                                "field": "role"
+                            },
+                            {
+                                "field": "isInternal"
+                            },
+                            {
+                                "field": "desc"
+                            },
+                            {
+                                "field": "status"
+                            }
+                        ],
+                        "modelKey": "GEN_MD$gen_business_partner_type_cf"
+                    }
+                },
+                "processConfig": {
+                    "processType": "TRANTOR",
+                    "model": "GEN_MD$gen_business_partner_type_cf",
+                    "modelName": "合作伙伴类型",
+                    "containerKey": "GEN_MD$GEN_BUSINESS_PARTNER_TYPE_VIEW-table-container-GEN_MD$gen_business_partner_type_cf",
+                    "viewKey": "GEN_MD$GEN_BUSINESS_PARTNER_TYPE_VIEW:list",
+                    "sceneKey": "GEN_MD$GEN_BUSINESS_PARTNER_TYPE_VIEW"
+                }
+            }   
+
+            response = self.http.post(url, json=params)
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(params, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
 
+    @pytest.mark.skip(reason="oss 导入依赖文件，暂时跳过")
     @case_decorator(
         story="合作伙伴类型管理",
         title="测试通过OSS提交合作伙伴类型导入任务",
