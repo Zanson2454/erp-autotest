@@ -16,6 +16,16 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
         cls.partner_id = None
         cls.partner_code = None
         cls.logger.info("合作伙伴主数据管理测试类初始化完成")
+        
+        cls.business_partner_type_cf = cls.md_init_cache.get("partner_info", {}).get("business_partner_type_cf", {})
+        cls.out_cust_type_id = cls.business_partner_type_cf.get("out_cust", {}).get("id", None)
+        cls.inter_cust_type_id = cls.business_partner_type_cf.get("inter_cust", {}).get("id", None)
+        cls.person_cust_type_id = cls.business_partner_type_cf.get("person_cust", {}).get("id", None)
+        cls.out_supplier_type_id = cls.business_partner_type_cf.get("out_supplier", {}).get("id", None)
+        cls.outsea_supplier_type_id = cls.business_partner_type_cf.get("outsea_supplier", {}).get("id", None)
+        cls.inter_supplier_type_id = cls.business_partner_type_cf.get("inter_supplier", {}).get("id", None)
+        cls.serv_supplier_type_id = cls.business_partner_type_cf.get("serv_supplier", {}).get("id", None)
+        
 
     @classmethod
     def teardown_class(cls):
@@ -23,7 +33,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
         try:
             cls.db.delete(
                 table="gen_business_partner_md", 
-                where="partner_code like %s", 
+                where="code like %s", 
                 params=["AT_%"]
             )
             cls.logger.info("测试数据清理完成")
@@ -249,7 +259,8 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": [self.partner_id]}
+            # 注意：启用接口ID传单个值，不是列表
+            set_dict = {"id": self.partner_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -284,7 +295,8 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": [self.partner_id]}
+            # 注意：禁用接口ID传单个值，不是列表
+            set_dict = {"id": self.partner_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -357,7 +369,8 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": [self.partner_id]}
+            # 注意：删除接口ID传单个值，不是列表
+            set_dict = {"id": self.partner_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)

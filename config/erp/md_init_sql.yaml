@@ -152,6 +152,37 @@ mat_info:
     description: "查询标签信息"
   
 partner_info:
+ # 合作伙伴类型
+  business_partner_type_cf:
+    out_cust:
+      sql: |
+        select id,`code`,`name`,`status` from gen_business_partner_type_cf where `code` like 'AUTOTEST_OUT_CUST';
+      description: "查询客户类型信息"
+    inter_cust:
+      sql: |
+        select id,`code`,`name`,`status` from gen_business_partner_type_cf where `code` like 'AUTOTEST_INTER_CUST';
+      description: "查询内部客户类型信息"
+    person_cust:  
+      sql: |
+        select id,`code`,`name`,`status` from gen_business_partner_type_cf where `code` like 'AUTOTEST_PERSON_CUST';
+      description: "查询个人客户类型信息"
+    out_supplier:
+      sql: |
+        select id,`code`,`name`,`status` from gen_business_partner_type_cf where `code` like 'AUTOTEST_OUT_SUPPLIER';
+      description: "查询供应商类型信息"
+    outsea_supplier:
+      sql: |
+        select id,`code`,`name`,`status` from gen_business_partner_type_cf where `code` like 'AUTOTEST_OUTSEA_SUPPLIER';
+      description: "查询海外供应商类型信息"
+    inter_supplier:
+      sql: |
+        select id,`code`,`name`,`status` from gen_business_partner_type_cf where `code` like 'AUTOTEST_INTER_SUPPLIER'; 
+      description: "查询内部供应商类型信息"
+    serv_supplier:
+      sql: |
+        select id,`code`,`name`,`status` from gen_business_partner_type_cf where `code` like 'AUTOTEST_SERV_SUPPLIER';
+      description: "查询服务供应商类型信息"
+
   # 供应商
   vend_info:
     sql: |
