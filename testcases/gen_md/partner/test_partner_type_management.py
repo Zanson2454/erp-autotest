@@ -15,6 +15,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         super().setup_class()
         cls.partner_type_id = None
         cls.partner_type_code = None
+        cls.partner_group_id = None
         cls.logger.info("相关方类型配置管理测试类初始化完成")
 
     @classmethod
@@ -24,6 +25,11 @@ class TestPartnerTypeManagement(GenMdBaseTest):
             cls.db.delete(
                 table="gen_partner_type_cf", 
                 where="partner_code like %s", 
+                params=["AT_%"]
+            )
+            cls.db.delete(
+                table="gen_partner_procedure_head_cf", 
+                where="code like %s", 
                 params=["AT_%"]
             )
             cls.logger.info("测试数据清理完成")
@@ -533,6 +539,378 @@ class TestPartnerTypeManagement(GenMdBaseTest):
                 "importConfig": {
                     "fileType": "EXCEL",
                     "sheetName": "相关方类型"
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise 
+
+    # ============= 相关方组管理 =============
+    @case_decorator(
+        story="相关方类型配置",
+        title="测试新增相关方组",
+        description="验证新增相关方组功能",
+        severity="normal",
+        order=12,
+        tags=["相关方组", "新增"]
+    )
+    def test_save_partner_group(self):
+        """新增相关方组用例"""
+        try:
+            if not self.partner_type_id:
+                self.test_save_partner_type(btClass="SLS_ORG", partnerClass="CUSTOMER")
+
+            code = self.mock_util.generate_unique_code(tag="PG")
+            name = f"相关方组_{self.mock_util.get_timestamp()}"
+
+            api_path = self.get_api_path("GEN-相关方组-保存服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["code", "name", "itemList"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "code": code,
+                "name": name,
+                "itemList": [
+                    {
+                        "partnerType": {
+                            "id": self.partner_type_id
+                        },
+                        "isRequired": True
+                    }
+                ]
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            self.partner_group_id = response.get("data", {}).get("data", {})
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="相关方类型配置",
+        title="测试查询相关方组分页",
+        description="验证相关方组分页查询功能",
+        severity="normal",
+        order=13,
+        tags=["相关方组", "查询"]
+    )
+    def test_query_partner_group_page(self):
+        """查询相关方组分页用例"""
+        try:
+            api_path = self.get_api_path("GEN-相关方组-查询分页服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["pageable", "fields", "systemParams"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": None
+                },
+                "fields": [
+                    {"name": "code", "type": "TEXT"},
+                    {"name": "name", "type": "TEXT"}
+                ],
+                "systemParams": None
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="相关方类型配置",
+        title="测试查询相关方组详情",
+        description="验证相关方组详情查询功能",
+        severity="normal",
+        order=14,
+        tags=["相关方组", "详情"]
+    )
+    def test_query_partner_group_detail(self):
+        """查询相关方组详情用例"""
+        try:
+            if not self.partner_group_id:
+                self.test_save_partner_group()
+
+            api_path = self.get_api_path("GEN-相关方组-查询详情服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["id"],
+                ["params", "request"]
+            )
+            set_dict = {"id": self.partner_group_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="相关方类型配置",
+        title="测试删除相关方组",
+        description="验证删除相关方组功能",
+        severity="normal",
+        order=15,
+        tags=["相关方组", "删除"]
+    )
+    def test_delete_partner_group(self):
+        """删除相关方组用例"""
+        try:
+            if not self.partner_group_id:
+                self.test_save_partner_group()
+
+            api_path = self.get_api_path("GEN-相关方组-删除服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["id"],
+                ["params", "request"]
+            )
+            set_dict = {"id": self.partner_group_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="相关方类型配置",
+        title="测试提交相关方组导出任务",
+        description="验证提交相关方组导出任务功能",
+        severity="normal",
+        order=16,
+        tags=["相关方组", "导出任务"]
+    )
+    def test_submit_partner_group_export_task(self):
+        """提交相关方组导出任务用例"""
+        try:
+            api_path = self.get_api_path("相关方组-导入导出任务管理接口-提交导出任务")
+            params, url = self.get_api_params(api_path)
+
+            params["params"] = {
+                "taskName": f"相关方组-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
+                "multiSheetConfig": [
+                    {
+                        "modelKey": "GEN_MD$gen_partner_procedure_head_cf",
+                        "modelName": "相关方组",
+                        "sheetNo": 0,
+                        "sheetName": "相关方组",
+                        "headerConfigList": [
+                            {
+                                "name": "相关方组编码",
+                                "type": "TEXT",
+                                "field": "code"
+                            },
+                            {
+                                "name": "相关方组名称",
+                                "type": "TEXT",
+                                "field": "name"
+                            },
+                            {
+                                "name": "创建时间",
+                                "type": "DATE",
+                                "field": "createdAt"
+                            },
+                            {
+                                "name": "更新时间",
+                                "type": "DATE",
+                                "field": "updatedAt"
+                            }
+                        ]
+                    }
+                ],
+                "queryData": {
+                    "containerKey": "GEN_MD$GEN_PARTNER_GROUP_VIEW-table-container-GEN_MD$gen_partner_procedure_head_cf",
+                    "viewKey": "GEN_MD$GEN_PARTNER_GROUP_VIEW:list",
+                    "sceneKey": "GEN_MD$GEN_PARTNER_GROUP_VIEW",
+                    "params": {
+                        "request": {
+                            "pageable": {}
+                        },
+                        "selectFields": [
+                            {"field": "code"},
+                            {"field": "name"},
+                            {"field": "createdAt"},
+                            {"field": "updatedAt"}
+                        ],
+                        "modelKey": "GEN_MD$gen_partner_procedure_head_cf"
+                    }
+                },
+                "processConfig": {
+                    "processType": "TRANTOR",
+                    "model": "GEN_MD$gen_partner_procedure_head_cf",
+                    "modelName": "相关方组",
+                    "containerKey": "GEN_MD$GEN_PARTNER_GROUP_VIEW-table-container-GEN_MD$gen_partner_procedure_head_cf",
+                    "viewKey": "GEN_MD$GEN_PARTNER_GROUP_VIEW:list",
+                    "sceneKey": "GEN_MD$GEN_PARTNER_GROUP_VIEW"
+                }
+            }
+
+            response = self.http.post(url, json=params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    # ============= 跳过的相关方组测试用例 =============
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
+    @case_decorator(
+        story="相关方类型配置",
+        title="测试相关方组标准导出",
+        description="验证相关方组标准导出功能",
+        severity="normal",
+        order=17,
+        tags=["相关方组", "导出"]
+    )
+    def test_export_partner_group(self):
+        """相关方组标准导出用例"""
+        try:
+            api_path = self.get_api_path("相关方组标准导出服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["exportConfig"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "exportConfig": {
+                    "fileName": f"相关方组导出_{self.mock_util.get_timestamp()}",
+                    "sheetName": "相关方组",
+                    "format": "EXCEL"
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
+    @case_decorator(
+        story="相关方类型配置",
+        title="测试相关方组标准导入",
+        description="验证相关方组标准导入功能",
+        severity="normal",
+        order=18,
+        tags=["相关方组", "导入"]
+    )
+    def test_import_partner_group(self):
+        """相关方组标准导入用例"""
+        try:
+            api_path = self.get_api_path("相关方组标准导入服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["importConfig"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "importConfig": {
+                    "fileName": f"相关方组导入_{self.mock_util.get_timestamp()}",
+                    "fileType": "EXCEL",
+                    "sheetName": "相关方组"
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
+    @case_decorator(
+        story="相关方类型配置",
+        title="测试通过OSS提交相关方组导入任务",
+        description="验证通过OSS提交相关方组导入任务功能",
+        severity="normal",
+        order=19,
+        tags=["相关方组", "OSS导入"]
+    )
+    def test_submit_partner_group_import_task_by_oss(self):
+        """通过OSS提交相关方组导入任务用例"""
+        try:
+            api_path = self.get_api_path("相关方组-导入导出任务管理接口-通过OSS提交导入任务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["taskName", "ossConfig", "importConfig"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "taskName": f"相关方组OSS导入任务_{self.mock_util.get_timestamp()}",
+                "ossConfig": {
+                    "bucketName": "test-bucket",
+                    "objectKey": f"partner_group_import_{self.mock_util.get_timestamp()}.xlsx"
+                },
+                "importConfig": {
+                    "fileType": "EXCEL",
+                    "sheetName": "相关方组"
                 }
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
