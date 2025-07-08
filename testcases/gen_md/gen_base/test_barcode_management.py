@@ -2,7 +2,6 @@ import allure
 import pytest
 from typing import Any
 from testcases.gen_md import GenMdBaseTest
-from utils.mock_util import MockData
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
@@ -18,7 +17,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
-        cls.mock_data = MockData()
         # 数据存储
         cls.barcode_md_id = None
         cls.barcode_md_code = None
@@ -32,12 +30,9 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def teardown_class(cls):
         """测试类结束后执行清理"""
         try:
-            tables = ["gen_barcode_md", "gen_barcode_rule_cf", "gen_barcode_filed_cf"]
-            for table in tables:
-                try:
-                    cls.db.delete(table=table, where="code like %s", params=["AT_%"])
-                except Exception:
-                    pass
+            cls.db.delete(table="gen_barcode_md", where="obj_code like %s", params=["AT_%"])
+            cls.db.delete(table="gen_barcode_rule_cf", where="org_code like %s", params=["AT_%"])
+            cls.db.delete(table="gen_barcode_field_cf", where="org_code like %s", params=["AT_%"])
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
@@ -52,11 +47,12 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         smoke=True,
         tags=["条码主数据", "新增", "GEN_BARCODE_MD_SAVE_ACTION_SERVICE"]
     )
+    @pytest.mark.skip(reason="业务用不上")
     def test_save_barcode_md(self):
         """新增条码主数据用例 - GEN_BARCODE_MD_SAVE_ACTION_SERVICE"""
         try:
-            barcode_code = self.mock_data.generate_unique_code(tag="BARCODE_MD")
-            barcode_name = f"条码主数据_{self.mock_data.get_timestamp()}"
+            obj_code = self.mock_util.generate_unique_code(tag="BARCODE_MD")
+            barcode_name = f"条码主数据_{self.mock_util.get_timestamp()}"
 
             api_path = self.get_api_path("GEN-条码主数据-保存服务")
             params, url = self.get_api_params(api_path)
@@ -65,9 +61,13 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
                 params, ["code", "name", "description"], ["params", "request"]
             )
             set_dict = {
-                "code": barcode_code,
-                "name": barcode_name,
-                "description": f"条码主数据描述_{self.mock_data.get_timestamp()}"
+                "obj_code": obj_code,
+                "type": "MAT",
+                "label": obj_code,
+                "create_label_amount": 1,
+                "print_amt":1,
+                "print_time":self.mock_util.get_timestamp(),
+                "status":"ENABLED"
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -75,7 +75,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             self.assert_util.assert_response_data(response)
             
             self.barcode_md_id = response.get("data", {}).get("data", {})
-            self.barcode_md_code = barcode_code
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -92,6 +91,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         order=2,
         tags=["条码主数据", "查询", "GEN_BARCODE_MD_QUERY_PAGE_ACTION_SERVICE"]
     )
+    @pytest.mark.skip(reason="业务用不上")
     def test_query_barcode_md_page(self):
         """查询条码主数据分页列表用例 - GEN_BARCODE_MD_QUERY_PAGE_ACTION_SERVICE"""
         try:
@@ -129,6 +129,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         order=3,
         tags=["条码主数据", "查询", "GEN_BARCODE_MD_QUERY_DETAIL_ACTION_SERVICE"]
     )
+    @pytest.mark.skip(reason="业务用不上")
     def test_query_barcode_md_detail(self):
         """查询条码主数据详情用例 - GEN_BARCODE_MD_QUERY_DETAIL_ACTION_SERVICE"""
         try:
@@ -162,6 +163,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         order=4,
         tags=["条码主数据", "启用", "GEN_BARCODE_MD_ENABLED_ACTION_SERVICE"]
     )
+    @pytest.mark.skip(reason="业务用不上")
     def test_enable_barcode_md(self):
         """启用条码主数据用例 - GEN_BARCODE_MD_ENABLED_ACTION_SERVICE"""
         try:
@@ -172,9 +174,9 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ids"], ["params", "request"]
+                params, ["id"], ["params", "request"]
             )
-            set_dict = {"ids": [self.barcode_md_id]}
+            set_dict = {"id": self.barcode_md_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -195,6 +197,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         order=5,
         tags=["条码主数据", "禁用", "GEN_BARCODE_MD_DISABLED_ACTION_SERVICE"]
     )
+    @pytest.mark.skip(reason="业务用不上")
     def test_disable_barcode_md(self):
         """禁用条码主数据用例 - GEN_BARCODE_MD_DISABLED_ACTION_SERVICE"""
         try:
@@ -205,9 +208,9 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ids"], ["params", "request"]
+                params, ["id"], ["params", "request"]
             )
-            set_dict = {"ids": [self.barcode_md_id]}
+            set_dict = {"id": self.barcode_md_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -228,40 +231,20 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         order=6,
         tags=["条码主数据", "删除", "GEN_BARCODE_MD_DELETE_ACTION_SERVICE"]
     )
+    @pytest.mark.skip(reason="业务用不上")
     def test_delete_barcode_md(self):
         """删除条码主数据用例 - GEN_BARCODE_MD_DELETE_ACTION_SERVICE"""
         try:
-            # 先创建一个测试数据用于删除
-            barcode_code = self.mock_data.generate_unique_code(tag="DEL_BARCODE_MD")
-            barcode_name = f"待删除条码主数据_{self.mock_data.get_timestamp()}"
+            if not self.barcode_md_id:
+                self.test_save_barcode_md()
 
-            # 创建条码主数据
-            save_api_path = self.get_api_path("GEN-条码主数据-保存服务")
-            save_params, save_url = self.get_api_params(save_api_path)
-            
-            save_filtered_params = ParamUtil.filter_post_body_fields(
-                save_params, ["code", "name", "description"], ["params", "request"]
-            )
-            save_set_dict = {
-                "code": barcode_code,
-                "name": barcode_name,
-                "description": "待删除条码主数据描述"
-            }
-            ParamUtil.set_request_params(save_filtered_params, save_set_dict)
-
-            save_response = self.http.post(save_url, json=save_filtered_params)
-            self.assert_util.assert_response_data(save_response)
-            
-            delete_barcode_id = save_response.get("data", {}).get("data", {})
-
-            # 删除条码主数据
             api_path = self.get_api_path("GEN-条码主数据-删除服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ids"], ["params", "request"]
+                params, ["id"], ["params", "request"]
             )
-            set_dict = {"ids": [delete_barcode_id]}
+            set_dict = {"id": self.barcode_md_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -287,19 +270,26 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_save_barcode_rule(self):
         """新增条码规则用例 - GEN_BARCODE_RULE_CF_SAVE_ACTION_SERVICE"""
         try:
-            rule_code = self.mock_data.generate_unique_code(tag="BARCODE_RULE")
-            rule_name = f"条码规则_{self.mock_data.get_timestamp()}"
+            if not self.barcode_field_id:
+                self.test_save_barcode_field()
+
+            prefix = self.mock_util.generate_unique_code(tag="BARCODE_RULE")
+            rule_name = f"条码规则_{self.mock_util.get_timestamp()}"
 
             api_path = self.get_api_path("GEN-条码规则-保存服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["code", "name", "description"], ["params", "request"]
+                params, ["prefix", "name", "remark","isUseBarcodeLabel","delimiter","bizType","bizFieldId"], ["params", "request"]
             )
             set_dict = {
-                "code": rule_code,
+                "prefix": prefix,
                 "name": rule_name,
-                "description": f"条码规则描述_{self.mock_data.get_timestamp()}"
+                "remark": f"条码规则描述_{self.mock_util.get_timestamp()}",
+                "isUseBarcodeLabel": True,
+                "delimiter": "-",
+                "bizType": "MAT",
+                "bizFieldId": {"id":self.barcode_field_id}
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -307,7 +297,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             self.assert_util.assert_response_data(response)
             
             self.barcode_rule_id = response.get("data", {}).get("data", {})
-            self.barcode_rule_code = rule_code
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -331,15 +320,15 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields"], ["params", "request"]
+                params, ["pageable", "fields", "systemParams"], ["params", "request"]
             )
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
                 "fields": [
-                    {"name": "code", "type": "TEXT"},
-                    {"name": "name", "type": "TEXT"},
-                    {"name": "description", "type": "TEXT"}
-                ]
+                    {"name": "prefix", "type": "TEXT"},
+                    {"name": "name", "type": "TEXT"}
+                ],
+                "systemParams": None
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -397,37 +386,16 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_delete_barcode_rule(self):
         """删除条码规则用例 - GEN_BARCODE_RULE_CF_DELETE_ACTION_SERVICE"""
         try:
-            # 先创建一个测试数据用于删除
-            rule_code = self.mock_data.generate_unique_code(tag="DEL_BARCODE_RULE")
-            rule_name = f"待删除条码规则_{self.mock_data.get_timestamp()}"
+            if not self.barcode_rule_id:
+                self.test_save_barcode_rule()
 
-            # 创建条码规则
-            save_api_path = self.get_api_path("GEN-条码规则-保存服务")
-            save_params, save_url = self.get_api_params(save_api_path)
-            
-            save_filtered_params = ParamUtil.filter_post_body_fields(
-                save_params, ["code", "name", "description"], ["params", "request"]
-            )
-            save_set_dict = {
-                "code": rule_code,
-                "name": rule_name,
-                "description": "待删除条码规则描述"
-            }
-            ParamUtil.set_request_params(save_filtered_params, save_set_dict)
-
-            save_response = self.http.post(save_url, json=save_filtered_params)
-            self.assert_util.assert_response_data(save_response)
-            
-            delete_rule_id = save_response.get("data", {}).get("data", {})
-
-            # 删除条码规则
             api_path = self.get_api_path("GEN-条码规则-删除服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ids"], ["params", "request"]
+                params, ["id"], ["params", "request"]
             )
-            set_dict = {"ids": [delete_rule_id]}
+            set_dict = {"id": self.barcode_rule_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -453,19 +421,19 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_save_barcode_field(self):
         """新增条码字段用例 - GEN_BARCODE_FILED_CF_SAVE_ACTION_SERVICE"""
         try:
-            field_code = self.mock_data.generate_unique_code(tag="BARCODE_FIELD")
-            field_name = f"条码字段_{self.mock_data.get_timestamp()}"
+            bizFieldKey = self.mock_util.generate_unique_code(tag="BARCODE_FIELD")
+            bizFieldName = f"条码字段_{self.mock_util.get_timestamp()}"
 
             api_path = self.get_api_path("GEN-条码字段-保存服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["code", "name", "description"], ["params", "request"]
+                params, ["bizFieldKey", "bizFieldName", "bizType"], ["params", "request"]
             )
             set_dict = {
-                "code": field_code,
-                "name": field_name,
-                "description": f"条码字段描述_{self.mock_data.get_timestamp()}"
+                "bizFieldKey": bizFieldKey,
+                "bizFieldName": bizFieldName,
+                "bizType": "MAT"
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -473,7 +441,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             self.assert_util.assert_response_data(response)
             
             self.barcode_field_id = response.get("data", {}).get("data", {})
-            self.barcode_field_code = field_code
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -497,15 +464,16 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields"], ["params", "request"]
+                params, ["pageable", "fields", "systemParams"], ["params", "request"]
             )
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
                 "fields": [
-                    {"name": "code", "type": "TEXT"},
-                    {"name": "name", "type": "TEXT"},
-                    {"name": "description", "type": "TEXT"}
-                ]
+                    {"name": "bizFieldKey", "type": "TEXT"},
+                    {"name": "bizFieldName", "type": "TEXT"},
+                    {"name": "bizType", "type": "TEXT"}
+                ],
+                "systemParams": None
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -563,37 +531,16 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_delete_barcode_field(self):
         """删除条码字段用例 - GEN_BARCODE_FILED_CF_DELETE_ACTION_SERVICE"""
         try:
-            # 先创建一个测试数据用于删除
-            field_code = self.mock_data.generate_unique_code(tag="DEL_BARCODE_FIELD")
-            field_name = f"待删除条码字段_{self.mock_data.get_timestamp()}"
+            if not self.barcode_field_id:
+                self.test_save_barcode_field()
 
-            # 创建条码字段
-            save_api_path = self.get_api_path("GEN-条码字段-保存服务")
-            save_params, save_url = self.get_api_params(save_api_path)
-            
-            save_filtered_params = ParamUtil.filter_post_body_fields(
-                save_params, ["code", "name", "description"], ["params", "request"]
-            )
-            save_set_dict = {
-                "code": field_code,
-                "name": field_name,
-                "description": "待删除条码字段描述"
-            }
-            ParamUtil.set_request_params(save_filtered_params, save_set_dict)
-
-            save_response = self.http.post(save_url, json=save_filtered_params)
-            self.assert_util.assert_response_data(save_response)
-            
-            delete_field_id = save_response.get("data", {}).get("data", {})
-
-            # 删除条码字段
             api_path = self.get_api_path("GEN-条码字段-删除服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ids"], ["params", "request"]
+                params, ["id"], ["params", "request"]
             )
-            set_dict = {"ids": [delete_field_id]}
+            set_dict = {"id": self.barcode_field_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -624,8 +571,8 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
 
             import_data = [
                 {
-                    "code": self.mock_data.generate_unique_code(tag="IMPORT_BARCODE_MD"),
-                    "name": f"导入测试条码主数据_{self.mock_data.get_timestamp()}",
+                    "code": self.mock_util.generate_unique_code(tag="IMPORT_BARCODE_MD"),
+                    "name": f"导入测试条码主数据_{self.mock_util.get_timestamp()}",
                     "description": "导入测试条码主数据描述"
                 }
             ]
@@ -703,7 +650,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             )
             set_dict = {
                 "fileKey": "test_barcode_md_import_file.xlsx",
-                "taskName": f"条码主数据导入任务_{self.mock_data.get_timestamp()}"
+                "taskName": f"条码主数据导入任务_{self.mock_util.get_timestamp()}"
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -736,7 +683,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
                 params, ["taskName", "queryData"], ["params", "request"]
             )
             set_dict = {
-                "taskName": f"条码主数据导出任务_{self.mock_data.get_timestamp()}",
+                "taskName": f"条码主数据导出任务_{self.mock_util.get_timestamp()}",
                 "queryData": {
                     "fields": [
                         {"name": "code", "type": "TEXT"},
@@ -775,8 +722,8 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
 
             import_data = [
                 {
-                    "code": self.mock_data.generate_unique_code(tag="IMPORT_BARCODE_RULE"),
-                    "name": f"导入测试条码规则_{self.mock_data.get_timestamp()}",
+                    "code": self.mock_util.generate_unique_code(tag="IMPORT_BARCODE_RULE"),
+                    "name": f"导入测试条码规则_{self.mock_util.get_timestamp()}",
                     "description": "导入测试条码规则描述"
                 }
             ]
@@ -854,7 +801,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             )
             set_dict = {
                 "fileKey": "test_barcode_rule_import_file.xlsx",
-                "taskName": f"条码规则导入任务_{self.mock_data.get_timestamp()}"
+                "taskName": f"条码规则导入任务_{self.mock_util.get_timestamp()}"
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -887,7 +834,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
                 params, ["taskName", "queryData"], ["params", "request"]
             )
             set_dict = {
-                "taskName": f"条码规则导出任务_{self.mock_data.get_timestamp()}",
+                "taskName": f"条码规则导出任务_{self.mock_util.get_timestamp()}",
                 "queryData": {
                     "fields": [
                         {"name": "code", "type": "TEXT"},
@@ -926,8 +873,8 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
 
             import_data = [
                 {
-                    "code": self.mock_data.generate_unique_code(tag="IMPORT_BARCODE_FIELD"),
-                    "name": f"导入测试条码规则允许业务字段_{self.mock_data.get_timestamp()}",
+                    "code": self.mock_util.generate_unique_code(tag="IMPORT_BARCODE_FIELD"),
+                    "name": f"导入测试条码规则允许业务字段_{self.mock_util.get_timestamp()}",
                     "description": "导入测试条码规则允许业务字段描述"
                 }
             ]
@@ -1005,7 +952,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             )
             set_dict = {
                 "fileKey": "test_barcode_field_import_file.xlsx",
-                "taskName": f"条码规则允许业务字段导入任务_{self.mock_data.get_timestamp()}"
+                "taskName": f"条码规则允许业务字段导入任务_{self.mock_util.get_timestamp()}"
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -1038,7 +985,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
                 params, ["taskName", "queryData"], ["params", "request"]
             )
             set_dict = {
-                "taskName": f"条码规则允许业务字段导出任务_{self.mock_data.get_timestamp()}",
+                "taskName": f"条码规则允许业务字段导出任务_{self.mock_util.get_timestamp()}",
                 "queryData": {
                     "fields": [
                         {"name": "code", "type": "TEXT"},
