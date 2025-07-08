@@ -9,12 +9,16 @@ from pathlib import Path
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
 
+from typing import Any
 from testcases.comm.base_test import BaseTest
 from data_factory.base import DataFactory
 from utils.cache_util import CacheUtil
 
 class GenMdBaseTest(BaseTest):
     """通用基础模块的基础测试类，负责加载通用配置和提供API访问方法"""
+    
+    # 类型提示：继承的动态属性
+    yaml_util: Any
     
     @classmethod
     def setup_class(cls):
@@ -39,7 +43,7 @@ class GenMdBaseTest(BaseTest):
         
         # 加载缓存数据
         DataFactory.init_sql_cache(
-        sql_config_path=project_root / "config" / "erp" / "md_init_sql.yaml", # 主数据依赖的初始化sql 存放路径
+        sql_config_path=str(project_root / "config" / "erp" / "md_init_sql.yaml"), # 主数据依赖的初始化sql 存放路径
         db_config_name="erp_db", # 数据库配置名称
         cache_key="md_init_cache", # 缓存key
         cache_dir="testdata/cache" # 缓存目录

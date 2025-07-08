@@ -29,7 +29,7 @@ class TestBomManagement(GenMdBaseTest):
         try:
             # 清理BOM相关测试数据
             cls.db.delete(table="gen_bom_head_md", where="bom_code like %s", params=["AT_%"])
-            cls.db.delete(table="gen_bom_item_type_cf", where="item_type_code like %s", params=["AT_%"])
+            cls.db.delete(table="gen_bom_item_type_cf", where="item_type like %s", params=["AT_%"])
             cls.db.delete(table="gen_bom_status_cf", where="status_code like %s", params=["AT_%"])
             cls.db.delete(table="gen_bom_use_cf", where="use_code like %s", params=["AT_%"])
             cls.db.delete(table="gen_bom_item_supp_ind_cf", where="supp_ind_code like %s", params=["AT_%"])

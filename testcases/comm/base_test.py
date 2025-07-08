@@ -12,6 +12,7 @@ from enum import Enum
 from pathlib import Path
 
 
+
 project_root = Path(__file__).parent.parent.parent
 sys.path.append(str(project_root))
 
@@ -213,7 +214,10 @@ class BaseTestInitializer:
     def initialize_environment(self) -> Dict[str, Any]:
         """初始化环境配置"""
         Loggers.info(f"初始化环境: {self.env_name}")
-        return self.data_factory.get_env_config()
+        config = self.data_factory.get_env_config()
+        if config is None:
+            raise RuntimeError(f"环境配置获取失败: {self.env_name}")
+        return config
     
     def initialize_base_data(self) -> Dict[str, Any]:
         """初始化基础数据"""
@@ -255,6 +259,10 @@ class BaseTestInitializer:
 class BaseTest:
     """重构后的测试基类"""
     
+    # 类型提示：动态设置的属性
+    logger: Any
+    assert_util: Any
+    
     @classmethod
     def setup_class(cls) -> None:
         """测试类初始化 - 简化版"""
@@ -290,8 +298,11 @@ class BaseTest:
                 setattr(cls, name, util) # 设置工具类
             
             # HTTP工具初始化
+            portal_url = cls.env_config.get("portal_url")
+            if not portal_url:
+                raise RuntimeError("配置中缺少portal_url")
             cls.http = HttpUtil(    
-                url=cls.env_config.get("portal_url"), # 获取portal_url
+                url=portal_url, # 获取portal_url
                 session=cls.session, # 获取会话
                 headers=cls.base_headers # 获取基础请求头
             )

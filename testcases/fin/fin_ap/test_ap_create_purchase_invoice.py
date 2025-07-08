@@ -140,7 +140,7 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
                 self.assert_util.assert_response_success(submit_result)
                 
                 submit_success = submit_result.get("success")
-                self.assert_util.assert_eq(submit_success, True, f"应付单提交API调用失败，单据编号: {ap_head_code}")
+                self.assert_util.assert_by_operator(submit_success, "=", True, f"应付单提交API调用失败，单据编号: {ap_head_code}")
                 
                 # 应付单过账 - 完全参考现有用例的实现
                 post_data = {**common_data, "apStatus": "DONE"}
@@ -158,7 +158,7 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
                 self.assert_util.assert_response_success(post_result)
                 
                 success = post_result.get("success")
-                self.assert_util.assert_eq(success, True, f"应付单过账API调用失败，单据编号: {ap_head_code}")
+                self.assert_util.assert_by_operator(success, "=", True, f"应付单过账API调用失败，单据编号: {ap_head_code}")
                 
                 # 等待过账完成
                 self.wait_for_ap_status(ap_head_code, "DONE", max_wait=15)
@@ -235,7 +235,7 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
                 
                 # 只断言success为true
                 success = result.get("success")
-                self.assert_util.assert_eq(success, True, f"应付单创建采购发票失败，应付单编号: {info['apHeadCode']}")
+                self.assert_util.assert_by_operator(success, "=", True, f"应付单创建采购发票失败，应付单编号: {info['apHeadCode']}")
                 
                 TestApCreatePurchaseInvoice.ap_pi_info.update({
                     "pi_create_success": True,
@@ -303,9 +303,9 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
                             invoicing_doc_amt = ap_record.get("invoicingDocAmt", 0)
                             invoicing_base_amt = ap_record.get("invoicingBaseAmt", 0)
                             
-                            self.assert_util.assert_eq(invoicing_doc_amt, info["total_amt"], 
+                            self.assert_util.assert_by_operator(invoicing_doc_amt, "=", info["total_amt"], 
                                 f"开票中金额不正确，期望: {info['total_amt']}，实际: {invoicing_doc_amt}")
-                            self.assert_util.assert_eq(invoicing_base_amt, info["gross_base_amt"], 
+                            self.assert_util.assert_by_operator(invoicing_base_amt, "=", info["gross_base_amt"], 
                                 f"开票中本位币金额不正确，期望: {info['gross_base_amt']}，实际: {invoicing_base_amt}")
                             
                             a.json({
@@ -362,7 +362,7 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
                 assert pi_info, f"数据工厂未查询到发票号 {invoice_no} 对应的采购发票信息"
                 
                 # 验证数据工厂查询结果
-                self.assert_util.assert_eq(pi_info.get("inv_code"), invoice_no, 
+                self.assert_util.assert_by_operator(pi_info.get("inv_code"), "=", invoice_no, 
                     f"数据工厂查询：发票号不匹配，期望: {invoice_no}，实际: {pi_info.get('inv_code')}")
                 
                 # 获取采购发票ID和编码
@@ -396,7 +396,7 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
                 
                 # 验证API查询到的ID与数据工厂查询到的ID一致
                 api_pi_id = pi_record.get("id")
-                self.assert_util.assert_eq(api_pi_id, pi_id, 
+                self.assert_util.assert_by_operator(api_pi_id, "=", pi_id, 
                     f"API查询的采购发票ID与数据工厂查询不一致，数据工厂: {pi_id}，API: {api_pi_id}")
                 
                 # 更新保存的信息

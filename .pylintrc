@@ -1,0 +1,6 @@
+# .pylintrc
+[MESSAGES CONTROL]
+disable = 
+    no-member,           # 禁用"属性未知"警告
+    arguments-differ,    # 禁用参数不匹配警告
+    too-few-public-methods

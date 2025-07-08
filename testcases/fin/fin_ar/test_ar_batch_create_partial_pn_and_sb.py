@@ -212,8 +212,6 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                     "viewTitle": "创建收款单",
                     "buttonKey": "ERP_FIN$FIN_ARM_FROM_DS-TERP_MIGRATE$FIN_CM_PN_REC-editView-footer-save",
                     "buttonName": "保存",
-                    "appId": 0,
-                    "teamId": base_data.get("team_id", 22),
                     "serviceKey": "ERP_FIN$PN_SAVE_ADMIN_SERVICE",
                     "params": {"request": save_request_data}
                 }
