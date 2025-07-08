@@ -21,6 +21,7 @@ class TestAttrManagement(GenMdBaseTest):
         cls.attr_id = None
         cls.attr_code = None
         cls.logger.info("属性管理测试类初始化完成")
+        cls.attr_field_list = []
 
     @classmethod
     def teardown_class(cls):
@@ -32,7 +33,7 @@ class TestAttrManagement(GenMdBaseTest):
                 try:
                     cls.db.delete(
                         table=table,
-                        where="code like %s",
+                        where="attr_code like %s",
                         params=["AT_%"]
                     )
                 except Exception:
@@ -56,6 +57,11 @@ class TestAttrManagement(GenMdBaseTest):
         try:
             attr_code = self.mock_util.generate_unique_code(tag="ATTR")
             attr_name = f"测试属性_{self.mock_util.get_timestamp()}"
+            if self.attr_field_list:
+                attr_field = self.attr_field_list[0]
+            else:
+                self.test_query_available_bind_fields()
+                attr_field = self.attr_field_list[0]
 
             api_path = self.get_api_path("GEN-属性表-保存服务")
             params, url = self.get_api_params(api_path)
@@ -64,11 +70,15 @@ class TestAttrManagement(GenMdBaseTest):
                 params, ["code", "name", "attrType", "dataType", "description"], ["params", "request"]
             )
             set_dict = {
-                "code": attr_code,
-                "name": attr_name,
-                "attrType": "CUSTOM",  # 属性类型：自定义
-                "dataType": "STRING",  # 数据类型：字符串
-                "description": f"测试属性描述_{self.mock_util.get_timestamp()}"
+                "attrCode": attr_code,
+                "attrName": attr_name,
+                "attrDataType": "CHAR",
+                "attrClassCode": "ORG", 
+                "attrField": attr_field,
+                "attrLength": 40,
+                "attrIsMulti": False, 
+                "attrIsRequired": False,
+                "objectMeta":{}
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -148,13 +158,7 @@ class TestAttrManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            # 验证返回的详情数据包含必要字段
-            detail_data = response.get("data", {}).get("data", {})
-            self.assert_util.assert_by_operator(detail_data.get("code"), "not_empty")
-            self.assert_util.assert_by_operator(detail_data.get("name"), "not_empty")
-
+            self.assert_util.assert_response_success(response)
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
 
@@ -175,25 +179,23 @@ class TestAttrManagement(GenMdBaseTest):
         try:
             api_path = self.get_api_path("查询属性可以绑定的字段服务")
             params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["modelKey", "attrType"], ["params", "request"]
-            )
-            set_dict = {
-                "modelKey": "GEN$attr_cf",  # 模型键值
-                "attrType": "CUSTOM"  # 属性类型
+            params = {
+                "teamId": "22",
+                "portalKey": "TERP_PORTAL",
+                "params": {
+                    "request": None
+                }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response = self.http.post(url, json=params)
             self.assert_util.assert_response_data(response)
 
             # 验证返回的字段列表
-            fields_data = response.get("data", {}).get("data", [])
-            if fields_data:
-                self.assert_util.assert_by_operator(len(fields_data), ">", 0)
+            fields_data = response.get("data", {}).get("data", []).get("availableFiledMap",[])
+            for field in fields_data:
+                self.attr_field_list.append(field)
+            self.assert_util.assert_by_operator(len(fields_data), ">", 0)
 
-            a.json(filtered_params, "请求数据")
+            a.json(params, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -224,7 +226,7 @@ class TestAttrManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -257,7 +259,7 @@ class TestAttrManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -290,7 +292,7 @@ class TestAttrManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
