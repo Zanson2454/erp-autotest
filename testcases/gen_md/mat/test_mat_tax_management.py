@@ -16,7 +16,8 @@ class TestMatTaxManagement(GenMdBaseTest):
         cls.mat_tax_id = None
         cls.mat_tax_code = None
         cls.logger.info("物料税分类管理测试类初始化完成")
-        cls.counId =  cls.init_data.get("country_info")[0].get("coun_id")
+        country_info = cls.init_data.get("country_info")
+        cls.counId = country_info[0].get("coun_id") if country_info else None
 
     @classmethod
     def teardown_class(cls):

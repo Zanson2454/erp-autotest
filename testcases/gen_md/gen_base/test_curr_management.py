@@ -345,15 +345,821 @@ class TestCurrencyManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    # ================ 导入导出管理 ================
+    @case_decorator(
+        story="汇率类型管理",
+        title="测试查询汇率类型详情",
+        description="验证GEN-汇率类型-查询详情服务功能",
+        severity="normal",
+        order=9,
+        tags=["汇率类型管理", "查询", "GEN_CURR_EXCHANGE_RATE_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE"]
+    )
+    def test_query_exchange_rate_type_detail(self):
+        """查询汇率类型详情用例"""
+        try:
+            if not self.exchange_rate_type_id:
+                self.test_save_exchange_rate_type()
+
+            api_path = self.get_api_path("GEN-汇率类型-查询详情服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], ["params", "request"]
+            )
+            set_dict = {"id": self.exchange_rate_type_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="汇率管理",
+        title="测试查询汇率详情",
+        description="验证GEN-汇率-查询详情服务功能",
+        severity="normal",
+        order=10,
+        tags=["汇率管理", "查询", "GEN_CURR_FORMULA_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE"]
+    )
+    def test_query_exchange_rate_detail(self):
+        """查询汇率详情用例"""
+        try:
+            if not self.exchange_rate_id:
+                self.test_save_exchange_rate()
+
+            api_path = self.get_api_path("GEN-汇率-查询详情服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], ["params", "request"]
+            )
+            set_dict = {"id": self.exchange_rate_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="汇率管理",
+        title="测试查询汇率(前端)",
+        description="验证GEN-汇率-查询汇率(前端)服务功能",
+        severity="normal",
+        order=11,
+        tags=["汇率管理", "查询", "GEN_CURR_FORMULA_TYPE_CF_QUERY_ACTION_SERVICE"]
+    )
+    def test_query_exchange_rate_frontend(self):
+        """查询汇率(前端)用例"""
+        try:
+            api_path = self.get_api_path("GEN-汇率-查询汇率(前端)服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["code", "name"], ["params", "request"]
+            )
+            set_dict = {
+                "code": "",
+                "name": ""
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    # ================ 根据ID查找数据服务 ================
+    @case_decorator(
+        story="币种配置管理",
+        title="测试币种配置根据ID查找数据",
+        description="验证币种配置-根据ID查找数据服务功能",
+        severity="normal",
+        order=12,
+        tags=["币种管理", "查询", "GEN_CURR_TYPE_CF_FIND_DATA_BY_ID_SERVICE"]
+    )
+    def test_find_currency_data_by_id(self):
+        """币种配置根据ID查找数据用例"""
+        try:
+            if not self.currency_id:
+                self.test_save_currency()
+
+            api_path = self.get_api_path("币种配置-根据ID查找数据服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], ["params", "request"]
+            )
+            set_dict = {"id": self.currency_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="汇率类型管理",
+        title="测试汇率类型根据ID查找数据",
+        description="验证汇率类型-根据ID查找数据服务功能",
+        severity="normal",
+        order=13,
+        tags=["汇率类型管理", "查询", "GEN_CURR_EXCHANGE_RATE_TYPE_CF_FIND_DATA_BY_ID_SERVICE"]
+    )
+    def test_find_exchange_rate_type_data_by_id(self):
+        """汇率类型根据ID查找数据用例"""
+        try:
+            if not self.exchange_rate_type_id:
+                self.test_save_exchange_rate_type()
+
+            api_path = self.get_api_path("汇率类型-根据ID查找数据服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], ["params", "request"]
+            )
+            set_dict = {"id": self.exchange_rate_type_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    # ================ 分页数据服务 ================
+    @case_decorator(
+        story="币种配置管理",
+        title="测试币种配置分页数据服务",
+        description="验证币种配置-分页数据服务功能",
+        severity="normal",
+        order=14,
+        tags=["币种管理", "查询", "GEN_CURR_TYPE_CF_PAGING_DATA_SERVICE"]
+    )
+    def test_currency_paging_data(self):
+        """币种配置分页数据服务用例"""
+        try:
+            api_path = self.get_api_path("币种配置-分页数据服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["pageable", "fields", "systemParams"], ["params", "request"]
+            )
+            set_dict =  {
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": None
+                },
+                "fields": [
+                    {
+                        "name": "currName",
+                        "type": "TEXT"
+                    },
+                    {
+                        "name": "currCode",
+                        "type": "TEXT"
+                    }
+                ],
+                "systemParams": None
+            }
+   
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="汇率类型管理",
+        title="测试汇率类型分页数据服务",
+        description="验证汇率类型-分页数据服务功能",
+        severity="normal",
+        order=15,
+        tags=["汇率类型管理", "查询", "GEN_CURR_EXCHANGE_RATE_TYPE_CF_PAGING_DATA_SERVICE"]
+    )
+    def test_exchange_rate_type_paging_data(self):
+        """汇率类型分页数据服务用例"""
+        try:
+            api_path = self.get_api_path("汇率类型-分页数据服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["pageable"], ["params", "request"]
+            )
+            set_dict = {
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "conditionGroup": None,
+                    "sortOrders": None,
+                    "keyword": None
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    # ================ 汇率导入导出管理 ================
+    @case_decorator(
+        story="汇率导入导出管理",
+        title="测试汇率标准导入",
+        description="验证汇率标准导入服务功能",
+        severity="normal",
+        order=16,
+        tags=["汇率管理", "导入", "GEN_CURR_FORMULA_TYPE_CF_GEI_IMPORT_SERVICE"]
+    )
+    @pytest.mark.skip(reason="汇率标准导入服务功能未实现")
+    def test_exchange_rate_import(self):
+        """汇率标准导入用例"""
+        try:
+            api_path = self.get_api_path("汇率标准导入服务")
+            params, url = self.get_api_params(api_path)
+
+            import_data = [
+                {
+                    "code": self.mock_data.generate_unique_code(tag="IMPORT_RATE"),
+                    "name": f"导入测试汇率_{self.mock_data.get_timestamp()}",
+                    "fromCurr": "USD",
+                    "toCurr": "CNY",
+                    "rate": 7.2
+                }
+            ]
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["data"], ["params", "request"]
+            )
+            set_dict = {"data": import_data}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="汇率导入导出管理",
+        title="测试汇率标准导出",
+        description="验证汇率标准导出服务功能",
+        severity="normal",
+        order=17,
+        tags=["汇率管理", "导出", "GEN_CURR_FORMULA_TYPE_CF_GEI_EXPORT_SERVICE"]
+    )
+    @pytest.mark.skip(reason="汇率标准导出服务功能未实现")
+    def test_exchange_rate_export(self):
+        """汇率标准导出用例"""
+        try:
+            api_path = self.get_api_path("汇率标准导出服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["selectFields"], ["params", "request"]
+            )
+            set_dict = {
+                "selectFields": [
+                    {"name": "code", "type": "TEXT"},
+                    {"name": "name", "type": "TEXT"},
+                    {"name": "fromCurr", "type": "TEXT"},
+                    {"name": "toCurr", "type": "TEXT"},
+                    {"name": "rate", "type": "NUMERIC"}
+                ]
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    # ================ 汇率类型导入导出管理 ================
+    @case_decorator(
+        story="汇率类型导入导出管理",
+        title="测试汇率类型标准导入",
+        description="验证汇率类型标准导入服务功能",
+        severity="normal",
+        order=18,
+        tags=["汇率类型管理", "导入", "GEN_CURR_EXCHANGE_RATE_TYPE_CF_GEI_IMPORT_SERVICE"]
+    )
+    @pytest.mark.skip(reason="汇率类型标准导入服务功能未实现")
+    def test_exchange_rate_type_import(self):
+        """汇率类型标准导入用例"""
+        try:
+            api_path = self.get_api_path("汇率类型标准导入服务")
+            params, url = self.get_api_params(api_path)
+
+            import_data = [
+                {
+                    "code": self.mock_data.generate_unique_code(tag="IMPORT_RATETYPE"),
+                    "name": f"导入测试汇率类型_{self.mock_data.get_timestamp()}",
+                    "description": "导入测试汇率类型描述"
+                }
+            ]
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["data"], ["params", "request"]
+            )
+            set_dict = {"data": import_data}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="汇率类型导入导出管理",
+        title="测试汇率类型标准导出",
+        description="验证汇率类型标准导出服务功能",
+        severity="normal",
+        order=19,
+        tags=["汇率类型管理", "导出", "GEN_CURR_EXCHANGE_RATE_TYPE_CF_GEI_EXPORT_SERVICE"]
+    )
+    @pytest.mark.skip(reason="汇率类型标准导出服务功能未实现")
+    def test_exchange_rate_type_export(self):
+        """汇率类型标准导出用例"""
+        try:
+            api_path = self.get_api_path("汇率类型标准导出服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["selectFields"], ["params", "request"]
+            )
+            set_dict = {
+                "selectFields": [
+                    {"name": "code", "type": "TEXT"},
+                    {"name": "name", "type": "TEXT"},
+                    {"name": "description", "type": "TEXT"}
+                ]
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    # ================ 导入导出任务管理接口 ================
+    @case_decorator(
+        story="币种配置任务管理",
+        title="测试币种配置OSS导入任务",
+        description="验证币种配置-导入导出任务管理接口-通过OSS提交导入任务功能",
+        severity="normal",
+        order=20,
+        tags=["币种管理", "任务管理", "GEN_CURR_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
+    )
+    @pytest.mark.skip(reason="OSS导入任务功能未实现")
+    def test_currency_oss_import_task(self):
+        """币种配置OSS导入任务用例"""
+        try:
+            api_path = self.get_api_path("币种配置-导入导出任务管理接口-通过OSS提交导入任务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["ossPath", "taskName"], ["params", "request"]
+            )
+            set_dict = {
+                "ossPath": "/test/currency_import.xlsx",
+                "taskName": f"币种配置导入任务_{self.mock_data.get_timestamp()}"
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="币种配置任务管理",
+        title="测试币种配置导出任务",
+        description="验证币种配置-导入导出任务管理接口-提交导出任务功能",
+        severity="normal",
+        order=21,
+        tags=["币种管理", "任务管理", "GEN_CURR_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST"]
+    )
+    @pytest.mark.skip(reason="导出任务功能未实现")
+    def test_currency_export_task(self):
+        """币种配置导出任务用例"""
+        try:
+            api_path = self.get_api_path("币种配置-导入导出任务管理接口-提交导出任务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["exportConfig", "taskName"], ["params", "request"]
+            )
+            set_dict = {
+                "exportConfig": {
+                    "fields": [
+                        {"name": "currCode", "type": "TEXT"},
+                        {"name": "currName", "type": "TEXT"},
+                        {"name": "symbol", "type": "TEXT"}
+                    ],
+                    "condition": {}
+                },
+                "taskName": f"币种配置导出任务_{self.mock_data.get_timestamp()}"
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="汇率任务管理",
+        title="测试汇率OSS导入任务",
+        description="验证汇率-导入导出任务管理接口-通过OSS提交导入任务功能",
+        severity="normal",
+        order=22,
+        tags=["汇率管理", "任务管理", "GEN_CURR_FORMULA_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
+    )
+    @pytest.mark.skip(reason="OSS导入任务功能未实现")
+    def test_exchange_rate_oss_import_task(self):
+        """汇率OSS导入任务用例"""
+        try:
+            api_path = self.get_api_path("汇率-导入导出任务管理接口-通过OSS提交导入任务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["ossPath", "taskName"], ["params", "request"]
+            )
+            set_dict = {
+                "ossPath": "/test/exchange_rate_import.xlsx",
+                "taskName": f"汇率导入任务_{self.mock_data.get_timestamp()}"
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="汇率任务管理",
+        title="测试汇率导出任务",
+        description="验证汇率-导入导出任务管理接口-提交导出任务功能",
+        severity="normal",
+        order=23,
+        tags=["汇率管理", "任务管理", "GEN_CURR_FORMULA_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST"]
+    )
+    @pytest.mark.skip(reason="导出任务功能未实现")
+    def test_exchange_rate_export_task(self):
+        """汇率导出任务用例"""
+        try:
+            api_path = self.get_api_path("汇率-导入导出任务管理接口-提交导出任务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["exportConfig", "taskName"], ["params", "request"]
+            )
+            set_dict = {
+                "exportConfig": {
+                    "fields": [
+                        {"name": "code", "type": "TEXT"},
+                        {"name": "name", "type": "TEXT"},
+                        {"name": "rate", "type": "NUMERIC"}
+                    ],
+                    "condition": {}
+                },
+                "taskName": f"汇率导出任务_{self.mock_data.get_timestamp()}"
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="汇率类型任务管理",
+        title="测试汇率类型OSS导入任务",
+        description="验证汇率类型-导入导出任务管理接口-通过OSS提交导入任务功能",
+        severity="normal",
+        order=24,
+        tags=["汇率类型管理", "任务管理", "GEN_CURR_EXCHANGE_RATE_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
+    )
+    @pytest.mark.skip(reason="OSS导入任务功能未实现")
+    def test_exchange_rate_type_oss_import_task(self):
+        """汇率类型OSS导入任务用例"""
+        try:
+            api_path = self.get_api_path("汇率类型-导入导出任务管理接口-通过OSS提交导入任务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["ossPath", "taskName"], ["params", "request"]
+            )
+            set_dict = {
+                "ossPath": "/test/exchange_rate_type_import.xlsx",
+                "taskName": f"汇率类型导入任务_{self.mock_data.get_timestamp()}"
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="汇率类型任务管理",
+        title="测试汇率类型导出任务",
+        description="验证汇率类型-导入导出任务管理接口-提交导出任务功能",
+        severity="normal",
+        order=25,
+        tags=["汇率类型管理", "任务管理", "GEN_CURR_EXCHANGE_RATE_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST"]
+    )
+    @pytest.mark.skip(reason="导出任务功能未实现")
+    def test_exchange_rate_type_export_task(self):
+        """汇率类型导出任务用例"""
+        try:
+            api_path = self.get_api_path("汇率类型-导入导出任务管理接口-提交导出任务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["exportConfig", "taskName"], ["params", "request"]
+            )
+            set_dict = {
+                "exportConfig": {
+                    "fields": [
+                        {"name": "code", "type": "TEXT"},
+                        {"name": "name", "type": "TEXT"},
+                        {"name": "description", "type": "TEXT"}
+                    ],
+                    "condition": {}
+                },
+                "taskName": f"汇率类型导出任务_{self.mock_data.get_timestamp()}"
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    # ================ 删除服务 ================
+    @case_decorator(
+        story="币种配置管理",
+        title="测试删除币种配置",
+        description="验证GEN-币种配置-删除服务功能",
+        severity="critical",
+        order=26,
+        tags=["币种管理", "删除", "GEN_CURR_TYPE_CF_DELETE_ACTION_SERVICE"]
+    )
+    def test_delete_currency(self):
+        """删除币种配置用例"""
+        try:
+            # 先创建一个测试数据用于删除
+            currency_code = self.mock_data.generate_unique_code(tag="DEL_CURR")
+            currency_name = f"待删除币种_{self.mock_data.get_timestamp()}"
+
+            # 创建币种
+            save_api_path = self.get_api_path("GEN-币种配置-保存服务")
+            save_params, save_url = self.get_api_params(save_api_path)
+            
+            save_filtered_params = ParamUtil.filter_post_body_fields(
+                save_params, ["currCode", "currName", "symbol", "decimalPlace"], ["params", "request"]
+            )
+            save_set_dict = {
+                "currCode": currency_code,
+                "currName": currency_name,
+                "symbol": currency_code,
+                "decimalPlace": 2
+            }
+            ParamUtil.set_request_params(save_filtered_params, save_set_dict)
+
+            save_response = self.http.post(save_url, json=save_filtered_params)
+            self.assert_util.assert_response_data(save_response)
+            
+            delete_currency_id = save_response.get("data", {}).get("data", {})
+
+            # 删除币种
+            api_path = self.get_api_path("GEN-币种配置-删除服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], ["params", "request"]
+            )
+            set_dict = {"id": delete_currency_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="汇率管理",
+        title="测试删除汇率",
+        description="验证GEN-汇率-删除服务功能",
+        severity="critical",
+        order=27,
+        tags=["汇率管理", "删除", "GEN_CURR_FORMULA_TYPE_CF_DELETE_ACTION_SERVICE"]
+    )
+    def test_delete_exchange_rate(self):
+        """删除汇率用例"""
+        try:
+            # 先创建一个测试数据用于删除
+            rate_code = self.mock_data.generate_unique_code(tag="DEL_RATE")
+            rate_name = f"待删除汇率_{self.mock_data.get_timestamp()}"
+
+            # 创建汇率
+            save_api_path = self.get_api_path("GEN-汇率-保存服务")
+            save_params, save_url = self.get_api_params(save_api_path)
+            
+            save_filtered_params = ParamUtil.filter_post_body_fields(
+                save_params, ["code", "name", "fromCurr", "toCurr", "rate"], ["params", "request"]
+            )
+            save_set_dict = {
+                "code": rate_code,
+                "name": rate_name,
+                "fromCurr": "USD",
+                "toCurr": "CNY",
+                "rate": 7.2
+            }
+            ParamUtil.set_request_params(save_filtered_params, save_set_dict)
+
+            save_response = self.http.post(save_url, json=save_filtered_params)
+            self.assert_util.assert_response_data(save_response)
+            
+            delete_rate_id = save_response.get("data", {}).get("data", {})
+
+            # 删除汇率
+            api_path = self.get_api_path("GEN-汇率-删除服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], ["params", "request"]
+            )
+            set_dict = {"id": delete_rate_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="汇率类型管理",
+        title="测试删除汇率类型",
+        description="验证GEN-汇率类型-删除服务功能",
+        severity="critical",
+        order=28,
+        tags=["汇率类型管理", "删除", "GEN_CURR_EXCHANGE_RATE_TYPE_CF_DELETE_ACTION_SERVICE"]
+    )
+    def test_delete_exchange_rate_type(self):
+        """删除汇率类型用例"""
+        try:
+            # 先创建一个测试数据用于删除
+            rate_type_code = self.mock_data.generate_unique_code(tag="DEL_RATETYPE")
+            rate_type_name = f"待删除汇率类型_{self.mock_data.get_timestamp()}"
+
+            # 创建汇率类型
+            save_api_path = self.get_api_path("GEN-汇率类型-保存服务")
+            save_params, save_url = self.get_api_params(save_api_path)
+            
+            save_filtered_params = ParamUtil.filter_post_body_fields(
+                save_params, ["code", "name", "description"], ["params", "request"]
+            )
+            save_set_dict = {
+                "code": rate_type_code,
+                "name": rate_type_name,
+                "description": "待删除汇率类型描述"
+            }
+            ParamUtil.set_request_params(save_filtered_params, save_set_dict)
+
+            save_response = self.http.post(save_url, json=save_filtered_params)
+            self.assert_util.assert_response_data(save_response)
+            
+            delete_rate_type_id = save_response.get("data", {}).get("data", {})
+
+            # 删除汇率类型
+            api_path = self.get_api_path("GEN-汇率类型-删除服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], ["params", "request"]
+            )
+            set_dict = {"id": delete_rate_type_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    # ================ 币种配置导入导出管理 ================
     @case_decorator(
         story="币种导入导出管理",
         title="测试币种配置标准导入",
         description="验证币种配置标准导入服务功能",
         severity="normal",
-        order=9,
+        order=29,
         tags=["币种管理", "导入", "GEN_CURR_TYPE_CF_GEI_IMPORT_SERVICE"]
     )
+    @pytest.mark.skip(reason="币种配置标准导入服务功能未实现")
     def test_currency_import(self):
         """币种配置标准导入用例"""
         try:
@@ -390,9 +1196,10 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试币种配置标准导出",
         description="验证币种配置标准导出服务功能",
         severity="normal",
-        order=10,
+        order=30,
         tags=["币种管理", "导出", "GEN_CURR_TYPE_CF_GEI_EXPORT_SERVICE"]
     )
+    @pytest.mark.skip(reason="币种配置标准导出服务功能未实现")
     def test_currency_export(self):
         """币种配置标准导出用例"""
         try:
@@ -428,7 +1235,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试币种汇率完整业务流程",
         description="验证币种、汇率、汇率类型的完整业务流程",
         severity="critical",
-        order=11,
+        order=31,
         tags=["币种管理", "综合测试", "业务流程"]
     )
     def test_currency_complete_workflow(self):
