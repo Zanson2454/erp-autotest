@@ -1,7 +1,7 @@
 from faker import Faker
 from faker.providers import BaseProvider
 from typing import Optional, List, Dict, Any, Union
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import random
 import re
 from pathlib import Path
@@ -133,7 +133,7 @@ class MockData:
         """
         phone = int(time.time()*10)
  
-        return phone
+        return str(phone)
     
     def get_mock_ssn(self) -> str:
         """生成身份证号
@@ -170,14 +170,14 @@ class MockData:
             'account_number': self.fake.chinese_bank_account()
         }
     
-    def get_mock_date(self, days_offset: int = 0, include_time: bool = True) -> datetime:
+    def get_mock_date(self, days_offset: int = 0, include_time: bool = True) -> Union[datetime, date]:
         """生成日期，支持日期偏移和时间包含选项
         
         Args:
             days_offset: 日期偏移量，正数为未来日期，负数为过去日期
             include_time: 是否包含时分秒，默认为True
         Returns:
-            datetime: 生成的日期
+            Union[datetime, datetime.date]: 生成的日期
         """
         target_date = datetime.now() + timedelta(days=days_offset)
         if not include_time:
@@ -335,7 +335,7 @@ class MockData:
         """
         return self.fake.company_introduction(max_length)
 
-    def get_mock_enterprise_credentials(self) -> Dict[str, str]:
+    def get_mock_enterprise_credentials(self):
         """生成企业证照信息（营业执照号、纳税人识别号、统一社会信用代码）
         
         现在企业通常使用统一社会信用代码作为营业执照号和纳税人识别号，
@@ -370,11 +370,15 @@ class MockData:
         # 统一社会信用代码
         business_license_no = f"{dept_code}{org_type}{area_code}{main_code}{check_code}"
         
-        # 现在大部分企业的营业执照号和纳税人识别号都是统一社会信用代码
-        # 但也提供独立的15位纳税人识别号选项，使用faker生成
-        taxpayer_number_15 = self.fake.numerify('###############')
+        return str(business_license_no)
+
+    def get_mock_postcode(self) -> str:
+        """生成邮政编码
         
-        return business_license_no
+        Returns:
+            str: 6位数字的邮政编码
+        """
+        return self.fake.postcode()
 
 if __name__ == '__main__':
     # 测试代码
