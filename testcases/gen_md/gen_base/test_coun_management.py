@@ -30,7 +30,7 @@ class TestCountryManagement(GenMdBaseTest):
                 try:
                     cls.db.delete(
                         table=table,
-                        where="code like %s",
+                        where="coun_code like %s",
                         params=["AT_%"]
                     )
                 except Exception:
@@ -207,6 +207,7 @@ class TestCountryManagement(GenMdBaseTest):
         order=5,
         tags=["国家管理", "导入", "GEN_COUN_TYPE_CF_GEI_IMPORT_SERVICE"]
     )
+    @pytest.mark.skip(reason="业务用不上")
     def test_country_import(self):
         """国家配置标准导入用例 - GEN_COUN_TYPE_CF_GEI_IMPORT_SERVICE"""
         try:
@@ -247,6 +248,7 @@ class TestCountryManagement(GenMdBaseTest):
         order=6,
         tags=["国家管理", "导出", "GEN_COUN_TYPE_CF_GEI_EXPORT_SERVICE"]
     )
+    @pytest.mark.skip(reason="业务用不上")
     def test_country_export(self):
         """国家配置标准导出用例 - GEN_COUN_TYPE_CF_GEI_EXPORT_SERVICE"""
         try:

@@ -34,7 +34,7 @@ class TestTimezoneManagement(GenMdBaseTest):
                 try:
                     cls.db.delete(
                         table=table,
-                        where="code like %s",
+                        where="timezone_code like %s",
                         params=["AT_%"]
                     )
                 except Exception:

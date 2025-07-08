@@ -319,4 +319,453 @@ class TestBankSystemManagement(GenMdBaseTest):
 
         except Exception as e:
             a.text(str(e), "失败原因")
+            raise
+
+    # ================ 银行配置根据ID查找数据服务 ================
+    @case_decorator(
+        story="银行管理",
+        title="测试银行配置根据ID查找数据",
+        description="验证银行配置-根据ID查找数据服务功能",
+        severity="normal",
+        order=9,
+        tags=["银行管理", "查询", "GEN_BANK_CF_FIND_DATA_BY_ID_SERVICE"]
+    )
+    def test_find_bank_data_by_id(self):
+        """银行配置根据ID查找数据用例"""
+        try:
+            if not self.bank_id:
+                self.test_save_bank()
+
+            api_path = self.get_api_path("银行配置-根据ID查找数据服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], ["params", "request"]
+            )
+            set_dict = {"id": self.bank_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="银行支行管理",
+        title="测试银行支行根据ID查找数据",
+        description="验证银行支行-根据ID查找数据服务功能",
+        severity="normal",
+        order=10,
+        tags=["银行支行管理", "查询", "GEN_SUB_BANK_CF_FIND_DATA_BY_ID_SERVICE"]
+    )
+    def test_find_sub_bank_data_by_id(self):
+        """银行支行根据ID查找数据用例"""
+        try:
+            if not self.sub_bank_id:
+                self.test_save_sub_bank()
+
+            api_path = self.get_api_path("银行支行-根据ID查找数据服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], ["params", "request"]
+            )
+            set_dict = {"id": self.sub_bank_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    # ================ 分页数据服务 ================
+    @case_decorator(
+        story="银行管理",
+        title="测试银行配置分页数据服务",
+        description="验证银行配置-分页数据服务功能",
+        severity="normal",
+        order=11,
+        tags=["银行管理", "查询", "GEN_BANK_CF_PAGING_DATA_SERVICE"]
+    )
+    def test_bank_paging_data(self):
+        """银行配置分页数据服务用例"""
+        try:
+            api_path = self.get_api_path("银行配置-分页数据服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["pageable", "fields", "systemParams"], ["params", "request"]
+            )
+            set_dict = {
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": None
+                },
+                "fields": [
+                    {"name": "bank_code", "type": "TEXT"},
+                    {"name": "bank_name", "type": "TEXT"}
+                ],
+                "systemParams": None
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="银行支行管理",
+        title="测试银行支行分页数据服务",
+        description="验证银行支行-分页数据服务功能",
+        severity="normal",
+        order=12,
+        tags=["银行支行管理", "查询", "GEN_SUB_BANK_CF_PAGING_DATA_SERVICE"]
+    )
+    def test_sub_bank_paging_data(self):
+        """银行支行分页数据服务用例"""
+        try:
+            api_path = self.get_api_path("银行支行-分页数据服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["pageable"], ["params", "request"]
+            )
+            set_dict = {
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "conditionGroup": None,
+                    "sortOrders": None,
+                    "keyword": None
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    # ================ 银行配置导入导出管理 ================
+    @case_decorator(
+        story="银行配置导入导出管理",
+        title="测试银行配置标准导入",
+        description="验证银行配置标准导入服务功能",
+        severity="normal",
+        order=13,
+        tags=["银行管理", "导入", "GEN_BANK_CF_GEI_IMPORT_SERVICE"]
+    )
+    @pytest.mark.skip(reason="业务用不上")
+    def test_bank_import(self):
+        """银行配置标准导入用例"""
+        try:
+            api_path = self.get_api_path("银行配置标准导入服务")
+            params, url = self.get_api_params(api_path)
+
+            import_data = [
+                {
+                    "bank_code": self.mock_data.generate_unique_code(tag="IMPORT_BANK"),
+                    "bank_name": f"导入测试银行_{self.mock_data.get_timestamp()}"
+                }
+            ]
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["data"], ["params", "request"]
+            )
+            set_dict = {"data": import_data}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="银行配置导入导出管理",
+        title="测试银行配置标准导出",
+        description="验证银行配置标准导出服务功能",
+        severity="normal",
+        order=14,
+        tags=["银行管理", "导出", "GEN_BANK_CF_GEI_EXPORT_SERVICE"]
+    )
+    @pytest.mark.skip(reason="业务用不上")
+    def test_bank_export(self):
+        """银行配置标准导出用例"""
+        try:
+            api_path = self.get_api_path("银行配置标准导出服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["selectFields"], ["params", "request"]
+            )
+            set_dict = {
+                "selectFields": [
+                    {"name": "bank_code", "type": "TEXT"},
+                    {"name": "bank_name", "type": "TEXT"}
+                ]
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    # ================ 银行支行导入导出管理 ================
+    @case_decorator(
+        story="银行支行导入导出管理",
+        title="测试银行支行标准导入",
+        description="验证银行支行标准导入服务功能",
+        severity="normal",
+        order=15,
+        tags=["银行支行管理", "导入", "GEN_SUB_BANK_CF_GEI_IMPORT_SERVICE"]
+    )
+    @pytest.mark.skip(reason="业务用不上")
+    def test_sub_bank_import(self):
+        """银行支行标准导入用例"""
+        try:
+            api_path = self.get_api_path("银行支行标准导入服务")
+            params, url = self.get_api_params(api_path)
+
+            import_data = [
+                {
+                    "sub_bank_code": self.mock_data.generate_unique_code(tag="IMPORT_SUBBANK"),
+                    "sub_bank_name": f"导入测试银行支行_{self.mock_data.get_timestamp()}"
+                }
+            ]
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["data"], ["params", "request"]
+            )
+            set_dict = {"data": import_data}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="银行支行导入导出管理",
+        title="测试银行支行标准导出",
+        description="验证银行支行标准导出服务功能",
+        severity="normal",
+        order=16,
+        tags=["银行支行管理", "导出", "GEN_SUB_BANK_CF_GEI_EXPORT_SERVICE"]
+    )
+    @pytest.mark.skip(reason="业务用不上")
+    def test_sub_bank_export(self):
+        """银行支行标准导出用例"""
+        try:
+            api_path = self.get_api_path("银行支行标准导出服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["selectFields"], ["params", "request"]
+            )
+            set_dict = {
+                "selectFields": [
+                    {"name": "sub_bank_code", "type": "TEXT"},
+                    {"name": "sub_bank_name", "type": "TEXT"}
+                ]
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    # ================ 银行配置任务管理接口 ================
+    @case_decorator(
+        story="银行配置任务管理",
+        title="测试银行配置OSS导入任务",
+        description="验证银行配置-导入导出任务管理接口-通过OSS提交导入任务功能",
+        severity="normal",
+        order=17,
+        tags=["银行管理", "任务管理", "GEN_BANK_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
+    )
+    @pytest.mark.skip(reason="业务用不上")
+    def test_bank_oss_import_task(self):
+        """银行配置OSS导入任务用例"""
+        try:
+            api_path = self.get_api_path("银行配置-导入导出任务管理接口-通过OSS提交导入任务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["ossPath", "taskName"], ["params", "request"]
+            )
+            set_dict = {
+                "ossPath": "/test/bank_import.xlsx",
+                "taskName": f"银行配置导入任务_{self.mock_data.get_timestamp()}"
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="银行配置任务管理",
+        title="测试银行配置导出任务",
+        description="验证银行配置-导入导出任务管理接口-提交导出任务功能",
+        severity="normal",
+        order=18,
+        tags=["银行管理", "任务管理", "GEN_BANK_CF_API_GEI_TASK_EXPORT_DIRECT_POST"]
+    )
+    @pytest.mark.skip(reason="业务用不上")
+    def test_bank_export_task(self):
+        """银行配置导出任务用例"""
+        try:
+            api_path = self.get_api_path("银行配置-导入导出任务管理接口-提交导出任务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["exportConfig", "taskName"], ["params", "request"]
+            )
+            set_dict = {
+                "exportConfig": {
+                    "fields": [
+                        {"name": "bank_code", "type": "TEXT"},
+                        {"name": "bank_name", "type": "TEXT"}
+                    ],
+                    "condition": {}
+                },
+                "taskName": f"银行配置导出任务_{self.mock_data.get_timestamp()}"
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    # ================ 银行支行任务管理接口 ================
+    @case_decorator(
+        story="银行支行任务管理",
+        title="测试银行支行OSS导入任务",
+        description="验证银行支行-导入导出任务管理接口-通过OSS提交导入任务功能",
+        severity="normal",
+        order=19,
+        tags=["银行支行管理", "任务管理", "GEN_SUB_BANK_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
+    )
+    @pytest.mark.skip(reason="业务用不上")
+    def test_sub_bank_oss_import_task(self):
+        """银行支行OSS导入任务用例"""
+        try:
+            api_path = self.get_api_path("银行支行-导入导出任务管理接口-通过OSS提交导入任务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["ossPath", "taskName"], ["params", "request"]
+            )
+            set_dict = {
+                "ossPath": "/test/sub_bank_import.xlsx",
+                "taskName": f"银行支行导入任务_{self.mock_data.get_timestamp()}"
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="银行支行任务管理",
+        title="测试银行支行导出任务",
+        description="验证银行支行-导入导出任务管理接口-提交导出任务功能",
+        severity="normal",
+        order=20,
+        tags=["银行支行管理", "任务管理", "GEN_SUB_BANK_CF_API_GEI_TASK_EXPORT_DIRECT_POST"]
+    )
+    @pytest.mark.skip(reason="业务用不上")
+    def test_sub_bank_export_task(self):
+        """银行支行导出任务用例"""
+        try:
+            api_path = self.get_api_path("银行支行-导入导出任务管理接口-提交导出任务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["exportConfig", "taskName"], ["params", "request"]
+            )
+            set_dict = {
+                "exportConfig": {
+                    "fields": [
+                        {"name": "sub_bank_code", "type": "TEXT"},
+                        {"name": "sub_bank_name", "type": "TEXT"}
+                    ],
+                    "condition": {}
+                },
+                "taskName": f"银行支行导出任务_{self.mock_data.get_timestamp()}"
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
             raise 

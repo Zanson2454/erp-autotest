@@ -32,7 +32,7 @@ class TestCurrencyManagement(GenMdBaseTest):
                 try:
                     cls.db.delete(
                         table=table,
-                        where="code like %s",
+                        where="curr_code like %s",
                         params=["AT_%"]
                     )
                 except Exception:
