@@ -31,7 +31,7 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
             cls.db.delete(
                 table="gen_uom_formula_type_cf",
                 where="created_by = %s",
-                params={cls.user_id}
+                params= [cls.user_id]
             )
             cls.logger.info("测试数据清理完成")
         except Exception as e:

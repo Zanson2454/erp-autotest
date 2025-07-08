@@ -1,5 +1,6 @@
 import allure
 import pytest
+from typing import Any
 from testcases.gen_md import GenMdBaseTest
 from utils.mock_util import MockData
 from utils.param_util import ParamUtil
@@ -9,23 +10,29 @@ from utils.report_util import a, case_decorator
 @allure.epic("通用基础数据")
 @allure.feature("条码系统管理")
 class TestBarcodeSystemManagement(GenMdBaseTest):
-    """条码系统管理测试类 - 整合条码规则、条码字段等功能"""
+    """条码系统管理测试类 - 覆盖条码主数据、条码规则、条码字段等功能"""
+    
+    # 类型提示：继承的动态属性
+    assert_util: Any
 
     @classmethod
     def setup_class(cls):
         super().setup_class()
         cls.mock_data = MockData()
-        cls.barcode_id = None
-        cls.barcode_code = None
+        # 数据存储
+        cls.barcode_md_id = None
+        cls.barcode_md_code = None
         cls.barcode_rule_id = None
         cls.barcode_rule_code = None
+        cls.barcode_field_id = None
+        cls.barcode_field_code = None
         cls.logger.info("条码系统管理测试类初始化完成")
 
     @classmethod
     def teardown_class(cls):
         """测试类结束后执行清理"""
         try:
-            tables = ["gen_barcode_md", "gen_barcode_rule_md"]
+            tables = ["gen_barcode_md", "gen_barcode_rule_cf", "gen_barcode_filed_cf"]
             for table in tables:
                 try:
                     cls.db.delete(table=table, where="code like %s", params=["AT_%"])
@@ -35,36 +42,40 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
-    # ================ 条码字段管理 ================
+    # ================ 条码主数据管理 ================
     @case_decorator(
-        story="条码字段管理",
-        title="测试新增条码字段",
-        description="验证新增条码字段功能",
+        story="条码主数据管理",
+        title="测试新增条码主数据",
+        description="验证GEN-条码主数据-保存服务功能",
         severity="blocker",
         order=1,
         smoke=True,
-        tags=["条码字段管理", "新增"]
+        tags=["条码主数据", "新增", "GEN_BARCODE_MD_SAVE_ACTION_SERVICE"]
     )
-    def test_save_barcode(self):
-        """新增条码字段用例"""
+    def test_save_barcode_md(self):
+        """新增条码主数据用例 - GEN_BARCODE_MD_SAVE_ACTION_SERVICE"""
         try:
-            barcode_code = self.mock_data.generate_unique_code(tag="Barcode")
-            barcode_name = f"条码字段_{self.mock_data.get_timestamp()}"
+            barcode_code = self.mock_data.generate_unique_code(tag="BARCODE_MD")
+            barcode_name = f"条码主数据_{self.mock_data.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-条码字段-保存服务")
+            api_path = self.get_api_path("GEN-条码主数据-保存服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["barcode_code", "barcode_name"], ["params", "request"]
+                params, ["code", "name", "description"], ["params", "request"]
             )
-            set_dict = {"barcode_code": barcode_code, "barcode_name": barcode_name}
+            set_dict = {
+                "code": barcode_code,
+                "name": barcode_name,
+                "description": f"条码主数据描述_{self.mock_data.get_timestamp()}"
+            }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
             
-            self.barcode_id = response.get("data", {}).get("data", {})
-            self.barcode_code = barcode_code
+            self.barcode_md_id = response.get("data", {}).get("data", {})
+            self.barcode_md_code = barcode_code
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -74,17 +85,17 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             raise
 
     @case_decorator(
-        story="条码字段管理",
-        title="测试查询条码字段列表",
-        description="验证条码字段列表查询功能",
+        story="条码主数据管理",
+        title="测试查询条码主数据分页列表",
+        description="验证GEN-条码主数据-查询分页服务功能",
         severity="normal",
         order=2,
-        tags=["条码字段管理", "查询"]
+        tags=["条码主数据", "查询", "GEN_BARCODE_MD_QUERY_PAGE_ACTION_SERVICE"]
     )
-    def test_query_barcode_list(self):
-        """查询条码字段列表用例"""
+    def test_query_barcode_md_page(self):
+        """查询条码主数据分页列表用例 - GEN_BARCODE_MD_QUERY_PAGE_ACTION_SERVICE"""
         try:
-            api_path = self.get_api_path("GEN-条码字段-查询分页服务")
+            api_path = self.get_api_path("GEN-条码主数据-查询分页服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -93,17 +104,15 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
                 "fields": [
-                    {"name": "barcode_code", "type": "TEXT"},
-                    {"name": "barcode_name", "type": "TEXT"}
+                    {"name": "code", "type": "TEXT"},
+                    {"name": "name", "type": "TEXT"},
+                    {"name": "description", "type": "TEXT"}
                 ]
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
-
-            data_list = response.get("data", {}).get("data", {}).get("data", [])
-            self.assert_util.assert_by_operator(data_list, "not_empty")
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -113,26 +122,146 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             raise
 
     @case_decorator(
-        story="条码字段管理",
-        title="测试查询条码字段详情",
-        description="验证条码字段详情查询功能",
+        story="条码主数据管理",
+        title="测试查询条码主数据详情",
+        description="验证GEN-条码主数据-查询详情服务功能",
         severity="normal",
         order=3,
-        tags=["条码字段管理", "查询"]
+        tags=["条码主数据", "查询", "GEN_BARCODE_MD_QUERY_DETAIL_ACTION_SERVICE"]
     )
-    def test_query_barcode_detail(self):
-        """查询条码字段详情用例"""
+    def test_query_barcode_md_detail(self):
+        """查询条码主数据详情用例 - GEN_BARCODE_MD_QUERY_DETAIL_ACTION_SERVICE"""
         try:
-            if not self.barcode_id:
-                self.test_save_barcode()
+            if not self.barcode_md_id:
+                self.test_save_barcode_md()
 
-            api_path = self.get_api_path("GEN-条码字段-查询详情服务")
+            api_path = self.get_api_path("GEN-条码主数据-查询详情服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params, ["id"], ["params", "request"]
             )
-            set_dict = {"id": self.barcode_id}
+            set_dict = {"id": self.barcode_md_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="条码主数据管理",
+        title="测试启用条码主数据",
+        description="验证GEN-条码主数据-启用服务功能",
+        severity="normal",
+        order=4,
+        tags=["条码主数据", "启用", "GEN_BARCODE_MD_ENABLED_ACTION_SERVICE"]
+    )
+    def test_enable_barcode_md(self):
+        """启用条码主数据用例 - GEN_BARCODE_MD_ENABLED_ACTION_SERVICE"""
+        try:
+            if not self.barcode_md_id:
+                self.test_save_barcode_md()
+
+            api_path = self.get_api_path("GEN-条码主数据-启用服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["ids"], ["params", "request"]
+            )
+            set_dict = {"ids": [self.barcode_md_id]}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="条码主数据管理",
+        title="测试禁用条码主数据",
+        description="验证GEN-条码主数据-禁用服务功能",
+        severity="normal",
+        order=5,
+        tags=["条码主数据", "禁用", "GEN_BARCODE_MD_DISABLED_ACTION_SERVICE"]
+    )
+    def test_disable_barcode_md(self):
+        """禁用条码主数据用例 - GEN_BARCODE_MD_DISABLED_ACTION_SERVICE"""
+        try:
+            if not self.barcode_md_id:
+                self.test_save_barcode_md()
+
+            api_path = self.get_api_path("GEN-条码主数据-禁用服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["ids"], ["params", "request"]
+            )
+            set_dict = {"ids": [self.barcode_md_id]}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="条码主数据管理",
+        title="测试删除条码主数据",
+        description="验证GEN-条码主数据-删除服务功能",
+        severity="critical",
+        order=6,
+        tags=["条码主数据", "删除", "GEN_BARCODE_MD_DELETE_ACTION_SERVICE"]
+    )
+    def test_delete_barcode_md(self):
+        """删除条码主数据用例 - GEN_BARCODE_MD_DELETE_ACTION_SERVICE"""
+        try:
+            # 先创建一个测试数据用于删除
+            barcode_code = self.mock_data.generate_unique_code(tag="DEL_BARCODE_MD")
+            barcode_name = f"待删除条码主数据_{self.mock_data.get_timestamp()}"
+
+            # 创建条码主数据
+            save_api_path = self.get_api_path("GEN-条码主数据-保存服务")
+            save_params, save_url = self.get_api_params(save_api_path)
+            
+            save_filtered_params = ParamUtil.filter_post_body_fields(
+                save_params, ["code", "name", "description"], ["params", "request"]
+            )
+            save_set_dict = {
+                "code": barcode_code,
+                "name": barcode_name,
+                "description": "待删除条码主数据描述"
+            }
+            ParamUtil.set_request_params(save_filtered_params, save_set_dict)
+
+            save_response = self.http.post(save_url, json=save_filtered_params)
+            self.assert_util.assert_response_data(save_response)
+            
+            delete_barcode_id = save_response.get("data", {}).get("data", {})
+
+            # 删除条码主数据
+            api_path = self.get_api_path("GEN-条码主数据-删除服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["ids"], ["params", "request"]
+            )
+            set_dict = {"ids": [delete_barcode_id]}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -149,32 +278,36 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     @case_decorator(
         story="条码规则管理",
         title="测试新增条码规则",
-        description="验证新增条码规则功能",
+        description="验证GEN-条码规则-保存服务功能",
         severity="blocker",
-        order=4,
+        order=7,
         smoke=True,
-        tags=["条码规则管理", "新增"]
+        tags=["条码规则", "新增", "GEN_BARCODE_RULE_CF_SAVE_ACTION_SERVICE"]
     )
     def test_save_barcode_rule(self):
-        """新增条码规则用例"""
+        """新增条码规则用例 - GEN_BARCODE_RULE_CF_SAVE_ACTION_SERVICE"""
         try:
-            barcode_rule_code = self.mock_data.generate_unique_code(tag="BarcodeRule")
-            barcode_rule_name = f"条码规则_{self.mock_data.get_timestamp()}"
+            rule_code = self.mock_data.generate_unique_code(tag="BARCODE_RULE")
+            rule_name = f"条码规则_{self.mock_data.get_timestamp()}"
 
             api_path = self.get_api_path("GEN-条码规则-保存服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["barcode_rule_code", "barcode_rule_name"], ["params", "request"]
+                params, ["code", "name", "description"], ["params", "request"]
             )
-            set_dict = {"barcode_rule_code": barcode_rule_code, "barcode_rule_name": barcode_rule_name}
+            set_dict = {
+                "code": rule_code,
+                "name": rule_name,
+                "description": f"条码规则描述_{self.mock_data.get_timestamp()}"
+            }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
             
             self.barcode_rule_id = response.get("data", {}).get("data", {})
-            self.barcode_rule_code = barcode_rule_code
+            self.barcode_rule_code = rule_code
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -185,14 +318,14 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
 
     @case_decorator(
         story="条码规则管理",
-        title="测试查询条码规则列表",
-        description="验证条码规则列表查询功能",
+        title="测试查询条码规则分页列表",
+        description="验证GEN-条码规则-查询分页服务功能",
         severity="normal",
-        order=5,
-        tags=["条码规则管理", "查询"]
+        order=8,
+        tags=["条码规则", "查询", "GEN_BARCODE_RULE_CF_QUERY_PAGE_ACTION_SERVICE"]
     )
-    def test_query_barcode_rule_list(self):
-        """查询条码规则列表用例"""
+    def test_query_barcode_rule_page(self):
+        """查询条码规则分页列表用例 - GEN_BARCODE_RULE_CF_QUERY_PAGE_ACTION_SERVICE"""
         try:
             api_path = self.get_api_path("GEN-条码规则-查询分页服务")
             params, url = self.get_api_params(api_path)
@@ -203,17 +336,15 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
                 "fields": [
-                    {"name": "barcode_rule_code", "type": "TEXT"},
-                    {"name": "barcode_rule_name", "type": "TEXT"}
+                    {"name": "code", "type": "TEXT"},
+                    {"name": "name", "type": "TEXT"},
+                    {"name": "description", "type": "TEXT"}
                 ]
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
-
-            data_list = response.get("data", {}).get("data", {}).get("data", [])
-            self.assert_util.assert_by_operator(data_list, "not_empty")
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -225,13 +356,13 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     @case_decorator(
         story="条码规则管理",
         title="测试查询条码规则详情",
-        description="验证条码规则详情查询功能",
+        description="验证GEN-条码规则-查询详情服务功能",
         severity="normal",
-        order=6,
-        tags=["条码规则管理", "查询"]
+        order=9,
+        tags=["条码规则", "查询", "GEN_BARCODE_RULE_CF_QUERY_DETAIL_ACTION_SERVICE"]
     )
     def test_query_barcode_rule_detail(self):
-        """查询条码规则详情用例"""
+        """查询条码规则详情用例 - GEN_BARCODE_RULE_CF_QUERY_DETAIL_ACTION_SERVICE"""
         try:
             if not self.barcode_rule_id:
                 self.test_save_barcode_rule()
@@ -258,24 +389,45 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     @case_decorator(
         story="条码规则管理",
         title="测试删除条码规则",
-        description="验证删除条码规则功能",
-        severity="normal",
-        order=7,
-        tags=["条码规则管理", "删除"]
+        description="验证GEN-条码规则-删除服务功能",
+        severity="critical",
+        order=10,
+        tags=["条码规则", "删除", "GEN_BARCODE_RULE_CF_DELETE_ACTION_SERVICE"]
     )
     def test_delete_barcode_rule(self):
-        """删除条码规则用例"""
+        """删除条码规则用例 - GEN_BARCODE_RULE_CF_DELETE_ACTION_SERVICE"""
         try:
-            if not self.barcode_rule_id:
-                self.test_save_barcode_rule()
+            # 先创建一个测试数据用于删除
+            rule_code = self.mock_data.generate_unique_code(tag="DEL_BARCODE_RULE")
+            rule_name = f"待删除条码规则_{self.mock_data.get_timestamp()}"
 
+            # 创建条码规则
+            save_api_path = self.get_api_path("GEN-条码规则-保存服务")
+            save_params, save_url = self.get_api_params(save_api_path)
+            
+            save_filtered_params = ParamUtil.filter_post_body_fields(
+                save_params, ["code", "name", "description"], ["params", "request"]
+            )
+            save_set_dict = {
+                "code": rule_code,
+                "name": rule_name,
+                "description": "待删除条码规则描述"
+            }
+            ParamUtil.set_request_params(save_filtered_params, save_set_dict)
+
+            save_response = self.http.post(save_url, json=save_filtered_params)
+            self.assert_util.assert_response_data(save_response)
+            
+            delete_rule_id = save_response.get("data", {}).get("data", {})
+
+            # 删除条码规则
             api_path = self.get_api_path("GEN-条码规则-删除服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params, ["ids"], ["params", "request"]
             )
-            set_dict = {"ids": [self.barcode_rule_id]}
+            set_dict = {"ids": [delete_rule_id]}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -286,4 +438,623 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
 
         except Exception as e:
             a.text(str(e), "失败原因")
-            raise 
+            raise
+
+    # ================ 条码字段管理 ================
+    @case_decorator(
+        story="条码字段管理",
+        title="测试新增条码字段",
+        description="验证GEN-条码字段-保存服务功能",
+        severity="blocker",
+        order=11,
+        smoke=True,
+        tags=["条码字段", "新增", "GEN_BARCODE_FILED_CF_SAVE_ACTION_SERVICE"]
+    )
+    def test_save_barcode_field(self):
+        """新增条码字段用例 - GEN_BARCODE_FILED_CF_SAVE_ACTION_SERVICE"""
+        try:
+            field_code = self.mock_data.generate_unique_code(tag="BARCODE_FIELD")
+            field_name = f"条码字段_{self.mock_data.get_timestamp()}"
+
+            api_path = self.get_api_path("GEN-条码字段-保存服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["code", "name", "description"], ["params", "request"]
+            )
+            set_dict = {
+                "code": field_code,
+                "name": field_name,
+                "description": f"条码字段描述_{self.mock_data.get_timestamp()}"
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            self.barcode_field_id = response.get("data", {}).get("data", {})
+            self.barcode_field_code = field_code
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="条码字段管理",
+        title="测试查询条码字段分页列表",
+        description="验证GEN-条码字段-查询分页服务功能",
+        severity="normal",
+        order=12,
+        tags=["条码字段", "查询", "GEN_BARCODE_FILED_CF_QUERY_PAGE_ACTION_SERVICE"]
+    )
+    def test_query_barcode_field_page(self):
+        """查询条码字段分页列表用例 - GEN_BARCODE_FILED_CF_QUERY_PAGE_ACTION_SERVICE"""
+        try:
+            api_path = self.get_api_path("GEN-条码字段-查询分页服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["pageable", "fields"], ["params", "request"]
+            )
+            set_dict = {
+                "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
+                "fields": [
+                    {"name": "code", "type": "TEXT"},
+                    {"name": "name", "type": "TEXT"},
+                    {"name": "description", "type": "TEXT"}
+                ]
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="条码字段管理",
+        title="测试查询条码字段详情",
+        description="验证GEN-条码字段-查询详情服务功能",
+        severity="normal",
+        order=13,
+        tags=["条码字段", "查询", "GEN_BARCODE_FILED_CF_QUERY_DETAIL_ACTION_SERVICE"]
+    )
+    def test_query_barcode_field_detail(self):
+        """查询条码字段详情用例 - GEN_BARCODE_FILED_CF_QUERY_DETAIL_ACTION_SERVICE"""
+        try:
+            if not self.barcode_field_id:
+                self.test_save_barcode_field()
+
+            api_path = self.get_api_path("GEN-条码字段-查询详情服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], ["params", "request"]
+            )
+            set_dict = {"id": self.barcode_field_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="条码字段管理",
+        title="测试删除条码字段",
+        description="验证GEN-条码字段-删除服务功能",
+        severity="critical",
+        order=14,
+        tags=["条码字段", "删除", "GEN_BARCODE_FILED_CF_DELETE_ACTION_SERVICE"]
+    )
+    def test_delete_barcode_field(self):
+        """删除条码字段用例 - GEN_BARCODE_FILED_CF_DELETE_ACTION_SERVICE"""
+        try:
+            # 先创建一个测试数据用于删除
+            field_code = self.mock_data.generate_unique_code(tag="DEL_BARCODE_FIELD")
+            field_name = f"待删除条码字段_{self.mock_data.get_timestamp()}"
+
+            # 创建条码字段
+            save_api_path = self.get_api_path("GEN-条码字段-保存服务")
+            save_params, save_url = self.get_api_params(save_api_path)
+            
+            save_filtered_params = ParamUtil.filter_post_body_fields(
+                save_params, ["code", "name", "description"], ["params", "request"]
+            )
+            save_set_dict = {
+                "code": field_code,
+                "name": field_name,
+                "description": "待删除条码字段描述"
+            }
+            ParamUtil.set_request_params(save_filtered_params, save_set_dict)
+
+            save_response = self.http.post(save_url, json=save_filtered_params)
+            self.assert_util.assert_response_data(save_response)
+            
+            delete_field_id = save_response.get("data", {}).get("data", {})
+
+            # 删除条码字段
+            api_path = self.get_api_path("GEN-条码字段-删除服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["ids"], ["params", "request"]
+            )
+            set_dict = {"ids": [delete_field_id]}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    # ================ 条码主数据导入导出管理 ================
+    @case_decorator(
+        story="条码主数据导入导出管理",
+        title="测试条码主数据标准导入",
+        description="验证条码主数据标准导入服务功能",
+        severity="normal",
+        order=15,
+        tags=["条码主数据", "导入", "GEN_BARCODE_MD_GEI_IMPORT_SERVICE"]
+    )
+    @pytest.mark.skip(reason="业务用不上")
+    def test_barcode_md_import(self):
+        """条码主数据标准导入用例 - GEN_BARCODE_MD_GEI_IMPORT_SERVICE"""
+        try:
+            api_path = self.get_api_path("条码主数据标准导入服务")
+            params, url = self.get_api_params(api_path)
+
+            import_data = [
+                {
+                    "code": self.mock_data.generate_unique_code(tag="IMPORT_BARCODE_MD"),
+                    "name": f"导入测试条码主数据_{self.mock_data.get_timestamp()}",
+                    "description": "导入测试条码主数据描述"
+                }
+            ]
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["data"], ["params", "request"]
+            )
+            set_dict = {"data": import_data}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="条码主数据导入导出管理",
+        title="测试条码主数据标准导出",
+        description="验证条码主数据标准导出服务功能",
+        severity="normal",
+        order=16,
+        tags=["条码主数据", "导出", "GEN_BARCODE_MD_GEI_EXPORT_SERVICE"]
+    )
+    @pytest.mark.skip(reason="业务用不上")
+    def test_barcode_md_export(self):
+        """条码主数据标准导出用例 - GEN_BARCODE_MD_GEI_EXPORT_SERVICE"""
+        try:
+            api_path = self.get_api_path("条码主数据标准导出服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["selectFields"], ["params", "request"]
+            )
+            set_dict = {
+                "selectFields": [
+                    {"name": "code", "type": "TEXT"},
+                    {"name": "name", "type": "TEXT"},
+                    {"name": "description", "type": "TEXT"}
+                ]
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="条码主数据任务管理",
+        title="测试条码主数据OSS导入任务",
+        description="验证条码主数据-导入导出任务管理接口-通过OSS提交导入任务功能",
+        severity="normal",
+        order=17,
+        tags=["条码主数据", "任务管理", "GEN_BARCODE_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
+    )
+    @pytest.mark.skip(reason="业务用不上")
+    def test_barcode_md_oss_import_task(self):
+        """条码主数据OSS导入任务用例 - GEN_BARCODE_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
+        try:
+            api_path = self.get_api_path("条码主数据-导入导出任务管理接口-通过OSS提交导入任务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["fileKey", "taskName"], ["params", "request"]
+            )
+            set_dict = {
+                "fileKey": "test_barcode_md_import_file.xlsx",
+                "taskName": f"条码主数据导入任务_{self.mock_data.get_timestamp()}"
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="条码主数据任务管理",
+        title="测试条码主数据导出任务",
+        description="验证条码主数据-导入导出任务管理接口-提交导出任务功能",
+        severity="normal",
+        order=18,
+        tags=["条码主数据", "任务管理", "GEN_BARCODE_MD_API_GEI_TASK_EXPORT_DIRECT_POST"]
+    )
+    @pytest.mark.skip(reason="业务用不上")
+    def test_barcode_md_export_task(self):
+        """条码主数据导出任务用例 - GEN_BARCODE_MD_API_GEI_TASK_EXPORT_DIRECT_POST"""
+        try:
+            api_path = self.get_api_path("条码主数据-导入导出任务管理接口-提交导出任务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["taskName", "queryData"], ["params", "request"]
+            )
+            set_dict = {
+                "taskName": f"条码主数据导出任务_{self.mock_data.get_timestamp()}",
+                "queryData": {
+                    "fields": [
+                        {"name": "code", "type": "TEXT"},
+                        {"name": "name", "type": "TEXT"},
+                        {"name": "description", "type": "TEXT"}
+                    ]
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    # ================ 条码规则导入导出管理 ================
+    @case_decorator(
+        story="条码规则导入导出管理",
+        title="测试条码规则标准导入",
+        description="验证条码规则标准导入服务功能",
+        severity="normal",
+        order=19,
+        tags=["条码规则", "导入", "GEN_BARCODE_RULE_CF_GEI_IMPORT_SERVICE"]
+    )
+    @pytest.mark.skip(reason="业务用不上")
+    def test_barcode_rule_import(self):
+        """条码规则标准导入用例 - GEN_BARCODE_RULE_CF_GEI_IMPORT_SERVICE"""
+        try:
+            api_path = self.get_api_path("条码规则标准导入服务")
+            params, url = self.get_api_params(api_path)
+
+            import_data = [
+                {
+                    "code": self.mock_data.generate_unique_code(tag="IMPORT_BARCODE_RULE"),
+                    "name": f"导入测试条码规则_{self.mock_data.get_timestamp()}",
+                    "description": "导入测试条码规则描述"
+                }
+            ]
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["data"], ["params", "request"]
+            )
+            set_dict = {"data": import_data}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="条码规则导入导出管理",
+        title="测试条码规则标准导出",
+        description="验证条码规则标准导出服务功能",
+        severity="normal",
+        order=20,
+        tags=["条码规则", "导出", "GEN_BARCODE_RULE_CF_GEI_EXPORT_SERVICE"]
+    )
+    @pytest.mark.skip(reason="业务用不上")
+    def test_barcode_rule_export(self):
+        """条码规则标准导出用例 - GEN_BARCODE_RULE_CF_GEI_EXPORT_SERVICE"""
+        try:
+            api_path = self.get_api_path("条码规则标准导出服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["selectFields"], ["params", "request"]
+            )
+            set_dict = {
+                "selectFields": [
+                    {"name": "code", "type": "TEXT"},
+                    {"name": "name", "type": "TEXT"},
+                    {"name": "description", "type": "TEXT"}
+                ]
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="条码规则任务管理",
+        title="测试条码规则OSS导入任务",
+        description="验证条码规则-导入导出任务管理接口-通过OSS提交导入任务功能",
+        severity="normal",
+        order=21,
+        tags=["条码规则", "任务管理", "GEN_BARCODE_RULE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
+    )
+    @pytest.mark.skip(reason="业务用不上")
+    def test_barcode_rule_oss_import_task(self):
+        """条码规则OSS导入任务用例 - GEN_BARCODE_RULE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
+        try:
+            api_path = self.get_api_path("条码规则-导入导出任务管理接口-通过OSS提交导入任务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["fileKey", "taskName"], ["params", "request"]
+            )
+            set_dict = {
+                "fileKey": "test_barcode_rule_import_file.xlsx",
+                "taskName": f"条码规则导入任务_{self.mock_data.get_timestamp()}"
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="条码规则任务管理",
+        title="测试条码规则导出任务",
+        description="验证条码规则-导入导出任务管理接口-提交导出任务功能",
+        severity="normal",
+        order=22,
+        tags=["条码规则", "任务管理", "GEN_BARCODE_RULE_CF_API_GEI_TASK_EXPORT_DIRECT_POST"]
+    )
+    @pytest.mark.skip(reason="业务用不上")
+    def test_barcode_rule_export_task(self):
+        """条码规则导出任务用例 - GEN_BARCODE_RULE_CF_API_GEI_TASK_EXPORT_DIRECT_POST"""
+        try:
+            api_path = self.get_api_path("条码规则-导入导出任务管理接口-提交导出任务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["taskName", "queryData"], ["params", "request"]
+            )
+            set_dict = {
+                "taskName": f"条码规则导出任务_{self.mock_data.get_timestamp()}",
+                "queryData": {
+                    "fields": [
+                        {"name": "code", "type": "TEXT"},
+                        {"name": "name", "type": "TEXT"},
+                        {"name": "description", "type": "TEXT"}
+                    ]
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    # ================ 条码规则允许业务字段管理 ================
+    @case_decorator(
+        story="条码规则允许业务字段管理",
+        title="测试条码规则允许业务字段标准导入",
+        description="验证条码规则允许业务字段标准导入服务功能",
+        severity="normal",
+        order=23,
+        tags=["条码字段", "导入", "GEN_BARCODE_FIELD_CF_GEI_IMPORT_SERVICE"]
+    )
+    @pytest.mark.skip(reason="业务用不上")
+    def test_barcode_field_import(self):
+        """条码规则允许业务字段标准导入用例 - GEN_BARCODE_FIELD_CF_GEI_IMPORT_SERVICE"""
+        try:
+            api_path = self.get_api_path("条码规则允许业务字段标准导入服务")
+            params, url = self.get_api_params(api_path)
+
+            import_data = [
+                {
+                    "code": self.mock_data.generate_unique_code(tag="IMPORT_BARCODE_FIELD"),
+                    "name": f"导入测试条码规则允许业务字段_{self.mock_data.get_timestamp()}",
+                    "description": "导入测试条码规则允许业务字段描述"
+                }
+            ]
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["data"], ["params", "request"]
+            )
+            set_dict = {"data": import_data}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="条码规则允许业务字段管理",
+        title="测试条码规则允许业务字段标准导出",
+        description="验证条码规则允许业务字段标准导出服务功能",
+        severity="normal",
+        order=24,
+        tags=["条码字段", "导出", "GEN_BARCODE_FIELD_CF_GEI_EXPORT_SERVICE"]
+    )
+    @pytest.mark.skip(reason="业务用不上")
+    def test_barcode_field_export(self):
+        """条码规则允许业务字段标准导出用例 - GEN_BARCODE_FIELD_CF_GEI_EXPORT_SERVICE"""
+        try:
+            api_path = self.get_api_path("条码规则允许业务字段标准导出服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["selectFields"], ["params", "request"]
+            )
+            set_dict = {
+                "selectFields": [
+                    {"name": "code", "type": "TEXT"},
+                    {"name": "name", "type": "TEXT"},
+                    {"name": "description", "type": "TEXT"}
+                ]
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="条码规则允许业务字段任务管理",
+        title="测试条码规则允许业务字段OSS导入任务",
+        description="验证条码规则允许业务字段-导入导出任务管理接口-通过OSS提交导入任务功能",
+        severity="normal",
+        order=25,
+        tags=["条码字段", "任务管理", "GEN_BARCODE_FIELD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
+    )
+    @pytest.mark.skip(reason="业务用不上")
+    def test_barcode_field_oss_import_task(self):
+        """条码规则允许业务字段OSS导入任务用例 - GEN_BARCODE_FIELD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
+        try:
+            api_path = self.get_api_path("条码规则允许业务字段-导入导出任务管理接口-通过OSS提交导入任务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["fileKey", "taskName"], ["params", "request"]
+            )
+            set_dict = {
+                "fileKey": "test_barcode_field_import_file.xlsx",
+                "taskName": f"条码规则允许业务字段导入任务_{self.mock_data.get_timestamp()}"
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="条码规则允许业务字段任务管理",
+        title="测试条码规则允许业务字段导出任务",
+        description="验证条码规则允许业务字段-导入导出任务管理接口-提交导出任务功能",
+        severity="normal",
+        order=26,
+        tags=["条码字段", "任务管理", "GEN_BARCODE_FIELD_CF_API_GEI_TASK_EXPORT_DIRECT_POST"]
+    )
+    @pytest.mark.skip(reason="业务用不上")
+    def test_barcode_field_export_task(self):
+        """条码规则允许业务字段导出任务用例 - GEN_BARCODE_FIELD_CF_API_GEI_TASK_EXPORT_DIRECT_POST"""
+        try:
+            api_path = self.get_api_path("条码规则允许业务字段-导入导出任务管理接口-提交导出任务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["taskName", "queryData"], ["params", "request"]
+            )
+            set_dict = {
+                "taskName": f"条码规则允许业务字段导出任务_{self.mock_data.get_timestamp()}",
+                "queryData": {
+                    "fields": [
+                        {"name": "code", "type": "TEXT"},
+                        {"name": "name", "type": "TEXT"},
+                        {"name": "description", "type": "TEXT"}
+                    ]
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise

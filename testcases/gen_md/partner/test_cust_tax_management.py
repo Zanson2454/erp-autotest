@@ -34,7 +34,7 @@ class TestCustomerTaxManagement(GenMdBaseTest):
         title="测试客户税分类标准导出",
         description="验证客户税分类标准导出功能",
         severity="normal",
-        order=1,
+        order=5,
         tags=["客户税分类", "导出"]
     )
     def test_export_customer_tax_type(self):
@@ -73,7 +73,7 @@ class TestCustomerTaxManagement(GenMdBaseTest):
         title="测试客户税分类标准导入",
         description="验证客户税分类标准导入功能",
         severity="normal",
-        order=2,
+        order=6,
         tags=["客户税分类", "导入"]
     )
     def test_import_customer_tax_type(self):
@@ -111,7 +111,7 @@ class TestCustomerTaxManagement(GenMdBaseTest):
         title="测试提交客户税分类导出任务",
         description="验证提交客户税分类导出任务功能",
         severity="normal",
-        order=3,
+        order=7,
         tags=["客户税分类", "导出任务"]
     )
     def test_submit_customer_tax_type_export_task(self):
@@ -201,7 +201,7 @@ class TestCustomerTaxManagement(GenMdBaseTest):
         title="测试通过OSS提交客户税分类导入任务",
         description="验证通过OSS提交客户税分类导入任务功能",
         severity="normal",
-        order=4,
+        order=8,
         tags=["客户税分类", "OSS导入"]
     )
     def test_submit_customer_tax_type_import_task_by_oss(self):
@@ -230,6 +230,178 @@ class TestCustomerTaxManagement(GenMdBaseTest):
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_success(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="客户税分类管理",
+        title="测试新增客户税分类",
+        description="验证新增客户税分类功能",
+        severity="blocker",
+        order=1,
+        smoke=True,
+        tags=["客户税分类管理", "新增", "GEN_CUST_TAX_TYPE_CF_SAVE_ACTION_SERVICE"]
+    )
+    def test_save_customer_tax_type(self):
+        """新增客户税分类用例"""
+        try:
+            # 准备客户税分类数据
+            cust_tax_code = self.mock_util.generate_unique_code(tag="CustTax")
+            
+            # 获取初始化数据中的国家信息
+            country_info = self.init_data.get("country_info")
+            coun_id = country_info[0].get("coun_id") if country_info else None
+
+            api_path = self.get_api_path("GEN-客户税分类-保存服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["taxClassCode", "taxClassDesc", "counId"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "taxClassCode": cust_tax_code,
+                "taxClassDesc": f"自动化测试客户税分类-{self.mock_util.get_timestamp()}",
+                "counId": {"id": coun_id}
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            # 保存返回的ID用于后续测试
+            self.cust_tax_id = response.get("data", {}).get("data", {})
+            self.cust_tax_code = cust_tax_code
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="客户税分类管理",
+        title="测试查询客户税分类分页",
+        description="验证客户税分类分页查询功能",
+        severity="normal",
+        order=2,
+        smoke=True,
+        tags=["客户税分类管理", "查询", "GEN_CUST_TAX_TYPE_CF_QUERY_PAGE_ACTION_SERVICE"]
+    )
+    def test_query_customer_tax_type_page(self):
+        """查询客户税分类分页用例"""
+        try:
+            api_path = self.get_api_path("GEN-客户税分类-查询分页服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["pageable", "fields"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True
+                },
+                "fields": [
+                    {"name": "taxClassCode", "type": "TEXT"},
+                    {"name": "taxClassDesc", "type": "TEXT"},
+                    {"name": "counId", "type": "TEXT"}
+                ]
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            # 验证返回数据结构
+            data_list = response.get("data", {}).get("data", {}).get("data", [])
+            self.assert_util.assert_by_operator(data_list, "not_empty")
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="客户税分类管理",
+        title="测试查询客户税分类详情",
+        description="验证客户税分类详情查询功能",
+        severity="normal",
+        order=3,
+        tags=["客户税分类管理", "详情", "GEN_CUST_TAX_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE"]
+    )
+    def test_query_customer_tax_type_detail(self):
+        """查询客户税分类详情用例"""
+        try:
+            # 如果没有ID，先创建一个
+            if not hasattr(self, 'cust_tax_id') or not self.cust_tax_id:
+                self.test_save_customer_tax_type()
+
+            api_path = self.get_api_path("GEN-客户税分类-查询详情服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["id"],
+                ["params", "request"]
+            )
+            set_dict = {"id": self.cust_tax_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            # 验证返回的详情数据
+            detail_data = response.get("data", {}).get("data", {})
+            self.assert_util.assert_by_operator(detail_data, "not_empty")
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="客户税分类管理",
+        title="测试删除客户税分类",
+        description="验证删除客户税分类功能",
+        severity="normal",
+        order=4,
+        tags=["客户税分类管理", "删除", "GEN_CUST_TAX_TYPE_CF_DELETE_ACTION_SERVICE"]
+    )
+    def test_delete_customer_tax_type(self):
+        """删除客户税分类用例"""
+        try:
+            # 如果没有ID，先创建一个
+            if not hasattr(self, 'cust_tax_id') or not self.cust_tax_id:
+                self.test_save_customer_tax_type()
+
+            api_path = self.get_api_path("GEN-客户税分类-删除服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["ids"],
+                ["params", "request"]
+            )
+            set_dict = {"ids": [self.cust_tax_id]}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")

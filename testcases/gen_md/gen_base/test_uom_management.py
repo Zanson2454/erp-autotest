@@ -591,4 +591,42 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
 
         except Exception as e:
             a.text(str(e), "失败原因")
+            raise
+
+    # ================ 单位转换系数服务 ================
+    @case_decorator(
+        story="单位转换系数管理",
+        title="测试获取基本单位转换系数",
+        description="验证GEN-UNIT-获取基本单位转换系数服务功能",
+        severity="normal",
+        order=16,
+        tags=["计量单位管理", "转换系数", "GAIN_WEIGHT_COEFFICIENT_EVENT_SERVICE"]
+    )
+    def test_gain_weight_coefficient(self):
+        """获取基本单位转换系数用例 - GAIN_WEIGHT_COEFFICIENT_EVENT_SERVICE"""
+        try:
+            api_path = self.get_api_path("GEN-UNIT-获取基本单位转换系数服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["fromUnit", "toUnit"], ["params", "request"]
+            )
+            set_dict = {
+                "fromUnit": "KG",    # 千克
+                "toUnit": "G"        # 克
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            # 验证返回的转换系数
+            coefficient_data = response.get("data", {}).get("data", {})
+            self.assert_util.assert_by_operator(coefficient_data, "not_empty")
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
             raise 

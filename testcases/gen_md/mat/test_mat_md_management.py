@@ -1,7 +1,6 @@
 import allure
 import pytest
 from testcases.gen_md import GenMdBaseTest
-from utils.mock_util import MockData
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
@@ -14,7 +13,6 @@ class TestStndMatManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
-        cls.mock_data = MockData()
         cls.matId = None
         
          # 获取初始化数据
@@ -22,21 +20,23 @@ class TestStndMatManagement(GenMdBaseTest):
         cls.counId = cls.init_data["country_info"][0]["coun_id"] if cls.init_data.get("country_info") else None
         cls.addrId = cls.init_data["addr_info"][0]["id"] if cls.init_data.get("addr_info") else None
         cls.uom_info = cls.init_data["uom_info"] if cls.init_data.get("uom_info") else None
-        cls.qty_uomId= cls.uom_info.get("qty_uom_info",[])[0]["uom_id"] if cls.uom_info.get("qty_uom_info") else None
-        cls.mass_uomId = cls.uom_info.get("mass_uom_info",[])[0]["uom_id"] if cls.uom_info.get("mass_uom_info") else None
-        cls.len_uomId = cls.uom_info.get("len_uom_info",[])[0]["uom_id"] if cls.uom_info.get("len_uom_info") else None
-        cls.volume_uomId = cls.uom_info.get("volume_uom_info",[])[0]["uom_id"] if cls.uom_info.get("volume_uom_info") else None
+        if cls.uom_info:
+            cls.qty_uomId= cls.uom_info.get("qty_uom_info",[])[0]["uom_id"] if cls.uom_info.get("qty_uom_info") else None
+            cls.mass_uomId = cls.uom_info.get("mass_uom_info",[])[0]["uom_id"] if cls.uom_info.get("mass_uom_info") else None
+            cls.len_uomId = cls.uom_info.get("len_uom_info",[])[0]["uom_id"] if cls.uom_info.get("len_uom_info") else None
+            cls.volume_uomId = cls.uom_info.get("volume_uom_info",[])[0]["uom_id"] if cls.uom_info.get("volume_uom_info") else None
         cls.logger.info(f'init_data: {cls.init_data}')
         cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
       
 
         
         # 获取md_cache_data缓存数据
-        cls.brandId = cls.md_cache_data.get("mat_info",{}).get("mat_brand_md",[])[0]["id"] if cls.md_cache_data.get("mat_info") else None
-        cls.mat_cateId = cls.md_cache_data.get("mat_info", {}).get("mat_cate_md", [])[0]["id"] if cls.md_cache_data.get("mat_info", {}).get("mat_cate_md") else None
-        cls.finp_matTypeId = cls.md_cache_data.get("mat_info", {}).get("mat_type_cf", {}).get("FINP",[])[0]["id"] if cls.md_cache_data.get("mat_info", []).get("mat_type_cf") else None
-        cls.atpGroupId = cls.md_cache_data.get("mat_info", {}).get("inv_atp_group_md",[])[0]["id"] if cls.md_cache_data.get("mat_info", {}).get("inv_atp_group_md") else None
-        cls.labelId = cls.md_cache_data.get("mat_info", {}).get("gen_label_md",[])[0]["id"] if cls.md_cache_data.get("mat_info", {}).get("gen_label_md") else None
+        if cls.md_cache_data:
+            cls.brandId = cls.md_cache_data.get("mat_info",{}).get("mat_brand_md",[])[0]["id"] if cls.md_cache_data.get("mat_info") else None
+            cls.mat_cateId = cls.md_cache_data.get("mat_info", {}).get("mat_cate_md", [])[0]["id"] if cls.md_cache_data.get("mat_info", {}).get("mat_cate_md") else None
+            cls.finp_matTypeId = cls.md_cache_data.get("mat_info", {}).get("mat_type_cf", {}).get("FINP",[])[0]["id"] if cls.md_cache_data.get("mat_info", []).get("mat_type_cf") else None
+            cls.atpGroupId = cls.md_cache_data.get("mat_info", {}).get("inv_atp_group_md",[])[0]["id"] if cls.md_cache_data.get("mat_info", {}).get("inv_atp_group_md") else None
+            cls.labelId = cls.md_cache_data.get("mat_info", {}).get("gen_label_md",[])[0]["id"] if cls.md_cache_data.get("mat_info", {}).get("gen_label_md") else None
         
         cls.logger.info("标准物料管理测试类初始化完成")
 
@@ -82,7 +82,7 @@ class TestStndMatManagement(GenMdBaseTest):
                 ["params", "request"]
             )
             # 2. 构造请求参数，补充更多字段
-            mat_code = self.mock_data.generate_unique_code(tag="MAT")
+            mat_code = self.mock_util.generate_unique_code(tag="MAT")
             set_dict = {
                         "imageUrl": None,
                         "matCode": mat_code,
@@ -90,15 +90,15 @@ class TestStndMatManagement(GenMdBaseTest):
                         "cateId": self.mat_cateId ,
                         "genMatTypeCfId": {"id": self.finp_matTypeId} ,
                         "baseUomId": {"id": self.qty_uomId},
-                        "matAbbr": f"测试物料_{self.mock_data.get_timestamp()}",
-                        "outerCode": f"OUTCODE_{self.mock_data.get_timestamp()}",
+                        "matAbbr": f"测试物料_{self.mock_util.get_timestamp()}",
+                        "outerCode": f"OUTCODE_{self.mock_util.get_timestamp()}",
                         "brandId": self.brandId ,
                         "isKitSls": False,
                         "bomUseId": None,
                         "isCompleteSetDel": False,
                         "specModel": mat_code,
                         "bizStatus": "SALE",
-                        "remark": f"自动化测试_{self.mock_data.get_mock_date(include_time=True)}",
+                        "remark": f"自动化测试_{self.mock_util.get_mock_date(include_time=True)}",
                         "customMat": False,
                         "labelList": [{"id": self.labelId}],
                         "id": None,
@@ -483,7 +483,7 @@ class TestStndMatManagement(GenMdBaseTest):
             )
             set_dict = {
                 "exportConfig": {
-                    "fileName": f"物料主数据导出_{self.mock_data.get_timestamp()}",
+                    "fileName": f"物料主数据导出_{self.mock_util.get_timestamp()}",
                     "sheetName": "物料主数据"
                 }
             }
@@ -523,7 +523,7 @@ class TestStndMatManagement(GenMdBaseTest):
             )
             set_dict = {
                 "exportConfig": {
-                    "fileName": f"物料主数据导入_{self.mock_data.get_timestamp()}",
+                    "fileName": f"物料主数据导入_{self.mock_util.get_timestamp()}",
                     "sheetName": "物料主数据"
                 }
             }
@@ -558,7 +558,7 @@ class TestStndMatManagement(GenMdBaseTest):
             params = {
                 "serviceKey": "GEN_MD$GEN_MAT_MD_API_GEI_TASK_EXPORT_DIRECT_POST",
                 "params":{
-                    "taskName": f"物料_{self.nickname}_{self.mock_data.get_timestamp()}",
+                    "taskName": f"物料_{self.nickname}_{self.mock_util.get_timestamp()}",
                     "multiSheetConfig": [
                         {
                             "modelKey": "GEN_MD$gen_mat_md",

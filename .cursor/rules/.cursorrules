@@ -234,12 +234,72 @@ self.logger.info(f"关键信息: {info}")
 "pageable": {
     "pageNo": 1,
     "pageSize": 20,
-    "needTotal": True
+    "needTotal": True,
+    "sortOrders": None,
+    "conditionItems": None
 },
 "fields": [
     {"name": "{fieldName}", "type": "TEXT"}
-]
+],
+"systemParams": None
 ```
+
+### 详情查询、启用禁用、删除参数
+```python
+{"id": {self.xxx_id}}
+```
+
+### 导出参数
+```python
+{
+"serviceKey": "XXX_API_GEI_TASK_EXPORT_DIRECT_POST",
+"params":{
+    "taskName": f"XXX_{self.nickname}_{self.mock_data.get_timestamp()}",
+    "multiSheetConfig": [
+        {
+            "modelKey": "XXX$xxx",
+            "modelName": "XXX",
+            "sheetNo": 0,
+            "sheetName": "XXX",
+            "headerConfigList": [
+                {
+                    "name": "XXXXX",
+                    "type": "ATTACHMENT",
+                    "field": "XXXXX"
+                },
+            ]
+        }
+    ],
+    "queryData": {
+        "containerKey": "XXX$xxx",
+        "viewKey": "XXX$xxx:list",
+        "sceneKey": "XXX$xxx",
+        "params": {
+            "request": {
+                "pageable": {
+                    "sortOrders": [
+
+                    ]
+                }
+            },
+            "selectFields": [
+                {
+                    "field": "XXXXX"
+                }
+            ],
+            "modelKey": "XXX$xxx"
+        }
+    },
+    "processConfig": {
+        "processType": "TRANTOR",
+        "model": "XXX$xxx",
+        "modelName": "XXX",
+        "containerKey": "XXX$xxx",
+        "viewKey": "XXX$xxx:list",
+        "sceneKey": "XXX$xxx"
+        }
+    }
+}
 
 ## 实际代码模式总结
 
@@ -250,9 +310,8 @@ self.logger.info(f"关键信息: {info}")
 @classmethod
 def setup_class(cls):
     super().setup_class()
-    cls.mock_data = MockData()  # 有些代码用这种方式
 
-# 或直接使用继承的mock_util
+# 直接使用继承的mock_util
 code = self.mock_util.generate_unique_code(tag="Prefix")
 ```
 
@@ -270,8 +329,6 @@ response = self.http.post(url, json=filtered_params)
 ```python
 # 响应ID提取的实际模式
 response_id = response.get("data", {}).get("data", {})
-# 或者使用ParamUtil
-response_id = ParamUtil.extract_id(response)
 ```
 
 ## 测试数据管理

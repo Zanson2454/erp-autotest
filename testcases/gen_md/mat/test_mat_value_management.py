@@ -16,8 +16,11 @@ class TestMat_ValueManagement(GenMdBaseTest):
         super().setup_class()
         cls.mat_value_id = None
         cls.mat_value_code = None
-        cls.inv_org_id = cls.md_cache_data.get("org_info",{}).get("inv_org_info",[])[0].get("id")
-        cls.mat_type_id = cls.md_cache_data.get("mat_info",{}).get("mat_type_cf",{}).get("FINP",[])[0].get("id")
+        if cls.md_cache_data:
+            inv_org_info = cls.md_cache_data.get("org_info",{}).get("inv_org_info",[])
+            cls.inv_org_id = inv_org_info[0].get("id") if inv_org_info else None
+            mat_type_info = cls.md_cache_data.get("mat_info",{}).get("mat_type_cf",{}).get("FINP",[])
+            cls.mat_type_id = mat_type_info[0].get("id") if mat_type_info else None
         cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
         cls.logger.info("物料价值管理测试类初始化完成")
         
@@ -31,7 +34,8 @@ class TestMat_ValueManagement(GenMdBaseTest):
         try:
             # 使用SQL删除测试数据
             sql = f"select id from gen_inv_org_mat_type_link_cf where mat_type_id = {cls.mat_type_id} and inv_org_id = {cls.inv_org_id} limit 1"
-            mat_value_id = cls.db.query(sql)[0].get("id")
+            result = cls.db.query(sql)
+            mat_value_id = result[0].get("id") if result else None
             if not mat_value_id:
                 cls.db.insert(
                     table="gen_inv_org_mat_type_link_cf",
@@ -200,38 +204,39 @@ class TestMat_ValueManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="物料价值管理",
         title="测试物料价值数量配置标准导出",
-        description="验证物料价值数量配置标准导出功能",
+        description="验证物料数量价值更新配置标准导出服务功能",
         severity="normal",
         order=4,
-        tags=["物料价值管理", "导出"]
+        tags=["物料价值管理", "标准导出", "GEN_INV_ORG_MAT_TYPE_LINK_CF_GEI_EXPORT_SERVICE"]
     )
+    @pytest.mark.skip(reason="标准导出需要复杂配置，暂时跳过")
     def test_export_mat_value(self):
         """
-        物料价值数量配置标准导出用例
+        物料价值数量配置标准导出用例 - GEN_INV_ORG_MAT_TYPE_LINK_CF_GEI_EXPORT_SERVICE
         """
         try:
             api_path = self.get_api_path("物料数量价值更新配置标准导出服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["exportConfig"],
-                ["params", "request"]
+                params, ["selectFields"], ["params", "request"]
             )
             set_dict = {
-                "exportConfig": {
-                    "fileName": f"物料价值数量配置导出_{self.mock_util.get_timestamp()}",
-                    "sheetName": "物料价值数量配置"
-                }
+                "selectFields": [
+                    {"name": "invOrgId", "type": "OBJECT"},
+                    {"name": "matTypeId", "type": "OBJECT"},
+                    {"name": "matQtyUpdate", "type": "BOOLEAN"},
+                    {"name": "matValUpdate", "type": "BOOLEAN"},
+                    {"name": "updatedAt", "type": "DATE"}
+                ]
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
+            self.assert_util.assert_response_data(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -240,30 +245,57 @@ class TestMat_ValueManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
     @case_decorator(
         story="物料价值管理",
         title="测试物料价值数量配置标准导入",
-        description="验证物料价值数量配置标准导入功能",
+        description="验证物料数量价值更新配置标准导入服务功能",
         severity="normal",
         order=5,
-        tags=["物料价值管理", "导入"]
+        tags=["物料价值管理", "标准导入", "GEN_INV_ORG_MAT_TYPE_LINK_CF_GEI_IMPORT_SERVICE"]
     )
+    @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
     def test_import_mat_value(self):
         """
-        物料价值数量配置标准导入用例（需要文件上传）
+        物料价值数量配置标准导入用例 - GEN_INV_ORG_MAT_TYPE_LINK_CF_GEI_IMPORT_SERVICE
         """
-        pass
+        try:
+            api_path = self.get_api_path("物料数量价值更新配置标准导入服务")
+            params, url = self.get_api_params(api_path)
+
+            import_data = [
+                {
+                    "invOrgId": {"id": self.inv_org_id},
+                    "matTypeId": {"id": self.mat_type_id},
+                    "matQtyUpdate": True,
+                    "matValUpdate": True
+                }
+            ]
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["sliceData"], ["params", "request"]
+            )
+            set_dict = {"sliceData": import_data}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
 
     @case_decorator(
         story="物料价值管理",
-        title="测试提交物料价值数量配置导出任务",
-        description="验证提交物料价值数量配置导出任务功能",
+        title="测试物料价值数量配置导出任务",
+        description="验证物料数量价值更新配置-导入导出任务管理接口-提交导出任务功能",
         severity="normal",
         order=6,
-        tags=["物料价值管理", "导出任务"]
+        tags=["物料价值管理", "导出任务", "GEN_INV_ORG_MAT_TYPE_LINK_CF_API_GEI_TASK_EXPORT_DIRECT_POST"]
     )
-    def test_submit_export_task(self):
+    def test_export_task(self):
         """
         提交物料价值数量配置导出任务用例
         """
@@ -370,6 +402,56 @@ class TestMat_ValueManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+    @case_decorator(
+        story="物料价值管理",
+        title="测试物料价值数量配置OSS导入任务",
+        description="验证物料数量价值更新配置-导入导出任务管理接口-通过OSS提交导入任务功能",
+        severity="normal",
+        order=7,
+        tags=["物料价值管理", "OSS导入任务", "GEN_INV_ORG_MAT_TYPE_LINK_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
+    )
+    @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
+    def test_oss_import_task(self):
+        """
+        物料价值数量配置OSS导入任务用例 - GEN_INV_ORG_MAT_TYPE_LINK_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+        """
+        try:
+            api_path = self.get_api_path("物料数量价值更新配置-导入导出任务管理接口-通过OSS提交导入任务")
+            params, url = self.get_api_params(api_path)
+
+            # 构造OSS导入任务参数
+            params = {
+                "serviceKey": "GEN_INV_ORG_MAT_TYPE_LINK_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST",
+                "teamId": 22,
+                "params": {
+                    "taskName": f"物料价值配置_{self.nickname}_{self.mock_util.get_timestamp()}_OSS导入",
+                    "fileKey": "test_mat_value_import.xlsx",
+                    "fileName": "物料价值配置导入模板.xlsx",
+                    "multiSheetConfig": [
+                        {
+                            "modelKey": "GEN_MD$gen_inv_org_mat_type_link_cf",
+                            "modelName": "物料数量价值更新配置",
+                            "sheetNo": 0,
+                            "sheetName": "物料数量价值更新配置"
+                        }
+                    ],
+                    "processConfig": {
+                        "processType": "TRANTOR",
+                        "model": "GEN_MD$gen_inv_org_mat_type_link_cf",
+                        "modelName": "物料数量价值更新配置"
+                    }
+                }
+            }
+
+            response = self.http.post(url, json=params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
 
     @case_decorator(
         story="物料价值管理",
