@@ -65,12 +65,16 @@ class GenMdBaseTest(BaseTest):
         获取API请求参数和完整URL
         """
         # 准备URL
+        
         url = api_path
         if with_query_params:
             url = f"{api_path}?{with_query_params}"
         
         # 获取请求参数 (从api_params字典中获取对应api_path的参数模板)
         params = self.api_params.get(api_path, {})
+        if not params:
+            raise ValueError(f"API路径 {api_path} 未找到对应的参数模板")
+       
         return params, url
       
     def set_request_param(self, params, key, value):

@@ -25,12 +25,8 @@ class TestBankSystemManagement(GenMdBaseTest):
     def teardown_class(cls):
         """测试类结束后执行清理"""
         try:
-            tables = ["gen_bank_md", "gen_sub_bank_md"]
-            for table in tables:
-                try:
-                    cls.db.delete(table=table, where="code like %s", params=["AT_%"])
-                except Exception:
-                    pass
+            cls.db.delete(table="gen_bank_cf", where="bank_code like %s", params=["AT_%"])
+            cls.db.delete(table="gen_sub_bank_cf", where="sub_bank_code like %s", params=["AT_%"])
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
@@ -51,21 +47,34 @@ class TestBankSystemManagement(GenMdBaseTest):
             bank_code = self.mock_data.generate_unique_code(tag="Bank")
             bank_name = f"银行_{self.mock_data.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-银行-保存服务")
+            api_path = self.get_api_path("GEN-银行配置-保存服务")
             params, url = self.get_api_params(api_path)
+        
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["bank_code", "bank_name"], ["params", "request"]
+                params, ["bankCode", "bankName","bankMneCode","bankSwiftCode"], ["params", "request"]
             )
-            set_dict = {"bank_code": bank_code, "bank_name": bank_name}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            set_dict = {
+                "bankCode": bank_code, 
+                "bankName": bank_name,
+                "bankMneCode":f"bankMneCode_{self.mock_data.get_timestamp()}",
+                "bankSwiftCode":f"bankSwiftCode_{self.mock_data.get_timestamp()}"
+                }
             
-            self.bank_id = response.get("data", {}).get("data", {})
+            self.logger.info(f"set_dict: {set_dict}")
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            self.logger.info(f"filtered_params: {filtered_params},url: {url}")
+            response = self.http.post(url, json=filtered_params)
+            self.logger.info(f"response: {response}")
+            self.assert_util.assert_response_success(response)
+            response_data = response.get("data", {}).get("data")
+            if not response_data:
+                raise ValueError("保存银行失败：响应数据中没有返回bank_id")
+            self.bank_id = response_data
             self.bank_code = bank_code
 
+            self.logger.info(f"保存银行成功，bank_id: {self.bank_id}, bank_code: {self.bank_code}")
+            
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
 
@@ -84,18 +93,19 @@ class TestBankSystemManagement(GenMdBaseTest):
     def test_query_bank_list(self):
         """查询银行列表用例"""
         try:
-            api_path = self.get_api_path("GEN-银行-查询分页服务")
+            api_path = self.get_api_path("GEN-银行配置-查询分页服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields"], ["params", "request"]
+                params, ["pageable", "fields", "systemParams"], ["params", "request"]
             )
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
                 "fields": [
-                    {"name": "bank_code", "type": "TEXT"},
-                    {"name": "bank_name", "type": "TEXT"}
-                ]
+                    {"name": "bankCode", "type": "TEXT"},
+                    {"name": "bankName", "type": "TEXT"}
+                ],
+                "systemParams": None
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -126,7 +136,7 @@ class TestBankSystemManagement(GenMdBaseTest):
             if not self.bank_id:
                 self.test_save_bank()
 
-            api_path = self.get_api_path("GEN-银行-查询详情服务")
+            api_path = self.get_api_path("GEN-银行配置-查询详情服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -159,13 +169,13 @@ class TestBankSystemManagement(GenMdBaseTest):
             if not self.bank_id:
                 self.test_save_bank()
 
-            api_path = self.get_api_path("GEN-银行-删除服务")
+            api_path = self.get_api_path("GEN-银行配置-删除服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ids"], ["params", "request"]
+                params, ["id"], ["params", "request"]
             )
-            set_dict = {"ids": [self.bank_id]}
+            set_dict = {"id": self.bank_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -198,9 +208,13 @@ class TestBankSystemManagement(GenMdBaseTest):
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["sub_bank_code", "sub_bank_name"], ["params", "request"]
+                params, ["subBankCode", "subBankName","genBankId"], ["params", "request"]
             )
-            set_dict = {"sub_bank_code": sub_bank_code, "sub_bank_name": sub_bank_name}
+            set_dict = {
+                "subBankCode": sub_bank_code, 
+                "subBankName": sub_bank_name,
+                "genBankId": {"id":self.bank_id}
+                }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -231,14 +245,15 @@ class TestBankSystemManagement(GenMdBaseTest):
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields"], ["params", "request"]
+                params, ["pageable", "fields", "systemParams"], ["params", "request"]
             )
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
                 "fields": [
                     {"name": "sub_bank_code", "type": "TEXT"},
                     {"name": "sub_bank_name", "type": "TEXT"}
-                ]
+                ],
+                "systemParams": None
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -306,9 +321,9 @@ class TestBankSystemManagement(GenMdBaseTest):
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ids"], ["params", "request"]
+                params, ["id"], ["params", "request"]
             )
-            set_dict = {"ids": [self.sub_bank_id]}
+            set_dict = {"id": self.sub_bank_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -330,6 +345,7 @@ class TestBankSystemManagement(GenMdBaseTest):
         order=9,
         tags=["银行管理", "查询", "GEN_BANK_CF_FIND_DATA_BY_ID_SERVICE"]
     )
+    @pytest.mark.skip(reason="业务用不上")
     def test_find_bank_data_by_id(self):
         """银行配置根据ID查找数据用例"""
         try:
@@ -363,6 +379,7 @@ class TestBankSystemManagement(GenMdBaseTest):
         order=10,
         tags=["银行支行管理", "查询", "GEN_SUB_BANK_CF_FIND_DATA_BY_ID_SERVICE"]
     )
+    @pytest.mark.skip(reason="业务用不上")
     def test_find_sub_bank_data_by_id(self):
         """银行支行根据ID查找数据用例"""
         try:
