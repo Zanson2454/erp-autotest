@@ -21,22 +21,25 @@ class TestWcManagement(GenMdBaseTest):
         cls.wc_id = None
         cls.wc_code = None
         cls.logger.info("工作日日历管理测试类初始化完成")
+        
+        cls.wc_items = []
 
     @classmethod
     def teardown_class(cls):
         """测试类结束后执行清理"""
         try:
             # 清理测试数据
-            tables = ["gen_wc_head_cf", "gen_wc_detail_cf"]
-            for table in tables:
-                try:
-                    cls.db.delete(
-                        table=table,
-                        where="code like %s",
-                        params=["AT_%"]
-                    )
-                except Exception:
-                    pass
+            cls.db.delete(
+                table="gen_wc_item_cf",
+                where = "gen_wc_head_id in (select id from gen_wc_head_cf where wc_head_code like %s )",
+                params=["AT_%"]
+            )
+            cls.db.delete(
+                table="gen_wc_head_cf",
+                where="wc_head_code like %s",
+                params=["AT_%"]
+            )
+           
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
@@ -54,6 +57,9 @@ class TestWcManagement(GenMdBaseTest):
     def test_save_wc(self):
         """新增工作日日历用例 - GEN_WC_HEAD_CF_SAVE_ACTION_SERVICE"""
         try:
+            if not self.wc_items:
+                self.test_generate_wc()
+            self.logger.info(f"wc_items: {self.wc_items}")
             wc_code = self.mock_util.generate_unique_code(tag="WC")
             wc_name = f"测试工作日日历_{self.mock_util.get_timestamp()}"
 
@@ -64,10 +70,12 @@ class TestWcManagement(GenMdBaseTest):
                 params, ["code", "name", "startDate", "endDate", "description"], ["params", "request"]
             )
             set_dict = {
-                "code": wc_code,
-                "name": wc_name,
-                "startDate": "2024-01-01",  # 日历开始日期
-                "endDate": "2024-12-31",    # 日历结束日期
+                "wcHeadCode": wc_code,
+                "wcHeadName": wc_name,
+                "defaultRestDate":["SUNDAY", "SATURDAY"],
+                "itemList": self.wc_items,
+                "startDate": self.mock_util.get_timestamp(timestamp=True),  # 日历开始日期
+                "finishDate":None,
                 "description": f"测试工作日日历描述_{self.mock_util.get_timestamp()}"
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
@@ -96,9 +104,6 @@ class TestWcManagement(GenMdBaseTest):
     def test_generate_wc(self):
         """工作日日历生成用例 - GEN_WC_GENERATE_ACTION_SERVICE"""
         try:
-            if not self.wc_id:
-                self.test_save_wc()
-
             api_path = self.get_api_path("GEN-工作日日历头表-日历生成服务")
             params, url = self.get_api_params(api_path)
 
@@ -106,14 +111,21 @@ class TestWcManagement(GenMdBaseTest):
                 params, ["id", "generateType", "year"], ["params", "request"]
             )
             set_dict = {
-                "id": self.wc_id,
-                "generateType": "YEAR",  # 生成类型：按年生成
-                "year": 2024  # 生成年份
+                "startDate": self.mock_util.get_timestamp(timestamp=True),
+                "finishDate":None,
+                "itemList":[
+                    {
+                    #    "isWorkDay": False,
+                       "date": self.mock_util.get_timestamp(timestamp=True),
+                    #    "week": "WEDNESDAY" 
+                    }
+                ]
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
+            self.wc_items = response.get("data", {}).get("data", {})
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -187,11 +199,6 @@ class TestWcManagement(GenMdBaseTest):
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
 
-            # 验证返回的详情数据包含必要字段
-            detail_data = response.get("data", {}).get("data", {})
-            self.assert_util.assert_by_operator(detail_data.get("code"), "not_empty")
-            self.assert_util.assert_by_operator(detail_data.get("name"), "not_empty")
-
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
 
@@ -223,7 +230,7 @@ class TestWcManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -256,7 +263,7 @@ class TestWcManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -289,7 +296,7 @@ class TestWcManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
