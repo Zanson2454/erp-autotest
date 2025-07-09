@@ -116,6 +116,12 @@
       "tax_code": "CN_PUR_02",
       "taxcate": "J",
       "tax": 6.0
+    },
+    {
+      "id": 14070001,
+      "tax_code": "tax_code",
+      "taxcate": "J",
+      "tax": 0.13
     }
   ]
 }

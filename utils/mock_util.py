@@ -380,6 +380,14 @@ class MockData:
         """
         return self.fake.postcode()
 
+
+    def get_mock_uuid(self) -> str:
+        """生成UUID
+        
+        Returns:
+            str: 生成的UUID
+        """
+        return str(uuid.uuid4())
 if __name__ == '__main__':
     # 测试代码
     mock = MockData()

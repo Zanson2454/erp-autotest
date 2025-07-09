@@ -66,10 +66,27 @@ class TestSurveyManagement(GenMdBaseTest):
                 params, ["code", "name", "description", "status"], ["params", "request"]
             )
             set_dict = {
-                "code": mission_code,
-                "name": mission_name,
-                "description": f"测试评分任务描述_{self.mock_util.get_timestamp()}",
-                "status": "DRAFT"
+                "title": mission_code,
+                "surveyType": "VEND",
+                "surveyObj":1,
+                "startDate": self.mock_util.get_timestamp(timestamp= True),
+                "endDate": self.mock_util.get_timestamp(timestamp=True),
+                "surveyMissionItem": [
+                    {
+                        "weight": 1,
+                        "surveyItem": [
+                            {
+                                "weight": 100,
+                                "user": {
+                                    "id": 1
+                                },
+                                "template": {
+                                    "id": 1
+                                }
+                            }
+                        ]
+                    }
+                ]
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
