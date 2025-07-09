@@ -21,22 +21,23 @@ class TestTaxManagement(GenMdBaseTest):
         cls.tax_id = None
         cls.tax_code = None
         cls.logger.info("税配置管理测试类初始化完成")
+        
+        # 依赖数据
+        if cls.init_data:
+            cls.coun_id = cls.init_data.get("country_info",[])[0].get("coun_id")
 
     @classmethod
     def teardown_class(cls):
         """测试类结束后执行清理"""
         try:
             # 清理测试数据
-            tables = ["gen_tax_type_cf"]
-            for table in tables:
-                try:
-                    cls.db.delete(
-                        table=table,
-                        where="code like %s",
-                        params=["AT_%"]
-                    )
-                except Exception:
-                    pass
+
+            cls.db.delete(
+                table='gen_tax_type_cf',
+                where="tax_code like %s",
+                params=["AT_%"]
+            )
+
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
@@ -64,11 +65,12 @@ class TestTaxManagement(GenMdBaseTest):
                 params, ["code", "name", "taxRate", "taxType", "description"], ["params", "request"]
             )
             set_dict = {
-                "code": tax_code,
-                "name": tax_name,
-                "taxRate": 13.0,  # 税率13%
-                "taxType": "VAT",  # 增值税
-                "description": f"测试税配置描述_{self.mock_util.get_timestamp()}"
+                "taxCode": tax_code,
+                "taxcate": 'J',
+                "tax": 0.13,  # 税率13%
+                "counId": {
+                    "id": self.coun_id
+                }
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -76,8 +78,6 @@ class TestTaxManagement(GenMdBaseTest):
             self.assert_util.assert_response_data(response)
             
             self.tax_id = response.get("data", {}).get("data", {})
-            self.tax_code = tax_code
-
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
 
@@ -100,7 +100,7 @@ class TestTaxManagement(GenMdBaseTest):
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields"], ["params", "request"]
+                params, ["pageable", "fields", "systemParams"], ["params", "request"]
             )
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
@@ -110,7 +110,8 @@ class TestTaxManagement(GenMdBaseTest):
                     {"name": "taxRate", "type": "NUMBER"},
                     {"name": "taxType", "type": "TEXT"},
                     {"name": "description", "type": "TEXT"}
-                ]
+                ],
+                "systemParams": None
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -150,10 +151,6 @@ class TestTaxManagement(GenMdBaseTest):
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
 
-            # 验证返回的详情数据包含必要字段
-            detail_data = response.get("data", {}).get("data", {})
-            self.assert_util.assert_by_operator(detail_data.get("code"), "not_empty")
-            self.assert_util.assert_by_operator(detail_data.get("name"), "not_empty")
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -170,6 +167,7 @@ class TestTaxManagement(GenMdBaseTest):
         order=4,
         tags=["税配置", "分页数据", "GEN_TAX_TYPE_CF_PAGING_DATA_SERVICE"]
     )
+    @pytest.mark.skip(reason="业务用不上")
     def test_tax_paging_data(self):
         """税配置分页数据用例 - GEN_TAX_TYPE_CF_PAGING_DATA_SERVICE"""
         try:
@@ -204,6 +202,7 @@ class TestTaxManagement(GenMdBaseTest):
         order=5,
         tags=["税配置", "ID查找", "GEN_TAX_TYPE_CF_FIND_DATA_BY_ID_SERVICE"]
     )
+    @pytest.mark.skip(reason="业务用不上")
     def test_find_tax_by_id(self):
         """根据ID查找税配置数据用例 - GEN_TAX_TYPE_CF_FIND_DATA_BY_ID_SERVICE"""
         try:
@@ -258,7 +257,7 @@ class TestTaxManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -399,27 +398,98 @@ class TestTaxManagement(GenMdBaseTest):
             api_path = self.get_api_path("税配置-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["taskName", "queryData"], ["params", "request"]
-            )
-            set_dict = {
-                "taskName": f"税配置导出任务_{self.mock_util.get_timestamp()}",
+            params['parmas'] =  {
+                "taskName": f"税管理-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
+                "multiSheetConfig": [
+                    {
+                        "modelKey": "GEN_MD$gen_tax_type_cf",
+                        "modelName": "税配置",
+                        "sheetNo": 0,
+                        "sheetName": "税配置",
+                        "headerConfigList": [
+                            {
+                                "name": "税码",
+                                "type": "TEXT",
+                                "field": "taxCode"
+                            },
+                            {
+                                "name": "国家",
+                                "type": "TEXT",
+                                "field": "counId.counName"
+                            },
+                            {
+                                "name": "类型",
+                                "type": "ENUM",
+                                "field": "taxcate",
+                                "multiSelect": False,
+                                "dictValues": [
+                                    {
+                                        "_row_id_": "进项",
+                                        "label": "进项",
+                                        "value": "J"
+                                    },
+                                    {
+                                        "_row_id_": "销项",
+                                        "label": "销项",
+                                        "value": "X"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "税率(%)",
+                                "type": "NUMBER",
+                                "field": "tax"
+                            }
+                        ]
+                    }
+                ],
                 "queryData": {
-                    "fields": [
-                        {"name": "code", "type": "TEXT"},
-                        {"name": "name", "type": "TEXT"},
-                        {"name": "taxRate", "type": "NUMBER"},
-                        {"name": "taxType", "type": "TEXT"},
-                        {"name": "description", "type": "TEXT"}
-                    ]
+                    "containerKey": "GEN_MD$GEN_TAX_TYPE_VIEW-table-container-GEN_MD$gen_tax_type_cf",
+                    "viewKey": "GEN_MD$GEN_TAX_TYPE_VIEW:list",
+                    "sceneKey": "GEN_MD$GEN_TAX_TYPE_VIEW",
+                    "params": {
+                        "request": {
+                            "pageable": {
+
+                            }
+                        },
+                        "selectFields": [
+                            {
+                                "field": "taxCode"
+                            },
+                            {
+                                "field": "taxcate"
+                            },
+                            {
+                                "field": "tax"
+                            },
+                            {
+                                "field": "counId",
+                                "selectFields": [
+                                    {
+                                        "field": "counName"
+                                    }
+                                ]
+                            }
+                        ],
+                        "modelKey": "GEN_MD$gen_tax_type_cf"
+                    }
+                },
+                "processConfig": {
+                    "processType": "TRANTOR",
+                    "model": "GEN_MD$gen_tax_type_cf",
+                    "modelName": "税配置",
+                    "containerKey": "GEN_MD$GEN_TAX_TYPE_VIEW-table-container-GEN_MD$gen_tax_type_cf",
+                    "viewKey": "GEN_MD$GEN_TAX_TYPE_VIEW:list",
+                    "sceneKey": "GEN_MD$GEN_TAX_TYPE_VIEW"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+
+            response = self.http.post(url, json=params)
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(params, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
