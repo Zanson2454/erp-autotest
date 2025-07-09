@@ -18,27 +18,39 @@ class TestSurveyManagement(GenMdBaseTest):
     def setup_class(cls):
         super().setup_class()
         # 数据存储
-        cls.survey_mission_id = None
-        cls.survey_mission_code = None
+        cls.survey_mission_head_id = None
+        cls.survey_mission_item_id = None
         cls.survey_detail_id = None
-        cls.survey_detail_code = None
-        cls.logger.info("评分管理测试类初始化完成")
 
+        cls.logger.info("评分管理测试类初始化完成")
+        
+        if cls.md_cache_data:
+            cls.cust_template_id = cls.md_cache_data.get("dynamic_form_info", {}).get("dynamic_form_template_md", {}).get("cust_template", [])[0].get("id")
+            cls.vend_template_id = cls.md_cache_data.get("dynamic_form_info", {}).get("dynamic_form_template_md", {}).get("vend_template", [])[0].get("id")
+            cls.cust_id = cls.md_cache_data.get("partner_info", {}).get("cust_info", [])[0].get("id")
     @classmethod
     def teardown_class(cls):
         """测试类结束后执行清理"""
         try:
             # 清理测试数据
-            tables = ["gen_survey_mission_md", "gen_survey_detail_md"]
-            for table in tables:
-                try:
-                    cls.db.delete(
-                        table=table,
-                        where="code like %s",
-                        params=["AT_%"]
-                    )
-                except Exception:
-                    pass
+           
+            cls.db.delete(
+                table="gen_survey_detail_md",
+                where="survey_mission in (select id from  gen_survey_mission_md where mission_code like %s)",
+                params=["AT_%"]
+            )
+            cls.db.delete(
+                table="gen_survey_mission_item_md",
+                where="gen_survey_mission_md_id in  (select id from  gen_survey_mission_md where mission_code like %s)",
+                params=["AT_%"]
+            )
+            cls.db.delete(
+                table="gen_survey_mission_md",
+                where="mission_code like %s",
+                params=["AT_%"]
+            )
+           
+
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
@@ -63,14 +75,15 @@ class TestSurveyManagement(GenMdBaseTest):
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["code", "name", "description", "status"], ["params", "request"]
+                params, ["title", "surveyType", "surveyObj", "startDate", "endDate", "surveyMissionItem"], ["params", "request"]
             )
             set_dict = {
-                "title": mission_code,
-                "surveyType": "VEND",
-                "surveyObj":1,
+                "missionCode": mission_code,
+                "title": mission_name,
+                "surveyType": "CUST",
+                "surveyObj":self.cust_id,
                 "startDate": self.mock_util.get_timestamp(timestamp= True),
-                "endDate": self.mock_util.get_timestamp(timestamp=True),
+                "endDate": self.mock_util.get_timestamp(timestamp=True,day_offset=7),
                 "surveyMissionItem": [
                     {
                         "weight": 1,
@@ -78,10 +91,10 @@ class TestSurveyManagement(GenMdBaseTest):
                             {
                                 "weight": 100,
                                 "user": {
-                                    "id": 1
+                                    "id": self.user_id  
                                 },
                                 "template": {
-                                    "id": 1
+                                    "id": self.cust_template_id
                                 }
                             }
                         ]
@@ -93,7 +106,10 @@ class TestSurveyManagement(GenMdBaseTest):
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
             
-            self.survey_mission_id = response.get("data", {}).get("data", {})
+            self.survey_mission_head_id = response.get("data", {}).get("data", {}).get("id")
+            
+            sql = f"select id from gen_survey_mission_item_md where gen_survey_mission_md_id = {self.survey_mission_head_id}"
+            self.survey_mission_item_id = self.db.query(sql)[0].get("id")
             self.survey_mission_code = mission_code
 
             a.json(filtered_params, "请求数据")
@@ -114,7 +130,7 @@ class TestSurveyManagement(GenMdBaseTest):
     def test_release_survey_mission(self):
         """发布评分任务用例 - GEN_SURVEY_MISSION_RELEASE_ACTION_SERVICE"""
         try:
-            if not self.survey_mission_id:
+            if not self.survey_mission_head_id:
                 self.test_create_survey_mission()
 
             api_path = self.get_api_path("GEN-评分任务-发布评分任务服务")
@@ -123,11 +139,11 @@ class TestSurveyManagement(GenMdBaseTest):
             filtered_params = ParamUtil.filter_post_body_fields(
                 params, ["id"], ["params", "request"]
             )
-            set_dict = {"id": self.survey_mission_id}
+            set_dict = {"id": self.survey_mission_head_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -147,7 +163,7 @@ class TestSurveyManagement(GenMdBaseTest):
     def test_survey_score(self):
         """业务人员进行评分用例 - GEN_SURVEY_SCORE_ACTION_SERVICE"""
         try:
-            if not self.survey_mission_id:
+            if not self.survey_mission_head_id:
                 self.test_create_survey_mission()
 
             api_path = self.get_api_path("GEN-评分任务-业务人员进行评分服务")
@@ -157,14 +173,28 @@ class TestSurveyManagement(GenMdBaseTest):
                 params, ["missionId", "score", "comment"], ["params", "request"]
             )
             set_dict = {
-                "missionId": self.survey_mission_id,
+                "missionId": self.survey_mission_head_id,
                 "score": 85,
-                "comment": f"测试评分评价_{self.mock_util.get_timestamp()}"
+                "state": "SCORED",
+                "surveyRecord":None,
+                "type":"CUST",
+                "user":{
+                    "id":self.user_id
+                },
+                "template":{
+                    "templateInfo":None
+                    },
+                "surveyMission": {
+                    "id":self.survey_mission_head_id
+                    },
+                "surveyMissionItem": {
+                        "id": self.survey_mission_item_id
+                    }
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             # 保存评分详情ID
             self.survey_detail_id = response.get("data", {}).get("data", {})
@@ -440,7 +470,7 @@ class TestSurveyManagement(GenMdBaseTest):
             import_data = [
                 {
                     "code": self.mock_util.generate_unique_code(tag="IMPORT_DETAIL"),
-                    "missionId": self.survey_mission_id,
+                    "missionId": self.survey_mission_head_id,
                     "score": 90,
                     "comment": f"导入测试评分详情_{self.mock_util.get_timestamp()}"
                 }

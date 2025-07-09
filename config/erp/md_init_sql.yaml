@@ -230,3 +230,14 @@ index_info:
     sql: |
       select id,gen_index_code,gen_index_name from gen_index_md where gen_index_code='AUTOTEST_INDEX_CODE' and deleted=0 limit 1;
     description: "查询指标信息"
+
+dynamic_form_info:
+  dynamic_form_template_md:
+    cust_template:
+      sql: |
+        select id ,`name`,`desc` from gen_dynamic_form_template_md where name like '%(自动化)' and state='ENABLED' and template_type="gen_cust_dynamic_form_record_md" limit 1
+      description: "查询客户动态表单模板信息"
+    vend_template:
+      sql: |
+        select id ,`name`,`desc` from gen_dynamic_form_template_md where name like '%(自动化)' and state='ENABLED' and template_type="gen_vend_dynamic_form_record_md" limit 1
+      description: "查询供应商动态表单模板信息"
