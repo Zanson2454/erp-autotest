@@ -155,7 +155,7 @@ class TestDynamicManagement(GenMdBaseTest):
         order=2,
         tags=["动态表单", "创建修改", "GEN_CREATE_DYNAMIC_FORM_TEMPLATE_SERVICE"]
     )
-    @pytest.mark.skip(reason="dynamic_form场景,业务用不上")
+    @pytest.mark.skip(reason="dynamic_form场景.菜单未引用,业务用不上")
     def test_create_dynamic_form_template(self):
         """创建修改动态表单模板用例 - GEN_CREATE_DYNAMIC_FORM_TEMPLATE_SERVICE"""
         try:
