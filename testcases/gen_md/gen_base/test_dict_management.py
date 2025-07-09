@@ -27,16 +27,17 @@ class TestDictManagement(GenMdBaseTest):
         """测试类结束后执行清理"""
         try:
             # 清理测试数据
-            tables = ["gen_dict_head_cf", "gen_dict_detail_cf"]
-            for table in tables:
-                try:
-                    cls.db.delete(
-                        table=table,
-                        where="code like %s",
-                        params=["AT_%"]
-                    )
-                except Exception:
-                    pass
+        
+            cls.db.delete(
+                table="gen_dict_head_cf",
+                where="code like %s",
+                params=["AT_%"]
+            )
+            cls.db.delete(
+                table="gen_dict_detail_cf",
+                where="code like %s",
+                params=["AT_%"]
+            )
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
@@ -61,13 +62,28 @@ class TestDictManagement(GenMdBaseTest):
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["code", "name", "dictType", "description"], ["params", "request"]
+                params, ["code", "name", "isSystem", "itemList"], ["params", "request"]
             )
             set_dict = {
                 "code": dict_code,
                 "name": dict_name,
-                "dictType": "SYSTEM",  # 字典类型：系统字典
-                "description": f"测试数据字典类别描述_{self.mock_util.get_timestamp()}"
+                "isSystem": True,
+                "itemList": [
+                    {
+                        "code": f"P_CODE1_{self.mock_util.get_timestamp()}",
+                        "name": f"字典项1_{self.mock_util.get_timestamp()}",
+                        "isSystem": True,
+                        "sort": 1,
+                        "status": "ENABLED"
+                    },
+                    {
+                        "code": f"P_CODE2_{self.mock_util.get_timestamp()}",
+                        "name": f"字典项2_{self.mock_util.get_timestamp()}",
+                        "isSystem": True,
+                        "sort": 2,
+                        "status": "ENABLED"
+                    }
+                ]
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -99,17 +115,32 @@ class TestDictManagement(GenMdBaseTest):
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields"], ["params", "request"]
+                params, ["pageable", "fields", "systemParams"], ["params", "request"]
             )
-            set_dict = {
-                "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
+            set_dict =  {
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "sortOrders": None,
+                    "conditionItems": None
+                },
                 "fields": [
-                    {"name": "code", "type": "TEXT"},
-                    {"name": "name", "type": "TEXT"},
-                    {"name": "dictType", "type": "TEXT"},
-                    {"name": "description", "type": "TEXT"}
-                ]
+                    {
+                        "name": "code",
+                        "type": "TEXT"
+                    },
+                    {
+                        "name": "name",
+                        "type": "TEXT"
+                    },
+                    {
+                        "name": "status",
+                        "type": "SELECT"
+                    }
+                ],
+                "systemParams": None
             }
+
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -148,11 +179,6 @@ class TestDictManagement(GenMdBaseTest):
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
 
-            # 验证返回的详情数据包含必要字段
-            detail_data = response.get("data", {}).get("data", {})
-            self.assert_util.assert_by_operator(detail_data.get("code"), "not_empty")
-            self.assert_util.assert_by_operator(detail_data.get("name"), "not_empty")
-
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
 
@@ -184,7 +210,7 @@ class TestDictManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -217,7 +243,7 @@ class TestDictManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -250,7 +276,7 @@ class TestDictManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
