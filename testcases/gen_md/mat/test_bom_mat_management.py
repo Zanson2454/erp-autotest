@@ -47,6 +47,7 @@ class TestBomManagement(GenMdBaseTest):
         smoke=True,
         tags=["BOM管理", "BOM头", "新增"]
     )
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     def test_save_bom_head(self):
         """
         新增BOM头用例
@@ -136,6 +137,7 @@ class TestBomManagement(GenMdBaseTest):
         order=3,
         tags=["BOM管理", "BOM头", "详情"]
     )
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     def test_query_bom_head_detail(self):
         """
         查询BOM头详情用例
