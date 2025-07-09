@@ -28,16 +28,11 @@ class TestDynamicManagement(GenMdBaseTest):
         """测试类结束后执行清理"""
         try:
             # 清理测试数据
-            tables = ["gen_dynamic_form_template_md"]
-            for table in tables:
-                try:
-                    cls.db.delete(
-                        table=table,
-                        where="code like %s",
-                        params=["AT_%"]
-                    )
-                except Exception:
-                    pass
+            cls.db.delete(
+                table="gen_dynamic_form_template_md",
+                where="code like %s",
+                params=["AT_%"]
+            )
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")

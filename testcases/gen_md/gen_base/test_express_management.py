@@ -27,16 +27,11 @@ class TestExpressManagement(GenMdBaseTest):
         """测试类结束后执行清理"""
         try:
             # 清理测试数据
-            tables = ["gen_express_com_md"]
-            for table in tables:
-                try:
-                    cls.db.delete(
-                        table=table,
-                        where="code like %s",
-                        params=["AT_%"]
-                    )
-                except Exception:
-                    pass
+            cls.db.delete(
+                table="gen_express_com_md",
+                where="code like %s",
+                params=["AT_%"]
+            )
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
@@ -66,7 +61,34 @@ class TestExpressManagement(GenMdBaseTest):
             set_dict = {
                 "code": express_code,
                 "name": express_name,
-                "description": f"测试快递公司描述_{self.mock_util.get_timestamp()}"
+                "contactName": self.mock_util.get_mock_name(),
+                "contactPhone": self.mock_util.get_mock_phone_number(),
+                "deliveryEnabled": True,
+                "desc": f"测试快递公司描述_{self.mock_util.get_timestamp()}",
+                "servTypeList":[
+                    {
+                        "servType": "测试业务类型",
+                        "comId": None
+                    }
+                ],
+                "netInfoList":[
+                    { 
+                        "checkMan": self.mock_util.get_mock_name(),
+                        "childTempId": "2",
+                        "code": express_code,
+                        "comId": None,
+                        "net": f"网点名称_{self.mock_util.get_timestamp()}",
+                        "partnerId": f"account_{self.mock_util.get_timestamp()}",
+                        "partnerKey": f"key_{self.mock_util.get_timestamp()}",
+                        "partnerName": f"partner_{self.mock_util.get_timestamp()}",
+                        "partnerSecret": f"secret_{self.mock_util.get_timestamp()}",
+                        "payType": "MONTHLY",
+                        "printType": "NON",
+                        "tempId": "1"
+                    }
+                ],
+                "status": "DRAFT",
+                "type": "INNER"
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -183,7 +205,7 @@ class TestExpressManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -216,7 +238,7 @@ class TestExpressManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
