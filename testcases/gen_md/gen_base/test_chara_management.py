@@ -1,7 +1,6 @@
 import allure
 import pytest
 from testcases.gen_md import GenMdBaseTest
-from utils.mock_util import MockData
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
@@ -14,12 +13,10 @@ class TestCharacteristicManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
-        cls.mock_data = MockData()
         # 数据存储
-        cls.characteristic_id = None
-        cls.characteristic_code = None
-        cls.characteristic_class_id = None
-        cls.characteristic_class_code = None
+        cls.chara_id = None
+        cls.chara_class_id = None
+
         cls.logger.info("特征管理测试类初始化完成")
 
     @classmethod
@@ -27,16 +24,16 @@ class TestCharacteristicManagement(GenMdBaseTest):
         """测试类结束后执行清理"""
         try:
             # 清理测试数据
-            tables = ["gen_chara_md", "gen_chara_class_md"]
-            for table in tables:
-                try:
-                    cls.db.delete(
-                        table=table,
-                        where="code like %s",
-                        params=["AT_%"]
-                    )
-                except Exception:
-                    pass
+            cls.db.delete(
+                table="gen_chara_md",
+                where="code like %s",
+                params=["AT_%"]
+            )
+            cls.db.delete(
+                table="gen_chara_class_md",
+                where="code like %s",
+                params=["AT_%"]
+            )
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
@@ -51,30 +48,35 @@ class TestCharacteristicManagement(GenMdBaseTest):
         smoke=True,
         tags=["特征管理", "新增", "GEN_CHARA_CLASS_MD_SAVE_ACTION_SERVICE"]
     )
-    def test_save_characteristic_class(self):
+    def test_save_chara_class(self):
         """新增特征类定义用例 - GEN_CHARA_CLASS_MD_SAVE_ACTION_SERVICE"""
         try:
-            class_code = self.mock_data.generate_unique_code(tag="CHARACLASS")
-            class_name = f"测试特征类_{self.mock_data.get_timestamp()}"
+            chara_class_code = self.mock_util.generate_unique_code(tag="CHARACLASS")
+            chara_class_name = f"测试特征类_{self.mock_util.get_timestamp()}"
 
             api_path = self.get_api_path("GEN-特征类定义表-保存服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["code", "name", "description"], ["params", "request"]
+                params, ["code", "name", "charaClassType", "charaList", "remark"], ["params", "request"]
             )
             set_dict = {
-                "code": class_code,
-                "name": class_name,
-                "description": f"测试特征类描述_{self.mock_data.get_timestamp()}"
+                "code": chara_class_code,
+                "name": chara_class_name,
+                "charaClassType":"BATCH",
+                "charaList":[
+                    {"charaId":{"id":self.chara_id},
+                     "isRequired":True
+                     }
+                ],
+                "remark": f"测试特征类描述_{self.mock_util.get_timestamp()}"
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
             
-            self.characteristic_class_id = response.get("data", {}).get("data", {})
-            self.characteristic_class_code = class_code
+            self.chara_class_id = response.get("data", {}).get("data", {})
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -98,16 +100,33 @@ class TestCharacteristicManagement(GenMdBaseTest):
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields"], ["params", "request"]
+                params, ["pageable", "fields", "systemParams"], ["params", "request"]
             )
             set_dict = {
-                "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
-                "fields": [
-                    {"name": "code", "type": "TEXT"},
-                    {"name": "name", "type": "TEXT"},
-                    {"name": "description", "type": "TEXT"}
-                ]
-            }
+                    "pageable": {
+                        "pageNo": 1,
+                        "pageSize": 20,
+                        "needTotal": True,
+                        "sortOrders": None,
+                        "conditionItems": None
+                    },
+                    "fields": [
+                        {
+                            "name": "name",
+                            "type": "TEXT"
+                        },
+                        {
+                            "name": "code",
+                            "type": "TEXT"
+                        },
+                        {
+                            "name": "charaClassType",
+                            "type": "SELECT"
+                        }
+                    ],
+                    "systemParams": None
+                }
+    
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -128,11 +147,11 @@ class TestCharacteristicManagement(GenMdBaseTest):
         order=3,
         tags=["特征管理", "查询", "GEN_CHARA_CLASS_MD_QUERY_DETAIL_ACTION_SERVICE"]
     )
-    def test_query_characteristic_class_detail(self):
+    def test_query_chara_class_detail(self):
         """查询特征类定义详情用例"""
         try:
-            if not self.characteristic_class_id:
-                self.test_save_characteristic_class()
+            if not self.chara_class_id:
+                self.test_save_chara_class()
 
             api_path = self.get_api_path("GEN-特征类定义表-查询详情服务")
             params, url = self.get_api_params(api_path)
@@ -140,7 +159,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
             filtered_params = ParamUtil.filter_post_body_fields(
                 params, ["id"], ["params", "request"]
             )
-            set_dict = {"id": self.characteristic_class_id}
+            set_dict = {"id": self.chara_class_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -164,20 +183,20 @@ class TestCharacteristicManagement(GenMdBaseTest):
     def test_enable_characteristic_class(self):
         """启用特征类定义用例"""
         try:
-            if not self.characteristic_class_id:
-                self.test_save_characteristic_class()
+            if not self.chara_class_id:
+                self.test_save_chara_class()
 
             api_path = self.get_api_path("GEN-特征类定义表-启用服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ids"], ["params", "request"]
+                params, ["id"], ["params", "request"]
             )
-            set_dict = {"ids": [self.characteristic_class_id]}
+            set_dict = {"id": self.chara_class_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -197,20 +216,20 @@ class TestCharacteristicManagement(GenMdBaseTest):
     def test_disable_characteristic_class(self):
         """禁用特征类定义用例"""
         try:
-            if not self.characteristic_class_id:
-                self.test_save_characteristic_class()
+            if not self.chara_class_id:
+                self.test_save_chara_class()
 
             api_path = self.get_api_path("GEN-特征类定义表-禁用服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ids"], ["params", "request"]
+                params, ["id"], ["params", "request"]
             )
-            set_dict = {"ids": [self.characteristic_class_id]}
+            set_dict = {"id": self.chara_class_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -231,40 +250,21 @@ class TestCharacteristicManagement(GenMdBaseTest):
         """删除特征类定义用例"""
         try:
             # 先创建一个测试数据用于删除
-            class_code = self.mock_data.generate_unique_code(tag="DEL_CHARACLASS")
-            class_name = f"待删除特征类_{self.mock_data.get_timestamp()}"
-
-            # 创建特征类
-            save_api_path = self.get_api_path("GEN-特征类定义表-保存服务")
-            save_params, save_url = self.get_api_params(save_api_path)
-            
-            save_filtered_params = ParamUtil.filter_post_body_fields(
-                save_params, ["code", "name", "description"], ["params", "request"]
-            )
-            save_set_dict = {
-                "code": class_code,
-                "name": class_name,
-                "description": "待删除特征类描述"
-            }
-            ParamUtil.set_request_params(save_filtered_params, save_set_dict)
-
-            save_response = self.http.post(save_url, json=save_filtered_params)
-            self.assert_util.assert_response_data(save_response)
-            
-            delete_class_id = save_response.get("data", {}).get("data", {})
+            if not self.chara_class_id:
+                self.test_save_chara_class()
 
             # 删除特征类
             api_path = self.get_api_path("GEN-特征类定义表-删除服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ids"], ["params", "request"]
+                params, ["id"], ["params", "request"]
             )
-            set_dict = {"ids": [delete_class_id]}
+            set_dict = {"id": self.chara_class_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -283,35 +283,45 @@ class TestCharacteristicManagement(GenMdBaseTest):
         smoke=True,
         tags=["特征管理", "新增", "GEN_CHARA_MD_SAVE_ACTION_SERVICE"]
     )
-    def test_save_characteristic(self):
+    def test_save_chara(self):
         """新增特征定义用例 - GEN_CHARA_MD_SAVE_ACTION_SERVICE"""
         try:
             # 确保有特征类
-            if not self.characteristic_class_id:
-                self.test_save_characteristic_class()
-
-            chara_code = self.mock_data.generate_unique_code(tag="CHARA")
-            chara_name = f"测试特征_{self.mock_data.get_timestamp()}"
+            chara_code = self.mock_util.generate_unique_code(tag="CHARA")
+            chara_name = f"测试特征_{self.mock_util.get_timestamp()}"
 
             api_path = self.get_api_path("GEN-特征定义表-保存服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["code", "name", "charaClassId", "dataType"], ["params", "request"]
+                params, ["code", "name", "charaClassId", "dataType", "charNo", "isCustom", "isRequired", "isSingleValue", "remark", "presetValues"], ["params", "request"]
             )
             set_dict = {
                 "code": chara_code,
                 "name": chara_name,
-                "charaClassId": self.characteristic_class_id,
-                "dataType": "TEXT"
+                "dataType":"STRING",
+                "charNo":40,
+                "isCustom":False,
+                "isRequired":False,
+                "isSingleValue":True,
+                "remark":f"测试特征描述_{self.mock_util.get_timestamp()}",
+                "presetValues":[
+                    {
+                        "value": f"特征1_{self.mock_util.get_timestamp()}",
+                        "defaultRelv": False
+                    },
+                    {
+                        "value": f"特征2_{self.mock_util.get_timestamp()}",
+                        "defaultRelv": True
+                    } 
+                ]
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
             
-            self.characteristic_id = response.get("data", {}).get("data", {})
-            self.characteristic_code = chara_code
+            self.chara_id = response.get("data", {}).get("data", {})
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -338,12 +348,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
                 params, ["pageable", "fields"], ["params", "request"]
             )
             set_dict = {
-                "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
-                "fields": [
-                    {"name": "code", "type": "TEXT"},
-                    {"name": "name", "type": "TEXT"},
-                    {"name": "dataType", "type": "TEXT"}
-                ]
+                "pageable": {"pageNo": 1, "pageSize": 20}
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -368,8 +373,8 @@ class TestCharacteristicManagement(GenMdBaseTest):
     def test_query_characteristic_detail(self):
         """查询特征定义详情用例"""
         try:
-            if not self.characteristic_id:
-                self.test_save_characteristic()
+            if not self.chara_id:
+                self.test_save_chara()
 
             api_path = self.get_api_path("GEN-特征定义表-查询详情服务")
             params, url = self.get_api_params(api_path)
@@ -377,7 +382,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
             filtered_params = ParamUtil.filter_post_body_fields(
                 params, ["id"], ["params", "request"]
             )
-            set_dict = {"id": self.characteristic_id}
+            set_dict = {"id": self.chara_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -401,20 +406,20 @@ class TestCharacteristicManagement(GenMdBaseTest):
     def test_enable_characteristic(self):
         """启用特征定义用例"""
         try:
-            if not self.characteristic_id:
-                self.test_save_characteristic()
+            if not self.chara_id:
+                self.test_save_chara()
 
             api_path = self.get_api_path("GEN-特征定义表-启用服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ids"], ["params", "request"]
+                params, ["id"], ["params", "request"]
             )
-            set_dict = {"ids": [self.characteristic_id]}
+            set_dict = {"id": self.chara_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -434,20 +439,20 @@ class TestCharacteristicManagement(GenMdBaseTest):
     def test_disable_characteristic(self):
         """禁用特征定义用例"""
         try:
-            if not self.characteristic_id:
-                self.test_save_characteristic()
+            if not self.chara_id:
+                self.test_save_chara()
 
             api_path = self.get_api_path("GEN-特征定义表-禁用服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ids"], ["params", "request"]
+                params, ["id"], ["params", "request"]
             )
-            set_dict = {"ids": [self.characteristic_id]}
+            set_dict = {"id": self.chara_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -468,45 +473,21 @@ class TestCharacteristicManagement(GenMdBaseTest):
         """删除特征定义用例"""
         try:
             # 确保有特征类
-            if not self.characteristic_class_id:
-                self.test_save_characteristic_class()
-
-            # 先创建一个测试数据用于删除
-            chara_code = self.mock_data.generate_unique_code(tag="DEL_CHARA")
-            chara_name = f"待删除特征_{self.mock_data.get_timestamp()}"
-
-            # 创建特征
-            save_api_path = self.get_api_path("GEN-特征定义表-保存服务")
-            save_params, save_url = self.get_api_params(save_api_path)
-            
-            save_filtered_params = ParamUtil.filter_post_body_fields(
-                save_params, ["code", "name", "charaClassId", "dataType"], ["params", "request"]
-            )
-            save_set_dict = {
-                "code": chara_code,
-                "name": chara_name,
-                "charaClassId": self.characteristic_class_id,
-                "dataType": "TEXT"
-            }
-            ParamUtil.set_request_params(save_filtered_params, save_set_dict)
-
-            save_response = self.http.post(save_url, json=save_filtered_params)
-            self.assert_util.assert_response_data(save_response)
-            
-            delete_chara_id = save_response.get("data", {}).get("data", {})
+            if not self.chara_id:
+                self.test_save_chara()
 
             # 删除特征
             api_path = self.get_api_path("GEN-特征定义表-删除服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ids"], ["params", "request"]
+                params, ["id"], ["params", "request"]
             )
-            set_dict = {"ids": [delete_chara_id]}
+            set_dict = {"id": self.chara_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -533,8 +514,8 @@ class TestCharacteristicManagement(GenMdBaseTest):
 
             import_data = [
                 {
-                    "code": self.mock_data.generate_unique_code(tag="IMPORT_CHARACLASS"),
-                    "name": f"导入测试特征类_{self.mock_data.get_timestamp()}",
+                    "code": self.mock_util.generate_unique_code(tag="IMPORT_CHARACLASS"),
+                    "name": f"导入测试特征类_{self.mock_util.get_timestamp()}",
                     "description": "导入测试特征类描述"
                 }
             ]
@@ -612,7 +593,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
             )
             set_dict = {
                 "ossPath": "/test/characteristic_class_import.xlsx",
-                "taskName": f"特征类定义表导入任务_{self.mock_data.get_timestamp()}"
+                "taskName": f"特征类定义表导入任务_{self.mock_util.get_timestamp()}"
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -653,7 +634,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
                     ],
                     "condition": {}
                 },
-                "taskName": f"特征类定义表导出任务_{self.mock_data.get_timestamp()}"
+                "taskName": f"特征类定义表导出任务_{self.mock_util.get_timestamp()}"
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 

@@ -343,3 +343,30 @@ response_id = response.get("data", {}).get("data", {})
 - 只允许传 {"id": self.xxx_id}，禁止传 {"ids": [self.xxx_id]}，除非后端接口明确要求批量。
 - 删除/启用/禁用等操作前，必须先判断 self.xxx_id 是否已存在，只有为 None 时才调用新增接口，避免重复创建。
 - 所有依赖数据的测试用例，优先判断依赖数据是否已存在，避免重复创建。 
+
+#### 测试数据清理规范
+
+- `teardown_class` 清理测试数据时，**禁止用循环遍历表名**，必须**一个表一个表地单独调用清理方法**，以便日志和异常更清晰，便于定位问题。
+
+**示例（推荐）：**
+```python
+@classmethod
+def teardown_class(cls):
+    try:
+        cls.db.delete(table="table1", where="code like %s", params=["AT_%"])
+        cls.db.delete(table="table2", where="code like %s", params=["AT_%"])
+        cls.logger.info("测试数据清理完成")
+    except Exception as e:
+        cls.logger.error(f"测试数据清理失败: {str(e)}")
+```
+
+**反例（禁止）：**
+```python
+tables = ["table1", "table2"]
+for table in tables:
+    cls.db.delete(table=table, where="code like %s", params=["AT_%"])
+```
+
+---
+
+**是否需要我帮你自动修正所有相关用例的 teardown_class？** 
