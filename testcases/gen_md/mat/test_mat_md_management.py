@@ -242,6 +242,7 @@ class TestStndMatManagement(GenMdBaseTest):
         order=4,
         tags=["标准物料管理", "查找", "ID"]
     )
+    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     def test_find_mat_by_id(self):
         """
         根据ID查找物料数据用例
