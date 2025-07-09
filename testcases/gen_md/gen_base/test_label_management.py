@@ -64,8 +64,9 @@ class TestLabelManagement(GenMdBaseTest):
                 "color": "#FF5722",  # 标签颜色
                 "usageType": usageType
             }
+            
             ParamUtil.set_request_params(filtered_params, set_dict)
-
+            self.logger.info(f"filtered_params: {filtered_params}")
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
             

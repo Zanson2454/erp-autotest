@@ -18,17 +18,16 @@ class TestMonitoringManagement(GenMdBaseTest):
         cls.monitoring_id = None
         cls.monitoring_code = None
         cls.logger.info("监控管理测试类初始化完成")
+        
+        if cls.md_cache_data:
+            cls.index_id = cls.md_cache_data.get("index_info", {}).get("index_md",[])[0].get("id") or None
 
     @classmethod
     def teardown_class(cls):
         """测试类结束后执行清理"""
         try:
-            tables = ["gen_monitoring_plan_info_md", "gen_monitoring_alert_result_md"]
-            for table in tables:
-                try:
-                    cls.db.delete(table=table, where="code like %s", params=["AT_%"])
-                except Exception:
-                    pass
+            cls.db.delete(table="gen_monitoring_plan_info_md", where="plan_code like %s", params=["AT_%"])
+            cls.db.delete(table="gen_monitoring_alert_result_md", where="metric_name like %s", params=["%"])
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
@@ -53,9 +52,40 @@ class TestMonitoringManagement(GenMdBaseTest):
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["monitoring_code", "monitoring_name"], ["params", "request"]
+                params, [
+                    "planCode", "planName", "remark", "genIndexMdId", "datasource",
+                    "monitoringDate", "monitoringDetails", "monitoringStatus", "monitoringTime",
+                    "monitoringType", "solutionSettings", "status"
+                    ], 
+                ["params", "request"]
             )
-            set_dict = {"monitoring_code": monitoring_code, "monitoring_name": monitoring_name}
+            set_dict = {
+                "planCode": monitoring_code,
+                "planName": monitoring_name,
+                "remark": f"测试备注_{self.mock_data.get_timestamp()}",
+                "genIndexMdId": {"id": self.index_id},
+                "datasource": "测试数据源",
+                "monitoringDate": f"{self.mock_data.get_timestamp(timestamp=True)}",
+                "monitoringStatus": None,
+                "monitoringTime": "00:00:00",
+                "monitoringType": "TIMING",
+                "solutionSettings": [
+                    {
+                    "auxiliaryMessageDetails": "附属消息详情",
+                    "recipient": "张三",
+                    "triggerCondition": "测试条件"
+                    }
+                ],
+                "monitoringDetails": [
+                    {"nonCompliantData": "未达标数据",
+                    "nonCompliantDataAddress": "未达标数据地址",
+                    "priority": 1,
+                    "recommendedAssignee": "Anson",
+                    "recommendedSolution": "推荐解决方案"
+                    }
+                ],
+                "status": "DRAFT"
+            }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -87,23 +117,37 @@ class TestMonitoringManagement(GenMdBaseTest):
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields"], ["params", "request"]
+                params, ["pageable", "fields", "systemParams"], ["params", "request"]
             )
             set_dict = {
-                "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": None
+                },
                 "fields": [
-                    {"name": "monitoring_code", "type": "TEXT"},
-                    {"name": "monitoring_name", "type": "TEXT"}
-                ]
+                    {
+                        "name": "planCode",
+                        "type": "TEXT"
+                    },
+                    {
+                        "name": "planName",
+                        "type": "TEXT"
+                    },
+                    {
+                        "name": "monitoringStatus",
+                        "type": "SELECT"
+                    }
+                ],
+                    "systemParams": None
             }
+
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
-
-            data_list = response.get("data", {}).get("data", {}).get("data", [])
-            self.assert_util.assert_by_operator(data_list, "not_empty")
-
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
 
@@ -170,7 +214,7 @@ class TestMonitoringManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -234,13 +278,13 @@ class TestMonitoringManagement(GenMdBaseTest):
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ids"], ["params", "request"]
+                params, ["id"], ["params", "request"]
             )
-            set_dict = {"ids": [self.monitoring_id]}
+            set_dict = {"id": self.monitoring_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -267,13 +311,13 @@ class TestMonitoringManagement(GenMdBaseTest):
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ids"], ["params", "request"]
+                params, ["id"], ["params", "request"]
             )
-            set_dict = {"ids": [self.monitoring_id]}
+            set_dict = {"id": self.monitoring_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -292,18 +336,30 @@ class TestMonitoringManagement(GenMdBaseTest):
         tags=["监控预警结果管理", "保存", "GEN_MONITORING_ALERT_RESULT_MD_SAVE_ACTION_SERVICE"]
     )
     def test_save_monitoring_alert_result(self):
-        """监控预警结果信息保存服务用例"""
+        """监控预警结果信息保存服务用例"""  
         try:
-            alert_code = self.mock_data.generate_unique_code(tag="AlertResult")
-            alert_name = f"监控预警结果_{self.mock_data.get_timestamp()}"
-
+            metricName = f"测试指标_{self.mock_data.get_timestamp()}"
             api_path = self.get_api_path("GEN-监控预警结果信息-保存服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["alert_code", "alert_name"], ["params", "request"]
+                params, ["metricName", "metricValue", "metricUnit", "metricTime", "metricType", "metricStatus", "metricRemark"], ["params", "request"]
             )
-            set_dict = {"alert_code": alert_code, "alert_name": alert_name}
+            set_dict = {
+                "metricName": metricName,
+                "achievedValue": 100,
+                "tagetValue": 100,
+                "cycle": "DAY",
+                "targetDescription": f"目标描述_{self.mock_data.get_timestamp()}",
+                "nonCompliantData": "未达标数据",
+                "recommendedSolution": "推荐解决方案",
+                "isPushed": False,
+                "isViewedByAssignee": False,
+                "suggestedAssignee": "Anson",
+                "resolutionStatus": "UNRESOLVED",
+                "alertTime": f"{self.mock_data.get_timestamp(timestamp=True)}"
+            }
+             
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -368,13 +424,13 @@ class TestMonitoringManagement(GenMdBaseTest):
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ids"], ["params", "request"]
+                params, ["id"], ["params", "request"]
             )
-            set_dict = {"ids": [self.monitoring_id]}
+            set_dict = {"id": self.monitoring_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")

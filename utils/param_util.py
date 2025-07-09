@@ -14,28 +14,31 @@ import uuid
 
 class ParamUtil:
     @staticmethod
-    def filter_post_body_fields(body: Dict[str, Any], fields: List[str], path: List[str] = None) -> Dict[str, Any]:
+    def filter_post_body_fields(body: Dict[str, Any], fields: List[str], path: Optional[List[str]] = None) -> Dict[str, Any]:
         """
-        支持指定嵌套路径的字段过滤，并将过滤结果嵌套回原路径
+        支持指定嵌套路径的字段过滤，并将过滤结果嵌套回原路径，保留同级其它字段
         :param body: 原始请求体 dict
         :param fields: 需要保留的字段名列表
         :param path: 需要过滤的嵌套路径（如 ["params", "request"]）
-        :return: 只包含指定字段的新 dict，嵌套回 path
+        :return: 只包含指定字段的新 dict，嵌套回 path，保留同级其它字段
         """
         if path and len(path) > 0:
             p = path[0]
-            sub_body = body.get(p, {})
-            filtered = ParamUtil.filter_post_body_fields(sub_body, fields, path[1:])
-            return {p: filtered}
+            # 递归过滤目标路径
+            filtered = ParamUtil.filter_post_body_fields(body.get(p, {}), fields, path[1:])
+            # 保留同级其它字段
+            result = {}
+            for k, v in body.items():
+                if k == p:
+                    result[k] = filtered
+                else:
+                    result[k] = v
+            return result
         else:
             result = {}
             for k, v in body.items():
                 if k in fields:
-                    # 如果字段值是一个字典，保留其所有内容
-                    if isinstance(v, dict):
-                        result[k] = v
-                    else:
-                        result[k] = v
+                    result[k] = v
             return result
 
     @staticmethod
@@ -148,7 +151,7 @@ class ParamUtil:
         return apis_dict.get(api_key, {}).get("path")
     
     @staticmethod
-    def get_api_params(api_params_dict: Dict[str, Any], api_path: str, with_query_params: str = None) -> tuple:
+    def get_api_params(api_params_dict: Dict[str, Any], api_path: str, with_query_params: Optional[str] = None) -> tuple:
         """
         获取API请求参数和完整URL
         
@@ -156,7 +159,7 @@ class ParamUtil:
             api_params_dict (dict): API参数配置字典
             api_path (str): API路径，如"/api/trantor/service/engine/execute/ERP_GEN$gen_mat_md_PAGING_DATA_SERVICE"
             with_query_params (str, optional): 查询参数字符串，如"param1=value1&param2=value2"
-            
+        
         返回:
             tuple: (params, url)
                 params (dict): 对应API的请求参数模板，如{"params": {"request": {...}}}

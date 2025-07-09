@@ -222,3 +222,11 @@ partner_info:
     validation:
       min_records: 1
       required_fields: ["id", "code", "name", "status"]
+
+
+index_info:
+  # 指标信息
+  index_md:
+    sql: |
+      select id,gen_index_code,gen_index_name from gen_index_md where gen_index_code='AUTOTEST_INDEX_CODE' and deleted=0 limit 1;
+    description: "查询指标信息"
