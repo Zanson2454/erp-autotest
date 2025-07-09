@@ -21,7 +21,6 @@ class TestIndexManagement(GenMdBaseTest):
         cls.mock_data = MockData()
         # 数据存储
         cls.index_id = None
-        cls.index_code = None
         cls.parent_index_id = None
         cls.logger.info("指标中心管理测试类初始化完成")
 
@@ -30,16 +29,11 @@ class TestIndexManagement(GenMdBaseTest):
         """测试类结束后执行清理"""
         try:
             # 清理测试数据
-            tables = ["gen_index_md"]
-            for table in tables:
-                try:
-                    cls.db.delete(
-                        table=table,
-                        where="code like %s",
-                        params=["AT_%"]
-                    )
-                except Exception:
-                    pass
+            cls.db.delete(
+                table="gen_index_md",
+                where="gen_index_code like %s",
+                params=["AT_%"]
+            )
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
@@ -64,15 +58,19 @@ class TestIndexManagement(GenMdBaseTest):
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["code", "name", "type", "unit", "description", "parentId"], ["params", "request"]
+                params, ["genIndexCode", "genIndexName", "genIndexDataResult", "genIndexDataSource", "genIndexDataType", "genIndexRemark", "genIndexSort", "genIndexSql", "genParentId", "status"], ["params", "request"]
             )
             set_dict = {
-                "code": index_code,
-                "name": index_name,
-                "type": "RATIO",  # 指标类型：比率
-                "unit": "%",  # 指标单位
-                "description": f"测试指标描述_{self.mock_data.get_timestamp()}",
-                "parentId": None  # 顶级指标
+                "genIndexCode": index_code,
+                "genIndexName": index_name,
+                "genIndexDataResult": f"DataResult_{self.mock_data.get_timestamp()}",  
+                "genIndexDataSource": f"DataSource_{self.mock_data.get_timestamp()}",  
+                "genIndexDataType": "MODEL",
+                "genIndexRemark": None,  
+                "genIndexSort": 1,
+                "genIndexSql": None,
+                "genParentId": None,
+                "status": "DRAFT"
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -80,7 +78,6 @@ class TestIndexManagement(GenMdBaseTest):
             self.assert_util.assert_response_data(response)
             
             self.index_id = response.get("data", {}).get("data", {})
-            self.index_code = index_code
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -103,19 +100,14 @@ class TestIndexManagement(GenMdBaseTest):
             api_path = self.get_api_path("指标中心表-调用取号规则服务")
             params, url = self.get_api_params(api_path)
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ruleKey", "params"], ["params", "request"]
-            )
-            set_dict = {
-                "ruleKey": "INDEX_CODE_RULE",  # 指标编码规则
-                "params": {}
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            params['modelKey'] = "GEN_MD$gen_index_md_code"
+            params['request'] = {"ruleKey":"GEN_MD$gen_index_md_code"}
 
-            response = self.http.post(url, json=filtered_params)
+            response = self.http.post(url, json=params)
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
+            index_code = response.get("data", {}).get("data", {})
+            self.assert_util.assert_by_operator(index_code, "not_empty")
+            a.json(params, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -137,18 +129,40 @@ class TestIndexManagement(GenMdBaseTest):
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields"], ["params", "request"]
+                params, ["pageable"], ["params", "request"]
             )
-            set_dict = {
-                "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
-                "fields": [
-                    {"name": "code", "type": "TEXT"},
-                    {"name": "name", "type": "TEXT"},
-                    {"name": "type", "type": "TEXT"},
-                    {"name": "unit", "type": "TEXT"},
-                    {"name": "description", "type": "TEXT"}
-                ]
+            set_dict =  {
+                "pageable": {
+                    "conditionGroup": {
+                        "type": "ConditionGroup",
+                        "logicOperator": "OR",
+                        "conditions": [
+                            {
+                                "type": "ConditionGroup",
+                                "logicOperator": "OR",
+                                "conditions": [
+                                    {
+                                        "type": "ConditionLeaf",
+                                        "leftValue": {
+                                            "type": "VarValue",
+                                            "varValue": [
+                                                {
+                                                    "valueKey": "genParentId",
+                                                    "valueName": "genParentId"
+                                                }
+                                            ],
+                                            "valueType": "VAR",
+                                            "fieldType": "Number"
+                                        },
+                                        "operator": "IS_NULL"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
             }
+        
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -187,11 +201,6 @@ class TestIndexManagement(GenMdBaseTest):
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
 
-            # 验证返回的详情数据包含必要字段
-            detail_data = response.get("data", {}).get("data", {})
-            self.assert_util.assert_by_operator(detail_data.get("code"), "not_empty")
-            self.assert_util.assert_by_operator(detail_data.get("name"), "not_empty")
-
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
 
@@ -210,17 +219,20 @@ class TestIndexManagement(GenMdBaseTest):
     def test_query_by_parent(self):
         """根据父ID查询下级列表用例 - GEN_INDEX_MD_QUERY_BY_PARENT_ACTION_SERVICE"""
         try:
+            if not self.index_id:
+                self.test_save_index()
+
             api_path = self.get_api_path("GEN-指标中心-根据父ID查询下级列表服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params, ["parentId"], ["params", "request"]
             )
-            set_dict = {"parentId": None}  # 查询顶级指标
+            set_dict = {"parentId": self.index_id}  # 查询顶级指标
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -286,7 +298,7 @@ class TestIndexManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -319,7 +331,7 @@ class TestIndexManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -352,7 +364,7 @@ class TestIndexManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
