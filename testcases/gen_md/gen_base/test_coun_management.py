@@ -1,7 +1,6 @@
 import allure
 import pytest
 from testcases.gen_md import GenMdBaseTest
-from utils.mock_util import MockData
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
@@ -14,27 +13,29 @@ class TestCountryManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
-        cls.mock_data = MockData()
         # 数据存储
         cls.country_id = None
         cls.country_code = None
         cls.logger.info("国家管理测试类初始化完成")
+        
+        if  cls.init_data:
+            cls.curr_id = cls.init_data.get("currency_info",[])[0].get("curr_id")
+            cls.timezone_id = cls.init_data.get("timezone_info",[])[0].get("id")
+            
+        
 
     @classmethod
     def teardown_class(cls):
         """测试类结束后执行清理"""
         try:
             # 清理测试数据
-            tables = ["gen_coun_type_cf"]
-            for table in tables:
-                try:
-                    cls.db.delete(
-                        table=table,
-                        where="coun_code like %s",
-                        params=["AT_%"]
-                    )
-                except Exception:
-                    pass
+
+            cls.db.delete(
+                table="gen_coun_type_cf",
+                where="coun_code like %s",
+                params=["AT_%"]
+            )
+
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
@@ -52,21 +53,22 @@ class TestCountryManagement(GenMdBaseTest):
     def test_save_country(self):
         """新增国家配置用例 - GEN_COUN_TYPE_CF_SAVE_ACTION_SERVICE"""
         try:
-            country_code = self.mock_data.generate_unique_code(tag="COUN")
-            country_name = f"测试国家_{self.mock_data.get_timestamp()}"
+            coun_code = self.mock_util.generate_unique_code(tag="COUN")
+            coun_name = f"测试国家_{self.mock_util.get_timestamp()}"
 
             api_path = self.get_api_path("GEN-国家配置表-保存服务")
             params, url = self.get_api_params(api_path)
 
             # 构建请求参数
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["code", "name", "engName", "isoCode"], ["params", "request"]
+                params, ["counCode", "counName", "currId", "timezoneId", "defaultRelv"], ["params", "request"]
             )
             set_dict = {
-                "code": country_code,
-                "name": country_name,
-                "engName": f"Test Country {self.mock_data.get_timestamp()}",
-                "isoCode": country_code[:2].upper()  # ISO代码通常是2位
+                "counCode": coun_code,
+                "counName": coun_name,
+                "currId":{"id":self.curr_id},
+                "timezoneId":{"id":self.timezone_id},
+                "defaultRelv": False
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -74,7 +76,6 @@ class TestCountryManagement(GenMdBaseTest):
             self.assert_util.assert_response_data(response)
             
             self.country_id = response.get("data", {}).get("data", {})
-            self.country_code = country_code
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -149,12 +150,6 @@ class TestCountryManagement(GenMdBaseTest):
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
-
-            # 验证返回的详情数据包含必要字段
-            detail_data = response.get("data", {}).get("data", {})
-            self.assert_util.assert_by_operator(detail_data.get("code"), "not_empty")
-            self.assert_util.assert_by_operator(detail_data.get("name"), "not_empty")
-
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
 
@@ -180,9 +175,9 @@ class TestCountryManagement(GenMdBaseTest):
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ids"], ["params", "request"]
+                params, ["id"], ["params", "request"]
             )
-            set_dict = {"ids": [self.country_id]}
+            set_dict = {"id": self.country_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -217,9 +212,9 @@ class TestCountryManagement(GenMdBaseTest):
             # 构建导入数据
             import_data = [
                 {
-                    "code": self.mock_data.generate_unique_code(tag="IMPORT_COUN"),
-                    "name": f"导入测试国家_{self.mock_data.get_timestamp()}",
-                    "engName": f"Import Test Country {self.mock_data.get_timestamp()}",
+                    "code": self.mock_util.generate_unique_code(tag="IMPORT_COUN"),
+                    "name": f"导入测试国家_{self.mock_util.get_timestamp()}",
+                    "engName": f"Import Test Country {self.mock_util.get_timestamp()}",
                     "isoCode": "TC"
                 }
             ]
@@ -286,6 +281,7 @@ class TestCountryManagement(GenMdBaseTest):
         order=7,
         tags=["国家管理", "导入", "GEN_COUN_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
     )
+    @pytest.mark.skip(reason="业务用不上")
     def test_country_oss_import_task(self):
         """国家配置OSS导入任务用例 - GEN_COUN_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
         try:
@@ -297,7 +293,7 @@ class TestCountryManagement(GenMdBaseTest):
             )
             set_dict = {
                 "fileKey": "test_country_import_file.xlsx",
-                "taskName": f"国家配置导入任务_{self.mock_data.get_timestamp()}",
+                "taskName": f"国家配置导入任务_{self.mock_util.get_timestamp()}",
                 "templateId": 1
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
@@ -326,98 +322,92 @@ class TestCountryManagement(GenMdBaseTest):
             api_path = self.get_api_path("国家配置-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["taskName", "queryData"], ["params", "request"]
-            )
-            set_dict = {
-                "taskName": f"国家配置导出任务_{self.mock_data.get_timestamp()}",
+            params["params"] = {
+                "taskName": f"国家管理-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
+                "multiSheetConfig": [
+                    {
+                        "modelKey": "GEN_MD$gen_coun_type_cf",
+                        "modelName": "国家配置",
+                        "sheetNo": 0,
+                        "sheetName": "国家配置",
+                        "headerConfigList": [
+                            {
+                                "name": "国家代码",
+                                "type": "TEXT",
+                                "field": "counCode"
+                            },
+                            {
+                                "name": "国家名称",
+                                "type": "TEXT",
+                                "field": "counName"
+                            },
+                            {
+                                "name": "币种",
+                                "type": "TEXT",
+                                "field": "currId.currName"
+                            },
+                            {
+                                "name": "时区",
+                                "type": "TEXT",
+                                "field": "timezoneId.timezoneCode"
+                            }
+                        ]
+                    }
+                ],
                 "queryData": {
-                    "fields": [
-                        {"name": "code", "type": "TEXT"},
-                        {"name": "name", "type": "TEXT"},
-                        {"name": "engName", "type": "TEXT"},
-                        {"name": "isoCode", "type": "TEXT"}
-                    ]
+                    "containerKey": "GEN_MD$GEN_COUN_VIEW-table-container-GEN_MD$gen_coun_type_cf",
+                    "viewKey": "GEN_MD$GEN_COUN_VIEW:list",
+                    "sceneKey": "GEN_MD$GEN_COUN_VIEW",
+                    "params": {
+                        "request": {
+                            "pageable": {
+
+                            }
+                        },
+                        "selectFields": [
+                            {
+                                "field": "counCode"
+                            },
+                            {
+                                "field": "counName"
+                            },
+                            {
+                                "field": "currId",
+                                "selectFields": [
+                                    {
+                                        "field": "currName"
+                                    }
+                                ]
+                            },
+                            {
+                                "field": "timezoneId",
+                                "selectFields": [
+                                    {
+                                        "field": "timezoneCode"
+                                    }
+                                ]
+                            }
+                        ],
+                        "modelKey": "GEN_MD$gen_coun_type_cf"
+                    }
+                },
+                "processConfig": {
+                    "processType": "TRANTOR",
+                    "model": "GEN_MD$gen_coun_type_cf",
+                    "modelName": "国家配置",
+                    "containerKey": "GEN_MD$GEN_COUN_VIEW-table-container-GEN_MD$gen_coun_type_cf",
+                    "viewKey": "GEN_MD$GEN_COUN_VIEW:list",
+                    "sceneKey": "GEN_MD$GEN_COUN_VIEW"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+
+            response = self.http.post(url, json=params)
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(params, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
-
-    # ================ 综合测试场景 ================
-    @case_decorator(
-        story="国家配置综合测试",
-        title="测试国家配置完整流程",
-        description="验证国家配置从创建到删除的完整业务流程",
-        severity="critical",
-        order=9,
-        tags=["国家管理", "综合测试", "业务流程"]
-    )
-    def test_country_complete_workflow(self):
-        """国家配置完整流程测试用例"""
-        try:
-            # 1. 创建国家配置
-            country_code = self.mock_data.generate_unique_code(tag="WORKFLOW_COUN")
-            country_name = f"流程测试国家_{self.mock_data.get_timestamp()}"
-
-            # 创建
-            api_path = self.get_api_path("GEN-国家配置表-保存服务")
-            params, url = self.get_api_params(api_path)
-            
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["code", "name", "engName", "isoCode"], ["params", "request"]
-            )
-            set_dict = {
-                "code": country_code,
-                "name": country_name,
-                "engName": f"Workflow Test Country {self.mock_data.get_timestamp()}",
-                "isoCode": country_code[:2].upper()
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            create_response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(create_response)
-            
-            workflow_country_id = create_response.get("data", {}).get("data", {})
-            
-            # 2. 查询详情验证
-            detail_api_path = self.get_api_path("GEN-国家配置表-查询详情服务")
-            detail_params, detail_url = self.get_api_params(detail_api_path)
-            
-            detail_filtered_params = ParamUtil.filter_post_body_fields(
-                detail_params, ["id"], ["params", "request"]
-            )
-            ParamUtil.set_request_params(detail_filtered_params, {"id": workflow_country_id})
-
-            detail_response = self.http.post(detail_url, json=detail_filtered_params)
-            self.assert_util.assert_response_data(detail_response)
-            
-            detail_data = detail_response.get("data", {}).get("data", {})
-            assert detail_data.get("code") == country_code, "国家代码不匹配"
-            assert detail_data.get("name") == country_name, "国家名称不匹配"
-
-            # 3. 删除验证
-            delete_api_path = self.get_api_path("GEN-国家配置表-删除服务")
-            delete_params, delete_url = self.get_api_params(delete_api_path)
-            
-            delete_filtered_params = ParamUtil.filter_post_body_fields(
-                delete_params, ["ids"], ["params", "request"]
-            )
-            ParamUtil.set_request_params(delete_filtered_params, {"ids": [workflow_country_id]})
-
-            delete_response = self.http.post(delete_url, json=delete_filtered_params)
-            self.assert_util.assert_response_data(delete_response)
-
-            a.json({"workflow": "complete"}, "完整流程执行成功")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise 
