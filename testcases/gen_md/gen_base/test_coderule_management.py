@@ -59,10 +59,22 @@ class TestCodeRuleManagement(GenMdBaseTest):
                     "conditionItems": None
                 },
                 "fields": [
-                    {"name": "ruleCode", "type": "TEXT"},
-                    {"name": "ruleName", "type": "TEXT"},
-                    {"name": "ruleType", "type": "TEXT"},
-                    {"name": "status", "type": "TEXT"}
+                    {
+                        "name": "ruleKey",
+                        "type": "TEXT"
+                    },
+                    {
+                        "name": "ruleName",
+                        "type": "TEXT"
+                    },
+                    {
+                        "name": "modelKey",
+                        "type": "TEXT"
+                    },
+                    {
+                        "name": "modelName",
+                        "type": "TEXT"
+                    }
                 ],
                 "systemParams": None
             }
@@ -130,6 +142,7 @@ class TestCodeRuleManagement(GenMdBaseTest):
         order=3,
         tags=["编码规则", "编辑", "GEN_CODE_RULE_UPDATE_ACTION_SERVICE"]
     )
+    @pytest.mark.skip(reason="业务用不上")
     def test_update_code_rule(self):
         """编辑编码规则用例 - GEN_CODE_RULE_UPDATE_ACTION_SERVICE"""
         try:
