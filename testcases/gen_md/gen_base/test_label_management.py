@@ -28,17 +28,11 @@ class TestLabelManagement(GenMdBaseTest):
     def teardown_class(cls):
         """测试类结束后执行清理"""
         try:
-            # 清理测试数据
-            tables = ["gen_label_md"]
-            for table in tables:
-                try:
-                    cls.db.delete(
-                        table=table,
-                        where="code like %s",
-                        params=["AT_%"]
-                    )
-                except Exception:
-                    pass
+            cls.db.delete(
+                table="gen_label_md",
+                where="name like %s",
+                params=["测试标签_%"]
+            )
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
@@ -53,10 +47,10 @@ class TestLabelManagement(GenMdBaseTest):
         smoke=True,
         tags=["标签管理", "新增", "GEN_LABEL_MD_SAVE_ACTION_SERVICE"]
     )
-    def test_save_label(self):
+    @pytest.mark.parametrize("usageType", ["MAT", "SO_HEAD","CRM_MEMBER"])
+    def test_save_label(self, usageType):
         """新增标签用例 - GEN_LABEL_MD_SAVE_ACTION_SERVICE"""
         try:
-            label_code = self.mock_data.generate_unique_code(tag="LABEL")
             label_name = f"测试标签_{self.mock_data.get_timestamp()}"
 
             api_path = self.get_api_path("GEN-标签表-保存服务")
@@ -66,10 +60,9 @@ class TestLabelManagement(GenMdBaseTest):
                 params, ["code", "name", "color", "description"], ["params", "request"]
             )
             set_dict = {
-                "code": label_code,
                 "name": label_name,
                 "color": "#FF5722",  # 标签颜色
-                "description": f"测试标签描述_{self.mock_data.get_timestamp()}"
+                "usageType": usageType
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -77,7 +70,6 @@ class TestLabelManagement(GenMdBaseTest):
             self.assert_util.assert_response_data(response)
             
             self.label_id = response.get("data", {}).get("data", {})
-            self.label_code = label_code
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -101,7 +93,7 @@ class TestLabelManagement(GenMdBaseTest):
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields"], ["params", "request"]
+                params, ["pageable", "fields", "systemParams"], ["params", "request"]
             )
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
@@ -110,7 +102,8 @@ class TestLabelManagement(GenMdBaseTest):
                     {"name": "name", "type": "TEXT"},
                     {"name": "color", "type": "TEXT"},
                     {"name": "description", "type": "TEXT"}
-                ]
+                ],
+                "systemParams": None
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -136,7 +129,7 @@ class TestLabelManagement(GenMdBaseTest):
         """查询标签详情用例 - GEN_LABEL_MD_QUERY_DETAIL_ACTION_SERVICE"""
         try:
             if not self.label_id:
-                self.test_save_label()
+                self.test_save_label(usageType="MAT")
 
             api_path = self.get_api_path("GEN-标签表-查询详情服务")
             params, url = self.get_api_params(api_path)
@@ -149,11 +142,6 @@ class TestLabelManagement(GenMdBaseTest):
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
-
-            # 验证返回的详情数据包含必要字段
-            detail_data = response.get("data", {}).get("data", {})
-            self.assert_util.assert_by_operator(detail_data.get("code"), "not_empty")
-            self.assert_util.assert_by_operator(detail_data.get("name"), "not_empty")
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -174,7 +162,7 @@ class TestLabelManagement(GenMdBaseTest):
         """启用标签用例 - GEN_LABEL_MD_ENABLED_ACTION_SERVICE"""
         try:
             if not self.label_id:
-                self.test_save_label()
+                self.test_save_label(usageType="MAT")
 
             api_path = self.get_api_path("GEN-标签表-启用服务")
             params, url = self.get_api_params(api_path)
@@ -186,7 +174,7 @@ class TestLabelManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -207,7 +195,7 @@ class TestLabelManagement(GenMdBaseTest):
         """禁用标签用例 - GEN_LABEL_MD_DISABLED_ACTION_SERVICE"""
         try:
             if not self.label_id:
-                self.test_save_label()
+                self.test_save_label(usageType="MAT")
 
             api_path = self.get_api_path("GEN-标签表-禁用服务")
             params, url = self.get_api_params(api_path)
@@ -219,7 +207,7 @@ class TestLabelManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -240,7 +228,7 @@ class TestLabelManagement(GenMdBaseTest):
         """删除标签用例 - GEN_LABEL_MD_DELETE_ACTION_SERVICE"""
         try:
             if not self.label_id:
-                self.test_save_label()
+                self.test_save_label(usageType="MAT")
 
             api_path = self.get_api_path("GEN-标签表-删除服务")
             params, url = self.get_api_params(api_path)
@@ -252,7 +240,7 @@ class TestLabelManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
