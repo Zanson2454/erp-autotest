@@ -374,7 +374,6 @@ class TestSurveyManagement(GenMdBaseTest):
             # 构造OSS导入任务参数
             params = {
                 "serviceKey": "GEN_SURVEY_MISSION_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST",
-                "teamId": 22,
                 "params": {
                     "taskName": f"评分任务_{self.nickname}_{self.mock_util.get_timestamp()}_OSS导入",
                     "fileKey": "test_survey_mission_import.xlsx",
