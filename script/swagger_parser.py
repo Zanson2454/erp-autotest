@@ -163,7 +163,8 @@ class SwaggerParser:
             # 只支持本地引用
             if ref_path.startswith('#/components/schemas/'):
                 ref_name = ref_path.split('/')[-1]
-                ref_schema = self.swagger_data.get('components', {}).get('schemas', {}).get(ref_name, {})
+                if self.swagger_data:
+                    ref_schema = self.swagger_data.get('components', {}).get('schemas', {}).get(ref_name, {})
                 logger.debug(f"递归解析 $ref: {ref_path} => {ref_name}, schema: {ref_schema}")
                 return self._get_schema_value(ref_schema)
             logger.warning(f"不支持的 $ref 路径: {ref_path}")
@@ -232,7 +233,7 @@ class SwaggerParser:
             logger.error(f"保存YAML文件失败: {str(e)}")
             raise
 
-    def save_paths_to_yaml(self, endpoints: Dict[str, Dict[str, Any]], output_path: str = None, module: str = None) -> None:
+    def save_paths_to_yaml(self, endpoints: Dict[str, Dict[str, Any]], output_path: str = '', module: str = '') -> None:
         """
         将接口路径信息保存到YAML文件，采用扁平化结构，便于调用和阅读
         同时将详细参数信息保存到 gen_api_params.yaml
@@ -393,7 +394,10 @@ class SwaggerParser:
             logger.info(f"发现$ref引用: {ref_path}")
             if ref_path.startswith('#/components/schemas/'):
                 ref_name = ref_path.split('/')[-1]
-                ref_schema = self.swagger_data.get('components', {}).get('schemas', {}).get(ref_name, {})
+                if self.swagger_data:
+                    ref_schema = self.swagger_data.get('components', {}).get('schemas', {}).get(ref_name, {})
+                else:
+                    ref_schema = {}
                 logger.info(f"解析$ref: {ref_path} => {ref_name}")
                 logger.info(f"引用schema内容: {ref_schema}")
                 return self._get_schema_value(ref_schema)
@@ -565,10 +569,10 @@ if __name__ == "__main__":
     )
     
     # 获取指定团队和模块的Swagger文档
-    swagger_doc = parser.fetch_swagger_doc("TERP", "GEN_MD")
+    swagger_doc = parser.fetch_swagger_doc("TERP", "SCM_SLS")
     
     # 解析所有接口
     endpoints = parser.parse_endpoints()
     
     # 保存路径信息到gen_path.yaml
-    parser.save_paths_to_yaml(endpoints, module="GEN_MD") 
+    parser.save_paths_to_yaml(endpoints, module="SCM_SLS") 

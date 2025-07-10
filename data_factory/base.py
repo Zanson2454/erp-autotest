@@ -18,7 +18,7 @@ class SQLInitializer:
     仅做通用数据加载，不做结构化、ID提取、分类等业务处理。
     """
     @classmethod
-    def init_sql(cls, sql_config: dict, db_config: Dict[str, Any], cache_key: str = None) -> Dict[str, Any]:
+    def init_sql(cls, sql_config: dict, db_config: Dict[str, Any], cache_key: str = "init_cache") -> Dict[str, Any]:
         """
         初始化SQL数据，递归遍历yaml，遇到sql字段就执行，最终返回结构与yaml一致。
         :param sql_config: SQL配置（已加载的dict）
@@ -136,7 +136,10 @@ class DataFactory:
             sql_config_full = YamlUtil.get_project_config(project, "base_init_sql.yaml")
             sql_config = sql_config_full.get("base_info", {})  # 只取 base_info 层
             Loggers.info(f"加载SQL配置keys: {list(sql_config.keys())}")
-            db_config = cls._env_config["database"][db_config_name]
+            if cls._env_config: 
+                db_config = cls._env_config["database"][db_config_name]
+            else:
+                db_config = {}
             data = SQLInitializer.init_sql(sql_config, db_config, cache_key=cache_key)
             CacheUtil.set(cache_key, data)
             Loggers.info(f"写入缓存成功，路径为: {CacheUtil._cache_dir / f'{cache_key}.json'}")
@@ -180,7 +183,10 @@ class DataFactory:
         sql_config = YamlUtil.read_yaml(sql_config_path)
         # 2. 获取数据库配置
         env_config = cls.get_env_config()
-        db_config = env_config["database"][db_config_name]
+        if env_config:
+            db_config = env_config["database"][db_config_name]
+        else:
+            db_config = {}
         # 3. 初始化缓存目录
         CacheUtil.init(cache_dir)
         # 4. 初始化SQL并缓存
