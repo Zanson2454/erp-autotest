@@ -25,11 +25,16 @@ class TestAdmOrgManagement(GenMdBaseTest):
         cls.addrId = cls.init_data["addr_info"][0]["id"] if cls.init_data.get("addr_info") else None
         
         # 获取md_cache_data中的第一个数据
-        cls.orgBusinessTypeIds = cls.md_cache_data["org_info"]["org_biz_type_cf"] if cls.md_cache_data.get("org_info") else None
-        cls.logger.info(f"orgBusinessTypeIds: {cls.orgBusinessTypeIds}")
-        for org_biz_type in cls.orgBusinessTypeIds:
-            if org_biz_type["code"] == "ADM_ORG":  # 行政组织类型
-                cls.admOrgTypeId = org_biz_type["id"]
+        if cls.md_cache_data:
+            cls.orgBusinessTypeIds = cls.md_cache_data["org_info"]["org_biz_type_cf"] if cls.md_cache_data.get("org_info") else None
+            cls.logger.info(f"orgBusinessTypeIds: {cls.orgBusinessTypeIds}")
+            if cls.orgBusinessTypeIds:
+                for org_biz_type in cls.orgBusinessTypeIds:
+                    if org_biz_type["code"] == "ADM_ORG":  # 行政组织类型
+                        cls.admOrgTypeId = org_biz_type["id"]
+            else:
+                cls.admOrgTypeId = None
+                cls.logger.info("orgBusinessTypeIds为空")
     @classmethod
     def teardown_class(cls):
         try:

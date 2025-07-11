@@ -10,9 +10,10 @@ project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
 
 from typing import Any
-from testcases.comm.base_test import BaseTest
+from testcases.comm.base_test import BaseTest,LoginService
 from data_factory.base import DataFactory
 from utils.cache_util import CacheUtil
+from utils.request_util import HttpUtil
 
 class GenMdBaseTest(BaseTest):
     """通用基础模块的基础测试类，负责加载通用配置和提供API访问方法"""
@@ -24,35 +25,73 @@ class GenMdBaseTest(BaseTest):
     def setup_class(cls):
         """
         测试类初始化 - 加载通用配置
-        完成以下工作:
         1. 调用父类初始化方法 (包括登录、数据库连接等)
-        2. 初始化通用配置文件路径
-        3. 加载API路径和参数配置
+        2. 多门户多用户登录，获取 session
+        3. 初始化通用配置文件路径
+        4. 加载API路径和参数配置
+        5. 初始化 http 工具，自动带上门户请求头
         """
-        # 调用父类初始化方法 (完成登录、获取用户信息、建立数据库连接等)
         super().setup_class()
-        
+
+        # 门户配置
+        portal_keys = {
+            "admin": "TERP_PORTAL",
+            "cust": "TERP_CUST_PC"
+        }
+        tenant_key = "terp"
+        login_service = LoginService(cls.env_config)
+
+        # 登录两个门户，分别保存 session/user_info/headers/url
+        cls.sessions = {}
+        cls.user_infos = {}
+        cls.http_clients = {}
+        cls.portal_urls = {}
+        cls.portal_headers = {}
+
+        for role, portal_key in portal_keys.items():
+            result = login_service.login(portal_key=portal_key, tenant_key=tenant_key)
+            if result.status != result.status.SUCCESS:
+                raise RuntimeError(f"{role} 登录失败: {result.error_message}")
+            portal_url = result.portal_url or ""
+            if not isinstance(portal_url, str) or not portal_url:
+                raise ValueError(f"{role} portal_url 不能为空且必须为字符串")
+            cls.sessions[role] = result.session
+            cls.user_infos[role] = result.user_info
+            cls.portal_urls[role] = portal_url
+            cls.portal_headers[role] = result.portal_headers
+            cls.http_clients[role] = HttpUtil(
+                url=portal_url,
+                session=result.session,
+                headers=result.portal_headers
+            )
+
+        # 兼容原有写法
+        cls.http = cls.http_clients["admin"]
+        cls.http_cust = cls.http_clients["cust"]
+        cls.admin_session = cls.sessions["admin"]
+        cls.cust_session = cls.sessions["cust"]
+        cls.admin_user_info = cls.user_infos["admin"]
+        cls.cust_user_info = cls.user_infos["cust"]
+
         # 初始化配置文件路径
+        project_root = Path(__file__).resolve().parent.parent.parent
         cls.md_api_path = Path(project_root) / "testdata" / "gen_md" / "md_api_path.yaml"
         cls.md_api_params = Path(project_root) / "testdata" / "gen_md" / "md_api_params.yaml"
-        
         # 加载API路径配置和参数配置
         cls.apis = cls.yaml_util.read_yaml(cls.md_api_path).get("apis", {})
         cls.api_params = cls.yaml_util.read_yaml(cls.md_api_params).get("api_params", {})
-        
-        
         # 加载缓存数据
         DataFactory.init_sql_cache(
-        sql_config_path=str(project_root / "config" / "erp" / "md_init_sql.yaml"), # 主数据依赖的初始化sql 存放路径
-        db_config_name="erp_db", # 数据库配置名称
-        cache_key="md_init_cache", # 缓存key
-        cache_dir="testdata/cache" # 缓存目录
+            sql_config_path=str(project_root / "config" / "erp" / "md_init_sql.yaml"), # 主数据依赖的初始化sql 存放路径
+            db_config_name="erp_db", # 数据库配置名称
+            cache_key="md_init_cache", # 缓存key
+            cache_dir="testdata/cache" # 缓存目录
         )
         cls.md_cache_data = CacheUtil.get('md_init_cache')
-        
         cls.path_params = {"tmodule":"GEN_MD"}
         cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
         cls.user_id = cls.init_data["user_info"]['user_info']["id"]
+
     
     def get_api_path(self, api_key):
         """
@@ -116,3 +155,10 @@ class GenMdBaseTest(BaseTest):
         for key, value in param_dict.items():
             params['params']['request'][key] = value
         return params
+
+
+
+if __name__ == "__main__":
+    GenMdBaseTest.setup_class()
+    print(GenMdBaseTest.admin_user_info)
+    print(GenMdBaseTest.cust_user_info)

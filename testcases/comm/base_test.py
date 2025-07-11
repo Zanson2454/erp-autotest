@@ -1,5 +1,6 @@
 # 改进后的登录管理
 
+from math import log
 import sys
 import os
 import time
@@ -40,6 +41,10 @@ class LoginResult:
     user_info: Optional[Dict[str, Any]] = None
     session: Optional[requests.Session] = None
     error_message: Optional[str] = None
+    portal_url: Optional[str] = None
+    portal_headers: Optional[Dict[str, str]] = None
+    iam_url: Optional[str] = None
+    iam_headers: Optional[Dict[str, str]] = None
 
 class AuthenticationError(Exception):
     """认证相关异常"""
@@ -60,33 +65,7 @@ class SessionManager:
         """获取会话对象"""
         return self.session
 
-class HeaderBuilder:
-    """请求头构建器"""
     
-    @staticmethod
-    def get_base_headers() -> Dict[str, str]:
-        """获取基础请求头"""
-        return {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'User-Agent': MockData().get_mock_user_agent(),
-            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
-            'Cache-Control': 'no-cache',
-            'Pragma': 'no-cache',
-            'Sec-Fetch-Site': 'same-origin',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Dest': 'empty'
-        }
-    
-    @staticmethod
-    def build_headers_with_origin(base_headers: Dict[str, str], 
-                                 origin: str, referer: str) -> Dict[str, str]:
-        """构建带Origin的请求头"""
-        return {
-            **base_headers,
-            'Origin': origin,
-            'Referer': referer
-        }
 
 class LoginService:
     """登录服务 - 专门负责登录逻辑"""
@@ -98,31 +77,49 @@ class LoginService:
     
     def __init__(self, config: Dict[str, Any]):
         self.config = config
-        self.session_manager = SessionManager(HeaderBuilder.get_base_headers())
-        self._validate_config()
-    
-    def _validate_config(self):
-        """验证配置完整性"""
-        required_keys = ["iam_url", "portal_url", "tenants"]
-        for key in required_keys:
-            if not self.config.get(key):
-                raise ValueError(f"配置缺少必要字段: {key}")
-    
-    def login(self) -> LoginResult:
+        self.session_manager = SessionManager(self.build_headers())
+        
+    @staticmethod
+    def build_headers(origin: Optional[str] = None, referer: Optional[str] = None) -> Dict[str, str]:
+        """获取基础请求头"""
+        headers = {
+            'Content-Type': 'application/json',
+            'User-Agent': MockData().get_mock_user_agent(),
+            'Referer': referer,
+            'Origin': origin
+        }
+        return headers
+    def login(self, portal_key, tenant_key="terp") -> LoginResult:
         """执行登录"""
         try:
-            # 1. 准备登录数据
-            login_data = self._prepare_login_data()
-            
-            # 2. 构建请求头
-            iam_headers = HeaderBuilder.build_headers_with_origin(
-                HeaderBuilder.get_base_headers(),
-                self.config["iam_url"],
-                self.config["iam_referer"]
+            # 1. 准备登录数据,从配置中读取
+            auth_config = self.config.get("portal_config", {}).get(tenant_key, {}).get(portal_key, {})
+            login_url = f"{auth_config.get('iam_url', '').rstrip('/')}{self.LOGIN_ENDPOINT}"
+            login_data = {
+            "account": auth_config.get("username", ""),
+            "password": auth_config.get("password", ""),
+            "iam_url": auth_config.get("iam_url", ""),
+            "iam_referer": auth_config.get("iam_referer", ""),
+            "portal_url": auth_config.get("portal_url", ""),
+            "portal_referer": auth_config.get("portal_referer", ""),
+            "description": auth_config.get("description", "")
+        }
+            # 2. 执行登录请求
+            iam_headers = self.build_headers(
+                origin=auth_config.get("iam_url", ""),
+                referer=auth_config.get("iam_referer", "")
             )
-            
-            # 3. 执行登录请求
-            login_response = self._execute_login_request(login_data, iam_headers)
+            Loggers.info(f"登录URL: {login_url}")
+            Loggers.info(f"登录账号: {login_data['account']}")
+            Loggers.info(f"登录请求头: {iam_headers}")
+            Loggers.info(f"登录数据: {login_data}")
+            self.session_manager.update_headers(iam_headers)
+            login_response = self.session_manager.get_session().post(
+                login_url, 
+                json=login_data, 
+                headers=iam_headers
+            )
+    
             
             # 4. 验证登录结果
             if not self._is_login_successful(login_response):
@@ -132,7 +129,7 @@ class LoginService:
                 )
             
             # 5. 获取用户信息
-            user_info = self._get_user_info()
+            user_info = self._get_user_info(portal_key, tenant_key)
             if not user_info:
                 return LoginResult(
                     status=LoginStatus.FAILED,
@@ -142,9 +139,12 @@ class LoginService:
             return LoginResult(
                 status=LoginStatus.SUCCESS,
                 user_info=user_info,
+                portal_url=auth_config.get("portal_url", ""),
+                iam_url=auth_config.get("iam_url", ""),
+                portal_headers=self.build_headers(auth_config.get("portal_url", ""),auth_config.get("portal_referer", "")),
+                iam_headers=self.build_headers(auth_config.get("iam_url", ""),auth_config.get("iam_referer", "")),
                 session=self.session_manager.get_session()
             )
-            
         except Exception as e:
             Loggers.error(f"登录过程异常: {str(e)}")
             return LoginResult(
@@ -152,44 +152,28 @@ class LoginService:
                 error_message=str(e)
             )
     
-    def _prepare_login_data(self) -> Dict[str, str]:
-        """准备登录数据"""
-        auth_config = self.config.get("tenants", {}).get("terp", {}).get("auth", {})
-        return {
-            "account": auth_config.get("username", ""),
-            "password": auth_config.get("password", "")
-        }
-    
-    def _execute_login_request(self, login_data: Dict[str, str], 
-                              headers: Dict[str, str]) -> requests.Response:
-        """执行登录请求"""
-        login_url = f"{self.config['iam_url']}{self.LOGIN_ENDPOINT}"
-        self.session_manager.update_headers(headers)
-        
-        Loggers.info(f"登录URL: {login_url}")
-        Loggers.info(f"登录账号: {login_data['account']}")
-        
-        return self.session_manager.get_session().post(
-            login_url, 
-            json=login_data, 
-            headers=headers
-        )
+
     
     def _is_login_successful(self, response: requests.Response) -> bool:
         """判断登录是否成功"""
         return response.status_code == self.LOGIN_SUCCESS_CODE
     
-    def _get_user_info(self) -> Optional[Dict[str, Any]]:
+    def _get_user_info(self, portal_key, tenant_key="terp") -> Optional[Dict[str, Any]]:
         """获取用户信息"""
-        url = f"{self.config['portal_url']}{self.USER_INFO_ENDPOINT}"
-        
-        portal_headers = HeaderBuilder.build_headers_with_origin(
-            HeaderBuilder.get_base_headers(),
-            self.config["portal_url"],
-            self.config["portal_referer"]
-        )
-        
+        portal_config = self.config.get("portal_config", {}).get(tenant_key, {}).get(portal_key, {})
+        portal_url = portal_config.get("portal_url", "")
+        portal_referer = portal_config.get("portal_referer", "")
+        Loggers.info(f"portal_config: {portal_config}")
+        Loggers.info(f"portal_referer: {portal_referer}")
+        if not portal_url:
+            Loggers.error("portal_url 配置缺失，请检查配置文件！")
+            return None
+        portal_headers = self.build_headers(portal_url, portal_referer) 
+        url = f"{portal_url}{self.USER_INFO_ENDPOINT}"
+        Loggers.info(f"获取用户信息URL: {url}")
+        Loggers.info(f"获取用户信息请求头: {portal_headers}")
         self.session_manager.update_headers(portal_headers)
+        
         
         try:
             response = self.session_manager.get_session().get(url)
@@ -229,7 +213,7 @@ class BaseTestInitializer:
     def initialize_authentication(self, env_config: Dict[str, Any]) -> LoginResult:
         """初始化认证"""
         login_service = LoginService(env_config)
-        login_result = login_service.login()
+        login_result = login_service.login(portal_key="TERP_PORTAL",tenant_key="terp")
         
         if login_result.status != LoginStatus.SUCCESS:
             raise AuthenticationError(f"登录失败: {login_result.error_message}")
@@ -281,7 +265,6 @@ class BaseTest:
             login_result = initializer.initialize_authentication(cls.env_config)
             cls.user_info = login_result.user_info # 获取用户信息
             cls.session = login_result.session # 获取会话
-            cls.base_headers = HeaderBuilder.get_base_headers() # 获取基础请求头
             
             # 数据库初始化
             cls.db = initializer.initialize_database(cls.env_config) # 获取数据库连接
@@ -297,15 +280,8 @@ class BaseTest:
             for name, util in utilities.items(): # 设置工具类
                 setattr(cls, name, util) # 设置工具类
             
-            # HTTP工具初始化
-            portal_url = cls.env_config.get("portal_url")
-            if not portal_url:
-                raise RuntimeError("配置中缺少portal_url")
-            cls.http = HttpUtil(    
-                url=portal_url, # 获取portal_url
-                session=cls.session, # 获取会话
-                headers=cls.base_headers # 获取基础请求头
-            )
+            
+      
             
             # 更新初始化数据
             cls.init_data["user_info"] = {"user_info": cls.user_info}
@@ -389,9 +365,9 @@ if __name__ == "__main__":
     BaseTest.setup_class()
     print(BaseTest.env_config)
     print(BaseTest.init_data)
-    if BaseTest.user_info:
-        print(BaseTest.user_info['nickname'])
-    print(BaseTest.session)
-    print(BaseTest.base_headers)
-    print(BaseTest.db)
-    print(BaseTest.http)
+    # if BaseTest.user_info:
+    #     print(BaseTest.user_info['nickname'])
+   
+   
+    login_result = LoginService(BaseTest.env_config).login(portal_key="TERP_CUST_PC",tenant_key="terp")
+    print(login_result)
