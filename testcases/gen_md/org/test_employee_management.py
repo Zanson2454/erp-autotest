@@ -25,9 +25,10 @@ class TestEmployeeManagement(GenMdBaseTest):
         cls.employee_id = None
         
         # 依赖组织
-        cls.pur_org_id = cls.md_cache_data.get("org_info",{}).get("pur_org_info",[])[0].get("id",None)
-        cls.com_org_id = cls.md_cache_data.get("org_info",{}).get("com_org_info",[])[0].get("id",None)
-        cls.identityId = cls.md_cache_data.get("org_info",{}).get("org_identity_cf",[])[0].get("id",None)
+        if cls.md_cache_data:
+            cls.pur_org_id = cls.md_cache_data.get("org_info",{}).get("pur_org_info",[])[0].get("id",None)
+            cls.com_org_id = cls.md_cache_data.get("org_info",{}).get("com_org_info",[])[0].get("id",None)
+            cls.identityId = cls.md_cache_data.get("org_info",{}).get("org_identity_cf",[])[0].get("id",None)
     @classmethod
     def teardown_class(cls):
         """
