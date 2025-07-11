@@ -1,8 +1,6 @@
 import allure
 import pytest
-from pathlib import Path
 from testcases.gen_md import GenMdBaseTest
-from utils.mock_util import MockData
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
@@ -16,8 +14,7 @@ class TestEmployeeManagement(GenMdBaseTest):
     def setup_class(cls):
         super().setup_class()
         
-        
-
+    
         # 用于存储创建员工时的实际数据，供查询测试用例使用
         cls.mobile = None
         cls.email = None

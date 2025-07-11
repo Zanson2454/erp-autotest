@@ -265,6 +265,11 @@ class BaseTest:
             login_result = initializer.initialize_authentication(cls.env_config)
             cls.user_info = login_result.user_info # 获取用户信息
             cls.session = login_result.session # 获取会话
+            cls.http = HttpUtil(
+                url=login_result.portal_url,
+                session=login_result.session,
+                headers=login_result.portal_headers
+            )
             
             # 数据库初始化
             cls.db = initializer.initialize_database(cls.env_config) # 获取数据库连接
@@ -365,9 +370,9 @@ if __name__ == "__main__":
     BaseTest.setup_class()
     print(BaseTest.env_config)
     print(BaseTest.init_data)
-    # if BaseTest.user_info:
-    #     print(BaseTest.user_info['nickname'])
+    if BaseTest.user_info:
+        print(BaseTest.user_info['nickname'])
    
    
-    login_result = LoginService(BaseTest.env_config).login(portal_key="TERP_CUST_PC",tenant_key="terp")
-    print(login_result)
+    # login_result = LoginService(BaseTest.env_config).login(portal_key="TERP_CUST_PC",tenant_key="terp")
+    # print(login_result)

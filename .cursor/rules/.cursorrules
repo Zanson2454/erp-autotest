@@ -368,5 +368,46 @@ for table in tables:
 ```
 
 ---
+```python
+ # 门户配置
+portal_keys = {
+    "admin": "TERP_PORTAL",
+    "cust": "TERP_CUST_PC"
+}
+tenant_key = "terp"
+login_service = LoginService(cls.env_config)
 
-**是否需要我帮你自动修正所有相关用例的 teardown_class？** 
+# 登录两个门户，分别保存 session/user_info/headers/url
+cls.sessions = {}
+cls.user_infos = {}
+cls.http_clients = {}
+cls.portal_urls = {}
+cls.portal_headers = {}
+
+for role, portal_key in portal_keys.items():
+    result = login_service.login(portal_key=portal_key, tenant_key=tenant_key)
+    if result.status != result.status.SUCCESS:
+        raise RuntimeError(f"{role} 登录失败: {result.error_message}")
+    portal_url = result.portal_url or ""
+    if not isinstance(portal_url, str) or not portal_url:
+        raise ValueError(f"{role} portal_url 不能为空且必须为字符串")
+    cls.sessions[role] = result.session
+    cls.user_infos[role] = result.user_info
+    cls.portal_urls[role] = portal_url
+    cls.portal_headers[role] = result.portal_headers
+    cls.http_clients[role] = HttpUtil(
+        url=portal_url,
+        session=result.session,
+        headers=result.portal_headers
+    )
+
+# 兼容原有写法
+cls.http = cls.http_clients["admin"]
+cls.http_cust = cls.http_clients["cust"]
+cls.admin_session = cls.sessions["admin"]
+cls.cust_session = cls.sessions["cust"]
+cls.admin_user_info = cls.user_infos["admin"]
+cls.cust_user_info = cls.user_infos["cust"]
+```
+
+
