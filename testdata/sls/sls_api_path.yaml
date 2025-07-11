@@ -1,5 +1,5 @@
 version: '1.0'
-total_apis: 233
+total_apis: 239
 apis:
   SLS-销售-取消提交服务:
     path: /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_CANNEL_COMMIT_EVENT_SERVICE
@@ -367,6 +367,9 @@ apis:
   分页查询销售订单行:
     path: /api/trantor/service/engine/execute/SCM_SLS$PAGING_SO_ITEMS
     method: POST
+  销售收入分析定时任务:
+    path: /api/trantor/service/engine/execute/SCM_SLS$sales_income_analysis_scheduled_task
+    method: POST
   SLS-销售订单-审批拒绝服务:
     path: /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_APPROVAL_REFUSE_ACTION_SERVICE
     method: POST
@@ -448,6 +451,9 @@ apis:
   销售渠道标准导出服务:
     path: /api/trantor/service/engine/execute/SCM_SLS$SLS_DC_MD_GEI_EXPORT_SERVICE
     method: POST
+  SLS-AI工具-查询订单列表:
+    path: /api/trantor/service/engine/execute/SCM_SLS$sls_tool_so_query_service
+    method: POST
   SLS-销售渠道-启用:
     path: /api/trantor/service/engine/execute/SCM_SLS$sls_dc_enabled_service
     method: POST
@@ -508,6 +514,9 @@ apis:
   退货订单抬头表标准导出服务:
     path: /api/trantor/service/engine/execute/SCM_SLS$SLS_RO_HEAD_TR_GEI_EXPORT_SERVICE
     method: POST
+  业务待办助手数据统计服务:
+    path: /api/trantor/service/engine/execute/SCM_SLS$business_todo_assistant_DATA_STATISTIC_SERVICE
+    method: POST
   根据客户查询默认地址:
     path: /api/trantor/service/engine/execute/SCM_SLS$ZDY_QueryDefaultAddrByCustId
     method: POST
@@ -565,6 +574,9 @@ apis:
   外部销售订单创建:
     path: /api/trantor/service/engine/execute/SCM_SLS$external_sales_order_creation
     method: POST
+  销售主管数据统计服务:
+    path: /api/trantor/service/engine/execute/SCM_SLS$agent_sales_master_DATA_STATISTIC_SERVICE
+    method: POST
   销售订单批量删除服务:
     path: /api/trantor/service/engine/execute/SCM_SLS$sales_order_batch_delete_service
     method: POST
@@ -616,11 +628,17 @@ apis:
   订单行项目类型定义表标准导入服务:
     path: /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_ITEM_TYPE_CF_GEI_IMPORT_SERVICE
     method: POST
+  SLS-AI工具-发货计划行查询服务:
+    path: /api/trantor/service/engine/execute/SCM_SLS$sls_tools_schl_query_service
+    method: POST
   SLS-订单项目行分配-详情服务:
     path: /api/trantor/service/engine/execute/SCM_SLS$sls_so_detm_detail_service
     method: POST
   寻仓规则保存:
     path: /api/trantor/service/engine/execute/SCM_SLS$WH_FIND_RULE_UPDATE_SERVICE
+    method: POST
+  计算服务:
+    path: /api/trantor/service/engine/execute/SCM_SLS$calculator_service
     method: POST
   查询全部的因子库和函数因子库:
     path: /api/trantor/service/engine/execute/SCM_SLS$RULE_ENGINE_QUERY_ALL_FACTOR_ACTION_EVENT

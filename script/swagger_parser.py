@@ -324,7 +324,7 @@ class SwaggerParser:
                 'total_apis': len(api_dict),
                 'apis': api_dict
             }
-            if output_path is None:
+            if not output_path:  # 这里改为 not output_path
                 gen_path_output_file = Path(__file__).parent / f"{prefix}_api_path.yaml"
             else:
                 gen_path_output_file = Path(output_path)
