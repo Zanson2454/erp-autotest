@@ -33,7 +33,7 @@ class GenMdBaseTest(BaseTest):
         """
         super().setup_class()
 
-        # 门户配置
+        # 登录两个门户，分别保存 session/user_info 并初始化 http 工具
         portal_keys = {
             "admin": "TERP_PORTAL",
             "cust": "TERP_CUST_PC"
@@ -41,37 +41,30 @@ class GenMdBaseTest(BaseTest):
         tenant_key = "terp"
         login_service = LoginService(cls.env_config)
 
-        # 登录两个门户，分别保存 session/user_info/headers/url
-        cls.sessions = {}
-        cls.user_infos = {}
-        cls.http_clients = {}
-        cls.portal_urls = {}
-        cls.portal_headers = {}
+        # 登录 admin
+        admin_result = login_service.login(portal_key=portal_keys["admin"], tenant_key=tenant_key)
+        if admin_result.status != admin_result.status.SUCCESS:
+            raise RuntimeError(f"admin 登录失败: {admin_result.error_message}")
+        cls.admin_session = admin_result.session
+        cls.admin_user_info = admin_result.user_info
+        cls.http = HttpUtil(
+            url=admin_result.portal_url,
+            session=admin_result.session,
+            headers=admin_result.portal_headers
+        )
 
-        for role, portal_key in portal_keys.items():
-            result = login_service.login(portal_key=portal_key, tenant_key=tenant_key)
-            if result.status != result.status.SUCCESS:
-                raise RuntimeError(f"{role} 登录失败: {result.error_message}")
-            portal_url = result.portal_url or ""
-            if not isinstance(portal_url, str) or not portal_url:
-                raise ValueError(f"{role} portal_url 不能为空且必须为字符串")
-            cls.sessions[role] = result.session
-            cls.user_infos[role] = result.user_info
-            cls.portal_urls[role] = portal_url
-            cls.portal_headers[role] = result.portal_headers
-            cls.http_clients[role] = HttpUtil(
-                url=portal_url,
-                session=result.session,
-                headers=result.portal_headers
-            )
+        # 登录 cust
+        cust_result = login_service.login(portal_key=portal_keys["cust"], tenant_key=tenant_key)
+        if cust_result.status != cust_result.status.SUCCESS:
+            raise RuntimeError(f"cust 登录失败: {cust_result.error_message}")
+        cls.cust_session = cust_result.session
+        cls.cust_user_info = cust_result.user_info
+        cls.http_cust = HttpUtil(
+            url=cust_result.portal_url,
+            session=cust_result.session,
+            headers=cust_result.portal_headers
+        )
 
-        # 兼容原有写法
-        cls.http = cls.http_clients["admin"]
-        cls.http_cust = cls.http_clients["cust"]
-        cls.admin_session = cls.sessions["admin"]
-        cls.cust_session = cls.sessions["cust"]
-        cls.admin_user_info = cls.user_infos["admin"]
-        cls.cust_user_info = cls.user_infos["cust"]
 
         # 初始化配置文件路径
         project_root = Path(__file__).resolve().parent.parent.parent
