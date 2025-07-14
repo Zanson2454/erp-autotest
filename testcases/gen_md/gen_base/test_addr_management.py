@@ -178,6 +178,7 @@ class TestAddrManagement(GenMdBaseTest):
         order=5,
         tags=["地址库", "分页数据", "GEN_ADDR_TYPE_CF_PAGING_DATA_SERVICE"]
     )
+    @pytest.mark.skip(reason="地址库分页数据服务接口未开发")
     def test_addr_paging_data(self):
         """地址库分页数据服务用例 - GEN_ADDR_TYPE_CF_PAGING_DATA_SERVICE"""
         try:

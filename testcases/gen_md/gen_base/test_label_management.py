@@ -2,7 +2,6 @@ import allure
 import pytest
 from typing import Any
 from testcases.gen_md import GenMdBaseTest
-from utils.mock_util import MockData
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
@@ -18,7 +17,6 @@ class TestLabelManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
-        cls.mock_data = MockData()
         # 数据存储
         cls.label_id = None
         cls.label_code = None
@@ -51,7 +49,7 @@ class TestLabelManagement(GenMdBaseTest):
     def test_save_label(self, usageType):
         """新增标签用例 - GEN_LABEL_MD_SAVE_ACTION_SERVICE"""
         try:
-            label_name = f"测试标签_{self.mock_data.get_timestamp()}"
+            label_name = f"测试标签_{self.mock_util.get_timestamp()}"
 
             api_path = self.get_api_path("GEN-标签表-保存服务")
             params, url = self.get_api_params(api_path)
@@ -269,8 +267,8 @@ class TestLabelManagement(GenMdBaseTest):
             # 构建导入数据
             import_data = [
                 {
-                    "code": self.mock_data.generate_unique_code(tag="IMPORT_LABEL"),
-                    "name": f"导入测试标签_{self.mock_data.get_timestamp()}",
+                    "code": self.mock_util.generate_unique_code(tag="IMPORT_LABEL"),
+                    "name": f"导入测试标签_{self.mock_util.get_timestamp()}",
                     "color": "#4CAF50",
                     "description": "导入的标签描述"
                 }
@@ -350,7 +348,7 @@ class TestLabelManagement(GenMdBaseTest):
             )
             set_dict = {
                 "fileKey": "test_label_import_file.xlsx",
-                "taskName": f"标签表导入任务_{self.mock_data.get_timestamp()}",
+                "taskName": f"标签表导入任务_{self.mock_util.get_timestamp()}",
                 "templateId": 1
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
@@ -384,7 +382,7 @@ class TestLabelManagement(GenMdBaseTest):
                 params, ["taskName", "queryData"], ["params", "request"]
             )
             set_dict = {
-                "taskName": f"标签表导出任务_{self.mock_data.get_timestamp()}",
+                "taskName": f"标签表导出任务_{self.mock_util.get_timestamp()}",
                 "queryData": {
                     "fields": [
                         {"name": "code", "type": "TEXT"},

@@ -322,7 +322,7 @@ class TestCountryManagement(GenMdBaseTest):
             api_path = self.get_api_path("国家配置-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
 
-            params["params"] = {
+            params["params"] =  {
                 "taskName": f"国家管理-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
                 "multiSheetConfig": [
                     {
@@ -400,7 +400,6 @@ class TestCountryManagement(GenMdBaseTest):
                     "sceneKey": "GEN_MD$GEN_COUN_VIEW"
                 }
             }
-
 
             response = self.http.post(url, json=params)
             self.assert_util.assert_response_data(response)
