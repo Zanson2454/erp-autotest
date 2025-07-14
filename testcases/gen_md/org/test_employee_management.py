@@ -355,7 +355,8 @@ class TestEmployeeManagement(GenMdBaseTest):
             # 确保已经创建了员工
             if not TestEmployeeManagement.employee_id:
                 self.test_save_employee()
-
+            
+            
             # 调用保存员工组织关联关系接口
             api_path = self.get_api_path("ORG-组织-保存员工组织关联关系服务")
             params, url = self.get_api_params(api_path)
@@ -374,6 +375,16 @@ class TestEmployeeManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             self.logger.info(f"请求参数: {filtered_params}")
+
+            # 判断是否已存在员工关联数据
+            sql = f"select id from org_employee_org_link_cf where employee_id={TestEmployeeManagement.employee_id} and identity_id={self.identityId} and org_unit_id={self.pur_org_id}"
+            result = self.db.query(sql)
+            if  result:
+               self.db.delete(
+                table="org_employee_org_link_cf",
+                where=f"employee_id={TestEmployeeManagement.employee_id} and identity_id={self.identityId} and org_unit_id={self.pur_org_id}"
+               )
+
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_success(response)
@@ -425,13 +436,13 @@ class TestEmployeeManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             self.logger.info(f"请求参数: {filtered_params}")
 
-            response = self.http.post(url, json=filtered_params)
+            response = self.http.post(url, headers=self.admin_headers, json=filtered_params)
             self.assert_util.assert_response_success(response)
 
             # 验证返回的员工信息列表
             employee_list = response.get("data", {}).get("data", {}).get("data", [])
             self.assert_util.assert_by_operator(len(employee_list), ">", 0)
-            # self.assert_util.assert_by_operator(employee_list[0].get("id"), "=", TestEmployeeManagement.employee_id)
+    
            
             
 
@@ -490,3 +501,5 @@ class TestEmployeeManagement(GenMdBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
+        
+        

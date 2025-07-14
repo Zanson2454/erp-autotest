@@ -80,13 +80,14 @@ class LoginService:
         self.session_manager = SessionManager(self.build_headers())
         
     @staticmethod
-    def build_headers(origin: Optional[str] = None, referer: Optional[str] = None) -> Dict[str, str]:
+    def build_headers(origin: Optional[str] = None, referer: Optional[str] = None, cookie: Optional[str] = None) -> Dict[str, str]:
         """获取基础请求头"""
         headers = {
             'Content-Type': 'application/json',
             'User-Agent': MockData().get_mock_user_agent(),
             'Referer': referer,
-            'Origin': origin
+            'Origin': origin,
+            'Cookie': cookie
         }
         return headers
     def login(self, portal_key, tenant_key="terp") -> LoginResult:
@@ -119,6 +120,8 @@ class LoginService:
                 json=login_data, 
                 headers=iam_headers
             )
+            cookie=login_response.headers.get("Set-Cookie")
+           
     
             
             # 4. 验证登录结果
@@ -141,7 +144,7 @@ class LoginService:
                 user_info=user_info,
                 portal_url=auth_config.get("portal_url", ""),
                 iam_url=auth_config.get("iam_url", ""),
-                portal_headers=self.build_headers(auth_config.get("portal_url", ""),auth_config.get("portal_referer", "")),
+                portal_headers=self.build_headers(auth_config.get("portal_url", ""),auth_config.get("portal_referer", ""),cookie=cookie),
                 iam_headers=self.build_headers(auth_config.get("iam_url", ""),auth_config.get("iam_referer", "")),
                 session=self.session_manager.get_session()
             )

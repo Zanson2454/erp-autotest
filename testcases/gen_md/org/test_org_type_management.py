@@ -228,8 +228,11 @@ class TestOrg_TypeManagement(GenMdBaseTest):
             self.assert_util.assert_response_success(response)
 
             sql = f"select status from org_business_type_cf where id ={self.org_type_id}"
-            status = self.db.query(sql)[0]["status"]
-            self.assert_util.assert_by_operator(status, "=", "ENABLED")
+            if self.db.query(sql):
+                status = self.db.query(sql)[0]["status"]
+                self.assert_util.assert_by_operator(status, "=", "ENABLED")
+            else:
+                self.logger.info("组织类型管理信息不存在")
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")

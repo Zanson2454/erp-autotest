@@ -942,7 +942,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
             }
                         
             self.logger.info(f"请求参数: {export_params}")
-            response = self.http.post(url, json=export_params)
+            response = self.http.post(url, headers=self.admin_headers,json=export_params)
             self.assert_util.assert_response_success(response)
 
             a.json(export_params, "请求数据")

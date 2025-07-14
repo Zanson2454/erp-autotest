@@ -363,8 +363,9 @@ class TestOrg_RelationManagement(GenMdBaseTest):
             # 过滤和设置参数
             params = {
                 "serviceKey": "GEN_MD$ORG_RELATION_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
+                "teamId": 22,
                 "params": {
-                    "taskName": f"组织关联-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
+                    "taskName": "组织关联-章昂-20250714-导出",
                     "multiSheetConfig": [
                         {
                             "modelKey": "GEN_MD$org_relation_cf",
@@ -495,6 +496,8 @@ class TestOrg_RelationManagement(GenMdBaseTest):
                         }
                     ],
                     "queryData": {
+                        "appId": 0,
+                        "teamId": 22,
                         "containerKey": "GEN_MD$ORG_ORG_RELATION_VIEW-table-container-GEN_MD$org_relation_cf",
                         "viewKey": "GEN_MD$ORG_RELATION_VIEW:list",
                         "sceneKey": "GEN_MD$ORG_RELATION_VIEW",
@@ -564,6 +567,8 @@ class TestOrg_RelationManagement(GenMdBaseTest):
                     },
                     "processConfig": {
                         "processType": "TRANTOR",
+                        "appId": 0,
+                        "teamId": 22,
                         "model": "GEN_MD$org_relation_cf",
                         "modelName": "组织关联关系表",
                         "containerKey": "GEN_MD$ORG_ORG_RELATION_VIEW-table-container-GEN_MD$org_relation_cf",
@@ -573,7 +578,8 @@ class TestOrg_RelationManagement(GenMdBaseTest):
                 }
             }
             self.logger.info(f"请求参数: {params}")
-            response = self.http.post(url, json=params)
+            self.logger.info(f"请求头: {self.admin_headers}")
+            response = self.http.post(url, headers=self.admin_headers,json=params)
             self.assert_util.assert_response_success(response)
             
 

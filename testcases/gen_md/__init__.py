@@ -52,6 +52,7 @@ class GenMdBaseTest(BaseTest):
             session=admin_result.session,
             headers=admin_result.portal_headers
         )
+        cls.admin_headers = admin_result.portal_headers
 
         # 登录 cust
         cust_result = login_service.login(portal_key=portal_keys["cust"], tenant_key=tenant_key)
