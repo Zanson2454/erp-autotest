@@ -28,12 +28,12 @@ class TestMat_ValueManagement(GenMdBaseTest):
     @classmethod
     def teardown_class(cls):
         """
-        测试类结束后执行清理
-        清理所有测试过程中创建的物料价值管理数据
+        测试类结束后执行数据初始化
+        如果不存在物料价值管理数据则插入默认数据
         """
         try:
-            # 使用SQL删除测试数据
-            sql = f"select id from gen_inv_org_mat_type_link_cf where mat_type_id = {cls.mat_type_id} and inv_org_id = {cls.inv_org_id} limit 1"
+            # 检查是否存在数据
+            sql = f"select id from gen_inv_org_mat_type_link_cf where mat_type_id = {cls.mat_type_id} and inv_org_id = {cls.inv_org_id} and deleted=0 limit 1"
             result = cls.db.query(sql)
             mat_value_id = result[0].get("id") if result else None
             if not mat_value_id:
@@ -484,6 +484,7 @@ class TestMat_ValueManagement(GenMdBaseTest):
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_success(response)
+        
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
