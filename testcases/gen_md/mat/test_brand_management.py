@@ -460,7 +460,7 @@ class TestBrandManagement(GenMdBaseTest):
             }
 
 
-            response = self.http.post(url, json=params)
+            response = self.http.post(url, headers=self.admin_headers, json=params)
             self.assert_util.assert_response_data(response)
 
             a.json(params, "请求数据")

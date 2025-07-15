@@ -388,7 +388,7 @@ class TestMatCateManagement(GenMdBaseTest):
             set_dict = {"parentId": self.cateId}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response = self.http.post(url, headers=self.admin_headers, json=filtered_params)
             self.assert_util.assert_response_data(response)
 
             a.json(filtered_params, "请求数据")

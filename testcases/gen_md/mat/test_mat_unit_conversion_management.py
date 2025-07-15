@@ -387,7 +387,7 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
                 }
             }
 
-            response = self.http.post(url, json=params)
+            response = self.http.post(url, headers=self.admin_headers, json=params)
             self.assert_util.assert_response_success(response)
 
             a.json(params, "请求数据")

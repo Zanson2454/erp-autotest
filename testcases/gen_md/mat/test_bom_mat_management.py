@@ -47,7 +47,6 @@ class TestBomManagement(GenMdBaseTest):
         smoke=True,
         tags=["BOM管理", "BOM头", "新增"]
     )
-    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     def test_save_bom_head(self):
         """
         新增BOM头用例
@@ -137,7 +136,6 @@ class TestBomManagement(GenMdBaseTest):
         order=3,
         tags=["BOM管理", "BOM头", "详情"]
     )
-    @pytest.mark.skip(reason="业务未引用，暂时跳过")
     def test_query_bom_head_detail(self):
         """
         查询BOM头详情用例
@@ -1028,7 +1026,7 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response = self.http.post(url, headers=self.admin_headers, json=filtered_params)
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -1402,7 +1400,7 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response = self.http.post(url, headers=self.admin_headers, json=filtered_params)
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -1568,7 +1566,7 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response = self.http.post(url, headers=self.admin_headers, json=filtered_params)
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")

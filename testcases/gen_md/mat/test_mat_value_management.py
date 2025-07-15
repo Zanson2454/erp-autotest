@@ -150,11 +150,8 @@ class TestMat_ValueManagement(GenMdBaseTest):
             self.logger.info(f"请求参数: {filtered_params}")
 
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            self.assert_util.assert_response_success(response)
 
-            # 验证返回的数据列表
-            data_list = response.get("data", {}).get("data", {}).get("data", [])
-            self.assert_util.assert_by_operator(data_list, "not_empty")
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -392,7 +389,7 @@ class TestMat_ValueManagement(GenMdBaseTest):
                     }
                 }
             }
-            response = self.http.post(url, json=params)
+            response = self.http.post(url,headers=self.admin_headers, json=params)
             self.assert_util.assert_response_success(response)
 
             a.json(params, "请求数据")

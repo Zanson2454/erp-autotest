@@ -212,7 +212,7 @@ class TestMatTypeManagement(GenMdBaseTest):
             set_dict = {"id": self.mat_type_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response = self.http.post(url,  headers=self.admin_headers,json=filtered_params)
             self.assert_util.assert_response_data(response)
 
             a.json(filtered_params, "请求数据")
@@ -341,7 +341,7 @@ class TestMatTypeManagement(GenMdBaseTest):
                 }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response = self.http.post(url, headers=self.admin_headers, json=filtered_params)
             self.assert_util.assert_response_data(response)
 
             a.json(filtered_params, "请求数据")
@@ -452,62 +452,62 @@ class TestMatTypeManagement(GenMdBaseTest):
             api_path = self.get_api_path("物料类型-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
             params = {
-    "serviceKey": "GEN_MD$GEN_MAT_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
-    "params": {
-        "taskName": "物料类型-章昂-20250630-导出",
-        "multiSheetConfig": [
-            {
-                "modelKey": "GEN_MD$gen_mat_type_cf",
-                "modelName": "物料类型",
-                "sheetNo": 0,
-                "sheetName": "物料类型",
-                "headerConfigList": [
-                    {
-                        "name": "物料类型编码",
-                        "type": "TEXT",
-                        "field": "matTypeCode"
-                    },
-                    {
-                        "name": "物料类型名称",
-                        "type": "TEXT",
-                        "field": "matTypeName"
-                    }
-                ]
-            }
-        ],
-        "queryData": {
-            "containerKey": "GEN_MD$GEN_MAT_TYPE_VIEW-table-container-GEN_MD$gen_mat_type_cf",
-            "viewKey": "GEN_MD$GEN_MAT_TYPE_VIEW:list",
-            "sceneKey": "GEN_MD$GEN_MAT_TYPE_VIEW",
-            "params": {
-                "request": {
-                    "pageable": {
+                "serviceKey": "GEN_MD$GEN_MAT_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
+                "params": {
+                    "taskName": f"物料类型-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
+                    "multiSheetConfig": [
+                        {
+                            "modelKey": "GEN_MD$gen_mat_type_cf",
+                            "modelName": "物料类型",
+                            "sheetNo": 0,
+                            "sheetName": "物料类型",
+                            "headerConfigList": [
+                                {
+                                    "name": "物料类型编码",
+                                    "type": "TEXT",
+                                    "field": "matTypeCode"
+                                },
+                                {
+                                    "name": "物料类型名称",
+                                    "type": "TEXT",
+                                    "field": "matTypeName"
+                                }
+                            ]
+                        }
+                    ],
+                    "queryData": {
+                        "containerKey": "GEN_MD$GEN_MAT_TYPE_VIEW-table-container-GEN_MD$gen_mat_type_cf",
+                        "viewKey": "GEN_MD$GEN_MAT_TYPE_VIEW:list",
+                        "sceneKey": "GEN_MD$GEN_MAT_TYPE_VIEW",
+                        "params": {
+                            "request": {
+                                "pageable": {
 
-                    }
-                },
-                "selectFields": [
-                    {
-                        "field": "matTypeCode"
+                                }
+                            },
+                            "selectFields": [
+                                {
+                                    "field": "matTypeCode"
+                                },
+                                {
+                                    "field": "matTypeName"
+                                }
+                            ],
+                            "modelKey": "GEN_MD$gen_mat_type_cf"
+                        }
                     },
-                    {
-                        "field": "matTypeName"
+                    "processConfig": {
+                        "processType": "TRANTOR",
+                        "model": "GEN_MD$gen_mat_type_cf",
+                        "modelName": "物料类型",
+                        "containerKey": "GEN_MD$GEN_MAT_TYPE_VIEW-table-container-GEN_MD$gen_mat_type_cf",
+                        "viewKey": "GEN_MD$GEN_MAT_TYPE_VIEW:list",
+                        "sceneKey": "GEN_MD$GEN_MAT_TYPE_VIEW"
                     }
-                ],
-                "modelKey": "GEN_MD$gen_mat_type_cf"
+                }
             }
-        },
-        "processConfig": {
-            "processType": "TRANTOR",
-            "model": "GEN_MD$gen_mat_type_cf",
-            "modelName": "物料类型",
-            "containerKey": "GEN_MD$GEN_MAT_TYPE_VIEW-table-container-GEN_MD$gen_mat_type_cf",
-            "viewKey": "GEN_MD$GEN_MAT_TYPE_VIEW:list",
-            "sceneKey": "GEN_MD$GEN_MAT_TYPE_VIEW"
-        }
-    }
-}
 
-            response = self.http.post(url, json=params)
+            response = self.http.post(url, headers=self.admin_headers, json=params)
             self.assert_util.assert_response_success(response)
 
             a.json(params, "请求数据")

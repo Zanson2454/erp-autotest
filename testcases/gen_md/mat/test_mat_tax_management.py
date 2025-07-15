@@ -329,8 +329,8 @@ class TestMatTaxManagement(GenMdBaseTest):
                     }
                 }
             }
-
-            response = self.http.post(url, json=params)
+            self.logger.info(f"请求参数: {self.admin_headers}")
+            response = self.http.post(url, headers=self.admin_headers, json=params)
             self.assert_util.assert_response_success(response)
 
             a.json(params, "请求数据")

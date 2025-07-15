@@ -717,7 +717,7 @@ class TestStndMatManagement(GenMdBaseTest):
                         }
                  }
             }
-            response = self.http.post(url, json=params)
+            response = self.http.post(url,headers=self.admin_headers, json=params)
             self.assert_util.assert_response_success(response)
 
             a.json(params, "请求数据")
@@ -773,7 +773,7 @@ class TestStndMatManagement(GenMdBaseTest):
             }}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response = self.http.post(url, headers=self.admin_headers, json=filtered_params)
             self.assert_util.assert_response_data(response)
 
             a.json(filtered_params, "请求数据")
