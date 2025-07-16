@@ -23,7 +23,7 @@ class PrdConfigInitializer:
     
     def __init__(self):
         """初始化数据库连接"""
-        self.db = DBManager()
+        self.db = DBManager()  # 无参数调用，使用兼容模式
         self.logger = logger
         
     def ensure_configs_exist(self):

@@ -1,0 +1,558 @@
+version: '1.0'
+total_apis: 185
+apis:
+  INV-盘点单-审核完成:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_AUDIT_SUCCESS
+    method: POST
+  INV-盘点单-审核失败:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_AUDIT_FAIL
+    method: POST
+  INV-盘点单-审核撤回:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_AUDIT_ROLLBACK
+    method: POST
+  INV-盘点-盘点方案审核通过服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_PLAN_AUDIT_PASS_ACTION_SERVICE
+    method: POST
+  INV-仓储区--删除服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_AREA_DELETE_ACTION_SERVICE
+    method: POST
+  INV-仓储区-保存服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_AREA_SAVE_ACTION_SERVICE
+    method: POST
+  INV-作业类型-查询分页服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_BS_TYPE_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  作业类型定义表标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_BS_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  仓储区-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_AREA_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  INV-移动扩展类型-删除服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_EXT_TYPE_DELETE_ACTION_SERVICE
+    method: POST
+  INV-仓位-查询分页服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_BIN_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  正逆向标识定义表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_FB_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  正逆向标识定义表标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_FB_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  移动类型扩展类型定义表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_EXT_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  INV-移动凭证明细-详情服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_DOC_ITEM_DETAIL_ACTION_SERVICE
+    method: POST
+  INV-移动扩展类型-详情服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_EXT_TYPE_DETAIL_ACTION_SERVICE
+    method: POST
+  INV-特殊库存类型-特殊库存分类详情查询服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_SPC_STK_CLASS_DETAIL_ACTION_SERVICE
+    method: POST
+  移动类型扩展类型定义表标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_EXT_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  特殊库存标识定义表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_SPC_STK_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  INV-批次规则-根据单据类别ID查询对应的单据类型详情:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_QUERY_DOC_TYPE_DETAIL_BY_ID_SERVICE
+    method: POST
+  INV-批次规则-订单类型分页查询服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_RULE_ORDER_TYPE_PAGE_ACTION_SERVICE
+    method: POST
+  特殊库存标识定义表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_SPC_STK_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  仓库-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_WH_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  ABC分组方案-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ABC_GROUP_STRATEGY_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  INV-批次-查询建议物料的批次特征服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_QUERY_SUGGEST_BATCH_ACTION_SERVICE
+    method: POST
+  INV-批次-批次查询详情(后台)服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  库存类型定义表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_INV_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  移动类型定义表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  ABC分析结果-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ABC_GROUP_RESULT_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  INV-批次-批次库存类型转移服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_INV_TYPE_TRANS_ACTION_SERVICE
+    method: POST
+  INV-移动类型-查询详情服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_TYPE_DETAIL_ACTION_SERVICE
+    method: POST
+  INV-盘点计划盘点计划数据校验服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_STRATEGY_DATA_CHECK_ACTION_SERVICE
+    method: POST
+  INV-移动类型-保存服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_TYPE_SAVE_ACTION_SERVICE
+    method: POST
+  INV-仓储区-查询详情服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_AREA_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  INV-盘点策略-获取启用的ABC分组信息服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ABC_GROUP_STRATEGY_ITEM_PAGE_ACTION_SERVICE
+    method: POST
+  INV-批次-批次分页查询服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_PAGE_QUERY_ACTION_SERVICE
+    method: POST
+  移动凭证抬头表标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_DOC_HEAD_TR_GEI_EXPORT_SERVICE
+    method: POST
+  库存余额表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_STK_BA_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  INV-盘点-盘点单保存服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_SAVE_ACTION_SERVICE
+    method: POST
+  INV-作业正逆向-删除服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_FB_TYPE_DELETE_ACTION_SERVICE
+    method: POST
+  INV-移动凭证-查询物料的存储视图的单位服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_QUERY_MAT_INV_UNIT_ACTION_SERVICE
+    method: POST
+  INV-特殊库存类型-删除服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_SPC_STK_TYPE_DELETE_ACTION_SERVICE
+    method: POST
+  INV-批次-批量生成条码服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_BATCH_CREATE_BARCODE_ACTION_SERVICE
+    method: POST
+  盘点类型移动类型关联表标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_MVM_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  INV-移动类型-禁用服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_TYPE_DISABLED_ACTION_SERVICE
+    method: POST
+  INV-移动凭证-分页查询服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_VOUCHER_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  INV-批次-获取批次导入的模版服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_FIND_IMPORT_TEMPLATE_ACTION_SERVICE
+    method: POST
+  批量生成仓库条码服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_WH_BATCH_CREATE_BARCODE_ACTION_SERVICE
+    method: POST
+  INV-盘点-盘点确认服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_CONFIRM_ACTION_SERVICE
+    method: POST
+  INV-批次规则-根据单据类别查询对应的单据类:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_QUERY_DOC_TYPE_BY_DOC_CLASS_TYPE_SERVICE
+    method: POST
+  特殊库存标识定义表标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_SPC_STK_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  INV-作业类型-根据ID集合查询作业类型服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_BS_TYPE_QUERY_BY_IDS_ACTION_SERVICE
+    method: POST
+  仓库标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_WH_MD_GEI_EXPORT_SERVICE
+    method: POST
+  INV-批次规则-保存服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_RULE_SAVE_ACTION_SERVICE
+    method: POST
+  INV-库存类型-根据code查询库存类型服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_INV_TYPE_QUERY_BY_CODE_ACTION_SERVICE
+    method: POST
+  INV-盘点-盘点容差保存服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_TOLERANCE_SAVE_ACTION_SERVICE
+    method: POST
+  INV-批次规则-启用服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_RULE_ENABLE_ACTION_SERVICE
+    method: POST
+  INV-仓库-保存服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_WH_SAVE_ACTION_SERVICE
+    method: POST
+  INV-移动类型-查询分页服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_TYPE__QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  INV-作业正逆向-查询分页服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_FB_TYPE_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  INV-批次-生成批次编码服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_CREATE_BATCH_CODE_ACTION_SERVICE
+    method: POST
+  INV-盘点计划计算抽盘比例服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ECHO_CALCULATE_COUNT_RATIO_ACTION_SERVICE
+    method: POST
+  ATP检查规则标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ATP_RULE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  仓位-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_BIN_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  INV-批次-移动凭证获取可用的批次服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_QUERY_AVAILABLE_BATCH_ACTION_SERVICE
+    method: POST
+  INV-作业类型-删除服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_BS_TYPE_DELETE_ACTION_SERVICE
+    method: POST
+  INV-作业正逆向-保存服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_FB_TYPE_SAVE_ACTION_SERVICE
+    method: POST
+  INV-特殊库存类型-详情查询服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_SPC_STK_TYPE_DETAIL_ACTION_SERVICE
+    method: POST
+  库存类型定义表标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_INV_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  移动类型扩展类型定义表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_EXT_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  INV-批次-查询物料的批次特征服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_QUERY_MAT_BATCH_CHARA_ACTION_SERVICE
+    method: POST
+  INV-移动凭证-复制服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_VOUCHER_COPY_ACTION_SERVICE
+    method: POST
+  仓位-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_BIN_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  INV-仓库-查询详情服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_WH_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  盘点类型移动类型关联表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_MVM_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  INV-移动凭证-详情服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_VOUCHER_DETAIL_ACTION_SERVICE
+    method: POST
+  INV-盘点-盘点方案审核失败服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_PLAN_AUDIT_FAIL_ACTION_SERVICE
+    method: POST
+  ABC分组方案标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ABC_GROUP_STRATEGY_HEAD_CF_GEI_IMPORT_SERVICE
+    method: POST
+  仓库标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_WH_MD_GEI_IMPORT_SERVICE
+    method: POST
+  INV-移动类型-启用服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_TYPE_ENABLED_ACTION_SERVICE
+    method: POST
+  INV-移动凭证-新版创建服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_NEW_CREATE_MVM_VOUCHER_ACTION_SERVICE
+    method: POST
+  ATP检查组标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ATP_GROUP_MD_GEI_IMPORT_SERVICE
+    method: POST
+  INV-盘点-盘点方案启用服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_PLAN_ENABLED_ACTION_SERVICE
+    method: POST
+  仓位标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_BIN_MD_GEI_EXPORT_SERVICE
+    method: POST
+  INV-库存类型-根据id集合查询库存类型服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_INV_TYPE_QUERY_BY_IDS_ACTION_SERVICE
+    method: POST
+  ATP检查规则-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ATP_RULE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  INV-仓库-启用服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_WH_ENABLED_ACTION_SERVICE
+    method: POST
+  INV-作业正逆向-详情服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_FB_TYPE_DETAIL_ACTION_SERVICE
+    method: POST
+  INV-库存类型-保存服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_INV_TYPE_SAVE_ACTION_SERVICE
+    method: POST
+  作业类型定义表标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_BS_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  INV-批次规则-分页查询服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_RULE_FIND_BY_PAGE_ACTION_SERVICE
+    method: POST
+  作业类型定义表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_BS_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  正逆向标识定义表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_FB_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  INV-移动扩展类型-查询分页服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_EXT_TYPE_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  移动凭证抬头表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_DOC_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  ABC分组方案-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ABC_GROUP_STRATEGY_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  INV-批次-批次确认(移动凭证)服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_DETERMINE_ACTION_SERVICE
+    method: POST
+  盘点作业单明细表标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_ITEM_TR_GEI_IMPORT_SERVICE
+    method: POST
+  仓位标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_BIN_MD_GEI_IMPORT_SERVICE
+    method: POST
+  ATP检查规则标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ATP_RULE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  库存类型定义表标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_INV_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  INV-盘点计划-盘点计划保存服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_STRATEGY_SAVE_ACTION_SERVICE
+    method: POST
+  ATP检查规则-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ATP_RULE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  库存类型定义表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_INV_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  INV-盘点计划回显盘点计划详细信息服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ECHO_COUNT_STRATEGY_DETAILS_ACTION_SERVICE
+    method: POST
+  INV-批次范围-查询批次范围详情服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_RANGE_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  ATP检查组-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ATP_GROUP_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  INV-仓位-查询详情服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_BIN_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  INV-库存余额-库存账统计服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_BA_STK_COUNT_QUERY_ACTION_SERVICE
+    method: POST
+  INV-移动凭证-新版移动凭证冲销服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_NEW_MOVE_VOUCHER_WRITE_OFF_ACTION_SERVICE
+    method: POST
+  INV-特殊库存类型-特殊库存分类分页查询服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_SPC_STK_CLASS_PAGING_ACTION_SERVICE
+    method: POST
+  盘点作业单抬头表标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_HEAD_TR_GEI_EXPORT_SERVICE
+    method: POST
+  INV-盘点-盘点单审核成功服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_AUDIT_PASS_ACTION_SERVICE
+    method: POST
+  批量生成仓位条码服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_BIN_BATCH_CREATE_BARCODE_ACTION_SERVICE
+    method: POST
+  正逆向标识定义表标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_FB_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  INV-批次-批量生成批次编码服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_CREATE_BATCH_BATCH_CODE_ACTION_SERVICE
+    method: POST
+  移动类型定义表标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  INV-批次规则-删除服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_RULE_DELETE_ACTION_SERVICE
+    method: POST
+  盘点类型移动类型关联表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_MVM_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  INV-盘点-手动创建生成盘点明细数据服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_MANUAL_CREATE_DOC_ITEM_ACTION_SERVICE
+    method: POST
+  INV-库存类型--查询分页服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_INV_TYPE_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  INV-盘点-盘点方案定时任务服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_PLAN_JOB_ACTION_SERVICE
+    method: POST
+  INV-特殊库存类型-查询分页服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_SPC_STK_TYPE_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  特殊库存标识定义表标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_SPC_STK_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  INV-移动类型-根据移动类型ID集合查询冲销的移动类型服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_QUERY_NEGATIVE_MVM_TYPE_BY_MVM_TYPE_IDS_ACTION_SERVICE
+    method: POST
+  盘点计划标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_STRATEGY_MD_GEI_EXPORT_SERVICE
+    method: POST
+  ATP检查组标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ATP_GROUP_MD_GEI_EXPORT_SERVICE
+    method: POST
+  INV-库存类型-查询详情服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_INV_TYPE_DETAIL_ACTION_SERVICE
+    method: POST
+  移动类型扩展类型定义表标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_EXT_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  INV-批次-批次确认分页(移动凭证)服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_DETERMINE_PAGING_ACTION_SERVICE
+    method: POST
+  INV-库存类型-删除服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_INV_TYPE_DELETE_ACTION_SERVICE
+    method: POST
+  INV-移动凭证-打印服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_DOC_PRINT_ACTION_SERVICE
+    method: POST
+  盘点作业单抬头表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  盘点作业单明细表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_ITEM_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  INV-盘点-库存盘点作业单导入校验服务服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_IMPORT_ACTION_SERVICE
+    method: POST
+  INV-作业类型-详情服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_BS_TYPE_DETAIL_ACTION_SERVICE
+    method: POST
+  INV-盘点-盘点方案取消审核服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_PLAN_AUDIT_CANCEL_ACTION_SERVICE
+    method: POST
+  INV-仓库--删除服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_WH_DELETE_ACTION_SERVICE
+    method: POST
+  INV-作业正逆向-根据ID集合查询作业正逆向详情服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_FB_TYPE_QUERY_BY_IDS_ACTION_SERVICE
+    method: POST
+  INV-移动凭证-调拨数量计算服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_TRANSFER_QUANTITY_CALCULATE_ACTION_SERVICE
+    method: POST
+  INV-盘点-盘点方案禁用服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_PLAN_DISABLE_ACTION_SERVICE
+    method: POST
+  ATP检查组-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ATP_GROUP_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  INV-移动凭证-分页查询ES服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_VOUCHER_PAGING_BY_ES_ACTION_SERVICE
+    method: POST
+  仓储区标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_AREA_MD_GEI_EXPORT_SERVICE
+    method: POST
+  INV-物料存储视图-根据条件查询存储视图服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MAT_INV_QUERY_ACTION_SERVICE
+    method: POST
+  INV-盘点-盘点方案保存服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_PLAN_SAVE_ACTION_SERVICE
+    method: POST
+  作业类型定义表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_BS_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  INV-批次规则-查询详情服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_RULE_QUERY_DETAIL_ACTION_SERVICE
+    method: POST
+  INV-盘点计划停用盘点计划服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_STRATEGY_DISABLE_ACTION_SERVICE
+    method: POST
+  ABC分组方案标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ABC_GROUP_STRATEGY_HEAD_CF_GEI_EXPORT_SERVICE
+    method: POST
+  库存余额表标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_STK_BA_GEI_EXPORT_SERVICE
+    method: POST
+  INV-盘点-盘点方案提交审核服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_PLAN_SUBMIT_AUDIT_ACTION_SERVICE
+    method: POST
+  仓储区-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_AREA_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  INV-盘点计划启用盘点计划服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_STRATEGY_ENABLE_ACTION_SERVICE
+    method: POST
+  INV-移动凭证明细-分页查询服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_DOC_ITEM_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  ABC分析结果标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ABC_GROUP_RESULT_TR_GEI_EXPORT_SERVICE
+    method: POST
+  INV-库存余额-查询分页服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_BA_STK_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  INV-批次-批次策略保存服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_STRATEGY_SAVE_ACTION_SERVICE
+    method: POST
+  INV-移动扩展类型-保存服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_EXT_TYPE_SAVE_ACTION_SERVICE
+    method: POST
+  INV-仓位-保存服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_BIN_SAVE_ACTION_SERVICE
+    method: POST
+  INV-移动凭证-获取移动凭证请求流水号服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_GET_REQUEST_NO_ACTION_SERVICE
+    method: POST
+  INV-仓储区-批量生成条码服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_AREA_BATCH_CREATE_BARCODE_ACTION_SERVICE
+    method: POST
+  INV-批次规则-停用服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_RULE_DISABLE_ACTION_SERVICE
+    method: POST
+  INV-盘点计划ABC分析结果转为必盘物料服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_GET_COUNT_STRATEGY_MAT_ACTION_SERVICE
+    method: POST
+  盘点计划-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_STRATEGY_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  INV-仓储区-查询分页服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_AREA_QUERY_PAGE_ACTION_SERVICE
+    method: POST
+  仓库-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_WH_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  INV-特殊库存类型-保存服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_SPC_STK_TYPE_SAVE_ACTION_SERVICE
+    method: POST
+  INV-批次-批次生成批次分页查询服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_CREATE_PAGE_QUERY_ACTION_SERVICE
+    method: POST
+  仓储区标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_AREA_MD_GEI_IMPORT_SERVICE
+    method: POST
+  INV-批次-根据批次编码批量查询详情服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_QUERY_DETAIL_BY_CODES_ACTION_SERVICE
+    method: POST
+  INV-移动类型-删除服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_MVM_TYPE_DELETE_ACTION_SERVICE
+    method: POST
+  INV-盘点计划操作盘点计划服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_STRATEGY_PLAN_EXEC_JOB_ACTION_SERVICE
+    method: POST
+  INV-特殊库存分类-查询对应的业务模型数据:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_SPC_STOCK_CLASS_DATA_QUERY_SERVICE
+    method: POST
+  INV-盘点计划操作单个盘点计划服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_STR_SERVICE
+    method: POST
+  INV-仓位--删除服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_BIN_DELETE_ACTION_SERVICE
+    method: POST
+  INV-作业类型-保存服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_BS_TYPE_SAVE_ACTION_SERVICE
+    method: POST
+  盘点类型移动类型关联表标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_MVM_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  INV-盘点-盘点单审核失败服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_AUDIT_FAIL_ACTION_SERVICE
+    method: POST
+  INV-盘点策略-启用ABC分组逻辑服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ABC_GROUP_STRATEGY_ENABLE_ACTION_SERVICE
+    method: POST
+  INV-移动类型-查询正向的移动类型服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_QUERY_POSITIVE_MVM_TYPE_ACTION_SERVICE
+    method: POST
+  INV-移动凭证-移动凭证重新推送存货价值服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_PUSH_INV_VALUE_ACTION_SERVICE
+    method: POST
+  INV-移动类型-查询移动凭证需要展示的批次按钮类型服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_QUERY_BATCH_BUTTON_TYPE_ACTION_SERVICE
+    method: POST
+  INV-仓库-禁用服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_WH_DISABLED_ACTION_SERVICE
+    method: POST
+  INV-仓库-查询分页服务:
+    path: /api/trantor/service/engine/execute/SCM_INV$INV_WH_QUERY_PAGE_ACTION_SERVICE
+    method: POST

@@ -14,6 +14,7 @@ class YamlUtil:
     _config_dir = Path("config")
     _initialized = False
 
+
     @classmethod
     def init(cls, config_dir: str = "config"):
         if not cls._initialized:
@@ -21,7 +22,7 @@ class YamlUtil:
             cls._initialized = True
 
     @classmethod
-    def read_yaml(cls, file_path: str) -> Dict[str, Any]:
+    def read_yaml(cls, file_path: Any) -> Dict[str, Any]:
         # 支持绝对路径和相对路径
         file_path = Path(file_path)
         if not file_path.is_absolute():

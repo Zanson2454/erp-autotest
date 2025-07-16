@@ -22,9 +22,9 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         cls.modelName = None
         cls.logger.info("组织切换管理测试类初始化完成")
         cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
-        
-        cls.orgDimensionId = cls.md_cache_data["org_info"].get("org_dimension_cf",[])[0]["id"]
-        cls.com_org_id = cls.md_cache_data["org_info"].get("com_org_info",[])[0]["id"]
+        if cls.md_cache_data:
+            cls.orgDimensionId = cls.md_cache_data["org_info"].get("org_dimension_cf",[])[0]["id"]
+            cls.com_org_id = cls.md_cache_data["org_info"].get("com_org_info",[])[0]["id"]
     @classmethod
     def teardown_class(cls):
         """

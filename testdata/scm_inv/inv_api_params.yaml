@@ -1,0 +1,1673 @@
+api_params:
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_AUDIT_SUCCESS:
+    params:
+      request:
+        id: 0
+        approveNote: null
+    serviceKey: SCM_INV$INV_COUNT_DOC_AUDIT_SUCCESS
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_AUDIT_FAIL:
+    params:
+      request:
+        id: 0
+        approveNote: null
+    serviceKey: SCM_INV$INV_COUNT_DOC_AUDIT_FAIL
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_AUDIT_ROLLBACK:
+    params:
+      request:
+        id: 0
+        approveNote: null
+    serviceKey: SCM_INV$INV_COUNT_DOC_AUDIT_ROLLBACK
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_PLAN_AUDIT_PASS_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_COUNT_PLAN_AUDIT_PASS_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_AREA_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_AREA_DELETE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_AREA_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_AREA_SAVE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_BS_TYPE_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_BS_TYPE_QUERY_PAGE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_BS_TYPE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: SCM_INV$INV_BS_TYPE_CF_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_AREA_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      sheetConfig: {}
+      fileName: null
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      fileKey: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      relationFieldConvert: false
+      service: null
+      modelMainField: null
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_AREA_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_EXT_TYPE_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_MVM_EXT_TYPE_DELETE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_BIN_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request:
+        code: null
+        updatedBy:
+          createdAt: 0
+          deleted: 0
+          nickname: null
+          mobile: null
+          id: 0
+          version: 0
+          email: null
+          updatedAt: 0
+          username: null
+        originOrgId: 0
+        invAreaId:
+          code: null
+          updatedBy: {}
+          originOrgId: 0
+          purpose:
+          - null
+          version: 0
+          createdAt: 0
+          deleted: 0
+          createdBy: {}
+          invWhId: {}
+          requestId: null
+          name: null
+          tenantId: 0
+          id: 0
+          status: null
+          updatedAt: 0
+        version: 0
+        createdAt: 0
+        deleted: 0
+        createdBy:
+          createdAt: 0
+          deleted: 0
+          nickname: null
+          mobile: null
+          id: 0
+          version: 0
+          email: null
+          updatedAt: 0
+          username: null
+        invWhId:
+          code: null
+          updatedBy: {}
+          originOrgId: 0
+          contactName: null
+          isEnableWel: false
+          lon: 0
+          manageOrgId: {}
+          version: 0
+          addressId: {}
+          createdAt: 0
+          addressDetail: null
+          deleted: 0
+          createdBy: {}
+          requestId: null
+          name: null
+          tenantId: 0
+          id: 0
+          contactPhone: null
+          lat: 0
+          status: null
+          updatedAt: 0
+        requestId: null
+        name: null
+        tenantId: 0
+        id: 0
+        status: null
+        updatedAt: 0
+    serviceKey: SCM_INV$INV_BIN_QUERY_PAGE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_FB_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_FB_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_FB_TYPE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: SCM_INV$INV_FB_TYPE_CF_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_EXT_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      sheetConfig: {}
+      fileName: null
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      fileKey: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      relationFieldConvert: false
+      service: null
+      modelMainField: null
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_MVM_EXT_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_DOC_ITEM_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_MVM_DOC_ITEM_DETAIL_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_EXT_TYPE_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_MVM_EXT_TYPE_DETAIL_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_SPC_STK_CLASS_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_SPC_STK_CLASS_DETAIL_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_EXT_TYPE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: SCM_INV$INV_MVM_EXT_TYPE_CF_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_SPC_STK_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      sheetConfig: {}
+      fileName: null
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      fileKey: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      relationFieldConvert: false
+      service: null
+      modelMainField: null
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_SPC_STK_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_QUERY_DOC_TYPE_DETAIL_BY_ID_SERVICE:
+    params:
+      request:
+        docClassType: null
+        id: 0
+    serviceKey: SCM_INV$INV_QUERY_DOC_TYPE_DETAIL_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_RULE_ORDER_TYPE_PAGE_ACTION_SERVICE:
+    params:
+      request:
+        docClassType: null
+        pageable:
+          needTotal: false
+          sortOrders:
+          - {}
+          conditionItems: null
+          pageNo: 1
+          conditionGroup: null
+          pageSize: 20
+          keyword: null
+    serviceKey: SCM_INV$INV_ADMIN_BATCH_RULE_ORDER_TYPE_PAGE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_SPC_STK_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_SPC_STK_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_WH_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_WH_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_ABC_GROUP_STRATEGY_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_ABC_GROUP_STRATEGY_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_QUERY_SUGGEST_BATCH_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_BATCH_QUERY_SUGGEST_BATCH_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_BATCH_QUERY_DETAIL_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_INV_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_INV_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_MVM_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_ABC_GROUP_RESULT_TR_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_ABC_GROUP_RESULT_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_INV_TYPE_TRANS_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_BATCH_INV_TYPE_TRANS_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_TYPE_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_MVM_TYPE_DETAIL_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_STRATEGY_DATA_CHECK_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_COUNT_STRATEGY_DATA_CHECK_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_TYPE_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_MVM_TYPE_SAVE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_AREA_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_AREA_QUERY_DETAIL_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ABC_GROUP_STRATEGY_ITEM_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ABC_GROUP_STRATEGY_ITEM_PAGE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_PAGE_QUERY_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_BATCH_PAGE_QUERY_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_DOC_HEAD_TR_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: SCM_INV$INV_MVM_DOC_HEAD_TR_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_STK_BA_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_STK_BA_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_COUNT_DOC_SAVE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_FB_TYPE_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_FB_TYPE_DELETE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_QUERY_MAT_INV_UNIT_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_QUERY_MAT_INV_UNIT_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_SPC_STK_TYPE_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_SPC_STK_TYPE_DELETE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_BATCH_CREATE_BARCODE_ACTION_SERVICE:
+    params:
+      request:
+      - {}
+    serviceKey: SCM_INV$INV_ADMIN_BATCH_BATCH_CREATE_BARCODE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_MVM_TYPE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: SCM_INV$INV_COUNT_MVM_TYPE_CF_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_TYPE_DISABLED_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_MVM_TYPE_DISABLED_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_VOUCHER_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_MVM_VOUCHER_QUERY_PAGE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_FIND_IMPORT_TEMPLATE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_BATCH_FIND_IMPORT_TEMPLATE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_WH_BATCH_CREATE_BARCODE_ACTION_SERVICE:
+    params:
+      request:
+      - {}
+    serviceKey: SCM_INV$INV_WH_BATCH_CREATE_BARCODE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_CONFIRM_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_COUNT_CONFIRM_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_QUERY_DOC_TYPE_BY_DOC_CLASS_TYPE_SERVICE:
+    params:
+      request:
+        docClassType: null
+    serviceKey: SCM_INV$INV_QUERY_DOC_TYPE_BY_DOC_CLASS_TYPE_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_SPC_STK_TYPE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: SCM_INV$INV_SPC_STK_TYPE_CF_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_BS_TYPE_QUERY_BY_IDS_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_BS_TYPE_QUERY_BY_IDS_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_WH_MD_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: SCM_INV$INV_WH_MD_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_RULE_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_BATCH_RULE_SAVE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_INV_TYPE_QUERY_BY_CODE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_INV_TYPE_QUERY_BY_CODE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_TOLERANCE_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_COUNT_TOLERANCE_SAVE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_RULE_ENABLE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_BATCH_RULE_ENABLE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_WH_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_WH_SAVE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_TYPE__QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request:
+        batchCodeRuleKey: null
+        code: null
+        updatedBy: {}
+        originOrgId: 0
+        remark: null
+        mvmRule:
+        - invTypeId: {}
+          updatedBy: {}
+          originOrgId: 0
+          mvmPosNeg: null
+          isSpcStk: false
+          version: 0
+          mvmTypeId: {}
+          createdAt: 0
+          deleted: 0
+          createdBy: {}
+          invOrgIdSource: null
+          id: 0
+          updatedAt: 0
+        mvmExtTypeId:
+          createdAt: 0
+          updatedBy: {}
+          deleted: 0
+          code: null
+          originOrgId: 0
+          uniqueCode: null
+          createdBy: {}
+          name: null
+          id: 0
+          version: 0
+          updatedAt: 0
+        version: 0
+        createdAt: 0
+        bsTypeId:
+          isCreateNewBatch: false
+          updatedBy: {}
+          code: null
+          originOrgId: 0
+          version: 0
+          createdAt: 0
+          deleted: 0
+          uniqueCode: null
+          createdBy: {}
+          name: null
+          id: 0
+          isSupportWriteOff: false
+          updatedAt: 0
+        deleted: 0
+        invTypeTransId:
+          createdAt: 0
+          updatedBy: {}
+          deleted: 0
+          code: null
+          originOrgId: 0
+          createdBy: {}
+          name: null
+          from: {}
+          id: 0
+          to: {}
+          version: 0
+          updatedAt: 0
+        createdBy: {}
+        name: null
+        id: 0
+        fbTypeId:
+          updatedBy: {}
+          code: null
+          originOrgId: 0
+          isRevType: false
+          version: 0
+          isDocPre: false
+          createdAt: 0
+          revFbTypeId: {}
+          deleted: 0
+          uniqueCode: null
+          createdBy: {}
+          name: null
+          id: 0
+          updatedAt: 0
+        status: null
+        updatedAt: 0
+    serviceKey: SCM_INV$INV_MVM_TYPE__QUERY_PAGE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_FB_TYPE_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_FB_TYPE_QUERY_PAGE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_CREATE_BATCH_CODE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_BATCH_CREATE_BATCH_CODE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ECHO_CALCULATE_COUNT_RATIO_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ECHO_CALCULATE_COUNT_RATIO_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ATP_RULE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: SCM_INV$INV_ATP_RULE_CF_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_BIN_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      sheetConfig: {}
+      fileName: null
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      fileKey: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      relationFieldConvert: false
+      service: null
+      modelMainField: null
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_BIN_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_QUERY_AVAILABLE_BATCH_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_BATCH_QUERY_AVAILABLE_BATCH_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_BS_TYPE_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_BS_TYPE_DELETE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_FB_TYPE_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_FB_TYPE_SAVE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_SPC_STK_TYPE_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_SPC_STK_TYPE_DETAIL_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_INV_TYPE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: SCM_INV$INV_INV_TYPE_CF_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_EXT_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_MVM_EXT_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_QUERY_MAT_BATCH_CHARA_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_BATCH_QUERY_MAT_BATCH_CHARA_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_VOUCHER_COPY_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_MVM_VOUCHER_COPY_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_BIN_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_BIN_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_WH_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_WH_QUERY_DETAIL_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_MVM_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      sheetConfig: {}
+      fileName: null
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      fileKey: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      relationFieldConvert: false
+      service: null
+      modelMainField: null
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_COUNT_MVM_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_VOUCHER_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_MVM_VOUCHER_DETAIL_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_PLAN_AUDIT_FAIL_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_COUNT_PLAN_AUDIT_FAIL_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ABC_GROUP_STRATEGY_HEAD_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: SCM_INV$INV_ABC_GROUP_STRATEGY_HEAD_CF_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_WH_MD_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: SCM_INV$INV_WH_MD_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_TYPE_ENABLED_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_MVM_TYPE_ENABLED_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_NEW_CREATE_MVM_VOUCHER_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_NEW_CREATE_MVM_VOUCHER_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ATP_GROUP_MD_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: SCM_INV$INV_ATP_GROUP_MD_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_PLAN_ENABLED_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_COUNT_PLAN_ENABLED_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_BIN_MD_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: SCM_INV$INV_BIN_MD_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_INV_TYPE_QUERY_BY_IDS_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_INV_TYPE_QUERY_BY_IDS_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ATP_RULE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_ATP_RULE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_WH_ENABLED_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_WH_ENABLED_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_FB_TYPE_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_FB_TYPE_DETAIL_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_INV_TYPE_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_INV_TYPE_SAVE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_BS_TYPE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: SCM_INV$INV_BS_TYPE_CF_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_RULE_FIND_BY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_BATCH_RULE_FIND_BY_PAGE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_BS_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_BS_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_FB_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      sheetConfig: {}
+      fileName: null
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      fileKey: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      relationFieldConvert: false
+      service: null
+      modelMainField: null
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_FB_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_EXT_TYPE_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_MVM_EXT_TYPE_QUERY_PAGE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_DOC_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_MVM_DOC_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_ABC_GROUP_STRATEGY_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      sheetConfig: {}
+      fileName: null
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      fileKey: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      relationFieldConvert: false
+      service: null
+      modelMainField: null
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_ABC_GROUP_STRATEGY_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_DETERMINE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_BATCH_DETERMINE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_ITEM_TR_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: SCM_INV$INV_COUNT_DOC_ITEM_TR_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_BIN_MD_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: SCM_INV$INV_BIN_MD_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ATP_RULE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: SCM_INV$INV_ATP_RULE_CF_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_INV_TYPE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: SCM_INV$INV_INV_TYPE_CF_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_STRATEGY_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_COUNT_STRATEGY_SAVE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ATP_RULE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      sheetConfig: {}
+      fileName: null
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      fileKey: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      relationFieldConvert: false
+      service: null
+      modelMainField: null
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_ATP_RULE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_INV_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      sheetConfig: {}
+      fileName: null
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      fileKey: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      relationFieldConvert: false
+      service: null
+      modelMainField: null
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_INV_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_ECHO_COUNT_STRATEGY_DETAILS_ACTION_SERVICE:
+    params:
+      request: 0
+    serviceKey: SCM_INV$INV_ECHO_COUNT_STRATEGY_DETAILS_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_RANGE_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_BATCH_RANGE_QUERY_DETAIL_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ATP_GROUP_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      sheetConfig: {}
+      fileName: null
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      fileKey: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      relationFieldConvert: false
+      service: null
+      modelMainField: null
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_ATP_GROUP_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_BIN_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_BIN_QUERY_DETAIL_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_BA_STK_COUNT_QUERY_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_BA_STK_COUNT_QUERY_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_NEW_MOVE_VOUCHER_WRITE_OFF_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_NEW_MOVE_VOUCHER_WRITE_OFF_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_SPC_STK_CLASS_PAGING_ACTION_SERVICE:
+    params:
+      request:
+        spcStkTypeId: 0
+        code: null
+        name: null
+    serviceKey: SCM_INV$INV_ADMIN_SPC_STK_CLASS_PAGING_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_HEAD_TR_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: SCM_INV$INV_COUNT_DOC_HEAD_TR_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_AUDIT_PASS_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_COUNT_DOC_AUDIT_PASS_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_BIN_BATCH_CREATE_BARCODE_ACTION_SERVICE:
+    params:
+      request:
+      - {}
+    serviceKey: SCM_INV$INV_BIN_BATCH_CREATE_BARCODE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_FB_TYPE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: SCM_INV$INV_FB_TYPE_CF_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_CREATE_BATCH_BATCH_CODE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_BATCH_CREATE_BATCH_BATCH_CODE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_TYPE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: SCM_INV$INV_MVM_TYPE_CF_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_RULE_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_BATCH_RULE_DELETE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_MVM_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_COUNT_MVM_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_MANUAL_CREATE_DOC_ITEM_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_COUNT_DOC_MANUAL_CREATE_DOC_ITEM_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_INV_TYPE_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_INV_TYPE_QUERY_PAGE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_PLAN_JOB_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_COUNT_PLAN_JOB_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_SPC_STK_TYPE_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_SPC_STK_TYPE_QUERY_PAGE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_SPC_STK_TYPE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: SCM_INV$INV_SPC_STK_TYPE_CF_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_QUERY_NEGATIVE_MVM_TYPE_BY_MVM_TYPE_IDS_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_QUERY_NEGATIVE_MVM_TYPE_BY_MVM_TYPE_IDS_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_STRATEGY_MD_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: SCM_INV$INV_COUNT_STRATEGY_MD_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ATP_GROUP_MD_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: SCM_INV$INV_ATP_GROUP_MD_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_INV_TYPE_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_INV_TYPE_DETAIL_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_EXT_TYPE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: SCM_INV$INV_MVM_EXT_TYPE_CF_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_DETERMINE_PAGING_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_BATCH_DETERMINE_PAGING_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_INV_TYPE_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_INV_TYPE_DELETE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_DOC_PRINT_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_MVM_DOC_PRINT_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_COUNT_DOC_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_ITEM_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      sheetConfig: {}
+      fileName: null
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      fileKey: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      relationFieldConvert: false
+      service: null
+      modelMainField: null
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_COUNT_DOC_ITEM_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_IMPORT_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_COUNT_DOC_IMPORT_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_BS_TYPE_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_BS_TYPE_DETAIL_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_PLAN_AUDIT_CANCEL_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_COUNT_PLAN_AUDIT_CANCEL_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_WH_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_WH_DELETE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_FB_TYPE_QUERY_BY_IDS_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_FB_TYPE_QUERY_BY_IDS_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_TRANSFER_QUANTITY_CALCULATE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_TRANSFER_QUANTITY_CALCULATE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_PLAN_DISABLE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_COUNT_PLAN_DISABLE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ATP_GROUP_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_ATP_GROUP_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_VOUCHER_PAGING_BY_ES_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_MVM_VOUCHER_PAGING_BY_ES_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_AREA_MD_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: SCM_INV$INV_AREA_MD_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_MAT_INV_QUERY_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_MAT_INV_QUERY_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_PLAN_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_COUNT_PLAN_SAVE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_BS_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      sheetConfig: {}
+      fileName: null
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      fileKey: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      relationFieldConvert: false
+      service: null
+      modelMainField: null
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_BS_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_RULE_QUERY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_BATCH_RULE_QUERY_DETAIL_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_STRATEGY_DISABLE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_COUNT_STRATEGY_DISABLE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ABC_GROUP_STRATEGY_HEAD_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: SCM_INV$INV_ABC_GROUP_STRATEGY_HEAD_CF_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_STK_BA_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: SCM_INV$INV_STK_BA_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_PLAN_SUBMIT_AUDIT_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_COUNT_PLAN_SUBMIT_AUDIT_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_AREA_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_AREA_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_STRATEGY_ENABLE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_COUNT_STRATEGY_ENABLE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_DOC_ITEM_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_MVM_DOC_ITEM_QUERY_PAGE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ABC_GROUP_RESULT_TR_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: SCM_INV$INV_ABC_GROUP_RESULT_TR_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_BA_STK_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_BA_STK_QUERY_PAGE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_STRATEGY_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_BATCH_STRATEGY_SAVE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_EXT_TYPE_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_MVM_EXT_TYPE_SAVE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_BIN_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_BIN_SAVE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_GET_REQUEST_NO_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_GET_REQUEST_NO_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_AREA_BATCH_CREATE_BARCODE_ACTION_SERVICE:
+    params:
+      request:
+      - {}
+    serviceKey: SCM_INV$INV_AREA_BATCH_CREATE_BARCODE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_RULE_DISABLE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_BATCH_RULE_DISABLE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_GET_COUNT_STRATEGY_MAT_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_GET_COUNT_STRATEGY_MAT_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_STRATEGY_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_COUNT_STRATEGY_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_AREA_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request:
+        code: null
+        updatedBy:
+          createdAt: 0
+          deleted: 0
+          nickname: null
+          mobile: null
+          id: 0
+          version: 0
+          email: null
+          updatedAt: 0
+          username: null
+        originOrgId: 0
+        purpose:
+        - null
+        version: 0
+        createdAt: 0
+        deleted: 0
+        createdBy:
+          createdAt: 0
+          deleted: 0
+          nickname: null
+          mobile: null
+          id: 0
+          version: 0
+          email: null
+          updatedAt: 0
+          username: null
+        invWhId:
+          code: null
+          updatedBy: {}
+          originOrgId: 0
+          contactName: null
+          isEnableWel: false
+          lon: 0
+          manageOrgId: {}
+          version: 0
+          addressId: {}
+          createdAt: 0
+          addressDetail: null
+          deleted: 0
+          createdBy: {}
+          requestId: null
+          name: null
+          tenantId: 0
+          id: 0
+          contactPhone: null
+          lat: 0
+          status: null
+          updatedAt: 0
+        requestId: null
+        name: null
+        tenantId: 0
+        id: 0
+        status: null
+        updatedAt: 0
+    serviceKey: SCM_INV$INV_AREA_QUERY_PAGE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_WH_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      sheetConfig: {}
+      fileName: null
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      fileKey: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      relationFieldConvert: false
+      service: null
+      modelMainField: null
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: SCM_INV$INV_WH_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_INV$INV_SPC_STK_TYPE_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_SPC_STK_TYPE_SAVE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_CREATE_PAGE_QUERY_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_BATCH_CREATE_PAGE_QUERY_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_AREA_MD_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: SCM_INV$INV_AREA_MD_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_BATCH_QUERY_DETAIL_BY_CODES_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_BATCH_QUERY_DETAIL_BY_CODES_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_MVM_TYPE_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_MVM_TYPE_DELETE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_STRATEGY_PLAN_EXEC_JOB_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_COUNT_STRATEGY_PLAN_EXEC_JOB_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_SPC_STOCK_CLASS_DATA_QUERY_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems:
+            conditions: {}
+            logicOperator: null
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+        invSpcStkTypeId: 0
+    serviceKey: SCM_INV$INV_SPC_STOCK_CLASS_DATA_QUERY_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_STR_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_COUNT_STR_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_BIN_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_BIN_DELETE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_BS_TYPE_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_BS_TYPE_SAVE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_MVM_TYPE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: SCM_INV$INV_COUNT_MVM_TYPE_CF_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_AUDIT_FAIL_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_COUNT_DOC_AUDIT_FAIL_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ABC_GROUP_STRATEGY_ENABLE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ABC_GROUP_STRATEGY_ENABLE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_QUERY_POSITIVE_MVM_TYPE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_QUERY_POSITIVE_MVM_TYPE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_ADMIN_PUSH_INV_VALUE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_ADMIN_PUSH_INV_VALUE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_QUERY_BATCH_BUTTON_TYPE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_QUERY_BATCH_BUTTON_TYPE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_WH_DISABLED_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_WH_DISABLED_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$INV_WH_QUERY_PAGE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_INV$INV_WH_QUERY_PAGE_ACTION_SERVICE

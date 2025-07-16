@@ -345,6 +345,53 @@ class SwaggerParser:
             logger.error(f"保存文件失败: {str(e)}")
             raise
             
+    def save_unified_api_yaml(self, endpoints: Dict[str, Dict[str, Any]], output_path: str = '', module: str = '') -> None:
+        """
+        生成统一结构的API配置YAML
+        Args:
+            endpoints: 解析后的接口信息
+            output_path: 输出文件路径（可选）
+            module: 模块名称（用于文件名前缀，可选）
+        """
+        try:
+            unified_dict = {}
+            for path, methods in endpoints.items():
+                if "$SYS_" in path:
+                    continue
+                for method, info in methods.items():
+                    service_name = info.get('summary', '').strip() or path.split('/')[-1]
+                    
+                    # 清理服务名称，去掉【编排服务】、【事件服务】等后缀
+                    service_name = service_name.replace('【系统服务】', '').replace('【事件服务】', '').replace('【编排服务】', '').strip()
+                    
+                    entry = {
+                        'path': path,
+                        'method': method.upper()
+                    }
+                    # body/params
+                    request_params = {}
+                    if 'requestBody' in info and info['requestBody']:
+                        schema = info['requestBody'].get('schema', {})
+                        request_params = self._get_schema_value(schema)
+                    for param in info.get('parameters', []):
+                        if param.get('in') == 'query':
+                            param_schema = param.get('schema', {})
+                            request_params[param['name']] = self._get_schema_value(param_schema)
+                    if request_params:
+                        entry['body'] = request_params
+                    unified_dict[service_name] = entry
+
+            # 保存
+            if not output_path:
+                prefix = module.split('_')[-1].lower() if module else 'api'
+                output_path = str(Path(__file__).parent / f"{prefix}_api_info.yaml")
+            with open(output_path, 'w', encoding='utf-8') as f:
+                yaml.dump(unified_dict, f, allow_unicode=True, sort_keys=False)
+            logger.info(f"统一API信息已保存到: {output_path}")
+        except Exception as e:
+            logger.error(f"保存统一YAML失败: {str(e)}")
+            raise
+            
     def _format_request_params(self, info: dict, operation_path: str) -> dict:
         """
         格式化请求参数，只保留 path 和 body 的映射关系
@@ -569,10 +616,13 @@ if __name__ == "__main__":
     )
     
     # 获取指定团队和模块的Swagger文档
-    swagger_doc = parser.fetch_swagger_doc("TERP", "SCM_SLS")
+    swagger_doc = parser.fetch_swagger_doc("TERP", "SCM_PUR")
     
     # 解析所有接口
     endpoints = parser.parse_endpoints()
     
     # 保存路径信息到gen_path.yaml
-    parser.save_paths_to_yaml(endpoints, module="SCM_SLS") 
+    # parser.save_paths_to_yaml(endpoints, module="SCM_PUR")
+    
+    # 保存统一结构到unified_api.yaml
+    parser.save_unified_api_yaml(endpoints, module="SCM_PUR") 

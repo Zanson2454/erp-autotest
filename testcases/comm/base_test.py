@@ -24,7 +24,8 @@ from utils.cache_util import CacheUtil
 from utils.yaml_util import YamlUtil
 from utils.request_util import HttpUtil
 from utils.exception_util import safe_api_call
-from data_factory.base import DataFactory, DBManager
+from data_factory.base import DataFactory 
+from utils.mysql_util import DBManager
 
 
 class LoginStatus(Enum):
@@ -223,14 +224,14 @@ class BaseTestInitializer:
         
         return login_result
     
-    def initialize_database(self, env_config: Dict[str, Any]) -> DBManager:
+    def initialize_database(self, env_config: Dict[str, Any],db_name="erp_db") -> DBManager:
         """初始化数据库连接"""
-        db_config = env_config.get("database", {}).get("erp_db")
+        db_config = env_config.get("database", {}).get(db_name)
         if not db_config:
-            raise RuntimeError("数据库配置未找到，请检查环境配置文件")
-        
-        DBManager.init(db_config)
-        return DBManager()
+            raise RuntimeError(f"数据库配置未找到: {db_name}，请检查环境配置文件")
+
+        # 创建独立的数据库连接实例
+        return DBManager(**db_config)
     
     def initialize_utilities(self) -> Dict[str, Any]:
         """初始化工具类"""
@@ -249,6 +250,16 @@ class BaseTest:
     # 类型提示：动态设置的属性
     logger: Any
     assert_util: Any
+    env_config: Any
+    init_data: Any
+    user_info: Any
+    session: Any
+    http: Any
+    db: Any
+    iam_db: Any
+    mock_util: Any
+    cache: Any
+    yaml_util: Any
     
     @classmethod
     def setup_class(cls) -> None:
@@ -262,6 +273,7 @@ class BaseTest:
             
             # 分步初始化
             cls.env_config = initializer.initialize_environment() # 获取环境基础配置
+            Loggers.info(f"环境配置: {cls.env_config}")
             cls.init_data = initializer.initialize_base_data() # 获取基础数据
             
             # 认证初始化
@@ -275,13 +287,10 @@ class BaseTest:
             )
             
             # 数据库初始化
-            cls.db = initializer.initialize_database(cls.env_config) # 获取数据库连接
+            cls.db = initializer.initialize_database(cls.env_config,db_name="erp_db") # 获取数据库连接
+            cls.iam_db = initializer.initialize_database(cls.env_config,db_name="iam_db") # 获取数据库连接
             
-            # mock工具初始化
-            cls.mock_util = MockData() # 获取mock工具类
-            
-            # 缓存工具初始化
-            cls.cache = CacheUtil() # 获取缓存工具类
+
             
             # 工具类初始化
             utilities = initializer.initialize_utilities() # 获取工具类
@@ -313,6 +322,26 @@ class BaseTest:
             duration = time.time() - self.test_start_time
             method_name = getattr(method, '__name__', 'unknown_method')
             self.logger.info(f"测试方法 {method_name} 执行完成，耗时: {duration:.3f}秒")
+
+    def set_request_param(self, params, key, value):
+        """设置请求参数"""
+        if 'params' not in params:
+            params['params'] = {}
+        if 'request' not in params['params']:
+            params['params']['request'] = {}
+        params['params']['request'][key] = value
+        return params
+
+    def set_request_params(self, params, param_dict):
+        """批量设置请求参数"""
+        if 'params' not in params:
+            params['params'] = {}
+        if 'request' not in params['params']:
+            params['params']['request'] = {}
+        for key, value in param_dict.items():
+            params['params']['request'][key] = value
+        return params
+    
     
     @staticmethod
     def timer(func):

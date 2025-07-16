@@ -43,3 +43,10 @@ database:
     password: ${TEST_DB_PASSWORD}
     database: ${TEST_DB_NAME}
     charset: utf8mb4
+  iam_db:
+    host: ${TEST_DB_HOST}
+    port: ${TEST_DB_PORT}
+    user: ${TEST_DB_USER}
+    password: ${TEST_DB_PASSWORD}
+    database: ${TEST_IAM_DB_NAME}
+    charset: utf8mb4

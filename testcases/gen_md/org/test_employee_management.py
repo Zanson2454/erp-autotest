@@ -52,6 +52,11 @@ class TestEmployeeManagement(GenMdBaseTest):
                 where="code like %s",
                 params=["AT_%"]
             )
+            cls.iam_db.delete(
+                table="iam_user",
+                where="username like %s",
+                params=["AT_%"]
+            )
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
@@ -105,7 +110,7 @@ class TestEmployeeManagement(GenMdBaseTest):
                 "type": "FORMAL",  # 正式员工
                 "orgStructId": self.com_org_id,
                 "mobile": mobile,
-                "email": email,
+                "email": f"{self.mock_util.get_timestamp()}@terminus.io",
                 "userName": user_name,
                 "entryAt": entry_date,
                 "resignationAt": None,

@@ -30,25 +30,27 @@ class TestBizOrgManagement(GenMdBaseTest):
      
         
         # 获取md_cache_data中的第一个数据
-        cls.orgBusinessTypeIds = cls.md_cache_data["org_info"]["org_biz_type_cf"] if cls.md_cache_data.get("org_info") else None
-        cls.slsDcId = cls.md_cache_data.get("org_info", {}).get("sls_dc_md", [])[0]["id"] if cls.md_cache_data.get("org_info", {}).get("sls_dc_md") else None
-        cls.whId = cls.md_cache_data.get("org_info", {}).get("inv_wh_md", [])[0]["id"] if cls.md_cache_data.get("org_info", {}).get("inv_wh_md") else None
+        if cls.md_cache_data:
+            cls.orgBusinessTypeIds = cls.md_cache_data["org_info"]["org_biz_type_cf"] if cls.md_cache_data.get("org_info") else None
+            cls.slsDcId = cls.md_cache_data.get("org_info", {}).get("sls_dc_md", [])[0]["id"] if cls.md_cache_data.get("org_info", {}).get("sls_dc_md") else None
+            cls.whId = cls.md_cache_data.get("org_info", {}).get("inv_wh_md", [])[0]["id"] if cls.md_cache_data.get("org_info", {}).get("inv_wh_md") else None
 
         # cls.logger.info(f"slsDcId:{cls.slsDcId}")
         # cls.logger.info(f"orgBusinessTypeIds: {cls.orgBusinessTypeIds}")
-        for org_biz_type in  cls.orgBusinessTypeIds:
-            if org_biz_type["code"] == "COM_ORG":
-                cls.comOrgTypeId = org_biz_type["id"]
-            elif org_biz_type["code"] == "PUR_ORG":
-                cls.purOrgTypeId = org_biz_type["id"]
-            elif org_biz_type["code"] == "SLS_ORG":
-                cls.slsOrgTypeId  = org_biz_type["id"]
-            elif org_biz_type["code"] == "SLS_DC":
-                cls.slsDcTypeId = org_biz_type["id"]
-            elif org_biz_type["code"] == "INV_ORG":
-                cls.invOrgTypeId = org_biz_type["id"]
-            elif org_biz_type["code"] == "INV_LOC":
-                cls.invLocTypeId = org_biz_type["id"]
+        if cls.orgBusinessTypeIds:
+            for org_biz_type in  cls.orgBusinessTypeIds:
+                if org_biz_type["code"] == "COM_ORG":
+                    cls.comOrgTypeId = org_biz_type["id"]
+                elif org_biz_type["code"] == "PUR_ORG":
+                    cls.purOrgTypeId = org_biz_type["id"]
+                elif org_biz_type["code"] == "SLS_ORG":
+                    cls.slsOrgTypeId  = org_biz_type["id"]
+                elif org_biz_type["code"] == "SLS_DC":
+                    cls.slsDcTypeId = org_biz_type["id"]
+                elif org_biz_type["code"] == "INV_ORG":
+                    cls.invOrgTypeId = org_biz_type["id"]
+                elif org_biz_type["code"] == "INV_LOC":
+                    cls.invLocTypeId = org_biz_type["id"]
                 
     @classmethod        
     def teardown_class(cls):
