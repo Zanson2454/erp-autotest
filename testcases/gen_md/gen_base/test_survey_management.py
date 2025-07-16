@@ -36,18 +36,18 @@ class TestSurveyManagement(GenMdBaseTest):
            
             cls.db.delete(
                 table="gen_survey_detail_md",
-                where="survey_mission in (select id from  gen_survey_mission_md where mission_code like %s)",
-                params=["AT_%"]
+                where="survey_mission in (select id from  gen_survey_mission_md where title like %s or title like %s)",
+                params=["测试评分任务_%", "自动化_%"]
             )
             cls.db.delete(
                 table="gen_survey_mission_item_md",
-                where="gen_survey_mission_md_id in  (select id from  gen_survey_mission_md where mission_code like %s)",
-                params=["AT_%"]
+                where="gen_survey_mission_md_id in  (select id from  gen_survey_mission_md where title like %s or title like %s)",
+                params=["测试评分任务_%", "自动化_%"]
             )
             cls.db.delete(
                 table="gen_survey_mission_md",
-                where="mission_code like %s",
-                params=["AT_%"]
+                where="title like %s or title like %s",
+                params=["测试评分任务_%", "自动化_%"]
             )
            
 
@@ -86,20 +86,18 @@ class TestSurveyManagement(GenMdBaseTest):
                 "endDate": self.mock_util.get_timestamp(timestamp=True,day_offset=7),
                 "surveyMissionItem": [
                     {
-                        "weight": 1,
-                        "surveyItem": [
-                            {
-                                "weight": 100,
-                                "user": {
-                                    "id": self.user_id  
-                                },
-                                "template": {
-                                    "id": self.cust_template_id
-                                }
-                            }
-                        ]
+                        "weight": 10,
+                        "template":{
+                            "id":self.cust_template_id
+                        },
+                        "user":{
+                            "id":self.user_id
+                        }   
                     }
-                ]
+                ],
+                "surveyObj":{
+                    "id":self.cust_id
+                }
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -110,7 +108,6 @@ class TestSurveyManagement(GenMdBaseTest):
             
             sql = f"select id from gen_survey_mission_item_md where gen_survey_mission_md_id = {self.survey_mission_head_id}"
             self.survey_mission_item_id = self.db.query(sql)[0].get("id")
-            self.survey_mission_code = mission_code
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -144,6 +141,10 @@ class TestSurveyManagement(GenMdBaseTest):
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_success(response)
+            
+            sql = f"select state from gen_survey_mission_md where id = {self.survey_mission_head_id}"
+            state = self.db.query(sql)[0].get("state")
+            self.assert_util.assert_by_operator(state, "=", "RELEASED")
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -163,27 +164,100 @@ class TestSurveyManagement(GenMdBaseTest):
     def test_survey_score(self):
         """业务人员进行评分用例 - GEN_SURVEY_SCORE_ACTION_SERVICE"""
         try:
-            if not self.survey_mission_head_id:
-                self.test_create_survey_mission()
+            if not self.survey_detail_id:
+                self.test_query_survey_detail()
 
             api_path = self.get_api_path("GEN-评分任务-业务人员进行评分服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["missionId", "score", "comment"], ["params", "request"]
+                params, ["missionId", "score", "comment", "surveyRecord", "surveyDate", "type", "user", "template", "surveyObj", "surveyMission", "surveyMissionItem"], ["params", "request"]
             )
             set_dict = {
+                "id": self.survey_detail_id,
                 "missionId": self.survey_mission_head_id,
-                "score": 85,
-                "state": "SCORED",
+                "score": 20,
+                "state": "WAIT",
                 "surveyRecord":None,
-                "type":"CUST",
+                "surveyDate":self.mock_util.get_timestamp(timestamp=True),
+                "type": "CUST",
                 "user":{
                     "id":self.user_id
                 },
                 "template":{
-                    "templateInfo":None
+                    "id":self.cust_template_id,
+                    "templateInfo":{
+                        "header":[
+                            {
+                                "defaultValue":None,
+                                "length":40,
+                                "name":"序号",
+                                "required":True,
+                                "showWay":"ONLY_VIEW",
+                                "type":"TextArea",
+                                "value":None
+                                },
+                            {
+                                "defaultValue": "-",
+                                "length": 40,
+                                "name": "客户名称",
+                                "required": True,
+                                "showWay": "EDITABLE",
+                                "type": "TextArea",
+                                "value": f"测试客户_{self.mock_util.get_timestamp()}"
+                            }
+                            ],
+                        "body":[
+                                {
+                                "contentText":"基础信息评估及合作稳定性",
+                                "contentType":"TEXT",
+                                "formValue":10,
+                                "maxScore":10,
+                                "type":"score",
+                                "u_id":self.mock_util.get_mock_uuid()
+                                },
+                                {
+                                    "contentText":"客户满意度如何",
+                                    "formValue":10,
+                                    "selectItems":[
+                                        {
+                                            "label":"不满",
+                                            "score":0
+                                        },
+                                        {
+                                            "label":"一般",
+                                            "score":2
+                                        },
+                                        {
+                                            "label":"良好",
+                                            "score":6
+                                        },
+                                        {
+                                            "label":"满意",
+                                            "score":10
+                                        }
+                                    ],
+                                    "type":"select",
+                                    "u_id":self.mock_util.get_mock_uuid()
+                                },
+                                {
+                                    "contentText":"客户是否有重大违约记录",
+                                    "formValue":0,
+                                    "type":"boolean",
+                                    "u_id":self.mock_util.get_mock_uuid()
+                                },
+                                {
+                                    "contentText":"客户的 30 天销量",
+                                    "formValue":0,
+                                    "type":"section",
+                                    "u_id":self.mock_util.get_mock_uuid(),
+                                    "service":{}
+                                }
+                        ]
                     },
+                "surveyObj":{
+                    "id":self.cust_id
+                },
                 "surveyMission": {
                     "id":self.survey_mission_head_id
                     },
@@ -191,6 +265,8 @@ class TestSurveyManagement(GenMdBaseTest):
                         "id": self.survey_mission_item_id
                     }
             }
+            }
+            
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -201,7 +277,6 @@ class TestSurveyManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -218,7 +293,12 @@ class TestSurveyManagement(GenMdBaseTest):
         """查询评分详情用例 - GEN_SURVEY_DETAIL_ACTION_SERVICE"""
         try:
             if not self.survey_detail_id:
-                self.test_survey_score()
+                if not self.survey_mission_head_id:
+                    self.test_release_survey_mission()
+                sql = f"select id from  gen_survey_detail_md where survey_mission= {self.survey_mission_head_id}"
+                self.survey_detail_id = self.db.query(sql)[0].get("id")
+                if not self.survey_detail_id:
+                    self.test_survey_score()
 
             api_path = self.get_api_path("GEN-评分详情-查询评分详情服务")
             params, url = self.get_api_params(api_path)
