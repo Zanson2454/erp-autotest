@@ -49,7 +49,9 @@ class SQLInitializer:
             if isinstance(value, dict) and 'sql' in value:
                 sql = value['sql']
                 try:
-                    query_result = DBManager.query(sql)
+                    # 确保DBManager类配置已初始化，然后创建实例
+                    db_instance = DBManager()
+                    query_result = db_instance.query(sql)
                     result[key] = query_result
                     Loggers.info(f"SQL执行结果: {key} -> {query_result}")
                 except Exception as e:

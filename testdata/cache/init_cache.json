@@ -1,18 +1,127 @@
 {
-  "currency_info": null,
-  "language_info": null,
-  "country_info": null,
-  "timezone_info": null,
-  "gen_wc_head_info": null,
-  "calender_info": null,
-  "addr_info": null,
-  "exchange_rate_type_info": null,
+  "currency_info": [
+    {
+      "curr_id": 2000001,
+      "curr_code": "CNY",
+      "curr_name": "人民币"
+    }
+  ],
+  "language_info": [
+    {
+      "language_id": 2000001,
+      "language_code": "CHINESE",
+      "language_name": "中文"
+    }
+  ],
+  "country_info": [
+    {
+      "coun_id": 14037001,
+      "coun_code": "CHINA",
+      "coun_name": "中国"
+    }
+  ],
+  "timezone_info": [
+    {
+      "id": 2000001,
+      "timezone_code": "UTC-8",
+      "timezone_format": "UTC"
+    }
+  ],
+  "gen_wc_head_info": [
+    {
+      "gen_wc_head_id": 2000003,
+      "wc_head_code": "ihg",
+      "wc_head_name": "hgv"
+    }
+  ],
+  "calender_info": [
+    {
+      "id": 2002001,
+      "calendar_code": "01",
+      "calendar_name": "基准会计期间类型",
+      "status": "ENABLED"
+    }
+  ],
+  "addr_info": [
+    {
+      "id": 70028089
+    }
+  ],
+  "exchange_rate_type_info": [
+    {
+      "exchange_rate_type_id": 2000001,
+      "exchange_rate_type_code": "HR",
+      "exchange_rate_type_name": "固定汇率"
+    }
+  ],
   "uom_info": {
-    "qty_uom_info": null,
-    "mass_uom_info": null,
-    "len_uom_info": null,
-    "volume_uom_info": null
+    "qty_uom_info": [
+      {
+        "uom_id": 2004001,
+        "uom_code": "QTY",
+        "uom_type": "QTY",
+        "uom_desc": "件"
+      }
+    ],
+    "mass_uom_info": [
+      {
+        "uom_id": 2007001,
+        "uom_code": "KG",
+        "uom_type": "MASS",
+        "uom_desc": "千克"
+      }
+    ],
+    "len_uom_info": [
+      {
+        "uom_id": 14050001,
+        "uom_code": "CMT",
+        "uom_type": "L",
+        "uom_desc": "厘米"
+      }
+    ],
+    "volume_uom_info": [
+      {
+        "uom_id": 14049001,
+        "uom_code": "MTQ",
+        "uom_type": "VOL",
+        "uom_desc": "立方米"
+      }
+    ]
   },
-  "bank_info": null,
-  "tax_info": null
+  "bank_info": [
+    {
+      "bank_id": 2000005,
+      "bank_code": "CMB",
+      "bank_name": "招商银行",
+      "sub_bank_id": 1000006,
+      "sub_bank_code": "308902839019",
+      "sub_bank_name": "招商银行深圳红山支行"
+    }
+  ],
+  "tax_info": [
+    {
+      "id": 2002001,
+      "tax_code": "CN_PUR_01",
+      "taxcate": "J",
+      "tax": 13.0
+    },
+    {
+      "id": 2002002,
+      "tax_code": "CN_SLS_01",
+      "taxcate": "X",
+      "tax": 13.0
+    },
+    {
+      "id": 2003001,
+      "tax_code": "CN_PUR_02",
+      "taxcate": "J",
+      "tax": 6.0
+    },
+    {
+      "id": 14070001,
+      "tax_code": "tax_code",
+      "taxcate": "J",
+      "tax": 0.13
+    }
+  ]
 }

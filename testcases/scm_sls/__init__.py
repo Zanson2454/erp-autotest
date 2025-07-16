@@ -8,6 +8,7 @@ from data_factory.sls_factory import SlsDataFactory
 from utils.yaml_util import YamlUtil
 from utils.cache_util import CacheUtil
 from testcases.comm.base_test import BaseTest
+from data_factory.base import DataFactory
 
 class SlsBase(BaseTest):
     @classmethod
@@ -20,9 +21,18 @@ class SlsBase(BaseTest):
         cls.sls_cache_path = project_root / "testdata" / "cache" / "sls_cache.json"
         cls.sls_cache_dir = cls.sls_cache_path.parent
 
-        # 读取API配置
-        cls.sls_api_paths = YamlUtil.read_yaml(str(cls.sls_api_path_yaml))["apis"]
-        cls.sls_api_params = YamlUtil.read_yaml(str(cls.sls_prams_path_yaml))["api_params"]
+        # 加载API路径配置和参数配置
+        cls.apis = cls.yaml_util.read_yaml(cls.sls_api_path_yaml).get("apis", {})
+        cls.api_params = cls.yaml_util.read_yaml(cls.sls_prams_path_yaml).get("api_params", {})
+        # 初始化DataFactory（必须在init_sql_cache之前调用）
+        DataFactory.__init__(env_name="test")
+        # 加载缓存数据
+        DataFactory.init_sql_cache(
+            sql_config_path=str(project_root / "config" / "erp" / "sls_init_sql.yaml"), # 销售管理依赖的初始化sql 存放路径
+            db_config_name="erp_db", # 数据库配置名称
+            cache_key="sls_init_cache", # 缓存key
+            cache_dir="testdata/cache" # 缓存目录
+        )
 
         # 缓存初始化
         CacheUtil.init(str(cls.sls_cache_dir))

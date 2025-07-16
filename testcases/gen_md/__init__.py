@@ -74,6 +74,8 @@ class GenMdBaseTest(BaseTest):
         # 加载API路径配置和参数配置
         cls.apis = cls.yaml_util.read_yaml(cls.md_api_path).get("apis", {})
         cls.api_params = cls.yaml_util.read_yaml(cls.md_api_params).get("api_params", {})
+        # 初始化DataFactory（必须在init_sql_cache之前调用）
+        DataFactory.__init__(env_name="test")
         # 加载缓存数据
         DataFactory.init_sql_cache(
             sql_config_path=str(project_root / "config" / "erp" / "md_init_sql.yaml"), # 主数据依赖的初始化sql 存放路径
@@ -82,6 +84,7 @@ class GenMdBaseTest(BaseTest):
             cache_dir="testdata/cache" # 缓存目录
         )
         cls.md_cache_data = CacheUtil.get('md_init_cache')
+        cls.logger.info(f"md_cache_data: {cls.md_cache_data}")
         cls.path_params = {"tmodule":"GEN_MD"}
         cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
         cls.user_id = cls.init_data["user_info"]['user_info']["id"]
