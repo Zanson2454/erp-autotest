@@ -394,10 +394,10 @@ class TestCustomerTaxManagement(GenMdBaseTest):
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["ids"],
+                ["id"],
                 ["params", "request"]
             )
-            set_dict = {"ids": [self.cust_tax_id]}
+            set_dict = {"id": self.cust_tax_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)

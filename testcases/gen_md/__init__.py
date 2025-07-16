@@ -54,17 +54,17 @@ class GenMdBaseTest(BaseTest):
         )
         cls.admin_headers = admin_result.portal_headers
 
-        # 登录 cust
-        cust_result = login_service.login(portal_key=portal_keys["cust"], tenant_key=tenant_key)
-        if cust_result.status != cust_result.status.SUCCESS:
-            raise RuntimeError(f"cust 登录失败: {cust_result.error_message}")
-        cls.cust_session = cust_result.session
-        cls.cust_user_info = cust_result.user_info
-        cls.http_cust = HttpUtil(
-            url=cust_result.portal_url,
-            session=cust_result.session,
-            headers=cust_result.portal_headers
-        )
+        # # 登录 cust
+        # cust_result = login_service.login(portal_key=portal_keys["cust"], tenant_key=tenant_key)
+        # if cust_result.status != cust_result.status.SUCCESS:
+        #     raise RuntimeError(f"cust 登录失败: {cust_result.error_message}")
+        # cls.cust_session = cust_result.session
+        # cls.cust_user_info = cust_result.user_info
+        # cls.http_cust = HttpUtil(
+        #     url=cust_result.portal_url,
+        #     session=cust_result.session,
+        #     headers=cust_result.portal_headers
+        # )
 
 
         # 初始化配置文件路径
