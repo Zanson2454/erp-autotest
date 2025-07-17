@@ -11,6 +11,7 @@ from utils.report_util import fix_report_title
 import threading
 from utils.dingtalk_util import send_dingtalk_msg
 import datetime
+from typing import Optional
 
 # 钉钉机器人Webhook（请替换为你的真实token）
 DINGTALK_WEBHOOK = "https://oapi.dingtalk.com/robot/send?access_token=f239b50eb61afcd187515c7fdf919ff5fdb1e9dae47e184a9515a4dc3335001a"
@@ -22,8 +23,10 @@ class ExecType(str, Enum):
 
 class RunTestRequest(BaseModel):
     type: ExecType = Field(..., description="执行类型: all/module/file")
-    module: str = Field(None, description="模块名，如 gen")
-    file: str = Field(None, description="文件名，不带 .py")
+    module: Optional[str] = Field(None, description="模块名，如 gen")
+    file: Optional[str] = Field(None, description="文件名，不带 .py")
+    env: str = Field("test", description="环境配置")
+    workers: int = Field(4, description="并行工作进程数")
 
 router = APIRouter(prefix="/executor", tags=["用例执行"])
 
@@ -38,8 +41,18 @@ def run_tests_background(task_id, target, req):
             shutil.rmtree(results_history, ignore_errors=True)
             shutil.copytree(report_history, results_history)
 
-        # 2. 执行 pytest
-        pytest_cmd = ["pytest", target, "--alluredir=reports/allure-results", "--disable-warnings", "-q"]
+        # 2. 执行 pytest 按文件并行执行
+        pytest_cmd = [
+            "pytest", 
+            target, 
+            "-s", 
+            "--log-cli-level=INFO",
+            f"--env={req.get('env', 'test')}",
+            f"-n={req.get('workers', 4)}",
+            "--dist=loadfile",
+            "--alluredir=reports/allure-results", 
+            "--disable-warnings"
+        ]
         pytest_proc = subprocess.run(pytest_cmd, capture_output=True, text=True, timeout=1200)
         tasks[task_id]["pytest"] = pytest_proc.stdout + pytest_proc.stderr
         tasks[task_id]["pytest_returncode"] = pytest_proc.returncode

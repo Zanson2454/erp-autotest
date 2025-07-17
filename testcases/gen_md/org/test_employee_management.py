@@ -110,7 +110,7 @@ class TestEmployeeManagement(GenMdBaseTest):
                 "type": "FORMAL",  # 正式员工
                 "orgStructId": self.com_org_id,
                 "mobile": mobile,
-                "email": f"{self.mock_util.get_timestamp()}@terminus.io",
+                "email": email,
                 "userName": user_name,
                 "entryAt": entry_date,
                 "resignationAt": None,

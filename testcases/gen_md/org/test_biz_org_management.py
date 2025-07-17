@@ -5,6 +5,7 @@ from utils.mock_util import MockData
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 import pytest
+import time
 
 
 @allure.epic("组织管理")
@@ -16,9 +17,6 @@ class TestBizOrgManagement(GenMdBaseTest):
       
         super().setup_class()
         cls.org_info = {}
-        cls.mock_data = MockData()
-        # cls.logger.info(f"init_data: {cls.init_data}")
-        # cls.logger.info(f"md_cache_data: {cls.md_cache_data}")
         cls.enabled_org_id = None
         
         # 获取初始化数据中的第一个数据
@@ -79,9 +77,9 @@ class TestBizOrgManagement(GenMdBaseTest):
         保存公司组织用例
         """
         try:
-            org_code = self.mock_data.generate_unique_code(tag="ComOrg")
-            org_name = self.mock_data.get_mock_company()
-            org_enable_date = self.mock_data.get_mock_date(include_time=False, days_offset=0)
+            org_code = self.mock_util.generate_unique_code(tag="ComOrg")
+            org_name = self.mock_util.get_mock_company()
+            org_enable_date = self.mock_util.get_mock_date(include_time=False, days_offset=0)
 
             api_path = self.get_api_path("ORG-组织架构-保存服务")
             params, url = self.get_api_params(api_path)
@@ -149,9 +147,9 @@ class TestBizOrgManagement(GenMdBaseTest):
                 org_parent_code = TestBizOrgManagement.org_info.get("com_org_info", {}).get("org_code")
                 com_org_id = TestBizOrgManagement.org_info.get("com_org_info", {}).get("id")
 
-            org_code = self.mock_data.generate_unique_code(tag="PurOrg")
-            org_name = f"采购组织_{self.mock_data.get_timestamp()}"
-            org_enable_date = self.mock_data.get_mock_date(include_time=False, days_offset=0)
+            org_code = self.mock_util.generate_unique_code(tag="PurOrg")
+            org_name = f"采购组织_{self.mock_util.get_timestamp()}"
+            org_enable_date = self.mock_util.get_mock_date(include_time=False, days_offset=0)
 
             api_path = self.get_api_path("ORG-组织架构-保存服务")
             params, url = self.get_api_params(api_path)
@@ -219,9 +217,9 @@ class TestBizOrgManagement(GenMdBaseTest):
                 org_parent_code = TestBizOrgManagement.org_info.get("com_org_info", {}).get("org_code")
                 com_org_id = TestBizOrgManagement.org_info.get("com_org_info", {}).get("id")
 
-            org_code = self.mock_data.generate_unique_code(tag="SlsOrg")
-            org_name = f"销售组织_{self.mock_data.get_timestamp()}"
-            org_enable_date = self.mock_data.get_mock_date(include_time=False, days_offset=0)
+            org_code = self.mock_util.generate_unique_code(tag="SlsOrg")
+            org_name = f"销售组织_{self.mock_util.get_timestamp()}"
+            org_enable_date = self.mock_util.get_mock_date(include_time=False, days_offset=0)
 
             api_path = self.get_api_path("ORG-组织架构-保存服务")
             params, url = self.get_api_params(api_path)
@@ -289,9 +287,9 @@ class TestBizOrgManagement(GenMdBaseTest):
                 org_parent_code = TestBizOrgManagement.org_info.get("com_org_info", {}).get("org_code")
                 com_org_id = TestBizOrgManagement.org_info.get("com_org_info", {}).get("id")
 
-            org_code = self.mock_data.generate_unique_code(tag="InvOrg")
-            org_name = f"库存组织_{self.mock_data.get_timestamp()}"
-            org_enable_date = self.mock_data.get_mock_date(include_time=False, days_offset=0)
+            org_code = self.mock_util.generate_unique_code(tag="InvOrg")
+            org_name = f"库存组织_{self.mock_util.get_timestamp()}"
+            org_enable_date = self.mock_util.get_mock_date(include_time=False, days_offset=0)
 
             api_path = self.get_api_path("ORG-组织架构-保存服务")
             params, url = self.get_api_params(api_path)
@@ -359,9 +357,9 @@ class TestBizOrgManagement(GenMdBaseTest):
                 org_parent_code = TestBizOrgManagement.org_info.get("inv_org_info", {}).get("org_code")
                 inv_org_id = TestBizOrgManagement.org_info.get("inv_org_info", {}).get("id")
 
-            org_code = self.mock_data.generate_unique_code(tag="InvLoc")
-            org_name = f"库存地点_{self.mock_data.get_timestamp()}"
-            org_enable_date = self.mock_data.get_mock_date(include_time=False, days_offset=0)
+            org_code = self.mock_util.generate_unique_code(tag="InvLoc")
+            org_name = f"库存地点_{self.mock_util.get_timestamp()}"
+            org_enable_date = self.mock_util.get_mock_date(include_time=False, days_offset=0)
 
             api_path = self.get_api_path("ORG-组织架构-保存服务")
             params, url = self.get_api_params(api_path)
@@ -374,8 +372,8 @@ class TestBizOrgManagement(GenMdBaseTest):
                 ["params", "request"]
             )
             
-            contact_phone = self.mock_data.get_mock_phone_number()
-            contact_name = self.mock_data.get_mock_name()
+            contact_phone = self.mock_util.get_mock_phone_number()
+            contact_name = self.mock_util.get_mock_name()
             
             set_dict = {
                 "orgCode": org_code,
@@ -933,14 +931,11 @@ class TestBizOrgManagement(GenMdBaseTest):
         启用组织单元用例
         """
         try:
-            sql = "select id from org_struct_md where deleted=0 and  org_dimension_code = 'SCM_ORG_GRP' and org_code like 'AT_%'  and org_status in ('DISABLED','DRAFT') limit 1"
-            org_id = self.db.query(sql)
-            if not org_id:
+            org_id = self.org_info.get("com_org_info",{}).get("id")
+            if not  org_id:
                 self.test_save_com_org()
-                org_id = TestBizOrgManagement.org_info.get("com_org_info", {}).get("id")
-            else:
-                org_id = org_id[0].get("id")
-                
+                org_id = self.org_info.get("com_org_info",{}).get("id")
+            
             # 获取API配置
             api_path = self.get_api_path("ORG-组织架构-启用组织单元服务")
             params, url = self.get_api_params(api_path)
@@ -968,8 +963,8 @@ class TestBizOrgManagement(GenMdBaseTest):
             
             sql = f"select org_status from org_struct_md where id = {org_id}"
             org_status = self.db.query(sql)[0].get("org_status")
-            TestBizOrgManagement.enabled_org_id = org_id
             self.assert_util.assert_by_operator(org_status,"=","ENABLED")
+            self.enabled_org_id = org_id
             self.logger.info(f"成功启用组织: {org_id}")
             
             # Allure 附件
@@ -994,9 +989,15 @@ class TestBizOrgManagement(GenMdBaseTest):
         停用组织单元用例
         """
         try:
-            if not TestBizOrgManagement.enabled_org_id:
-                self.test_enable_org_struct()
-            org_id = TestBizOrgManagement.enabled_org_id
+            org_id = self.org_info.get("com_org_info",{}).get("id")
+            if not  org_id:
+                self.test_save_com_org()
+                org_id = self.org_info.get("com_org_info",{}).get("id")
+            
+            if not  org_id:
+                self.test_save_com_org()
+                org_id = self.org_info.get("com_org_info",{}).get("id")
+            
 
             # 获取停用API配置
             api_path = self.get_api_path("ORG-组织架构-停用组织单元服务")

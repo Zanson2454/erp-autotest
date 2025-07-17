@@ -1,3 +1,4 @@
+from sqlite3.dbapi2 import Timestamp
 from faker import Faker
 from faker.providers import BaseProvider
 from typing import Optional, List, Dict, Any, Union
@@ -149,7 +150,8 @@ class MockData:
         Returns:
             str: 随机生成的邮箱地址
         """
-        return self.fake.email()
+        timestamp = int(time.time() * 1000)
+        return f"{timestamp}@terminus.io"
     
     def get_mock_company(self) -> str:
         """生成公司名称

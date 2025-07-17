@@ -278,6 +278,8 @@ class DBManager:
             if params:
                 self._logger.error(f"参数: {params}")
             raise
+        
+
 
     def close(self):
         """关闭连接"""
