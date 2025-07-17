@@ -9,7 +9,7 @@ from pathlib import Path
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
 
-from typing import Any
+from typing import Any,Dict
 from testcases.comm.base_test import BaseTest,LoginService
 from data_factory.base import DataFactory
 from utils.cache_util import CacheUtil
@@ -20,6 +20,14 @@ class GenMdBaseTest(BaseTest):
     
     # 类型提示：继承的动态属性
     yaml_util: Any
+    
+    
+    # 登录两个门户，分别保存 session/user_info 并初始化 http 工具
+    _PORTAL_TYPE_KEYS: Dict[str, str] = {
+    "admin": "TERP_PORTAL",
+    "cust": "TERP_CUST_PC"
+    }   
+    
     
     @classmethod
     def setup_class(cls):
@@ -33,40 +41,26 @@ class GenMdBaseTest(BaseTest):
         """
         super().setup_class()
 
-        # 登录两个门户，分别保存 session/user_info 并初始化 http 工具
-        portal_keys = {
-            "admin": "TERP_PORTAL",
-            "cust": "TERP_CUST_PC"
-        }
-        tenant_key = "terp"
-        login_service = LoginService(cls.env_config)
-
+        cls.login_service = LoginService(cls.env_config)  # 初始化一次登录服务，避免重复创建
         # 登录 admin
-        admin_result = login_service.login(portal_key=portal_keys["admin"], tenant_key=tenant_key)
+        admin_result = cls.login_service.login(portal_key=cls._PORTAL_TYPE_KEYS["admin"])
         if admin_result.status != admin_result.status.SUCCESS:
             raise RuntimeError(f"admin 登录失败: {admin_result.error_message}")
-        cls.admin_session = admin_result.session
-        cls.admin_user_info = admin_result.user_info
         
+        # 初始化 cust 的 headers
+        if admin_result.portal_headers:
+            cls.cust_portal_headers = admin_result.portal_headers.copy()  
+        cust_portal_referer = cls.env_config.get("portal_config",{}).get('terp',{}).get("TERP_CUST_PC",{}).get("portal_referer")
+        cls.cust_portal_headers["Referer"] = cust_portal_referer
+        # cls.logger.info(f"cust_portal_headers: {cls.cust_portal_headers}")
+  
+        # 初始化 http 实例
         cls.http = HttpUtil(
             url=admin_result.portal_url,
             session=admin_result.session,
             headers=admin_result.portal_headers
         )
-        cls.admin_headers = admin_result.portal_headers
-
-        # # 登录 cust
-        # cust_result = login_service.login(portal_key=portal_keys["cust"], tenant_key=tenant_key)
-        # if cust_result.status != cust_result.status.SUCCESS:
-        #     raise RuntimeError(f"cust 登录失败: {cust_result.error_message}")
-        # cls.cust_session = cust_result.session
-        # cls.cust_user_info = cust_result.user_info
-        # cls.http_cust = HttpUtil(
-        #     url=cust_result.portal_url,
-        #     session=cust_result.session,
-        #     headers=cust_result.portal_headers
-        # )
-
+     
 
         # 初始化配置文件路径
         cls.md_api_path = Path(project_root) / "testdata" / "gen_md" / "md_api_path.yaml"
@@ -84,7 +78,6 @@ class GenMdBaseTest(BaseTest):
             cache_dir="testdata/cache" # 缓存目录
         )
         cls.md_cache_data = CacheUtil.get('md_init_cache')
-        cls.logger.info(f"md_cache_data: {cls.md_cache_data}")
         cls.path_params = {"tmodule":"GEN_MD"}
         cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
         cls.user_id = cls.init_data["user_info"]['user_info']["id"]
