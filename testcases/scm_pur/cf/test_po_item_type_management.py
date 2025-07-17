@@ -70,9 +70,10 @@ class TestPoItemTypeManagement(ScmPurBaseTest):
     )
     def test_export_task_po_item_type(self):
         try:
-            api_info = self.get_api_info("订单项目行类型-导入导出任务管理接口-提交导出任务")
-            a.json(api_info, "请求数据")
-            response = self.http.post(api_info["path"], json=api_info["body"])
+            api_path = self.get_api_path("订单项目行类型-导入导出任务管理接口-提交导出任务")
+            params, url = self.get_api_params(api_path)
+            a.json(params, "请求数据")
+            response = self.http.post(url, json=params)
             a.json(response, "响应数据")
             self.assert_util.assert_response_success(response)
         except Exception as e:
@@ -89,9 +90,10 @@ class TestPoItemTypeManagement(ScmPurBaseTest):
     )
     def test_export_po_item_type(self):
         try:
-            api_info = self.get_api_info("订单项目行类型标准导出服务")
-            a.json(api_info, "请求数据")
-            response = self.http.post(api_info["path"], json=api_info["body"])
+            api_path = self.get_api_path("订单项目行类型标准导出服务")
+            params, url = self.get_api_params(api_path)
+            a.json(params, "请求数据")
+            response = self.http.post(url, json=params)
             a.json(response, "响应数据")
             self.assert_util.assert_response_success(response)
         except Exception as e:
@@ -109,11 +111,12 @@ class TestPoItemTypeManagement(ScmPurBaseTest):
     )
     def test_get_name_by_type_id_from_purchase_request_line(self):
         try:
-            api_info = self.get_api_info("根据采购申请行类型ID查询名称")
+            api_path = self.get_api_path("根据采购申请行类型ID查询名称")
+            params, url = self.get_api_params(api_path)
             # 这里需要一个有效的type_id，实际用例应先通过分页接口获取
-            ParamUtil.set_request_params(api_info["body"], {"typeId": 1})
-            a.json(api_info, "请求数据")
-            response = self.http.post(api_info["path"], json=api_info["body"])
+            ParamUtil.set_request_params(params, {"typeId": 1})
+            a.json(params, "请求数据")
+            response = self.http.post(url, json=params)
             a.json(response, "响应数据")
             self.assert_util.assert_response_success(response)
         except Exception as e:

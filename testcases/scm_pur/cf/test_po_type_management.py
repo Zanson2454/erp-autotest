@@ -29,7 +29,7 @@ class TestPoTypeManagement(ScmPurBaseTest):
             # 假设表名为 pur_po_type_cf，code 字段为 type_code
             cls.db.delete(
                 table="pur_po_type_cf",
-                where="type_code like %s",
+                where="po_type like %s",
                 params=["AT_%"]
             )
             cls.logger.info("测试数据清理完成")
@@ -70,9 +70,63 @@ class TestPoTypeManagement(ScmPurBaseTest):
     )
     def test_export_task_po_type(self):
         try:
-            api_info = self.get_api_info("订单类型-导入导出任务管理接口-提交导出任务")
-            a.json(api_info, "请求数据")
-            response = self.http.post(api_info["path"], json=api_info["body"])
+            api_path = self.get_api_path("订单类型-导入导出任务管理接口-提交导出任务")
+            params, url = self.get_api_params(api_path)
+            params["params"]= {
+                "taskName": f"订单类型-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
+                "multiSheetConfig": [
+                    {
+                        "modelKey": "SCM_PUR$pur_po_type_cf",
+                        "modelName": "订单类型",
+                        "sheetNo": 0,
+                        "sheetName": "订单类型",
+                        "headerConfigList": [
+                            {
+                                "name": "类型编码",
+                                "type": "TEXT",
+                                "field": "poType"
+                            },
+                            {
+                                "name": "类型名称",
+                                "type": "TEXT",
+                                "field": "poTypeName"
+                            }
+                        ]
+                    }
+                ],
+                "queryData": {
+                    "containerKey": "SCM_PUR$PUR_PO_TYPE_VIEW-list-SCM_PUR$pur_po_type_cf",
+                    "viewKey": "SCM_PUR$PUR_PO_TYPE_VIEW:list",
+                    "sceneKey": "SCM_PUR$PUR_PO_TYPE_VIEW",
+                    "params": {
+                        "request": {
+                            "pageable": {
+
+                            }
+                        },
+                        "selectFields": [
+                            {
+                                "field": "poType"
+                            },
+                            {
+                                "field": "poTypeName"
+                            }
+                        ],
+                        "modelKey": "SCM_PUR$pur_po_type_cf"
+                    }
+                },
+                "processConfig": {
+                    "processType": "TRANTOR",
+                    "model": "SCM_PUR$pur_po_type_cf",
+                    "modelName": "订单类型",
+                    "containerKey": "SCM_PUR$PUR_PO_TYPE_VIEW-list-SCM_PUR$pur_po_type_cf",
+                    "viewKey": "SCM_PUR$PUR_PO_TYPE_VIEW:list",
+                    "sceneKey": "SCM_PUR$PUR_PO_TYPE_VIEW"
+                }
+            }
+
+            a.json(params, "请求数据")
+            response = self.http.post(url, json=params)
             a.json(response, "响应数据")
             self.assert_util.assert_response_success(response)
         except Exception as e:
@@ -87,11 +141,13 @@ class TestPoTypeManagement(ScmPurBaseTest):
         order=4,
         tags=["订单类型", "标准导出"]
     )
+    @pytest.mark.skip(reason="业务未引用暂时跳过")
     def test_export_po_type(self):
         try:
-            api_info = self.get_api_info("订单类型标准导出服务")
-            a.json(api_info, "请求数据")
-            response = self.http.post(api_info["path"], json=api_info["body"])
+            api_path = self.get_api_path("订单类型标准导出服务")
+            params, url = self.get_api_params(api_path)
+            a.json(params, "请求数据")
+            response = self.http.post(url, json=params)
             a.json(response, "响应数据")
             self.assert_util.assert_response_success(response)
         except Exception as e:
