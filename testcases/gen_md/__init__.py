@@ -48,10 +48,12 @@ class GenMdBaseTest(BaseTest):
             raise RuntimeError(f"admin 登录失败: {admin_result.error_message}")
         
         # 初始化 cust 的 headers
-        if admin_result.portal_headers:
-            cls.cust_portal_headers = admin_result.portal_headers.copy()  
+        cls.admin_headers = admin_result.portal_headers
+        if cls.admin_headers:
+            cls.cust_portal_headers = cls.admin_headers.copy()  
         cust_portal_referer = cls.env_config.get("portal_config",{}).get('terp',{}).get("TERP_CUST_PC",{}).get("portal_referer")
         cls.cust_portal_headers["Referer"] = cust_portal_referer
+        cls.logger.info(f"cust_portal_headers: {cls.cust_portal_headers}")
         # cls.logger.info(f"cust_portal_headers: {cls.cust_portal_headers}")
   
         # 初始化 http 实例
