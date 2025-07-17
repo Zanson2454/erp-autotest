@@ -1,0 +1,834 @@
+version: '1.0'
+total_apis: 277
+apis:
+  PO_ITEM_采购订单行_解冻服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_UNFREEZE_EVENT_SERVICE
+    method: POST
+  PO-变更审批通过-行状态修改服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_APPROVED_ITEM_STATUS_UPDATE_SERVICE
+    method: POST
+  PR-ITEM-创建采购订单服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_CREATE_PO_SUBMIT_EVENT_SERVICE
+    method: POST
+  PO-创建订单-提交审批拒绝服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_CREATE_SUBMIT_APPROVED_REJECT_SERVICE
+    method: POST
+  PR-HEAD状态-审批中-生效服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_HEAD_STATUS_EFFECT_SERVICE
+    method: POST
+  采购申请自动下单规则校验服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ORDER_RULE_JUDGE_EVENT_SERVICE
+    method: POST
+  采购订单完成:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_FINISHED_SERVICE
+    method: POST
+  PR-取消采购申请服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_CANCEL_EVENT_SERVICE
+    method: POST
+  PR-提交采购申请-审批退回服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_APPROVAL_REJECT_SERVICE
+    method: POST
+  PO-订单行选择物料服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_MAT_CONVERT_EVENT_SERVICE
+    method: POST
+  PO-重新定价-NEW服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_RE_PRICE_ACTION_EVENT_SERVICE
+    method: POST
+  PR-ITEM状态变更-执行中-已完成服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_STATUS_UPDATE_FINISHED_SERVICE
+    method: POST
+  POT_保存服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$FHDSFHD_SERVICE
+    method: POST
+  PO-订单行-数据回填服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$DN_FILL_DATA_BACK_EVENT_SERVICE
+    method: POST
+  PO-订单行-取消完成服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_CANCEL_FINISHED_SERVICE
+    method: POST
+  PO-列表页-提交服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_LIST_SUBMIT_SERVICE
+    method: POST
+  PR-提交采购申请-审批通过服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_APPROVED_STATUS_UPDATE_SERVICE
+    method: POST
+  PO-采购订单-基于销售订单分组服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_SO_GROUP_EVENT_SERVICE
+    method: POST
+  采购申请整单完成服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_FINISH_EVENT_SERVICE
+    method: POST
+  PO-变更审批通过-头状态修改服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_APPROVED_HEAD_STATUS_UPDATE_SERVICE
+    method: POST
+  PR-ITEM状态变更-草稿-生效服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_SUBMIT_STATUS_UPDATE_SERVICE
+    method: POST
+  PO-创建订单-保存服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_CREATE_SAVE_EVENT_SERVICE
+    method: POST
+  PO_协同_供应商接单服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_RECEIVE_EVENT_SERVICE
+    method: POST
+  PR-HEAD生效服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_EFFECT_EVENT_SERVICE
+    method: POST
+  PR-ITEM状态-审批中-生效服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_STATUS_EFFECT_SERVICE
+    method: POST
+  PO-创建订单-提交审批通过服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_CREATE_SUBMIT_APPROVED_SERVICE
+    method: POST
+  PO-查询采购定价记录服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_QUERY_PRICE_RECORDS_EVENT_SERVICE
+    method: POST
+  POT_审核服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$FDSJF_SERVICE
+    method: POST
+  PR-HEAD状态变更-审批中服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_STATUS_UPDATE_APPROVAL_SERVICE
+    method: POST
+  PO-删除订单服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_DELETE_DRAFT_PO_BY_ID_EVENT_SERVICE
+    method: POST
+  PO-采购订单变更-审批撤回-行状态修改服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ALTER_APPROVAL_REJECT_ITEM_STATUS_CHANGE_SERVICE
+    method: POST
+  PR-单据追踪服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_CREATE_DOC_TRACE_EVENT_SERVICE
+    method: POST
+  RG-批量提交订单服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$RG_BATCH_CREATE_SERVICE
+    method: POST
+  PR-采购申请行业务状态变更-待下单-执行中服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_STATUS_IN_EXECUTION_SERVICE
+    method: POST
+  PO-根据规则组带出支付条款信息服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_QUERY_RULE_GROUP_EVENT_SERVICE
+    method: POST
+  RG-采购退货ATP检查服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_RG_ATP_CHECK_SERVICE
+    method: POST
+  PO-采购申请行转采购订单项目行服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_PR_ITEM_CONVERT_ITEM_EVENT_SERVICE
+    method: POST
+  VEND-供应商查询默认的联系方式服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$VEND_QUERY_DEFAULT_CONTACT_INFO_SERVICE
+    method: POST
+  PR-ITEM-锁定服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_LOCK_EVENT_SERVICE
+    method: POST
+  PO-回写收货数量服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_SAVE_PUR_QTY_SERVICE
+    method: POST
+  PR-ITEM-匹配配额协议-保存服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_SAVE_QUOTA_EVENT_SERVICE
+    method: POST
+  PR-HEAD提交-状态变更-审批拒绝服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_STATUS_UPDATE_APPROVAL_REJECT_SERVICE
+    method: POST
+  PR-申请类型带出相关方附件备注服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_QUERY_PARTNER_TEXT_ATTACHMENT_EVENT_SERVICE
+    method: POST
+  PR-ITEM-取消锁定服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_UNLOCK_EVENT_SERVICE
+    method: POST
+  PR-ITEM状态变更-审批中服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_STATUS_UPDATE_APPROVAL_SERVICE
+    method: POST
+  PO-自动填充采购订单相关方服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_AUTO_FILL_PARTNER_EVENT_SERVICE
+    method: POST
+  PO-复制初始化服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_COPY_INIT_SERVICE
+    method: POST
+  PR-取消提交服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_CANCEL_SUBMIT_EVENT_SERVICE
+    method: POST
+  PR-ITEM-匹配货源清单-保存服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_SAVE_LIST_EVENT_SERVICE
+    method: POST
+  PO-查询采购订单默认附件服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_QUERY_DEFAULT_ATTACHMENT_EVENT_SERVICE
+    method: POST
+  PR-采购申请行批量自动下单服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEMS_BATCH_AUTO_ORDER_EVENT_SERVICE
+    method: POST
+  PR-ITEM-提交服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_SUBMIT_EVENT_SERVICE
+    method: POST
+  PR-ITEM批量状态变更-执行中-已完成服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_BATCH_STATUS_UPDATE_FINISHED_SERVICE
+    method: POST
+  PO-查询采购订单收付款类型服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_QUERY_FIN_BRM_EVENT_SERVICE
+    method: POST
+  采购申请自动匹配规则校验服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_MATCH_RULE_JUDGE_EVENT_SERVICE
+    method: POST
+  PR-ITEM状态变更-寻源-下单服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_STATUS_IUPDATE_SOURCE_SERVICE
+    method: POST
+  PO-订单头-取消冻结服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_CANCEL_FREEZE_SERVICE
+    method: POST
+  PR-采购申请行分组生成采购订单服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_GROUP_TO_PO_EVENT_SERVICE
+    method: POST
+  PO-保存计划行服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_S_SAVE_EVENT_SERVICE
+    method: POST
+  PO-变更审批-行状态修改服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_APPROVAL_ITEM_STATUS_UPDATE_SERVICE
+    method: POST
+  根据父编码渲染订单行服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_RENDER_BY_PARENT_CODE_EVENT_SERVICE
+    method: POST
+  PO-创建订单-审批通过行状态修改服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_ITEM_APPROED_STATUS_UPDATE_SERVICE
+    method: POST
+  PR-获取当前用户关联的员工服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_GET_USER_EMPLOYEE_SERVICE
+    method: POST
+  PO-创建订单-提交行状态修改服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_ITEM_SUBMIT_STATUS_UPDATE_SERVICE
+    method: POST
+  PR-申请复制服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_COPY_SERVICE
+    method: POST
+  PO-批量删除订单服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_BATCH_DELETE_DRAFT_PO_BY_IDS_EVENT_SERVICE
+    method: POST
+  PO-取消提交服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_CANCEL_SUBMIT_EVENT_SERVICE
+    method: POST
+  PO-查询关联单据行信息服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_QUERY_REF_ITEM_INFO_SERVICE
+    method: POST
+  打印采购订单数据查询接口服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_QUERY_PRINT_DETAIL_EVENT_SERVICE
+    method: POST
+  根据生产版本渲染订单行服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_ITEM_RENDER_BY_PRD_VRS_EVENT_SERVICE
+    method: POST
+  PO-自动定价-NEW服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_AUTO_PRICE_ACTION_EVENT_SERVICE
+    method: POST
+  PO_ITEM_采购订单行_冻结服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_FREEZE_EVENT_SERVICE
+    method: POST
+  PO-变更-审批通过服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_ALTER_APPROVED_SERVICE
+    method: POST
+  PR-整单指派服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_EMPLOYEE_DISPATCH_EVENT_SERVICE
+    method: POST
+  PO-变更审批-头状态修改服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_APPROVAL_STATUS_UPDATE_SERVICE
+    method: POST
+  PO-根据冻结记录进行解冻服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_UNFREEZE_BY_RECORD_EVENT_SERVICE
+    method: POST
+  PO-获取定价服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_CALCULATE_PRICE_EVENT_SERVICE
+    method: POST
+  PO-采购订单变更-审批撤回服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ALTER_APPROVAL_REJECT_SERVICE
+    method: POST
+  PO-订单行-手动完成服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_FINISHED_SERVICE
+    method: POST
+  PR-采购申请-保存并提交服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_SAVE_THAN_SUBMIT_EVENT_SERVICE
+    method: POST
+  PO-查询支付计划行服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_QUERY_PAYMENT_LINE_EVENT_SERVICE
+    method: POST
+  POT_提交服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$FSDJF_SERVICE
+    method: POST
+  PO-创建订单-审批拒绝行状态修改服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_APPROVAL_REJECT_ITEM_STATUS_UPDATE_SERVICE
+    method: POST
+  PO-订单行-冻结服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_FREEZE_SERVICE
+    method: POST
+  PO-创建订单-提交审批拒绝头状态修改服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_APPROVAL_REJECT_HEAD_STATUS_SERVICE
+    method: POST
+  PR-创建采购申请-保存服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_CREATE_SAVE_EVENT_SERVICE
+    method: POST
+  PO-查询采购订单默认相关方服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_QUERY_DEFAULT_PARTNER_EVENT_SERVICE
+    method: POST
+  PO-单据行类型服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_MAT_TYPE_GET_ITEM_TYPE_SERVICE
+    method: POST
+  采购申请自动派单规则校验服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_MD_ASSIGN_JUDGE_SERVICE
+    method: POST
+  PO-创建订单-审批通过头状态修改服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_APPROVAL_HEAD_STATUS_UPDATE_SERVICE
+    method: POST
+  PR-采购申请生效-自动指派服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_EFFECT_EVENT_SERVICE
+    method: POST
+  RG-批量保存退货订单服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$RG_BATCH_SAVE_SERVICE
+    method: POST
+  PO-价格协议行转采购订单项目行服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_AGREEMENT_ITEM_CONVERT_ITEM_EVENT_SERVICE
+    method: POST
+  PR-HEAD状态变更-执行中-已完成服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_HEAD_STATUS_UPDATE_FINISHED_SERVICE
+    method: POST
+  PR-采购申请行已指派-批量自动匹配价格协议服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEMS_ASSIGNED_AUTO_MATCH_PRICE_AGREEMENT_EVENT_SERVICE
+    method: POST
+  PO-作废-头状态修改服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$ABOLISH_HEAD_STATUS_UPDATE_SERVICE
+    method: POST
+  PR-ITEM-指派采购员-保存服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_SAVE_EMLPYEE_EVENT_SERVICE
+    method: POST
+  PR-采购任务-退回服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_SEND_BACK_SERVICE
+    method: POST
+  PO-订单行-取消冻结服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_CANCEL_FREEZE_SERVICE
+    method: POST
+  PR-采购任务-退回状态变更服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_SEND_BACK_STATUS_UPDATE_SERVICE
+    method: POST
+  PR-ITEM状态变更-指派-寻源服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_STATUS_UPDATE_ASSIGN_SERVICE
+    method: POST
+  PO-取消完成-行状态修改服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$CANCEL_ITEM_STATUS_UPDATE_SERVICE
+    method: POST
+  PO-创建订单-提交服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_CREATE_SUBMIT_EVENT_SERVICE
+    method: POST
+  PO-采购订单变更-审批撤回-头状态修改服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ALTER_APPROVAL_REJECT_HEAD_STATUS_CHANGE_SERVICE
+    method: POST
+  PR-ITEM提交-状态变更-审批拒绝服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_STATUS_UPDATE_APPROVAL_REJECT_SERVICE
+    method: POST
+  PR-创建采购申请-提交-回调-同意服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_SUBMIT_CALLBACK_ACCEPTED_SERVICE
+    method: POST
+  采购申请作废服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ABOLISH_EVENT_SERVICE
+    method: POST
+  PR-采购任务-转办服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_TRANSFER_ANOTHER_SERVICE
+    method: POST
+  采购申请行完成服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_FINISH_EVENT_SERVICE
+    method: POST
+  PO-订单-变更服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_ALTER_EVENT_SERVICE
+    method: POST
+  PO-根据采购订单行返回批次信息服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_ITEM_QUERY_BATCH_INFO_BY_PO_ITEM_EVENT_SERVICE
+    method: POST
+  PO_协同_发送采购订单服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_SEND_EVENT_SERVICE
+    method: POST
+  PO-创建订单-提交审批行状态修改服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_ITEM_SUBMIT_APPROVAL_STATUS_UPDATE_SERVICE
+    method: POST
+  PO-三方商城失败重试服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_THIRD_PARTY_RETRY_EVENT_SERVICE
+    method: POST
+  单据事件处理（批量转为单个）服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$COA_BDG_BILL_EVENT_HANDE_EVENT_SERVICE_CONVERT_SERVICE
+    method: POST
+  PR-ITEM-匹配框架合同-保存服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_SAVE_INFO_EVENT_SERVICE
+    method: POST
+  RG-采购退货分组服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$RG_GROUP_BY_PO_CODE_SERVICE
+    method: POST
+  PO-根据订单id带出支付条款信息服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_BRM_RULE_QUERY_BY_PO_ID_EVENT_SERVICE
+    method: POST
+  采购申请行生成采购订单服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_SUBMIT_PO_EVENT_SERVICE
+    method: POST
+  PO-物料信息转采购订单项目行服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_MAT_CONVERT_ITEM_EVENT_SERVICE
+    method: POST
+  根据生产版本渲染申请行服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_RENDER_BY_PRD_VRS_EVENT_SERVICE
+    method: POST
+  PO-取消完成-头状态修改服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$CANCEL_FINISED_HEAD_STATUS_UPDATE_SERVICE
+    method: POST
+  PO-订单-作废服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ABOLISHED_SERVICE
+    method: POST
+  PO-订单头-冻结服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_FREEZE_SERVICE
+    method: POST
+  PO_协同_供应商拒单服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_REJECT_EVENT_SERVICE
+    method: POST
+  PR-创建采购申请-提交服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_CREATE_SUBMIT_EVENT_SERVICE
+    method: POST
+  PO-作废-行状态修改服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$ABOLISH_ITEM_STATUS_UPDATE_SERVICE
+    method: POST
+  采购订单-H-分页数据服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_TR_PAGING_DATA_SERVICE
+    method: POST
+  采购申请类型定义表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$pur_pr_head_type_cf_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  配额协议表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_QUOTA_HEAD_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  供应商交货单管理分页查询:
+    path: /api/trantor/service/engine/execute/SCM_PUR$SUPPLIER_DN_PAGINATION_QUERY_SERVICE
+    method: POST
+  订单类型标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  采购订单-ITEM标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_TR_GEI_IMPORT_SERVICE
+    method: POST
+  货源清单表标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_SRC_LIST_MD_GEI_IMPORT_SERVICE
+    method: POST
+  PO_QUERY_BASE_CURR:
+    path: /api/trantor/service/engine/execute/SCM_PUR$po_query_base_curr
+    method: POST
+  MOCK合同查询:
+    path: /api/trantor/service/engine/execute/SCM_PUR$mock_contract_query
+    method: POST
+  申请获取三方商城商品单价:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_GET_THIRD_PRICE_EVENT
+    method: POST
+  采购申请行类型定义表标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  采购申请并提交预算:
+    path: /api/trantor/service/engine/execute/SCM_PUR$purchase_request_and_submit_budget
+    method: POST
+  根据id更新采购申请行:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_UPDATE_BY_ID
+    method: POST
+  PR-生效发送服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$pur_pr_effective_send_service
+    method: POST
+  PR-创建采购申请-列表提交服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_CREATE_LIST_SUBMIT_EVENT_SERVICE
+    method: POST
+  根据item-headId查询pohead:
+    path: /api/trantor/service/engine/execute/SCM_PUR$query_pohead_by_item_headid
+    method: POST
+  供应商订单管理分页查询:
+    path: /api/trantor/service/engine/execute/SCM_PUR$SUPPLIER_ORDER_MANAGEMENT_PAGINATION_QUERY_SERVICE
+    method: POST
+  自动派单规则抬头标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_ASSIGN_RULE_HEAD_MD_GEI_EXPORT_SERVICE
+    method: POST
+  PO-批量提交采购订单:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_BATCN_SUMBIT_PO_EVENT_SERVICE
+    method: POST
+  校验采购数量是否大于申请剩余数量:
+    path: /api/trantor/service/engine/execute/SCM_PUR$VALIDATE_PUR_QTY_GREATER_THAN_REST_PR_QTY
+    method: POST
+  采购订单-H标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_TR_GEI_IMPORT_SERVICE
+    method: POST
+  结算类型定义表-分页数据服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_SETT_TYPE_CF_PAGING_DATA_SERVICE
+    method: POST
+  采购-采购订单-根据仓库选择物料填充订单信息:
+    path: /api/trantor/service/engine/execute/SCM_PUR$FUll_PUR_ORDER_BY_WM_STK_SERVICE
+    method: POST
+  采购申请行-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  aasdasaasda:
+    path: /api/trantor/service/engine/execute/SCM_PUR$test01001010101
+    method: POST
+  采购订单-H-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_TR_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  供应商订单行管理分页查询:
+    path: /api/trantor/service/engine/execute/SCM_PUR$SUPPLIER_PO_ITEM_PAGINATION_QUERY_SERVICE
+    method: POST
+  货源清单表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$pur_src_list_md_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  自动发送供应商（发送通知）:
+    path: /api/trantor/service/engine/execute/SCM_PUR$AUTOMATIC_SUPPLIER_SEND_NOTIFICATION
+    method: POST
+  采购申请查询ACTION服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_PAGING_ACTION_SERVICE
+    method: POST
+  采购订单-H-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  货源清单表-分页数据服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$pur_src_list_md_PAGING_DATA_SERVICE
+    method: POST
+  ORG-获取规定采购组织下当前登录账号员工信息:
+    path: /api/trantor/service/engine/execute/SCM_PUR$ORG_GET_PUR_ORG_EMPLOYEE_BY_CURRENT_USER
+    method: POST
+  增加相关方信息name:
+    path: /api/trantor/service/engine/execute/SCM_PUR$ZDY_ADD_FILL_NAME
+    method: POST
+  采购订单-ITEM-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  订单项目行类型标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  配额协议表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$pur_quota_head_md_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  根据物料ID采购组织ID库存组织ID查询采购信息记录-采购视图:
+    path: /api/trantor/service/engine/execute/SCM_PUR$ZDY_GET_PUR_REC_MD
+    method: POST
+  订单类型-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  PR-采购申请行已指派采购员发送服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$pur_pr_items_assigned_send_service
+    method: POST
+  采购申请类型定义表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  采购订单-ITEM-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  采购申请行标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_TR_GEI_EXPORT_SERVICE
+    method: POST
+  货源清单表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_SRC_LIST_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  自动匹配协议规则抬头-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_MATCH_AGREEMENT_RULE_HEAD_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  采购订单分页查询ACTION服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_PAGING_ACTION_SERVICE
+    method: POST
+  查询采购订单详情:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_QUERY_DETAIL
+    method: POST
+  自动下单规则抬头标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_ORDER_RULE_HEAD_MD_GEI_IMPORT_SERVICE
+    method: POST
+  采购信息记录-采购视图-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$pur_info_rec_pur_md_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  采购列表页提交:
+    path: /api/trantor/service/engine/execute/SCM_PUR$purchase_list_submit
+    method: POST
+  查询申请详细信息:
+    path: /api/trantor/service/engine/execute/SCM_PUR$query_application_details
+    method: POST
+  采购申请单据表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  采购申请类型定义表标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  订单项目行类型-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  订单类型标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  根据外部单据编号查询采购订单:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_QUERY_BY_EXT_DOC_CODE
+    method: POST
+  自动下单规则抬头-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_ORDER_RULE_HEAD_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  供应商采购订单-H-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_TR_API_GEI_TASK_EXPORT_VEND
+    method: POST
+  采购主管数据统计服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$agent_purchase_master_DATA_STATISTIC_SERVICE
+    method: POST
+  采购申请行类型定义表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$pur_pr_item_type_cf_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  采购-采购订单-根据库存选择物料填充订单信息:
+    path: /api/trantor/service/engine/execute/SCM_PUR$FUll_PUR_ORDER_BY_IM_STK_SERVICE
+    method: POST
+  根据id查询poHead:
+    path: /api/trantor/service/engine/execute/SCM_PUR$query_head_by_id
+    method: POST
+  自动下单规则抬头标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_ORDER_RULE_HEAD_MD_GEI_EXPORT_SERVICE
+    method: POST
+  供应商操作越权校验:
+    path: /api/trantor/service/engine/execute/SCM_PUR$VEND_OPERATION_OVERREACH_VALIDATION
+    method: POST
+  采购申请行类型定义表-分页数据服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$pur_pr_item_type_cf_PAGING_DATA_SERVICE
+    method: POST
+  采购申请类型定义表-分页数据服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$pur_pr_head_type_cf_PAGING_DATA_SERVICE
+    method: POST
+  批量手动定价:
+    path: /api/trantor/service/engine/execute/SCM_PUR$batch_manual_pricing
+    method: POST
+  采购发票类型-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$CF_INVOICE_TYPE_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  查询三方商品:
+    path: /api/trantor/service/engine/execute/SCM_PUR$QUERY_THIRD_SKU
+    method: POST
+  采购申请行类型定义表标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  采购订单-ITEM-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$pur_po_item_tr_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  根据采购组织查询公司组织:
+    path: /api/trantor/service/engine/execute/SCM_PUR$company_organization_by_procurement_organization
+    method: POST
+  供应商订单管理分页导出查询:
+    path: /api/trantor/service/engine/execute/SCM_PUR$SUPPLIER_ORDER_MANAGEMENT_PAGINATION_EX_Q
+    method: POST
+  配额协议表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_QUOTA_HEAD_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  PR_采购申请_整单完成:
+    path: /api/trantor/service/engine/execute/SCM_PUR$pr_purchase_request_whole_completed
+    method: POST
+  采购计划行-导入:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_SCHEDULE_IMPORT_SERVICE
+    method: POST
+  货源清单表标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_SRC_LIST_MD_GEI_EXPORT_SERVICE
+    method: POST
+  自动派单规则抬头标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_ASSIGN_RULE_HEAD_MD_GEI_IMPORT_SERVICE
+    method: POST
+  取库存地点中的地址:
+    path: /api/trantor/service/engine/execute/SCM_PUR$get_inventory_location_address
+    method: POST
+  采购申请单据表标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_TR_GEI_EXPORT_SERVICE
+    method: POST
+  根据物料和采购组织查询物料采购视图:
+    path: /api/trantor/service/engine/execute/SCM_PUR$QUERY_MATERIAL_PURCHASING_VIEW_BY_MATERIAL_AND_PUR
+    method: POST
+  采购申请类型定义表标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  根据采购申请行ID查询已请购数量:
+    path: /api/trantor/service/engine/execute/SCM_PUR$GET_REQUESTED_QUANTITY_BY_PR_ITEM_ID
+    method: POST
+  批量提交退货订单:
+    path: /api/trantor/service/engine/execute/SCM_PUR$bulk_return_order_submission
+    method: POST
+  PR-申请类型定义分页查询服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_TYPE_CF_PAGING_SERVICE
+    method: POST
+  根据订单行id查采购批次:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_QUERY_PUR_BATCH_BY_PO_ITME_ID_SERVICE
+    method: POST
+  保存采购申请行采购数量:
+    path: /api/trantor/service/engine/execute/SCM_PUR$SAVE_PURCHASE_REQUEST_LINE_PURCHASE_QUANTITY
+    method: POST
+  采购订单-ITEM-分页数据服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$pur_po_item_tr_PAGING_DATA_SERVICE
+    method: POST
+  PR-前置-采购退货分组:
+    path: /api/trantor/service/engine/execute/SCM_PUR$RG_GROUP_BY_PO_CODE_PRE
+    method: POST
+  根据采购申请类型ID查询名称:
+    path: /api/trantor/service/engine/execute/SCM_PUR$get_pr_type_name_by_type_id
+    method: POST
+  采购申请行类型定义表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  采购数量转化基本数量:
+    path: /api/trantor/service/engine/execute/SCM_PUR$purchase_quantity_to_basic_quantity
+    method: POST
+  资质组-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$GEN_QUALIFICATIONS_HEAD_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  自动派单规则抬头-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_ASSIGN_RULE_HEAD_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  配额协议表标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_QUOTA_HEAD_MD_GEI_EXPORT_SERVICE
+    method: POST
+  采购申请类型定义表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  自动匹配协议规则抬头标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_MATCH_AGREEMENT_RULE_HEAD_MD_GEI_EXPORT_SERVICE
+    method: POST
+  采购订单-SCHL-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_SCHL_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  批量创建退货订单:
+    path: /api/trantor/service/engine/execute/SCM_PUR$batch_create_return_orders
+    method: POST
+  采购信息记录-采购视图-分页数据服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$pur_info_rec_pur_md_PAGING_DATA_SERVICE
+    method: POST
+  采购申请行类型定义表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  采购订单-ITEM标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_TR_GEI_EXPORT_SERVICE
+    method: POST
+  根据申请批量提交采购订单:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_BATCH_SUBMIT
+    method: POST
+  供应商查询订单详情:
+    path: /api/trantor/service/engine/execute/SCM_PUR$VEND_QUERY_PO_DETAIL_SERVICE
+    method: POST
+  根据采购申请行类型ID查询名称:
+    path: /api/trantor/service/engine/execute/SCM_PUR$get_name_by_type_id_from_purchase_request_line
+    method: POST
+  货源清单表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_SRC_LIST_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  采购申请单据表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$pur_pr_head_tr_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  分页查询我的采购任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$paginate_my_purchase_tasks
+    method: POST
+  采购申请单据表-分页数据服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$pur_pr_head_tr_PAGING_DATA_SERVICE
+    method: POST
+  订单项目行类型-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  自动下单规则抬头-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_ORDER_RULE_HEAD_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  查询订单详情:
+    path: /api/trantor/service/engine/execute/SCM_PUR$QUERY_ORDER_DETAIL
+    method: POST
+  采购订单-SCHL标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_SCHL_TR_GEI_IMPORT_SERVICE
+    method: POST
+  PR-批量采购申请行业务状态变更-待下单-执行中服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_BATCH_PR_ITEM_STAT_EXECUTION_SERVICE
+    method: POST
+  结算类型定义表-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_SETT_TYPE_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  自动派单规则启用:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ASSIGN_ENABLE_SERVICE
+    method: POST
+  分页查询三方商品:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PAGING_THIRD_SKU
+    method: POST
+  采购订单-SCHL-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_SCHL_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  采购申请行批量创建采购订单-状态校验:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_BATCH_CREATE_PO_STATUS_VALIDATION
+    method: POST
+  订单项目行类型标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  采购订单-SCHL标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_SCHL_TR_GEI_EXPORT_SERVICE
+    method: POST
+  根据物料采购视图获取期望到货日期:
+    path: /api/trantor/service/engine/execute/SCM_PUR$GET_EXPECTED_ARRIVAL_DATE_FROM_MATERIAL_PROCUREMEN
+    method: POST
+  PR-采购申请行项目类型分页查询:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_TYPE_CF_PAGING_SERVICE
+    method: POST
+  PO-批量保存采购订单:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_BATCH_SAVE_PO_EVENT_SERVICE
+    method: POST
+  PR_采购任务_完成:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_COMPLETE_SERVICE
+    method: POST
+  根据供应库存组织带出相关方:
+    path: /api/trantor/service/engine/execute/SCM_PUR$get_related_party_by_supply_inventory_organization
+    method: POST
+  资质组-分页数据服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$gen_qualifications_head_cf_PAGING_DATA_SERVICE
+    method: POST
+  根据物料类型&单据类型带出行类型:
+    path: /api/trantor/service/engine/execute/SCM_PUR$get_line_type_by_material_and_document_type
+    method: POST
+  自动匹配规则启用:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_MATCH_ENABLE_SERVICE
+    method: POST
+  采购订单计划-导入:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_SCHEDULE_IMPORT_NEW_SERVICR
+    method: POST
+  自动派单规则抬头-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_ASSIGN_RULE_HEAD_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  采购按分配表获取项目行类型new:
+    path: /api/trantor/service/engine/execute/SCM_PUR$ZDY_GET_PUR_ITEM_TYPE_JSON
+    method: POST
+  采购计划行-合并后保存:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_SCHEDULE_MERGE_SAVE_SERVICE
+    method: POST
+  采购订单-H-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  订单行退货校验:
+    path: /api/trantor/service/engine/execute/SCM_PUR$ORDER_LINE_RETURN_CHECK
+    method: POST
+  采购计划行-合并:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_SCHEDULE_MERGE_SERVICE
+    method: POST
+  PR列表提交前补充关联模型信息:
+    path: /api/trantor/service/engine/execute/SCM_PUR$add_related_model_info_before_submitting_p
+    method: POST
+  采购计划行-编辑:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_SCHEDULE_EDIT_SERVICE
+    method: POST
+  查询采购行项目类型:
+    path: /api/trantor/service/engine/execute/SCM_PUR$QueryPurcaseProjectLineType
+    method: POST
+  配额协议表标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_QUOTA_HEAD_MD_GEI_IMPORT_SERVICE
+    method: POST
+  自动下单规则启用:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ORDER_ENABLE_SERVICE
+    method: POST
+  采购申请保存状态校验:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PURCHASE_REQUEST_SAVE_STATE_VALIDATION
+    method: POST
+  根据headId查询item:
+    path: /api/trantor/service/engine/execute/SCM_PUR$query_item_by_headid
+    method: POST
+  采购订单自动发送供应商:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PURCHASE_ORDER_AUTO_SEND_SUPPLIER
+    method: POST
+  资质组-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$gen_qualifications_head_cf_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  配额协议表-分页数据服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$pur_quota_head_md_PAGING_DATA_SERVICE
+    method: POST
+  根据采购采购信息ID查询供应商:
+    path: /api/trantor/service/engine/execute/SCM_PUR$ZDY_FROM_PUR_REC_INFO_ID_GET_VEND
+    method: POST
+  【服务验证】下单状态检查:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PO_ORDERSTATUS_CHECK_SERVICE
+    method: POST
+  采购订单-H标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_TR_GEI_EXPORT_SERVICE
+    method: POST
+  订单类型-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST

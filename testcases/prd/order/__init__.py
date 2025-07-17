@@ -107,7 +107,7 @@ class PrdBaseTest(BaseTest):
         返回:
             str: 对应的API路径，如果找不到对应的API，则返回None
         """
-        return self.apis.get(api_key, {}).get("path")
+        return super().get_api_path(api_key, self.apis)
     
     def get_cross_module_api_path(self, module_name: str, api_key: str) -> str:
         """
@@ -176,12 +176,7 @@ class PrdBaseTest(BaseTest):
                 params (dict): 对应API的请求参数模板
                 url (str): 完整的API URL
         """
-        url = api_path
-        if with_query_params:
-            url = f"{api_path}?{with_query_params}"
-        
-        params = self.api_params.get(api_path, {})
-        return params, url
+        return super().get_api_params(api_path, self.api_params, with_query_params)
     
     def get_latest_prd_order(self, status="DRAFT"):
         """

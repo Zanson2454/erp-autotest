@@ -24,6 +24,7 @@ from utils.cache_util import CacheUtil
 from utils.yaml_util import YamlUtil
 from utils.request_util import HttpUtil
 from utils.exception_util import safe_api_call
+from utils.param_util import ParamUtil
 from data_factory.base import DataFactory 
 from utils.mysql_util import DBManager
 
@@ -342,6 +343,28 @@ class BaseTest:
             params['params']['request'][key] = value
         return params
     
+    def get_api_path(self, api_key, apis_dict):
+        """
+        获取API路径
+        Args:
+            api_key: API键名
+            apis_dict: API配置字典
+        Returns:
+            str: API路径
+        """
+        return ParamUtil.get_api_path(apis_dict, api_key)
+    
+    def get_api_params(self, api_path, api_params_dict, with_query_params=None):
+        """
+        获取API请求参数和完整URL
+        Args:
+            api_path: API路径
+            api_params_dict: API参数配置字典
+            with_query_params: 查询参数
+        Returns:
+            tuple: (参数模板, 完整URL)
+        """
+        return ParamUtil.get_api_params(api_params_dict, api_path, with_query_params)
     
     @staticmethod
     def timer(func):

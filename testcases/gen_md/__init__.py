@@ -47,6 +47,7 @@ class GenMdBaseTest(BaseTest):
             raise RuntimeError(f"admin 登录失败: {admin_result.error_message}")
         cls.admin_session = admin_result.session
         cls.admin_user_info = admin_result.user_info
+        
         cls.http = HttpUtil(
             url=admin_result.portal_url,
             session=admin_result.session,
@@ -68,7 +69,6 @@ class GenMdBaseTest(BaseTest):
 
 
         # 初始化配置文件路径
-        project_root = Path(__file__).resolve().parent.parent.parent
         cls.md_api_path = Path(project_root) / "testdata" / "gen_md" / "md_api_path.yaml"
         cls.md_api_params = Path(project_root) / "testdata" / "gen_md" / "md_api_params.yaml"
         # 加载API路径配置和参数配置
@@ -94,24 +94,13 @@ class GenMdBaseTest(BaseTest):
         """
         获取API路径
         """
-        return self.apis.get(api_key, {}).get("path")
+        return super().get_api_path(api_key, self.apis)
     
     def get_api_params(self, api_path, with_query_params=None):
         """
         获取API请求参数和完整URL
         """
-        # 准备URL
-        
-        url = api_path
-        if with_query_params:
-            url = f"{api_path}?{with_query_params}"
-        
-        # 获取请求参数 (从api_params字典中获取对应api_path的参数模板)
-        params = self.api_params.get(api_path, {})
-        if not params:
-            raise ValueError(f"API路径 {api_path} 未找到对应的参数模板")
-       
-        return params, url
+        return super().get_api_params(api_path, self.api_params, with_query_params)
       
     def set_request_param(self, params, key, value):
         """

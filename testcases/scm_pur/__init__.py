@@ -41,46 +41,13 @@ class ScmPurBaseTest(BaseTest):
         """
         super().setup_class()
 
-        portal_keys = {
-            "admin": "TERP_PORTAL",
-            # "cust": "TERP_CUST_PC"
-        }
-        tenant_key = "terp"
-        login_service = LoginService(cls.env_config)
-
-        # 登录 admin
-        admin_result = login_service.login(portal_key=portal_keys["admin"], tenant_key=tenant_key)
-        if admin_result.status != admin_result.status.SUCCESS:
-            raise RuntimeError(f"admin 登录失败: {admin_result.error_message}")
-        cls.admin_session = admin_result.session
-        cls.admin_user_info = admin_result.user_info
-        cls.http = HttpUtil(
-            url=admin_result.portal_url,
-            session=admin_result.session,
-            headers=admin_result.portal_headers
-        )
-        cls.admin_headers = admin_result.portal_headers
-
-        # # 登录 cust（如需多门户测试可放开）
-        # cust_result = login_service.login(portal_key=portal_keys["cust"], tenant_key=tenant_key)
-        # if cust_result.status != cust_result.status.SUCCESS:
-        #     raise RuntimeError(f"cust 登录失败: {cust_result.error_message}")
-        # cls.cust_session = cust_result.session
-        # cls.cust_user_info = cust_result.user_info
-        # cls.http_cust = HttpUtil(
-        #     url=cust_result.portal_url,
-        #     session=cust_result.session,
-        #     headers=cust_result.portal_headers
-        # )
-
-        # 初始化配置文件路径
-        cls.pur_unified_api_path = Path(project_root) / "testdata" / "scm_pur" / "pur_api_info.yaml"
+        cls.pur_api_path = Path(project_root) / "testdata" / "scm_pur" / "pur_api_path.yaml"
+        cls.pur_api_params_path = Path(project_root) / "testdata" / "scm_pur" / "pur_api_params.yaml"
+        # 加载API路径配置和参数配置
+        cls.apis = cls.yaml_util.read_yaml(cls.pur_api_path).get("apis", {})
+        cls.api_params = cls.yaml_util.read_yaml(cls.pur_api_params_path).get("api_params", {})
         
-        # 从缓存加载统一API配置（性能优化）
-
-        cls.apis =cls.yaml_util.read_yaml(str(cls.pur_unified_api_path)) or {}
-        
-        # 加载缓存数据
+        # 加载主数据缓存数据
         DataFactory.init_sql_cache(
             sql_config_path=str(project_root / "config" / "erp" / "md_init_sql.yaml"), # 主数据依赖的初始化sql 存放路径
             db_config_name="erp_db", # 数据库配置名称
@@ -91,25 +58,23 @@ class ScmPurBaseTest(BaseTest):
         cls.path_params = {"tmodule": "SCM_PUR"}
         cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
         cls.user_id = cls.init_data["user_info"]['user_info']["id"]
-
-    def get_api_info(self, api_key):
+        
+        
+    def get_api_path(self, api_key):
         """
         获取API路径
         """
-        api_info = self.apis.get(api_key, {})
-        if not api_info:
-            raise ValueError(f"API服务名 {api_key} 未找到")
-        api_path = api_info.get("path")
-        api_method = api_info.get("method","POST")
-        if not api_path:
-            raise ValueError(f"API服务名 {api_key} 未找到对应的路径")
-        api_params = api_info.get("body", {}).copy() if api_info.get("body") else {}
-        return {"path":api_path,"method":api_method,"body":api_params}
-
+        return super().get_api_path(api_key, self.apis)
+    
+    def get_api_params(self, api_path, with_query_params=None):
+        """
+        获取API请求参数和完整URL
+        """
+        return super().get_api_params(api_path, self.api_params, with_query_params)
 
 
 
 if __name__ == "__main__":
     ScmPurBaseTest.setup_class()
-    print(ScmPurBaseTest.admin_user_info)
+    print(ScmPurBaseTest.nickname)
     # print(ScmPurBaseTest.cust_user_info)

@@ -1,7 +1,5 @@
-PO_ITEM_采购订单行_解冻服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_UNFREEZE_EVENT_SERVICE
-  method: POST
-  body:
+api_params:
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_UNFREEZE_EVENT_SERVICE:
     params:
       request:
         purCurrId: null
@@ -106,12 +104,8 @@ PO_ITEM_采购订单行_解冻服务:
         deliveryCompleted: false
         category: {}
         genMatTypeCf: {}
-    serviceKey: null
-    teamId: 0
-PO-变更审批通过-行状态修改服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_APPROVED_ITEM_STATUS_UPDATE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_ITEM_UNFREEZE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_APPROVED_ITEM_STATUS_UPDATE_SERVICE:
     params:
       request:
         purCurrId: null
@@ -216,12 +210,8 @@ PO-变更审批通过-行状态修改服务:
         deliveryCompleted: false
         category: {}
         genMatTypeCf: {}
-    serviceKey: null
-    teamId: 0
-PR-ITEM-创建采购订单服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_CREATE_PO_SUBMIT_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_APPROVED_ITEM_STATUS_UPDATE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_CREATE_PO_SUBMIT_EVENT_SERVICE:
     params:
       request:
         receiveAddressDetail: null
@@ -304,12 +294,8 @@ PR-ITEM-创建采购订单服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-PO-创建订单-提交审批拒绝服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_CREATE_SUBMIT_APPROVED_REJECT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_CREATE_PO_SUBMIT_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_CREATE_SUBMIT_APPROVED_REJECT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -381,12 +367,8 @@ PO-创建订单-提交审批拒绝服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PR-HEAD状态-审批中-生效服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_HEAD_STATUS_EFFECT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_CREATE_SUBMIT_APPROVED_REJECT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_HEAD_STATUS_EFFECT_SERVICE:
     params:
       request:
         purOrgId: {}
@@ -427,12 +409,8 @@ PR-HEAD状态-审批中-生效服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-采购申请自动下单规则校验服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ORDER_RULE_JUDGE_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_HEAD_STATUS_EFFECT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ORDER_RULE_JUDGE_EVENT_SERVICE:
     params:
       request:
         updatedBy: {}
@@ -453,12 +431,8 @@ PR-HEAD状态-审批中-生效服务:
         id: 0
         status: null
         updatedAt: 0
-    serviceKey: null
-    teamId: 0
-采购订单完成:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_FINISHED_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_ORDER_RULE_JUDGE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_FINISHED_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -530,12 +504,8 @@ PR-HEAD状态-审批中-生效服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PR-取消采购申请服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_CANCEL_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_FINISHED_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_CANCEL_EVENT_SERVICE:
     params:
       request:
         purOrgId: {}
@@ -576,12 +546,8 @@ PR-取消采购申请服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-PR-提交采购申请-审批退回服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_APPROVAL_REJECT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_CANCEL_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_APPROVAL_REJECT_SERVICE:
     params:
       request:
         purOrgId: {}
@@ -622,12 +588,8 @@ PR-提交采购申请-审批退回服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-PO-订单行选择物料服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_MAT_CONVERT_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_APPROVAL_REJECT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_MAT_CONVERT_EVENT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -699,12 +661,8 @@ PO-订单行选择物料服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PO-重新定价-NEW服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_RE_PRICE_ACTION_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_ITEM_MAT_CONVERT_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_RE_PRICE_ACTION_EVENT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -776,12 +734,8 @@ PO-重新定价-NEW服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PR-ITEM状态变更-执行中-已完成服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_STATUS_UPDATE_FINISHED_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_RE_PRICE_ACTION_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_STATUS_UPDATE_FINISHED_SERVICE:
     params:
       request:
         receiveAddressDetail: null
@@ -864,12 +818,8 @@ PR-ITEM状态变更-执行中-已完成服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-POT_保存服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$FHDSFHD_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_ITEM_STATUS_UPDATE_FINISHED_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$FHDSFHD_SERVICE:
     params:
       request:
         invLocStoFrom: {}
@@ -905,12 +855,8 @@ POT_保存服务:
         purPoItemTrId: {}
         vendId: {}
         mergedId: {}
-    serviceKey: null
-    teamId: 0
-PO-订单行-数据回填服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$DN_FILL_DATA_BACK_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$FHDSFHD_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$DN_FILL_DATA_BACK_EVENT_SERVICE:
     params:
       request:
         approveStatus: null
@@ -997,12 +943,8 @@ PO-订单行-数据回填服务:
         wmEnabled: false
         payStatus: null
         moveVoucherId: {}
-    serviceKey: null
-    teamId: 0
-PO-订单行-取消完成服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_CANCEL_FINISHED_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$DN_FILL_DATA_BACK_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_CANCEL_FINISHED_SERVICE:
     params:
       request:
         purCurrId: null
@@ -1107,12 +1049,8 @@ PO-订单行-取消完成服务:
         deliveryCompleted: false
         category: {}
         genMatTypeCf: {}
-    serviceKey: null
-    teamId: 0
-PO-列表页-提交服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_LIST_SUBMIT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_ITEM_CANCEL_FINISHED_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_LIST_SUBMIT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -1184,12 +1122,8 @@ PO-列表页-提交服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PR-提交采购申请-审批通过服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_APPROVED_STATUS_UPDATE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_LIST_SUBMIT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_APPROVED_STATUS_UPDATE_SERVICE:
     params:
       request:
         purOrgId: {}
@@ -1230,12 +1164,8 @@ PR-提交采购申请-审批通过服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-PO-采购订单-基于销售订单分组服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_SO_GROUP_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_APPROVED_STATUS_UPDATE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_SO_GROUP_EVENT_SERVICE:
     params:
       request:
       - approveStatus: null
@@ -1307,12 +1237,8 @@ PO-采购订单-基于销售订单分组服务:
         slsTmId: 0
         soTitle: null
         invLoc: {}
-    serviceKey: null
-    teamId: 0
-采购申请整单完成服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_FINISH_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_SO_GROUP_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_FINISH_EVENT_SERVICE:
     params:
       request:
         purOrgId: {}
@@ -1353,12 +1279,8 @@ PO-采购订单-基于销售订单分组服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-PO-变更审批通过-头状态修改服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_APPROVED_HEAD_STATUS_UPDATE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_HEAD_FINISH_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_APPROVED_HEAD_STATUS_UPDATE_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -1430,12 +1352,8 @@ PO-变更审批通过-头状态修改服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PR-ITEM状态变更-草稿-生效服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_SUBMIT_STATUS_UPDATE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_APPROVED_HEAD_STATUS_UPDATE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_SUBMIT_STATUS_UPDATE_SERVICE:
     params:
       request:
         receiveAddressDetail: null
@@ -1518,12 +1436,8 @@ PR-ITEM状态变更-草稿-生效服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-PO-创建订单-保存服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_CREATE_SAVE_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_ITEM_SUBMIT_STATUS_UPDATE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_CREATE_SAVE_EVENT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -1595,12 +1509,8 @@ PO-创建订单-保存服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PO_协同_供应商接单服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_RECEIVE_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_CREATE_SAVE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_RECEIVE_EVENT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -1672,12 +1582,8 @@ PO_协同_供应商接单服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PR-HEAD生效服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_EFFECT_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_RECEIVE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_EFFECT_EVENT_SERVICE:
     params:
       request:
         purOrgId: {}
@@ -1718,12 +1624,8 @@ PR-HEAD生效服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-PR-ITEM状态-审批中-生效服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_STATUS_EFFECT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_HEAD_EFFECT_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_STATUS_EFFECT_SERVICE:
     params:
       request:
         receiveAddressDetail: null
@@ -1806,12 +1708,8 @@ PR-ITEM状态-审批中-生效服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-PO-创建订单-提交审批通过服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_CREATE_SUBMIT_APPROVED_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_ITEM_STATUS_EFFECT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_CREATE_SUBMIT_APPROVED_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -1883,12 +1781,8 @@ PO-创建订单-提交审批通过服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PO-查询采购定价记录服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_QUERY_PRICE_RECORDS_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_CREATE_SUBMIT_APPROVED_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_QUERY_PRICE_RECORDS_EVENT_SERVICE:
     params:
       request:
         amountNet: 0
@@ -1906,12 +1800,8 @@ PO-查询采购定价记录服务:
         taxAmount: 0
         invOrgId: {}
         matName: null
-    serviceKey: null
-    teamId: 0
-POT_审核服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$FDSJF_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_QUERY_PRICE_RECORDS_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$FDSJF_SERVICE:
     params:
       request:
         invLocStoFrom: {}
@@ -1947,12 +1837,8 @@ POT_审核服务:
         purPoItemTrId: {}
         vendId: {}
         mergedId: {}
-    serviceKey: null
-    teamId: 0
-PR-HEAD状态变更-审批中服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_STATUS_UPDATE_APPROVAL_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$FDSJF_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_STATUS_UPDATE_APPROVAL_SERVICE:
     params:
       request:
         purOrgId: {}
@@ -1993,12 +1879,8 @@ PR-HEAD状态变更-审批中服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-PO-删除订单服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_DELETE_DRAFT_PO_BY_ID_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_HEAD_STATUS_UPDATE_APPROVAL_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_DELETE_DRAFT_PO_BY_ID_EVENT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -2070,12 +1952,8 @@ PO-删除订单服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PO-采购订单变更-审批撤回-行状态修改服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ALTER_APPROVAL_REJECT_ITEM_STATUS_CHANGE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_DELETE_DRAFT_PO_BY_ID_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ALTER_APPROVAL_REJECT_ITEM_STATUS_CHANGE_SERVICE:
     params:
       request:
         purCurrId: null
@@ -2180,12 +2058,8 @@ PO-采购订单变更-审批撤回-行状态修改服务:
         deliveryCompleted: false
         category: {}
         genMatTypeCf: {}
-    serviceKey: null
-    teamId: 0
-PR-单据追踪服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_CREATE_DOC_TRACE_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_ALTER_APPROVAL_REJECT_ITEM_STATUS_CHANGE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_CREATE_DOC_TRACE_EVENT_SERVICE:
     params:
       request:
         purOrgId: {}
@@ -2226,22 +2100,14 @@ PR-单据追踪服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-RG-批量提交订单服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$RG_BATCH_CREATE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_CREATE_DOC_TRACE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$RG_BATCH_CREATE_SERVICE:
     params:
       request:
         request:
         - {}
-    serviceKey: null
-    teamId: 0
-PR-采购申请行业务状态变更-待下单-执行中服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_STATUS_IN_EXECUTION_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$RG_BATCH_CREATE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_STATUS_IN_EXECUTION_SERVICE:
     params:
       request:
         receiveAddressDetail: null
@@ -2324,20 +2190,12 @@ PR-采购申请行业务状态变更-待下单-执行中服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-PO-根据规则组带出支付条款信息服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_QUERY_RULE_GROUP_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_ITEM_STATUS_IN_EXECUTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_QUERY_RULE_GROUP_EVENT_SERVICE:
     params:
       request: {}
-    serviceKey: null
-    teamId: 0
-RG-采购退货ATP检查服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_RG_ATP_CHECK_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_QUERY_RULE_GROUP_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_RG_ATP_CHECK_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -2409,23 +2267,15 @@ RG-采购退货ATP检查服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PO-采购申请行转采购订单项目行服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_PR_ITEM_CONVERT_ITEM_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_RG_ATP_CHECK_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_PR_ITEM_CONVERT_ITEM_EVENT_SERVICE:
     params:
       request:
         poHead: {}
         prItems:
         - {}
-    serviceKey: null
-    teamId: 0
-VEND-供应商查询默认的联系方式服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$VEND_QUERY_DEFAULT_CONTACT_INFO_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_PR_ITEM_CONVERT_ITEM_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$VEND_QUERY_DEFAULT_CONTACT_INFO_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -2497,12 +2347,8 @@ VEND-供应商查询默认的联系方式服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PR-ITEM-锁定服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_LOCK_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$VEND_QUERY_DEFAULT_CONTACT_INFO_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_LOCK_EVENT_SERVICE:
     params:
       request:
       - receiveAddressDetail: null
@@ -2585,12 +2431,8 @@ PR-ITEM-锁定服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-PO-回写收货数量服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_SAVE_PUR_QTY_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_ITEM_LOCK_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_SAVE_PUR_QTY_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -2662,12 +2504,8 @@ PO-回写收货数量服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PR-ITEM-匹配配额协议-保存服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_SAVE_QUOTA_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_SAVE_PUR_QTY_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_SAVE_QUOTA_EVENT_SERVICE:
     params:
       request:
         receiveAddressDetail: null
@@ -2750,12 +2588,8 @@ PR-ITEM-匹配配额协议-保存服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-PR-HEAD提交-状态变更-审批拒绝服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_STATUS_UPDATE_APPROVAL_REJECT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_ITEM_SAVE_QUOTA_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_STATUS_UPDATE_APPROVAL_REJECT_SERVICE:
     params:
       request:
         purOrgId: {}
@@ -2796,12 +2630,8 @@ PR-HEAD提交-状态变更-审批拒绝服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-PR-申请类型带出相关方附件备注服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_QUERY_PARTNER_TEXT_ATTACHMENT_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_STATUS_UPDATE_APPROVAL_REJECT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_QUERY_PARTNER_TEXT_ATTACHMENT_EVENT_SERVICE:
     params:
       request:
         purOrgId: {}
@@ -2842,12 +2672,8 @@ PR-申请类型带出相关方附件备注服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-PR-ITEM-取消锁定服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_UNLOCK_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_QUERY_PARTNER_TEXT_ATTACHMENT_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_UNLOCK_EVENT_SERVICE:
     params:
       request:
       - receiveAddressDetail: null
@@ -2930,12 +2756,8 @@ PR-ITEM-取消锁定服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-PR-ITEM状态变更-审批中服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_STATUS_UPDATE_APPROVAL_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_ITEM_UNLOCK_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_STATUS_UPDATE_APPROVAL_SERVICE:
     params:
       request:
         receiveAddressDetail: null
@@ -3018,12 +2840,8 @@ PR-ITEM状态变更-审批中服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-PO-自动填充采购订单相关方服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_AUTO_FILL_PARTNER_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_ITEM_STATUS_UPDATE_APPROVAL_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_AUTO_FILL_PARTNER_EVENT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -3095,12 +2913,8 @@ PO-自动填充采购订单相关方服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PO-复制初始化服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_COPY_INIT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_AUTO_FILL_PARTNER_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_COPY_INIT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -3172,12 +2986,8 @@ PO-复制初始化服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PR-取消提交服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_CANCEL_SUBMIT_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_COPY_INIT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_CANCEL_SUBMIT_EVENT_SERVICE:
     params:
       request:
         purOrgId: {}
@@ -3218,12 +3028,8 @@ PR-取消提交服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-PR-ITEM-匹配货源清单-保存服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_SAVE_LIST_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_CANCEL_SUBMIT_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_SAVE_LIST_EVENT_SERVICE:
     params:
       request:
         receiveAddressDetail: null
@@ -3306,12 +3112,8 @@ PR-ITEM-匹配货源清单-保存服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-PO-查询采购订单默认附件服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_QUERY_DEFAULT_ATTACHMENT_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_ITEM_SAVE_LIST_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_QUERY_DEFAULT_ATTACHMENT_EVENT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -3383,12 +3185,8 @@ PO-查询采购订单默认附件服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PR-采购申请行批量自动下单服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEMS_BATCH_AUTO_ORDER_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_QUERY_DEFAULT_ATTACHMENT_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEMS_BATCH_AUTO_ORDER_EVENT_SERVICE:
     params:
       request:
       - receiveAddressDetail: null
@@ -3471,12 +3269,8 @@ PR-采购申请行批量自动下单服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-PR-ITEM-提交服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_SUBMIT_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_ITEMS_BATCH_AUTO_ORDER_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_SUBMIT_EVENT_SERVICE:
     params:
       request:
       - receiveAddressDetail: null
@@ -3559,12 +3353,8 @@ PR-ITEM-提交服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-PR-ITEM批量状态变更-执行中-已完成服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_BATCH_STATUS_UPDATE_FINISHED_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_ITEM_SUBMIT_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_BATCH_STATUS_UPDATE_FINISHED_SERVICE:
     params:
       request:
       - receiveAddressDetail: null
@@ -3647,12 +3437,8 @@ PR-ITEM批量状态变更-执行中-已完成服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-PO-查询采购订单收付款类型服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_QUERY_FIN_BRM_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_ITEM_BATCH_STATUS_UPDATE_FINISHED_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_QUERY_FIN_BRM_EVENT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -3724,12 +3510,8 @@ PO-查询采购订单收付款类型服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-采购申请自动匹配规则校验服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_MATCH_RULE_JUDGE_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_QUERY_FIN_BRM_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_MATCH_RULE_JUDGE_EVENT_SERVICE:
     params:
       request:
         updatedBy: {}
@@ -3750,12 +3532,8 @@ PO-查询采购订单收付款类型服务:
         id: 0
         status: null
         updatedAt: 0
-    serviceKey: null
-    teamId: 0
-PR-ITEM状态变更-寻源-下单服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_STATUS_IUPDATE_SOURCE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_MATCH_RULE_JUDGE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_STATUS_IUPDATE_SOURCE_SERVICE:
     params:
       request:
         receiveAddressDetail: null
@@ -3838,12 +3616,8 @@ PR-ITEM状态变更-寻源-下单服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-PO-订单头-取消冻结服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_CANCEL_FREEZE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_ITEM_STATUS_IUPDATE_SOURCE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_CANCEL_FREEZE_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -3915,12 +3689,8 @@ PO-订单头-取消冻结服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PR-采购申请行分组生成采购订单服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_GROUP_TO_PO_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_HEAD_CANCEL_FREEZE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_GROUP_TO_PO_EVENT_SERVICE:
     params:
       request:
       - receiveAddressDetail: null
@@ -4003,12 +3773,8 @@ PR-采购申请行分组生成采购订单服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-PO-保存计划行服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_S_SAVE_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_ITEM_GROUP_TO_PO_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_S_SAVE_EVENT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -4080,12 +3846,8 @@ PO-保存计划行服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PO-变更审批-行状态修改服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_APPROVAL_ITEM_STATUS_UPDATE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_S_SAVE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_APPROVAL_ITEM_STATUS_UPDATE_SERVICE:
     params:
       request:
         purCurrId: null
@@ -4190,12 +3952,8 @@ PO-变更审批-行状态修改服务:
         deliveryCompleted: false
         category: {}
         genMatTypeCf: {}
-    serviceKey: null
-    teamId: 0
-根据父编码渲染订单行服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_RENDER_BY_PARENT_CODE_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_APPROVAL_ITEM_STATUS_UPDATE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_RENDER_BY_PARENT_CODE_EVENT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -4267,12 +4025,8 @@ PO-变更审批-行状态修改服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PO-创建订单-审批通过行状态修改服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_ITEM_APPROED_STATUS_UPDATE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_ITEM_RENDER_BY_PARENT_CODE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_ITEM_APPROED_STATUS_UPDATE_SERVICE:
     params:
       request:
         purCurrId: null
@@ -4377,12 +4131,8 @@ PO-创建订单-审批通过行状态修改服务:
         deliveryCompleted: false
         category: {}
         genMatTypeCf: {}
-    serviceKey: null
-    teamId: 0
-PR-获取当前用户关联的员工服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_GET_USER_EMPLOYEE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_ITEM_APPROED_STATUS_UPDATE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_GET_USER_EMPLOYEE_SERVICE:
     params:
       request:
         purOrgId: {}
@@ -4423,12 +4173,8 @@ PR-获取当前用户关联的员工服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-PO-创建订单-提交行状态修改服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_ITEM_SUBMIT_STATUS_UPDATE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_GET_USER_EMPLOYEE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_ITEM_SUBMIT_STATUS_UPDATE_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -4500,12 +4246,8 @@ PO-创建订单-提交行状态修改服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PR-申请复制服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_COPY_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_ITEM_SUBMIT_STATUS_UPDATE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_COPY_SERVICE:
     params:
       request:
         purOrgId: {}
@@ -4546,12 +4288,8 @@ PR-申请复制服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-PO-批量删除订单服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_BATCH_DELETE_DRAFT_PO_BY_IDS_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_COPY_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_BATCH_DELETE_DRAFT_PO_BY_IDS_EVENT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -4623,12 +4361,8 @@ PO-批量删除订单服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PO-取消提交服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_CANCEL_SUBMIT_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_BATCH_DELETE_DRAFT_PO_BY_IDS_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_CANCEL_SUBMIT_EVENT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -4700,12 +4434,8 @@ PO-取消提交服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PO-查询关联单据行信息服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_QUERY_REF_ITEM_INFO_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_CANCEL_SUBMIT_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_QUERY_REF_ITEM_INFO_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -4777,12 +4507,8 @@ PO-查询关联单据行信息服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-打印采购订单数据查询接口服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_QUERY_PRINT_DETAIL_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_QUERY_REF_ITEM_INFO_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_QUERY_PRINT_DETAIL_EVENT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -4854,12 +4580,8 @@ PO-查询关联单据行信息服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-根据生产版本渲染订单行服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_ITEM_RENDER_BY_PRD_VRS_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_QUERY_PRINT_DETAIL_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_ITEM_RENDER_BY_PRD_VRS_EVENT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -4931,12 +4653,8 @@ PO-查询关联单据行信息服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PO-自动定价-NEW服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_AUTO_PRICE_ACTION_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_ITEM_RENDER_BY_PRD_VRS_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_AUTO_PRICE_ACTION_EVENT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -5008,12 +4726,8 @@ PO-自动定价-NEW服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PO_ITEM_采购订单行_冻结服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_FREEZE_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_AUTO_PRICE_ACTION_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_FREEZE_EVENT_SERVICE:
     params:
       request:
         purCurrId: null
@@ -5118,12 +4832,8 @@ PO_ITEM_采购订单行_冻结服务:
         deliveryCompleted: false
         category: {}
         genMatTypeCf: {}
-    serviceKey: null
-    teamId: 0
-PO-变更-审批通过服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_ALTER_APPROVED_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_ITEM_FREEZE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_ALTER_APPROVED_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -5195,12 +4905,8 @@ PO-变更-审批通过服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PR-整单指派服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_EMPLOYEE_DISPATCH_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_ALTER_APPROVED_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_EMPLOYEE_DISPATCH_EVENT_SERVICE:
     params:
       request:
         purOrgId: {}
@@ -5241,12 +4947,8 @@ PR-整单指派服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-PO-变更审批-头状态修改服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_APPROVAL_STATUS_UPDATE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_EMPLOYEE_DISPATCH_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_APPROVAL_STATUS_UPDATE_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -5318,12 +5020,8 @@ PO-变更审批-头状态修改服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PO-根据冻结记录进行解冻服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_UNFREEZE_BY_RECORD_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_HEAD_APPROVAL_STATUS_UPDATE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_UNFREEZE_BY_RECORD_EVENT_SERVICE:
     params:
       request:
         updatedBy: {}
@@ -5344,12 +5042,8 @@ PO-根据冻结记录进行解冻服务:
         matName: null
         status: null
         updatedAt: 0
-    serviceKey: null
-    teamId: 0
-PO-获取定价服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_CALCULATE_PRICE_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_UNFREEZE_BY_RECORD_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_CALCULATE_PRICE_EVENT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -5421,12 +5115,8 @@ PO-获取定价服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PO-采购订单变更-审批撤回服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ALTER_APPROVAL_REJECT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_CALCULATE_PRICE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ALTER_APPROVAL_REJECT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -5498,12 +5188,8 @@ PO-采购订单变更-审批撤回服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PO-订单行-手动完成服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_FINISHED_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_ALTER_APPROVAL_REJECT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_FINISHED_SERVICE:
     params:
       request:
         purCurrId: null
@@ -5608,12 +5294,8 @@ PO-订单行-手动完成服务:
         deliveryCompleted: false
         category: {}
         genMatTypeCf: {}
-    serviceKey: null
-    teamId: 0
-PR-采购申请-保存并提交服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_SAVE_THAN_SUBMIT_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_ITEM_FINISHED_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_SAVE_THAN_SUBMIT_EVENT_SERVICE:
     params:
       request:
         purOrgId: {}
@@ -5654,12 +5336,8 @@ PR-采购申请-保存并提交服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-PO-查询支付计划行服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_QUERY_PAYMENT_LINE_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_SAVE_THAN_SUBMIT_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_QUERY_PAYMENT_LINE_EVENT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -5731,12 +5409,8 @@ PO-查询支付计划行服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-POT_提交服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$FSDJF_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_QUERY_PAYMENT_LINE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$FSDJF_SERVICE:
     params:
       request:
         invLocStoFrom: {}
@@ -5772,12 +5446,8 @@ POT_提交服务:
         purPoItemTrId: {}
         vendId: {}
         mergedId: {}
-    serviceKey: null
-    teamId: 0
-PO-创建订单-审批拒绝行状态修改服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_APPROVAL_REJECT_ITEM_STATUS_UPDATE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$FSDJF_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_APPROVAL_REJECT_ITEM_STATUS_UPDATE_SERVICE:
     params:
       request:
         purCurrId: null
@@ -5882,12 +5552,8 @@ PO-创建订单-审批拒绝行状态修改服务:
         deliveryCompleted: false
         category: {}
         genMatTypeCf: {}
-    serviceKey: null
-    teamId: 0
-PO-订单行-冻结服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_FREEZE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_APPROVAL_REJECT_ITEM_STATUS_UPDATE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_FREEZE_SERVICE:
     params:
       request:
         purCurrId: null
@@ -5992,12 +5658,8 @@ PO-订单行-冻结服务:
         deliveryCompleted: false
         category: {}
         genMatTypeCf: {}
-    serviceKey: null
-    teamId: 0
-PO-创建订单-提交审批拒绝头状态修改服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_APPROVAL_REJECT_HEAD_STATUS_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_ITEM_FREEZE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_APPROVAL_REJECT_HEAD_STATUS_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -6069,12 +5731,8 @@ PO-创建订单-提交审批拒绝头状态修改服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PR-创建采购申请-保存服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_CREATE_SAVE_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_APPROVAL_REJECT_HEAD_STATUS_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_CREATE_SAVE_EVENT_SERVICE:
     params:
       request:
         purOrgId: {}
@@ -6115,24 +5773,16 @@ PR-创建采购申请-保存服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-PO-查询采购订单默认相关方服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_QUERY_DEFAULT_PARTNER_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_CREATE_SAVE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_QUERY_DEFAULT_PARTNER_EVENT_SERVICE:
     params:
       request:
         poType: {}
         employeePartnerCode: null
         vendId: {}
         vendPartnerCode: null
-    serviceKey: null
-    teamId: 0
-PO-单据行类型服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_MAT_TYPE_GET_ITEM_TYPE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_QUERY_DEFAULT_PARTNER_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_MAT_TYPE_GET_ITEM_TYPE_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -6204,12 +5854,8 @@ PO-单据行类型服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-采购申请自动派单规则校验服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_MD_ASSIGN_JUDGE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_MAT_TYPE_GET_ITEM_TYPE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_MD_ASSIGN_JUDGE_SERVICE:
     params:
       request:
         updatedBy: {}
@@ -6232,12 +5878,8 @@ PO-单据行类型服务:
         - null
         status: null
         updatedAt: 0
-    serviceKey: null
-    teamId: 0
-PO-创建订单-审批通过头状态修改服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_APPROVAL_HEAD_STATUS_UPDATE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_MD_ASSIGN_JUDGE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_APPROVAL_HEAD_STATUS_UPDATE_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -6309,12 +5951,8 @@ PO-创建订单-审批通过头状态修改服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PR-采购申请生效-自动指派服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_EFFECT_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_APPROVAL_HEAD_STATUS_UPDATE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_EFFECT_EVENT_SERVICE:
     params:
       request:
         purOrgId: {}
@@ -6355,22 +5993,14 @@ PR-采购申请生效-自动指派服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-RG-批量保存退货订单服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$RG_BATCH_SAVE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_EFFECT_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$RG_BATCH_SAVE_SERVICE:
     params:
       request:
       - request:
         - {}
-    serviceKey: null
-    teamId: 0
-PO-价格协议行转采购订单项目行服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_AGREEMENT_ITEM_CONVERT_ITEM_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$RG_BATCH_SAVE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_AGREEMENT_ITEM_CONVERT_ITEM_EVENT_SERVICE:
     params:
       request:
         priceAgreements:
@@ -6378,12 +6008,8 @@ PO-价格协议行转采购订单项目行服务:
         poHeadCode: null
         poHeadId: 0
         poTypeId: 0
-    serviceKey: null
-    teamId: 0
-PR-HEAD状态变更-执行中-已完成服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_HEAD_STATUS_UPDATE_FINISHED_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_AGREEMENT_ITEM_CONVERT_ITEM_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_HEAD_STATUS_UPDATE_FINISHED_SERVICE:
     params:
       request:
         purOrgId: {}
@@ -6424,12 +6050,8 @@ PR-HEAD状态变更-执行中-已完成服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-PR-采购申请行已指派-批量自动匹配价格协议服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEMS_ASSIGNED_AUTO_MATCH_PRICE_AGREEMENT_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_HEAD_STATUS_UPDATE_FINISHED_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEMS_ASSIGNED_AUTO_MATCH_PRICE_AGREEMENT_EVENT_SERVICE:
     params:
       request:
       - receiveAddressDetail: null
@@ -6512,12 +6134,8 @@ PR-采购申请行已指派-批量自动匹配价格协议服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-PO-作废-头状态修改服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$ABOLISH_HEAD_STATUS_UPDATE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_ITEMS_ASSIGNED_AUTO_MATCH_PRICE_AGREEMENT_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$ABOLISH_HEAD_STATUS_UPDATE_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -6589,12 +6207,8 @@ PO-作废-头状态修改服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PR-ITEM-指派采购员-保存服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_SAVE_EMLPYEE_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$ABOLISH_HEAD_STATUS_UPDATE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_SAVE_EMLPYEE_EVENT_SERVICE:
     params:
       request:
         receiveAddressDetail: null
@@ -6677,12 +6291,8 @@ PR-ITEM-指派采购员-保存服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-PR-采购任务-退回服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_SEND_BACK_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_ITEM_SAVE_EMLPYEE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_SEND_BACK_SERVICE:
     params:
       request:
         receiveAddressDetail: null
@@ -6765,12 +6375,8 @@ PR-采购任务-退回服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-PO-订单行-取消冻结服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_CANCEL_FREEZE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_ITEM_SEND_BACK_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_CANCEL_FREEZE_SERVICE:
     params:
       request:
         purCurrId: null
@@ -6875,12 +6481,8 @@ PO-订单行-取消冻结服务:
         deliveryCompleted: false
         category: {}
         genMatTypeCf: {}
-    serviceKey: null
-    teamId: 0
-PR-采购任务-退回状态变更服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_SEND_BACK_STATUS_UPDATE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_ITEM_CANCEL_FREEZE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_SEND_BACK_STATUS_UPDATE_SERVICE:
     params:
       request:
         receiveAddressDetail: null
@@ -6963,12 +6565,8 @@ PR-采购任务-退回状态变更服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-PR-ITEM状态变更-指派-寻源服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_STATUS_UPDATE_ASSIGN_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_ITEM_SEND_BACK_STATUS_UPDATE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_STATUS_UPDATE_ASSIGN_SERVICE:
     params:
       request:
         receiveAddressDetail: null
@@ -7051,12 +6649,8 @@ PR-ITEM状态变更-指派-寻源服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-PO-取消完成-行状态修改服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$CANCEL_ITEM_STATUS_UPDATE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_ITEM_STATUS_UPDATE_ASSIGN_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$CANCEL_ITEM_STATUS_UPDATE_SERVICE:
     params:
       request:
         purCurrId: null
@@ -7161,12 +6755,8 @@ PO-取消完成-行状态修改服务:
         deliveryCompleted: false
         category: {}
         genMatTypeCf: {}
-    serviceKey: null
-    teamId: 0
-PO-创建订单-提交服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_CREATE_SUBMIT_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$CANCEL_ITEM_STATUS_UPDATE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_CREATE_SUBMIT_EVENT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -7238,12 +6828,8 @@ PO-创建订单-提交服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PO-采购订单变更-审批撤回-头状态修改服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ALTER_APPROVAL_REJECT_HEAD_STATUS_CHANGE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_CREATE_SUBMIT_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ALTER_APPROVAL_REJECT_HEAD_STATUS_CHANGE_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -7315,12 +6901,8 @@ PO-采购订单变更-审批撤回-头状态修改服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PR-ITEM提交-状态变更-审批拒绝服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_STATUS_UPDATE_APPROVAL_REJECT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_ALTER_APPROVAL_REJECT_HEAD_STATUS_CHANGE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_STATUS_UPDATE_APPROVAL_REJECT_SERVICE:
     params:
       request:
         receiveAddressDetail: null
@@ -7403,12 +6985,8 @@ PR-ITEM提交-状态变更-审批拒绝服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-PR-创建采购申请-提交-回调-同意服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_SUBMIT_CALLBACK_ACCEPTED_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_ITEM_STATUS_UPDATE_APPROVAL_REJECT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_SUBMIT_CALLBACK_ACCEPTED_SERVICE:
     params:
       request:
         purOrgId: {}
@@ -7449,12 +7027,8 @@ PR-创建采购申请-提交-回调-同意服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-采购申请作废服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ABOLISH_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_SUBMIT_CALLBACK_ACCEPTED_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ABOLISH_EVENT_SERVICE:
     params:
       request:
         purOrgId: {}
@@ -7495,12 +7069,8 @@ PR-创建采购申请-提交-回调-同意服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-PR-采购任务-转办服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_TRANSFER_ANOTHER_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_ABOLISH_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_TRANSFER_ANOTHER_SERVICE:
     params:
       request:
         receiveAddressDetail: null
@@ -7583,12 +7153,8 @@ PR-采购任务-转办服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-采购申请行完成服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_FINISH_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_ITEM_TRANSFER_ANOTHER_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_FINISH_EVENT_SERVICE:
     params:
       request:
         receiveAddressDetail: null
@@ -7671,12 +7237,8 @@ PR-采购任务-转办服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-PO-订单-变更服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_ALTER_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_ITEM_FINISH_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_ALTER_EVENT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -7748,12 +7310,8 @@ PO-订单-变更服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PO-根据采购订单行返回批次信息服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_ITEM_QUERY_BATCH_INFO_BY_PO_ITEM_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_ALTER_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_ITEM_QUERY_BATCH_INFO_BY_PO_ITEM_EVENT_SERVICE:
     params:
       request:
         purCurrId: null
@@ -7858,12 +7416,8 @@ PO-根据采购订单行返回批次信息服务:
         deliveryCompleted: false
         category: {}
         genMatTypeCf: {}
-    serviceKey: null
-    teamId: 0
-PO_协同_发送采购订单服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_SEND_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_ITEM_QUERY_BATCH_INFO_BY_PO_ITEM_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_SEND_EVENT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -7935,12 +7489,8 @@ PO_协同_发送采购订单服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PO-创建订单-提交审批行状态修改服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_ITEM_SUBMIT_APPROVAL_STATUS_UPDATE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_SEND_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_ITEM_SUBMIT_APPROVAL_STATUS_UPDATE_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -8012,12 +7562,8 @@ PO-创建订单-提交审批行状态修改服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PO-三方商城失败重试服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_THIRD_PARTY_RETRY_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_ITEM_SUBMIT_APPROVAL_STATUS_UPDATE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_THIRD_PARTY_RETRY_EVENT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -8089,12 +7635,8 @@ PO-三方商城失败重试服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-单据事件处理（批量转为单个）服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$COA_BDG_BILL_EVENT_HANDE_EVENT_SERVICE_CONVERT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_THIRD_PARTY_RETRY_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$COA_BDG_BILL_EVENT_HANDE_EVENT_SERVICE_CONVERT_SERVICE:
     params:
       request:
         receiveAddressDetail: null
@@ -8177,12 +7719,8 @@ PO-三方商城失败重试服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-PR-ITEM-匹配框架合同-保存服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_SAVE_INFO_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$COA_BDG_BILL_EVENT_HANDE_EVENT_SERVICE_CONVERT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_SAVE_INFO_EVENT_SERVICE:
     params:
       request:
         receiveAddressDetail: null
@@ -8265,12 +7803,8 @@ PR-ITEM-匹配框架合同-保存服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-RG-采购退货分组服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$RG_GROUP_BY_PO_CODE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_ITEM_SAVE_INFO_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$RG_GROUP_BY_PO_CODE_SERVICE:
     params:
       request:
       - purCurrId: null
@@ -8375,12 +7909,8 @@ RG-采购退货分组服务:
         deliveryCompleted: false
         category: {}
         genMatTypeCf: {}
-    serviceKey: null
-    teamId: 0
-PO-根据订单id带出支付条款信息服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_BRM_RULE_QUERY_BY_PO_ID_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$RG_GROUP_BY_PO_CODE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_BRM_RULE_QUERY_BY_PO_ID_EVENT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -8452,12 +7982,8 @@ PO-根据订单id带出支付条款信息服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-采购申请行生成采购订单服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_SUBMIT_PO_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_BRM_RULE_QUERY_BY_PO_ID_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_SUBMIT_PO_EVENT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -8529,24 +8055,16 @@ PO-根据订单id带出支付条款信息服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PO-物料信息转采购订单项目行服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_MAT_CONVERT_ITEM_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_ITEM_SUBMIT_PO_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_MAT_CONVERT_ITEM_EVENT_SERVICE:
     params:
       request:
         mats:
         - {}
         poHead: {}
         relatedModelPoHead: {}
-    serviceKey: null
-    teamId: 0
-根据生产版本渲染申请行服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_RENDER_BY_PRD_VRS_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_MAT_CONVERT_ITEM_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_RENDER_BY_PRD_VRS_EVENT_SERVICE:
     params:
       request:
         purOrgId: {}
@@ -8587,12 +8105,8 @@ PO-物料信息转采购订单项目行服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-PO-取消完成-头状态修改服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$CANCEL_FINISED_HEAD_STATUS_UPDATE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_ITEM_RENDER_BY_PRD_VRS_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$CANCEL_FINISED_HEAD_STATUS_UPDATE_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -8664,12 +8178,8 @@ PO-取消完成-头状态修改服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PO-订单-作废服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ABOLISHED_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$CANCEL_FINISED_HEAD_STATUS_UPDATE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ABOLISHED_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -8741,12 +8251,8 @@ PO-订单-作废服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PO-订单头-冻结服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_FREEZE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_ABOLISHED_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_FREEZE_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -8818,12 +8324,8 @@ PO-订单头-冻结服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PO_协同_供应商拒单服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_REJECT_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_FREEZE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_REJECT_EVENT_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -8895,12 +8397,8 @@ PO_协同_供应商拒单服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PR-创建采购申请-提交服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_CREATE_SUBMIT_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_REJECT_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_CREATE_SUBMIT_EVENT_SERVICE:
     params:
       request:
         purOrgId: {}
@@ -8941,12 +8439,8 @@ PR-创建采购申请-提交服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-PO-作废-行状态修改服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$ABOLISH_ITEM_STATUS_UPDATE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_CREATE_SUBMIT_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$ABOLISH_ITEM_STATUS_UPDATE_SERVICE:
     params:
       request:
         purCurrId: null
@@ -9051,12 +8545,8 @@ PO-作废-行状态修改服务:
         deliveryCompleted: false
         category: {}
         genMatTypeCf: {}
-    serviceKey: null
-    teamId: 0
-采购订单-H-分页数据服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_TR_PAGING_DATA_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$ABOLISH_ITEM_STATUS_UPDATE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_TR_PAGING_DATA_SERVICE:
     params:
       request:
         pageable:
@@ -9066,12 +8556,8 @@ PO-作废-行状态修改服务:
           pageNo: 1
           conditionGroup: {}
           pageSize: 20
-    serviceKey: null
-    teamId: 0
-采购申请类型定义表-根据ID查找单表数据服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$pur_pr_head_type_cf_FIND_SINGLE_DATA_BY_ID_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_HEAD_TR_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$pur_pr_head_type_cf_FIND_SINGLE_DATA_BY_ID_SERVICE:
     params:
       request:
         updatedBy: {}
@@ -9094,12 +8580,8 @@ PO-作废-行状态修改服务:
         submitApproval: false
         status: null
         updatedAt: 0
-    serviceKey: null
-    teamId: 0
-配额协议表-导入导出任务管理接口-提交导出任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_QUOTA_HEAD_MD_API_GEI_TASK_EXPORT_DIRECT_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$pur_pr_head_type_cf_FIND_SINGLE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_QUOTA_HEAD_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       sheetConfig: {}
       sliceSize: 0
@@ -9120,12 +8602,8 @@ PO-作废-行状态修改服务:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-供应商交货单管理分页查询:
-  path: /api/trantor/service/engine/execute/SCM_PUR$SUPPLIER_DN_PAGINATION_QUERY_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_QUOTA_HEAD_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_PUR$SUPPLIER_DN_PAGINATION_QUERY_SERVICE:
     params:
       pageable:
         sortOrders:
@@ -9136,58 +8614,36 @@ PO-作废-行状态修改服务:
         pageNo: 1
         conditionGroup: {}
         pageSize: 20
-    serviceKey: null
-    teamId: 0
-订单类型标准导出服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_TYPE_CF_GEI_EXPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$SUPPLIER_DN_PAGINATION_QUERY_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_TYPE_CF_GEI_EXPORT_SERVICE:
     params:
       request: {}
       selectFields:
       - {}
       modelKey: null
-    serviceKey: null
-    teamId: 0
-采购订单-ITEM标准导入服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_TR_GEI_IMPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_TYPE_CF_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_TR_GEI_IMPORT_SERVICE:
     params:
       request:
         sliceData:
         - {}
         context:
           importMode: null
-    serviceKey: null
-    teamId: 0
-货源清单表标准导入服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_SRC_LIST_MD_GEI_IMPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_ITEM_TR_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_SRC_LIST_MD_GEI_IMPORT_SERVICE:
     params:
       request:
         sliceData:
         - {}
         context:
           importMode: null
-    serviceKey: null
-    teamId: 0
-PO_QUERY_BASE_CURR:
-  path: /api/trantor/service/engine/execute/SCM_PUR$po_query_base_curr
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_SRC_LIST_MD_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$po_query_base_curr:
     params:
       currId: null
-    serviceKey: null
-    teamId: 0
-MOCK合同查询:
-  path: /api/trantor/service/engine/execute/SCM_PUR$mock_contract_query
-  method: POST
-申请获取三方商城商品单价:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_GET_THIRD_PRICE_EVENT
-  method: POST
-  body:
+    serviceKey: SCM_PUR$po_query_base_curr
+  /api/trantor/service/engine/execute/SCM_PUR$mock_contract_query: {}
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_GET_THIRD_PRICE_EVENT:
     params:
       request:
         receiveAddressDetail: null
@@ -9270,31 +8726,19 @@ MOCK合同查询:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-采购申请行类型定义表标准导出服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_TYPE_CF_GEI_EXPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_GET_THIRD_PRICE_EVENT
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_TYPE_CF_GEI_EXPORT_SERVICE:
     params:
       request: {}
       selectFields:
       - {}
       modelKey: null
-    serviceKey: null
-    teamId: 0
-采购申请并提交预算:
-  path: /api/trantor/service/engine/execute/SCM_PUR$purchase_request_and_submit_budget
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_ITEM_TYPE_CF_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$purchase_request_and_submit_budget:
     params:
       request: {}
-    serviceKey: null
-    teamId: 0
-根据id更新采购申请行:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_UPDATE_BY_ID
-  method: POST
-  body:
+    serviceKey: SCM_PUR$purchase_request_and_submit_budget
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_UPDATE_BY_ID:
     params:
       request:
         receiveAddressDetail: null
@@ -9377,12 +8821,8 @@ MOCK合同查询:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-PR-生效发送服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$pur_pr_effective_send_service
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_ITEM_UPDATE_BY_ID
+  /api/trantor/service/engine/execute/SCM_PUR$pur_pr_effective_send_service:
     params:
       request:
         purOrgId: {}
@@ -9423,12 +8863,8 @@ PR-生效发送服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-PR-创建采购申请-列表提交服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_CREATE_LIST_SUBMIT_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$pur_pr_effective_send_service
+  /api/trantor/service/engine/execute/SCM_PUR$PR_CREATE_LIST_SUBMIT_EVENT_SERVICE:
     params:
       request:
         purOrgId: {}
@@ -9469,12 +8905,8 @@ PR-创建采购申请-列表提交服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-根据item-headId查询pohead:
-  path: /api/trantor/service/engine/execute/SCM_PUR$query_pohead_by_item_headid
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_CREATE_LIST_SUBMIT_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$query_pohead_by_item_headid:
     params:
       request:
         purCurrId: null
@@ -9579,12 +9011,8 @@ PR-创建采购申请-列表提交服务:
         deliveryCompleted: false
         category: {}
         genMatTypeCf: {}
-    serviceKey: null
-    teamId: 0
-供应商订单管理分页查询:
-  path: /api/trantor/service/engine/execute/SCM_PUR$SUPPLIER_ORDER_MANAGEMENT_PAGINATION_QUERY_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$query_pohead_by_item_headid
+  /api/trantor/service/engine/execute/SCM_PUR$SUPPLIER_ORDER_MANAGEMENT_PAGINATION_QUERY_SERVICE:
     params:
       pageable:
         sortOrders:
@@ -9595,23 +9023,15 @@ PR-创建采购申请-列表提交服务:
         pageNo: 1
         conditionGroup: {}
         pageSize: 20
-    serviceKey: null
-    teamId: 0
-自动派单规则抬头标准导出服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_ASSIGN_RULE_HEAD_MD_GEI_EXPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$SUPPLIER_ORDER_MANAGEMENT_PAGINATION_QUERY_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_ASSIGN_RULE_HEAD_MD_GEI_EXPORT_SERVICE:
     params:
       request: {}
       selectFields:
       - {}
       modelKey: null
-    serviceKey: null
-    teamId: 0
-PO-批量提交采购订单:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_BATCN_SUMBIT_PO_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_AUTO_ASSIGN_RULE_HEAD_MD_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_BATCN_SUMBIT_PO_EVENT_SERVICE:
     params:
       request:
       - supplierContactInfo: null
@@ -9683,33 +9103,21 @@ PO-批量提交采购订单:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-校验采购数量是否大于申请剩余数量:
-  path: /api/trantor/service/engine/execute/SCM_PUR$VALIDATE_PUR_QTY_GREATER_THAN_REST_PR_QTY
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_BATCN_SUMBIT_PO_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$VALIDATE_PUR_QTY_GREATER_THAN_REST_PR_QTY:
     params:
       id: 0
       purQty: 0
-    serviceKey: null
-    teamId: 0
-采购订单-H标准导入服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_TR_GEI_IMPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$VALIDATE_PUR_QTY_GREATER_THAN_REST_PR_QTY
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_TR_GEI_IMPORT_SERVICE:
     params:
       request:
         sliceData:
         - {}
         context:
           importMode: null
-    serviceKey: null
-    teamId: 0
-结算类型定义表-分页数据服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_SETT_TYPE_CF_PAGING_DATA_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_HEAD_TR_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_SETT_TYPE_CF_PAGING_DATA_SERVICE:
     params:
       request:
         pageable:
@@ -9719,21 +9127,13 @@ PO-批量提交采购订单:
           pageNo: 1
           conditionGroup: {}
           pageSize: 20
-    serviceKey: null
-    teamId: 0
-采购-采购订单-根据仓库选择物料填充订单信息:
-  path: /api/trantor/service/engine/execute/SCM_PUR$FUll_PUR_ORDER_BY_WM_STK_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_SETT_TYPE_CF_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$FUll_PUR_ORDER_BY_WM_STK_SERVICE:
     params:
       wmStkBaIds:
       - 0
-    serviceKey: null
-    teamId: 0
-采购申请行-导入导出任务管理接口-提交导出任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_TR_API_GEI_TASK_EXPORT_DIRECT_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$FUll_PUR_ORDER_BY_WM_STK_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_TR_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       sheetConfig: {}
       sliceSize: 0
@@ -9754,12 +9154,8 @@ PO-批量提交采购订单:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-aasdasaasda:
-  path: /api/trantor/service/engine/execute/SCM_PUR$test01001010101
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_ITEM_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_PUR$test01001010101:
     params:
       request:
       - receiveAddressDetail: null
@@ -9842,12 +9238,8 @@ aasdasaasda:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-采购订单-H-根据ID查找数据服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_TR_FIND_DATA_BY_ID_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$test01001010101
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_TR_FIND_DATA_BY_ID_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -9919,12 +9311,8 @@ aasdasaasda:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-供应商订单行管理分页查询:
-  path: /api/trantor/service/engine/execute/SCM_PUR$SUPPLIER_PO_ITEM_PAGINATION_QUERY_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_HEAD_TR_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$SUPPLIER_PO_ITEM_PAGINATION_QUERY_SERVICE:
     params:
       pageable:
         sortOrders:
@@ -9935,12 +9323,8 @@ aasdasaasda:
         pageNo: 1
         conditionGroup: {}
         pageSize: 20
-    serviceKey: null
-    teamId: 0
-货源清单表-根据ID查找单表数据服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$pur_src_list_md_FIND_SINGLE_DATA_BY_ID_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$SUPPLIER_PO_ITEM_PAGINATION_QUERY_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$pur_src_list_md_FIND_SINGLE_DATA_BY_ID_SERVICE:
     params:
       request:
         updatedBy: {}
@@ -9959,12 +9343,8 @@ aasdasaasda:
         matCode: {}
         status: null
         updatedAt: 0
-    serviceKey: null
-    teamId: 0
-自动发送供应商（发送通知）:
-  path: /api/trantor/service/engine/execute/SCM_PUR$AUTOMATIC_SUPPLIER_SEND_NOTIFICATION
-  method: POST
-  body:
+    serviceKey: SCM_PUR$pur_src_list_md_FIND_SINGLE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$AUTOMATIC_SUPPLIER_SEND_NOTIFICATION:
     params:
       request:
         supplierContactInfo: null
@@ -10036,20 +9416,12 @@ aasdasaasda:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-采购申请查询ACTION服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_PAGING_ACTION_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$AUTOMATIC_SUPPLIER_SEND_NOTIFICATION
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_PAGING_ACTION_SERVICE:
     params:
       request: {}
-    serviceKey: null
-    teamId: 0
-采购订单-H-导入导出任务管理接口-提交导出任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_HEAD_PAGING_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       sheetConfig: {}
       sliceSize: 0
@@ -10070,12 +9442,8 @@ aasdasaasda:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-货源清单表-分页数据服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$pur_src_list_md_PAGING_DATA_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_PUR$pur_src_list_md_PAGING_DATA_SERVICE:
     params:
       request:
         pageable:
@@ -10085,20 +9453,12 @@ aasdasaasda:
           pageNo: 1
           conditionGroup: {}
           pageSize: 20
-    serviceKey: null
-    teamId: 0
-ORG-获取规定采购组织下当前登录账号员工信息:
-  path: /api/trantor/service/engine/execute/SCM_PUR$ORG_GET_PUR_ORG_EMPLOYEE_BY_CURRENT_USER
-  method: POST
-  body:
+    serviceKey: SCM_PUR$pur_src_list_md_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$ORG_GET_PUR_ORG_EMPLOYEE_BY_CURRENT_USER:
     params:
       purOrgId: 0
-    serviceKey: null
-    teamId: 0
-增加相关方信息name:
-  path: /api/trantor/service/engine/execute/SCM_PUR$ZDY_ADD_FILL_NAME
-  method: POST
-  body:
+    serviceKey: SCM_PUR$ORG_GET_PUR_ORG_EMPLOYEE_BY_CURRENT_USER
+  /api/trantor/service/engine/execute/SCM_PUR$ZDY_ADD_FILL_NAME:
     params:
       po:
         supplierContactInfo: null
@@ -10170,12 +9530,8 @@ ORG-获取规定采购组织下当前登录账号员工信息:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-采购订单-ITEM-导入导出任务管理接口-通过OSS提交导入任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$ZDY_ADD_FILL_NAME
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
     params:
       sheetConfig: {}
       fileName: null
@@ -10198,23 +9554,15 @@ ORG-获取规定采购组织下当前登录账号员工信息:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-订单项目行类型标准导出服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_TYPE_CF_GEI_EXPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_ITEM_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_TYPE_CF_GEI_EXPORT_SERVICE:
     params:
       request: {}
       selectFields:
       - {}
       modelKey: null
-    serviceKey: null
-    teamId: 0
-配额协议表-根据ID查找单表数据服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$pur_quota_head_md_FIND_SINGLE_DATA_BY_ID_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_ITEM_TYPE_CF_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$pur_quota_head_md_FIND_SINGLE_DATA_BY_ID_SERVICE:
     params:
       request:
         updatedBy: {}
@@ -10235,12 +9583,8 @@ ORG-获取规定采购组织下当前登录账号员工信息:
         matCode: {}
         status: null
         updatedAt: 0
-    serviceKey: null
-    teamId: 0
-根据物料ID采购组织ID库存组织ID查询采购信息记录-采购视图:
-  path: /api/trantor/service/engine/execute/SCM_PUR$ZDY_GET_PUR_REC_MD
-  method: POST
-  body:
+    serviceKey: SCM_PUR$pur_quota_head_md_FIND_SINGLE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$ZDY_GET_PUR_REC_MD:
     params:
       purOrgd: 0
       matId: 0
@@ -10253,12 +9597,8 @@ ORG-获取规定采购组织下当前登录账号员工信息:
           sortType: null
         pageSize: 20
       invOrgId: 0
-    serviceKey: null
-    teamId: 0
-订单类型-导入导出任务管理接口-提交导出任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$ZDY_GET_PUR_REC_MD
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       sheetConfig: {}
       sliceSize: 0
@@ -10279,12 +9619,8 @@ ORG-获取规定采购组织下当前登录账号员工信息:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-PR-采购申请行已指派采购员发送服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$pur_pr_items_assigned_send_service
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_PUR$pur_pr_items_assigned_send_service:
     params:
       request:
         receiveAddressDetail: null
@@ -10367,12 +9703,8 @@ PR-采购申请行已指派采购员发送服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-采购申请类型定义表-导入导出任务管理接口-通过OSS提交导入任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$pur_pr_items_assigned_send_service
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
     params:
       sheetConfig: {}
       fileName: null
@@ -10395,12 +9727,8 @@ PR-采购申请行已指派采购员发送服务:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-采购订单-ITEM-导入导出任务管理接口-提交导出任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_TR_API_GEI_TASK_EXPORT_DIRECT_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_HEAD_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_TR_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       sheetConfig: {}
       sliceSize: 0
@@ -10421,23 +9749,15 @@ PR-采购申请行已指派采购员发送服务:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-采购申请行标准导出服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_TR_GEI_EXPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_ITEM_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_TR_GEI_EXPORT_SERVICE:
     params:
       request: {}
       selectFields:
       - {}
       modelKey: null
-    serviceKey: null
-    teamId: 0
-货源清单表-导入导出任务管理接口-提交导出任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_SRC_LIST_MD_API_GEI_TASK_EXPORT_DIRECT_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_ITEM_TR_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_SRC_LIST_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       sheetConfig: {}
       sliceSize: 0
@@ -10458,12 +9778,8 @@ PR-采购申请行已指派采购员发送服务:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-自动匹配协议规则抬头-导入导出任务管理接口-提交导出任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_MATCH_AGREEMENT_RULE_HEAD_MD_API_GEI_TASK_EXPORT_DIRECT_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_SRC_LIST_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_MATCH_AGREEMENT_RULE_HEAD_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       sheetConfig: {}
       sliceSize: 0
@@ -10484,83 +9800,12 @@ PR-采购申请行已指派采购员发送服务:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-采购订单分页查询ACTION服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_PAGING_ACTION_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_AUTO_MATCH_AGREEMENT_RULE_HEAD_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_PAGING_ACTION_SERVICE:
     params:
       request: {}
-    serviceKey: null
-    teamId: 0
-查询采购订单详情:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_QUERY_DETAIL
-  method: POST
-  body:
-    params:
-      id: 0
-    serviceKey: null
-    teamId: 0
-自动下单规则抬头标准导入服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_ORDER_RULE_HEAD_MD_GEI_IMPORT_SERVICE
-  method: POST
-  body:
-    params:
-      request:
-        sliceData:
-        - {}
-        context:
-          importMode: null
-    serviceKey: null
-    teamId: 0
-采购信息记录-采购视图-根据ID查找单表数据服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$pur_info_rec_pur_md_FIND_SINGLE_DATA_BY_ID_SERVICE
-  method: POST
-  body:
-    params:
-      request:
-        purOrgId: {}
-        isSurplusAllowed: false
-        note: null
-        docCodeRef: null
-        vendCode: {}
-        priceGross: 0
-        isShortageAllowed: false
-        invLocId: {}
-        norm: null
-        createdAt: 0
-        taxratePercent: 0
-        purPercentShortage: 0
-        purQtyMin: 0
-        id: 0
-        deadline: 0
-        invOrgId: {}
-        payName: null
-        timeLeft: 0
-        updatedAt: 0
-        stopReason: null
-        uomBaseId: {}
-        prTypeStatus: null
-        updatedBy: {}
-        originOrgId: 0
-        purInfoRecPurCode: null
-        version: 0
-        docTypeRef: null
-        deleted: 0
-        timeDeadline: 0
-        createdBy: {}
-        matId: {}
-        warPeriod: 0
-        payCode: null
-        purPercentSurplus: 0
-        purInfoRecId: {}
-    serviceKey: null
-    teamId: 0
-采购列表页提交:
-  path: /api/trantor/service/engine/execute/SCM_PUR$purchase_list_submit
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_HEAD_PAGING_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$QUERY_PO_DETAIL_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -10632,12 +9877,128 @@ PR-采购申请行已指派采购员发送服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-查询申请详细信息:
-  path: /api/trantor/service/engine/execute/SCM_PUR$query_application_details
-  method: POST
-  body:
+    serviceKey: SCM_PUR$QUERY_PO_DETAIL_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_ORDER_RULE_HEAD_MD_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: SCM_PUR$PUR_PR_AUTO_ORDER_RULE_HEAD_MD_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$pur_info_rec_pur_md_FIND_SINGLE_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        purOrgId: {}
+        isSurplusAllowed: false
+        note: null
+        docCodeRef: null
+        vendCode: {}
+        priceGross: 0
+        isShortageAllowed: false
+        invLocId: {}
+        norm: null
+        createdAt: 0
+        taxratePercent: 0
+        purPercentShortage: 0
+        purQtyMin: 0
+        id: 0
+        deadline: 0
+        invOrgId: {}
+        payName: null
+        timeLeft: 0
+        updatedAt: 0
+        stopReason: null
+        uomBaseId: {}
+        prTypeStatus: null
+        updatedBy: {}
+        originOrgId: 0
+        purInfoRecPurCode: null
+        version: 0
+        docTypeRef: null
+        deleted: 0
+        timeDeadline: 0
+        createdBy: {}
+        matId: {}
+        warPeriod: 0
+        payCode: null
+        purPercentSurplus: 0
+        purInfoRecId: {}
+    serviceKey: SCM_PUR$pur_info_rec_pur_md_FIND_SINGLE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$purchase_list_submit:
+    params:
+      request:
+        supplierContactInfo: null
+        invType: {}
+        purCurrId: {}
+        showDeliveryUnfreeze: false
+        freezeRecordList:
+        - {}
+        thirdPartyOrderStatus: null
+        poStatusDel: null
+        invLocStoFrom: {}
+        invLocId: {}
+        payMethodValue: null
+        supplyInvOrgId: {}
+        createdAt: 0
+        showFreezeRecord: false
+        supplyInvLocId: {}
+        text:
+        - {}
+        id: 0
+        totalCarriage: 0
+        invOrgId: {}
+        purThirdPartSyncItems:
+        - {}
+        referPoCode: null
+        updatedAt: 0
+        contCode: null
+        updatedBy: {}
+        originOrgId: 0
+        isGrBlock: null
+        amountNet: 0
+        version: 0
+        supplierCollaborationEnabled: false
+        buyer: {}
+        poType: {}
+        pymtSchl:
+        - {}
+        taxAmount: 0
+        vendId: {}
+        purOrgId: {}
+        docIdExt: null
+        invOrg: {}
+        docCodeRef: null
+        deliveryFrozen: false
+        invOrgStoFrom: {}
+        payTermValue: null
+        docIdRef: 0
+        purEmployee: {}
+        businessDate: 0
+        totalAmountGross: 0
+        attachment:
+        - {}
+        poCode: null
+        documentStatus: null
+        purContactPerson: null
+        comOrgId: {}
+        businessStatus: null
+        rgDocRef: {}
+        docTypeRef: null
+        poItem:
+        - {}
+        currTypeCode: {}
+        supplierContactPerson: null
+        deleted: 0
+        partner:
+        - {}
+        poName: null
+        createdBy: {}
+        contName: null
+        purContactInfo: null
+        purRemark: null
+    serviceKey: SCM_PUR$purchase_list_submit
+  /api/trantor/service/engine/execute/SCM_PUR$query_application_details:
     params:
       request:
         purOrgId: {}
@@ -10678,12 +10039,8 @@ PR-采购申请行已指派采购员发送服务:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-采购申请单据表-导入导出任务管理接口-提交导出任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$query_application_details
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       sheetConfig: {}
       sliceSize: 0
@@ -10704,24 +10061,16 @@ PR-采购申请行已指派采购员发送服务:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-采购申请类型定义表标准导入服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_TYPE_CF_GEI_IMPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_TYPE_CF_GEI_IMPORT_SERVICE:
     params:
       request:
         sliceData:
         - {}
         context:
           importMode: null
-    serviceKey: null
-    teamId: 0
-订单项目行类型-导入导出任务管理接口-提交导出任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_HEAD_TYPE_CF_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       sheetConfig: {}
       sliceSize: 0
@@ -10742,32 +10091,20 @@ PR-采购申请行已指派采购员发送服务:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-订单类型标准导入服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_TYPE_CF_GEI_IMPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_ITEM_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_TYPE_CF_GEI_IMPORT_SERVICE:
     params:
       request:
         sliceData:
         - {}
         context:
           importMode: null
-    serviceKey: null
-    teamId: 0
-根据外部单据编号查询采购订单:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_QUERY_BY_EXT_DOC_CODE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_TYPE_CF_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_QUERY_BY_EXT_DOC_CODE:
     params:
       request: null
-    serviceKey: null
-    teamId: 0
-自动下单规则抬头-导入导出任务管理接口-提交导出任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_ORDER_RULE_HEAD_MD_API_GEI_TASK_EXPORT_DIRECT_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_QUERY_BY_EXT_DOC_CODE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_ORDER_RULE_HEAD_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       sheetConfig: {}
       sliceSize: 0
@@ -10788,12 +10125,8 @@ PR-采购申请行已指派采购员发送服务:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-供应商采购订单-H-导入导出任务管理接口-提交导出任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_TR_API_GEI_TASK_EXPORT_VEND
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_AUTO_ORDER_RULE_HEAD_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_TR_API_GEI_TASK_EXPORT_VEND:
     params:
       sheetConfig: {}
       sliceSize: 0
@@ -10814,21 +10147,13 @@ PR-采购申请行已指派采购员发送服务:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-采购主管数据统计服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$agent_purchase_master_DATA_STATISTIC_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_HEAD_TR_API_GEI_TASK_EXPORT_VEND
+  /api/trantor/service/engine/execute/SCM_PUR$agent_purchase_master_DATA_STATISTIC_SERVICE:
     params:
       userContent: null
       agentKey: null
-    serviceKey: null
-    teamId: 0
-采购申请行类型定义表-根据ID查找单表数据服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$pur_pr_item_type_cf_FIND_SINGLE_DATA_BY_ID_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$agent_purchase_master_DATA_STATISTIC_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$pur_pr_item_type_cf_FIND_SINGLE_DATA_BY_ID_SERVICE:
     params:
       request:
         outsourcingSupplierRequired: false
@@ -10856,41 +10181,25 @@ PR-采购申请行已指派采购员发送服务:
         canCreateOrderWithoutAgreement: false
         requireSupplyInvLoc: false
         status: null
-    serviceKey: null
-    teamId: 0
-采购-采购订单-根据库存选择物料填充订单信息:
-  path: /api/trantor/service/engine/execute/SCM_PUR$FUll_PUR_ORDER_BY_IM_STK_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$pur_pr_item_type_cf_FIND_SINGLE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$FUll_PUR_ORDER_BY_IM_STK_SERVICE:
     params:
       imStkBaIds:
       - 0
-    serviceKey: null
-    teamId: 0
-根据id查询poHead:
-  path: /api/trantor/service/engine/execute/SCM_PUR$query_head_by_id
-  method: POST
-  body:
+    serviceKey: SCM_PUR$FUll_PUR_ORDER_BY_IM_STK_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$query_head_by_id:
     params:
       request:
         id: 0
-    serviceKey: null
-    teamId: 0
-自动下单规则抬头标准导出服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_ORDER_RULE_HEAD_MD_GEI_EXPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$query_head_by_id
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_ORDER_RULE_HEAD_MD_GEI_EXPORT_SERVICE:
     params:
       request: {}
       selectFields:
       - {}
       modelKey: null
-    serviceKey: null
-    teamId: 0
-供应商操作越权校验:
-  path: /api/trantor/service/engine/execute/SCM_PUR$VEND_OPERATION_OVERREACH_VALIDATION
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_AUTO_ORDER_RULE_HEAD_MD_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$VEND_OPERATION_OVERREACH_VALIDATION:
     params:
       request:
         supplierContactInfo: null
@@ -10962,12 +10271,8 @@ PR-采购申请行已指派采购员发送服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-采购申请行类型定义表-分页数据服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$pur_pr_item_type_cf_PAGING_DATA_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$VEND_OPERATION_OVERREACH_VALIDATION
+  /api/trantor/service/engine/execute/SCM_PUR$pur_pr_item_type_cf_PAGING_DATA_SERVICE:
     params:
       request:
         pageable:
@@ -10977,12 +10282,8 @@ PR-采购申请行已指派采购员发送服务:
           pageNo: 1
           conditionGroup: {}
           pageSize: 20
-    serviceKey: null
-    teamId: 0
-采购申请类型定义表-分页数据服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$pur_pr_head_type_cf_PAGING_DATA_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$pur_pr_item_type_cf_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$pur_pr_head_type_cf_PAGING_DATA_SERVICE:
     params:
       request:
         pageable:
@@ -10992,12 +10293,8 @@ PR-采购申请行已指派采购员发送服务:
           pageNo: 1
           conditionGroup: {}
           pageSize: 20
-    serviceKey: null
-    teamId: 0
-批量手动定价:
-  path: /api/trantor/service/engine/execute/SCM_PUR$batch_manual_pricing
-  method: POST
-  body:
+    serviceKey: SCM_PUR$pur_pr_head_type_cf_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$batch_manual_pricing:
     params:
       request:
       - supplierContactInfo: null
@@ -11069,12 +10366,8 @@ PR-采购申请行已指派采购员发送服务:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-采购发票类型-根据ID查找数据服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$CF_INVOICE_TYPE_FIND_DATA_BY_ID_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$batch_manual_pricing
+  /api/trantor/service/engine/execute/SCM_PUR$CF_INVOICE_TYPE_FIND_DATA_BY_ID_SERVICE:
     params:
       request:
         invoiceTypeName: null
@@ -11091,32 +10384,20 @@ PR-采购申请行已指派采购员发送服务:
         invoiceTypeCancel: {}
         id: 0
         updatedAt: 0
-    serviceKey: null
-    teamId: 0
-查询三方商品:
-  path: /api/trantor/service/engine/execute/SCM_PUR$QUERY_THIRD_SKU
-  method: POST
-  body:
+    serviceKey: SCM_PUR$CF_INVOICE_TYPE_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$QUERY_THIRD_SKU:
     params:
       id: 0
-    serviceKey: null
-    teamId: 0
-采购申请行类型定义表标准导入服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_TYPE_CF_GEI_IMPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$QUERY_THIRD_SKU
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_TYPE_CF_GEI_IMPORT_SERVICE:
     params:
       request:
         sliceData:
         - {}
         context:
           importMode: null
-    serviceKey: null
-    teamId: 0
-采购订单-ITEM-根据ID查找单表数据服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$pur_po_item_tr_FIND_SINGLE_DATA_BY_ID_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_ITEM_TYPE_CF_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$pur_po_item_tr_FIND_SINGLE_DATA_BY_ID_SERVICE:
     params:
       request:
         purCurrId: null
@@ -11221,20 +10502,12 @@ PR-采购申请行已指派采购员发送服务:
         deliveryCompleted: false
         category: {}
         genMatTypeCf: {}
-    serviceKey: null
-    teamId: 0
-根据采购组织查询公司组织:
-  path: /api/trantor/service/engine/execute/SCM_PUR$company_organization_by_procurement_organization
-  method: POST
-  body:
+    serviceKey: SCM_PUR$pur_po_item_tr_FIND_SINGLE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$company_organization_by_procurement_organization:
     params:
       comorgid: 0
-    serviceKey: null
-    teamId: 0
-供应商订单管理分页导出查询:
-  path: /api/trantor/service/engine/execute/SCM_PUR$SUPPLIER_ORDER_MANAGEMENT_PAGINATION_EX_Q
-  method: POST
-  body:
+    serviceKey: SCM_PUR$company_organization_by_procurement_organization
+  /api/trantor/service/engine/execute/SCM_PUR$SUPPLIER_ORDER_MANAGEMENT_PAGINATION_EX_Q:
     params:
       request:
         pageable:
@@ -11245,12 +10518,8 @@ PR-采购申请行已指派采购员发送服务:
           conditionGroup: null
           pageSize: 20
           keyword: null
-    serviceKey: null
-    teamId: 0
-配额协议表-导入导出任务管理接口-通过OSS提交导入任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_QUOTA_HEAD_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$SUPPLIER_ORDER_MANAGEMENT_PAGINATION_EX_Q
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_QUOTA_HEAD_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
     params:
       sheetConfig: {}
       fileName: null
@@ -11273,12 +10542,8 @@ PR-采购申请行已指派采购员发送服务:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-PR_采购申请_整单完成:
-  path: /api/trantor/service/engine/execute/SCM_PUR$pr_purchase_request_whole_completed
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_QUOTA_HEAD_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_PUR$pr_purchase_request_whole_completed:
     params:
       request:
         purOrgId: {}
@@ -11319,90 +10584,54 @@ PR_采购申请_整单完成:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-采购计划行-导入:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_SCHEDULE_IMPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$pr_purchase_request_whole_completed
+  /api/trantor/service/engine/execute/SCM_PUR$PO_SCHEDULE_IMPORT_SERVICE:
     params:
       request: {}
-    serviceKey: null
-    teamId: 0
-货源清单表标准导出服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_SRC_LIST_MD_GEI_EXPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_SCHEDULE_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_SRC_LIST_MD_GEI_EXPORT_SERVICE:
     params:
       request: {}
       selectFields:
       - {}
       modelKey: null
-    serviceKey: null
-    teamId: 0
-自动派单规则抬头标准导入服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_ASSIGN_RULE_HEAD_MD_GEI_IMPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_SRC_LIST_MD_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_ASSIGN_RULE_HEAD_MD_GEI_IMPORT_SERVICE:
     params:
       request:
         sliceData:
         - {}
         context:
           importMode: null
-    serviceKey: null
-    teamId: 0
-取库存地点中的地址:
-  path: /api/trantor/service/engine/execute/SCM_PUR$get_inventory_location_address
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_AUTO_ASSIGN_RULE_HEAD_MD_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$get_inventory_location_address:
     params:
       request: null
-    serviceKey: null
-    teamId: 0
-采购申请单据表标准导出服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_TR_GEI_EXPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$get_inventory_location_address
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_TR_GEI_EXPORT_SERVICE:
     params:
       request: {}
       selectFields:
       - {}
       modelKey: null
-    serviceKey: null
-    teamId: 0
-根据物料和采购组织查询物料采购视图:
-  path: /api/trantor/service/engine/execute/SCM_PUR$QUERY_MATERIAL_PURCHASING_VIEW_BY_MATERIAL_AND_PUR
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_HEAD_TR_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$QUERY_MATERIAL_PURCHASING_VIEW_BY_MATERIAL_AND_PUR:
     params:
       purOrgId: 0
       matId: 0
-    serviceKey: null
-    teamId: 0
-采购申请类型定义表标准导出服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_TYPE_CF_GEI_EXPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$QUERY_MATERIAL_PURCHASING_VIEW_BY_MATERIAL_AND_PUR
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_TYPE_CF_GEI_EXPORT_SERVICE:
     params:
       request: {}
       selectFields:
       - {}
       modelKey: null
-    serviceKey: null
-    teamId: 0
-根据采购申请行ID查询已请购数量:
-  path: /api/trantor/service/engine/execute/SCM_PUR$GET_REQUESTED_QUANTITY_BY_PR_ITEM_ID
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_HEAD_TYPE_CF_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$GET_REQUESTED_QUANTITY_BY_PR_ITEM_ID:
     params:
       prItemId: 0
-    serviceKey: null
-    teamId: 0
-批量提交退货订单:
-  path: /api/trantor/service/engine/execute/SCM_PUR$bulk_return_order_submission
-  method: POST
-  body:
+    serviceKey: SCM_PUR$GET_REQUESTED_QUANTITY_BY_PR_ITEM_ID
+  /api/trantor/service/engine/execute/SCM_PUR$bulk_return_order_submission:
     params:
       request:
       - supplierContactInfo: null
@@ -11474,12 +10703,8 @@ PR_采购申请_整单完成:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PR-申请类型定义分页查询服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_TYPE_CF_PAGING_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$bulk_return_order_submission
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_TYPE_CF_PAGING_SERVICE:
     params:
       request:
         pageable:
@@ -11489,12 +10714,8 @@ PR-申请类型定义分页查询服务:
           pageNo: 1
           conditionGroup: {}
           pageSize: 20
-    serviceKey: null
-    teamId: 0
-根据订单行id查采购批次:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_QUERY_PUR_BATCH_BY_PO_ITME_ID_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_TYPE_CF_PAGING_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_QUERY_PUR_BATCH_BY_PO_ITME_ID_SERVICE:
     params:
       itemId: 0
       pageable:
@@ -11505,23 +10726,15 @@ PR-申请类型定义分页查询服务:
         conditionGroup: null
         pageSize: 20
         keyword: null
-    serviceKey: null
-    teamId: 0
-保存采购申请行采购数量:
-  path: /api/trantor/service/engine/execute/SCM_PUR$SAVE_PURCHASE_REQUEST_LINE_PURCHASE_QUANTITY
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_QUERY_PUR_BATCH_BY_PO_ITME_ID_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$SAVE_PURCHASE_REQUEST_LINE_PURCHASE_QUANTITY:
     params:
       conPriceAgreementItem: {}
       notOrderAmount: 0
       id: 0
       purQty: 0
-    serviceKey: null
-    teamId: 0
-采购订单-ITEM-分页数据服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$pur_po_item_tr_PAGING_DATA_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$SAVE_PURCHASE_REQUEST_LINE_PURCHASE_QUANTITY
+  /api/trantor/service/engine/execute/SCM_PUR$pur_po_item_tr_PAGING_DATA_SERVICE:
     params:
       request:
         pageable:
@@ -11531,30 +10744,18 @@ PR-申请类型定义分页查询服务:
           pageNo: 1
           conditionGroup: {}
           pageSize: 20
-    serviceKey: null
-    teamId: 0
-PR-前置-采购退货分组:
-  path: /api/trantor/service/engine/execute/SCM_PUR$RG_GROUP_BY_PO_CODE_PRE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$pur_po_item_tr_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$RG_GROUP_BY_PO_CODE_PRE:
     params:
       ids:
       - 0
-    serviceKey: null
-    teamId: 0
-根据采购申请类型ID查询名称:
-  path: /api/trantor/service/engine/execute/SCM_PUR$get_pr_type_name_by_type_id
-  method: POST
-  body:
+    serviceKey: SCM_PUR$RG_GROUP_BY_PO_CODE_PRE
+  /api/trantor/service/engine/execute/SCM_PUR$get_pr_type_name_by_type_id:
     params:
       request:
         id: 0
-    serviceKey: null
-    teamId: 0
-采购申请行类型定义表-导入导出任务管理接口-提交导出任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$get_pr_type_name_by_type_id
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       sheetConfig: {}
       sliceSize: 0
@@ -11575,12 +10776,8 @@ PR-前置-采购退货分组:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-采购数量转化基本数量:
-  path: /api/trantor/service/engine/execute/SCM_PUR$purchase_quantity_to_basic_quantity
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_ITEM_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_PUR$purchase_quantity_to_basic_quantity:
     params:
       request:
         matId: 0
@@ -11588,12 +10785,8 @@ PR-前置-采购退货分组:
         unitId: {}
         orgAmount: 0
       purnum: 0
-    serviceKey: null
-    teamId: 0
-资质组-根据ID查找数据服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$GEN_QUALIFICATIONS_HEAD_CF_FIND_DATA_BY_ID_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$purchase_quantity_to_basic_quantity
+  /api/trantor/service/engine/execute/SCM_PUR$GEN_QUALIFICATIONS_HEAD_CF_FIND_DATA_BY_ID_SERVICE:
     params:
       request:
         qualificationsHeadCode: null
@@ -11608,12 +10801,8 @@ PR-前置-采购退货分组:
         qualificationsItem:
         - {}
         updatedAt: 0
-    serviceKey: null
-    teamId: 0
-自动派单规则抬头-导入导出任务管理接口-通过OSS提交导入任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_ASSIGN_RULE_HEAD_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$GEN_QUALIFICATIONS_HEAD_CF_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_ASSIGN_RULE_HEAD_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
     params:
       sheetConfig: {}
       fileName: null
@@ -11636,23 +10825,15 @@ PR-前置-采购退货分组:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-配额协议表标准导出服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_QUOTA_HEAD_MD_GEI_EXPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_AUTO_ASSIGN_RULE_HEAD_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_QUOTA_HEAD_MD_GEI_EXPORT_SERVICE:
     params:
       request: {}
       selectFields:
       - {}
       modelKey: null
-    serviceKey: null
-    teamId: 0
-采购申请类型定义表-导入导出任务管理接口-提交导出任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_QUOTA_HEAD_MD_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_HEAD_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       sheetConfig: {}
       sliceSize: 0
@@ -11673,23 +10854,15 @@ PR-前置-采购退货分组:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-自动匹配协议规则抬头标准导出服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_MATCH_AGREEMENT_RULE_HEAD_MD_GEI_EXPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_HEAD_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_MATCH_AGREEMENT_RULE_HEAD_MD_GEI_EXPORT_SERVICE:
     params:
       request: {}
       selectFields:
       - {}
       modelKey: null
-    serviceKey: null
-    teamId: 0
-采购订单-SCHL-导入导出任务管理接口-提交导出任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_SCHL_TR_API_GEI_TASK_EXPORT_DIRECT_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_AUTO_MATCH_AGREEMENT_RULE_HEAD_MD_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_SCHL_TR_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       sheetConfig: {}
       sliceSize: 0
@@ -11710,12 +10883,8 @@ PR-前置-采购退货分组:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-批量创建退货订单:
-  path: /api/trantor/service/engine/execute/SCM_PUR$batch_create_return_orders
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_SCHL_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_PUR$batch_create_return_orders:
     params:
       request:
       - supplierContactInfo: null
@@ -11787,12 +10956,8 @@ PR-前置-采购退货分组:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-采购信息记录-采购视图-分页数据服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$pur_info_rec_pur_md_PAGING_DATA_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$batch_create_return_orders
+  /api/trantor/service/engine/execute/SCM_PUR$pur_info_rec_pur_md_PAGING_DATA_SERVICE:
     params:
       request:
         pageable:
@@ -11802,12 +10967,8 @@ PR-前置-采购退货分组:
           pageNo: 1
           conditionGroup: {}
           pageSize: 20
-    serviceKey: null
-    teamId: 0
-采购申请行类型定义表-导入导出任务管理接口-通过OSS提交导入任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$pur_info_rec_pur_md_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
     params:
       sheetConfig: {}
       fileName: null
@@ -11830,23 +10991,15 @@ PR-前置-采购退货分组:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-采购订单-ITEM标准导出服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_TR_GEI_EXPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_ITEM_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_TR_GEI_EXPORT_SERVICE:
     params:
       request: {}
       selectFields:
       - {}
       modelKey: null
-    serviceKey: null
-    teamId: 0
-根据申请批量提交采购订单:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_BATCH_SUBMIT
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_ITEM_TR_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_BATCH_SUBMIT:
     params:
       request:
       - supplierContactInfo: null
@@ -11918,29 +11071,17 @@ PR-前置-采购退货分组:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-供应商查询订单详情:
-  path: /api/trantor/service/engine/execute/SCM_PUR$VEND_QUERY_PO_DETAIL_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_BATCH_SUBMIT
+  /api/trantor/service/engine/execute/SCM_PUR$VEND_QUERY_PO_DETAIL_SERVICE:
     params:
       id: 0
-    serviceKey: null
-    teamId: 0
-根据采购申请行类型ID查询名称:
-  path: /api/trantor/service/engine/execute/SCM_PUR$get_name_by_type_id_from_purchase_request_line
-  method: POST
-  body:
+    serviceKey: SCM_PUR$VEND_QUERY_PO_DETAIL_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$get_name_by_type_id_from_purchase_request_line:
     params:
       request:
         id: 0
-    serviceKey: null
-    teamId: 0
-货源清单表-导入导出任务管理接口-通过OSS提交导入任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_SRC_LIST_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$get_name_by_type_id_from_purchase_request_line
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_SRC_LIST_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
     params:
       sheetConfig: {}
       fileName: null
@@ -11963,12 +11104,8 @@ PR-前置-采购退货分组:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-采购申请单据表-根据ID查找单表数据服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$pur_pr_head_tr_FIND_SINGLE_DATA_BY_ID_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_SRC_LIST_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_PUR$pur_pr_head_tr_FIND_SINGLE_DATA_BY_ID_SERVICE:
     params:
       request:
         purOrgId: {}
@@ -12009,12 +11146,8 @@ PR-前置-采购退货分组:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-分页查询我的采购任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$paginate_my_purchase_tasks
-  method: POST
-  body:
+    serviceKey: SCM_PUR$pur_pr_head_tr_FIND_SINGLE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$paginate_my_purchase_tasks:
     params:
       pageable:
         sortOrders:
@@ -12106,12 +11239,8 @@ PR-前置-采购退货分组:
         conditionGroup: {}
         pageSize: 20
       businessStatus: null
-    serviceKey: null
-    teamId: 0
-采购申请单据表-分页数据服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$pur_pr_head_tr_PAGING_DATA_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$paginate_my_purchase_tasks
+  /api/trantor/service/engine/execute/SCM_PUR$pur_pr_head_tr_PAGING_DATA_SERVICE:
     params:
       request:
         pageable:
@@ -12121,12 +11250,8 @@ PR-前置-采购退货分组:
           pageNo: 1
           conditionGroup: {}
           pageSize: 20
-    serviceKey: null
-    teamId: 0
-订单项目行类型-导入导出任务管理接口-通过OSS提交导入任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$pur_pr_head_tr_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
     params:
       sheetConfig: {}
       fileName: null
@@ -12149,12 +11274,8 @@ PR-前置-采购退货分组:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-自动下单规则抬头-导入导出任务管理接口-通过OSS提交导入任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_ORDER_RULE_HEAD_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_ITEM_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_ORDER_RULE_HEAD_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
     params:
       sheetConfig: {}
       fileName: null
@@ -12177,12 +11298,8 @@ PR-前置-采购退货分组:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-查询订单详情:
-  path: /api/trantor/service/engine/execute/SCM_PUR$QUERY_ORDER_DETAIL
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_AUTO_ORDER_RULE_HEAD_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_PUR$QUERY_ORDER_DETAIL:
     params:
       request:
         supplierContactInfo: null
@@ -12254,24 +11371,16 @@ PR-前置-采购退货分组:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-采购订单-SCHL标准导入服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_SCHL_TR_GEI_IMPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$QUERY_ORDER_DETAIL
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_SCHL_TR_GEI_IMPORT_SERVICE:
     params:
       request:
         sliceData:
         - {}
         context:
           importMode: null
-    serviceKey: null
-    teamId: 0
-PR-批量采购申请行业务状态变更-待下单-执行中服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_BATCH_PR_ITEM_STAT_EXECUTION_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_SCHL_TR_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_BATCH_PR_ITEM_STAT_EXECUTION_SERVICE:
     params:
       request:
       - receiveAddressDetail: null
@@ -12354,12 +11463,8 @@ PR-批量采购申请行业务状态变更-待下单-执行中服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-结算类型定义表-根据ID查找数据服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_SETT_TYPE_CF_FIND_DATA_BY_ID_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_BATCH_PR_ITEM_STAT_EXECUTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_SETT_TYPE_CF_FIND_DATA_BY_ID_SERVICE:
     params:
       request:
         createdAt: 0
@@ -12375,12 +11480,8 @@ PR-批量采购申请行业务状态变更-待下单-执行中服务:
         updatedAt: 0
         msTypeStatus:
         - null
-    serviceKey: null
-    teamId: 0
-自动派单规则启用:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ASSIGN_ENABLE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_SETT_TYPE_CF_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ASSIGN_ENABLE_SERVICE:
     params:
       request:
         updatedBy: {}
@@ -12403,12 +11504,8 @@ PR-批量采购申请行业务状态变更-待下单-执行中服务:
         - null
         status: null
         updatedAt: 0
-    serviceKey: null
-    teamId: 0
-分页查询三方商品:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PAGING_THIRD_SKU
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_ASSIGN_ENABLE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PAGING_THIRD_SKU:
     params:
       pageable:
         sortOrders:
@@ -12418,12 +11515,8 @@ PR-批量采购申请行业务状态变更-待下单-执行中服务:
         conditionGroup: null
         pageSize: 20
         keyword: null
-    serviceKey: null
-    teamId: 0
-采购订单-SCHL-导入导出任务管理接口-通过OSS提交导入任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_SCHL_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PAGING_THIRD_SKU
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_SCHL_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
     params:
       sheetConfig: {}
       fileName: null
@@ -12446,12 +11539,8 @@ PR-批量采购申请行业务状态变更-待下单-执行中服务:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-采购申请行批量创建采购订单-状态校验:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_BATCH_CREATE_PO_STATUS_VALIDATION
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_SCHL_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_BATCH_CREATE_PO_STATUS_VALIDATION:
     params:
       request:
       - receiveAddressDetail: null
@@ -12534,43 +11623,27 @@ PR-批量采购申请行业务状态变更-待下单-执行中服务:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-订单项目行类型标准导入服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_TYPE_CF_GEI_IMPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_ITEM_BATCH_CREATE_PO_STATUS_VALIDATION
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_ITEM_TYPE_CF_GEI_IMPORT_SERVICE:
     params:
       request:
         sliceData:
         - {}
         context:
           importMode: null
-    serviceKey: null
-    teamId: 0
-采购订单-SCHL标准导出服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_SCHL_TR_GEI_EXPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_ITEM_TYPE_CF_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_SCHL_TR_GEI_EXPORT_SERVICE:
     params:
       request: {}
       selectFields:
       - {}
       modelKey: null
-    serviceKey: null
-    teamId: 0
-根据物料采购视图获取期望到货日期:
-  path: /api/trantor/service/engine/execute/SCM_PUR$GET_EXPECTED_ARRIVAL_DATE_FROM_MATERIAL_PROCUREMEN
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_SCHL_TR_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$GET_EXPECTED_ARRIVAL_DATE_FROM_MATERIAL_PROCUREMEN:
     params:
       matId: 0
-    serviceKey: null
-    teamId: 0
-PR-采购申请行项目类型分页查询:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_TYPE_CF_PAGING_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$GET_EXPECTED_ARRIVAL_DATE_FROM_MATERIAL_PROCUREMEN
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ITEM_TYPE_CF_PAGING_SERVICE:
     params:
       request:
         pageable:
@@ -12580,12 +11653,8 @@ PR-采购申请行项目类型分页查询:
           pageNo: 1
           conditionGroup: {}
           pageSize: 20
-    serviceKey: null
-    teamId: 0
-PO-批量保存采购订单:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_BATCH_SAVE_PO_EVENT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_ITEM_TYPE_CF_PAGING_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_BATCH_SAVE_PO_EVENT_SERVICE:
     params:
       request:
       - supplierContactInfo: null
@@ -12657,12 +11726,8 @@ PO-批量保存采购订单:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-PR_采购任务_完成:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_COMPLETE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_BATCH_SAVE_PO_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PR_ITEM_COMPLETE_SERVICE:
     params:
       request:
         receiveAddressDetail: null
@@ -12745,12 +11810,8 @@ PR_采购任务_完成:
         createdBy: {}
         mtoSlsSoItemCode: {}
         receiverContactInfo: null
-    serviceKey: null
-    teamId: 0
-根据供应库存组织带出相关方:
-  path: /api/trantor/service/engine/execute/SCM_PUR$get_related_party_by_supply_inventory_organization
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PR_ITEM_COMPLETE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$get_related_party_by_supply_inventory_organization:
     params:
       id: 0
       source_vend:
@@ -12787,12 +11848,8 @@ PR_采购任务_完成:
         - null
         classType: null
         status: null
-    serviceKey: null
-    teamId: 0
-资质组-分页数据服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$gen_qualifications_head_cf_PAGING_DATA_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$get_related_party_by_supply_inventory_organization
+  /api/trantor/service/engine/execute/SCM_PUR$gen_qualifications_head_cf_PAGING_DATA_SERVICE:
     params:
       request:
         pageable:
@@ -12802,22 +11859,18 @@ PR_采购任务_完成:
           pageNo: 1
           conditionGroup: {}
           pageSize: 20
-    serviceKey: null
-    teamId: 0
-根据物料类型&单据类型带出行类型:
-  path: /api/trantor/service/engine/execute/SCM_PUR$get_line_type_by_material_and_document_type
-  method: POST
-  body:
+    serviceKey: SCM_PUR$gen_qualifications_head_cf_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_QUERY_DETAIL:
+    params:
+      id: 0
+    serviceKey: SCM_PUR$PUR_PO_QUERY_DETAIL
+  /api/trantor/service/engine/execute/SCM_PUR$get_line_type_by_material_and_document_type:
     params:
       matTypeId: 0
       prTypeId: 0
       parentItemType: 0
-    serviceKey: null
-    teamId: 0
-自动匹配规则启用:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_MATCH_ENABLE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$get_line_type_by_material_and_document_type
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_MATCH_ENABLE_SERVICE:
     params:
       request:
         updatedBy: {}
@@ -12838,12 +11891,8 @@ PR_采购任务_完成:
         id: 0
         status: null
         updatedAt: 0
-    serviceKey: null
-    teamId: 0
-采购订单计划-导入:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_SCHEDULE_IMPORT_NEW_SERVICR
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_MATCH_ENABLE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PO_SCHEDULE_IMPORT_NEW_SERVICR:
     params:
       sheetConfig: {}
       fileName: null
@@ -12866,12 +11915,8 @@ PR_采购任务_完成:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-自动派单规则抬头-导入导出任务管理接口-提交导出任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_ASSIGN_RULE_HEAD_MD_API_GEI_TASK_EXPORT_DIRECT_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_SCHEDULE_IMPORT_NEW_SERVICR
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_AUTO_ASSIGN_RULE_HEAD_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       sheetConfig: {}
       sliceSize: 0
@@ -12892,22 +11937,14 @@ PR_采购任务_完成:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-采购按分配表获取项目行类型new:
-  path: /api/trantor/service/engine/execute/SCM_PUR$ZDY_GET_PUR_ITEM_TYPE_JSON
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_AUTO_ASSIGN_RULE_HEAD_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_PUR$ZDY_GET_PUR_ITEM_TYPE_JSON:
     params:
       MAT:
         id: 0
       PO_TYPE_ID: 0
-    serviceKey: null
-    teamId: 0
-采购计划行-合并后保存:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_SCHEDULE_MERGE_SAVE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$ZDY_GET_PUR_ITEM_TYPE_JSON
+  /api/trantor/service/engine/execute/SCM_PUR$PO_SCHEDULE_MERGE_SAVE_SERVICE:
     params:
       records:
       - invLocStoFrom: {}
@@ -12943,12 +11980,8 @@ PR_采购任务_完成:
         purPoItemTrId: {}
         vendId: {}
         mergedId: {}
-    serviceKey: null
-    teamId: 0
-采购订单-H-导入导出任务管理接口-通过OSS提交导入任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_SCHEDULE_MERGE_SAVE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
     params:
       sheetConfig: {}
       fileName: null
@@ -12971,21 +12004,13 @@ PR_采购任务_完成:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
-订单行退货校验:
-  path: /api/trantor/service/engine/execute/SCM_PUR$ORDER_LINE_RETURN_CHECK
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_HEAD_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_PUR$ORDER_LINE_RETURN_CHECK:
     params:
       request:
       - 0
-    serviceKey: null
-    teamId: 0
-采购计划行-合并:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_SCHEDULE_MERGE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$ORDER_LINE_RETURN_CHECK
+  /api/trantor/service/engine/execute/SCM_PUR$PO_SCHEDULE_MERGE_SERVICE:
     params:
       records:
       - invLocStoFrom: {}
@@ -13021,12 +12046,8 @@ PR_采购任务_完成:
         purPoItemTrId: {}
         vendId: {}
         mergedId: {}
-    serviceKey: null
-    teamId: 0
-PR列表提交前补充关联模型信息:
-  path: /api/trantor/service/engine/execute/SCM_PUR$add_related_model_info_before_submitting_p
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_SCHEDULE_MERGE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$add_related_model_info_before_submitting_p:
     params:
       request:
         purOrgId: {}
@@ -13067,12 +12088,8 @@ PR列表提交前补充关联模型信息:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-采购计划行-编辑:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_SCHEDULE_EDIT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$add_related_model_info_before_submitting_p
+  /api/trantor/service/engine/execute/SCM_PUR$PO_SCHEDULE_EDIT_SERVICE:
     params:
       record:
         invLocStoFrom: {}
@@ -13108,34 +12125,22 @@ PR列表提交前补充关联模型信息:
         purPoItemTrId: {}
         vendId: {}
         mergedId: {}
-    serviceKey: null
-    teamId: 0
-查询采购行项目类型:
-  path: /api/trantor/service/engine/execute/SCM_PUR$QueryPurcaseProjectLineType
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_SCHEDULE_EDIT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$QueryPurcaseProjectLineType:
     params:
       request:
         md_mat_id: 0
         cf_po_type_id: 0
-    serviceKey: null
-    teamId: 0
-配额协议表标准导入服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_QUOTA_HEAD_MD_GEI_IMPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$QueryPurcaseProjectLineType
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_QUOTA_HEAD_MD_GEI_IMPORT_SERVICE:
     params:
       request:
         sliceData:
         - {}
         context:
           importMode: null
-    serviceKey: null
-    teamId: 0
-自动下单规则启用:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ORDER_ENABLE_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_QUOTA_HEAD_MD_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PR_ORDER_ENABLE_SERVICE:
     params:
       request:
         updatedBy: {}
@@ -13156,12 +12161,8 @@ PR列表提交前补充关联模型信息:
         id: 0
         status: null
         updatedAt: 0
-    serviceKey: null
-    teamId: 0
-采购申请保存状态校验:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PURCHASE_REQUEST_SAVE_STATE_VALIDATION
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PR_ORDER_ENABLE_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PURCHASE_REQUEST_SAVE_STATE_VALIDATION:
     params:
       req:
         purOrgId: {}
@@ -13202,12 +12203,8 @@ PR列表提交前补充关联模型信息:
         createdBy: {}
         buyType: null
         syncStatus: null
-    serviceKey: null
-    teamId: 0
-根据headId查询item:
-  path: /api/trantor/service/engine/execute/SCM_PUR$query_item_by_headid
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PURCHASE_REQUEST_SAVE_STATE_VALIDATION
+  /api/trantor/service/engine/execute/SCM_PUR$query_item_by_headid:
     params:
       request:
         supplierContactInfo: null
@@ -13279,12 +12276,8 @@ PR列表提交前补充关联模型信息:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-采购订单自动发送供应商:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PURCHASE_ORDER_AUTO_SEND_SUPPLIER
-  method: POST
-  body:
+    serviceKey: SCM_PUR$query_item_by_headid
+  /api/trantor/service/engine/execute/SCM_PUR$PURCHASE_ORDER_AUTO_SEND_SUPPLIER:
     params:
       req:
         supplierContactInfo: null
@@ -13356,12 +12349,8 @@ PR列表提交前补充关联模型信息:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-资质组-根据ID查找单表数据服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$gen_qualifications_head_cf_FIND_SINGLE_DATA_BY_ID_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PURCHASE_ORDER_AUTO_SEND_SUPPLIER
+  /api/trantor/service/engine/execute/SCM_PUR$gen_qualifications_head_cf_FIND_SINGLE_DATA_BY_ID_SERVICE:
     params:
       request:
         qualificationsHeadCode: null
@@ -13376,12 +12365,8 @@ PR列表提交前补充关联模型信息:
         qualificationsItem:
         - {}
         updatedAt: 0
-    serviceKey: null
-    teamId: 0
-配额协议表-分页数据服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$pur_quota_head_md_PAGING_DATA_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$gen_qualifications_head_cf_FIND_SINGLE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$pur_quota_head_md_PAGING_DATA_SERVICE:
     params:
       request:
         pageable:
@@ -13391,21 +12376,13 @@ PR列表提交前补充关联模型信息:
           pageNo: 1
           conditionGroup: {}
           pageSize: 20
-    serviceKey: null
-    teamId: 0
-根据采购采购信息ID查询供应商:
-  path: /api/trantor/service/engine/execute/SCM_PUR$ZDY_FROM_PUR_REC_INFO_ID_GET_VEND
-  method: POST
-  body:
+    serviceKey: SCM_PUR$pur_quota_head_md_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$ZDY_FROM_PUR_REC_INFO_ID_GET_VEND:
     params:
       purInfoRec:
         id: 0
-    serviceKey: null
-    teamId: 0
-【服务验证】下单状态检查:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PO_ORDERSTATUS_CHECK_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$ZDY_FROM_PUR_REC_INFO_ID_GET_VEND
+  /api/trantor/service/engine/execute/SCM_PUR$PO_ORDERSTATUS_CHECK_SERVICE:
     params:
       request:
         supplierContactInfo: null
@@ -13477,23 +12454,15 @@ PR列表提交前补充关联模型信息:
         contName: null
         purContactInfo: null
         purRemark: null
-    serviceKey: null
-    teamId: 0
-采购订单-H标准导出服务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_TR_GEI_EXPORT_SERVICE
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PO_ORDERSTATUS_CHECK_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_HEAD_TR_GEI_EXPORT_SERVICE:
     params:
       request: {}
       selectFields:
       - {}
       modelKey: null
-    serviceKey: null
-    teamId: 0
-订单类型-导入导出任务管理接口-通过OSS提交导入任务:
-  path: /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-  method: POST
-  body:
+    serviceKey: SCM_PUR$PUR_PO_HEAD_TR_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_PUR$PUR_PO_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
     params:
       sheetConfig: {}
       fileName: null
@@ -13516,5 +12485,4 @@ PR列表提交前补充关联模型信息:
       namespace: null
       taskName: null
       selfRelationModel: false
-    serviceKey: null
-    teamId: 0
+    serviceKey: SCM_PUR$PUR_PO_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST

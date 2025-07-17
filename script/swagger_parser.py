@@ -622,7 +622,7 @@ if __name__ == "__main__":
     endpoints = parser.parse_endpoints()
     
     # 保存路径信息到gen_path.yaml
-    # parser.save_paths_to_yaml(endpoints, module="SCM_PUR")
+    parser.save_paths_to_yaml(endpoints, module="SCM_PUR")
     
     # 保存统一结构到unified_api.yaml
-    parser.save_unified_api_yaml(endpoints, module="SCM_PUR") 
+    # parser.save_unified_api_yaml(endpoints, module="SCM_PUR") 
