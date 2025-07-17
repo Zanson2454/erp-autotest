@@ -141,5 +141,5 @@ class GenMdBaseTest(BaseTest):
 
 if __name__ == "__main__":
     GenMdBaseTest.setup_class()
-    print(GenMdBaseTest.admin_user_info)
+    print(GenMdBaseTest.nickname)
     # print(GenMdBaseTest.cust_user_info)
