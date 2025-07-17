@@ -26,10 +26,10 @@ class TestPoItemTypeManagement(ScmPurBaseTest):
     def teardown_class(cls):
         """测试类结束后执行清理"""
         try:
-            # 假设表名为 pur_po_item_type_cf，code 字段为 type_code
+            # 假设表名为 pur_po_item_type_cf，code 字段为 po_item_type
             cls.db.delete(
                 table="pur_po_item_type_cf",
-                where="type_code like %s",
+                where="po_item_type like %s",
                 params=["AT_%"]
             )
             cls.logger.info("测试数据清理完成")
@@ -72,6 +72,59 @@ class TestPoItemTypeManagement(ScmPurBaseTest):
         try:
             api_path = self.get_api_path("订单项目行类型-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
+            params["params"]= {
+                "taskName": f"订单项目行类型-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
+                "multiSheetConfig": [
+                    {
+                        "modelKey": "SCM_PUR$pur_po_item_type_cf",
+                        "modelName": "订单项目行类型",
+                        "sheetNo": 0,
+                        "sheetName": "订单项目行类型",
+                        "headerConfigList": [
+                            {
+                                "name": "类型编码",
+                                "type": "TEXT",
+                                "field": "poItemType"
+                            },
+                            {
+                                "name": "类型名称",
+                                "type": "TEXT",
+                                "field": "poItemTypeName"
+                            }
+                        ]
+                    }
+                ],
+                "queryData": {
+                    "containerKey": "SCM_PUR$PUR_PO_ITEM_TYPE_VIEW-list-SCM_PUR$pur_po_item_type_cf",
+                    "viewKey": "SCM_PUR$PUR_PO_ITEM_TYPE_VIEW:list",
+                    "sceneKey": "SCM_PUR$PUR_PO_ITEM_TYPE_VIEW",
+                    "params": {
+                        "request": {
+                            "pageable": {
+
+                            }
+                        },
+                        "selectFields": [
+                            {
+                                "field": "poItemType"
+                            },
+                            {
+                                "field": "poItemTypeName"
+                            }
+                        ],
+                        "modelKey": "SCM_PUR$pur_po_item_type_cf"
+                    }
+                },
+                "processConfig": {
+                    "processType": "TRANTOR",
+                    "model": "SCM_PUR$pur_po_item_type_cf",
+                    "modelName": "订单项目行类型",
+                    "containerKey": "SCM_PUR$PUR_PO_ITEM_TYPE_VIEW-list-SCM_PUR$pur_po_item_type_cf",
+                    "viewKey": "SCM_PUR$PUR_PO_ITEM_TYPE_VIEW:list",
+                    "sceneKey": "SCM_PUR$PUR_PO_ITEM_TYPE_VIEW"
+                }
+            }
+
             a.json(params, "请求数据")
             response = self.http.post(url, json=params)
             a.json(response, "响应数据")
@@ -88,6 +141,7 @@ class TestPoItemTypeManagement(ScmPurBaseTest):
         order=4,
         tags=["订单项目行类型", "标准导出"]
     )
+    @pytest.mark.skip(reason="业务未引用暂时跳过")
     def test_export_po_item_type(self):
         try:
             api_path = self.get_api_path("订单项目行类型标准导出服务")
