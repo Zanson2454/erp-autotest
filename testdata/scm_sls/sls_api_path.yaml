@@ -1,5 +1,5 @@
 version: '1.0'
-total_apis: 239
+total_apis: 243
 apis:
   SLS-销售-取消提交服务:
     path: /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_CANNEL_COMMIT_EVENT_SERVICE
@@ -364,6 +364,9 @@ apis:
   查询销售订单详情(bom子行):
     path: /api/trantor/service/engine/execute/SCM_SLS$query_sls_order_bom_detail
     method: POST
+  销售收入专项分析助手数据统计服务:
+    path: /api/trantor/service/engine/execute/SCM_SLS$sales_gross_profit_specialized_analysis_assistant_DATA_STATISTIC_SERVICE
+    method: POST
   分页查询销售订单行:
     path: /api/trantor/service/engine/execute/SCM_SLS$PAGING_SO_ITEMS
     method: POST
@@ -426,6 +429,9 @@ apis:
     method: POST
   销售订单项目行-根据订单ID查找数据:
     path: /api/trantor/service/engine/execute/SCM_SLS$sales_order_item_line_find_data_by_order_id
+    method: POST
+  更新风险项目:
+    path: /api/trantor/service/engine/execute/SCM_SLS$update_risk_project
     method: POST
   退货订单抬头表-导入导出任务管理接口-提交导出任务:
     path: /api/trantor/service/engine/execute/SCM_SLS$SLS_RO_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST
@@ -595,6 +601,9 @@ apis:
   测试回填服务:
     path: /api/trantor/service/engine/execute/SCM_SLS$test_fillback_service
     method: POST
+  创建业务待办:
+    path: /api/trantor/service/engine/execute/SCM_SLS$create_business_todo
+    method: POST
   SLS-订单行项目类型组-保存服务:
     path: /api/trantor/service/engine/execute/SCM_SLS$sls_item_type_group_save_service
     method: POST
@@ -633,6 +642,9 @@ apis:
     method: POST
   SLS-订单项目行分配-详情服务:
     path: /api/trantor/service/engine/execute/SCM_SLS$sls_so_detm_detail_service
+    method: POST
+  SLS-销售渠道-根据销售组织查询销售渠道:
+    path: /api/trantor/service/engine/execute/SCM_SLS$sls_dc_query_by_sls_org_service
     method: POST
   寻仓规则保存:
     path: /api/trantor/service/engine/execute/SCM_SLS$WH_FIND_RULE_UPDATE_SERVICE

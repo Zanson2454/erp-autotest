@@ -249,6 +249,7 @@ class BaseTest:
     """重构后的测试基类"""
     
     # 类型提示：动态设置的属性
+    # type: ignore[attr-defined]
     logger: Any
     assert_util: Any
     env_config: Any

@@ -22,12 +22,11 @@ from utils.log_util import Loggers
 from utils.response_util import ResponseUtil
 
 logger = Loggers()
-logger
 class AssertHelper:
     """断言辅助类，提供通用的断言方法"""
 
     @staticmethod
-    def assert_response_success(response: Dict[str, Any], message: str = None) -> None:
+    def assert_response_success(response: Dict[str, Any], message: str = '') -> None:
         """
         断言响应成功
         
@@ -45,7 +44,7 @@ class AssertHelper:
             logger.info(f"响应成功断言通过: success={success}")
 
     @staticmethod
-    def assert_response_data(response: Dict[str, Any], message: str = None) -> Any:
+    def assert_response_data(response: Dict[str, Any], message: str = '') -> Any:
         """
         断言响应成功
         支持处理Response对象和字典类型的响应数据
@@ -85,7 +84,7 @@ class AssertHelper:
             logger.warning("响应对象中没有elapsed属性，无法验证响应时间")
 
     @staticmethod
-    def assert_all_in(expected_list: List[Any], actual_list: List[Any], message: str = None) -> None:
+    def assert_all_in(expected_list: List[Any], actual_list: List[Any], message: str = '') -> None:
         """
         断言所有期望的值都在实际列表中存在
         
@@ -95,7 +94,7 @@ class AssertHelper:
             message: 自定义错误消息
         """
         missing = [item for item in expected_list if item not in actual_list]
-        if message is None:
+        if not message:
             message = f"以下期望值在实际列表中未找到: {missing}"
         assert not missing, message
 

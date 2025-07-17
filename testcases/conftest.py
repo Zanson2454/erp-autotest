@@ -29,9 +29,6 @@ from datetime import datetime
 from typing import Generator, Callable, Any
 from pathlib import Path
 from functools import wraps
-import inspect
-import re
-
 from utils.log_util import Loggers
 from utils.yaml_util import YamlUtil
 from utils.report_util import ReportEnhancer, TestStatus
@@ -41,6 +38,7 @@ project_root = Path(__file__).resolve().parent.parent
 
 # 确保必要的目录存在
 REQUIRED_DIRS = ["reports/allure-results", "reports/allure-report","logs", "testdata", "testcases"]
+
 for dir_name in REQUIRED_DIRS:
     os.makedirs(project_root / dir_name, exist_ok=True)
 

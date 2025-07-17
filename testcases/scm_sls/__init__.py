@@ -1,94 +1,123 @@
-from pathlib import Path
+"""
+销售管理模块的测试初始化
+提供配置加载等通用功能
+"""
 import sys
+from pathlib import Path
 
+# 获取项目根目录
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
 
-from data_factory.sls_factory import SlsDataFactory
-from utils.yaml_util import YamlUtil
-from utils.cache_util import CacheUtil
-from testcases.comm.base_test import BaseTest
+from typing import Any, Dict
+from testcases.comm.base_test import BaseTest, LoginService
 from data_factory.base import DataFactory
+from utils.cache_util import CacheUtil
+from utils.request_util import HttpUtil
 
 class SlsBase(BaseTest):
+    """销售管理模块的基础测试类，负责加载销售配置和提供API访问方法"""
+    
+    # 类型提示：继承的动态属性
+    yaml_util: Any
+    
+    # 登录两个门户，分别保存 session/user_info 并初始化 http 工具
+    _PORTAL_TYPE_KEYS: Dict[str, str] = {
+        "admin": "TERP_PORTAL",
+        "cust": "TERP_CUST_PC"
+    }
+    
     @classmethod
     def setup_class(cls):
+        """
+        测试类初始化 - 加载销售配置
+        1. 调用父类初始化方法 (包括登录、数据库连接等)
+        2. 多门户多用户登录，获取 session
+        3. 初始化销售配置文件路径
+        4. 加载API路径和参数配置
+        5. 初始化 http 工具，自动带上门户请求头
+        6. 加载销售缓存数据
+        """
         super().setup_class()
-        # 路径
-        cls.sls_api_path_yaml = project_root / "testdata" / "sls" / "sls_api_path.yaml"
-        cls.sls_prams_path_yaml = project_root / "testdata" / "sls" / "sls_api_params.yaml"
-        cls.sls_init_path = project_root / "testdata" / "init" / "sls_init.yaml"
-        cls.sls_cache_path = project_root / "testdata" / "cache" / "sls_cache.json"
-        cls.sls_cache_dir = cls.sls_cache_path.parent
 
+        cls.login_service = LoginService(cls.env_config)  # 初始化一次登录服务，避免重复创建
+        # 登录 admin
+        admin_result = cls.login_service.login(portal_key=cls._PORTAL_TYPE_KEYS["admin"])
+        if admin_result.status != admin_result.status.SUCCESS:
+            raise RuntimeError(f"admin 登录失败: {admin_result.error_message}")
+        
+        # 初始化 cust 的 headers
+        cls.admin_headers = admin_result.portal_headers
+        if cls.admin_headers:
+            cls.cust_portal_headers = cls.admin_headers.copy()  
+        cust_portal_referer = cls.env_config.get("portal_config",{}).get('terp',{}).get("TERP_CUST_PC",{}).get("portal_referer")
+        cls.cust_portal_headers["Referer"] = cust_portal_referer
+        cls.logger.info(f"cust_portal_headers: {cls.cust_portal_headers}")
+  
+        # 初始化 http 实例
+        cls.http = HttpUtil(
+            url=admin_result.portal_url,
+            session=admin_result.session,
+            headers=admin_result.portal_headers
+        )
+     
+        # 初始化配置文件路径
+        cls.sls_api_path = Path(project_root) / "testdata" / "scm_sls" / "sls_api_path.yaml"
+        cls.sls_api_params = Path(project_root) / "testdata" / "scm_sls" / "sls_api_params.yaml"
+        
         # 加载API路径配置和参数配置
-        cls.apis = cls.yaml_util.read_yaml(cls.sls_api_path_yaml).get("apis", {})
-        cls.api_params = cls.yaml_util.read_yaml(cls.sls_prams_path_yaml).get("api_params", {})
+        cls.apis = cls.yaml_util.read_yaml(cls.sls_api_path).get("apis", {})
+        cls.api_params = cls.yaml_util.read_yaml(cls.sls_api_params).get("api_params", {})
+        
         # 初始化DataFactory（必须在init_sql_cache之前调用）
         DataFactory.__init__(env_name="test")
-        # 加载缓存数据
+        
+             # 加载缓存数据
+        DataFactory.init_sql_cache(
+            sql_config_path=str(project_root / "config" / "erp" / "md_init_sql.yaml"), # 主数据依赖的初始化sql 存放路径
+            db_config_name="erp_db", # 数据库配置名称
+            cache_key="md_init_cache", # 缓存key
+            cache_dir="testdata/cache" # 缓存目录
+        )
+        cls.md_cache_data = CacheUtil.get('md_init_cache')
+        
+        
         DataFactory.init_sql_cache(
             sql_config_path=str(project_root / "config" / "erp" / "sls_init_sql.yaml"), # 销售管理依赖的初始化sql 存放路径
             db_config_name="erp_db", # 数据库配置名称
             cache_key="sls_init_cache", # 缓存key
             cache_dir="testdata/cache" # 缓存目录
         )
+        cls.sls_cache_data = CacheUtil.get('sls_init_cache')
+        
+        # 从sls_config中获取数据
+        sls_config = cls.sls_cache_data.get("sls_config", {})
+        cls.ORDER_TYPES = sls_config.get("ORDER_TYPES", [])
+        cls.ORDER_LINE_TYPES = sls_config.get("ORDER_LINE_TYPES", [])
+        cls.ORDER_TYPE_LINE_COMBINATIONS = sls_config.get("ORDER_TYPE_LINE_COMBINATIONS", [])
 
-        # 缓存初始化
-        CacheUtil.init(str(cls.sls_cache_dir))
-        if not cls.sls_cache_path.exists():
-            SlsDataFactory.cache_sls_data()
-        data = CacheUtil.get("sls_cache")
-        if not data:
-            SlsDataFactory.cache_sls_data()
-            data = CacheUtil.get("sls_cache")
-            if not data:
-                raise RuntimeError("sls_cache.json 读取失败或内容为空，请检查数据工厂写入逻辑和缓存文件内容！")
 
-        cls.ORDER_TYPES = data["ORDER_TYPES"]
-        cls.ORDER_LINE_TYPES = data["ORDER_LINE_TYPES"]
-        cls.ORDER_TYPE_LINE_COMBINATIONS = data["ORDER_TYPE_LINE_COMBINATIONS"]
+        cls.sls_cache_data = CacheUtil.get('sls_init_cache')
+        cls.path_params = {"tmodule": "SCM_SLS"}
+        cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
+        cls.user_id = cls.init_data["user_info"]['user_info']["id"]
 
-        # 提取ID映射
-        cls.ORDER_TYPE_IDS = {}
-        cls.ORDER_LINE_TYPE_IDS = {}
-        for combo in cls.ORDER_TYPE_LINE_COMBINATIONS:
-            order_line_type_code = combo.get("so_item_type_code")
-            order_line_type_id = combo.get("so_item_type_id")
-            if order_line_type_code and order_line_type_id:
-                cls.ORDER_LINE_TYPE_IDS[order_line_type_code] = order_line_type_id
-            for detm_info in combo.get("so_item_detm_info", []):
-                order_type_code = detm_info.get("so_type_code")
-                order_type_id = detm_info.get("so_type_id")
-                if order_type_code and order_type_id:
-                    cls.ORDER_TYPE_IDS[order_type_code] = order_type_id
-
-    @classmethod
-    def get_order_type_id(cls, order_type_code: str):
-        """通过订单类型编码获取订单类型ID"""
-        if order_type_code in cls.ORDER_TYPE_IDS:
-            return cls.ORDER_TYPE_IDS[order_type_code]
-        raise ValueError(f"未找到订单类型: {order_type_code}")
-
-    @classmethod
-    def get_order_type_name(cls, order_type_code: str):
-        """通过订单类型编码获取订单类型名称"""
-        return cls.ORDER_TYPES.get(order_type_code) or f"未找到订单类型: {order_type_code}"
-
-    @classmethod
-    def get_order_line_type_id(cls, order_line_type_code: str):
-        """通过订单行类型编码获取订单行类型ID"""
-        if order_line_type_code in cls.ORDER_LINE_TYPE_IDS:
-            return cls.ORDER_LINE_TYPE_IDS[order_line_type_code]
-        raise ValueError(f"未找到订单行类型: {order_line_type_code}")
-
-    @classmethod
-    def get_order_line_type_name(cls, order_line_type_code: str):
-        """通过订单行类型编码获取订单行类型名称"""
-        return cls.ORDER_LINE_TYPES.get(order_line_type_code) or f"未找到订单行类型: {order_line_type_code}"
+    def get_api_path(self, api_key):
+        """
+        获取API路径
+        """
+        return super().get_api_path(api_key, self.apis)
     
+    def get_api_params(self, api_path, with_query_params=None):
+        """
+        获取API请求参数和完整URL
+        """
+        return super().get_api_params(api_path, self.api_params, with_query_params)
+    
+
 if __name__ == "__main__":
     SlsBase.setup_class()
+    print(SlsBase.nickname)
     print(SlsBase.ORDER_TYPES)
     print(SlsBase.ORDER_LINE_TYPES)
     print(SlsBase.ORDER_TYPE_LINE_COMBINATIONS)
