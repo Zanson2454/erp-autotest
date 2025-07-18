@@ -30,7 +30,7 @@ class TestSoTypeManagement(SlsBase):
         try:
             cls.db.delete(
                 table="sls_so_type_cf",
-                where="code like %s",
+                where="so_type_code like %s",
                 params=["AT_%"]
             )
             cls.logger.info("测试数据清理完成")

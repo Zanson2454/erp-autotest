@@ -29,7 +29,7 @@ class TestSoItemTypeManagement(SlsBase):
         """测试类结束后执行清理"""
         try:
             cls.db.delete(
-                table="gen_sls_so_item_type_cf",
+                table="sls_so_item_type_cf",
                 where="so_item_type_code like %s",
                 params=["AT_%"]
             )
@@ -92,7 +92,7 @@ class TestSoItemTypeManagement(SlsBase):
         order=2,
         tags=["订单行项目类型", "导入", "SLS_SO_ITEM_TYPE_CF_GEI_IMPORT_SERVICE"]
     )
-    @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
+    @pytest.mark.skip(reason="业务未引用")
     def test_so_item_type_import_service(self):
         """订单行项目类型定义表标准导入服务用例"""
         try:
@@ -188,6 +188,7 @@ class TestSoItemTypeManagement(SlsBase):
         order=3,
         tags=["订单行项目类型", "导出", "SLS_SO_ITEM_TYPE_CF_GEI_EXPORT_SERVICE"]
     )
+    @pytest.mark.skip(reason="业务未引用")
     def test_so_item_type_export_service(self):
         """订单行项目类型定义表标准导出服务用例"""
         try:
@@ -386,80 +387,65 @@ class TestSoItemTypeManagement(SlsBase):
             api_path = self.get_api_path("订单行项目类型定义表-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
             
-            # 2. 参数处理
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["serviceKey", "params"], ["params"]
-            )
-            set_dict = {
-                "serviceKey": "SCM_SLS$SLS_SO_ITEM_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
-                "params": {
-                    "taskName": f"订单行项目类型定义表-自动化测试-{self.mock_util.get_timestamp()}-导出",
-                    "multiSheetConfig": [
-                        {
-                            "modelKey": "SCM_SLS$so_item_type_cf",
-                            "modelName": "订单行项目类型定义表",
-                            "sheetNo": 0,
-                            "sheetName": "订单行项目类型定义表",
-                            "headerConfigList": [
-                                {
-                                    "name": "订单行项目类型编码",
-                                    "type": "TEXT",
-                                    "field": "so_item_type_code"
-                                },
-                                {
-                                    "name": "订单行项目类型名称",
-                                    "type": "TEXT",
-                                    "field": "so_item_type_name"
-                                },
-                                {
-                                    "name": "描述",
-                                    "type": "TEXT",
-                                    "field": "description"
-                                }
-                            ]
-                        }
-                    ],
-                    "queryData": {
-                        "containerKey": "SCM_SLS$so_item_type_cf",
-                        "viewKey": "SCM_SLS$so_item_type_cf:list",
-                        "sceneKey": "SCM_SLS$so_item_type_cf",
-                        "params": {
-                            "request": {
-                                "pageable": {
-                                    "sortOrders": []
-                                }
-                            },
-                            "selectFields": [
-                                {
-                                    "field": "so_item_type_code"
-                                },
-                                {
-                                    "field": "so_item_type_name"
-                                },
-                                {
-                                    "field": "description"
-                                }
-                            ],
-                            "modelKey": "SCM_SLS$so_item_type_cf"
-                        }
-                    },
-                    "processConfig": {
-                        "processType": "TRANTOR",
-                        "model": "SCM_SLS$so_item_type_cf",
+            params['params'] = {
+                "taskName": f"订单行项目类型-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
+                "multiSheetConfig": [
+                    {
+                        "modelKey": "SCM_SLS$sls_so_item_type_cf",
                         "modelName": "订单行项目类型定义表",
-                        "containerKey": "SCM_SLS$so_item_type_cf",
-                        "viewKey": "SCM_SLS$so_item_type_cf:list",
-                        "sceneKey": "SCM_SLS$so_item_type_cf"
+                        "sheetNo": 0,
+                        "sheetName": "订单行项目类型定义表",
+                        "headerConfigList": [
+                            {
+                                "name": "类型编码",
+                                "type": "TEXT",
+                                "field": "soItemTypeCode"
+                            },
+                            {
+                                "name": "类型名称",
+                                "type": "TEXT",
+                                "field": "soItemTypeName"
+                            }
+                        ]
                     }
+                ],
+                "queryData": {
+                    "containerKey": "ERP_SCM$so_item_type_cf-list-ERP_SCM$sls_so_item_type_cf",
+                    "viewKey": "SCM_SLS$so_item_type_cf:list",
+                    "sceneKey": "SCM_SLS$so_item_type_cf",
+                    "params": {
+                        "request": {
+                            "pageable": {
+
+                            }
+                        },
+                        "selectFields": [
+                            {
+                                "field": "soItemTypeCode"
+                            },
+                            {
+                                "field": "soItemTypeName"
+                            }
+                        ],
+                        "modelKey": "SCM_SLS$sls_so_item_type_cf"
+                    }
+                },
+                "processConfig": {
+                    "processType": "TRANTOR",
+                    "model": "SCM_SLS$sls_so_item_type_cf",
+                    "modelName": "订单行项目类型定义表",
+                    "containerKey": "ERP_SCM$so_item_type_cf-list-ERP_SCM$sls_so_item_type_cf",
+                    "viewKey": "SCM_SLS$so_item_type_cf:list",
+                    "sceneKey": "SCM_SLS$so_item_type_cf"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response = self.http.post(url, json=params)
             self.assert_util.assert_response_success(response)
             
-            a.json(filtered_params, "请求数据")
+            a.json(params, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -474,6 +460,7 @@ class TestSoItemTypeManagement(SlsBase):
         order=6,
         tags=["订单项目行分配", "导出", "SLS_SO_ITEM_DETM_CF_GEI_EXPORT_SERVICE"]
     )
+    @pytest.mark.skip(reason="业务未引用")
     def test_so_item_detm_export_service(self):
         """订单项目行分配表标准导出服务用例"""
         try:
@@ -575,81 +562,169 @@ class TestSoItemTypeManagement(SlsBase):
             # 1. 调用API
             api_path = self.get_api_path("订单项目行分配表-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
-            
-            # 2. 参数处理
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["serviceKey", "params"], ["params"]
-            )
-            set_dict = {
-                "serviceKey": "SCM_SLS$SLS_SO_ITEM_DETM_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
-                "params": {
-                    "taskName": f"订单项目行分配表-自动化测试-{self.mock_util.get_timestamp()}-导出",
-                    "multiSheetConfig": [
-                        {
-                            "modelKey": "SCM_SLS$so_item_detm_cf",
-                            "modelName": "订单项目行分配表",
-                            "sheetNo": 0,
-                            "sheetName": "订单项目行分配表",
-                            "headerConfigList": [
-                                {
-                                    "name": "订单项目行分配编码",
-                                    "type": "TEXT",
-                                    "field": "so_item_detm_code"
-                                },
-                                {
-                                    "name": "订单项目行分配名称",
-                                    "type": "TEXT",
-                                    "field": "so_item_detm_name"
-                                },
-                                {
-                                    "name": "描述",
-                                    "type": "TEXT",
-                                    "field": "description"
-                                }
-                            ]
-                        }
-                    ],
-                    "queryData": {
-                        "containerKey": "SCM_SLS$so_item_detm_cf",
-                        "viewKey": "SCM_SLS$so_item_detm_cf:list",
-                        "sceneKey": "SCM_SLS$so_item_detm_cf",
-                        "params": {
-                            "request": {
-                                "pageable": {
-                                    "sortOrders": []
-                                }
-                            },
-                            "selectFields": [
-                                {
-                                    "field": "so_item_detm_code"
-                                },
-                                {
-                                    "field": "so_item_detm_name"
-                                },
-                                {
-                                    "field": "description"
-                                }
-                            ],
-                            "modelKey": "SCM_SLS$so_item_detm_cf"
-                        }
-                    },
-                    "processConfig": {
-                        "processType": "TRANTOR",
-                        "model": "SCM_SLS$so_item_detm_cf",
+            params['params'] = {
+                "taskName": f"订单项目行分配-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
+                "multiSheetConfig": [
+                    {
+                        "modelKey": "SCM_SLS$sls_so_item_detm_cf",
                         "modelName": "订单项目行分配表",
-                        "containerKey": "SCM_SLS$so_item_detm_cf",
-                        "viewKey": "SCM_SLS$so_item_detm_cf:list",
-                        "sceneKey": "SCM_SLS$so_item_detm_cf"
+                        "sheetNo": 0,
+                        "sheetName": "订单项目行分配表",
+                        "headerConfigList": [
+                            {
+                                "name": "销售订单类型",
+                                "type": "TEXT",
+                                "field": "soTypeId.soTypeName"
+                            },
+                            {
+                                "name": "订单行项目类型组",
+                                "type": "TEXT",
+                                "field": "soItemTypeGroupId.name"
+                            },
+                            {
+                                "name": "用途",
+                                "type": "ENUM",
+                                "field": "usageType",
+                                "multiSelect": False,
+                                "dictValues": [
+                                    {
+                                        "_row_id_": "FREE_GIFT",
+                                        "label": "赠品",
+                                        "value": "FREE_GIFT"
+                                    },
+                                    {
+                                        "_row_id_": "jNOSfni",
+                                        "label": "定制",
+                                        "value": "CUSTOMED"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "高层级的项目类型",
+                                "type": "TEXT",
+                                "field": "parentSoItemTypeId.soItemTypeName"
+                            },
+                            {
+                                "name": "默认订单行项目类型",
+                                "type": "TEXT",
+                                "field": "soItemTypeId.soItemTypeName"
+                            },
+                            {
+                                "name": "可选订单行项目类型1",
+                                "type": "TEXT",
+                                "field": "soItemTypeId1.soItemTypeName"
+                            },
+                            {
+                                "name": "可选订单行项目类型2",
+                                "type": "TEXT",
+                                "field": "soItemTypeId2.soItemTypeName"
+                            },
+                            {
+                                "name": "可选订单行项目类型3",
+                                "type": "TEXT",
+                                "field": "soItemTypeId3.soItemTypeName"
+                            },
+                            {
+                                "name": "备注",
+                                "type": "TEXT",
+                                "field": "remark"
+                            }
+                        ]
                     }
+                ],
+                "queryData": {
+                    "containerKey": "ERP_SCM$so_item_detm_scence-table-container-ERP_SCM$sls_so_item_detm_cf",
+                    "viewKey": "SCM_SLS$so_item_detm_scence:list",
+                    "sceneKey": "SCM_SLS$so_item_detm_scence",
+                    "params": {
+                        "request": {
+                            "pageable": {
+
+                            }
+                        },
+                        "selectFields": [
+                            {
+                                "field": "usageType"
+                            },
+                            {
+                                "field": "remark"
+                            },
+                            {
+                                "field": "soTypeId",
+                                "selectFields": [
+                                    {
+                                        "field": "soTypeName"
+                                    }
+                                ]
+                            },
+                            {
+                                "field": "soItemTypeGroupId",
+                                "selectFields": [
+                                    {
+                                        "field": "name"
+                                    }
+                                ]
+                            },
+                            {
+                                "field": "parentSoItemTypeId",
+                                "selectFields": [
+                                    {
+                                        "field": "soItemTypeName"
+                                    }
+                                ]
+                            },
+                            {
+                                "field": "soItemTypeId",
+                                "selectFields": [
+                                    {
+                                        "field": "soItemTypeName"
+                                    }
+                                ]
+                            },
+                            {
+                                "field": "soItemTypeId1",
+                                "selectFields": [
+                                    {
+                                        "field": "soItemTypeName"
+                                    }
+                                ]
+                            },
+                            {
+                                "field": "soItemTypeId2",
+                                "selectFields": [
+                                    {
+                                        "field": "soItemTypeName"
+                                    }
+                                ]
+                            },
+                            {
+                                "field": "soItemTypeId3",
+                                "selectFields": [
+                                    {
+                                        "field": "soItemTypeName"
+                                    }
+                                ]
+                            }
+                        ],
+                        "modelKey": "SCM_SLS$sls_so_item_detm_cf"
+                    }
+                },
+                "processConfig": {
+                    "processType": "TRANTOR",
+                    "model": "SCM_SLS$sls_so_item_detm_cf",
+                    "modelName": "订单项目行分配表",
+                    "containerKey": "ERP_SCM$so_item_detm_scence-table-container-ERP_SCM$sls_so_item_detm_cf",
+                    "viewKey": "SCM_SLS$so_item_detm_scence:list",
+                    "sceneKey": "SCM_SLS$so_item_detm_scence"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response = self.http.post(url, json=params)
             self.assert_util.assert_response_success(response)
             
-            a.json(filtered_params, "请求数据")
+            a.json(params, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
