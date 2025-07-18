@@ -23,15 +23,21 @@ class TestWhFindRuleManagement(SlsBase):
         cls.wh_find_rule_id = None
         cls.wh_find_rule_code = None
         cls.logger.info("销售寻仓规则配置表管理测试类初始化完成")
+        
+        # 依赖主数据
+        cls.sls_org_id = cls.md_cache_data.get("org_info").get("sls_org_info")[0].get("id")
+        cls.sls_dc_id = cls.md_cache_data.get("org_info").get("sls_dc_md")[0].get("id")
+        cls.inv_loc_id = cls.md_cache_data.get("org_info").get("inv_loc_info")[0].get("id")
+
     
     @classmethod
     def teardown_class(cls):
         """测试类结束后执行清理"""
         try:
             cls.db.delete(
-                table="gen_sls_wh_find_rule_cf",
-                where="wh_find_rule_code like %s",
-                params=["AT_%"]
+                table="sls_wh_find_rule_cf",
+                where="name like %s",
+                params=["自动化寻仓规则_%"]
             )
             cls.logger.info("测试数据清理完成")
         except Exception as e:
@@ -52,17 +58,11 @@ class TestWhFindRuleManagement(SlsBase):
             api_path = self.get_api_path("销售寻仓规则配置表-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
             
-            # 2. 参数处理
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["serviceKey", "params"], ["params"]
-            )
-            set_dict = {
-                "serviceKey": "SCM_SLS$SLS_WH_FIND_RULE_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
-                "params": {
-                    "taskName": f"寻仓规则配置表-自动化测试-{self.mock_util.get_timestamp()}-导出",
+            params['params'] = {
+                    "taskName": f"寻仓规则配置表-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
                     "multiSheetConfig": [
                         {
-                            "modelKey": "SCM_SLS$wh_find_rule_cf",
+                            "modelKey": "SCM_SLS$sls_wh_find_rule_cf",
                             "modelName": "寻仓规则配置表",
                             "sheetNo": 0,
                             "sheetName": "寻仓规则配置表",
@@ -70,25 +70,15 @@ class TestWhFindRuleManagement(SlsBase):
                                 {
                                     "name": "寻仓规则编码",
                                     "type": "TEXT",
-                                    "field": "wh_find_rule_code"
-                                },
-                                {
-                                    "name": "寻仓规则名称",
-                                    "type": "TEXT",
-                                    "field": "wh_find_rule_name"
-                                },
-                                {
-                                    "name": "描述",
-                                    "type": "TEXT",
-                                    "field": "description"
+                                    "field": "name"
                                 }
                             ]
                         }
                     ],
                     "queryData": {
-                        "containerKey": "SCM_SLS$wh_find_rule_cf",
-                        "viewKey": "SCM_SLS$wh_find_rule_cf:list",
-                        "sceneKey": "SCM_SLS$wh_find_rule_cf",
+                        "containerKey": "SCM_SLS$SLS_WH_FIND_RULE_VIEW:list-SCM_SLS$sls_wh_find_rule_cf",
+                        "viewKey": "SCM_SLS$SLS_WH_FIND_RULE_VIEW:list",
+                        "sceneKey": "SCM_SLS$SLS_WH_FIND_RULE_VIEW",
                         "params": {
                             "request": {
                                 "pageable": {
@@ -97,35 +87,28 @@ class TestWhFindRuleManagement(SlsBase):
                             },
                             "selectFields": [
                                 {
-                                    "field": "wh_find_rule_code"
-                                },
-                                {
-                                    "field": "wh_find_rule_name"
-                                },
-                                {
-                                    "field": "description"
+                                    "field": "name"
                                 }
                             ],
-                            "modelKey": "SCM_SLS$wh_find_rule_cf"
+                            "modelKey": "SCM_SLS$sls_wh_find_rule_cf"
                         }
                     },
                     "processConfig": {
                         "processType": "TRANTOR",
-                        "model": "SCM_SLS$wh_find_rule_cf",
+                        "model": "SCM_SLS$sls_wh_find_rule_cf",
                         "modelName": "寻仓规则配置表",
-                        "containerKey": "SCM_SLS$wh_find_rule_cf",
-                        "viewKey": "SCM_SLS$wh_find_rule_cf:list",
-                        "sceneKey": "SCM_SLS$wh_find_rule_cf"
+                        "containerKey": "SCM_SLS$SLS_WH_FIND_RULE_VIEW:list-SCM_SLS$sls_wh_find_rule_cf",
+                        "viewKey": "SCM_SLS$SLS_WH_FIND_RULE_VIEW:list",
+                        "sceneKey": "SCM_SLS$SLS_WH_FIND_RULE_VIEW"
                     }
                 }
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response = self.http.post(url, json=params)
             self.assert_util.assert_response_success(response)
             
-            a.json(filtered_params, "请求数据")
+            a.json(params, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -144,8 +127,7 @@ class TestWhFindRuleManagement(SlsBase):
         """寻仓规则保存用例"""
         try:
             # 1. 准备测试数据
-            wh_find_rule_code = self.mock_util.generate_unique_code(tag="WFR")
-            wh_find_rule_name = f"寻仓规则_{self.mock_util.get_timestamp()}"
+            wh_find_rule_name = f"自动化寻仓规则_{self.mock_util.get_timestamp()}"
             
             # 2. 调用API
             api_path = self.get_api_path("寻仓规则保存")
@@ -153,19 +135,16 @@ class TestWhFindRuleManagement(SlsBase):
             
             # 3. 参数处理
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["serviceKey", "params"], ["params"]
+                params, ["name", "sls_org_id", "sls_dc_id", "inv_loc", "wms_strategy", "status"], ["params","request"]
             )
-            set_dict = {
-                "serviceKey": "SCM_SLS$WH_FIND_RULE_UPDATE_SERVICE",
-                "params": {
-                    "request": {
-                        "wh_find_rule_code": wh_find_rule_code,
-                        "wh_find_rule_name": wh_find_rule_name,
-                        "description": self.mock_util.get_mock_remark(),
-                        "status": "ENABLED"
+            set_dict =  {
+                        "name": wh_find_rule_name,
+                        "sls_org_id": {"id": self.sls_org_id},
+                        "sls_dc_id": {"id": self.sls_dc_id},
+                        "inv_loc": {"id": self.inv_loc_id},
+                        "wms_strategy" : "DEFAULT_PRIORITY",
+                        "status": "DRAFT"
                     }
-                }
-            }
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 4. 发送请求和断言
@@ -174,7 +153,6 @@ class TestWhFindRuleManagement(SlsBase):
             
             # 5. 保存数据和报告
             self.wh_find_rule_id = response.get("data", {}).get("data", {})
-            self.wh_find_rule_code = wh_find_rule_code
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
             
@@ -399,11 +377,7 @@ class TestWhFindRuleManagement(SlsBase):
                             "sheetNo": 0,
                             "sheetName": "寻仓规则配置表",
                             "headerConfigList": [
-                                {
-                                    "name": "寻仓规则编码",
-                                    "type": "TEXT",
-                                    "field": "wh_find_rule_code"
-                                },
+
                                 {
                                     "name": "寻仓规则名称",
                                     "type": "TEXT",
