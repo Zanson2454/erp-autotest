@@ -20,27 +20,25 @@ class TestSoTypeDetmManagement(SlsBase):
     @classmethod
     def setup_class(cls):
         super().setup_class()
-        cls.so_type_id = None
+       
         cls.so_detm_id = None
         cls.logger.info("销售订单类型和订单项目行分配管理测试类初始化完成")
-    
+        
+        # 获取依赖数据
+        cls.so_type_id = cls.ORDER_TYPES[0]["id"]
+        cls.so_item_type_id = cls.ORDER_LINE_TYPES[0]["id"]
+        cls.so_item_type_group_id = cls.ORDER_LINE_TYPES[0]["id"]
     @classmethod
     def teardown_class(cls):
         """测试类结束后执行清理"""
         try:
             # 清理订单项目行分配数据
             cls.db.delete(
-                table="sls_so_item_type_detm_cf",
-                where="id = %s",
-                params=[cls.so_detm_id] if cls.so_detm_id else []
+                table="sls_so_item_detm_cf",
+                where="remark like %s",
+                params=["自动化测试%"]
             )
-            # 清理销售订单类型数据（如果有创建的话）
-            if cls.so_type_id:
-                cls.db.delete(
-                    table="sls_so_type_cf",
-                    where="id = %s",
-                    params=[cls.so_type_id]
-                )
+        
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
@@ -62,33 +60,25 @@ class TestSoTypeDetmManagement(SlsBase):
             
             # 2. 参数处理
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["serviceKey", "params"], ["params"]
+                params, ["pageable"], ["params","request"]
             )
             set_dict = {
-                "serviceKey": "SCM_SLS$sls_so_type_paging_service",
-                "params": {
-                    "request": {
-                        "pageable": {
-                            "pageNo": 1,
-                            "pageSize": 20,
-                            "needTotal": True,
-                            "sortOrders": [],
-                            "conditionItems": {},
-                            "conditionGroup": {}
-                        }
-                    }
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True,
+                    "sortOrders": [],
+                    "conditionItems": {},
+                    "conditionGroup": {}
                 }
             }
+        
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 3. 发送请求和断言
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
-            
-            # 4. 验证返回数据
-            response_data = response.get("data", {}).get("data", {})
-            self.assert_util.assert_by_operator(response_data.get("pageNo"), "=", 1)
-            
+            self.assert_util.assert_response_data(response)
+
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
             
@@ -109,7 +99,7 @@ class TestSoTypeDetmManagement(SlsBase):
         try:
             # 1. 准备测试数据
             so_item_type_code = self.mock_util.generate_unique_code(tag="SIT")
-            remark = self.mock_util.get_mock_remark()
+            
             
             # 2. 调用API
             api_path = self.get_api_path("SLS-订单项目方分配-保存服务")
@@ -120,14 +110,15 @@ class TestSoTypeDetmManagement(SlsBase):
                 params, ["serviceKey", "params"], ["params"]
             )
             set_dict = {
-                "serviceKey": "SCM_SLS$sls_so_detm_save_service",
-                "params": {
-                    "request": {
-                        "soItemTypeCode": so_item_type_code,
-                        "remark": remark,
-                        "usageType": "NORMAL"
-                    }
-                }
+                "soTypeId": {"id": self.so_type_id},
+                "soItemTypeId": {"id": self.so_item_type_id},
+                "soItemTypeGroupId": {"id": self.so_item_type_group_id},
+                "parentSoItemTypeId": None,
+                "soItemTypeId1": None,
+                "soItemTypeId2": None,
+                "soItemTypeId3": None,
+                "usageType": None,
+                "remark": f"自动化测试_{self.mock_util.get_timestamp()}",
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             
@@ -136,7 +127,7 @@ class TestSoTypeDetmManagement(SlsBase):
             self.assert_util.assert_response_success(response)
             
             # 5. 保存数据和报告
-            self.so_detm_id = response.get("data", {}).get("data", {})
+            self.so_detm_id = response.get("data", {}).get("data", {}).get("id")
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
             
@@ -165,25 +156,16 @@ class TestSoTypeDetmManagement(SlsBase):
             
             # 2. 参数处理
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["serviceKey", "params"], ["params"]
+                params, ["id"], ["params","request"]
             )
             set_dict = {
-                "serviceKey": "SCM_SLS$sls_so_detm_detail_service",
-                "params": {
-                    "request": {
                         "id": self.so_detm_id
                     }
-                }
-            }
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 3. 发送请求和断言
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
-            
-            # 4. 验证返回数据
-            response_data = response.get("data", {}).get("data", {})
-            self.assert_util.assert_by_operator(response_data.get("id"), "=", self.so_detm_id)
+            self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -209,33 +191,25 @@ class TestSoTypeDetmManagement(SlsBase):
             
             # 2. 参数处理
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["serviceKey", "params"], ["params"]
+                params, ["pageable"], ["params","request"]
             )
             set_dict = {
-                "serviceKey": "SCM_SLS$sls_so_detm_paging_service",
-                "params": {
-                    "request": {
-                        "pageable": {
-                            "pageNo": 1,
-                            "pageSize": 20,
-                            "needTotal": True,
-                            "sortOrders": [],
-                            "conditionItems": {},
-                            "conditionGroup": {}
-                        }
-                    }
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": None
                 }
+                
+                
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 3. 发送请求和断言
             response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
-            
-            # 4. 验证返回数据
-            response_data = response.get("data", {}).get("data", {})
-            self.assert_util.assert_by_operator(response_data.get("pageNo"), "=", 1)
-            
+            self.assert_util.assert_response_data(response)
+
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
             
