@@ -8101,6 +8101,18 @@ api_params:
         conditionGroup: null
         pageSize: 20
     serviceKey: SCM_SLS$SO_QUERY_PARTNER_BY_PARTNER_CLASS
+  /api/trantor/service/engine/execute/SCM_SLS$QUERY_CUST_PARTNER_DETAIL:
+    params:
+      prtnClassRef: null
+      includeDetail: true
+      pageable:
+        sortOrders:
+        - {}
+        conditionItems: null
+        pageNo: 1
+        conditionGroup: null
+        pageSize: 20
+    serviceKey: SCM_SLS$QUERY_CUST_PARTNER_DETAIL
   /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_APPROVAL_RULE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       sheetConfig: {}

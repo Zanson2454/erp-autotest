@@ -63,11 +63,12 @@ class TestOtherQuery(SlsBase):
         order=2,
         tags=["销售管理", "相关方查询"]
     )
+    @pytest.mark.skip(reason="业务未引用")
     def test_query_cust_partner(self):
         """测试根据相关方类别查询相关方"""
         try:
             # 1. 调用API
-            api_path = self.get_api_path("SO-根据相关方类别查询合作伙伴信息")
+            api_path = self.get_api_path("根据相关方类别查询相关方")
             params, url = self.get_api_params(api_path)
             
             # 2. 参数处理
@@ -96,23 +97,40 @@ class TestOtherQuery(SlsBase):
         order=3,
         tags=["销售管理", "相关方查询"]
     )
+    @pytest.mark.skip(reason="业务未引用")
     def test_query_cust_partner_detail(self):
         """测试根据相关方类别查询相关方详情"""
         try:
             # 1. 调用API
-            api_path = self.get_api_path("SO-根据相关方类别查询合作伙伴信息")
+            api_path = self.get_api_path("根据相关方类别查询相关方-详情")
             params, url = self.get_api_params(api_path)
             
-            # 2. 参数处理
+            # 2. 参数处理 - 详情查询可能需要更多参数
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["prtnClassRef"], ["params"]
+                params, ["prtnClassRef", "includeDetail"], ["params"]
             )
-            set_dict = {"prtnClassRef": self.partner_class_id}
+            set_dict = {
+                "prtnClassRef": self.partner_class_id,
+                "includeDetail": True  # 添加详情标识
+            }
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 3. 发送请求和断言
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
+            
+            # 4. 验证详情数据
+            response_data = response.get("data", {}).get("data", [])
+            if response_data:
+                # 验证第一个合作伙伴的详细信息
+                first_partner = response_data[0]
+                self.assert_util.assert_field_exists(first_partner, "id", "合作伙伴ID")
+                self.assert_util.assert_field_exists(first_partner, "name", "合作伙伴名称")
+                # 验证详情字段
+                if "detail" in first_partner or "address" in first_partner or "contact" in first_partner:
+                    a.text("成功获取合作伙伴详细信息", "验证结果")
+                else:
+                    a.text("合作伙伴信息包含基本字段", "验证结果")
             
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")

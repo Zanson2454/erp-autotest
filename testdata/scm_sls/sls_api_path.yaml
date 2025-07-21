@@ -538,6 +538,9 @@ apis:
   SO-根据相关方类别查询合作伙伴信息:
     path: /api/trantor/service/engine/execute/SCM_SLS$SO_QUERY_PARTNER_BY_PARTNER_CLASS
     method: POST
+  QUERY_CUST_PARTNER_DETAIL:
+    path: /api/trantor/service/engine/execute/SCM_SLS$QUERY_CUST_PARTNER_DETAIL
+    method: POST
   销售审单规则-导入导出任务管理接口-提交导出任务:
     path: /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_APPROVAL_RULE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
     method: POST
