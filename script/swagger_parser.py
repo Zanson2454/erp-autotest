@@ -616,13 +616,13 @@ if __name__ == "__main__":
     )
     
     # 获取指定团队和模块的Swagger文档
-    swagger_doc = parser.fetch_swagger_doc("TERP", "SCM_SLS")
+    swagger_doc = parser.fetch_swagger_doc("TERP", "ERP_FIN")
     
     # 解析所有接口
     endpoints = parser.parse_endpoints()
     
     # 保存路径信息到gen_path.yaml
-    parser.save_paths_to_yaml(endpoints, module="SCM_SLS")
+    parser.save_paths_to_yaml(endpoints, module="ERP_FIN")
     
     # 保存统一结构到unified_api.yaml
     # parser.save_unified_api_yaml(endpoints, module="SCM_PUR") 
