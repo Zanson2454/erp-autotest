@@ -1,48 +1,26 @@
 # SLS配置数据查询定义
 sls_config:
   # 订单类型信息
-  ORDER_TYPES:
+  so_type_info:
     sql: |
-      SELECT id ,so_type_code,so_type_name,`status` FROM sls_so_type_cf WHERE deleted = 0
+      SELECT id ,so_type_code,so_type_name,`status` FROM sls_so_type_cf WHERE deleted = 0 and status='ENABLED'
     description: "查询订单类型"
-    validation:
-      min_records: 1
-      required_fields: ["id", "so_type_name", "so_type_code"]
 
   # 订单行类型信息
-  ORDER_LINE_TYPES:
+  so_item_type_info:
     sql: |
-      SELECT id, so_item_type_code, so_item_type_name,`status`  FROM sls_so_item_type_cf WHERE deleted = 0
+      SELECT id, so_item_type_code, so_item_type_name,`status`  FROM sls_so_item_type_cf WHERE deleted = 0 and status='ENABLED'
     description: "查询订单行类型"
-    validation:
-      min_records: 1
-      required_fields: ["id", "so_item_type_name", "so_item_type_code"]
 
   # 订单类型和订单行类型分配    
-  ORDER_TYPE_LINE_COMBINATIONS:
+  so_item_detm_info:
     sql: |
       SELECT so_item_type_id, so_type_id,mat_type_id, usage_type,parent_so_item_type_id,so_item_type_group_id FROM sls_so_item_detm_cf  WHERE deleted = 0
     description: "查询订单类型和订单行类型的分配" 
-    validation:
-      min_records: 1
-      required_fields: ["so_type_id", "so_item_type_id"]    
 
 
   # 订单行类型组信息
-  ORDER_ITEM_TYPE_GROUP:
+  so_item_type_group_info:
     sql: |
-      SELECT id,so_item_type_group_code,so_item_type_group_name from  gen_sls_so_item_type_group_cf where deleted=0
+      select id,`code`,`name` from sls_so_item_type_group_cf where deleted=0
     description: "查询订单行项目类型组"
-    validation:
-      min_records: 1
-      required_fields: ["id", "so_item_type_group_name", "so_item_type_group_code"]
-
-
-  # 物料类型信息
-  MATERIAL_TYPE:
-    sql: |
-      SELECT id,mat_type_code,mat_type_name from gen_mat_type_cf where deleted=0
-    description: "查询物料类型"
-    validation:
-      min_records: 1
-      required_fields: ["id", "mat_type_name", "mat_type_code"]

@@ -25,6 +25,15 @@ org_info:
     description: "查询组织维度信息"
 
   # 组织单位
+  # 集团公司
+   # 公司组织
+  gr_come_org_info:
+    sql: |
+      SELECT id, org_code, org_name, org_status, org_dimension_code, org_business_type_code
+      FROM org_struct_md
+      WHERE org_status="ENABLED" AND org_dimension_code="SCM_ORG_GRP" AND org_code="AUTOTEST_GR_ORG" and  deleted=0  LIMIT 1
+    description: "查询集团公司组织信息"
+
   # 公司组织
   com_org_info:
     sql: |
@@ -92,7 +101,7 @@ org_info:
   # 销售渠道
   sls_dc_md:
     sql: |
-      select id,`code`,`name`,is_online,`status`  from sls_dc_md where `code` like 'AT_%' and deleted=0 and `status`	='ENABLED'; 
+      select id,`code`,`name`,is_online,`status`  from sls_dc_md where `code` like 'AUTOTEST_%' and deleted=0 and `status`	='ENABLED'; 
     description: "查询销售渠道信息"
 
   # 仓库信息
@@ -110,6 +119,7 @@ org_info:
     description: "查询默认员工信息"
 
 mat_info:
+  
   # 物料类目
   mat_cate_md:
     sql: |
@@ -142,12 +152,21 @@ mat_info:
       select id,`code`,`name` from inv_atp_group_md where deleted=0 limit 1
     description: "查询ATP检查组信息"
 
-  # 标签
+  # 物料标签
   gen_label_md:
     sql: |
       select id,`name`,usage_type from gen_label_md where usage_type='MAT'  and `name`='自动化' and `status`="ENABLED" limit 1
     description: "查询标签信息"
-  
+  # 物料主数据
+  mat_md:
+    FINP:
+      sql: |
+        select id,mat_code,mat_name from gen_mat_md where deleted=0 and mat_code like "AUTOTEST_MAT_FINP" and `status`="ENABLED"
+      description: "查询成品物料主数据信息"
+    SERV:
+      sql: |
+        select id,mat_code,mat_name from gen_mat_md where deleted=0 and mat_code like "AUTOTEST_MAT_SERV" and `status`="ENABLED"
+      description: "查询服务物料主数据信息"
 partner_info:
   # 合作伙伴类型
   business_partner_type_cf:

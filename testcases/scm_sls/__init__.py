@@ -89,15 +89,7 @@ class SlsBase(BaseTest):
             cache_dir="testdata/cache" # 缓存目录
         )
         cls.sls_cache_data = CacheUtil.get('sls_init_cache')
-        
-        # 从sls_config中获取数据
-        sls_config = cls.sls_cache_data.get("sls_config", {})
-        cls.ORDER_TYPES = sls_config.get("ORDER_TYPES", [])
-        cls.ORDER_LINE_TYPES = sls_config.get("ORDER_LINE_TYPES", [])
-        cls.ORDER_TYPE_LINE_COMBINATIONS = sls_config.get("ORDER_TYPE_LINE_COMBINATIONS", [])
 
-
-        cls.sls_cache_data = CacheUtil.get('sls_init_cache')
         cls.path_params = {"tmodule": "SCM_SLS"}
         cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
         cls.user_id = cls.init_data["user_info"]['user_info']["id"]

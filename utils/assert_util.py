@@ -99,7 +99,7 @@ class AssertHelper:
         assert not missing, message
 
     @staticmethod
-    def assert_by_operator(actual: Any, operator: str, expected: Any = None) -> None:
+    def assert_by_operator(actual: Any, operator: str, expected: Any = None,message:str = '') -> None:
         """
         通用运算符断言
         :param actual: 实际值
@@ -140,15 +140,15 @@ class AssertHelper:
                 raise ValueError(f"不支持的断言运算符: {operator}")
         except Exception as e:
             log["assert_result"] = "fail"
-            logger.error(f"断言异常: {e}, 日志: {log}")
-            raise AssertionError(f"断言异常: {e}, 日志: {log}")
+            logger.error(f"断言异常: {e}, 日志: {log}, {message}")
+            raise AssertionError(f"断言异常: {e}, 日志: {log}, {message}")
         if result:
             log["assert_result"] = "success"
             logger.info(f"断言通过: {log}")
         else:
             log["assert_result"] = "fail"
-            logger.error(f"断言失败: {log}")
-            raise AssertionError(f"断言失败: {log}")
+            logger.error(f"断言失败: {log}，{message}")
+            raise AssertionError(f"断言失败: {log}，{message}")
 
 if __name__ == "__main__":
     assert_helper = AssertHelper()
