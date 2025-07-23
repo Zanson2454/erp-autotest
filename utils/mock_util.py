@@ -390,6 +390,41 @@ class MockData:
             str: 生成的UUID
         """
         return str(uuid.uuid4())
+
+    def get_mock_price(self, min_price: float = 1.00, max_price: float = 999999.99) -> float:
+        """生成销售价格，保留2位小数，8位内数字
+        
+        Args:
+            min_price: 最小价格，默认1.00
+            max_price: 最大价格，默认999999.99（6位整数+2位小数）
+            
+        Returns:
+            float: 生成的销售价格，保留2位小数
+            
+        Examples:
+            >>> mock.get_mock_price()
+            12345.67
+            >>> mock.get_mock_price(10.00, 100.00)
+            45.23
+        """
+        # 确保价格在合理范围内
+        if min_price < 0:
+            min_price = 1.00
+        if max_price > 999999.99:
+            max_price = 999999.99
+        if min_price >= max_price:
+            min_price, max_price = 1.00, 999999.99
+            
+        # 生成随机价格，保留2位小数
+        price = round(random.uniform(min_price, max_price), 2)
+        
+        # 确保价格不超过8位数字（包括小数点）
+        price_str = f"{price:.2f}"
+        if len(price_str.replace('.', '')) > 8:
+            # 如果超过8位，重新生成一个较小的价格
+            price = round(random.uniform(1.00, 99999.99), 2)
+            
+        return price
 if __name__ == '__main__':
     # 测试代码
     mock = MockData()
@@ -415,6 +450,8 @@ if __name__ == '__main__':
     print("企业证照信息:", mock.get_mock_enterprise_credentials())
     print("经营范围:", mock.get_mock_business_scope())
     print("公司简介:", mock.get_mock_company_intro())
+    print("销售价格:", mock.get_mock_price())
+    print("指定范围价格:", mock.get_mock_price(10.00, 100.00))
     
     # print("业务组织数据:", mock.get_mock_org_info(org_type="ComOrg", org_name="某公司"))
     # print("时间戳:", mock.get_mock_date(include_time=False,days_offset=-1))

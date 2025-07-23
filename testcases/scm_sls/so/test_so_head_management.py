@@ -72,10 +72,10 @@ class TestSoHeadManagement(SlsBase):
         cls.sls_person_name = None
         cls.sls_partner_links = None
         cls.so_items = None
-        cls.so_price_data = None
         cls.sls_org_obj = None
         cls.mat_obj = None
-        cls.order_id = None
+        cls.so_head_id_save = None
+        cls.so_head_id_submit = None
         cls.render_qty = random.randint(1, 99)  # 生成1-99之间的随机整数
         cls.so_data_render = None
         cls.so_data_price = None
@@ -246,11 +246,17 @@ class TestSoHeadManagement(SlsBase):
         )
         set_dict = {
             "addrId": {"id": self.addr_id},
+            "addrDetail": self.addr_detail,
             "baseCurrId": {"id":self.curr_id},
             "slsCurrId": {"id":self.curr_id},
             "custId": {"id": self.cust_id},
+            "custPersonName": self.cust_person_name,
+            "custPhone": self.cust_phone,
             "invLoc": None,
             "invOrg": None,
+            "slsPerson": self.sls_person_obj,
+            "slsPhone": self.sls_phone,
+            "slsPersonName": self.sls_person_name,
             "slsComId": {"id": self.com_org_id},
             "slsDcId": {"id": self.sls_dc_id},
             "slsOrgId": {"id": self.sls_org_id},
@@ -271,9 +277,9 @@ class TestSoHeadManagement(SlsBase):
         ParamUtil.set_request_params(filtered_params, set_dict)
 
         response = self.http.post(url, json=filtered_params, description="订单行渲染")
-        self.so_data = response.get("data", {}).get("data", {})
+        self.so_data_render = response.get("data", {}).get("data", {})
         self.assert_util.assert_response_data(response)
-        self.so_code = self.so_data.get("soCode")
+        self.so_code = self.so_data_render.get("soCode")
         self.assert_util.assert_by_operator(self.so_code, "not_empty",message="检查订单号是否获取到")
         a.json(filtered_params, "请求数据")
         a.json(response, "响应数据")
@@ -291,7 +297,7 @@ class TestSoHeadManagement(SlsBase):
     def test_calculate_pricing(self):
         """自动定价"""
         
-        if not self.so_data:
+        if not self.so_data_render:
             self.test_render_order_line()
             
         api_path = self.get_api_path("SLS-销售订单-前端定价服务")
@@ -305,235 +311,134 @@ class TestSoHeadManagement(SlsBase):
             ], ["params", "request"]
         )
 
-        self.so_data["priceCalcDate"] = self.mock_util.get_timestamp(timestamp=True)
-        self.so_data["currExchangeRateType"] = self.exchange_rate_type_id
-        self.so_data["exchRate"] = 1
-        self.so_data["isFixedExchRate"] = False
-        self.so_data["soItems"][0]["soItemSlsQty"] = self.render_qty
-        set_dict = self.so_data
+        # 方法1：使用字典更新，更简洁
+        pricing_updates = {
+            "priceCalcDate": self.mock_util.get_timestamp(timestamp=True),
+            "currExchangeRateType": self.exchange_rate_type_id,
+            "exchRate": 1,
+            "isFixedExchRate": False,
+            "soDesc": f"自动化测试_{self.mock_util.get_timestamp()}"
+        }
+        self.so_data_render.update(pricing_updates)
+        
+        # 方法2：使用字典推导式更新订单行
+        so_item_updates = {
+            "soItemSlsQty": self.render_qty,
+            "soItemDelQty": 0,
+            "soItemTransferQty": 0,
+            "soItemBaseQty": 1,
+            "soItemPrice": self.mock_util.get_mock_price(),
+            "invLocId": {"id": self.inv_loc_id},
+            "invOrgId": {"id": self.inv_org_id}
+        }
+        self.so_data_render["soItems"][0].update(so_item_updates)
+        
+        set_dict = self.so_data_render
         ParamUtil.set_request_params(filtered_params, set_dict)
 
         response = self.http.post(url, json=filtered_params, description="自动定价")
         self.assert_util.assert_response_data(response)
+        self.so_data_price = response.get("data", {}).get("data", {})
     
         a.json(filtered_params, "请求数据")
         a.json(response, "响应数据")
        
 
-    # def _save_or_submit_order(self, submit=True, order_type="STND"):
-    #     """保存或提交订单
+    
 
-    #     Args:
-    #         submit: 是否提交订单，True为提交，False为保存
-    #         order_type: 订单类型
+    @case_decorator(
+        story="销售订单",
+        title="SLS-销售订单-保存服务",
+        description="验证SLS_SO_SAVE_ACTION_SERVICE接口",
+        severity="critical",
+        order=90,
+        tags=["销售订单", "保存", "SLS_SO_SAVE_ACTION_SERVICE"]
+    )
+    def test_so_save(self):
+        """SLS-销售订单-保存服务"""
+        try:
+            # 确保有可保存的订单数据
+            if  not self.so_data_price:
+                self.test_calculate_pricing()
 
-    #     Returns:
-    #         订单ID
-    #     """
-    #     # 确保所有前置条件已满足
-    #     if not hasattr(self, 'so_price_data') or not self.so_price_data:
-    #         self.test_08_calculate_pricing()
+            api_path = self.get_api_path("SLS-销售订单-保存服务")
+            params, url = self.get_api_params(api_path)
+            
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, [
+                    "soCode", "soDocDate", "priceCalcDate", "custId", "addrId", "addrDetail",
+                    "custPersonName", "custPhone", "slsPerson", "slsPhone", "slsPersonName",
+                    "slsOrgId", "slsDcId", "slsComId", "slsCurrId", "baseCurrId",
+                    "currExchangeRateType", "exchRate", "soItems", "slsPartnerLinks",
+                    "soTypeId", "isFixedExchRate", "reCalculate"
+                ], ["params", "request"]
+            )
+            
+            # 使用定价后的数据作为保存请求
+            set_dict = self.so_data_price
+            ParamUtil.set_request_params(filtered_params, set_dict)
 
-    #     url = self.sls_api_paths["订单管理"]["提交订单"] if submit else self.sls_api_paths["订单管理"]["保存订单"]
-    #     action = "提交" if submit else "保存"
+            response = self.http.post(url, json=filtered_params, description="保存销售订单")
+            self.assert_util.assert_response_data(response)
+            
+            # 保存订单ID供后续使用
+            response_data = response.get("data", {}).get("data", {})
+            self.so_head_id_save = response_data.get("id")
+            self.assert_util.assert_by_operator(self.so_head_id_save, "not_empty",message="保存订单失败，未返回订单ID")
+            
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            a.text(f"销售订单保存成功，订单ID: {self.so_head_id_save}", "保存结果")
+            
+        except Exception as e:
+            a.text(str(e), "保存失败原因")
+            raise
 
-    #     data = self.sls_api_params.get(url, {})
-    #     curr_time = int(datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp() * 1000)
+    @case_decorator(
+        story="销售订单",
+        title="SLS-销售订单-提交服务",
+        description="验证SLS_SO_SUBMIT_ACTION_SERVICE接口",
+        severity="critical",
+        order=110,
+        tags=["销售订单", "提交", "SLS_SO_SUBMIT_ACTION_SERVICE"]
+    )
+    def test_so_submit(self):
+        """SLS-销售订单-提交服务"""
+        try:
+            # 确保有可提交的订单
+            if not self.so_data_price:
+                self.test_calculate_pricing()
 
-    #     # 构建请求参数
-    #     data['params']['request']['soTypeId'] = {"id": self.so_type_id}
-    #     data['params']['request']['soDocDate'] = curr_time
-    #     data['params']['request']['custId'] = {"id": self.cust_id}
-    #     data['params']['request']['addrId'] = {"id": self.addr_id}
-    #     data['params']['request']['addrDetail'] = self.addr_detail
-    #     data['params']['request']['custPersonName'] = self.cust_person_name
-    #     data['params']['request']['custPhone'] = self.cust_phone
-    #     data['params']['request']['slsPerson'] = self.sls_person_obj
-    #     data['params']['request']['slsPhone'] = self.sls_phone
-    #     data['params']['request']['slsPersonName'] = self.sls_person_name
-    #     data['params']['request']['slsOrgId'] = {"id": self.sls_org_id}
-    #     data['params']['request']['slsDcId'] = {"id": self.sls_dc_id}
-    #     data['params']['request']['slsComId'] = {"id": self.com_org_id}
-    #     data['params']['request']['slsCurrId'] = {"id": self.sls_curr_id}
-    #     data['params']['request']['baseCurrId'] = {"id": self.base_curr_id}
-    #     data['params']['request']['currExchangeRateType'] = self.exchange_rate_type_id
-    #     data['params']['request']['exchRate'] = 1
-    #     data['params']['request']['soItems'] = self.so_price_data.get("soItems", [])
-    #     data['params']['request']['slsPartnerLinks'] = self.sls_partner_links
-    #     data['params']['request']['totalAmt'] = self.so_price_data.get("totalAmt", 0)
-    #     data['params']['request']['taxAmt'] = self.so_price_data.get("taxAmt", 0)
-    #     data['params']['request']['netAmt'] = self.so_price_data.get("netAmt", 0)
+            api_path = self.get_api_path("SLS-销售订单-提交服务")
+            params, url = self.get_api_params(api_path)
+            
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,  [
+                    "soCode", "soDocDate", "priceCalcDate", "custId", "addrId", "addrDetail",
+                    "custPersonName", "custPhone", "slsPerson", "slsPhone", "slsPersonName",
+                    "slsOrgId", "slsDcId", "slsComId", "slsCurrId", "baseCurrId",
+                    "currExchangeRateType", "exchRate", "soItems", "slsPartnerLinks",
+                    "soTypeId", "isFixedExchRate", "reCalculate"
+                ], ["params", "request"]
+            )
+            
+            set_dict = self.so_data_price
+            ParamUtil.set_request_params(filtered_params, set_dict)
 
-    #     # 如果是提交订单，添加提交相关参数
-    #     if submit:
-    #         data['params']['request']['submitDate'] = curr_time
-    #         data['params']['request']['submitter'] = self.sls_person_name
+            response = self.http.post(url, json=filtered_params, description="提交销售订单")
+            self.assert_util.assert_response_data(response)
+            self.so_head_id_submit = response.get("data", {}).get("data", {}).get("id")
+            
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            a.text(f"销售订单提交成功，订单ID: {self.so_head_id_submit}", "提交结果")
+            
+        except Exception as e:
+            a.text(str(e), "提交失败原因")
+            raise
 
-    #     self.logger.info(f"{action}订单请求参数: {json.dumps(data, indent=2, ensure_ascii=False)}")
-    #     a.json(data, f"{action}订单请求参数")
+   
 
-    #     result = self.http.post(url, json=data, description=f"{action}销售订单")
-    #     response_data = result.get("data", {}).get("data", {})
-
-    #     # 提取订单ID
-    #     order_id = response_data.get("id") or response_data.get('orderId')
-    #     if not order_id:
-    #         error_msg = f"{action}订单失败，未返回订单ID: {response_data}"
-    #         self.logger.error(error_msg)
-    #         a.text(error_msg, "错误")
-    #         raise ValueError(error_msg)
-
-    #     self.order_id = order_id
-    #     a.text(f"销售订单{action}成功，订单ID: {order_id}", f"{action}结果")
-    #     self.logger.info(f"销售订单{action}成功，订单ID: {order_id}")
-
-    #     return order_id
-
-    # @case_decorator(
-    #     story="销售订单",
-    #     title="保存多种类型订单",
-    #     description="测试保存不同类型的销售订单",
-    #     severity="critical",
-    #     order=90,
-    #     tags=["销售订单", "保存订单", "多类型"]
-    # )
-    # def test_save_multiple_order_types(self):
-    #     """测试保存多种类型的销售订单"""
-    #     for order_type in self.TEST_ORDER_TYPES:
-    #         with allure.step(f"保存{order_type}类型订单"):
-    #             self.logger.info(f"开始保存{order_type}类型订单")
-    #             # 重新初始化订单数据
-    #             self.order_id = None
-    #             self.so_items = None
-    #             self.so_price_data = None
-
-    #             # 初始化订单
-    #             self.test_01_init_sales_order(order_type)
-    #             # 重新渲染订单行
-    #             self.test_07_render_order_line(order_type)
-    #             # 重新计算定价
-    #             self.test_08_calculate_pricing()
-    #             # 保存订单
-    #             order_id = self._save_or_submit_order(submit=False, order_type=order_type)
-
-    #             self.assert_util.assert_not_none(order_id, f"保存{order_type}类型订单失败，未生成订单ID")
-    #             a.text(f"{order_type}类型订单保存成功，订单ID: {order_id}", "保存结果")
-
-    # @case_decorator(
-    #     story="销售订单",
-    #     title="提交多种类型订单",
-    #     description="测试提交不同类型的销售订单",
-    #     severity="critical",
-    #     order=100,
-    #     tags=["销售订单", "提交订单", "多类型"]
-    # )
-    # def test_submit_multiple_order_types(self):
-    #     """测试提交多种类型的销售订单"""
-    #     for order_type in self.TEST_ORDER_TYPES:
-    #         with allure.step(f"提交{order_type}类型订单"):
-    #             self.logger.info(f"开始提交{order_type}类型订单")
-    #             # 重新初始化订单数据
-    #             self.order_id = None
-    #             self.so_items = None
-    #             self.so_price_data = None
-
-    #             # 初始化订单
-    #             self.test_01_init_sales_order(order_type)
-    #             # 重新渲染订单行
-    #             self.test_07_render_order_line(order_type)
-    #             # 重新计算定价
-    #             self.test_08_calculate_pricing()
-    #             # 提交订单
-    #             order_id = self._save_or_submit_order(submit=True, order_type=order_type)
-
-    #             self.assert_util.assert_not_none(order_id, f"提交{order_type}类型订单失败，未生成订单ID")
-    #             a.text(f"{order_type}类型订单提交成功，订单ID: {order_id}", "提交结果")
-
-    # @case_decorator(
-    #     story="销售订单",
-    #     title="SLS-销售订单-提交服务",
-    #     description="验证SLS_SO_SUBMIT_ACTION_SERVICE接口",
-    #     severity="critical",
-    #     order=110,
-    #     tags=["销售订单", "提交", "SLS_SO_SUBMIT_ACTION_SERVICE"]
-    # )
-    # def test_submit_action_service(self):
-    #     """SLS-销售订单-提交服务"""
-    #     try:
-    #         # 确保有可提交的订单
-    #         if not hasattr(self, 'order_id') or not self.order_id:
-    #             self.test_submit_multiple_order_types()
-
-    #         api_path = self.get_api_path("SLS-销售订单-提交服务")
-    #         params, url = self.get_api_params(api_path)
-    #         # 使用已创建的订单ID
-    #         params['params']['request']['orderId'] = self.order_id
-    #         response = self.http.post(url, json=params)
-    #         a.json(params, "请求数据")
-    #         a.json(response, "响应数据")
-    #         self.assert_util.assert_response_success(response)
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
-
-    # @case_decorator(
-    #     story="销售订单",
-    #     title="物料选择后重新渲染",
-    #     description="验证SLS_AFTER_MAT_SELECT_RENDER_SERVICE接口",
-    #     severity="critical",
-    #     order=120,
-    #     tags=["销售订单", "渲染", "SLS_AFTER_MAT_SELECT_RENDER_SERVICE"]
-    # )
-    # def test_after_mat_select_render(self):
-    #     """物料选择后重新渲染"""
-    #     try:
-    #         # 确保有订单行数据
-    #         if not hasattr(self, 'so_items') or not self.so_items:
-    #             self.test_07_render_order_line()
-
-    #         api_path = self.get_api_path("物料选择后重新渲染")
-    #         params, url = self.get_api_params(api_path)
-    #         # 使用已选择的物料和订单行数据
-    #         params['params']['request']['matId'] = self.mat_obj['id']
-    #         params['params']['request']['soItemId'] = self.so_items[0]['id'] if self.so_items else None
-    #         params['params']['request']['soItemSlsQty'] = self.render_qty
-    #         response = self.http.post(url, json=params)
-    #         a.json(params, "请求数据")
-    #         a.json(response, "响应数据")
-    #         self.assert_util.assert_response_success(response)
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
-
-    # @case_decorator(
-    #     story="销售订单",
-    #     title="SLS-销售订单-保存服务",
-    #     description="验证SLS_SO_SAVE_ACTION_SERVICE接口",
-    #     severity="critical",
-    #     order=130,
-    #     tags=["销售订单", "保存", "SLS_SO_SAVE_ACTION_SERVICE"]
-    # )
-    # def test_save_action_service(self):
-    #     """SLS-销售订单-保存服务"""
-    #     try:
-    #         # 确保有可保存的订单数据
-    #         if not hasattr(self, 'so_price_data') or not self.so_price_data:
-    #             self.test_08_calculate_pricing()
-
-    #         api_path = self.get_api_path("SLS-销售订单-保存服务")
-    #         params, url = self.get_api_params(api_path)
-    #         # 使用已计算的订单数据
-    #         params['params']['request']['soItems'] = self.so_price_data.get('soItems', [])
-    #         params['params']['request']['totalAmt'] = self.so_price_data.get('totalAmt', 0)
-    #         params['params']['request']['taxAmt'] = self.so_price_data.get('taxAmt', 0)
-    #         params['params']['request']['netAmt'] = self.so_price_data.get('netAmt', 0)
-    #         response = self.http.post(url, json=params)
-    #         a.json(params, "请求数据")
-    #         a.json(response, "响应数据")
-    #         self.assert_util.assert_response_success(response)
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
 
     # @case_decorator(
     #     story="销售订单",
