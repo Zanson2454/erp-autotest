@@ -36,9 +36,9 @@
   ],
   "calender_info": [
     {
-      "id": 2001008,
-      "calendar_code": "4343",
-      "calendar_name": "34234",
+      "id": 2002001,
+      "calendar_code": "01",
+      "calendar_name": "基准会计期间类型",
       "status": "ENABLED"
     }
   ],
