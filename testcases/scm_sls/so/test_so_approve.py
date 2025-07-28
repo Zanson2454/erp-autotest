@@ -1,6 +1,6 @@
 import pytest
 import allure
-from testcases.sls import SlsBase
+from testcases.scm_sls import SlsBase
 from utils.report_util import a, case_decorator
 
 @allure.epic("销售管理")
