@@ -9,8 +9,9 @@ import random
 from decimal import Decimal
 
 # 设置项目根目录到Python路径
-project_root = Path(__file__).resolve().parent.parent.parent
-sys.path.insert(0, str(project_root))
+project_root = Path(__file__).resolve().parent.parent.parent.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
 from testcases.comm.base_test import BaseTest
 from utils.yaml_util import YamlUtil
@@ -24,9 +25,9 @@ class TestSettItemCheck(BaseTest):
     def setup_class(cls):
         """测试类初始化"""
         super().setup_class()
-        cls.base_api_path = Path(project_root) / "testdata" / "fin" / "fin_api_path.yaml"
+        cls.base_api_path = Path(project_root) / "testdata" / "erp_fin" / "fin_api_path.yaml"
         
-        cls.base_api_params = Path(project_root) / "testdata" / "fin" / "fin_api_params.yaml"
+        cls.base_api_params = Path(project_root) / "testdata" / "erp_fin" / "fin_api_params.yaml"
         
         cls.yaml_util = YamlUtil()
         

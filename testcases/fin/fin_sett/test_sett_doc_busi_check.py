@@ -9,8 +9,9 @@ import random
 from decimal import Decimal
 
 # 设置项目根目录到Python路径
-project_root = Path(__file__).resolve().parent.parent.parent
-sys.path.insert(0, str(project_root))
+project_root = Path(__file__).resolve().parent.parent.parent.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
 from testcases.comm.base_test import BaseTest
 from utils.yaml_util import YamlUtil
@@ -24,8 +25,8 @@ class TestSettDocBusiCheck(BaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
-        cls.base_api_path = Path(project_root) / "testdata" / "fin" / "fin_api_path.yaml"
-        cls.base_api_params = Path(project_root) / "testdata" / "fin" / "fin_api_params.yaml"
+        cls.base_api_path = Path(project_root) / "testdata" / "erp_fin" / "fin_api_path.yaml"
+        cls.base_api_params = Path(project_root) / "testdata" / "erp_fin" / "fin_api_params.yaml"
         cls.yaml_util = YamlUtil()  
         cls.fin_path = cls.yaml_util.read_yaml(cls.base_api_path).get("apis", {})
         cls.fin_params = cls.yaml_util.read_yaml(cls.base_api_params).get("api_params", {})
@@ -191,7 +192,7 @@ class TestSettDocBusiCheck(BaseTest):
         data = self.fin_params.get(url, {})
         #过滤请求参数
         filtered_data = ParamUtil.filter_post_body_fields(data, ["id","settItems"], ["params", "request"])
-        sett_doc = FinSettlementFactory._insert_settlement_doc("CREATED")
+        sett_doc = FinSettlementFactory.get_or_create_settlement_doc("CREATED")
         #获取已创建的结算单id
         filtered_data["params"]["request"]["id"] = sett_doc.get("id")
         
@@ -310,7 +311,7 @@ class TestSettDocBusiCheck(BaseTest):
 if __name__ == "__main__":
     test = TestSettDocBusiCheck()
     test.setup_class()
-    test.test_sett_doc_confirm()
+    test.test_sett_doc_save()
     #FinSettlementFactory._insert_settlement_doc("CREATED")
             
             

@@ -31,9 +31,9 @@ class FinSettlementFactory:
         """
         data_factory = DataFactory() 
         db_config = data_factory.get_env_config()['database']['erp_db']
-        DBManager.init(db_config)
+        db = DBManager(**db_config)
         # 1. 尝试从数据库查询
-        data = cls._query_settlement_item(status)
+        data = cls._query_settlement_item(db, status)
         if  data:
             Loggers.info(f"从数据库获取到结算项数据: {data.get('id')}")
             return data
@@ -49,7 +49,7 @@ class FinSettlementFactory:
             
         # 3. 如果接口创建失败，尝试直接数据库插入
         try:
-            data = cls._insert_settlement_item(status)
+            data = cls._insert_settlement_item(db, status)
             Loggers.info(f"通过数据库插入成功创建结算项数据: {data.get('id')}")
             return data
         except Exception as e:
@@ -65,9 +65,9 @@ class FinSettlementFactory:
         """
         data_factory = DataFactory() 
         db_config = data_factory.get_env_config()['database']['erp_db']
-        DBManager.init(db_config)
+        db = DBManager(**db_config)
         # 1. 尝试从数据库查询
-        data = cls._query_settlement_doc(status)
+        data = cls._query_settlement_doc(db, status)
         if   data:
             Loggers.info(f"从数据库获取到结算单数据: {data.get('id')}")
             return data
@@ -83,7 +83,7 @@ class FinSettlementFactory:
             
         # 3. 如果接口创建失败，尝试直接数据库插入
         try:
-            data = cls._insert_settlement_doc(status)
+            data = cls._insert_settlement_doc(db, status)
             Loggers.info(f"通过数据库插入成功创建结算单数据: {data.get('id')}")
             return data
         except Exception as e:
@@ -91,7 +91,7 @@ class FinSettlementFactory:
             raise
 
     @staticmethod
-    def _query_settlement_item(status: str = None) -> Optional[Dict[str, Any]]:
+    def _query_settlement_item(db: DBManager, status: str = None) -> Optional[Dict[str, Any]]:
         """从数据库查询任意状态结算项"""
         sql = """
             SELECT * FROM sett_item_tr
@@ -105,11 +105,11 @@ class FinSettlementFactory:
             sql += " AND sett_item_status = %s order by created_at desc" 
             params.append(status)
             
-        result = DBManager.query(sql, params)
+        result = db.query(sql, params)
         return result[0] if result else None
 
     @staticmethod
-    def _query_settlement_doc(status: str = None) -> Optional[Dict[str, Any]]:
+    def _query_settlement_doc(db: DBManager, status: str = None) -> Optional[Dict[str, Any]]:
         """从数据库查询结算单"""
         sql = """
             SELECT * FROM sett_doc_tr
@@ -123,7 +123,7 @@ class FinSettlementFactory:
             sql += " AND sett_doc_status = %s order by created_at desc"
             params.append(status)
             
-        result = DBManager.query(sql, params)
+        result = db.query(sql, params)
         return result[0] if result else None
 
     @staticmethod
@@ -155,7 +155,7 @@ class FinSettlementFactory:
         return None
 
     @classmethod
-    def _insert_settlement_item(cls, status: str = None) -> Dict[str, Any]:
+    def _insert_settlement_item(cls, db: DBManager, status: str = None) -> Dict[str, Any]:
         """直接插入已创建或已对账结算项"""
         from datetime import datetime
         now = datetime.now()
@@ -218,7 +218,7 @@ class FinSettlementFactory:
             'doc_curr_id': 2000001,
             'base_curr_id': 2000001,
             'exch_rate': 1.00,
-            'com_org_id': 14373001,
+            'com_org_id': 14617078,
             'partner_code': None,
             'partner_id': 2059001,
             'partner_name': '客户(自动化)',
@@ -232,11 +232,11 @@ class FinSettlementFactory:
             'po_so_item_id': 0,
             'pt_head_id': None
         }
-        DBManager.insert('sett_item_tr', data)
-        return cls._query_settlement_item(status)
+        db.insert('sett_item_tr', data)
+        return cls._query_settlement_item(db, status)
 
     @classmethod
-    def _insert_settlement_doc(cls, status: str = None) -> Dict[str, Any]:
+    def _insert_settlement_doc(cls, db: DBManager, status: str = None) -> Dict[str, Any]:
         """直接插入结算单"""
         from datetime import datetime
         now = datetime.now()
@@ -250,7 +250,7 @@ class FinSettlementFactory:
             'sett_doc_code': f'AUTOTEST-SETTD{now.strftime("%Y%m%d%H%M%S")}',
             'sett_doc_type_id': 2002002,
             'sett_doc_status': 'CREATED',
-            'com_org_id': 14373001,
+            'com_org_id': 14617078,
             'partner_code': None,
             'partner_id': 2059001,
             'partner_name': '客户(自动化)',
@@ -320,13 +320,8 @@ class FinSettlementFactory:
             'bkb_settlement_item_code': None,
             'bkb_settlement_item_id': None,
             'whether_auto_generate_bkb_settlement': 0,
-            'counterparty_partner_id': None,
-            'lock_key': None,
-            'inv_mvm_item_code': None,
-            'async_execution_status': 'SUCCEEDED',
-            'gen_mat_type_cf_id': 2503002,
             'counterparty_com_org_id': None,
-            'id': f'0{str(int(now.timestamp() * 1000))[-7:]}',
+            'id': f'0{str(int(now.timestamp() * 1000))[-7:]}' ,
             'created_by': 540175374525637,
             'updated_by': 540175374525637,
             'basic_unit_id': 2007001,
@@ -339,7 +334,7 @@ class FinSettlementFactory:
             'doc_curr_id': 2000001,
             'base_curr_id': 2000001,
             'exch_rate': 1.00,
-            'com_org_id': 14373001,
+            'com_org_id': 14617078,
             'partner_code': None,
             'partner_id': 2059001,
             'partner_name': '客户(自动化)',
@@ -353,8 +348,8 @@ class FinSettlementFactory:
             'po_so_item_id': 0,
             'pt_head_id': None
         }
-        DBManager.insert('sett_doc_tr', data)
-        DBManager.insert('sett_item_tr', sett_item_data)
-        return cls._query_settlement_doc(status)
+        db.insert('sett_doc_tr', data)
+        db.insert('sett_item_tr', sett_item_data)
+        return cls._query_settlement_doc(db, status)
 if __name__ == '__main__':
    pass
