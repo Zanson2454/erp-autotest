@@ -45,17 +45,20 @@ class TestLabelManagement(GenMdBaseTest):
         smoke=True,
         tags=["标签管理", "新增", "GEN_LABEL_MD_SAVE_ACTION_SERVICE"]
     )
-    @pytest.mark.parametrize("usageType", ["MAT", "SO_HEAD","CRM_MEMBER"])
+    @pytest.mark.parametrize("usageType", ["MAT", "SO_HEAD","CRM_MEMBER",""])
     def test_save_label(self, usageType):
         """新增标签用例 - GEN_LABEL_MD_SAVE_ACTION_SERVICE"""
         try:
-            label_name = f"测试标签_{self.mock_util.get_timestamp()}"
+            # 使用更唯一的标签名称，避免主键冲突
+            timestamp = self.mock_util.get_timestamp()
+            random_num = self.mock_util.generate_unique_code(tag="LABEL")[-4:]  # 取后4位随机数
+            label_name = f"测试标签_{timestamp}_{random_num}"
 
             api_path = self.get_api_path("GEN-标签表-保存服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["code", "name", "color", "description"], ["params", "request"]
+                params, ["code", "name", "color"], ["params", "request"]
             )
             set_dict = {
                 "name": label_name,
@@ -66,6 +69,7 @@ class TestLabelManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             self.logger.info(f"filtered_params: {filtered_params}")
             response = self.http.post(url, json=filtered_params)
+            self.logger.info(f"response: {response}")
             self.assert_util.assert_response_data(response)
             
             self.label_id = response.get("data", {}).get("data", {})
@@ -140,6 +144,7 @@ class TestLabelManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
+            
             self.assert_util.assert_response_data(response)
 
             a.json(filtered_params, "请求数据")
