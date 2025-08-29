@@ -18,6 +18,7 @@ from utils.yaml_util import YamlUtil
 from data_factory.fin_sett_factory import FinSettlementFactory
 from utils.log_util import Loggers
 from utils.param_util import ParamUtil
+from utils.report_util import a, case_decorator
 @allure.epic("ERP通业财模块")
 @allure.feature("结算管理")
 class TestSettItemBusiCheck(BaseTest):
@@ -132,11 +133,145 @@ class TestSettItemBusiCheck(BaseTest):
         self.assert_util.assert_response_success(result)
         assert result.get("data",{}).get("data",{}).get("total",{}) >= 0
         
+    
+    
+    BATCH_GET_SCOPE_TEST_CASES = [
+        {
+            "docType": "SETT_ITEM",
+            "filterMethod": "CONDITION",
+            "operType": "CONFIRM",
+            "settItemStatus": "CREATED",
+            "isCancelTrasferNote": False,
+            "description": "操作类型：对账确认",
+            "expected_status": "PENDING"
+        },
+        {
+            "docType": "SETT_ITEM",
+            "filterMethod": "CONDITION",
+            "operType": "MANUAL",
+            "settItemStatus": "RECONCILED",
+            "isCancelTrasferNote": False,
+            "description": "操作类型：手工汇单",
+            "expected_status": "PENDING"
+        },
+    ]
+    @case_decorator(
+        story="结算项批量处理",
+        title="批量任务处理获取命中范围",
+        description="验证SETT_BATCH_AGGREGATION_LOCK_EVENT_SERVICE",
+        severity="critical",
+        order=0,
+        smoke=False,
+        tags=["结算管理", "结算项批量任务处理", "SETT_BATCH_AGGREGATION_LOCK_EVENT_SERVICE"]
+    )
+    @pytest.mark.parametrize("test_params", BATCH_GET_SCOPE_TEST_CASES)
+    def test_batch_get_scope(self, test_params):
+        """测试批量任务处理获取命中范围 - 参数化测试
+        
+        Args:
+            test_params: 包含测试参数的字典，包括：
+                - docType: 文档类型
+                - filterMethod: 筛选方法
+                - operType: 操作类型
+                - settItemStatus: 结算项状态
+                - isCancelTrasferNote: 是否取消转单
+                - description: 测试场景描述
+                - expected_status: 期望的任务状态
+        """
+        try:
+            url = self.fin_path["结算项-结算批量锁定服务"]["path"]
+            data = self.fin_params.get(url, {})
+            data = ParamUtil.filter_post_body_fields(
+                data, 
+                ["docType","filterMethod","operType","settItemStatus","isCancelTrasferNote"], 
+                ["params", "request"]
+            )
+            
+            # 设置请求参数
+            set_dict = {
+                "docType": test_params["docType"],
+                "filterMethod": test_params["filterMethod"],
+                "operType": test_params["operType"], 
+                "settItemStatus": test_params["settItemStatus"],
+                "isCancelTrasferNote": test_params["isCancelTrasferNote"]
+            }
+            ParamUtil.set_request_params(data, set_dict)
+            
+            self.logger.info(f"测试场景: {test_params['description']}")
+            self.logger.info(f"请求参数: {data}")
+            
+            result = self.http.post(url, json=data, description=f"批量任务处理获取命中范围 - {test_params['description']}")
+            
+            # 通用断言逻辑 - 所有参数组合都使用相同的断言
+            self.assert_util.assert_response_success(result)
+            self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("taskCode",{}),"not_empty")
+            self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("docType",{}),"=", test_params["docType"])
+            self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("operType",{}),"=", test_params["operType"])
+            self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("taskStatus",{}),"=", test_params["expected_status"])
+            
+            # 记录测试数据
+            a.json(data, f"请求数据 - {test_params['description']}")
+            a.json(result, f"响应数据 - {test_params['description']}")
+            
+        except Exception as e:
+            a.text(f"测试场景 '{test_params['description']}' 失败: {str(e)}", "失败原因")
+            raise
+    
+    
+    @case_decorator(
+        story="结算项批量处理",
+        title="命中范围取消取消",
+        description="验证SETT_BATCH_AGGREGATION_CANCEL_ASYNC_EVENT_SERVICE",
+        severity="critical",
+        order=1,
+        smoke=False,
+        tags=["结算管理", "结算项批量任务处理", "SETT_BATCH_AGGREGATION_CANCEL_ASYNC_EVENT_SERVICE"]
+    )
+    def test_cancal_scope(self):
+        """测试取消命中范围"""
+        try:
+            url = self.fin_path["结算项-批量任务取消-异步服务"]["path"]
+            data = self.fin_params.get(url, {})
+            data=ParamUtil.filter_post_body_fields(
+                data, 
+                ["docType","id","operType","taskCode","taskStatus"],
+                ["params", "request"]
+            )
+        
+            #获取最新的批量任务记录
+            sql="""
+                select id,task_code,task_status,doc_type,oper_type
+                from sett_aggregate_record_tr where deleted=0 order by created_at desc limit 1;
+            """
+            task_info=self.db.query(sql)[0]
+            task_code=task_info["task_code"]
+            doc_type=task_info["doc_type"]
+            oper_type=task_info["oper_type"]
+            id=task_info["id"]
+            task_status=task_info["task_status"]
+            set_dict={
+                "docType":doc_type,
+                "id":id,
+                "operType":oper_type,
+                "taskCode":task_code,
+                "taskStatus":task_status
+            }
+            ParamUtil.set_request_params(data, set_dict)
+            result = self.http.post(url, json=data, description=f"取消命中范围")
+            self.assert_util.assert_response_success(result)
+            a.json(data, "请求数据")
+            a.json(result, "响应数据")
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+        
+        
 if __name__ == "__main__":
+    # 运行参数化测试的示例
     test = TestSettItemBusiCheck()
     test.setup_class()
-    test.test_sett_item_record()
-    """ pytest.main(["-v", __file__]) """
+    test.test_cancal_scope()
+    #test.test_batch_get_scope(test.BATCH_GET_SCOPE_TEST_CASES[0])
 
         
         
