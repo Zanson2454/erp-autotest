@@ -17,6 +17,7 @@ from testcases.comm.base_test import BaseTest
 from utils.yaml_util import YamlUtil
 from utils.param_util import ParamUtil
 from data_factory.fin_sett_factory import FinSettlementFactory
+from utils.report_util import a, case_decorator
 from utils.log_util import Loggers
 @allure.epic("ERP通业财模块")
 @allure.feature("结算管理")
@@ -51,6 +52,21 @@ class TestSettDocCheck(BaseTest):
         #self.assert_util.assert_eq(result.get("data",{}).get("data",{}).get("id",{}),filtered_data["params"]["request"]["id"])
         #self.assert_util.assert_not_empty(result.get("data",{}).get("data",{}).get("settItems",{}),"结算单明细为空")
     
+    
+    @case_decorator(
+        story="结算单条件查询",
+        title="测试条件查询结算单分页数据",
+        description="验证条件查询结算单分页数据功能",
+        severity="normal",
+        order=2,
+        smoke=True,
+        tags=["结算单管理", "条件查询", "SETT_ITEM_TR_PAGING_DATA_SERVICE"]
+    )
+    def test_sett_doc_paging_data(self):
+        url=self.fin_path["结算项表-分页数据服务"]["path"]
+        data=self.fin_params.get(url,{})
+        pass
+        
         
         
 if __name__ == "__main__":

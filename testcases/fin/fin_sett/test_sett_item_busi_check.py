@@ -220,6 +220,84 @@ class TestSettItemBusiCheck(BaseTest):
     
     @case_decorator(
         story="结算项批量处理",
+        title="命中范围导入匹配",
+        description="SETT_BATCH_AGGREGATION_LOCK_EVENT_SERVICE",
+        severity="critical",
+        order=1,
+        smoke=False,
+        tags=["结算管理", "结算项批量任务处理", "SETT_BATCH_AGGREGATION_LOCK_EVENT_SERVICE"]
+    )
+    def test_import_batch_get_scope(self):
+        """测试命中范围导入匹配"""
+        
+        sql="""
+            select id,sett_item_code,sett_item_status from sett_item_tr
+            where deleted=0
+            and sett_item_status in ('RECONCILED','CREATED') order by created_at desc limit 3;
+        """
+        result=self.db.query(sql)
+        sett_item_codes=[sett_item_code["sett_item_code"] for sett_item_code in result]
+                 
+        url=self.fin_path["结算项-结算批量锁定服务"]["path"]
+        data=self.fin_params.get(url,{})
+        data=ParamUtil.filter_post_body_fields(
+            data,
+            ["docType","operType","settItemCodes"],
+            ["params","request"])
+        set_dict={
+            "docType":"SETT_ITEM",
+            "operType":"CONFIRM",
+            "settItemCodes":sett_item_codes
+        }
+        ParamUtil.set_request_params(data, set_dict)
+        result=self.http.post(url, json=data, description=f"命中范围导入匹配")
+        self.assert_util.assert_response_success(result)
+        self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("taskCode",{}),"not_empty")
+        self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("docType",{}),"=","SETT_ITEM")
+        self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("operType",{}),"=",set_dict["operType"])
+        self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("taskStatus",{}),"=","PENDING")
+        self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("submitQty",{}),"=",len(set_dict["settItemCodes"]))
+        a.json(data, "请求数据")
+        a.json(result, "响应数据")
+        
+        
+    @case_decorator(
+        story="结算批量处理",
+        title="根据ID查找数据服务",
+        description="结算汇单记录-根据ID查找数据服务",
+        severity="critical",
+        order=2,
+        smoke=False,
+        tags=["结算管理", "结算项批量任务处理", "SETT_AGGREGATE_RECORD_TR_FIND_DATA_BY_ID_SERVICE"]
+    )
+    def test_find_sett_doc_by_id(self):
+        """测试结算汇单记录-根据ID查找数据服务"""
+        try:
+            sql="""
+                select id,task_code from sett_aggregate_record_tr where deleted=0 order by created_at desc limit 1;
+            """
+            task_id=self.db.query(sql)[0]["id"]
+            task_code=self.db.query(sql)[0]["task_code"]
+            url=self.fin_path["结算汇单记录-根据ID查找数据服务"]["path"]
+            data=self.fin_params.get(url,{})
+            data=ParamUtil.filter_post_body_fields(
+                data,
+                ["id"],
+                ["params","request"])
+            set_dict={"id":task_id}
+            ParamUtil.set_request_params(data, set_dict)
+            result=self.http.post(url, json=data, description=f"根据ID查找数据服务")
+            self.assert_util.assert_response_success(result)
+            self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("taskCode",{}),"=",task_code)
+            a.json(data, "请求数据")
+            a.json(result, "响应数据")
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+        
+    
+    @case_decorator(
+        story="结算项批量处理",
         title="命中范围取消取消",
         description="验证SETT_BATCH_AGGREGATION_CANCEL_ASYNC_EVENT_SERVICE",
         severity="critical",
@@ -265,12 +343,12 @@ class TestSettItemBusiCheck(BaseTest):
             a.text(str(e), "失败原因")
             raise
         
-        
+         
 if __name__ == "__main__":
     # 运行参数化测试的示例
     test = TestSettItemBusiCheck()
     test.setup_class()
-    test.test_cancal_scope()
+    test.test_find_sett_doc_by_id()
     #test.test_batch_get_scope(test.BATCH_GET_SCOPE_TEST_CASES[0])
 
         
