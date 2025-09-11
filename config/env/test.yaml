@@ -1,7 +1,7 @@
 # 测试环境多用户配置示例
 erp_env: "test"
-erp_version: "0630"
-trantor_version: "3.0.2506"
+erp_version: "0830"
+trantor_version: "3.0.2509"
 
 # 多门户认证信息配置
 portal_config:
