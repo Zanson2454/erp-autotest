@@ -71,7 +71,24 @@ class TestSettConfig(BaseTest):
     def test_add_sett_type(self):
         url=self.fin_path["结算类型-保存主数据服务"]["path"]
         data=self.fin_params.get(url,{})
-        pass
+        data=ParamUtil.filter_post_body_fields(
+            data,
+            ["code","name","type",],
+            ["params","request"])
+        now_str = datetime.now().strftime("%Y%m%d%H%M%S")
+        set_dict={
+            "code":f"AUTO-TEST-CODE-{now_str}",
+            "name":f"AUTO-TEST-NAME-{now_str}",
+            "type":"CASH"
+        }
+        ParamUtil.set_request_params(data,set_dict)
+        result=self.http.post(url,json=data,description=f"新增结算方式")
+        self.assert_util.assert_response_success(result)
+        self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("code",{}),"=",set_dict["code"])
+        self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("name",{}),"=",set_dict["name"])
+        self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("type",{}),"=",set_dict["type"])
+        a.json(data, "请求数据")
+        a.json(result, "响应数据")
 
 
 if __name__ == "__main__":
