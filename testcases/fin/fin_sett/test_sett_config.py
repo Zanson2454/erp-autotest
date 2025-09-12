@@ -344,7 +344,136 @@ class TestSettConfig(BaseTest):
         a.json(data, "请求数据")
         a.json(result, "响应数据")
         
+        
+    @case_decorator(
+        story="结算配置",
+        title="测试启用汇单规则",
+        description="验证启用结算汇单规则功能",
+        severity="critical",
+        order=7,
+        smoke=False,
+        tags=["结算配置", "启用结算汇单规则","SETT_SDC_ENABLE_SERVICE"]
+    )
+    def test_enable_sett_rule(self):
+        url=self.fin_path["SETT-SDC-结算汇单规则启用服务"]["path"]
+        data=self.fin_params.get(url,{})
+        data=ParamUtil.filter_post_body_fields(
+            data,
+            ["id"],
+            ["params","request"])
+        sql="""
+        select id,sdc_head_code from sett_sdc_head_cf where deleted=0  order by created_at desc limit 1;
+        """
+        id=self.db.query(sql)[0]["id"]
+        set_dict={
+            "id":id
+        }
+        ParamUtil.set_request_params(data,set_dict)
+        result=self.http.post(url,json=data,description=f"启用汇单规则")
+        self.assert_util.assert_response_success(result)
+        a.json(data, "请求数据")
+        a.json(result, "响应数据")
+        
+    @case_decorator(
+        story="结算配置",
+        title="测试新增结算行项目类型关联汇单规则",
+        description="验证新增结算行项目类型关联汇单规则功能",
+        severity="critical",
+        order=8,
+        smoke=False,
+        tags=["结算配置", "新增结算行项目类型关联汇单规则","SETT_SRS_LINK_CF_SAVE_DATA_SERVICE"]
+    )
+    def test_add_sett_item_type_link_rule(self):
+        url=self.fin_path["结算行项目类型关联汇单规则-保存数据服务"]["path"]
+        data=self.fin_params.get(url,{})
+        data=ParamUtil.filter_post_body_fields(
+            data,
+            ["comOrgId","sdcHeadCode","settDocTypeCode","settItemTypeCode"],
+            ["params","request"])
+        sql="""
+        select id,org_code,org_name from org_struct_md where deleted=0 and org_code like '%AUTOTEST_GR_ORG%';
+        """
+        com_org_id=self.db.query(sql)[0]["id"]
+        sql="""
+        select id,sett_doc_type_code,sett_item_type_name
+        from  fin_sett_item_type_cf where deleted=0 and sett_item_type_code like '%AUTO%' order by created_at desc limit 1;
+        """
+        sett_item_type_id=self.db.query(sql)[0]["id"]
+        sett_doc_type_id=self.db.query(sql)[0]["sett_doc_type_code"]
+        sql=f"""
+        select id,sdc_head_code,sdc_description
+        from sett_sdc_head_cf where deleted=0 and sett_head_type={sett_doc_type_id} order by created_at desc limit 1;
+        """
+        sdc_head_id=self.db.query(sql)[0]["id"]
+        set_dict={
+            "comOrgId":{
+                "id":com_org_id
+            },
+            "sdcHeadCode":{
+                "id":sdc_head_id
+            },
+            "settDocTypeCode":{
+                "id":sett_doc_type_id
+            },
+            "settItemTypeCode":{
+                "id":sett_item_type_id
+            }
+        }
+        ParamUtil.set_request_params(data,set_dict)
+        result=self.http.post(url,json=data,description=f"新增结算行项目类型关联汇单规则")
+        self.assert_util.assert_response_success(result)
+        a.json(data, "请求数据")
+        a.json(result, "响应数据")
+        
+        
+    @case_decorator(
+        story="结算配置",
+        title="测试新增结算单据类型关联往来单据",
+        description="验证新增结算单据类型关联往来单据功能",
+        severity="critical",
+        order=9,
+        smoke=False,
+        tags=["结算配置", "新增结算单据类型关联往来单据","SETT_DOC_ASSOC_TYPE_CREATE_EVENT_SERVICE"]
+    )
+    def test_add_sett_doc_type_link_apar_type(self):
+        url=self.fin_path["结算单关联往来单据类型配置-保存服务"]["path"]
+        data=self.fin_params.get(url,{})
+        
+        data=ParamUtil.filter_post_body_fields(
+            data,
+            ["companyOrganization","settlementType","apType"],
+            ["params","request"])
+        
+        sql="""
+        select id,org_code,org_name from org_struct_md where deleted=0 and org_code like '%AUTOTEST_GR_ORG%';
+        """
+        com_org_id=self.db.query(sql)[0]["id"]
+        sql="""
+        select id,sett_doc_type_code,sett_doc_type_name from fin_sett_doc_type_cf where deleted=0 and sett_doc_type_code like '%AUTO%' order by created_at desc limit 1;
+        """
+        sett_doc_type_id=self.db.query(sql)[0]["id"]
+        sql="""
+        select id,ap_type_code,name from fin_apm_ap_type_md where deleted=0 order by created_at desc limit 1;
+        """
+        ap_type_id=self.db.query(sql)[0]["id"]
+        set_dict={
+            "companyOrganization":{
+                "id":com_org_id
+            },
+            "settlementType":{
+                "id":sett_doc_type_id
+            },
+            "apType":{
+                "id":ap_type_id
+            }
+        }
+        ParamUtil.set_request_params(data,set_dict)
+        result=self.http.post(url,json=data,description=f"新增结算单据类型关联往来单据")
+        self.assert_util.assert_response_success(result)
+        a.json(data, "请求数据")
+        
+
 if __name__ == "__main__":
     test = TestSettConfig()
     test.setup_class()
-    test.test_add_sett_rule()
+    test.test_add_sett_doc_type_link_apar_type()
