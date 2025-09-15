@@ -75,10 +75,10 @@ class ScmInvBaseTest(BaseTest):
         DataFactory.init_sql_cache(
             sql_config_path=str(project_root / "config" / "erp" / "md_init_sql.yaml"), # 主数据依赖的初始化sql存放路径
             db_config_name="erp_db", # 数据库配置名称
-            cache_key="md_init_cache", # 缓存key
+            cache_key="inv_init_cache", # 缓存key
             cache_dir="testdata/cache" # 缓存目录
         )
-        cls.md_cache_data = CacheUtil.get('md_init_cache')
+        cls.inv_cache_data = CacheUtil.get('inv_init_cache')
         cls.path_params = {"tmodule":"SCM_INV"}
         cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
         cls.user_id = cls.init_data["user_info"]['user_info']["id"]

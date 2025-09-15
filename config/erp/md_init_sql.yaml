@@ -110,6 +110,29 @@ org_info:
       select id,`code`,`name` from inv_wh_md where deleted=0 and `status`="ENABLED" limit 1
     description: "查询仓库信息"
 
+  # 仓位信息
+  inv_bin_rec_md:
+    sql: |
+      select inv_wh_id, inv_area_id, id,`code`,`name` from inv_bin_md where code = 'AUTOTEST_REC_BIN' limit 1
+    description: "查询绑定的仓库id、收货仓储区id、收货仓位id"
+
+  inv_bin_send_md:
+    sql: |
+      select inv_wh_id, inv_area_id, id,`code`,`name` from inv_bin_md where code = 'AUTOTEST_SEND_BIN' limit 1
+    description: "查询绑定的仓库id、发货仓储区id、发货仓位id"
+
+  # 采购移动类型信息
+  inv_mvm_type_cf_pur:
+    sql: |
+      select id,`code`,`name` from inv_mvm_type_cf where code='00301100' limit 1
+    description: "查询采购移动类型信息"
+
+  # 销售移动类型信息
+  inv_mvm_type_cf_sls:
+    sql: |
+      select id,`code`,`name` from inv_mvm_type_cf where code='20401100' limit 1
+    description: "查询销售移动类型信息"
+
   # 默认员工
   employee_info:
     sql: |

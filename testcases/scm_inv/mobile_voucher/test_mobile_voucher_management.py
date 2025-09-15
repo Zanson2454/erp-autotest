@@ -15,23 +15,35 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
         super().setup_class()
         # 测试数据变量
         cls.mobile_voucher_id = None
+        cls.mobile_voucher_code = None
         cls.batch_code = None
         cls.material_id = None
         cls.batch_id = None
         cls.charaClassId = None
         cls.batchCharaValueList = None
         
-        # 固定ID常量
-        cls.comOrgId = 14507001
-        cls.matId = 14097001
-        cls.invOrgId = 14375002
-        cls.invLocId = 14376002
-        cls.mvmTypeId = 2112005
-        cls.moveTypeId = 2112005
-        cls.unitId = 2004001
-        cls.invWhId = 2002001
-        cls.invAreaId = 2002001
-        cls.invBinId = 2002003
+        # 从初始化数据中获取ID
+        cls.unitId = cls.init_data["uom_info"]["qty_uom_info"][0]["uom_id"] if cls.init_data.get("uom_info", {}).get("qty_uom_info") else None
+        
+        # 从inv_cache_data中获取ID
+        if cls.inv_cache_data:
+            # 公司组织ID
+            cls.comOrgId = cls.inv_cache_data["org_info"]["gr_come_org_info"][0]["id"] if cls.inv_cache_data.get("org_info", {}).get("com_org_info") else None
+            # 库存组织ID
+            cls.invOrgId = cls.inv_cache_data["org_info"]["inv_org_info"][0]["id"] if cls.inv_cache_data.get("org_info", {}).get("inv_org_info") else None
+            # 库存地点ID
+            cls.invLocId = cls.inv_cache_data["org_info"]["inv_loc_info"][0]["id"] if cls.inv_cache_data.get("org_info", {}).get("inv_loc_info") else None
+            # 物料ID (使用成品物料)
+            cls.matId = cls.inv_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"] if cls.inv_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP") else None
+            # 仓库ID
+            cls.invWhId = cls.inv_cache_data["org_info"]["inv_bin_rec_md"][0]["inv_wh_id"] if cls.inv_cache_data.get("org_info", {}).get("inv_bin_rec_md") else None
+            # 仓储区ID
+            cls.invAreaId = cls.inv_cache_data["org_info"]["inv_bin_rec_md"][0]["inv_area_id"] if cls.inv_cache_data.get("org_info", {}).get("inv_bin_rec_md") else None
+            # 仓位ID
+            cls.invBinId = cls.inv_cache_data["org_info"]["inv_bin_rec_md"][0]["id"] if cls.inv_cache_data.get("org_info", {}).get("inv_bin_rec_md") else None
+            # 移动类型ID
+            cls.mvmTypeId = cls.inv_cache_data["org_info"]["inv_mvm_type_cf_pur"][0]["id"] if cls.inv_cache_data.get("org_info", {}).get("inv_mvm_type_cf_pur") else None
+            cls.moveTypeId = cls.mvmTypeId  # 移动类型和移动凭证类型使用相同ID
         
         cls.logger.info("移动凭证管理测试类初始化完成")
 
@@ -190,7 +202,7 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
         title="测试新增移动凭证",
         description="验证新增移动凭证功能",
         severity="blocker",
-        order=3,
+        order=4,
         smoke=True,
         tags=["移动凭证", "新增"]
     )
@@ -251,9 +263,9 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
             # 保存移动凭证数据
             voucher_data = response.get("data", {}).get("data", {})
             self.mobile_voucher_id = voucher_data.get("moveVoucherId")
-            voucher_code = voucher_data.get("moveVoucherCode")
+            self.mobile_voucher_code = voucher_data.get("moveVoucherCode")
             
-            self.logger.info(f"移动凭证创建成功 - ID: {self.mobile_voucher_id}, 编码: {voucher_code}")
+            self.logger.info(f"移动凭证创建成功 - ID: {self.mobile_voucher_id}, 编码: {self.mobile_voucher_code}")
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -267,13 +279,13 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
         title="测试查询移动凭证分页",
         description="验证移动凭证分页查询功能",
         severity="normal",
-        order=4,
+        order=5,
         tags=["移动凭证", "查询"]
     )
     def test_query_mobile_voucher_page(self):
         """查询移动凭证分页用例"""
         try:
-            api_path = self.get_api_path("SCM_INV-移动凭证-查询分页服务")
+            api_path = self.get_api_path("INV-移动凭证-分页查询服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -283,23 +295,135 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
             )
             set_dict = {
                 "pageable": {
-                    "pageNo": 1,
+                    "pageNo": 2,
                     "pageSize": 20,
-                    "needTotal": True
+                    "sortOrders": 
+                    [
+                        {"fieldAlias":"createdAt","sortType":"DESC"}
+                    ]
                 },
                 "fields": [
-                    {"name": "voucherCode", "type": "TEXT"},
-                    {"name": "voucherName", "type": "TEXT"},
-                    {"name": "voucherType", "type": "TEXT"}
+                    {"name": "code", "type": "TEXT"},
+                    {"name": "upDocCode", "type": "TEXT"},
+                    {"name": "sourceType", "type": "SELECT"},
+                    {"name": "docCode", "type": "TEXT"}
                 ]
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
+            
+            # 断言分页数据总数大于0
+            total = response.get("data", {}).get("data", {}).get("total", 0)
+            assert total > 0, f"移动凭证分页查询结果为空，total: {total}"
+            self.logger.info(f"分页查询成功，总记录数: {total}")
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="移动凭证管理",
+        title="测试移动凭证筛选查询",
+        description="验证移动凭证列表页筛选功能，包括编码查询和来源类型查询",
+        severity="normal",
+        order=6,
+        tags=["移动凭证", "筛选查询"]
+    )
+    def test_query_mobile_voucher_with_filters(self):
+        """移动凭证筛选查询用例"""
+        try:
+            # 确保有移动凭证编码
+            if not self.mobile_voucher_code:
+                self.test_save_mobile_voucher()
+                
+            api_path = self.get_api_path("INV-移动凭证-分页查询服务")
+            params, url = self.get_api_params(api_path)
+
+            # 测试1：根据编码筛选查询
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["pageable", "fields"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 50,
+                    "needTotal": True,
+                    "sortOrders": [{"fieldAlias": "createdAt", "sortType": "DESC"}],
+                    "conditionItems": {
+                        "type": "ConditionItems",
+                        "conditions": {
+                            "code": {
+                                "operator": "CONTAINS",
+                                "value": self.mobile_voucher_code
+                            }
+                        },
+                        "logicOperator": "AND"
+                    }
+                },
+                "fields": [
+                    {"name": "code", "type": "TEXT"},
+                    {"name": "upDocCode", "type": "TEXT"},
+                    {"name": "sourceType", "type": "SELECT"},
+                    {"name": "docCode", "type": "TEXT"}
+                ]
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            # 断言编码筛选结果 - 修复数据路径
+            data_list = response.get("data", {}).get("data", {}).get("data", [])
+            assert len(data_list) > 0, "编码筛选查询结果为空"
+            found_match = any(self.mobile_voucher_code in item.get("code", "") for item in data_list)
+            assert found_match, f"编码筛选查询未找到匹配的记录: {self.mobile_voucher_code}"
+
+            a.json(filtered_params, "编码筛选请求数据")
+            a.json(response, "编码筛选响应数据")
+
+            # 测试2：根据来源类型筛选查询
+            set_dict_source = {
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 50,
+                    "needTotal": True,
+                    "sortOrders": [{"fieldAlias": "createdAt", "sortType": "DESC"}],
+                    "conditionItems": {
+                        "type": "ConditionItems",
+                        "conditions": {
+                            "sourceType": {
+                                "operator": "IN",
+                                "value": ["MANUAL"]
+                            }
+                        },
+                        "logicOperator": "AND"
+                    }
+                },
+                "fields": [
+                    {"name": "code", "type": "TEXT"},
+                    {"name": "sourceType", "type": "SELECT"}
+                ]
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict_source)
+
+            response_source = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response_source)
+            
+            # 断言来源类型筛选结果 - 修复数据路径
+            source_data_list = response_source.get("data", {}).get("data", {}).get("data", [])
+            if source_data_list:
+                all_manual = all(item.get("sourceType") == "MANUAL" for item in source_data_list)
+                assert all_manual, "来源类型筛选查询结果不符合筛选条件"
+
+            a.json(filtered_params, "来源筛选请求数据")
+            a.json(response_source, "来源筛选响应数据")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -310,16 +434,17 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
         title="测试查询移动凭证详情",
         description="验证移动凭证详情查询功能",
         severity="normal",
-        order=5,
+        order=7,
         tags=["移动凭证", "详情"]
     )
     def test_query_mobile_voucher_detail(self):
         """查询移动凭证详情用例"""
         try:
+            # 确保有移动凭证ID
             if not self.mobile_voucher_id:
                 self.test_save_mobile_voucher()
-
-            api_path = self.get_api_path("SCM_INV-移动凭证-查询详情服务")
+                
+            api_path = self.get_api_path("INV-移动凭证-详情服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -333,188 +458,10 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
-
-    @case_decorator(
-        story="移动凭证管理",
-        title="测试移动凭证分页数据服务",
-        description="验证移动凭证分页数据服务功能",
-        severity="normal",
-        order=6,
-        tags=["移动凭证", "分页数据"]
-    )
-    def test_mobile_voucher_paging_data(self):
-        """移动凭证分页数据服务用例"""
-        try:
-            api_path = self.get_api_path("移动凭证-分页数据服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["pageable", "queryCondition"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "pageable": {
-                    "pageNo": 1,
-                    "pageSize": 10,
-                    "needTotal": True
-                },
-                "queryCondition": {}
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
-
-    @case_decorator(
-        story="移动凭证管理",
-        title="测试修改移动凭证",
-        description="验证修改移动凭证功能",
-        severity="normal",
-        order=7,
-        tags=["移动凭证", "修改"]
-    )
-    def test_update_mobile_voucher(self):
-        """修改移动凭证用例"""
-        try:
-            if not self.mobile_voucher_id:
-                self.test_save_mobile_voucher()
-
-            api_path = self.get_api_path("SCM_INV-移动凭证-修改服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id", "voucherName", "remark"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "id": self.mobile_voucher_id,
-                "voucherName": f"修改后移动凭证_{self.mock_util.get_timestamp()}",
-                "remark": f"自动化测试修改移动凭证-{self.mock_util.get_timestamp()}"
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
-
-    @case_decorator(
-        story="移动凭证管理",
-        title="测试启用移动凭证",
-        description="验证启用移动凭证功能",
-        severity="normal",
-        order=8,
-        tags=["移动凭证", "启用"]
-    )
-    def test_enable_mobile_voucher(self):
-        """启用移动凭证用例"""
-        try:
-            if not self.mobile_voucher_id:
-                self.test_save_mobile_voucher()
-
-            api_path = self.get_api_path("SCM_INV-移动凭证-启用服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
-            set_dict = {"id": self.mobile_voucher_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
-
-    @case_decorator(
-        story="移动凭证管理",
-        title="测试禁用移动凭证",
-        description="验证禁用移动凭证功能",
-        severity="normal",
-        order=9,
-        tags=["移动凭证", "禁用"]
-    )
-    def test_disable_mobile_voucher(self):
-        """禁用移动凭证用例"""
-        try:
-            if not self.mobile_voucher_id:
-                self.test_save_mobile_voucher()
-
-            api_path = self.get_api_path("SCM_INV-移动凭证-禁用服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
-            set_dict = {"id": self.mobile_voucher_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
-
-    @case_decorator(
-        story="移动凭证管理",
-        title="测试删除移动凭证",
-        description="验证删除移动凭证功能",
-        severity="normal",
-        order=10,
-        tags=["移动凭证", "删除"]
-    )
-    def test_delete_mobile_voucher(self):
-        """删除移动凭证用例"""
-        try:
-            if not self.mobile_voucher_id:
-                self.test_save_mobile_voucher()
-
-            api_path = self.get_api_path("SCM_INV-移动凭证-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
-            set_dict = {"id": self.mobile_voucher_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
+            # 断言详情数据完整性
+            detail_data = response.get("data", {}).get("data", {})
+            assert detail_data.get("id") == self.mobile_voucher_id, "详情ID与查询ID不匹配"
+            assert detail_data.get("code"), "移动凭证编码不能为空"
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -528,161 +475,165 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
         title="测试提交移动凭证导出任务",
         description="验证提交移动凭证导出任务功能",
         severity="normal",
-        order=11,
+        order=8,
         tags=["移动凭证", "导出任务"]
     )
     def test_submit_mobile_voucher_export_task(self):
         """提交移动凭证导出任务用例"""
         try:
-            api_path = self.get_api_path("移动凭证-导入导出任务管理接口-提交导出任务")
+            # 确保有移动凭证数据
+            if not self.mobile_voucher_id:
+                self.test_save_mobile_voucher()
+                
+            api_path = self.get_api_path("移动凭证抬头表-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
 
-            params["params"] = {
-                "taskName": f"移动凭证-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
-                "multiSheetConfig": [
-                    {
-                        "modelKey": "SCM_INV$inv_mobile_voucher_md",
-                        "modelName": "移动凭证",
-                        "sheetNo": 0,
-                        "sheetName": "移动凭证",
-                        "headerConfigList": [
-                            {
-                                "name": "凭证编码",
-                                "type": "TEXT",
-                                "field": "voucherCode"
-                            },
-                            {
-                                "name": "凭证名称",
-                                "type": "TEXT",
-                                "field": "voucherName"
-                            },
-                            {
-                                "name": "凭证类型",
-                                "type": "ENUM",
-                                "field": "voucherType",
-                                "multiSelect": False,
-                                "dictValues": [
-                                    {
-                                        "_row_id_": "调拨",
-                                        "label": "调拨",
-                                        "value": "TRANSFER"
-                                    },
-                                    {
-                                        "_row_id_": "入库",
-                                        "label": "入库",
-                                        "value": "IN"
-                                    },
-                                    {
-                                        "_row_id_": "出库",
-                                        "label": "出库",
-                                        "value": "OUT"
-                                    }
-                                ]
-                            },
-                            {
-                                "name": "状态",
-                                "type": "ENUM",
-                                "field": "status",
-                                "multiSelect": False,
-                                "dictValues": [
-                                    {
-                                        "_row_id_": "未启用",
-                                        "label": "未启用",
-                                        "value": "INACTIVE"
-                                    },
-                                    {
-                                        "_row_id_": "已启用",
-                                        "label": "已启用",
-                                        "value": "ENABLED"
-                                    },
-                                    {
-                                        "_row_id_": "已停用",
-                                        "label": "已停用",
-                                        "value": "DISABLED"
-                                    }
-                                ]
-                            },
-                            {
-                                "name": "备注",
-                                "type": "TEXT",
-                                "field": "remark"
-                            }
-                        ]
-                    }
-                ],
+            # 根据curl直接构造参数，不使用filter_post_body_fields
+            filtered_params = {
+                "serviceKey": "SCM_INV$INV_MVM_DOC_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST",
+                "teamId": 22,
+                "params": {
+                    "taskName": f"移动凭证-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
+                "multiSheetConfig": [{
+                    "modelKey": "SCM_INV$inv_mvm_doc_head_tr",
+                    "modelName": "移动凭证抬头表",
+                    "sheetNo": 0,
+                    "sheetName": "移动凭证抬头表",
+                    "headerConfigList": [
+                        {"name": "编码", "type": "TEXT", "field": "code"},
+                        {"name": "公司组织", "type": "TEXT", "field": "comOrgId.orgName"},
+                        {"name": "记账时间", "type": "DATE", "field": "mvmDocTimePst"},
+                        {"name": "关联业务单", "type": "TEXT", "field": "docCode"},
+                        {"name": "冲销原凭证", "type": "TEXT", "field": "revMvmDocId.code"},
+                        {"name": "上游单据", "type": "TEXT", "field": "upDocCode"},
+                        {"name": "凭证来源", "type": "ENUM", "field": "sourceType", "multiSelect": False,
+                         "dictValues": [
+                             {"_row_id_": "PURCHASE", "label": "采购", "value": "PURCHASE"},
+                             {"_row_id_": "SALE", "label": "销售", "value": "SALE"},
+                             {"_row_id_": "MANUAL", "label": "库存", "value": "MANUAL"},
+                             {"_row_id_": "TRANSFER", "label": "调拨", "value": "TRANSFER"},
+                             {"_row_id_": "STOCK_CHECK", "label": "盘点", "value": "STOCK_CHECK"},
+                             {"_row_id_": "CHECK", "label": "对账", "value": "CHECK"},
+                             {"_row_id_": "PRD", "label": "生产", "value": "PRD"},
+                             {"_row_id_": "WH", "label": "仓库", "value": "WAREHOUSE"}
+                         ]},
+                        {"name": "存货价值推送状态", "type": "ENUM", "field": "invValuePushStatus", "multiSelect": False,
+                         "dictValues": [
+                             {"_row_id_": "PUSH_SUCCESS", "label": "推送成功", "value": "PUSH_SUCCESS"},
+                             {"_row_id_": "PUSH_FAIL", "label": "推送失败", "value": "PUSH_FAIL"},
+                             {"_row_id_": "NO_PUSH", "label": "无需推送", "value": "NO_PUSH"},
+                             {"_row_id_": "WAIT_PUSH", "label": "待推送", "value": "WAIT_PUSH"}
+                         ]},
+                        {"name": "创建时间", "type": "DATE", "field": "createdAt"},
+                        {"name": "存货价值推送失败原因", "type": "MULTI_TEXT", "field": "invValuePushErrorMsg"}
+                    ]
+                }],
                 "queryData": {
-                    "containerKey": "SCM_INV$MOBILE_VOUCHER_VIEW-table-container-SCM_INV$inv_mobile_voucher_md",
-                    "viewKey": "SCM_INV$MOBILE_VOUCHER_VIEW:list",
-                    "sceneKey": "SCM_INV$MOBILE_VOUCHER_VIEW",
+                    "appId": 0,
+                    "teamId": 22,
+                    "containerKey": "SCM_INV$INV_MVM_VOUCHER_VIEW-table-container-SCM_INV$inv_mvm_doc_head_tr",
+                    "viewKey": "SCM_INV$INV_MVM_VOUCHER_VIEW:list",
+                    "sceneKey": "SCM_INV$INV_MVM_VOUCHER_VIEW",
                     "params": {
                         "request": {
-                            "pageable": {}
+                            "pageable": {
+                                "conditionItems": {
+                                    "type": "ConditionItems",
+                                    "logicOperator": "AND",
+                                    "conditions": {
+                                        "id": {
+                                            "operator": "IN",
+                                            "value": [self.mobile_voucher_id]
+                                        }
+                                    }
+                                },
+                                "sortOrders": [{"fieldAlias": "createdAt", "sortType": "DESC"}]
+                            }
                         },
                         "selectFields": [
-                            {"field": "voucherCode"},
-                            {"field": "voucherName"},
-                            {"field": "voucherType"},
-                            {"field": "status"},
-                            {"field": "remark"}
+                            {"field": "code"},
+                            {"field": "mvmDocTimePst"},
+                            {"field": "docCode"},
+                            {"field": "upDocCode"},
+                            {"field": "sourceType"},
+                            {"field": "invValuePushStatus"},
+                            {"field": "createdAt"},
+                            {"field": "invValuePushErrorMsg"},
+                            {"field": "comOrgId", "selectFields": [{"field": "orgName"}]},
+                            {"field": "revMvmDocId", "selectFields": [{"field": "code"}]}
                         ],
-                        "modelKey": "SCM_INV$inv_mobile_voucher_md"
+                        "modelKey": "SCM_INV$inv_mvm_doc_head_tr"
                     }
                 },
                 "processConfig": {
                     "processType": "TRANTOR",
-                    "model": "SCM_INV$inv_mobile_voucher_md",
-                    "modelName": "移动凭证",
-                    "containerKey": "SCM_INV$MOBILE_VOUCHER_VIEW-table-container-SCM_INV$inv_mobile_voucher_md",
-                    "viewKey": "SCM_INV$MOBILE_VOUCHER_VIEW:list",
-                    "sceneKey": "SCM_INV$MOBILE_VOUCHER_VIEW"
+                    "appId": 0,
+                    "teamId": 22,
+                    "model": "SCM_INV$inv_mvm_doc_head_tr",
+                    "modelName": "移动凭证抬头表",
+                    "containerKey": "SCM_INV$INV_MVM_VOUCHER_VIEW-table-container-SCM_INV$inv_mvm_doc_head_tr",
+                    "viewKey": "SCM_INV$INV_MVM_VOUCHER_VIEW:list",
+                    "sceneKey": "SCM_INV$INV_MVM_VOUCHER_VIEW"
+                    }
                 }
             }
 
-            response = self.http.post(url, json=params)
+            response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_success(response)
 
-            a.json(params, "请求数据")
+            # 断言导出任务提交成功
+            task_data = response.get("data", {}).get("data", {})
+            main_task_id = task_data.get("mainTaskId")
+            assert main_task_id, "导出任务ID不能为空"
+            self.logger.info(f"导出任务提交成功，任务ID: {main_task_id}")
+
+            a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="OSS导入依赖文件，暂时跳过")
     @case_decorator(
         story="移动凭证管理",
-        title="测试通过OSS提交移动凭证导入任务",
-        description="验证通过OSS提交移动凭证导入任务功能",
-        severity="normal",
-        order=12,
-        tags=["移动凭证", "OSS导入"]
+        title="测试移动凭证冲销",
+        description="验证移动凭证冲销功能",
+        severity="critical",
+        order=9,
+        tags=["移动凭证", "冲销"]
     )
-    def test_submit_mobile_voucher_import_task_by_oss(self):
-        """通过OSS提交移动凭证导入任务用例"""
+    def test_move_voucher_write_off(self):
+        """移动凭证冲销用例"""
         try:
-            api_path = self.get_api_path("移动凭证-导入导出任务管理接口-通过OSS提交导入任务")
+            # 确保有移动凭证数据
+            if not self.mobile_voucher_id:
+                self.test_save_mobile_voucher()
+                
+            api_path = self.get_api_path("INV-移动凭证-新版移动凭证冲销服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["taskName", "ossConfig", "importConfig"],
+                ["id"],
                 ["params", "request"]
             )
             set_dict = {
-                "taskName": f"移动凭证OSS导入任务_{self.mock_util.get_timestamp()}",
-                "ossConfig": {
-                    "bucketName": "test-bucket",
-                    "objectKey": f"mobile_voucher_import_{self.mock_util.get_timestamp()}.xlsx"
-                },
-                "importConfig": {
-                    "fileType": "EXCEL",
-                    "sheetName": "移动凭证"
-                }
+                "id": self.mobile_voucher_id
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_success(response)
+
+            # 断言冲销成功
+            write_off_data = response.get("data", {}).get("data", {})
+            write_off_voucher_id = write_off_data.get("moveVoucherId")
+            write_off_voucher_code = write_off_data.get("moveVoucherCode")
+            
+            assert write_off_voucher_id, "冲销凭证ID不能为空"
+            assert write_off_voucher_code, "冲销凭证编码不能为空"
+            
+            self.logger.info(f"移动凭证冲销成功 - 原凭证ID: {self.mobile_voucher_id}, 冲销凭证ID: {write_off_voucher_id}, 冲销凭证编码: {write_off_voucher_code}")
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
