@@ -1,50 +1,36 @@
-🎯 ERP测试用例生成规范提示词
+## 🚀 ERP测试用例快速生成助手
 
-🤖 角色设定
-你是阿里巴巴ERP高级测试开发专家，精通企业级自动化测试框架设计和API测试用例编写。
+### 📋 使用说明
+- 配合 @testcase_temp.mdc 使用，本文件为快速参考版本
+- 适用场景：基于curl命令快速生成标准测试用例
 
-📋 核心规范
+### ⚡ 核心流程
+1. **API匹配**：提取curl中serviceKey → 在对应模块api_path.yaml查找key
+2. **参数过滤**：ParamUtil.filter_post_body_fields() 过滤业务字段
+3. **标准结构**：遵循项目既定模板，不自行优化架构
 
-1. **API Key查找**：
-   - 优先从curl中提取 `serviceKey`（如：`SCM_INV$INV_MVM_VOUCHER_QUERY_PAGE_ACTION_SERVICE`）
-   - 在 `inv_api_path.yaml` 文件中搜索对应的key名称
-   - 使用找到的key名称调用 `self.get_api_path()`
-
-2. **请求参数处理**：
-   - 使用 `ParamUtil.filter_post_body_fields()` 过滤参数
-   - **禁止**在 `filtered_params` 中包含：`sceneKey`、`viewKey`、`appId`、`teamId`、`serviceKey`、`params`、`request`
-   - 直接从 `request` 层级开始解析参数
-   - 参考现有代码的封装方式
-
-3. **代码风格**：
-   - 保持代码简洁，避免冗余
-   - 只保留重要的业务断言
-   - 遵循现有项目的代码风格和结构
-   - 统一使用团队既定的封装方法，不要自行"优化"架构
-
-🔧 标准模板结构
+### 🔥 快速模板
 ```python
-def test_xxx(self):
-    """xxx用例"""
+@case_decorator(order=1, severity="critical", tags=["模块"])
+def test_功能操作(self):
+    """功能说明"""
     try:
-        api_path = self.get_api_path("从inv_api_path.yaml找到的key")
+        # 1. API调用
+        api_path = self.get_api_path("匹配的key")
         params, url = self.get_api_params(api_path)
         
+        # 2. 参数处理  
         filtered_params = ParamUtil.filter_post_body_fields(
-            params,
-            ["具体的参数字段"],
-            ["params", "request"]
+            params, ["业务字段列表"], ["params", "request"]
         )
-        set_dict = {
-            # 具体的参数值
-        }
+        set_dict = {"字段": "值"}
         ParamUtil.set_request_params(filtered_params, set_dict)
         
+        # 3. 请求与断言
         response = self.http.post(url, json=filtered_params)
         self.assert_util.assert_response_data(response)
         
-        # 重要的业务断言
-        
+        # 4. 报告记录
         a.json(filtered_params, "请求数据")
         a.json(response, "响应数据")
         
@@ -53,15 +39,8 @@ def test_xxx(self):
         raise
 ```
 
-📝 输出要求
-1. **严格遵循规范**：按照上述规范生成测试用例，确保API Key正确匹配
-2. **保持代码风格一致**：与项目现有代码风格完全一致
-3. **添加必要装饰器**：包含 `@case_decorator` 和适当的 order、severity、tags
-4. **完整的异常处理**：统一使用 try-except-raise 模式
-5. **业务断言充分**：验证关键返回数据，添加日志记录
-6. **报告附件完整**：包含请求和响应数据的附件
-
-⚠️ 重要提醒
-- 不要修改或"优化"现有的封装架构
-- 严格使用项目既定的工具类和方法
-- 保持与团队代码规范的一致性
+### 🎯 关键要点
+- **严格复用**：使用项目既定工具类和方法
+- **参数过滤**：必须使用ParamUtil.filter_post_body_fields
+- **异常处理**：所有用例必须包含try-catch结构
+📖 详细规范请参考：@testcase_temp.mdc

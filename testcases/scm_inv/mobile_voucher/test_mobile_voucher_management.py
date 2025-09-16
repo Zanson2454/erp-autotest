@@ -416,7 +416,7 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
             response_source = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response_source)
             
-            # 断言来源类型筛选结果 - 修复数据路径
+            # 断言来源类型筛选结果
             source_data_list = response_source.get("data", {}).get("data", {}).get("data", [])
             if source_data_list:
                 all_manual = all(item.get("sourceType") == "MANUAL" for item in source_data_list)
