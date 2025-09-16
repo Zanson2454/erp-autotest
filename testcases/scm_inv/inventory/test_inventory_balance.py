@@ -135,3 +135,78 @@ class TestInventoryBalance(ScmInvBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+    @case_decorator(
+        story="库存余额管理",
+        title="测试物料库存余额查询",
+        description="验证物料库存余额查询分页功能",
+        severity="critical",
+        order=3,
+        tags=["库存余额", "查询", "分页"]
+    )
+    def test_query_material_stock_balance(self):
+        """物料库存余额查询用例"""
+        try:
+            # 1. 获取数据库中的实际库存余额作为基准值
+            db_balance = self.get_current_inventory_balance()
+            
+            # 2. API调用
+            api_path = self.get_api_path("INV-库存余额-物料库存余额查询分页服务")
+            params, url = self.get_api_params(api_path)
+            
+            # 3. 参数处理
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["pageable", "fields"], ["params", "request"]
+            )
+            
+            # 构造查询条件
+            set_dict = {
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": {
+                        "type": "ConditionItems",
+                        "conditions": {
+                            "comOrgId": {
+                                "operator": "EQ",
+                                "value": {"id": self.comOrgId}
+                            },
+                            "matId": {
+                                "operator": "EQ", 
+                                "value": {"id": self.matId}
+                            }
+                        },
+                        "logicOperator": "AND"
+                    }
+                },
+                "fields": [
+                    {"name": "stkQty", "type": "DECIMAL"}
+                ]
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            # 4. 请求与断言
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            # 5. 业务断言
+            response_data = response.get("data", {}).get("data", {})
+            data_list = response_data.get("data", [])
+            
+            # 断言查询结果存在
+            assert len(data_list) > 0, f"查询结果数据列表不能为空，实际长度: {len(data_list)}"
+            
+            # 获取API返回的库存数量并验证一致性
+            api_stk_qty = data_list[0].get("stkQty", 0)
+            assert api_stk_qty == db_balance, f"API返回的库存数量({api_stk_qty})与数据库查询结果({db_balance})不一致"
+            
+            # 6. 报告记录
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            a.text(f"库存数量一致性验证 - API: {api_stk_qty}, 数据库: {db_balance}", "库存查询结果")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
