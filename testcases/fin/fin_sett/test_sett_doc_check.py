@@ -38,9 +38,15 @@ class TestSettDocCheck(BaseTest):
         
         cls.fin_params = cls.yaml_util.read_yaml(cls.base_api_params).get("api_params", {})  
         
-    @allure.title("查询结算单详情")
-    @allure.description("测试步骤：查询结算单详情")
-    @allure.severity(allure.severity_level.CRITICAL)
+    @case_decorator(
+        story="结算单管理",
+        title="测试查询结算单详情",
+        description="测试查询结算单详情",
+        severity="critical",
+        order=0,
+        smoke=False,
+        tags=["结算单管理", "查询结算单详情","SETT_DOC_TR_FIND_DATA_BY_ID_SERVICE"]
+    )
     def test_search_detail(self):
         """测试查询结算单详情"""
         url = self.fin_path["结算单表-根据ID查找数据服务"]["path"]
