@@ -1,8 +1,9 @@
 import allure
+import datetime
 import pytest
 import sys
-from pathlib import Path
 import time
+from pathlib import Path
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
@@ -21,6 +22,12 @@ class TestInventoryBalance(ScmInvBaseTest):
         # 测试数据变量
         cls.mobile_voucher_id = None
         cls.mobile_voucher_code = None
+        cls.batch_code = None
+        cls.balance_detail_id = None
+        cls.balance_detail_code = None
+        cls.adjust_voucher_id = None
+        cls.adjust_voucher_code = None
+        cls.batch_detail_id = None
         
         # 从初始化数据中获取ID
         cls.unitId = cls.init_data["uom_info"]["qty_uom_info"][0]["uom_id"] if cls.init_data.get("uom_info", {}).get("qty_uom_info") else None
@@ -35,14 +42,14 @@ class TestInventoryBalance(ScmInvBaseTest):
             cls.invLocId = cls.inv_cache_data["org_info"]["inv_loc_info"][0]["id"] if cls.inv_cache_data.get("org_info", {}).get("inv_loc_info") else None
             # 物料ID (使用成品物料)
             cls.matId = cls.inv_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"] if cls.inv_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP") else None
-            # 移动类型ID
-            cls.mvmTypeId = cls.inv_cache_data["org_info"]["inv_mvm_type_cf_pur"][0]["id"] if cls.inv_cache_data.get("org_info", {}).get("inv_mvm_type_cf_pur") else None
-            # 仓库ID
-            cls.invWhId = cls.inv_cache_data["org_info"]["inv_wh_info"][0]["id"] if cls.inv_cache_data.get("org_info", {}).get("inv_wh_info") else None
-            # 库区ID
-            cls.invAreaId = cls.inv_cache_data["org_info"]["inv_area_info"][0]["id"] if cls.inv_cache_data.get("org_info", {}).get("inv_area_info") else None
+            # 调拨移动类型ID
+            cls.mvmTypeId = cls.inv_cache_data["org_info"]["inv_mvm_type_cf_all"][0]["id"] if cls.inv_cache_data.get("org_info", {}).get("inv_mvm_type_cf_all") else None
+             # 仓库ID
+            cls.invWhId = cls.inv_cache_data["org_info"]["inv_bin_rec_md"][0]["inv_wh_id"] if cls.inv_cache_data.get("org_info", {}).get("inv_bin_rec_md") else None
+            # 仓储区ID
+            cls.invAreaId = cls.inv_cache_data["org_info"]["inv_bin_rec_md"][0]["inv_area_id"] if cls.inv_cache_data.get("org_info", {}).get("inv_bin_rec_md") else None
             # 仓位ID
-            cls.invBinId = cls.inv_cache_data["org_info"]["inv_bin_info"][0]["id"] if cls.inv_cache_data.get("org_info", {}).get("inv_bin_info") else None
+            cls.invBinId = cls.inv_cache_data["org_info"]["inv_bin_rec_md"][0]["id"] if cls.inv_cache_data.get("org_info", {}).get("inv_bin_rec_md") else None
         
         cls.logger.info("库存余额综合测试类初始化完成")
 
@@ -94,6 +101,7 @@ class TestInventoryBalance(ScmInvBaseTest):
             # 保存移动凭证数据到类变量
             TestInventoryBalance.mobile_voucher_id = voucher_manager.mobile_voucher_id
             TestInventoryBalance.mobile_voucher_code = voucher_manager.mobile_voucher_code
+            TestInventoryBalance.batch_code = voucher_manager.batch_code
             
             # 验证移动凭证创建成功
             assert self.mobile_voucher_id, "移动凭证ID不能为空"
@@ -205,6 +213,301 @@ class TestInventoryBalance(ScmInvBaseTest):
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
             a.text(f"库存数量一致性验证 - API: {api_stk_qty}, 数据库: {db_balance}", "库存查询结果")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="库存余额管理",
+        title="测试仓库库存余额查询",
+        description="验证仓库库存余额查询分页功能",
+        severity="critical",
+        order=4,
+        tags=["库存余额", "仓库查询", "分页"]
+    )
+    def test_query_warehouse_stock_balance(self):
+        """仓库库存余额查询用例"""
+        try:
+            # 1. 获取数据库中的实际仓库库存余额作为基准值
+            db_balance = self.get_current_inventory_balance()
+            
+            # 2. API调用
+            api_path = self.get_api_path("INV-库存余额-仓库库存余额查询分页服务")
+            params, url = self.get_api_params(api_path)
+            
+            # 3. 参数处理
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["pageable", "fields"], ["params", "request"]
+            )
+            
+            # 构造查询条件
+            set_dict = {
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": {
+                        "type": "ConditionItems",
+                        "conditions": {
+                            "comOrgId": {
+                                "operator": "EQ",
+                                "value": {"id": self.comOrgId}
+                            },
+                            "matId": {
+                                "operator": "EQ", 
+                                "value": {"id": self.matId}
+                            },
+                            "invLocId": {
+                                "operator": "EQ",
+                                "value": {"id": self.invLocId}
+                            }
+                        },
+                        "logicOperator": "AND"
+                    }
+                },
+                "fields": [
+                    {"name": "comOrgId", "type": "OBJECT"},
+                    {"name": "matId", "type": "OBJECT"},
+                    {"name": "invLocId", "type": "OBJECT"}
+                ]
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            # 4. 请求与断言
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            # 5. 业务断言
+            response_data = response.get("data", {}).get("data", {})
+            total = response_data.get("total", 0)
+            data_list = response_data.get("data", [])
+            
+            # 断言total大于0
+            assert total > 0, f"查询结果总数应该大于0，实际总数: {total}"
+            
+            # 断言查询结果存在
+            assert len(data_list) > 0, f"查询结果数据列表不能为空，实际长度: {len(data_list)}"
+            
+            # 获取API返回的库存数量并验证一致性
+            api_stk_qty = data_list[0].get("stkQty", 0)
+            assert api_stk_qty == db_balance, f"API返回的库存数量({api_stk_qty})与数据库查询结果({db_balance})不一致"
+            
+            # 6. 报告记录
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            a.text(f"仓库库存查询验证 - API库存数量: {api_stk_qty}, 数据库库存数量: {db_balance}, 总数: {total}", "仓库库存查询结果")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="库存余额管理",
+        title="测试库存余额明细查询",
+        description="验证库存余额明细查询分页功能并保存第一条记录信息",
+        severity="critical",
+        order=5,
+        tags=["库存余额", "明细查询", "分页"]
+    )
+    def test_query_stock_balance_detail(self):
+        """库存余额明细查询用例"""
+        try:
+            # 1. API调用
+            api_path = self.get_api_path("INV-库存余额-查询分页服务")
+            params, url = self.get_api_params(api_path)
+            
+            # 2. 参数处理
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["pageable", "fields"], ["params", "request"]
+            )
+            
+            # 构造查询条件
+            set_dict = {
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": {
+                        "type": "ConditionItems",
+                        "conditions": {
+                            "matId": {
+                                "operator": "EQ",
+                                "value": {"id": self.matId}
+                            },
+                            "invOrgId": {
+                                "operator": "EQ",
+                                "value": {"id": self.invOrgId}
+                            },
+                            "invLocId": {
+                                "operator": "EQ",
+                                "value": {"id": self.invLocId}
+                            },
+                            "invWhId": {
+                                "operator": "EQ",
+                                "value": {"id": self.invWhId}
+                            },
+                            "invAreaId": {
+                                "operator": "EQ",
+                                "value": {"id": self.invAreaId}
+                            }
+                        },
+                        "logicOperator": "AND"
+                    }
+                },
+                "fields": [
+                    {"name": "matId", "type": "OBJECT"},
+                    {"name": "invOrgId", "type": "OBJECT"},
+                    {"name": "invLocId", "type": "OBJECT"},
+                    {"name": "invWhId", "type": "OBJECT"},
+                    {"name": "invAreaId", "type": "OBJECT"},
+                    {"name": "invBinId", "type": "OBJECT"},
+                    {"name": "batchId", "type": "OBJECT"},
+                    {"name": "invTypeId", "type": "OBJECT"},
+                    {"name": "spcStkTypeId", "type": "OBJECT"}
+                ]
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            # 3. 请求与断言
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            # 4. 业务断言
+            response_data = response.get("data", {}).get("data", {})
+            total = response_data.get("total", 0)
+            data_list = response_data.get("data", [])
+            
+            # 断言total大于0
+            assert total > 0, f"查询结果总数应该大于0，实际总数: {total}"
+            
+            # 断言查询结果存在
+            assert len(data_list) > 0, f"查询结果数据列表不能为空，实际长度: {len(data_list)}"
+            
+            # 验证batch_code包含在查询的列表里面
+            if self.batch_code:
+                assert self.batch_code in str(data_list), f"批次编码 {self.batch_code} 未在查询结果中找到"
+            
+            # 保存第一条记录的id和code作为类变量
+            first_record = data_list[0]
+            TestInventoryBalance.balance_detail_id = first_record.get("id")
+            TestInventoryBalance.balance_detail_code = first_record.get("batchId", {}).get("code")
+            # 保存批次ID用于批次调整
+            TestInventoryBalance.batch_detail_id = first_record.get("batchId", {}).get("id")
+            
+            # 5. 报告记录
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            a.text(f"余额明细查询验证 - 总数: {total}, 批次编码验证: {self.batch_code in str(data_list) if self.batch_code else '无需验证'}, 第一条记录ID: {self.balance_detail_id}, 编码: {self.balance_detail_code}", "余额明细查询结果")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="库存余额管理",
+        title="测试批次调整移动凭证创建",
+        description="验证批次调整移动凭证创建功能，包含出库和入库操作",
+        severity="critical",
+        order=6,
+        tags=["库存余额", "批次调整", "移动凭证"]
+    )
+    def test_create_batch_adjustment_voucher(self):
+        """批次调整移动凭证创建用例"""
+        try:
+            # 确保前置条件已满足
+            assert self.mobile_voucher_id, "移动凭证ID不能为空，请先执行test_create_mobile_voucher_increase_inventory"
+            assert self.batch_code, "批次编码不能为空，请先执行test_create_mobile_voucher_increase_inventory"
+            assert self.balance_detail_id, "余额明细ID不能为空，请先执行test_query_stock_balance_detail"
+            assert self.batch_detail_id, "批次ID不能为空，请先执行test_query_stock_balance_detail"
+            
+            # 生成请求数据
+            current_time = datetime.datetime.now()
+            timestamp = current_time.strftime("%Y%m%d%H%M%S")
+            doc_time = int(current_time.timestamp() * 1000)  # 毫秒时间戳
+            request_no = self.mock_util.generate_unique_code(tag="REQ")
+            
+            # 1. API调用
+            api_path = self.get_api_path("INV-移动凭证-新版创建服务")
+            params, url = self.get_api_params(api_path)
+            
+            # 2. 参数处理 - 构建批次调整移动凭证请求参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params,
+                ["comOrgId", "mvmTypeId", "showType", "mvmDocTimePst", "remark", "requestNo", "mvmDocOutList", "mvmDocInList"],
+                ["params", "request"]
+            )
+            
+            set_dict = {
+                "comOrgId": {"id": self.comOrgId},
+                "mvmTypeId": {"id": self.mvmTypeId}, 
+                "showType": "ALL",
+                "mvmDocTimePst": doc_time,
+                "remark": f"自动化测试批次调整-{timestamp}",
+                "requestNo": request_no,
+                # 出库明细 - 使用现有批次
+                "mvmDocOutList": [{
+                    "id": self.balance_detail_id,
+                    "context": {},
+                    "version": 1,
+                    "deleted": 0,
+                    "matId": {"id": self.matId},
+                    "invOrgId": {"id": self.invOrgId},
+                    "invLocId": {"id": self.invLocId},
+                    "invWhId": {"id": self.invWhId},
+                    "invAreaId": {"id": self.invAreaId},
+                    "invBinId": {"id": self.invBinId},
+                    "mvmQty": 1,
+                    "batchId": {"id": self.batch_detail_id},  # 使用现有批次ID
+                    "unitId": self.unitId,
+                    "refCode": "1",
+                    "mvmTypeId": {"id": self.mvmTypeId}
+                }],
+                # 入库明细 - 创建新批次
+                "mvmDocInList": [{
+                    "id": self.balance_detail_id,
+                    "context": {},
+                    "version": 1,
+                    "deleted": 0,
+                    "matId": {"id": self.matId},
+                    "invOrgId": {"id": self.invOrgId},
+                    "invLocId": {"id": self.invLocId},
+                    "invWhId": {"id": self.invWhId},
+                    "invAreaId": {"id": self.invAreaId},
+                    "invBinId": {"id": self.invBinId},
+                    "mvmQty": 1,
+                    "batchId": {
+                        "context": {},
+                        "batchCode": f"sqwBAT{timestamp}",  # 新的批次编码，使用固定前缀
+                    },
+                    "unitId": self.unitId,
+                    "refCode": "1",
+                    "mvmTypeId": {"id": self.mvmTypeId}
+                }]
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            # 3. 请求与断言
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            # 4. 业务断言 - 保存移动凭证数据到类变量
+            voucher_data = response.get("data", {}).get("data", {})
+            TestInventoryBalance.adjust_voucher_id = voucher_data.get("moveVoucherId")
+            TestInventoryBalance.adjust_voucher_code = voucher_data.get("moveVoucherCode")
+            
+            # 验证移动凭证创建成功
+            assert self.adjust_voucher_id, "批次调整移动凭证ID不能为空"
+            assert self.adjust_voucher_code, "批次调整移动凭证编码不能为空"
+            
+            self.logger.info(f"批次调整移动凭证创建成功 - ID: {self.adjust_voucher_id}, 编码: {self.adjust_voucher_code}")
+            
+            # 5. 报告记录
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            a.text(f"批次调整移动凭证创建 - ID: {self.adjust_voucher_id}, 编码: {self.adjust_voucher_code}", "批次调整移动凭证信息")
             
         except Exception as e:
             a.text(str(e), "失败原因")

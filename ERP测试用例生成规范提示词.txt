@@ -41,6 +41,9 @@ def test_功能操作(self):
 
 ### 🎯 关键要点
 - **严格复用**：使用项目既定工具类和方法
-- **参数过滤**：必须使用ParamUtil.filter_post_body_fields
+- **参数过滤**：必须使用ParamUtil.filter_post_body_fields，只过滤业务字段
 - **异常处理**：所有用例必须包含try-catch结构
+- **字段过滤规范**：
+  - ❌ 禁止过滤：sceneKey, viewKey, appId, teamId, serviceKey
+  - ✅ 只过滤业务字段：如pageable, fields, request等实际业务参数
 📖 详细规范请参考：@testcase_temp.mdc

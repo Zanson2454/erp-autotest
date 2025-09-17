@@ -133,6 +133,11 @@ org_info:
       select id,`code`,`name` from inv_mvm_type_cf where code='20401100' limit 1
     description: "查询销售移动类型信息"
 
+  # 调拨移动类型信息
+  inv_mvm_type_cf_all:
+    sql: |
+      select id,`code`,`name` from inv_mvm_type_cf where code='40301100' limit 1
+    description: "查询调拨移动类型信息"
   # 默认员工
   employee_info:
     sql: |

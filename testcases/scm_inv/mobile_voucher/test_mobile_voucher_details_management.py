@@ -316,3 +316,159 @@ class TestMobileVoucherDetailsManagement(ScmInvBaseTest):
             a.text(str(e), "失败原因")
             raise
 
+    @case_decorator(
+        story="移动凭证明细管理",
+        title="测试提交移动凭证明细导出任务",
+        description="验证提交移动凭证明细导出任务功能",
+        severity="normal",
+        order=4,
+        tags=["移动凭证明细", "导出任务"]
+    )
+    def test_submit_mobile_voucher_details_export_task(self):
+        """提交移动凭证明细导出任务用例"""
+        try:
+            # 查询最新的移动凭证明细ID
+            result = self.db.query(
+                sql="SELECT id FROM inv_mvm_doc_item_tr ORDER BY created_at DESC LIMIT 1"
+            )
+            if not result:
+                self.logger.warning("未找到移动凭证明细数据，跳过导出测试")
+                return
+                
+            detail_id = result[0].get("id")
+            self.logger.info(f"查询到最新的移动凭证明细ID: {detail_id}")
+                
+            api_path = self.get_api_path("移动凭证行项目表-导入导出任务管理接口-提交导出任务")
+            params, url = self.get_api_params(api_path)
+
+            # 根据curl直接构造参数，不使用filter_post_body_fields
+            filtered_params = {
+                "serviceKey": "SCM_INV$INV_MVM_DOC_ITEM_TR_API_GEI_TASK_EXPORT_DIRECT_POST",
+                "teamId": 22,
+                "params": {
+                    "taskName": f"移动凭证明细表-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
+                    "multiSheetConfig": [{
+                        "modelKey": "SCM_INV$inv_mvm_doc_item_tr",
+                        "modelName": "移动凭证行项目表",
+                        "sheetNo": 0,
+                        "sheetName": "移动凭证行项目表",
+                        "headerConfigList": [
+                            {"name": "移动凭证", "type": "TEXT", "field": "mvmDocId.code"},
+                            {"name": "凭证来源", "type": "ENUM", "field": "sourceType", "multiSelect": False,
+                             "dictValues": [
+                                 {"_row_id_": "PURCHASE", "label": "采购", "value": "PURCHASE"},
+                                 {"_row_id_": "SALE", "label": "销售", "value": "SALE"},
+                                 {"_row_id_": "MANUAL", "label": "库存", "value": "MANUAL"},
+                                 {"_row_id_": "TRANSFER", "label": "调拨", "value": "TRANSFER"},
+                                 {"_row_id_": "STOCK_CHECK", "label": "盘点", "value": "STOCK_CHECK"},
+                                 {"_row_id_": "CHECK", "label": "对账", "value": "CHECK"},
+                                 {"_row_id_": "PRD", "label": "生产", "value": "PRD"},
+                                 {"_row_id_": "WH", "label": "仓库", "value": "WAREHOUSE"}
+                             ]},
+                            {"name": "物料", "type": "TEXT", "field": "matId.matName"},
+                            {"name": "公司组织", "type": "TEXT", "field": "comOrgId.orgName"},
+                            {"name": "库存组织", "type": "TEXT", "field": "invOrgId.orgName"},
+                            {"name": "库存地点", "type": "TEXT", "field": "invLocId.orgName"},
+                            {"name": "仓库", "type": "TEXT", "field": "invWhId.name"},
+                            {"name": "仓储区", "type": "TEXT", "field": "invAreaId.name"},
+                            {"name": "仓位", "type": "TEXT", "field": "invBinId.name"},
+                            {"name": "变更方向", "type": "ENUM", "field": "mvmPosNeg", "multiSelect": False,
+                             "dictValues": [
+                                 {"label": "+", "value": "INCREASE"},
+                                 {"label": "-", "value": "DECREASE"}
+                             ]},
+                            {"name": "数量", "type": "DECIMAL", "field": "mvmQty", "precision": 6, "precisionDisplayType": "ORIGIN_ROUND"},
+                            {"name": "单位", "type": "TEXT", "field": "mvmUomId.uomDesc"},
+                            {"name": "库存类型", "type": "TEXT", "field": "invTypeId.name"},
+                            {"name": "批次", "type": "TEXT", "field": "batchId.code"},
+                            {"name": "操作前库存", "type": "DECIMAL", "field": "originQty", "precision": 6, "precisionDisplayType": "ORIGIN_ROUND"},
+                            {"name": "关联单据", "type": "TEXT", "field": "docCode"},
+                            {"name": "业务单据行编码", "type": "TEXT", "field": "subDocCode"},
+                            {"name": "上游单据编码", "type": "TEXT", "field": "upDocCode"},
+                            {"name": "上游单据行编码", "type": "TEXT", "field": "subUpDocCode"},
+                            {"name": "特殊库存标", "type": "TEXT", "field": "spcStkTypeId.name"},
+                            {"name": "特殊库存分类", "type": "TEXT", "field": "spcStkTypeClassName"},
+                            {"name": "移动类型", "type": "TEXT", "field": "mvmTypeId.name"},
+                            {"name": "创建时间", "type": "DATE", "field": "createdAt"}
+                        ]
+                    }],
+                    "queryData": {
+                        "appId": 0,
+                        "teamId": 22,
+                        "containerKey": "ERP_SCM$INV_MOVE_CERTIFICATE_DETAILS_VIEW-table-container-ERP_SCM$inv_mvm_doc_item_tr",
+                        "viewKey": "SCM_INV$INV_MOVE_CERTIFICATE_DETAILS_VIEW:list",
+                        "sceneKey": "SCM_INV$INV_MOVE_CERTIFICATE_DETAILS_VIEW",
+                        "params": {
+                            "request": {
+                                "pageable": {
+                                    "conditionItems": {
+                                        "type": "ConditionItems",
+                                        "logicOperator": "AND",
+                                        "conditions": {
+                                            "id": {
+                                                "operator": "IN",
+                                                "value": [detail_id]
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "selectFields": [
+                                {"field": "sourceType"},
+                                {"field": "mvmPosNeg"},
+                                {"field": "mvmQty"},
+                                {"field": "originQty"},
+                                {"field": "docCode"},
+                                {"field": "subDocCode"},
+                                {"field": "upDocCode"},
+                                {"field": "subUpDocCode"},
+                                {"field": "spcStkTypeClassName"},
+                                {"field": "createdAt"},
+                                {"field": "mvmDocId", "selectFields": [{"field": "code"}]},
+                                {"field": "matId", "selectFields": [{"field": "matName"}]},
+                                {"field": "comOrgId", "selectFields": [{"field": "orgName"}]},
+                                {"field": "invOrgId", "selectFields": [{"field": "orgName"}]},
+                                {"field": "invLocId", "selectFields": [{"field": "orgName"}]},
+                                {"field": "invWhId", "selectFields": [{"field": "name"}]},
+                                {"field": "invAreaId", "selectFields": [{"field": "name"}]},
+                                {"field": "invBinId", "selectFields": [{"field": "name"}]},
+                                {"field": "mvmUomId", "selectFields": [{"field": "uomDesc"}]},
+                                {"field": "invTypeId", "selectFields": [{"field": "name"}]},
+                                {"field": "batchId", "selectFields": [{"field": "code"}]},
+                                {"field": "spcStkTypeId", "selectFields": [{"field": "name"}]},
+                                {"field": "mvmTypeId", "selectFields": [{"field": "name"}]}
+                            ],
+                            "modelKey": "SCM_INV$inv_mvm_doc_item_tr"
+                        }
+                    },
+                    "processConfig": {
+                        "processType": "TRANTOR",
+                        "appId": 0,
+                        "teamId": 22,
+                        "model": "SCM_INV$inv_mvm_doc_item_tr",
+                        "modelName": "移动凭证行项目表",
+                        "containerKey": "ERP_SCM$INV_MOVE_CERTIFICATE_DETAILS_VIEW-table-container-ERP_SCM$inv_mvm_doc_item_tr",
+                        "viewKey": "SCM_INV$INV_MOVE_CERTIFICATE_DETAILS_VIEW:list",
+                        "sceneKey": "SCM_INV$INV_MOVE_CERTIFICATE_DETAILS_VIEW"
+                    }
+                }
+            }
+
+            response = self.http.post(url, json=filtered_params)
+            self.logger.info(f"导出任务响应: {response}")
+            self.assert_util.assert_response_success(response)
+
+            # 断言导出任务提交成功
+            task_data = response.get("data", {}).get("data", {})
+            main_task_id = task_data.get("mainTaskId")
+            assert main_task_id, "导出任务ID不能为空"
+            self.logger.info(f"移动凭证明细导出任务提交成功，任务ID: {main_task_id}, 导出明细ID: {detail_id}")
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+
