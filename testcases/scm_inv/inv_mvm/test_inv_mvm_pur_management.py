@@ -1,9 +1,14 @@
 import allure
 import pytest
+import sys
+from pathlib import Path
+import datetime
+
+project_root = Path(__file__).resolve().parent.parent.parent.parent
+sys.path.append(str(project_root))
 from testcases.scm_inv import ScmInvBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
-import datetime
 
 @allure.epic("库存管理")
 @allure.feature("移动凭证管理")
@@ -28,7 +33,7 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
         # 从inv_cache_data中获取ID
         if cls.inv_cache_data:
             # 公司组织ID
-            cls.comOrgId = cls.inv_cache_data["org_info"]["gr_come_org_info"][0]["id"] if cls.inv_cache_data.get("org_info", {}).get("com_org_info") else None
+            cls.comOrgId = cls.inv_cache_data["org_info"]["gr_come_org_info"][0]["id"] if cls.inv_cache_data.get("org_info", {}).get("gr_come_org_info") else None
             # 库存组织ID
             cls.invOrgId = cls.inv_cache_data["org_info"]["inv_org_info"][0]["id"] if cls.inv_cache_data.get("org_info", {}).get("inv_org_info") else None
             # 库存地点ID
