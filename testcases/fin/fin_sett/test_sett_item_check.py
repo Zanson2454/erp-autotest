@@ -16,6 +16,8 @@ if str(project_root) not in sys.path:
 from testcases.comm.base_test import BaseTest
 from utils.yaml_util import YamlUtil
 from utils.param_util import ParamUtil
+from utils.report_util import a, case_decorator
+
 @allure.epic("ERP通业财模块")
 @allure.feature("结算管理")
 class TestSettItemCheck(BaseTest):
@@ -36,9 +38,15 @@ class TestSettItemCheck(BaseTest):
         
         cls.fin_params = cls.yaml_util.read_yaml(cls.base_api_params).get("api_params", {})  
 
-    @allure.title("查询结算项详情")
-    @allure.description("测试步骤：查询结算项详情")
-    @allure.severity(allure.severity_level.CRITICAL)
+    @case_decorator(
+        story="结算项管理",
+        title="测试查询结算项详情",
+        description="测试查询结算项详情",
+        severity="critical",
+        order=0,
+        smoke=False,
+        tags=["结算项管理", "查询结算项详情","SETT_ITEM_TR_FIND_DATA_BY_ID_SERVICE"]
+    )
     def test_search_detail(self):
         """测试查询结算项详情"""
         
@@ -75,9 +83,15 @@ class TestSettItemCheck(BaseTest):
         self.assert_util.assert_response_success(result)
 
 
-    @allure.title("获取结算项编码")
-    @allure.description("测试步骤：获取结算项编码")
-    @allure.severity(allure.severity_level.CRITICAL)
+    @case_decorator(
+        story="结算项管理",
+        title="测试获取结算项编码",
+        description="测试获取结算项编码",
+        severity="critical",
+        order=0,
+        smoke=False,
+        tags=["结算项管理", "获取结算项编码","SETT_ITEM_TR_CODE_SERVICE"]
+    )
     def test_get_sett_item_code(self):
         """测试获取结算项编码"""
         url = self.fin_path["apis"]["结算项表-调用取号规则服务"]["path"]
@@ -96,9 +110,15 @@ class TestSettItemCheck(BaseTest):
         self.sett_item_code_result = result.get("data").get("data")
         # return result.get("data").get("data")
         
-    @allure.title("新增结算项")
-    @allure.description("测试步骤：新增结算项")
-    @allure.severity(allure.severity_level.CRITICAL)
+    @case_decorator(
+        story="结算项管理",
+        title="测试新增结算项",
+        description="测试新增结算项",
+        severity="critical",
+        order=0,
+        smoke=False,
+        tags=["结算项管理", "新增结算项","SETT-ITEM-手动创建服务"]
+    )
     def test_add_sett_item(self):
         """测试新增结算项"""
         url = self.fin_path["apis"]["SETT-ITEM-手动创建服务"]["path"]
@@ -253,9 +273,15 @@ class TestSettItemCheck(BaseTest):
         #提供其它测试用例使用
         #return result.get("data").get("data")[0].get("id")
         
-    @allure.title("删除结算项")
-    @allure.description("测试步骤：删除结算项")
-    @allure.severity(allure.severity_level.CRITICAL)
+    @case_decorator(
+        story="结算项管理",
+        title="测试删除结算项",
+        description="测试删除结算项",
+        severity="critical",
+        order=0,
+        smoke=False,
+        tags=["结算项管理", "删除结算项","SETT-ITEM-删除服务"]
+    )
     def test_delete_sett_item(self):
         """测试删除结算项"""
         url = self.fin_path["apis"]["结算项-删除服务"]["path"]
@@ -284,9 +310,15 @@ class TestSettItemCheck(BaseTest):
         after_result=self.db.query(after_sql)
         assert not after_result
 
-    @allure.title("查询结算项分页数据")
-    @allure.description("测试步骤：查询结算项分页数据")
-    @allure.severity(allure.severity_level.CRITICAL)
+    @case_decorator(
+        story="结算项管理",
+        title="测试查询结算项分页数据",
+        description="测试查询结算项分页数据",
+        severity="critical",
+        order=0,
+        smoke=False,
+        tags=["结算项管理", "查询结算项分页数据","SETT_ITEM_TR_PAGING_DATA_SERVICE"]
+    )
     def test_sett_item_paging_data(self):
         """测试结算项分页数据"""
         url = self.fin_path["apis"]["结算项表-分页数据服务"]["path"]

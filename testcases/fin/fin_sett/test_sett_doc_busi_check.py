@@ -18,6 +18,8 @@ from utils.yaml_util import YamlUtil
 from data_factory.fin_sett_factory import FinSettlementFactory
 from utils.log_util import Loggers
 from utils.param_util import ParamUtil
+from utils.report_util import a, case_decorator
+
 @allure.epic("ERP通业财模块")
 @allure.feature("结算管理")
 class TestSettDocBusiCheck(BaseTest):
@@ -48,6 +50,15 @@ class TestSettDocBusiCheck(BaseTest):
         return [created_sett_doc_id,result[0]["id"]]
         
 
+    @case_decorator(
+        story="结算单管理",
+        title="测试结算单修改备注操作",
+        description="测试结算单修改备注操作",
+        severity="critical",
+        order=0,
+        smoke=False,
+        tags=["结算单管理", "结算单修改备注操作","SETT_DOC_TR_FIND_DATA_BY_ID_SERVICE"]
+    )
     def test_sett_doc_remark(self):
         """测试结算单修改备注操作"""
         url = self.fin_path["结算单表-根据ID查找无行信息数据服务"]["path"]
@@ -60,6 +71,16 @@ class TestSettDocBusiCheck(BaseTest):
         self.assert_util.assert_response_success(result)
         self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("id",{}),"=",sett_doc_id)
         
+    
+    @case_decorator(
+        story="结算单管理",
+        title="测试结算单修改备注保存操作",
+        description="测试结算单修改备注保存操作",
+        severity="critical",
+        order=0,
+        smoke=False,
+        tags=["结算单管理", "结算单修改备注保存操作","SETT_DOC_TR_SAVE_DATA_SERVICE"]
+    )
     def test_sett_doc_remark_save(self):
         """测试结算单修改备注保存操作"""
         url = self.fin_path["结算单表-保存数据服务"]["path"]
@@ -99,7 +120,15 @@ class TestSettDocBusiCheck(BaseTest):
         
         
 
-    @allure.story("结算单确认")
+    @case_decorator(
+        story="结算单管理",
+        title="测试结算单确认",
+        description="测试结算单确认",
+        severity="critical",
+        order=0,
+        smoke=False,
+        tags=["结算单管理", "结算单确认","SETT-DOC-运营端结算单确认下推应收应付-异步服务"]
+    )
     def test_sett_doc_confirm(self):
         """测试结算单确认"""
         url = self.fin_path["SETT-DOC-运营端结算单确认下推应收应付-异步服务"]["path"]
@@ -127,6 +156,17 @@ class TestSettDocBusiCheck(BaseTest):
                 assert result.get("success",{}) == False
                 assert result.get("err",{}).get("msg",{}) == "结算单异步任务提交失败，请确认结算单异步执行状态！"
                 
+    
+    
+    @case_decorator(
+        story="结算单管理",
+        title="测试结算单取消汇单",
+        description="测试结算单取消汇单",
+        severity="critical",
+        order=0,
+        smoke=False,
+        tags=["结算单管理", "结算单取消汇单","SETT-DOC-结算单取消服务"]
+    )
     def test_cancel_sett_doc(self):
         """测试结算单取消汇单"""
         url = self.fin_path["SETT-DOC-结算单取消服务"]["path"]
@@ -169,9 +209,15 @@ class TestSettDocBusiCheck(BaseTest):
                 assert result.get("success",{}) == False
                 assert result.get("err",{}).get("msg",{}) == "存在已确认的结算单，请重新选择后再进行操作"
     
-    @allure.title("结算单修改操作")
-    @allure.description("测试步骤：点击修改结算单")
-    @allure.severity(allure.severity_level.CRITICAL)
+    @case_decorator(
+        story="结算单管理",
+        title="测试修改结算单",
+        description="测试修改结算单",
+        severity="critical",
+        order=0,
+        smoke=False,
+        tags=["结算单管理", "修改结算单","SETT-DOC-详情视图查询服务"]
+    )
     def test_sett_doc_modify(self):
         """测试修改结算单"""
         url = self.fin_path["结算单-详情视图查询服务"]["path"]
@@ -182,9 +228,15 @@ class TestSettDocBusiCheck(BaseTest):
         self.assert_util.assert_response_success(result)   
         self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("id",{}),"=",filtered_data["params"]["request"]["id"])
         
-    @allure.title("结算单修改保存操作")
-    @allure.description("测试步骤：1结算单修改保存")
-    @allure.severity(allure.severity_level.CRITICAL)
+    @case_decorator(
+        story="结算单管理",
+        title="测试结算单修改保存",
+        description="测试结算单修改保存",
+        severity="critical",
+        order=0,
+        smoke=False,
+        tags=["结算单管理", "结算单修改保存","SETT-DOC-结算单保存调整结算项服务"]
+    )
     #检查修改后的结算单金额，检查修改后生成的结算项状态、关联单据id
     def test_sett_doc_save(self):
         """结算单修改保存"""

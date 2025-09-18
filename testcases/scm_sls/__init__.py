@@ -119,6 +119,7 @@ class SlsBase(BaseTest):
         
         if cls.sls_cache_data:
             cls.so_type_info = cls.sls_cache_data.get("sls_config",{}).get("so_type_info",[])
+            cls.ORDER_TYPES = cls.so_type_info  # 添加缺失的属性
             for so_type  in  cls.so_type_info:
                 if so_type.get("so_type_code") == "STND":
                     cls.stnd_so_type_id = so_type.get("id")
@@ -127,9 +128,19 @@ class SlsBase(BaseTest):
                 if so_type.get("so_type_code") == "CENT":
                     cls.cent_so_type_id = so_type.get("id")
             cls.so_item_type_info = cls.sls_cache_data.get("sls_config",{}).get("so_item_type_info",[])
+            cls.ORDER_LINE_TYPES = cls.so_item_type_info  # 添加缺失的属性
             for so_item_type in cls.so_item_type_info:
                 if so_item_type.get("so_item_type_code") == "NORM":
                     cls.stnd_so_item_type_id = so_item_type.get("id")
+            
+            # 添加订单类型和订单行类型的组合
+            cls.ORDER_TYPE_LINE_COMBINATIONS = []
+            for so_type in cls.so_type_info:
+                for so_item_type in cls.so_item_type_info:
+                    cls.ORDER_TYPE_LINE_COMBINATIONS.append({
+                        "so_type": so_type,
+                        "so_item_type": so_item_type
+                    })
 
         # 初始化销售配置数据
         # cls.so_type_id = cls.ids.get("so_type_id")
