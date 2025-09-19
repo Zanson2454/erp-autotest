@@ -209,6 +209,85 @@ class SlsBase(BaseTest):
         except Exception as e:
             self.logger.error(f"创建订单失败: {str(e)}")
             raise
+    
+    def create_delivery_order(self, so_id):
+        """
+        基于销售订单创建交货单的公共方法
+        :param so_id: 销售订单ID
+        :return: 交货单ID（如果API返回的话）
+        """
+        try:
+            # 1. 查询销售订单的完整数据
+            order_data = self.db.query(f"""
+                SELECT h.*, i.* 
+                FROM sls_so_head_tr h 
+                LEFT JOIN sls_so_item_tr i ON h.id = i.so_id 
+                WHERE h.id = {so_id}
+            """)
+            
+            if not order_data:
+                raise ValueError(f"未找到销售订单数据，订单ID: {so_id}")
+            
+            # 2. 调用创建交货单API
+            api_path = self.get_api_path("SO-销售订单自动创建交货单服务")
+            params, url = self.get_api_params(api_path)
+            
+            # 3. 构造完整的销售订单数据传递给API
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id", "soCode", "soTitle", "soStatus", "custId", "slsOrgId", "slsComId", "slsDcId", "soTypeId", "baseCurrId", "slsCurrId", "soItems"], 
+                ["params", "request"]
+            )
+            
+            # 4. 获取订单行项目数据
+            so_items = []
+            for item in order_data:
+                if item.get('i.id'):  # 确保是订单行数据（使用别名）
+                    so_items.append({
+                        "id": item['i.id'],
+                        "soItemCode": item['so_item_code'],
+                        "matId": {"id": item['mat_id']},
+                        "matCode": item['mat_code'],
+                        "matName": item['mat_name'],
+                        "soItemSlsQty": float(item['so_item_sls_qty']) if item['so_item_sls_qty'] else 0,
+                        "soItemDelQty": float(item['so_item_del_qty']) if item['so_item_del_qty'] else 0,
+                        "soItemTransferQty": float(item['so_item_transfer_qty']) if item['so_item_transfer_qty'] else 0,
+                        "soItemPrice": float(item['so_item_price']) if item['so_item_price'] else 0,
+                        "uomSlsId": {"id": item['uom_sls_id']},
+                        "invOrgId": {"id": item['inv_org_id']},
+                        "invLocId": {"id": item['inv_loc_id']}
+                    })
+            
+            set_dict = {
+                "id": so_id,
+                "soCode": order_data[0]['so_code'],
+                "soTitle": order_data[0]['so_title'],
+                "soStatus": order_data[0]['so_status'],
+                "custId": {"id": order_data[0]['cust_id']},
+                "slsOrgId": {"id": order_data[0]['sls_org_id']},
+                "slsComId": {"id": order_data[0]['sls_com_id']},
+                "slsDcId": {"id": order_data[0]['sls_dc_id']},
+                "soTypeId": {"id": order_data[0]['so_type_id']},
+                "baseCurrId": {"id": order_data[0]['base_curr_id']},
+                "slsCurrId": {"id": order_data[0]['sls_curr_id']},
+                "soItems": so_items
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            # 5. 发送请求和断言
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            # 6. 保存交货单ID（如果API返回的话）
+            delivery_id = response.get("data", {}).get("data", {})
+            
+            # 7. 记录创建结果
+            self.logger.info(f"交货单创建成功 - 销售订单ID: {so_id}, 交货单ID: {delivery_id}")
+            
+            return delivery_id
+            
+        except Exception as e:
+            self.logger.error(f"创建交货单失败: {str(e)}")
+            raise
    
     def _init_sales_order(self, order_type="STND"):
         """初始化销售订单

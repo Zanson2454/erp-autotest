@@ -2,6 +2,7 @@ import pytest
 import allure
 from testcases.scm_sls import SlsBase
 from utils.report_util import a, case_decorator
+from utils.param_util import ParamUtil
 
 @allure.epic("销售管理")
 @allure.feature("销售订单-组织详情")

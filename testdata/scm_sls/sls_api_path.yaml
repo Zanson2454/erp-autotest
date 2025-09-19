@@ -4,6 +4,15 @@ apis:
   SLS-销售-取消提交服务:
     path: /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_CANNEL_COMMIT_EVENT_SERVICE
     method: POST
+  销售订单详情查询服务:
+    path: /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_QUERY_DETAIL_EVENT_SERVICE?tmodule=SCM_SLS
+    method: POST
+  销售订单编辑保存服务:
+    path: /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_HEAD_TR_ONLINE_EDIT_SAVE_SERVICE
+    method: POST
+  销售订单保存服务:
+    path: /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_SAVE_ACTION_SERVICE?tmodule=SCM_SLS
+    method: POST
   赠品策略-匹配范围表结构服务:
     path: /api/trantor/service/engine/execute/SCM_SLS$GIFT_STRATEGY_MATCH_SCOPE_TABLE_EVENT_SERVICE
     method: POST
@@ -159,6 +168,9 @@ apis:
     method: POST
   SO-删除服务:
     path: /api/trantor/service/engine/execute/SCM_SLS$SO_DELETE_EVENT_SERVICE
+    method: POST
+  销售订单单个删除服务:
+    path: /api/trantor/service/engine/execute/SCM_SLS$SO_DELETE_EVENT_SERVICE?tmodule=SCM_SLS
     method: POST
   销售订单-业务规则组条款查询服务:
     path: /api/trantor/service/engine/execute/SCM_SLS$SO_IES_BUSINESS_RULES_QUERY_EVENT_SERVICE
@@ -587,7 +599,7 @@ apis:
     path: /api/trantor/service/engine/execute/SCM_SLS$agent_sales_master_DATA_STATISTIC_SERVICE
     method: POST
   销售订单批量删除服务:
-    path: /api/trantor/service/engine/execute/SCM_SLS$sales_order_batch_delete_service
+    path: /api/trantor/service/engine/execute/SCM_SLS$sales_order_batch_delete_service?tmodule=SCM_SLS
     method: POST
   赠品策略-导入导出任务管理接口-通过OSS提交导入任务:
     path: /api/trantor/service/engine/execute/SCM_SLS$GIFT_STRATEGY_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
@@ -660,6 +672,9 @@ apis:
     method: POST
   SLS-销售订单-审批同意服务:
     path: /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_APPROVAL_AGREE_ACTION_SERVICE
+    method: POST
+  审批同意服务:
+    path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_TASK_SUBMIT_POST
     method: POST
   销售订单抬头表-导入导出任务管理接口-提交导出任务:
     path: /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST
