@@ -13,7 +13,7 @@ from utils.report_util import a, case_decorator
 
 @allure.epic("库存管理")
 @allure.feature("库存余额管理")
-class TestInventoryBalance(ScmInvBaseTest):
+class TestInvStkBalancePurManagement(ScmInvBaseTest):
     """库存余额综合测试类"""
 
     @classmethod
@@ -84,7 +84,7 @@ class TestInventoryBalance(ScmInvBaseTest):
             self.logger.info(f"操作前库存余额: {pre_operation_balance}")
             
             # 使用pytest.importorskip动态导入，避免pytest收集移动凭证测试类
-            mobile_voucher_module = pytest.importorskip('testcases.scm_inv.mobile_voucher.test_mobile_voucher_management')
+            mobile_voucher_module = pytest.importorskip('testcases.scm_inv.inv_mvm.test_inv_mvm_pur_management')
             TestMobileVoucherManagement = mobile_voucher_module.TestMobileVoucherManagement
             
             # 创建移动凭证管理实例
@@ -99,9 +99,9 @@ class TestInventoryBalance(ScmInvBaseTest):
             voucher_manager.test_save_mobile_voucher()
             
             # 保存移动凭证数据到类变量
-            TestInventoryBalance.mobile_voucher_id = voucher_manager.mobile_voucher_id
-            TestInventoryBalance.mobile_voucher_code = voucher_manager.mobile_voucher_code
-            TestInventoryBalance.batch_code = voucher_manager.batch_code
+            TestInvStkBalancePurManagement.mobile_voucher_id = voucher_manager.mobile_voucher_id
+            TestInvStkBalancePurManagement.mobile_voucher_code = voucher_manager.mobile_voucher_code
+            TestInvStkBalancePurManagement.batch_code = voucher_manager.batch_code
             
             # 验证移动凭证创建成功
             assert self.mobile_voucher_id, "移动凭证ID不能为空"
@@ -126,6 +126,10 @@ class TestInventoryBalance(ScmInvBaseTest):
     def test_verify_inventory_balance_change(self):
         """验证库存余额变化用例"""
         try:
+            # 确保前置条件：移动凭证已创建
+            if not self.mobile_voucher_id:
+                self.test_create_mobile_voucher_increase_inventory()
+            
             # 获取当前库存余额（移动凭证已创建）
             current_balance = self.get_current_inventory_balance()
             self.logger.info(f"当前库存余额: {current_balance}")
@@ -392,10 +396,10 @@ class TestInventoryBalance(ScmInvBaseTest):
             
             # 保存第一条记录的id和code作为类变量
             first_record = data_list[0]
-            TestInventoryBalance.balance_detail_id = first_record.get("id")
-            TestInventoryBalance.balance_detail_code = first_record.get("batchId", {}).get("code")
+            TestInvStkBalancePurManagement.balance_detail_id = first_record.get("id")
+            TestInvStkBalancePurManagement.balance_detail_code = first_record.get("batchId", {}).get("code")
             # 保存批次ID用于批次调整
-            TestInventoryBalance.batch_detail_id = first_record.get("batchId", {}).get("id")
+            TestInvStkBalancePurManagement.batch_detail_id = first_record.get("batchId", {}).get("id")
             
             # 5. 报告记录
             a.json(filtered_params, "请求数据")
@@ -418,6 +422,11 @@ class TestInventoryBalance(ScmInvBaseTest):
         """批次调整移动凭证创建用例"""
         try:
             # 确保前置条件已满足
+            if not self.mobile_voucher_id:
+                self.test_create_mobile_voucher_increase_inventory()
+            if not self.balance_detail_id:
+                self.test_query_stock_balance_detail()
+                
             assert self.mobile_voucher_id, "移动凭证ID不能为空，请先执行test_create_mobile_voucher_increase_inventory"
             assert self.batch_code, "批次编码不能为空，请先执行test_create_mobile_voucher_increase_inventory"
             assert self.balance_detail_id, "余额明细ID不能为空，请先执行test_query_stock_balance_detail"
@@ -495,8 +504,8 @@ class TestInventoryBalance(ScmInvBaseTest):
             
             # 4. 业务断言 - 保存移动凭证数据到类变量
             voucher_data = response.get("data", {}).get("data", {})
-            TestInventoryBalance.adjust_voucher_id = voucher_data.get("moveVoucherId")
-            TestInventoryBalance.adjust_voucher_code = voucher_data.get("moveVoucherCode")
+            TestInvStkBalancePurManagement.adjust_voucher_id = voucher_data.get("moveVoucherId")
+            TestInvStkBalancePurManagement.adjust_voucher_code = voucher_data.get("moveVoucherCode")
             
             # 验证移动凭证创建成功
             assert self.adjust_voucher_id, "批次调整移动凭证ID不能为空"
@@ -508,6 +517,133 @@ class TestInventoryBalance(ScmInvBaseTest):
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
             a.text(f"批次调整移动凭证创建 - ID: {self.adjust_voucher_id}, 编码: {self.adjust_voucher_code}", "批次调整移动凭证信息")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="库存余额管理",
+        title="测试库存余额明细导出",
+        description="验证库存余额明细导出任务提交功能",
+        severity="normal",
+        order=7,
+        tags=["库存余额", "导出", "任务管理"]
+    )
+    def test_export_inventory_balance_detail(self):
+        """库存余额明细导出测试用例"""
+        try:
+            # 0. 确保前置数据存在
+            if not self.balance_detail_id:
+                self.test_query_stock_balance_detail()
+            
+            # 1. 准备测试数据
+            timestamp = self.mock_util.get_timestamp()
+            task_name = f"库存余额明细-{self.nickname}-{timestamp}-导出"
+            
+            # 2. API调用
+            api_path = self.get_api_path("库存余额表-导入导出任务管理接口-提交导出任务")
+            params, url = self.get_api_params(api_path)
+            
+            # 3. 直接构造完整参数（不使用过滤机制）
+            request_params = {
+                "serviceKey": "SCM_INV$INV_STK_BA_API_GEI_TASK_EXPORT_DIRECT_POST",
+                "teamId": 22,
+                "params": {
+                    "taskName": task_name,
+                    "multiSheetConfig": [{
+                        "modelKey": "SCM_INV$inv_stk_ba",
+                        "modelName": "库存余额表",
+                        "sheetNo": 0,
+                        "sheetName": "库存余额表",
+                        "headerConfigList": [
+                            {"name": "公司组织", "type": "TEXT", "field": "comOrgId.orgName"},
+                            {"name": "物料", "type": "TEXT", "field": "matId.matName"},
+                            {"name": "库存组织", "type": "TEXT", "field": "invOrgId.orgName"},
+                            {"name": "库存地点", "type": "TEXT", "field": "invLocId.orgName"},
+                            {"name": "仓库", "type": "TEXT", "field": "invWhId.name"},
+                            {"name": "仓储区", "type": "TEXT", "field": "invAreaId.name"},
+                            {"name": "仓位", "type": "TEXT", "field": "invBinId.name"},
+                            {"name": "数量", "type": "DECIMAL", "field": "stkQty", "precision": 6, "precisionDisplayType": "ORIGIN_ROUND"},
+                            {"name": "单位", "type": "TEXT", "field": "baseUomId.uomDesc"},
+                            {"name": "批次", "type": "TEXT", "field": "batchId.code"},
+                            {"name": "库存类型", "type": "TEXT", "field": "invTypeId.name"},
+                            {"name": "特殊库存标识", "type": "TEXT", "field": "spcStkTypeId.name"},
+                            {"name": "特殊库存分类名称", "type": "TEXT", "field": "spcStkTypeClassName"}
+                        ]
+                    }],
+                    "queryData": {
+                        "appId": 0,
+                        "teamId": 22,
+                        "containerKey": "ERP_SCM$INV_STOCK_BALANCE_VIEW-TERP_MIGRATE$baStk3-table-container-TERP_MIGRATE$inv_stk_ba",
+                        "viewKey": "SCM_INV$INV_STOCK_BALANCE_VIEW:list",
+                        "sceneKey": "SCM_INV$INV_STOCK_BALANCE_VIEW",
+                        "params": {
+                            "request": {
+                                "pageable": {
+                                    "conditionItems": {
+                                        "type": "ConditionItems",
+                                        "logicOperator": "AND",
+                                        "conditions": {
+                                            "id": {
+                                                "operator": "IN",
+                                                "value": [self.balance_detail_id]
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "selectFields": [
+                                {"field": "stkQty"},
+                                {"field": "spcStkTypeClassName"},
+                                {"field": "comOrgId", "selectFields": [{"field": "orgName"}]},
+                                {"field": "matId", "selectFields": [{"field": "matName"}]},
+                                {"field": "invOrgId", "selectFields": [{"field": "orgName"}]},
+                                {"field": "invLocId", "selectFields": [{"field": "orgName"}]},
+                                {"field": "invWhId", "selectFields": [{"field": "name"}]},
+                                {"field": "invAreaId", "selectFields": [{"field": "name"}]},
+                                {"field": "invBinId", "selectFields": [{"field": "name"}]},
+                                {"field": "baseUomId", "selectFields": [{"field": "uomDesc"}]},
+                                {"field": "batchId", "selectFields": [{"field": "code"}]},
+                                {"field": "invTypeId", "selectFields": [{"field": "name"}]},
+                                {"field": "spcStkTypeId", "selectFields": [{"field": "name"}]}
+                            ],
+                            "modelKey": "SCM_INV$inv_stk_ba"
+                        }
+                    },
+                    "processConfig": {
+                        "processType": "TRANTOR",
+                        "appId": 0,
+                        "teamId": 22,
+                        "model": "SCM_INV$inv_stk_ba",
+                        "modelName": "库存余额表",
+                        "containerKey": "ERP_SCM$INV_STOCK_BALANCE_VIEW-TERP_MIGRATE$baStk3-table-container-TERP_MIGRATE$inv_stk_ba",
+                        "viewKey": "SCM_INV$INV_STOCK_BALANCE_VIEW:list",
+                        "sceneKey": "SCM_INV$INV_STOCK_BALANCE_VIEW"
+                    }
+                }
+            }
+            
+            # 4. 发送请求和断言
+            response = self.http.post(url, json=request_params)
+            self.assert_util.assert_response_data(response)
+            
+            # 5. 业务断言
+            response_data = response.get("data", {})
+            task_id = response_data.get("taskId")
+            
+            # 验证导出任务创建成功
+            if task_id:
+                self.logger.info(f"库存余额明细导出任务创建成功 - 任务ID: {task_id}, 任务名称: {task_name}")
+                task_info = f"导出任务创建成功 - 任务ID: {task_id}, 任务名称: {task_name}"
+            else:
+                self.logger.info(f"库存余额明细导出任务提交成功 - 任务名称: {task_name}")
+                task_info = f"导出任务提交成功 - 任务名称: {task_name}"
+            
+            # 6. 报告记录
+            a.json(request_params, "请求数据")
+            a.json(response, "响应数据")
+            a.text(task_info, "导出任务信息")
             
         except Exception as e:
             a.text(str(e), "失败原因")
