@@ -428,88 +428,7 @@ api_params:
   /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_ITEM_FREEZE_EVENT_SERVICE:
     params:
       request:
-        itemNumber: 0
-        volumUomId: {}
-        orderNumber: 0
-        deliveryModeId: {}
-        salesPrice: 0
-        soItemDelQty: 0
-        nonDiscount: false
-        invLocId: {}
-        delPhone: null
-        soDocDate: 0
-        soCode: null
-        deliveryLackLimit: 0
-        createdAt: 0
-        matBasePrice: 0
-        serviceVendId: {}
-        soItemTypeId: {}
-        soAssociationItemId: {}
-        delAddrId: {}
-        soItemSlsQty: 0
-        soItemStatus: null
-        id: 0
-        taxRateId: {}
-        soItemTransferQty: 0
-        taxAmt: 0
-        invOrgId: {}
-        soExtItemCode: null
-        matName: null
-        updatedAt: 0
-        soId: {}
-        uomSlsId: {}
-        uomBaseId: {}
-        updatedBy: {}
-        originOrgId: 0
-        expressComId: {}
-        soSchlDelDate: 0
-        parentItemType: {}
-        soItemGrossPrice: 0
-        soItemSettQty: 0
-        version: 0
-        isCompleteSet: false
-        soItemCode: null
-        taxRate: 0
-        soSchedules:
-        - {}
-        netWeight: 0
-        soItemBaseQty: 0
-        discountInfo: null
-        matId: {}
-        parentItem: {}
-        weightUomId: {}
-        deliveryOverdoseLimit: 0
-        discountAmt: 0
-        remark: null
-        atpCheck: false
-        bomWhether: false
-        isFreeze: false
-        matVolum: 0
-        isDeliveryCompleted: false
-        soItemOutstandingQty: 0
-        requestId: null
-        externalPriceInfo: null
-        bomQty: 0
-        isPaymentCompleted: false
-        prItemCode: null
-        soItemBusinessStatus: null
-        usageType: null
-        soItemTypeGroupId: {}
-        netTradeAmt: 0
-        delAddrDetail: null
-        bomId: {}
-        isRev: false
-        soItemPrice: 0
-        deliveryType: null
-        delPersonName: null
-        parentItemNumber: 0
-        deliveryInterceptFail: false
-        salesAmt: 0
-        grossWeight: 0
-        deleted: 0
-        createdBy: {}
-        matCode: null
-        grossTradeAmt: 0
+        id: null
     serviceKey: SCM_SLS$SLS_SO_ITEM_FREEZE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_SLS$SO_MATCH_ACC_EVENT_SERVICE:
     params:
@@ -3219,6 +3138,34 @@ api_params:
         soTitle: null
         invLoc: {}
     serviceKey: SCM_SLS$SO_DELETE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_TASK_SUBMIT_POST:
+    serviceKey: "ERP_GEN$API_TRANTOR_WORKFLOW_V2_TASK_SUBMIT_POST"
+    params:
+      _rootParams:
+        pageKey: "sys_common$approval_task_center"
+        sceneKey: "sys_common$approval_task_center"
+        buttonName: "同意"
+        buttonKey: "AGREE"
+      taskInstanceId: null
+      auditResult:
+        remark: "同意"
+        decisionType: "AGREE"
+    pageKey: "sys_common$approval_task_center"
+    sceneKey: "sys_common$approval_task_center"
+    buttonName: "同意"
+    buttonKey: "AGREE"
+  /api/trantor/service/engine/execute/SCM_SLS$SO_DELETE_EVENT_SERVICE?tmodule=SCM_SLS:
+    sceneKey: "SCM_SLS$sls_so_730"
+    viewKey: "SCM_SLS$sls_so_730:list"
+    viewTitle: "list"
+    buttonKey: "SCM_SLS$sls_so_730-TERP_MIGRATE$sls_so-record-actions-1-button-3"
+    buttonName: "删除"
+    appId: 0
+    teamId: 22
+    serviceKey: "SCM_SLS$SO_DELETE_EVENT_SERVICE"
+    params:
+      request:
+        id: null
   /api/trantor/service/engine/execute/SCM_SLS$SO_IES_BUSINESS_RULES_QUERY_EVENT_SERVICE:
     params:
       request:
@@ -8458,12 +8405,19 @@ api_params:
       userContent: null
       agentKey: null
     serviceKey: SCM_SLS$agent_sales_master_DATA_STATISTIC_SERVICE
-  /api/trantor/service/engine/execute/SCM_SLS$sales_order_batch_delete_service:
+  /api/trantor/service/engine/execute/SCM_SLS$sales_order_batch_delete_service?tmodule=SCM_SLS:
+    sceneKey: "SCM_SLS$sls_so_730"
+    viewKey: "SCM_SLS$sls_so_730:list"
+    viewTitle: "list"
+    buttonKey: "SCM_SLS$sls_so_730-TERP_MIGRATE$sls_so-batch-actions-1-button-2"
+    buttonName: "批量删除"
+    appId: 0
+    teamId: 22
+    serviceKey: "SCM_SLS$sales_order_batch_delete_service"
     params:
       request:
         ids:
         - 0
-    serviceKey: SCM_SLS$sales_order_batch_delete_service
   /api/trantor/service/engine/execute/SCM_SLS$GIFT_STRATEGY_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
     params:
       sheetConfig: {}
