@@ -82,4 +82,22 @@ def create_special_method():
 - **缓存获取**：优先从inv_cache_data获取配置数据
 - **异常处理**：所有测试用例必须有try-catch
 
+## ⚠️ 常见错误避免
+1. **参数过滤错误**：
+   - ❌ 错误：`["request"], ["params", "request"]` - 不要过滤request字段
+   - ✅ 正确：`["params", "request"]` - 只过滤业务字段
+   
+2. **ID参数传递错误**：
+   - ❌ 错误：`{"request": {"id": xxx}}` - 不要嵌套request
+   - ✅ 正确：`{"id": xxx}` - 直接传id
+
+3. **测试执行顺序控制**：
+   - ✅ 正确：使用 `case_decorator(order=N)` - 已内置pytest.mark.run支持
+   - ❌ 错误：重复使用 `@pytest.mark.run(order=N)` - 不需要额外添加
+
+4. **测试数据共享问题**：
+   - ❌ 错误：使用 `self.data_id` - 实例变量不在测试方法间共享
+   - ✅ 正确：使用 `self.__class__.data_id` - 类变量可在测试方法间共享
+   - 📝 原因：pytest为每个测试方法创建新的测试类实例
+
 遵循这些规则，确保代码质量和效率！
