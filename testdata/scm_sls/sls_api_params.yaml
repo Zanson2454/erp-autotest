@@ -9552,3 +9552,261 @@ api_params:
         context:
           importMode: null
     serviceKey: SCM_SLS$SLS_WH_FIND_RULE_CF_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_SAVE_ACTION_SERVICE?tmodule=SCM_SLS:
+    sceneKey: SCM_SLS$sls_so_price
+    viewKey: SCM_SLS$sls_so_price:edit
+    viewTitle: edit
+    buttonKey: SCM_SLS$sls_so_price-TERP_MIGRATE$sls_so-editView-footer-save
+    buttonName: 保存
+    appId: 0
+    teamId: 22
+    serviceKey: SCM_SLS$SLS_SO_SAVE_ACTION_SERVICE
+    params:
+      request:
+        id: null
+        reCalculate: false
+        soCode: null
+        priceIdempotent: null
+        soTypeId:
+          id: null
+          context: {}
+          version: 4
+          deleted: 0
+          createdAt: 0
+          updatedAt: 0
+          createdBy: 0
+          updatedBy: 0
+          soTypeCode: null
+          soTypeName: null
+          partnerProcedureHeadRef:
+            id: 0
+          status: null
+          submitApproval: true
+          modifyApproval: false
+          btClass: null
+          effectiveDays: 5
+          isRev: false
+        isRev: false
+        soTitle: null
+        soNotes: null
+        soDocDate: 0
+        effectiveAt: 0
+        priceCalcDate: 0
+        soDesc: null
+        soAssociationCode: null
+        custId:
+          id: null
+          context: {}
+          version: 0
+          deleted: 0
+          createdAt: 0
+          updatedAt: 0
+          createdBy: 0
+          updatedBy: 0
+          code: null
+          status: null
+          name: null
+          partnerIdentity: []
+          partnerTypeId:
+            id: null
+            context: {}
+            version: 0
+            deleted: 0
+            createdAt: 0
+            updatedAt: 0
+            createdBy: 0
+            updatedBy: 0
+            code: null
+            name: null
+            desc: null
+            classType: null
+            isInternal: false
+            isAddrRequired: false
+            isBankRequired: false
+            status: null
+            isOverseasPartner: false
+            isNeedMaintainService: false
+            role: null
+            channelType: null
+          comCorporation: null
+          bizLicenseNo: null
+          enterpriseType: null
+          registeredCapital: null
+          socialCreditCode: null
+          taxpayersNum: null
+          bizScope: null
+          intro: null
+          addressDetail: null
+          classType: null
+          isInternal: false
+        addrId:
+          id: null
+        addrDetail: null
+        custPersonName: null
+        custPhone: null
+        slsPerson:
+          id: null
+          context: {}
+          name: null
+        slsPhone: null
+        slsOrgId:
+          id: null
+          context: {}
+          orgName: null
+          comOrgId:
+            id: null
+        slsDcId:
+          id: null
+          context: {}
+          code: null
+          name: null
+          isOnline: false
+        slsComId:
+          id: null
+        slsCurrId:
+          id: null
+          context: {}
+          version: 0
+          deleted: 0
+          createdAt: 0
+          updatedAt: 0
+          createdBy: 0
+          updatedBy: 0
+          currCode: null
+          currName: null
+          symbol: null
+          remark: null
+        baseCurrId:
+          id: null
+        isFixedExchRate: false
+        currExchangeRateType: null
+        exchRate: 1
+        totalAmt: null
+        discountAmt: null
+        grossBaseAmt: null
+        soItems:
+        - bomWhether: false
+          soSchlDelDate: 0
+          context: {}
+          soItemCode: null
+          matId:
+            id: null
+            context: {}
+            matCode: null
+            matName: null
+            imageUrl: null
+            genMatTypeCfId:
+              id: null
+            baseUomId: null
+            weightUomId: null
+            grossWeight: null
+            netWeight: null
+            atpGroupId: null
+            customMat: false
+            isKitSls: false
+            isCompleteSetDel: false
+            slsSoItemTypeGroupId: null
+            invOrgId:
+              id: null
+            invLovId:
+              id: null
+            allowShortageShortagePercent: 0
+            allowSurplusSurplusPercent: 0
+            slsOrgId:
+              id: null
+            slsDcId:
+              id: null
+            slsUomId:
+              id: null
+            slsBasePrice: null
+            specModel: null
+          matCode: null
+          matName: null
+          matBasePrice: null
+          soItemSlsQty: null
+          soItemGrossPrice: null
+          taxRateId: null
+          taxRate: null
+          taxAmt: null
+          grossTradeAmt: null
+          soItemTypeId:
+            id: null
+            context: {}
+            version: 0
+            deleted: 0
+            createdAt: 0
+            updatedAt: 0
+            createdBy: 0
+            updatedBy: 0
+            soItemTypeCode: null
+            soItemTypeName: null
+            delRelv: true
+            autoDelivery: false
+            checkInvLocRelv: true
+            status: null
+            isAutomaticComplete: true
+            isCompletePickControl: false
+            autoPr: false
+            autoOutDnPost: false
+            settlement: true
+            priceControlType: null
+          uomSlsId:
+            id: null
+            context: {}
+          uomBaseId:
+            id: null
+            context: {}
+          invOrgId:
+            id: null
+            context: {}
+          invLocId:
+            id: null
+            context: {}
+          weightUomId:
+            id: null
+            context: {}
+          grossWeight: null
+          netWeight: null
+          volumUomId:
+            context: {}
+          delAddrId:
+            id: null
+            context: {}
+          itemNumber: 1
+          atpCheck: true
+          salesPrice: null
+          matTypeId: null
+          soItemTypeGroupId: null
+          isCompleteSet: false
+          salesAmt: null
+          soItemBaseQty: null
+        slsPartnerLinks:
+        - context: {}
+          partnerTypeId:
+            id: null
+          partnerClass: null
+          partnerId:
+            id: null
+        slsAttachmentLinks: null
+        slsTextLinks: null
+  /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_MANUAL_SUBMIT?tmodule=SCM_SLS:
+    sceneKey: SCM_SLS$sls_so_price
+    viewKey: SCM_SLS$sls_so_price:list
+    viewTitle: list
+    buttonKey: SCM_SLS$sls_so_price-RdEaeGYQWColCWLGgyCot
+    buttonName: 提交
+    appId: 0
+    teamId: 22
+    serviceKey: SCM_SLS$SLS_SO_MANUAL_SUBMIT
+    params:
+      request:
+        id: null
+  /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_DATA_REFER_CREATE_EVENT_SERVICE?tmodule=SCM_SLS:
+    sceneKey: SCM_SLS$sls_so_730
+    viewKey: SCM_SLS$sls_so_730:edit
+    appId: 0
+    teamId: 22
+    serviceKey: SCM_SLS$SLS_SO_DATA_REFER_CREATE_EVENT_SERVICE
+    params:
+      request:
+        id: null

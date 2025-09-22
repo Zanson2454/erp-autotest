@@ -116,6 +116,8 @@ class SlsBase(BaseTest):
             cls.inv_loc_id = cls.md_cache_data.get("org_info",{}).get("inv_loc_info",[])[0].get("id")
             cls.partner_type_id = cls.md_cache_data.get("partner_info",{}).get("partner_type_cf",{}).get("sls_partner_type",[])[0].get("id")
             cls.mat_id = cls.md_cache_data.get("mat_info",{}).get("mat_md",{}).get("FINP",[])[0].get("id")
+            cls.mat_code = cls.md_cache_data.get("mat_info",{}).get("mat_md",{}).get("FINP",[])[0].get("mat_code")
+            cls.mat_name = cls.md_cache_data.get("mat_info",{}).get("mat_md",{}).get("FINP",[])[0].get("mat_name")
         
         if cls.sls_cache_data:
             cls.so_type_info = cls.sls_cache_data.get("sls_config",{}).get("so_type_info",[])
@@ -210,84 +212,6 @@ class SlsBase(BaseTest):
             self.logger.error(f"创建订单失败: {str(e)}")
             raise
     
-    def create_delivery_order(self, so_id):
-        """
-        基于销售订单创建交货单的公共方法
-        :param so_id: 销售订单ID
-        :return: 交货单ID（如果API返回的话）
-        """
-        try:
-            # 1. 查询销售订单的完整数据
-            order_data = self.db.query(f"""
-                SELECT h.*, i.* 
-                FROM sls_so_head_tr h 
-                LEFT JOIN sls_so_item_tr i ON h.id = i.so_id 
-                WHERE h.id = {so_id}
-            """)
-            
-            if not order_data:
-                raise ValueError(f"未找到销售订单数据，订单ID: {so_id}")
-            
-            # 2. 调用创建交货单API
-            api_path = self.get_api_path("SO-销售订单自动创建交货单服务")
-            params, url = self.get_api_params(api_path)
-            
-            # 3. 构造完整的销售订单数据传递给API
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id", "soCode", "soTitle", "soStatus", "custId", "slsOrgId", "slsComId", "slsDcId", "soTypeId", "baseCurrId", "slsCurrId", "soItems"], 
-                ["params", "request"]
-            )
-            
-            # 4. 获取订单行项目数据
-            so_items = []
-            for item in order_data:
-                if item.get('i.id'):  # 确保是订单行数据（使用别名）
-                    so_items.append({
-                        "id": item['i.id'],
-                        "soItemCode": item['so_item_code'],
-                        "matId": {"id": item['mat_id']},
-                        "matCode": item['mat_code'],
-                        "matName": item['mat_name'],
-                        "soItemSlsQty": float(item['so_item_sls_qty']) if item['so_item_sls_qty'] else 0,
-                        "soItemDelQty": float(item['so_item_del_qty']) if item['so_item_del_qty'] else 0,
-                        "soItemTransferQty": float(item['so_item_transfer_qty']) if item['so_item_transfer_qty'] else 0,
-                        "soItemPrice": float(item['so_item_price']) if item['so_item_price'] else 0,
-                        "uomSlsId": {"id": item['uom_sls_id']},
-                        "invOrgId": {"id": item['inv_org_id']},
-                        "invLocId": {"id": item['inv_loc_id']}
-                    })
-            
-            set_dict = {
-                "id": so_id,
-                "soCode": order_data[0]['so_code'],
-                "soTitle": order_data[0]['so_title'],
-                "soStatus": order_data[0]['so_status'],
-                "custId": {"id": order_data[0]['cust_id']},
-                "slsOrgId": {"id": order_data[0]['sls_org_id']},
-                "slsComId": {"id": order_data[0]['sls_com_id']},
-                "slsDcId": {"id": order_data[0]['sls_dc_id']},
-                "soTypeId": {"id": order_data[0]['so_type_id']},
-                "baseCurrId": {"id": order_data[0]['base_curr_id']},
-                "slsCurrId": {"id": order_data[0]['sls_curr_id']},
-                "soItems": so_items
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            
-            # 5. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-            
-            # 6. 保存交货单ID（如果API返回的话）
-            delivery_id = response.get("data", {}).get("data", {})
-            
-            # 7. 记录创建结果
-            self.logger.info(f"交货单创建成功 - 销售订单ID: {so_id}, 交货单ID: {delivery_id}")
-            
-            return delivery_id
-            
-        except Exception as e:
-            self.logger.error(f"创建交货单失败: {str(e)}")
-            raise
    
     def _init_sales_order(self, order_type="STND"):
         """初始化销售订单
@@ -565,6 +489,248 @@ class SlsBase(BaseTest):
         except Exception as e:
             self.logger.error(f"提交订单失败: {str(e)}")
             raise
+
+    # ==================== 报价单相关方法 ====================
+    
+    def create_quote(self, submit=False):
+        """
+        创建报价单的公共方法
+        :param submit: 是否提交（True=已生效态，False=草稿态）
+        :return: 报价单ID
+        """
+        try:
+            # 1. 准备报价单基础数据
+            self._prepare_quote_data()
+            
+            # 2. 直接保存或提交（跳过定价步骤）
+            if submit:
+                self._quote_submit()
+                return self.quote_id_submit  # 返回提交后的报价单ID
+            else:
+                self._quote_save()
+                return self.quote_id_save  # 返回草稿报价单ID
+
+        except Exception as e:
+            self.logger.error(f"创建报价单失败: {str(e)}")
+            raise
+    
+    def _prepare_quote_data(self):
+        """准备报价单基础数据"""
+        try:
+            # 生成报价单编码和描述
+            quote_code = self.mock_util.generate_unique_code(tag="QT")
+            quote_name = f"自动化测试报价_{self.mock_util.get_timestamp()}"
+            
+            # 准备报价单基础数据
+            self.quote_data = {
+                "soCode": quote_code,
+                "soDesc": quote_name,
+                "custId": {"id": self.cust_id},
+                "slsOrgId": {"id": self.sls_org_id},
+                "slsComId": {"id": self.com_org_id},
+                "slsDcId": {"id": self.sls_dc_id},
+                "soTypeId": {"id": self.stnd_so_type_id},
+                "baseCurrId": {"id": self.curr_id},
+                "slsCurrId": {"id": self.curr_id},
+                "soItems": [
+                    {
+                        "matId": {"id": self.mat_id},
+                        "matCode": "AUTOTEST_MAT_FINP",
+                        "matName": "成品物料(自动化-带批次)",
+                        "soItemSlsQty": 10,
+                        "soItemGrossPrice": 100.0,
+                        "uomSlsId": {"id": 2004001},
+                        "uomBaseId": {"id": 2004001},
+                        "soItemTypeId": {"id": self.stnd_so_item_type_id},
+                        "invOrgId": {"id": self.inv_org_id},
+                        "invLocId": {"id": self.inv_loc_id},
+                        "soSchlDelDate": self.mock_util.get_timestamp(timestamp=True, day_offset=1)
+                    }
+                ]
+            }
+            
+            self.logger.info(f"报价单基础数据准备完成: {quote_code}")
+            
+        except Exception as e:
+            self.logger.error(f"准备报价单数据失败: {str(e)}")
+            raise
+    
+    def _quote_calculate_pricing(self):
+        """报价单定价计算"""
+        try:
+            # 确保有可定价的数据
+            if not self.quote_data:
+                self._prepare_quote_data()
+            
+            api_path = self.get_api_path("SLS-销售报价-前端定价服务")
+            params, url = self.get_api_params(api_path)
+            
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["soCode", "soDesc", "custId", "slsOrgId", "slsComId", "slsDcId", "soTypeId", "baseCurrId", "slsCurrId", "soItems"], 
+                ["params", "request"]
+            )
+            
+            ParamUtil.set_request_params(filtered_params, self.quote_data)
+            
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            # 保存定价后的数据
+            self.quote_data_price = response.get("data", {}).get("data", {})
+            self.quote_id_price = self.quote_data_price.get("id")
+            
+            self.logger.info(f"报价单定价计算完成，报价单ID: {self.quote_id_price}")
+            
+        except Exception as e:
+            self.logger.error(f"报价单定价计算失败: {str(e)}")
+            raise
+    
+    def _quote_save(self):
+        """报价单保存服务"""
+        try:
+            # 确保有可保存的报价单数据
+            if not self.quote_data:
+                self._prepare_quote_data()
+            
+            api_path = self.get_api_path("SLS-销售报价-保存服务")
+            params, url = self.get_api_params(api_path)
+            
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["soCode", "soDesc", "custId", "slsOrgId", "slsComId", "slsDcId", "soTypeId", "baseCurrId", "slsCurrId", "soItems"], 
+                ["params", "request"]
+            )
+            
+            ParamUtil.set_request_params(filtered_params, self.quote_data)
+            
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            # 保存草稿报价单ID
+            response_data = response.get("data", {}).get("data", {})
+            self.quote_id_save = response_data.get("id")
+            
+            self.logger.info(f"报价单保存成功，ID: {self.quote_id_save}")
+            
+        except Exception as e:
+            self.logger.error(f"报价单保存失败: {str(e)}")
+            raise
+    
+    def _quote_submit(self):
+        """报价单提交服务"""
+        try:
+            # 确保有可提交的报价单
+            if not self.quote_data:
+                self._prepare_quote_data()
+            
+            # 先保存
+            self._quote_save()
+            
+            # 再提交
+            api_path = self.get_api_path("SLS-销售报价-提交服务")
+            params, url = self.get_api_params(api_path)
+            
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], 
+                ["params", "request"]
+            )
+            
+            set_dict = {"id": self.quote_id_save}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            # 保存提交后的报价单ID
+            response_data = response.get("data", {}).get("data", {})
+            self.quote_id_submit = response_data.get("id")
+            
+            self.logger.info(f"报价单提交成功，ID: {self.quote_id_submit}")
+            
+        except Exception as e:
+            self.logger.error(f"报价单提交失败: {str(e)}")
+            raise
+
+    # ==================== 交货单相关方法 ====================
+    
+    def create_delivery_order(self, so_id):
+        """
+        基于销售订单创建交货单的公共方法
+        :param so_id: 销售订单ID
+        :return: 交货单ID（如果API返回的话）
+        """
+        try:
+            # 1. 查询销售订单的完整数据
+            order_data = self.db.query("""
+                SELECT h.*, i.* 
+                FROM sls_so_head_tr h 
+                LEFT JOIN sls_so_item_tr i ON h.id = i.so_id 
+                WHERE h.id = %s
+            """, (so_id,))
+            
+            if not order_data:
+                raise ValueError(f"未找到销售订单数据，订单ID: {so_id}")
+            
+            # 2. 调用创建交货单API
+            api_path = self.get_api_path("SO-销售订单自动创建交货单服务")
+            params, url = self.get_api_params(api_path)
+            
+            # 3. 构造完整的销售订单数据传递给API
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id", "soCode", "soTitle", "soStatus", "custId", "slsOrgId", "slsComId", "slsDcId", "soTypeId", "baseCurrId", "slsCurrId", "soItems"], 
+                ["params", "request"]
+            )
+            
+            # 4. 获取订单行项目数据
+            so_items = []
+            for item in order_data:
+                if item.get('i.id'):  # 确保是订单行数据（使用别名）
+                    so_items.append({
+                        "id": item['i.id'],
+                        "soItemCode": item['so_item_code'],
+                        "matId": {"id": item['mat_id']},
+                        "matCode": item['mat_code'],
+                        "matName": item['mat_name'],
+                        "soItemSlsQty": float(item['so_item_sls_qty']) if item['so_item_sls_qty'] else 0,
+                        "soItemDelQty": float(item['so_item_del_qty']) if item['so_item_del_qty'] else 0,
+                        "soItemTransferQty": float(item['so_item_transfer_qty']) if item['so_item_transfer_qty'] else 0,
+                        "soItemPrice": float(item['so_item_price']) if item['so_item_price'] else 0,
+                        "uomSlsId": {"id": item['uom_sls_id']},
+                        "invOrgId": {"id": item['inv_org_id']},
+                        "invLocId": {"id": item['inv_loc_id']}
+                    })
+            
+            set_dict = {
+                "id": so_id,
+                "soCode": order_data[0]['so_code'],
+                "soTitle": order_data[0]['so_title'],
+                "soStatus": order_data[0]['so_status'],
+                "custId": {"id": order_data[0]['cust_id']},
+                "slsOrgId": {"id": order_data[0]['sls_org_id']},
+                "slsComId": {"id": order_data[0]['sls_com_id']},
+                "slsDcId": {"id": order_data[0]['sls_dc_id']},
+                "soTypeId": {"id": order_data[0]['so_type_id']},
+                "baseCurrId": {"id": order_data[0]['base_curr_id']},
+                "slsCurrId": {"id": order_data[0]['sls_curr_id']},
+                "soItems": so_items
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            # 5. 发送请求和断言
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            # 6. 保存交货单ID（如果API返回的话）
+            delivery_id = response.get("data", {}).get("data", {})
+            
+            # 7. 记录创建结果
+            self.logger.info(f"交货单创建成功 - 销售订单ID: {so_id}, 交货单ID: {delivery_id}")
+            
+            return delivery_id
+            
+        except Exception as e:
+            self.logger.error(f"创建交货单失败: {str(e)}")
+            raise
+
 
 if __name__ == "__main__":
     SlsBase.setup_class()
