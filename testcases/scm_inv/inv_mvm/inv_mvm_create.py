@@ -89,170 +89,6 @@ class MobileVoucherCreator(ScmInvBaseTest):
         except Exception as e:
             self.logger.error(f"创建采购入库移动凭证失败: {str(e)}")
             raise
-    
-    def create_special_stock_voucher(
-        self,
-        voucher_type,        # 必填：凭证类型 "in"(入库) 或 "out"(出库)
-        spc_stk_type_id,     # 必填：特殊库存标识ID
-        spc_stk_type_class,  # 必填：特殊库存分类ID
-        spc_stk_type_class_name=None,  # 可选：特殊库存分类名称
-        mat_id=None,         # 可选：物料ID，不传则使用默认成品物料
-        qty=1,               # 必填：数量
-        mvmTypeId=None,      # 可选：移动类型ID，不传则根据voucher_type自动选择
-        batch_id=None,       # 可选：出库时的批次ID（出库必需，入库时忽略）
-        batch_code=None,     # 可选：入库时的批次编码（入库时可选）
-        comOrgId=None,       # 可选：公司组织ID，不传则使用默认
-        invOrgId=None,       # 可选：库存组织ID，不传则使用默认
-        invLocId=None,       # 可选：库存地点ID，不传则使用默认
-        invWhId=None,        # 可选：仓库ID
-        invAreaId=None,      # 可选：仓储区ID  
-        invBinId=None,       # 可选：仓位ID
-        remark=None,         # 可选：备注
-        mat_items=None       # 可选：多物料行 [{"mat_id": xx, "qty": xx, "batch_id": xx}, ...]
-    ):
-        """
-        创建特殊库存移动凭证（支持入库和出库）
-        
-        :param voucher_type: 凭证类型，"in"(入库) 或 "out"(出库)
-        :param spc_stk_type_id: 特殊库存标识ID（必填）
-        :param spc_stk_type_class: 特殊库存分类ID（必填）
-        :param spc_stk_type_class_name: 特殊库存分类名称
-        :param mat_id: 物料ID，不传则使用默认成品物料（单物料模式）
-        :param qty: 数量，默认1（单物料模式）
-        :param mvmTypeId: 移动类型ID，不传则根据voucher_type自动选择
-        :param batch_id: 出库时的批次ID（出库必需）
-        :param batch_code: 入库时的批次编码（入库时可选）
-        :param comOrgId: 公司组织ID，不传则使用默认
-        :param invOrgId: 库存组织ID，不传则使用默认
-        :param invLocId: 库存地点ID，不传则使用默认
-        :param invWhId: 仓库ID，可选
-        :param invAreaId: 仓储区ID，可选
-        :param invBinId: 仓位ID，可选
-        :param remark: 备注
-        :param mat_items: 多物料行，传此参数时忽略mat_id和qty
-        :return: 移动凭证信息字典
-        """
-        try:
-            # 1. 参数验证
-            if voucher_type not in ["in", "out"]:
-                raise ValueError("凭证类型必须是 'in'(入库) 或 'out'(出库)")
-            if not spc_stk_type_id:
-                raise ValueError("特殊库存标识ID不能为空")
-            if not spc_stk_type_class:
-                raise ValueError("特殊库存分类ID不能为空")
-            
-            # 2. 根据类型设置默认值
-            if voucher_type == "in":
-                # 入库：采购类型
-                mvmTypeId = mvmTypeId or self.inv_cache_data["org_info"]["inv_mvm_type_cf_pur"][0]["id"]
-                show_type = "IN"
-                voucher_name = "特殊库存采购入库"
-            else:
-                # 出库：销售类型
-                mvmTypeId = mvmTypeId or self.inv_cache_data["org_info"]["inv_mvm_type_cf_sls"][0]["id"]
-                show_type = "OUT"
-                voucher_name = "特殊库存销售出库"
-            
-            comOrgId = comOrgId or self.comOrgId
-            invOrgId = invOrgId or self.invOrgId
-            invLocId = invLocId or self.invLocId
-            
-            # 3. 处理物料行数据
-            items = []
-            total_qty = 0
-            
-            if mat_items:
-                # 多物料行模式
-                for item in mat_items:
-                    item_mat_id = item.get("mat_id")
-                    item_qty = item.get("qty", 1)
-                    item_batch_id = item.get("batch_id") if voucher_type == "out" else None
-                    total_qty += item_qty
-                    
-                    voucher_item = self._build_special_stock_item(
-                        voucher_type=voucher_type,
-                        mat_id=item_mat_id, qty=item_qty, mvmTypeId=mvmTypeId,
-                        invOrgId=invOrgId, invLocId=invLocId,
-                        invWhId=invWhId, invAreaId=invAreaId, invBinId=invBinId,
-                        spc_stk_type_id=spc_stk_type_id,
-                        spc_stk_type_class=spc_stk_type_class,
-                        spc_stk_type_class_name=spc_stk_type_class_name,
-                        batch_id=item_batch_id,
-                        batch_code=batch_code
-                    )
-                    items.append(voucher_item)
-            else:
-                # 单物料行模式
-                mat_id = mat_id or self.inv_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
-                total_qty = qty
-                
-                # 出库时检查批次
-                if voucher_type == "out" and not batch_id:
-                    need_batch = self._check_need_batch(mat_id)
-                    if need_batch:
-                        available_batches = self.get_available_batches(mat_id, invOrgId, invLocId)
-                        if not available_batches:
-                            raise ValueError(f"物料{mat_id}没有可用批次进行特殊库存出库")
-                        batch_id = available_batches[0]["id"]
-                
-                voucher_item = self._build_special_stock_item(
-                    voucher_type=voucher_type,
-                    mat_id=mat_id, qty=qty, mvmTypeId=mvmTypeId,
-                    invOrgId=invOrgId, invLocId=invLocId,
-                    invWhId=invWhId, invAreaId=invAreaId, invBinId=invBinId,
-                    spc_stk_type_id=spc_stk_type_id,
-                    spc_stk_type_class=spc_stk_type_class,
-                    spc_stk_type_class_name=spc_stk_type_class_name,
-                    batch_id=batch_id,
-                    batch_code=batch_code
-                )
-                items.append(voucher_item)
-            
-            # 4. 创建凭证
-            kwargs = {"mvmTypeId": mvmTypeId, "comOrgId": comOrgId, "show_type": show_type,
-                     "remark": remark or f"自动化测试{voucher_name}-{self.mock_util.get_timestamp()}"}
-            
-            if voucher_type == "in":
-                kwargs["in_items"] = items
-            else:
-                kwargs["out_items"] = items
-                
-            result = self._create_voucher(**kwargs)
-            
-            result.update({
-                "batch_code": batch_code if voucher_type == "in" and not mat_items else None,
-                "batch_id": batch_id if voucher_type == "out" and not mat_items else None,
-                "voucher_type": f"special_{voucher_type}",
-                "total_qty": total_qty,
-                "item_count": len(items),
-                "spc_stk_type_id": spc_stk_type_id,
-                "spc_stk_type_class": spc_stk_type_class
-            })
-            
-            return result
-            
-        except Exception as e:
-            self.logger.error(f"创建特殊库存移动凭证失败: {str(e)}")
-            raise
-    
-    def create_special_purchase_voucher(self, spc_stk_type_id, spc_stk_type_class, **kwargs):
-        """创建特殊库存采购入库移动凭证（便利方法）"""
-        return self.create_special_stock_voucher(
-            voucher_type="in",
-            spc_stk_type_id=spc_stk_type_id,
-            spc_stk_type_class=spc_stk_type_class,
-            **kwargs
-        )
-    
-    def create_special_sale_voucher(self, spc_stk_type_id, spc_stk_type_class, **kwargs):
-        """创建特殊库存销售出库移动凭证（便利方法）"""
-        return self.create_special_stock_voucher(
-            voucher_type="out",
-            spc_stk_type_id=spc_stk_type_id,
-            spc_stk_type_class=spc_stk_type_class,
-            **kwargs
-        )
-    
     def create_sale_voucher(
         self,
         mat_id=None,         # 可选：物料ID，不传则使用默认成品物料
@@ -304,95 +140,161 @@ class MobileVoucherCreator(ScmInvBaseTest):
     
     def create_transfer_voucher(
         self,
-        mat_id=None,
-        qty=1,
-        mvmTypeId=None,
-        from_batch_id=None,
-        to_batch_code=None,
-        from_wh_info=None,
-        to_wh_info=None,
-        remark=None
+        mat_id=None,         # 可选：物料ID，不传则使用默认成品物料
+        qty=1,               # 必填：数量
+        mvmTypeId=None,      # 可选：移动类型ID，不传则使用调拨类型
+        comOrgId=None,       # 可选：公司组织ID，不传则使用默认
+        invOrgId=None,       # 可选：库存组织ID，不传则使用默认
+        invLocId=None,       # 可选：库存地点ID，不传则使用默认
+        from_batch_id=None,  # 可选：出库批次ID，如果物料需要批次管理且不传则自动查找
+        to_batch_code=None,  # 可选：入库批次编码，不传则自动生成
+        from_wh_info=None,   # 可选：出库仓库信息 {"invWhId": xx, "invAreaId": xx, "invBinId": xx}
+        to_wh_info=None,     # 可选：入库仓库信息 {"invWhId": xx, "invAreaId": xx, "invBinId": xx}
+        remark=None          # 可选：备注
     ):
-        """
-        创建调拨移动凭证
-        
-        :param mat_id: 物料ID，不传则使用默认成品物料
-        :param qty: 数量，默认1
-        :param mvmTypeId: 移动类型ID，不传则使用调拨类型
-        :param from_batch_id: 出库批次ID，如果物料需要批次管理则必传
-        :param to_batch_code: 入库批次编码，不传则自动生成
-        :param from_wh_info: 出库仓库信息 {"invWhId": xx, "invAreaId": xx, "invBinId": xx}
-        :param to_wh_info: 入库仓库信息 {"invWhId": xx, "invAreaId": xx, "invBinId": xx}
-        :param remark: 备注
-        :return: 移动凭证信息字典
-        """
+        """创建调拨移动凭证（一出一入）"""
         try:
-            # 1. 参数默认值处理
+            # 参数默认值处理
             mat_id = mat_id or self.inv_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
             mvmTypeId = mvmTypeId or self.inv_cache_data["org_info"]["inv_mvm_type_cf_all"][0]["id"]
+            comOrgId, invOrgId, invLocId = self._get_default_org_params(comOrgId, invOrgId, invLocId)
             
-            # 2. 处理批次信息
-            need_batch = self._check_need_batch(mat_id)
-            if need_batch:
-                if not from_batch_id:
-                    available_batches = self.get_available_batches(mat_id, self.invOrgId, self.invLocId)
-                    if not available_batches:
-                        raise ValueError(f"物料{mat_id}没有可用批次进行调拨出库")
-                    from_batch_id = available_batches[0]["id"]
-                if not to_batch_code:
-                    to_batch_code = self._generate_batch_code()
+            # 处理出库批次：如果需要批次且未指定，自动查找可用批次
+            if not from_batch_id and self._check_need_batch(mat_id):
+                available_batches = self.get_available_batches(mat_id, invOrgId, invLocId)
+                if not available_batches:
+                    raise ValueError(f"物料{mat_id}没有可用批次进行调拨出库")
+                from_batch_id = available_batches[0]["id"]
             
-            # 3. 构建出库明细
-            out_item = self._build_move_item(
-                mat_id=mat_id, qty=qty, mvmTypeId=mvmTypeId,
-                invWhId=from_wh_info.get("invWhId") if from_wh_info else None,
-                invAreaId=from_wh_info.get("invAreaId") if from_wh_info else None,
-                invBinId=from_wh_info.get("invBinId") if from_wh_info else None
+            # 构建出库明细（复用销售出库逻辑）
+            out_items, _ = self._build_voucher_items(
+                None, mat_id, qty, mvmTypeId, invOrgId, invLocId,
+                from_wh_info.get("invWhId") if from_wh_info else None,
+                from_wh_info.get("invAreaId") if from_wh_info else None,
+                from_wh_info.get("invBinId") if from_wh_info else None,
+                "sale", batch_id=from_batch_id
             )
             
-            # 添加出库批次信息
-            if need_batch and from_batch_id:
-                batch_detail = self._get_batch_detail(from_batch_id)
-                out_item["batchId"] = batch_detail
-            
-            # 4. 构建入库明细
-            in_item = self._build_move_item(
-                mat_id=mat_id, qty=qty, mvmTypeId=mvmTypeId,
-                invWhId=to_wh_info.get("invWhId") if to_wh_info else None,
-                invAreaId=to_wh_info.get("invAreaId") if to_wh_info else None,
-                invBinId=to_wh_info.get("invBinId") if to_wh_info else None
+            # 构建入库明细（复用采购入库逻辑）
+            in_items, total_qty = self._build_voucher_items(
+                None, mat_id, qty, mvmTypeId, invOrgId, invLocId,
+                to_wh_info.get("invWhId") if to_wh_info else None,
+                to_wh_info.get("invAreaId") if to_wh_info else None,
+                to_wh_info.get("invBinId") if to_wh_info else None,
+                "purchase", batch_code=to_batch_code
             )
             
-            # 添加入库批次信息
-            if need_batch and to_batch_code:
-                batch_info = self._get_batch_info(mat_id)
-                in_item["batchId"] = {
-                    "batchType": "INBOUND",
-                    "batchCode": to_batch_code,
-                    "charaClassId": batch_info.get("charaClassId"),
-                    "quantity": qty,
-                    "charaValue": batch_info.get("batchCharaValueList", [])
-                }
-            
-            # 5. 创建凭证
+            # 创建凭证
             result = self._create_voucher(
                 mvmTypeId=mvmTypeId,
+                comOrgId=comOrgId,
                 show_type="ALL",
                 remark=remark or f"自动化测试调拨-{self.mock_util.get_timestamp()}",
-                in_items=[in_item],
-                out_items=[out_item]
+                in_items=in_items,
+                out_items=out_items
             )
             
             result.update({
                 "from_batch_id": from_batch_id,
                 "to_batch_code": to_batch_code,
-                "voucher_type": "transfer"
+                "voucher_type": "transfer",
+                "total_qty": total_qty,
+                "item_count": 1
             })
             
             return result
             
         except Exception as e:
             self.logger.error(f"创建调拨移动凭证失败: {str(e)}")
+            raise
+    
+    def create_special_stock_transfer_voucher(
+        self,
+        mat_id=None,         # 可选：物料ID，不传则使用默认成品物料
+        qty=1,               # 必填：数量
+        mvmTypeId=None,      # 可选：移动类型ID，不传则使用特殊库存转移类型
+        comOrgId=None,       # 可选：公司组织ID，不传则使用默认
+        invOrgId=None,       # 可选：库存组织ID，不传则使用默认
+        invLocId=None,       # 可选：库存地点ID，不传则使用默认
+        from_batch_id=None,  # 可选：出库批次ID，如果物料需要批次管理且不传则自动查找
+        to_batch_code=None,  # 可选：入库批次编码，不传则自动生成
+        from_wh_info=None,   # 可选：出库仓库信息 {"invWhId": xx, "invAreaId": xx, "invBinId": xx}
+        to_wh_info=None,     # 可选：入库仓库信息 {"invWhId": xx, "invAreaId": xx, "invBinId": xx}
+        remark=None          # 可选：备注
+    ):
+        """创建特殊库存转移移动凭证（一出一入，入库带特殊库存标识）"""
+        try:
+            # 参数默认值处理
+            mat_id = mat_id or self.inv_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
+            mvmTypeId = mvmTypeId or self.inv_cache_data["org_info"]["inv_mvm_type_cf_spc_stk_transfer"][0]["id"]
+            comOrgId, invOrgId, invLocId = self._get_default_org_params(comOrgId, invOrgId, invLocId)
+            
+            # 从缓存获取特殊库存参数
+            spc_stk_type_info = self.inv_cache_data["org_info"]["inv_spc_stk_type_cf_spc_stk_transfer"][0]
+            vend_info = self.inv_cache_data["partner_info"]["vend_info"][0]
+            
+            # 处理出库批次：如果需要批次且未指定，自动查找可用批次
+            if not from_batch_id and self._check_need_batch(mat_id):
+                available_batches = self.get_available_batches(mat_id, invOrgId, invLocId)
+                if not available_batches:
+                    raise ValueError(f"物料{mat_id}没有可用批次进行特殊库存转移出库")
+                from_batch_id = available_batches[0]["id"]
+            
+            # 构建出库明细（复用销售出库逻辑）
+            out_items, _ = self._build_voucher_items(
+                None, mat_id, qty, mvmTypeId, invOrgId, invLocId,
+                from_wh_info.get("invWhId") if from_wh_info else None,
+                from_wh_info.get("invAreaId") if from_wh_info else None,
+                from_wh_info.get("invBinId") if from_wh_info else None,
+                "sale", batch_id=from_batch_id
+            )
+            
+            # 构建入库明细（使用特殊库存入库逻辑）
+            in_items, total_qty = self._build_voucher_items(
+                None, mat_id, qty, mvmTypeId, invOrgId, invLocId,
+                to_wh_info.get("invWhId") if to_wh_info else None,
+                to_wh_info.get("invAreaId") if to_wh_info else None,
+                to_wh_info.get("invBinId") if to_wh_info else None,
+                "purchase", batch_code=to_batch_code
+            )
+            
+            # 为入库明细添加特殊库存相关字段
+            for in_item in in_items:
+                in_item["spcStkTypeId"] = {
+                    "code": "V",
+                    "name": spc_stk_type_info["name"],
+                    "modelKey": "pur_vend_info_md",
+                    "isPushInvValue": True,
+                    "id": spc_stk_type_info["id"]
+                }
+                in_item["spcStkTypeClass"] = vend_info["id"]
+                in_item["spcStkTypeClassName"] = vend_info["name"]
+            
+            # 创建凭证
+            result = self._create_voucher(
+                mvmTypeId=mvmTypeId,
+                comOrgId=comOrgId,
+                show_type="ALL",
+                remark=remark or f"自动化测试特殊库存转移-{self.mock_util.get_timestamp()}",
+                in_items=in_items,
+                out_items=out_items
+            )
+            
+            result.update({
+                "from_batch_id": from_batch_id,
+                "to_batch_code": to_batch_code,
+                "voucher_type": "special_stock_transfer",
+                "total_qty": total_qty,
+                "item_count": 1,
+                "spc_stk_type_id": spc_stk_type_info["id"],
+                "spc_stk_type_class": vend_info["id"],
+                "spc_stk_type_class_name": vend_info["name"]
+            })
+            
+            return result
+            
+        except Exception as e:
+            self.logger.error(f"创建特殊库存转移移动凭证失败: {str(e)}")
             raise
     
     def _get_default_org_params(self, comOrgId, invOrgId, invLocId):
@@ -582,42 +484,6 @@ class MobileVoucherCreator(ScmInvBaseTest):
         
         return out_item
 
-    def _build_special_stock_item(self, voucher_type, mat_id, qty, mvmTypeId, spc_stk_type_id, spc_stk_type_class, 
-                                spc_stk_type_class_name=None, invOrgId=None, invLocId=None, 
-                                invWhId=None, invAreaId=None, invBinId=None, batch_id=None, batch_code=None):
-        """构建特殊库存明细（支持入库和出库，包含特殊库存字段和批次处理）"""
-        # 构建基础明细
-        item = self._build_move_item(mat_id, qty, mvmTypeId, invOrgId, invLocId, invWhId, invAreaId, invBinId)
-        
-        # 添加特殊库存相关字段
-        item["spcStkTypeId"] = {"id": spc_stk_type_id}
-        item["spcStkTypeClass"] = spc_stk_type_class
-        if spc_stk_type_class_name:
-            item["spcStkTypeClassName"] = spc_stk_type_class_name
-        
-        # 处理批次信息
-        need_batch = self._check_need_batch(mat_id)
-        if need_batch:
-            if voucher_type == "in":
-                # 入库：创建新批次
-                batch_code = batch_code or self._generate_batch_code()
-                batch_info = self._get_batch_info(mat_id)
-                if batch_info:
-                    item["batchId"] = {
-                        "batchType": "INBOUND",
-                        "batchCode": batch_code,
-                        "charaClassId": batch_info.get("charaClassId"),
-                        "quantity": qty,
-                        "charaValue": batch_info.get("batchCharaValueList", [])
-                    }
-            else:
-                # 出库：引用现有批次
-                if batch_id:
-                    batch_detail = self._get_batch_detail(batch_id)
-                    item["batchId"] = batch_detail
-        
-        return item
-
     def _build_move_item(self, mat_id, qty, mvmTypeId, invOrgId=None, invLocId=None, invWhId=None, invAreaId=None, invBinId=None, ref_code="1"):
         """构建移动明细基础信息"""
         # 使用传入的参数，如果没有传入则使用默认值
@@ -688,7 +554,7 @@ class MobileVoucherCreator(ScmInvBaseTest):
 
     def _create_voucher(self, mvmTypeId, show_type, remark, comOrgId=None, in_items=None, out_items=None):
         """创建移动凭证的通用方法"""
-        # 生成请求数据（使用时间戳格式，这样已经测试通过了）
+        # 生成请求数据
         doc_time = int(datetime.datetime.now().timestamp() * 1000)
         request_no = self.mock_util.generate_unique_code(tag="REQ")
         

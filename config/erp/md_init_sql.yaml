@@ -138,6 +138,19 @@ org_info:
     sql: |
       select id,`code`,`name` from inv_mvm_type_cf where code='40301100' limit 1
     description: "查询调拨移动类型信息"
+
+  # 特殊库存转移移动类型信息
+  inv_mvm_type_cf_spc_stk_transfer:
+    sql: |
+      select id,`code`,`name` from inv_mvm_type_cf where code='71301100' limit 1
+    description: "查询特殊库存转移移动类型信息"
+
+  # 特殊库存转移移动类型信息
+  inv_spc_stk_type_cf_spc_stk_transfer:
+    sql: |
+      select id,`name` from inv_spc_stk_type_cf where name='供应商寄售' limit 1
+    description: "查询特殊库存类型信息"
+
   # 默认员工
   employee_info:
     sql: |
