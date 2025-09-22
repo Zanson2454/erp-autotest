@@ -97,8 +97,9 @@ class SlsBase(BaseTest):
         cls.path_params = {"tmodule": "SCM_SLS"}
         cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
         cls.user_id = cls.init_data["user_info"]['user_info']["id"]
+
         
-        
+     # ==================== 销售订单相关方法 ====================
         
     # 初始化订单配置数据
         if cls.init_data:
