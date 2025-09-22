@@ -1,0 +1,311 @@
+import allure
+import pytest
+import sys
+from pathlib import Path
+
+project_root = Path(__file__).resolve().parent.parent.parent
+sys.path.append(str(project_root))
+from testcases.scm_sls import SlsBase
+from utils.param_util import ParamUtil
+from utils.report_util import a, case_decorator
+
+
+@allure.epic("销售管理")
+@allure.feature("报价单管理")
+class TestQuoteCrud(SlsBase):
+    """报价单增删改查测试类"""
+    
+    @classmethod
+    def setup_class(cls):
+        super().setup_class()
+        cls.quote_id_draft = None
+        cls.quote_id_copy = None
+        cls.quote_id_submit = None
+        cls.logger.info("报价单增删改查测试类初始化完成")
+    
+    @classmethod
+    def teardown_class(cls):
+        """测试类结束后执行清理"""
+        try:
+            # 清理报价单数据
+            if cls.quote_id_draft:
+                cls.db.delete(
+                    table="sls_so_head_tr",
+                    where="id = %s",
+                    params=[cls.quote_id_draft]
+                )
+            if cls.quote_id_copy:
+                cls.db.delete(
+                    table="sls_so_head_tr",
+                    where="id = %s",
+                    params=[cls.quote_id_copy]
+                )
+            if cls.quote_id_submit:
+                cls.db.delete(
+                    table="sls_so_head_tr",
+                    where="id = %s",
+                    params=[cls.quote_id_submit]
+                )
+            cls.logger.info("报价单测试数据清理完成")
+        except Exception as e:
+            cls.logger.error(f"报价单测试数据清理失败: {str(e)}")
+    
+    @case_decorator(
+        story="报价单管理",
+        title="测试创建草稿态报价单并编辑保存",
+        description="验证创建草稿态报价单，编辑后保存的功能",
+        severity="critical",
+        order=1,
+        smoke=True,
+        tags=["报价单", "创建", "编辑"]
+    )
+    def test_01_create_and_edit_draft_quote(self):
+        """测试创建草稿态报价单并编辑保存"""
+        try:
+            # 1. 调用公共方法创建草稿态报价单
+            self.quote_id_draft = self.create_quote(submit=False)
+            a.text(f"草稿态报价单创建成功，ID: {self.quote_id_draft}", "草稿报价单ID")
+            
+            # 2. 编辑草稿态报价单
+            api_path = self.get_api_path("SLS-销售报价-保存服务")
+            params, url = self.get_api_params(api_path)
+            
+            # 3. 参数处理
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id", "soCode", "soDesc", "custId", "slsOrgId", "slsComId", "slsDcId", "soTypeId", "baseCurrId", "slsCurrId", "soItems"], 
+                ["params", "request"]
+            )
+            
+            # 4. 设置编辑后的数据
+            edit_name = f"编辑后的报价单_{self.mock_util.get_timestamp()}"
+            set_dict = {
+                "id": self.quote_id_draft,
+                "soCode": f"QT_{self.mock_util.get_timestamp()}",
+                "soDesc": edit_name,
+                "custId": {"id": self.cust_id},
+                "slsOrgId": {"id": self.sls_org_id},
+                "slsComId": {"id": self.com_org_id},
+                "slsDcId": {"id": self.sls_dc_id},
+                "soTypeId": {"id": self.stnd_so_type_id},
+                "baseCurrId": {"id": self.curr_id},
+                "slsCurrId": {"id": self.curr_id},
+                "soItems": [
+                    {
+                        "matId": {"id": self.mat_id},
+                        "matCode": self.mat_code,
+                        "matName": self.mat_name,
+                        "soItemSlsQty": 20,  # 修改数量
+                        "soItemGrossPrice": 150.0,  # 修改价格
+                        "uomSlsId": {"id": 2004001},
+                        "uomBaseId": {"id": 2004001},
+                        "soItemTypeId": {"id": self.stnd_so_item_type_id},
+                        "invOrgId": {"id": self.inv_org_id},
+                        "invLocId": {"id": self.inv_loc_id},
+                        "soSchlDelDate": self.mock_util.get_timestamp(timestamp=True, day_offset=2)
+                    }
+                ]
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            # 5. 发送请求和断言
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            # 6. 保存编辑后的报价单ID
+            response_data = response.get("data", {}).get("data", {})
+            self.quote_id_draft = response_data.get("id")
+            
+            a.json(filtered_params, "编辑请求数据")
+            a.json(response, "编辑响应数据")
+            a.text(f"草稿态报价单编辑保存成功，ID: {self.quote_id_draft}", "编辑结果")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    @case_decorator(
+        story="报价单管理",
+        title="测试复制草稿态报价单并保存",
+        description="验证复制草稿态报价单并保存的功能",
+        severity="critical",
+        order=2,
+        tags=["报价单", "复制", "保存"]
+    )
+    def test_02_copy_and_save_draft_quote(self):
+        """测试复制草稿态报价单并保存"""
+        try:
+            # 1. 确保有草稿态报价单
+            if not self.quote_id_draft:
+                self.test_01_create_and_edit_draft_quote()
+            
+            # 2. 调用复制API
+            api_path = self.get_api_path("SLS-销售报价-复制服务")
+            params, url = self.get_api_params(api_path)
+            
+            # 3. 参数处理
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], 
+                ["params", "request"]
+            )
+            
+            set_dict = {"id": self.quote_id_draft}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            # 4. 发送复制请求和断言
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            # 5. 获取复制的报价单数据
+            response_data = response.get("data", {}).get("data", {})
+            copied_quote_data = response_data
+            
+            # 6. 保存复制的报价单
+            save_api_path = self.get_api_path("SLS-销售报价-保存服务")
+            save_params, save_url = self.get_api_params(save_api_path)
+            
+            # 7. 参数处理
+            save_filtered_params = ParamUtil.filter_post_body_fields(
+                save_params, ["soCode", "soDesc", "custId", "slsOrgId", "slsComId", "slsDcId", "soTypeId", "baseCurrId", "slsCurrId", "soItems"], 
+                ["params", "request"]
+            )
+            
+            # 8. 设置复制的报价单数据
+            set_save_dict = {
+                "soCode": copied_quote_data.get("soCode", ""),
+                "soDesc": f"复制的{copied_quote_data.get('soDesc', '')}",
+                "custId": copied_quote_data.get("custId", {}),
+                "slsOrgId": copied_quote_data.get("slsOrgId", {}),
+                "slsComId": copied_quote_data.get("slsComId", {}),
+                "slsDcId": copied_quote_data.get("slsDcId", {}),
+                "soTypeId": copied_quote_data.get("soTypeId", {}),
+                "baseCurrId": copied_quote_data.get("baseCurrId", {}),
+                "slsCurrId": copied_quote_data.get("slsCurrId", {}),
+                "soItems": copied_quote_data.get("soItems", [])
+            }
+            ParamUtil.set_request_params(save_filtered_params, set_save_dict)
+            
+            # 9. 发送保存请求和断言
+            save_response = self.http.post(save_url, json=save_filtered_params)
+            self.assert_util.assert_response_data(save_response)
+            
+            # 10. 保存复制的报价单ID
+            save_response_data = save_response.get("data", {}).get("data", {})
+            self.quote_id_copy = save_response_data.get("id")
+            
+            a.json(filtered_params, "复制请求数据")
+            a.json(response, "复制响应数据")
+            a.json(save_filtered_params, "保存请求数据")
+            a.json(save_response, "保存响应数据")
+            a.text(f"草稿态报价单复制并保存成功，新ID: {self.quote_id_copy}", "复制保存结果")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    @case_decorator(
+        story="报价单管理",
+        title="测试删除复制的草稿态报价单",
+        description="验证删除复制的草稿态报价单的功能",
+        severity="critical",
+        order=3,
+        tags=["报价单", "删除"]
+    )
+    def test_03_delete_copied_quote(self):
+        """测试删除复制的草稿态报价单"""
+        try:
+            # 1. 确保有复制的报价单
+            if not self.quote_id_copy:
+                self.test_02_copy_and_save_draft_quote()
+            
+            # 2. 调用删除API
+            api_path = self.get_api_path("SLS-销售报价-删除服务")
+            params, url = self.get_api_params(api_path)
+            
+            # 3. 参数处理
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], 
+                ["params", "request"]
+            )
+            
+            set_dict = {"id": self.quote_id_copy}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            # 4. 发送请求和断言
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            # 5. 清空已删除的报价单ID
+            deleted_id = self.quote_id_copy
+            self.quote_id_copy = None
+            
+            a.json(filtered_params, "删除请求数据")
+            a.json(response, "删除响应数据")
+            a.text(f"草稿态报价单删除成功，已删除ID: {deleted_id}", "删除结果")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    @case_decorator(
+        story="报价单管理",
+        title="测试创建已生效报价单",
+        description="验证创建已生效报价单的功能",
+        severity="critical",
+        order=4,
+        smoke=True,
+        tags=["报价单", "创建", "提交"]
+    )
+    def test_04_create_submitted_quote(self):
+        """测试创建已生效报价单"""
+        try:
+            # 1. 调用公共方法创建已生效报价单
+            self.quote_id_submit = self.create_quote(submit=True)
+            a.text(f"已生效报价单创建成功，ID: {self.quote_id_submit}", "已生效报价单ID")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    @case_decorator(
+        story="报价单管理",
+        title="测试作废已生效报价单",
+        description="验证作废已生效报价单的功能",
+        severity="critical",
+        order=5,
+        tags=["报价单", "作废"]
+    )
+    def test_05_cancel_submitted_quote(self):
+        """测试作废已生效报价单"""
+        try:
+            # 1. 确保有已生效的报价单
+            if not self.quote_id_submit:
+                self.test_04_create_submitted_quote()
+            
+            # 2. 调用作废API
+            api_path = self.get_api_path("SLS-销售报价-作废服务")
+            params, url = self.get_api_params(api_path)
+            
+            # 3. 参数处理
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], 
+                ["params", "request"]
+            )
+            
+            set_dict = {"id": self.quote_id_submit}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            # 4. 发送请求和断言
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            # 5. 保存作废后的报价单ID
+            response_data = response.get("data", {}).get("data", {})
+            self.quote_id_submit = response_data.get("id")
+            
+            a.json(filtered_params, "作废请求数据")
+            a.json(response, "作废响应数据")
+            a.text(f"已生效报价单作废成功，ID: {self.quote_id_submit}", "作废结果")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise

@@ -22,6 +22,15 @@ apis:
   SLS-销售报价-转订单服务:
     path: /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_DATA_REFER_CREATE_EVENT_SERVICE?tmodule=SCM_SLS
     method: POST
+  SLS-销售报价-复制服务:
+    path: /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_DATA_COPY_EVENT_SERVICE?tmodule=SCM_SLS
+    method: POST
+  SLS-销售报价-删除服务:
+    path: /api/trantor/service/engine/execute/SCM_SLS$SO_DELETE_EVENT_SERVICE?tmodule=SCM_SLS
+    method: POST
+  SLS-销售报价-作废服务:
+    path: /api/trantor/service/engine/execute/SCM_SLS$SLS_REPEAL_EVENT_SERVICE?tmodule=SCM_SLS
+    method: POST
   赠品策略-匹配范围表结构服务:
     path: /api/trantor/service/engine/execute/SCM_SLS$GIFT_STRATEGY_MATCH_SCOPE_TABLE_EVENT_SERVICE
     method: POST
