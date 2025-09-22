@@ -309,3 +309,73 @@ class TestQuoteCrud(SlsBase):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
+    
+    @case_decorator(
+        story="报价单管理",
+        title="测试查看报价单详情",
+        description="验证查看报价单详情的功能",
+        severity="critical",
+        order=6,
+        tags=["报价单", "详情查询"]
+    )
+    def test_06_query_quote_detail(self):
+        """测试查看报价单详情"""
+        try:
+            # 1. 确保有报价单数据（优先使用已生效的，其次使用草稿的）
+            quote_id = None
+            if self.quote_id_submit:
+                quote_id = self.quote_id_submit
+            elif self.quote_id_draft:
+                quote_id = self.quote_id_draft
+            else:
+                # 如果没有报价单，先创建一个草稿态的
+                self.test_01_create_and_edit_draft_quote()
+                quote_id = self.quote_id_draft
+            
+            # 2. 调用详情查询API
+            api_path = self.get_api_path("SLS-销售报价-详情查询服务")
+            params, url = self.get_api_params(api_path)
+            
+            # 3. 参数处理
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], 
+                ["params", "request"]
+            )
+            
+            set_dict = {"id": quote_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            # 4. 发送请求和断言
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            # 5. 获取详情数据
+            response_data = response.get("data", {}).get("data", {})
+            
+            # 6. 验证关键字段
+            self.assert_util.assert_by_operator(response_data.get("id"), "=", quote_id)
+            self.assert_util.assert_by_operator(response_data.get("soCode"), "!=", None)
+            self.assert_util.assert_by_operator(response_data.get("soDesc"), "!=", None)
+            self.assert_util.assert_by_operator(response_data.get("custId"), "!=", None)
+            self.assert_util.assert_by_operator(response_data.get("slsOrgId"), "!=", None)
+            
+            # 7. 验证行项目数据
+            so_items = response_data.get("soItems", [])
+            self.assert_util.assert_by_operator(len(so_items), ">", 0)
+            
+            if so_items:
+                first_item = so_items[0]
+                self.assert_util.assert_by_operator(first_item.get("matId"), "!=", None)
+                self.assert_util.assert_by_operator(first_item.get("matCode"), "!=", None)
+                self.assert_util.assert_by_operator(first_item.get("soItemSlsQty"), ">", 0)
+            
+            a.json(filtered_params, "详情查询请求数据")
+            a.json(response, "详情查询响应数据")
+            a.text(f"报价单详情查询成功，ID: {quote_id}", "详情查询结果")
+            a.text(f"报价单编码: {response_data.get('soCode')}", "报价单编码")
+            a.text(f"报价单描述: {response_data.get('soDesc')}", "报价单描述")
+            a.text(f"行项目数量: {len(so_items)}", "行项目数量")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise

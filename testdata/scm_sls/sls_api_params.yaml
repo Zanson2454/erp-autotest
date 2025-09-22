@@ -9846,3 +9846,13 @@ api_params:
     params:
       request:
         id: null
+  /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_QUERY_DETAIL_EVENT_SERVICE?tmodule=SCM_SLS:
+    sceneKey: SCM_SLS$sls_so_price
+    viewKey: SCM_SLS$sls_so_price:detail
+    viewTitle: detail
+    appId: 0
+    teamId: 22
+    serviceKey: SCM_SLS$SLS_SO_QUERY_DETAIL_EVENT_SERVICE
+    params:
+      request:
+        id: null
