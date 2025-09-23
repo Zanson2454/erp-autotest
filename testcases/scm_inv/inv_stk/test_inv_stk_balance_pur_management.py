@@ -1,3 +1,8 @@
+"""
+功能描述:
+    本模块测试库存余额管理的完整业务流程，包括移动凭证创建、库存余额查询、
+    批次调整、导出等核心功能，确保库存数据的准确性和一致性。
+"""
 import allure
 import datetime
 import pytest
@@ -28,6 +33,11 @@ class TestInvStkBalancePurManagement(ScmInvBaseTest):
         cls.adjust_voucher_id = None
         cls.adjust_voucher_code = None
         cls.batch_detail_id = None
+        
+        # 防重复执行标记
+        cls._create_mobile_voucher_executed = False
+        cls._query_balance_detail_executed = False
+        cls._create_batch_adjustment_executed = False
         
         # 从初始化数据中获取ID
         cls.unitId = cls.init_data["uom_info"]["qty_uom_info"][0]["uom_id"] if cls.init_data.get("uom_info", {}).get("qty_uom_info") else None
@@ -79,6 +89,11 @@ class TestInvStkBalancePurManagement(ScmInvBaseTest):
     def test_create_mobile_voucher_increase_inventory(self):
         """创建移动凭证增加库存用例"""
         try:
+            # 防重复执行检查
+            if self.__class__._create_mobile_voucher_executed and self.mobile_voucher_id is not None:
+                self.logger.info(f"移动凭证创建方法已执行过，跳过重复执行，ID: {self.mobile_voucher_id}")
+                return
+            
             # 记录操作前的库存余额
             pre_operation_balance = self.get_current_inventory_balance()
             self.logger.info(f"操作前库存余额: {pre_operation_balance}")
@@ -102,6 +117,7 @@ class TestInvStkBalancePurManagement(ScmInvBaseTest):
             TestInvStkBalancePurManagement.mobile_voucher_id = voucher_manager.mobile_voucher_id
             TestInvStkBalancePurManagement.mobile_voucher_code = voucher_manager.mobile_voucher_code
             TestInvStkBalancePurManagement.batch_code = voucher_manager.batch_code
+            TestInvStkBalancePurManagement._create_mobile_voucher_executed = True  # 标记已执行
             
             # 验证移动凭证创建成功
             assert self.mobile_voucher_id, "移动凭证ID不能为空"
@@ -318,6 +334,11 @@ class TestInvStkBalancePurManagement(ScmInvBaseTest):
     def test_query_stock_balance_detail(self):
         """库存余额明细查询用例"""
         try:
+            # 防重复执行检查
+            if self.__class__._query_balance_detail_executed and self.balance_detail_id is not None:
+                self.logger.info(f"余额明细查询方法已执行过，跳过重复执行，ID: {self.balance_detail_id}")
+                return
+            
             # 1. API调用
             api_path = self.get_api_path("INV-库存余额-查询分页服务")
             params, url = self.get_api_params(api_path)
@@ -400,6 +421,7 @@ class TestInvStkBalancePurManagement(ScmInvBaseTest):
             TestInvStkBalancePurManagement.balance_detail_code = first_record.get("batchId", {}).get("code")
             # 保存批次ID用于批次调整
             TestInvStkBalancePurManagement.batch_detail_id = first_record.get("batchId", {}).get("id")
+            TestInvStkBalancePurManagement._query_balance_detail_executed = True  # 标记已执行
             
             # 5. 报告记录
             a.json(filtered_params, "请求数据")
@@ -421,6 +443,11 @@ class TestInvStkBalancePurManagement(ScmInvBaseTest):
     def test_create_batch_adjustment_voucher(self):
         """批次调整移动凭证创建用例"""
         try:
+            # 防重复执行检查
+            if self.__class__._create_batch_adjustment_executed and self.adjust_voucher_id is not None:
+                self.logger.info(f"批次调整凭证创建方法已执行过，跳过重复执行，ID: {self.adjust_voucher_id}")
+                return
+            
             # 确保前置条件已满足
             if not self.mobile_voucher_id:
                 self.test_create_mobile_voucher_increase_inventory()
@@ -506,6 +533,7 @@ class TestInvStkBalancePurManagement(ScmInvBaseTest):
             voucher_data = response.get("data", {}).get("data", {})
             TestInvStkBalancePurManagement.adjust_voucher_id = voucher_data.get("moveVoucherId")
             TestInvStkBalancePurManagement.adjust_voucher_code = voucher_data.get("moveVoucherCode")
+            TestInvStkBalancePurManagement._create_batch_adjustment_executed = True  # 标记已执行
             
             # 验证移动凭证创建成功
             assert self.adjust_voucher_id, "批次调整移动凭证ID不能为空"
