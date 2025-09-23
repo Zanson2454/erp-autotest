@@ -1,0 +1,26 @@
+{
+  "requestId": "bdcebc94-317385",
+  "success": true,
+  "data": {
+    "data": {
+      "code": "AT_ItemTypeGroup98756553011795",
+      "name": "测试订单行项目类型组_20250923113916",
+      "desc": "测试订单行项目类型组_20250923113916",
+      "id": 2007006,
+      "createdBy": {
+        "id": 540175374525637
+      },
+      "updatedBy": {
+        "id": 540175374525637
+      },
+      "createdAt": 1758598756000,
+      "updatedAt": 1758598756000,
+      "version": 0,
+      "deleted": 0,
+      "requestId": "bdcebc94-317384",
+      "originOrgId": 0,
+      "tenantId": 0,
+      "orderNumber": 0
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "params": {
+    "request": {
+      "pageable": {
+        "sortOrders": [
+          {}
+        ],
+        "conditionItems": {},
+        "pageNo": 1,
+        "conditionGroup": {},
+        "pageSize": 20
+      }
+    }
+  },
+  "serviceKey": "SCM_SLS$sls_dc_paging_service"
+}

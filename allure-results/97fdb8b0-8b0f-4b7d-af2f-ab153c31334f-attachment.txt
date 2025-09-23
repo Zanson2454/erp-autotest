@@ -1,0 +1,129 @@
+[32m2025-09-23 11:29:39.800[0m | [1mINFO    [0m | [36mtestcases.conftest[0m:[36msetup_test_environment[0m:[36m134[0m - [1m开始测试会话[0m
+[32m2025-09-23 11:29:39.803[0m | [1mINFO    [0m | [36mdata_factory.base[0m:[36m__init__[0m:[36m82[0m - [1m已加载环境变量文件: /Users/test/erp-autotest/.env[0m
+[32m2025-09-23 11:29:39.806[0m | [1mINFO    [0m | [36mutils.yaml_util[0m:[36mread_yaml[0m:[36m39[0m - [1m读取YAML文件: config/env/test.yaml[0m
+[32m2025-09-23 11:29:39.806[0m | [33m[1mWARNING [0m | [36mdata_factory.base[0m:[36m_replace_env_vars[0m:[36m115[0m - [33m[1m环境变量未定义: TEST_USERNAME[0m
+[32m2025-09-23 11:29:39.806[0m | [33m[1mWARNING [0m | [36mdata_factory.base[0m:[36m_replace_env_vars[0m:[36m115[0m - [33m[1m环境变量未定义: TEST_PASSWORD[0m
+[32m2025-09-23 11:29:39.806[0m | [34m[1mDEBUG   [0m | [36mdata_factory.base[0m:[36m_replace_env_vars[0m:[36m113[0m - [34m[1m替换环境变量: TEST_TERP_PORTAL_USERNAME -> 17376596912[0m
+[32m2025-09-23 11:29:39.807[0m | [34m[1mDEBUG   [0m | [36mdata_factory.base[0m:[36m_replace_env_vars[0m:[36m113[0m - [34m[1m替换环境变量: TEST_TERP_PORTAL_PASSWORD -> Y+IFHj91Gc+CFRI64dS1fxQNx5Xf31hmceqOLHY+ypYkfOc2a5hVrN1He0AT5U5m5SBWma87qVUlF4xT5qAqhBPwDoaa5j2To5IZCx8fSZKly3f5wcLzh8mwfqQccyzgTxcZofBg6yyhaClNJRAIfJZ/CZt6zx3QkWg9aQGEbqY=[0m
+[32m2025-09-23 11:29:39.807[0m | [34m[1mDEBUG   [0m | [36mdata_factory.base[0m:[36m_replace_env_vars[0m:[36m113[0m - [34m[1m替换环境变量: TEST_TERP_PORTAL_IAM_URL -> https://t-erp-huoshan-portal-iam-test.app.duandian.com[0m
+[32m2025-09-23 11:29:39.807[0m | [34m[1mDEBUG   [0m | [36mdata_factory.base[0m:[36m_replace_env_vars[0m:[36m113[0m - [34m[1m替换环境变量: TEST_TERP_PORTAL_IAM_REFERER -> https://t-erp-huoshan-portal-iam-test.app.duandian.com/TERP_PORTAL-TERP-tpf_umwrhzbg[0m
+[32m2025-09-23 11:29:39.807[0m | [34m[1mDEBUG   [0m | [36mdata_factory.base[0m:[36m_replace_env_vars[0m:[36m113[0m - [34m[1m替换环境变量: TEST_TERP_PORTAL_URL -> https://t-erp-huoshan-portal-test.app.duandian.com[0m
+[32m2025-09-23 11:29:39.807[0m | [34m[1mDEBUG   [0m | [36mdata_factory.base[0m:[36m_replace_env_vars[0m:[36m113[0m - [34m[1m替换环境变量: TEST_TERP_PORTAL_REFERER -> https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP[0m
+[32m2025-09-23 11:29:39.807[0m | [34m[1mDEBUG   [0m | [36mdata_factory.base[0m:[36m_replace_env_vars[0m:[36m113[0m - [34m[1m替换环境变量: TEST_TERP_CUST_PC_USERNAME -> 17376596912[0m
+[32m2025-09-23 11:29:39.808[0m | [34m[1mDEBUG   [0m | [36mdata_factory.base[0m:[36m_replace_env_vars[0m:[36m113[0m - [34m[1m替换环境变量: TEST_TERP_CUST_PC_PASSWORD -> Y+IFHj91Gc+CFRI64dS1fxQNx5Xf31hmceqOLHY+ypYkfOc2a5hVrN1He0AT5U5m5SBWma87qVUlF4xT5qAqhBPwDoaa5j2To5IZCx8fSZKly3f5wcLzh8mwfqQccyzgTxcZofBg6yyhaClNJRAIfJZ/CZt6zx3QkWg9aQGEbqY=[0m
+[32m2025-09-23 11:29:39.808[0m | [34m[1mDEBUG   [0m | [36mdata_factory.base[0m:[36m_replace_env_vars[0m:[36m113[0m - [34m[1m替换环境变量: TEST_TERP_CUST_PC_IAM_URL -> https://t-erp-huoshan-portal-iam-test.app.duandian.com[0m
+[32m2025-09-23 11:29:39.808[0m | [34m[1mDEBUG   [0m | [36mdata_factory.base[0m:[36m_replace_env_vars[0m:[36m113[0m - [34m[1m替换环境变量: TEST_TERP_CUST_PC_IAM_REFERER -> https://t-erp-huoshan-portal-iam-test.app.duandian.com/TERP_DEALER_PORTAL-TERP-tpf_umwrhzbg[0m
+[32m2025-09-23 11:29:39.808[0m | [34m[1mDEBUG   [0m | [36mdata_factory.base[0m:[36m_replace_env_vars[0m:[36m113[0m - [34m[1m替换环境变量: TEST_TERP_CUST_PC_URL -> https://t-erp-huoshan-portal-test.app.duandian.com[0m
+[32m2025-09-23 11:29:39.808[0m | [34m[1mDEBUG   [0m | [36mdata_factory.base[0m:[36m_replace_env_vars[0m:[36m113[0m - [34m[1m替换环境变量: TEST_TERP_CUST_PC_REFERER -> https://t-erp-huoshan-portal-test.app.duandian.com/TERP_DEALER_PORTAL-TERP[0m
+[32m2025-09-23 11:29:39.808[0m | [34m[1mDEBUG   [0m | [36mdata_factory.base[0m:[36m_replace_env_vars[0m:[36m113[0m - [34m[1m替换环境变量: TEST_DB_HOST -> 10.3.0.143[0m
+[32m2025-09-23 11:29:39.808[0m | [34m[1mDEBUG   [0m | [36mdata_factory.base[0m:[36m_replace_env_vars[0m:[36m113[0m - [34m[1m替换环境变量: TEST_DB_PORT -> 3306[0m
+[32m2025-09-23 11:29:39.809[0m | [34m[1mDEBUG   [0m | [36mdata_factory.base[0m:[36m_replace_env_vars[0m:[36m113[0m - [34m[1m替换环境变量: TEST_DB_USER -> terp_test[0m
+[32m2025-09-23 11:29:39.809[0m | [34m[1mDEBUG   [0m | [36mdata_factory.base[0m:[36m_replace_env_vars[0m:[36m113[0m - [34m[1m替换环境变量: TEST_DB_PASSWORD -> 43sVPCQ2pE%g55bc[0m
+[32m2025-09-23 11:29:39.809[0m | [34m[1mDEBUG   [0m | [36mdata_factory.base[0m:[36m_replace_env_vars[0m:[36m113[0m - [34m[1m替换环境变量: TEST_DB_NAME -> terp_test[0m
+[32m2025-09-23 11:29:39.809[0m | [34m[1mDEBUG   [0m | [36mdata_factory.base[0m:[36m_replace_env_vars[0m:[36m113[0m - [34m[1m替换环境变量: TEST_DB_HOST -> 10.3.0.143[0m
+[32m2025-09-23 11:29:39.809[0m | [34m[1mDEBUG   [0m | [36mdata_factory.base[0m:[36m_replace_env_vars[0m:[36m113[0m - [34m[1m替换环境变量: TEST_DB_PORT -> 3306[0m
+[32m2025-09-23 11:29:39.809[0m | [34m[1mDEBUG   [0m | [36mdata_factory.base[0m:[36m_replace_env_vars[0m:[36m113[0m - [34m[1m替换环境变量: TEST_DB_USER -> terp_test[0m
+[32m2025-09-23 11:29:39.810[0m | [34m[1mDEBUG   [0m | [36mdata_factory.base[0m:[36m_replace_env_vars[0m:[36m113[0m - [34m[1m替换环境变量: TEST_DB_PASSWORD -> 43sVPCQ2pE%g55bc[0m
+[32m2025-09-23 11:29:39.810[0m | [34m[1mDEBUG   [0m | [36mdata_factory.base[0m:[36m_replace_env_vars[0m:[36m113[0m - [34m[1m替换环境变量: TEST_IAM_DB_NAME -> iam_test[0m
+[32m2025-09-23 11:29:39.810[0m | [1mINFO    [0m | [36mdata_factory.base[0m:[36m__init__[0m:[36m90[0m - [1m已加载YAML配置文件: /Users/test/erp-autotest/config/env/test.yaml[0m
+[32m2025-09-23 11:29:39.810[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36minitialize_environment[0m:[36m205[0m - [1m初始化环境: test[0m
+[32m2025-09-23 11:29:39.810[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36msetup_class[0m:[36m278[0m - [1m环境配置: {'erp_env': 'test', 'erp_version': '0830', 'trantor_version': '3.0.2509', 'portal_config': {'terp': {'auth': {'username': '${TEST_USERNAME}', 'password': '${TEST_PASSWORD}'}, 'TERP_PORTAL': {'username': '17376596912', 'password': 'Y+IFHj91Gc+CFRI64dS1fxQNx5Xf31hmceqOLHY+ypYkfOc2a5hVrN1He0AT5U5m5SBWma87qVUlF4xT5qAqhBPwDoaa5j2To5IZCx8fSZKly3f5wcLzh8mwfqQccyzgTxcZofBg6yyhaClNJRAIfJZ/CZt6zx3QkWg9aQGEbqY=', 'iam_url': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com', 'iam_referer': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com/TERP_PORTAL-TERP-tpf_umwrhzbg', 'portal_url': 'https://t-erp-huoshan-portal-test.app.duandian.com', 'portal_referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP', 'description': 'TERP门户'}, 'TERP_CUST_PC': {'username': '17376596912', 'password': 'Y+IFHj91Gc+CFRI64dS1fxQNx5Xf31hmceqOLHY+ypYkfOc2a5hVrN1He0AT5U5m5SBWma87qVUlF4xT5qAqhBPwDoaa5j2To5IZCx8fSZKly3f5wcLzh8mwfqQccyzgTxcZofBg6yyhaClNJRAIfJZ/CZt6zx3QkWg9aQGEbqY=', 'iam_url': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com', 'iam_referer': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com/TERP_DEALER_PORTAL-TERP-tpf_umwrhzbg', 'portal_url': 'https://t-erp-huoshan-portal-test.app.duandian.com', 'portal_referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_DEALER_PORTAL-TERP', 'description': 'TERP客户端PC门户'}}}, 'database': {'erp_db': {'host': '10.3.0.143', 'port': '3306', 'user': 'terp_test', 'password': '43sVPCQ2pE%g55bc', 'database': 'terp_test', 'charset': 'utf8mb4'}, 'iam_db': {'host': '10.3.0.143', 'port': '3306', 'user': 'terp_test', 'password': '43sVPCQ2pE%g55bc', 'database': 'iam_test', 'charset': 'utf8mb4'}}}[0m
+[32m2025-09-23 11:29:39.810[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36mget[0m:[36m44[0m - [1m读取缓存文件: /Users/test/erp-autotest/cache/init_cache.json[0m
+[32m2025-09-23 11:29:39.811[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36mget[0m:[36m47[0m - [1m缓存文件不存在: /Users/test/erp-autotest/cache/init_cache.json[0m
+[32m2025-09-23 11:29:39.818[0m | [1mINFO    [0m | [36mutils.yaml_util[0m:[36mread_yaml[0m:[36m39[0m - [1m读取YAML文件: config/erp/base_init_sql.yaml[0m
+[32m2025-09-23 11:29:39.819[0m | [1mINFO    [0m | [36mdata_factory.base[0m:[36mget_base_data[0m:[36m140[0m - [1m加载SQL配置keys: ['currency_info', 'language_info', 'country_info', 'timezone_info', 'gen_wc_head_info', 'calender_info', 'addr_info', 'exchange_rate_type_info', 'uom_info', 'bank_info', 'tax_info'][0m
+[32m2025-09-23 11:29:39.819[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36minit[0m:[36m37[0m - [1m缓存目录: /Users/test/erp-autotest/testdata/cache[0m
+[32m2025-09-23 11:29:39.819[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36minit[0m:[36m38[0m - [1m缓存目录创建状态: 存在=True[0m
+[32m2025-09-23 11:29:39.819[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36mget[0m:[36m44[0m - [1m读取缓存文件: /Users/test/erp-autotest/testdata/cache/init_cache.json[0m
+[32m2025-09-23 11:29:39.820[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36mget[0m:[36m54[0m - [1m成功读取缓存: init_cache.json[0m
+[32m2025-09-23 11:29:39.820[0m | [1mINFO    [0m | [36mdata_factory.base[0m:[36minit_sql[0m:[36m33[0m - [1m从缓存获取数据成功[0m
+[32m2025-09-23 11:29:39.820[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36mset[0m:[36m63[0m - [1m写入缓存文件: /Users/test/erp-autotest/testdata/cache/init_cache.json[0m
+[32m2025-09-23 11:29:39.820[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36mset[0m:[36m67[0m - [1m成功写入缓存: init_cache.json[0m
+[32m2025-09-23 11:29:39.821[0m | [1mINFO    [0m | [36mdata_factory.base[0m:[36mget_base_data[0m:[36m147[0m - [1m写入缓存成功，路径为: /Users/test/erp-autotest/testdata/cache/init_cache.json[0m
+[32m2025-09-23 11:29:39.893[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36mlogin[0m:[36m115[0m - [1m登录URL: https://t-erp-huoshan-portal-iam-test.app.duandian.com/iam/api/v1/user/login/account[0m
+[32m2025-09-23 11:29:39.893[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36mlogin[0m:[36m116[0m - [1m登录账号: 17376596912[0m
+[32m2025-09-23 11:29:39.893[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36mlogin[0m:[36m117[0m - [1m登录请求头: {'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (iPod; U; CPU iPhone OS 3_2 like Mac OS X; id-ID) AppleWebKit/531.3.2 (KHTML, like Gecko) Version/4.0.5 Mobile/8B119 Safari/6531.3.2', 'Referer': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com/TERP_PORTAL-TERP-tpf_umwrhzbg', 'Origin': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com', 'Cookie': None}[0m
+[32m2025-09-23 11:29:39.893[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36mlogin[0m:[36m118[0m - [1m登录数据: {'account': '17376596912', 'password': 'Y+IFHj91Gc+CFRI64dS1fxQNx5Xf31hmceqOLHY+ypYkfOc2a5hVrN1He0AT5U5m5SBWma87qVUlF4xT5qAqhBPwDoaa5j2To5IZCx8fSZKly3f5wcLzh8mwfqQccyzgTxcZofBg6yyhaClNJRAIfJZ/CZt6zx3QkWg9aQGEbqY=', 'iam_url': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com', 'iam_referer': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com/TERP_PORTAL-TERP-tpf_umwrhzbg', 'portal_url': 'https://t-erp-huoshan-portal-test.app.duandian.com', 'portal_referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP', 'description': 'TERP门户'}[0m
+[32m2025-09-23 11:29:40.123[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36m_get_user_info[0m:[36m171[0m - [1mportal_config: {'username': '17376596912', 'password': 'Y+IFHj91Gc+CFRI64dS1fxQNx5Xf31hmceqOLHY+ypYkfOc2a5hVrN1He0AT5U5m5SBWma87qVUlF4xT5qAqhBPwDoaa5j2To5IZCx8fSZKly3f5wcLzh8mwfqQccyzgTxcZofBg6yyhaClNJRAIfJZ/CZt6zx3QkWg9aQGEbqY=', 'iam_url': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com', 'iam_referer': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com/TERP_PORTAL-TERP-tpf_umwrhzbg', 'portal_url': 'https://t-erp-huoshan-portal-test.app.duandian.com', 'portal_referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP', 'description': 'TERP门户'}[0m
+[32m2025-09-23 11:29:40.123[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36m_get_user_info[0m:[36m172[0m - [1mportal_referer: https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP[0m
+[32m2025-09-23 11:29:40.166[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36m_get_user_info[0m:[36m178[0m - [1m获取用户信息URL: https://t-erp-huoshan-portal-test.app.duandian.com/api/trantor/portal/user/current[0m
+[32m2025-09-23 11:29:40.166[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36m_get_user_info[0m:[36m179[0m - [1m获取用户信息请求头: {'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (compatible; MSIE 6.0; Windows NT 10.0; Trident/5.1)', 'Referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP', 'Origin': 'https://t-erp-huoshan-portal-test.app.duandian.com', 'Cookie': None}[0m
+[32m2025-09-23 11:29:40.621[0m | [1mINFO    [0m | [36mutils.mysql_util[0m:[36m_connect_instance[0m:[36m106[0m - [1m数据库实例连接成功 [database=terp_test][0m
+[32m2025-09-23 11:29:40.990[0m | [1mINFO    [0m | [36mutils.mysql_util[0m:[36m_connect_instance[0m:[36m106[0m - [1m数据库实例连接成功 [database=iam_test][0m
+[32m2025-09-23 11:29:41.032[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36msetup_class[0m:[36m308[0m - [1m测试基类初始化完成[0m
+[32m2025-09-23 11:29:41.095[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36mlogin[0m:[36m115[0m - [1m登录URL: https://t-erp-huoshan-portal-iam-test.app.duandian.com/iam/api/v1/user/login/account[0m
+[32m2025-09-23 11:29:41.095[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36mlogin[0m:[36m116[0m - [1m登录账号: 17376596912[0m
+[32m2025-09-23 11:29:41.095[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36mlogin[0m:[36m117[0m - [1m登录请求头: {'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (compatible; MSIE 7.0; Windows 95; Trident/5.1)', 'Referer': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com/TERP_PORTAL-TERP-tpf_umwrhzbg', 'Origin': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com', 'Cookie': None}[0m
+[32m2025-09-23 11:29:41.095[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36mlogin[0m:[36m118[0m - [1m登录数据: {'account': '17376596912', 'password': 'Y+IFHj91Gc+CFRI64dS1fxQNx5Xf31hmceqOLHY+ypYkfOc2a5hVrN1He0AT5U5m5SBWma87qVUlF4xT5qAqhBPwDoaa5j2To5IZCx8fSZKly3f5wcLzh8mwfqQccyzgTxcZofBg6yyhaClNJRAIfJZ/CZt6zx3QkWg9aQGEbqY=', 'iam_url': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com', 'iam_referer': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com/TERP_PORTAL-TERP-tpf_umwrhzbg', 'portal_url': 'https://t-erp-huoshan-portal-test.app.duandian.com', 'portal_referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP', 'description': 'TERP门户'}[0m
+[32m2025-09-23 11:29:41.364[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36m_get_user_info[0m:[36m171[0m - [1mportal_config: {'username': '17376596912', 'password': 'Y+IFHj91Gc+CFRI64dS1fxQNx5Xf31hmceqOLHY+ypYkfOc2a5hVrN1He0AT5U5m5SBWma87qVUlF4xT5qAqhBPwDoaa5j2To5IZCx8fSZKly3f5wcLzh8mwfqQccyzgTxcZofBg6yyhaClNJRAIfJZ/CZt6zx3QkWg9aQGEbqY=', 'iam_url': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com', 'iam_referer': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com/TERP_PORTAL-TERP-tpf_umwrhzbg', 'portal_url': 'https://t-erp-huoshan-portal-test.app.duandian.com', 'portal_referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP', 'description': 'TERP门户'}[0m
+[32m2025-09-23 11:29:41.364[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36m_get_user_info[0m:[36m172[0m - [1mportal_referer: https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP[0m
+[32m2025-09-23 11:29:41.411[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36m_get_user_info[0m:[36m178[0m - [1m获取用户信息URL: https://t-erp-huoshan-portal-test.app.duandian.com/api/trantor/portal/user/current[0m
+[32m2025-09-23 11:29:41.411[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36m_get_user_info[0m:[36m179[0m - [1m获取用户信息请求头: {'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/534.2 (KHTML, like Gecko) Chrome/51.0.870.0 Safari/534.2', 'Referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP', 'Origin': 'https://t-erp-huoshan-portal-test.app.duandian.com', 'Cookie': None}[0m
+[32m2025-09-23 11:29:41.660[0m | [1mINFO    [0m | [36mtestcases.scm_sls[0m:[36msetup_class[0m:[36m59[0m - [1mcust_portal_headers: {'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (iPod; U; CPU iPhone OS 4_3 like Mac OS X; ak-GH) AppleWebKit/531.25.6 (KHTML, like Gecko) Version/4.0.5 Mobile/8B113 Safari/6531.25.6', 'Referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_DEALER_PORTAL-TERP', 'Origin': 'https://t-erp-huoshan-portal-test.app.duandian.com', 'Cookie': 'terp_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiMjAyNTA5MjMxMTI5NDEyNzk1MDlmYWVmMGE2NTk0ZGE5OTZhMDJmNGMzMzI2NGI3OCIsImV4cGlyZSI6MjU5MjAwLCJwYXRoIjoiLyIsImRvbWFpbiI6ImR1YW5kaWFuLmNvbSIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMy4wLjI1MDkuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc1ODg1NzM4MSwibmJmIjoxNzU4NTk4MTgxLCJpYXQiOjE3NTg1OTgxODEsImp0aSI6IjdiMmQ1Y2JiM2NjYTRjOGNiZjJjYmMxYzJjMWYwOGYyIn0.4KtBaR6dtaIxDq564jG3reimEk3DflF9lAqyAC0z-zA; Max-Age=259200; Expires=Fri, 26 Sep 2025 03:29:41 GMT; Domain=duandian.com; Path=/; HttpOnly'}[0m
+[32m2025-09-23 11:29:41.713[0m | [1mINFO    [0m | [36mutils.yaml_util[0m:[36mread_yaml[0m:[36m39[0m - [1m读取YAML文件: /Users/test/erp-autotest/testdata/scm_sls/sls_api_path.yaml[0m
+[32m2025-09-23 11:29:42.450[0m | [1mINFO    [0m | [36mutils.yaml_util[0m:[36mread_yaml[0m:[36m39[0m - [1m读取YAML文件: /Users/test/erp-autotest/testdata/scm_sls/sls_api_params.yaml[0m
+[32m2025-09-23 11:29:42.465[0m | [1mINFO    [0m | [36mutils.yaml_util[0m:[36mread_yaml[0m:[36m39[0m - [1m读取YAML文件: /Users/test/erp-autotest/config/erp/md_init_sql.yaml[0m
+[32m2025-09-23 11:29:42.466[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36mget[0m:[36m44[0m - [1m读取缓存文件: /Users/test/erp-autotest/testdata/cache/md_init_cache.json[0m
+[32m2025-09-23 11:29:42.467[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36mget[0m:[36m54[0m - [1m成功读取缓存: md_init_cache.json[0m
+[32m2025-09-23 11:29:42.467[0m | [1mINFO    [0m | [36mdata_factory.base[0m:[36minit_sql[0m:[36m33[0m - [1m从缓存获取数据成功[0m
+[32m2025-09-23 11:29:42.467[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36mget[0m:[36m44[0m - [1m读取缓存文件: /Users/test/erp-autotest/testdata/cache/md_init_cache.json[0m
+[32m2025-09-23 11:29:42.468[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36mget[0m:[36m54[0m - [1m成功读取缓存: md_init_cache.json[0m
+[32m2025-09-23 11:29:42.470[0m | [1mINFO    [0m | [36mutils.yaml_util[0m:[36mread_yaml[0m:[36m39[0m - [1m读取YAML文件: /Users/test/erp-autotest/config/erp/sls_init_sql.yaml[0m
+[32m2025-09-23 11:29:42.470[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36mget[0m:[36m44[0m - [1m读取缓存文件: /Users/test/erp-autotest/testdata/cache/sls_init_cache.json[0m
+[32m2025-09-23 11:29:42.471[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36mget[0m:[36m54[0m - [1m成功读取缓存: sls_init_cache.json[0m
+[32m2025-09-23 11:29:42.472[0m | [1mINFO    [0m | [36mdata_factory.base[0m:[36minit_sql[0m:[36m33[0m - [1m从缓存获取数据成功[0m
+[32m2025-09-23 11:29:42.472[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36mget[0m:[36m44[0m - [1m读取缓存文件: /Users/test/erp-autotest/testdata/cache/sls_init_cache.json[0m
+[32m2025-09-23 11:29:42.472[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36mget[0m:[36m54[0m - [1m成功读取缓存: sls_init_cache.json[0m
+[32m2025-09-23 11:29:42.472[0m | [1mINFO    [0m | [36mtestcases.scm_sls[0m:[36msetup_class[0m:[36m112[0m - [1mcust_id: 2059001[0m
+[32m2025-09-23 11:29:42.473[0m | [1mINFO    [0m | [36mtest_so_approve[0m:[36msetup_class[0m:[36m25[0m - [1m销售订单审批流程测试类初始化完成[0m
+[32m2025-09-23 11:29:42.473[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36msetup_method[0m:[36m317[0m - [1m开始测试方法: test_01_enable_approval_rule[0m
+[32m2025-09-23 11:29:42.474[0m | [1mINFO    [0m | [36mtest_so_approve[0m:[36mtest_01_enable_approval_rule[0m:[36m86[0m - [1m接口请求的地址>>>https://t-erp-huoshan-portal-test.app.duandian.com/api/trantor/service/engine/execute/SCM_SLS$SO_APPROVAL_CF_ENABLE_AND_CLEAR_CACHE_ACTION_SERVICE?tmodule=SCM_SLS[0m
+[32m2025-09-23 11:29:42.475[0m | [1mINFO    [0m | [36mtest_so_approve[0m:[36mtest_01_enable_approval_rule[0m:[36m86[0m - [1m接口请求的方法>>>POST[0m
+[32m2025-09-23 11:29:42.475[0m | [1mINFO    [0m | [36mtest_so_approve[0m:[36mtest_01_enable_approval_rule[0m:[36m86[0m - [1m接口请求的json参数>>>
+{
+  "sceneKey": "SCM_SLS$SLS_APPROVAL_RULE_MANAGE",
+  "viewKey": "SCM_SLS$SLS_APPROVAL_RULE_MANAGE:list",
+  "viewTitle": "list",
+  "buttonKey": "ERP_SCM$SLS_APPROVAL_RULE_MANAGE-detailView-actions-enable",
+  "buttonName": "启用",
+  "appId": 0,
+  "teamId": 22,
+  "serviceKey": "SCM_SLS$SO_APPROVAL_CF_ENABLE_AND_CLEAR_CACHE_ACTION_SERVICE",
+  "params": {
+    "request": {
+      "name": "hxytest11",
+      "code": "CODE2025090909583810028",
+      "status": "ENABLED",
+      "conditionExpress": "{\"type\":\"ConditionGroup\",\"conditions\":[{\"type\":\"ConditionLeaf\",\"leftValue\":{\"type\":\"VarValue\",\"varValue\":[{\"valueKey\":\"SCM_SLS$sls_so_head_tr\",\"fieldType\":\"Model\"},{\"valueKey\":\"totalAmt\",\"valueName\":\"订单总金额\",\"value\":\"SCM_SLS$sls_so_head_tr.totalAmt\",\"fieldType\":\"Number\"}],\"valueType\":\"VAR\",\"fieldType\":\"Number\"},\"operator\":\"GT\",\"rightValue\":{\"type\":\"VarValue\",\"valueType\":\"CONST\",\"fieldType\":\"Number\",\"varValue\":null,\"constValue\":\"1000\",\"constLabel\":\"1000\"},\"rightValues\":null}],\"logicOperator\":\"OR\"}",
+      "calculateType": "ENGINE",
+      "billRegisterId": {
+        "id": 8188
+      },
+      "id": 2005002,
+      "createdBy": {
+        "id": 618373053188357,
+        "username": "hxy_test",
+        "mobile": "158****0081",
+        "nickname": "侯新雨",
+        "status": true
+      },
+      "updatedBy": {
+        "id": 618373053188357,
+        "username": "hxy_test",
+        "mobile": "158****0081",
+        "nickname": "侯新雨",
+        "status": true
+      },
+      "createdAt": 1757383119000,
+      "updatedAt": 1758246935000
+    }
+  }
+}[0m
+[32m2025-09-23 11:29:42.646[0m | [1mINFO    [0m | [36mutils.report_util[0m:[36mwrapper[0m:[36m364[0m - [1m响应状态码: 200[0m
+[32m2025-09-23 11:29:42.647[0m | [1mINFO    [0m | [36mutils.report_util[0m:[36mwrapper[0m:[36m364[0m - [1m响应内容: {
+  "requestId": "3d116d07-315277",
+  "success": true
+}[0m
+[32m2025-09-23 11:29:42.647[0m | [1mINFO    [0m | [36mutils.assert_util[0m:[36massert_response_success[0m:[36m44[0m - [1m响应成功断言通过: success=True[0m
+[32m2025-09-23 11:29:42.658[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36mteardown_method[0m:[36m326[0m - [1m测试方法 test_01_enable_approval_rule 执行完成，耗时: 0.184秒[0m
+[32m2025-09-23 11:29:42.660[0m | [1mINFO    [0m | [36mtest_so_approve[0m:[36mteardown_class[0m:[36m37[0m - [1m测试数据清理完成[0m

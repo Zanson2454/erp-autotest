@@ -1,0 +1,29 @@
+{
+  "params": {
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "needTotal": true,
+        "sortOrders": null,
+        "conditionItems": null
+      },
+      "fields": [
+        {
+          "name": "code",
+          "type": "TEXT"
+        },
+        {
+          "name": "name",
+          "type": "TEXT"
+        },
+        {
+          "name": "desc",
+          "type": "TEXT"
+        }
+      ],
+      "systemParams": null
+    }
+  },
+  "serviceKey": "SCM_SLS$sls_item_type_group_paging_service"
+}

@@ -1,0 +1,50 @@
+{
+  "requestId": "8b4610ae-330975",
+  "success": true,
+  "data": {
+    "data": {
+      "data": [
+        {
+          "code": "AT_ItemTypeGroup7552208006386",
+          "name": "测试订单行项目类型组_20250923140552",
+          "desc": "测试订单行项目类型组_20250923140552",
+          "id": 2007008,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1758607552000,
+          "updatedAt": 1758607552000,
+          "version": 0,
+          "deleted": 0,
+          "requestId": "d8147868-330973",
+          "originOrgId": 0,
+          "tenantId": 0,
+          "orderNumber": 0
+        },
+        {
+          "code": "NORM",
+          "name": "标准销售",
+          "id": 2000001,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "createdAt": 1751939264000,
+          "updatedAt": 1751939264000,
+          "version": 0,
+          "deleted": 0,
+          "requestId": "ac1d8320-5b72-11f0-94c0-1d310b109e3b",
+          "originOrgId": 0,
+          "tenantId": 0,
+          "orderNumber": 0
+        }
+      ],
+      "total": 2
+    }
+  }
+}

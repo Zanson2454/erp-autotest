@@ -1,0 +1,31 @@
+{
+  "requestId": "f7f0e1e3-317472",
+  "success": true,
+  "data": {
+    "data": {
+      "soItemTypeId": {
+        "id": 2000005
+      },
+      "soTypeId": {
+        "id": 2101001
+      },
+      "remark": "自动化测试_20250923113938",
+      "soItemTypeGroupId": {
+        "id": 2000005
+      },
+      "id": 2042004,
+      "createdBy": {
+        "id": 540175374525637
+      },
+      "updatedBy": {
+        "id": 540175374525637
+      },
+      "createdAt": 1758598778000,
+      "updatedAt": 1758598778000,
+      "version": 0,
+      "deleted": 0,
+      "originOrgId": 0,
+      "requestId": "40b85402-317471"
+    }
+  }
+}

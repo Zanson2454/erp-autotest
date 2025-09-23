@@ -1,0 +1,88 @@
+{
+  "params": {
+    "request": {
+      "serviceKey": "SCM_SLS$WH_FIND_RULE_DETAIL_SERVICE",
+      "params": {
+        "request": {
+          "id": {
+            "context": {},
+            "name": "自动化寻仓规则_20250922175726",
+            "slsDcIds": [
+              {
+                "context": {},
+                "dcId": {
+                  "id": 2001001
+                },
+                "id": 2008002,
+                "slsWhFindRuleCfSlsDcIdsId": {
+                  "id": 2006002
+                },
+                "deleted": 0,
+                "originOrgId": 0,
+                "version": 0,
+                "createdAt": 1758535047247,
+                "updatedAt": 1758535047247,
+                "createdBy": {
+                  "id": 540175374525637
+                },
+                "updatedBy": {
+                  "id": 540175374525637
+                },
+                "requestId": "393c2774-278704"
+              }
+            ],
+            "slsOrgIds": [
+              {
+                "context": {},
+                "slsOrgId": {
+                  "id": 14377001
+                },
+                "id": 2008002,
+                "slsWhFindRuleCfSlsOrgIdsId": {
+                  "id": 2006002
+                },
+                "deleted": 0,
+                "originOrgId": 0,
+                "version": 0,
+                "createdAt": 1758535047244,
+                "updatedAt": 1758535047244,
+                "createdBy": {
+                  "id": 540175374525637
+                },
+                "updatedBy": {
+                  "id": 540175374525637
+                },
+                "requestId": "393c2774-278704"
+              }
+            ],
+            "invLocIds": [
+              {
+                "context": {},
+                "invLocId": {
+                  "id": 14376002
+                },
+                "id": 2008002,
+                "slsWhFindRuleCfInvLocIdsId": 2006002,
+                "deleted": 0,
+                "originOrgId": 0,
+                "version": 0,
+                "createdAt": 1758535047237,
+                "updatedAt": 1758535047237,
+                "createdBy": {
+                  "id": 540175374525637
+                },
+                "updatedBy": {
+                  "id": 540175374525637
+                },
+                "requestId": "393c2774-278704"
+              }
+            ],
+            "wmsStrategy": "DEFAULT_PRIORITY",
+            "status": "DRAFT"
+          }
+        }
+      }
+    }
+  },
+  "serviceKey": "SCM_SLS$WH_FIND_RULE_DETAIL_SERVICE"
+}

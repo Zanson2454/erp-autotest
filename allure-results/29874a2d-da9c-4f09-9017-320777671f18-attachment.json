@@ -1,0 +1,22 @@
+{
+  "params": {
+    "request": {
+      "soTypeId": {
+        "id": 2101001
+      },
+      "soItemTypeId": {
+        "id": 2000005
+      },
+      "soItemTypeGroupId": {
+        "id": 2000005
+      },
+      "parentSoItemTypeId": null,
+      "soItemTypeId1": null,
+      "soItemTypeId2": null,
+      "soItemTypeId3": null,
+      "usageType": null,
+      "remark": "自动化测试_20250923140622"
+    }
+  },
+  "serviceKey": "SCM_SLS$sls_so_detm_save_service"
+}

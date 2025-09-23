@@ -1,0 +1,22 @@
+{
+  "requestId": "d97f4a0d-315363",
+  "success": true,
+  "data": {
+    "data": {
+      "code": "AT_ItemTypeGroup98209136005660",
+      "originOrgId": 0,
+      "orderNumber": 0,
+      "updatedBy": 540175374525637,
+      "version": 0,
+      "createdAt": 1758598209407,
+      "deleted": 0,
+      "createdBy": 540175374525637,
+      "requestId": "d97f4a0d-315363",
+      "name": "测试订单行项目类型组_20250923113009",
+      "tenantId": 0,
+      "id": 2007001,
+      "desc": "测试订单行项目类型组_20250923113009",
+      "updatedAt": 1758598209407
+    }
+  }
+}

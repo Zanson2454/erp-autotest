@@ -1,0 +1,14 @@
+{
+  "params": {
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "needTotal": true,
+        "sortOrders": null,
+        "conditionItems": null
+      }
+    }
+  },
+  "serviceKey": "SCM_SLS$sls_so_detm_paging_service"
+}

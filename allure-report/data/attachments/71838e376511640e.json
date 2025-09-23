@@ -1,0 +1,21 @@
+{
+  "requestId": "40b85402-317339",
+  "success": true,
+  "data": {
+    "data": {
+      "soItemTypeGroupId": 2000005,
+      "originOrgId": 0,
+      "updatedBy": 540175374525637,
+      "remark": "自动化测试_20250923113902",
+      "version": 0,
+      "createdAt": 1758598743068,
+      "deleted": 0,
+      "createdBy": 540175374525637,
+      "requestId": "40b85402-317339",
+      "soItemTypeId": 2000005,
+      "id": 2042003,
+      "soTypeId": 2101001,
+      "updatedAt": 1758598743068
+    }
+  }
+}

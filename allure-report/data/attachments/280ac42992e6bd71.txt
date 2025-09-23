@@ -1,0 +1,1563 @@
+[32m2025-09-23 14:09:00.438[0m | [1mINFO    [0m | [36mtest_so_operator[0m:[36msetup_method[0m:[36m41[0m - [1m开始执行测试方法: test_03_submit_sales_order_edit[0m
+[32m2025-09-23 14:09:00.440[0m | [1mINFO    [0m | [36mtest_so_operator[0m:[36m_query_draft_orders_from_db[0m:[36m66[0m - [1m执行查询草稿态订单: 
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE created_by = %s
+                AND so_status = 'DRAFT'
+                AND deleted = 0 
+            ORDER BY created_at DESC
+            LIMIT 1
+        [0m
+[32m2025-09-23 14:09:00.815[0m | [34m[1mDEBUG   [0m | [36mutils.mysql_util[0m:[36mquery[0m:[36m173[0m - [34m[1m执行查询: 
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE created_by = %s
+                AND so_status = 'DRAFT'
+                AND deleted = 0 
+            ORDER BY created_at DESC
+            LIMIT 1
+        [0m
+[32m2025-09-23 14:09:00.815[0m | [34m[1mDEBUG   [0m | [36mutils.mysql_util[0m:[36mquery[0m:[36m175[0m - [34m[1m查询参数: (540175374525637,)[0m
+[32m2025-09-23 14:09:00.815[0m | [34m[1mDEBUG   [0m | [36mutils.mysql_util[0m:[36mquery[0m:[36m176[0m - [34m[1m查询结果: [{"id": 17392119, "so_code": "SO2025092314085700576", "so_status": "DRAFT"}][0m
+[32m2025-09-23 14:09:00.816[0m | [1mINFO    [0m | [36mtest_so_operator[0m:[36m_query_draft_orders_from_db[0m:[36m80[0m - [1m查询到的草稿态订单数据: {
+  "so_id": "17392119",
+  "so_code": "SO2025092314085700576",
+  "so_status": "DRAFT"
+}[0m
+[32m2025-09-23 14:09:00.816[0m | [1mINFO    [0m | [36mtest_so_operator[0m:[36mtest_02_sales_order_edit[0m:[36m221[0m - [1m接口请求的地址>>>https://t-erp-huoshan-portal-test.app.duandian.com/api/trantor/service/engine/execute/SCM_SLS$SLS_SO_QUERY_DETAIL_EVENT_SERVICE?tmodule=SCM_SLS[0m
+[32m2025-09-23 14:09:00.816[0m | [1mINFO    [0m | [36mtest_so_operator[0m:[36mtest_02_sales_order_edit[0m:[36m221[0m - [1m接口请求的方法>>>POST[0m
+[32m2025-09-23 14:09:00.817[0m | [1mINFO    [0m | [36mtest_so_operator[0m:[36mtest_02_sales_order_edit[0m:[36m221[0m - [1m接口请求的json参数>>>
+{
+  "sceneKey": "SCM_SLS$sls_so_730",
+  "viewKey": "SCM_SLS$sls_so_730:edit",
+  "appId": 0,
+  "teamId": 22,
+  "serviceKey": "SCM_SLS$SLS_SO_QUERY_DETAIL_EVENT_SERVICE",
+  "params": {
+    "request": {
+      "id": "17392119"
+    }
+  }
+}[0m
+[32m2025-09-23 14:09:00.817[0m | [1mINFO    [0m | [36mutils.exception_util[0m:[36mwrapper[0m:[36m173[0m - [1m请求描述: 编辑订单[0m
+[32m2025-09-23 14:09:00.996[0m | [1mINFO    [0m | [36mutils.exception_util[0m:[36mwrapper[0m:[36m173[0m - [1m响应状态码: 200[0m
+[32m2025-09-23 14:09:01.000[0m | [1mINFO    [0m | [36mutils.exception_util[0m:[36mwrapper[0m:[36m173[0m - [1m响应内容: {
+  "requestId": "8b4610ae-331715",
+  "success": true,
+  "data": {
+    "data": {
+      "id": 17392119,
+      "context": {},
+      "version": 3,
+      "deleted": 0,
+      "createdAt": 1758607738000,
+      "updatedAt": 1758607738000,
+      "createdBy": 540175374525637,
+      "updatedBy": 540175374525637,
+      "soCode": "SO2025092314085700576",
+      "soDesc": "自动化测试_20250923140857",
+      "soDocDate": 1758607737000,
+      "baseCurrId": {
+        "id": 2000001,
+        "context": {},
+        "version": 1,
+        "deleted": 0,
+        "createdAt": 1685104478000,
+        "updatedAt": 1685104478000,
+        "createdBy": 40,
+        "updatedBy": 448216378753285,
+        "currCode": "CNY",
+        "currName": "人民币",
+        "symbol": "￥",
+        "remark": "人民币"
+      },
+      "slsCurrId": {
+        "id": 2000001,
+        "context": {},
+        "version": 1,
+        "deleted": 0,
+        "createdAt": 1685104478000,
+        "updatedAt": 1685104478000,
+        "createdBy": 40,
+        "updatedBy": 448216378753285,
+        "currCode": "CNY",
+        "currName": "人民币",
+        "symbol": "￥",
+        "remark": "人民币"
+      },
+      "exchRate": 1.0,
+      "grossBaseAmt": 374925.0,
+      "netBaseAmt": 331792.035398,
+      "totalAmt": 374925.0,
+      "taxAmt": 43132.96460176991,
+      "soCreateSource": "TERP门户",
+      "slsOrgId": {
+        "id": 14377001,
+        "context": {},
+        "orgCode": "AUTOTEST_SLS_ORG",
+        "orgName": "销售组织(自动化)"
+      },
+      "slsComId": {
+        "id": 14507001,
+        "context": {}
+      },
+      "slsDcId": {
+        "id": 2001001,
+        "context": {},
+        "code": "AUTOTEST_SLS_DC",
+        "name": "销售渠道(自动化1)"
+      },
+      "soTypeId": {
+        "id": 2101001,
+        "context": {}
+      },
+      "custId": {
+        "id": 2059001,
+        "context": {},
+        "code": "AUTOTEST_CUST",
+        "name": "客户(自动化)"
+      },
+      "addrId": {
+        "id": 70002638,
+        "context": {}
+      },
+      "custPersonName": "李月汝",
+      "custPhone": "18378999655",
+      "slsPerson": {
+        "id": 14094003,
+        "context": {}
+      },
+      "slsPersonName": "章昂",
+      "slsPhone": "17376596912",
+      "soStatus": "DRAFT",
+      "soBusinessStatus": "INIT",
+      "currExchangeRateType": 2000001,
+      "soItems": [
+        {
+          "id": 17515131,
+          "context": {},
+          "version": 3,
+          "deleted": 0,
+          "createdAt": 1758607738000,
+          "updatedAt": 1758607738000,
+          "createdBy": 540175374525637,
+          "updatedBy": 540175374525637,
+          "soItemCode": "SOI20250923140857100139",
+          "soId": 17392119,
+          "soCode": "SO2025092314085700576",
+          "matId": {
+            "id": 14097001,
+            "context": {},
+            "matCode": "AUTOTEST_MAT_FINP",
+            "matName": "成品物料(自动化-带批次)",
+            "genMatTypeCfId": {
+              "id": 2000001
+            }
+          },
+          "matCode": "AUTOTEST_MAT_FINP",
+          "matName": "成品物料(自动化-带批次)",
+          "matBasePrice": 4999.0,
+          "soItemSlsQty": 75.0,
+          "soItemDelQty": 0.0,
+          "soItemTransferQty": 0.0,
+          "soItemSettQty": 0.0,
+          "soItemOutstandingQty": 75.0,
+          "soItemPrice": 4423.893805,
+          "soItemGrossPrice": 4999.0,
+          "taxRateId": 2002002,
+          "taxRate": 0.13,
+          "taxAmt": 43132.96460176991,
+          "grossTradeAmt": 374925.0,
+          "netTradeAmt": 331792.035398,
+          "soDocDate": 1758607738000,
+          "soSchlDelDate": 1758607737000,
+          "soItemStatus": "DRAFT",
+          "soItemBusinessStatus": "INIT",
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {},
+            "version": 216,
+            "deleted": 0,
+            "createdAt": 1685108592000,
+            "updatedAt": 1758247383000,
+            "createdBy": 27,
+            "updatedBy": 618373053188357,
+            "soItemTypeCode": "NORM",
+            "soItemTypeName": "常规销售",
+            "delRelv": true,
+            "autoDelivery": false,
+            "checkInvLocRelv": true,
+            "status": "ENABLED",
+            "isAutomaticComplete": true,
+            "isCompletePickControl": false,
+            "autoPr": false,
+            "autoOutDnPost": false,
+            "settlement": true,
+            "priceControlType": "STAND"
+          },
+          "uomSlsId": {
+            "id": 2004001,
+            "context": {},
+            "uomCode": "QTY",
+            "uomDesc": "件"
+          },
+          "uomBaseId": {
+            "id": 2004001,
+            "context": {},
+            "uomCode": "QTY",
+            "uomDesc": "件"
+          },
+          "soItemBaseQty": 75.0,
+          "invOrgId": {
+            "id": 14375002,
+            "context": {},
+            "orgCode": "AUTOTEST_INV_ORG",
+            "orgName": "库存组织(自动化)"
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {},
+            "orgCode": "AUTOTEST_INV_LOC_ORG",
+            "orgName": "库存地点(自动化)"
+          },
+          "bomWhether": false,
+          "bomId": {
+            "context": {}
+          },
+          "weightUomId": {
+            "id": 2002011,
+            "context": {},
+            "uomCode": "TON",
+            "uomDesc": "吨"
+          },
+          "grossWeight": 1.11,
+          "netWeight": 0.88,
+          "volumUomId": {
+            "context": {}
+          },
+          "delAddrId": {
+            "id": 70002638,
+            "context": {},
+            "addrName": "南庄镇",
+            "addrCode": "70002638"
+          },
+          "delPersonName": "李月汝",
+          "itemNumber": 1,
+          "atpCheck": true,
+          "parentItemType": {
+            "context": {}
+          },
+          "deliveryModeId": {
+            "context": {}
+          },
+          "serviceVendId": {
+            "context": {}
+          },
+          "expressComId": {
+            "context": {}
+          },
+          "salesPrice": 4999.0,
+          "soSchedules": [
+            {
+              "id": 17495131,
+              "context": {},
+              "version": 3,
+              "deleted": 0,
+              "createdAt": 1758607738000,
+              "updatedAt": 1758607738000,
+              "createdBy": 540175374525637,
+              "updatedBy": 540175374525637,
+              "soSchlCode": "SOS20250923140857100130",
+              "soId": 17392119,
+              "soCode": "SO2025092314085700576",
+              "soItemId": 17515131,
+              "soItemCode": "SOI20250923140857100139",
+              "soSchlExptDate": 1758607737000,
+              "uomSlsId": {
+                "id": 2004001
+              },
+              "uomBaseId": {
+                "id": 2004001
+              },
+              "soSchlSlsQty": 75.0,
+              "soSchlDelQty": 75.0,
+              "soSchlConfirmedQty": 75.0,
+              "soSchlDelSubQty": 0.0,
+              "soSchlTransferQty": 0.0,
+              "soSchlSettQty": 0.0,
+              "soSchlOutstandingQty": 75.0,
+              "soSchlStatus": "DRAFT",
+              "soSchlBusinessStatus": "INIT",
+              "soSchlTypeId": {
+                "id": 2103001
+              }
+            }
+          ],
+          "slsSoItemTypeCfDTO": {
+            "id": 2103001,
+            "context": {},
+            "version": 216,
+            "deleted": 0,
+            "createdAt": 1685108592000,
+            "updatedAt": 1758247383000,
+            "createdBy": 27,
+            "updatedBy": 618373053188357,
+            "soItemTypeCode": "NORM",
+            "soItemTypeName": "常规销售",
+            "delRelv": true,
+            "autoDelivery": false,
+            "checkInvLocRelv": true,
+            "status": "ENABLED",
+            "isAutomaticComplete": true,
+            "isCompletePickControl": false,
+            "autoPr": false,
+            "autoOutDnPost": false,
+            "settlement": true,
+            "priceControlType": "STAND"
+          },
+          "freeze": false,
+          "delAddrDetail": "佛山市禅城区季华五路28号",
+          "soItemTypeGroupId": 2000001,
+          "isCompleteSet": false,
+          "salesAmt": 374925.0
+        }
+      ],
+      "slsSoTypeCf": {
+        "id": 2101001,
+        "context": {},
+        "version": 82,
+        "deleted": 0,
+        "createdAt": 1685108645000,
+        "updatedAt": 1758177903000,
+        "createdBy": 27,
+        "updatedBy": 477234922377861,
+        "soTypeCode": "STND",
+        "soTypeName": "标准销售",
+        "soTypeDesc": "标准销售",
+        "partnerProcedureHeadRef": {
+          "id": 14016001
+        },
+        "status": "ENABLED",
+        "submitApproval": false,
+        "modifyApproval": false,
+        "currExchangeRateType": 2000001,
+        "btClass": "SALES",
+        "syncPrice": false,
+        "isRev": false
+      },
+      "slsPartnerLinks": [
+        {
+          "id": 17129071,
+          "context": {},
+          "version": 1,
+          "deleted": 0,
+          "createdAt": 1758607738000,
+          "updatedAt": 1758607738000,
+          "createdBy": 540175374525637,
+          "updatedBy": 540175374525637,
+          "soId": 17392119,
+          "partnerTypeId": {
+            "id": 14006001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ],
+      "slsTextLinks": [],
+      "slsAttachmentLinks": [],
+      "invOrg": {
+        "context": {}
+      },
+      "invLoc": {
+        "context": {}
+      },
+      "priceIdempotent": "0bee80353aa798f87d01dc4445ce5a7c",
+      "addrDetail": "佛山市禅城区季华五路28号",
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false,
+      "priceCalcDate": 1758607738000,
+      "btClass": "SALES",
+      "fixedExchRate": false,
+      "freezeType": "NU_FREEZE"
+    }
+  }
+}[0m
+[32m2025-09-23 14:09:01.002[0m | [1mINFO    [0m | [36mtest_so_operator[0m:[36mtest_03_submit_sales_order_edit[0m:[36m269[0m - [1m接口请求的地址>>>https://t-erp-huoshan-portal-test.app.duandian.com/api/trantor/service/engine/execute/SCM_SLS$SLS_SO_SAVE_ACTION_SERVICE?tmodule=SCM_SLS[0m
+[32m2025-09-23 14:09:01.002[0m | [1mINFO    [0m | [36mtest_so_operator[0m:[36mtest_03_submit_sales_order_edit[0m:[36m269[0m - [1m接口请求的方法>>>POST[0m
+[32m2025-09-23 14:09:01.004[0m | [1mINFO    [0m | [36mtest_so_operator[0m:[36mtest_03_submit_sales_order_edit[0m:[36m269[0m - [1m接口请求的json参数>>>
+{
+  "sceneKey": "SCM_SLS$sls_so_730",
+  "viewKey": "SCM_SLS$sls_so_730:edit",
+  "viewTitle": "edit",
+  "buttonKey": "SCM_SLS$sls_so_730-TERP_MIGRATE$sls_so-editView-footer-save",
+  "buttonName": "保存",
+  "appId": 0,
+  "teamId": 22,
+  "serviceKey": "SCM_SLS$SLS_SO_SAVE_ACTION_SERVICE",
+  "params": {
+    "request": {
+      "id": 17392119,
+      "context": {},
+      "version": 3,
+      "deleted": 0,
+      "createdAt": 1758607738000,
+      "updatedAt": 1758607738000,
+      "createdBy": 540175374525637,
+      "updatedBy": 540175374525637,
+      "soCode": "SO2025092314085700576",
+      "soDesc": "自动化测试_20250923140857",
+      "soDocDate": 1758607737000,
+      "baseCurrId": {
+        "id": 2000001,
+        "context": {},
+        "version": 1,
+        "deleted": 0,
+        "createdAt": 1685104478000,
+        "updatedAt": 1685104478000,
+        "createdBy": 40,
+        "updatedBy": 448216378753285,
+        "currCode": "CNY",
+        "currName": "人民币",
+        "symbol": "￥",
+        "remark": "人民币"
+      },
+      "slsCurrId": {
+        "id": 2000001,
+        "context": {},
+        "version": 1,
+        "deleted": 0,
+        "createdAt": 1685104478000,
+        "updatedAt": 1685104478000,
+        "createdBy": 40,
+        "updatedBy": 448216378753285,
+        "currCode": "CNY",
+        "currName": "人民币",
+        "symbol": "￥",
+        "remark": "人民币"
+      },
+      "exchRate": 1.0,
+      "grossBaseAmt": 374925.0,
+      "netBaseAmt": 331792.035398,
+      "totalAmt": 374925.0,
+      "taxAmt": 43132.96460176991,
+      "soCreateSource": "TERP门户",
+      "slsOrgId": {
+        "id": 14377001,
+        "context": {},
+        "orgCode": "AUTOTEST_SLS_ORG",
+        "orgName": "销售组织(自动化)"
+      },
+      "slsComId": {
+        "id": 14507001,
+        "context": {}
+      },
+      "slsDcId": {
+        "id": 2001001,
+        "context": {},
+        "code": "AUTOTEST_SLS_DC",
+        "name": "销售渠道(自动化1)"
+      },
+      "soTypeId": {
+        "id": 2101001,
+        "context": {}
+      },
+      "custId": {
+        "id": 2059001,
+        "context": {},
+        "code": "AUTOTEST_CUST",
+        "name": "客户(自动化)"
+      },
+      "addrId": {
+        "id": 70002638,
+        "context": {}
+      },
+      "custPersonName": "李月汝",
+      "custPhone": "18378999655",
+      "slsPerson": {
+        "id": 14094003,
+        "context": {}
+      },
+      "slsPersonName": "章昂",
+      "slsPhone": "17376596912",
+      "soStatus": "DRAFT",
+      "soBusinessStatus": "INIT",
+      "currExchangeRateType": 2000001,
+      "soItems": [
+        {
+          "id": 17515131,
+          "context": {},
+          "version": 3,
+          "deleted": 0,
+          "createdAt": 1758607738000,
+          "updatedAt": 1758607738000,
+          "createdBy": 540175374525637,
+          "updatedBy": 540175374525637,
+          "soItemCode": "SOI20250923140857100139",
+          "soId": 17392119,
+          "soCode": "SO2025092314085700576",
+          "matId": {
+            "id": 14097001,
+            "context": {},
+            "matCode": "AUTOTEST_MAT_FINP",
+            "matName": "成品物料(自动化-带批次)",
+            "genMatTypeCfId": {
+              "id": 2000001
+            }
+          },
+          "matCode": "AUTOTEST_MAT_FINP",
+          "matName": "成品物料(自动化-带批次)",
+          "matBasePrice": 4999.0,
+          "soItemSlsQty": 75.0,
+          "soItemDelQty": 0.0,
+          "soItemTransferQty": 0.0,
+          "soItemSettQty": 0.0,
+          "soItemOutstandingQty": 75.0,
+          "soItemPrice": 4423.893805,
+          "soItemGrossPrice": 4999.0,
+          "taxRateId": 2002002,
+          "taxRate": 0.13,
+          "taxAmt": 43132.96460176991,
+          "grossTradeAmt": 374925.0,
+          "netTradeAmt": 331792.035398,
+          "soDocDate": 1758607738000,
+          "soSchlDelDate": 1758607737000,
+          "soItemStatus": "DRAFT",
+          "soItemBusinessStatus": "INIT",
+          "soItemTypeId": {
+            "id": 2103001,
+            "context": {},
+            "version": 216,
+            "deleted": 0,
+            "createdAt": 1685108592000,
+            "updatedAt": 1758247383000,
+            "createdBy": 27,
+            "updatedBy": 618373053188357,
+            "soItemTypeCode": "NORM",
+            "soItemTypeName": "常规销售",
+            "delRelv": true,
+            "autoDelivery": false,
+            "checkInvLocRelv": true,
+            "status": "ENABLED",
+            "isAutomaticComplete": true,
+            "isCompletePickControl": false,
+            "autoPr": false,
+            "autoOutDnPost": false,
+            "settlement": true,
+            "priceControlType": "STAND"
+          },
+          "uomSlsId": {
+            "id": 2004001,
+            "context": {},
+            "uomCode": "QTY",
+            "uomDesc": "件"
+          },
+          "uomBaseId": {
+            "id": 2004001,
+            "context": {},
+            "uomCode": "QTY",
+            "uomDesc": "件"
+          },
+          "soItemBaseQty": 75.0,
+          "invOrgId": {
+            "id": 14375002,
+            "context": {},
+            "orgCode": "AUTOTEST_INV_ORG",
+            "orgName": "库存组织(自动化)"
+          },
+          "invLocId": {
+            "id": 14376002,
+            "context": {},
+            "orgCode": "AUTOTEST_INV_LOC_ORG",
+            "orgName": "库存地点(自动化)"
+          },
+          "bomWhether": false,
+          "bomId": {
+            "context": {}
+          },
+          "weightUomId": {
+            "id": 2002011,
+            "context": {},
+            "uomCode": "TON",
+            "uomDesc": "吨"
+          },
+          "grossWeight": 1.11,
+          "netWeight": 0.88,
+          "volumUomId": {
+            "context": {}
+          },
+          "delAddrId": {
+            "id": 70002638,
+            "context": {},
+            "addrName": "南庄镇",
+            "addrCode": "70002638"
+          },
+          "delPersonName": "李月汝",
+          "itemNumber": 1,
+          "atpCheck": true,
+          "parentItemType": {
+            "context": {}
+          },
+          "deliveryModeId": {
+            "context": {}
+          },
+          "serviceVendId": {
+            "context": {}
+          },
+          "expressComId": {
+            "context": {}
+          },
+          "salesPrice": 4999.0,
+          "soSchedules": [
+            {
+              "id": 17495131,
+              "context": {},
+              "version": 3,
+              "deleted": 0,
+              "createdAt": 1758607738000,
+              "updatedAt": 1758607738000,
+              "createdBy": 540175374525637,
+              "updatedBy": 540175374525637,
+              "soSchlCode": "SOS20250923140857100130",
+              "soId": 17392119,
+              "soCode": "SO2025092314085700576",
+              "soItemId": 17515131,
+              "soItemCode": "SOI20250923140857100139",
+              "soSchlExptDate": 1758607737000,
+              "uomSlsId": {
+                "id": 2004001
+              },
+              "uomBaseId": {
+                "id": 2004001
+              },
+              "soSchlSlsQty": 75.0,
+              "soSchlDelQty": 75.0,
+              "soSchlConfirmedQty": 75.0,
+              "soSchlDelSubQty": 0.0,
+              "soSchlTransferQty": 0.0,
+              "soSchlSettQty": 0.0,
+              "soSchlOutstandingQty": 75.0,
+              "soSchlStatus": "DRAFT",
+              "soSchlBusinessStatus": "INIT",
+              "soSchlTypeId": {
+                "id": 2103001
+              }
+            }
+          ],
+          "slsSoItemTypeCfDTO": {
+            "id": 2103001,
+            "context": {},
+            "version": 216,
+            "deleted": 0,
+            "createdAt": 1685108592000,
+            "updatedAt": 1758247383000,
+            "createdBy": 27,
+            "updatedBy": 618373053188357,
+            "soItemTypeCode": "NORM",
+            "soItemTypeName": "常规销售",
+            "delRelv": true,
+            "autoDelivery": false,
+            "checkInvLocRelv": true,
+            "status": "ENABLED",
+            "isAutomaticComplete": true,
+            "isCompletePickControl": false,
+            "autoPr": false,
+            "autoOutDnPost": false,
+            "settlement": true,
+            "priceControlType": "STAND"
+          },
+          "freeze": false,
+          "delAddrDetail": "佛山市禅城区季华五路28号",
+          "soItemTypeGroupId": 2000001,
+          "isCompleteSet": false,
+          "salesAmt": 374925.0
+        }
+      ],
+      "slsSoTypeCf": {
+        "id": 2101001,
+        "context": {},
+        "version": 82,
+        "deleted": 0,
+        "createdAt": 1685108645000,
+        "updatedAt": 1758177903000,
+        "createdBy": 27,
+        "updatedBy": 477234922377861,
+        "soTypeCode": "STND",
+        "soTypeName": "标准销售",
+        "soTypeDesc": "标准销售",
+        "partnerProcedureHeadRef": {
+          "id": 14016001
+        },
+        "status": "ENABLED",
+        "submitApproval": false,
+        "modifyApproval": false,
+        "currExchangeRateType": 2000001,
+        "btClass": "SALES",
+        "syncPrice": false,
+        "isRev": false
+      },
+      "slsPartnerLinks": [
+        {
+          "id": 17129071,
+          "context": {},
+          "version": 1,
+          "deleted": 0,
+          "createdAt": 1758607738000,
+          "updatedAt": 1758607738000,
+          "createdBy": 540175374525637,
+          "updatedBy": 540175374525637,
+          "soId": 17392119,
+          "partnerTypeId": {
+            "id": 14006001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ],
+      "slsTextLinks": [],
+      "slsAttachmentLinks": [],
+      "invOrg": {
+        "context": {}
+      },
+      "invLoc": {
+        "context": {}
+      },
+      "priceIdempotent": "0bee80353aa798f87d01dc4445ce5a7c",
+      "addrDetail": "佛山市禅城区季华五路28号",
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false,
+      "priceCalcDate": 1758607738000,
+      "btClass": "SALES",
+      "fixedExchRate": false,
+      "freezeType": "NU_FREEZE",
+      "syncSubmit": true
+    }
+  }
+}[0m
+[32m2025-09-23 14:09:01.004[0m | [1mINFO    [0m | [36mutils.exception_util[0m:[36mwrapper[0m:[36m173[0m - [1m请求描述: 保存订单[0m
+[32m2025-09-23 14:09:01.526[0m | [1mINFO    [0m | [36mutils.exception_util[0m:[36mwrapper[0m:[36m173[0m - [1m响应状态码: 200[0m
+[32m2025-09-23 14:09:01.530[0m | [1mINFO    [0m | [36mutils.exception_util[0m:[36mwrapper[0m:[36m173[0m - [1m响应内容: {
+  "requestId": "8b4610ae-331716",
+  "success": true,
+  "data": {
+    "data": {
+      "id": 17392119,
+      "context": {},
+      "version": 3,
+      "deleted": 0,
+      "createdAt": 1758607738000,
+      "updatedAt": 1758607738000,
+      "createdBy": {
+        "id": 540175374525637
+      },
+      "updatedBy": {
+        "id": 540175374525637
+      },
+      "soCode": "SO2025092314085700576",
+      "soDesc": "自动化测试_20250923140857",
+      "soDocDate": 1758607737000,
+      "baseCurrId": {
+        "id": 2000001
+      },
+      "slsCurrId": {
+        "id": 2000001
+      },
+      "exchRate": 1.0,
+      "grossBaseAmt": 374925.0,
+      "netBaseAmt": 331792.0353982301,
+      "totalAmt": 374925.0,
+      "taxAmt": 43132.96460176991,
+      "soCreateSource": "TERP门户",
+      "slsOrgId": {
+        "id": 14377001
+      },
+      "slsComId": {
+        "id": 14507001
+      },
+      "slsDcId": {
+        "id": 2001001
+      },
+      "soTypeId": {
+        "id": 2101001
+      },
+      "custId": {
+        "id": 2059001
+      },
+      "addrId": {
+        "id": 70002638
+      },
+      "custPersonName": "李月汝",
+      "custPhone": "18378999655",
+      "slsPerson": {
+        "id": 14094003
+      },
+      "slsPersonName": "章昂",
+      "slsPhone": "17376596912",
+      "soStatus": "EFFECT",
+      "soBusinessStatus": "INIT",
+      "currExchangeRateType": 2000001,
+      "btClass": "SALES",
+      "priceCalcDate": 1758607738000,
+      "slsSoTypeCf": {
+        "id": 2101001,
+        "context": {},
+        "version": 82,
+        "deleted": 0,
+        "createdAt": 1685108645000,
+        "updatedAt": 1758177903000,
+        "createdBy": 27,
+        "updatedBy": 477234922377861,
+        "soTypeCode": "STND",
+        "soTypeName": "标准销售",
+        "soTypeDesc": "标准销售",
+        "partnerProcedureHeadRef": {
+          "id": 14016001
+        },
+        "status": "ENABLED",
+        "submitApproval": false,
+        "modifyApproval": false,
+        "currExchangeRateType": 2000001,
+        "btClass": "SALES",
+        "syncPrice": false,
+        "isRev": false
+      },
+      "soItems": [
+        {
+          "id": 17515131,
+          "context": {},
+          "version": 3,
+          "deleted": 0,
+          "createdAt": 1758607738000,
+          "updatedAt": 1758607738000,
+          "createdBy": 540175374525637,
+          "updatedBy": 540175374525637,
+          "soItemCode": "SOI20250923140857100139",
+          "soId": 17392119,
+          "soCode": "SO2025092314085700576",
+          "matId": {
+            "id": 14097001
+          },
+          "matCode": "AUTOTEST_MAT_FINP",
+          "matName": "成品物料(自动化-带批次)",
+          "matBasePrice": 4999.0,
+          "soItemSlsQty": 75.0,
+          "soItemDelQty": 0,
+          "soItemTransferQty": 0,
+          "soItemSettQty": 0,
+          "soItemOutstandingQty": 75.0,
+          "soItemPrice": 4423.893805309735,
+          "soItemGrossPrice": 4999.0,
+          "taxRateId": {
+            "id": 2002002
+          },
+          "taxRate": 0.13,
+          "taxAmt": 43132.96460176991,
+          "grossTradeAmt": 374925.0,
+          "netTradeAmt": 331792.0353982301,
+          "soDocDate": 1758607738000,
+          "soSchlDelDate": 1758607737000,
+          "soItemStatus": "EFFECT",
+          "soItemBusinessStatus": "INIT",
+          "soItemTypeId": {
+            "id": 2103001
+          },
+          "uomSlsId": {
+            "id": 2004001
+          },
+          "uomBaseId": {
+            "id": 2004001
+          },
+          "soItemBaseQty": 75.0,
+          "invOrgId": {
+            "id": 14375002
+          },
+          "invLocId": {
+            "id": 14376002
+          },
+          "bomWhether": false,
+          "weightUomId": {
+            "id": 2002011
+          },
+          "grossWeight": 1.11,
+          "netWeight": 0.88,
+          "delAddrId": {
+            "id": 70002638
+          },
+          "delPersonName": "李月汝",
+          "itemNumber": 1,
+          "atpCheck": true,
+          "isCompleteSet": false,
+          "salesPrice": 4999.0,
+          "salesAmt": 374925.0,
+          "soSchedules": [
+            {
+              "id": 17495131,
+              "context": {},
+              "version": 3,
+              "deleted": 0,
+              "createdAt": 1758607738000,
+              "updatedAt": 1758607738000,
+              "createdBy": 540175374525637,
+              "updatedBy": 540175374525637,
+              "soSchlCode": "SOS20250923140857100130",
+              "soId": 17392119,
+              "soCode": "SO2025092314085700576",
+              "soItemId": 17515131,
+              "soItemCode": "SOI20250923140857100139",
+              "soSchlExptDate": 1758607737000,
+              "uomSlsId": {
+                "id": 2004001
+              },
+              "uomBaseId": {
+                "id": 2004001
+              },
+              "soSchlSlsQty": 75.0,
+              "soSchlDelQty": 75.0,
+              "soSchlConfirmedQty": 75.0,
+              "soSchlDelSubQty": 0,
+              "soSchlTransferQty": 0,
+              "soSchlSettQty": 0,
+              "soSchlOutstandingQty": 75.0,
+              "soSchlStatus": "DRAFT",
+              "soSchlBusinessStatus": "INIT",
+              "soSchlTypeId": {
+                "id": 2103001
+              }
+            }
+          ],
+          "slsSoItemTypeCfDTO": {
+            "id": 2103001,
+            "context": {},
+            "version": 216,
+            "deleted": 0,
+            "createdAt": 1685108592000,
+            "updatedAt": 1758247383000,
+            "createdBy": 27,
+            "updatedBy": 618373053188357,
+            "soItemTypeCode": "NORM",
+            "soItemTypeName": "常规销售",
+            "delRelv": true,
+            "autoDelivery": false,
+            "checkInvLocRelv": true,
+            "status": "ENABLED",
+            "isAutomaticComplete": true,
+            "isCompletePickControl": false,
+            "autoPr": false,
+            "autoOutDnPost": false,
+            "settlement": true,
+            "priceControlType": "STAND"
+          },
+          "freeze": false,
+          "delAddrDetail": "佛山市禅城区季华五路28号",
+          "soItemTypeGroupId": 2000001
+        }
+      ],
+      "slsPartnerLinks": [
+        {
+          "id": 17129071,
+          "context": {},
+          "version": 1,
+          "deleted": 0,
+          "createdAt": 1758607738000,
+          "updatedAt": 1758607738000,
+          "createdBy": 540175374525637,
+          "updatedBy": 540175374525637,
+          "soId": 17392119,
+          "partnerTypeId": {
+            "id": 14006001
+          },
+          "partnerClass": "CUSTOMER",
+          "partnerId": {
+            "id": 2059001
+          }
+        }
+      ],
+      "slsTextLinks": [],
+      "slsAttachmentLinks": [],
+      "preDocIdempotent": "0bee80353aa798f87d01dc4445ce5a7c",
+      "priceIdempotent": "289a32236a18a5c32cc30e0dd55129c6",
+      "preCalculate": false,
+      "reCalculate": false,
+      "addrDetail": "佛山市禅城区季华五路28号",
+      "partnerCheck": false,
+      "matQualificationCheck": false,
+      "whetherPrice": false,
+      "syncSubmit": true,
+      "soPriceDTO": {
+        "context": {},
+        "usageType": "SLS",
+        "docType": "SLS",
+        "preDocIdempotent": "289a32236a18a5c32cc30e0dd55129c6",
+        "docIdempotent": "289a32236a18a5c32cc30e0dd55129c6",
+        "isReCalculate": false,
+        "doc": {
+          "docCode": "SO2025092314085700576",
+          "docModelKey": "sls_so_head_tr",
+          "docCurrId": 2000001,
+          "comOrgId": 14507001,
+          "docTime": 1758607738000,
+          "docData": {
+            "id": 17392119,
+            "context": {},
+            "version": 3,
+            "deleted": 0,
+            "createdAt": "2025-09-23T14:08:58",
+            "updatedAt": "2025-09-23T14:08:58",
+            "createdBy": 540175374525637,
+            "updatedBy": 540175374525637,
+            "soCode": "SO2025092314085700576",
+            "soDesc": "自动化测试_20250923140857",
+            "soDocDate": "2025-09-23T14:08:57",
+            "baseCurrId": 2000001,
+            "slsCurrId": 2000001,
+            "exchRate": 1.0,
+            "grossBaseAmt": 374925.0,
+            "netBaseAmt": 331792.035398,
+            "totalAmt": 374925.0,
+            "taxAmt": 43132.96460176991,
+            "soCreateSource": "TERP门户",
+            "slsOrgId": 14377001,
+            "slsComId": 14507001,
+            "slsDcId": 2001001,
+            "soTypeId": 2101001,
+            "custId": 2059001,
+            "addrId": 70002638,
+            "custPersonName": "李月汝",
+            "custPhone": "18378999655",
+            "slsPerson": 14094003,
+            "slsPersonName": "章昂",
+            "slsPhone": "17376596912",
+            "soStatus": "DRAFT",
+            "soBusinessStatus": "INIT",
+            "currExchangeRateType": 2000001,
+            "btClass": "SALES",
+            "priceCalcDate": "2025-09-23T14:08:58",
+            "slsSoTypeCf": {
+              "id": 2101001,
+              "context": {},
+              "version": 82,
+              "deleted": 0,
+              "createdAt": "2023-05-26T21:44:05",
+              "updatedAt": "2025-09-18T14:45:03",
+              "createdBy": 27,
+              "updatedBy": 477234922377861,
+              "soTypeCode": "STND",
+              "soTypeName": "标准销售",
+              "soTypeDesc": "标准销售",
+              "partnerProcedureHeadRef": 14016001,
+              "status": "ENABLED",
+              "submitApproval": false,
+              "modifyApproval": false,
+              "currExchangeRateType": 2000001,
+              "btClass": "SALES",
+              "syncPrice": false,
+              "isRev": false
+            },
+            "soItems": [
+              {
+                "id": 17515131,
+                "context": {},
+                "version": 3,
+                "deleted": 0,
+                "createdAt": "2025-09-23T14:08:58",
+                "updatedAt": "2025-09-23T14:08:58",
+                "createdBy": 540175374525637,
+                "updatedBy": 540175374525637,
+                "soItemCode": "SOI20250923140857100139",
+                "soId": 17392119,
+                "soCode": "SO2025092314085700576",
+                "matId": 14097001,
+                "matCode": "AUTOTEST_MAT_FINP",
+                "matName": "成品物料(自动化-带批次)",
+                "matBasePrice": 4999.0,
+                "soItemSlsQty": 75.0,
+                "soItemDelQty": 0.0,
+                "soItemTransferQty": 0.0,
+                "soItemSettQty": 0.0,
+                "soItemOutstandingQty": 75.0,
+                "soItemPrice": 4423.893805,
+                "soItemGrossPrice": 4999.0,
+                "taxRateId": 2002002,
+                "taxRate": 0.13,
+                "taxAmt": 43132.96460176991,
+                "grossTradeAmt": 374925.0,
+                "netTradeAmt": 331792.035398,
+                "soDocDate": "2025-09-23T14:08:58",
+                "soSchlDelDate": "2025-09-23T14:08:57",
+                "soItemStatus": "DRAFT",
+                "soItemBusinessStatus": "INIT",
+                "soItemTypeId": 2103001,
+                "uomSlsId": 2004001,
+                "uomBaseId": 2004001,
+                "soItemBaseQty": 75.0,
+                "invOrgId": 14375002,
+                "invLocId": 14376002,
+                "bomWhether": false,
+                "weightUomId": 2002011,
+                "grossWeight": 1.11,
+                "netWeight": 0.88,
+                "delAddrId": 70002638,
+                "delPersonName": "李月汝",
+                "itemNumber": 1,
+                "atpCheck": true,
+                "isCompleteSet": false,
+                "salesPrice": 4999.0,
+                "salesAmt": 374925.0,
+                "soSchedules": [
+                  {
+                    "id": 17495131,
+                    "context": {},
+                    "version": 3,
+                    "deleted": 0,
+                    "createdAt": "2025-09-23T14:08:58",
+                    "updatedAt": "2025-09-23T14:08:58",
+                    "createdBy": 540175374525637,
+                    "updatedBy": 540175374525637,
+                    "soSchlCode": "SOS20250923140857100130",
+                    "soId": 17392119,
+                    "soCode": "SO2025092314085700576",
+                    "soItemId": 17515131,
+                    "soItemCode": "SOI20250923140857100139",
+                    "soSchlExptDate": "2025-09-23T14:08:57",
+                    "uomSlsId": 2004001,
+                    "uomBaseId": 2004001,
+                    "soSchlSlsQty": 75.0,
+                    "soSchlDelQty": 75.0,
+                    "soSchlConfirmedQty": 75.0,
+                    "soSchlDelSubQty": 0.0,
+                    "soSchlTransferQty": 0.0,
+                    "soSchlSettQty": 0.0,
+                    "soSchlOutstandingQty": 75.0,
+                    "soSchlStatus": "DRAFT",
+                    "soSchlBusinessStatus": "INIT",
+                    "soSchlTypeId": 2103001
+                  }
+                ],
+                "slsSoItemTypeCfDTO": {
+                  "id": 2103001,
+                  "context": {},
+                  "version": 216,
+                  "deleted": 0,
+                  "createdAt": "2023-05-26T21:43:12",
+                  "updatedAt": "2025-09-19T10:03:03",
+                  "createdBy": 27,
+                  "updatedBy": 618373053188357,
+                  "soItemTypeCode": "NORM",
+                  "soItemTypeName": "常规销售",
+                  "delRelv": true,
+                  "autoDelivery": false,
+                  "checkInvLocRelv": true,
+                  "status": "ENABLED",
+                  "isAutomaticComplete": true,
+                  "isCompletePickControl": false,
+                  "autoPr": false,
+                  "autoOutDnPost": false,
+                  "settlement": true,
+                  "priceControlType": "STAND"
+                },
+                "freeze": false,
+                "delAddrDetail": "佛山市禅城区季华五路28号",
+                "soItemTypeGroupId": 2000001
+              }
+            ],
+            "slsPartnerLinks": [
+              {
+                "id": 17129071,
+                "context": {},
+                "version": 1,
+                "deleted": 0,
+                "createdAt": "2025-09-23T14:08:58",
+                "updatedAt": "2025-09-23T14:08:58",
+                "createdBy": 540175374525637,
+                "updatedBy": 540175374525637,
+                "soId": 17392119,
+                "partnerTypeId": 14006001,
+                "partnerClass": "CUSTOMER",
+                "partnerId": 2059001
+              }
+            ],
+            "slsTextLinks": [],
+            "slsAttachmentLinks": [],
+            "preDocIdempotent": "0bee80353aa798f87d01dc4445ce5a7c",
+            "priceIdempotent": "289a32236a18a5c32cc30e0dd55129c6",
+            "preCalculate": false,
+            "reCalculate": false,
+            "addrDetail": "佛山市禅城区季华五路28号",
+            "partnerCheck": false,
+            "matQualificationCheck": false,
+            "whetherPrice": false,
+            "syncSubmit": true,
+            "isFixedExchRate": false,
+            "isFreezeType": "NU_FREEZE"
+          },
+          "docLineList": [
+            {
+              "docLineCode": "SOI20250923140857100139",
+              "docLineModelKey": "sls_so_item_tr",
+              "invOrgId": 14375002,
+              "matId": 14097001,
+              "matCode": "AUTOTEST_MAT_FINP",
+              "docUomBaseId": 2004001,
+              "docUomBaseNum": 75.0,
+              "priceControlType": "STAND",
+              "docLineData": {
+                "id": 17515131,
+                "context": {},
+                "version": 3,
+                "deleted": 0,
+                "createdAt": "2025-09-23T14:08:58",
+                "updatedAt": "2025-09-23T14:08:58",
+                "createdBy": 540175374525637,
+                "updatedBy": 540175374525637,
+                "soItemCode": "SOI20250923140857100139",
+                "soId": 17392119,
+                "soCode": "SO2025092314085700576",
+                "matId": 14097001,
+                "matCode": "AUTOTEST_MAT_FINP",
+                "matName": "成品物料(自动化-带批次)",
+                "matBasePrice": 4999.0,
+                "soItemSlsQty": 75.0,
+                "soItemDelQty": 0.0,
+                "soItemTransferQty": 0.0,
+                "soItemSettQty": 0.0,
+                "soItemOutstandingQty": 75.0,
+                "soItemPrice": 4423.893805,
+                "soItemGrossPrice": 4999.0,
+                "taxRateId": 2002002,
+                "taxRate": 0.13,
+                "taxAmt": 43132.96460176991,
+                "grossTradeAmt": 374925.0,
+                "netTradeAmt": 331792.035398,
+                "soDocDate": "2025-09-23T14:08:58",
+                "soSchlDelDate": "2025-09-23T14:08:57",
+                "soItemStatus": "DRAFT",
+                "soItemBusinessStatus": "INIT",
+                "soItemTypeId": 2103001,
+                "uomSlsId": 2004001,
+                "uomBaseId": 2004001,
+                "soItemBaseQty": 75.0,
+                "invOrgId": 14375002,
+                "invLocId": 14376002,
+                "bomWhether": false,
+                "weightUomId": 2002011,
+                "grossWeight": 1.11,
+                "netWeight": 0.88,
+                "delAddrId": 70002638,
+                "delPersonName": "李月汝",
+                "itemNumber": 1,
+                "atpCheck": true,
+                "isCompleteSet": false,
+                "salesPrice": 4999.0,
+                "salesAmt": 374925.0,
+                "soSchedules": [
+                  {
+                    "id": 17495131,
+                    "context": {},
+                    "version": 3,
+                    "deleted": 0,
+                    "createdAt": "2025-09-23T14:08:58",
+                    "updatedAt": "2025-09-23T14:08:58",
+                    "createdBy": 540175374525637,
+                    "updatedBy": 540175374525637,
+                    "soSchlCode": "SOS20250923140857100130",
+                    "soId": 17392119,
+                    "soCode": "SO2025092314085700576",
+                    "soItemId": 17515131,
+                    "soItemCode": "SOI20250923140857100139",
+                    "soSchlExptDate": "2025-09-23T14:08:57",
+                    "uomSlsId": 2004001,
+                    "uomBaseId": 2004001,
+                    "soSchlSlsQty": 75.0,
+                    "soSchlDelQty": 75.0,
+                    "soSchlConfirmedQty": 75.0,
+                    "soSchlDelSubQty": 0.0,
+                    "soSchlTransferQty": 0.0,
+                    "soSchlSettQty": 0.0,
+                    "soSchlOutstandingQty": 75.0,
+                    "soSchlStatus": "DRAFT",
+                    "soSchlBusinessStatus": "INIT",
+                    "soSchlTypeId": 2103001
+                  }
+                ],
+                "slsSoItemTypeCfDTO": {
+                  "id": 2103001,
+                  "context": {},
+                  "version": 216,
+                  "deleted": 0,
+                  "createdAt": "2023-05-26T21:43:12",
+                  "updatedAt": "2025-09-19T10:03:03",
+                  "createdBy": 27,
+                  "updatedBy": 618373053188357,
+                  "soItemTypeCode": "NORM",
+                  "soItemTypeName": "常规销售",
+                  "delRelv": true,
+                  "autoDelivery": false,
+                  "checkInvLocRelv": true,
+                  "status": "ENABLED",
+                  "isAutomaticComplete": true,
+                  "isCompletePickControl": false,
+                  "autoPr": false,
+                  "autoOutDnPost": false,
+                  "settlement": true,
+                  "priceControlType": "STAND"
+                },
+                "freeze": false,
+                "delAddrDetail": "佛山市禅城区季华五路28号",
+                "soItemTypeGroupId": 2000001
+              }
+            }
+          ]
+        },
+        "priceStrategyLogDTOS": [
+          {
+            "matchStatus": "MATCH_SUCCESS",
+            "priceTypeLogHeadDTOS": [
+              {
+                "docCode": "SO2025092314085700576",
+                "priceTypeCode": "yunfeitest",
+                "priceTypeName": "运费抬头",
+                "stepNo": 40,
+                "docCurrId": 2000001,
+                "docCurrPrice": 6.0,
+                "isAllowManual": false,
+                "baseEdit": false
+              }
+            ],
+            "priceTypeLogItemDTOS": [
+              {
+                "docCode": "SO2025092314085700576",
+                "docLineCode": "SOI20250923140857100139",
+                "priceTypeCode": "SALES_PRICE",
+                "priceTypeName": "销售价",
+                "stepNo": 20,
+                "docCurrId": 2000001,
+                "docCurrPrice": 4999.0,
+                "docCurrAmount": 374925.0,
+                "percentage": 0.13,
+                "partnerTypeId": 14006001,
+                "partnerId": 2059001,
+                "settItemTypeId": 6,
+                "taxRate": 0.13,
+                "taxCode": 2002002,
+                "docUomBaseId": 2004001,
+                "docUomBaseNum": 75.0,
+                "settSubjectType": "SLS_ORG",
+                "settEntityId": 14507001,
+                "isAllowManual": true,
+                "baseEdit": false,
+                "priceTransferValueCfDTOS": [
+                  {
+                    "id": 5860,
+                    "context": {},
+                    "version": 1,
+                    "deleted": 0,
+                    "createdAt": 1745945978000,
+                    "updatedAt": 1745945978000,
+                    "createdBy": 499869775084741,
+                    "updatedBy": 499869775084741,
+                    "fieldName": "c",
+                    "fieldKey": "salesAmt",
+                    "transferValueType": "DOC_AMOUNT"
+                  },
+                  {
+                    "id": 5861,
+                    "context": {},
+                    "version": 1,
+                    "deleted": 0,
+                    "createdAt": 1745945978000,
+                    "updatedAt": 1745945978000,
+                    "createdBy": 499869775084741,
+                    "updatedBy": 499869775084741,
+                    "fieldName": "c",
+                    "fieldKey": "salesPrice",
+                    "transferValueType": "DOC_PRICE"
+                  }
+                ]
+              },
+              {
+                "docCode": "SO2025092314085700576",
+                "docLineCode": "SOI20250923140857100139",
+                "priceTypeCode": "SLS_DISCOUNT",
+                "priceTypeName": "优惠金额",
+                "stepNo": 30,
+                "docCurrId": 2000001,
+                "docUomBaseId": 2004001,
+                "docUomBaseNum": 75.0,
+                "isAllowManual": false,
+                "baseEdit": false
+              },
+              {
+                "docCode": "SO2025092314085700576",
+                "docLineCode": "SOI20250923140857100139",
+                "priceTypeCode": "REBATE001",
+                "priceTypeName": "返利优惠",
+                "stepNo": 35,
+                "docCurrId": 2000001,
+                "partnerTypeId": 14006001,
+                "partnerId": 2059001,
+                "settItemTypeId": 2003001,
+                "docUomBaseId": 2004001,
+                "docUomBaseNum": 75.0,
+                "settSubjectType": "SLS_ORG",
+                "settEntityId": 14507001,
+                "isAllowManual": false,
+                "baseEdit": false,
+                "priceTransferValueCfDTOS": [
+                  {
+                    "id": 5862,
+                    "context": {},
+                    "version": 1,
+                    "deleted": 0,
+                    "createdAt": 1756085907000,
+                    "updatedAt": 1756085907000,
+                    "createdBy": 643874941128517,
+                    "updatedBy": 643874941128517,
+                    "fieldName": "c",
+                    "fieldKey": "rebatePrice",
+                    "transferValueType": "DOC_PRICE"
+                  },
+                  {
+                    "id": 5863,
+                    "context": {},
+                    "version": 1,
+                    "deleted": 0,
+                    "createdAt": 1756085907000,
+                    "updatedAt": 1756085907000,
+                    "createdBy": 643874941128517,
+                    "updatedBy": 643874941128517,
+                    "fieldName": "c",
+                    "fieldKey": "rebateAmt",
+                    "transferValueType": "DOC_AMOUNT"
+                  }
+                ]
+              },
+              {
+                "docCode": "SO2025092314085700576",
+                "docLineCode": "SOI20250923140857100139",
+                "priceTypeName": "成交价",
+                "stepNo": 50,
+                "fromNo": 20,
+                "toNo": 40,
+                "docCurrId": 2000001,
+                "docCurrPrice": 4999.0,
+                "docCurrAmount": 374925.0,
+                "docUomBaseId": 2004001,
+                "docUomBaseNum": 75.0,
+                "baseEdit": false,
+                "priceTransferValueCfDTOS": [
+                  {
+                    "id": 5864,
+                    "context": {},
+                    "version": 1,
+                    "deleted": 0,
+                    "createdAt": 1739003549000,
+                    "updatedAt": 1739003549000,
+                    "createdBy": 540567688227525,
+                    "updatedBy": 540567688227525,
+                    "fieldName": "c",
+                    "fieldKey": "soItemGrossPrice",
+                    "transferValueType": "DOC_PRICE"
+                  },
+                  {
+                    "id": 5865,
+                    "context": {},
+                    "version": 1,
+                    "deleted": 0,
+                    "createdAt": 1739003549000,
+                    "updatedAt": 1739003549000,
+                    "createdBy": 540567688227525,
+                    "updatedBy": 540567688227525,
+                    "fieldName": "c",
+                    "fieldKey": "grossTradeAmt",
+                    "transferValueType": "DOC_AMOUNT"
+                  }
+                ]
+              },
+              {
+                "docCode": "SO2025092314085700576",
+                "docLineCode": "SOI20250923140857100139",
+                "priceTypeCode": "REBATE_SVAT",
+                "priceTypeName": "返利_税",
+                "stepNo": 56,
+                "fromNo": 35,
+                "docCurrId": 2000001,
+                "docUomBaseId": 2004001,
+                "docUomBaseNum": 75.0,
+                "isAllowManual": false,
+                "baseEdit": false
+              },
+              {
+                "docCode": "SO2025092314085700576",
+                "docLineCode": "SOI20250923140857100139",
+                "priceTypeCode": "SVAT_SLS",
+                "priceTypeName": "销项税",
+                "stepNo": 60,
+                "fromNo": 20,
+                "docCurrId": 2000001,
+                "docCurrAmount": 43132.96460176991,
+                "percentage": 0.13,
+                "taxRate": 0.13,
+                "taxCode": 2002002,
+                "docUomBaseId": 2004001,
+                "docUomBaseNum": 75.0,
+                "isAllowManual": false,
+                "baseEdit": false,
+                "priceTransferValueCfDTOS": [
+                  {
+                    "id": 5866,
+                    "context": {},
+                    "version": 1,
+                    "deleted": 0,
+                    "createdAt": 1714284459000,
+                    "updatedAt": 1714284459000,
+                    "createdBy": 499869775084741,
+                    "updatedBy": 499869775084741,
+                    "fieldName": "c",
+                    "fieldKey": "taxRate",
+                    "transferValueType": "TAX_RATE"
+                  },
+                  {
+                    "id": 5867,
+                    "context": {},
+                    "version": 1,
+                    "deleted": 0,
+                    "createdAt": 1714284459000,
+                    "updatedAt": 1714284459000,
+                    "createdBy": 499869775084741,
+                    "updatedBy": 499869775084741,
+                    "fieldName": "c",
+                    "fieldKey": "taxAmt",
+                    "transferValueType": "DOC_AMOUNT"
+                  },
+                  {
+                    "id": 5868,
+                    "context": {},
+                    "version": 1,
+                    "deleted": 0,
+                    "createdAt": 1714284459000,
+                    "updatedAt": 1714284459000,
+                    "createdBy": 499869775084741,
+                    "updatedBy": 499869775084741,
+                    "fieldName": "c",
+                    "fieldKey": "taxRateId",
+                    "transferValueType": "TAX_CODE"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "isFixedExchRate": false,
+      "isFreezeType": "NU_FREEZE"
+    }
+  }
+}[0m
+[32m2025-09-23 14:09:01.626[0m | [34m[1mDEBUG   [0m | [36mutils.mysql_util[0m:[36mquery[0m:[36m173[0m - [34m[1m执行查询: select id,so_code,so_status from sls_so_head_tr where so_code='SO2025092314085700576'[0m
+[32m2025-09-23 14:09:01.627[0m | [34m[1mDEBUG   [0m | [36mutils.mysql_util[0m:[36mquery[0m:[36m176[0m - [34m[1m查询结果: [{"id": 17392119, "so_code": "SO2025092314085700576", "so_status": "EFFECT"}][0m
+[32m2025-09-23 14:09:01.630[0m | [1mINFO    [0m | [36mtest_so_operator[0m:[36mteardown_method[0m:[36m48[0m - [1m测试方法 test_03_submit_sales_order_edit 执行完成[0m

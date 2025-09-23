@@ -379,3 +379,48 @@ class TestQuoteCrud(SlsBase):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
+    
+    @case_decorator(
+        story="报价单管理",
+        title="测试批量删除草稿态报价单",
+        description="验证批量删除草稿态报价单的功能",
+        severity="critical",
+        order=7,
+        tags=["报价单", "批量删除"]
+    )
+    def test_07_batch_delete_draft_quotes(self):
+        """测试批量删除草稿态报价单"""
+        try:
+            # 1. 创建多个草稿态报价单
+            quote_ids = []
+            for i in range(3):  # 创建3个草稿态报价单
+                quote_id = self.create_quote(submit=False)
+                quote_ids.append(quote_id)
+                self.logger.info(f"创建第{i+1}个草稿态报价单，ID: {quote_id}")
+            
+            # 2. 调用批量删除API
+            api_path = self.get_api_path("SLS-销售报价-批量删除服务")
+            params, url = self.get_api_params(api_path)
+            
+            # 3. 参数处理
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["ids"], 
+                ["params", "request"]
+            )
+            
+            set_dict = {"ids": quote_ids}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            # 4. 发送请求和断言
+            response = self.http.post(url, json=filtered_params)
+            # 批量删除API返回的是简单的成功响应，使用assert_response_success
+            self.assert_util.assert_response_success(response)
+            
+            a.json(filtered_params, "批量删除请求数据")
+            a.json(response, "批量删除响应数据")
+            a.text(f"批量删除草稿态报价单成功，删除数量: {len(quote_ids)}", "批量删除结果")
+            a.text(f"删除的报价单ID: {quote_ids}", "删除的报价单ID列表")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise

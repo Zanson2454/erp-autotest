@@ -1,0 +1,20 @@
+{
+  "requestId": "3a5a2ae3-330869",
+  "success": true,
+  "data": {
+    "data": {
+      "id": 2013009,
+      "context": {},
+      "version": 1,
+      "deleted": 0,
+      "createdAt": 1758607522188,
+      "updatedAt": 1758607522188,
+      "createdBy": 540175374525637,
+      "updatedBy": 540175374525637,
+      "code": "AT_DC7521965003386",
+      "name": "自动化销售渠道_20250923140521",
+      "isOnline": true,
+      "status": "INACTIVE"
+    }
+  }
+}

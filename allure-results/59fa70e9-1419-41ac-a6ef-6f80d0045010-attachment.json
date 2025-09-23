@@ -1,0 +1,476 @@
+{
+  "requestId": "3341196e-315332",
+  "success": true,
+  "data": {
+    "data": {
+      "data": [
+        {
+          "soItemTypeCode": "THRD",
+          "soItemTypeName": "三方销售",
+          "isDelRelv": true,
+          "isCheckInvLocRelv": true,
+          "isAutoDelivery": false,
+          "status": "ENABLED",
+          "isAutomaticComplete": false,
+          "isCompletePickControl": false,
+          "isAutoPr": true,
+          "isAutoOutDnPost": true,
+          "purPrHeadTypeId": {
+            "id": 14002001
+          },
+          "purPrItemTypeId": {
+            "id": 14002001
+          },
+          "isSettlement": false,
+          "priceControlType": "STAND",
+          "isRev": false,
+          "id": 2000005,
+          "createdBy": {
+            "id": 450352725549381
+          },
+          "updatedBy": {
+            "id": 495202347526917
+          },
+          "createdAt": 1692961867000,
+          "updatedAt": 1744092346000,
+          "version": 35,
+          "deleted": 0,
+          "originOrgId": 0
+        },
+        {
+          "soItemTypeCode": "CENT",
+          "soItemTypeName": "集中销售",
+          "isDelRelv": true,
+          "isCheckInvLocRelv": false,
+          "isAutoDelivery": false,
+          "status": "ENABLED",
+          "isAutomaticComplete": false,
+          "isCompletePickControl": false,
+          "isAutoPr": false,
+          "isAutoOutDnPost": false,
+          "isSettlement": true,
+          "priceControlType": "STAND",
+          "id": 2001002,
+          "createdBy": {
+            "id": 496988507945925
+          },
+          "updatedBy": {
+            "id": 477142386786949
+          },
+          "createdAt": 1712025340000,
+          "updatedAt": 1723444736000,
+          "version": 5,
+          "deleted": 0,
+          "originOrgId": 0
+        },
+        {
+          "soItemTypeCode": "FREE",
+          "soItemTypeName": "赠品销售",
+          "isDelRelv": true,
+          "isCheckInvLocRelv": false,
+          "soItemTypeDesc": "赠品销售",
+          "isAutoDelivery": false,
+          "status": "ENABLED",
+          "isAutomaticComplete": false,
+          "isCompletePickControl": false,
+          "isAutoPr": false,
+          "isAutoOutDnPost": false,
+          "isSettlement": false,
+          "priceControlType": "FREE",
+          "isRev": false,
+          "id": 2002003,
+          "createdBy": {
+            "id": 499869775084741
+          },
+          "updatedBy": {
+            "id": 618373053188357
+          },
+          "createdAt": 1713948897000,
+          "updatedAt": 1744269464000,
+          "version": 10,
+          "deleted": 0,
+          "originOrgId": 0
+        },
+        {
+          "soItemTypeCode": "VEND_CONS",
+          "soItemTypeName": "供应商寄售直接销售",
+          "isDelRelv": true,
+          "isCheckInvLocRelv": false,
+          "soItemTypeDesc": "供应商寄售直接销售",
+          "isAutoDelivery": false,
+          "status": "ENABLED",
+          "isAutomaticComplete": false,
+          "isCompletePickControl": false,
+          "isAutoPr": false,
+          "isAutoOutDnPost": false,
+          "isSettlement": true,
+          "priceControlType": "STAND",
+          "id": 2002004,
+          "createdBy": {
+            "id": 499869775084741
+          },
+          "updatedBy": {
+            "id": 477142386786949
+          },
+          "createdAt": 1713948973000,
+          "updatedAt": 1723447136000,
+          "version": 20,
+          "deleted": 0,
+          "originOrgId": 0
+        },
+        {
+          "soItemTypeCode": "REFUND_ONLY",
+          "soItemTypeName": "仅退款",
+          "isDelRelv": true,
+          "isCheckInvLocRelv": true,
+          "isAutoDelivery": false,
+          "status": "ENABLED",
+          "isAutomaticComplete": false,
+          "isCompletePickControl": false,
+          "isAutoPr": false,
+          "isAutoOutDnPost": false,
+          "isSettlement": true,
+          "priceControlType": "STAND",
+          "id": 2004001,
+          "createdBy": {
+            "id": 517511681572997
+          },
+          "updatedBy": {
+            "id": 477142386786949
+          },
+          "createdAt": 1714112675000,
+          "updatedAt": 1723447225000,
+          "version": 11,
+          "deleted": 0,
+          "originOrgId": 0
+        },
+        {
+          "soItemTypeCode": "RETURN",
+          "soItemTypeName": "销售换货",
+          "isDelRelv": true,
+          "isCheckInvLocRelv": false,
+          "isAutoDelivery": false,
+          "status": "INACTIVE",
+          "isAutomaticComplete": false,
+          "isCompletePickControl": false,
+          "isAutoPr": false,
+          "isAutoOutDnPost": false,
+          "isSettlement": true,
+          "priceControlType": "STAND",
+          "isRev": false,
+          "id": 2014001,
+          "createdBy": {
+            "id": 535301586132101
+          },
+          "updatedBy": {
+            "id": 535301586132101
+          },
+          "createdAt": 1729477247000,
+          "updatedAt": 1729477247000,
+          "version": 0,
+          "deleted": 0,
+          "originOrgId": 0
+        },
+        {
+          "soItemTypeCode": "Baojia",
+          "soItemTypeName": "标准报价",
+          "isDelRelv": true,
+          "isCheckInvLocRelv": false,
+          "isAutoDelivery": false,
+          "status": "INACTIVE",
+          "isAutomaticComplete": false,
+          "isCompletePickControl": false,
+          "isAutoPr": false,
+          "isAutoOutDnPost": false,
+          "isSettlement": true,
+          "priceControlType": "STAND",
+          "isRev": false,
+          "id": 2015001,
+          "createdBy": {
+            "id": 618373053188357
+          },
+          "updatedBy": {
+            "id": 618373053188357
+          },
+          "createdAt": 1744796400000,
+          "updatedAt": 1745804337000,
+          "version": 1,
+          "deleted": 0,
+          "originOrgId": 0
+        },
+        {
+          "soItemTypeCode": "STO",
+          "soItemTypeName": "镜像销售订单",
+          "isDelRelv": true,
+          "isCheckInvLocRelv": false,
+          "isAutoDelivery": false,
+          "status": "INACTIVE",
+          "isAutomaticComplete": false,
+          "isCompletePickControl": false,
+          "isAutoPr": false,
+          "isAutoOutDnPost": false,
+          "isSettlement": false,
+          "priceControlType": "STAND",
+          "isRev": false,
+          "id": 2017001,
+          "createdBy": {
+            "id": 499869775084741
+          },
+          "updatedBy": {
+            "id": 499869775084741
+          },
+          "createdAt": 1755769510000,
+          "updatedAt": 1755769510000,
+          "version": 0,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": "871b2f90-7e73-11f0-832a-1da437b885be"
+        },
+        {
+          "soItemTypeCode": "NORM",
+          "soItemTypeName": "常规销售",
+          "isDelRelv": true,
+          "isCheckInvLocRelv": true,
+          "isAutoDelivery": false,
+          "status": "ENABLED",
+          "isAutomaticComplete": true,
+          "isCompletePickControl": false,
+          "isAutoPr": false,
+          "isAutoOutDnPost": false,
+          "isSettlement": true,
+          "priceControlType": "STAND",
+          "isRev": false,
+          "id": 2103001,
+          "createdBy": {
+            "id": 27
+          },
+          "updatedBy": {
+            "id": 618373053188357
+          },
+          "createdAt": 1685108592000,
+          "updatedAt": 1758247383000,
+          "version": 216,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": "7c3ae4f0-920d-11f0-ae42-b388cd2751f5"
+        },
+        {
+          "soItemTypeCode": "SERV",
+          "soItemTypeName": "标准服务销售(无库存)",
+          "isDelRelv": true,
+          "isCheckInvLocRelv": false,
+          "soItemTypeDesc": "标准服务销售(无库存)",
+          "isAutoDelivery": true,
+          "status": "ENABLED",
+          "isAutomaticComplete": false,
+          "isCompletePickControl": false,
+          "isAutoPr": false,
+          "isAutoOutDnPost": false,
+          "isSettlement": true,
+          "priceControlType": "STAND",
+          "id": 2103002,
+          "createdBy": {
+            "id": 25
+          },
+          "updatedBy": {
+            "id": 476102974181637
+          },
+          "createdAt": 1685270115000,
+          "updatedAt": 1724725931000,
+          "version": 16,
+          "deleted": 0,
+          "originOrgId": 0
+        },
+        {
+          "soItemTypeCode": "CONS_FILL",
+          "soItemTypeName": "寄售销售-补货",
+          "isDelRelv": true,
+          "isCheckInvLocRelv": true,
+          "soItemTypeDesc": "寄售销售-补货",
+          "isAutoDelivery": false,
+          "status": "ENABLED",
+          "isAutomaticComplete": false,
+          "isCompletePickControl": false,
+          "isAutoPr": false,
+          "isAutoOutDnPost": false,
+          "isSettlement": false,
+          "priceControlType": "STAND",
+          "isRev": false,
+          "id": 2103003,
+          "createdBy": {
+            "id": 25
+          },
+          "updatedBy": {
+            "id": 477234922377861
+          },
+          "createdAt": 1685270219000,
+          "updatedAt": 1755853117000,
+          "version": 13,
+          "deleted": 0,
+          "originOrgId": 0,
+          "requestId": "309a8580-7f36-11f0-992f-fb719bd5a15f"
+        },
+        {
+          "soItemTypeCode": "CONS_ISSU",
+          "soItemTypeName": "寄售销售-消耗",
+          "isDelRelv": true,
+          "isCheckInvLocRelv": false,
+          "soItemTypeDesc": "寄售销售-消耗",
+          "isAutoDelivery": false,
+          "status": "ENABLED",
+          "isAutomaticComplete": false,
+          "isCompletePickControl": false,
+          "isAutoPr": false,
+          "isAutoOutDnPost": false,
+          "isSettlement": true,
+          "priceControlType": "STAND",
+          "isRev": false,
+          "id": 2103004,
+          "createdBy": {
+            "id": 25
+          },
+          "updatedBy": {
+            "id": 618373053188357
+          },
+          "createdAt": 1685270280000,
+          "updatedAt": 1744078345000,
+          "version": 9,
+          "deleted": 0,
+          "originOrgId": 0
+        },
+        {
+          "soItemTypeCode": "RETN",
+          "soItemTypeName": "标准退货",
+          "isDelRelv": true,
+          "isCheckInvLocRelv": true,
+          "soItemTypeDesc": "标准退货",
+          "isAutoDelivery": false,
+          "status": "ENABLED",
+          "isAutomaticComplete": false,
+          "isCompletePickControl": false,
+          "isAutoPr": false,
+          "isAutoOutDnPost": false,
+          "isSettlement": true,
+          "priceControlType": "STAND",
+          "id": 2103005,
+          "createdBy": {
+            "id": 25
+          },
+          "updatedBy": {
+            "id": 496988507945925
+          },
+          "createdAt": 1685270371000,
+          "updatedAt": 1724898876000,
+          "version": 30,
+          "deleted": 0,
+          "originOrgId": 0
+        },
+        {
+          "soItemTypeCode": "BOMA_MAIN",
+          "soItemTypeName": "母件销售-母件商品",
+          "isDelRelv": false,
+          "isCheckInvLocRelv": false,
+          "isAutoDelivery": false,
+          "status": "ENABLED",
+          "isAutomaticComplete": false,
+          "isCompletePickControl": false,
+          "isAutoPr": false,
+          "isAutoOutDnPost": false,
+          "isSettlement": true,
+          "priceControlType": "STAND",
+          "id": 2109001,
+          "createdBy": {
+            "id": 25
+          },
+          "updatedBy": {
+            "id": 477142386786949
+          },
+          "createdAt": 1686034513000,
+          "updatedAt": 1723447332000,
+          "version": 15,
+          "deleted": 0,
+          "originOrgId": 0
+        },
+        {
+          "soItemTypeCode": "BOMA_SUBL",
+          "soItemTypeName": "母件销售-子件商品",
+          "isDelRelv": true,
+          "isCheckInvLocRelv": false,
+          "isAutoDelivery": false,
+          "status": "ENABLED",
+          "isAutomaticComplete": false,
+          "isCompletePickControl": false,
+          "isAutoPr": false,
+          "isAutoOutDnPost": false,
+          "isSettlement": false,
+          "priceControlType": "FREE",
+          "id": 2109002,
+          "createdBy": {
+            "id": 25
+          },
+          "updatedBy": {
+            "id": 477142386786949
+          },
+          "createdAt": 1686034513000,
+          "updatedAt": 1723447362000,
+          "version": 17,
+          "deleted": 0,
+          "originOrgId": 0
+        },
+        {
+          "soItemTypeCode": "BOMB_MAIN",
+          "soItemTypeName": "子件销售-母件商品",
+          "isDelRelv": false,
+          "isCheckInvLocRelv": false,
+          "isAutoDelivery": false,
+          "status": "ENABLED",
+          "isAutomaticComplete": false,
+          "isCompletePickControl": false,
+          "isAutoPr": false,
+          "isAutoOutDnPost": false,
+          "isSettlement": false,
+          "priceControlType": "FREE",
+          "id": 2109003,
+          "createdBy": {
+            "id": 25
+          },
+          "updatedBy": {
+            "id": 477142386786949
+          },
+          "createdAt": 1686641887000,
+          "updatedAt": 1723447437000,
+          "version": 4,
+          "deleted": 0,
+          "originOrgId": 0
+        },
+        {
+          "soItemTypeCode": "BOMB_SUBL",
+          "soItemTypeName": "子件销售-子件商品",
+          "isDelRelv": true,
+          "isCheckInvLocRelv": false,
+          "isAutoDelivery": false,
+          "status": "DISABLED",
+          "isAutomaticComplete": false,
+          "isCompletePickControl": false,
+          "isAutoPr": false,
+          "isAutoOutDnPost": false,
+          "isSettlement": true,
+          "priceControlType": "STAND",
+          "id": 2109004,
+          "createdBy": {
+            "id": 25
+          },
+          "updatedBy": {
+            "id": 477142386786949
+          },
+          "createdAt": 1686642037000,
+          "updatedAt": 1723447429000,
+          "version": 4,
+          "deleted": 0,
+          "originOrgId": 0
+        }
+      ],
+      "total": 17
+    }
+  }
+}

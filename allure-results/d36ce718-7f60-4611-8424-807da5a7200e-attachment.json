@@ -1,0 +1,15 @@
+{
+  "sceneKey": "SCM_SLS$sls_so_price",
+  "viewKey": "SCM_SLS$sls_so_price:list",
+  "viewTitle": "list",
+  "buttonKey": "SCM_SLS$sls_so_price-repeal",
+  "buttonName": "作废",
+  "appId": 0,
+  "teamId": 22,
+  "serviceKey": "SCM_SLS$SLS_REPEAL_EVENT_SERVICE",
+  "params": {
+    "request": {
+      "id": 17392024
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "params": {
+    "request": {
+      "name": "自动化寻仓规则_20250923140750",
+      "status": "DRAFT",
+      "sls_org_id": {
+        "id": 14377001
+      },
+      "sls_dc_id": {
+        "id": 2001001
+      },
+      "inv_loc": {
+        "id": 14376002
+      },
+      "wms_strategy": "DEFAULT_PRIORITY"
+    }
+  },
+  "serviceKey": "SCM_SLS$WH_FIND_RULE_UPDATE_SERVICE"
+}

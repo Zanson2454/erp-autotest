@@ -1,0 +1,157 @@
+{
+  "params": {
+    "taskName": "订单项目行分配-章昂-20250923114044-导出",
+    "multiSheetConfig": [
+      {
+        "modelKey": "SCM_SLS$sls_so_item_detm_cf",
+        "modelName": "订单项目行分配表",
+        "sheetNo": 0,
+        "sheetName": "订单项目行分配表",
+        "headerConfigList": [
+          {
+            "name": "销售订单类型",
+            "type": "TEXT",
+            "field": "soTypeId.soTypeName"
+          },
+          {
+            "name": "订单行项目类型组",
+            "type": "TEXT",
+            "field": "soItemTypeGroupId.name"
+          },
+          {
+            "name": "用途",
+            "type": "ENUM",
+            "field": "usageType",
+            "multiSelect": false,
+            "dictValues": [
+              {
+                "_row_id_": "FREE_GIFT",
+                "label": "赠品",
+                "value": "FREE_GIFT"
+              },
+              {
+                "_row_id_": "jNOSfni",
+                "label": "定制",
+                "value": "CUSTOMED"
+              }
+            ]
+          },
+          {
+            "name": "高层级的项目类型",
+            "type": "TEXT",
+            "field": "parentSoItemTypeId.soItemTypeName"
+          },
+          {
+            "name": "默认订单行项目类型",
+            "type": "TEXT",
+            "field": "soItemTypeId.soItemTypeName"
+          },
+          {
+            "name": "可选订单行项目类型1",
+            "type": "TEXT",
+            "field": "soItemTypeId1.soItemTypeName"
+          },
+          {
+            "name": "可选订单行项目类型2",
+            "type": "TEXT",
+            "field": "soItemTypeId2.soItemTypeName"
+          },
+          {
+            "name": "可选订单行项目类型3",
+            "type": "TEXT",
+            "field": "soItemTypeId3.soItemTypeName"
+          },
+          {
+            "name": "备注",
+            "type": "TEXT",
+            "field": "remark"
+          }
+        ]
+      }
+    ],
+    "queryData": {
+      "containerKey": "ERP_SCM$so_item_detm_scence-table-container-ERP_SCM$sls_so_item_detm_cf",
+      "viewKey": "SCM_SLS$so_item_detm_scence:list",
+      "sceneKey": "SCM_SLS$so_item_detm_scence",
+      "params": {
+        "request": {
+          "pageable": {}
+        },
+        "selectFields": [
+          {
+            "field": "usageType"
+          },
+          {
+            "field": "remark"
+          },
+          {
+            "field": "soTypeId",
+            "selectFields": [
+              {
+                "field": "soTypeName"
+              }
+            ]
+          },
+          {
+            "field": "soItemTypeGroupId",
+            "selectFields": [
+              {
+                "field": "name"
+              }
+            ]
+          },
+          {
+            "field": "parentSoItemTypeId",
+            "selectFields": [
+              {
+                "field": "soItemTypeName"
+              }
+            ]
+          },
+          {
+            "field": "soItemTypeId",
+            "selectFields": [
+              {
+                "field": "soItemTypeName"
+              }
+            ]
+          },
+          {
+            "field": "soItemTypeId1",
+            "selectFields": [
+              {
+                "field": "soItemTypeName"
+              }
+            ]
+          },
+          {
+            "field": "soItemTypeId2",
+            "selectFields": [
+              {
+                "field": "soItemTypeName"
+              }
+            ]
+          },
+          {
+            "field": "soItemTypeId3",
+            "selectFields": [
+              {
+                "field": "soItemTypeName"
+              }
+            ]
+          }
+        ],
+        "modelKey": "SCM_SLS$sls_so_item_detm_cf"
+      }
+    },
+    "processConfig": {
+      "processType": "TRANTOR",
+      "model": "SCM_SLS$sls_so_item_detm_cf",
+      "modelName": "订单项目行分配表",
+      "containerKey": "ERP_SCM$so_item_detm_scence-table-container-ERP_SCM$sls_so_item_detm_cf",
+      "viewKey": "SCM_SLS$so_item_detm_scence:list",
+      "sceneKey": "SCM_SLS$so_item_detm_scence"
+    }
+  },
+  "serviceKey": "SCM_SLS$SLS_SO_ITEM_DETM_CF_API_GEI_TASK_EXPORT_DIRECT_POST"
+}

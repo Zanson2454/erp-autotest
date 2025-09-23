@@ -1,0 +1,10 @@
+{
+  "params": {
+    "request": {
+      "code": "AT_DC98827899019795",
+      "isOnline": true,
+      "name": "自动化销售渠道_20250923114027"
+    }
+  },
+  "serviceKey": "SCM_SLS$sls_dc_save_service"
+}

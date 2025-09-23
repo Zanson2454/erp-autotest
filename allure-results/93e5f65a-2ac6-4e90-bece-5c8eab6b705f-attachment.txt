@@ -1,0 +1,1 @@
+响应未成功，原始响应: {'requestId': '86de1078-317629', 'success': False, 'err': {'code': 'so.status.not.effect.cant.cancel', 'msg': '销售订单的单据状态不是已生效，不能作废'}}

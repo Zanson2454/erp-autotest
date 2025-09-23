@@ -1,0 +1,253 @@
+[32m2025-09-23 14:06:42.613[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36minitialize_environment[0m:[36m205[0m - [1m初始化环境: test[0m
+[32m2025-09-23 14:06:42.614[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36msetup_class[0m:[36m278[0m - [1m环境配置: {'erp_env': 'test', 'erp_version': '0830', 'trantor_version': '3.0.2509', 'portal_config': {'terp': {'auth': {'username': '${TEST_USERNAME}', 'password': '${TEST_PASSWORD}'}, 'TERP_PORTAL': {'username': '17376596912', 'password': 'Y+IFHj91Gc+CFRI64dS1fxQNx5Xf31hmceqOLHY+ypYkfOc2a5hVrN1He0AT5U5m5SBWma87qVUlF4xT5qAqhBPwDoaa5j2To5IZCx8fSZKly3f5wcLzh8mwfqQccyzgTxcZofBg6yyhaClNJRAIfJZ/CZt6zx3QkWg9aQGEbqY=', 'iam_url': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com', 'iam_referer': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com/TERP_PORTAL-TERP-tpf_umwrhzbg', 'portal_url': 'https://t-erp-huoshan-portal-test.app.duandian.com', 'portal_referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP', 'description': 'TERP门户'}, 'TERP_CUST_PC': {'username': '17376596912', 'password': 'Y+IFHj91Gc+CFRI64dS1fxQNx5Xf31hmceqOLHY+ypYkfOc2a5hVrN1He0AT5U5m5SBWma87qVUlF4xT5qAqhBPwDoaa5j2To5IZCx8fSZKly3f5wcLzh8mwfqQccyzgTxcZofBg6yyhaClNJRAIfJZ/CZt6zx3QkWg9aQGEbqY=', 'iam_url': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com', 'iam_referer': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com/TERP_DEALER_PORTAL-TERP-tpf_umwrhzbg', 'portal_url': 'https://t-erp-huoshan-portal-test.app.duandian.com', 'portal_referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_DEALER_PORTAL-TERP', 'description': 'TERP客户端PC门户'}}}, 'database': {'erp_db': {'host': '10.3.0.143', 'port': 3306, 'user': 'terp_test', 'password': '43sVPCQ2pE%g55bc', 'database': 'terp_test', 'charset': 'utf8mb4'}, 'iam_db': {'host': '10.3.0.143', 'port': '3306', 'user': 'terp_test', 'password': '43sVPCQ2pE%g55bc', 'database': 'iam_test', 'charset': 'utf8mb4'}}}[0m
+[32m2025-09-23 14:06:42.614[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36mget[0m:[36m44[0m - [1m读取缓存文件: /Users/test/erp-autotest/testdata/cache/init_cache.json[0m
+[32m2025-09-23 14:06:42.614[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36mget[0m:[36m54[0m - [1m成功读取缓存: init_cache.json[0m
+[32m2025-09-23 14:06:42.691[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36mlogin[0m:[36m115[0m - [1m登录URL: https://t-erp-huoshan-portal-iam-test.app.duandian.com/iam/api/v1/user/login/account[0m
+[32m2025-09-23 14:06:42.691[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36mlogin[0m:[36m116[0m - [1m登录账号: 17376596912[0m
+[32m2025-09-23 14:06:42.692[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36mlogin[0m:[36m117[0m - [1m登录请求头: {'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows; U; Windows 98; Win 9x 4.90) AppleWebKit/531.49.5 (KHTML, like Gecko) Version/5.0 Safari/531.49.5', 'Referer': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com/TERP_PORTAL-TERP-tpf_umwrhzbg', 'Origin': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com', 'Cookie': None}[0m
+[32m2025-09-23 14:06:42.692[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36mlogin[0m:[36m118[0m - [1m登录数据: {'account': '17376596912', 'password': 'Y+IFHj91Gc+CFRI64dS1fxQNx5Xf31hmceqOLHY+ypYkfOc2a5hVrN1He0AT5U5m5SBWma87qVUlF4xT5qAqhBPwDoaa5j2To5IZCx8fSZKly3f5wcLzh8mwfqQccyzgTxcZofBg6yyhaClNJRAIfJZ/CZt6zx3QkWg9aQGEbqY=', 'iam_url': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com', 'iam_referer': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com/TERP_PORTAL-TERP-tpf_umwrhzbg', 'portal_url': 'https://t-erp-huoshan-portal-test.app.duandian.com', 'portal_referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP', 'description': 'TERP门户'}[0m
+[32m2025-09-23 14:06:42.929[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36m_get_user_info[0m:[36m171[0m - [1mportal_config: {'username': '17376596912', 'password': 'Y+IFHj91Gc+CFRI64dS1fxQNx5Xf31hmceqOLHY+ypYkfOc2a5hVrN1He0AT5U5m5SBWma87qVUlF4xT5qAqhBPwDoaa5j2To5IZCx8fSZKly3f5wcLzh8mwfqQccyzgTxcZofBg6yyhaClNJRAIfJZ/CZt6zx3QkWg9aQGEbqY=', 'iam_url': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com', 'iam_referer': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com/TERP_PORTAL-TERP-tpf_umwrhzbg', 'portal_url': 'https://t-erp-huoshan-portal-test.app.duandian.com', 'portal_referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP', 'description': 'TERP门户'}[0m
+[32m2025-09-23 14:06:42.929[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36m_get_user_info[0m:[36m172[0m - [1mportal_referer: https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP[0m
+[32m2025-09-23 14:06:42.968[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36m_get_user_info[0m:[36m178[0m - [1m获取用户信息URL: https://t-erp-huoshan-portal-test.app.duandian.com/api/trantor/portal/user/current[0m
+[32m2025-09-23 14:06:42.969[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36m_get_user_info[0m:[36m179[0m - [1m获取用户信息请求头: {'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (compatible; MSIE 6.0; Windows 95; Trident/4.1)', 'Referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP', 'Origin': 'https://t-erp-huoshan-portal-test.app.duandian.com', 'Cookie': None}[0m
+[32m2025-09-23 14:06:43.471[0m | [1mINFO    [0m | [36mutils.mysql_util[0m:[36m_connect_instance[0m:[36m106[0m - [1m数据库实例连接成功 [database=terp_test][0m
+[32m2025-09-23 14:06:43.926[0m | [1mINFO    [0m | [36mutils.mysql_util[0m:[36m_connect_instance[0m:[36m106[0m - [1m数据库实例连接成功 [database=iam_test][0m
+[32m2025-09-23 14:06:43.968[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36msetup_class[0m:[36m308[0m - [1m测试基类初始化完成[0m
+[32m2025-09-23 14:06:44.030[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36mlogin[0m:[36m115[0m - [1m登录URL: https://t-erp-huoshan-portal-iam-test.app.duandian.com/iam/api/v1/user/login/account[0m
+[32m2025-09-23 14:06:44.030[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36mlogin[0m:[36m116[0m - [1m登录账号: 17376596912[0m
+[32m2025-09-23 14:06:44.030[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36mlogin[0m:[36m117[0m - [1m登录请求头: {'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (compatible; MSIE 7.0; Windows NT 5.01; Trident/4.0)', 'Referer': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com/TERP_PORTAL-TERP-tpf_umwrhzbg', 'Origin': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com', 'Cookie': None}[0m
+[32m2025-09-23 14:06:44.031[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36mlogin[0m:[36m118[0m - [1m登录数据: {'account': '17376596912', 'password': 'Y+IFHj91Gc+CFRI64dS1fxQNx5Xf31hmceqOLHY+ypYkfOc2a5hVrN1He0AT5U5m5SBWma87qVUlF4xT5qAqhBPwDoaa5j2To5IZCx8fSZKly3f5wcLzh8mwfqQccyzgTxcZofBg6yyhaClNJRAIfJZ/CZt6zx3QkWg9aQGEbqY=', 'iam_url': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com', 'iam_referer': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com/TERP_PORTAL-TERP-tpf_umwrhzbg', 'portal_url': 'https://t-erp-huoshan-portal-test.app.duandian.com', 'portal_referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP', 'description': 'TERP门户'}[0m
+[32m2025-09-23 14:06:44.522[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36m_get_user_info[0m:[36m171[0m - [1mportal_config: {'username': '17376596912', 'password': 'Y+IFHj91Gc+CFRI64dS1fxQNx5Xf31hmceqOLHY+ypYkfOc2a5hVrN1He0AT5U5m5SBWma87qVUlF4xT5qAqhBPwDoaa5j2To5IZCx8fSZKly3f5wcLzh8mwfqQccyzgTxcZofBg6yyhaClNJRAIfJZ/CZt6zx3QkWg9aQGEbqY=', 'iam_url': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com', 'iam_referer': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com/TERP_PORTAL-TERP-tpf_umwrhzbg', 'portal_url': 'https://t-erp-huoshan-portal-test.app.duandian.com', 'portal_referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP', 'description': 'TERP门户'}[0m
+[32m2025-09-23 14:06:44.523[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36m_get_user_info[0m:[36m172[0m - [1mportal_referer: https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP[0m
+[32m2025-09-23 14:06:44.559[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36m_get_user_info[0m:[36m178[0m - [1m获取用户信息URL: https://t-erp-huoshan-portal-test.app.duandian.com/api/trantor/portal/user/current[0m
+[32m2025-09-23 14:06:44.559[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36m_get_user_info[0m:[36m179[0m - [1m获取用户信息请求头: {'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Linux; Android 2.2) AppleWebKit/533.2 (KHTML, like Gecko) Chrome/42.0.856.0 Safari/533.2', 'Referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP', 'Origin': 'https://t-erp-huoshan-portal-test.app.duandian.com', 'Cookie': None}[0m
+[32m2025-09-23 14:06:44.711[0m | [1mINFO    [0m | [36mtestcases.scm_sls[0m:[36msetup_class[0m:[36m59[0m - [1mcust_portal_headers: {'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.1)', 'Referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_DEALER_PORTAL-TERP', 'Origin': 'https://t-erp-huoshan-portal-test.app.duandian.com', 'Cookie': 'terp_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiMjAyNTA5MjMxNDA2NDQyMTczZWFkMDYyODJiNjI0MTRhOWE5YjAwNjY0NDI2NmU3ZSIsImV4cGlyZSI6MjU5MjAwLCJwYXRoIjoiLyIsImRvbWFpbiI6ImR1YW5kaWFuLmNvbSIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMy4wLjI1MDkuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc1ODg2NjgwNCwibmJmIjoxNzU4NjA3NjA0LCJpYXQiOjE3NTg2MDc2MDQsImp0aSI6IjM1ZjEwNTAzYTcyMTQ3Yjk5M2U4M2JjOGVjOGQ3NDBhIn0.etHnOhRhH5bkmL_mZAqlrmNQmntWvO9jgTbY_Usa0bo; Max-Age=259200; Expires=Fri, 26 Sep 2025 06:06:44 GMT; Domain=duandian.com; Path=/; HttpOnly'}[0m
+[32m2025-09-23 14:06:44.767[0m | [1mINFO    [0m | [36mutils.yaml_util[0m:[36mread_yaml[0m:[36m39[0m - [1m读取YAML文件: /Users/test/erp-autotest/testdata/scm_sls/sls_api_path.yaml[0m
+[32m2025-09-23 14:06:45.492[0m | [1mINFO    [0m | [36mutils.yaml_util[0m:[36mread_yaml[0m:[36m39[0m - [1m读取YAML文件: /Users/test/erp-autotest/testdata/scm_sls/sls_api_params.yaml[0m
+[32m2025-09-23 14:06:45.508[0m | [1mINFO    [0m | [36mutils.yaml_util[0m:[36mread_yaml[0m:[36m39[0m - [1m读取YAML文件: /Users/test/erp-autotest/config/erp/md_init_sql.yaml[0m
+[32m2025-09-23 14:06:45.509[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36mget[0m:[36m44[0m - [1m读取缓存文件: /Users/test/erp-autotest/testdata/cache/md_init_cache.json[0m
+[32m2025-09-23 14:06:45.509[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36mget[0m:[36m54[0m - [1m成功读取缓存: md_init_cache.json[0m
+[32m2025-09-23 14:06:45.509[0m | [1mINFO    [0m | [36mdata_factory.base[0m:[36minit_sql[0m:[36m33[0m - [1m从缓存获取数据成功[0m
+[32m2025-09-23 14:06:45.510[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36mget[0m:[36m44[0m - [1m读取缓存文件: /Users/test/erp-autotest/testdata/cache/md_init_cache.json[0m
+[32m2025-09-23 14:06:45.510[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36mget[0m:[36m54[0m - [1m成功读取缓存: md_init_cache.json[0m
+[32m2025-09-23 14:06:45.511[0m | [1mINFO    [0m | [36mutils.yaml_util[0m:[36mread_yaml[0m:[36m39[0m - [1m读取YAML文件: /Users/test/erp-autotest/config/erp/sls_init_sql.yaml[0m
+[32m2025-09-23 14:06:45.512[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36mget[0m:[36m44[0m - [1m读取缓存文件: /Users/test/erp-autotest/testdata/cache/sls_init_cache.json[0m
+[32m2025-09-23 14:06:45.512[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36mget[0m:[36m54[0m - [1m成功读取缓存: sls_init_cache.json[0m
+[32m2025-09-23 14:06:45.512[0m | [1mINFO    [0m | [36mdata_factory.base[0m:[36minit_sql[0m:[36m33[0m - [1m从缓存获取数据成功[0m
+[32m2025-09-23 14:06:45.513[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36mget[0m:[36m44[0m - [1m读取缓存文件: /Users/test/erp-autotest/testdata/cache/sls_init_cache.json[0m
+[32m2025-09-23 14:06:45.513[0m | [1mINFO    [0m | [36mutils.cache_util[0m:[36mget[0m:[36m54[0m - [1m成功读取缓存: sls_init_cache.json[0m
+[32m2025-09-23 14:06:45.513[0m | [1mINFO    [0m | [36mtestcases.scm_sls[0m:[36msetup_class[0m:[36m112[0m - [1mcust_id: 2059001[0m
+[32m2025-09-23 14:06:45.513[0m | [1mINFO    [0m | [36mtest_wh_find_rule_management[0m:[36msetup_class[0m:[36m25[0m - [1m销售寻仓规则配置表管理测试类初始化完成[0m
+[32m2025-09-23 14:06:45.514[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36msetup_method[0m:[36m317[0m - [1m开始测试方法: test_wh_find_rule_detail[0m
+[32m2025-09-23 14:06:45.515[0m | [1mINFO    [0m | [36mtest_wh_find_rule_management[0m:[36mtest_wh_find_rule_save[0m:[36m151[0m - [1m接口请求的地址>>>https://t-erp-huoshan-portal-test.app.duandian.com/api/trantor/service/engine/execute/SCM_SLS$WH_FIND_RULE_UPDATE_SERVICE[0m
+[32m2025-09-23 14:06:45.515[0m | [1mINFO    [0m | [36mtest_wh_find_rule_management[0m:[36mtest_wh_find_rule_save[0m:[36m151[0m - [1m接口请求的方法>>>POST[0m
+[32m2025-09-23 14:06:45.515[0m | [1mINFO    [0m | [36mtest_wh_find_rule_management[0m:[36mtest_wh_find_rule_save[0m:[36m151[0m - [1m接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "name": "自动化寻仓规则_20250923140645",
+      "status": "DRAFT",
+      "sls_org_id": {
+        "id": 14377001
+      },
+      "sls_dc_id": {
+        "id": 2001001
+      },
+      "inv_loc": {
+        "id": 14376002
+      },
+      "wms_strategy": "DEFAULT_PRIORITY"
+    }
+  },
+  "serviceKey": "SCM_SLS$WH_FIND_RULE_UPDATE_SERVICE"
+}[0m
+[32m2025-09-23 14:06:45.581[0m | [1mINFO    [0m | [36mutils.report_util[0m:[36mwrapper[0m:[36m364[0m - [1m响应状态码: 200[0m
+[32m2025-09-23 14:06:45.582[0m | [1mINFO    [0m | [36mutils.report_util[0m:[36mwrapper[0m:[36m364[0m - [1m响应内容: {
+  "requestId": "3948ab85-331161",
+  "success": true,
+  "data": {
+    "data": {
+      "context": {},
+      "name": "自动化寻仓规则_20250923140645",
+      "slsDcIds": [
+        {
+          "context": {},
+          "dcId": {
+            "id": 2001001
+          },
+          "id": 2009012,
+          "slsWhFindRuleCfSlsDcIdsId": {
+            "id": 2007012
+          },
+          "deleted": 0,
+          "originOrgId": 0,
+          "version": 0,
+          "createdAt": 1758607605668,
+          "updatedAt": 1758607605668,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "requestId": "3948ab85-331161"
+        }
+      ],
+      "slsOrgIds": [
+        {
+          "context": {},
+          "slsOrgId": {
+            "id": 14377001
+          },
+          "id": 2009012,
+          "slsWhFindRuleCfSlsOrgIdsId": {
+            "id": 2007012
+          },
+          "deleted": 0,
+          "originOrgId": 0,
+          "version": 0,
+          "createdAt": 1758607605665,
+          "updatedAt": 1758607605665,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "requestId": "3948ab85-331161"
+        }
+      ],
+      "invLocIds": [
+        {
+          "context": {},
+          "invLocId": {
+            "id": 14376002
+          },
+          "id": 2009012,
+          "slsWhFindRuleCfInvLocIdsId": 2007012,
+          "deleted": 0,
+          "originOrgId": 0,
+          "version": 0,
+          "createdAt": 1758607605661,
+          "updatedAt": 1758607605661,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "requestId": "3948ab85-331161"
+        }
+      ],
+      "wmsStrategy": "DEFAULT_PRIORITY",
+      "status": "DRAFT"
+    }
+  }
+}[0m
+[32m2025-09-23 14:06:45.583[0m | [1mINFO    [0m | [36mutils.assert_util[0m:[36massert_response_success[0m:[36m44[0m - [1m响应成功断言通过: success=True[0m
+[32m2025-09-23 14:06:45.585[0m | [1mINFO    [0m | [36mtest_wh_find_rule_management[0m:[36mtest_wh_find_rule_detail[0m:[36m197[0m - [1m接口请求的地址>>>https://t-erp-huoshan-portal-test.app.duandian.com/api/trantor/service/engine/execute/SCM_SLS$WH_FIND_RULE_DETAIL_SERVICE[0m
+[32m2025-09-23 14:06:45.586[0m | [1mINFO    [0m | [36mtest_wh_find_rule_management[0m:[36mtest_wh_find_rule_detail[0m:[36m197[0m - [1m接口请求的方法>>>POST[0m
+[32m2025-09-23 14:06:45.587[0m | [1mINFO    [0m | [36mtest_wh_find_rule_management[0m:[36mtest_wh_find_rule_detail[0m:[36m197[0m - [1m接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "serviceKey": "SCM_SLS$WH_FIND_RULE_DETAIL_SERVICE",
+      "params": {
+        "request": {
+          "id": {
+            "context": {},
+            "name": "自动化寻仓规则_20250923140645",
+            "slsDcIds": [
+              {
+                "context": {},
+                "dcId": {
+                  "id": 2001001
+                },
+                "id": 2009012,
+                "slsWhFindRuleCfSlsDcIdsId": {
+                  "id": 2007012
+                },
+                "deleted": 0,
+                "originOrgId": 0,
+                "version": 0,
+                "createdAt": 1758607605668,
+                "updatedAt": 1758607605668,
+                "createdBy": {
+                  "id": 540175374525637
+                },
+                "updatedBy": {
+                  "id": 540175374525637
+                },
+                "requestId": "3948ab85-331161"
+              }
+            ],
+            "slsOrgIds": [
+              {
+                "context": {},
+                "slsOrgId": {
+                  "id": 14377001
+                },
+                "id": 2009012,
+                "slsWhFindRuleCfSlsOrgIdsId": {
+                  "id": 2007012
+                },
+                "deleted": 0,
+                "originOrgId": 0,
+                "version": 0,
+                "createdAt": 1758607605665,
+                "updatedAt": 1758607605665,
+                "createdBy": {
+                  "id": 540175374525637
+                },
+                "updatedBy": {
+                  "id": 540175374525637
+                },
+                "requestId": "3948ab85-331161"
+              }
+            ],
+            "invLocIds": [
+              {
+                "context": {},
+                "invLocId": {
+                  "id": 14376002
+                },
+                "id": 2009012,
+                "slsWhFindRuleCfInvLocIdsId": 2007012,
+                "deleted": 0,
+                "originOrgId": 0,
+                "version": 0,
+                "createdAt": 1758607605661,
+                "updatedAt": 1758607605661,
+                "createdBy": {
+                  "id": 540175374525637
+                },
+                "updatedBy": {
+                  "id": 540175374525637
+                },
+                "requestId": "3948ab85-331161"
+              }
+            ],
+            "wmsStrategy": "DEFAULT_PRIORITY",
+            "status": "DRAFT"
+          }
+        }
+      }
+    }
+  },
+  "serviceKey": "SCM_SLS$WH_FIND_RULE_DETAIL_SERVICE"
+}[0m
+[32m2025-09-23 14:06:45.652[0m | [1mINFO    [0m | [36mutils.report_util[0m:[36mwrapper[0m:[36m364[0m - [1m响应状态码: 200[0m
+[32m2025-09-23 14:06:45.652[0m | [1mINFO    [0m | [36mutils.report_util[0m:[36mwrapper[0m:[36m364[0m - [1m响应内容: {
+  "requestId": "7b57a6b8-331162",
+  "success": true,
+  "data": {
+    "data": {
+      "context": {}
+    }
+  }
+}[0m
+[32m2025-09-23 14:06:45.653[0m | [1mINFO    [0m | [36mutils.assert_util[0m:[36massert_response_success[0m:[36m44[0m - [1m响应成功断言通过: success=True[0m
+[32m2025-09-23 14:06:45.654[0m | [1mINFO    [0m | [36mutils.assert_util[0m:[36massert_by_operator[0m:[36m147[0m - [1m断言通过: {'expect_value': None, 'actual_value': None, 'assert_symbol': '=', 'assert_result': 'success'}[0m
+[32m2025-09-23 14:06:45.658[0m | [1mINFO    [0m | [36mtestcases.comm.base_test[0m:[36mteardown_method[0m:[36m326[0m - [1m测试方法 test_wh_find_rule_detail 执行完成，耗时: 0.143秒[0m
+[32m2025-09-23 14:06:45.798[0m | [1mINFO    [0m | [36mutils.mysql_util[0m:[36mdelete[0m:[36m272[0m - [1m删除数据成功 [表=sls_wh_find_rule_cf, 影响行数=1][0m
+[32m2025-09-23 14:06:45.798[0m | [1mINFO    [0m | [36mtest_wh_find_rule_management[0m:[36mteardown_class[0m:[36m42[0m - [1m测试数据清理完成[0m

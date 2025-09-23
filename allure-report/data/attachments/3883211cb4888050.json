@@ -1,0 +1,82 @@
+{
+  "requestId": "98324cf4-278572",
+  "success": true,
+  "data": {
+    "data": {
+      "context": {},
+      "name": "自动化寻仓规则_20250922175653",
+      "slsDcIds": [
+        {
+          "context": {},
+          "dcId": {
+            "id": 2001001
+          },
+          "id": 2008001,
+          "slsWhFindRuleCfSlsDcIdsId": {
+            "id": 2006001
+          },
+          "deleted": 0,
+          "originOrgId": 0,
+          "version": 0,
+          "createdAt": 1758535014095,
+          "updatedAt": 1758535014095,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "requestId": "98324cf4-278572"
+        }
+      ],
+      "slsOrgIds": [
+        {
+          "context": {},
+          "slsOrgId": {
+            "id": 14377001
+          },
+          "id": 2008001,
+          "slsWhFindRuleCfSlsOrgIdsId": {
+            "id": 2006001
+          },
+          "deleted": 0,
+          "originOrgId": 0,
+          "version": 0,
+          "createdAt": 1758535014042,
+          "updatedAt": 1758535014042,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "requestId": "98324cf4-278572"
+        }
+      ],
+      "invLocIds": [
+        {
+          "context": {},
+          "invLocId": {
+            "id": 14376002
+          },
+          "id": 2008001,
+          "slsWhFindRuleCfInvLocIdsId": 2006001,
+          "deleted": 0,
+          "originOrgId": 0,
+          "version": 0,
+          "createdAt": 1758535013989,
+          "updatedAt": 1758535013989,
+          "createdBy": {
+            "id": 540175374525637
+          },
+          "updatedBy": {
+            "id": 540175374525637
+          },
+          "requestId": "98324cf4-278572"
+        }
+      ],
+      "wmsStrategy": "DEFAULT_PRIORITY",
+      "status": "DRAFT"
+    }
+  }
+}

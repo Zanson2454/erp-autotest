@@ -1,0 +1,14 @@
+{
+  "requestId": "a655a9c1-315845",
+  "success": true,
+  "data": {
+    "data": {
+      "id": 2010003,
+      "context": {},
+      "name": "测试审单规则_20250923113223",
+      "code": "CODE2025092311322310002",
+      "status": "ENABLED",
+      "calculateType": "CUSTOM"
+    }
+  }
+}
