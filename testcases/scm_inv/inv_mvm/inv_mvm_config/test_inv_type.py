@@ -1,4 +1,7 @@
-"""库存类型配置的新增、查询、详情、删除测试"""
+"""
+库存类型配置管理测试模块
+覆盖库存类型的CRUD操作、分页查询、导出功能
+"""
 import allure
 import pytest
 import sys
@@ -15,11 +18,17 @@ from utils.report_util import a, case_decorator
 @allure.feature("库存类型配置")
 class TestInvTypeManagement(ScmInvBaseTest):
     """库存类型配置管理测试类"""
+    
+    # 常量配置
+    TEST_PREFIX = "AT"
+    DEFAULT_PAGE_SIZE = 20
+    DEFAULT_TEAM_ID = 22
 
     @classmethod
     def setup_class(cls):
         super().setup_class()
         cls.inv_type_id = None
+        cls._save_executed = False  # 防重复执行标记
         cls.logger.info("库存类型配置管理测试类初始化完成")
 
     @classmethod
@@ -32,13 +41,13 @@ class TestInvTypeManagement(ScmInvBaseTest):
                 WHERE created_by IN (
                     SELECT DISTINCT created_by FROM inv_inv_type_cf WHERE code LIKE %s
                 )
-            """, ["AT_%"])
+            """, [f"{cls.TEST_PREFIX}_%"])
             
             # 再清理主表数据
             cls.db.delete(
                 table="inv_inv_type_cf",
                 where="code like %s",
-                params=["AT_%"]
+                params=[f"{cls.TEST_PREFIX}_%"]
             )
             cls.logger.info("测试数据清理完成")
         except Exception as e:
@@ -55,6 +64,11 @@ class TestInvTypeManagement(ScmInvBaseTest):
     def test_save_inv_type(self):
         """测试保存库存类型"""
         try:
+            # 防重复执行检查
+            if self.__class__._save_executed and self.inv_type_id is not None:
+                self.logger.info(f"保存方法已执行过，跳过重复执行，ID: {self.inv_type_id}")
+                return
+            
             # 1. 准备测试数据
             inv_type_code = self.mock_util.generate_unique_code(tag="AT")
             inv_type_name = f"库存类型_{self.mock_util.get_timestamp()}"
@@ -89,6 +103,7 @@ class TestInvTypeManagement(ScmInvBaseTest):
             # 5. 保存数据和报告
             response_data = response.get("data", {}).get("data", {})
             self.__class__.inv_type_id = response_data.get("id")
+            self.__class__._save_executed = True  # 标记已执行
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
             
@@ -123,7 +138,7 @@ class TestInvTypeManagement(ScmInvBaseTest):
             query_params = {
                 "pageable": {
                     "pageNo": 1,
-                    "pageSize": 20,
+                    "pageSize": self.DEFAULT_PAGE_SIZE,
                     "needTotal": True,
                     "sortOrders": None,
                     "conditionItems": {
@@ -131,7 +146,7 @@ class TestInvTypeManagement(ScmInvBaseTest):
                         "conditions": {
                             "code": {
                                 "operator": "CONTAINS",
-                                "value": "AT"
+                                "value": self.TEST_PREFIX
                             }
                         },
                         "logicOperator": "AND"
@@ -179,8 +194,9 @@ class TestInvTypeManagement(ScmInvBaseTest):
     def test_export_inv_type(self):
         """测试导出库存类型"""
         try:
-            # 依赖保存方法创建的数据
-            assert self.inv_type_id is not None, "请先执行 test_save_inv_type 创建测试数据"
+            # 确保前置数据存在
+            if self.inv_type_id is None:
+                self.test_save_inv_type()
             
             # 1. 构建导出URL
             url = "https://t-erp-huoshan-portal-test.app.duandian.com/api/trantor/service/engine/execute/SCM_INV$INV_INV_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST"
@@ -189,7 +205,7 @@ class TestInvTypeManagement(ScmInvBaseTest):
             timestamp = self.mock_util.get_timestamp()
             export_params = {
                 "serviceKey": "SCM_INV$INV_INV_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
-                "teamId": 22,
+                "teamId": self.DEFAULT_TEAM_ID,
                 "params": {
                     "taskName": f"库存类型-{self.nickname}-{timestamp}-导出",
                     "multiSheetConfig": [
@@ -214,7 +230,7 @@ class TestInvTypeManagement(ScmInvBaseTest):
                     ],
                     "queryData": {
                         "appId": 0,
-                        "teamId": 22,
+                        "teamId": self.DEFAULT_TEAM_ID,
                         "containerKey": "SCM_INV$INV_TYPE_VIEW-table-container-SCM_INV$inv_inv_type_cf",
                         "viewKey": "SCM_INV$INV_TYPE_VIEW:list",
                         "sceneKey": "SCM_INV$INV_TYPE_VIEW",
@@ -232,7 +248,7 @@ class TestInvTypeManagement(ScmInvBaseTest):
                                         }
                                     },
                                     "pageNo": 1,
-                                    "pageSize": 20
+                                    "pageSize": self.DEFAULT_PAGE_SIZE
                                 }
                             },
                             "selectFields": [
@@ -245,7 +261,7 @@ class TestInvTypeManagement(ScmInvBaseTest):
                     "processConfig": {
                         "processType": "TRANTOR",
                         "appId": 0,
-                        "teamId": 22,
+                        "teamId": self.DEFAULT_TEAM_ID,
                         "model": "SCM_INV$inv_inv_type_cf",
                         "modelName": "库存类型定义表",
                         "containerKey": "SCM_INV$INV_TYPE_VIEW-table-container-SCM_INV$inv_inv_type_cf",
@@ -280,8 +296,9 @@ class TestInvTypeManagement(ScmInvBaseTest):
     def test_delete_inv_type(self):
         """测试删除库存类型"""
         try:
-            # 依赖保存方法创建的数据
-            assert self.inv_type_id is not None, "请先执行 test_save_inv_type 创建测试数据"
+            # 确保前置数据存在
+            if self.inv_type_id is None:
+                self.test_save_inv_type()
             
             # 1. 调用API
             api_path = self.get_api_path("INV-库存类型-删除服务")

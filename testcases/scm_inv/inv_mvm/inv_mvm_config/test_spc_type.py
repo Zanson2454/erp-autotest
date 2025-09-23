@@ -1,4 +1,7 @@
-"""特殊库存类型配置的新增、查询、详情、删除测试"""
+"""
+特殊库存类型配置管理测试模块
+覆盖特殊库存类型的CRUD操作、分页查询、导出功能
+"""
 import allure
 import pytest
 import sys
@@ -15,11 +18,17 @@ from utils.report_util import a, case_decorator
 @allure.feature("特殊库存类型配置")
 class TestSpcTypeManagement(ScmInvBaseTest):
     """特殊库存类型配置管理测试类"""
+    
+    # 常量配置
+    TEST_PREFIX = "AT"
+    DEFAULT_PAGE_SIZE = 20
+    DEFAULT_TEAM_ID = 22
 
     @classmethod
     def setup_class(cls):
         super().setup_class()
         cls.spc_type_id = None
+        cls._save_executed = False  # 添加执行标记
         cls.logger.info("特殊库存类型配置管理测试类初始化完成")
 
     @classmethod
@@ -29,7 +38,7 @@ class TestSpcTypeManagement(ScmInvBaseTest):
             cls.db.delete(
                 table="inv_spc_stk_type_cf",
                 where="code like %s",
-                params=["AT_%"]
+                params=[f"{cls.TEST_PREFIX}_%"]
             )
             cls.logger.info("测试数据清理完成")
         except Exception as e:
@@ -46,6 +55,11 @@ class TestSpcTypeManagement(ScmInvBaseTest):
     def test_save_spc_type(self):
         """测试保存特殊库存类型"""
         try:
+            # 防重复执行检查
+            if self.__class__._save_executed and self.spc_type_id is not None:
+                self.logger.info(f"保存方法已执行过，跳过重复执行，ID: {self.spc_type_id}")
+                return
+            
             # 1. 准备测试数据
             spc_type_code = self.mock_util.generate_unique_code(tag="AT")
             spc_type_name = f"特殊库存类型_{self.mock_util.get_timestamp()}"
@@ -81,6 +95,7 @@ class TestSpcTypeManagement(ScmInvBaseTest):
             # 5. 保存数据和报告
             response_data = response.get("data", {}).get("data", {})
             self.__class__.spc_type_id = response_data.get("id")
+            self.__class__._save_executed = True  # 标记已执行
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
             
@@ -101,8 +116,9 @@ class TestSpcTypeManagement(ScmInvBaseTest):
     def test_query_spc_type_detail(self):
         """测试查询特殊库存类型详情"""
         try:
-            # 依赖保存方法创建的数据
-            assert self.spc_type_id is not None, "请先执行 test_save_spc_type 创建测试数据"
+            # 确保前置数据存在
+            if self.spc_type_id is None:
+                self.test_save_spc_type()
             
             # 1. 调用API
             api_path = self.get_api_path("INV-特殊库存类型-详情查询服务")
@@ -156,7 +172,7 @@ class TestSpcTypeManagement(ScmInvBaseTest):
             query_params = {
                 "pageable": {
                     "pageNo": 1,
-                    "pageSize": 20,
+                    "pageSize": self.DEFAULT_PAGE_SIZE,
                     "needTotal": True,
                     "sortOrders": None,
                     "conditionItems": {
@@ -164,7 +180,7 @@ class TestSpcTypeManagement(ScmInvBaseTest):
                         "conditions": {
                             "code": {
                                 "operator": "CONTAINS",
-                                "value": "AT"
+                                "value": self.TEST_PREFIX
                             }
                         },
                         "logicOperator": "AND"
@@ -225,7 +241,7 @@ class TestSpcTypeManagement(ScmInvBaseTest):
             timestamp = self.mock_util.get_timestamp()
             export_params = {
                 "serviceKey": "SCM_INV$INV_SPC_STK_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
-                "teamId": 22,
+                "teamId": self.DEFAULT_TEAM_ID,
                 "params": {
                     "taskName": f"特殊库存类型-{self.nickname}-{timestamp}-导出",
                     "multiSheetConfig": [
@@ -255,7 +271,7 @@ class TestSpcTypeManagement(ScmInvBaseTest):
                     ],
                     "queryData": {
                         "appId": 0,
-                        "teamId": 22,
+                        "teamId": self.DEFAULT_TEAM_ID,
                         "containerKey": "SCM_INV$INV_SPC_TYPE_VIEW-table-container-SCM_INV$inv_spc_stk_type_cf",
                         "viewKey": "SCM_INV$INV_SPC_TYPE_VIEW:list",
                         "sceneKey": "SCM_INV$INV_SPC_TYPE_VIEW",
@@ -273,7 +289,7 @@ class TestSpcTypeManagement(ScmInvBaseTest):
                                         }
                                     },
                                     "pageNo": 1,
-                                    "pageSize": 20
+                                    "pageSize": self.DEFAULT_PAGE_SIZE
                                 }
                             },
                             "selectFields": [
@@ -287,7 +303,7 @@ class TestSpcTypeManagement(ScmInvBaseTest):
                     "processConfig": {
                         "processType": "TRANTOR",
                         "appId": 0,
-                        "teamId": 22,
+                        "teamId": self.DEFAULT_TEAM_ID,
                         "model": "SCM_INV$inv_spc_stk_type_cf",
                         "modelName": "特殊库存标识定义表",
                         "containerKey": "SCM_INV$INV_SPC_TYPE_VIEW-table-container-SCM_INV$inv_spc_stk_type_cf",
@@ -322,8 +338,9 @@ class TestSpcTypeManagement(ScmInvBaseTest):
     def test_delete_spc_type(self):
         """测试删除特殊库存类型"""
         try:
-            # 依赖保存方法创建的数据
-            assert self.spc_type_id is not None, "请先执行 test_save_spc_type 创建测试数据"
+            # 确保前置数据存在
+            if self.spc_type_id is None:
+                self.test_save_spc_type()
             
             # 1. 调用API
             api_path = self.get_api_path("INV-特殊库存类型-删除服务")

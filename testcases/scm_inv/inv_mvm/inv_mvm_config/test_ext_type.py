@@ -1,4 +1,7 @@
-"""移动类型扩展配置的新增、查询、详情、删除测试"""
+"""
+移动类型扩展配置管理测试模块
+覆盖移动类型扩展的CRUD操作、分页查询、导出功能
+"""
 import allure
 import pytest
 import sys
@@ -15,11 +18,17 @@ from utils.report_util import a, case_decorator
 @allure.feature("移动类型扩展配置")
 class TestInvMvmConfigManagement(ScmInvBaseTest):
     """移动类型扩展配置管理测试类"""
+    
+    # 常量配置
+    TEST_PREFIX = "AT"
+    DEFAULT_PAGE_SIZE = 20
+    DEFAULT_TEAM_ID = 22
 
     @classmethod
     def setup_class(cls):
         super().setup_class()
         cls.mvm_ext_type_id = None
+        cls._save_executed = False  # 防重复执行标记
         cls.logger.info("移动类型扩展配置管理测试类初始化完成")
 
     @classmethod
@@ -29,7 +38,7 @@ class TestInvMvmConfigManagement(ScmInvBaseTest):
             cls.db.delete(
                 table="inv_mvm_ext_type_cf",
                 where="code like %s",
-                params=["AT%"]
+                params=[f"{cls.TEST_PREFIX}%"]
             )
             cls.logger.info("测试数据清理完成")
         except Exception as e:
@@ -46,11 +55,15 @@ class TestInvMvmConfigManagement(ScmInvBaseTest):
     def test_save_mvm_ext_type(self):
         """测试保存移动类型扩展"""
         try:
+            # 防重复执行检查
+            if self.__class__._save_executed and self.mvm_ext_type_id is not None:
+                self.logger.info(f"保存方法已执行过，跳过重复执行，ID: {self.mvm_ext_type_id}")
+                return
+            
             # 1. 准备测试数据
-            # 使用毫秒级时间戳确保唯一性
-            microsecond = str(int(time.time() * 1000000))[-6:]  # 微秒时间戳后6位
-            ext_type_code = f"AT{microsecond}"  # 总长度8位
-            ext_type_name = f"移动类型扩展_{microsecond}"
+            timestamp_suffix = str(int(time.time() * 1000000))[-6:]
+            ext_type_code = f"{self.TEST_PREFIX}{timestamp_suffix}"
+            ext_type_name = f"移动类型扩展_{timestamp_suffix}"
             
             # 2. 调用API
             api_path = self.get_api_path("INV-移动扩展类型-保存服务")
@@ -77,6 +90,7 @@ class TestInvMvmConfigManagement(ScmInvBaseTest):
             # 5. 保存数据和报告
             response_data = response.get("data", {}).get("data", {})
             self.__class__.mvm_ext_type_id = response_data.get("id")  # 保存到类变量，供其他测试方法使用
+            self.__class__._save_executed = True  # 标记已执行
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
             
@@ -97,8 +111,9 @@ class TestInvMvmConfigManagement(ScmInvBaseTest):
     def test_query_mvm_ext_type_detail(self):
         """测试查询移动类型扩展详情"""
         try:
-            # 依赖保存方法创建的数据
-            assert self.mvm_ext_type_id is not None, "请先执行 test_save_mvm_ext_type 创建测试数据"
+            # 确保前置数据存在
+            if self.mvm_ext_type_id is None:
+                self.test_save_mvm_ext_type()
             
             # 1. 调用API
             api_path = self.get_api_path("INV-移动扩展类型-详情服务")
@@ -152,7 +167,7 @@ class TestInvMvmConfigManagement(ScmInvBaseTest):
             query_params = {
                 "pageable": {
                     "pageNo": 1,
-                    "pageSize": 20,
+                    "pageSize": self.DEFAULT_PAGE_SIZE,
                     "needTotal": True,
                     "sortOrders": None,
                     "conditionItems": {
@@ -160,7 +175,7 @@ class TestInvMvmConfigManagement(ScmInvBaseTest):
                         "conditions": {
                             "code": {
                                 "operator": "CONTAINS",
-                                "value": "AT"
+                                "value": self.TEST_PREFIX
                             }
                         },
                         "logicOperator": "AND"
@@ -222,7 +237,7 @@ class TestInvMvmConfigManagement(ScmInvBaseTest):
             timestamp = self.mock_util.get_timestamp()
             export_params = {
                 "serviceKey": "SCM_INV$INV_MVM_EXT_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
-                "teamId": 22,
+                "teamId": self.DEFAULT_TEAM_ID,
                 "params": {
                     "taskName": f"移动类型扩展-{self.nickname}-{timestamp}-导出",
                     "multiSheetConfig": [
@@ -252,7 +267,7 @@ class TestInvMvmConfigManagement(ScmInvBaseTest):
                     ],
                     "queryData": {
                         "appId": 0,
-                        "teamId": 22,
+                        "teamId": self.DEFAULT_TEAM_ID,
                         "containerKey": "SCM_INV$INV_MVM_EXT_TYPE_VIEW-table-container-SCM_INV$inv_mvm_ext_type_cf",
                         "viewKey": "SCM_INV$INV_MVM_EXT_TYPE_VIEW:list",
                         "sceneKey": "SCM_INV$INV_MVM_EXT_TYPE_VIEW",
@@ -270,7 +285,7 @@ class TestInvMvmConfigManagement(ScmInvBaseTest):
                                         }
                                     },
                                     "pageNo": 1,
-                                    "pageSize": 20
+                                    "pageSize": self.DEFAULT_PAGE_SIZE
                                 }
                             },
                             "selectFields": [
@@ -284,7 +299,7 @@ class TestInvMvmConfigManagement(ScmInvBaseTest):
                     "processConfig": {
                         "processType": "TRANTOR",
                         "appId": 0,
-                        "teamId": 22,
+                        "teamId": self.DEFAULT_TEAM_ID,
                         "model": "SCM_INV$inv_mvm_ext_type_cf",
                         "modelName": "移动类型扩展类型定义表",
                         "containerKey": "SCM_INV$INV_MVM_EXT_TYPE_VIEW-table-container-SCM_INV$inv_mvm_ext_type_cf",
@@ -319,8 +334,9 @@ class TestInvMvmConfigManagement(ScmInvBaseTest):
     def test_delete_mvm_ext_type(self):
         """测试删除移动类型扩展"""
         try:
-            # 依赖保存方法创建的数据
-            assert self.mvm_ext_type_id is not None, "请先执行 test_save_mvm_ext_type 创建测试数据"
+            # 确保前置数据存在
+            if self.mvm_ext_type_id is None:
+                self.test_save_mvm_ext_type()
             
             # 1. 调用API
             api_path = self.get_api_path("INV-移动扩展类型-删除服务")

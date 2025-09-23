@@ -1,4 +1,7 @@
-"""作业正逆向标识配置的新增、查询、详情、删除测试"""
+"""
+作业正逆向标识配置管理测试模块
+覆盖正逆向标识的CRUD操作、分页查询、导出功能
+"""
 import allure
 import pytest
 import sys
@@ -15,11 +18,17 @@ from utils.report_util import a, case_decorator
 @allure.feature("作业正逆向标识配置")
 class TestFbTypeManagement(ScmInvBaseTest):
     """作业正逆向标识配置管理测试类"""
+    
+    # 常量配置
+    TEST_PREFIX = "AT"
+    DEFAULT_PAGE_SIZE = 20
+    DEFAULT_TEAM_ID = 22
 
     @classmethod
     def setup_class(cls):
         super().setup_class()
         cls.fb_type_id = None
+        cls._save_executed = False  # 防重复执行标记
         cls.logger.info("作业正逆向标识配置管理测试类初始化完成")
 
     @classmethod
@@ -29,7 +38,7 @@ class TestFbTypeManagement(ScmInvBaseTest):
             cls.db.delete(
                 table="inv_fb_type_cf",
                 where="code like %s",
-                params=["AT_%"]
+                params=[f"{cls.TEST_PREFIX}_%"]
             )
             cls.logger.info("测试数据清理完成")
         except Exception as e:
@@ -46,11 +55,15 @@ class TestFbTypeManagement(ScmInvBaseTest):
     def test_save_fb_type(self):
         """测试保存作业正逆向标识"""
         try:
+            # 防重复执行检查
+            if self.__class__._save_executed and self.fb_type_id is not None:
+                self.logger.info(f"保存方法已执行过，跳过重复执行，ID: {self.fb_type_id}")
+                return
+            
             # 1. 准备测试数据
             fb_type_code = self.mock_util.generate_unique_code(tag="AT")
             fb_type_name = f"作业正逆向标识_{self.mock_util.get_timestamp()}"
-            # uniqueCode字段长度限制，使用较短的代码
-            unique_code = f"AT{self.mock_util.get_timestamp()[-6:]}"
+            unique_code = f"{self.TEST_PREFIX}{self.mock_util.get_timestamp()[-6:]}"
             
             # 2. 调用API
             api_path = self.get_api_path("INV-作业正逆向-保存服务")
@@ -86,6 +99,7 @@ class TestFbTypeManagement(ScmInvBaseTest):
             # 5. 保存数据和报告
             response_data = response.get("data", {}).get("data", {})
             self.__class__.fb_type_id = response_data.get("id")
+            self.__class__._save_executed = True  # 标记已执行
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
             
@@ -106,8 +120,9 @@ class TestFbTypeManagement(ScmInvBaseTest):
     def test_query_fb_type_detail(self):
         """测试查询作业正逆向标识详情"""
         try:
-            # 依赖保存方法创建的数据
-            assert self.fb_type_id is not None, "请先执行 test_save_fb_type 创建测试数据"
+            # 确保前置数据存在
+            if self.fb_type_id is None:
+                self.test_save_fb_type()
             
             # 1. 调用API
             api_path = self.get_api_path("INV-作业正逆向-详情服务")
@@ -161,7 +176,7 @@ class TestFbTypeManagement(ScmInvBaseTest):
             query_params = {
                 "pageable": {
                     "pageNo": 1,
-                    "pageSize": 20,
+                    "pageSize": self.DEFAULT_PAGE_SIZE,
                     "needTotal": True,
                     "sortOrders": None,
                     "conditionItems": {
@@ -169,7 +184,7 @@ class TestFbTypeManagement(ScmInvBaseTest):
                         "conditions": {
                             "code": {
                                 "operator": "CONTAINS",
-                                "value": "AT"
+                                "value": self.TEST_PREFIX
                             }
                         },
                         "logicOperator": "AND"
@@ -230,7 +245,7 @@ class TestFbTypeManagement(ScmInvBaseTest):
             timestamp = self.mock_util.get_timestamp()
             export_params = {
                 "serviceKey": "SCM_INV$INV_FB_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
-                "teamId": 22,
+                "teamId": self.DEFAULT_TEAM_ID,
                 "params": {
                     "taskName": f"作业正逆向标识-{self.nickname}-{timestamp}-导出",
                     "multiSheetConfig": [
@@ -265,7 +280,7 @@ class TestFbTypeManagement(ScmInvBaseTest):
                     ],
                     "queryData": {
                         "appId": 0,
-                        "teamId": 22,
+                        "teamId": self.DEFAULT_TEAM_ID,
                         "containerKey": "SCM_INV$INV_FB_TYPE_VIEW-table-container-SCM_INV$inv_fb_type_cf",
                         "viewKey": "SCM_INV$INV_FB_TYPE_VIEW:list",
                         "sceneKey": "SCM_INV$INV_FB_TYPE_VIEW",
@@ -283,7 +298,7 @@ class TestFbTypeManagement(ScmInvBaseTest):
                                         }
                                     },
                                     "pageNo": 1,
-                                    "pageSize": 20
+                                    "pageSize": self.DEFAULT_PAGE_SIZE
                                 }
                             },
                             "selectFields": [
@@ -298,7 +313,7 @@ class TestFbTypeManagement(ScmInvBaseTest):
                     "processConfig": {
                         "processType": "TRANTOR",
                         "appId": 0,
-                        "teamId": 22,
+                        "teamId": self.DEFAULT_TEAM_ID,
                         "model": "SCM_INV$inv_fb_type_cf",
                         "modelName": "正逆向标识定义表",
                         "containerKey": "SCM_INV$INV_FB_TYPE_VIEW-table-container-SCM_INV$inv_fb_type_cf",
@@ -333,8 +348,9 @@ class TestFbTypeManagement(ScmInvBaseTest):
     def test_delete_fb_type(self):
         """测试删除作业正逆向标识"""
         try:
-            # 依赖保存方法创建的数据
-            assert self.fb_type_id is not None, "请先执行 test_save_fb_type 创建测试数据"
+            # 确保前置数据存在
+            if self.fb_type_id is None:
+                self.test_save_fb_type()
             
             # 1. 调用API
             api_path = self.get_api_path("INV-作业正逆向-删除服务")
