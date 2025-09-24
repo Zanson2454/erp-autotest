@@ -336,3 +336,46 @@ class TestRebateCrud(SlsBase):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
+    
+    @case_decorator(
+        story="返利政策管理",
+        title="测试删除返利政策",
+        description="验证删除返利政策的功能",
+        severity="critical",
+        order=5,
+        tags=["返利政策", "删除"]
+    )
+    def test_05_delete_rebate_policy(self):
+        """测试删除返利政策"""
+        try:
+            # 1. 确保有返利政策数据
+            if not self.rebate_id:
+                self.test_04_disable_rebate_policy()
+            
+            # 2. 使用SQL删除返利政策
+            delete_sql = """
+                DELETE FROM sls_rebate_policy_head_tr 
+                WHERE id = %s
+            """
+            
+            result = self.db.execute(delete_sql, [self.rebate_id])
+            
+            # 3. 验证删除结果
+            if result:
+                a.text(f"返利政策删除成功，ID: {self.rebate_id}", "删除结果")
+                a.text(f"删除影响行数: {result}", "删除统计")
+                
+                # 4. 验证数据确实被删除
+                check_sql = "SELECT COUNT(*) as count FROM sls_rebate_policy_head_tr WHERE id = %s"
+                check_result = self.db.query_one(check_sql, [self.rebate_id])
+                
+                if check_result and check_result.get("count") == 0:
+                    a.text("返利政策已成功从数据库中删除", "删除验证")
+                else:
+                    a.text("返利政策删除验证失败，数据仍存在", "删除验证")
+            else:
+                a.text("返利政策删除失败，未影响任何行", "删除结果")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
