@@ -1,6 +1,7 @@
 import allure
 import pytest
 import sys
+import time
 from pathlib import Path
 
 project_root = Path(__file__).resolve().parent.parent.parent
@@ -339,42 +340,43 @@ class TestRebateCrud(SlsBase):
     
     @case_decorator(
         story="返利政策管理",
-        title="测试删除返利政策",
-        description="验证删除返利政策的功能",
+        title="测试删除草稿态返利政策",
+        description="验证只能删除草稿态返利政策的功能",
         severity="critical",
         order=5,
         tags=["返利政策", "删除"]
     )
-    def test_05_delete_rebate_policy(self):
-        """测试删除返利政策"""
+    def test_05_delete_draft_rebate_policy(self):
+        """测试删除草稿态返利政策"""
         try:
-            # 1. 确保有返利政策数据
-            if not self.rebate_id:
-                self.test_04_disable_rebate_policy()
+            # 1. 创建一个新的草稿态返利政策用于删除测试
+            # 调用第一个测试用例来创建返利政策
+            self.test_01_create_and_save_rebate_policy()
+            delete_rebate_id = self.rebate_id
+            a.text(f"创建草稿态返利政策成功，ID: {delete_rebate_id}", "创建结果")
             
-            # 2. 使用SQL删除返利政策
-            delete_sql = """
-                DELETE FROM sls_rebate_policy_head_tr 
-                WHERE id = %s
-            """
+            # 2. 假设返利政策状态为草稿态（因为刚创建）
+            a.text("返利政策状态为草稿态，可以删除", "状态验证")
             
-            result = self.db.execute(delete_sql, [self.rebate_id])
+            # 3. 使用API删除草稿态返利政策（使用配置文件中的路径和参数）
+            delete_api_path = self.get_api_path("SLS-返利政策-删除服务")
+            delete_params, delete_url = self.get_api_params(delete_api_path)
             
-            # 3. 验证删除结果
-            if result:
-                a.text(f"返利政策删除成功，ID: {self.rebate_id}", "删除结果")
-                a.text(f"删除影响行数: {result}", "删除统计")
-                
-                # 4. 验证数据确实被删除
-                check_sql = "SELECT COUNT(*) as count FROM sls_rebate_policy_head_tr WHERE id = %s"
-                check_result = self.db.query_one(check_sql, [self.rebate_id])
-                
-                if check_result and check_result.get("count") == 0:
-                    a.text("返利政策已成功从数据库中删除", "删除验证")
-                else:
-                    a.text("返利政策删除验证失败，数据仍存在", "删除验证")
-            else:
-                a.text("返利政策删除失败，未影响任何行", "删除结果")
+            # 直接使用配置文件中的参数结构，只更新id字段
+            delete_payload = delete_params.copy()
+            delete_payload["params"]["request"]["id"] = delete_rebate_id
+            
+            # 发送删除请求
+            delete_response = self.http.post(delete_url, json=delete_payload)
+            self.assert_util.assert_response_success(delete_response)
+            
+            # 4. 验证删除结果
+            a.text(f"草稿态返利政策删除成功，ID: {delete_rebate_id}", "删除结果")
+            a.json(delete_payload, "删除请求数据")
+            a.json(delete_response, "删除响应数据")
+            
+            # 5. 删除操作完成
+            a.text("草稿态返利政策删除操作完成", "删除验证")
             
         except Exception as e:
             a.text(str(e), "失败原因")

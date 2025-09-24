@@ -9972,3 +9972,36 @@ api_params:
         periodBeginAt: null
         periodEndAt: null
         status: "ENABLED"
+  /api/trantor/service/engine/execute/SCM_REB$REB_POLICY_DELETE_ACTION_SERVICE?tmodule=SCM_REB:
+    sceneKey: SCM_REB$REBATE
+    viewKey: SCM_REB$REBATE:list
+    viewTitle: list
+    buttonKey: SCM_REB$REBATE-m2kwCYt36Xpu3RahnHVp0
+    buttonName: 删除
+    appId: 0
+    teamId: 22
+    serviceKey: SCM_REB$REB_POLICY_DELETE_ACTION_SERVICE
+    params:
+      request:
+        id: null
+        context: {}
+        version: 1
+        deleted: 0
+        createdAt: 1758683183000
+        updatedAt: 1758683183000
+        createdBy: 540175374525637
+        updatedBy: 540175374525637
+        policyCode: "AT_RP83182842001764"
+        policyName: "自动化测试返利政策_20250924110622"
+        rebDocType: "SO"
+        acquireType: "AMT"
+        comOrgId:
+          id: 14507001
+          context: {}
+        settAccTypeId:
+          id: 14007001
+          context: {}
+        periodType: "MONTH"
+        periodBeginAt: 1758683183000
+        periodEndAt: 1790219183000
+        status: "DRAFT"
