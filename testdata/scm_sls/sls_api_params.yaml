@@ -9868,3 +9868,107 @@ api_params:
     params:
       request:
         ids: []
+  /api/trantor/service/engine/execute/SCM_REB$REB_POLICY_SAVE_ACTION_SERVICE?tmodule=SCM_REB:
+    sceneKey: SCM_REB$REBATE
+    viewKey: SCM_REB$REBATE:bQu_FI0CgU_AP6_XVU29r
+    viewTitle: edit
+    buttonKey: SCM_REB$REBATE-e4gdMlXr1dpMcq6HoIv_n
+    buttonName: 提交
+    appId: 0
+    teamId: 22
+    serviceKey: SCM_REB$REB_POLICY_SAVE_ACTION_SERVICE
+    params:
+      request:
+        policyCode: ""
+        policyName: ""
+        status: null
+        id: null
+        rebDocType: "SO"
+        comOrgId:
+          id: 14507001
+        slsOrgIds: null
+        slsDcIds: null
+        acquireType: "AMT"
+        settAccTypeId:
+          id: 14007001
+        soTypeIds: null
+        soItemTypeIds: null
+        dnTypeIds: null
+        dnItemTypeIds: null
+        periodType: "MONTH"
+        periodBeginAt: null
+        periodEndAt: null
+        rebRules: []
+  /api/trantor/service/engine/execute/SCM_REB$REB_POLICY_SUBMIT_APPROVAL_ACTION_SERVICE?tmodule=SCM_REB:
+    sceneKey: SCM_REB$REBATE
+    viewKey: SCM_REB$REBATE:list
+    viewTitle: list
+    buttonKey: SCM_REB$REBATE-E7dK3WHCaMeBXR2K3Yn6d
+    buttonName: 提交
+    appId: 0
+    teamId: 22
+    serviceKey: SCM_REB$REB_POLICY_SUBMIT_APPROVAL_ACTION_SERVICE
+    params:
+      request:
+        id: null
+  /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_TASK_SUBMIT_POST:
+    serviceKey: ERP_GEN$API_TRANTOR_WORKFLOW_V2_TASK_SUBMIT_POST
+    params:
+      _rootParams:
+        pageKey: sys_common$approval_task_center
+        sceneKey: sys_common$approval_task_center
+        buttonName: 同意
+        buttonKey: AGREE
+      taskInstanceId: null
+      auditResult:
+        remark: 同意
+        decisionType: AGREE
+    pageKey: sys_common$approval_task_center
+    sceneKey: sys_common$approval_task_center
+    buttonName: 同意
+    buttonKey: AGREE
+  /api/trantor/service/engine/execute/SCM_SLS$SLS_REBATE_POLICY_ENABLE_SERVICE?tmodule=SCM_SLS:
+    sceneKey: SCM_SLS$sls_rebate_policy
+    viewKey: SCM_SLS$sls_rebate_policy:list
+    viewTitle: list
+    buttonKey: SCM_SLS$sls_rebate_policy-enable
+    buttonName: 启用
+    appId: 0
+    teamId: 22
+    serviceKey: SCM_SLS$SLS_REBATE_POLICY_ENABLE_SERVICE
+    params:
+      request:
+        id: null
+  /api/trantor/service/engine/execute/SCM_REB$REB_POLICY_DISABLE_ACTION_SERVICE?tmodule=SCM_REB:
+    sceneKey: SCM_REB$REBATE
+    viewKey: SCM_REB$REBATE:list
+    viewTitle: list
+    buttonKey: SCM_REB$REBATE-pLKnqWeLBDRvZFMLkX-u3
+    buttonName: 停用
+    appId: 0
+    teamId: 22
+    serviceKey: SCM_REB$REB_POLICY_DISABLE_ACTION_SERVICE
+    params:
+      request:
+        id: null
+        context: {}
+        version: null
+        deleted: 0
+        createdAt: null
+        updatedAt: null
+        createdBy: null
+        updatedBy: null
+        policyCode: null
+        policyName: null
+        rebDocType: "SO"
+        acquireType: "AMT"
+        comOrgId:
+          id: null
+          context: {}
+        settAccTypeId:
+          id: null
+          context: {}
+        periodType: "MONTH"
+        periodBeginAt: null
+        periodEndAt: null
+        status: "ENABLED"

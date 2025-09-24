@@ -37,6 +37,21 @@ apis:
   SLS-销售报价-批量删除服务:
     path: /api/trantor/service/engine/execute/SCM_SLS$sales_order_batch_delete_service?tmodule=SCM_SLS
     method: POST
+  SLS-返利政策-保存服务:
+    path: /api/trantor/service/engine/execute/SCM_REB$REB_POLICY_SAVE_ACTION_SERVICE?tmodule=SCM_REB
+    method: POST
+  SLS-返利政策-提交服务:
+    path: /api/trantor/service/engine/execute/SCM_REB$REB_POLICY_SUBMIT_APPROVAL_ACTION_SERVICE?tmodule=SCM_REB
+    method: POST
+  SLS-返利政策-审核通过服务:
+    path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_TASK_SUBMIT_POST
+    method: POST
+  SLS-返利政策-启用服务:
+    path: /api/trantor/service/engine/execute/SCM_REB$REB_POLICY_ENABLE_SERVICE?tmodule=SCM_REB
+    method: POST
+  SLS-返利政策-停用服务:
+    path: /api/trantor/service/engine/execute/SCM_REB$REB_POLICY_DISABLE_ACTION_SERVICE?tmodule=SCM_REB
+    method: POST
   赠品策略-匹配范围表结构服务:
     path: /api/trantor/service/engine/execute/SCM_SLS$GIFT_STRATEGY_MATCH_SCOPE_TABLE_EVENT_SERVICE
     method: POST

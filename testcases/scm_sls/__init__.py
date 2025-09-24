@@ -99,7 +99,7 @@ class SlsBase(BaseTest):
         cls.user_id = cls.init_data["user_info"]['user_info']["id"]
 
         
-     # ==================== 销售订单相关方法 ====================
+    # ==================== 销售订单相关方法 ====================
         
     # 初始化订单配置数据
         if cls.init_data:
@@ -135,6 +135,12 @@ class SlsBase(BaseTest):
             for so_item_type in cls.so_item_type_info:
                 if so_item_type.get("so_item_type_code") == "NORM":
                     cls.stnd_so_item_type_id = so_item_type.get("id")
+            
+            # 初始化返利政策相关属性
+            cls.rebate_type_info = cls.sls_cache_data.get("sls_config",{}).get("rebate_type_info",[])
+            for rebate_type in cls.rebate_type_info:
+                if rebate_type.get("rebate_type_code") == "STND":
+                    cls.stnd_rebate_type_id = rebate_type.get("id")
             
             # 添加订单类型和订单行类型的组合
             cls.ORDER_TYPE_LINE_COMBINATIONS = []
