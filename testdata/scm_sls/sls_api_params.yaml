@@ -10005,3 +10005,17 @@ api_params:
         periodBeginAt: 1758683183000
         periodEndAt: 1790219183000
         status: "DRAFT"
+  /api/trantor/service/engine/execute/ERP_ACC$acc_trans_record_page_service?tmodule=ERP_ACC:
+    sceneKey: ERP_ACC$ADV_ACC_MANAVE_NEW
+    viewKey: ERP_ACC$ADV_ACC_MANAVE_NEW:detail
+    appId: 0
+    teamId: 22
+    serviceKey: ERP_ACC$acc_trans_record_page_service
+    params:
+      accId: 14072001
+      pageable:
+        pageNo: 1
+        pageSize: 20
+        needTotal: true
+        sortOrders: null
+        conditionItems: null

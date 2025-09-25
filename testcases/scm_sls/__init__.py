@@ -186,11 +186,12 @@ class SlsBase(BaseTest):
         """
         return super().get_api_params(api_path, self.api_params, with_query_params)
     
-    def create_sales_order(self, order_type="STND", submit=False):
+    def create_sales_order(self, order_type="STND", submit=False, rebate_amount=None):
         """
         创建销售订单的公共方法
         :param order_type: 订单类型（STND/THRD/CENT），默认为STND
         :param submit: 是否提交订单（True=提交，False=保存为草稿）
+        :param rebate_amount: 返利金额，如果提供则会在订单行中添加返利金额
         :return: 订单ID
         """
         try:
@@ -206,6 +207,10 @@ class SlsBase(BaseTest):
             
             # 5. 定价
             self._calculate_pricing()
+            
+            # 6. 如果提供了返利金额，添加到订单行中
+            if rebate_amount is not None:
+                self._add_rebate_amount(rebate_amount)
             
             # 4. 保存或提交
             if submit:
@@ -418,6 +423,24 @@ class SlsBase(BaseTest):
         self.assert_util.assert_response_data(response)
         self.so_data_price = response.get("data", {}).get("data", {})
     
+    def _add_rebate_amount(self, rebate_amount):
+        """添加返利金额到订单行中"""
+        try:
+            if self.so_data_price and "soItems" in self.so_data_price:
+                for item in self.so_data_price["soItems"]:
+                    # 添加返利金额字段
+                    item["rebateAmt"] = rebate_amount
+                    # 计算净金额 = 销售金额 - 返利金额
+                    if "salesAmt" in item:
+                        item["netAmt"] = item["salesAmt"] - rebate_amount
+                    elif "grossTradeAmt" in item:
+                        item["netAmt"] = item["grossTradeAmt"] - rebate_amount
+                
+                self.logger.info(f"已添加返利金额 {rebate_amount} 到订单行中")
+        except Exception as e:
+            self.logger.error(f"添加返利金额失败: {str(e)}")
+            raise
+    
     def _so_save(self):
         """SLS-销售订单-保存服务"""
         try:
@@ -434,7 +457,7 @@ class SlsBase(BaseTest):
                     "custPersonName", "custPhone", "slsPerson", "slsPhone", "slsPersonName",
                     "slsOrgId", "slsDcId", "slsComId", "slsCurrId", "baseCurrId",
                     "currExchangeRateType", "exchRate", "soItems", "slsPartnerLinks",
-                    "soTypeId", "isFixedExchRate", "reCalculate"
+                    "soTypeId", "isFixedExchRate", "reCalculate", "rebateAmt", "netAmt"
                 ], ["params", "request"]
             )
             
