@@ -95,12 +95,12 @@ class TestInvStkBalanceTransferManagement(MobileVoucherCreator):
             remark=remark
         )
 
-    @pytest.mark.run(order=1)
     @case_decorator(
         story="库存余额调拨验证",
         title="测试查询调拨前库存余额",
         description="查询调拨前的库存余额总量，为后续总量不变验证提供基准",
         severity="critical",
+        order=1,
         tags=["库存余额", "调拨", "基准查询"]
     )
     def test_query_initial_balance_before_transfer(self):
@@ -121,12 +121,12 @@ class TestInvStkBalanceTransferManagement(MobileVoucherCreator):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.run(order=2)
     @case_decorator(
         story="库存余额调拨验证",
         title="测试创建调拨移动凭证",
         description="创建调拨移动凭证，验证凭证创建成功",
         severity="blocker",
+        order=2,
         tags=["库存余额", "调拨", "移动凭证"]
     )
     def test_create_transfer_voucher(self):
@@ -159,12 +159,12 @@ class TestInvStkBalanceTransferManagement(MobileVoucherCreator):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.run(order=3)
     @case_decorator(
         story="库存余额调拨验证",
         title="测试验证调拨后库存余额总量不变",
         description="验证调拨完成后，库存总量保持不变，只改变分布",
         severity="blocker",
+        order=3,
         tags=["库存余额", "调拨", "总量验证"]
     )
     def test_verify_balance_unchanged_after_transfer(self):

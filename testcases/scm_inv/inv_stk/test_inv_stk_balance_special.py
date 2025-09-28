@@ -93,12 +93,12 @@ class TestInvStkBalanceSpecialManagement(MobileVoucherCreator):
             remark=remark
         )
 
-    @pytest.mark.run(order=1)
     @case_decorator(
         story="库存余额特殊库存转移验证",
         title="测试查询特殊库存转移前库存余额",
         description="查询特殊库存转移前的库存余额，为后续对比提供基准数据",
         severity="critical",
+        order=1,
         tags=["库存余额", "特殊库存转移", "基准查询"]
     )
     def test_query_initial_balance_before_special_transfer(self):
@@ -119,12 +119,13 @@ class TestInvStkBalanceSpecialManagement(MobileVoucherCreator):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.run(order=2)
+
     @case_decorator(
         story="库存余额特殊库存转移验证",
         title="测试创建特殊库存转移移动凭证",
         description="创建特殊库存转移移动凭证，验证凭证创建成功",
         severity="blocker",
+        order=2,
         tags=["库存余额", "特殊库存转移", "移动凭证"]
     )
     def test_create_special_stock_transfer_voucher(self):
@@ -157,12 +158,12 @@ class TestInvStkBalanceSpecialManagement(MobileVoucherCreator):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.run(order=3)
     @case_decorator(
         story="库存余额特殊库存转移验证",
         title="测试验证特殊库存转移后库存余额变化",
         description="验证特殊库存转移完成后，库存余额的正确性",
         severity="blocker",
+        order=3,
         tags=["库存余额", "特殊库存转移", "余额验证"]
     )
     def test_verify_balance_after_special_transfer(self):

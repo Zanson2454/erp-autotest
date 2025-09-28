@@ -73,12 +73,12 @@ class TestInvStkBalanceSalesManagement(MobileVoucherCreator):
         self.assert_util.assert_by_operator(voucher_info["total_qty"], "=", 1, "总数量应该是1")
         return voucher_id
 
-    @pytest.mark.run(order=1)
     @case_decorator(
         story="库存余额销售出库验证",
         title="测试查询销售前库存余额",
         description="查询销售出库前的库存余额，为后续对比提供基准数据",
         severity="critical",
+        order=1,
         tags=["库存余额", "销售出库", "基准查询"]
     )
     def test_query_initial_balance_before_sale(self):
@@ -99,12 +99,12 @@ class TestInvStkBalanceSalesManagement(MobileVoucherCreator):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.run(order=2)
     @case_decorator(
         story="库存余额销售出库验证",
         title="测试创建销售出库移动凭证",
         description="创建销售出库移动凭证，验证凭证创建成功",
         severity="blocker",
+        order=2,
         tags=["库存余额", "销售出库", "移动凭证"]
     )
     def test_create_sale_voucher_decrease_inventory(self):
@@ -143,12 +143,12 @@ class TestInvStkBalanceSalesManagement(MobileVoucherCreator):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.run(order=3)
     @case_decorator(
         story="库存余额销售出库验证",
         title="测试验证销售后库存余额减少",
         description="验证销售出库后库存余额正确减少，确保库存数据一致性",
         severity="blocker",
+        order=3,
         tags=["库存余额", "销售出库", "余额验证"]
     )
     def test_verify_balance_decrease_after_sale(self):
