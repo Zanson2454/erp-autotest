@@ -1,4 +1,281 @@
 api_params:
+  /api/trantor/service/engine/execute/SCM_INV$SYS_ReverseConstructTreeService:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: SCM_INV$SYS_ReverseConstructTreeService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_COUNT_DATA_SERVICE:
+    params:
+      request:
+      - null
+      modelKey: null
+    serviceKey: SCM_INV$SYS_COUNT_DATA_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$SYS_BatchUpdateDataByIdsService:
+    params:
+      request:
+      - {}
+      modelKey: null
+    serviceKey: SCM_INV$SYS_BatchUpdateDataByIdsService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_QueryStatisticsService:
+    params:
+      request:
+        aggregateField: null
+        conditionItems: null
+        groupByFields:
+        - null
+        conditionGroup: null
+        aggregateFunc: null
+      modelKey: null
+    serviceKey: SCM_INV$SYS_QueryStatisticsService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_MasterData_CreateAndEnableDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: SCM_INV$SYS_MasterData_CreateAndEnableDataService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_SaveDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: SCM_INV$SYS_SaveDataService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_DeleteDataByIdService:
+    params:
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: SCM_INV$SYS_DeleteDataByIdService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_CopyDataConverterService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: SCM_INV$SYS_CopyDataConverterService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_CopyAndCreateDataByIdsService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: SCM_INV$SYS_CopyAndCreateDataByIdsService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_MasterData_MultiDisableDataService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: SCM_INV$SYS_MasterData_MultiDisableDataService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_CreateDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: SCM_INV$SYS_CreateDataService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_MasterData_UpdateDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: SCM_INV$SYS_MasterData_UpdateDataService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_MasterData_CreateDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: SCM_INV$SYS_MasterData_CreateDataService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_UpdateDataByIdService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: SCM_INV$SYS_UpdateDataByIdService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_FindDataByIdsService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: SCM_INV$SYS_FindDataByIdsService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_MasterData_MultiEnableDataService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: SCM_INV$SYS_MasterData_MultiEnableDataService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_MasterData_EnableDataService:
+    params:
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: SCM_INV$SYS_MasterData_EnableDataService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_TreeSearchService:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: SCM_INV$SYS_TreeSearchService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_FindTreeDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: SCM_INV$SYS_FindTreeDataService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_BatchDeleteDataByIdsService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: SCM_INV$SYS_BatchDeleteDataByIdsService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_BatchCreateDataService:
+    params:
+      request:
+      - {}
+      modelKey: null
+    serviceKey: SCM_INV$SYS_BatchCreateDataService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_InvokeCodeRuleService:
+    params:
+      request:
+        formParams: {}
+        ruleKey: null
+      modelKey: null
+    serviceKey: SCM_INV$SYS_InvokeCodeRuleService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_FindDataByIdService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: SCM_INV$SYS_FindDataByIdService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_FindSingleDataByIdService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: SCM_INV$SYS_FindSingleDataByIdService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_MasterData_DisableDataService:
+    params:
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: SCM_INV$SYS_MasterData_DisableDataService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_PagingDataService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        sortOrders:
+        - fieldAlias: null
+          sortType: null
+        pageable:
+          conditionItems: null
+          pageNo: 1
+          conditionGroup: null
+          pageSize: 20
+      modelKey: null
+    serviceKey: SCM_INV$SYS_PagingDataService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_BatchUpdateDataByConditionService:
+    params:
+      request:
+        data: {}
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: SCM_INV$SYS_BatchUpdateDataByConditionService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_BatchDeleteDataService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: SCM_INV$SYS_BatchDeleteDataService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_BatchSaveDataService:
+    params:
+      request:
+      - {}
+      modelKey: null
+    serviceKey: SCM_INV$SYS_BatchSaveDataService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_FindOneDataService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: SCM_INV$SYS_FindOneDataService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_SUM_DATA_SERVICE:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+      fields:
+      - null
+      modelKey: null
+    serviceKey: SCM_INV$SYS_SUM_DATA_SERVICE
+  /api/trantor/service/engine/execute/SCM_INV$SYS_BatchDeleteDataByConditionService:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: SCM_INV$SYS_BatchDeleteDataByConditionService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_FindTreeChildrenDataService:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: SCM_INV$SYS_FindTreeChildrenDataService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_FindListDataService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: SCM_INV$SYS_FindListDataService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_MasterData_SaveDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: SCM_INV$SYS_MasterData_SaveDataService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_FindSingleDataByConditionService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: SCM_INV$SYS_FindSingleDataByConditionService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_MasterData_SaveAndEnableDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: SCM_INV$SYS_MasterData_SaveAndEnableDataService
+  /api/trantor/service/engine/execute/SCM_INV$SYS_MasterData_DeleteDataService:
+    params:
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: SCM_INV$SYS_MasterData_DeleteDataService
   /api/trantor/service/engine/execute/SCM_INV$INV_COUNT_DOC_AUDIT_SUCCESS:
     params:
       request:

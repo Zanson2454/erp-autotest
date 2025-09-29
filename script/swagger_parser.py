@@ -233,7 +233,7 @@ class SwaggerParser:
             logger.error(f"保存YAML文件失败: {str(e)}")
             raise
 
-    def save_paths_to_yaml(self, endpoints: Dict[str, Dict[str, Any]], output_path: str = '', module: str = '') -> None:
+    def save_paths_to_yaml(self, endpoints: Dict[str, Dict[str, Any]], output_path: str = '', module: str = '', include_sys_services: bool = False) -> None:
         """
         将接口路径信息保存到YAML文件，采用扁平化结构，便于调用和阅读
         同时将详细参数信息保存到 gen_api_params.yaml
@@ -242,13 +242,15 @@ class SwaggerParser:
             endpoints: 解析后的接口信息
             output_path: gen_path.yaml的输出文件路径，默认为swagger_parser.py同级目录下的gen_path.yaml
             module: 模块名称，用于生成文件名前缀
+            include_sys_services: 是否包含系统服务接口，默认为False（保持原有行为）
         """
         try:
             api_dict = {}  # For gen_path.yaml
             params_dict_for_yaml = {}  # For gen_api_params.yaml
 
             for path, methods in endpoints.items():
-                if "$SYS_" in path:
+                # 根据参数决定是否跳过系统服务接口
+                if "$SYS_" in path and not include_sys_services:
                     continue
                 for method, info in methods.items():
                     logger.info(f"\n{'='*50}")
@@ -345,18 +347,20 @@ class SwaggerParser:
             logger.error(f"保存文件失败: {str(e)}")
             raise
             
-    def save_unified_api_yaml(self, endpoints: Dict[str, Dict[str, Any]], output_path: str = '', module: str = '') -> None:
+    def save_unified_api_yaml(self, endpoints: Dict[str, Dict[str, Any]], output_path: str = '', module: str = '', include_sys_services: bool = False) -> None:
         """
         生成统一结构的API配置YAML
         Args:
             endpoints: 解析后的接口信息
             output_path: 输出文件路径（可选）
             module: 模块名称（用于文件名前缀，可选）
+            include_sys_services: 是否包含系统服务接口，默认为False（保持原有行为）
         """
         try:
             unified_dict = {}
             for path, methods in endpoints.items():
-                if "$SYS_" in path:
+                # 根据参数决定是否跳过系统服务接口
+                if "$SYS_" in path and not include_sys_services:
                     continue
                 for method, info in methods.items():
                     service_name = info.get('summary', '').strip() or path.split('/')[-1]
@@ -616,13 +620,19 @@ if __name__ == "__main__":
     )
     
     # 获取指定团队和模块的Swagger文档
-    swagger_doc = parser.fetch_swagger_doc("TERP", "ERP_FI")
+    swagger_doc = parser.fetch_swagger_doc("TERP", "SCM_INV")
     
     # 解析所有接口
     endpoints = parser.parse_endpoints()
     
-    # 保存路径信息到gen_path.yaml
-    parser.save_paths_to_yaml(endpoints, module="ERP_FI")
+    # 保存路径信息到gen_path.yaml（不包含系统服务，保持原有行为）
+    #parser.save_paths_to_yaml(endpoints, module="SCM_INV")
     
-    # 保存统一结构到unified_api.yaml
-    # parser.save_unified_api_yaml(endpoints, module="SCM_PUR") 
+    # 保存路径信息到gen_path.yaml（包含系统服务）
+    parser.save_paths_to_yaml(endpoints, module="SCM_INV", include_sys_services=True)
+    
+    # 保存统一结构到unified_api.yaml（不包含系统服务）
+    # parser.save_unified_api_yaml(endpoints, module="SCM_INV")
+    
+    # 保存统一结构到unified_api.yaml（包含系统服务）
+    #parser.save_unified_api_yaml(endpoints, module="SCM_INV", include_sys_services=True) 

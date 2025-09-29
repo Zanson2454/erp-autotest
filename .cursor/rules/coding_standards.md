@@ -33,15 +33,21 @@ def test_method_name(self):
         
         # 2. 过滤参数
         filtered_params = ParamUtil.filter_post_body_fields(
-            params, ["业务字段"], ["params", "request"]
+            params, ["业务字段1", "业务字段2"], ["params", "request"]
         )
-        ParamUtil.set_request_params(filtered_params, {"key": "value"})
         
-        # 3. 执行请求
+        # 3. 设置请求参数
+        set_dict = {
+            "业务字段1": "值1",
+            "业务字段2": "值2"
+        }
+        ParamUtil.set_request_params(filtered_params, set_dict)
+        
+        # 4. 执行请求
         response = self.http.post(url, json=filtered_params)
         self.assert_util.assert_response_data(response)
         
-        # 4. 记录报告
+        # 5. 记录报告
         a.json(filtered_params, "请求数据")
         a.json(response, "响应数据")
         
@@ -53,7 +59,7 @@ def test_method_name(self):
 ## 关键规则
 - **顺序控制**: 同时使用`@pytest.mark.run(order=N)`和`case_decorator(order=N)`
 - **数据共享**: 使用`self.__class__.data_id`而非`self.data_id`
-- **参数过滤**: 只过滤业务字段，保留`params`和`request`
+- **参数过滤**: 只过滤业务字段（如code、name、id等），保留`params`和`request`结构，不过滤系统字段（如sceneKey、viewKey、serviceKey等）
 - **ID传递**: 直接传`{"id": xxx}`，不嵌套request
 - **异常处理**: 必须包含try-catch结构
 
