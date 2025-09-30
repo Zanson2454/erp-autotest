@@ -38,7 +38,7 @@ class TestInvAtpGroupManagement(ScmInvBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
-    @pytest.mark.run(order=1)
+    #@pytest.mark.run(order=1)
     @case_decorator(
         story="ATP检查组管理",
         title="测试创建ATP检查组",
@@ -91,7 +91,7 @@ class TestInvAtpGroupManagement(ScmInvBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.run(order=2)
+    #@pytest.mark.run(order=2)
     @case_decorator(
         story="ATP检查组管理",
         title="测试查询ATP检查组导出",
@@ -177,7 +177,7 @@ class TestInvAtpGroupManagement(ScmInvBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.run(order=3)
+    #@pytest.mark.run(order=3)
     @case_decorator(
         story="ATP检查组管理",
         title="测试查询ATP检查组详情",
@@ -230,7 +230,7 @@ class TestInvAtpGroupManagement(ScmInvBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.run(order=4)
+    #@pytest.mark.run(order=4)
     @case_decorator(
         story="ATP检查组管理",
         title="测试分页查询ATP检查组列表",
@@ -294,7 +294,7 @@ class TestInvAtpGroupManagement(ScmInvBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.run(order=5)
+    #@pytest.mark.run(order=5)
     @case_decorator(
         story="ATP检查组管理",
         title="测试删除ATP检查组",
