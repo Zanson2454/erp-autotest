@@ -14,6 +14,7 @@ portal_config:
     
     # 多门户配置（新增）
     TERP_PORTAL: # 门户 key
+      cookie: "${TEST_TERP_PORTAL_COOKIE}"
       username: "${TEST_TERP_PORTAL_USERNAME}"
       password: "${TEST_TERP_PORTAL_PASSWORD}"
       iam_url: "${TEST_TERP_PORTAL_IAM_URL}"
@@ -24,6 +25,7 @@ portal_config:
       
     
     TERP_CUST_PC: # 门户 key
+      cookie: "${TEST_TERP_CUST_PC_COOKIE}"
       username: "${TEST_TERP_CUST_PC_USERNAME}"
       password: "${TEST_TERP_CUST_PC_PASSWORD}"
       iam_url: "${TEST_TERP_CUST_PC_IAM_URL}"

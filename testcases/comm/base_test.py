@@ -88,52 +88,75 @@ class LoginService:
             'Content-Type': 'application/json',
             'User-Agent': MockData().get_mock_user_agent(),
             'Referer': referer,
-            'Origin': origin,
-            'Cookie': cookie
+            'Origin': origin
         }
+        # 只有明确提供了 cookie 时才添加 Cookie header
+        # 避免 None 值覆盖 session 中已有的 cookie
+        if cookie:
+            headers['Cookie'] = cookie
         return headers
     def login(self, portal_key, tenant_key="terp") -> LoginResult:
-        """执行登录"""
+        """
+        执行登录 - 支持两种方式：
+        1. 配置了 cookie：直接使用 cookie 登录（快捷方式）
+        2. 未配置 cookie：使用账号密码登录（原有方式）
+        """
         try:
             # 1. 准备登录数据,从配置中读取
             auth_config = self.config.get("portal_config", {}).get(tenant_key, {}).get(portal_key, {})
-            login_url = f"{auth_config.get('iam_url', '').rstrip('/')}{self.LOGIN_ENDPOINT}"
-            login_data = {
-            "account": auth_config.get("username", ""),
-            "password": auth_config.get("password", ""),
-            "iam_url": auth_config.get("iam_url", ""),
-            "iam_referer": auth_config.get("iam_referer", ""),
-            "portal_url": auth_config.get("portal_url", ""),
-            "portal_referer": auth_config.get("portal_referer", ""),
-            "description": auth_config.get("description", "")
-        }
-            # 2. 执行登录请求
-            iam_headers = self.build_headers(
-                origin=auth_config.get("iam_url", ""),
-                referer=auth_config.get("iam_referer", "")
-            )
-            Loggers.info(f"登录URL: {login_url}")
-            Loggers.info(f"登录账号: {login_data['account']}")
-            Loggers.info(f"登录请求头: {iam_headers}")
-            Loggers.info(f"登录数据: {login_data}")
-            self.session_manager.update_headers(iam_headers)
-            login_response = self.session_manager.get_session().post(
-                login_url, 
-                json=login_data, 
-                headers=iam_headers
-            )
-            cookie=login_response.headers.get("Set-Cookie")
-           
-    
             
-            # 4. 验证登录结果
-            if not self._is_login_successful(login_response):
-                return LoginResult(
-                    status=LoginStatus.FAILED,
-                    error_message=f"登录失败: {login_response.text}"
+            # 检查是否配置了 cookie（支持直接使用 cookie 登录）
+            cookie = auth_config.get("cookie", "")
+            
+            if cookie:
+                # ============ 方式1：使用 cookie 快捷登录 ============
+                Loggers.info(f"检测到配置了 cookie，使用 cookie 快捷登录")
+                Loggers.info(f"Cookie 前50个字符: {cookie[:50]}...")
+                
+                # 设置 cookie 到 session，后续所有请求都会自动带上
+                self.session_manager.get_session().headers.update({"Cookie": cookie})
+                
+            else:
+                # ============ 方式2：使用账号密码登录（原有逻辑，完整保留） ============
+                Loggers.info(f"未配置 cookie，使用账号密码登录")
+                login_url = f"{auth_config.get('iam_url', '').rstrip('/')}{self.LOGIN_ENDPOINT}"
+                login_data = {
+                    "account": auth_config.get("username", ""),
+                    "password": auth_config.get("password", ""),
+                    "iam_url": auth_config.get("iam_url", ""),
+                    "iam_referer": auth_config.get("iam_referer", ""),
+                    "portal_url": auth_config.get("portal_url", ""),
+                    "portal_referer": auth_config.get("portal_referer", ""),
+                    "description": auth_config.get("description", "")
+                }
+                # 2. 执行登录请求
+                iam_headers = self.build_headers(
+                    origin=auth_config.get("iam_url", ""),
+                    referer=auth_config.get("iam_referer", "")
                 )
+                Loggers.info(f"登录URL: {login_url}")
+                Loggers.info(f"登录账号: {login_data['account']}")
+                Loggers.info(f"登录请求头: {iam_headers}")
+                Loggers.info(f"登录数据: {login_data}")
+                self.session_manager.update_headers(iam_headers)
+                login_response = self.session_manager.get_session().post(
+                    login_url, 
+                    json=login_data, 
+                    headers=iam_headers
+                )
+                
+                # 3. 验证登录结果
+                if not self._is_login_successful(login_response):
+                    return LoginResult(
+                        status=LoginStatus.FAILED,
+                        error_message=f"登录失败: {login_response.text}"
+                    )
+                
+                # 4. 获取登录返回的 cookie（用于构建返回的 headers）
+                cookie = login_response.headers.get("Set-Cookie", "")
+                # 注意：requests.Session 会自动管理 cookie，无需手动设置
             
-            # 5. 获取用户信息
+            # 5. 获取用户信息（两种登录方式都需要）
             user_info = self._get_user_info(portal_key, tenant_key)
             if not user_info:
                 return LoginResult(
@@ -141,13 +164,21 @@ class LoginService:
                     error_message="获取用户信息失败"
                 )
             
+            # 6. 返回登录结果
             return LoginResult(
                 status=LoginStatus.SUCCESS,
                 user_info=user_info,
                 portal_url=auth_config.get("portal_url", ""),
                 iam_url=auth_config.get("iam_url", ""),
-                portal_headers=self.build_headers(auth_config.get("portal_url", ""),auth_config.get("portal_referer", ""),cookie=cookie),
-                iam_headers=self.build_headers(auth_config.get("iam_url", ""),auth_config.get("iam_referer", "")),
+                portal_headers=self.build_headers(
+                    auth_config.get("portal_url", ""),
+                    auth_config.get("portal_referer", ""),
+                    cookie=cookie  # 传入 cookie 用于构建外部 headers
+                ),
+                iam_headers=self.build_headers(
+                    auth_config.get("iam_url", ""),
+                    auth_config.get("iam_referer", "")
+                ),
                 session=self.session_manager.get_session()
             )
         except Exception as e:
@@ -164,21 +195,29 @@ class LoginService:
         return response.status_code == self.LOGIN_SUCCESS_CODE
     
     def _get_user_info(self, portal_key, tenant_key="terp") -> Optional[Dict[str, Any]]:
-        """获取用户信息"""
+        """
+        获取用户信息
+        注意：cookie 已经在 session 中管理，无需重复设置
+        - cookie 登录：cookie 在 login 方法中已设置到 session.headers
+        - 账号密码登录：cookie 由 requests.Session 自动管理
+        """
         portal_config = self.config.get("portal_config", {}).get(tenant_key, {}).get(portal_key, {})
         portal_url = portal_config.get("portal_url", "")
         portal_referer = portal_config.get("portal_referer", "")
-        Loggers.info(f"portal_config: {portal_config}")
-        Loggers.info(f"portal_referer: {portal_referer}")
+        
+        Loggers.info(f"获取用户信息 - portal_referer: {portal_referer}")
         if not portal_url:
             Loggers.error("portal_url 配置缺失，请检查配置文件！")
             return None
+        
+        # 构建 headers（不传 cookie，让 session 自动管理）
         portal_headers = self.build_headers(portal_url, portal_referer) 
         url = f"{portal_url}{self.USER_INFO_ENDPOINT}"
         Loggers.info(f"获取用户信息URL: {url}")
         Loggers.info(f"获取用户信息请求头: {portal_headers}")
-        self.session_manager.update_headers(portal_headers)
         
+        # 更新 headers（只更新 Origin、Referer 等，不影响 Cookie）
+        self.session_manager.update_headers(portal_headers)
         
         try:
             response = self.session_manager.get_session().get(url)
