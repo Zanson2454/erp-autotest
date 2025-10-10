@@ -69,7 +69,7 @@ class TestVoucherOperation(FiBaseTest):
         title="新增总账凭证",
         description="测试新增总账凭证",
         severity="critical",
-        order=0,
+        order=1,
         smoke=False,
         tags=["凭证录入","保存","FIN_GLM_VE_SAVE_EVENT_SERVICE"]
     )
@@ -106,6 +106,7 @@ class TestVoucherOperation(FiBaseTest):
                 "asOrgId":{
                     "id":as_org_id
                 },
+                "remark":"测试正常业务流程",
                 "bizDate":ve_date // 1000 * 1000,
                 "calendarItemId":calendarItemId,
                 "createType":"MANUAL",
@@ -156,8 +157,122 @@ class TestVoucherOperation(FiBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
+        
+    @case_decorator(
+        story="总账凭证操作",
+        title="提交凭证",
+        description="测试总账凭证提交操作",
+        severity="critical",
+        order=2,
+        smoke=False,
+        tags=["凭证录入","提交","FIN_GLM_VE_SUBMIT_BY_ID_EVENT_SERVICE"]
+    )
+    def test_submit_voucher(self):
+        """测试总账凭证提交操作"""
+        url=self.get_api_path("总账-凭证-凭证列表提交服务")
+        params,url=self.get_api_params(url)
+        filtered_params=ParamUtil.filter_post_body_fields(
+            params, ["id"], ["params", "request"])
+        sql="""
+        select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='DRAFT' order by created_at desc limit 1;
+        """
+        voucher_id=self.db.query(sql)[0]["id"]
+        set_dict={
+            "id":voucher_id
+        }
+        ParamUtil.set_request_params(filtered_params, set_dict)
+        response=self.http.post(url, json=filtered_params)
+        self.assert_util.assert_response_success(response)
+        self.assert_util.assert_by_operator(response["data"]["data"]["veStatus"], "=", "APPROVING", "凭证状态不是待审批")
+        a.json(filtered_params, "请求数据")
+        a.json(response, "响应数据")
 
+
+    @case_decorator(
+        story="总账凭证操作",
+        title="凭证审批同意",
+        description="测试总账凭证审批同意操作",
+        severity="critical",
+        order=3,
+        smoke=False,
+        tags=["凭证录入","审批同意","FIN_GLM_VE_APPROVAL_EVENT_SERVICE"]
+    )
+    def test_approve_voucher(self):
+        """测试总账凭证审批同意操作"""
+        url=self.get_api_path("总账-凭证-凭证审核服务")
+        params,url=self.get_api_params(url)
+        filtered_params=ParamUtil.filter_post_body_fields(
+            params, ["id"], ["params", "request"])
+        sql="""
+        select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='APPROVING' order by created_at desc limit 1;
+        """
+        voucher_id=self.db.query(sql)[0]["id"]
+        set_dict={
+            "id":voucher_id
+        }
+        ParamUtil.set_request_params(filtered_params, set_dict)
+        response=self.http.post(url, json=filtered_params)
+        self.assert_util.assert_response_success(response)
+        a.json(filtered_params, "请求数据")
+        a.json(response, "响应数据")
+        
+    @case_decorator(
+        story="总账凭证操作",
+        title="凭证复核同意操作",
+        description="测试总账凭证复核同意操作",
+        severity="critical",
+        order=4,
+        smoke=False,
+        tags=["凭证录入","复核同意","FIN_GLM_VE_CHECK_EVENT_SERVICE"]
+    )
+    def test_check_voucher(self):
+        """测试总账凭证复核同意操作"""
+        url=self.get_api_path("总账-凭证-凭证复核服务")
+        params,url=self.get_api_params(url)
+        filtered_params=ParamUtil.filter_post_body_fields(
+            params, ["id"], ["params", "request"])
+        sql="""
+        select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='CHECKING' order by created_at desc limit 1;
+        """
+        voucher_id=self.db.query(sql)[0]["id"]
+        set_dict={
+            "id":voucher_id
+        }
+        ParamUtil.set_request_params(filtered_params, set_dict)
+        response=self.http.post(url, json=filtered_params)
+        self.assert_util.assert_response_success(response)
+        a.json(filtered_params, "请求数据")
+        a.json(response, "响应数据")
+        
+    
+    @case_decorator(
+        story="总账凭证操作",
+        title="凭证记账操作",
+        description="测试总账凭证记账操作",
+        severity="critical",
+        order=5,
+        smoke=False,
+        tags=["凭证录入","记账","FIN_GLM_VE_ACCOUNTING_EVENT_SERVICE"]
+    )
+    def test_account_voucher(self):
+        """测试总账凭证记账操作"""
+        url=self.get_api_path("总账-凭证-凭证记账服务")
+        params,url=self.get_api_params(url)
+        filtered_params=ParamUtil.filter_post_body_fields(
+            params, ["id"], ["params", "request"])
+        sql="""
+        select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='WAIT_ACCOUNT' order by created_at desc limit 1;
+        """
+        voucher_id=self.db.query(sql)[0]["id"]
+        set_dict={
+            "id":voucher_id
+        }
+        ParamUtil.set_request_params(filtered_params, set_dict)
+        response=self.http.post(url, json=filtered_params)
+        self.assert_util.assert_response_success(response)
+        a.json(filtered_params, "请求数据")
+        a.json(response, "响应数据")
 if __name__ == "__main__":
     test=TestVoucherOperation()
     test.setup_class()
-    test.test_add_voucher()
+    test.test_account_voucher()
