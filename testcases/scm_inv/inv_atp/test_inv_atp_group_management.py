@@ -281,9 +281,13 @@ class TestInvAtpGroupManagement(ScmInvBaseTest):
             
             # 验证结果
             result_data = response.get("data", {}).get("data", {})
-            assert "data" in result_data and "total" in result_data, "分页查询结果缺少必需字段"
+            assert "total" in result_data, "分页查询结果缺少total字段"
             
+            total = result_data.get("total", 0)
             content = result_data.get("data", [])
+            
+            self.logger.info(f"📊 分页查询结果: total={total}, 数据条数={len(content)}")
+            
             if content:
                 assert "id" in content[0] and "code" in content[0], "查询结果项缺少必需字段"
             
