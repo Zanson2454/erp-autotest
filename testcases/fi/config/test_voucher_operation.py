@@ -272,6 +272,120 @@ class TestVoucherOperation(FiBaseTest):
         self.assert_util.assert_response_success(response)
         a.json(filtered_params, "请求数据")
         a.json(response, "响应数据")
+        
+    @case_decorator(
+        story="总账凭证操作",
+        title="凭证反记账操作",
+        description="测试总账凭证反记账操作",
+        severity="critical",
+        order=6,
+        smoke=False,
+        tags=["凭证录入","反记账","FIN_GLM_VE_ACCOUNT_REVERSE_EVENT_SERVICE"]
+    )
+    def test_account_reverse_voucher(self):
+        """测试总账凭证反记账操作"""
+        url=self.get_api_path("总账-凭证-反过账Event服务")
+        params,url=self.get_api_params(url)
+        filtered_params=ParamUtil.filter_post_body_fields(
+            params, ["id"], ["params", "request"])
+        sql="""
+        select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='ACCOUNTED' order by created_at desc limit 1;
+        """
+        voucher_id=self.db.query(sql)[0]["id"]
+        set_dict={
+            "id":voucher_id
+        }
+        ParamUtil.set_request_params(filtered_params, set_dict)
+        response=self.http.post(url, json=filtered_params)
+        self.assert_util.assert_response_success(response)
+        a.json(filtered_params, "请求数据")
+        a.json(response, "响应数据")
+        
+    @case_decorator(
+        story="总账凭证操作",
+        title="凭证作废操作",
+        description="测试总账凭证作废操作",
+        severity="critical",
+        order=7,
+        smoke=False,
+        tags=["凭证录入","作废","FIN_GLM_VE_INVALID_ACTION_SERVICE"]
+    )
+    def test_invalid_voucher(self):
+        """测试总账凭证作废操作"""
+        url=self.get_api_path("总账-凭证-凭证作废服务")
+        params,url=self.get_api_params(url)
+        filtered_params=ParamUtil.filter_post_body_fields(
+            params, ["id"], ["params", "request"])
+        sql="""
+        select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='WAIT_ACCOUNT' order by created_at desc limit 1;
+        """
+        voucher_id=self.db.query(sql)[0]["id"]
+        set_dict={
+            "id":voucher_id
+        }
+        ParamUtil.set_request_params(filtered_params, set_dict)
+        response=self.http.post(url, json=filtered_params)
+        self.assert_util.assert_response_success(response)
+        a.json(filtered_params, "请求数据")
+        a.json(response, "响应数据")
+        
+    @case_decorator(
+        story="总账凭证操作",
+        title="凭证取消作废操作",
+        description="测试总账凭证取消作废操作",
+        severity="critical",
+        order=8,
+        smoke=False,
+        tags=["凭证录入","作废","FIN_GLM_VE_CANCEL_INVALID_ACTION_SERVICE"]
+    ) 
+    def test_cancel_invalid_voucher(self):
+        """测试总账凭证取消作废操作"""
+        url=self.get_api_path("总账-凭证-凭证取消作废服务")
+        params,url=self.get_api_params(url)
+        filtered_params=ParamUtil.filter_post_body_fields(
+            params, ["id"], ["params", "request"])
+        sql="""
+        select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='CANCELED' order by created_at desc limit 1;
+        """
+        voucher_id=self.db.query(sql)[0]["id"]
+        set_dict={
+            "id":voucher_id
+        }
+        ParamUtil.set_request_params(filtered_params, set_dict)
+        response=self.http.post(url, json=filtered_params)
+        self.assert_util.assert_response_success(response)
+        a.json(filtered_params, "请求数据")
+        a.json(response, "响应数据")
+        
+    @case_decorator(
+        story="总账凭证操作",
+        title="凭证删除操作",
+        description="测试总账凭证删除操作",
+        severity="critical",
+        order=9,
+        smoke=False,
+        tags=["凭证录入","删除","FIN_GLM_VE_DELETE_EVENT_SERVICE"]
+    )
+    def test_delete_voucher(self):
+        """测试总账凭证删除操作"""
+        url=self.get_api_path("总账-凭证-凭证删除服务")
+        params,url=self.get_api_params(url)
+        filtered_params=ParamUtil.filter_post_body_fields(
+            params, ["id"], ["params", "request"])
+        sql="""
+        select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='DRAFT' order by created_at desc limit 1;
+        """
+        voucher_id=self.db.query(sql)[0]["id"]
+        set_dict={
+            "id":voucher_id
+        }
+        ParamUtil.set_request_params(filtered_params, set_dict)
+        response=self.http.post(url, json=filtered_params)
+        self.assert_util.assert_response_success(response)
+        a.json(filtered_params, "请求数据")
+        a.json(response, "响应数据")
+        
+        
 if __name__ == "__main__":
     test=TestVoucherOperation()
     test.setup_class()
