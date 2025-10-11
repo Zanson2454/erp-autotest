@@ -64,8 +64,15 @@ class TestVoucherOperation(FiBaseTest):
             a.text(str(e), "失败原因")
             raise
         
-    def create_voucher_with_amounts(self, debit_amt, credit_amt, remark):
-        """创建指定借贷金额的凭证"""
+    def create_voucher_with_amounts(self, debit_amt, credit_amt, remark, use_cash_account=False):
+        """创建指定借贷金额的凭证
+        
+        Args:
+            debit_amt: 借方金额
+            credit_amt: 贷方金额  
+            remark: 凭证备注
+            use_cash_account: 是否使用现金类科目，默认False
+        """
         url = self.get_api_path("总账-凭证-凭证暂存服务")
         params, url = self.get_api_params(url)
         calendarItemId, vouchNumber, ab_type_id, vt_type, ve_date, as_org_id, coa_type = self.get_ve_base_info()
@@ -77,10 +84,30 @@ class TestVoucherOperation(FiBaseTest):
         sql = "select id from gen_curr_exchange_rate_type_cf where deleted=0 and type_code='HR' order by created_at desc limit 1;"
         rt_type_id = self.db.query(sql)[0]["id"]
     
-        # 获取科目
-        sql = f"select id,aa_head_code,aa_head_name from fin_glm_aa_head_cf where coa_type={coa_type} and leaf=1;"
+        # 根据参数选择科目类型
+        if use_cash_account:
+            # 获取现金类科目
+            sql = f"""
+            select id,aa_head_code,aa_head_name from fin_glm_aa_head_cf 
+            where coa_type={coa_type} and leaf=1 and aa_head_name like '%现金%' 
+            order by created_at desc limit 1;
+            """
+        else:
+            # 获取普通科目
+            sql = f"select id,aa_head_code,aa_head_name from fin_glm_aa_head_cf where coa_type={coa_type} and leaf=1;"
+        
         aa_head_ids = self.db.query(sql)
         aa_head_ids = [aa_head_id["id"] for aa_head_id in aa_head_ids]
+        
+        # 如果现金类科目不足2个，则补充普通科目
+        if len(aa_head_ids) < 2:
+            sql = f"select id,aa_head_code,aa_head_name from fin_glm_aa_head_cf where coa_type={coa_type} and leaf=1;"
+            additional_accounts = self.db.query(sql)
+            for account in additional_accounts:
+                if account["id"] not in aa_head_ids:
+                    aa_head_ids.append(account["id"])
+                    if len(aa_head_ids) >= 2:
+                        break
     
         filtered_params = ParamUtil.filter_post_body_fields(
             params,
@@ -236,14 +263,33 @@ class TestVoucherOperation(FiBaseTest):
             "debit_amt": 123.45,
             "credit_amt": 123.45,
             "remark": "测试正常业务流程",
-            "expected_status": "APPROVING"
+            "expected_status": "APPROVING",
+            "use_cash_account": False,
+            "expected_success": True,
+            "expected_error_code": None,
+            "expected_error_msg": None
         },
         {
             "name": "借贷金额不平衡",
             "debit_amt": 100.00,
             "credit_amt": 200.00,
             "remark": "测试借贷不平衡业务流程",
-            "expected_status": "DRAFT"  # 预期提交失败，保持草稿状态
+            "expected_status": "DRAFT",
+            "use_cash_account": False,
+            "expected_success": False,
+            "expected_error_code": "glm.ve.credit.debit.not.equal",
+            "expected_error_msg": "凭证借贷不相等"
+        },
+        {
+            "name": "现金类科目不指定现金流量",
+            "debit_amt": 500.00,
+            "credit_amt": 500.00,
+            "remark": "测试现金类科目不指定现金流量业务流程",
+            "expected_status": "DRAFT",
+            "use_cash_account": True,
+            "expected_success": False,
+            "expected_error_code": "glm.ve.amt.of.cai.and.cas.item.check.not.equal",
+            "expected_error_msg": "凭证流量检查不通过，现金科目金额与凭证行现金类科目金额不相等"
         }
     ])
     def test_submit_voucher(self, test_data):
@@ -252,7 +298,8 @@ class TestVoucherOperation(FiBaseTest):
         self.create_voucher_with_amounts(
             test_data["debit_amt"], 
             test_data["credit_amt"], 
-            test_data["remark"]
+            test_data["remark"],
+            test_data.get("use_cash_account", False)
         )
         url=self.get_api_path("总账-凭证-凭证列表提交服务")
         params,url=self.get_api_params(url)
@@ -269,29 +316,30 @@ class TestVoucherOperation(FiBaseTest):
         ParamUtil.set_request_params(filtered_params, set_dict)
         response=self.http.post(url, json=filtered_params)
         
-        if test_data["name"] == "正常借贷平衡":
-            # 正常情况应该成功
+        # 统一断言逻辑
+        if test_data["expected_success"]:
+            # 成功情况断言
             self.assert_util.assert_response_success(response)
             self.assert_util.assert_by_operator(
                 response["data"]["data"]["veStatus"], 
                 "=", 
-                "APPROVING", 
-                "凭证状态不是待审批"
+                test_data["expected_status"], 
+                f"凭证状态不是{test_data['expected_status']}"
             )
         else:
-            # 借贷不平衡情况应该失败
+            # 失败情况断言
             assert response["success"] is False
             self.assert_util.assert_by_operator(
                 response["err"]["code"], 
                 "=", 
-                "glm.ve.credit.debit.not.equal", 
-                "错误代码不是凭证借贷不相等"
+                test_data["expected_error_code"], 
+                f"错误代码不是{test_data['expected_error_code']}"
             )
             self.assert_util.assert_by_operator(
                 response["err"]["msg"], 
                 "=", 
-                "凭证借贷不相等", 
-                "错误信息不是凭证借贷不相等"
+                test_data["expected_error_msg"], 
+                f"错误信息不是{test_data['expected_error_msg']}"
             )
 
 
