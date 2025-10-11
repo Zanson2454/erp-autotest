@@ -19,15 +19,12 @@ class ScmPurBaseTest(BaseTest):
     
     # 类型注解
     yaml_util: Any
-    apis: Any
-    pur_unified_api_path: Any
-    md_cache_data: Any
-    path_params: Any
-    nickname: Any
-    user_id: Any
-    admin_session: Any
-    admin_user_info: Any
-    admin_headers: Any
+    
+    # 登录两个门户，分别保存 session/user_info 并初始化 http 工具
+    _PORTAL_TYPE_KEYS = {
+        "admin": "TERP_PORTAL",
+        "cust": "TERP_CUST_PC"
+    }
 
     @classmethod
     def setup_class(cls):
@@ -41,20 +38,44 @@ class ScmPurBaseTest(BaseTest):
         """
         super().setup_class()
 
+        cls.login_service = LoginService(cls.env_config)
+        # 登录 admin
+        admin_result = cls.login_service.login(portal_key=cls._PORTAL_TYPE_KEYS["admin"])
+        if admin_result.status != admin_result.status.SUCCESS:
+            raise RuntimeError(f"admin 登录失败: {admin_result.error_message}")
+        
+        # 初始化 cust 的 headers
+        cls.admin_headers = admin_result.portal_headers
+        if cls.admin_headers:
+            cls.cust_portal_headers = cls.admin_headers.copy()
+        cust_portal_referer = cls.env_config.get("portal_config", {}).get('terp', {}).get("TERP_CUST_PC", {}).get("portal_referer")
+        cls.cust_portal_headers["Referer"] = cust_portal_referer
+        cls.logger.info(f"cust_portal_headers: {cls.cust_portal_headers}")
+        
+        # 初始化 http 实例
+        cls.http = HttpUtil(
+            url=admin_result.portal_url,
+            session=admin_result.session,
+            headers=admin_result.portal_headers
+        )
+
+        # 初始化采购模块配置文件路径
         cls.pur_api_path = Path(project_root) / "testdata" / "scm_pur" / "pur_api_path.yaml"
         cls.pur_api_params_path = Path(project_root) / "testdata" / "scm_pur" / "pur_api_params.yaml"
         # 加载API路径配置和参数配置
         cls.apis = cls.yaml_util.read_yaml(cls.pur_api_path).get("apis", {})
         cls.api_params = cls.yaml_util.read_yaml(cls.pur_api_params_path).get("api_params", {})
         
+        # 初始化DataFactory（必须在init_sql_cache之前调用）
+        DataFactory.__init__(env_name="test")
         # 加载主数据缓存数据
         DataFactory.init_sql_cache(
-            sql_config_path=str(project_root / "config" / "erp" / "md_init_sql.yaml"), # 主数据依赖的初始化sql 存放路径
-            db_config_name="erp_db", # 数据库配置名称
-            cache_key="md_init_cache", # 缓存key
-            cache_dir="testdata/cache" # 缓存目录
+            sql_config_path=str(project_root / "config" / "erp" / "pur_init_sql.yaml"),
+            db_config_name="erp_db",
+            cache_key="pur_init_cache",
+            cache_dir="testdata/cache"
         )
-        cls.md_cache_data = CacheUtil.get('md_init_cache')
+        cls.pur_cache_data = CacheUtil.get('pur_init_cache')
         cls.path_params = {"tmodule": "SCM_PUR"}
         cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
         cls.user_id = cls.init_data["user_info"]['user_info']["id"]
@@ -71,7 +92,46 @@ class ScmPurBaseTest(BaseTest):
         获取API请求参数和完整URL
         """
         return super().get_api_params(api_path, self.api_params, with_query_params)
-
+    
+    def set_request_param(self, params, key, value):
+        """
+        设置请求参数中的值，简化嵌套访问
+        
+        参数:
+            params: 请求参数字典
+            key: 参数键名
+            value: 参数值
+        
+        返回:
+            更新后的参数字典
+        """
+        if 'params' not in params:
+            params['params'] = {}
+        if 'request' not in params['params']:
+            params['params']['request'] = {}
+            
+        params['params']['request'][key] = value
+        return params
+    
+    def set_request_params(self, params, param_dict):
+        """
+        批量设置请求参数，简化嵌套访问
+        
+        参数:
+            params: 请求参数字典
+            param_dict: 要设置的参数字典 {key: value, ...}
+        
+        返回:
+            更新后的参数字典
+        """
+        if 'params' not in params:
+            params['params'] = {}
+        if 'request' not in params['params']:
+            params['params']['request'] = {}
+            
+        for key, value in param_dict.items():
+            params['params']['request'][key] = value
+        return params
 
 
 if __name__ == "__main__":

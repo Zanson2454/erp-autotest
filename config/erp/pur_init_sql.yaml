@@ -1,0 +1,19 @@
+# PUR配置数据查询定义
+pur_config:
+  # 订单类型信息
+  po_type_info:
+    sql: |
+      SELECT id ,po_type,po_type_name,`status` FROM pur_po_type_cf WHERE deleted = 0 and status='ENABLED'
+    description: "查询订单类型"
+
+  # 订单行类型信息
+  po_item_type_info:
+    sql: |
+      SELECT id, po_item_type, po_item_type_name,`status`  FROM pur_po_item_type_cf WHERE deleted = 0 and status='ENABLED'
+    description: "查询订单行类型"
+
+  # 订单类型和订单行类型分配    
+  po_item_detm_info:
+    sql: |
+      SELECT id,po_item_type, po_type FROM pur_po_item_detm_cf  WHERE deleted = 0
+    description: "查询订单类型和订单行类型的分配" 

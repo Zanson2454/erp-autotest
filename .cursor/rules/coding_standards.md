@@ -13,6 +13,13 @@ alwaysApply: true
 - 参数从缓存获取，禁止写死
 - 遵循项目架构和代码风格
 
+## 数据获取模式
+```python
+@classmethod
+def setup_class(cls):
+    cls.mat_id = cls.inv_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
+```
+
 ## 标准代码模板
 
 ```python
@@ -61,12 +68,5 @@ def test_method_name(self):
 - **参数过滤**: 只过滤业务字段（如code、name、id等），保留`params`和`request`结构，不过滤系统字段（如sceneKey、viewKey、serviceKey等）
 - **ID传递**: 直接传`{"id": xxx}`，不嵌套request
 - **异常处理**: 必须包含try-catch结构
-
-## 数据获取模式
-```python
-@classmethod
-def setup_class(cls):
-    cls.mat_id = cls.inv_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
-```
 
 立即应用以上规则生成代码！
