@@ -32,7 +32,7 @@ class TestPrItemTypeManagement(ScmPurBaseTest):
         title="测试创建采购申请行类型",
         description="验证采购申请行类型创建功能",
         severity="critical",
-        order=6,
+        file_level_order=1,  # 使用新的文件级排序
         tags=["采购申请行类型定义表", "创建", "SYS_SaveDataService"]
     )
     def test_create_pr_item_type(self):
@@ -115,7 +115,7 @@ class TestPrItemTypeManagement(ScmPurBaseTest):
         title="采购申请行类型定义表分页数据服务",
         description="验证采购申请行类型定义表分页数据服务功能",
         severity="blocker",
-        order=7,
+        file_level_order=2,  # 使用新的文件级排序
         tags=["采购申请行类型定义表", "分页查询", "SYS_PagingDataService"]
     )
     def test_paging_pr_item_type(self):
@@ -166,7 +166,7 @@ class TestPrItemTypeManagement(ScmPurBaseTest):
         title="采购申请行类型定义表导出任务接口",
         description="验证采购申请行类型定义表导出任务接口功能",
         severity="normal",
-        order=8,
+        file_level_order=3,  # 使用新的文件级排序
         tags=["采购申请行类型定义表", "导出任务"]
     )
     def test_export_task_pr_item_type(self):
@@ -264,7 +264,7 @@ class TestPrItemTypeManagement(ScmPurBaseTest):
         title="测试删除采购申请行类型",
         description="验证采购申请行类型删除功能",
         severity="critical",
-        order=9,
+        file_level_order=4,  # 使用新的文件级排序
         tags=["采购申请行类型定义表", "删除", "SYS_DeleteDataByIdService"]
     )
     def test_delete_pr_item_type(self):

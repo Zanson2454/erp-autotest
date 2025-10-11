@@ -237,3 +237,39 @@ def handle_test_failure(item: pytest.Item, report: pytest.TestReport) -> None:
                 )
             except Exception as e:
                 Loggers.error(f"截图失败: {e}") 
+def pytest_collection_modifyitems(session, config, items):
+    """
+    智能排序方案：支持两种模式
+    
+    模式1 - 全局排序（兼容老代码）：
+        - 使用 order 参数的测试用例，由 pytest-ordering 插件处理
+        - 所有文件的测试用例按 order 值统一排序（可能交叉执行）
+    
+    模式2 - 文件级串行（新功能）：
+        - 使用 file_level_order 参数的测试用例，由本函数处理
+        - 先按文件路径排序，文件内按 file_level_order 排序
+        - 确保先执行完文件1的所有测试，再执行文件2
+    
+    原理：给每个文件分配编号，排序键 = 文件编号*1000 + file_level_order
+    这样可以确保文件1的order=999也会排在文件2的order=1之前
+    """
+    def get_file_level_order(item):
+        """从函数的 _file_level_order 属性中获取排序值"""
+        return getattr(item.function, '_file_level_order', None)
+    
+    # 分离两种模式的测试用例
+    file_level_items = [item for item in items if get_file_level_order(item) is not None]
+    other_items = [item for item in items if get_file_level_order(item) is None]
+    
+    # 对使用 file_level_order 的测试用例进行文件级排序
+    if file_level_items:
+        # 为每个文件分配唯一编号（按字母顺序）
+        file_paths = sorted(set(item.location[0] for item in file_level_items))
+        file_index = {path: idx for idx, path in enumerate(file_paths)}
+        
+        # 排序键 = 文件编号*1000 + file_level_order
+        file_level_items.sort(key=lambda x: file_index[x.location[0]] * 1000 + get_file_level_order(x))
+    
+    # 重新组合：file_level_order 的测试用例排在前面
+    # 这样可以优先执行需要文件级串行的测试
+    items[:] = file_level_items + other_items

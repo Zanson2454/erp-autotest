@@ -322,18 +322,24 @@ class AllureSimple:
 a = AllureSimple()
 
 
-def case_decorator(title="", story="", description="", severity="normal", order=0, smoke=False, tags=None):
+def case_decorator(title="", story="", description="", severity="normal", order=0, file_level_order=None, smoke=False, tags=None):
     """
-    统一的测试用例装饰器 - 修复重复执行问题
+    统一的测试用例装饰器 - 支持两种排序模式
     
     Args:
         title: 测试用例标题，必填
         story: 所属故事/模块，必填
         description: 详细描述，可选
         severity: 严重级别，支持：blocker/critical/normal/minor/trivial，默认normal
-        order: 执行顺序，数字越小越先执行，默认0
+        order: 全局执行顺序（兼容老代码），使用pytest-ordering插件，默认0
+        file_level_order: 文件级执行顺序（新功能），先按文件串行，再按此值排序，默认None
         smoke: 是否为冒烟测试，默认False
         tags: 标签列表，用于分类和过滤，默认为空
+        
+    使用说明：
+        - 如果使用 order：全局排序，所有文件的测试用例按order值统一排序（可能交叉执行）
+        - 如果使用 file_level_order：文件级串行，先执行完文件1的所有测试，再执行文件2
+        - 两个参数不要同时使用，优先使用 file_level_order
     """
     severity_map = {
         "blocker": allure.severity_level.BLOCKER,
@@ -363,11 +369,17 @@ def case_decorator(title="", story="", description="", severity="normal", order=
             # 调用原始函数
             return func(*args, **kwargs)
         
+        # 根据排序模式选择不同的处理方式
+        if file_level_order is not None:
+            # 新模式：文件级排序，保存到 _file_level_order 属性
+            wrapper._file_level_order = file_level_order
+        elif order:
+            # 兼容模式：全局排序，使用 pytest-ordering 插件
+            wrapper = pytest.mark.run(order=order)(wrapper)
+        
         # 应用pytest装饰器
         if smoke:
             wrapper = pytest.mark.smoke(wrapper)
-        if order:
-            wrapper = pytest.mark.run(order=order)(wrapper)
         
         return wrapper
     return decorator
