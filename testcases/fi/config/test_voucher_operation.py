@@ -64,6 +64,69 @@ class TestVoucherOperation(FiBaseTest):
             a.text(str(e), "失败原因")
             raise
         
+    def create_voucher_with_amounts(self, debit_amt, credit_amt, remark):
+        """创建指定借贷金额的凭证"""
+        url = self.get_api_path("总账-凭证-凭证暂存服务")
+        params, url = self.get_api_params(url)
+        calendarItemId, vouchNumber, ab_type_id, vt_type, ve_date, as_org_id, coa_type = self.get_ve_base_info()
+    
+        # 获取货币和汇率类型
+        sql = "select id from gen_curr_type_cf where deleted=0 and curr_code='CNY'"
+        curr_id = self.db.query(sql)[0]["id"]
+    
+        sql = "select id from gen_curr_exchange_rate_type_cf where deleted=0 and type_code='HR' order by created_at desc limit 1;"
+        rt_type_id = self.db.query(sql)[0]["id"]
+    
+        # 获取科目
+        sql = f"select id,aa_head_code,aa_head_name from fin_glm_aa_head_cf where coa_type={coa_type} and leaf=1;"
+        aa_head_ids = self.db.query(sql)
+        aa_head_ids = [aa_head_id["id"] for aa_head_id in aa_head_ids]
+    
+        filtered_params = ParamUtil.filter_post_body_fields(
+            params,
+            ["abType","asOrgId","bizDate","calendarItemId","createType","veItems","voEntryDate","vouchNumber","vtTypeId","whetherAdPeriodVe"],
+            ["params","request"]
+        )
+    
+        set_dict = {
+            "abType": {"id": ab_type_id},
+            "asOrgId": {"id": as_org_id},
+            "remark": remark,
+            "bizDate": ve_date // 1000 * 1000,
+            "calendarItemId": calendarItemId,
+            "createType": "MANUAL",
+            "voEntryDate": ve_date,
+            "vouchNumber": vouchNumber,
+            "vtTypeId": {"id": vt_type},
+            "whetherAdPeriodVe": False,
+            "veItems": [
+                {
+                    "aaHeadId": {"id": aa_head_ids[0]},
+                    "currId": {"id": curr_id},
+                    "debitAmt": debit_amt,
+                    "exRate": 1,
+                    "origCurrAmt": debit_amt,
+                    "veItemDescr": "摘要",
+                    "rtType": {"id": rt_type_id}
+                },
+                {
+                    "aaHeadId": {"id": aa_head_ids[1]},
+                    "currId": {"id": curr_id},
+                    "creditAmt": credit_amt,
+                    "exRate": 1,
+                    "origCurrAmt": credit_amt,
+                    "veItemDescr": "摘要",
+                    "rtType": {"id": rt_type_id}
+                }
+            ]
+        }
+    
+        ParamUtil.set_request_params(filtered_params, set_dict)
+        response = self.http.post(url, json=filtered_params)
+        self.assert_util.assert_response_success(response)
+        a.json(filtered_params, f"创建凭证请求数据-{remark}")
+        a.json(response, f"创建凭证响应数据-{remark}")   
+    
     @case_decorator(
         story="总账凭证操作",
         title="新增总账凭证",
@@ -167,14 +230,37 @@ class TestVoucherOperation(FiBaseTest):
         smoke=False,
         tags=["凭证录入","提交","FIN_GLM_VE_SUBMIT_BY_ID_EVENT_SERVICE"]
     )
-    def test_submit_voucher(self):
+    @pytest.mark.parametrize("test_data", [
+        {
+            "name": "正常借贷平衡",
+            "debit_amt": 123.45,
+            "credit_amt": 123.45,
+            "remark": "测试正常业务流程",
+            "expected_status": "APPROVING"
+        },
+        {
+            "name": "借贷金额不平衡",
+            "debit_amt": 100.00,
+            "credit_amt": 200.00,
+            "remark": "测试借贷不平衡业务流程",
+            "expected_status": "DRAFT"  # 预期提交失败，保持草稿状态
+        }
+    ])
+    def test_submit_voucher(self, test_data):
         """测试总账凭证提交操作"""
+        # 首先创建凭证
+        self.create_voucher_with_amounts(
+            test_data["debit_amt"], 
+            test_data["credit_amt"], 
+            test_data["remark"]
+        )
         url=self.get_api_path("总账-凭证-凭证列表提交服务")
         params,url=self.get_api_params(url)
         filtered_params=ParamUtil.filter_post_body_fields(
             params, ["id"], ["params", "request"])
-        sql="""
-        select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='DRAFT' order by created_at desc limit 1;
+        
+        sql=f"""
+        select id from fin_glm_ve_head_tr where remark='{test_data["remark"]}' and ve_status='DRAFT' order by created_at desc limit 1;
         """
         voucher_id=self.db.query(sql)[0]["id"]
         set_dict={
@@ -182,10 +268,31 @@ class TestVoucherOperation(FiBaseTest):
         }
         ParamUtil.set_request_params(filtered_params, set_dict)
         response=self.http.post(url, json=filtered_params)
-        self.assert_util.assert_response_success(response)
-        self.assert_util.assert_by_operator(response["data"]["data"]["veStatus"], "=", "APPROVING", "凭证状态不是待审批")
-        a.json(filtered_params, "请求数据")
-        a.json(response, "响应数据")
+        
+        if test_data["name"] == "正常借贷平衡":
+            # 正常情况应该成功
+            self.assert_util.assert_response_success(response)
+            self.assert_util.assert_by_operator(
+                response["data"]["data"]["veStatus"], 
+                "=", 
+                "APPROVING", 
+                "凭证状态不是待审批"
+            )
+        else:
+            # 借贷不平衡情况应该失败
+            assert response["success"] is False
+            self.assert_util.assert_by_operator(
+                response["err"]["code"], 
+                "=", 
+                "glm.ve.credit.debit.not.equal", 
+                "错误代码不是凭证借贷不相等"
+            )
+            self.assert_util.assert_by_operator(
+                response["err"]["msg"], 
+                "=", 
+                "凭证借贷不相等", 
+                "错误信息不是凭证借贷不相等"
+            )
 
 
     @case_decorator(
@@ -384,6 +491,8 @@ class TestVoucherOperation(FiBaseTest):
         self.assert_util.assert_response_success(response)
         a.json(filtered_params, "请求数据")
         a.json(response, "响应数据")
+
+    
         
         
 if __name__ == "__main__":
