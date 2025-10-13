@@ -68,6 +68,7 @@ run_tests.sh
 *logs/*
 .DS_Store
 **/.DS_Store
+specification.mdc
 
 # 忽略 Allure 结果和报告内容，但保留目录结构
 reports/allure-results/*

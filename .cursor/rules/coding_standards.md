@@ -27,7 +27,7 @@ def setup_class(cls):
     story="功能模块",
     title="测试标题", 
     severity="critical",
-    order=1,
+    file_level_order=1,  # 使用新的文件级排序
     tags=["标签"]
 )
 def test_method_name(self):
@@ -63,7 +63,7 @@ def test_method_name(self):
 ```
 
 ## 关键规则
-- **顺序控制**: 使用`case_decorator(order=N)`
+- **顺序控制**: 使用`case_decorator(file_level_order=N)`
 - **数据共享**: 使用`self.__class__.data_id`而非`self.data_id`
 - **参数过滤**: 只过滤业务字段（如code、name、id等），保留`params`和`request`结构，不过滤系统字段（如sceneKey、viewKey、serviceKey等）
 - **ID传递**: 直接传`{"id": xxx}`，不嵌套request

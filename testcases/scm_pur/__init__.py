@@ -52,11 +52,11 @@ class ScmPurBaseTest(BaseTest):
         cls.cust_portal_headers["Referer"] = cust_portal_referer
         cls.logger.info(f"cust_portal_headers: {cls.cust_portal_headers}")
         
-        # 初始化 http 实例
+        # 使用 admin_result 初始化 http 实例
         cls.http = HttpUtil(
-            url=admin_result.portal_url,
-            session=admin_result.session,
-            headers=admin_result.portal_headers
+            url=admin_result.portal_url,    # admin 的 URL
+            session=admin_result.session,   # admin 的 session（包含 cookie）
+            headers=admin_result.portal_headers # admin 的 headers
         )
 
         # 初始化采购模块配置文件路径
