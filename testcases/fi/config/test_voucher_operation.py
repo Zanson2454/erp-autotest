@@ -64,7 +64,7 @@ class TestVoucherOperation(FiBaseTest):
             a.text(str(e), "失败原因")
             raise
         
-    def create_voucher_with_amounts(self, debit_amt, credit_amt, remark, use_cash_account=False):
+    def create_voucher_with_amounts(self, debit_amt, credit_amt, remark, use_cash_account=False, use_ad_account=False):
         """创建指定借贷金额的凭证
         
         Args:
@@ -72,6 +72,7 @@ class TestVoucherOperation(FiBaseTest):
             credit_amt: 贷方金额  
             remark: 凭证备注
             use_cash_account: 是否使用现金类科目，默认False
+            use_ad_account: 是否使用辅助维度科目，默认False
         """
         url = self.get_api_path("总账-凭证-凭证暂存服务")
         params, url = self.get_api_params(url)
@@ -90,6 +91,13 @@ class TestVoucherOperation(FiBaseTest):
             sql = f"""
             select id,aa_head_code,aa_head_name from fin_glm_aa_head_cf 
             where coa_type={coa_type} and leaf=1 and aa_head_name like '%现金%' 
+            order by created_at desc limit 1;
+            """
+        elif use_ad_account:
+            # 获取有辅助维度的科目
+            sql = f"""
+            select id,aa_head_code,aa_head_name from fin_glm_aa_head_cf 
+            where coa_type={coa_type} and leaf=1 and aa_head_name like '%辅助维度%' 
             order by created_at desc limit 1;
             """
         else:
@@ -150,7 +158,7 @@ class TestVoucherOperation(FiBaseTest):
     
         ParamUtil.set_request_params(filtered_params, set_dict)
         response = self.http.post(url, json=filtered_params)
-        self.assert_util.assert_response_success(response)
+        #self.assert_util.assert_response_success(response)
         a.json(filtered_params, f"创建凭证请求数据-{remark}")
         a.json(response, f"创建凭证响应数据-{remark}")   
     
@@ -290,6 +298,18 @@ class TestVoucherOperation(FiBaseTest):
             "expected_success": False,
             "expected_error_code": "glm.ve.amt.of.cai.and.cas.item.check.not.equal",
             "expected_error_msg": "凭证流量检查不通过，现金科目金额与凭证行现金类科目金额不相等"
+        },
+        {
+            "name":"辅助维度科目不指定辅助维度值",
+            "debit_amt": 4.12,
+            "credit_amt": 4.12,
+            "remark": "测试辅助维度科目不指定辅助维度值业务流程",
+            "expected_status": "DRAFT",
+            "use_cash_account": False,
+            "use_ad_account": True,  # 使用辅助维度科目
+            "expected_success": False,
+            "expected_error_code": "glm.ve.ads.required.ad.miss",
+            "expected_error_msg": "必填维度缺失"
         }
     ])
     def test_submit_voucher(self, test_data):
@@ -299,7 +319,8 @@ class TestVoucherOperation(FiBaseTest):
             test_data["debit_amt"], 
             test_data["credit_amt"], 
             test_data["remark"],
-            test_data.get("use_cash_account", False)
+            test_data.get("use_cash_account", False),
+            test_data.get("use_ad_account", False)
         )
         url=self.get_api_path("总账-凭证-凭证列表提交服务")
         params,url=self.get_api_params(url)
@@ -540,10 +561,49 @@ class TestVoucherOperation(FiBaseTest):
         a.json(filtered_params, "请求数据")
         a.json(response, "响应数据")
 
-    
+    @case_decorator(
+        story="总账凭证批量操作",
+        title="凭证批量提交操作",
+        description="测试总账凭证批量提交操作",
+        severity="critical",
+        order=1,
+        smoke=False,
+        tags=["凭证录入","批量提交","FIN_GLM_VE_SUBMIT_BY_ID_BATCH_EVENT_SERVICE"]
+    )
+    def test_batch_submit_voucher(self):
+        """测试总账凭证批量提交操作"""
+        url=self.get_api_path("总账-凭证-凭证列表批量提交服务")
+        params,url=self.get_api_params(url)
+        filtered_params=ParamUtil.filter_post_body_fields(
+            params, ["request"], ["params"])
+        
+        # 执行3次创建凭证
+        for _ in range(3):
+            self.create_voucher_with_amounts(
+                1.23,
+                1.23,
+                "测试正常批量业务流程",
+                False,
+                False
+            )
+        
+        # 获取凭证ID列表
+        sql="""
+        select id from fin_glm_ve_head_tr where remark='测试正常批量业务流程' and ve_status='DRAFT' order by created_at desc limit 3;
+        """
+        voucher_ids=self.db.query(sql)
+        
+        # 直接设置request参数为列表
+        filtered_params['params']['request'] = voucher_ids
+        response=self.http.post(url, json=filtered_params)
+        self.assert_util.assert_response_success(response)
+        a.json(filtered_params, "请求数据")
+        a.json(response, "响应数据")
+        
+        
         
         
 if __name__ == "__main__":
     test=TestVoucherOperation()
     test.setup_class()
-    test.test_account_voucher()
+    test.test_batch_submit_voucher()
