@@ -150,6 +150,13 @@ org_info:
     sql: |
       select id,`name` from inv_spc_stk_type_cf where name='供应商寄售' limit 1
     description: "查询特殊库存类型信息"
+  
+  #ATP销售检查规则信息
+  inv_atp_rule_cf:
+    sql: |
+      select id,doc_class,ctrl_type,atp_group_id from inv_atp_rule_cf where doc_class='SO' and atp_group_id='2000001' and deleted=0 limit 1
+
+    description: "查询ATP检查规则信息"
 
   # 默认员工
   employee_info:

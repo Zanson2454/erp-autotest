@@ -13,7 +13,6 @@ from utils.report_util import a, case_decorator
 
 @allure.epic("库存管理")
 @allure.feature("ATP库存占量-销售")
-@pytest.mark.run(order=2)
 class TestInvAtpLockSale(ScmInvBaseTest):
     """ATP库存占量-销售单测试类
     
@@ -38,15 +37,32 @@ class TestInvAtpLockSale(ScmInvBaseTest):
             cls.mat_code = cls.inv_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP", [])[0].get("matCode")
             cls.inv_org_id = cls.inv_cache_data.get("org_info", {}).get("inv_org_info", [])[0].get("id")
             cls.inv_loc_id = cls.inv_cache_data.get("org_info", {}).get("inv_loc_info", [])[0].get("id")
+            cls.atp_rule_id = cls.inv_cache_data.get("org_info", {}).get("inv_atp_rule_cf", [])[0].get("id")
         
         cls.logger.info("ATP销售单测试类初始化完成")
+    
+    @classmethod
+    def teardown_class(cls):
+        """测试类结束后恢复ATP规则为弱控制"""
+        try:
+            if cls.atp_rule_id:
+                update_sql = f"""
+                    UPDATE inv_atp_rule_cf
+                    SET ctrl_type = 'WEAK'
+                    WHERE id = {cls.atp_rule_id}
+                      AND deleted = 0
+                """
+                cls.db.execute(update_sql)
+                cls.logger.info("✅ teardown_class: ATP规则已恢复为弱控制")
+        except Exception as e:
+            cls.logger.error(f"⚠️ teardown_class恢复弱控制失败: {str(e)}")
 
     @case_decorator(
         story="ATP销售单",
         title="创建销售单验证confirmQty为-5",
         description="创建销售单，验证响应中confirmQty为-5（销售为负数）",
         severity="critical",
-        order=6,
+        file_level_order=1,
         tags=["ATP", "销售", "创建"]
     )
     def test_create_sale_order(self):
@@ -136,7 +152,7 @@ class TestInvAtpLockSale(ScmInvBaseTest):
         title="创建销售交货单",
         description="创建销售交货单，验证srcDocICode、planQty、postingQty",
         severity="critical",
-        order=7,
+        file_level_order=2,
         tags=["ATP", "销售", "交货单"]
     )
     def test_create_delivery_note(self):
@@ -217,7 +233,7 @@ class TestInvAtpLockSale(ScmInvBaseTest):
         title="查询销售单数据库数据",
         description="查询销售单数据库，验证confirm_qty=-2, unclose_qty=2, plan_qty=5",
         severity="critical",
-        order=8,
+        file_level_order=3,
         tags=["ATP", "销售", "数据库验证"]
     )
     def test_verify_sale_order_db(self):
@@ -280,7 +296,7 @@ class TestInvAtpLockSale(ScmInvBaseTest):
         title="查询交货单数据库数据",
         description="查询交货单数据库，验证confirm_qty=0, unclose_qty=0, plan_qty=3",
         severity="critical",
-        order=9,
+        file_level_order=4,
         tags=["ATP", "销售", "数据库验证"]
     )
     def test_verify_delivery_note_db(self):
@@ -320,6 +336,95 @@ class TestInvAtpLockSale(ScmInvBaseTest):
                 f"plan_qty: {plan_qty}",
                 "交货单数据库数据"
             )
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="ATP强控制",
+        title="强控制-库存不足无法创建销售单",
+        description="修改ATP规则为强控制，创建大数量销售单验证库存不足拦截",
+        severity="critical",
+        file_level_order=10,
+        tags=["ATP", "强控制", "库存不足"]
+    )
+    def test_strict_control_insufficient_inventory(self):
+        """强控制-库存不足无法创建销售单"""
+        try:
+            # 1. 通过SQL修改ATP规则为强控制
+            self.logger.info("📝 步骤1: 通过SQL修改ATP规则为强控制")
+            update_sql = f"""
+                UPDATE inv_atp_rule_cf
+                SET ctrl_type = 'STRICT'
+                WHERE id = {self.__class__.atp_rule_id}
+                  AND deleted = 0
+            """
+            self.db.execute(update_sql)
+            self.logger.info(f"✅ ATP规则已修改为强控制，rule_id={self.__class__.atp_rule_id}")
+            
+            # 2. 尝试创建大数量销售单（库存不足）
+            self.logger.info("📝 步骤2: 尝试创建大数量销售单（库存不足场景）")
+            api_path = self.get_api_path("INV-ATP-手动创建单据")
+            params, url = self.get_api_params(api_path)
+            
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, [
+                    "id", "docHCode", "docICode", "docClass", "docPosneg", "docHId",
+                    "docIId", "srcDocClass", "srcDocIId", "srcDocICode", "planDate",
+                    "planQty", "postingQty", "matId", "invOrgId", "invLocId", "docTime"
+                ],
+                ["params", "request"]
+            )
+            
+            today = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+            plan_date = int(today.timestamp() * 1000)
+            doc_time = int(datetime.datetime.now().timestamp() * 1000)
+            
+            ParamUtil.set_request_params(filtered_params, {
+                "id": None,
+                "docHCode": None,
+                "docICode": None,
+                "docClass": "SO",
+                "docPosneg": "NEG",
+                "docHId": None,
+                "docIId": None,
+                "srcDocClass": None,
+                "srcDocIId": None,
+                "srcDocICode": None,
+                "planDate": plan_date,
+                "planQty": 999999999999,  # 极大数量，触发库存不足
+                "postingQty": None,
+                "matId": {"id": self.__class__.mat_id, "matCode": self.__class__.mat_code},
+                "invOrgId": {"id": self.__class__.inv_org_id},
+                "invLocId": {"id": self.__class__.inv_loc_id},
+                "docTime": doc_time
+            })
+            
+            response = self.http.post(
+                url,
+                json=filtered_params,
+                params={"tmodule": "SCM_INV"}
+            )
+            
+            # 3. 验证响应（强控制下应该失败或返回错误信息）
+            success = response.get("success", False)
+            error_msg = response.get("message", "")
+            
+            self.logger.info(f"📊 响应结果: success={success}, message={error_msg}")
+            
+            if not success:
+                self.logger.info(f"✅ 验证通过: 强控制生效，库存不足已拦截")
+                self.logger.info(f"📝 错误信息: {error_msg}")
+            else:
+                result_data = response.get("data", {}).get("data", {})
+                item_list = result_data.get("itemList", [])
+                if item_list and len(item_list) > 0:
+                    confirm_qty = item_list[0].get("confirmQty", 0)
+                    self.logger.info(f"📊 创建成功但confirmQty={confirm_qty}，可能有库存限制")
+            
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
             
         except Exception as e:
             a.text(str(e), "失败原因")

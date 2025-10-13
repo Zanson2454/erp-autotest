@@ -64,7 +64,7 @@ db.sqlite3-journal
 run_tests.sh
 
 # 忽略配置数据
-#.env
+.env
 *logs/*
 .DS_Store
 **/.DS_Store
@@ -81,7 +81,6 @@ testdata/cache/*
 case_coverage_stat.json
 
 # 忽略用户输入
-userinput.py
 test.mdc
 docs/
 reports/fin_case_coverage.json
