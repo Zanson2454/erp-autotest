@@ -26,6 +26,19 @@ class TestPrItemTypeManagement(ScmPurBaseTest):
         # 从缓存获取标准采购订单ID
         cls.standard_po_type_id = [item["id"] for item in cls.pur_cache_data["pur_config"]["po_type_info"] if item["po_type"] == "STND"][0]
         cls.logger.info(f"采购申请行类型定义表管理测试类初始化完成，标准采购订单ID: {cls.standard_po_type_id}")
+    
+    @classmethod
+    def teardown_class(cls):
+        """测试类结束后执行清理"""
+        try:
+            cls.db.delete(
+                table="pur_pr_item_type_cf",
+                where="pr_item_type_code like %s",
+                params=["AUTOTEST_PRI_%"]
+            )
+            cls.logger.info("采购申请行类型定义表测试数据清理完成")
+        except Exception as e:
+            cls.logger.error(f"测试数据清理失败: {str(e)}")
 
     @case_decorator(
         story="采购申请行类型定义表新建",

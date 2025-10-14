@@ -1,5 +1,6 @@
 ---
-alwaysApply: false
+alwaysApply: true
+
 ---
 
 # ERP自动化测试项目 Cursor Rules
