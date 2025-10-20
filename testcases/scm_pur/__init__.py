@@ -68,7 +68,17 @@ class ScmPurBaseTest(BaseTest):
         
         # 初始化DataFactory（必须在init_sql_cache之前调用）
         DataFactory.__init__(env_name="test")
-        # 加载主数据缓存数据
+        
+        # 加载主数据缓存（采购依赖物料、组织等主数据）
+        DataFactory.init_sql_cache(
+            sql_config_path=str(project_root / "config" / "erp" / "md_init_sql.yaml"),
+            db_config_name="erp_db",
+            cache_key="md_init_cache",
+            cache_dir="testdata/cache"
+        )
+        cls.md_cache_data = CacheUtil.get('md_init_cache')
+        
+        # 加载采购配置数据
         DataFactory.init_sql_cache(
             sql_config_path=str(project_root / "config" / "erp" / "pur_init_sql.yaml"),
             db_config_name="erp_db",
@@ -79,6 +89,10 @@ class ScmPurBaseTest(BaseTest):
         cls.path_params = {"tmodule": "SCM_PUR"}
         cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
         cls.user_id = cls.init_data["user_info"]['user_info']["id"]
+        
+        cls.logger.info(f"✅ md_cache_data 加载完成: {cls.md_cache_data is not None}")
+        cls.logger.info(f"✅ pur_cache_data 加载完成: {cls.pur_cache_data is not None}")
+        cls.logger.info(f"✅ init_data 加载完成: {cls.init_data is not None}")
         
         
     def get_api_path(self, api_key):
