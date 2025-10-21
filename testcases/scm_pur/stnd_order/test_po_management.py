@@ -1,3 +1,6 @@
+"""
+标准采购订单无审批流程测试
+"""
 import allure
 import pytest
 import sys
@@ -17,7 +20,6 @@ from utils.param_util import ParamUtil
 class TestPoManagement(ScmPurBaseTest):
     """标准采购订单测试类"""
     
-    # 测试数据标识常量
     TEST_REMARK = "执行自动化测试备注"
     
     @classmethod
@@ -60,7 +62,6 @@ class TestPoManagement(ScmPurBaseTest):
     
     @classmethod
     def teardown_class(cls):
-        """测试类结束后执行清理"""
         try:
             cls.db.delete(
                 table="pur_po_head_tr",
@@ -77,7 +78,7 @@ class TestPoManagement(ScmPurBaseTest):
             cls.logger.error(f"测试数据清理失败: {str(e)}")
     
     def _get_po_detail_by_id(self, po_id):
-        """根据订单ID获取完整订单详情对象"""
+        """获取订单详情"""
         api_path = self.get_api_path("(系统)查询数据详情服务")
         _, url = self.get_api_params(api_path)
         
@@ -103,7 +104,7 @@ class TestPoManagement(ScmPurBaseTest):
         return po_detail
     
     def _verify_po_status(self, expected_status, status_desc):
-        """验证订单状态的公共方法"""
+        """验证订单状态"""
         query_sql = "SELECT id, document_status, deleted FROM pur_po_head_tr WHERE id = %s"
         result = self.db.query(query_sql, [self.__class__.po_id])
         
@@ -125,7 +126,6 @@ class TestPoManagement(ScmPurBaseTest):
         tags=["采购", "标准订单", "创建"]
     )
     def test_create_standard_po(self):
-        """测试创建标准采购订单"""
         try:
             current_ts = int(datetime.now().timestamp() * 1000)
             
@@ -161,7 +161,6 @@ class TestPoManagement(ScmPurBaseTest):
             )
             
             self.__class__.pur_remark = self.TEST_REMARK
-            self.logger.info(f"采购订单创建成功，备注: {self.TEST_REMARK}")
             a.json(result.get("response", {}), "响应数据")
             
         except Exception as e:
@@ -177,7 +176,6 @@ class TestPoManagement(ScmPurBaseTest):
         tags=["采购", "标准订单", "查询"]
     )
     def test_query_po_list(self):
-        """测试查询采购订单列表"""
         try:
             api_path = self.get_api_path("采购订单分页查询ACTION服务")
             params, url = self.get_api_params(api_path)
@@ -238,11 +236,6 @@ class TestPoManagement(ScmPurBaseTest):
                 assert pur_remark == self.__class__.pur_remark, \
                     f"采购备注不匹配: 期望={self.__class__.pur_remark}, 实际={pur_remark}"
             
-            self.logger.info(
-                f"查询列表成功: po_id={self.__class__.po_id}, "
-                f"po_code={self.__class__.po_code}, status={document_status}"
-            )
-            
             a.text(
                 f"订单ID: {self.__class__.po_id}\n"
                 f"订单编码: {self.__class__.po_code}\n"
@@ -265,7 +258,6 @@ class TestPoManagement(ScmPurBaseTest):
         tags=["采购", "标准订单", "查询"]
     )
     def test_query_po_detail(self):
-        """测试查询采购订单详情"""
         try:
             if not self.__class__.po_id:
                 self.test_query_po_list()
@@ -296,12 +288,58 @@ class TestPoManagement(ScmPurBaseTest):
             assert document_status == "EFFECT", \
                 f"单据状态不符合预期: 期望=EFFECT, 实际={document_status}"
             
-            self.logger.info(
-                f"订单详情查询成功: po_id={self.__class__.po_id}, "
-                f"po_code={result_data.get('poCode')}, status={document_status}"
+            a.json(response, "响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    @case_decorator(
+        story="标准采购订单",
+        title="未交货完成订单失败",
+        description="验证未交货状态下完成采购订单失败",
+        severity="normal",
+        file_level_order=4,
+        tags=["采购", "标准订单", "完成", "失败校验"]
+    )
+    def test_finish_po_without_delivery(self):
+        try:
+            if not self.__class__.po_id:
+                self.test_query_po_list()
+            
+            po_detail = self._get_po_detail_by_id(self.__class__.po_id)
+            
+            api_path = self.get_api_path("采购订单完成")
+            _, url = self.get_api_params(api_path)
+            
+            request_params = {
+                "serviceKey": "SCM_PUR$PUR_PO_FINISHED_SERVICE",
+                "params": {
+                    "request": po_detail
+                }
+            }
+            
+            response = self.http.post(
+                url,
+                json=request_params,
+                params={"tmodule": "SCM_PUR"}
             )
             
+            success = response.get("success", True)
+            assert success is False, "预期完成操作应该失败，但实际返回成功"
+            
+            err_info = response.get("err", {})
+            err_code = err_info.get("code", "")
+            err_msg = err_info.get("msg", "")
+            
+            assert err_code == "po.item.delivery.not.completed", \
+                f"错误码不符合预期: 期望=po.item.delivery.not.completed, 实际={err_code}"
+            assert "交货未完成" in err_msg or "不允许完成" in err_msg, \
+                f"错误信息不符合预期: {err_msg}"
+            
+            a.json(request_params, "请求数据")
             a.json(response, "响应数据")
+            a.text(f"错误码: {err_code}\n错误信息: {err_msg}", "业务校验")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -312,11 +350,10 @@ class TestPoManagement(ScmPurBaseTest):
         title="作废采购订单",
         description="作废采购订单并验证状态",
         severity="critical",
-        file_level_order=4,
+        file_level_order=5,
         tags=["采购", "标准订单", "作废"]
     )
     def test_abolish_po(self):
-        """测试作废采购订单"""
         try:
             if not self.__class__.po_id:
                 self.test_query_po_list()
@@ -354,11 +391,10 @@ class TestPoManagement(ScmPurBaseTest):
         title="取消提交采购订单",
         description="创建新订单后取消提交并验证状态为草稿",
         severity="critical",
-        file_level_order=5,
+        file_level_order=6,
         tags=["采购", "标准订单", "取消提交"]
     )
     def test_cancel_submit_po(self):
-        """测试取消提交采购订单"""
         try:
             self.test_create_standard_po()
             self.test_query_po_list()
@@ -398,14 +434,128 @@ class TestPoManagement(ScmPurBaseTest):
     
     @case_decorator(
         story="标准采购订单",
+        title="导出采购订单",
+        description="导出采购订单数据",
+        severity="normal",
+        file_level_order=7,
+        tags=["采购", "标准订单", "导出"]
+    )
+    def test_export_po(self):
+        try:
+            if not self.__class__.po_id:
+                self.test_query_po_list()
+            
+            api_path = self.get_api_path("采购订单-H-导入导出任务管理接口-提交导出任务")
+            _, url = self.get_api_params(api_path)
+            
+            timestamp = self.mock_util.get_timestamp()
+            task_name = f"采购订单-{self.nickname}-{timestamp}-导出"
+            
+            request_params = {
+                "serviceKey": "SCM_PUR$PUR_PO_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST",
+                "teamId": 22,
+                "params": {
+                    "taskName": task_name,
+                    "multiSheetConfig": [
+                        {
+                            "modelKey": "SCM_PUR$pur_po_head_tr",
+                            "modelName": "采购订单-H",
+                            "sheetNo": 0,
+                            "sheetName": "采购订单-H",
+                            "headerConfigList": [
+                                {"name": "单据编号", "type": "TEXT", "field": "poCode"},
+                                {"name": "单据类型", "type": "TEXT", "field": "poType"},
+                                {"name": "供应商,伙伴名称", "type": "TEXT", "field": "vendId.name"},
+                                {"name": "含税总金额", "type": "DECIMAL", "field": "totalAmountGross", "precision": 2, "precisionDisplayType": "FILL_ROUND"},
+                                {"name": "不含税金额", "type": "DECIMAL", "field": "amountNet", "precision": 2, "precisionDisplayType": "FILL_ROUND"},
+                                {"name": "税额", "type": "DECIMAL", "field": "taxAmount", "precision": 2, "precisionDisplayType": "FILL_ROUND"},
+                                {"name": "采购组织", "type": "TEXT", "field": "purOrgId.orgName"},
+                                {"name": "单据状态", "type": "ENUM", "field": "documentStatus", "multiSelect": False},
+                                {"name": "业务状态", "type": "ENUM", "field": "businessStatus", "multiSelect": False},
+                                {"name": "交货状态", "type": "ENUM", "field": "poStatusDel", "multiSelect": False},
+                                {"name": "采购员", "type": "TEXT", "field": "purEmployee.name"},
+                                {"name": "创建人", "type": "TEXT", "field": "createdBy.nickname"},
+                                {"name": "创建时间", "type": "DATE", "field": "createdAt"}
+                            ]
+                        }
+                    ],
+                    "queryData": {
+                        "appId": 0,
+                        "teamId": 22,
+                        "containerKey": "PO-listView-table",
+                        "viewKey": "SCM_PUR$TERP_MIGRATE_PO:5FK5Ssd3Ov6z1uVTvum6n",
+                        "sceneKey": "SCM_PUR$TERP_MIGRATE_PO",
+                        "params": {
+                            "request": {
+                                "pageable": {
+                                    "conditionItems": {
+                                        "type": "ConditionItems",
+                                        "logicOperator": "AND",
+                                        "conditions": {
+                                            "id": {
+                                                "operator": "IN",
+                                                "value": [self.__class__.po_id]
+                                            }
+                                        }
+                                    },
+                                    "sortOrders": [
+                                        {"fieldAlias": "updatedAt", "sortType": "DESC"},
+                                        {"fieldAlias": "createdAt", "sortType": "DESC"}
+                                    ],
+                                    "pageNo": 1,
+                                    "pageSize": 20
+                                }
+                            },
+                            "selectFields": [
+                                {"field": "poCode"},
+                                {"field": "poType"},
+                                {"field": "totalAmountGross"},
+                                {"field": "amountNet"},
+                                {"field": "taxAmount"},
+                                {"field": "documentStatus"},
+                                {"field": "businessStatus"},
+                                {"field": "poStatusDel"},
+                                {"field": "createdAt"},
+                                {"field": "vendId", "selectFields": [{"field": "name"}]},
+                                {"field": "purOrgId", "selectFields": [{"field": "orgName"}]},
+                                {"field": "purEmployee", "selectFields": [{"field": "name"}]},
+                                {"field": "createdBy", "selectFields": [{"field": "nickname"}]}
+                            ],
+                            "modelKey": "SCM_PUR$pur_po_head_tr"
+                        }
+                    },
+                    "processConfig": {
+                        "processType": "TRANTOR",
+                        "appId": 0,
+                        "teamId": 22,
+                        "model": "SCM_PUR$pur_po_head_tr",
+                        "modelName": "采购订单-H",
+                        "containerKey": "PO-listView-table",
+                        "viewKey": "SCM_PUR$TERP_MIGRATE_PO:5FK5Ssd3Ov6z1uVTvum6n",
+                        "sceneKey": "SCM_PUR$TERP_MIGRATE_PO"
+                    }
+                }
+            }
+            
+            response = self.http.post(url, json=request_params, params={"tmodule": "SCM_PUR"})
+            self.assert_util.assert_response_success(response)
+            
+            a.json(request_params, "请求数据")
+            a.json(response, "响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    @case_decorator(
+        story="标准采购订单",
         title="删除采购订单",
         description="删除草稿状态的采购订单并验证deleted字段",
         severity="critical",
-        file_level_order=6,
+        file_level_order=8,
         tags=["采购", "标准订单", "删除"]
     )
     def test_delete_po(self):
-        """测试删除采购订单"""
         try:
             if not self.__class__.po_id:
                 raise ValueError("未找到可删除的订单ID")
@@ -438,8 +588,6 @@ class TestPoManagement(ScmPurBaseTest):
             deleted_value = result[0].get("deleted")
             assert deleted_value != 0, \
                 f"订单删除标记不符合预期: 期望 deleted != 0, 实际 deleted={deleted_value}"
-            
-            self.logger.info(f"订单删除成功: po_id={self.__class__.po_id}, deleted={deleted_value}")
             
             a.json(request_params, "请求数据")
             a.json(response, "响应数据")
