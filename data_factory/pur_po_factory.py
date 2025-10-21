@@ -105,6 +105,12 @@ class PurPoFactory:
                 - tax_rate_id: 税率ID (可选，不传从缓存获取)
                 - delivery_date: 交货日期 (默认当前时间)
                 - note: 备注 (默认"执行自动化测试备注")
+                - po_schl_list: 计划行列表 (可选，支持自定义拆分计划行)
+                    示例: [
+                        {"qty": 10, "delivery_date": 1761033525000},
+                        {"qty": 2, "delivery_date": 1760976000000}
+                    ]
+                    注意: 所有计划行数量之和不能超过订单行数量
         
         可选参数（不传则从缓存自动获取）:
             po_type_id: 采购订单类型ID (默认从 pur_cache_data 获取)
@@ -147,6 +153,12 @@ class PurPoFactory:
                 ["init_data", "currency_info", 0, "curr_id"]
             )
             
+            # 获取采购相关方类型ID（用于partner参数）
+            pur_partner_type_id = self._get_default_value(
+                None,
+                ["md_cache_data", "partner_info", "partner_type_cf", "pur_partner_type", "id"]
+            )
+            
             api_path = ParamUtil.get_api_path(self.apis, "PO-创建订单-提交服务")
             params, url = ParamUtil.get_api_params(self.api_params, api_path)
             
@@ -160,6 +172,14 @@ class PurPoFactory:
                 ["params", "request"]
             )
             
+            # 构建partner参数（智能获取相关方类型ID）
+            partner_list = []
+            if pur_partner_type_id:
+                partner_list.append({
+                    "partnerTypeRef": {"id": pur_partner_type_id},
+                    "partnerRef": {"id": vend_id}
+                })
+            
             ParamUtil.set_request_params(filtered_params, {
                 "poCode": None,
                 "poType": {"id": po_type_id},
@@ -172,7 +192,7 @@ class PurPoFactory:
                 "businessDate": business_date or int(datetime.now().timestamp() * 1000),
                 "purCurrId": {"id": pur_curr_id},
                 "currTypeCode": {"id": pur_curr_id},
-                "partner": [{"partnerTypeRef": {"id": "2000005"}, "partnerRef": {"id": vend_id}}],
+                "partner": partner_list,
                 "attachment": []
             })
             
@@ -194,7 +214,7 @@ class PurPoFactory:
             raise
     
     def _build_po_items(self, mat_items: List[Dict], vend_id: str, pur_employee_id: str) -> List[Dict]:
-        """构建采购订单明细（支持智能默认值）"""
+        """构建采购订单明细（支持智能默认值 + 计划行拆分）"""
         po_items = []
         tax_rate = 0.13
         
@@ -231,6 +251,17 @@ class PurPoFactory:
             tax_rate_id = item.get("tax_rate_id") or default_tax_rate_id
             pur_curr_id = item.get("pur_curr_id") or default_pur_curr_id
             
+            # 构建计划行（支持用户自定义拆分）
+            po_schl_list = self._build_po_schl(
+                item=item,
+                qty=qty,
+                inv_org_id=inv_org_id,
+                inv_loc_id=inv_loc_id,
+                uom_pur_id=uom_pur_id,
+                vend_id=vend_id,
+                pur_employee_id=pur_employee_id
+            )
+            
             po_item = {
                 "poItemType": {"id": po_item_type_id},
                 "poItemUsge": "ORDINARY",
@@ -247,16 +278,7 @@ class PurPoFactory:
                 "amountGross": amount_gross,
                 "amountNet": amount_net,
                 "taxAmount": tax_amount,
-                "poSchl": [{
-                    "matId": {"id": item.get("mat_id")},
-                    "poSchlQtyDel": qty,
-                    "poSchlQtyFul": 0,
-                    "invOrgId": {"id": inv_org_id},
-                    "invLocId": {"id": inv_loc_id},
-                    "uomPurId": {"id": uom_pur_id},
-                    "vendId": {"id": vend_id},
-                    "purEmployee": {"id": pur_employee_id}
-                }],
+                "poSchl": po_schl_list,
                 "invOrgId": {"id": inv_org_id},
                 "invLocId": {"id": inv_loc_id},
                 "poDateDel": item.get("delivery_date", int(datetime.now().timestamp() * 1000)),
@@ -276,80 +298,190 @@ class PurPoFactory:
             po_items.append(po_item)
         
         return po_items
+    
+    def _build_po_schl(
+        self, 
+        item: Dict, 
+        qty: float,
+        inv_org_id: str,
+        inv_loc_id: str,
+        uom_pur_id: str,
+        vend_id: str,
+        pur_employee_id: str
+    ) -> List[Dict]:
+        """
+        构建计划行列表（支持自定义拆分）
+        
+        参数:
+            item: 订单行配置
+            qty: 订单行总数量
+            inv_org_id: 库存组织ID
+            inv_loc_id: 库存位置ID
+            uom_pur_id: 采购单位ID
+            vend_id: 供应商ID
+            pur_employee_id: 采购员ID
+            
+        返回:
+            计划行列表
+        """
+        po_schl_list = []
+        custom_schl_list = item.get("po_schl_list", [])
+        
+        if custom_schl_list:
+            # 用户自定义计划行：校验数量总和
+            total_schl_qty = sum(schl.get("qty", 0) for schl in custom_schl_list)
+            if total_schl_qty > qty:
+                raise ValueError(
+                    f"计划行数量总和 ({total_schl_qty}) 不能超过订单行数量 ({qty})"
+                )
+            
+            # 构建多个计划行
+            for schl in custom_schl_list:
+                schl_qty = schl.get("qty", 0)
+                schl_delivery_date = schl.get("delivery_date", int(datetime.now().timestamp() * 1000))
+                
+                po_schl_list.append({
+                    "matId": {"id": item.get("mat_id")},
+                    "poSchlQtyDel": schl_qty,
+                    "poSchlQtyFul": 0,
+                    "poSchlDateDel": schl_delivery_date,
+                    "invOrgId": {"id": inv_org_id},
+                    "invLocId": {"id": inv_loc_id},
+                    "uomPurId": {"id": uom_pur_id},
+                    "vendId": {"id": vend_id},
+                    "purEmployee": {"id": pur_employee_id}
+                })
+        else:
+            # 默认：单个计划行
+            po_schl_list.append({
+                "matId": {"id": item.get("mat_id")},
+                "poSchlQtyDel": qty,
+                "poSchlQtyFul": 0,
+                "invOrgId": {"id": inv_org_id},
+                "invLocId": {"id": inv_loc_id},
+                "uomPurId": {"id": uom_pur_id},
+                "vendId": {"id": vend_id},
+                "purEmployee": {"id": pur_employee_id}
+            })
+        
+        return po_schl_list
 
 
-if __name__ == "__main__":
-    """独立运行测试采购订单创建（演示智能默认值）"""
-    from testcases.scm_pur import ScmPurBaseTest
+# if __name__ == "__main__":
+#     """独立运行测试采购订单创建（演示智能默认值）"""
+#     from testcases.scm_pur import ScmPurBaseTest
     
-    print("\n" + "="*60)
-    print("📦 采购订单数据工厂 - 独立测试（智能默认值）")
-    print("="*60 + "\n")
+#     print("\n" + "="*60)
+#     print("📦 采购订单数据工厂 - 独立测试（智能默认值）")
+#     print("="*60 + "\n")
     
-    ScmPurBaseTest.setup_class()
+#     ScmPurBaseTest.setup_class()
     
-    # 初始化工厂（自动从缓存加载默认值）
-    po_factory = PurPoFactory(
-        http_client=ScmPurBaseTest.http,
-        apis=ScmPurBaseTest.apis,
-        api_params=ScmPurBaseTest.api_params,
-        mock_util=ScmPurBaseTest.mock_util,
-        logger=ScmPurBaseTest.logger,
-        init_data=ScmPurBaseTest.init_data,
-        md_cache_data=ScmPurBaseTest.md_cache_data,
-        pur_cache_data=ScmPurBaseTest.pur_cache_data
-    )
+#     # 初始化工厂（自动从缓存加载默认值）
+#     po_factory = PurPoFactory(
+#         http_client=ScmPurBaseTest.http,
+#         apis=ScmPurBaseTest.apis,
+#         api_params=ScmPurBaseTest.api_params,
+#         mock_util=ScmPurBaseTest.mock_util,
+#         logger=ScmPurBaseTest.logger,
+#         init_data=ScmPurBaseTest.init_data,
+#         md_cache_data=ScmPurBaseTest.md_cache_data,
+#         pur_cache_data=ScmPurBaseTest.pur_cache_data
+#     )
     
-    # 获取物料ID（从缓存）
-    mat_id = ScmPurBaseTest.md_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP", [{}])[0].get("id")
-    mat_code = ScmPurBaseTest.md_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP", [{}])[0].get("mat_code")
+#     # 获取物料ID（从缓存）
+#     mat_id = ScmPurBaseTest.md_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP", [{}])[0].get("id")
+#     mat_code = ScmPurBaseTest.md_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP", [{}])[0].get("mat_code")
     
-    current_ts = int(datetime.now().timestamp() * 1000)
+#     current_ts = int(datetime.now().timestamp() * 1000)
     
-    # 示例1：只传必需参数（mat_id），其他从缓存自动获取
-    print("【示例1】只传 mat_id，其他参数自动从缓存获取：")
-    mat_items_simple = [
-        {
-            "mat_id": mat_id,
-            "mat_code": mat_code,
-            "qty": 10,
-            "price": 100
-        }
-    ]
+#     # 示例1：只传必需参数（mat_id），其他从缓存自动获取
+#     print("【示例1】只传 mat_id，其他参数自动从缓存获取：")
+#     mat_items_simple = [
+#         {
+#             "mat_id": mat_id,
+#             "mat_code": mat_code,
+#             "qty": 10,
+#             "price": 100
+#         }
+#     ]
     
-    try:
-        result = po_factory.create_standard_po(mat_items=mat_items_simple)
-        print("✅ 采购订单创建成功（使用默认值）")
-        print(f"订单ID: {result.get('response', {}).get('data', {}).get('data')}\n")
-    except Exception as e:
-        print(f"❌ 创建失败: {str(e)}\n")
-        import traceback
-        traceback.print_exc()
+#     try:
+#         result = po_factory.create_standard_po(mat_items=mat_items_simple)
+#         print("✅ 采购订单创建成功（使用默认值）")
+#         print(f"订单ID: {result.get('response', {}).get('data', {}).get('data')}\n")
+#     except Exception as e:
+#         print(f"❌ 创建失败: {str(e)}\n")
+#         import traceback
+#         traceback.print_exc()
     
-    # 示例2：显式传递部分参数（演示参数优先级）
-    print("\n【示例2】显式传递部分参数，其他使用默认值：")
-    mat_items_custom = [
-        {
-            "mat_id": mat_id,
-            "mat_code": mat_code,
-            "qty": 20,
-            "price": 200,
-            "note": "自定义备注"
-        }
-    ]
+#     # 示例2：自定义计划行拆分（关键功能）
+#     print("\n【示例2】自定义计划行拆分（1个订单行拆成2个计划行）：")
+#     mat_items_split_schl = [
+#         {
+#             "mat_id": mat_id,
+#             "mat_code": mat_code,
+#             "qty": 12,  # 订单行总数量
+#             "price": 11,
+#             "po_schl_list": [  # 自定义计划行
+#                 {"qty": 10, "delivery_date": current_ts + 86400000 * 5},  # 5天后
+#                 {"qty": 2, "delivery_date": current_ts}  # 今天
+#             ]
+#         }
+#     ]
     
-    try:
-        result = po_factory.create_standard_po(
-            mat_items=mat_items_custom,
-            pur_remark="显式传递的采购备注"  # 显式传递，优先使用
-        )
-        print("✅ 采购订单创建成功（混合使用显式参数和默认值）")
-        print(f"订单ID: {result.get('response', {}).get('data', {}).get('data')}\n")
-    except Exception as e:
-        print(f"❌ 创建失败: {str(e)}\n")
-        import traceback
-        traceback.print_exc()
+#     try:
+#         result = po_factory.create_standard_po(mat_items=mat_items_split_schl)
+#         print("✅ 采购订单创建成功（计划行拆分：10 + 2 = 12）")
+#         print(f"订单ID: {result.get('response', {}).get('data', {}).get('data')}\n")
+#     except Exception as e:
+#         print(f"❌ 创建失败: {str(e)}\n")
+#         import traceback
+#         traceback.print_exc()
     
-    print("="*60)
-    print("测试完成！")
-    print("="*60 + "\n")
+#     # 示例3：计划行数量校验（预期失败）
+#     print("\n【示例3】计划行数量校验（故意触发错误）：")
+#     mat_items_invalid = [
+#         {
+#             "mat_id": mat_id,
+#             "mat_code": mat_code,
+#             "qty": 12,
+#             "price": 11,
+#             "po_schl_list": [
+#                 {"qty": 10, "delivery_date": current_ts},
+#                 {"qty": 5, "delivery_date": current_ts}  # 总和15 > 订单行12
+#             ]
+#         }
+#     ]
+    
+#     try:
+#         result = po_factory.create_standard_po(mat_items=mat_items_invalid)
+#         print("❌ 应该触发校验错误，但成功了！\n")
+#     except ValueError as e:
+#         print(f"✅ 校验成功拦截：{str(e)}\n")
+#     except Exception as e:
+#         print(f"⚠️  其他异常: {str(e)}\n")
+    
+#     # 示例4：不传计划行（默认行为，兼容旧代码）
+#     print("\n【示例4】不传计划行（默认行为，向后兼容）：")
+#     mat_items_default = [
+#         {
+#             "mat_id": mat_id,
+#             "mat_code": mat_code,
+#             "qty": 15,
+#             "price": 50
+#         }
+#     ]
+    
+#     try:
+#         result = po_factory.create_standard_po(mat_items=mat_items_default)
+#         print("✅ 采购订单创建成功（使用默认单个计划行）")
+#         print(f"订单ID: {result.get('response', {}).get('data', {}).get('data')}\n")
+#     except Exception as e:
+#         print(f"❌ 创建失败: {str(e)}\n")
+#         import traceback
+#         traceback.print_exc()
+    
+#     print("="*60)
+#     print("测试完成！")
+#     print("="*60 + "\n")
