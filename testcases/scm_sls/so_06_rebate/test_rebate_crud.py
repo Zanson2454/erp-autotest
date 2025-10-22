@@ -29,7 +29,7 @@ class TestRebateCrud(SlsBase):
             # 清理返利政策数据
             if cls.rebate_id:
                 cls.db.delete(
-                    table="sls_rebate_policy_tr",
+                    table="rebate_policy_head_tr",
                     where="id = %s",
                     params=[cls.rebate_id]
                 )
@@ -340,13 +340,159 @@ class TestRebateCrud(SlsBase):
     
     @case_decorator(
         story="返利政策管理",
+        title="测试从返利政策详情中停用返利政策",
+        description="验证从返利政策详情页面停用已启用的返利政策",
+        severity="critical",
+        order=5,
+        tags=["返利政策", "停用", "详情"]
+    )
+    def test_05_disable_rebate_from_detail(self):
+        """测试从返利政策详情中停用返利政策"""
+        try:
+            # 1. 首先检查数据库中是否有启用状态的返利政策
+            enabled_rebates = self.db.query(
+                "SELECT * FROM rebate_policy_head_tr WHERE status = 'ENABLED' AND deleted = 0 LIMIT 1"
+            )
+            
+            if enabled_rebates:
+                # 使用已存在的启用状态返利政策
+                rebate_data = enabled_rebates[0]
+                self.rebate_id = rebate_data.get("id")
+                self.logger.info(f"找到已启用的返利政策，ID: {self.rebate_id}")
+                a.text(f"使用已存在的启用状态返利政策，ID: {self.rebate_id}", "返利政策选择")
+            else:
+                # 如果没有启用状态的返利政策，创建一个新的并启用
+                self.logger.info("未找到启用状态的返利政策，开始创建新的返利政策")
+                a.text("未找到启用状态的返利政策，创建新返利政策", "返利政策准备")
+                
+                # 创建、提交并审核通过返利政策
+                self.test_01_create_and_save_rebate_policy()
+                self.test_02_submit_rebate_policy()
+                self.test_03_approve_rebate_policy()
+                
+                # 验证返利政策已启用
+                rebate_check = self.db.query(
+                    f"SELECT * FROM rebate_policy_head_tr WHERE id = {self.rebate_id}"
+                )
+                
+                if rebate_check:
+                    rebate_data = rebate_check[0]
+                    current_status = rebate_data.get("status")
+                    
+                    if current_status != "ENABLED":
+                        # 如果审核后不是启用状态，手动更新为启用状态
+                        self.logger.warning(f"返利政策审核后状态为 {current_status}，手动更新为启用状态")
+                        self.db.execute(
+                            f"UPDATE rebate_policy_head_tr SET status = 'ENABLED' WHERE id = {self.rebate_id}"
+                        )
+                        # 重新查询
+                        rebate_check = self.db.query(
+                            f"SELECT * FROM rebate_policy_head_tr WHERE id = {self.rebate_id}"
+                        )
+                        rebate_data = rebate_check[0]
+                    
+                    a.text(f"新建返利政策并设置为启用状态，ID: {self.rebate_id}", "返利政策创建")
+                else:
+                    raise Exception(f"未找到创建的返利政策记录，ID: {self.rebate_id}")
+            
+            self.logger.info(f"开始从详情页停用返利政策，ID: {self.rebate_id}")
+            
+            # 2. 获取返利政策详情数据
+            current_status = rebate_data.get("status")
+            
+            a.text(f"返利政策当前状态: {current_status}", "返利政策详情")
+            # 将datetime对象转换为字符串以便JSON序列化
+            rebate_data_for_report = {k: str(v) if hasattr(v, 'isoformat') else v for k, v in rebate_data.items()}
+            a.json(rebate_data_for_report, "返利政策详情数据")
+            
+            # 验证返利政策当前为启用状态
+            if current_status != "ENABLED":
+                raise Exception(f"返利政策当前状态为 {current_status}，不是启用状态，无法测试停用功能")
+            
+            # 3. 调用停用返利政策API
+            api_path = self.get_api_path("SLS-返利政策-停用服务")
+            params, url = self.get_api_params(api_path)
+            
+            # 4. 参数处理 - 使用详情数据构建停用请求
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, 
+                ["id", "context", "version", "deleted", "createdAt", "updatedAt", 
+                 "createdBy", "updatedBy", "policyCode", "policyName", "rebDocType", 
+                 "acquireType", "comOrgId", "settAccTypeId", "periodType", 
+                 "periodBeginAt", "periodEndAt", "status"], 
+                ["params", "request"]
+            )
+            
+            # 5. 设置停用参数 - 使用从数据库查询到的真实数据
+            # 转换datetime为时间戳
+            def datetime_to_timestamp(dt):
+                """将datetime对象转换为毫秒时间戳"""
+                if dt is None:
+                    return None
+                if hasattr(dt, 'timestamp'):
+                    return int(dt.timestamp() * 1000)
+                return dt
+            
+            set_dict = {
+                "id": rebate_data.get("id"),
+                "context": {},
+                "version": rebate_data.get("version", 1),
+                "deleted": 0,
+                "createdAt": datetime_to_timestamp(rebate_data.get("created_at")),
+                "updatedAt": int(time.time() * 1000),
+                "createdBy": rebate_data.get("created_by"),
+                "updatedBy": rebate_data.get("updated_by"),
+                "policyCode": rebate_data.get("policy_code"),
+                "policyName": rebate_data.get("policy_name"),
+                "rebDocType": rebate_data.get("reb_doc_type", "SO"),
+                "acquireType": rebate_data.get("acquire_type", "AMT"),
+                "comOrgId": {"id": rebate_data.get("com_org_id"), "context": {}},
+                "settAccTypeId": {"id": rebate_data.get("sett_acc_type_id"), "context": {}},
+                "periodType": rebate_data.get("period_type", "MONTH"),
+                "periodBeginAt": datetime_to_timestamp(rebate_data.get("period_begin_at")),
+                "periodEndAt": datetime_to_timestamp(rebate_data.get("period_end_at")),
+                "status": "ENABLED"  # 停用前的状态
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            # 6. 发送停用请求
+            self.logger.info("发送停用返利政策请求")
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+            
+            # 7. 验证停用结果 - 从数据库查询验证状态是否已更新为停用
+            time.sleep(1)  # 等待数据库更新
+            updated_rebate = self.db.query(
+                f"SELECT status FROM rebate_policy_head_tr WHERE id = {self.rebate_id}"
+            )
+            
+            if updated_rebate:
+                new_status = updated_rebate[0].get("status")
+                a.text(f"返利政策停用后状态: {new_status}", "状态验证")
+                
+                # 断言状态已更新为停用
+                assert new_status == "DISABLED", f"返利政策停用失败，当前状态为: {new_status}"
+            
+            a.json(filtered_params, "停用返利政策请求数据")
+            a.json(response, "停用返利政策响应数据")
+            a.text(f"返利政策从详情页停用成功，ID: {self.rebate_id}", "停用结果")
+            
+            self.logger.info(f"返利政策停用测试完成，ID: {self.rebate_id}")
+            
+        except Exception as e:
+            self.logger.error(f"返利政策停用测试失败: {str(e)}")
+            a.text(str(e), "失败原因")
+            raise
+    
+    @case_decorator(
+        story="返利政策管理",
         title="测试删除草稿态返利政策",
         description="验证只能删除草稿态返利政策的功能",
         severity="critical",
-        order=5,
+        order=6,
         tags=["返利政策", "删除"]
     )
-    def test_05_delete_draft_rebate_policy(self):
+    def test_06_delete_draft_rebate_policy(self):
         """测试删除草稿态返利政策"""
         try:
             # 1. 创建一个新的草稿态返利政策用于删除测试
