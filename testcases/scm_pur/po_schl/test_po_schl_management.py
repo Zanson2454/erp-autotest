@@ -23,6 +23,7 @@ class TestPoSchlManagement(ScmPurBaseTest):
     TEST_REMARK = "执行自动化测试备注"
     TEST_QTY = 12  # 测试数量
     TEST_PRICE = 11  # 测试单价
+    SPLIT_QTY = 3  # 拆分后的数量
     
     @classmethod
     def setup_class(cls):
@@ -62,22 +63,30 @@ class TestPoSchlManagement(ScmPurBaseTest):
         
         cls.logger.info("采购计划行管理测试类初始化完成")
     
-    # @classmethod
-    # def teardown_class(cls):
-    #     try:
-    #         cls.db.delete(
-    #             table="pur_po_head_tr",
-    #             where="pur_remark like %s",
-    #             params=[f"%{cls.TEST_REMARK}%"]
-    #         )
-    #         cls.db.delete(
-    #             table="pur_po_item_tr",
-    #             where="note like %s",
-    #             params=[f"%{cls.TEST_REMARK}%"]
-    #         )
-    #         cls.logger.info("测试数据清理完成")
-    #     except Exception as e:
-    #         cls.logger.error(f"测试数据清理失败: {str(e)}")
+    @classmethod
+    def teardown_class(cls):
+        try:
+            # 先删除计划行
+            cls.db.delete(
+                table="pur_po_schl_tr",
+                where="po_code IN (SELECT po_code FROM pur_po_head_tr WHERE pur_remark like %s)",
+                params=[f"%{cls.TEST_REMARK}%"]
+            )
+            # 再删除订单行
+            cls.db.delete(
+                table="pur_po_item_tr",
+                where="note like %s",
+                params=[f"%{cls.TEST_REMARK}%"]
+            )
+            # 最后删除订单头（父表）
+            cls.db.delete(
+                table="pur_po_head_tr",
+                where="pur_remark like %s",
+                params=[f"%{cls.TEST_REMARK}%"]
+            )
+            cls.logger.info("测试数据清理完成")
+        except Exception as e:
+            cls.logger.error(f"测试数据清理失败: {str(e)}")
     
     @case_decorator(
         story="采购计划行",
@@ -540,7 +549,7 @@ class TestPoSchlManagement(ScmPurBaseTest):
                 f"订单编号: {self.__class__.merged_po_code}\n"
                 f"原计划行ID: {self.__class__.merged_po_schl_id}\n"
                 f"合并后总数量: {self.__class__.merged_po_schl_qty}\n"
-                f"编辑后数量: {new_qty}\n"
+                f"编辑后数量: {self.SPLIT_QTY}\n"
                 f"拆分后行数: {len(verify_result)}\n"
                 f"拆分后总数量: {total_qty} ✅\n"
                 f"第1行未清数量: {verify_result[0].get('un_close_qty')}\n"

@@ -296,10 +296,110 @@ class TestPoManagement(ScmPurBaseTest):
     
     @case_decorator(
         story="标准采购订单",
+        title="交货冻结",
+        description="对采购订单进行交货冻结",
+        severity="critical",
+        file_level_order=4,
+        tags=["采购", "标准订单", "冻结"]
+    )
+    def test_freeze_po_delivery(self):
+        try:
+            if not self.__class__.po_id:
+                self.test_query_po_list()
+            
+            po_detail = self._get_po_detail_by_id(self.__class__.po_id)
+            
+            api_path = self.get_api_path("PO-订单头-冻结服务")
+            _, url = self.get_api_params(api_path)
+            
+            request_params = {
+                "serviceKey": "SCM_PUR$PUR_PO_FREEZE_SERVICE",
+                "params": {
+                    "request": po_detail
+                }
+            }
+            
+            response = self.http.post(
+                url,
+                json=request_params,
+                params={"tmodule": "SCM_PUR"}
+            )
+            
+            self.assert_util.assert_response_success(response)
+            
+            query_sql = "SELECT id, delivery_frozen FROM pur_po_head_tr WHERE id = %s"
+            result = self.db.query(query_sql, [self.__class__.po_id])
+            
+            assert result, "数据库未查询到订单数据"
+            
+            delivery_frozen = result[0].get("delivery_frozen")
+            assert delivery_frozen == 1, \
+                f"交货冻结状态不符合预期: 期望=1, 实际={delivery_frozen}"
+            
+            a.json(request_params, "请求数据")
+            a.json(response, "响应数据")
+            a.text(f"数据库查询结果: {result}", "数据库验证")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    @case_decorator(
+        story="标准采购订单",
+        title="交货解冻",
+        description="对采购订单进行交货解冻",
+        severity="critical",
+        file_level_order=5,
+        tags=["采购", "标准订单", "解冻"]
+    )
+    def test_unfreeze_po_delivery(self):
+        try:
+            if not self.__class__.po_id:
+                self.test_query_po_list()
+            
+            po_detail = self._get_po_detail_by_id(self.__class__.po_id)
+            
+            api_path = self.get_api_path("PO-订单头-取消冻结服务")
+            _, url = self.get_api_params(api_path)
+            
+            request_params = {
+                "serviceKey": "SCM_PUR$PUR_PO_HEAD_CANCEL_FREEZE_SERVICE",
+                "params": {
+                    "request": po_detail
+                }
+            }
+            
+            response = self.http.post(
+                url,
+                json=request_params,
+                params={"tmodule": "SCM_PUR"}
+            )
+            
+            self.assert_util.assert_response_success(response)
+            
+            query_sql = "SELECT id, delivery_frozen FROM pur_po_head_tr WHERE id = %s"
+            result = self.db.query(query_sql, [self.__class__.po_id])
+            
+            assert result, "数据库未查询到订单数据"
+            
+            delivery_frozen = result[0].get("delivery_frozen")
+            assert delivery_frozen == 0, \
+                f"交货解冻状态不符合预期: 期望=0, 实际={delivery_frozen}"
+            
+            a.json(request_params, "请求数据")
+            a.json(response, "响应数据")
+            a.text(f"数据库查询结果: {result}", "数据库验证")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    
+    @case_decorator(
+        story="标准采购订单",
         title="未交货完成订单失败",
         description="验证未交货状态下完成采购订单失败",
         severity="normal",
-        file_level_order=4,
+        file_level_order=6,
         tags=["采购", "标准订单", "完成", "失败校验"]
     )
     def test_finish_po_without_delivery(self):
@@ -350,7 +450,7 @@ class TestPoManagement(ScmPurBaseTest):
         title="作废采购订单",
         description="作废采购订单并验证状态",
         severity="critical",
-        file_level_order=5,
+        file_level_order=7,
         tags=["采购", "标准订单", "作废"]
     )
     def test_abolish_po(self):
@@ -391,7 +491,7 @@ class TestPoManagement(ScmPurBaseTest):
         title="取消提交采购订单",
         description="创建新订单后取消提交并验证状态为草稿",
         severity="critical",
-        file_level_order=6,
+        file_level_order=8,
         tags=["采购", "标准订单", "取消提交"]
     )
     def test_cancel_submit_po(self):
@@ -437,7 +537,7 @@ class TestPoManagement(ScmPurBaseTest):
         title="导出采购订单",
         description="导出采购订单数据",
         severity="normal",
-        file_level_order=7,
+        file_level_order=9,
         tags=["采购", "标准订单", "导出"]
     )
     def test_export_po(self):
@@ -552,7 +652,7 @@ class TestPoManagement(ScmPurBaseTest):
         title="删除采购订单",
         description="删除草稿状态的采购订单并验证deleted字段",
         severity="critical",
-        file_level_order=8,
+        file_level_order=10,
         tags=["采购", "标准订单", "删除"]
     )
     def test_delete_po(self):
