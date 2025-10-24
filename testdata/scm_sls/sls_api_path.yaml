@@ -51,11 +51,29 @@ apis:
     method: POST
   SLS-返利政策-停用服务:
     path: /api/trantor/service/engine/execute/SCM_REB$REB_POLICY_DISABLE_ACTION_SERVICE?tmodule=SCM_REB
-  SLS-返利政策-删除服务:
-    path: /api/trantor/service/engine/execute/SCM_REB$REB_POLICY_DELETE_ACTION_SERVICE?tmodule=SCM_REB
-    method: POST
   SLS-返利账户流水-查询服务:
     path: /api/trantor/service/engine/execute/ERP_ACC$acc_trans_record_page_service?tmodule=ERP_ACC
+    method: POST
+  SLS-返利确认订单行-查询服务:
+    path: /api/trantor/service/engine/execute/SCM_REB$SYS_PagingDataService?tmodule=SCM_REB&modelKey=SCM_REB%24rebate_cb_item_tr
+    method: POST
+  SLS-返利确认单行-确认服务:
+    path: /api/trantor/service/engine/execute/SCM_REB$REB_CB_HEAD_CONFIRM_DETAILS_ACTION_SERVICE?tmodule=SCM_REB
+    method: POST
+  SLS-返利确认单-查询服务:
+    path: /api/trantor/service/engine/execute/SCM_REB$REB_CB_HEAD_PAGING_ACTION_SERVICE?tmodule=SCM_REB
+    method: POST
+  SLS-返利确认单-提交服务:
+    path: /api/trantor/service/engine/execute/SCM_REB$REB_CB_HEAD_SUBMIT_APPROVAL_ACTION_SERVICE?tmodule=SCM_REB
+    method: POST
+  SLS-待办任务-查询服务:
+    path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_TASK_INSTANCE_SEARCH_GET
+    method: POST
+  SLS-待办任务-处理服务:
+    path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_TASK_SUBMIT_POST?tmodule=AI
+    method: POST
+  SLS-返利政策-重新计算服务:
+    path: /api/trantor/service/engine/execute/SCM_REB$REB_POLICY_PERIOD_RECALC_ACTION_SERVICE?tmodule=SCM_REB
     method: POST
   赠品策略-匹配范围表结构服务:
     path: /api/trantor/service/engine/execute/SCM_SLS$GIFT_STRATEGY_MATCH_SCOPE_TABLE_EVENT_SERVICE

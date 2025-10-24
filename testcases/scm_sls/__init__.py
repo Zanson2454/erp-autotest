@@ -4,6 +4,7 @@
 """
 import sys
 import random
+import time
 from pathlib import Path
 
 # 获取项目根目录
@@ -16,6 +17,7 @@ from data_factory.base import DataFactory
 from utils.cache_util import CacheUtil
 from utils.request_util import HttpUtil
 from utils.param_util import ParamUtil
+from utils.report_util import a
 
 
 
@@ -759,6 +761,191 @@ class SlsBase(BaseTest):
             
         except Exception as e:
             self.logger.error(f"创建交货单失败: {str(e)}")
+            raise
+
+    # ==================== 返利政策相关方法 ====================
+    
+    def create_and_approve_rebate_policy(self, policy_name=None, policy_code=None):
+        """
+        创建、提交并审批通过返利政策的完整流程公共方法
+        
+        :param policy_name: 返利政策名称，如果为None则自动生成
+        :param policy_code: 返利政策编码，如果为None则自动生成
+        :return: 包含返利政策ID、编码、名称和状态的字典
+        """
+        try:
+            # 1. 生成返利政策基本信息
+            if not policy_name:
+                policy_name = f"自动化返利政策_{self.mock_util.get_timestamp()}"
+            if not policy_code:
+                policy_code = self.mock_util.generate_unique_code(tag="AT_REB")
+            
+            self.logger.info(f"开始创建返利政策: {policy_name} ({policy_code})")
+            
+            # 2. 创建返利政策
+            api_path = self.get_api_path("SLS-返利政策-保存服务")
+            params, url = self.get_api_params(api_path)
+            
+            # 设置返利政策参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["policyName", "policyCode", "periodBeginAt", "periodEndAt", "status", "rebDocType", "comOrgId", "acquireType", "settAccTypeId", "periodType"], ["params", "request"]
+            )
+            
+            # 设置返利政策数据
+            current_time = int(time.time() * 1000)
+            set_dict = {
+                "policyName": policy_name,
+                "policyCode": policy_code,
+                "periodBeginAt": current_time,
+                "periodEndAt": current_time + 365 * 24 * 60 * 60 * 1000,  # 一年后
+                "status": "DRAFT",
+                "rebDocType": "SO",
+                "comOrgId": {"id": 14507001},
+                "acquireType": "AMT",
+                "settAccTypeId": {"id": 14007001},
+                "periodType": "MONTH"
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            # 发送创建请求
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            # 获取创建的返利政策ID
+            policy_data = response.get("data", {}).get("data", {})
+            policy_id = policy_data.get("id")
+            self.logger.info(f"返利政策创建成功，ID: {policy_id}")
+            
+            # 3. 提交返利政策
+            api_path = self.get_api_path("SLS-返利政策-提交服务")
+            params, url = self.get_api_params(api_path)
+            
+            # 设置提交参数
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], ["params", "request"]
+            )
+            set_dict = {"id": policy_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            # 发送提交请求
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+            
+            self.logger.info(f"返利政策提交成功，ID: {policy_id}")
+            
+            # 4. 审批通过返利政策
+            api_path = self.get_api_path("SLS-待办任务-查询服务")
+            params, url = self.get_api_params(api_path)
+            
+            # 查询待办任务
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["pageable"], ["params", "request"]
+            )
+            set_dict = {
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": None
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            # 查询待办任务
+            task_response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(task_response)
+            
+            # 获取待办任务列表
+            task_data = task_response.get("data", {}).get("data", {})
+            task_list = task_data.get("data", []) if isinstance(task_data, dict) else task_data
+            
+            if not task_list:
+                raise Exception("未找到待办任务")
+            
+            # 找到返利政策相关的待办任务
+            target_task = None
+            
+            # 检查task_list是否为列表
+            if isinstance(task_list, list):
+                for task in task_list:
+                    # 检查task是否为字典类型
+                    if isinstance(task, dict):
+                        task_name = task.get("taskName", "")
+                        if "返利政策" in task_name or "rebate" in task_name.lower():
+                            target_task = task
+                            break
+                
+                if not target_task:
+                    # 如果没找到返利政策相关的任务，取第一个任务
+                    if task_list and len(task_list) > 0:
+                        target_task = task_list[0]
+                        self.logger.warning(f"未找到返利政策相关的待办任务，使用第一个任务: {target_task.get('taskName')}")
+                    else:
+                        raise Exception("未找到任何待办任务")
+            else:
+                raise Exception(f"待办任务列表格式错误，期望列表，实际: {type(task_list)}")
+            
+            task_id = target_task.get("id")
+            self.logger.info(f"找到待办任务，ID: {task_id}, 任务名: {target_task.get('taskName')}")
+            
+            # 处理待办任务（审批通过）
+            api_path = self.get_api_path("SLS-待办任务-处理服务")
+            params, url = self.get_api_params(api_path)
+            
+            # 设置任务处理参数 - 使用用户提供的正确参数结构
+            filtered_params = {
+                "sceneKey": "AI$todo_workbench",
+                "viewKey": "AI$todo_workbench:list",
+                "viewTitle": "list",
+                "appId": 0,
+                "teamId": 22,
+                "serviceKey": "sys_common$API_TRANTOR_WORKFLOW_V2_TASK_SUBMIT_POST",
+                "params": {
+                    "taskInstanceId": target_task.get("taskId"),  # 使用taskId而不是id
+                    "auditResult": {
+                        "remark": "同意",
+                        "decisionType": "AGREE"
+                    }
+                }
+            }
+            
+            # 发送审批请求
+            approve_response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(approve_response)
+            
+            self.logger.info(f"返利政策审批通过成功，政策ID: {policy_id}")
+            
+            # 5. 验证返利政策状态
+            time.sleep(2)  # 等待状态更新
+            policy_info = self.db.query(
+                "SELECT id, policy_code, status FROM rebate_policy_head_tr WHERE id = %s",
+                [policy_id]
+            )
+            
+            if policy_info:
+                status = policy_info[0]['status']
+                self.logger.info(f"返利政策最终状态: {status}")
+                
+                if status != "ENABLED":
+                    self.logger.warning(f"返利政策状态不是ENABLED，当前状态: {status}")
+            
+            # 6. 记录结果
+            result = {
+                "policy_id": policy_id,
+                "policy_code": policy_code,
+                "policy_name": policy_name,
+                "status": "ENABLED"
+            }
+            
+            a.json(result, "返利政策创建和审批结果")
+            self.logger.info(f"返利政策完整流程完成: {result}")
+            
+            return result
+            
+        except Exception as e:
+            self.logger.error(f"创建和审批返利政策失败: {str(e)}")
+            a.text(str(e), "失败原因")
             raise
 
 

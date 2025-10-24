@@ -3150,6 +3150,10 @@ api_params:
       auditResult:
         remark: "同意"
         decisionType: "AGREE"
+      request:
+        taskId: 0
+        action: "APPROVE"
+        comment: "自动化测试审批通过"
     pageKey: "sys_common$approval_task_center"
     sceneKey: "sys_common$approval_task_center"
     buttonName: "同意"
@@ -9927,6 +9931,18 @@ api_params:
     sceneKey: sys_common$approval_task_center
     buttonName: 同意
     buttonKey: AGREE
+/api/trantor/service/engine/execute/SCM_REB$REB_POLICY_PERIOD_RECALC_ACTION_SERVICE?tmodule=SCM_REB:
+  sceneKey: SCM_REB$REBATE
+  viewKey: SCM_REB$REBATE:5uCsaenWWhh98UB6-FArW
+  viewTitle: detail
+  buttonKey: SCM_REB$REBATE-9V9JwvPX2qW62WPuSSd7D
+  buttonName: 重新计算
+  appId: 0
+  teamId: 22
+  serviceKey: SCM_REB$REB_POLICY_PERIOD_RECALC_ACTION_SERVICE
+  params:
+    request:
+      periodId: null
   /api/trantor/service/engine/execute/SCM_SLS$SLS_REBATE_POLICY_ENABLE_SERVICE?tmodule=SCM_SLS:
     sceneKey: SCM_SLS$sls_rebate_policy
     viewKey: SCM_SLS$sls_rebate_policy:list
@@ -10019,3 +10035,101 @@ api_params:
         needTotal: true
         sortOrders: null
         conditionItems: null
+  /api/trantor/service/engine/execute/SCM_REB$SYS_PagingDataService?tmodule=SCM_REB&modelKey=SCM_REB%24rebate_cb_item_tr:
+    sceneKey: SCM_REB$REBATE_ORDER_ITEM
+    viewKey: SCM_REB$REBATE_ORDER_ITEM:list
+    containerKey: SCM_REB$REBATE_ITEM-VFSwLoBGM715kBVcVKwVy
+    appId: 0
+    teamId: 22
+    serviceKey: SCM_REB$SYS_PagingDataService
+    params:
+      request:
+        pageable:
+          pageNo: 1
+          pageSize: 20
+          needTotal: true
+          sortOrders: null
+          conditionGroup: null
+        modelKey: SCM_REB$rebate_cb_item_tr
+  /api/trantor/service/engine/execute/SCM_REB$REB_CB_HEAD_CONFIRM_DETAILS_ACTION_SERVICE?tmodule=SCM_REB:
+    sceneKey: SCM_REB$REBATE_ORDER_ITEM
+    viewKey: SCM_REB$REBATE_ORDER_ITEM:list
+    viewTitle: list
+    buttonKey: SCM_REB$REBATE_ITEM-a3vsKUlWjVsGqslCF8j5a
+    buttonName: 返利确认
+    appId: 0
+    teamId: 22
+    serviceKey: SCM_REB$REB_CB_HEAD_CONFIRM_DETAILS_ACTION_SERVICE
+    params:
+      request:
+        ids: [2007001]
+  /api/trantor/service/engine/execute/SCM_REB$REB_CB_HEAD_PAGING_ACTION_SERVICE?tmodule=SCM_REB:
+    sceneKey: SCM_REB$REBATE_ORDER
+    viewKey: SCM_REB$REBATE_ORDER:list
+    appId: 0
+    teamId: 22
+    serviceKey: SCM_REB$REB_CB_HEAD_PAGING_ACTION_SERVICE
+    params:
+      request:
+        pageable:
+          pageNo: 1
+          pageSize: 20
+          needTotal: true
+          sortOrders: null
+          conditionItems: null
+        fields:
+          - name: cbCode
+            type: TEXT
+          - name: confirmAt
+            type: DATE
+        systemParams: null
+  /api/trantor/service/engine/execute/SCM_REB$REB_CB_HEAD_SUBMIT_APPROVAL_ACTION_SERVICE?tmodule=SCM_REB:
+    sceneKey: SCM_REB$REBATE_ORDER
+    viewKey: SCM_REB$REBATE_ORDER:list
+    viewTitle: list
+    buttonKey: SCM_REB$REBATE_ORDER-SwL634IIkTdN9x73T4j6e
+    buttonName: 提交
+    appId: 0
+    teamId: 22
+    serviceKey: SCM_REB$REB_CB_HEAD_SUBMIT_APPROVAL_ACTION_SERVICE
+    params:
+      request:
+        id: 2006002
+        context: {}
+        version: 1
+        deleted: 0
+        createdAt: 1761122316000
+        updatedAt: 1761122316000
+        createdBy: 618373053188357
+        updatedBy: 618373053188357
+        cbCode: "CODE2025102216383510094"
+        policyId:
+          id: 2013009
+        confirmAt: 1761122316000
+        confirmTotalAmt: 1
+        status: "DRAFT"
+  /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_TASK_INSTANCE_SEARCH_GET:
+    serviceKey: ERP_GEN$API_TRANTOR_WORKFLOW_V2_TASK_INSTANCE_SEARCH_GET
+    params:
+      logType: 2
+      _tab_id: "yHBrJwh__Olz"
+      pageNo: "1"
+      pageSize: "20"
+      keyword: "返利确认"
+      status: "0"
+  /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_TASK_SUBMIT_POST:
+    serviceKey: ERP_GEN$API_TRANTOR_WORKFLOW_V2_TASK_SUBMIT_POST
+    params:
+      _rootParams:
+        pageKey: sys_common$approval_task_center
+        sceneKey: sys_common$approval_task_center
+        buttonName: 同意
+        buttonKey: AGREE
+      taskInstanceId: null
+      auditResult:
+        remark: 同意
+        decisionType: AGREE
+    pageKey: sys_common$approval_task_center
+    sceneKey: sys_common$approval_task_center
+    buttonName: 同意
+    buttonKey: AGREE
