@@ -1,0 +1,843 @@
+version: '1.0'
+total_apis: 280
+apis:
+  (系统)停用主数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_MasterData_DisableDataService
+    method: POST
+  (系统)新增数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_CreateDataService
+    method: POST
+  (系统)批量删除数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_BatchDeleteDataService
+    method: POST
+  (系统)根据条件查询单条数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_FindSingleDataByConditionService
+    method: POST
+  (系统)新增并启用主数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_MasterData_CreateAndEnableDataService
+    method: POST
+  (系统)删除主数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_MasterData_DeleteDataService
+    method: POST
+  (系统)更新主数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_MasterData_UpdateDataService
+    method: POST
+  (系统)查询单条数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_FindOneDataService
+    method: POST
+  (系统)根据IDS复制并新增数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_CopyAndCreateDataByIdsService
+    method: POST
+  (系统)根据ID查询单条数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_FindSingleDataByIdService
+    method: POST
+  (系统)批量新增数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_BatchCreateDataService
+    method: POST
+  (系统)通过条件组查询树模型子数据列表:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_FindTreeChildrenDataService
+    method: POST
+  (系统)新增主数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_MasterData_CreateDataService
+    method: POST
+  (系统)批量启用主数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_MasterData_MultiEnableDataService
+    method: POST
+  (系统)根据IDS查询数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_FindDataByIdsService
+    method: POST
+  (系统)启用主数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_MasterData_EnableDataService
+    method: POST
+  (系统)保存主数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_MasterData_SaveDataService
+    method: POST
+  (系统)查询统计服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_QueryStatisticsService
+    method: POST
+  (系统)保存并启用主数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_MasterData_SaveAndEnableDataService
+    method: POST
+  (系统)查询数据详情服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_FindDataByIdService
+    method: POST
+  (系统)删除数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_DeleteDataByIdService
+    method: POST
+  (系统)反向构建树以及同步查询出所有同级服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_ReverseConstructTreeService
+    method: POST
+  (系统)调用取号规则服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_InvokeCodeRuleService
+    method: POST
+  (系统)根据IDS批量更新数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_BatchUpdateDataByIdsService
+    method: POST
+  (系统)SUM服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_SUM_DATA_SERVICE
+    method: POST
+  (系统)更新数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_UpdateDataByIdService
+    method: POST
+  (系统)通过条件组查询数据列表:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_FindListDataService
+    method: POST
+  (系统)树查询数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_FindTreeDataService
+    method: POST
+  (系统)查询分页数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_PagingDataService
+    method: POST
+  (系统)树搜索:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_TreeSearchService
+    method: POST
+  (系统)COUNT服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_COUNT_DATA_SERVICE
+    method: POST
+  (系统)根据条件批量更新数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_BatchUpdateDataByConditionService
+    method: POST
+  (系统)批量保存数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_BatchSaveDataService
+    method: POST
+  (系统)保存数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_SaveDataService
+    method: POST
+  (系统)批量停用主数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_MasterData_MultiDisableDataService
+    method: POST
+  (系统)转换复制数据:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_CopyDataConverterService
+    method: POST
+  (系统)根据条件批量删除数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_BatchDeleteDataByConditionService
+    method: POST
+  (系统)根据IDS批量删除数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SYS_BatchDeleteDataByIdsService
+    method: POST
+  DEL-交货单提交事件服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_SUBMITTING_EVENT_SERVICE
+    method: POST
+  DEL-销售交货单-根据编码批量查询特殊库存标识服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_SLS_FIND_SPC_BY_CODES_EVENT_SERVICE
+    method: POST
+  DN-采购-根据DN创建逆向交货单服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_RG_GROUP_BY_DNI_EVENT_SERVICE
+    method: POST
+  DEL-DN-保存交货项目行的批次信息服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_SAVE_ITEM_BATCH_EVENT_SERVICE
+    method: POST
+  DEL-交货单类型分配表批量删除服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_ITEM_TYPE_DISTRIBUTION_BATCH_DELETE_EVENT_SERVICE
+    method: POST
+  DEL-交货单复制服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_COPY_EVENT_SERVICE
+    method: POST
+  DEL-快递对接-查询DN母单快递信息服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_EXPRESS_DETAIL_EVENT_SERVICE
+    method: POST
+  物料主数据管理-对外管理服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$EXTERNAL_MAT_ORDER_CREATION_EVENT_SERVICE
+    method: POST
+  DEL-整单作废更新订单数量和状态服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_CANCEL_UPDATE_SLS_ITEM_QTY_EVENT_SERVICE
+    method: POST
+  DEL-交货单-打印详情服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_PRINT_DETAIL_EVENT_SERVICE
+    method: POST
+  DEL-交货单批量保存服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_BATCH_SAVE_LIST_EVENT_SERVICE
+    method: POST
+  DN-采购发货单提交服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SUBMIT_PUR_DN_EVENT_SERVICE
+    method: POST
+  DEL-销售交货审批拒绝回调服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_SLS_DN_APPROVE_REJECT_EVENT_SERVICE
+    method: POST
+  DEL-交货单详情服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_DETAIL_EVENT_SERVICE
+    method: POST
+  DEL-销售发货批次确认服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_SLS_DN_BATCH_CONFIRM_EVENT_SERVICE
+    method: POST
+  DN-采购-审批拒绝回调服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_PUR_PLAN_AUDIT_FAIL_EVENT_SERVICE
+    method: POST
+  DEL-采购-根据id查询交货项目行和批次信息服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_FIND_ITEM_AND_BATCH_BY_ID_EVENT_SERVICE
+    method: POST
+  DEL-交货单-已完结服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_STATUS_FINISHED_SERVICE_SERVICE
+    method: POST
+  DEL-销售交货单行作废更新订单数量和变更行状态服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_ITEM_CANCEL_UPDATE_SLS_ITEM_QTY_EVENT_SERVICE
+    method: POST
+  DEL-快递对接-快递轨迹查询服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_EXPRESS_TRACE_EVENT_SERVICE
+    method: POST
+  DEL-打印次数回调服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_EXPRESS_PRINT_COUNT_EVENT_SERVICE
+    method: POST
+  DN-采购-退货行分组服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_RG_GROUP_EVENT_SERVICE
+    method: POST
+  DEL-交货单删除服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_DELETE_EVENT_SERVICE
+    method: POST
+  DN-采购-收货过账-OLD服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_PST_PUR_EVENT_SERVICE
+    method: POST
+  DEL-交货单公共-未开WM拣货/清点修改执行数量服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_INV_EXECUTED_UPDATE_QTY_EVENT_SERVICE
+    method: POST
+  DEL-APP端仓库执行任务保存服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_APP_INV_EXECUTED_SAVE_EVENT_SERVICE
+    method: POST
+  DEL-获取定价服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_CALCULATE_PRICE_EVENT_SERVICE
+    method: POST
+  DEL-交货单缓存-行类型停用:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_ITEM_TYPE_DIS_ENABLED_EVENT_SERVICE
+    method: POST
+  DEL-交货单拆单保存服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_SEPARATE_SAVE_EVENT_SERVICE
+    method: POST
+  DN-采购交货单行作废服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_MVM_PUR_ITEM_DISCARDED_EVENT_SERVICE
+    method: POST
+  DEL-交货单打印订单详情服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_PRINT_DOC_DETAIL_EVENT_SERVICE
+    method: POST
+  DEL-快递对接-查询快递列表服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_EXPRESS_LIST_EVENT_SERVICE
+    method: POST
+  DEL-查询交货单行批次信息服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_FIND_BATCH_BY_ITEM_ID_EVENT_SERVICE
+    method: POST
+  DN-采购-提交审批服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_PUR_PLAN_AUDIT_SUBMIT_EVENT_SERVICE
+    method: POST
+  DEL-交货单缓存-头类型启用服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_TYPE_ENABLED_EVENT_SERVICE
+    method: POST
+  交货单公共-交货过账事件:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_POST_EVENT
+    method: POST
+  DEL-交货单类型启用清除缓存服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_ENABLED_CLEAN_CACHE_EVENT_SERVICE
+    method: POST
+  交货单公共-交货提交事件:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_SUBMIT_EVENT
+    method: POST
+  DEL-保存发货单-批量服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_SAVE_LIST_EVENT_SERVICE
+    method: POST
+  DEL-销售交货单提交审批服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_SLS_DN_SUBMIT_APPROVE_EVENT_SERVICE
+    method: POST
+  DEL-交货单过账服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_POSTING_EVENT_SERVICE
+    method: POST
+  DEL-交货单审批拒绝回调服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_APPROVE_REJECT_EVENT_SERVICE
+    method: POST
+  DEL-交货单公共-执行完成服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_EXECUTE_END_ENEVT_SERVICE
+    method: POST
+  DEL-交货单查看历史单据占用服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_FIND_HISTORY_OCCURY_EVENT_SERVICE
+    method: POST
+  DEL-交货单审批成功回调服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_APPROVE_PASS_EVENT_SERVICE
+    method: POST
+  DEL-查询发货单行批次信息服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_QUERY_BATCH_BY_RELATED_ITEM_SERVICE_SERVICE
+    method: POST
+  DEL-交货单缓存-头类型停用:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_TYPE_DIS_ENABLED_EVENT_SERVICE
+    method: POST
+  DN-采购-退货取消过账服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_CANCEL_PST_PUR_RETN_EVENT_SERVICE
+    method: POST
+  DN-采购-批量提交审批服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_PUR_BATCH_SUBMIT_APPROVE_EVENT_SERVICE
+    method: POST
+  DN-采购-自动生效服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_PUR_AUTO_INEFFECT_EVENT_SERVICE
+    method: POST
+  DEL-采退DN-按行集合分组服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_PO_ITEM_LIST_RG_GROUP_EVENT_SERVICE
+    method: POST
+  DEL-交货单行保存服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_ITEM_SAVE_EVENT_SERVICE
+    method: POST
+  DEL-交货单行分页查询服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_ITEM_LIST_PAGE_EVENT_SERVICE
+    method: POST
+  DN-销售-发货提交服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_SLS_SUBMIT_EVENT_SERVICE
+    method: POST
+  DEL-交货单公共-扫码过账渲染:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_SCAN_CODE_POSTED_QUERY_EVENT_SERVICE
+    method: POST
+  DN-采购订单行-退货服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_PUR_ITEM_RG_EVENT_SERVICE
+    method: POST
+  DN-采退-交货单提交服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_PUR_RG_SUBMIT_EVENT_SERVICE
+    method: POST
+  DEL-交货单公共-自动创建交货单服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_AUTO_CREATE_BY_DOC_EVENT_SERVICE
+    method: POST
+  DN-提交采购发货单服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_SUBMIT_PUR_DN_EVENT_SERVICE
+    method: POST
+  DN-销售-取消发货过账服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_SLS_CANCEL_PST_EVENT_SERVICE
+    method: POST
+  DEL-自动获取相关方服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_GET_DEFAULT_PARTNER_SERVICE_SERVICE
+    method: POST
+  交货单公共-批量保存事件:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_BATCH_SAVE_EVENT
+    method: POST
+  DEL-交货单作废服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_DISCARDING_EVENT_SERVICE
+    method: POST
+  DEL-保存交货单服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_SAVE_EVENT_SERVICE
+    method: POST
+  DN-采购-联动取消过账服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_PUR_LINK_CANCEL_POST_SERVICE
+    method: POST
+  DEL-交货单公共-扫码绑定业务员:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_SALESMAN_BATCH_SAVE_EVENT_SERVICE
+    method: POST
+  DEL-交货单行保存清除缓存服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_ITEN_TYPE_SAVE_CLEAN_CACHE_EVENT_SERVICE
+    method: POST
+  交货单公共-取消过账事件:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_CANCEL_POST_EVENT
+    method: POST
+  DN-采购-退货过账服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_PST_PUR_RETN_EVENT_SERVICE
+    method: POST
+  DEL-根据订单项目行分组查询创建交货单服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_SLS_ITEM_SUBMIT_EVENT_SERVICE
+    method: POST
+  DEL-交货单公共-交货单类型保存清除缓存服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_TYPE_CACHE_CLEAR_EVENT_SERVICE
+    method: POST
+  DEL-销售批量提交服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_SLS_BATCH_SUBMIT_APPROVE_EVENT_SERVICE
+    method: POST
+  销售交货单自动提交服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_SLS_DN_AUTO_SUBMIT_APPROVE_EVENT_SERVICE
+    method: POST
+  DEL-交货单批量删除服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_BATCH_DELETE_EVENT_SERVICE
+    method: POST
+  DN-采购发货单-提交服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_PUR_SUBMIT_EVENT_SERVICE
+    method: POST
+  DEL-交货单公共-交货单失焦保存:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_FORUS_SAVE_EVENT_SERVICE
+    method: POST
+  DN-采购-计划行分组服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_PO_GROUP_EVENT_SERVICE
+    method: POST
+  交货单分页查询服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_HEAD_QUERY_FROM_DS_EVENT_SERVICE
+    method: POST
+  DN-采购交单终止服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_MVM_PUR_HEAD_CLOSED_EVENT_SERVICE
+    method: POST
+  DN-采购-审批回撤回调服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_PUR_PLAN_AUDIT_ROLL_EVENT_SERVICE
+    method: POST
+  DEL-交货单解冻服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_UN_BLOCK_EVENT_SERVICE
+    method: POST
+  DEL-保存并提交服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_SAVE_SUBMIT_EVENT_SERVICE
+    method: POST
+  DEL-未开启WM查看拣配服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_CLOSE_WM_PICK_QUERY_ENEVT_SERVICE
+    method: POST
+  DEL-过账专属交货单详情服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_PST_DETAIL_EVENT_SERVICE
+    method: POST
+  DN-联动取消过账服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$GEN_CANCEL_GR_REF_EVENT_SERVICE
+    method: POST
+  DEL-交货单审批撤回回调服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_APPROVE_ROLLBACK_EVENT_SERVICE
+    method: POST
+  DEL-交货单公共-批量保存业务员:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_SET_SALESMAN_EVENT_SERVICE
+    method: POST
+  DEL-交货流程-计算可用数量服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_PROCESS_AVAILABLE_QTY_CALCULATE_EVENT_SERVICE
+    method: POST
+  DEL-交货单取消过账服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_CANCEL_POSTED_EVENT_SERVICE
+    method: POST
+  DN-销售-发货过账服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_SLS_PST_EVENT_SERVICE
+    method: POST
+  DEL-快递对接-打印快递面单服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_EXPRESS_PRINT_EVENT_SERVICE
+    method: POST
+  DN-采购交货单整单作废服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_MVM_PUR_HEAD_DISCARDED_EVENT_SERVICE
+    method: POST
+  DEL-交货单公共-ES数据分页查询服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_HEAD_QUERY_FROM_ES_ACTION_SERVICE
+    method: POST
+  DN-发货单-已支付服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_STATUS_PAYED_SERVICE_SERVICE
+    method: POST
+  DEL-交货单公共-仓库执行完成/仓库执行完成并过账:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_TASK_FINISH_EVENT_SERVICE
+    method: POST
+  DEL-APP端仓库执行任务平铺服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_APP_INV_EXECUTED_TASK_TILE_EVENT_SERVICE
+    method: POST
+  DEL-交货批次-批次确认分页查询服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_BATCH_CONFIRM_PAGING_EVENT_SERVICE
+    method: POST
+  DEL-快递对接-快递下单服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_EXPRESS_PLACE_ORDER_EVENT_SERVICE
+    method: POST
+  DEL-交货单过账异步业务处理事件服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_POSTING_ASYNC_EVENT_SERVICE
+    method: POST
+  DN-发货单-基于销售订单分组服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_SO_GROUP_EVENT_SERVICE
+    method: POST
+  DN-采购-项目行分组服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_GROUP_ITEM_EVENT_SERVICE
+    method: POST
+  DEL-交货单公共-扫码验货:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_SCAN_CODE_INSPECT_GOODS_EVENT_SERVICE
+    method: POST
+  DN-发货单-保存服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_SAVE_S_EVENT_SERVICE
+    method: POST
+  DN-采购-DN单自动创建服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_PUR_AUTO_CREATE_EVENT_SERVICE
+    method: POST
+  DEL-交货单公共-查询交货单行配置服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_ITEM_TYPE_BY_DN_TYPE_ID_EVENT_SERVICE
+    method: POST
+  DEL-快递对接-呼叫联想快递保存:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_EXPRESS_IMAGINE_PLACE_ORDER_EVENT_SERVICE
+    method: POST
+  DEL-生成结算项服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_CREATE_SETT_ITEM_EVENT_SERVICE
+    method: POST
+  DEL-快递对接-取消快递服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_EXPRESS_CANCEL_EVENT_SERVICE
+    method: POST
+  DEL- 销售交货单终止服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_SLS_CLOSED_EVENT_SERVICE
+    method: POST
+  DEL-交货单公共-交货单条码生成服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_BARCODE_GENERATE_EVENT_SERVICE
+    method: POST
+  DEL-交货单公共-交货单行条码生成服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_ITEM_BARCODE_GENERATE_EVENT_SERVICE
+    method: POST
+  DEL-交货流程-流程记录创建服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_PROCESS_RECORD_CREATE_EVENT_SERVICE
+    method: POST
+  DEL-交货单公共-创建交货单服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_CREATE_EVENT_SERVICE
+    method: POST
+  DEL-保存清除分配表缓存信息服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_TYPE_DISTRIBUTION_CACHE_CLEAR_EVENT_SERVICE
+    method: POST
+  DEL-快递对接-补拆包裹服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_EXPRESS_SPILT_QTY_EVENT_SERVICE
+    method: POST
+  DEL-运力提报服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_TRANS_INFO_REPORT_EVENT_SERVICE
+    method: POST
+  DEL-交货单冻结服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_BLOCK_EVENT_SERVICE
+    method: POST
+  仓库执行任务保存事件服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_APP_INV_EXECUTED_TASK_SAVE_EVENT_SERVICE
+    method: POST
+  DEL-APP端DN列表分页查询服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_APP_DN_LIST_PAGE_EVENT_SERVICE
+    method: POST
+  DN-采购-审批完成回调服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_PUR_PLAN_AUDIT_PASS_EVENT_SERVICE
+    method: POST
+  DEL-查看定价服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_CALCULATE_QUERY_EVENT_SERVICE
+    method: POST
+  DN-收货单-基于销退单分组服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_RO_GROUP_EVENT_SERVICE
+    method: POST
+  DEL-供应商寄售-库存所属合作伙伴查询服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_INV_PARTNER_EVENT_SERVICE
+    method: POST
+  DN-收货单-取消过账服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_CRETN_CANCEL_PST_EVENT_SERVICE
+    method: POST
+  DEL-采退DN-按行分组服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_PO_ITEM_RG_GROUP_ACTION_EVENT_SERVICE
+    method: POST
+  DEL-交货单缓存-行类型启用:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_ITEM_TYPE_ENABLED_EVENT_SERVICE
+    method: POST
+  DN-采购发货单-提交并保存服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SUBMIT_SAVE_PO_EVENT_SERVICE
+    method: POST
+  DEL-交货单行启用清除缓存服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_ITEN_TYPE_EVENT_CLEAN_CACHE_EVENT_SERVICE
+    method: POST
+  DEL-根据上游单据查询DN列表服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_FIND_LIST_BY_DOC_EVENT_SERVICE
+    method: POST
+  DN-采购-收货过账服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_PUR_CREATE_GR_EVENT_SERVICE
+    method: POST
+  DEL-销售交货审批成功回调服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_SLS_DN_APPROVED_EVENT_SERVICE
+    method: POST
+  DEL-销售交货单保存并提交服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_SLS_SAVE_SUBMIT_EVENT_SERVICE
+    method: POST
+  取消执行服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_CANCEL_WM_EXECUTE_SERVICE
+    method: POST
+  DEL-交货单类型停用清除缓存服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DISENABLED_CLEAN_CACHE_EVENT_SERVICE
+    method: POST
+  DN-收货单-过账服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_RETN_PST_EVENT_SERVICE
+    method: POST
+  DEL-销售交货单过账和过账冲销更新数量及状态服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_POST_UPDATE_QTY_STATUS_EVENT_SERVICE
+    method: POST
+  DEL-批次确认服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_BATCH_COMFIRM_SERVICE_SERVICE
+    method: POST
+  DEL-交货单公共-扫码过账:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_SCAN_CODE_POSTED_EVENT_SERVICE
+    method: POST
+  DEL-交货单类型分配表删除服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_ITEM_TYPE_DISTRIBUTION_DELETE_EVENT_SERVICE
+    method: POST
+  DN-采购-DN单自动创建(销售-采购)服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_SUBMIT_TRANSFER_AUTO_EVENT_SERVICE
+    method: POST
+  DEL-交货单公共-根据交货单头ID查询交货单任务行:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_QUERY_TASK_BY_HEAD_ID_EVENT_SERVICE
+    method: POST
+  DN-采购-取消过账服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_CANCEL_PST_PUR_EVENT_SERVICE
+    method: POST
+  DEL-交货单公共-保存服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_SAVE_ENEVT_SERVICE
+    method: POST
+  DEL-APP端仓库执行任务完成服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_APP_INV_EXECUTED_EVENT_SERVICE
+    method: POST
+  DEL-交货单公共-打印:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_PRINT_EVENT_SERVICE
+    method: POST
+  DEL-查看拣配服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_INV_EXECUTED_QUERY_EVENT_SERVICE
+    method: POST
+  DEL-交货单行作废服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_ITEM_DISCARDING_EVENT_SERVICE
+    method: POST
+  DEL-交货流程-节点下拉列表服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_PROCESS_NODE_LIST_EVENT_SERVICE
+    method: POST
+  DEL-销售交货审批撤回回调服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_SLS_DN_APPROVE_ROLLBACK_EVENT_SERVICE
+    method: POST
+  DN-收货单-销退收货提交服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_RETN_SUBMIT_EVENT_SERVICE
+    method: POST
+  DEL-交货单批次控制服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_BATCH_CONTROL_BATCH_EVENT_SERVICE
+    method: POST
+  DEL-交货单拆单服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_SEPARATE_EVENT_SERVICE
+    method: POST
+  DEL-快递对接-呼叫快递渲染:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_EXPRESS_PLACE_ORDER_SHOW_EVENT_SERVICE
+    method: POST
+  交货单抬头表-启用主数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_HEAD_TR_MASTER_DATA_ENABLE_DATA_SERVICE
+    method: POST
+  DEL-交货单公共-根据快递单查询所有交货单:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_FIND_BY_EXPRESSNUM_SERVICE
+    method: POST
+  交货单抬头表标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_HEAD_TR_GEI_IMPORT_SERVICE
+    method: POST
+  交货流程节点-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_PROCESS_NODE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  DEL-调拨单-调拨出库单入库单过账:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_TRANSFER_ORDER_SEND_DN_POSTED_SERVICE
+    method: POST
+  交货流程节点标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_PROCESS_NODE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  交货流程记录-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_PROCESS_RECORD_TR_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  交货流程抬头-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_PROCESS_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  采购订单-ITEM标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$PUR_PO_ITEM_TR_GEI_IMPORT_SERVICE
+    method: POST
+  交货单抬头表-批量禁用主数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_HEAD_TR_MASTER_DATA_MULTI_DISABLE_DATA_SERVICE
+    method: POST
+  DEL-交货单公共-数据分页查询服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_HEAD_QUERY_FROM_DS_ACTION_SERVICE
+    method: POST
+  DEL-快递对接-快递面单撤回:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_EXPRESS_CALLBACK_SERVICE
+    method: POST
+  DEL-交货单公共-根据订单ID查询交货单行服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_QUERY_BY_HEAD_ID_ACTION_SERVICE
+    method: POST
+  根据税码ID查税率:
+    path: /api/trantor/service/engine/execute/SCM_DEL$ZDY_QueryRateByTaxId
+    method: POST
+  DEL-交货单公共-独立创建补全地址:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_CREATED_FULL_ADDR_SERVICE
+    method: POST
+  查询交货流程节点根据DN:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_PROCESS_NODE_LIST_BY_DN_SERVICE
+    method: POST
+  调拨单头表标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_TRANSFER_ORDER_HEAD_TR_GEI_IMPORT_SERVICE
+    method: POST
+  DN快递单号-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_EXPRESS_NUM_MD_API_GEI_TASK_IMPORT
+    method: POST
+  交货单抬头表-批量启用主数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_HEAD_TR_MASTER_DATA_MULTI_ENABLE_DATA_SERVICE
+    method: POST
+  交货单抬头表标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_HEAD_TR_GEI_EXPORT_SERVICE
+    method: POST
+  DEL-快递对接-快递保存:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_EXPRESS_SAVE_SERVICE
+    method: POST
+  DEL-交货单公共-交货平均周期统计:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_QUERY_AVG_DEL_DAYS_SERVICE
+    method: POST
+  交货单抬头表-保存数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_HEAD_TR_SAVE_DATA_SERVICE
+    method: POST
+  交货流程节点-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_PROCESS_NODE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  DEL-交货单公共-调拨单导入:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_STR_IMPORT_SERVICE
+    method: POST
+  交货流程记录-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_PROCESS_RECORD_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  交货单快递面单导入:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_EXPRESS_IMPORT
+    method: POST
+  交货单类型分配表业务单据头查询服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_TYPE_DISTRIBUTION_FIND_SERVICE
+    method: POST
+  DN快递关联表标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_EXPRESS_LINK_MD_GEI_EXPORT_SERVICE
+    method: POST
+  DEL-调拨单-调拨出库单提交同步生成调拨入库单:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_TRANSFER_ORDER_SEND_DN_SUBMIT_SERVICE
+    method: POST
+  交货单项目行表-分页数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_ITEM_TR_PAGING_DATA_SERVICE
+    method: POST
+  DEL-交货单公共-移动端打印列表:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_APP_PRINT_PAGE_SERVICE
+    method: POST
+  DN快递关联表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_EXPRESS_LINK_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  交货单抬头表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_HEAD_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  DEL_获取订单行详细信息:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_ITEM_DETAILS_SERVICE
+    method: POST
+  交货单类型配置-分页数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_TYPE_CF_PAGING_DATA_SERVICE
+    method: POST
+  调拨单标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_TRANSFER_ORDER_NORMAL_IMPORT_SERVICE
+    method: POST
+  交货快递单号导入:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_EXPRESS_NUM_IMPORT
+    method: POST
+  交货流程节点标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_PROCESS_NODE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  DN-交货单公共-查询分页服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_PAGE_ACTION_SERVICE
+    method: POST
+  DN快递关联表标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_EXPRESS_LINK_MD_GEI_IMPORT_SERVICE
+    method: POST
+  销售交货单根据订单行导入:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_SLS_IMPORT_SERVICE
+    method: POST
+  DEL-交货单公共--快递面单导入:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_EXPRESS_IMPORT_SERVICE
+    method: POST
+  交货单项目行表-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_ITEM_TR_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  交货单类型分配表业务单据行查询服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_TYPE_DISTRIBUTION_DOC_ITEM_FIND_SERVICE
+    method: POST
+  采购交货单根据订单行导入:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_PUR_IMPORT_SERVICE
+    method: POST
+  DN-采购-根据id查对应数据:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_QUERY_BY_IDS_SERVICE
+    method: POST
+  物料详情查询服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$MATERIAL_DETAIL_QUERY_SERVICE
+    method: POST
+  DEL-交货流程-流程记录弹框渲染:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_PROCESS_RECORD_EDIT_RENDER_SERVICE
+    method: POST
+  DEL-交货单过账业务处理服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_POSTING_ACTION_SERVICE
+    method: POST
+  交货单抬头表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_HEAD_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  交货流程记录-分页数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_PROCESS_RECORD_TR_PAGING_DATA_SERVICE
+    method: POST
+  交货单抬头表-禁用主数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_HEAD_TR_MASTER_DATA_DISABLE_DATA_SERVICE
+    method: POST
+  DEL-交货单取消过账业务处理服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_CANCEL_POSTED_ACTION_SERVICE
+    method: POST
+  DEL-交货单公共-交货延迟率统计:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_QUERY_DEL_DELAY_RATE_SERVICE
+    method: POST
+  根据合同查询有效收货单:
+    path: /api/trantor/service/engine/execute/SCM_DEL$QUERY_EFFECT_INNER_DEL_DN_BY_CON
+    method: POST
+  交货流程记录标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_PROCESS_RECORD_TR_GEI_EXPORT_SERVICE
+    method: POST
+  交货流程抬头-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_PROCESS_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  DEL-调拨单--根据调拨单ID查询调拨单行:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_STR_FIND_ITEM_BY_HEAD_ID_SERVICE
+    method: POST
+  DEL-交货单公共-交货单提交业务处理服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_SUBMITTING_ACTION_SERVICE
+    method: POST
+  交货单抬头表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  DEL-交货单公共-分页查询交货单行-后端:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_I_PAGING_BACK_SERVICE
+    method: POST
+  SCM-物料-查询物料单据数量的统计服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$GEN_MAT_ORDER_COUNT_SERVICE
+    method: POST
+  DEL-交货单-查询当前客户的交货单:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_QUERY_CUST_DEL_ORDER_SERVICE
+    method: POST
+  交货单抬头表-分页数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_HEAD_TR_PAGING_DATA_SERVICE
+    method: POST
+  DN快递关联表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_EXPRESS_LINK_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  DEL-调拨单-保存:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_TRANSFER_ORDER_SAVE_SERVICE
+    method: POST
+  根据交货头表ID查询行表:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_QUERY_BY_HEAD_ID_SERVICE
+    method: POST
+  交货流程抬头标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_PROCESS_HEAD_CF_GEI_IMPORT_SERVICE
+    method: POST
+  交货单抬头表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_HEAD_TR_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  根据交货行查询交货流程记录:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_PROCESS_RECORD_BATCH_QUERY_BY_DN_ITEM_SERVICE
+    method: POST
+  交货单类型配置-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_TYPE_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  交货单抬头表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_HEAD_TR_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  供应商交货单分页查询:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SUPPLIER_DN_PAGINATION_QUERY_SERVICE
+    method: POST
+  交货流程抬头标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_PROCESS_HEAD_CF_GEI_EXPORT_SERVICE
+    method: POST
+  交货单抬头表-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_HEAD_TR_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  调拨单头表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_TRANSFER_ORDER_HEAD_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  DEL-交货单公共-独立创建补全发货地址:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_CREATED_SEND_ADDR_SERVICE
+    method: POST
+  DEL-交货单公共--销售交货单导入:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_SLS_IMPORT
+    method: POST
+  交货单项目行表标准导出服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_ITEM_TR_GEI_EXPORT_SERVICE
+    method: POST
+  DEL-交货单公共-仓库执行完成并过账:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_TASK_FINISH_POST_SERVICE
+    method: POST
+  DEL-物料-通过交货单行ID查询物料信息:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_QUERY_MAT_INFO_BY_DN_ITEM_ID_SERVICE
+    method: POST
+  DEL-调拨单-调拨出入库单更新:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_STR_UPDATE_SERVICE
+    method: POST
+  ERP_SCM$DEL-交货单公共-初始化业务员:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_DEFAULT_SLAESMAN_SERVICE
+    method: POST
+  DEL-交货单公共--采购交货单导入:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DN_PUR_IMPORT_SERVICE
+    method: POST
+  交货单抬头表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_HEAD_TR_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  批量创建交货流程记录:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_PROCESS_RECORD_BATCH_CREATE_SERVICE
+    method: POST
+  交货单项目行表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$DEL_DN_ITEM_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  销售订单项目行表标准导入服务:
+    path: /api/trantor/service/engine/execute/SCM_DEL$SLS_SO_ITEM_TR_GEI_IMPORT_SERVICE
+    method: POST

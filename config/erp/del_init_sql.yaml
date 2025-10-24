@@ -1,0 +1,19 @@
+# DEL配置数据查询定义
+pur_config:
+  # 交货单类型信息
+  dn_type_info:
+    sql: |
+      SELECT id,dn_type_code,dn_type_name FROM del_dn_type_cf WHERE deleted = 0 and status='ENABLED'
+    description: "查询交货单类型"
+
+  # 交货单行类型信息
+  dn_item_type_info:
+    sql: |
+      SELECT id,dn_item_type_code,dn_item_type_name FROM del_dn_item_type_cf WHERE deleted = 0 and status='ENABLED'
+    description: "查询交货单行类型"
+
+  # 交货单类型和交货单行类型分配
+  dn_type_distribution_info:
+    sql: |
+      SELECT id,doc_type_name,doc_item_type_name FROM del_dn_type_distribution_cf WHERE deleted = 0
+    description: "查询交货单类型和交货单行类型的分配" 
