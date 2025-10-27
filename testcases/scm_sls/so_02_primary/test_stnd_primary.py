@@ -96,6 +96,16 @@ class TestStandardSalesOrder(SlsBase):
             if not self.order_id:
                 self.test_01_create_effective_standard_order()
             
+            # 检查订单状态，确保订单已生效
+            order_info = self.db.query(f"SELECT so_status FROM sls_so_head_tr WHERE id={self.order_id}")
+            if not order_info:
+                raise ValueError(f"未找到订单，订单ID: {self.order_id}")
+            
+            order_status = order_info[0]['so_status']
+            if order_status != "EFFECT":
+                self.logger.warning(f"订单状态不是已生效，当前状态: {order_status}。订单ID: {self.order_id}")
+                a.text(f"订单状态不是已生效，当前状态: {order_status}。订单ID: {self.order_id}", "状态警告")
+            
             # 使用继承的create_delivery_order方法创建交货单
             self.delivery_id = self.create_delivery_order(self.order_id)
             
