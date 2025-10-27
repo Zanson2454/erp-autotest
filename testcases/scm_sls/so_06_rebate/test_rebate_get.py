@@ -66,7 +66,7 @@ class TestRebateGet(SlsBase):
             a.text(f"返利政策创建并审批通过，ID: {self.rebate_policy_id}", "返利政策信息")
             
             # 3. 设置返利金额
-            rebate_amount = 1.0  # 1元返利金额
+            rebate_amount = 0.01  # 0.01元返利金额
             
             # 4. 创建带返利金额的销售订单
             self.so_id = self.create_sales_order(order_type="STND", submit=True, rebate_amount=rebate_amount)
@@ -105,7 +105,7 @@ class TestRebateGet(SlsBase):
             # 如果没有销售订单，先创建一个
             if not self.so_id:
                 self.logger.info("未找到销售订单，先创建一个带返利金额的销售订单")
-                rebate_amount = 1.0
+                rebate_amount = 0.01
                 self.so_id = self.create_sales_order(order_type="STND", submit=True, rebate_amount=rebate_amount)
                 
                 # 获取销售订单信息
@@ -143,7 +143,7 @@ class TestRebateGet(SlsBase):
             # 如果没有销售订单，先创建一个
             if not self.so_id:
                 self.logger.info("未找到销售订单，先创建一个带返利金额的销售订单")
-                rebate_amount = 1.0
+                rebate_amount = 0.01
                 self.so_id = self.create_sales_order(order_type="STND", submit=True, rebate_amount=rebate_amount)
                 
                 # 获取销售订单信息
@@ -254,7 +254,7 @@ class TestRebateGet(SlsBase):
             # 如果没有销售订单，先创建一个
             if not self.so_id:
                 self.logger.info("未找到销售订单，先创建一个带返利金额的销售订单")
-                rebate_amount = 1.0
+                rebate_amount = 0.01
                 self.so_id = self.create_sales_order(order_type="STND", submit=True, rebate_amount=rebate_amount)
                 
                 # 获取销售订单信息
@@ -348,7 +348,7 @@ class TestRebateGet(SlsBase):
             # 如果没有销售订单，先创建一个
             if not self.so_id:
                 self.logger.info("未找到销售订单，先创建一个带返利金额的销售订单")
-                rebate_amount = 1.0
+                rebate_amount = 0.01
                 self.so_id = self.create_sales_order(order_type="STND", submit=True, rebate_amount=rebate_amount)
                 
                 # 获取销售订单信息
@@ -422,7 +422,7 @@ class TestRebateGet(SlsBase):
             # 如果没有销售订单，先创建一个
             if not self.so_id:
                 self.logger.info("未找到销售订单，先创建一个带返利金额的销售订单")
-                rebate_amount = 1.0
+                rebate_amount = 0.01
                 self.so_id = self.create_sales_order(order_type="STND", submit=True, rebate_amount=rebate_amount)
                 
                 # 获取销售订单信息
@@ -481,7 +481,7 @@ class TestRebateGet(SlsBase):
                 # 验证第一条流水的金额
                 first_record = records[0]
                 flow_amount = first_record.get("amount", 0)
-                expected_amount = 1.0  # 期望的返利金额
+                expected_amount = 0.01  # 期望的返利金额
                 
                 self.logger.info(f"第一条流水记录金额: {flow_amount}")
                 self.logger.info(f"期望的返利金额: {expected_amount}")
@@ -598,9 +598,40 @@ class TestRebateGet(SlsBase):
             policy_id = rebate_policy['policy_id']
             self.logger.info(f"新返利政策创建并审批通过，ID: {policy_id}")
             
-            # 3. 使用默认的periodId（因为数据库表不存在，直接使用默认值）
-            period_id = 2019006
-            self.logger.info(f"使用默认periodId: {period_id}")
+            # 3. 获取周期ID - 使用API查询方式
+            self.logger.info(f"查询返利政策ID {policy_id} 对应的周期ID")
+            try:
+                # 尝试通过API查询周期信息
+                api_path = self.get_api_path("SLS-返利政策-查询服务")
+                params, url = self.get_api_params(api_path)
+                
+                # 设置查询参数
+                filtered_params = ParamUtil.filter_post_body_fields(
+                    params, ["id"], ["params", "request"]
+                )
+                set_dict = {"id": policy_id}
+                ParamUtil.set_request_params(filtered_params, set_dict)
+                
+                # 发送查询请求
+                query_response = self.http.post(url, json=filtered_params)
+                self.assert_util.assert_response_success(query_response)
+                
+                # 从响应中提取周期ID
+                policy_data = query_response.get("data", {}).get("data", {})
+                periods = policy_data.get("periods", [])
+                
+                if periods:
+                    period_id = periods[0].get("id")
+                    self.logger.info(f"从API查询到返利政策ID {policy_id} 对应的周期ID: {period_id}")
+                else:
+                    # 如果API查询不到，使用默认计算方式
+                    period_id = policy_id + 10000
+                    self.logger.warning(f"API查询不到周期信息，使用默认计算方式: {period_id}")
+                    
+            except Exception as e:
+                # 如果API查询失败，使用默认计算方式
+                period_id = policy_id + 10000
+                self.logger.warning(f"API查询周期失败: {str(e)}，使用默认计算方式: {period_id}")
             
             # 4. 调用重新计算API
             api_path = self.get_api_path("SLS-返利政策-重新计算服务")
@@ -616,18 +647,8 @@ class TestRebateGet(SlsBase):
             # 6. 发送请求
             response = self.http.post(url, json=filtered_params)
             
-            # 检查响应，如果是"周期内存在非待确认状态的返利明细，无法重算"错误，则跳过
-            if not response.get("success", False):
-                error_msg = response.get("err", {}).get("msg", "")
-                if "周期内存在非待确认状态的返利明细，无法重算" in error_msg:
-                    self.logger.warning(f"返利政策重新计算跳过: {error_msg}")
-                    a.text(f"返利政策重新计算跳过: {error_msg}", "跳过重新计算")
-                    return
-                else:
-                    # 其他错误则抛出异常
-                    self.assert_util.assert_response_success(response)
-            else:
-                self.assert_util.assert_response_success(response)
+            # 检查响应，不跳过任何错误，直接断言
+            self.assert_util.assert_response_success(response)
             
             a.json(filtered_params, "返利政策重新计算请求数据")
             a.json(response, "返利政策重新计算响应数据")
