@@ -14,6 +14,8 @@ from utils.report_util import a, case_decorator
 from data_factory.del_po_dn_factory import DelPoDnFactory
 from data_factory.pur_po_factory import PurPoFactory
 from utils.param_util import ParamUtil
+from utils.cache_util import CacheUtil
+from data_factory.base import DataFactory
 
 
 @allure.epic("交货管理")
@@ -21,44 +23,72 @@ from utils.param_util import ParamUtil
 class TestDelPoDnManagement(ScmDelBaseTest):
     """标准采购交货单测试类"""
     
+    # 常量定义
     TEST_REMARK = "执行自动化测试备注SQW"
     PLAN_DEL_QTY = 10  # 计划交货数量（同时作为批次数量）
+    BATCH_QTY = 10     # 批次数量
+    PUR_QTY = 100      # 采购数量
+    PUR_PRICE = 50     # 采购价格
     
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        
+        # 初始化测试数据ID
+        cls._init_test_data_ids()
+        
+        # 初始化缓存数据
+        cls._init_cache_data()
+        
+        # 初始化采购配置
+        cls._init_pur_config()
+        
+        cls.logger.info("标准采购交货单测试类初始化完成")
+    
+    @classmethod
+    def _init_test_data_ids(cls):
+        """初始化测试数据ID"""
         cls.dn_id = None
         cls.dn_code = None
         cls.po_id = None
         cls.po_code = None
         cls.po_item_id = None
-        cls.task_list = None  # 存储生成的清点任务列表
-        cls.warehouse_task_list = None  # 存储查询到的仓库任务列表
-        
-        if cls.md_cache_data:
-            mat_info = cls.md_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP", [{}])[0]
-            org_info = cls.md_cache_data.get("org_info", {})
-            partner_info = cls.md_cache_data.get("partner_info", {})
+        cls.task_list = None
+        cls.warehouse_task_list = None
+    
+    @classmethod
+    def _init_cache_data(cls):
+        """初始化缓存数据"""
+        if not cls.md_cache_data:
+            return
             
-            cls.mat_id = mat_info.get("id")
-            cls.mat_code = mat_info.get("mat_code")
-            cls.inv_org_id = org_info.get("inv_org_info", [{}])[0].get("id")
-            cls.inv_loc_id = org_info.get("inv_loc_info", [{}])[0].get("id")
-            cls.pur_org_id = org_info.get("pur_org_info", [{}])[0].get("id")
-            cls.com_org_id = org_info.get("gr_come_org_info", [{}])[0].get("id")
-            cls.vend_id = partner_info.get("vend_info", [{}])[0].get("id")
-            cls.pur_employee_id = org_info.get("employee_info", [{}])[0].get("id")
+        # 物料信息
+        mat_info = cls.md_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP", [{}])[0]
+        cls.mat_id = mat_info.get("id")
+        cls.mat_code = mat_info.get("mat_code")
         
+        # 组织信息
+        org_info = cls.md_cache_data.get("org_info", {})
+        cls.inv_org_id = org_info.get("inv_org_info", [{}])[0].get("id")
+        cls.inv_loc_id = org_info.get("inv_loc_info", [{}])[0].get("id")
+        cls.pur_org_id = org_info.get("pur_org_info", [{}])[0].get("id")
+        cls.com_org_id = org_info.get("gr_come_org_info", [{}])[0].get("id")
+        cls.pur_employee_id = org_info.get("employee_info", [{}])[0].get("id")
+        
+        # 合作伙伴信息
+        partner_info = cls.md_cache_data.get("partner_info", {})
+        cls.vend_id = partner_info.get("vend_info", [{}])[0].get("id")
+        
+        # 初始化数据
         if cls.init_data:
             cls.pur_curr_id = cls.init_data.get("currency_info", [{}])[0].get("curr_id")
             cls.uom_pur_id = cls.init_data.get("uom_info", {}).get("qty_uom_info", [{}])[0].get("uom_id")
             cls.tax_rate_id = cls.init_data.get("tax_info", [{}])[0].get("id")
-        
-        # 从采购缓存数据获取采购配置
+    
+    @classmethod
+    def _init_pur_config(cls):
+        """初始化采购配置"""
         if not hasattr(cls, 'pur_cache_data') or not cls.pur_cache_data:
-            from utils.cache_util import CacheUtil
-            from data_factory.base import DataFactory
-            
             DataFactory.init_sql_cache(
                 sql_config_path=str(project_root / "config" / "erp" / "pur_init_sql.yaml"),
                 db_config_name="erp_db",
@@ -76,39 +106,40 @@ class TestDelPoDnManagement(ScmDelBaseTest):
                 (item.get("id") for item in po_item_types if item.get("po_item_type") == "STND"),
                 None
             )
-        
-        cls.logger.info("标准采购交货单测试类初始化完成")
     
-    # @classmethod
-    # def teardown_class(cls):
-    #     """清理测试数据"""
-    #     try:
-    #         cls.db.delete(
-    #             table="del_dn_head_tr",
-    #             where="remark like %s",
-    #             params=[f"%{cls.TEST_REMARK}%"]
-    #         )
-    #         cls.db.delete(
-    #             table="del_dn_item_tr",
-    #             where="item_remark like %s",
-    #             params=[f"%{cls.TEST_REMARK}%"]
-    #         )
-    #         cls.logger.info("测试数据清理完成")
-    #     except Exception as e:
-    #         cls.logger.error(f"测试数据清理失败: {str(e)}")
+    @classmethod
+    def teardown_class(cls):
+        """清理测试数据"""
+        try:
+            cls.db.delete(
+                table="del_dn_head_tr",
+                where="remark like %s",
+                params=[f"%{cls.TEST_REMARK}%"]
+            )
+            cls.db.delete(
+                table="del_dn_item_tr",
+                where="remark like %s",
+                params=[f"%{cls.TEST_REMARK}%"]
+            )
+            cls.logger.info("测试数据清理完成")
+        except Exception as e:
+            cls.logger.error(f"测试数据清理失败: {str(e)}")
     
-    def _create_dn_factory(self):
-        """创建交货单工厂实例"""
-        return DelPoDnFactory(
-            http_client=self.http,
-            apis=self.apis,
-            api_params=self.api_params,
-            mock_util=self.mock_util,
-            logger=self.logger,
-            init_data=self.init_data,
-            md_cache_data=self.md_cache_data,
-            del_cache_data=self.del_cache_data
-        )
+    @property
+    def dn_factory(self):
+        """获取交货单工厂实例（单例模式）"""
+        if not hasattr(self, '_dn_factory'):
+            self._dn_factory = DelPoDnFactory(
+                http_client=self.http,
+                apis=self.apis,
+                api_params=self.api_params,
+                mock_util=self.mock_util,
+                logger=self.logger,
+                init_data=self.init_data,
+                md_cache_data=self.md_cache_data,
+                del_cache_data=self.del_cache_data
+            )
+        return self._dn_factory
     
     def _verify_dn_biz_status(self, expected_status):
         """验证交货单业务状态"""
@@ -143,8 +174,8 @@ class TestDelPoDnManagement(ScmDelBaseTest):
                 "inv_org_id": str(self.inv_org_id),
                 "inv_loc_id": str(self.inv_loc_id),
                 "uom_pur_id": str(self.uom_pur_id),
-                "qty": 100,
-                "price": 50,
+                "qty": self.PUR_QTY,
+                "price": self.PUR_PRICE,
                 "po_item_type_id": str(self.po_item_type_id),
                 "tax_rate_id": str(self.tax_rate_id),
                 "delivery_date": current_ts,
@@ -154,8 +185,8 @@ class TestDelPoDnManagement(ScmDelBaseTest):
             # 加载采购模块的API配置
             from utils.yaml_util import YamlUtil
             yaml_util = YamlUtil()
-            pur_api_path = Path(project_root) / "testdata" / "scm_pur" / "pur_api_path.yaml"
-            pur_api_params_path = Path(project_root) / "testdata" / "scm_pur" / "pur_api_params.yaml"
+            pur_api_path = project_root / "testdata" / "scm_pur" / "pur_api_path.yaml"
+            pur_api_params_path = project_root / "testdata" / "scm_pur" / "pur_api_params.yaml"
             pur_apis = yaml_util.read_yaml(pur_api_path).get("apis", {})
             pur_api_params = yaml_util.read_yaml(pur_api_params_path).get("api_params", {})
             
@@ -176,7 +207,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
                 pur_remark=self.TEST_REMARK
             )
             
-            # 从数据库查询最新创建的采购订单行（因为接口可能不返回完整信息）
+            # 从数据库查询最新创建的采购订单行
             query_sql = """
                 SELECT po_item_code, po_code, id 
                 FROM pur_po_item_tr 
@@ -214,20 +245,18 @@ class TestDelPoDnManagement(ScmDelBaseTest):
             if not self.__class__.po_item_id:
                 self._create_po_for_dn()
             
-            dn_factory = self._create_dn_factory()
-            
             # 准备批次信息
             batch_info = [
                 {
                     "batchType": "INBOUND",
                     "batchCode": f"BAT{self.mock_util.get_timestamp()}",
                     "charaClassId": None,
-                    "quantity": self.PLAN_DEL_QTY,
+                    "quantity": self.BATCH_QTY,
                     "charaValue": []
                 }
             ]
             
-            result = dn_factory.create_po_delivery_note(
+            result = self.dn_factory.create_po_delivery_note(
                 po_item_id_list=[self.__class__.po_item_id],
                 plan_del_qty=self.PLAN_DEL_QTY,
                 remark=self.TEST_REMARK,
@@ -271,8 +300,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
             if not self.__class__.dn_id:
                 self.test_create_standard_po_dn()
             
-            dn_factory = self._create_dn_factory()
-            result = dn_factory.submit_delivery_note(dn_id=self.__class__.dn_id)
+            result = self.dn_factory.submit_delivery_note(dn_id=self.__class__.dn_id)
             
             assert result.get("success"), "交货单提交失败"
             
@@ -326,7 +354,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
                 params, ["btClass", "pageable"], ["params", "request"]
             )
             
-            set_dict = {
+            ParamUtil.set_request_params(filtered_params, {
                 "btClass": "PUR",
                 "pageable": {
                     "pageNo": 1,
@@ -335,8 +363,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
                     "sortOrders": None,
                     "conditionGroup": None
                 }
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            })
             
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
@@ -372,8 +399,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
                 params, ["id"], ["params", "request"]
             )
             
-            set_dict = {"id": str(self.__class__.dn_id)}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            ParamUtil.set_request_params(filtered_params, {"id": str(self.__class__.dn_id)})
             
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
@@ -413,8 +439,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
                 params, ["id", "pageable"], ["params", "request"]
             )
             
-            set_dict = {"id": self.__class__.dn_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            ParamUtil.set_request_params(filtered_params, {"id": self.__class__.dn_id})
             
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
@@ -450,8 +475,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
                 params, ["id"], ["params", "request"]
             )
             
-            set_dict = {"id": self.__class__.dn_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            ParamUtil.set_request_params(filtered_params, {"id": self.__class__.dn_id})
             
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
@@ -497,8 +521,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
                 params, ["delWmWarehouseTaskList"], ["params", "request"]
             )
             
-            set_dict = {"delWmWarehouseTaskList": self.__class__.task_list}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            ParamUtil.set_request_params(filtered_params, {"delWmWarehouseTaskList": self.__class__.task_list})
             
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
@@ -538,8 +561,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
                 params, ["id"], ["params", "request"]
             )
             
-            set_dict = {"id": self.__class__.dn_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            ParamUtil.set_request_params(filtered_params, {"id": self.__class__.dn_id})
             
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
@@ -585,8 +607,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
                 params, ["delWmWarehouseTaskList"], ["params", "request"]
             )
             
-            set_dict = {"delWmWarehouseTaskList": self.__class__.warehouse_task_list}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            ParamUtil.set_request_params(filtered_params, {"delWmWarehouseTaskList": self.__class__.warehouse_task_list})
             
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_success(response)
