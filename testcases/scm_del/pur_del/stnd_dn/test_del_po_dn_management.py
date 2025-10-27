@@ -33,6 +33,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
         cls.po_code = None
         cls.po_item_id = None
         cls.task_list = None  # 存储生成的清点任务列表
+        cls.warehouse_task_list = None  # 存储查询到的仓库任务列表
         
         if cls.md_cache_data:
             mat_info = cls.md_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP", [{}])[0]
@@ -80,6 +81,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
     
     # @classmethod
     # def teardown_class(cls):
+    #     """清理测试数据"""
     #     try:
     #         cls.db.delete(
     #             table="del_dn_head_tr",
@@ -94,6 +96,41 @@ class TestDelPoDnManagement(ScmDelBaseTest):
     #         cls.logger.info("测试数据清理完成")
     #     except Exception as e:
     #         cls.logger.error(f"测试数据清理失败: {str(e)}")
+    
+    def _create_dn_factory(self):
+        """创建交货单工厂实例"""
+        return DelPoDnFactory(
+            http_client=self.http,
+            apis=self.apis,
+            api_params=self.api_params,
+            mock_util=self.mock_util,
+            logger=self.logger,
+            init_data=self.init_data,
+            md_cache_data=self.md_cache_data,
+            del_cache_data=self.del_cache_data
+        )
+    
+    def _verify_dn_biz_status(self, expected_status):
+        """验证交货单业务状态"""
+        query_sql = """
+            SELECT id, biz_status 
+            FROM del_dn_head_tr 
+            WHERE id = %s 
+            ORDER BY created_at DESC 
+            LIMIT 1
+        """
+        db_result = self.db.query(query_sql, [self.__class__.dn_id])
+        
+        if not db_result:
+            raise ValueError(f"未在数据库中找到交货单: id={self.__class__.dn_id}")
+        
+        actual_status = db_result[0].get("biz_status")
+        self.logger.info(f"交货单业务状态: {actual_status}")
+        
+        assert actual_status == expected_status, \
+            f"交货单业务状态不符合预期: 期望={expected_status}, 实际={actual_status}"
+        
+        return actual_status
     
     def _create_po_for_dn(self):
         """创建采购订单用于后续创建交货单"""
@@ -174,23 +211,12 @@ class TestDelPoDnManagement(ScmDelBaseTest):
     def test_create_standard_po_dn(self):
         """创建标准采购交货单"""
         try:
-            # 1. 先创建采购订单
             if not self.__class__.po_item_id:
                 self._create_po_for_dn()
             
-            # 2. 创建交货单工厂实例
-            dn_factory = DelPoDnFactory(
-                http_client=self.http,
-                apis=self.apis,
-                api_params=self.api_params,
-                mock_util=self.mock_util,
-                logger=self.logger,
-                init_data=self.init_data,
-                md_cache_data=self.md_cache_data,
-                del_cache_data=self.del_cache_data
-            )
+            dn_factory = self._create_dn_factory()
             
-            # 3. 准备批次信息（批次数量与计划交货数量保持一致）
+            # 准备批次信息
             batch_info = [
                 {
                     "batchType": "INBOUND",
@@ -201,7 +227,6 @@ class TestDelPoDnManagement(ScmDelBaseTest):
                 }
             ]
             
-            # 4. 调用数据工厂创建交货单
             result = dn_factory.create_po_delivery_note(
                 po_item_id_list=[self.__class__.po_item_id],
                 plan_del_qty=self.PLAN_DEL_QTY,
@@ -209,17 +234,14 @@ class TestDelPoDnManagement(ScmDelBaseTest):
                 batch_info=batch_info
             )
             
-            # 5. 保存交货单信息
             self.__class__.dn_id = result.get("dn_id")
             self.__class__.dn_code = result.get("dn_code")
             del_status = result.get("del_status")
             
-            # 6. 断言验证
             assert self.__class__.dn_id, "交货单ID不能为空"
             assert self.__class__.dn_code, "交货单编码不能为空"
             assert del_status == "DRAFT", f"交货单状态不符合预期: 期望=DRAFT, 实际={del_status}"
             
-            # 7. 记录到报告
             a.text(
                 f"交货单ID: {self.__class__.dn_id}\n"
                 f"交货单编码: {self.__class__.dn_code}\n"
@@ -246,29 +268,14 @@ class TestDelPoDnManagement(ScmDelBaseTest):
     def test_submit_po_dn(self):
         """提交采购交货单"""
         try:
-            # 1. 如果没有创建交货单，先创建
             if not self.__class__.dn_id:
                 self.test_create_standard_po_dn()
             
-            # 2. 创建交货单工厂实例
-            dn_factory = DelPoDnFactory(
-                http_client=self.http,
-                apis=self.apis,
-                api_params=self.api_params,
-                mock_util=self.mock_util,
-                logger=self.logger,
-                init_data=self.init_data,
-                md_cache_data=self.md_cache_data,
-                del_cache_data=self.del_cache_data
-            )
-            
-            # 3. 调用提交方法（传入交货单ID）
+            dn_factory = self._create_dn_factory()
             result = dn_factory.submit_delivery_note(dn_id=self.__class__.dn_id)
             
-            # 4. 验证提交结果
             assert result.get("success"), "交货单提交失败"
             
-            # 5. 从数据库查询实际状态
             query_sql = """
                 SELECT del_status, dn_code 
                 FROM del_dn_head_tr 
@@ -279,15 +286,13 @@ class TestDelPoDnManagement(ScmDelBaseTest):
             if db_result:
                 actual_status = db_result[0].get("del_status")
                 actual_dn_code = db_result[0].get("dn_code")
-                self.logger.info(f"数据库查询结果 - 交货单状态: {actual_status}, 编码: {actual_dn_code}")
                 
-                # 验证状态已变更（不再是草稿态）
-                assert actual_status == "INEFFECT", f"交货单状态仍为草稿态: {actual_status}"
-                assert actual_dn_code == self.__class__.dn_code, f"交货单编码不匹配: 期望={self.__class__.dn_code}, 实际={actual_dn_code}"
+                assert actual_status == "INEFFECT", f"交货单状态应为生效态: {actual_status}"
+                assert actual_dn_code == self.__class__.dn_code, \
+                    f"交货单编码不匹配: 期望={self.__class__.dn_code}, 实际={actual_dn_code}"
             else:
                 raise ValueError(f"未在数据库中找到交货单: id={self.__class__.dn_id}")
             
-            # 6. 记录到报告
             a.text(
                 f"交货单ID: {result.get('dn_id')}\n"
                 f"交货单编码: {result.get('dn_code')}\n"
@@ -311,20 +316,16 @@ class TestDelPoDnManagement(ScmDelBaseTest):
     def test_query_po_dn_list(self):
         """查询采购交货单列表"""
         try:
-            # 1. 如果没有提交交货单，先提交
             if not self.__class__.dn_id:
                 self.test_submit_po_dn()
             
-            # 2. 获取API配置
             api_path = self.get_api_path("DEL-交货单公共-数据分页查询服务")
             params, url = self.get_api_params(api_path)
             
-            # 3. 过滤参数
             filtered_params = ParamUtil.filter_post_body_fields(
                 params, ["btClass", "pageable"], ["params", "request"]
             )
             
-            # 4. 设置请求参数
             set_dict = {
                 "btClass": "PUR",
                 "pageable": {
@@ -337,14 +338,12 @@ class TestDelPoDnManagement(ScmDelBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            # 5. 执行请求
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
             
-            # 6. 验证数据
             records = response.get("data", {}).get("data", {})
             assert records.get("total") > 0, "未查询到交货单数据"
-            # 9. 记录报告
+            
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
             
@@ -363,38 +362,29 @@ class TestDelPoDnManagement(ScmDelBaseTest):
     def test_query_po_dn_detail(self):
         """查询采购交货单详情"""
         try:
-            # 1. 如果没有提交交货单，先提交
             if not self.__class__.dn_id:
                 self.test_submit_po_dn()
             
-            # 2. 获取API配置
             api_path = self.get_api_path("DEL-交货单详情服务")
             params, url = self.get_api_params(api_path)
             
-            # 3. 过滤参数
             filtered_params = ParamUtil.filter_post_body_fields(
                 params, ["id"], ["params", "request"]
             )
             
-            # 4. 设置请求参数
             set_dict = {"id": str(self.__class__.dn_id)}
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            # 5. 执行请求
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
             
-            # 6. 验证数据
             result_data = response.get("data", {}).get("data", {})
             assert result_data, "详情数据为空"
-            
-            # 7. 断言验证
             assert result_data.get("id") == self.__class__.dn_id, \
                 f"交货单ID不匹配: 期望={self.__class__.dn_id}, 实际={result_data.get('id')}"
             assert result_data.get("delStatus") == "INEFFECT", \
                 f"交货状态不符合预期: 期望=INEFFECT, 实际={result_data.get('delStatus')}"
             
-            # 8. 记录报告
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
             
@@ -413,34 +403,25 @@ class TestDelPoDnManagement(ScmDelBaseTest):
     def test_query_po_dn_items(self):
         """查询采购交货单行列表"""
         try:
-            # 1. 如果没有提交交货单，先提交
             if not self.__class__.dn_id:
                 self.test_submit_po_dn()
             
-            # 2. 获取API配置
             api_path = self.get_api_path("DEL-交货单公共-根据订单ID查询交货单行服务")
             params, url = self.get_api_params(api_path)
             
-            # 3. 过滤参数
             filtered_params = ParamUtil.filter_post_body_fields(
                 params, ["id", "pageable"], ["params", "request"]
             )
             
-            # 4. 设置请求参数
-            set_dict = {
-                "id": self.__class__.dn_id
-            }
+            set_dict = {"id": self.__class__.dn_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            # 5. 执行请求
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
             
-            # 6. 验证数据
             result_data = response.get("data", {}).get("data", [])
             assert result_data is not None, "未查询到交货单行数据"
 
-            # 7. 记录报告
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
             
@@ -450,51 +431,40 @@ class TestDelPoDnManagement(ScmDelBaseTest):
 
     @case_decorator(
         story="标准采购交货单",
-        title="测试生成清点任务",
+        title="生成清点任务",
         description="验证生成清点任务功能",
         severity="critical",
         file_level_order=6,
-        tags=["清点任务", "生成", "DEL_APP_INV_EXECUTED_TASK_TILE_EVENT_SERVICE"]
+        tags=["清点任务", "生成"]
     )
     def test_generate_inv_executed_task(self):
-        """测试生成清点任务"""
+        """生成清点任务"""
         try:
-            # 1. 如果没有提交交货单，先提交
             if not self.__class__.dn_id:
                 self.test_submit_po_dn()
             
-            # 2. 获取API配置
             api_path = self.get_api_path("DEL-APP端仓库执行任务平铺服务")
             params, url = self.get_api_params(api_path)
             
-            # 3. 过滤参数 - 只保留业务字段
             filtered_params = ParamUtil.filter_post_body_fields(
                 params, ["id"], ["params", "request"]
             )
             
-            # 4. 设置请求参数 - 使用交货单ID
-            set_dict = {
-                "id": self.__class__.dn_id
-            }
+            set_dict = {"id": self.__class__.dn_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            # 5. 执行请求
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
             
-            # 6. 提取并保存清点任务列表数据
             response_data = response.get("data", {}).get("data", {})
-            
-            # 验证响应数据不为空
             assert response_data, "响应数据为空，未生成清点任务"
             
             task_list = response_data.get("delWmWarehouseTaskList", [])
             assert task_list, "清点任务列表为空"
             
             self.__class__.task_list = task_list
-            self.logger.info(f"✅ 成功生成 {len(task_list)} 个清点任务")
+            self.logger.info(f"成功生成 {len(task_list)} 个清点任务")
             
-            # 7. 记录报告
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
             a.text(f"生成任务数量: {len(task_list)}", "任务统计")
@@ -505,69 +475,130 @@ class TestDelPoDnManagement(ScmDelBaseTest):
 
     @case_decorator(
         story="标准采购交货单",
-        title="测试保存清点任务",
+        title="保存清点任务",
         description="验证保存清点任务功能",
         severity="critical",
         file_level_order=7,
-        tags=["清点任务", "保存", "DEL_APP_INV_EXECUTED_TASK_SAVE_EVENT_SERVICE"]
+        tags=["清点任务", "保存"]
     )
     def test_save_inv_executed_task(self):
-        """测试保存清点任务"""
+        """保存清点任务"""
         try:
-            # 1. 如果没有清点任务数据，先执行生成任务
             if not self.__class__.task_list:
                 self.test_generate_inv_executed_task()
             
-            # 2. 验证任务数据
             if not self.__class__.task_list:
                 raise ValueError("清点任务列表为空，无法保存")
             
-            # 3. 获取API配置
             api_path = self.get_api_path("仓库执行任务保存事件服务")
             params, url = self.get_api_params(api_path)
             
-            # 4. 过滤参数 - 只保留业务字段
             filtered_params = ParamUtil.filter_post_body_fields(
                 params, ["delWmWarehouseTaskList"], ["params", "request"]
             )
             
-            # 5. 设置请求参数 - 直接使用第一个API返回的任务列表
-            set_dict = {
-                "delWmWarehouseTaskList": self.__class__.task_list
-            }
+            set_dict = {"delWmWarehouseTaskList": self.__class__.task_list}
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            # 6. 执行请求
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
             
-            # 7. 验证交货单业务状态
-            query_sql = """
-                SELECT id, biz_status 
-                FROM del_dn_head_tr 
-                WHERE id = %s 
-                ORDER BY created_at DESC 
-                LIMIT 1
-            """
-            db_result = self.db.query(query_sql, [self.__class__.dn_id])
+            actual_biz_status = self._verify_dn_biz_status("TASK_EXECUTING")
             
-            if db_result:
-                actual_biz_status = db_result[0].get("biz_status")
-                self.logger.info(f"数据库查询结果 - 业务状态: {actual_biz_status}")
-                
-                # 断言业务状态为任务执行中
-                assert actual_biz_status == "TASK_EXECUTING", \
-                    f"交货单业务状态不符合预期: 期望=TASK_EXECUTING, 实际={actual_biz_status}"
-            else:
-                raise ValueError(f"未在数据库中找到交货单: id={self.__class__.dn_id}")
-            
-            # 8. 记录报告
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
             a.text(
                 f"保存任务数量: {len(self.__class__.task_list)}\n"
                 f"交货单业务状态: {actual_biz_status}",
                 "保存结果"
+            )
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="标准采购交货单",
+        title="查询交货单任务",
+        description="验证根据交货单头ID查询任务功能",
+        severity="critical",
+        file_level_order=8,
+        tags=["交货单任务", "查询"]
+    )
+    def test_query_dn_task_by_head_id(self):
+        """查询交货单任务"""
+        try:
+            if not self.__class__.dn_id:
+                self.test_save_inv_executed_task()
+            
+            api_path = self.get_api_path("DEL-交货单公共-根据交货单头ID查询交货单任务行")
+            params, url = self.get_api_params(api_path)
+            
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], ["params", "request"]
+            )
+            
+            set_dict = {"id": self.__class__.dn_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            response_data = response.get("data", {}).get("data", {})
+            assert response_data, "响应数据为空，未查询到任务数据"
+            
+            task_list = response_data.get("delWmWarehouseTaskList", [])
+            assert task_list, "仓库任务列表为空"
+            
+            self.__class__.warehouse_task_list = task_list
+            self.logger.info(f"成功查询到 {len(task_list)} 个仓库任务")
+            
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            a.text(f"查询任务数量: {len(task_list)}", "任务统计")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="标准采购交货单",
+        title="收货完成并过账",
+        description="验证收货完成并过账功能",
+        severity="critical",
+        file_level_order=9,
+        tags=["收货完成", "过账"]
+    )
+    def test_dn_task_finish_post(self):
+        """收货完成并过账"""
+        try:
+            if not self.__class__.warehouse_task_list:
+                self.test_query_dn_task_by_head_id()
+            
+            if not self.__class__.warehouse_task_list:
+                raise ValueError("仓库任务列表为空，无法完成收货")
+            
+            api_path = self.get_api_path("DEL-交货单公共-仓库执行完成并过账")
+            params, url = self.get_api_params(api_path)
+            
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["delWmWarehouseTaskList"], ["params", "request"]
+            )
+            
+            set_dict = {"delWmWarehouseTaskList": self.__class__.warehouse_task_list}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+            
+            actual_biz_status = self._verify_dn_biz_status("POSTED")
+            
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            a.text(
+                f"完成任务数量: {len(self.__class__.warehouse_task_list)}\n"
+                f"交货单业务状态: {actual_biz_status}",
+                "完成结果"
             )
             
         except Exception as e:
