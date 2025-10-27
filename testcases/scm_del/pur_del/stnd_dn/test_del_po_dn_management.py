@@ -50,6 +50,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
         """初始化测试数据ID"""
         cls.dn_id = None
         cls.dn_code = None
+        cls.dn_item_id = None
         cls.po_id = None
         cls.po_code = None
         cls.po_item_id = None
@@ -271,9 +272,24 @@ class TestDelPoDnManagement(ScmDelBaseTest):
             assert self.__class__.dn_code, "交货单编码不能为空"
             assert del_status == "DRAFT", f"交货单状态不符合预期: 期望=DRAFT, 实际={del_status}"
             
+            # 从数据库查询交货单行ID
+            query_sql = """
+                SELECT id FROM del_dn_item_tr 
+                WHERE dn_id = %s
+                ORDER BY created_at DESC 
+                LIMIT 1
+            """
+            dn_item_result = self.db.query(query_sql, [self.__class__.dn_id])
+            if dn_item_result:
+                self.__class__.dn_item_id = dn_item_result[0].get("id")
+                self.logger.info(f"获取交货单行ID: {self.__class__.dn_item_id}")
+            else:
+                self.logger.warning(f"未查询到交货单行数据: dn_id={self.__class__.dn_id}")
+            
             a.text(
                 f"交货单ID: {self.__class__.dn_id}\n"
                 f"交货单编码: {self.__class__.dn_code}\n"
+                f"交货单行ID: {self.__class__.dn_item_id}\n"
                 f"交货状态: {del_status}\n"
                 f"计划交货数量: {self.PLAN_DEL_QTY}\n"
                 f"采购订单编码: {self.__class__.po_code}\n"
@@ -542,10 +558,52 @@ class TestDelPoDnManagement(ScmDelBaseTest):
 
     @case_decorator(
         story="标准采购交货单",
+        title="交货单列表下拉查看清点",
+        description="验证交货单列表下拉查看清点功能",
+        severity="critical",
+        file_level_order=8,
+        tags=["交货单", "清点", "查看"]
+    )
+    def test_query_dn_inv_executed(self):
+        """交货单列表下拉查看清点"""
+        try:
+            if not self.__class__.dn_item_id:
+                self.test_save_inv_executed_task()
+            
+            api_path = self.get_api_path("DEL-查看拣配服务")
+            params, url = self.get_api_params(api_path)
+            
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], ["params", "request"]
+            )
+            
+            # 注意：这里传的是交货单行ID，不是交货单头ID
+            ParamUtil.set_request_params(filtered_params, {"id": self.__class__.dn_item_id})
+            
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            response_data = response.get("data", {}).get("data", {})
+            assert response_data, "响应数据为空，未查询到清点数据"
+            
+            a.text(
+                f"交货单行ID: {self.__class__.dn_item_id}\n"
+                f"交货单头ID: {self.__class__.dn_id}",
+                "查询参数"
+            )
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="标准采购交货单",
         title="查询交货单任务",
         description="验证根据交货单头ID查询任务功能",
         severity="critical",
-        file_level_order=8,
+        file_level_order=9,
         tags=["交货单任务", "查询"]
     )
     def test_query_dn_task_by_head_id(self):
@@ -588,7 +646,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
         title="收货完成并过账",
         description="验证收货完成并过账功能",
         severity="critical",
-        file_level_order=9,
+        file_level_order=10,
         tags=["收货完成", "过账"]
     )
     def test_dn_task_finish_post(self):
