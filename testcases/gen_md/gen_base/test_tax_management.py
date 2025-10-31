@@ -48,7 +48,7 @@ class TestTaxManagement(GenMdBaseTest):
         title="测试新增税配置",
         description="验证GEN-税配置-保存服务功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["税配置", "新增", "GEN_TAX_TYPE_CF_SAVE_ACTION_SERVICE"]
     )
@@ -90,7 +90,7 @@ class TestTaxManagement(GenMdBaseTest):
         title="测试查询税配置分页列表",
         description="验证GEN-税配置-查询分页服务功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         tags=["税配置", "查询", "GEN_TAX_TYPE_CF_QUERY_PAGE_ACTION_SERVICE"]
     )
     def test_query_tax_page(self):
@@ -130,7 +130,7 @@ class TestTaxManagement(GenMdBaseTest):
         title="测试查询税配置详情",
         description="验证GEN-税配置-查询详情服务功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         tags=["税配置", "查询", "GEN_TAX_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE"]
     )
     def test_query_tax_detail(self):
@@ -164,7 +164,7 @@ class TestTaxManagement(GenMdBaseTest):
         title="测试税配置分页数据",
         description="验证税配置-分页数据服务功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         tags=["税配置", "分页数据", "GEN_TAX_TYPE_CF_PAGING_DATA_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -199,7 +199,7 @@ class TestTaxManagement(GenMdBaseTest):
         title="测试根据ID查找税配置数据",
         description="验证税配置-根据ID查找数据服务功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         tags=["税配置", "ID查找", "GEN_TAX_TYPE_CF_FIND_DATA_BY_ID_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -238,7 +238,7 @@ class TestTaxManagement(GenMdBaseTest):
         title="测试删除税配置",
         description="验证GEN-税配置-删除服务功能",
         severity="critical",
-        order=6,
+        file_level_order=6,
         tags=["税配置", "删除", "GEN_TAX_TYPE_CF_DELETE_ACTION_SERVICE"]
     )
     def test_delete_tax(self):
@@ -272,7 +272,7 @@ class TestTaxManagement(GenMdBaseTest):
         title="测试税配置标准导入",
         description="验证税配置标准导入服务功能",
         severity="normal",
-        order=7,
+        file_level_order=7,
         tags=["税配置", "导入", "GEN_TAX_TYPE_CF_GEI_IMPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -314,7 +314,7 @@ class TestTaxManagement(GenMdBaseTest):
         title="测试税配置标准导出",
         description="验证税配置标准导出服务功能",
         severity="normal",
-        order=8,
+        file_level_order=8,
         tags=["税配置", "导出", "GEN_TAX_TYPE_CF_GEI_EXPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -353,7 +353,7 @@ class TestTaxManagement(GenMdBaseTest):
         title="测试税配置OSS导入任务",
         description="验证税配置-导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=9,
+        file_level_order=9,
         tags=["税配置", "任务管理", "GEN_TAX_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -388,7 +388,7 @@ class TestTaxManagement(GenMdBaseTest):
         title="测试税配置导出任务",
         description="验证税配置-导入导出任务管理接口-提交导出任务功能",
         severity="normal",
-        order=10,
+        file_level_order=10,
         tags=["税配置", "任务管理", "GEN_TAX_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")

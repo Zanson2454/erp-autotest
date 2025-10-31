@@ -37,7 +37,7 @@ class TestAgents(GenMdBaseTest):
         title="测试销售预测服务",
         description="验证销售预测服务功能 - 基于历史数据进行销售预测分析",
         severity="normal",
-        order=1,
+        file_level_order=1,
         tags=["代理管理", "销售预测", "预测分析", "sales_forecasting_service"]
     )
     def test_sales_forecasting_service(self):
@@ -120,7 +120,7 @@ class TestAgents(GenMdBaseTest):
         title="测试通用通知服务",
         description="验证通用通知服务功能 - 支持多渠道消息推送和通知管理",
         severity="normal",
-        order=2,
+        file_level_order=2,
         tags=["代理管理", "通用通知", "消息推送", "general_notification_service"]
     )
     def test_general_notification_service(self):

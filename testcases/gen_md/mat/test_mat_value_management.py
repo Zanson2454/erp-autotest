@@ -59,7 +59,7 @@ class TestMat_ValueManagement(GenMdBaseTest):
         title="测试新增物料价值管理",
         description="验证新增物料价值管理功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["物料价值管理", "新增"]
     )
@@ -107,7 +107,7 @@ class TestMat_ValueManagement(GenMdBaseTest):
         title="测试查询物料价值管理列表",
         description="验证物料价值管理列表查询功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         smoke=True,
         tags=["物料价值管理", "查询"]
     )
@@ -165,7 +165,7 @@ class TestMat_ValueManagement(GenMdBaseTest):
         title="测试查询物料价值管理详情",
         description="验证物料价值管理详情查询功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         smoke=True,
         tags=["物料价值管理", "查询"]
     )
@@ -206,7 +206,7 @@ class TestMat_ValueManagement(GenMdBaseTest):
         title="测试物料价值数量配置标准导出",
         description="验证物料数量价值更新配置标准导出服务功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         tags=["物料价值管理", "标准导出", "GEN_INV_ORG_MAT_TYPE_LINK_CF_GEI_EXPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="标准导出需要复杂配置，暂时跳过")
@@ -247,7 +247,7 @@ class TestMat_ValueManagement(GenMdBaseTest):
         title="测试物料价值数量配置标准导入",
         description="验证物料数量价值更新配置标准导入服务功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         tags=["物料价值管理", "标准导入", "GEN_INV_ORG_MAT_TYPE_LINK_CF_GEI_IMPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
@@ -289,7 +289,7 @@ class TestMat_ValueManagement(GenMdBaseTest):
         title="测试物料价值数量配置导出任务",
         description="验证物料数量价值更新配置-导入导出任务管理接口-提交导出任务功能",
         severity="normal",
-        order=6,
+        file_level_order=6,
         tags=["物料价值管理", "导出任务", "GEN_INV_ORG_MAT_TYPE_LINK_CF_API_GEI_TASK_EXPORT_DIRECT_POST"]
     )
     def test_export_task(self):
@@ -404,7 +404,7 @@ class TestMat_ValueManagement(GenMdBaseTest):
         title="测试物料价值数量配置OSS导入任务",
         description="验证物料数量价值更新配置-导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=7,
+        file_level_order=7,
         tags=["物料价值管理", "OSS导入任务", "GEN_INV_ORG_MAT_TYPE_LINK_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
     )
     @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
@@ -455,7 +455,7 @@ class TestMat_ValueManagement(GenMdBaseTest):
         title="测试删除物料价值管理",
         description="验证删除物料价值管理功能",
         severity="normal",
-        order=8,
+        file_level_order=8,
         smoke=True,
         tags=["物料价值管理", "删除"]
     )

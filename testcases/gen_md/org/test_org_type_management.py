@@ -46,7 +46,7 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         title="测试新增组织类型管理",
         description="验证新增组织类型管理功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["组织类型管理", "新增"]
     )
@@ -104,7 +104,7 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         title="测试查询组织类型管理列表",
         description="验证组织类型管理列表查询功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         smoke=True,
         tags=["组织类型管理", "查询"]
     )
@@ -156,7 +156,7 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         title="测试查询组织类型管理详情",
         description="验证组织类型管理详情查询功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         smoke=True,
         tags=["组织类型管理", "查询"]
     )
@@ -197,7 +197,7 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         title="测试启用组织类型管理",
         description="验证启用组织类型管理功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         smoke=True,
         tags=["组织类型管理", "启用"]
     )
@@ -246,7 +246,7 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         title="测试禁用组织类型管理",
         description="验证禁用组织类型管理功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         smoke=True,
         tags=["组织类型管理", "禁用"]
     )
@@ -296,7 +296,7 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         title="测试查询组织架构类型列表",
         description="验证组织架构类型列表查询功能",
         severity="normal",
-        order=6,
+        file_level_order=6,
         smoke=True,
         tags=["组织类型管理", "架构查询"]
     )
@@ -332,7 +332,7 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         title="测试查询组织业务类型分页",
         description="验证组织业务类型分页查询功能",
         severity="normal",
-        order=7,
+        file_level_order=7,
         smoke=True,
         tags=["组织类型管理", "业务类型查询"]
     )
@@ -379,7 +379,7 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         title="测试删除组织类型管理",
         description="验证删除组织类型管理功能",
         severity="normal",
-        order=8,
+        file_level_order=8,
         smoke=True,
         tags=["组织类型管理", "删除"]
     )

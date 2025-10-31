@@ -45,7 +45,7 @@ class TestTextManagement(GenMdBaseTest):
         title="测试新增文本类型",
         description="验证新增文本类型功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["文本类型", "新增"]
     )
@@ -91,7 +91,7 @@ class TestTextManagement(GenMdBaseTest):
         title="测试查询文本类型分页",
         description="验证文本类型分页查询功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         tags=["文本类型", "查询"]
     )
     def test_query_text_type_page(self):
@@ -146,7 +146,7 @@ class TestTextManagement(GenMdBaseTest):
         title="测试查询文本类型详情",
         description="验证文本类型详情查询功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         tags=["文本类型", "详情"]
     )
     def test_query_text_type_detail(self):
@@ -181,7 +181,7 @@ class TestTextManagement(GenMdBaseTest):
         title="测试提交文本类型导出任务",
         description="验证提交文本类型导出任务功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         tags=["文本类型", "导出任务"]
     )
     def test_submit_text_type_export_task(self):
@@ -292,7 +292,7 @@ class TestTextManagement(GenMdBaseTest):
         title="测试删除文本类型",
         description="验证删除文本类型功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         tags=["文本类型", "删除"]
     )
     def test_delete_text_type(self):
@@ -328,7 +328,7 @@ class TestTextManagement(GenMdBaseTest):
         title="测试新增文本组",
         description="验证新增文本组功能",
         severity="normal",
-        order=6,
+        file_level_order=6,
         tags=["文本组", "新增"]
     )
     def test_save_text_group(self):
@@ -377,7 +377,7 @@ class TestTextManagement(GenMdBaseTest):
         title="测试查询文本组分页",
         description="验证文本组分页查询功能",
         severity="normal",
-        order=7,
+        file_level_order=7,
         tags=["文本组", "查询"]
     )
     def test_query_text_group_page(self):
@@ -429,7 +429,7 @@ class TestTextManagement(GenMdBaseTest):
         title="测试查询文本组详情",
         description="验证文本组详情查询功能",
         severity="normal",
-        order=8,
+        file_level_order=8,
         tags=["文本组", "详情"]
     )
     def test_query_text_group_detail(self):
@@ -465,7 +465,7 @@ class TestTextManagement(GenMdBaseTest):
         title="测试提交文本组导出任务",
         description="验证提交文本组导出任务功能",
         severity="normal",
-        order=9,
+        file_level_order=9,
         tags=["文本组", "导出任务"]
     )
     def test_submit_text_group_export_task(self):
@@ -553,7 +553,7 @@ class TestTextManagement(GenMdBaseTest):
         title="测试删除文本组",
         description="验证删除文本组功能",
         severity="normal",
-        order=10,
+        file_level_order=10,
         tags=["文本组", "删除"]
     )
     def test_delete_text_group(self):
@@ -590,7 +590,7 @@ class TestTextManagement(GenMdBaseTest):
         title="测试文本类型标准导出",
         description="验证文本类型标准导出功能",
         severity="normal",
-        order=11,
+        file_level_order=11,
         tags=["文本类型", "导出"]
     )
     def test_export_text_type(self):
@@ -628,7 +628,7 @@ class TestTextManagement(GenMdBaseTest):
         title="测试文本类型标准导入",
         description="验证文本类型标准导入功能",
         severity="normal",
-        order=12,
+        file_level_order=12,
         tags=["文本类型", "导入"]
     )
     def test_import_text_type(self):
@@ -666,7 +666,7 @@ class TestTextManagement(GenMdBaseTest):
         title="测试通过OSS提交文本类型导入任务",
         description="验证通过OSS提交文本类型导入任务功能",
         severity="normal",
-        order=13,
+        file_level_order=13,
         tags=["文本类型", "OSS导入"]
     )
     def test_submit_text_type_import_task_by_oss(self):
@@ -709,7 +709,7 @@ class TestTextManagement(GenMdBaseTest):
         title="测试文本组标准导出",
         description="验证文本组标准导出功能",
         severity="normal",
-        order=14,
+        file_level_order=14,
         tags=["文本组", "导出"]
     )
     def test_export_text_group(self):
@@ -747,7 +747,7 @@ class TestTextManagement(GenMdBaseTest):
         title="测试文本组标准导入",
         description="验证文本组标准导入功能",
         severity="normal",
-        order=15,
+        file_level_order=15,
         tags=["文本组", "导入"]
     )
     def test_import_text_group(self):
@@ -785,7 +785,7 @@ class TestTextManagement(GenMdBaseTest):
         title="测试通过OSS提交文本组导入任务",
         description="验证通过OSS提交文本组导入任务功能",
         severity="normal",
-        order=16,
+        file_level_order=16,
         tags=["文本组", "OSS导入"]
     )
     def test_submit_text_group_import_task_by_oss(self):

@@ -42,7 +42,7 @@ class TestExpressManagement(GenMdBaseTest):
         title="测试新增快递公司",
         description="验证GEN-快递公司-保存服务功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["快递公司", "新增", "GEN_EXPRESS_COM_MD_SAVE_ACTION_SERVICE"]
     )
@@ -110,7 +110,7 @@ class TestExpressManagement(GenMdBaseTest):
         title="测试查询快递公司详情",
         description="验证GEN-快递公司-查询详情服务功能",
         severity="critical",
-        order=2,
+        file_level_order=2,
         tags=["快递公司", "查询", "GEN_EXPRESS_COM_MD_QUERY_DETAIL_ACTION_SERVICE"]
     )
     def test_query_express_detail(self):
@@ -143,7 +143,7 @@ class TestExpressManagement(GenMdBaseTest):
         title="测试查询快递公司分页",
         description="验证GEN-快递公司-查询分页服务功能",
         severity="critical",
-        order=3,
+        file_level_order=3,
         tags=["快递公司", "分页查询", "GEN_EXPRESS_COM_MD_QUERY_PAGE_ACTION_SERVICE"]
     )
     def test_query_express_page(self):
@@ -186,7 +186,7 @@ class TestExpressManagement(GenMdBaseTest):
         title="测试启用快递公司",
         description="验证GEN-快递公司-启用服务功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         tags=["快递公司", "启用", "GEN_EXPRESS_COM_MD_ENABLED_ACTION_SERVICE"]
     )
     def test_enable_express_company(self):
@@ -219,7 +219,7 @@ class TestExpressManagement(GenMdBaseTest):
         title="测试禁用快递公司",
         description="验证GEN-快递公司-禁用服务功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         tags=["快递公司", "禁用", "GEN_EXPRESS_COM_MD_DISABLED_ACTION_SERVICE"]
     )
     def test_disable_express_company(self):
@@ -252,7 +252,7 @@ class TestExpressManagement(GenMdBaseTest):
         title="测试标准导入快递公司",
         description="验证快递公司标准导入服务功能",
         severity="normal",
-        order=6,
+        file_level_order=6,
         tags=["快递公司", "导入", "GEN_EXPRESS_COM_MD_GEI_IMPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
@@ -291,7 +291,7 @@ class TestExpressManagement(GenMdBaseTest):
         title="测试标准导出快递公司",
         description="验证快递公司标准导出服务功能",
         severity="normal",
-        order=7,
+        file_level_order=7,
         tags=["快递公司", "导出", "GEN_EXPRESS_COM_MD_GEI_EXPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="标准导出需要复杂配置，暂时跳过")
@@ -328,7 +328,7 @@ class TestExpressManagement(GenMdBaseTest):
         title="测试快递公司导出任务",
         description="验证快递公司-导入导出任务管理接口-提交导出任务功能",
         severity="normal",
-        order=8,
+        file_level_order=8,
         tags=["快递公司", "任务管理", "GEN_EXPRESS_COM_MD_API_GEI_TASK_EXPORT_DIRECT_POST"]
     )
     @pytest.mark.skip(reason="任务管理接口配置复杂，暂时跳过")
@@ -407,7 +407,7 @@ class TestExpressManagement(GenMdBaseTest):
         title="测试快递公司OSS导入任务",
         description="验证快递公司-导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=9,
+        file_level_order=9,
         tags=["快递公司", "任务管理", "GEN_EXPRESS_COM_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
     )
     @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
@@ -456,7 +456,7 @@ class TestExpressManagement(GenMdBaseTest):
         title="测试删除快递公司",
         description="验证GEN-快递公司-删除服务功能",
         severity="critical",
-        order=10,
+        file_level_order=10,
         tags=["快递公司", "删除", "GEN_EXPRESS_COM_MD_DELETE_ACTION_SERVICE"]
     )
     def test_delete_express_company(self):

@@ -52,7 +52,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         title="测试新增组织切换模型",
         description="验证新增组织切换模型功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["组织切换管理", "新增模型"]
     )
@@ -106,7 +106,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         title="测试分页查询组织切换模型",
         description="验证分页查询组织切换模型功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         smoke=True,
         tags=["组织切换管理", "模型分页查询"]
     )
@@ -186,7 +186,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         title="测试查询组织切换模型详情",
         description="验证查询组织切换模型详情功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         smoke=True,
         tags=["组织切换管理", "模型详情查询"]
     )
@@ -234,7 +234,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         title="测试模型是否开启了组织切换",
         description="验证模型是否开启了组织切换功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         smoke=True,
         tags=["组织切换管理", "模型开启判断"]
     )
@@ -272,7 +272,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         title="测试新增组织切换",
         description="验证新增组织切换功能",
         severity="blocker",
-        order=5,
+        file_level_order=5,
         smoke=True,
         tags=["组织切换管理", "新增"]
     )
@@ -335,7 +335,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         title="测试启用组织切换",
         description="验证启用组织切换功能",
         severity="normal",
-        order=6,
+        file_level_order=6,
         smoke=True,
         tags=["组织切换管理", "启用"]
     )
@@ -377,7 +377,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         title="测试停用组织切换",
         description="验证停用组织切换功能",
         severity="normal",
-        order=7,
+        file_level_order=7,
         smoke=True,
         tags=["组织切换管理", "停用"]
     )
@@ -419,7 +419,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         title="测试分页查询组织切换",
         description="验证分页查询组织切换功能",
         severity="normal",
-        order=8,
+        file_level_order=8,
         smoke=True,
         tags=["组织切换管理", "分页查询"]
     )
@@ -476,7 +476,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         title="测试查询组织切换详情",
         description="验证查询组织切换详情功能",
         severity="normal",
-        order=9,
+        file_level_order=9,
         smoke=True,
         tags=["组织切换管理", "详情查询"]
     )
@@ -518,7 +518,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         title="测试查询用户所在的公司",
         description="验证查询用户所在的公司功能",
         severity="normal",
-        order=10,
+        file_level_order=10,
         smoke=True,
         tags=["组织切换管理", "用户公司查询"]
     )
@@ -552,7 +552,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         title="测试切换公司列表标准导出",
         description="验证切换公司列表标准导出功能",
         severity="normal",
-        order=11,
+        file_level_order=11,
         smoke=True,
         tags=["组织切换管理", "列表导出"]
     )
@@ -598,7 +598,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         title="测试切换公司模型表标准导出",
         description="验证切换公司模型表标准导出功能",
         severity="normal",
-        order=12,
+        file_level_order=12,
         smoke=True,
         tags=["组织切换管理", "模型导出"]
     )
@@ -642,7 +642,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         title="测试切换公司列表标准导入",
         description="验证切换公司列表标准导入功能",
         severity="normal",
-        order=13,
+        file_level_order=13,
         smoke=True,
         tags=["组织切换管理", "列表导入"]
     )
@@ -668,7 +668,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         title="测试切换公司模型表标准导入",
         description="验证切换公司模型表标准导入功能",
         severity="normal",
-        order=14,
+        file_level_order=14,
         smoke=True,
         tags=["组织切换管理", "模型导入"]
     )
@@ -693,7 +693,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         title="测试删除组织切换",
         description="验证删除组织切换功能",
         severity="normal",
-        order=15,
+        file_level_order=15,
         smoke=True,
         tags=["组织切换管理", "删除"]
     )
@@ -735,7 +735,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         title="测试删除组织切换模型",
         description="验证删除组织切换模型功能",
         severity="normal",
-        order=16,
+        file_level_order=16,
         smoke=True,
         tags=["组织切换管理", "删除模型"]
     )
@@ -781,7 +781,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         title="测试切换公司列表导出任务提交",
         description="验证切换公司列表导入导出任务管理接口-提交导出任务功能",
         severity="normal",
-        order=17,
+        file_level_order=17,
         smoke=True,
         tags=["组织切换管理", "列表导出任务"]
     )
@@ -847,7 +847,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         title="测试切换公司模型表导出任务提交",
         description="验证切换公司模型表导入导出任务管理接口-提交导出任务功能",
         severity="normal",
-        order=18,
+        file_level_order=18,
         smoke=True,
         tags=["组织切换管理", "模型导出任务"]
     )
@@ -958,7 +958,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         title="测试切换公司列表OSS导入任务提交",
         description="验证切换公司列表导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=19,
+        file_level_order=19,
         smoke=True,
         tags=["组织切换管理", "列表OSS导入任务"]
     )
@@ -984,7 +984,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         title="测试切换公司模型表OSS导入任务提交",
         description="验证切换公司模型表导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=20,
+        file_level_order=20,
         smoke=True,
         tags=["组织切换管理", "模型OSS导入任务"]
     )

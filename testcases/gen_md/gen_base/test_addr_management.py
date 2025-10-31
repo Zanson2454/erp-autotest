@@ -45,7 +45,7 @@ class TestAddrManagement(GenMdBaseTest):
         title="测试新增地址库",
         description="验证GEN-地址库-保存服务功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["地址库", "新增", "GEN_ADDR_TYPE_CF_SAVE_ACTION_SERVICE"]
     )
@@ -90,7 +90,7 @@ class TestAddrManagement(GenMdBaseTest):
         title="测试新增下级地址库",
         description="验证GEN-地址库-保存服务功能(创建下级地址)",
         severity="normal",
-        order=2,
+        file_level_order=2,
         tags=["地址库", "新增", "下级地址", "GEN_ADDR_TYPE_CF_SAVE_ACTION_SERVICE"]
     )
     def test_save_child_addr(self):
@@ -136,7 +136,7 @@ class TestAddrManagement(GenMdBaseTest):
         title="测试查询地址库分页列表",
         description="验证GEN-地址库-查询分页服务功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         tags=["地址库", "查询", "GEN_ADDR_TYPE_CF_QUERY_PAGE_ACTION_SERVICE"]
     )
     def test_query_addr_page(self):
@@ -175,7 +175,7 @@ class TestAddrManagement(GenMdBaseTest):
         title="测试地址库分页数据服务",
         description="验证地址库-分页数据服务功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         tags=["地址库", "分页数据", "GEN_ADDR_TYPE_CF_PAGING_DATA_SERVICE"]
     )
     @pytest.mark.skip(reason="地址库分页数据服务接口未开发")
@@ -222,7 +222,7 @@ class TestAddrManagement(GenMdBaseTest):
         title="测试根据父级ID查询下级地址列表",
         description="验证GEN-地址库-根据父级ID查询下级列表服务功能",
         severity="normal",
-        order=6,
+        file_level_order=6,
         tags=["地址库", "层级查询", "GEN_ADDR_TYPE_CF_QUERY_BY_PARENT_ACTION_SERVICE"]
     )
     def test_query_addr_by_parent(self):
@@ -259,7 +259,7 @@ class TestAddrManagement(GenMdBaseTest):
         title="测试查询地址库详情",
         description="验证GEN-地址库-查询详情服务功能",
         severity="normal",
-        order=7,
+        file_level_order=7,
         tags=["地址库", "查询", "GEN_ADDR_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE"]
     )
     def test_query_addr_detail(self):
@@ -292,7 +292,7 @@ class TestAddrManagement(GenMdBaseTest):
         title="测试删除地址库",
         description="验证GEN-地址库-删除服务功能",
         severity="critical",
-        order=8,
+        file_level_order=8,
         tags=["地址库", "删除", "GEN_ADDR_TYPE_CF_DELETE_ACTION_SERVICE"]
     )
     def test_delete_addr(self):
@@ -326,7 +326,7 @@ class TestAddrManagement(GenMdBaseTest):
         title="测试地址库标准导入",
         description="验证地址库标准导入服务功能",
         severity="normal",
-        order=9,
+        file_level_order=9,
         tags=["地址库", "导入", "GEN_ADDR_TYPE_CF_GEI_IMPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -369,7 +369,7 @@ class TestAddrManagement(GenMdBaseTest):
         title="测试地址库标准导出",
         description="验证地址库标准导出服务功能",
         severity="normal",
-        order=10,
+        file_level_order=10,
         tags=["地址库", "导出", "GEN_ADDR_TYPE_CF_GEI_EXPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -409,7 +409,7 @@ class TestAddrManagement(GenMdBaseTest):
         title="测试地址库OSS导入任务",
         description="验证地址库-导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=11,
+        file_level_order=11,
         tags=["地址库", "任务管理", "GEN_ADDR_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -444,7 +444,7 @@ class TestAddrManagement(GenMdBaseTest):
         title="测试地址库导出任务",
         description="验证地址库-导入导出任务管理接口-提交导出任务功能",
         severity="normal",
-        order=12,
+        file_level_order=12,
         tags=["地址库", "任务管理", "GEN_ADDR_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")

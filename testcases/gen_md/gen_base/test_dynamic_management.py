@@ -41,7 +41,7 @@ class TestDynamicManagement(GenMdBaseTest):
         title="测试创建动态表单模板",
         description="验证GEN-动态表单-创建修改动态表单模板服务功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,          
         tags=["动态表单", "创建", "GEN_DYNAMIC_CREATE_UPDATE_TEMPLATE_SERVICE"]
     )
@@ -152,7 +152,7 @@ class TestDynamicManagement(GenMdBaseTest):
         title="测试创建修改动态表单模板（备用服务）",
         description="验证GEN-创建修改动态表单模板服务功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         tags=["动态表单", "创建修改", "GEN_CREATE_DYNAMIC_FORM_TEMPLATE_SERVICE"]
     )
     @pytest.mark.skip(reason="dynamic_form场景.菜单未引用,业务用不上")
@@ -261,7 +261,7 @@ class TestDynamicManagement(GenMdBaseTest):
         title="测试分页查询动态表单模板",
         description="验证GEN-动态表单-分页查询动态表单模板服务功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         tags=["动态表单", "查询", "GEN_DYNAMIC_PAGING_TEMPLATE_SERVICE"]
     )
     def test_paging_template(self):
@@ -302,7 +302,7 @@ class TestDynamicManagement(GenMdBaseTest):
         title="测试根据ID查询动态表单模板",
         description="验证GEN-动态表单-根据id查询动态表单模板服务功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         tags=["动态表单", "查询", "GEN_DYNAMIC_FIND_BY_ID_TEMPLATE_SERVICE"]
     )
     def test_find_by_id_template(self):
@@ -335,7 +335,7 @@ class TestDynamicManagement(GenMdBaseTest):
         title="测试根据IDs查询动态表单模板集合",
         description="验证GEN-动态表单-根据ids查询动态表单模板集合服务功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         tags=["动态表单", "批量查询", "GEN_DYNAMIC_FIND_BY_IDS_TEMPLATE_SERVICE"]
     )
     def test_find_by_ids_template(self):
@@ -368,7 +368,7 @@ class TestDynamicManagement(GenMdBaseTest):
         title="测试启用动态表单模板",
         description="验证GEN-动态表单-启用动态表单模板服务功能",
         severity="normal",
-        order=6,
+        file_level_order=6,
         tags=["动态表单", "启用", "GEN_DYNAMIC_ENABLE_TEMPLATE_SERVICE"]
     )
     def test_enable_template(self):
@@ -401,7 +401,7 @@ class TestDynamicManagement(GenMdBaseTest):
         title="测试禁用动态表单模板",
         description="验证GEN-动态表单-禁用动态表单模板服务功能",
         severity="normal",
-        order=7,
+        file_level_order=7,
         tags=["动态表单", "禁用", "GEN_DYNAMIC_DISABLE_TEMPLATE_SERVICE"]
     )
     def test_disable_template(self):
@@ -434,7 +434,7 @@ class TestDynamicManagement(GenMdBaseTest):
         title="测试删除动态表单模板",
         description="验证GEN-动态表单-删除动态表单模板服务功能",
         severity="critical",
-        order=8,
+        file_level_order=8,
         tags=["动态表单", "删除", "GEN_DYNAMIC_DELETE_TEMPLATE_SERVICE"]
     )
     def test_delete_template(self):
@@ -468,7 +468,7 @@ class TestDynamicManagement(GenMdBaseTest):
         title="测试动态表单模板标准导入",
         description="验证动态表单模板类标准导入服务功能",
         severity="normal",
-        order=9,
+        file_level_order=9,
         tags=["动态表单", "导入", "GEN_DYNAMIC_FORM_TEMPLATE_MD_GEI_IMPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -518,7 +518,7 @@ class TestDynamicManagement(GenMdBaseTest):
         title="测试动态表单模板标准导出",
         description="验证动态表单模板类标准导出服务功能",
         severity="normal",
-        order=10,
+        file_level_order=10,
         tags=["动态表单", "导出", "GEN_DYNAMIC_FORM_TEMPLATE_MD_GEI_EXPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -557,7 +557,7 @@ class TestDynamicManagement(GenMdBaseTest):
         title="测试动态表单模板OSS导入任务",
         description="验证动态表单模板类-导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=11,
+        file_level_order=11,
         tags=["动态表单", "任务管理", "GEN_DYNAMIC_FORM_TEMPLATE_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -592,7 +592,7 @@ class TestDynamicManagement(GenMdBaseTest):
         title="测试动态表单模板导出任务",
         description="验证动态表单模板类-导入导出任务管理接口-提交导出任务功能",
         severity="normal",
-        order=12,
+        file_level_order=12,
         tags=["动态表单", "任务管理", "GEN_DYNAMIC_FORM_TEMPLATE_MD_API_GEI_TASK_EXPORT_DIRECT_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")

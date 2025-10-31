@@ -43,7 +43,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试新增条码主数据",
         description="验证GEN-条码主数据-保存服务功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["条码主数据", "新增", "GEN_BARCODE_MD_SAVE_ACTION_SERVICE"]
     )
@@ -88,7 +88,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试查询条码主数据分页列表",
         description="验证GEN-条码主数据-查询分页服务功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         tags=["条码主数据", "查询", "GEN_BARCODE_MD_QUERY_PAGE_ACTION_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -126,7 +126,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试查询条码主数据详情",
         description="验证GEN-条码主数据-查询详情服务功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         tags=["条码主数据", "查询", "GEN_BARCODE_MD_QUERY_DETAIL_ACTION_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -160,7 +160,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试启用条码主数据",
         description="验证GEN-条码主数据-启用服务功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         tags=["条码主数据", "启用", "GEN_BARCODE_MD_ENABLED_ACTION_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -194,7 +194,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试禁用条码主数据",
         description="验证GEN-条码主数据-禁用服务功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         tags=["条码主数据", "禁用", "GEN_BARCODE_MD_DISABLED_ACTION_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -228,7 +228,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试删除条码主数据",
         description="验证GEN-条码主数据-删除服务功能",
         severity="critical",
-        order=6,
+        file_level_order=6,
         tags=["条码主数据", "删除", "GEN_BARCODE_MD_DELETE_ACTION_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -263,7 +263,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试新增条码规则",
         description="验证GEN-条码规则-保存服务功能",
         severity="blocker",
-        order=7,
+        file_level_order=7,
         smoke=True,
         tags=["条码规则", "新增", "GEN_BARCODE_RULE_CF_SAVE_ACTION_SERVICE"]
     )
@@ -310,7 +310,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试查询条码规则分页列表",
         description="验证GEN-条码规则-查询分页服务功能",
         severity="normal",
-        order=8,
+        file_level_order=8,
         tags=["条码规则", "查询", "GEN_BARCODE_RULE_CF_QUERY_PAGE_ACTION_SERVICE"]
     )
     def test_query_barcode_rule_page(self):
@@ -347,7 +347,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试查询条码规则详情",
         description="验证GEN-条码规则-查询详情服务功能",
         severity="normal",
-        order=9,
+        file_level_order=9,
         tags=["条码规则", "查询", "GEN_BARCODE_RULE_CF_QUERY_DETAIL_ACTION_SERVICE"]
     )
     def test_query_barcode_rule_detail(self):
@@ -380,7 +380,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试删除条码规则",
         description="验证GEN-条码规则-删除服务功能",
         severity="critical",
-        order=10,
+        file_level_order=10,
         tags=["条码规则", "删除", "GEN_BARCODE_RULE_CF_DELETE_ACTION_SERVICE"]
     )
     def test_delete_barcode_rule(self):
@@ -414,7 +414,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试新增条码字段",
         description="验证GEN-条码字段-保存服务功能",
         severity="blocker",
-        order=11,
+        file_level_order=11,
         smoke=True,
         tags=["条码字段", "新增", "GEN_BARCODE_FILED_CF_SAVE_ACTION_SERVICE"]
     )
@@ -454,7 +454,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试查询条码字段分页列表",
         description="验证GEN-条码字段-查询分页服务功能",
         severity="normal",
-        order=12,
+        file_level_order=12,
         tags=["条码字段", "查询", "GEN_BARCODE_FILED_CF_QUERY_PAGE_ACTION_SERVICE"]
     )
     def test_query_barcode_field_page(self):
@@ -492,7 +492,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试查询条码字段详情",
         description="验证GEN-条码字段-查询详情服务功能",
         severity="normal",
-        order=13,
+        file_level_order=13,
         tags=["条码字段", "查询", "GEN_BARCODE_FILED_CF_QUERY_DETAIL_ACTION_SERVICE"]
     )
     def test_query_barcode_field_detail(self):
@@ -525,7 +525,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试删除条码字段",
         description="验证GEN-条码字段-删除服务功能",
         severity="critical",
-        order=14,
+        file_level_order=14,
         tags=["条码字段", "删除", "GEN_BARCODE_FILED_CF_DELETE_ACTION_SERVICE"]
     )
     def test_delete_barcode_field(self):
@@ -559,7 +559,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试条码主数据标准导入",
         description="验证条码主数据标准导入服务功能",
         severity="normal",
-        order=15,
+        file_level_order=15,
         tags=["条码主数据", "导入", "GEN_BARCODE_MD_GEI_IMPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -598,7 +598,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试条码主数据标准导出",
         description="验证条码主数据标准导出服务功能",
         severity="normal",
-        order=16,
+        file_level_order=16,
         tags=["条码主数据", "导出", "GEN_BARCODE_MD_GEI_EXPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -635,7 +635,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试条码主数据OSS导入任务",
         description="验证条码主数据-导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=17,
+        file_level_order=17,
         tags=["条码主数据", "任务管理", "GEN_BARCODE_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -669,7 +669,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试条码主数据导出任务",
         description="验证条码主数据-导入导出任务管理接口-提交导出任务功能",
         severity="normal",
-        order=18,
+        file_level_order=18,
         tags=["条码主数据", "任务管理", "GEN_BARCODE_MD_API_GEI_TASK_EXPORT_DIRECT_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -710,7 +710,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试条码规则标准导入",
         description="验证条码规则标准导入服务功能",
         severity="normal",
-        order=19,
+        file_level_order=19,
         tags=["条码规则", "导入", "GEN_BARCODE_RULE_CF_GEI_IMPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -749,7 +749,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试条码规则标准导出",
         description="验证条码规则标准导出服务功能",
         severity="normal",
-        order=20,
+        file_level_order=20,
         tags=["条码规则", "导出", "GEN_BARCODE_RULE_CF_GEI_EXPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -786,7 +786,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试条码规则OSS导入任务",
         description="验证条码规则-导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=21,
+        file_level_order=21,
         tags=["条码规则", "任务管理", "GEN_BARCODE_RULE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -820,7 +820,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试条码规则导出任务",
         description="验证条码规则-导入导出任务管理接口-提交导出任务功能",
         severity="normal",
-        order=22,
+        file_level_order=22,
         tags=["条码规则", "任务管理", "GEN_BARCODE_RULE_CF_API_GEI_TASK_EXPORT_DIRECT_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -861,7 +861,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试条码规则允许业务字段标准导入",
         description="验证条码规则允许业务字段标准导入服务功能",
         severity="normal",
-        order=23,
+        file_level_order=23,
         tags=["条码字段", "导入", "GEN_BARCODE_FIELD_CF_GEI_IMPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -900,7 +900,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试条码规则允许业务字段标准导出",
         description="验证条码规则允许业务字段标准导出服务功能",
         severity="normal",
-        order=24,
+        file_level_order=24,
         tags=["条码字段", "导出", "GEN_BARCODE_FIELD_CF_GEI_EXPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -937,7 +937,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试条码规则允许业务字段OSS导入任务",
         description="验证条码规则允许业务字段-导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=25,
+        file_level_order=25,
         tags=["条码字段", "任务管理", "GEN_BARCODE_FIELD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -971,7 +971,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         title="测试条码规则允许业务字段导出任务",
         description="验证条码规则允许业务字段-导入导出任务管理接口-提交导出任务功能",
         severity="normal",
-        order=26,
+        file_level_order=26,
         tags=["条码字段", "任务管理", "GEN_BARCODE_FIELD_CF_API_GEI_TASK_EXPORT_DIRECT_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")

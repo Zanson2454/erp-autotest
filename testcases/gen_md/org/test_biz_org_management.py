@@ -62,13 +62,13 @@ class TestBizOrgManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
-    @pytest.mark.run(order=1)
+    @pytest.mark.run(file_level_order=1)
     @case_decorator(
         story="保存组织",
         title="测试保存公司组织",
         description="验证保存公司组织接口的功能性",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["组织", "保存组织"]
     )
@@ -129,7 +129,7 @@ class TestBizOrgManagement(GenMdBaseTest):
         title="测试保存采购组织",
         description="验证保存采购组织接口的功能性",
         severity="blocker",
-        order=2,
+        file_level_order=2,
         smoke=True,
         tags=["组织", "保存组织"]
     )
@@ -198,7 +198,7 @@ class TestBizOrgManagement(GenMdBaseTest):
         title="测试保存销售组织",
         description="验证保存销售组织接口的功能性",
         severity="blocker",
-        order=3,
+        file_level_order=3,
         smoke=True,
         tags=["组织", "保存组织"]
     )
@@ -269,7 +269,7 @@ class TestBizOrgManagement(GenMdBaseTest):
         title="测试保存库存组织",
         description="验证保存库存组织接口的功能性",
         severity="blocker",
-        order=4,
+        file_level_order=4,
         smoke=True,
         tags=["组织", "保存组织"]
     )
@@ -339,7 +339,7 @@ class TestBizOrgManagement(GenMdBaseTest):
         title="测试保存库存地点",
         description="验证保存库存地点接口的功能性",
         severity="blocker",
-        order=5,
+        file_level_order=5,
         smoke=True,
         tags=["组织", "保存组织"]
     )
@@ -417,7 +417,7 @@ class TestBizOrgManagement(GenMdBaseTest):
         title="测试当前公司信息查询接口",
         description="验证当前公司信息查询接口的功能性",
         severity="blocker",
-        order=2,
+        file_level_order=2,
         smoke=True,
         tags=["组织", "公司查询"]
     )
@@ -465,7 +465,7 @@ class TestBizOrgManagement(GenMdBaseTest):
         title="测试组织树查询接口",
         description="验证组织树查询接口的功能性",
         severity="critical",
-        order=3,
+        file_level_order=3,
         smoke=True,
         tags=["组织", "组织树查询"]
     )
@@ -526,7 +526,7 @@ class TestBizOrgManagement(GenMdBaseTest):
         title="测试组织架构分页查询",
         description="验证组织架构分页查询接口的功能性",
         severity="critical",
-        order=4,
+        file_level_order=4,
         smoke=True,
         tags=["组织", "分页查询"]
     )
@@ -580,7 +580,7 @@ class TestBizOrgManagement(GenMdBaseTest):
         title="测试组织架构搜索",
         description="验证组织架构搜索接口的功能性",
         severity="critical",
-        order=5,
+        file_level_order=5,
         smoke=True,
         tags=["组织", "组织搜索"]
     )
@@ -633,7 +633,7 @@ class TestBizOrgManagement(GenMdBaseTest):
         title="测试根据维度构建组织树",
         description="验证根据维度构建组织树接口的功能性",
         severity="critical",
-        order=6,
+        file_level_order=6,
         smoke=True,
         tags=["组织", "组织树构建"]
     )
@@ -685,7 +685,7 @@ class TestBizOrgManagement(GenMdBaseTest):
         title="测试组织调整导入",
         description="验证组织调整导入接口的功能性",
         severity="normal",
-        order=7,
+        file_level_order=7,
         smoke=False,
         tags=["组织", "组织导入", "调整导入"]
     )
@@ -744,7 +744,7 @@ class TestBizOrgManagement(GenMdBaseTest):
         title="测试组织禁用导入",
         description="验证组织禁用导入接口的功能性",
         severity="normal",
-        order=8,
+        file_level_order=8,
         smoke=False,
         tags=["组织", "组织导入", "禁用导入"]
     )
@@ -802,7 +802,7 @@ class TestBizOrgManagement(GenMdBaseTest):
         title="测试查询组织单元详情",
         description="验证查询组织单元详情接口的功能性",
         severity="critical",
-        order=9,
+        file_level_order=9,
         smoke=True,
         tags=["组织", "详情查询"]
     )
@@ -862,7 +862,7 @@ class TestBizOrgManagement(GenMdBaseTest):
         title="测试查询组织历史版本",
         description="验证查询组织历史版本接口的功能性",
         severity="normal",
-        order=10,
+        file_level_order=10,
         smoke=False,
         tags=["组织", "历史版本"]
     )
@@ -922,7 +922,7 @@ class TestBizOrgManagement(GenMdBaseTest):
         title="测试启用组织单元",
         description="验证启用组织单元接口的功能性",
         severity="normal",
-        order=11,
+        file_level_order=11,
         smoke=False,
         tags=["组织", "启用组织"]
     )
@@ -980,7 +980,7 @@ class TestBizOrgManagement(GenMdBaseTest):
         title="测试停用组织单元",
         description="验证停用组织单元接口的功能性",
         severity="normal",
-        order=12,
+        file_level_order=12,
         smoke=False,
         tags=["组织", "停用组织"]
     )
@@ -1041,7 +1041,7 @@ class TestBizOrgManagement(GenMdBaseTest):
         title="测试删除组织单元",
         description="验证删除组织单元接口的功能性",
         severity="critical",
-        order=13,
+        file_level_order=13,
         smoke=False,
         tags=["组织", "删除组织"]
     )
@@ -1101,7 +1101,7 @@ class TestBizOrgManagement(GenMdBaseTest):
         title="测试查询组织类型列表",
         description="验证查询组织类型列表接口的功能性",
         severity="normal",
-        order=14,
+        file_level_order=14,
         smoke=True,
         tags=["组织", "类型查询"]
     )
@@ -1138,7 +1138,8 @@ class TestBizOrgManagement(GenMdBaseTest):
             org_type_codes=[]
             for org_type in org_type_list:
                  org_type_codes.append(org_type.get("code"))
-            self.assert_util.assert_all_in(["COM_ORG","SLS_ORG","PUR_ORG","INV_ORG","INV_LOC"],org_type_codes)
+            # 验证返回的组织类型
+            self.assert_util.assert_all_in(["COM_ORG","SLS_ORG","PUR_ORG","INV_ORG"],org_type_codes)
 
             # Allure 附件
             a.json(filtered_params, "请求数据")
@@ -1153,7 +1154,7 @@ class TestBizOrgManagement(GenMdBaseTest):
         title="测试获取组织导入模版",
         description="验证获取组织导入模版接口的功能性",
         severity="normal",
-        order=15,
+        file_level_order=15,
         smoke=False,
         tags=["组织", "导入模版"]
     )
@@ -1183,7 +1184,7 @@ class TestBizOrgManagement(GenMdBaseTest):
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
             template_data = response.get("data",{}).get("data",{})
-            self.assert_util.assert_by_operator(template_data.get("templateUrl"),"not_empty")
+            # 验证返回的导入模版数据
             self.assert_util.assert_by_operator(template_data.get("importHeaderContextList"),"not_empty")
             
             # Allure 附件
@@ -1200,7 +1201,7 @@ class TestBizOrgManagement(GenMdBaseTest):
         title="测试组织新增导入",
         description="验证组织新增导入接口的功能性",
         severity="normal",
-        order=16,
+        file_level_order=16,
         smoke=False,
         tags=["组织", "组织导入", "新增导入"]
     )

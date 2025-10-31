@@ -44,7 +44,7 @@ class TestIdentityManagement(GenMdBaseTest):
         title="测试启用组织身份",
         description="验证启用组织身份功能",
         severity="normal",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["组织身份", "启用"]
     )
@@ -107,7 +107,7 @@ class TestIdentityManagement(GenMdBaseTest):
         title="测试禁用组织身份",
         description="验证禁用组织身份功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         smoke=True,
         tags=["组织身份", "禁用"]
     )

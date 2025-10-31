@@ -27,16 +27,21 @@ class TestCurrencyManagement(GenMdBaseTest):
         """测试类结束后执行清理"""
         try:
             # 清理测试数据
-            tables = ["gen_curr_type_cf", "gen_curr_formula_type_cf", "gen_curr_exchange_rate_type_cf"]
-            for table in tables:
-                try:
-                    cls.db.delete(
-                        table=table,
-                        where="curr_code like %s",
-                        params=["AT_%"]
-                    )
-                except Exception:
-                    pass
+            cls.db.delete(
+                table="gen_curr_type_cf",
+                where="curr_code like %s",
+                params=["AT_%"]
+            )
+            cls.db.delete(
+                table="gen_curr_formula_type_cf",
+                where="code like %s",
+                params=["AT_%"]
+            )
+            cls.db.delete(
+                table="gen_curr_exchange_rate_type_cf",
+                where="type_code like %s",
+                params=["AT_%"]
+            )
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
@@ -47,7 +52,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试新增币种配置",
         description="验证GEN-币种配置-保存服务功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["币种管理", "新增", "GEN_CURR_TYPE_CF_SAVE_ACTION_SERVICE"]
     )
@@ -89,7 +94,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试查询币种配置分页列表",
         description="验证GEN-币种配置-查询分页服务功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         tags=["币种管理", "查询", "GEN_CURR_TYPE_CF_QUERY_PAGE_ACTION_SERVICE"]
     )
     def test_query_currency_page(self):
@@ -126,7 +131,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试查询币种配置详情",
         description="验证GEN-币种配置-查询详情服务功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         tags=["币种管理", "查询", "GEN_CURR_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE"]
     )
     def test_query_currency_detail(self):
@@ -160,7 +165,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试新增汇率",
         description="验证GEN-汇率-保存服务功能",
         severity="blocker",
-        order=4,
+        file_level_order=4,
         smoke=True,
         tags=["汇率管理", "新增", "GEN_CURR_FORMULA_TYPE_CF_SAVE_ACTION_SERVICE"]
     )
@@ -169,19 +174,28 @@ class TestCurrencyManagement(GenMdBaseTest):
         try:
             rate_code = self.mock_data.generate_unique_code(tag="RATE")
             rate_name = f"测试汇率_{self.mock_data.get_timestamp()}"
+            
+            # 获取币种ID
+            curr_id = self.init_data.get("currency_info", [{}])[0].get("curr_id")
+            if not curr_id:
+                curr_id = 2000001  # 默认CNY币种ID
+            
+            # 获取汇率类型ID
+            rate_type_id = self.init_data.get("exchange_rate_type_info", [{}])[0].get("exchange_rate_type_id")
 
             api_path = self.get_api_path("GEN-汇率-保存服务")
             params, url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["code", "name", "fromCurr", "toCurr", "rate"], ["params", "request"]
+                params, ["code", "name", "exchRate", "baseCurrId", "tarCurrId", "genCurrExchangeRateTypeCf"], ["params", "request"]
             )
             set_dict = {
                 "code": rate_code,
                 "name": rate_name,
-                "fromCurr": "USD",
-                "toCurr": "CNY",
-                "rate": 7.2
+                "exchRate": 7.2,
+                "baseCurrId": {"id": curr_id},
+                "tarCurrId": {"id": curr_id},
+                "genCurrExchangeRateTypeCf": {"id": rate_type_id}
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -202,7 +216,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试查询汇率分页列表",
         description="验证GEN-汇率-查询分页服务功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         tags=["汇率管理", "查询", "GEN_CURR_FORMULA_TYPE_CF_QUERY_PAGE_ACTION_SERVICE"]
     )
     def test_query_exchange_rate_page(self):
@@ -239,7 +253,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试根据币种获取汇率",
         description="验证GEN-汇率-根据基本币种与目标币种获取汇率功能",
         severity="normal",
-        order=6,
+        file_level_order=6,
         tags=["汇率管理", "查询", "GEN_GET_RATE_FROM_CURR_SERVICE"]
     )
     def test_get_rate_from_currency(self):
@@ -273,7 +287,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试新增汇率类型",
         description="验证GEN-汇率类型-保存服务功能",
         severity="blocker",
-        order=7,
+        file_level_order=7,
         smoke=True,
         tags=["汇率类型管理", "新增", "GEN_CURR_EXCHANGE_RATE_TYPE_CF_SAVE_ACTION_SERVICE"]
     )
@@ -313,7 +327,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试查询汇率类型分页列表",
         description="验证GEN-汇率类型-查询分页服务功能",
         severity="normal",
-        order=8,
+        file_level_order=8,
         tags=["汇率类型管理", "查询", "GEN_CURR_EXCHANGE_RATE_TYPE_CF_QUERY_PAGE_ACTION_SERVICE"]
     )
     def test_query_exchange_rate_type_page(self):
@@ -350,7 +364,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试查询汇率类型详情",
         description="验证GEN-汇率类型-查询详情服务功能",
         severity="normal",
-        order=9,
+        file_level_order=9,
         tags=["汇率类型管理", "查询", "GEN_CURR_EXCHANGE_RATE_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE"]
     )
     def test_query_exchange_rate_type_detail(self):
@@ -383,7 +397,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试查询汇率详情",
         description="验证GEN-汇率-查询详情服务功能",
         severity="normal",
-        order=10,
+        file_level_order=10,
         tags=["汇率管理", "查询", "GEN_CURR_FORMULA_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE"]
     )
     def test_query_exchange_rate_detail(self):
@@ -416,7 +430,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试查询汇率(前端)",
         description="验证GEN-汇率-查询汇率(前端)服务功能",
         severity="normal",
-        order=11,
+        file_level_order=11,
         tags=["汇率管理", "查询", "GEN_CURR_FORMULA_TYPE_CF_QUERY_ACTION_SERVICE"]
     )
     def test_query_exchange_rate_frontend(self):
@@ -450,7 +464,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试币种配置根据ID查找数据",
         description="验证币种配置-根据ID查找数据服务功能",
         severity="normal",
-        order=12,
+        file_level_order=12,
         tags=["币种管理", "查询", "GEN_CURR_TYPE_CF_FIND_DATA_BY_ID_SERVICE"]
     )
     def test_find_currency_data_by_id(self):
@@ -483,7 +497,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试汇率类型根据ID查找数据",
         description="验证汇率类型-根据ID查找数据服务功能",
         severity="normal",
-        order=13,
+        file_level_order=13,
         tags=["汇率类型管理", "查询", "GEN_CURR_EXCHANGE_RATE_TYPE_CF_FIND_DATA_BY_ID_SERVICE"]
     )
     def test_find_exchange_rate_type_data_by_id(self):
@@ -517,7 +531,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试币种配置分页数据服务",
         description="验证币种配置-分页数据服务功能",
         severity="normal",
-        order=14,
+        file_level_order=14,
         tags=["币种管理", "查询", "GEN_CURR_TYPE_CF_PAGING_DATA_SERVICE"]
     )
     def test_currency_paging_data(self):
@@ -567,7 +581,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试汇率类型分页数据服务",
         description="验证汇率类型-分页数据服务功能",
         severity="normal",
-        order=15,
+        file_level_order=15,
         tags=["汇率类型管理", "查询", "GEN_CURR_EXCHANGE_RATE_TYPE_CF_PAGING_DATA_SERVICE"]
     )
     def test_exchange_rate_type_paging_data(self):
@@ -606,7 +620,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试汇率标准导入",
         description="验证汇率标准导入服务功能",
         severity="normal",
-        order=16,
+        file_level_order=16,
         tags=["汇率管理", "导入", "GEN_CURR_FORMULA_TYPE_CF_GEI_IMPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="汇率标准导入服务功能未实现")
@@ -647,7 +661,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试汇率标准导出",
         description="验证汇率标准导出服务功能",
         severity="normal",
-        order=17,
+        file_level_order=17,
         tags=["汇率管理", "导出", "GEN_CURR_FORMULA_TYPE_CF_GEI_EXPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="汇率标准导出服务功能未实现")
@@ -687,7 +701,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试汇率类型标准导入",
         description="验证汇率类型标准导入服务功能",
         severity="normal",
-        order=18,
+        file_level_order=18,
         tags=["汇率类型管理", "导入", "GEN_CURR_EXCHANGE_RATE_TYPE_CF_GEI_IMPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="汇率类型标准导入服务功能未实现")
@@ -726,7 +740,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试汇率类型标准导出",
         description="验证汇率类型标准导出服务功能",
         severity="normal",
-        order=19,
+        file_level_order=19,
         tags=["汇率类型管理", "导出", "GEN_CURR_EXCHANGE_RATE_TYPE_CF_GEI_EXPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="汇率类型标准导出服务功能未实现")
@@ -764,7 +778,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试币种配置OSS导入任务",
         description="验证币种配置-导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=20,
+        file_level_order=20,
         tags=["币种管理", "任务管理", "GEN_CURR_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
     )
     @pytest.mark.skip(reason="OSS导入任务功能未实现")
@@ -798,7 +812,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试币种配置导出任务",
         description="验证币种配置-导入导出任务管理接口-提交导出任务功能",
         severity="normal",
-        order=21,
+        file_level_order=21,
         tags=["币种管理", "任务管理", "GEN_CURR_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST"]
     )
     @pytest.mark.skip(reason="导出任务功能未实现")
@@ -839,7 +853,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试汇率OSS导入任务",
         description="验证汇率-导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=22,
+        file_level_order=22,
         tags=["汇率管理", "任务管理", "GEN_CURR_FORMULA_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
     )
     @pytest.mark.skip(reason="OSS导入任务功能未实现")
@@ -873,7 +887,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试汇率导出任务",
         description="验证汇率-导入导出任务管理接口-提交导出任务功能",
         severity="normal",
-        order=23,
+        file_level_order=23,
         tags=["汇率管理", "任务管理", "GEN_CURR_FORMULA_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST"]
     )
     @pytest.mark.skip(reason="导出任务功能未实现")
@@ -914,7 +928,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试汇率类型OSS导入任务",
         description="验证汇率类型-导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=24,
+        file_level_order=24,
         tags=["汇率类型管理", "任务管理", "GEN_CURR_EXCHANGE_RATE_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
     )
     @pytest.mark.skip(reason="OSS导入任务功能未实现")
@@ -948,7 +962,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试汇率类型导出任务",
         description="验证汇率类型-导入导出任务管理接口-提交导出任务功能",
         severity="normal",
-        order=25,
+        file_level_order=25,
         tags=["汇率类型管理", "任务管理", "GEN_CURR_EXCHANGE_RATE_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST"]
     )
     @pytest.mark.skip(reason="导出任务功能未实现")
@@ -990,7 +1004,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试删除币种配置",
         description="验证GEN-币种配置-删除服务功能",
         severity="critical",
-        order=26,
+        file_level_order=26,
         tags=["币种管理", "删除", "GEN_CURR_TYPE_CF_DELETE_ACTION_SERVICE"]
     )
     def test_delete_currency(self):
@@ -1045,7 +1059,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试删除汇率",
         description="验证GEN-汇率-删除服务功能",
         severity="critical",
-        order=27,
+        file_level_order=27,
         tags=["汇率管理", "删除", "GEN_CURR_FORMULA_TYPE_CF_DELETE_ACTION_SERVICE"]
     )
     def test_delete_exchange_rate(self):
@@ -1059,15 +1073,20 @@ class TestCurrencyManagement(GenMdBaseTest):
             save_api_path = self.get_api_path("GEN-汇率-保存服务")
             save_params, save_url = self.get_api_params(save_api_path)
             
+            # 获取币种ID和汇率类型ID
+            curr_id = self.init_data.get("currency_info", [{}])[0].get("curr_id", 2000001)
+            rate_type_id = self.init_data.get("exchange_rate_type_info", [{}])[0].get("exchange_rate_type_id")
+            
             save_filtered_params = ParamUtil.filter_post_body_fields(
-                save_params, ["code", "name", "fromCurr", "toCurr", "rate"], ["params", "request"]
+                save_params, ["code", "name", "exchRate", "baseCurrId", "tarCurrId", "genCurrExchangeRateTypeCf"], ["params", "request"]
             )
             save_set_dict = {
                 "code": rate_code,
                 "name": rate_name,
-                "fromCurr": "USD",
-                "toCurr": "CNY",
-                "rate": 7.2
+                "exchRate": 7.2,
+                "baseCurrId": {"id": curr_id},
+                "tarCurrId": {"id": curr_id},
+                "genCurrExchangeRateTypeCf": {"id": rate_type_id}
             }
             ParamUtil.set_request_params(save_filtered_params, save_set_dict)
 
@@ -1101,7 +1120,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试删除汇率类型",
         description="验证GEN-汇率类型-删除服务功能",
         severity="critical",
-        order=28,
+        file_level_order=28,
         tags=["汇率类型管理", "删除", "GEN_CURR_EXCHANGE_RATE_TYPE_CF_DELETE_ACTION_SERVICE"]
     )
     def test_delete_exchange_rate_type(self):
@@ -1156,7 +1175,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试币种配置标准导入",
         description="验证币种配置标准导入服务功能",
         severity="normal",
-        order=29,
+        file_level_order=29,
         tags=["币种管理", "导入", "GEN_CURR_TYPE_CF_GEI_IMPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="币种配置标准导入服务功能未实现")
@@ -1196,7 +1215,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试币种配置标准导出",
         description="验证币种配置标准导出服务功能",
         severity="normal",
-        order=30,
+        file_level_order=30,
         tags=["币种管理", "导出", "GEN_CURR_TYPE_CF_GEI_EXPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="币种配置标准导出服务功能未实现")
@@ -1235,7 +1254,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         title="测试币种汇率完整业务流程",
         description="验证币种、汇率、汇率类型的完整业务流程",
         severity="critical",
-        order=31,
+        file_level_order=31,
         tags=["币种管理", "综合测试", "业务流程"]
     )
     def test_currency_complete_workflow(self):
@@ -1291,15 +1310,20 @@ class TestCurrencyManagement(GenMdBaseTest):
             rate_api_path = self.get_api_path("GEN-汇率-保存服务")
             rate_params, rate_url = self.get_api_params(rate_api_path)
             
+            # 获取币种ID和汇率类型ID
+            curr_id = self.init_data.get("currency_info", [{}])[0].get("curr_id", 2000001)
+            rate_type_id = self.init_data.get("exchange_rate_type_info", [{}])[0].get("exchange_rate_type_id")
+            
             rate_filtered_params = ParamUtil.filter_post_body_fields(
-                rate_params, ["code", "name", "fromCurr", "toCurr", "rate"], ["params", "request"]
+                rate_params, ["code", "name", "exchRate", "baseCurrId", "tarCurrId", "genCurrExchangeRateTypeCf"], ["params", "request"]
             )
             rate_set_dict = {
                 "code": rate_code,
                 "name": rate_name,
-                "fromCurr": currency_code,
-                "toCurr": "USD",
-                "rate": 0.14
+                "exchRate": 0.14,
+                "baseCurrId": {"id": curr_id},
+                "tarCurrId": {"id": curr_id},
+                "genCurrExchangeRateTypeCf": {"id": rate_type_id}
             }
             ParamUtil.set_request_params(rate_filtered_params, rate_set_dict)
 

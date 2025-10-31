@@ -61,7 +61,7 @@ class TestSurveyManagement(GenMdBaseTest):
         title="测试创建评分任务",
         description="验证GEN-评分任务-创建评分任务服务功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["评分任务", "创建", "GEN_SURVEY_MISSION_SAVE_UPDATE_ACTION_SERVICE"]
     )
@@ -121,7 +121,7 @@ class TestSurveyManagement(GenMdBaseTest):
         title="测试发布评分任务",
         description="验证GEN-评分任务-发布评分任务服务功能",
         severity="critical",
-        order=2,
+        file_level_order=2,
         tags=["评分任务", "发布", "GEN_SURVEY_MISSION_RELEASE_ACTION_SERVICE"]
     )
     def test_release_survey_mission(self):
@@ -158,7 +158,7 @@ class TestSurveyManagement(GenMdBaseTest):
         title="测试业务人员进行评分",
         description="验证GEN-评分任务-业务人员进行评分服务功能",
         severity="critical",
-        order=3,
+        file_level_order=3,
         tags=["评分任务", "评分", "GEN_SURVEY_SCORE_ACTION_SERVICE"]
     )
     def test_survey_score(self):
@@ -286,7 +286,7 @@ class TestSurveyManagement(GenMdBaseTest):
         title="测试查询评分详情",
         description="验证GEN-评分详情-查询评分详情服务功能",
         severity="critical",
-        order=4,
+        file_level_order=4,
         tags=["评分详情", "查询", "GEN_SURVEY_DETAIL_ACTION_SERVICE"]
     )
     def test_query_survey_detail(self):
@@ -325,7 +325,7 @@ class TestSurveyManagement(GenMdBaseTest):
         title="测试评分任务标准导入",
         description="验证评分任务标准导入服务功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         tags=["评分任务", "导入", "GEN_SURVEY_MISSION_MD_GEI_IMPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
@@ -365,7 +365,7 @@ class TestSurveyManagement(GenMdBaseTest):
         title="测试评分任务标准导出",
         description="验证评分任务标准导出服务功能",
         severity="normal",
-        order=6,
+        file_level_order=6,
         tags=["评分任务", "导出", "GEN_SURVEY_MISSION_MD_GEI_EXPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="标准导出需要复杂配置，暂时跳过")
@@ -403,7 +403,7 @@ class TestSurveyManagement(GenMdBaseTest):
         title="测试评分任务导出任务",
         description="验证评分任务-导入导出任务管理接口-提交导出任务功能",
         severity="normal",
-        order=7,
+        file_level_order=7,
         tags=["评分任务", "任务管理", "GEN_SURVEY_MISSION_MD_API_GEI_TASK_EXPORT_DIRECT_POST"]
     )
     @pytest.mark.skip(reason="任务管理接口配置复杂，暂时跳过")
@@ -488,7 +488,7 @@ class TestSurveyManagement(GenMdBaseTest):
         title="测试评分任务OSS导入任务",
         description="验证评分任务-导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=8,
+        file_level_order=8,
         tags=["评分任务", "任务管理", "GEN_SURVEY_MISSION_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
     )
     @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
@@ -537,7 +537,7 @@ class TestSurveyManagement(GenMdBaseTest):
         title="测试评分详情标准导入",
         description="验证评分详情标准导入服务功能",
         severity="normal",
-        order=9,
+        file_level_order=9,
         tags=["评分详情", "导入", "GEN_SURVEY_DETAIL_MD_GEI_IMPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
@@ -577,7 +577,7 @@ class TestSurveyManagement(GenMdBaseTest):
         title="测试评分详情标准导出",
         description="验证评分详情标准导出服务功能",
         severity="normal",
-        order=10,
+        file_level_order=10,
         tags=["评分详情", "导出", "GEN_SURVEY_DETAIL_MD_GEI_EXPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="标准导出需要复杂配置，暂时跳过")
@@ -615,7 +615,7 @@ class TestSurveyManagement(GenMdBaseTest):
         title="测试评分详情导出任务",
         description="验证评分详情-导入导出任务管理接口-提交导出任务功能",
         severity="normal",
-        order=11,
+        file_level_order=11,
         tags=["评分详情", "任务管理", "GEN_SURVEY_DETAIL_MD_API_GEI_TASK_EXPORT_DIRECT_POST"]
     )
     @pytest.mark.skip(reason="任务管理接口配置复杂，暂时跳过")
@@ -700,7 +700,7 @@ class TestSurveyManagement(GenMdBaseTest):
         title="测试评分详情OSS导入任务",
         description="验证评分详情-导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=12,
+        file_level_order=12,
         tags=["评分详情", "任务管理", "GEN_SURVEY_DETAIL_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
     )
     @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")

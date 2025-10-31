@@ -41,7 +41,7 @@ class TestQualificationsManagement(GenMdBaseTest):
         title="测试新增资质类型",
         description="验证新增资质类型功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["资质类型", "新增"]
     )
@@ -83,7 +83,7 @@ class TestQualificationsManagement(GenMdBaseTest):
         title="测试查询资质类型分页",
         description="验证资质类型分页查询功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         tags=["资质类型", "查询"]
     )
     def test_query_qualification_type_page(self):
@@ -134,7 +134,7 @@ class TestQualificationsManagement(GenMdBaseTest):
         title="测试查询资质类型详情",
         description="验证资质类型详情查询功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         tags=["资质类型", "详情"]
     )
     def test_query_qualification_type_detail(self):
@@ -169,7 +169,7 @@ class TestQualificationsManagement(GenMdBaseTest):
         title="测试提交资质类型导出任务",
         description="验证提交资质类型导出任务功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         tags=["资质类型", "导出任务"]
     )
     def test_submit_qualification_type_export_task(self):
@@ -256,7 +256,7 @@ class TestQualificationsManagement(GenMdBaseTest):
         title="测试删除资质类型",
         description="验证删除资质类型功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         tags=["资质类型", "删除"]
     )
     def test_delete_qualification_type(self):
@@ -292,7 +292,7 @@ class TestQualificationsManagement(GenMdBaseTest):
         title="测试新增资质组",
         description="验证新增资质组功能",
         severity="normal",
-        order=6,
+        file_level_order=6,
         tags=["资质组", "新增"]
     )
     def test_save_qualification_group(self):
@@ -344,7 +344,7 @@ class TestQualificationsManagement(GenMdBaseTest):
         title="测试查询资质组分页",
         description="验证资质组分页查询功能",
         severity="normal",
-        order=7,
+        file_level_order=7,
         tags=["资质组", "查询"]
     )
     def test_query_qualification_group_page(self):
@@ -387,7 +387,7 @@ class TestQualificationsManagement(GenMdBaseTest):
         title="测试查询资质组详情",
         description="验证资质组详情查询功能",
         severity="normal",
-        order=8,
+        file_level_order=8,
         tags=["资质组", "详情"]
     )
     def test_query_qualification_group_detail(self):
@@ -422,7 +422,7 @@ class TestQualificationsManagement(GenMdBaseTest):
         title="测试提交资质组导出任务",
         description="验证提交资质组导出任务功能",
         severity="normal",
-        order=9,
+        file_level_order=9,
         tags=["资质组", "导出任务"]
     )
     def test_submit_qualification_group_export_task(self):
@@ -516,7 +516,7 @@ class TestQualificationsManagement(GenMdBaseTest):
         title="测试删除资质组",
         description="验证删除资质组功能",
         severity="normal",
-        order=10,
+        file_level_order=10,
         tags=["资质组", "删除"]
     )
     def test_delete_qualification_group(self):
@@ -553,7 +553,7 @@ class TestQualificationsManagement(GenMdBaseTest):
         title="测试资质类型标准导出",
         description="验证资质类型标准导出功能",
         severity="normal",
-        order=11,
+        file_level_order=11,
         tags=["资质类型", "导出"]
     )
     def test_export_qualification_type(self):
@@ -591,7 +591,7 @@ class TestQualificationsManagement(GenMdBaseTest):
         title="测试资质类型标准导入",
         description="验证资质类型标准导入功能",
         severity="normal",
-        order=12,
+        file_level_order=12,
         tags=["资质类型", "导入"]
     )
     def test_import_qualification_type(self):
@@ -629,7 +629,7 @@ class TestQualificationsManagement(GenMdBaseTest):
         title="测试通过OSS提交资质类型导入任务",
         description="验证通过OSS提交资质类型导入任务功能",
         severity="normal",
-        order=13,
+        file_level_order=13,
         tags=["资质类型", "OSS导入"]
     )
     def test_submit_qualification_type_import_task_by_oss(self):
@@ -672,7 +672,7 @@ class TestQualificationsManagement(GenMdBaseTest):
         title="测试资质组标准导出",
         description="验证资质组标准导出功能",
         severity="normal",
-        order=14,
+        file_level_order=14,
         tags=["资质组", "导出"]
     )
     def test_export_qualification_group(self):
@@ -710,7 +710,7 @@ class TestQualificationsManagement(GenMdBaseTest):
         title="测试资质组标准导入",
         description="验证资质组标准导入功能",
         severity="normal",
-        order=15,
+        file_level_order=15,
         tags=["资质组", "导入"]
     )
     def test_import_qualification_group(self):
@@ -748,7 +748,7 @@ class TestQualificationsManagement(GenMdBaseTest):
         title="测试通过OSS提交资质组导入任务",
         description="验证通过OSS提交资质组导入任务功能",
         severity="normal",
-        order=16,
+        file_level_order=16,
         tags=["资质组", "OSS导入"]
     )
     def test_submit_qualification_group_import_task_by_oss(self):

@@ -41,7 +41,7 @@ class TestLabelManagement(GenMdBaseTest):
         title="测试新增标签",
         description="验证GEN-标签表-保存服务功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["标签管理", "新增", "GEN_LABEL_MD_SAVE_ACTION_SERVICE"]
     )
@@ -86,7 +86,7 @@ class TestLabelManagement(GenMdBaseTest):
         title="测试查询标签分页列表",
         description="验证GEN-标签表-查询分页服务功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         tags=["标签管理", "查询", "GEN_LABEL_MD_QUERY_PAGE_ACTION_SERVICE"]
     )
     def test_query_label_page(self):
@@ -125,7 +125,7 @@ class TestLabelManagement(GenMdBaseTest):
         title="测试查询标签详情",
         description="验证GEN-标签表-查询详情服务功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         tags=["标签管理", "查询", "GEN_LABEL_MD_QUERY_DETAIL_ACTION_SERVICE"]
     )
     def test_query_label_detail(self):
@@ -159,7 +159,7 @@ class TestLabelManagement(GenMdBaseTest):
         title="测试启用标签",
         description="验证GEN-标签表-启用服务功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         tags=["标签管理", "启用", "GEN_LABEL_MD_ENABLED_ACTION_SERVICE"]
     )
     def test_enable_label(self):
@@ -192,7 +192,7 @@ class TestLabelManagement(GenMdBaseTest):
         title="测试禁用标签",
         description="验证GEN-标签表-禁用服务功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         tags=["标签管理", "禁用", "GEN_LABEL_MD_DISABLED_ACTION_SERVICE"]
     )
     def test_disable_label(self):
@@ -225,7 +225,7 @@ class TestLabelManagement(GenMdBaseTest):
         title="测试删除标签",
         description="验证GEN-标签表-删除服务功能",
         severity="critical",
-        order=6,
+        file_level_order=6,
         tags=["标签管理", "删除", "GEN_LABEL_MD_DELETE_ACTION_SERVICE"]
     )
     def test_delete_label(self):
@@ -259,7 +259,7 @@ class TestLabelManagement(GenMdBaseTest):
         title="测试标签表标准导入",
         description="验证标签表标准导入服务功能",
         severity="normal",
-        order=7,
+        file_level_order=7,
         tags=["标签管理", "导入", "GEN_LABEL_MD_GEI_IMPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -300,7 +300,7 @@ class TestLabelManagement(GenMdBaseTest):
         title="测试标签表标准导出",
         description="验证标签表标准导出服务功能",
         severity="normal",
-        order=8,
+        file_level_order=8,
         tags=["标签管理", "导出", "GEN_LABEL_MD_GEI_EXPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -338,7 +338,7 @@ class TestLabelManagement(GenMdBaseTest):
         title="测试标签表OSS导入任务",
         description="验证标签表-导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=9,
+        file_level_order=9,
         tags=["标签管理", "任务管理", "GEN_LABEL_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -373,7 +373,7 @@ class TestLabelManagement(GenMdBaseTest):
         title="测试标签表导出任务",
         description="验证标签表-导入导出任务管理接口-提交导出任务功能",
         severity="normal",
-        order=10,
+        file_level_order=10,
         tags=["标签管理", "任务管理", "GEN_LABEL_MD_API_GEI_TASK_EXPORT_DIRECT_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")

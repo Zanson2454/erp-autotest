@@ -48,7 +48,7 @@ class TestDictManagement(GenMdBaseTest):
         title="测试新增数据字典类别",
         description="验证GEN-数据字典类别-保存服务功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["数据字典", "新增", "GEN_DICT_HEAD_CF_SAVE_ACTION_SERVICE"]
     )
@@ -105,7 +105,7 @@ class TestDictManagement(GenMdBaseTest):
         title="测试查询数据字典类别分页列表",
         description="验证GEN-数据字典类别-查询分页服务功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         tags=["数据字典", "查询", "GEN_DICT_HEAD_CF_QUERY_PAGE_ACTION_SERVICE"]
     )
     def test_query_dict_page(self):
@@ -158,7 +158,7 @@ class TestDictManagement(GenMdBaseTest):
         title="测试查询数据字典类别详情",
         description="验证GEN-数据字典类别-查询详情服务功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         tags=["数据字典", "查询", "GEN_DICT_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE"]
     )
     def test_query_dict_detail(self):
@@ -191,7 +191,7 @@ class TestDictManagement(GenMdBaseTest):
         title="测试启用数据字典类别",
         description="验证GEN-数据字典类别-启用服务功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         tags=["数据字典", "启用", "GEN_DICT_HEAD_CF_ENABLED_ACTION_SERVICE"]
     )
     def test_enable_dict(self):
@@ -224,7 +224,7 @@ class TestDictManagement(GenMdBaseTest):
         title="测试禁用数据字典类别",
         description="验证GEN-数据字典类别-禁用服务功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         tags=["数据字典", "禁用", "GEN_DICT_HEAD_CF_DISABLED_ACTION_SERVICE"]
     )
     def test_disable_dict(self):
@@ -257,7 +257,7 @@ class TestDictManagement(GenMdBaseTest):
         title="测试删除数据字典类别",
         description="验证GEN-数据字典类别-删除服务功能",
         severity="critical",
-        order=6,
+        file_level_order=6,
         tags=["数据字典", "删除", "GEN_DICT_HEAD_CF_DELETE_ACTION_SERVICE"]
     )
     def test_delete_dict(self):
@@ -291,7 +291,7 @@ class TestDictManagement(GenMdBaseTest):
         title="测试数据字典类别标准导入",
         description="验证数据字典类别标准导入服务功能",
         severity="normal",
-        order=7,
+        file_level_order=7,
         tags=["数据字典", "导入", "GEN_DICT_HEAD_CF_GEI_IMPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -332,7 +332,7 @@ class TestDictManagement(GenMdBaseTest):
         title="测试数据字典类别标准导出",
         description="验证数据字典类别标准导出服务功能",
         severity="normal",
-        order=8,
+        file_level_order=8,
         tags=["数据字典", "导出", "GEN_DICT_HEAD_CF_GEI_EXPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -370,7 +370,7 @@ class TestDictManagement(GenMdBaseTest):
         title="测试数据字典类别OSS导入任务",
         description="验证数据字典类别-导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=9,
+        file_level_order=9,
         tags=["数据字典", "任务管理", "GEN_DICT_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -405,7 +405,7 @@ class TestDictManagement(GenMdBaseTest):
         title="测试数据字典类别导出任务",
         description="验证数据字典类别-导入导出任务管理接口-提交导出任务功能",
         severity="normal",
-        order=10,
+        file_level_order=10,
         tags=["数据字典", "任务管理", "GEN_DICT_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")

@@ -38,7 +38,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         title="测试新增监控管理",
         description="验证新增监控管理功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["监控管理", "新增"]
     )
@@ -106,7 +106,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         title="测试查询监控管理列表",
         description="验证监控管理列表查询功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         smoke=True,
         tags=["监控管理", "查询"]
     )
@@ -160,7 +160,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         title="测试查询监控管理详情",
         description="验证监控管理详情查询功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         smoke=True,
         tags=["监控管理", "查询"]
     )
@@ -194,7 +194,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         title="测试删除监控管理",
         description="验证删除监控管理功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         smoke=True,
         tags=["监控管理", "删除"]
     )
@@ -229,7 +229,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         title="测试监控方案查询分页服务",
         description="验证监控方案-查询分页服务功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         tags=["监控方案管理", "查询", "GEN_MONITORING_PLAN_INFO_MD_QUERY_PAGE_ACTION_SERVICE"]
     )
     def test_query_monitoring_plan_page(self):
@@ -265,7 +265,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         title="测试监控方案启用服务",
         description="验证监控方案-启用服务功能",
         severity="normal",
-        order=6,
+        file_level_order=6,
         tags=["监控方案管理", "启用", "GEN_MONITORING_PLAN_INFO_MD_ENABLED_ACTION_SERVICE"]
     )
     def test_enable_monitoring_plan(self):
@@ -298,7 +298,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         title="测试监控方案删除服务",
         description="验证监控方案-删除服务功能",
         severity="normal",
-        order=7,
+        file_level_order=7,
         tags=["监控方案管理", "删除", "GEN_MONITORING_PLAN_INFO_MD_DELETE_ACTION_SERVICE"]
     )
     def test_delete_monitoring_plan(self):
@@ -332,7 +332,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         title="测试监控预警结果信息保存服务",
         description="验证监控预警结果信息-保存服务功能",
         severity="normal",
-        order=8,
+        file_level_order=8,
         tags=["监控预警结果管理", "保存", "GEN_MONITORING_ALERT_RESULT_MD_SAVE_ACTION_SERVICE"]
     )
     def test_save_monitoring_alert_result(self):
@@ -377,7 +377,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         title="测试监控预警结果信息查询详情服务",
         description="验证监控预警结果信息-查询详情服务功能",
         severity="normal",
-        order=9,
+        file_level_order=9,
         tags=["监控预警结果管理", "查询", "GEN_MONITORING_ALERT_RESULT_MD_DETAIL_ACTION_SERVICE"]
     )
     def test_query_monitoring_alert_result_detail(self):
@@ -411,7 +411,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         title="测试监控预警结果信息删除服务",
         description="验证监控预警结果信息-删除服务功能",
         severity="normal",
-        order=10,
+        file_level_order=10,
         tags=["监控预警结果管理", "删除", "GEN_MONITORING_ALERT_RESULT_MD_DELETE_ACTION_SERVICE"]
     )
     def test_delete_monitoring_alert_result(self):
@@ -445,7 +445,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         title="测试监控方案标准导入服务",
         description="验证监控方案标准导入服务功能",
         severity="normal",
-        order=11,
+        file_level_order=11,
         tags=["监控方案管理", "导入", "GEN_MONITORING_PLAN_INFO_MD_GEI_IMPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -483,7 +483,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         title="测试监控方案标准导出服务",
         description="验证监控方案标准导出服务功能",
         severity="normal",
-        order=12,
+        file_level_order=12,
         tags=["监控方案管理", "导出", "GEN_MONITORING_PLAN_INFO_MD_GEI_EXPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -520,7 +520,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         title="测试监控预警结果信息标准导入服务",
         description="验证监控预警结果信息标准导入服务功能",
         severity="normal",
-        order=13,
+        file_level_order=13,
         tags=["监控预警结果管理", "导入", "GEN_MONITORING_ALERT_RESULT_MD_GEI_IMPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -558,7 +558,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         title="测试监控预警结果信息标准导出服务",
         description="验证监控预警结果信息标准导出服务功能",
         severity="normal",
-        order=14,
+        file_level_order=14,
         tags=["监控预警结果管理", "导出", "GEN_MONITORING_ALERT_RESULT_MD_GEI_EXPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -595,7 +595,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         title="测试监控方案OSS导入任务",
         description="验证监控方案-导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=15,
+        file_level_order=15,
         tags=["监控方案管理", "任务管理", "GEN_MONITORING_PLAN_INFO_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -629,7 +629,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         title="测试监控方案导出任务",
         description="验证监控方案-导入导出任务管理接口-提交导出任务功能",
         severity="normal",
-        order=16,
+        file_level_order=16,
         tags=["监控方案管理", "任务管理", "GEN_MONITORING_PLAN_INFO_MD_API_GEI_TASK_EXPORT_DIRECT_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -670,7 +670,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         title="测试监控预警结果信息OSS导入任务",
         description="验证监控预警结果信息-导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=17,
+        file_level_order=17,
         tags=["监控预警结果管理", "任务管理", "GEN_MONITORING_ALERT_RESULT_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -704,7 +704,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         title="测试监控预警结果信息导出任务",
         description="验证监控预警结果信息-导入导出任务管理接口-提交导出任务功能",
         severity="normal",
-        order=18,
+        file_level_order=18,
         tags=["监控预警结果管理", "任务管理", "GEN_MONITORING_ALERT_RESULT_MD_API_GEI_TASK_EXPORT_DIRECT_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")

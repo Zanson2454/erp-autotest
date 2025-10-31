@@ -66,7 +66,7 @@ class TestEmployeeManagement(GenMdBaseTest):
         title="测试新增员工管理",
         description="验证新增员工管理功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["员工管理", "新增"]
     )
@@ -137,7 +137,7 @@ class TestEmployeeManagement(GenMdBaseTest):
         title="测试查询员工详情",
         description="验证查询员工详情功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         smoke=True,
         tags=["员工管理", "查询详情"]
     )
@@ -183,7 +183,7 @@ class TestEmployeeManagement(GenMdBaseTest):
         title="测试员工分页查询",
         description="验证员工分页查询功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         smoke=True,
         tags=["员工管理", "分页查询"]
     )
@@ -224,7 +224,7 @@ class TestEmployeeManagement(GenMdBaseTest):
         title="测试员工条件查询-按手机号",
         description="验证员工按手机号条件查询功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         smoke=True,
         tags=["员工管理", "条件查询", "手机号查询"]
     )
@@ -287,7 +287,7 @@ class TestEmployeeManagement(GenMdBaseTest):
         title="测试员工条件查询-按姓名",
         description="验证员工按姓名条件查询功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         smoke=True,
         tags=["员工管理", "条件查询", "姓名查询"]
     )
@@ -348,7 +348,7 @@ class TestEmployeeManagement(GenMdBaseTest):
         title="测试保存员工组织关联关系",
         description="验证保存员工组织关联关系功能",
         severity="normal",
-        order=6,
+        file_level_order=6,
         smoke=True,
         tags=["员工管理", "保存关联"]
     )
@@ -408,7 +408,7 @@ class TestEmployeeManagement(GenMdBaseTest):
         title="测试查询指定组织和下级组织的员工信息",
         description="验证查询指定组织和下级组织的员工信息功能",
         severity="normal",
-        order=7,
+        file_level_order=7,
         smoke=True,
         tags=["员工管理", "组织查询", "下级组织"]
     )
@@ -463,7 +463,7 @@ class TestEmployeeManagement(GenMdBaseTest):
         title="测试删除员工组织关联关系",
         description="验证删除员工组织关联关系功能",
         severity="normal",
-        order=8,
+        file_level_order=8,
         smoke=True,
         tags=["员工管理", "删除关联"]
     )

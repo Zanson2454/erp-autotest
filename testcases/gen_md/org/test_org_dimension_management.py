@@ -60,7 +60,7 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
         title="测试新增组织维度管理",
         description="验证新增组织维度管理功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["组织维度管理", "新增"]
     )
@@ -115,7 +115,7 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
         title="测试查询组织维度管理详情",
         description="验证组织维度管理详情查询功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         smoke=True,
         tags=["组织维度管理", "查询详情"]
     )
@@ -162,7 +162,7 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
         title="测试查询组织维度管理列表",
         description="验证组织维度管理列表查询功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         smoke=True,
         tags=["组织维度管理", "查询"]
     )
@@ -237,7 +237,7 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
         title="测试启用组织维度管理",
         description="验证启用组织维度管理功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         smoke=True,
         tags=["组织维度管理", "启用"]
     )
@@ -283,7 +283,7 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
         title="测试禁用组织维度管理",
         description="验证禁用组织维度管理功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         smoke=True,
         tags=["组织维度管理", "禁用"]
     )
@@ -328,7 +328,7 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
         title="测试查询启用的组织维度列表",
         description="验证查询启用的组织维度列表功能",
         severity="normal",
-        order=6,
+        file_level_order=6,
         smoke=True,
         tags=["组织维度管理", "查询启用列表"]
     )
@@ -373,7 +373,7 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
         title="测试删除组织维度管理",
         description="验证删除组织维度管理功能",
         severity="normal",
-        order=7,
+        file_level_order=7,
         smoke=True,
         tags=["组织维度管理", "删除"]
     )

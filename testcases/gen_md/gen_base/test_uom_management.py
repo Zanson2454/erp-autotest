@@ -25,7 +25,10 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         
         # 依赖数据
         if cls.md_cache_data:
-            cls.mat_id = cls.md_cache_data.get("mat_info", {}).get("mat_cate_md",[])[0].get("id") or None
+            mat_info = cls.md_cache_data.get("mat_info", {})
+            mat_md = mat_info.get("mat_md", {})
+            mat_md_finp = mat_md.get("FINP", [])
+            cls.mat_id = mat_md_finp[0].get("id") if mat_md_finp else None
 
     @classmethod
     def teardown_class(cls):
@@ -53,7 +56,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         title="测试新增计量单位",
         description="验证GEN-计量单位-保存服务功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["计量单位管理", "新增", "GEN_UOM_TYPE_CF_SAVE_ACTION_SERVICE"]
     )
@@ -94,7 +97,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         title="测试查询计量单位分页列表",
         description="验证GEN-计量单位-查询分页服务功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         tags=["计量单位管理", "查询", "GEN_UOM_TYPE_CF_QUERY_PAGE_ACTION_SERVICE"]
     )
     def test_query_uom_type_page(self):
@@ -151,7 +154,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         title="测试计量单位分页数据服务",
         description="验证计量单位-分页数据服务功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         tags=["计量单位管理", "查询", "GEN_UOM_TYPE_CF_PAGING_DATA_SERVICE"]
     )
     def test_query_uom_type_paging_data(self):
@@ -183,7 +186,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         title="测试查询计量单位详情",
         description="验证GEN-计量单位-查询详情服务功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         tags=["计量单位管理", "查询", "GEN_UOM_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE"]
     )
     def test_query_uom_type_detail(self):
@@ -216,7 +219,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         title="测试根据ID查找计量单位数据",
         description="验证计量单位-根据ID查找数据服务功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         tags=["计量单位管理", "查询", "GEN_UOM_TYPE_CF_FIND_DATA_BY_ID_SERVICE"]
     )
     @pytest.mark.skip(reason="废弃")
@@ -250,7 +253,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         title="测试计量单位转换功能",
         description="验证GEN-计量单位-单位转换(前端)服务功能",
         severity="normal",
-        order=6,
+        file_level_order=6,
         tags=["计量单位管理", "转换", "GEN_UOM_TYPE_CONVERSION_ACTION_SERVICE"]
     )
     def test_uom_type_conversion(self):
@@ -266,15 +269,9 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
                 params, ["matId", "unitId", "targetUnitId", "orgAmount"], ["params", "request"]
             )
             set_dict = {
-                "matId": {
-                    "id": self.mat_id
-                },
-                "unitId": {
-                    "id": self.uom_id
-                },
-                "targetUnitId": {
-                    "id": self.uom_id
-                },
+                "matId": self.mat_id,
+                "unitId": self.uom_id,
+                "targetUnitId": self.uom_id,
                 "orgAmount": 1
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
@@ -294,7 +291,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         title="测试删除计量单位",
         description="验证GEN-计量单位-删除服务功能",
         severity="normal",
-        order=7,
+        file_level_order=7,
         tags=["计量单位管理", "删除", "GEN_UOM_TYPE_CF_DELETE_ACTION_SERVICE"]
     )
     def test_delete_uom_type(self):
@@ -328,7 +325,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         title="测试新增计量单位转换",
         description="验证GEN-计量单位转换-保存服务功能",
         severity="blocker",
-        order=8,
+        file_level_order=8,
         smoke=True,
         tags=["计量单位转换管理", "新增", "GEN_UOM_FORMULA_TYPE_CF_SAVE_ACTION_SERVICE"]
     )
@@ -374,7 +371,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         title="测试查询计量单位转换分页列表",
         description="验证GEN-计量单位转换-查询分页服务功能",
         severity="normal",
-        order=9,
+        file_level_order=9,
         tags=["计量单位转换管理", "查询", "GEN_UOM_FORMULA_TYPE_CF_QUERY_PAGE_ACTION_SERVICE"]
     )
     def test_query_uom_formula_page(self):
@@ -415,7 +412,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         title="测试查询计量单位转换详情",
         description="验证GEN-计量单位转换-查询详情服务功能",
         severity="normal",
-        order=10,
+        file_level_order=10,
         tags=["计量单位转换管理", "查询", "GEN_UOM_FORMULA_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE"]
     )
     def test_query_uom_formula_detail(self):
@@ -448,7 +445,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         title="测试删除计量单位转换",
         description="验证GEN-计量单位转换-删除服务功能",
         severity="normal",
-        order=11,
+        file_level_order=11,
         tags=["计量单位转换管理", "删除", "GEN_UOM_FORMULA_TYPE_CF_DELETE_ACTION_SERVICE"]
     )
     def test_delete_uom_formula(self):
@@ -482,7 +479,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         title="测试计量单位标准导入",
         description="验证计量单位标准导入服务功能",
         severity="normal",
-        order=12,
+        file_level_order=12,
         tags=["计量单位管理", "导入", "GEN_UOM_TYPE_CF_GEI_IMPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -523,7 +520,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         title="测试计量单位标准导出",
         description="验证计量单位标准导出服务功能",
         severity="normal",
-        order=13,
+        file_level_order=13,
         tags=["计量单位管理", "导出", "GEN_UOM_TYPE_CF_GEI_EXPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -561,7 +558,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         title="测试计量单位OSS导入任务",
         description="验证计量单位-导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=14,
+        file_level_order=14,
         tags=["计量单位管理", "导入", "GEN_UOM_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -596,7 +593,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         title="测试计量单位导出任务",
         description="验证计量单位-导入导出任务管理接口-提交导出任务功能",
         severity="normal",
-        order=15,
+        file_level_order=15,
         tags=["计量单位管理", "导出", "GEN_UOM_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST"]
     )
     def test_uom_type_export_task(self):
@@ -728,7 +725,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         title="测试获取基本单位转换系数",
         description="验证GEN-UNIT-获取基本单位转换系数服务功能",
         severity="normal",
-        order=16,
+        file_level_order=16,
         tags=["计量单位管理", "转换系数", "GAIN_WEIGHT_COEFFICIENT_EVENT_SERVICE"]
     )
     def test_gain_weight_coefficient(self):

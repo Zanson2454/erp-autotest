@@ -44,7 +44,7 @@ class TestIndexManagement(GenMdBaseTest):
         title="测试新增指标",
         description="验证GEN-指标中心-保存服务功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["指标中心", "新增", "GEN_INDEX_MD_SAVE_ACTION_SERVICE"]
     )
@@ -91,7 +91,7 @@ class TestIndexManagement(GenMdBaseTest):
         title="测试调用取号规则",
         description="验证指标中心表-调用取号规则服务功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         tags=["指标中心", "取号规则", "GEN_INDEX_MD_INVOKE_CODE_RULE_SERVICE"]
     )
     def test_invoke_code_rule(self):
@@ -119,7 +119,7 @@ class TestIndexManagement(GenMdBaseTest):
         title="测试查询指标分页列表",
         description="验证GEN-指标中心-查询分页服务功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         tags=["指标中心", "查询", "GEN_INDEX_MD_QUERY_PAGE_ACTION_SERVICE"]
     )
     def test_query_index_page(self):
@@ -180,7 +180,7 @@ class TestIndexManagement(GenMdBaseTest):
         title="测试查询指标详情",
         description="验证GEN-指标中心-查询详情服务功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         tags=["指标中心", "查询", "GEN_INDEX_MD_DETAIL_ACTION_SERVICE"]
     )
     def test_query_index_detail(self):
@@ -213,7 +213,7 @@ class TestIndexManagement(GenMdBaseTest):
         title="测试根据父ID查询下级列表",
         description="验证GEN-指标中心-根据父ID查询下级列表服务功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         tags=["指标中心", "查询", "GEN_INDEX_MD_QUERY_BY_PARENT_ACTION_SERVICE"]
     )
     def test_query_by_parent(self):
@@ -246,7 +246,7 @@ class TestIndexManagement(GenMdBaseTest):
         title="测试查找树子数据",
         description="验证指标中心表-查找树子数据服务功能",
         severity="normal",
-        order=6,
+        file_level_order=6,
         tags=["指标中心", "树形结构", "GEN_INDEX_MD_FIND_TREE_CHILDREN_DATA_SERVICE"]
     )
     def test_find_tree_children(self):
@@ -279,7 +279,7 @@ class TestIndexManagement(GenMdBaseTest):
         title="测试启用指标",
         description="验证GEN-指标中心-启用服务功能",
         severity="normal",
-        order=7,
+        file_level_order=7,
         tags=["指标中心", "启用", "GEN_INDEX_MD_ENABLED_ACTION_SERVICE"]
     )
     def test_enable_index(self):
@@ -312,7 +312,7 @@ class TestIndexManagement(GenMdBaseTest):
         title="测试禁用指标",
         description="验证GEN-指标中心-禁用服务功能",
         severity="normal",
-        order=8,
+        file_level_order=8,
         tags=["指标中心", "禁用", "GEN_INDEX_MD_DISABLED_ACTION_SERVICE"]
     )
     def test_disable_index(self):
@@ -345,7 +345,7 @@ class TestIndexManagement(GenMdBaseTest):
         title="测试删除指标",
         description="验证GEN-指标中心-删除服务功能",
         severity="critical",
-        order=9,
+        file_level_order=9,
         tags=["指标中心", "删除", "GEN_INDEX_MD_DELETE_ACTION_SERVICE"]
     )
     def test_delete_index(self):
@@ -379,7 +379,7 @@ class TestIndexManagement(GenMdBaseTest):
         title="测试指标中心标准导入",
         description="验证指标中心表标准导入服务功能",
         severity="normal",
-        order=10,
+        file_level_order=10,
         tags=["指标中心", "导入", "GEN_INDEX_MD_GEI_IMPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -421,7 +421,7 @@ class TestIndexManagement(GenMdBaseTest):
         title="测试指标中心OSS导入任务",
         description="验证指标中心表-导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=11,
+        file_level_order=11,
         tags=["指标中心", "任务管理", "GEN_INDEX_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")

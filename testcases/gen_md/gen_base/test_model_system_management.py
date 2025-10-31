@@ -37,7 +37,7 @@ class TestModelSystemManagement(GenMdBaseTest):
         title="测试模型系统分页查询",
         description="验证模型系统分页查询服务功能",
         severity="critical",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["模型系统", "分页查询", "GEN_MODEL_SYSTEM_PAGING_ACTION_SERVICE"]
     )
@@ -79,7 +79,7 @@ class TestModelSystemManagement(GenMdBaseTest):
         title="测试模型根据ID集合查询详情",
         description="验证模型根据ID集合查询详情服务功能",
         severity="critical",
-        order=2,
+        file_level_order=2,
         tags=["模型系统", "查询详情", "GEN_MODEL_SYSTEM_QUERY_BY_IDS_ACTION_SERVICE"]
     )
     def test_query_model_system_by_ids(self):

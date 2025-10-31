@@ -24,7 +24,7 @@ class TestOrgOther(GenMdBaseTest):
         title="测试当前登录人是否在当前组织内",
         description="验证当前登录人是否在当前组织内服务功能",
         severity="normal",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["组织其他功能", "用户组织判断"]
     )
@@ -69,7 +69,7 @@ class TestOrgOther(GenMdBaseTest):
         title="测试钉钉同步组织架构",
         description="验证钉钉同步组织架构服务功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         smoke=False,
         tags=["组织其他功能", "钉钉同步"]
     )
@@ -117,7 +117,7 @@ class TestOrgOther(GenMdBaseTest):
         title="测试公司组织预留字段转币种",
         description="验证公司组织预留字段转币种服务功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         smoke=True,
         tags=["组织其他功能", "币种转换"]
     )

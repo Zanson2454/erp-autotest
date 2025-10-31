@@ -52,7 +52,7 @@ class TestAdmOrgManagement(GenMdBaseTest):
         title="测试保存行政组织",
         description="验证保存行政组织接口的功能性",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["行政组织", "保存组织"]
     )
@@ -107,7 +107,7 @@ class TestAdmOrgManagement(GenMdBaseTest):
         title="测试启用行政组织",
         description="验证启用行政组织接口的功能性",
         severity="blocker",
-        order=2,
+        file_level_order=2,
         smoke=True,
         tags=["行政组织", "启用组织"]
     )
@@ -152,7 +152,7 @@ class TestAdmOrgManagement(GenMdBaseTest):
         title="测试停用行政组织",
         description="验证停用行政组织接口的功能性",
         severity="blocker",
-        order=3,
+        file_level_order=3,
         smoke=True,
         tags=["行政组织", "停用组织"]
     )
@@ -197,7 +197,7 @@ class TestAdmOrgManagement(GenMdBaseTest):
         title="测试删除行政组织",
         description="验证删除行政组织接口的功能性",
         severity="blocker",
-        order=4,
+        file_level_order=4,
         smoke=True,
         tags=["行政组织", "删除组织"]
     )
@@ -251,7 +251,7 @@ class TestAdmOrgManagement(GenMdBaseTest):
         title="测试查询行政组织",
         description="验证查询行政组织接口的功能性",
         severity="blocker",
-        order=5,
+        file_level_order=5,
         smoke=True,
         tags=["行政组织", "查询组织"]
     )

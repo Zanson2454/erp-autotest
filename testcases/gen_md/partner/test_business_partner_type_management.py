@@ -34,7 +34,7 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
         title="测试新增合作伙伴类型",
         description="验证新增合作伙伴类型功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["合作伙伴类型", "新增"]
     )
@@ -79,7 +79,7 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
         title="测试查询合作伙伴类型分页",
         description="验证合作伙伴类型分页查询功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         tags=["合作伙伴类型", "查询"]
     )
     def test_query_business_partner_type_page(self):
@@ -121,7 +121,7 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
         title="测试查询合作伙伴类型详情",
         description="验证合作伙伴类型详情查询功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         tags=["合作伙伴类型", "详情"]
     )
     def test_query_business_partner_type_detail(self):
@@ -156,7 +156,7 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
         title="测试合作伙伴类型分页数据服务",
         description="验证合作伙伴类型分页数据服务功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         tags=["合作伙伴类型", "分页数据"]
     )
     def test_business_partner_type_paging_data(self):
@@ -195,7 +195,7 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
         title="测试启用合作伙伴类型",
         description="验证启用合作伙伴类型功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         tags=["合作伙伴类型", "启用"]
     )
     def test_enable_business_partner_type(self):
@@ -230,7 +230,7 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
         title="测试禁用合作伙伴类型",
         description="验证禁用合作伙伴类型功能",
         severity="normal",
-        order=6,
+        file_level_order=6,
         tags=["合作伙伴类型", "禁用"]
     )
     def test_disable_business_partner_type(self):
@@ -265,7 +265,7 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
         title="测试删除合作伙伴类型",
         description="验证删除合作伙伴类型功能",
         severity="normal",
-        order=7,
+        file_level_order=7,
         tags=["合作伙伴类型", "删除"]
     )
     def test_delete_business_partner_type(self):
@@ -301,7 +301,7 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
         title="测试合作伙伴类型标准导出",
         description="验证合作伙伴类型标准导出功能",
         severity="normal",
-        order=8,
+        file_level_order=8,
         tags=["合作伙伴类型", "导出"]
     )
     def test_export_business_partner_type(self):
@@ -340,7 +340,7 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
         title="测试合作伙伴类型标准导入",
         description="验证合作伙伴类型标准导入功能",
         severity="normal",
-        order=9,
+        file_level_order=9,
         tags=["合作伙伴类型", "导入"]
     )
     def test_import_business_partner_type(self):
@@ -378,7 +378,7 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
         title="测试提交合作伙伴类型导出任务",
         description="验证提交合作伙伴类型导出任务功能",
         severity="normal",
-        order=10,
+        file_level_order=10,
         tags=["合作伙伴类型", "导出任务"]
     )
     def test_submit_business_partner_type_export_task(self):
@@ -540,7 +540,7 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
         title="测试通过OSS提交合作伙伴类型导入任务",
         description="验证通过OSS提交合作伙伴类型导入任务功能",
         severity="normal",
-        order=11,
+        file_level_order=11,
         tags=["合作伙伴类型", "OSS导入"]
     )
     def test_submit_business_partner_type_import_task_by_oss(self):

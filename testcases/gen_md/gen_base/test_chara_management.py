@@ -44,7 +44,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         title="测试新增特征类定义",
         description="验证GEN-特征类定义表-保存服务功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["特征管理", "新增", "GEN_CHARA_CLASS_MD_SAVE_ACTION_SERVICE"]
     )
@@ -90,7 +90,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         title="测试查询特征类定义分页列表",
         description="验证GEN-特征类定义表-查询分页服务功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         tags=["特征管理", "查询", "GEN_CHARA_CLASS_MD_QUERY_PAGE_ACTION_SERVICE"]
     )
     def test_query_characteristic_class_page(self):
@@ -144,7 +144,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         title="测试查询特征类定义详情",
         description="验证GEN-特征类定义表-查询详情服务功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         tags=["特征管理", "查询", "GEN_CHARA_CLASS_MD_QUERY_DETAIL_ACTION_SERVICE"]
     )
     def test_query_chara_class_detail(self):
@@ -177,7 +177,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         title="测试启用特征类定义",
         description="验证GEN-特征类定义表-启用服务功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         tags=["特征管理", "启用", "GEN_CHARA_CLASS_MD_ENABLED_ACTION_SERVICE"]
     )
     def test_enable_characteristic_class(self):
@@ -210,7 +210,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         title="测试禁用特征类定义",
         description="验证GEN-特征类定义表-禁用服务功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         tags=["特征管理", "禁用", "GEN_CHARA_CLASS_MD_DISABLED_ACTION_SERVICE"]
     )
     def test_disable_characteristic_class(self):
@@ -243,7 +243,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         title="测试删除特征类定义",
         description="验证GEN-特征类定义表-删除服务功能",
         severity="critical",
-        order=6,
+        file_level_order=6,
         tags=["特征管理", "删除", "GEN_CHARA_CLASS_MD_DELETE_ACTION_SERVICE"]
     )
     def test_delete_characteristic_class(self):
@@ -279,7 +279,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         title="测试新增特征定义",
         description="验证GEN-特征定义表-保存服务功能",
         severity="blocker",
-        order=7,
+        file_level_order=7,
         smoke=True,
         tags=["特征管理", "新增", "GEN_CHARA_MD_SAVE_ACTION_SERVICE"]
     )
@@ -335,7 +335,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         title="测试查询特征定义分页列表",
         description="验证GEN-特征定义表-查询分页服务功能",
         severity="normal",
-        order=8,
+        file_level_order=8,
         tags=["特征管理", "查询", "GEN_CHARA_MD_QUERY_PAGE_ACTION_SERVICE"]
     )
     def test_query_characteristic_page(self):
@@ -367,7 +367,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         title="测试查询特征定义详情",
         description="验证GEN-特征定义表-查询详情服务功能",
         severity="normal",
-        order=9,
+        file_level_order=9,
         tags=["特征管理", "查询", "GEN_CHARA_MD_QUERY_DETAIL_ACTION_SERVICE"]
     )
     def test_query_characteristic_detail(self):
@@ -400,7 +400,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         title="测试启用特征定义",
         description="验证GEN-特征定义表-启用服务功能",
         severity="normal",
-        order=10,
+        file_level_order=10,
         tags=["特征管理", "启用", "GEN_CHARA_MD_ENABLED_ACTION_SERVICE"]
     )
     def test_enable_characteristic(self):
@@ -433,7 +433,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         title="测试禁用特征定义",
         description="验证GEN-特征定义表-禁用服务功能",
         severity="normal",
-        order=11,
+        file_level_order=11,
         tags=["特征管理", "禁用", "GEN_CHARA_MD_DISABLED_ACTION_SERVICE"]
     )
     def test_disable_characteristic(self):
@@ -466,7 +466,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         title="测试删除特征定义",
         description="验证GEN-特征定义表-删除服务功能",
         severity="critical",
-        order=12,
+        file_level_order=12,
         tags=["特征管理", "删除", "GEN_CHARA_MD_DELETE_ACTION_SERVICE"]
     )
     def test_delete_characteristic(self):
@@ -502,7 +502,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         title="测试特征类定义表标准导入",
         description="验证特征类定义表标准导入服务功能",
         severity="normal",
-        order=13,
+        file_level_order=13,
         tags=["特征管理", "导入", "GEN_CHARA_CLASS_MD_GEI_IMPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -541,7 +541,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         title="测试特征类定义表标准导出",
         description="验证特征类定义表标准导出服务功能",
         severity="normal",
-        order=14,
+        file_level_order=14,
         tags=["特征管理", "导出", "GEN_CHARA_CLASS_MD_GEI_EXPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -578,7 +578,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         title="测试特征类定义表OSS导入任务",
         description="验证特征类定义表-导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=15,
+        file_level_order=15,
         tags=["特征管理", "任务管理", "GEN_CHARA_CLASS_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -612,7 +612,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         title="测试特征类定义表导出任务",
         description="验证特征类定义表-导入导出任务管理接口-提交导出任务功能",
         severity="normal",
-        order=16,
+        file_level_order=16,
         tags=["特征管理", "任务管理", "GEN_CHARA_CLASS_MD_API_GEI_TASK_EXPORT_DIRECT_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")

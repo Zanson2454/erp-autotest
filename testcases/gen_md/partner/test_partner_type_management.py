@@ -42,7 +42,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         title="测试新增相关方类型",
         description="验证新增相关方类型功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["相关方类型", "新增"]
     )
@@ -92,7 +92,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         title="测试查询相关方类型分页",
         description="验证相关方类型分页查询功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         tags=["相关方类型", "查询"]
     )
     def test_query_partner_type_page(self):
@@ -147,7 +147,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         title="测试查询相关方类型详情",
         description="验证相关方类型详情查询功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         tags=["相关方类型", "详情"]
     )
     def test_query_partner_type_detail(self):
@@ -182,7 +182,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         title="测试根据ID查找相关方类型数据",
         description="验证根据ID查找相关方类型数据功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         tags=["相关方类型", "查找"]
     )
     def test_find_partner_type_by_id(self):
@@ -217,7 +217,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         title="测试根据类型查询相关方分页",
         description="验证根据类型查询相关方分页功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         tags=["相关方类型", "相关方查询"]
     )
     def test_query_partner_by_type_page(self):
@@ -259,7 +259,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         title="测试合作伙伴类型分页查询(根据角色过滤)",
         description="验证合作伙伴类型分页查询(根据角色过滤)功能",
         severity="normal",
-        order=6,
+        file_level_order=6,
         tags=["相关方类型", "角色过滤"]
     )
     def test_partner_type_filter_paging(self):
@@ -314,7 +314,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         title="测试提交相关方类型导出任务",
         description="验证提交相关方类型导出任务功能",
         severity="normal",
-        order=7,
+        file_level_order=7,
         tags=["相关方类型", "导出任务"]
     )
     def test_submit_partner_type_export_task(self):
@@ -403,7 +403,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         title="测试删除相关方类型",
         description="验证删除相关方类型功能",
         severity="normal",
-        order=8,
+        file_level_order=8,
         tags=["相关方类型", "删除"]
     )
     def test_delete_partner_type(self):
@@ -440,7 +440,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         title="测试相关方类型标准导出",
         description="验证相关方类型标准导出功能",
         severity="normal",
-        order=9,
+        file_level_order=9,
         tags=["相关方类型", "导出"]
     )
     def test_export_partner_type(self):
@@ -478,7 +478,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         title="测试相关方类型标准导入",
         description="验证相关方类型标准导入功能",
         severity="normal",
-        order=10,
+        file_level_order=10,
         tags=["相关方类型", "导入"]
     )
     def test_import_partner_type(self):
@@ -516,7 +516,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         title="测试通过OSS提交相关方类型导入任务",
         description="验证通过OSS提交相关方类型导入任务功能",
         severity="normal",
-        order=11,
+        file_level_order=11,
         tags=["相关方类型", "OSS导入"]
     )
     def test_submit_partner_type_import_task_by_oss(self):
@@ -559,7 +559,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         title="测试新增相关方组",
         description="验证新增相关方组功能",
         severity="normal",
-        order=12,
+        file_level_order=12,
         tags=["相关方组", "新增"]
     )
     def test_save_partner_group(self):
@@ -610,7 +610,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         title="测试查询相关方组分页",
         description="验证相关方组分页查询功能",
         severity="normal",
-        order=13,
+        file_level_order=13,
         tags=["相关方组", "查询"]
     )
     def test_query_partner_group_page(self):
@@ -655,7 +655,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         title="测试查询相关方组详情",
         description="验证相关方组详情查询功能",
         severity="normal",
-        order=14,
+        file_level_order=14,
         tags=["相关方组", "详情"]
     )
     def test_query_partner_group_detail(self):
@@ -690,7 +690,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         title="测试删除相关方组",
         description="验证删除相关方组功能",
         severity="normal",
-        order=15,
+        file_level_order=15,
         tags=["相关方组", "删除"]
     )
     def test_delete_partner_group(self):
@@ -725,7 +725,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         title="测试提交相关方组导出任务",
         description="验证提交相关方组导出任务功能",
         severity="normal",
-        order=16,
+        file_level_order=16,
         tags=["相关方组", "导出任务"]
     )
     def test_submit_partner_group_export_task(self):
@@ -810,7 +810,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         title="测试相关方组标准导出",
         description="验证相关方组标准导出功能",
         severity="normal",
-        order=17,
+        file_level_order=17,
         tags=["相关方组", "导出"]
     )
     def test_export_partner_group(self):
@@ -849,7 +849,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         title="测试相关方组标准导入",
         description="验证相关方组标准导入功能",
         severity="normal",
-        order=18,
+        file_level_order=18,
         tags=["相关方组", "导入"]
     )
     def test_import_partner_group(self):
@@ -888,7 +888,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         title="测试通过OSS提交相关方组导入任务",
         description="验证通过OSS提交相关方组导入任务功能",
         severity="normal",
-        order=19,
+        file_level_order=19,
         tags=["相关方组", "OSS导入"]
     )
     def test_submit_partner_group_import_task_by_oss(self):

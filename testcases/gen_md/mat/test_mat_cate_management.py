@@ -40,7 +40,7 @@ class TestMatCateManagement(GenMdBaseTest):
         title="测试新增根类目",
         description="验证新增根类目功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["物料类目管理", "新增"]
     )
@@ -97,7 +97,7 @@ class TestMatCateManagement(GenMdBaseTest):
         title="测试查询类目详情",
         description="验证类目详情查询功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         smoke=True,
         tags=["物料类目管理", "查询"]
     )
@@ -144,7 +144,7 @@ class TestMatCateManagement(GenMdBaseTest):
         title="测试新增子类目",
         description="验证新增子类目功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         smoke=True,
         tags=["物料类目管理", "新增"]
     )
@@ -200,7 +200,7 @@ class TestMatCateManagement(GenMdBaseTest):
         title="测试启用类目",
         description="验证类目启用功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         smoke=True,
         tags=["物料类目管理", "启用"]
     )
@@ -243,7 +243,7 @@ class TestMatCateManagement(GenMdBaseTest):
         title="测试禁用类目",
         description="验证类目禁用功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         smoke=True,
         tags=["物料类目管理", "禁用"]
     )
@@ -285,7 +285,7 @@ class TestMatCateManagement(GenMdBaseTest):
         title="测试查询类目分页",
         description="验证类目分页查询功能",
         severity="normal",
-        order=6,
+        file_level_order=6,
         tags=["物料类目管理", "分页查询"]
     )
     def test_query_cate_page(self):
@@ -329,7 +329,7 @@ class TestMatCateManagement(GenMdBaseTest):
         title="测试根据父类目查询下级类目",
         description="验证根据父类目查询下级类目服务",
         severity="normal",
-        order=7,
+        file_level_order=7,
         tags=["物料类目管理", "下级类目"]
     )
     def test_query_child_cate(self):
@@ -366,7 +366,7 @@ class TestMatCateManagement(GenMdBaseTest):
         title="测试查找类目树子数据",
         description="验证查找类目树子数据服务",
         severity="normal",
-        order=8,
+        file_level_order=8,
         tags=["物料类目管理", "树结构"]
     )
     def test_find_tree_child_cate(self):
@@ -405,7 +405,7 @@ class TestMatCateManagement(GenMdBaseTest):
         title="测试根据ID查找类目数据",
         description="验证根据ID查找类目数据服务",
         severity="normal",
-        order=9,
+        file_level_order=9,
         tags=["物料类目管理", "ID查找"]
     )
     def test_find_cate_by_id(self):
@@ -443,7 +443,7 @@ class TestMatCateManagement(GenMdBaseTest):
         title="测试类目分页数据服务",
         description="验证类目分页数据服务",
         severity="normal",
-        order=10,
+        file_level_order=10,
         tags=["物料类目管理", "分页数据"]
     )
     def test_cate_paging_data(self):
@@ -491,7 +491,7 @@ class TestMatCateManagement(GenMdBaseTest):
         title="测试类目标准导入",
         description="验证类目标准导入功能",
         severity="normal",
-        order=11,
+        file_level_order=11,
         tags=["物料类目管理", "导入"]
     )
     def test_import_cate(self):
@@ -507,7 +507,7 @@ class TestMatCateManagement(GenMdBaseTest):
         title="测试通过OSS提交类目导入任务",
         description="验证通过OSS提交类目导入任务功能",
         severity="normal",
-        order=12,
+        file_level_order=12,
         tags=["物料类目管理", "OSS导入"]
     )
     def test_submit_import_task_by_oss(self):
@@ -556,7 +556,7 @@ class TestMatCateManagement(GenMdBaseTest):
         title="测试删除类目",
         description="验证删除类目功能",
         severity="normal",
-        order=13,
+        file_level_order=13,
         tags=["物料类目管理", "删除"]
     )
     def test_delete_cate(self):

@@ -37,7 +37,7 @@ class TestCodeRuleManagement(GenMdBaseTest):
         title="测试分页查询编码规则",
         description="验证GEN-编码规则-分页查询服务功能",
         severity="critical",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["编码规则", "分页查询", "GEN_CODE_RULE_PAGE_ACTION_SERVICE"]
     )
@@ -101,7 +101,7 @@ class TestCodeRuleManagement(GenMdBaseTest):
         title="测试查询编码规则详情",
         description="验证GEN-编码规则-查询详情服务功能",
         severity="critical",
-        order=2,
+        file_level_order=2,
         tags=["编码规则", "查询详情", "GEN_CODE_RULE_DETAIL_ACTION_SERVICE"]
     )
     def test_query_code_rule_detail(self):
@@ -139,7 +139,7 @@ class TestCodeRuleManagement(GenMdBaseTest):
         title="测试编辑编码规则",
         description="验证GEN-编码规则-编辑规则服务功能",
         severity="blocker",
-        order=3,
+        file_level_order=3,
         tags=["编码规则", "编辑", "GEN_CODE_RULE_UPDATE_ACTION_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")

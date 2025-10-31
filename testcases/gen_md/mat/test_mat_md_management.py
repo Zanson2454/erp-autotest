@@ -63,7 +63,7 @@ class TestStndMatManagement(GenMdBaseTest):
         title="测试新增物料主数据保存",
         description="验证新增物料主数据保存接口功能",
         severity="critical",
-        order=1,
+        file_level_order=1,
         tags=["标准物料管理", "新增", "保存"]
     )
     def test_save_mat(self):
@@ -144,7 +144,7 @@ class TestStndMatManagement(GenMdBaseTest):
         title="测试基于类目查询物料",
         description="验证基于类目查询物料列表功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         smoke=True,
         tags=["标准物料管理", "查询"]
     )
@@ -194,7 +194,7 @@ class TestStndMatManagement(GenMdBaseTest):
         title="测试物料详情查询",
         description="验证物料保存后可通过ID查询详情",
         severity="critical",
-        order=3,
+        file_level_order=3,
         tags=["标准物料管理", "详情", "查询"]
     )
     def test_query_mat_detail(self):
@@ -239,7 +239,7 @@ class TestStndMatManagement(GenMdBaseTest):
         title="测试根据ID查找物料数据",
         description="验证根据ID查找物料数据服务",
         severity="normal",
-        order=4,
+        file_level_order=4,
         tags=["标准物料管理", "查找", "ID"]
     )
     @pytest.mark.skip(reason="业务未引用，暂时跳过")
@@ -277,7 +277,7 @@ class TestStndMatManagement(GenMdBaseTest):
         title="测试启用物料",
         description="验证物料启用功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         tags=["标准物料管理", "启用"]
     )
     def test_enable_mat(self):
@@ -314,7 +314,7 @@ class TestStndMatManagement(GenMdBaseTest):
         title="测试禁用物料",
         description="验证物料禁用功能",
         severity="normal",
-        order=6,
+        file_level_order=6,
         tags=["标准物料管理", "禁用"]
     )
     def test_disable_mat(self):
@@ -351,7 +351,7 @@ class TestStndMatManagement(GenMdBaseTest):
         title="测试批量生成物料条码",
         description="验证批量生成物料条码功能",
         severity="normal",
-        order=7,
+        file_level_order=7,
         tags=["标准物料管理", "批量", "条码"]
     )
     def test_batch_create_barcode(self):
@@ -384,7 +384,7 @@ class TestStndMatManagement(GenMdBaseTest):
         title="测试批量物料打标",
         description="验证批量物料打标功能",
         severity="normal",
-        order=8,
+        file_level_order=8,
         tags=["标准物料管理", "批量", "打标"]
     )
     def test_batch_set_label(self):
@@ -424,7 +424,7 @@ class TestStndMatManagement(GenMdBaseTest):
         title="测试批量取消物料打标",
         description="验证批量取消物料打标功能",
         severity="normal",
-        order=9,
+        file_level_order=9,
         tags=["标准物料管理", "批量", "取消打标"]
     )
     def test_batch_cancel_label(self):
@@ -466,7 +466,7 @@ class TestStndMatManagement(GenMdBaseTest):
         title="测试物料标准导出",
         description="验证物料标准导出功能",
         severity="normal",
-        order=10,
+        file_level_order=10,
         tags=["标准物料管理", "导出"]
     )
     def test_export_mat(self):
@@ -506,7 +506,7 @@ class TestStndMatManagement(GenMdBaseTest):
         title="测试物料标准导入",
         description="验证物料标准导入功能",
         severity="normal",
-        order=11,
+        file_level_order=11,
         tags=["标准物料管理", "导入"]
     )
     def test_import_mat(self):
@@ -545,7 +545,7 @@ class TestStndMatManagement(GenMdBaseTest):
         title="测试提交物料导出任务",
         description="验证提交物料导出任务功能",
         severity="normal",
-        order=12,
+        file_level_order=12,
         tags=["标准物料管理", "导出任务"]
     )
     def test_submit_export_task(self):
@@ -733,7 +733,7 @@ class TestStndMatManagement(GenMdBaseTest):
         title="测试通过OSS提交物料导入任务",
         description="验证通过OSS提交物料导入任务功能",
         severity="normal",
-        order=13,
+        file_level_order=13,
         tags=["标准物料管理", "OSS导入"]
     )
     def test_submit_import_task_by_oss(self):
@@ -747,7 +747,7 @@ class TestStndMatManagement(GenMdBaseTest):
         title="测试物料主数据分页数据服务",
         description="验证物料主数据分页数据服务",
         severity="normal",
-        order=13,
+        file_level_order=13,
         tags=["标准物料管理", "分页数据"]
     )
     def test_mat_paging_data(self):
@@ -788,7 +788,7 @@ class TestStndMatManagement(GenMdBaseTest):
         title="测试删除物料",
         description="验证删除物料功能",
         severity="normal",
-        order=14,
+        file_level_order=14,
         tags=["标准物料管理", "删除"]
     )
     def test_delete_mat(self):

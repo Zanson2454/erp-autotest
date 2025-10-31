@@ -48,7 +48,7 @@ class TestAttrManagement(GenMdBaseTest):
         title="测试新增属性",
         description="验证GEN-属性表-保存服务功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["属性管理", "新增", "GEN_ATTR_CF_SAVE_ACTION_SERVICE"]
     )
@@ -100,7 +100,7 @@ class TestAttrManagement(GenMdBaseTest):
         title="测试查询属性分页列表",
         description="验证GEN-属性表-查询分页服务功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         tags=["属性管理", "查询", "GEN_ATTR_CF_QUERY_PAGE_ACTION_SERVICE"]
     )
     def test_query_attr_page(self):
@@ -139,7 +139,7 @@ class TestAttrManagement(GenMdBaseTest):
         title="测试查询属性详情",
         description="验证GEN-属性表-查询详情服务功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         tags=["属性管理", "查询", "GEN_ATTR_CF_QUERY_DETAIL_ACTION_SERVICE"]
     )
     def test_query_attr_detail(self):
@@ -171,7 +171,7 @@ class TestAttrManagement(GenMdBaseTest):
         title="测试查询属性可绑定字段",
         description="验证查询属性可以绑定的字段服务功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         tags=["属性管理", "字段绑定", "GEN_ATTR_QUERY_AVAILABLE_BIND_FILED_ACTION_SERVICE"]
     )
     def test_query_available_bind_fields(self):
@@ -207,7 +207,7 @@ class TestAttrManagement(GenMdBaseTest):
         title="测试启用属性",
         description="验证GEN-属性表-启用服务功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         tags=["属性管理", "启用", "GEN_ATTR_CF_ENABLED_ACTION_SERVICE"]
     )
     def test_enable_attr(self):
@@ -240,7 +240,7 @@ class TestAttrManagement(GenMdBaseTest):
         title="测试禁用属性",
         description="验证GEN-属性表-禁用服务功能",
         severity="normal",
-        order=6,
+        file_level_order=6,
         tags=["属性管理", "禁用", "GEN_ATTR_CF_DISABLED_ACTION_SERVICE"]
     )
     def test_disable_attr(self):
@@ -273,7 +273,7 @@ class TestAttrManagement(GenMdBaseTest):
         title="测试删除属性",
         description="验证GEN-属性表-删除服务功能",
         severity="critical",
-        order=7,
+        file_level_order=7,
         tags=["属性管理", "删除", "GEN_ATTR_CF_DELETE_ACTION_SERVICE"]
     )
     def test_delete_attr(self):

@@ -34,7 +34,7 @@ class TestCustomerTaxManagement(GenMdBaseTest):
         title="测试客户税分类标准导出",
         description="验证客户税分类标准导出功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         tags=["客户税分类", "导出"]
     )
     def test_export_customer_tax_type(self):
@@ -73,7 +73,7 @@ class TestCustomerTaxManagement(GenMdBaseTest):
         title="测试客户税分类标准导入",
         description="验证客户税分类标准导入功能",
         severity="normal",
-        order=6,
+        file_level_order=6,
         tags=["客户税分类", "导入"]
     )
     def test_import_customer_tax_type(self):
@@ -111,7 +111,7 @@ class TestCustomerTaxManagement(GenMdBaseTest):
         title="测试提交客户税分类导出任务",
         description="验证提交客户税分类导出任务功能",
         severity="normal",
-        order=7,
+        file_level_order=7,
         tags=["客户税分类", "导出任务"]
     )
     def test_submit_customer_tax_type_export_task(self):
@@ -201,7 +201,7 @@ class TestCustomerTaxManagement(GenMdBaseTest):
         title="测试通过OSS提交客户税分类导入任务",
         description="验证通过OSS提交客户税分类导入任务功能",
         severity="normal",
-        order=8,
+        file_level_order=8,
         tags=["客户税分类", "OSS导入"]
     )
     def test_submit_customer_tax_type_import_task_by_oss(self):
@@ -243,7 +243,7 @@ class TestCustomerTaxManagement(GenMdBaseTest):
         title="测试新增客户税分类",
         description="验证新增客户税分类功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["客户税分类管理", "新增", "GEN_CUST_TAX_TYPE_CF_SAVE_ACTION_SERVICE"]
     )
@@ -291,7 +291,7 @@ class TestCustomerTaxManagement(GenMdBaseTest):
         title="测试查询客户税分类分页",
         description="验证客户税分类分页查询功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         smoke=True,
         tags=["客户税分类管理", "查询", "GEN_CUST_TAX_TYPE_CF_QUERY_PAGE_ACTION_SERVICE"]
     )
@@ -339,7 +339,7 @@ class TestCustomerTaxManagement(GenMdBaseTest):
         title="测试查询客户税分类详情",
         description="验证客户税分类详情查询功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         tags=["客户税分类管理", "详情", "GEN_CUST_TAX_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE"]
     )
     def test_query_customer_tax_type_detail(self):
@@ -379,7 +379,7 @@ class TestCustomerTaxManagement(GenMdBaseTest):
         title="测试删除客户税分类",
         description="验证删除客户税分类功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         tags=["客户税分类管理", "删除", "GEN_CUST_TAX_TYPE_CF_DELETE_ACTION_SERVICE"]
     )
     def test_delete_customer_tax_type(self):

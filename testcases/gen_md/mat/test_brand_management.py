@@ -41,7 +41,7 @@ class TestBrandManagement(GenMdBaseTest):
         title="测试新增品牌",
         description="验证新增品牌功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["品牌管理", "新增"]
     )
@@ -74,10 +74,15 @@ class TestBrandManagement(GenMdBaseTest):
 
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
-            brand_id = response.get("data", {}).get("data", {})
-
+            response_data = response.get("data", {}).get("data", {})
+            
             # 保存品牌信息供后续用例使用
-            self.brandId = brand_id
+            if isinstance(response_data, dict):
+                self.brandId = response_data.get("id")
+                self.brandCode = brand_code
+            else:
+                self.brandId = response_data
+                self.brandCode = brand_code
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -91,7 +96,7 @@ class TestBrandManagement(GenMdBaseTest):
         title="测试查询品牌列表",
         description="验证品牌列表查询功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         smoke=True,
         tags=["品牌管理", "查询"]
     )
@@ -143,7 +148,7 @@ class TestBrandManagement(GenMdBaseTest):
         title="测试查询品牌详情",
         description="验证品牌详情查询功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         smoke=True,
         tags=["品牌管理", "查询"]
     )
@@ -184,7 +189,7 @@ class TestBrandManagement(GenMdBaseTest):
         title="测试修改品牌",
         description="验证修改品牌功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         smoke=True,
         tags=["品牌管理", "修改"]
     )
@@ -231,7 +236,7 @@ class TestBrandManagement(GenMdBaseTest):
         title="测试删除品牌",
         description="验证删除品牌功能",
         severity="normal",
-        order=5,
+        file_level_order=5,
         smoke=True,
         tags=["品牌管理", "删除"]
     )
@@ -278,7 +283,7 @@ class TestBrandManagement(GenMdBaseTest):
         title="测试品牌标准导入",
         description="验证品牌标准导入服务功能",
         severity="normal",
-        order=6,
+        file_level_order=6,
         tags=["品牌管理", "导入", "GEN_BRAND_MD_GEI_IMPORT_SERVICE"]
     )
     def test_brand_import(self):
@@ -318,7 +323,7 @@ class TestBrandManagement(GenMdBaseTest):
         title="测试品牌标准导出",
         description="验证品牌标准导出服务功能",
         severity="normal",
-        order=7,
+        file_level_order=7,
         tags=["品牌管理", "导出", "GEN_BRAND_MD_GEI_EXPORT_SERVICE"]
     )
     def test_brand_export(self):
@@ -355,7 +360,7 @@ class TestBrandManagement(GenMdBaseTest):
         title="测试品牌OSS导入任务",
         description="验证品牌-导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=8,
+        file_level_order=8,
         tags=["品牌管理", "导入", "GEN_BRAND_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
     )
     def test_brand_oss_import_task(self):
@@ -389,7 +394,7 @@ class TestBrandManagement(GenMdBaseTest):
         title="测试品牌导出任务",
         description="验证品牌-导入导出任务管理接口-提交导出任务功能",
         severity="normal",
-        order=9,
+        file_level_order=9,
         tags=["品牌管理", "导出", "GEN_BRAND_MD_API_GEI_TASK_EXPORT_DIRECT_POST"]
     )
     def test_brand_export_task(self):
@@ -476,7 +481,7 @@ class TestBrandManagement(GenMdBaseTest):
         title="测试品牌编码唯一性验证",
         description="验证品牌编码的唯一性约束",
         severity="normal",
-        order=10,
+        file_level_order=10,
         tags=["品牌管理", "业务验证", "唯一性测试"]
     )
     def test_brand_code_uniqueness(self):
@@ -520,7 +525,7 @@ class TestBrandManagement(GenMdBaseTest):
         title="测试品牌完整流程",
         description="验证品牌从创建到删除的完整业务流程",
         severity="critical",
-        order=11,
+        file_level_order=11,
         tags=["品牌管理", "综合测试", "业务流程"]
     )
     def test_brand_complete_workflow(self):

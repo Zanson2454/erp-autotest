@@ -37,7 +37,7 @@ class TestBankSystemManagement(GenMdBaseTest):
         title="测试新增银行",
         description="验证新增银行功能",
         severity="blocker",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["银行管理", "新增"]
     )
@@ -87,7 +87,7 @@ class TestBankSystemManagement(GenMdBaseTest):
         title="测试查询银行列表",
         description="验证银行列表查询功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         tags=["银行管理", "查询"]
     )
     def test_query_bank_list(self):
@@ -127,7 +127,7 @@ class TestBankSystemManagement(GenMdBaseTest):
         title="测试查询银行详情",
         description="验证银行详情查询功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         tags=["银行管理", "查询"]
     )
     def test_query_bank_detail(self):
@@ -160,7 +160,7 @@ class TestBankSystemManagement(GenMdBaseTest):
         title="测试删除银行",
         description="验证删除银行功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         tags=["银行管理", "删除"]
     )
     def test_delete_bank(self):
@@ -194,7 +194,7 @@ class TestBankSystemManagement(GenMdBaseTest):
         title="测试新增银行支行",
         description="验证新增银行支行功能",
         severity="blocker",
-        order=5,
+        file_level_order=5,
         smoke=True,
         tags=["银行支行管理", "新增"]
     )
@@ -235,7 +235,7 @@ class TestBankSystemManagement(GenMdBaseTest):
         title="测试查询银行支行列表",
         description="验证银行支行列表查询功能",
         severity="normal",
-        order=6,
+        file_level_order=6,
         tags=["银行支行管理", "查询"]
     )
     def test_query_sub_bank_list(self):
@@ -275,7 +275,7 @@ class TestBankSystemManagement(GenMdBaseTest):
         title="测试查询银行支行详情",
         description="验证银行支行详情查询功能",
         severity="normal",
-        order=7,
+        file_level_order=7,
         tags=["银行支行管理", "查询"]
     )
     def test_query_sub_bank_detail(self):
@@ -308,7 +308,7 @@ class TestBankSystemManagement(GenMdBaseTest):
         title="测试删除银行支行",
         description="验证删除银行支行功能",
         severity="normal",
-        order=8,
+        file_level_order=8,
         tags=["银行支行管理", "删除"]
     )
     def test_delete_sub_bank(self):
@@ -342,7 +342,7 @@ class TestBankSystemManagement(GenMdBaseTest):
         title="测试银行配置根据ID查找数据",
         description="验证银行配置-根据ID查找数据服务功能",
         severity="normal",
-        order=9,
+        file_level_order=9,
         tags=["银行管理", "查询", "GEN_BANK_CF_FIND_DATA_BY_ID_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -376,7 +376,7 @@ class TestBankSystemManagement(GenMdBaseTest):
         title="测试银行支行根据ID查找数据",
         description="验证银行支行-根据ID查找数据服务功能",
         severity="normal",
-        order=10,
+        file_level_order=10,
         tags=["银行支行管理", "查询", "GEN_SUB_BANK_CF_FIND_DATA_BY_ID_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -411,7 +411,7 @@ class TestBankSystemManagement(GenMdBaseTest):
         title="测试银行配置分页数据服务",
         description="验证银行配置-分页数据服务功能",
         severity="normal",
-        order=11,
+        file_level_order=11,
         tags=["银行管理", "查询", "GEN_BANK_CF_PAGING_DATA_SERVICE"]
     )
     def test_bank_paging_data(self):
@@ -454,7 +454,7 @@ class TestBankSystemManagement(GenMdBaseTest):
         title="测试银行支行分页数据服务",
         description="验证银行支行-分页数据服务功能",
         severity="normal",
-        order=12,
+        file_level_order=12,
         tags=["银行支行管理", "查询", "GEN_SUB_BANK_CF_PAGING_DATA_SERVICE"]
     )
     def test_sub_bank_paging_data(self):
@@ -493,7 +493,7 @@ class TestBankSystemManagement(GenMdBaseTest):
         title="测试银行配置标准导入",
         description="验证银行配置标准导入服务功能",
         severity="normal",
-        order=13,
+        file_level_order=13,
         tags=["银行管理", "导入", "GEN_BANK_CF_GEI_IMPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -531,7 +531,7 @@ class TestBankSystemManagement(GenMdBaseTest):
         title="测试银行配置标准导出",
         description="验证银行配置标准导出服务功能",
         severity="normal",
-        order=14,
+        file_level_order=14,
         tags=["银行管理", "导出", "GEN_BANK_CF_GEI_EXPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -568,7 +568,7 @@ class TestBankSystemManagement(GenMdBaseTest):
         title="测试银行支行标准导入",
         description="验证银行支行标准导入服务功能",
         severity="normal",
-        order=15,
+        file_level_order=15,
         tags=["银行支行管理", "导入", "GEN_SUB_BANK_CF_GEI_IMPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -606,7 +606,7 @@ class TestBankSystemManagement(GenMdBaseTest):
         title="测试银行支行标准导出",
         description="验证银行支行标准导出服务功能",
         severity="normal",
-        order=16,
+        file_level_order=16,
         tags=["银行支行管理", "导出", "GEN_SUB_BANK_CF_GEI_EXPORT_SERVICE"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -643,7 +643,7 @@ class TestBankSystemManagement(GenMdBaseTest):
         title="测试银行配置OSS导入任务",
         description="验证银行配置-导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=17,
+        file_level_order=17,
         tags=["银行管理", "任务管理", "GEN_BANK_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -677,7 +677,7 @@ class TestBankSystemManagement(GenMdBaseTest):
         title="测试银行配置导出任务",
         description="验证银行配置-导入导出任务管理接口-提交导出任务功能",
         severity="normal",
-        order=18,
+        file_level_order=18,
         tags=["银行管理", "任务管理", "GEN_BANK_CF_API_GEI_TASK_EXPORT_DIRECT_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -718,7 +718,7 @@ class TestBankSystemManagement(GenMdBaseTest):
         title="测试银行支行OSS导入任务",
         description="验证银行支行-导入导出任务管理接口-通过OSS提交导入任务功能",
         severity="normal",
-        order=19,
+        file_level_order=19,
         tags=["银行支行管理", "任务管理", "GEN_SUB_BANK_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")
@@ -752,7 +752,7 @@ class TestBankSystemManagement(GenMdBaseTest):
         title="测试银行支行导出任务",
         description="验证银行支行-导入导出任务管理接口-提交导出任务功能",
         severity="normal",
-        order=20,
+        file_level_order=20,
         tags=["银行支行管理", "任务管理", "GEN_SUB_BANK_CF_API_GEI_TASK_EXPORT_DIRECT_POST"]
     )
     @pytest.mark.skip(reason="业务用不上")
