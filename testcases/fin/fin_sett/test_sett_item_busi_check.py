@@ -93,7 +93,17 @@ class TestSettItemBusiCheck(BaseTest):
                 #assert result.get("err",{}).get("msg",{}) == "结算单异步任务提交失败，请确认结算单异步执行状态！"
                 self.assert_util.assert_by_operator(sql_result[0]["sett_item_status"], "=", "SETT_DOC_CREATED")
                 self.assert_util.assert_by_operator(sql_result[0]["sett_doc_id"], "not_empty")
-                
+    
+    
+    @case_decorator(
+        story="结算项批量处理",
+        title="批量手工汇单",
+        description="验证结算项手工汇单",
+        severity="critical",
+        order=0,
+        smoke=False,
+        tags=["结算管理", "结算项批量任务处理", "结算项手工汇单"]
+    )
     def test_sett_item_manual_remittance(self):
         """测试结算项手工汇单"""
         url = self.fin_path["SETT-ITEM-结算项手工汇单-关联操作-异步服务"]["path"]
@@ -348,7 +358,7 @@ if __name__ == "__main__":
     # 运行参数化测试的示例
     test = TestSettItemBusiCheck()
     test.setup_class()
-    test.test_find_sett_doc_by_id()
+    test.test_sett_item_record()
     #test.test_batch_get_scope(test.BATCH_GET_SCOPE_TEST_CASES[0])
 
         
