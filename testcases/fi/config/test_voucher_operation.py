@@ -90,7 +90,7 @@ class TestVoucherOperation(FiBaseTest):
             # 获取现金类科目
             sql = f"""
             select id,aa_head_code,aa_head_name from fin_glm_aa_head_cf 
-            where coa_type={coa_type} and leaf=1 and aa_head_name like '%现金%' 
+            where coa_type={coa_type} and leaf=1 and aa_head_name like '%现金%' and deleted=0 
             order by created_at desc limit 1;
             """
         elif use_ad_account:
