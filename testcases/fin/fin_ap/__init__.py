@@ -31,8 +31,8 @@ class ApBaseTest(BaseTest):
         
         # 初始化财务API配置
         project_root = Path(__file__).resolve().parent.parent.parent.parent
-        apis = cls.yaml_util.read_yaml(project_root / "testdata/fin/fin_api_path.yaml").get("apis", {})
-        api_params = cls.yaml_util.read_yaml(project_root / "testdata/fin/fin_api_params.yaml").get("api_params", {})
+        apis = cls.yaml_util.read_yaml(project_root / "testdata/erp_fin/fin_api_path.yaml").get("apis", {})
+        api_params = cls.yaml_util.read_yaml(project_root / "testdata/erp_fin/fin_api_params.yaml").get("api_params", {})
         cls.apis = apis
         cls.api_params = api_params
     
