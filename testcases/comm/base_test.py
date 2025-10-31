@@ -271,7 +271,23 @@ class BaseTestInitializer:
             raise RuntimeError(f"数据库配置未找到: {db_name}，请检查环境配置文件")
 
         # 创建独立的数据库连接实例
-        return DBManager(**db_config)
+        try:
+            return DBManager(**db_config)
+        except Exception as e:
+            host = db_config.get("host", "unknown")
+            port = db_config.get("port", "unknown")
+            database = db_config.get("database", "unknown")
+            raise RuntimeError(
+                f"数据库连接失败 [{db_name}]:\n"
+                f"  - 主机: {host}:{port}\n"
+                f"  - 数据库: {database}\n"
+                f"  - 错误: {str(e)}\n"
+                f"请检查:\n"
+                f"  1. 数据库服务是否已启动\n"
+                f"  2. 网络连接是否正常\n"
+                f"  3. 防火墙是否允许连接\n"
+                f"  4. 数据库配置是否正确"
+            ) from e
     
     def initialize_utilities(self) -> Dict[str, Any]:
         """初始化工具类"""

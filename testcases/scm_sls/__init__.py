@@ -105,25 +105,74 @@ class SlsBase(BaseTest):
         
     # 初始化订单配置数据
         if cls.init_data:
-            cls.curr_id = cls.init_data.get("currency_info",[])[0].get("curr_id")
-            cls.coun_id = cls.init_data.get("country_info",[])[0].get("coun_id")
-            cls.exchange_rate_type_id = cls.init_data.get("exchange_rate_type_info",[])[0].get("exchange_rate_type_id")
+            currency_info = cls.init_data.get("currency_info") or []
+            if currency_info:
+                cls.curr_id = currency_info[0].get("curr_id")
+            else:
+                # 默认货币ID（人民币 CNY）
+                cls.curr_id = 2000001
+            
+            country_info = cls.init_data.get("country_info") or []
+            if country_info:
+                cls.coun_id = country_info[0].get("coun_id")
+            else:
+                cls.coun_id = None
+            
+            exchange_rate_type_info = cls.init_data.get("exchange_rate_type_info") or []
+            if exchange_rate_type_info:
+                cls.exchange_rate_type_id = exchange_rate_type_info[0].get("exchange_rate_type_id")
+            else:
+                cls.exchange_rate_type_id = None
+        else:
+            # 当 init_data 为空时，设置默认值
+            cls.curr_id = 2000001  # 默认货币ID（人民币 CNY）
+            cls.coun_id = None
+            cls.exchange_rate_type_id = None
         # 初始化MD
         if cls.md_cache_data:
-            cls.cust_id = cls.md_cache_data.get("partner_info",{}).get("cust_info",[])[0].get("id")
-            cls.logger.info(f"cust_id: {cls.cust_id}")
-            cls.com_org_id = cls.md_cache_data.get("org_info",{}).get("gr_come_org_info",[])[0].get("id")
-            cls.sls_dc_id = cls.md_cache_data.get("org_info",{}).get("sls_dc_md",[])[0].get("id")
-            cls.sls_org_id = cls.md_cache_data.get("org_info",{}).get("sls_org_info",[])[0].get("id")
-            cls.inv_org_id = cls.md_cache_data.get("org_info",{}).get("inv_org_info",[])[0].get("id")
-            cls.inv_loc_id = cls.md_cache_data.get("org_info",{}).get("inv_loc_info",[])[0].get("id")
-            cls.partner_type_id = cls.md_cache_data.get("partner_info",{}).get("partner_type_cf",{}).get("sls_partner_type",[])[0].get("id")
-            cls.mat_id = cls.md_cache_data.get("mat_info",{}).get("mat_md",{}).get("FINP",[])[0].get("id")
-            cls.mat_code = cls.md_cache_data.get("mat_info",{}).get("mat_md",{}).get("FINP",[])[0].get("mat_code")
-            cls.mat_name = cls.md_cache_data.get("mat_info",{}).get("mat_md",{}).get("FINP",[])[0].get("mat_name")
+            partner_info = cls.md_cache_data.get("partner_info") or {}
+            cust_info = partner_info.get("cust_info") or []
+            if cust_info:
+                cls.cust_id = cust_info[0].get("id")
+                cls.logger.info(f"cust_id: {cls.cust_id}")
+            
+            org_info = cls.md_cache_data.get("org_info") or {}
+            gr_come_org_info = org_info.get("gr_come_org_info") or []
+            if gr_come_org_info:
+                cls.com_org_id = gr_come_org_info[0].get("id")
+            
+            sls_dc_md = org_info.get("sls_dc_md") or []
+            if sls_dc_md:
+                cls.sls_dc_id = sls_dc_md[0].get("id")
+            
+            sls_org_info = org_info.get("sls_org_info") or []
+            if sls_org_info:
+                cls.sls_org_id = sls_org_info[0].get("id")
+            
+            inv_org_info = org_info.get("inv_org_info") or []
+            if inv_org_info:
+                cls.inv_org_id = inv_org_info[0].get("id")
+            
+            inv_loc_info = org_info.get("inv_loc_info") or []
+            if inv_loc_info:
+                cls.inv_loc_id = inv_loc_info[0].get("id")
+            
+            partner_type_cf = partner_info.get("partner_type_cf") or {}
+            sls_partner_type = partner_type_cf.get("sls_partner_type") or []
+            if sls_partner_type:
+                cls.partner_type_id = sls_partner_type[0].get("id")
+            
+            mat_info = cls.md_cache_data.get("mat_info") or {}
+            mat_md = mat_info.get("mat_md") or {}
+            finp = mat_md.get("FINP") or []
+            if finp:
+                cls.mat_id = finp[0].get("id")
+                cls.mat_code = finp[0].get("mat_code")
+                cls.mat_name = finp[0].get("mat_name")
         
         if cls.sls_cache_data:
-            cls.so_type_info = cls.sls_cache_data.get("sls_config",{}).get("so_type_info",[])
+            sls_config = cls.sls_cache_data.get("sls_config") or {}
+            cls.so_type_info = sls_config.get("so_type_info") or []
             cls.ORDER_TYPES = cls.so_type_info  # 添加缺失的属性
             for so_type  in  cls.so_type_info:
                 if so_type.get("so_type_code") == "STND":
@@ -132,14 +181,14 @@ class SlsBase(BaseTest):
                     cls.thrd_so_type_id = so_type.get("id")
                 if so_type.get("so_type_code") == "CENT":
                     cls.cent_so_type_id = so_type.get("id")
-            cls.so_item_type_info = cls.sls_cache_data.get("sls_config",{}).get("so_item_type_info",[])
+            cls.so_item_type_info = sls_config.get("so_item_type_info") or []
             cls.ORDER_LINE_TYPES = cls.so_item_type_info  # 添加缺失的属性
             for so_item_type in cls.so_item_type_info:
                 if so_item_type.get("so_item_type_code") == "NORM":
                     cls.stnd_so_item_type_id = so_item_type.get("id")
             
             # 初始化返利政策相关属性
-            cls.rebate_type_info = cls.sls_cache_data.get("sls_config",{}).get("rebate_type_info",[])
+            cls.rebate_type_info = sls_config.get("rebate_type_info") or []
             for rebate_type in cls.rebate_type_info:
                 if rebate_type.get("rebate_type_code") == "STND":
                     cls.stnd_rebate_type_id = rebate_type.get("id")
