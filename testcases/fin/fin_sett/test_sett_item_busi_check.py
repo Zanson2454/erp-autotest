@@ -57,8 +57,15 @@ class TestSettItemBusiCheck(BaseTest):
         
         return [created_sett_item_id, doc_created_sett_item_id,reconciled_sett_item_id]
     
-    @allure.title("结算项对账确认")
-    @allure.description("1、新建结算项\n2、对账确认\n3、检查结算单是否生成")
+    @case_decorator(
+        story="结算项批量处理",
+        title="结算项对账确认",
+        description="验证结算项对账确认",
+        severity="critical",
+        order=1,
+        smoke=False,
+        tags=["结算管理", "结算项批量任务处理", "结算项对账确认"]
+    )
     def test_sett_item_record(self):
         """测试结算项对账确认"""
         # 获取结算项ID列表
@@ -170,7 +177,7 @@ class TestSettItemBusiCheck(BaseTest):
         title="批量任务处理获取命中范围",
         description="验证SETT_BATCH_AGGREGATION_LOCK_EVENT_SERVICE",
         severity="critical",
-        order=0,
+        order=7,
         smoke=False,
         tags=["结算管理", "结算项批量任务处理", "SETT_BATCH_AGGREGATION_LOCK_EVENT_SERVICE"]
     )
@@ -233,7 +240,7 @@ class TestSettItemBusiCheck(BaseTest):
         title="命中范围导入匹配",
         description="SETT_BATCH_AGGREGATION_LOCK_EVENT_SERVICE",
         severity="critical",
-        order=1,
+        order=8,
         smoke=False,
         tags=["结算管理", "结算项批量任务处理", "SETT_BATCH_AGGREGATION_LOCK_EVENT_SERVICE"]
     )
@@ -276,7 +283,7 @@ class TestSettItemBusiCheck(BaseTest):
         title="根据ID查找数据服务",
         description="结算汇单记录-根据ID查找数据服务",
         severity="critical",
-        order=2,
+        order=9,
         smoke=False,
         tags=["结算管理", "结算项批量任务处理", "SETT_AGGREGATE_RECORD_TR_FIND_DATA_BY_ID_SERVICE"]
     )
@@ -311,7 +318,7 @@ class TestSettItemBusiCheck(BaseTest):
         title="命中范围取消取消",
         description="验证SETT_BATCH_AGGREGATION_CANCEL_ASYNC_EVENT_SERVICE",
         severity="critical",
-        order=1,
+        order=10,
         smoke=False,
         tags=["结算管理", "结算项批量任务处理", "SETT_BATCH_AGGREGATION_CANCEL_ASYNC_EVENT_SERVICE"]
     )
@@ -319,36 +326,43 @@ class TestSettItemBusiCheck(BaseTest):
         """测试取消命中范围"""
         try:
             url = self.fin_path["结算项-批量任务取消-异步服务"]["path"]
-            data = self.fin_params.get(url, {})
-            data=ParamUtil.filter_post_body_fields(
-                data, 
-                ["docType","id","operType","taskCode","taskStatus"],
-                ["params", "request"]
-            )
-        
-            #获取最新的批量任务记录
+            
+            #获取最新的批量任务记录（2条）
             sql="""
                 select id,task_code,task_status,doc_type,oper_type
-                from sett_aggregate_record_tr where deleted=0 order by created_at desc limit 1;
+                from sett_aggregate_record_tr where deleted=0 order by created_at desc limit 2;
             """
-            task_info=self.db.query(sql)[0]
-            task_code=task_info["task_code"]
-            doc_type=task_info["doc_type"]
-            oper_type=task_info["oper_type"]
-            id=task_info["id"]
-            task_status=task_info["task_status"]
-            set_dict={
-                "docType":doc_type,
-                "id":id,
-                "operType":oper_type,
-                "taskCode":task_code,
-                "taskStatus":task_status
-            }
-            ParamUtil.set_request_params(data, set_dict)
-            result = self.http.post(url, json=data, description=f"取消命中范围")
-            self.assert_util.assert_response_success(result)
-            a.json(data, "请求数据")
-            a.json(result, "响应数据")
+            task_list = self.db.query(sql)
+            
+            # 遍历每条数据执行测试
+            for index, task_info in enumerate(task_list):
+                data = self.fin_params.get(url, {})
+                data = ParamUtil.filter_post_body_fields(
+                    data, 
+                    ["docType","id","operType","taskCode","taskStatus"],
+                    ["params", "request"]
+                )
+                
+                task_code = task_info["task_code"]
+                doc_type = task_info["doc_type"]
+                oper_type = task_info["oper_type"]
+                task_id = task_info["id"]
+                task_status = task_info["task_status"]
+                
+                set_dict = {
+                    "docType": doc_type,
+                    "id": task_id,
+                    "operType": oper_type,
+                    "taskCode": task_code,
+                    "taskStatus": task_status
+                }
+                ParamUtil.set_request_params(data, set_dict)
+                result = self.http.post(url, json=data, description=f"取消命中范围 - 第{index+1}条任务记录: {task_code}")
+                
+                # 相同的断言逻辑
+                self.assert_util.assert_response_success(result)
+                a.json(data, f"请求数据 - 第{index+1}条")
+                a.json(result, f"响应数据 - 第{index+1}条")
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
