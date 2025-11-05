@@ -1,0 +1,12 @@
+{
+  "params": {
+    "request": {
+      "code": "AT_ApprovalRule90677590026127",
+      "calculateType": "CUSTOM",
+      "name": "测试审单规则_20251031140437",
+      "status": "ENABLED",
+      "desc": "自动化测试创建 - 2025-10-31 14:04:37"
+    }
+  },
+  "serviceKey": "SCM_SLS$sls_order_audit_rule_save"
+}

@@ -1,0 +1,10 @@
+{
+  "params": {
+    "request": {
+      "code": "AT_ItemTypeGroup90526291013979",
+      "name": "测试订单行项目类型组_20251031140206",
+      "desc": "测试订单行项目类型组_20251031140206"
+    }
+  },
+  "serviceKey": "SCM_SLS$sls_item_type_group_save_service"
+}

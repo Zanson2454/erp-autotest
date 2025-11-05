@@ -1,0 +1,22 @@
+{
+  "policy_code": "AT_REB_RECALC_001",
+  "policy_name": "自动化返利政策_重新计算测试",
+  "reb_doc_type": "SO",
+  "acquire_type": "AMT",
+  "com_org_id": 14507001,
+  "sett_acc_type_id": 14007001,
+  "period_type": "MONTH",
+  "period_begin_at": "2025-10-31 14:03:17",
+  "period_end_at": "2026-10-31 14:03:17",
+  "status": "ENABLED",
+  "id": 2017061,
+  "created_by": 618373053188357,
+  "updated_by": 618373053188357,
+  "created_at": "2025-10-31 14:03:18",
+  "updated_at": "2025-10-31 14:03:20",
+  "version": 3,
+  "deleted": 0,
+  "request_id": null,
+  "origin_org_id": 0,
+  "tenant_id": 0
+}

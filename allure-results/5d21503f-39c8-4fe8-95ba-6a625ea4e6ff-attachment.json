@@ -1,0 +1,30 @@
+{
+  "params": {
+    "request": {
+      "id": 2017061,
+      "context": {},
+      "version": 3,
+      "deleted": 0,
+      "createdAt": 1761890598000,
+      "updatedAt": 1761890625351,
+      "createdBy": 618373053188357,
+      "updatedBy": 618373053188357,
+      "policyCode": "AT_REB_RECALC_001",
+      "policyName": "自动化返利政策_重新计算测试",
+      "rebDocType": "SO",
+      "acquireType": "AMT",
+      "comOrgId": {
+        "id": 14507001,
+        "context": {}
+      },
+      "settAccTypeId": {
+        "id": 14007001,
+        "context": {}
+      },
+      "periodType": "MONTH",
+      "periodBeginAt": 1761890597000,
+      "periodEndAt": 1793426597000,
+      "status": "ENABLED"
+    }
+  }
+}

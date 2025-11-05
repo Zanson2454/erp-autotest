@@ -1,0 +1,20 @@
+{
+  "requestId": "3f012f9f-204827",
+  "success": true,
+  "data": {
+    "data": {
+      "id": 2017012,
+      "context": {},
+      "version": 1,
+      "deleted": 0,
+      "createdAt": 1761890654417,
+      "updatedAt": 1761890654417,
+      "createdBy": 618373053188357,
+      "updatedBy": 618373053188357,
+      "code": "AT_DC90654280024370",
+      "name": "自动化销售渠道_20251031140414",
+      "isOnline": true,
+      "status": "INACTIVE"
+    }
+  }
+}

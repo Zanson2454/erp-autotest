@@ -1,0 +1,34 @@
+{
+  "requestId": "44cff424-204198",
+  "success": true,
+  "data": {
+    "data": {
+      "code": "AT_DC90502347009133",
+      "name": "自动化销售渠道_20251031140142",
+      "isOnline": true,
+      "status": "INACTIVE",
+      "id": 2017010,
+      "createdBy": {
+        "id": 618373053188357,
+        "username": "hxy_test",
+        "mobile": "158****0081",
+        "nickname": "侯新雨",
+        "status": true
+      },
+      "updatedBy": {
+        "id": 618373053188357,
+        "username": "hxy_test",
+        "mobile": "158****0081",
+        "nickname": "侯新雨",
+        "status": true
+      },
+      "createdAt": 1761890502000,
+      "updatedAt": 1761890502000,
+      "version": 1,
+      "deleted": 0,
+      "originOrgId": 0,
+      "tenantId": 0,
+      "orderNumber": 0
+    }
+  }
+}

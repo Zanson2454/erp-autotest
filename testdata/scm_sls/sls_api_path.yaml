@@ -37,6 +37,36 @@ apis:
   SLS-销售报价-批量删除服务:
     path: /api/trantor/service/engine/execute/SCM_SLS$sales_order_batch_delete_service?tmodule=SCM_SLS
     method: POST
+  SLS-销售价格-保存服务:
+    path: /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_SAVE_ACTION_SERVICE?tmodule=SCM_SLS
+    method: POST
+  SLS-销售价格-提交服务:
+    path: /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_MANUAL_SUBMIT?tmodule=SCM_SLS
+    method: POST
+  SLS-销售价格-详情查询服务:
+    path: /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_QUERY_DETAIL_EVENT_SERVICE?tmodule=SCM_SLS
+    method: POST
+  SLS-销售价格-删除服务:
+    path: /api/trantor/service/engine/execute/SCM_SLS$SO_DELETE_EVENT_SERVICE?tmodule=SCM_SLS
+    method: POST
+  SLS-销售价格-查询价格维护单列表服务:
+    path: /api/trantor/service/engine/execute/ERP_PRICE$PRICE_ADJ_HEAD_TR_PAGING_DATA_SERVICE?tmodule=ERP_PRICE
+    method: POST
+  SLS-销售价格-价格调整保存服务:
+    path: /api/trantor/service/engine/execute/ERP_PRICE$price_ADJ_SAVE_EVENT_SERVICE?tmodule=ERP_PRICE
+    method: POST
+  SLS-销售价格-价格维护单列表提交服务:
+    path: /api/trantor/service/engine/execute/ERP_PRICE$PRICE_ADJ_LIST_SUBMIT_EVENT_SERVICE?tmodule=ERP_PRICE
+    method: POST
+  SLS-销售价格-价格维护单编辑并提交服务:
+    path: /api/trantor/service/engine/execute/ERP_PRICE$price_ADJ_SUBMIT_EVENT_SERVICE?tmodule=ERP_PRICE
+    method: POST
+  SLS-销售价格-查询销售价格列表服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_MD_PAGING_QUERY_EVENT_SERVICE
+    method: POST
+  SLS-销售价格-查询价格维护单详情服务:
+    path: /api/trantor/service/engine/execute/ERP_PRICE$PRICE_GLOBAL_CF_FIND_DATA_BY_CODE_SERVICE
+    method: POST
   SLS-返利政策-保存服务:
     path: /api/trantor/service/engine/execute/SCM_REB$REB_POLICY_SAVE_ACTION_SERVICE?tmodule=SCM_REB
     method: POST

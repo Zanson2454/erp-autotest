@@ -1,0 +1,47 @@
+2025-10-31 14:05:26.833 | INFO     | test_so_operator:setup_method:41 - 开始执行测试方法: test_06_repeal_sales_order
+2025-10-31 14:05:26.834 | INFO     | test_so_operator:_query_effective_orders_from_db:99 - 执行查询生效态订单: 
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE created_by = %s
+                AND so_status = 'EFFECT'
+                AND deleted = 0 
+            ORDER BY created_at DESC
+            LIMIT 1
+        
+2025-10-31 14:05:27.112 | DEBUG    | utils.mysql_util:query:173 - 执行查询: 
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE created_by = %s
+                AND so_status = 'EFFECT'
+                AND deleted = 0 
+            ORDER BY created_at DESC
+            LIMIT 1
+        
+2025-10-31 14:05:27.112 | DEBUG    | utils.mysql_util:query:175 - 查询参数: (618373053188357,)
+2025-10-31 14:05:27.113 | DEBUG    | utils.mysql_util:query:176 - 查询结果: [{"id": 17425165, "so_code": "SO2025103114052501179", "so_status": "EFFECT"}]
+2025-10-31 14:05:27.113 | INFO     | test_so_operator:_query_effective_orders_from_db:113 - 查询到的生效态订单数据: {
+  "so_id": "17425165",
+  "so_code": "SO2025103114052501179",
+  "so_status": "EFFECT"
+}
+2025-10-31 14:05:27.113 | INFO     | test_so_operator:test_06_repeal_sales_order:378 - 接口请求的地址>>>https://t-erp-huoshan-portal-test.app.duandian.com/api/trantor/service/engine/execute/SCM_SLS$SO_STATUS_REPEAL_UPDATE_EVENT_SERVICE
+2025-10-31 14:05:27.113 | INFO     | test_so_operator:test_06_repeal_sales_order:378 - 接口请求的方法>>>POST
+2025-10-31 14:05:27.114 | INFO     | test_so_operator:test_06_repeal_sales_order:378 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "id": "17425165"
+    }
+  },
+  "serviceKey": "SCM_SLS$SO_STATUS_REPEAL_UPDATE_EVENT_SERVICE"
+}
+2025-10-31 14:05:27.114 | INFO     | utils.exception_util:wrapper:173 - 请求描述: 作废订单
+2025-10-31 14:05:27.168 | INFO     | utils.exception_util:wrapper:173 - 响应状态码: 200
+2025-10-31 14:05:27.169 | INFO     | utils.exception_util:wrapper:173 - 响应内容: {
+  "requestId": "ca881ef1-205280",
+  "success": true,
+  "data": {}
+}
+2025-10-31 14:05:27.195 | DEBUG    | utils.mysql_util:query:173 - 执行查询: select id,so_code,so_status from sls_so_head_tr where id=17425165
+2025-10-31 14:05:27.196 | DEBUG    | utils.mysql_util:query:176 - 查询结果: [{"id": 17425165, "so_code": "SO2025103114052501179", "so_status": "CANCELLED"}]
+2025-10-31 14:05:27.197 | INFO     | test_so_operator:teardown_method:48 - 测试方法 test_06_repeal_sales_order 执行完成

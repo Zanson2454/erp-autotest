@@ -1,0 +1,29 @@
+{
+  "params": {
+    "request": {
+      "pageable": {
+        "pageNo": 1,
+        "pageSize": 20,
+        "needTotal": true,
+        "sortOrders": null,
+        "conditionItems": null
+      },
+      "fields": [
+        {
+          "name": "soItemTypeCode",
+          "type": "TEXT"
+        },
+        {
+          "name": "soItemTypeName",
+          "type": "TEXT"
+        },
+        {
+          "name": "description",
+          "type": "TEXT"
+        }
+      ],
+      "systemParams": null
+    }
+  },
+  "serviceKey": "SCM_SLS$SO_ITEM_TYPE_PAGING_SERVICE"
+}

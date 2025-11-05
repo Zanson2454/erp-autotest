@@ -1,0 +1,47 @@
+{
+  "params": {
+    "taskName": "寻仓规则配置表-侯新雨-20251031140039-导出",
+    "multiSheetConfig": [
+      {
+        "modelKey": "SCM_SLS$sls_wh_find_rule_cf",
+        "modelName": "寻仓规则配置表",
+        "sheetNo": 0,
+        "sheetName": "寻仓规则配置表",
+        "headerConfigList": [
+          {
+            "name": "寻仓规则编码",
+            "type": "TEXT",
+            "field": "name"
+          }
+        ]
+      }
+    ],
+    "queryData": {
+      "containerKey": "SCM_SLS$SLS_WH_FIND_RULE_VIEW:list-SCM_SLS$sls_wh_find_rule_cf",
+      "viewKey": "SCM_SLS$SLS_WH_FIND_RULE_VIEW:list",
+      "sceneKey": "SCM_SLS$SLS_WH_FIND_RULE_VIEW",
+      "params": {
+        "request": {
+          "pageable": {
+            "sortOrders": []
+          }
+        },
+        "selectFields": [
+          {
+            "field": "name"
+          }
+        ],
+        "modelKey": "SCM_SLS$sls_wh_find_rule_cf"
+      }
+    },
+    "processConfig": {
+      "processType": "TRANTOR",
+      "model": "SCM_SLS$sls_wh_find_rule_cf",
+      "modelName": "寻仓规则配置表",
+      "containerKey": "SCM_SLS$SLS_WH_FIND_RULE_VIEW:list-SCM_SLS$sls_wh_find_rule_cf",
+      "viewKey": "SCM_SLS$SLS_WH_FIND_RULE_VIEW:list",
+      "sceneKey": "SCM_SLS$SLS_WH_FIND_RULE_VIEW"
+    }
+  },
+  "serviceKey": "SCM_SLS$SLS_WH_FIND_RULE_CF_API_GEI_TASK_EXPORT_DIRECT_POST"
+}

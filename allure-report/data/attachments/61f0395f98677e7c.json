@@ -1,0 +1,19 @@
+{
+  "sceneKey": "SCM_SLS$sls_so_price",
+  "viewKey": "SCM_SLS$sls_so_price:list",
+  "viewTitle": "list",
+  "buttonKey": "SCM_SLS$sls_so_price-TERP_MIGRATE$sls_so-batch-actions-1-button-2",
+  "buttonName": "批量删除",
+  "appId": 0,
+  "teamId": 22,
+  "serviceKey": "SCM_SLS$sales_order_batch_delete_service",
+  "params": {
+    "request": {
+      "ids": [
+        17425148,
+        17425149,
+        17425150
+      ]
+    }
+  }
+}

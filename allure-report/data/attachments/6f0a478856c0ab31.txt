@@ -1,0 +1,99 @@
+2025-10-31 14:00:36.779 | INFO     | testcases.comm.base_test:initialize_environment:244 - 初始化环境: test
+2025-10-31 14:00:36.779 | INFO     | testcases.comm.base_test:setup_class:333 - 环境配置: {'erp_env': 'test', 'erp_version': '0830', 'trantor_version': '3.0.2509', 'portal_config': {'terp': {'auth': {'username': '${TEST_USERNAME}', 'password': '${TEST_PASSWORD}'}, 'TERP_PORTAL': {'cookie': 'trantor_v2_lng=zh-CN; taid=7bb30de1-7e9b-4513-b307-80500a6ffa87; emp_cookie=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiMjAyNTEwMjQxMzQ5MjQyODUyOWQ0Yzc1MzA4NTY0MGQ4YWQ0OTlkYzIyZWZkMGZmYiIsImV4cGlyZSI6MTIwOTYwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJkdWFuZGlhbi5jb20iLCJodHRwT25seSI6dHJ1ZSwic2VjdXJlIjp0cnVlLCJpc3MiOiJpYW0oMy4wLjI1MDYuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc2MjQ5NDU5OSwibmJmIjoxNzYxMjg0OTk5LCJpYXQiOjE3NjEyODQ5OTksImp0aSI6IjQxOGQxMGQ2NWVlNTQ1NWI4ZGU3MGY3Mzk4ZjQ3ZTRlIn0.dqvck--Vq2_ijEhHj51aMHV2PpSvg3t7eKapdZT_JtU; terp_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiMjAyNTEwMjcxMDMyMTA3MTRmNDIxM2E5NDFiYjE0MTI1OTE2ZmNjMTFhYjJlYTdiNSIsImV4cGlyZSI6ODY0MDAwLCJwYXRoIjoiLyIsImRvbWFpbiI6ImR1YW5kaWFuLmNvbSIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMy4wLjI1MDkuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc2Mjc1Mjg5MSwibmJmIjoxNzYxODg4ODkxLCJpYXQiOjE3NjE4ODg4OTEsImp0aSI6IjIzMzNhMWZmZDU1ZTQ5Yjc5NTFjMmQwM2VhNGJiZjIwIn0.AjEEFAUlOHR-HFmYfLMr1z4RQwTycRT4zRFbBp4cbL0', 'username': '17376596912', 'password': 'Y+IFHj91Gc+CFRI64dS1fxQNx5Xf31hmceqOLHY+ypYkfOc2a5hVrN1He0AT5U5m5SBWma87qVUlF4xT5qAqhBPwDoaa5j2To5IZCx8fSZKly3f5wcLzh8mwfqQccyzgTxcZofBg6yyhaClNJRAIfJZ/CZt6zx3QkWg9aQGEbqY=', 'iam_url': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com', 'iam_referer': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com/TERP_PORTAL-TERP-tpf_umwrhzbg', 'portal_url': 'https://t-erp-huoshan-portal-test.app.duandian.com', 'portal_referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP', 'description': 'TERP门户'}, 'TERP_CUST_PC': {'cookie': 'terp_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiMjAyNTEwMjcxMDMyMTA3MTRmNDIxM2E5NDFiYjE0MTI1OTE2ZmNjMTFhYjJlYTdiNSIsImV4cGlyZSI6ODY0MDAwLCJwYXRoIjoiLyIsImRvbWFpbiI6ImR1YW5kaWFuLmNvbSIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMy4wLjI1MDkuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc2MjM5NjU1NCwibmJmIjoxNzYxNTMyNTU0LCJpYXQiOjE3NjE1MzI1NTQsImp0aSI6IjIzMzNhMWZmZDU1ZTQ5Yjc5NTFjMmQwM2VhNGJiZjIwIn0.SsrHa-ETvC_w2SJomVZMUssQ_jDOb0TIpFfo9c68dM0; Max-Age=864000; Expires=Thu, 06 Nov 2025 02:35:54 GMT; Path=/; Domain=duandian.com; HTTPOnly', 'username': '17376596912', 'password': 'Y+IFHj91Gc+CFRI64dS1fxQNx5Xf31hmceqOLHY+ypYkfOc2a5hVrN1He0AT5U5m5SBWma87qVUlF4xT5qAqhBPwDoaa5j2To5IZCx8fSZKly3f5wcLzh8mwfqQccyzgTxcZofBg6yyhaClNJRAIfJZ/CZt6zx3QkWg9aQGEbqY=', 'iam_url': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com', 'iam_referer': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com/TERP_DEALER_PORTAL-TERP-tpf_umwrhzbg', 'portal_url': 'https://t-erp-huoshan-portal-test.app.duandian.com', 'portal_referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_DEALER_PORTAL-TERP', 'description': 'TERP客户端PC门户'}}}, 'database': {'erp_db': {'host': '10.3.0.143', 'port': '3306', 'user': 'terp_test', 'password': '43sVPCQ2pE%g55bc', 'database': 'terp_test', 'charset': 'utf8mb4'}, 'iam_db': {'host': '10.3.0.143', 'port': '3306', 'user': 'terp_test', 'password': '43sVPCQ2pE%g55bc', 'database': 'iam_test', 'charset': 'utf8mb4'}}}
+2025-10-31 14:00:36.779 | INFO     | utils.cache_util:get:44 - 读取缓存文件: /Users/test/erp-autotest/testdata/cache/init_cache.json
+2025-10-31 14:00:36.780 | INFO     | utils.cache_util:get:54 - 成功读取缓存: init_cache.json
+2025-10-31 14:00:36.825 | INFO     | testcases.comm.base_test:login:113 - 检测到配置了 cookie，使用 cookie 快捷登录
+2025-10-31 14:00:36.825 | INFO     | testcases.comm.base_test:login:114 - Cookie 前50个字符: trantor_v2_lng=zh-CN; taid=7bb30de1-7e9b-4513-b307...
+2025-10-31 14:00:36.826 | INFO     | testcases.comm.base_test:_get_user_info:208 - 获取用户信息 - portal_referer: https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP
+2025-10-31 14:00:36.860 | INFO     | testcases.comm.base_test:_get_user_info:216 - 获取用户信息URL: https://t-erp-huoshan-portal-test.app.duandian.com/api/trantor/portal/user/current
+2025-10-31 14:00:36.860 | INFO     | testcases.comm.base_test:_get_user_info:217 - 获取用户信息请求头: {'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10_12_7 rv:4.0; de-DE) AppleWebKit/535.2.5 (KHTML, like Gecko) Version/5.0.2 Safari/535.2.5', 'Referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP', 'Origin': 'https://t-erp-huoshan-portal-test.app.duandian.com'}
+2025-10-31 14:00:37.271 | INFO     | utils.mysql_util:_connect_instance:106 - 数据库实例连接成功 [database=terp_test]
+2025-10-31 14:00:37.637 | INFO     | utils.mysql_util:_connect_instance:106 - 数据库实例连接成功 [database=iam_test]
+2025-10-31 14:00:37.674 | INFO     | testcases.comm.base_test:setup_class:363 - 测试基类初始化完成
+2025-10-31 14:00:37.713 | INFO     | testcases.comm.base_test:login:113 - 检测到配置了 cookie，使用 cookie 快捷登录
+2025-10-31 14:00:37.713 | INFO     | testcases.comm.base_test:login:114 - Cookie 前50个字符: trantor_v2_lng=zh-CN; taid=7bb30de1-7e9b-4513-b307...
+2025-10-31 14:00:37.713 | INFO     | testcases.comm.base_test:_get_user_info:208 - 获取用户信息 - portal_referer: https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP
+2025-10-31 14:00:37.755 | INFO     | testcases.comm.base_test:_get_user_info:216 - 获取用户信息URL: https://t-erp-huoshan-portal-test.app.duandian.com/api/trantor/portal/user/current
+2025-10-31 14:00:37.756 | INFO     | testcases.comm.base_test:_get_user_info:217 - 获取用户信息请求头: {'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows; U; Windows CE) AppleWebKit/532.47.7 (KHTML, like Gecko) Version/4.1 Safari/532.47.7', 'Referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP', 'Origin': 'https://t-erp-huoshan-portal-test.app.duandian.com'}
+2025-10-31 14:00:38.025 | INFO     | testcases.scm_sls:setup_class:61 - cust_portal_headers: {'Content-Type': 'application/json', 'User-Agent': 'Opera/8.60.(Windows NT 5.1; xh-ZA) Presto/2.9.180 Version/12.00', 'Referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_DEALER_PORTAL-TERP', 'Origin': 'https://t-erp-huoshan-portal-test.app.duandian.com', 'Cookie': 'trantor_v2_lng=zh-CN; taid=7bb30de1-7e9b-4513-b307-80500a6ffa87; emp_cookie=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiMjAyNTEwMjQxMzQ5MjQyODUyOWQ0Yzc1MzA4NTY0MGQ4YWQ0OTlkYzIyZWZkMGZmYiIsImV4cGlyZSI6MTIwOTYwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJkdWFuZGlhbi5jb20iLCJodHRwT25seSI6dHJ1ZSwic2VjdXJlIjp0cnVlLCJpc3MiOiJpYW0oMy4wLjI1MDYuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc2MjQ5NDU5OSwibmJmIjoxNzYxMjg0OTk5LCJpYXQiOjE3NjEyODQ5OTksImp0aSI6IjQxOGQxMGQ2NWVlNTQ1NWI4ZGU3MGY3Mzk4ZjQ3ZTRlIn0.dqvck--Vq2_ijEhHj51aMHV2PpSvg3t7eKapdZT_JtU; terp_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiMjAyNTEwMjcxMDMyMTA3MTRmNDIxM2E5NDFiYjE0MTI1OTE2ZmNjMTFhYjJlYTdiNSIsImV4cGlyZSI6ODY0MDAwLCJwYXRoIjoiLyIsImRvbWFpbiI6ImR1YW5kaWFuLmNvbSIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMy4wLjI1MDkuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc2Mjc1Mjg5MSwibmJmIjoxNzYxODg4ODkxLCJpYXQiOjE3NjE4ODg4OTEsImp0aSI6IjIzMzNhMWZmZDU1ZTQ5Yjc5NTFjMmQwM2VhNGJiZjIwIn0.AjEEFAUlOHR-HFmYfLMr1z4RQwTycRT4zRFbBp4cbL0'}
+2025-10-31 14:00:38.144 | INFO     | utils.yaml_util:read_yaml:39 - 读取YAML文件: /Users/test/erp-autotest/testdata/scm_sls/sls_api_path.yaml
+2025-10-31 14:00:39.316 | INFO     | utils.yaml_util:read_yaml:39 - 读取YAML文件: /Users/test/erp-autotest/testdata/scm_sls/sls_api_params.yaml
+2025-10-31 14:00:39.375 | INFO     | utils.yaml_util:read_yaml:39 - 读取YAML文件: /Users/test/erp-autotest/config/erp/md_init_sql.yaml
+2025-10-31 14:00:39.376 | INFO     | utils.cache_util:get:44 - 读取缓存文件: /Users/test/erp-autotest/testdata/cache/md_init_cache.json
+2025-10-31 14:00:39.376 | INFO     | utils.cache_util:get:54 - 成功读取缓存: md_init_cache.json
+2025-10-31 14:00:39.377 | INFO     | data_factory.base:init_sql:33 - 从缓存获取数据成功
+2025-10-31 14:00:39.377 | INFO     | utils.cache_util:get:44 - 读取缓存文件: /Users/test/erp-autotest/testdata/cache/md_init_cache.json
+2025-10-31 14:00:39.377 | INFO     | utils.cache_util:get:54 - 成功读取缓存: md_init_cache.json
+2025-10-31 14:00:39.379 | INFO     | utils.yaml_util:read_yaml:39 - 读取YAML文件: /Users/test/erp-autotest/config/erp/sls_init_sql.yaml
+2025-10-31 14:00:39.379 | INFO     | utils.cache_util:get:44 - 读取缓存文件: /Users/test/erp-autotest/testdata/cache/sls_init_cache.json
+2025-10-31 14:00:39.380 | INFO     | utils.cache_util:get:54 - 成功读取缓存: sls_init_cache.json
+2025-10-31 14:00:39.380 | INFO     | data_factory.base:init_sql:33 - 从缓存获取数据成功
+2025-10-31 14:00:39.380 | INFO     | utils.cache_util:get:44 - 读取缓存文件: /Users/test/erp-autotest/testdata/cache/sls_init_cache.json
+2025-10-31 14:00:39.381 | INFO     | utils.cache_util:get:54 - 成功读取缓存: sls_init_cache.json
+2025-10-31 14:00:39.381 | INFO     | testcases.scm_sls:setup_class:137 - cust_id: 2059001
+2025-10-31 14:00:39.381 | INFO     | test_wh_find_rule_management:setup_class:25 - 销售寻仓规则配置表管理测试类初始化完成
+2025-10-31 14:00:39.382 | INFO     | testcases.comm.base_test:setup_method:372 - 开始测试方法: test_wh_find_rule_export_task
+2025-10-31 14:00:39.383 | INFO     | test_wh_find_rule_management:test_wh_find_rule_export_task:108 - 接口请求的地址>>>https://t-erp-huoshan-portal-test.app.duandian.com/api/trantor/service/engine/execute/SCM_SLS$SLS_WH_FIND_RULE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+2025-10-31 14:00:39.383 | INFO     | test_wh_find_rule_management:test_wh_find_rule_export_task:108 - 接口请求的方法>>>POST
+2025-10-31 14:00:39.383 | INFO     | test_wh_find_rule_management:test_wh_find_rule_export_task:108 - 接口请求的json参数>>>
+{
+  "params": {
+    "taskName": "寻仓规则配置表-侯新雨-20251031140039-导出",
+    "multiSheetConfig": [
+      {
+        "modelKey": "SCM_SLS$sls_wh_find_rule_cf",
+        "modelName": "寻仓规则配置表",
+        "sheetNo": 0,
+        "sheetName": "寻仓规则配置表",
+        "headerConfigList": [
+          {
+            "name": "寻仓规则编码",
+            "type": "TEXT",
+            "field": "name"
+          }
+        ]
+      }
+    ],
+    "queryData": {
+      "containerKey": "SCM_SLS$SLS_WH_FIND_RULE_VIEW:list-SCM_SLS$sls_wh_find_rule_cf",
+      "viewKey": "SCM_SLS$SLS_WH_FIND_RULE_VIEW:list",
+      "sceneKey": "SCM_SLS$SLS_WH_FIND_RULE_VIEW",
+      "params": {
+        "request": {
+          "pageable": {
+            "sortOrders": []
+          }
+        },
+        "selectFields": [
+          {
+            "field": "name"
+          }
+        ],
+        "modelKey": "SCM_SLS$sls_wh_find_rule_cf"
+      }
+    },
+    "processConfig": {
+      "processType": "TRANTOR",
+      "model": "SCM_SLS$sls_wh_find_rule_cf",
+      "modelName": "寻仓规则配置表",
+      "containerKey": "SCM_SLS$SLS_WH_FIND_RULE_VIEW:list-SCM_SLS$sls_wh_find_rule_cf",
+      "viewKey": "SCM_SLS$SLS_WH_FIND_RULE_VIEW:list",
+      "sceneKey": "SCM_SLS$SLS_WH_FIND_RULE_VIEW"
+    }
+  },
+  "serviceKey": "SCM_SLS$SLS_WH_FIND_RULE_CF_API_GEI_TASK_EXPORT_DIRECT_POST"
+}
+2025-10-31 14:00:39.439 | INFO     | utils.report_util:wrapper:370 - 响应状态码: 200
+2025-10-31 14:00:39.439 | INFO     | utils.report_util:wrapper:370 - 响应内容: {
+  "requestId": "af67be6c-203886",
+  "success": true,
+  "data": {
+    "data": {
+      "mainTaskId": "20251031140039-cbc1e572"
+    }
+  }
+}
+2025-10-31 14:00:39.439 | INFO     | utils.assert_util:assert_response_success:44 - 响应成功断言通过: success=True
+2025-10-31 14:00:39.446 | INFO     | testcases.comm.base_test:teardown_method:381 - 测试方法 test_wh_find_rule_export_task 执行完成，耗时: 0.064秒
+2025-10-31 14:00:39.534 | INFO     | utils.mysql_util:delete:272 - 删除数据成功 [表=sls_wh_find_rule_cf, 影响行数=0]
+2025-10-31 14:00:39.535 | INFO     | test_wh_find_rule_management:teardown_class:42 - 测试数据清理完成

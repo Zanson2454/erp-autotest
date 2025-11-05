@@ -1,0 +1,84 @@
+2025-10-31 14:03:43.110 | INFO     | testcases.comm.base_test:initialize_environment:244 - 初始化环境: test
+2025-10-31 14:03:43.111 | INFO     | testcases.comm.base_test:setup_class:333 - 环境配置: {'erp_env': 'test', 'erp_version': '0830', 'trantor_version': '3.0.2509', 'portal_config': {'terp': {'auth': {'username': '${TEST_USERNAME}', 'password': '${TEST_PASSWORD}'}, 'TERP_PORTAL': {'cookie': 'trantor_v2_lng=zh-CN; taid=7bb30de1-7e9b-4513-b307-80500a6ffa87; emp_cookie=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiMjAyNTEwMjQxMzQ5MjQyODUyOWQ0Yzc1MzA4NTY0MGQ4YWQ0OTlkYzIyZWZkMGZmYiIsImV4cGlyZSI6MTIwOTYwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJkdWFuZGlhbi5jb20iLCJodHRwT25seSI6dHJ1ZSwic2VjdXJlIjp0cnVlLCJpc3MiOiJpYW0oMy4wLjI1MDYuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc2MjQ5NDU5OSwibmJmIjoxNzYxMjg0OTk5LCJpYXQiOjE3NjEyODQ5OTksImp0aSI6IjQxOGQxMGQ2NWVlNTQ1NWI4ZGU3MGY3Mzk4ZjQ3ZTRlIn0.dqvck--Vq2_ijEhHj51aMHV2PpSvg3t7eKapdZT_JtU; terp_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiMjAyNTEwMjcxMDMyMTA3MTRmNDIxM2E5NDFiYjE0MTI1OTE2ZmNjMTFhYjJlYTdiNSIsImV4cGlyZSI6ODY0MDAwLCJwYXRoIjoiLyIsImRvbWFpbiI6ImR1YW5kaWFuLmNvbSIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMy4wLjI1MDkuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc2Mjc1Mjg5MSwibmJmIjoxNzYxODg4ODkxLCJpYXQiOjE3NjE4ODg4OTEsImp0aSI6IjIzMzNhMWZmZDU1ZTQ5Yjc5NTFjMmQwM2VhNGJiZjIwIn0.AjEEFAUlOHR-HFmYfLMr1z4RQwTycRT4zRFbBp4cbL0', 'username': '17376596912', 'password': 'Y+IFHj91Gc+CFRI64dS1fxQNx5Xf31hmceqOLHY+ypYkfOc2a5hVrN1He0AT5U5m5SBWma87qVUlF4xT5qAqhBPwDoaa5j2To5IZCx8fSZKly3f5wcLzh8mwfqQccyzgTxcZofBg6yyhaClNJRAIfJZ/CZt6zx3QkWg9aQGEbqY=', 'iam_url': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com', 'iam_referer': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com/TERP_PORTAL-TERP-tpf_umwrhzbg', 'portal_url': 'https://t-erp-huoshan-portal-test.app.duandian.com', 'portal_referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP', 'description': 'TERP门户'}, 'TERP_CUST_PC': {'cookie': 'terp_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiMjAyNTEwMjcxMDMyMTA3MTRmNDIxM2E5NDFiYjE0MTI1OTE2ZmNjMTFhYjJlYTdiNSIsImV4cGlyZSI6ODY0MDAwLCJwYXRoIjoiLyIsImRvbWFpbiI6ImR1YW5kaWFuLmNvbSIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMy4wLjI1MDkuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc2MjM5NjU1NCwibmJmIjoxNzYxNTMyNTU0LCJpYXQiOjE3NjE1MzI1NTQsImp0aSI6IjIzMzNhMWZmZDU1ZTQ5Yjc5NTFjMmQwM2VhNGJiZjIwIn0.SsrHa-ETvC_w2SJomVZMUssQ_jDOb0TIpFfo9c68dM0; Max-Age=864000; Expires=Thu, 06 Nov 2025 02:35:54 GMT; Path=/; Domain=duandian.com; HTTPOnly', 'username': '17376596912', 'password': 'Y+IFHj91Gc+CFRI64dS1fxQNx5Xf31hmceqOLHY+ypYkfOc2a5hVrN1He0AT5U5m5SBWma87qVUlF4xT5qAqhBPwDoaa5j2To5IZCx8fSZKly3f5wcLzh8mwfqQccyzgTxcZofBg6yyhaClNJRAIfJZ/CZt6zx3QkWg9aQGEbqY=', 'iam_url': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com', 'iam_referer': 'https://t-erp-huoshan-portal-iam-test.app.duandian.com/TERP_DEALER_PORTAL-TERP-tpf_umwrhzbg', 'portal_url': 'https://t-erp-huoshan-portal-test.app.duandian.com', 'portal_referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_DEALER_PORTAL-TERP', 'description': 'TERP客户端PC门户'}}}, 'database': {'erp_db': {'host': '10.3.0.143', 'port': '3306', 'user': 'terp_test', 'password': '43sVPCQ2pE%g55bc', 'database': 'terp_test', 'charset': 'utf8mb4'}, 'iam_db': {'host': '10.3.0.143', 'port': '3306', 'user': 'terp_test', 'password': '43sVPCQ2pE%g55bc', 'database': 'iam_test', 'charset': 'utf8mb4'}}}
+2025-10-31 14:03:43.111 | INFO     | utils.cache_util:get:44 - 读取缓存文件: /Users/test/erp-autotest/testdata/cache/init_cache.json
+2025-10-31 14:03:43.111 | INFO     | utils.cache_util:get:54 - 成功读取缓存: init_cache.json
+2025-10-31 14:03:43.143 | INFO     | testcases.comm.base_test:login:113 - 检测到配置了 cookie，使用 cookie 快捷登录
+2025-10-31 14:03:43.143 | INFO     | testcases.comm.base_test:login:114 - Cookie 前50个字符: trantor_v2_lng=zh-CN; taid=7bb30de1-7e9b-4513-b307...
+2025-10-31 14:03:43.143 | INFO     | testcases.comm.base_test:_get_user_info:208 - 获取用户信息 - portal_referer: https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP
+2025-10-31 14:03:43.173 | INFO     | testcases.comm.base_test:_get_user_info:216 - 获取用户信息URL: https://t-erp-huoshan-portal-test.app.duandian.com/api/trantor/portal/user/current
+2025-10-31 14:03:43.173 | INFO     | testcases.comm.base_test:_get_user_info:217 - 获取用户信息请求头: {'Content-Type': 'application/json', 'User-Agent': 'Opera/8.33.(X11; Linux i686; kn-IN) Presto/2.9.181 Version/12.00', 'Referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP', 'Origin': 'https://t-erp-huoshan-portal-test.app.duandian.com'}
+2025-10-31 14:03:43.713 | INFO     | utils.mysql_util:_connect_instance:106 - 数据库实例连接成功 [database=terp_test]
+2025-10-31 14:03:44.100 | INFO     | utils.mysql_util:_connect_instance:106 - 数据库实例连接成功 [database=iam_test]
+2025-10-31 14:03:44.132 | INFO     | testcases.comm.base_test:setup_class:363 - 测试基类初始化完成
+2025-10-31 14:03:44.165 | INFO     | testcases.comm.base_test:login:113 - 检测到配置了 cookie，使用 cookie 快捷登录
+2025-10-31 14:03:44.165 | INFO     | testcases.comm.base_test:login:114 - Cookie 前50个字符: trantor_v2_lng=zh-CN; taid=7bb30de1-7e9b-4513-b307...
+2025-10-31 14:03:44.165 | INFO     | testcases.comm.base_test:_get_user_info:208 - 获取用户信息 - portal_referer: https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP
+2025-10-31 14:03:44.197 | INFO     | testcases.comm.base_test:_get_user_info:216 - 获取用户信息URL: https://t-erp-huoshan-portal-test.app.duandian.com/api/trantor/portal/user/current
+2025-10-31 14:03:44.197 | INFO     | testcases.comm.base_test:_get_user_info:217 - 获取用户信息请求头: {'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 5.2; cy-GB; rv:1.9.1.20) Gecko/7952-08-12 04:20:35 Firefox/3.6.1', 'Referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_PORTAL-TERP', 'Origin': 'https://t-erp-huoshan-portal-test.app.duandian.com'}
+2025-10-31 14:03:44.342 | INFO     | testcases.scm_sls:setup_class:61 - cust_portal_headers: {'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10_7_2) AppleWebKit/536.2 (KHTML, like Gecko) Chrome/58.0.811.0 Safari/536.2', 'Referer': 'https://t-erp-huoshan-portal-test.app.duandian.com/TERP_DEALER_PORTAL-TERP', 'Origin': 'https://t-erp-huoshan-portal-test.app.duandian.com', 'Cookie': 'trantor_v2_lng=zh-CN; taid=7bb30de1-7e9b-4513-b307-80500a6ffa87; emp_cookie=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiMjAyNTEwMjQxMzQ5MjQyODUyOWQ0Yzc1MzA4NTY0MGQ4YWQ0OTlkYzIyZWZkMGZmYiIsImV4cGlyZSI6MTIwOTYwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJkdWFuZGlhbi5jb20iLCJodHRwT25seSI6dHJ1ZSwic2VjdXJlIjp0cnVlLCJpc3MiOiJpYW0oMy4wLjI1MDYuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc2MjQ5NDU5OSwibmJmIjoxNzYxMjg0OTk5LCJpYXQiOjE3NjEyODQ5OTksImp0aSI6IjQxOGQxMGQ2NWVlNTQ1NWI4ZGU3MGY3Mzk4ZjQ3ZTRlIn0.dqvck--Vq2_ijEhHj51aMHV2PpSvg3t7eKapdZT_JtU; terp_iam_test=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiMjAyNTEwMjcxMDMyMTA3MTRmNDIxM2E5NDFiYjE0MTI1OTE2ZmNjMTFhYjJlYTdiNSIsImV4cGlyZSI6ODY0MDAwLCJwYXRoIjoiLyIsImRvbWFpbiI6ImR1YW5kaWFuLmNvbSIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMy4wLjI1MDkuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc2Mjc1Mjg5MSwibmJmIjoxNzYxODg4ODkxLCJpYXQiOjE3NjE4ODg4OTEsImp0aSI6IjIzMzNhMWZmZDU1ZTQ5Yjc5NTFjMmQwM2VhNGJiZjIwIn0.AjEEFAUlOHR-HFmYfLMr1z4RQwTycRT4zRFbBp4cbL0'}
+2025-10-31 14:03:44.406 | INFO     | utils.yaml_util:read_yaml:39 - 读取YAML文件: /Users/test/erp-autotest/testdata/scm_sls/sls_api_path.yaml
+2025-10-31 14:03:45.195 | INFO     | utils.yaml_util:read_yaml:39 - 读取YAML文件: /Users/test/erp-autotest/testdata/scm_sls/sls_api_params.yaml
+2025-10-31 14:03:45.213 | INFO     | utils.yaml_util:read_yaml:39 - 读取YAML文件: /Users/test/erp-autotest/config/erp/md_init_sql.yaml
+2025-10-31 14:03:45.214 | INFO     | utils.cache_util:get:44 - 读取缓存文件: /Users/test/erp-autotest/testdata/cache/md_init_cache.json
+2025-10-31 14:03:45.214 | INFO     | utils.cache_util:get:54 - 成功读取缓存: md_init_cache.json
+2025-10-31 14:03:45.214 | INFO     | data_factory.base:init_sql:33 - 从缓存获取数据成功
+2025-10-31 14:03:45.214 | INFO     | utils.cache_util:get:44 - 读取缓存文件: /Users/test/erp-autotest/testdata/cache/md_init_cache.json
+2025-10-31 14:03:45.215 | INFO     | utils.cache_util:get:54 - 成功读取缓存: md_init_cache.json
+2025-10-31 14:03:45.216 | INFO     | utils.yaml_util:read_yaml:39 - 读取YAML文件: /Users/test/erp-autotest/config/erp/sls_init_sql.yaml
+2025-10-31 14:03:45.216 | INFO     | utils.cache_util:get:44 - 读取缓存文件: /Users/test/erp-autotest/testdata/cache/sls_init_cache.json
+2025-10-31 14:03:45.217 | INFO     | utils.cache_util:get:54 - 成功读取缓存: sls_init_cache.json
+2025-10-31 14:03:45.217 | INFO     | data_factory.base:init_sql:33 - 从缓存获取数据成功
+2025-10-31 14:03:45.217 | INFO     | utils.cache_util:get:44 - 读取缓存文件: /Users/test/erp-autotest/testdata/cache/sls_init_cache.json
+2025-10-31 14:03:45.217 | INFO     | utils.cache_util:get:54 - 成功读取缓存: sls_init_cache.json
+2025-10-31 14:03:45.217 | INFO     | testcases.scm_sls:setup_class:137 - cust_id: 2059001
+2025-10-31 14:03:45.218 | INFO     | test_rebate_crud:setup_class:23 - 返利政策增删改查测试类初始化完成
+2025-10-31 14:03:45.218 | INFO     | testcases.comm.base_test:setup_method:372 - 开始测试方法: test_05_disable_rebate_from_detail
+2025-10-31 14:03:45.349 | DEBUG    | utils.mysql_util:query:173 - 执行查询: SELECT * FROM rebate_policy_head_tr WHERE status = 'ENABLED' AND deleted = 0 LIMIT 1
+2025-10-31 14:03:45.350 | DEBUG    | utils.mysql_util:query:176 - 查询结果: [{"policy_code": "AT_REB_RECALC_001", "policy_name": "自动化返利政策_重新计算测试", "reb_doc_type": "SO", "acquire_type": "AMT", "com_org_id": 14507001, "sett_acc_type_id": 14007001, "period_type": "MONTH", "period_begin_at": "2025-10-31T14:03:17", "period_end_at": "2026-10-31T14:03:17", "status": "ENABLED", "id": 2017061, "created_by": 618373053188357, "updated_by": 618373053188357, "created_at": "2025-10-31T14:03:18", "updated_at": "2025-10-31T14:03:20", "version": 3, "deleted": 0, "request_id": null, "origin_org_id": 0, "tenant_id": 0}]
+2025-10-31 14:03:45.350 | INFO     | test_rebate_crud:test_05_disable_rebate_from_detail:361 - 找到已启用的返利政策，ID: 2017061
+2025-10-31 14:03:45.351 | INFO     | test_rebate_crud:test_05_disable_rebate_from_detail:398 - 开始从详情页停用返利政策，ID: 2017061
+2025-10-31 14:03:45.351 | INFO     | test_rebate_crud:test_05_disable_rebate_from_detail:459 - 发送停用返利政策请求
+2025-10-31 14:03:45.352 | INFO     | test_rebate_crud:test_05_disable_rebate_from_detail:460 - 接口请求的地址>>>https://t-erp-huoshan-portal-test.app.duandian.com/api/trantor/service/engine/execute/SCM_REB$REB_POLICY_DISABLE_ACTION_SERVICE?tmodule=SCM_REB
+2025-10-31 14:03:45.352 | INFO     | test_rebate_crud:test_05_disable_rebate_from_detail:460 - 接口请求的方法>>>POST
+2025-10-31 14:03:45.352 | INFO     | test_rebate_crud:test_05_disable_rebate_from_detail:460 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "id": 2017061,
+      "context": {},
+      "version": 3,
+      "deleted": 0,
+      "createdAt": 1761890598000,
+      "updatedAt": 1761890625351,
+      "createdBy": 618373053188357,
+      "updatedBy": 618373053188357,
+      "policyCode": "AT_REB_RECALC_001",
+      "policyName": "自动化返利政策_重新计算测试",
+      "rebDocType": "SO",
+      "acquireType": "AMT",
+      "comOrgId": {
+        "id": 14507001,
+        "context": {}
+      },
+      "settAccTypeId": {
+        "id": 14007001,
+        "context": {}
+      },
+      "periodType": "MONTH",
+      "periodBeginAt": 1761890597000,
+      "periodEndAt": 1793426597000,
+      "status": "ENABLED"
+    }
+  }
+}
+2025-10-31 14:03:45.391 | INFO     | utils.report_util:wrapper:370 - 响应状态码: 200
+2025-10-31 14:03:45.392 | INFO     | utils.report_util:wrapper:370 - 响应内容: {
+  "requestId": "0fe39a01-204714",
+  "success": true
+}
+2025-10-31 14:03:45.392 | INFO     | utils.assert_util:assert_response_success:44 - 响应成功断言通过: success=True
+2025-10-31 14:03:46.423 | DEBUG    | utils.mysql_util:query:173 - 执行查询: SELECT status FROM rebate_policy_head_tr WHERE id = 2017061
+2025-10-31 14:03:46.423 | DEBUG    | utils.mysql_util:query:176 - 查询结果: [{"status": "DISABLED"}]
+2025-10-31 14:03:46.425 | INFO     | test_rebate_crud:test_05_disable_rebate_from_detail:480 - 返利政策停用测试完成，ID: 2017061
+2025-10-31 14:03:46.428 | INFO     | testcases.comm.base_test:teardown_method:381 - 测试方法 test_05_disable_rebate_from_detail 执行完成，耗时: 1.210秒
+2025-10-31 14:03:46.429 | INFO     | test_rebate_crud:teardown_class:36 - 返利政策测试数据清理完成

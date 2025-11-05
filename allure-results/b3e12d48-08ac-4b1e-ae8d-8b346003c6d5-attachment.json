@@ -1,0 +1,21 @@
+{
+  "requestId": "44cff424-204177",
+  "success": true,
+  "data": {
+    "data": {
+      "soItemTypeGroupId": 2000005,
+      "originOrgId": 0,
+      "updatedBy": 618373053188357,
+      "remark": "自动化测试_20251031140137",
+      "version": 0,
+      "createdAt": 1761890497770,
+      "deleted": 0,
+      "createdBy": 618373053188357,
+      "requestId": "44cff424-204177",
+      "soItemTypeId": 2000005,
+      "id": 2046005,
+      "soTypeId": 2101001,
+      "updatedAt": 1761890497770
+    }
+  }
+}

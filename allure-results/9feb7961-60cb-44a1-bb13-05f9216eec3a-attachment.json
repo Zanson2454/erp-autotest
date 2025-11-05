@@ -1,0 +1,26 @@
+{
+  "requestId": "43c3348d-204321",
+  "success": true,
+  "data": {
+    "data": {
+      "code": "AT_ItemTypeGroup90526291013979",
+      "name": "测试订单行项目类型组_20251031140206",
+      "desc": "测试订单行项目类型组_20251031140206",
+      "id": 2011009,
+      "createdBy": {
+        "id": 618373053188357
+      },
+      "updatedBy": {
+        "id": 618373053188357
+      },
+      "createdAt": 1761890526000,
+      "updatedAt": 1761890526000,
+      "version": 0,
+      "deleted": 0,
+      "requestId": "0fe39a01-204320",
+      "originOrgId": 0,
+      "tenantId": 0,
+      "orderNumber": 0
+    }
+  }
+}

@@ -1,0 +1,240 @@
+{
+  "requestId": "f77861b8-205106",
+  "success": true,
+  "data": {
+    "data": {
+      "soItem": {
+        "id": 17548169,
+        "context": {},
+        "soItemCode": "SOI20251031140501100153",
+        "soId": 17425157,
+        "soCode": "SO2025103114050101171",
+        "matId": {
+          "id": 14097001
+        },
+        "matCode": "AUTOTEST_MAT_FINP",
+        "matName": "成品物料(自动化-带批次)",
+        "matBasePrice": 4999.0,
+        "soItemSlsQty": 27,
+        "soItemDelQty": 0,
+        "soItemTransferQty": 0,
+        "soItemSettQty": 0,
+        "soItemOutstandingQty": 27,
+        "soItemPrice": 4423.893805309735,
+        "soItemGrossPrice": 4999.0,
+        "taxRateId": {
+          "id": 2002002
+        },
+        "taxRate": 0.13,
+        "taxAmt": 15527.867256637168,
+        "grossTradeAmt": 134973.0,
+        "netTradeAmt": 119445.13274336283,
+        "soDocDate": 1761890702160,
+        "soSchlDelDate": 1761890701732,
+        "soItemStatus": "DRAFT",
+        "soItemBusinessStatus": "INIT",
+        "soItemTypeId": {
+          "id": 2103001
+        },
+        "uomSlsId": {
+          "id": 2004001
+        },
+        "uomBaseId": {
+          "id": 2004001
+        },
+        "soItemBaseQty": 27,
+        "invOrgId": {
+          "id": 14375002
+        },
+        "invLocId": {
+          "id": 14376002
+        },
+        "bomWhether": false,
+        "weightUomId": {
+          "id": 2002011
+        },
+        "grossWeight": 1.11,
+        "netWeight": 0.88,
+        "delAddrId": {
+          "id": 70002638
+        },
+        "delAddrDetail": "佛山市禅城区季华五路28号",
+        "delPersonName": "李月汝",
+        "itemNumber": 1,
+        "atpCheck": true,
+        "isCompleteSet": false,
+        "salesPrice": 4999.0,
+        "salesAmt": 134973.0,
+        "soSchedules": [
+          {
+            "id": 17524150,
+            "context": {},
+            "soSchlCode": "SOS20251031140502100149",
+            "soId": 17425157,
+            "soCode": "SO2025103114050101171",
+            "soItemId": 17548169,
+            "soItemCode": "SOI20251031140501100153",
+            "soSchlExptDate": 1761890701732,
+            "uomSlsId": {
+              "id": 2004001
+            },
+            "uomBaseId": {
+              "id": 2004001
+            },
+            "soSchlSlsQty": 27,
+            "soSchlDelQty": 27,
+            "soSchlConfirmedQty": 27,
+            "soSchlDelSubQty": 0,
+            "soSchlTransferQty": 0,
+            "soSchlSettQty": 0,
+            "soSchlOutstandingQty": 27,
+            "soSchlTypeId": {
+              "id": 2103001
+            }
+          }
+        ],
+        "slsSoItemTypeCfDTO": {
+          "id": 2103001,
+          "context": {},
+          "version": 216,
+          "deleted": 0,
+          "createdAt": 1685108592000,
+          "updatedAt": 1758247383000,
+          "createdBy": 27,
+          "updatedBy": 618373053188357,
+          "soItemTypeCode": "NORM",
+          "soItemTypeName": "常规销售",
+          "delRelv": true,
+          "autoDelivery": false,
+          "checkInvLocRelv": true,
+          "status": "ENABLED",
+          "isAutomaticComplete": true,
+          "isCompletePickControl": false,
+          "autoPr": false,
+          "autoOutDnPost": false,
+          "settlement": true,
+          "priceControlType": "STAND"
+        },
+        "matTypeId": 2000001,
+        "soItemTypeGroupId": 2000001
+      },
+      "soPriceItemRecords": [
+        {
+          "context": {},
+          "soItemCode": "SOI20251031140501100153",
+          "soPriceCode": "SALES_PRICE",
+          "soPriceName": "销售价",
+          "soPriceDiscount": 0.13,
+          "docCurrId": {
+            "id": 2000001
+          },
+          "docUomBaseId": {
+            "id": 2004001
+          },
+          "docUomBaseNum": 27,
+          "docCurrPrice": 4999.0,
+          "docCurrGrossPrice": 4999.0,
+          "docCurrAmount": 134973.0,
+          "docCurrGrossAmount": 134973.0,
+          "partnerTypeId": 14006001,
+          "partnerId": {
+            "id": 2059001
+          },
+          "settItemTypeId": {
+            "id": 6
+          },
+          "settEntityId": {
+            "id": 14507001
+          },
+          "stepNo": 20
+        },
+        {
+          "context": {},
+          "soItemCode": "SOI20251031140501100153",
+          "soPriceCode": "SLS_DISCOUNT",
+          "soPriceName": "优惠金额",
+          "docCurrId": {
+            "id": 2000001
+          },
+          "docUomBaseId": {
+            "id": 2004001
+          },
+          "docUomBaseNum": 27,
+          "stepNo": 30
+        },
+        {
+          "context": {},
+          "soItemCode": "SOI20251031140501100153",
+          "soPriceCode": "REBATE001",
+          "soPriceName": "返利优惠",
+          "docCurrId": {
+            "id": 2000001
+          },
+          "docUomBaseId": {
+            "id": 2004001
+          },
+          "docUomBaseNum": 27,
+          "partnerTypeId": 14006001,
+          "partnerId": {
+            "id": 2059001
+          },
+          "settItemTypeId": {
+            "id": 2003001
+          },
+          "settEntityId": {
+            "id": 14507001
+          },
+          "stepNo": 35
+        },
+        {
+          "context": {},
+          "soItemCode": "SOI20251031140501100153",
+          "soPriceName": "成交价",
+          "docCurrId": {
+            "id": 2000001
+          },
+          "docUomBaseId": {
+            "id": 2004001
+          },
+          "docUomBaseNum": 27,
+          "docCurrPrice": 4999.0,
+          "docCurrGrossPrice": 4999.0,
+          "docCurrAmount": 134973.0,
+          "docCurrGrossAmount": 134973.0,
+          "stepNo": 50
+        },
+        {
+          "context": {},
+          "soItemCode": "SOI20251031140501100153",
+          "soPriceCode": "REBATE_SVAT",
+          "soPriceName": "返利_税",
+          "docCurrId": {
+            "id": 2000001
+          },
+          "docUomBaseId": {
+            "id": 2004001
+          },
+          "docUomBaseNum": 27,
+          "stepNo": 56
+        },
+        {
+          "context": {},
+          "soItemCode": "SOI20251031140501100153",
+          "soPriceCode": "SVAT_SLS",
+          "soPriceName": "销项税",
+          "soPriceDiscount": 0.13,
+          "docCurrId": {
+            "id": 2000001
+          },
+          "docUomBaseId": {
+            "id": 2004001
+          },
+          "docUomBaseNum": 27,
+          "docCurrAmount": 15527.867256637168,
+          "docCurrGrossAmount": 15527.867256637168,
+          "stepNo": 60
+        }
+      ]
+    }
+  }
+}

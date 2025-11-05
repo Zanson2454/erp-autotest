@@ -1,0 +1,59 @@
+{
+  "sceneKey": "SCM_REB$REBATE",
+  "viewKey": "SCM_REB$REBATE:bQu_FI0CgU_AP6_XVU29r",
+  "viewTitle": "edit",
+  "buttonKey": "SCM_REB$REBATE-e4gdMlXr1dpMcq6HoIv_n",
+  "buttonName": "提交",
+  "appId": 0,
+  "teamId": 22,
+  "serviceKey": "SCM_REB$REB_POLICY_SAVE_ACTION_SERVICE",
+  "params": {
+    "request": {
+      "policyCode": "AT_RP90550939017732",
+      "policyName": "自动化测试返利政策_20251031140230",
+      "status": null,
+      "id": null,
+      "rebDocType": "SO",
+      "comOrgId": {
+        "id": 14507001
+      },
+      "slsOrgIds": null,
+      "slsDcIds": null,
+      "acquireType": "AMT",
+      "settAccTypeId": {
+        "id": 14007001
+      },
+      "soTypeIds": null,
+      "soItemTypeIds": null,
+      "dnTypeIds": null,
+      "dnItemTypeIds": null,
+      "periodType": "MONTH",
+      "periodBeginAt": 1761890550939,
+      "periodEndAt": 1793426550939,
+      "rebRules": [
+        {
+          "matId": {
+            "id": 14097001,
+            "matCode": "AUTOTEST_MAT_FINP",
+            "matName": "成品物料(自动化-带批次)"
+          },
+          "matCateId": {
+            "id": 14082001
+          },
+          "custId": {
+            "id": 2059001
+          },
+          "ladderType": "FBT",
+          "rbType": "FIX_AMOUNT",
+          "rebateLadder": [
+            {
+              "amt": 1,
+              "minValue": 100,
+              "maxValue": 100000
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

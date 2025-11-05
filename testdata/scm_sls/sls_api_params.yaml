@@ -10133,3 +10133,79 @@ api_params:
     sceneKey: sys_common$approval_task_center
     buttonName: 同意
     buttonKey: AGREE
+
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_ADJ_HEAD_TR_PAGING_DATA_SERVICE?tmodule=ERP_PRICE:
+    sceneKey: ERP_PRICE$GEN_PRICE_ADJ_VIEW_NEW
+    viewKey: ERP_PRICE$GEN_PRICE_ADJ_VIEW_NEW:list
+    appId: 0
+    teamId: 22
+    serviceKey: ERP_PRICE$PRICE_ADJ_HEAD_TR_PAGING_DATA_SERVICE
+    params:
+      request:
+        pageable:
+          pageNo: 1
+          pageSize: 20
+          needTotal: true
+          sortOrders: null
+          conditionItems: null
+  /api/trantor/service/engine/execute/ERP_PRICE$price_ADJ_SAVE_EVENT_SERVICE?tmodule=ERP_PRICE:
+    sceneKey: ERP_PRICE$GEN_PRICE_ADJ_VIEW_NEW
+    viewKey: ERP_PRICE$GEN_PRICE_ADJ_VIEW_NEW:edit
+    viewTitle: edit
+    buttonKey: ERP_PRICE$GEN_PRICE_ADJ_VIEW_NEW-editView-footer-save
+    buttonName: 保存
+    appId: 0
+    teamId: 22
+    serviceKey: ERP_PRICE$price_ADJ_SAVE_EVENT_SERVICE
+    params:
+      request:
+        id: null
+        matchRecordId: null
+        priceAdjName: null
+        priceTypeName: null
+        matchRecordName: null
+        priceTypeId: null
+        priceAdjItemList: []
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_ADJ_LIST_SUBMIT_EVENT_SERVICE?tmodule=ERP_PRICE:
+    sceneKey: ERP_PRICE$GEN_PRICE_ADJ_VIEW_NEW
+    viewKey: ERP_PRICE$GEN_PRICE_ADJ_VIEW_NEW:list
+    viewTitle: list
+    buttonKey: ERP_PRICE$GEN_PRICE_ADJ_VIEW_NEW-3Pon4lTTkNmey0iDLN1eo
+    buttonName: 提交
+    appId: 0
+    teamId: 22
+    serviceKey: ERP_PRICE$PRICE_ADJ_LIST_SUBMIT_EVENT_SERVICE
+    params:
+      request:
+        id: null
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_MD_PAGING_QUERY_EVENT_SERVICE:
+    serviceKey: ERP_GEN$GEN_MATCH_RECORD_MD_PAGING_QUERY_EVENT_SERVICE
+    params:
+      request:
+        registerId: null
+        pageable:
+          pageNo: 1
+          pageSize: 10
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_GLOBAL_CF_FIND_DATA_BY_CODE_SERVICE:
+    serviceKey: ERP_GEN$PRICE_GLOBAL_CF_FIND_DATA_BY_CODE_SERVICE
+    params:
+      request:
+        code: null
+  /api/trantor/service/engine/execute/ERP_PRICE$price_ADJ_SUBMIT_EVENT_SERVICE?tmodule=ERP_PRICE:
+    sceneKey: ERP_PRICE$GEN_PRICE_ADJ_VIEW_NEW
+    viewKey: ERP_PRICE$GEN_PRICE_ADJ_VIEW_NEW:edit
+    viewTitle: edit
+    buttonKey: ERP_PRICE$GEN_PRICE_ADJ_VIEW_NEW-IK34uBDW4-N4q--eCn43Y
+    buttonName: 提交
+    appId: 0
+    teamId: 22
+    serviceKey: ERP_PRICE$price_ADJ_SUBMIT_EVENT_SERVICE
+    params:
+      request:
+        id: null
+        matchRecordId: null
+        priceAdjName: null
+        priceTypeName: null
+        matchRecordName: null
+        priceTypeId: null
+        priceAdjItemList: []

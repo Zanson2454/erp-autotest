@@ -1,0 +1,30 @@
+{
+  "params": {
+    "request": {
+      "id": 2017038,
+      "context": {},
+      "version": 3,
+      "deleted": 0,
+      "createdAt": 1761889776171,
+      "updatedAt": 1761889776171,
+      "createdBy": 618373053188357,
+      "updatedBy": 618373053188357,
+      "policyCode": "AT_RP_20251031134936",
+      "policyName": "自动化测试返利政策_20251031134936",
+      "rebDocType": "SO",
+      "acquireType": "AMT",
+      "comOrgId": {
+        "id": 14507001,
+        "context": {}
+      },
+      "settAccTypeId": {
+        "id": 14007001,
+        "context": {}
+      },
+      "periodType": "MONTH",
+      "periodBeginAt": 1761889776171,
+      "periodEndAt": 1793425776171,
+      "status": "ENABLED"
+    }
+  }
+}

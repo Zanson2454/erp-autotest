@@ -1,0 +1,119 @@
+2025-10-31 14:05:27.200 | INFO     | test_so_operator:setup_method:41 - 开始执行测试方法: test_07_freeze_sales_order
+2025-10-31 14:05:27.200 | INFO     | test_so_operator:_query_effective_orders_from_db:99 - 执行查询生效态订单: 
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE created_by = %s
+                AND so_status = 'EFFECT'
+                AND deleted = 0 
+            ORDER BY created_at DESC
+            LIMIT 1
+        
+2025-10-31 14:05:27.486 | DEBUG    | utils.mysql_util:query:173 - 执行查询: 
+            SELECT id, so_code, so_status 
+            FROM sls_so_head_tr 
+            WHERE created_by = %s
+                AND so_status = 'EFFECT'
+                AND deleted = 0 
+            ORDER BY created_at DESC
+            LIMIT 1
+        
+2025-10-31 14:05:27.486 | DEBUG    | utils.mysql_util:query:175 - 查询参数: (618373053188357,)
+2025-10-31 14:05:27.486 | DEBUG    | utils.mysql_util:query:176 - 查询结果: [{"id": 17425160, "so_code": "SO2025103114051001174", "so_status": "EFFECT"}]
+2025-10-31 14:05:27.487 | INFO     | test_so_operator:_query_effective_orders_from_db:113 - 查询到的生效态订单数据: {
+  "so_id": "17425160",
+  "so_code": "SO2025103114051001174",
+  "so_status": "EFFECT"
+}
+2025-10-31 14:05:27.487 | INFO     | test_so_operator:test_07_freeze_sales_order:406 - 接口请求的地址>>>https://t-erp-huoshan-portal-test.app.duandian.com/api/trantor/service/engine/execute/SCM_SLS$SLS_SO_HEAD_FREEZE_EVENT_SERVICE
+2025-10-31 14:05:27.487 | INFO     | test_so_operator:test_07_freeze_sales_order:406 - 接口请求的方法>>>POST
+2025-10-31 14:05:27.488 | INFO     | test_so_operator:test_07_freeze_sales_order:406 - 接口请求的json参数>>>
+{
+  "params": {
+    "request": {
+      "approveStatus": null,
+      "soExtCode": null,
+      "slsComId": {},
+      "priceIdempotent": null,
+      "actualPaidAmt": 0,
+      "custPhone": null,
+      "soDocDate": 0,
+      "soCode": null,
+      "soNotes": null,
+      "slsOrgId": {},
+      "buyerRemark": null,
+      "createdAt": 0,
+      "slsPersonName": null,
+      "id": 17425160,
+      "baseCurrId": {},
+      "taxAmt": 0,
+      "updatedAt": 0,
+      "grossBaseAmt": 0,
+      "priceCalcDate": 0,
+      "netBaseAmt": 0,
+      "slsAttachmentLinks": [
+        {}
+      ],
+      "updatedBy": {},
+      "originOrgId": 0,
+      "effectiveAt": 0,
+      "bizRuleGroup": 0,
+      "version": 0,
+      "currExchangeRateType": {},
+      "sellerRemark": null,
+      "soCreateSource": null,
+      "btClass": null,
+      "reCalculate": false,
+      "totalAmt": 0,
+      "discountInfo": null,
+      "freightAmt": 0,
+      "slsTextLinks": [
+        {}
+      ],
+      "freezeType": null,
+      "invOrg": {},
+      "discountAmt": 0,
+      "soStatus": null,
+      "isFixedExchRate": false,
+      "soAssociationCode": null,
+      "slsPhone": null,
+      "externalBuyerId": null,
+      "exchRate": 0,
+      "merchantDiscountAmt": 0,
+      "soItems": [
+        {}
+      ],
+      "requestId": null,
+      "custId": {},
+      "platformDiscountAmt": 0,
+      "addrId": {},
+      "soTypeId": {},
+      "slsPerson": {},
+      "slsCurrId": {},
+      "custPersonName": null,
+      "soBusinessStatus": null,
+      "deliveryInterceptFail": false,
+      "deleted": 0,
+      "slsPartnerLinks": [
+        {}
+      ],
+      "soDesc": null,
+      "createdBy": {},
+      "addrDetail": null,
+      "slsDcId": {},
+      "slsTmId": 0,
+      "soTitle": null,
+      "invLoc": {}
+    }
+  },
+  "serviceKey": "SCM_SLS$SLS_SO_HEAD_FREEZE_EVENT_SERVICE"
+}
+2025-10-31 14:05:27.488 | INFO     | utils.exception_util:wrapper:173 - 请求描述: 冻结订单
+2025-10-31 14:05:27.568 | INFO     | utils.exception_util:wrapper:173 - 响应状态码: 200
+2025-10-31 14:05:27.568 | INFO     | utils.exception_util:wrapper:173 - 响应内容: {
+  "requestId": "e57cb964-205283",
+  "success": true,
+  "data": {}
+}
+2025-10-31 14:05:27.600 | DEBUG    | utils.mysql_util:query:173 - 执行查询: select id,so_code,so_status,freeze_type from sls_so_head_tr where id=17425160
+2025-10-31 14:05:27.601 | DEBUG    | utils.mysql_util:query:176 - 查询结果: [{"id": 17425160, "so_code": "SO2025103114051001174", "so_status": "EFFECT", "freeze_type": "ALL_FREEZE"}]
+2025-10-31 14:05:27.602 | INFO     | test_so_operator:teardown_method:48 - 测试方法 test_07_freeze_sales_order 执行完成
