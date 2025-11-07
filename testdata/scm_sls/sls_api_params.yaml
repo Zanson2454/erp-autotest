@@ -6837,13 +6837,28 @@ api_params:
     serviceKey: SCM_SLS$special_analysis_of_sales_revenue_DATA_STATISTIC_SERVICE
   /api/trantor/service/engine/execute/SCM_SLS$PAGING_SO_ITEMS:
     params:
-      pageable:
-        sortOrders:
-        - {}
-        conditionItems: null
-        pageNo: 1
-        conditionGroup: null
-        pageSize: 20
+      sceneKey: SCM_SLS$sls_so_item
+      viewKey: SCM_SLS$sls_so_item:list
+      viewTitle: list
+      appId: 0
+      teamId: 22
+      serviceKey: SCM_SLS$PAGING_SO_ITEMS
+      params:
+        pageable:
+          pageNo: 1
+          pageSize: 20
+          needTotal: true
+          sortOrders: null
+          conditionItems:
+            type: ConditionItems
+            logicOperator: AND
+            conditions:
+              soCode:
+                operator: CONTAINS
+                value: null
+              matId:
+                operator: IN
+                value: []
     serviceKey: SCM_SLS$PAGING_SO_ITEMS
   /api/trantor/service/engine/execute/SCM_SLS$sales_income_analysis_scheduled_task:
     params:
@@ -9915,22 +9930,6 @@ api_params:
     params:
       request:
         id: null
-  /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_TASK_SUBMIT_POST:
-    serviceKey: ERP_GEN$API_TRANTOR_WORKFLOW_V2_TASK_SUBMIT_POST
-    params:
-      _rootParams:
-        pageKey: sys_common$approval_task_center
-        sceneKey: sys_common$approval_task_center
-        buttonName: 同意
-        buttonKey: AGREE
-      taskInstanceId: null
-      auditResult:
-        remark: 同意
-        decisionType: AGREE
-    pageKey: sys_common$approval_task_center
-    sceneKey: sys_common$approval_task_center
-    buttonName: 同意
-    buttonKey: AGREE
 /api/trantor/service/engine/execute/SCM_REB$REB_POLICY_PERIOD_RECALC_ACTION_SERVICE?tmodule=SCM_REB:
   sceneKey: SCM_REB$REBATE
   viewKey: SCM_REB$REBATE:5uCsaenWWhh98UB6-FArW
@@ -10108,105 +10107,3 @@ api_params:
         confirmAt: 1761122316000
         confirmTotalAmt: 1
         status: "DRAFT"
-  /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_TASK_INSTANCE_SEARCH_GET:
-    serviceKey: ERP_GEN$API_TRANTOR_WORKFLOW_V2_TASK_INSTANCE_SEARCH_GET
-    params:
-      logType: 2
-      _tab_id: "yHBrJwh__Olz"
-      pageNo: "1"
-      pageSize: "20"
-      keyword: "返利确认"
-      status: "0"
-  /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_TASK_SUBMIT_POST:
-    serviceKey: ERP_GEN$API_TRANTOR_WORKFLOW_V2_TASK_SUBMIT_POST
-    params:
-      _rootParams:
-        pageKey: sys_common$approval_task_center
-        sceneKey: sys_common$approval_task_center
-        buttonName: 同意
-        buttonKey: AGREE
-      taskInstanceId: null
-      auditResult:
-        remark: 同意
-        decisionType: AGREE
-    pageKey: sys_common$approval_task_center
-    sceneKey: sys_common$approval_task_center
-    buttonName: 同意
-    buttonKey: AGREE
-
-  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_ADJ_HEAD_TR_PAGING_DATA_SERVICE?tmodule=ERP_PRICE:
-    sceneKey: ERP_PRICE$GEN_PRICE_ADJ_VIEW_NEW
-    viewKey: ERP_PRICE$GEN_PRICE_ADJ_VIEW_NEW:list
-    appId: 0
-    teamId: 22
-    serviceKey: ERP_PRICE$PRICE_ADJ_HEAD_TR_PAGING_DATA_SERVICE
-    params:
-      request:
-        pageable:
-          pageNo: 1
-          pageSize: 20
-          needTotal: true
-          sortOrders: null
-          conditionItems: null
-  /api/trantor/service/engine/execute/ERP_PRICE$price_ADJ_SAVE_EVENT_SERVICE?tmodule=ERP_PRICE:
-    sceneKey: ERP_PRICE$GEN_PRICE_ADJ_VIEW_NEW
-    viewKey: ERP_PRICE$GEN_PRICE_ADJ_VIEW_NEW:edit
-    viewTitle: edit
-    buttonKey: ERP_PRICE$GEN_PRICE_ADJ_VIEW_NEW-editView-footer-save
-    buttonName: 保存
-    appId: 0
-    teamId: 22
-    serviceKey: ERP_PRICE$price_ADJ_SAVE_EVENT_SERVICE
-    params:
-      request:
-        id: null
-        matchRecordId: null
-        priceAdjName: null
-        priceTypeName: null
-        matchRecordName: null
-        priceTypeId: null
-        priceAdjItemList: []
-  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_ADJ_LIST_SUBMIT_EVENT_SERVICE?tmodule=ERP_PRICE:
-    sceneKey: ERP_PRICE$GEN_PRICE_ADJ_VIEW_NEW
-    viewKey: ERP_PRICE$GEN_PRICE_ADJ_VIEW_NEW:list
-    viewTitle: list
-    buttonKey: ERP_PRICE$GEN_PRICE_ADJ_VIEW_NEW-3Pon4lTTkNmey0iDLN1eo
-    buttonName: 提交
-    appId: 0
-    teamId: 22
-    serviceKey: ERP_PRICE$PRICE_ADJ_LIST_SUBMIT_EVENT_SERVICE
-    params:
-      request:
-        id: null
-  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_MD_PAGING_QUERY_EVENT_SERVICE:
-    serviceKey: ERP_GEN$GEN_MATCH_RECORD_MD_PAGING_QUERY_EVENT_SERVICE
-    params:
-      request:
-        registerId: null
-        pageable:
-          pageNo: 1
-          pageSize: 10
-          conditionItems: null
-  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_GLOBAL_CF_FIND_DATA_BY_CODE_SERVICE:
-    serviceKey: ERP_GEN$PRICE_GLOBAL_CF_FIND_DATA_BY_CODE_SERVICE
-    params:
-      request:
-        code: null
-  /api/trantor/service/engine/execute/ERP_PRICE$price_ADJ_SUBMIT_EVENT_SERVICE?tmodule=ERP_PRICE:
-    sceneKey: ERP_PRICE$GEN_PRICE_ADJ_VIEW_NEW
-    viewKey: ERP_PRICE$GEN_PRICE_ADJ_VIEW_NEW:edit
-    viewTitle: edit
-    buttonKey: ERP_PRICE$GEN_PRICE_ADJ_VIEW_NEW-IK34uBDW4-N4q--eCn43Y
-    buttonName: 提交
-    appId: 0
-    teamId: 22
-    serviceKey: ERP_PRICE$price_ADJ_SUBMIT_EVENT_SERVICE
-    params:
-      request:
-        id: null
-        matchRecordId: null
-        priceAdjName: null
-        priceTypeName: null
-        matchRecordName: null
-        priceTypeId: null
-        priceAdjItemList: []
