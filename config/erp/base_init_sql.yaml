@@ -6,7 +6,7 @@ base_info:
     sql: |
       SELECT id as 'curr_id', curr_code, curr_name 
       FROM gen_curr_type_cf 
-      WHERE curr_code='CNY' AND deleted=0 LIMIT 1
+      WHERE curr_name='人民币' AND deleted=0 LIMIT 1
     description: "查询人民币的基础信息"
     insert_sql: |
       INSERT INTO `gen_curr_type_cf` (`curr_code`, `curr_name`, `curr_iso_name`, `decimal_place`, `symbol`, `remark`, `created_by`, `updated_by`, `created_at`, `updated_at`, `version`, `deleted`, `request_id`, `origin_org_id`, `tenant_id`) VALUES
@@ -14,20 +14,6 @@ base_info:
     validation:
       min_records: 1
       required_fields: ["curr_id", "curr_code", "curr_name"]
-
-  # 语言信息
-  language_info:
-      sql: |
-        SELECT id as 'language_id', language_code, language_name 
-        FROM gen_language_type_cf 
-        WHERE language_code='CHINESE' AND deleted=0 LIMIT 1
-      description: "查询中文的基础信息"
-      insert_sql: |
-        INSERT INTO `gen_language_type_cf` (`created_by`, `updated_by`, `created_at`, `updated_at`, `version`, `deleted`, `language_code`, `language_name`, `origin_org_id`, `request_id`) VALUES
-        ( 1, 1, NOW(), NOW(), 0, 0, 'zh-CN', "简体中文", 0, NULL);
-      validation:
-        min_records: 1
-        required_fields: ["language_id", "language_code", "language_name"]
 
   # 国家信息
   country_info:
@@ -75,7 +61,7 @@ base_info:
   # 地址信息，四级地址ID
   addr_info:
     sql: |
-      SELECT id FROM gen_addr_type_cf  WHERE addr_name ='转塘街道'and deleted=0  and  is_leaf=1 and level=4 limit 1
+      SELECT id FROM gen_addr_type_cf  WHERE  deleted=0  and  is_leaf=1 and level=4 limit 1
     description: "查询地址信息"
   
   # 汇率类型
@@ -121,11 +107,11 @@ base_info:
         WHERE deleted=0 and uom_type='VOL' limit 1;
       description: "查询体积计量单位信息"
 
-  # 银行信息
-  bank_info:
-    sql: |
-     SELECT  a.id AS 'bank_id',a.bank_code AS 'bank_code',a.bank_name AS 'bank_name',b.id AS 'sub_bank_id',b.sub_bank_code AS 'sub_bank_code',b.sub_bank_name AS 'sub_bank_name' FROM gen_bank_cf a INNER JOIN  gen_sub_bank_cf b ON a.id = b.gen_bank_cf_id LIMIT 1
-    description: "查询银行信息"
+  # # 银行信息
+  # bank_info:
+  #   sql: |
+  #    SELECT  a.id AS 'bank_id',a.bank_code AS 'bank_code',a.bank_name AS 'bank_name',b.id AS 'sub_bank_id',b.sub_bank_code AS 'sub_bank_code',b.sub_bank_name AS 'sub_bank_name' FROM gen_bank_cf a INNER JOIN  gen_sub_bank_cf b ON a.id = b.gen_bank_cf_id LIMIT 1
+  #   description: "查询银行信息"
 
   # 税码信息
   tax_info:

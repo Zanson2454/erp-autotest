@@ -2,15 +2,8 @@
   "currency_info": [
     {
       "curr_id": 2000001,
-      "curr_code": "CNY",
+      "curr_code": "RMB",
       "curr_name": "人民币"
-    }
-  ],
-  "language_info": [
-    {
-      "language_id": 2000001,
-      "language_code": "CHINESE",
-      "language_name": "中文"
     }
   ],
   "country_info": [
@@ -44,7 +37,7 @@
   ],
   "addr_info": [
     {
-      "id": 70028089
+      "id": 1002
     }
   ],
   "exchange_rate_type_info": [
@@ -88,16 +81,6 @@
       }
     ]
   },
-  "bank_info": [
-    {
-      "bank_id": 2000005,
-      "bank_code": "CMB",
-      "bank_name": "招商银行",
-      "sub_bank_id": 1000006,
-      "sub_bank_code": "308902839019",
-      "sub_bank_name": "招商银行深圳红山支行"
-    }
-  ],
   "tax_info": [
     {
       "id": 2002001,
