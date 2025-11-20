@@ -78,12 +78,19 @@ class TestVoucherOperation(FiBaseTest):
         params, url = self.get_api_params(url)
         calendarItemId, vouchNumber, ab_type_id, vt_type, ve_date, as_org_id, coa_type = self.get_ve_base_info()
     
-        # 获取货币和汇率类型
-        sql = "select id from gen_curr_type_cf where deleted=0 and curr_code='CNY'"
-        curr_id = self.db.query(sql)[0]["id"]
+         # 从init_data中获取货币ID
+        currency_info = self.init_data.get("currency_info") or []
+        if currency_info:
+            curr_id = currency_info[0].get("curr_id")
+        else:
+            raise ValueError("未找到货币信息，请检查init_data配置")
     
-        sql = "select id from gen_curr_exchange_rate_type_cf where deleted=0 and type_code='HR' order by created_at desc limit 1;"
-        rt_type_id = self.db.query(sql)[0]["id"]
+        # 从init_data中获取汇率类型ID
+        exchange_rate_type_info = self.init_data.get("exchange_rate_type_info") or []
+        if exchange_rate_type_info:
+            rt_type_id = exchange_rate_type_info[0].get("exchange_rate_type_id")
+        else:
+            raise ValueError("未找到汇率类型信息，请检查init_data配置")
     
         # 根据参数选择科目类型
         if use_cash_account:
@@ -177,14 +184,19 @@ class TestVoucherOperation(FiBaseTest):
             url=self.get_api_path("总账-凭证-凭证暂存服务")
             params,url=self.get_api_params(url)
             calendarItemId,vouchNumber,ab_type_id,vt_type,ve_date,as_org_id,coa_type=self.get_ve_base_info()
-            sql="""
-            select id from gen_curr_type_cf where deleted=0 and curr_code='CNY'
-            """
-            curr_id=self.db.query(sql)[0]["id"]
-            sql="""
-            select id from gen_curr_exchange_rate_type_cf where deleted=0 and type_code='HR' order by created_at desc limit 1;
-            """
-            rt_type_id=self.db.query(sql)[0]["id"]
+            # 从init_data中获取货币ID
+            currency_info = self.init_data.get("currency_info") or []
+            if currency_info:
+                curr_id = currency_info[0].get("curr_id")
+            else:
+                raise ValueError("未找到货币信息，请检查init_data配置")
+            
+            # 从init_data中获取汇率类型ID
+            exchange_rate_type_info = self.init_data.get("exchange_rate_type_info") or []
+            if exchange_rate_type_info:
+                rt_type_id = exchange_rate_type_info[0].get("exchange_rate_type_id")
+            else:
+                raise ValueError("未找到汇率类型信息，请检查init_data配置")
             
             sql=f"""
             select id,aa_head_code,aa_head_name from fin_glm_aa_head_cf where coa_type={coa_type} and leaf=1;
@@ -437,15 +449,23 @@ class TestVoucherOperation(FiBaseTest):
         filtered_params=ParamUtil.filter_post_body_fields(
             params, ["id"], ["params", "request"])
         sql="""
-        select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='WAIT_ACCOUNT' order by created_at desc limit 1;
+        select id ,biz_date ,ab_type from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='WAIT_ACCOUNT' and deleted=0 order by created_at desc limit 1;
         """
-        voucher_id=self.db.query(sql)[0]["id"]
+        voucher_id,biz_date,ab_type=self.db.query(sql)[0]["id"],self.db.query(sql)[0]["biz_date"],self.db.query(sql)[0]["ab_type"]
         set_dict={
             "id":voucher_id
         }
         ParamUtil.set_request_params(filtered_params, set_dict)
         response=self.http.post(url, json=filtered_params)
-        self.assert_util.assert_response_success(response)
+        sql=f"""
+        select start_time,end_time from fin_common_calendar_item_cf where id=(select period_of_current  from fin_glm_ab_type_cf where id={ab_type})
+        """
+        start_time,end_time=self.db.query(sql)[0]["start_time"],self.db.query(sql)[0]["end_time"]
+        if biz_date < start_time or biz_date > end_time:
+            self.assert_util.assert_by_operator(response["err"]["code"], "=", "glm.ve.account.datetime.error")
+            self.assert_util.assert_by_operator(response["err"]["msg"], "=", "凭证日期不在账簿当前期间")
+        else:
+            self.assert_util.assert_response_success(response)
         a.json(filtered_params, "请求数据")
         a.json(response, "响应数据")
         
@@ -606,4 +626,4 @@ class TestVoucherOperation(FiBaseTest):
 if __name__ == "__main__":
     test=TestVoucherOperation()
     test.setup_class()
-    test.test_batch_submit_voucher()
+    test.test_add_voucher()
