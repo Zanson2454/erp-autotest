@@ -620,10 +620,119 @@ class TestVoucherOperation(FiBaseTest):
         a.json(filtered_params, "请求数据")
         a.json(response, "响应数据")
         
+    @case_decorator(
+        story="总账凭证批量操作",
+        title="批量审批",
+        description="测试总账凭证批量审批",
+        severity="critical",
+        order=2,
+        smoke=False,
+        tags=["凭证录入","批量审批","FIN_GLM_VE_APPROVAL_EVENT_SERVICE"]
+    )
+    def test_batch_approve_voucher(self):
+        """测试总账凭证批量审批"""
+        url=self.get_api_path("总账-凭证-凭证审核服务")
+        params,url=self.get_api_params(url)
+        filtered_params=ParamUtil.filter_post_body_fields(
+            params, ["id"], ["params", "request"])
+        sql="""
+        select id from fin_glm_ve_head_tr where remark='测试正常批量业务流程' and ve_status='APPROVING' and deleted=0 order by created_at desc limit 3;
+        """
+        voucher_ids=self.db.query(sql)
+        filtered_params['params']['request']['id'] = [voucher_id["id"] for voucher_id in voucher_ids]
+        response=self.http.post(url, json=filtered_params)
+        self.assert_util.assert_response_success(response)
+        a.json(filtered_params, "请求数据")
+        a.json(response, "响应数据")
+    
+    @case_decorator(
+        story="总账凭证批量操作",
+        title="批量复核",
+        description="测试总账凭证批量复核",
+        severity="critical",
+        order=3,
+        smoke=False,
+        tags=["凭证录入","批量复核","FIN_GLM_VE_CHECK_EVENT_SERVICE"]
+    )
+    def test_batch_check_voucher(self):
+        """测试总账凭证批量复核"""
+        url=self.get_api_path("总账-凭证-凭证复核服务")
+        params,url=self.get_api_params(url)
+        filtered_params=ParamUtil.filter_post_body_fields(
+            params, ["id"], ["params", "request"])
+        sql="""
+        select id from fin_glm_ve_head_tr where remark='测试正常批量业务流程' and ve_status='CHECKING' and deleted=0 order by created_at desc limit 3;
+        """
+        voucher_ids=self.db.query(sql)
+        filtered_params['params']['request']['id'] = [voucher_id["id"] for voucher_id in voucher_ids]
+        response=self.http.post(url, json=filtered_params)
+        self.assert_util.assert_response_success(response)
+        a.json(filtered_params, "请求数据")
+        a.json(response, "响应数据")
         
-        
+    @case_decorator(
+        story="总账凭证批量操作",
+        title="批量记账",
+        description="测试总账凭证批量记账",
+        severity="critical",
+        order=4,
+        smoke=False,
+        tags=["凭证录入","批量记账","FIN_GLM_VE_ACCOUNTING_BATCH_EVENT_SERVICE"]
+    )
+    def test_batch_account_voucher(self):
+        """测试总账凭证批量记账"""
+        url=self.get_api_path("总账-凭证-凭证批量记账服务")
+        params,url=self.get_api_params(url)
+        filtered_params=ParamUtil.filter_post_body_fields(
+            params, ["request"], ["params"])
+        sql="""
+        select id from fin_glm_ve_head_tr where remark='测试正常批量业务流程' and ve_status='WAIT_ACCOUNT' and deleted=0 order by created_at desc limit 3;
+        """
+        voucher_ids=self.db.query(sql)
+         # 验证是否有数据
+        if not voucher_ids or len(voucher_ids) == 0:
+            raise ValueError("未找到待记账的凭证数据，请检查数据")
+        filtered_params['params']['request']=voucher_ids
+        response=self.http.post(url, json=filtered_params)
+        self.assert_util.assert_response_success(response)
+        a.json(filtered_params, "请求数据")
+        a.json(response, "响应数据")
+    
+    @case_decorator(
+        story="总账凭证批量操作",
+        title="批量打印",
+        description="测试总账凭证批量打印",
+        severity="critical",
+        order=5,
+        smoke=False,
+        tags=["凭证录入","批量反记账","FIN_GLM_VE_PRINT_STATUS_BY_ID_BATCH_SERVICE"]
+    )
+    def test_batch_print_voucher(self):
+        """测试总账凭证批量打印"""
+        url=self.get_api_path("FIN_GLM_VE_PRINT_STATUS_BY_ID_BATCH_SERVICE")
+        params,url=self.get_api_params(url)
+        filtered_params=ParamUtil.filter_post_body_fields(
+            params, ["ids"], ["params", "request"])
+        sql="""
+        select id from fin_glm_ve_head_tr order by created_at desc  limit 3;
+        """
+        voucher_ids=self.db.query(sql)
+        filtered_params['params']['request']['ids'] = [voucher_id["id"] for voucher_id in voucher_ids]
+        response=self.http.post(url, json=filtered_params)
+        self.assert_util.assert_response_success(response)
+        sql=f"""
+        select print_status from fin_glm_ve_head_tr where id in ({','.join([str(voucher_id["id"]) for voucher_id in voucher_ids])})
+        """
+        print_status=self.db.query(sql)
+        if print_status:
+            for print_status in print_status:
+                self.assert_util.assert_by_operator(print_status["print_status"], "=", "PRINTED")
+        else:
+            raise ValueError("未找到打印状态数据，请检查数据")
+        a.json(filtered_params, "请求数据")
+        a.json(response, "响应数据")
         
 if __name__ == "__main__":
     test=TestVoucherOperation()
     test.setup_class()
-    test.test_add_voucher()
+    test.test_batch_print_voucher()
