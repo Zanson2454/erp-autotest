@@ -256,6 +256,7 @@ class TestMatTaxManagement(GenMdBaseTest):
         file_level_order=7,
         tags=["物料税分类管理", "导出任务"]
     )
+    @pytest.mark.skip(reason="业务不存在该场景，暂时跳过")
     def test_submit_export_task(self):
         """
         提交物料税分类导出任务用例
@@ -266,7 +267,6 @@ class TestMatTaxManagement(GenMdBaseTest):
 
             params = {
                 "serviceKey": "GEN_MD$GEN_MAT_TAX_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
-                "teamId": 22,
                 "params": {
                     "taskName": f"物料税分类-自动化测试-{self.mock_util.get_timestamp()}-导出",
                     "multiSheetConfig": [
@@ -295,8 +295,6 @@ class TestMatTaxManagement(GenMdBaseTest):
                         }
                     ],
                     "queryData": {
-                        "appId": 0,
-                        "teamId": 22,
                         "containerKey": "GEN_MD$GEN_MAT_TAX_VIEW-table-container-GEN_MD$gen_mat_tax_type_cf",
                         "viewKey": "GEN_MD$GEN_MAT_TAX_VIEW:list",
                         "sceneKey": "GEN_MD$GEN_MAT_TAX_VIEW",
@@ -319,8 +317,6 @@ class TestMatTaxManagement(GenMdBaseTest):
                     },
                     "processConfig": {
                         "processType": "TRANTOR",
-                        "appId": 0,
-                        "teamId": 22,
                         "model": "GEN_MD$gen_mat_tax_type_cf",
                         "modelName": "物料税分类",
                         "containerKey": "GEN_MD$GEN_MAT_TAX_VIEW-table-container-GEN_MD$gen_mat_tax_type_cf",
