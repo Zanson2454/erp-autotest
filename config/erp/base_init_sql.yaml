@@ -8,12 +8,6 @@ base_info:
       FROM gen_curr_type_cf 
       WHERE curr_name='人民币' AND deleted=0 LIMIT 1
     description: "查询人民币的基础信息"
-    insert_sql: |
-      INSERT INTO `gen_curr_type_cf` (`curr_code`, `curr_name`, `curr_iso_name`, `decimal_place`, `symbol`, `remark`, `created_by`, `updated_by`, `created_at`, `updated_at`, `version`, `deleted`, `request_id`, `origin_org_id`, `tenant_id`) VALUES
-      ('CNY', '人民币', NULL, NULL, NULL, NULL, 1, 1, NOW(), NOW(), 0, 0, NULL, 0, 0);
-    validation:
-      min_records: 1
-      required_fields: ["curr_id", "curr_code", "curr_name"]
 
   # 国家信息
   country_info:
@@ -22,24 +16,12 @@ base_info:
       FROM gen_coun_type_cf 
       WHERE coun_code='CHINA' AND deleted=0 LIMIT 1
     description: "查询中国的基础信息"
-    insert_sql: |
-      INSERT INTO `gen_coun_type_cf` (`coun_code`, `coun_name`, `default_relv`, `language_id`, `curr_id`, `timezone_id`, `created_by`, `updated_by`, `created_at`, `updated_at`, `version`, `deleted`, `request_id`, `origin_org_id`, `tenant_id`) VALUES
-      ('CHINA', '中国', (select id from gen_language_type_cf where language_code='zh-CN'), (select id from gen_curr_type_cf where curr_code='CNY'), NULL, 1, 1,now(),now(), 0, 0, NULL, 0, 0);
-    validation:
-      min_records: 1
-      required_fields: ["coun_id", "coun_code", "coun_name"]
 
   # 时区信息
   timezone_info:
     sql: |
      select id, timezone_code, timezone_format from gen_timezone_type_cf where `status`='ENABLED' and deleted=0 limit 1
     description: "查询时区信息"
-    insert_sql: |
-      INSERT INTO `gen_timezone_type_cf`(`created_by`,`updated_by`,`created_at`,`updated_at`,`version`,`deleted`,`timezone_code`,`timezone_format`,`is_summer_time`,`summer_time_start`,`summer_time_end`,`status`,`origin_org_id`,`request_id`,`timezone_desc`,`coun_id`,`timezone_district`)
-      VALUES (1,1,NOW(),NOW(),1,0,'Asia/Shanghai','UTC+8',0,NULL,NULL,'ENABLED',0,NULL,'东八区',(SELECT id FROM `gen_coun_type_cf` WHERE coun_code='CHINA' AND deleted=0 LIMIT 1),NULL);
-    validation:
-      min_records: 1
-      required_fields: ["id", "timezone_code", "timezone_format"]
 
   # 工作日日历
   gen_wc_head_info:
@@ -61,7 +43,7 @@ base_info:
   # 地址信息，四级地址ID
   addr_info:
     sql: |
-      SELECT id FROM gen_addr_type_cf  WHERE  deleted=0  and  is_leaf=1 and level=4 limit 1
+      SELECT id FROM gen_addr_type_cf  WHERE addr_name ='转塘街道'and deleted=0  and  is_leaf=1 and level=4 limit 1
     description: "查询地址信息"
   
   # 汇率类型
@@ -73,12 +55,6 @@ base_info:
       FROM gen_curr_exchange_rate_type_cf 
       WHERE type_code='HR' AND deleted=0 LIMIT 1
     description: "查询汇率类型信息"
-    insert_sql: |
-      INSERT INTO `gen_curr_exchange_rate_type_cf` (`type_code`, `type_name`, `created_by`, `updated_by`, `created_at`, `updated_at`, `version`, `deleted`, `request_id`, `origin_org_id`, `tenant_id`) VALUES
-      ('HR', '固定汇率', 1, 1, NOW(), NOW(), 0, 0, NULL, 0, 0);
-    validation:
-      min_records: 1
-      required_fields: ["exchange_rate_type_id", "exchange_rate_type_code", "exchange_rate_type_name"]
 
   # 计量单位信息
   uom_info:

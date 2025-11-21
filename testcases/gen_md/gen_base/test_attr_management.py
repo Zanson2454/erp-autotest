@@ -179,14 +179,12 @@ class TestAttrManagement(GenMdBaseTest):
         try:
             api_path = self.get_api_path("查询属性可以绑定的字段服务")
             params, url = self.get_api_params(api_path)
-            params = {
-                "teamId": "22",
-                "portalKey": "TERP_PORTAL",
-                "params": {
-                    "request": None
-                }
-            }
-            response = self.http.post(url, json=params)
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], ["params", "request"]
+            )
+            set_dict ={"id":0}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
 
             # 验证返回的字段列表

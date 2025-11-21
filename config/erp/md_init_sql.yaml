@@ -15,7 +15,7 @@ org_info:
   # 组织身份
   org_identity_cf:
     sql: |
-     select id,`code`,`name`  from org_identity_cf where `code`= "AUTOTEST_ORG_IDENTITY"  and  `status`="ENABLED" and deleted=0
+     select id,`code`,`name`  from org_identity_cf where `code`= "EMP"  and  `status`="ENABLED" and deleted=0
     description: "查询组织身份信息"
 
   # 组织维度
@@ -163,11 +163,10 @@ org_info:
     sql: |
       SELECT id, name
       FROM org_employee_md
-      WHERE name='admin' LIMIT 1
+      WHERE name='员工(自动化)' LIMIT 1
     description: "查询默认员工信息"
 
 mat_info:
-  
   # 物料类目
   mat_cate_md:
     sql: |
@@ -203,7 +202,7 @@ mat_info:
   # 物料标签
   gen_label_md:
     sql: |
-      select id,`name`,usage_type from gen_label_md where usage_type='MAT'  and `name`='自动化' and `status`="ENABLED" limit 1
+      select id,`name`,usage_type from gen_label_md where usage_type='MAT'  and `name`='物料标签(自动化)' and `status`="ENABLED" limit 1
     description: "查询标签信息"
   # 物料主数据
   mat_md:

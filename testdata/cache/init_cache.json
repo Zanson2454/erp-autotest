@@ -2,42 +2,42 @@
   "currency_info": [
     {
       "curr_id": 2000001,
-      "curr_code": "RMB",
+      "curr_code": "CNY",
       "curr_name": "人民币"
     }
   ],
   "country_info": [
     {
-      "coun_id": 14037001,
+      "coun_id": 2000001,
       "coun_code": "CHINA",
       "coun_name": "中国"
     }
   ],
   "timezone_info": [
     {
-      "id": 2000001,
-      "timezone_code": "UTC-8",
+      "id": 2000002,
+      "timezone_code": "UTC-5",
       "timezone_format": "UTC"
     }
   ],
   "gen_wc_head_info": [
     {
-      "gen_wc_head_id": 2000003,
-      "wc_head_code": "ihg",
-      "wc_head_name": "hgv"
+      "gen_wc_head_id": 2000001,
+      "wc_head_code": "GZRL001",
+      "wc_head_name": "标准工作日历"
     }
   ],
   "calender_info": [
     {
-      "id": 2002001,
-      "calendar_code": "01",
-      "calendar_name": "基准会计期间类型",
+      "id": 2000001,
+      "calendar_code": "ACC_CALEDAR_STND",
+      "calendar_name": "标准会计日期",
       "status": "ENABLED"
     }
   ],
   "addr_info": [
     {
-      "id": 1002
+      "id": 70028089
     }
   ],
   "exchange_rate_type_info": [
@@ -66,22 +66,28 @@
     ],
     "len_uom_info": [
       {
-        "uom_id": 14050001,
-        "uom_code": "CMT",
+        "uom_id": 2019001,
+        "uom_code": "m",
         "uom_type": "L",
-        "uom_desc": "厘米"
+        "uom_desc": "米"
       }
     ],
     "volume_uom_info": [
       {
-        "uom_id": 14049001,
-        "uom_code": "MTQ",
+        "uom_id": 2000003,
+        "uom_code": "M3",
         "uom_type": "VOL",
         "uom_desc": "立方米"
       }
     ]
   },
   "tax_info": [
+    {
+      "id": 2001001,
+      "tax_code": "CN_PUR_02",
+      "taxcate": "J",
+      "tax": 13.0
+    },
     {
       "id": 2002001,
       "tax_code": "CN_PUR_01",
@@ -98,13 +104,25 @@
       "id": 2003001,
       "tax_code": "CN_PUR_02",
       "taxcate": "J",
+      "tax": 1.0
+    },
+    {
+      "id": 2004001,
+      "tax_code": "CN_SLS_02",
+      "taxcate": "X",
       "tax": 6.0
     },
     {
-      "id": 14070001,
-      "tax_code": "tax_code",
+      "id": 2006001,
+      "tax_code": "CN_PUR_00",
       "taxcate": "J",
-      "tax": 0.13
+      "tax": 0.0
+    },
+    {
+      "id": 2007001,
+      "tax_code": "CN_SLS_02",
+      "taxcate": "X",
+      "tax": 13.0
     }
   ]
 }
