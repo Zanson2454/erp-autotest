@@ -1084,7 +1084,11 @@ class TestBizOrgManagement(GenMdBaseTest):
             # 断言
             self.assert_util.assert_response_success(response)
             sql = f"select deleted from org_struct_md where id = {org_id}"
-            deleted = self.db.query(sql)[0].get("deleted")
+            result = self.db.query(sql)
+            if result:
+                deleted = result[0].get("deleted")
+            else:
+                deleted = 0
             self.assert_util.assert_by_operator(deleted,"!=",0)
             self.logger.info(f"成功删除组织: {org_id}")
             
@@ -1158,6 +1162,7 @@ class TestBizOrgManagement(GenMdBaseTest):
         smoke=False,
         tags=["组织", "导入模版"]
     )
+    @pytest.mark.skip(reason="需要准备模板，手工验证")
     def test_get_org_import_template(self):
         """
         获取组织导入模版用例

@@ -93,7 +93,13 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
 
             # 保存组织切换模型信息供后续用例使用
             sql = f"select id from org_switch_model_cf where model_key = '{self.modelKey}'"
-            self.org_switch_model_id = self.db.query(sql)[0]["id"]
+            result = self.db.query(sql)
+            if result:
+                self.org_switch_model_id = result[0]["id"]
+            else:
+                self.logger.warning(f"组织切换模型 {self.modelKey} 在数据库中不存在")
+                # 如果数据不存在，说明保存操作失败，需要重新尝试或抛出异常
+                raise Exception(f"组织切换模型保存失败，model_key: {self.modelKey}")
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
 
@@ -320,8 +326,14 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
             self.assert_util.assert_response_data(response)
 
             sql = f"select id from org_switch_list_cf where switch_name = '{self.org_switch_name}'"
-            self.logger.info(f"sql: {self.db.query(sql)}")
-            self.org_switch_id = self.db.query(sql)[0]["id"]
+            result = self.db.query(sql)
+            self.logger.info(f"查询结果: {result}")
+            if result:
+                self.org_switch_id = result[0]["id"]
+            else:
+                self.logger.warning(f"组织切换 {self.org_switch_name} 在数据库中不存在")
+                # 如果数据不存在，说明保存操作失败，需要重新尝试或抛出异常
+                raise Exception(f"组织切换保存失败，switch_name: {self.org_switch_name}")
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")

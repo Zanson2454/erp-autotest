@@ -351,6 +351,7 @@ class TestOrg_RelationManagement(GenMdBaseTest):
         smoke=True,
         tags=["组织关联管理", "导出任务"]
     )
+    @pytest.mark.skip(reason="业务不存在该场景，暂时跳过")
     def test_submit_export_task(self):
         """
         提交组织关联导出任务用例

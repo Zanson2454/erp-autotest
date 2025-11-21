@@ -68,8 +68,7 @@ class TestIdentityManagement(GenMdBaseTest):
                 "updated_at": self.created_at,
                 "version": 0,
                 "deleted": 0,
-                "origin_org_id": 0,
-                "request_id": None
+                "origin_org_id": 0
             }
             org_identity_id = self.db.insert("org_identity_cf", data)
             self.logger.info(f"创建组织身份成功，ID: {org_identity_id}")
