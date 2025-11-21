@@ -90,7 +90,9 @@ class TestMat_ValueManagement(GenMdBaseTest):
             
             # 判断是否存在数据
             sql = f"select id from gen_inv_org_mat_type_link_cf where inv_org_id = {self.inv_org_id} and mat_type_id = {self.mat_type_id} limit 1"
-            self.mat_value_id = self.db.query(sql)[0].get("id")
+            result = self.db.query(sql)
+            if result:
+                self.mat_value_id = result[0].get("id")
             if not self.mat_value_id:
                 response = self.http.post(url, json=filtered_params)
                 self.assert_util.assert_response_data(response)
