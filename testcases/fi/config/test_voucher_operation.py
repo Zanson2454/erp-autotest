@@ -7,6 +7,7 @@ import os
 import sys
 import allure
 from pathlib import Path
+from datetime import datetime
 
 # 设置项目根目录到Python路径
 project_root = Path(__file__).resolve().parent.parent.parent.parent
@@ -690,8 +691,9 @@ class TestVoucherOperation(FiBaseTest):
         """
         voucher_ids=self.db.query(sql)
          # 验证是否有数据
-        if not voucher_ids or len(voucher_ids) == 0:
+        if not voucher_ids:
             raise ValueError("未找到待记账的凭证数据，请检查数据")
+        
         filtered_params['params']['request']=voucher_ids
         response=self.http.post(url, json=filtered_params)
         self.assert_util.assert_response_success(response)
@@ -725,14 +727,75 @@ class TestVoucherOperation(FiBaseTest):
         """
         print_status=self.db.query(sql)
         if print_status:
-            for print_status in print_status:
-                self.assert_util.assert_by_operator(print_status["print_status"], "=", "PRINTED")
+            for print_statue in print_status:
+                self.assert_util.assert_by_operator(print_statue["print_status"], "=", "PRINTED")
         else:
             raise ValueError("未找到打印状态数据，请检查数据")
         a.json(filtered_params, "请求数据")
         a.json(response, "响应数据")
+    
+    @case_decorator(
+        story="总账凭证操作",
+        title="凭证冲销-蓝冲",
+        description="测试总账凭证冲销-蓝冲",
+        severity="critical",
+        order=6,
+        smoke=False,
+        tags=["凭证录入","冲销-蓝冲","FIN_GLM_VE_OFFSET_EVENT_SERVICE"]
+    )
+    def test_offset_voucher(self):
+        """测试总账凭证冲销-蓝冲"""
+        url=self.get_api_path("总账-凭证-凭证冲销服务")
+        params,url=self.get_api_params(url)
+        filtered_params=ParamUtil.filter_post_body_fields(
+            params, ["offsetType","sourceVeHeadId"], ["params", "request"])
+        #获取凭证头
+        sql="""
+        select id,vouch_number,vo_entry_date,biz_date,debit_total_amt,credit_total_amt from fin_glm_ve_head_tr where remark in ('测试正常业务流程','测试正常批量业务流程')and ve_status='ACCOUNTED' and deleted=0  and offset_status='UNOFFSET' order by created_at limit 1;
+        """
+        voucher_id,vouch_number,vo_entry_date,biz_date,debit_total_amt,credit_total_amt=self.db.query(sql)[0]["id"],self.db.query(sql)[0]["vouch_number"],self.db.query(sql)[0]["vo_entry_date"],self.db.query(sql)[0]["biz_date"],self.db.query(sql)[0]["debit_total_amt"],self.db.query(sql)[0]["credit_total_amt"]
+        #获取凭证行
+        sql=f"""
+        select ve_item_descr,debit_amt,credit_amt from fin_glm_ve_item_tr where ve_head_id={voucher_id}
+        """
+        voucher_items=self.db.query(sql)
+        set_dict={
+            "offsetType": "BLUE",
+            "sourceVeHeadId": voucher_id
+        }
+        ParamUtil.set_request_params(filtered_params, set_dict)
+        response=self.http.post(url, json=filtered_params)
         
+        self.assert_util.assert_response_success(response)
+        #凭证头信息断言
+        self.assert_util.assert_by_operator(response["data"]["data"]['voEntryDate'], "=",int(datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp() * 1000) )
+        self.assert_util.assert_by_operator(response["data"]["data"]['debitTotalAmt'], "=", float(debit_total_amt))
+        self.assert_util.assert_by_operator(response["data"]["data"]['creditTotalAmt'], "=", float(credit_total_amt))
+        self.assert_util.assert_by_operator(response["data"]["data"]['veStatus'], "=", "WAIT_ACCOUNT")
+        self.assert_util.assert_by_operator(response["data"]["data"]['offsetStatus'], "=", "UNOFFSET")
+        self.assert_util.assert_by_operator(response["data"]["data"]['whetherOffset'], "=", True)
+        #凭证行信息断言
+        ve_items=response["data"]["data"].get("veItems",[])
+        assert len(ve_items) == len(voucher_items), "凭证行数量不一致"
+        for voucher_item, ve_item in zip(voucher_items, ve_items):
+            self.assert_util.assert_by_operator(ve_item["veItemDescr"], 
+                                                "=", 
+                                                f'冲-{vo_entry_date.strftime("%Y%m%d")}-{vouch_number}-{voucher_item["ve_item_descr"]}')
+            if ve_item.get("debitAmt"):
+                self.assert_util.assert_by_operator(voucher_item["debit_amt"], "=",None)
+            if ve_item.get("creditAmt"):
+                self.assert_util.assert_by_operator(voucher_item["credit_amt"], "=",None)
+            if not ve_item.get("debitAmt"):
+                self.assert_util.assert_by_operator(float(voucher_item["debit_amt"]), "=",ve_item["creditAmt"])
+            if not ve_item.get("creditAmt"):
+                self.assert_util.assert_by_operator(float(voucher_item["credit_amt"]), "=",ve_item["debitAmt"])
+        
+        
+        
+        
+        a.json(filtered_params, "请求数据")
+        a.json(response, "响应数据")
 if __name__ == "__main__":
     test=TestVoucherOperation()
     test.setup_class()
-    test.test_batch_print_voucher()
+    test.test_offset_voucher()
