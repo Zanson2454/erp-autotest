@@ -81,6 +81,16 @@
       }
     ]
   },
+  "bank_info": [
+    {
+      "bank_id": 2000001,
+      "bank_code": "BOC",
+      "bank_name": "中国银行",
+      "sub_bank_id": 2000001,
+      "sub_bank_code": "80001",
+      "sub_bank_name": "中国银行佛山厚辉支行"
+    }
+  ],
   "tax_info": [
     {
       "id": 2001001,

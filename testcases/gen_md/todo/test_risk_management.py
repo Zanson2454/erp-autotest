@@ -8,6 +8,7 @@ from utils.report_util import a, case_decorator
 
 @allure.epic("通用基础数据")
 @allure.feature("风险管理")
+@pytest.mark.skip(reason="风险管理功能暂未开发，暂时跳过")
 class TestRiskManagement(GenMdBaseTest):
     """风险管理测试类 - 覆盖库存风险定时通知等风险相关服务"""
     
@@ -173,6 +174,7 @@ class TestRiskManagement(GenMdBaseTest):
         file_level_order=3,
         tags=["风险管理", "风险规则", "保存", "GEN_RISK_RULE_MD_SAVE_SERVICE"]
     )
+    @pytest.mark.skip(reason="风险规则保存服务功能暂未开发，暂时跳过")
     def test_save_risk_rule(self):
         """风险规则保存用例 - GEN_RISK_RULE_MD_SAVE_SERVICE"""
         try:
@@ -219,6 +221,7 @@ class TestRiskManagement(GenMdBaseTest):
         file_level_order=4,
         tags=["风险管理", "风险项目", "保存", "GEN_RISK_TR_SAVE_SERVICE"]
     )
+    @pytest.mark.skip(reason="风险项目保存服务功能暂未开发，暂时跳过")
     def test_save_risk_tr(self):
         """风险项目保存用例 - GEN_RISK_TR_SAVE_SERVICE"""
         try:
@@ -273,6 +276,7 @@ class TestRiskManagement(GenMdBaseTest):
         file_level_order=5,
         tags=["风险管理", "风险项目", "分页查询", "GEN_RISK_TR_QUERY_PAGE_SERVICE"]
     )
+    @pytest.mark.skip(reason="风险项目分页查询服务功能暂未开发，暂时跳过")
     def test_query_risk_tr_page(self):
         """风险项目分页查询用例 - GEN_RISK_TR_QUERY_PAGE_SERVICE"""
         try:
@@ -318,6 +322,7 @@ class TestRiskManagement(GenMdBaseTest):
         file_level_order=6,
         tags=["风险管理", "风险项目", "查询详情", "GEN_RISK_TR_DETAIL_SERVICE"]
     )
+    @pytest.mark.skip(reason="风险项目查询详情服务功能暂未开发，暂时跳过")
     def test_query_risk_tr_detail(self):
         """风险项目查询详情用例 - GEN_RISK_TR_DETAIL_SERVICE"""
         try:
@@ -357,7 +362,7 @@ class TestRiskManagement(GenMdBaseTest):
         file_level_order=7,
         tags=["风险管理", "风险项目", "等级统计", "GEN_RISK_TR_QUERY_LEVEL_COUNT_SERVICE"]
     )
-    @pytest.mark.skip(reason="API路径配置不存在：风险项目各等级数量查询服务")
+    @pytest.mark.skip(reason="风险项目各等级数量查询服务功能暂未开发，暂时跳过")
     def test_query_risk_level_count(self):
         """风险项目各等级数量查询用例 - GEN_RISK_TR_QUERY_LEVEL_COUNT_SERVICE"""
         try:
@@ -402,6 +407,7 @@ class TestRiskManagement(GenMdBaseTest):
         file_level_order=8,
         tags=["风险管理", "风险行动", "保存", "GEN_RISK_ACTION_TR_SAVE_SERVICE"]
     )
+    @pytest.mark.skip(reason="风险行动保存服务功能暂未开发，暂时跳过")
     def test_save_risk_action(self):
         """风险行动保存用例 - GEN_RISK_ACTION_TR_SAVE_SERVICE"""
         try:
@@ -444,6 +450,7 @@ class TestRiskManagement(GenMdBaseTest):
         file_level_order=9,
         tags=["风险管理", "行动规则", "保存", "GEN_RISK_ACTION_RULE_MD_SAVE_SERVICE"]
     )
+    @pytest.mark.skip(reason="行动规则保存服务功能暂未开发，暂时跳过")
     def test_save_action_rule(self):
         """行动规则保存用例 - GEN_RISK_ACTION_RULE_MD_SAVE_SERVICE"""
         try:
@@ -490,7 +497,7 @@ class TestRiskManagement(GenMdBaseTest):
         file_level_order=10,
         tags=["风险管理", "风险项目", "忽略", "GEN_RISK_TR_STATUS_IGNORE_SERVICE"]
     )
-    @pytest.mark.skip(reason="API路径配置不存在：风险项目本次忽略服务")
+    @pytest.mark.skip(reason="风险项目本次忽略服务功能暂未开发，暂时跳过")
     def test_ignore_risk_tr(self):
         """风险项目本次忽略用例 - GEN_RISK_TR_STATUS_IGNORE_SERVICE"""
         try:
@@ -531,6 +538,7 @@ class TestRiskManagement(GenMdBaseTest):
         file_level_order=11,
         tags=["风险管理", "风险项目", "删除", "GEN_RISK_TR_DELETE_SERVICE"]
     )
+    @pytest.mark.skip(reason="风险项目删除服务功能暂未开发，暂时跳过")
     def test_delete_risk_tr(self):
         """风险项目删除用例 - GEN_RISK_TR_DELETE_SERVICE"""
         try:

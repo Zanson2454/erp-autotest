@@ -83,11 +83,11 @@ base_info:
         WHERE deleted=0 and uom_type='VOL' limit 1;
       description: "查询体积计量单位信息"
 
-  # # 银行信息
-  # bank_info:
-  #   sql: |
-  #    SELECT  a.id AS 'bank_id',a.bank_code AS 'bank_code',a.bank_name AS 'bank_name',b.id AS 'sub_bank_id',b.sub_bank_code AS 'sub_bank_code',b.sub_bank_name AS 'sub_bank_name' FROM gen_bank_cf a INNER JOIN  gen_sub_bank_cf b ON a.id = b.gen_bank_cf_id LIMIT 1
-  #   description: "查询银行信息"
+  # 银行信息
+  bank_info:
+    sql: |
+     SELECT  a.id AS 'bank_id',a.bank_code AS 'bank_code',a.bank_name AS 'bank_name',b.id AS 'sub_bank_id',b.sub_bank_code AS 'sub_bank_code',b.sub_bank_name AS 'sub_bank_name' FROM gen_bank_cf a INNER JOIN  gen_sub_bank_cf b ON a.id = b.gen_bank_id LIMIT 1
+    description: "查询银行信息"
 
   # 税码信息
   tax_info:

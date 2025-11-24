@@ -19,35 +19,53 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
 
         # 合作伙伴类型
         cls.business_partner_type_cf = cls.md_cache_data.get("partner_info", {}).get("business_partner_type_cf", {})
-        cls.out_cust_type_id = cls.business_partner_type_cf.get("out_cust", [{}])[0].get("id", None)
-        cls.inter_cust_type_id = cls.business_partner_type_cf.get("inter_cust", [{}])[0].get("id", None)
-        cls.person_cust_type_id = cls.business_partner_type_cf.get("person_cust", [{}])[0].get("id", None)
-        cls.out_supplier_type_id = cls.business_partner_type_cf.get("out_supplier", [{}])[0].get("id", None)
-        cls.outsea_supplier_type_id = cls.business_partner_type_cf.get("outsea_supplier", [{}])[0].get("id", None)
-        cls.inter_supplier_type_id = cls.business_partner_type_cf.get("inter_supplier", [{}])[0].get("id", None)
-        cls.serv_supplier_type_id = cls.business_partner_type_cf.get("serv_supplier", [{}])[0].get("id", None)
+        if cls.business_partner_type_cf:
+            cls.out_cust_type_id = cls.business_partner_type_cf.get("out_cust", [{}])[0].get("id", None)
+            cls.inter_cust_type_id = cls.business_partner_type_cf.get("inter_cust", [{}])[0].get("id", None)
+            cls.person_cust_type_id = cls.business_partner_type_cf.get("person_cust", [{}])[0].get("id", None)
+            cls.out_supplier_type_id = cls.business_partner_type_cf.get("out_supplier", [{}])[0].get("id", None)
+            cls.outsea_supplier_type_id = cls.business_partner_type_cf.get("outsea_supplier", [{}])[0].get("id", None)
+            cls.inter_supplier_type_id = cls.business_partner_type_cf.get("inter_supplier", [{}])[0].get("id", None)
+            cls.serv_supplier_type_id = cls.business_partner_type_cf.get("serv_supplier", [{}])[0].get("id", None)
+        else:
+            raise ValueError("business_partner_type_cf not found in md_cache_data")
         
         # 相关方信息 - 从partner_info下获取
         partner_type_cf = cls.md_cache_data.get("partner_info", {}).get("partner_type_cf", {})
-        cls.sls_partner_type_id = partner_type_cf.get("sls_partner_type", [{}])[0].get("id", None)  # 销售相关方类型
-        cls.pur_partner_type_id = partner_type_cf.get("pur_partner_type", [{}])[0].get("id", None) # 采购相关方类型
+        if partner_type_cf:
+            cls.sls_partner_type_id = partner_type_cf.get("sls_partner_type", [{}])[0].get("id", None)  # 销售相关方类型
+            cls.pur_partner_type_id = partner_type_cf.get("pur_partner_type", [{}])[0].get("id", None) # 采购相关方类型
+        else:
+            raise ValueError("partner_type_cf not found in md_cache_data")
         
         # 组织信息
         org_info = cls.md_cache_data.get("org_info", {})
-        cls.sls_org_id = org_info.get("sls_org_info", [{}])[0].get("id", None)  # 销售组织作为相关方
-        cls.pur_org_id = org_info.get("pur_org_info", [{}])[0].get("id", None)  # 采购组织作为相关方
+        if org_info:
+            cls.sls_org_id = org_info.get("sls_org_info", [{}])[0].get("id", None)  # 销售组织作为相关方
+            cls.pur_org_id = org_info.get("pur_org_info", [{}])[0].get("id", None)  # 采购组织作为相关方
+        else:
+            raise ValueError("org_info not found in md_cache_data")
         
         # 文本类型 - 从partner_info下获取
         text_type_cf = cls.md_cache_data.get("partner_info", {}).get("text_type_cf", {})
-        cls.sls_text_type_id = text_type_cf.get("sls_text_type", [{}])[0].get("id", None)
-        cls.pur_text_type_id = text_type_cf.get("pur_text_type", [{}])[0].get("id", None)
+        if text_type_cf:
+            cls.sls_text_type_id = text_type_cf.get("sls_text_type", [{}])[0].get("id", None)
+            cls.pur_text_type_id = text_type_cf.get("pur_text_type", [{}])[0].get("id", None)
+        else:
+            raise ValueError("text_type_cf not found in md_cache_data")
         
         # 类目信息 - 从mat_info下获取，注意是列表结构
         mat_info = cls.md_cache_data.get("mat_info", {})
-        cls.mat_cate_id = mat_info.get("mat_cate_md", [{}])[0].get("id", None)
+        if mat_info:
+            cls.mat_cate_id = mat_info.get("mat_cate_md", [{}])[0].get("id", None)
+        else:
+            raise ValueError("mat_info not found in md_cache_data")
         
         # 用户及员工信息 - 从org_info下获取
-        cls.employee_id = org_info.get("employee_info", [{}])[0].get("id", None)
+        if org_info:
+            cls.employee_id = org_info.get("employee_info", [{}])[0].get("id", None)
+        else:
+            raise ValueError("employee_info not found in org_info")
     
         # 基础数据 - 从init_cache获取
         cls.coun_id = cls.init_data.get("country_info", [])[0].get("coun_id", None)

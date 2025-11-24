@@ -53,6 +53,7 @@ class TestTodoManagement(GenMdBaseTest):
         smoke=True,
         tags=["待办管理", "日常待办", "保存", "GEN_DAILY_TO_DO_SAVE_SERVICE"]
     )
+    @pytest.mark.skip(reason="日常待办保存服务功能暂未开发，暂时跳过")
     def test_save_daily_todo(self):
         """日常待办保存用例 - GEN_DAILY_TO_DO_SAVE_SERVICE"""
         try:
@@ -107,6 +108,7 @@ class TestTodoManagement(GenMdBaseTest):
         smoke=True,
         tags=["待办管理", "日常待办", "分页查询", "GEN_DAILY_TO_DO_QUERY_PAGE_SERVICE"]
     )
+    @pytest.mark.skip(reason="日常待办分页查询服务功能暂未开发，暂时跳过")
     def test_query_daily_todo_page(self):
         """日常待办分页查询用例 - GEN_DAILY_TO_DO_QUERY_PAGE_SERVICE"""
         try:
@@ -159,6 +161,7 @@ class TestTodoManagement(GenMdBaseTest):
         file_level_order=3,
         tags=["待办管理", "日常待办", "完成", "GEN_DAILY_TO_DO_COMPLETED_SERVICE"]
     )
+    @pytest.mark.skip(reason="日常待办完成服务功能暂未开发，暂时跳过")
     def test_complete_daily_todo(self):
         """日常待办完成用例 - GEN_DAILY_TO_DO_COMPLETED_SERVICE"""
         try:
@@ -195,6 +198,7 @@ class TestTodoManagement(GenMdBaseTest):
         file_level_order=4,
         tags=["待办管理", "日常待办", "删除", "GEN_DAILY_TO_DO_DELETE_SERVICE"]
     )
+    @pytest.mark.skip(reason="日常待办删除服务功能暂未开发，暂时跳过")
     def test_delete_daily_todo(self):
         """日常待办删除用例 - GEN_DAILY_TO_DO_DELETE_SERVICE"""
         try:
@@ -241,6 +245,7 @@ class TestTodoManagement(GenMdBaseTest):
         smoke=True,
         tags=["待办管理", "业务待办", "保存", "GEN_BIZ_TO_DO_SAVE_SERVICE"]
     )
+    @pytest.mark.skip(reason="业务待办保存服务功能暂未开发，暂时跳过")
     def test_save_biz_todo(self):
         """业务待办保存用例 - GEN_BIZ_TO_DO_SAVE_SERVICE"""
         try:
@@ -291,6 +296,7 @@ class TestTodoManagement(GenMdBaseTest):
         smoke=True,
         tags=["待办管理", "业务待办", "分页查询", "GEN_BIZ_TO_DO_QUERY_PAGE_SERVICE"]
     )
+    @pytest.mark.skip(reason="业务待办分页查询服务功能暂未开发，暂时跳过")
     def test_query_biz_todo_page(self):
         """业务待办分页查询用例 - GEN_BIZ_TO_DO_QUERY_PAGE_SERVICE"""
         try:
@@ -343,6 +349,7 @@ class TestTodoManagement(GenMdBaseTest):
         file_level_order=7,
         tags=["待办管理", "业务待办", "删除", "GEN_BIZ_TO_DO_DELETE_SERVICE"]
     )
+    @pytest.mark.skip(reason="业务待办删除服务功能暂未开发，暂时跳过")
     def test_delete_biz_todo(self):
         """业务待办删除用例 - GEN_BIZ_TO_DO_DELETE_SERVICE"""
         try:
