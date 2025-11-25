@@ -124,38 +124,37 @@ org_info:
   # 采购移动类型信息
   inv_mvm_type_cf_pur:
     sql: |
-      select id,`code`,`name` from inv_mvm_type_cf where code='00301100' limit 1
+      select id,`code`,`name` from inv_mvm_type_cf where code='00301100' limit 1;
     description: "查询采购移动类型信息"
 
   # 销售移动类型信息
   inv_mvm_type_cf_sls:
     sql: |
-      select id,`code`,`name` from inv_mvm_type_cf where code='20401100' limit 1
+      select id,`code`,`name` from inv_mvm_type_cf where code='20401100' limit 1;
     description: "查询销售移动类型信息"
 
   # 调拨移动类型信息
   inv_mvm_type_cf_all:
     sql: |
-      select id,`code`,`name` from inv_mvm_type_cf where code='40301100' limit 1
+      select id,`code`,`name` from inv_mvm_type_cf where code='40301100' limit 1;
     description: "查询调拨移动类型信息"
 
   # 特殊库存转移移动类型信息
   inv_mvm_type_cf_spc_stk_transfer:
     sql: |
-      select id,`code`,`name` from inv_mvm_type_cf where code='71301100' limit 1
+      select id,`code`,`name` from inv_mvm_type_cf where name='特殊库存转移-无正逆向-无参考单业务-非限制-非限制-扩展02' limit 1;
     description: "查询特殊库存转移移动类型信息"
 
   # 特殊库存转移移动类型信息
   inv_spc_stk_type_cf_spc_stk_transfer:
     sql: |
-      select id,`name` from inv_spc_stk_type_cf where name='供应商寄售' limit 1
+      select id,`name` from inv_spc_stk_type_cf where name='供应商寄售' limit 1;
     description: "查询特殊库存类型信息"
   
   #ATP销售检查规则信息
   inv_atp_rule_cf:
     sql: |
-      select id,doc_class,ctrl_type,atp_group_id from inv_atp_rule_cf where doc_class='SO' and atp_group_id='2000001' and deleted=0 limit 1
-
+      select id,doc_class,ctrl_type,atp_group_id from inv_atp_rule_cf where doc_class='SO' and atp_group_id='2000001' and deleted=0 limit 1;
     description: "查询ATP检查规则信息"
 
   # 默认员工
