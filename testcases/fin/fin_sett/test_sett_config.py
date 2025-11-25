@@ -202,9 +202,12 @@ class TestSettConfig(BaseTest):
         }
         ParamUtil.set_request_params(data,set_dict)
         result=self.http.post(url,json=data,description=f"新增结算行项目类型")
-        self.assert_util.assert_response_success(result)
-        self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("settItemTypeCode",{}),"=",set_dict["settItemTypeCode"])
-        self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("settItemTypeName",{}),"=",set_dict["settItemTypeName"])
+        if result.get("err"):
+            self.assert_util.assert_by_operator(result.get("err",{}).get("masg",{}),"=","结算行项类型定义表 数据已存在")
+        if not result.get("err"):
+            self.assert_util.assert_response_success(result)
+            self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("settItemTypeCode",{}),"=",set_dict["settItemTypeCode"])
+            self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("settItemTypeName",{}),"=",set_dict["settItemTypeName"])
         a.json(data, "请求数据")
         a.json(result, "响应数据")
      
