@@ -253,7 +253,7 @@ class TestSettDocBusiCheck(BaseTest):
         
         #获取符合条件的结算行项目类型
         sql =f"""
-        select bt_class,sett_class from sett_doc_type_cf where deleted=0 and  id=(select sett_doc_type_id
+        select bt_class,sett_class from fin_sett_doc_type_cf where deleted=0 and  id=(select sett_doc_type_id
         from sett_doc_tr where id={filtered_data["params"]["request"]["id"]});
         """
         sql_result = self.db.query(sql)
@@ -261,7 +261,7 @@ class TestSettDocBusiCheck(BaseTest):
         bt_class = sql_result[0]["bt_class"]
         sql_sett_item_type = f"""
         select *
-        from sett_item_type_cf where deleted=0 and bt_class='{bt_class}'and sett_class='{sett_class}'
+        from fin_sett_item_type_cf where deleted=0 and bt_class='{bt_class}'and sett_class='{sett_class}'
         """
         sql_sett_item_type_result = self.db.query(sql_sett_item_type)
         
@@ -272,7 +272,7 @@ class TestSettDocBusiCheck(BaseTest):
             select *
             from gen_mat_md 
             where deleted=0 
-            and mat_code like 'AUTOTEST_MAT_RAWM' limit 1
+            and mat_code like '%AUTOTEST%' limit 1
         """
         sql_mat_result = self.db.query(sql_mat)
         
