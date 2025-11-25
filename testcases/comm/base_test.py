@@ -87,6 +87,7 @@ class LoginService:
         headers = {
             'Content-Type': 'application/json',
             'User-Agent': MockData().get_mock_user_agent(),
+            'Accpt-Language': 'zh-CN,zh;q=0.9',
             'Referer': referer,
             'Origin': origin
         }
