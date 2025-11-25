@@ -173,7 +173,7 @@ class TestSettConfig(BaseTest):
             ["params","request"])
         now_str = datetime.now().strftime("%Y%m%d%H%M%S")
         sql="""
-        select id,spg_code,spg_name from fin_sett_spg_type_cf where spg_code like '%AUTO-TEST%' order by created_at desc limit 1;
+        select id,spg_code,spg_name from fin_sett_spg_type_cf where spg_code ='GOODS' order by created_at desc limit 1;
         """
         spg_id=self.db.query(sql)[0]["id"]
         sql="""
@@ -396,7 +396,7 @@ class TestSettConfig(BaseTest):
         com_org_id=self.db.query(sql)[0]["id"]
         sql="""
         select id,sett_doc_type_code,sett_item_type_name
-        from  fin_sett_item_type_cf where deleted=0 and sett_item_type_code like '%AUTO%' order by created_at desc limit 1;
+        from  fin_sett_item_type_cf where deleted=0 and sett_item_type_code ='E_SLS_GOODS' order by created_at desc limit 1;
         """
         sett_item_type_id=self.db.query(sql)[0]["id"]
         sett_doc_type_id=self.db.query(sql)[0]["sett_doc_type_code"]

@@ -249,7 +249,7 @@ class FinSettlementFactory:
             'origin_org_id': 0,
             'sett_doc_code': f'AUTOTEST-SETTD{now.strftime("%Y%m%d%H%M%S")}',
             'sett_doc_type_id': 2002002,
-            'sett_doc_status': 'CREATED',
+            'sett_doc_status': status or 'CREATED',
             'com_org_id': 14617078,
             'partner_code': None,
             'partner_id': 2059001,

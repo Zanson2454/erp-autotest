@@ -47,6 +47,9 @@ class TestSettDocBusiCheck(BaseTest):
         LIMIT 1 
         """
         result = self.db.query(sql)
+        if not result:
+            FinSettlementFactory.get_or_create_settlement_doc("CONFIRMED")
+            result = self.db.query(sql)
         return [created_sett_doc_id,result[0]["id"]]
         
 
@@ -363,7 +366,7 @@ class TestSettDocBusiCheck(BaseTest):
 if __name__ == "__main__":
     test = TestSettDocBusiCheck()
     test.setup_class()
-    test.test_sett_doc_modify()
+    test.test_cancel_sett_doc()
     #FinSettlementFactory._insert_settlement_doc("CREATED")
             
             

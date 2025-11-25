@@ -136,9 +136,9 @@ class TestSettItemCheck(BaseTest):
         #获取结算行项目类型
         sql="""
             select *
-            from sett_item_type_cf
+            from fin_sett_item_type_cf
             where deleted=0
-            and sett_item_type_code='E_SLS_GODS'
+            and sett_item_type_code='E_SLS_GOODS'
         """
         settItemTypeId=self.db.query(sql)[0]["id"]
         #获取公司组织
@@ -164,7 +164,7 @@ class TestSettItemCheck(BaseTest):
             select *
             from gen_mat_md 
             where deleted=0 
-            and mat_code like 'AUTOTEST_MAT_RAWM'
+            and mat_code like '%AUTOTEST%'
         """
         matId=self.db.query(sql)[0]["id"]
         base_uom_id=self.db.query(sql)[0]["base_uom_id"]
@@ -179,9 +179,9 @@ class TestSettItemCheck(BaseTest):
         #获取关联结算单类型
         sql="""
             select *
-            from gen_sett_item_type_cf 
+            from fin_sett_item_type_cf 
             where deleted=0 
-            and sett_item_type_code='E_SLS_GODS'
+            and sett_item_type_code='E_SLS_GOODS'
         """
         settDocTypeId=self.db.query(sql)[0]["id"]
         
@@ -205,13 +205,13 @@ class TestSettItemCheck(BaseTest):
         
         #获取汇率
         sql=f"""
-           select unit_id,tar_curr_id,exch_rate from gen_curr_formula_type_cf where deleted=0 and unit_id={currId} and tar_curr_id={currId}
+           select base_curr_id,tar_curr_id,exch_rate from gen_curr_formula_type_cf where deleted=0 and base_curr_id={currId} and tar_curr_id={currId}
         """
         exchRate=self.db.query(sql)[0]["exch_rate"]
         
         #结算对象id，客户 供应商
         sql="""
-            select * from gen_cust_info_md where deleted=0 and cust_code like 'AUTOTEST_CUST'
+            select * from gen_business_partner_md where deleted=0 and partner_identity like '%CUSTOMER%' order by created_at desc limit 1
         """
         custId=self.db.query(sql)[0]["id"]
         
