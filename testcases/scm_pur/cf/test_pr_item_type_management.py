@@ -182,6 +182,7 @@ class TestPrItemTypeManagement(ScmPurBaseTest):
         file_level_order=3,  # 使用新的文件级排序
         tags=["采购申请行类型定义表", "导出任务"]
     )
+    @pytest.mark.skip(reason="业务用不上")
     def test_export_task_pr_item_type(self):
         """采购申请行类型定义表导出任务测试"""
         try:

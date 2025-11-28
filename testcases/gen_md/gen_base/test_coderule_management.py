@@ -104,6 +104,7 @@ class TestCodeRuleManagement(GenMdBaseTest):
         file_level_order=2,
         tags=["编码规则", "查询详情", "GEN_CODE_RULE_DETAIL_ACTION_SERVICE"]
     )
+    @pytest.mark.skip(reason="业务用不上")
     def test_query_code_rule_detail(self):
         """查询编码规则详情用例 - GEN_CODE_RULE_DETAIL_ACTION_SERVICE"""
         try:
