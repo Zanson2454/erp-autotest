@@ -221,14 +221,25 @@ class LoginService:
         self.session_manager.update_headers(portal_headers)
         
         try:
-            response = self.session_manager.get_session().get(url)
+            session = self.session_manager.get_session()
+            Loggers.info(f"Session headers: {session.headers}")
+            Loggers.info(f"Session cookies: {session.cookies.get_dict()}")
+            
+            response = session.get(url)
+            Loggers.info(f"获取用户信息响应状态码: {response.status_code}")
+            
             if response.status_code == self.LOGIN_SUCCESS_CODE:
-                return response.json().get("data")
+                response_data = response.json()
+                Loggers.info(f"获取用户信息响应: {response_data}")
+                return response_data.get("data")
             else:
-                Loggers.error(f"获取用户信息失败: {response.text}")
+                Loggers.error(f"获取用户信息失败 - 状态码: {response.status_code}")
+                Loggers.error(f"响应内容: {response.text}")
                 return None
         except Exception as e:
             Loggers.error(f"获取用户信息异常: {str(e)}")
+            import traceback
+            Loggers.error(f"异常堆栈: {traceback.format_exc()}")
             return None
 
 
