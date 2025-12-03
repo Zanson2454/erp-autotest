@@ -28,16 +28,11 @@ class TestAttrManagement(GenMdBaseTest):
         """测试类结束后执行清理"""
         try:
             # 清理测试数据
-            tables = ["gen_attr_cf"]
-            for table in tables:
-                try:
-                    cls.db.delete(
-                        table=table,
-                        where="attr_code like %s",
-                        params=["AT_%"]
-                    )
-                except Exception:
-                    pass
+            cls.db.delete(
+                table="gen_attr_cf",
+                where="attr_code like %s",
+                params=["AT_%"]
+            )
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
@@ -63,12 +58,6 @@ class TestAttrManagement(GenMdBaseTest):
                 self.test_query_available_bind_fields()
                 attr_field = self.attr_field_list[0]
 
-            api_path = self.get_api_path("GEN-属性表-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["code", "name", "attrType", "dataType", "description"], ["params", "request"]
-            )
             set_dict = {
                 "attrCode": attr_code,
                 "attrName": attr_name,
@@ -78,18 +67,17 @@ class TestAttrManagement(GenMdBaseTest):
                 "attrLength": 40,
                 "attrIsMulti": False, 
                 "attrIsRequired": False,
-                "objectMeta":{}
+                "objectMeta": {}
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
             
-            self.attr_id = response.get("data", {}).get("data", {})
+            response, attr_id = self.standard_api_call(
+                api_key="GEN-属性表-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=["code", "name", "attrType", "dataType", "description"],
+                store_id_as="attr"
+            )
+            
             self.attr_code = attr_code
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -106,12 +94,6 @@ class TestAttrManagement(GenMdBaseTest):
     def test_query_attr_page(self):
         """查询属性分页列表用例 - GEN_ATTR_CF_QUERY_PAGE_ACTION_SERVICE"""
         try:
-            api_path = self.get_api_path("GEN-属性表-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields"], ["params", "request"]
-            )
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
                 "fields": [
@@ -122,13 +104,13 @@ class TestAttrManagement(GenMdBaseTest):
                     {"name": "description", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-属性表-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=["pageable", "fields"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -148,19 +130,14 @@ class TestAttrManagement(GenMdBaseTest):
             if not self.attr_id:
                 self.test_save_attr()
 
-            api_path = self.get_api_path("GEN-属性表-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.attr_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-属性表-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -177,24 +154,20 @@ class TestAttrManagement(GenMdBaseTest):
     def test_query_available_bind_fields(self):
         """查询属性可绑定字段用例 - GEN_ATTR_QUERY_AVAILABLE_BIND_FILED_ACTION_SERVICE"""
         try:
-            api_path = self.get_api_path("查询属性可以绑定的字段服务")
-            params, url = self.get_api_params(api_path)
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
+            set_dict = {"id": 0}
+            
+            response, _ = self.standard_api_call(
+                api_key="查询属性可以绑定的字段服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
             )
-            set_dict ={"id":0}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
 
             # 验证返回的字段列表
             fields_data = response.get("data", {}).get("data", []).get("availableFiledMap",[])
             for field in fields_data:
                 self.attr_field_list.append(field)
             self.assert_util.assert_by_operator(len(fields_data), ">", 0)
-
-            a.json(params, "请求数据")
-            a.json(response, "响应数据")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -214,20 +187,14 @@ class TestAttrManagement(GenMdBaseTest):
             if not self.attr_id:
                 self.test_save_attr()
 
-            api_path = self.get_api_path("GEN-属性表-启用服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.attr_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-属性表-启用服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -247,20 +214,14 @@ class TestAttrManagement(GenMdBaseTest):
             if not self.attr_id:
                 self.test_save_attr()
 
-            api_path = self.get_api_path("GEN-属性表-禁用服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.attr_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-属性表-禁用服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -280,20 +241,14 @@ class TestAttrManagement(GenMdBaseTest):
             if not self.attr_id:
                 self.test_save_attr()
 
-            api_path = self.get_api_path("GEN-属性表-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.attr_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-属性表-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")

@@ -26,23 +26,15 @@ class TestDictManagement(GenMdBaseTest):
     def teardown_class(cls):
         """测试类结束后执行清理"""
         try:
-            # 清理测试数据
-        
             cls.db.delete(
                 table="gen_dict_head_cf",
-                where="code like %s",
-                params=["AT_%"]
-            )
-            cls.db.delete(
-                table="gen_dict_detail_cf",
-                where="code like %s",
+                where="dict_head_code like %s",
                 params=["AT_%"]
             )
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
-    # ================ 数据字典基础管理 ================
     @case_decorator(
         story="数据字典管理",
         title="测试新增数据字典类别",
@@ -53,48 +45,25 @@ class TestDictManagement(GenMdBaseTest):
         tags=["数据字典", "新增", "GEN_DICT_HEAD_CF_SAVE_ACTION_SERVICE"]
     )
     def test_save_dict(self):
-        """新增数据字典类别用例 - GEN_DICT_HEAD_CF_SAVE_ACTION_SERVICE"""
+        """新增数据字典类别用例"""
         try:
             dict_code = self.mock_util.generate_unique_code(tag="DICT")
-            dict_name = f"测试数据字典类别_{self.mock_util.get_timestamp()}"
+            dict_name = f"测试字典_{self.mock_util.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-数据字典类别-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["code", "name", "isSystem", "itemList"], ["params", "request"]
-            )
             set_dict = {
-                "code": dict_code,
-                "name": dict_name,
-                "isSystem": True,
-                "itemList": [
-                    {
-                        "code": f"P_CODE1_{self.mock_util.get_timestamp()}",
-                        "name": f"字典项1_{self.mock_util.get_timestamp()}",
-                        "isSystem": True,
-                        "sort": 1,
-                        "status": "ENABLED"
-                    },
-                    {
-                        "code": f"P_CODE2_{self.mock_util.get_timestamp()}",
-                        "name": f"字典项2_{self.mock_util.get_timestamp()}",
-                        "isSystem": True,
-                        "sort": 2,
-                        "status": "ENABLED"
-                    }
-                ]
+                "dictHeadCode": dict_code,
+                "dictHeadName": dict_name,
+                "remark": f"字典描述_{self.mock_util.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
             
-            self.dict_id = response.get("data", {}).get("data", {})
+            response, dict_id = self.standard_api_call(
+                api_key="GEN-数据字典类别-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=["code", "name", "remark"],
+                store_id_as="dict"
+            )
+            
             self.dict_code = dict_code
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -109,45 +78,23 @@ class TestDictManagement(GenMdBaseTest):
         tags=["数据字典", "查询", "GEN_DICT_HEAD_CF_QUERY_PAGE_ACTION_SERVICE"]
     )
     def test_query_dict_page(self):
-        """查询数据字典类别分页列表用例 - GEN_DICT_HEAD_CF_QUERY_PAGE_ACTION_SERVICE"""
+        """查询数据字典类别分页列表用例"""
         try:
-            api_path = self.get_api_path("GEN-数据字典类别-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields", "systemParams"], ["params", "request"]
-            )
-            set_dict =  {
-                "pageable": {
-                    "pageNo": 1,
-                    "pageSize": 20,
-                    "sortOrders": None,
-                    "conditionItems": None
-                },
+            set_dict = {
+                "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
                 "fields": [
-                    {
-                        "name": "code",
-                        "type": "TEXT"
-                    },
-                    {
-                        "name": "name",
-                        "type": "TEXT"
-                    },
-                    {
-                        "name": "status",
-                        "type": "SELECT"
-                    }
-                ],
-                "systemParams": None
+                    {"name": "code", "type": "TEXT"},
+                    {"name": "name", "type": "TEXT"},
+                    {"name": "remark", "type": "TEXT"}
+                ]
             }
-
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-数据字典类别-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=["pageable", "fields"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -162,25 +109,19 @@ class TestDictManagement(GenMdBaseTest):
         tags=["数据字典", "查询", "GEN_DICT_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE"]
     )
     def test_query_dict_detail(self):
-        """查询数据字典类别详情用例 - GEN_DICT_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE"""
+        """查询数据字典类别详情用例"""
         try:
             if not self.dict_id:
                 self.test_save_dict()
 
-            api_path = self.get_api_path("GEN-数据字典类别-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.dict_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-数据字典类别-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -195,25 +136,19 @@ class TestDictManagement(GenMdBaseTest):
         tags=["数据字典", "启用", "GEN_DICT_HEAD_CF_ENABLED_ACTION_SERVICE"]
     )
     def test_enable_dict(self):
-        """启用数据字典类别用例 - GEN_DICT_HEAD_CF_ENABLED_ACTION_SERVICE"""
+        """启用数据字典类别用例"""
         try:
             if not self.dict_id:
                 self.test_save_dict()
 
-            api_path = self.get_api_path("GEN-数据字典类别-启用服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.dict_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-数据字典类别-启用服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -228,25 +163,19 @@ class TestDictManagement(GenMdBaseTest):
         tags=["数据字典", "禁用", "GEN_DICT_HEAD_CF_DISABLED_ACTION_SERVICE"]
     )
     def test_disable_dict(self):
-        """禁用数据字典类别用例 - GEN_DICT_HEAD_CF_DISABLED_ACTION_SERVICE"""
+        """禁用数据字典类别用例"""
         try:
             if not self.dict_id:
                 self.test_save_dict()
 
-            api_path = self.get_api_path("GEN-数据字典类别-禁用服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.dict_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-数据字典类别-禁用服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -261,25 +190,19 @@ class TestDictManagement(GenMdBaseTest):
         tags=["数据字典", "删除", "GEN_DICT_HEAD_CF_DELETE_ACTION_SERVICE"]
     )
     def test_delete_dict(self):
-        """删除数据字典类别用例 - GEN_DICT_HEAD_CF_DELETE_ACTION_SERVICE"""
+        """删除数据字典类别用例"""
         try:
             if not self.dict_id:
                 self.test_save_dict()
 
-            api_path = self.get_api_path("GEN-数据字典类别-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.dict_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-数据字典类别-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -296,32 +219,24 @@ class TestDictManagement(GenMdBaseTest):
     )
     @pytest.mark.skip(reason="业务用不上")
     def test_dict_import(self):
-        """数据字典类别标准导入用例 - GEN_DICT_HEAD_CF_GEI_IMPORT_SERVICE"""
+        """数据字典类别标准导入用例"""
         try:
-            api_path = self.get_api_path("数据字典类别标准导入服务")
-            params, url = self.get_api_params(api_path)
-
-            # 构建导入数据
             import_data = [
                 {
                     "code": self.mock_util.generate_unique_code(tag="IMPORT_DICT"),
-                    "name": f"导入测试数据字典类别_{self.mock_util.get_timestamp()}",
-                    "dictType": "CUSTOM",
-                    "description": "导入的数据字典类别描述"
+                    "name": f"导入测试字典_{self.mock_util.get_timestamp()}",
+                    "remark": "导入测试字典描述"
                 }
             ]
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["data"], ["params", "request"]
-            )
             set_dict = {"data": import_data}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="数据字典类别标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["data"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -337,29 +252,22 @@ class TestDictManagement(GenMdBaseTest):
     )
     @pytest.mark.skip(reason="业务用不上")
     def test_dict_export(self):
-        """数据字典类别标准导出用例 - GEN_DICT_HEAD_CF_GEI_EXPORT_SERVICE"""
+        """数据字典类别标准导出用例"""
         try:
-            api_path = self.get_api_path("数据字典类别标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["selectFields"], ["params", "request"]
-            )
             set_dict = {
                 "selectFields": [
                     {"name": "code", "type": "TEXT"},
                     {"name": "name", "type": "TEXT"},
-                    {"name": "dictType", "type": "TEXT"},
-                    {"name": "description", "type": "TEXT"}
+                    {"name": "remark", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="数据字典类别标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["selectFields"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -375,26 +283,20 @@ class TestDictManagement(GenMdBaseTest):
     )
     @pytest.mark.skip(reason="业务用不上")
     def test_dict_oss_import_task(self):
-        """数据字典类别OSS导入任务用例 - GEN_DICT_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
+        """数据字典类别OSS导入任务用例"""
         try:
-            api_path = self.get_api_path("数据字典类别-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["fileKey", "taskName", "templateId"], ["params", "request"]
-            )
             set_dict = {
                 "fileKey": "test_dict_import_file.xlsx",
                 "taskName": f"数据字典类别导入任务_{self.mock_util.get_timestamp()}",
                 "templateId": 1
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="数据字典类别-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["fileKey", "taskName", "templateId"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -410,32 +312,25 @@ class TestDictManagement(GenMdBaseTest):
     )
     @pytest.mark.skip(reason="业务用不上")
     def test_dict_export_task(self):
-        """数据字典类别导出任务用例 - GEN_DICT_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST"""
+        """数据字典类别导出任务用例"""
         try:
-            api_path = self.get_api_path("数据字典类别-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["taskName", "queryData"], ["params", "request"]
-            )
             set_dict = {
                 "taskName": f"数据字典类别导出任务_{self.mock_util.get_timestamp()}",
                 "queryData": {
                     "fields": [
                         {"name": "code", "type": "TEXT"},
                         {"name": "name", "type": "TEXT"},
-                        {"name": "dictType", "type": "TEXT"},
-                        {"name": "description", "type": "TEXT"}
+                        {"name": "remark", "type": "TEXT"}
                     ]
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="数据字典类别-导入导出任务管理接口-提交导出任务",
+                set_dict=set_dict,
+                fields_to_filter=["taskName", "queryData"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")

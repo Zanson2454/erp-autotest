@@ -1,6 +1,4 @@
-# 改进后的登录管理
-
-from math import log
+# 测试基类
 import sys
 import os
 import time
@@ -84,9 +82,10 @@ class LoginService:
     @staticmethod
     def build_headers(origin: Optional[str] = None, referer: Optional[str] = None, cookie: Optional[str] = None) -> Dict[str, str]:
         """获取基础请求头"""
+        mock_data = MockData() 
         headers = {
             'Content-Type': 'application/json',
-            'User-Agent': MockData().get_mock_user_agent(),
+            'User-Agent': mock_data.get_mock_user_agent(),
             'Accpt-Language': 'zh-CN,zh;q=0.9',
             'Referer': referer,
             'Origin': origin

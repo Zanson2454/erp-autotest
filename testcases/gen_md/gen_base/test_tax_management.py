@@ -21,28 +21,20 @@ class TestTaxManagement(GenMdBaseTest):
         cls.tax_id = None
         cls.tax_code = None
         cls.logger.info("税配置管理测试类初始化完成")
-        
-        # 依赖数据
-        if cls.init_data:
-            cls.coun_id = cls.init_data.get("country_info",[])[0].get("coun_id")
 
     @classmethod
     def teardown_class(cls):
         """测试类结束后执行清理"""
         try:
-            # 清理测试数据
-
             cls.db.delete(
-                table='gen_tax_type_cf',
+                table="gen_tax_type_cf",
                 where="tax_code like %s",
                 params=["AT_%"]
             )
-
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
-    # ================ 税配置基础管理 ================
     @case_decorator(
         story="税配置管理",
         title="测试新增税配置",
@@ -53,33 +45,26 @@ class TestTaxManagement(GenMdBaseTest):
         tags=["税配置", "新增", "GEN_TAX_TYPE_CF_SAVE_ACTION_SERVICE"]
     )
     def test_save_tax(self):
-        """新增税配置用例 - GEN_TAX_TYPE_CF_SAVE_ACTION_SERVICE"""
+        """新增税配置用例"""
         try:
             tax_code = self.mock_util.generate_unique_code(tag="TAX")
-            tax_name = f"测试税配置_{self.mock_util.get_timestamp()}"
+            tax_name = f"测试税种_{self.mock_util.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-税配置-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["code", "name", "taxRate", "taxType", "description"], ["params", "request"]
-            )
             set_dict = {
                 "taxCode": tax_code,
-                "taxcate": 'J',
-                "tax": 0.13,  # 税率13%
-                "counId": {
-                    "id": self.coun_id
-                }
+                "taxName": tax_name,
+                "taxRate": 0.13,
+                "remark": f"税种描述_{self.mock_util.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
             
-            self.tax_id = response.get("data", {}).get("data", {})
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            response, tax_id = self.standard_api_call(
+                api_key="GEN-税配置-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=["taxCode", "taxName", "taxRate", "remark"],
+                store_id_as="tax"
+            )
+            
+            self.tax_code = tax_code
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -94,32 +79,23 @@ class TestTaxManagement(GenMdBaseTest):
         tags=["税配置", "查询", "GEN_TAX_TYPE_CF_QUERY_PAGE_ACTION_SERVICE"]
     )
     def test_query_tax_page(self):
-        """查询税配置分页列表用例 - GEN_TAX_TYPE_CF_QUERY_PAGE_ACTION_SERVICE"""
+        """查询税配置分页列表用例"""
         try:
-            api_path = self.get_api_path("GEN-税配置-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields", "systemParams"], ["params", "request"]
-            )
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
                 "fields": [
                     {"name": "code", "type": "TEXT"},
                     {"name": "name", "type": "TEXT"},
-                    {"name": "taxRate", "type": "NUMBER"},
-                    {"name": "taxType", "type": "TEXT"},
-                    {"name": "description", "type": "TEXT"}
-                ],
-                "systemParams": None
+                    {"name": "taxRate", "type": "NUMBER"}
+                ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-税配置-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=["pageable", "fields"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -134,26 +110,19 @@ class TestTaxManagement(GenMdBaseTest):
         tags=["税配置", "查询", "GEN_TAX_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE"]
     )
     def test_query_tax_detail(self):
-        """查询税配置详情用例 - GEN_TAX_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE"""
+        """查询税配置详情用例"""
         try:
             if not self.tax_id:
                 self.test_save_tax()
 
-            api_path = self.get_api_path("GEN-税配置-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.tax_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-税配置-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -169,26 +138,24 @@ class TestTaxManagement(GenMdBaseTest):
     )
     @pytest.mark.skip(reason="业务用不上")
     def test_tax_paging_data(self):
-        """税配置分页数据用例 - GEN_TAX_TYPE_CF_PAGING_DATA_SERVICE"""
+        """税配置分页数据用例"""
         try:
-            api_path = self.get_api_path("税配置-分页数据服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageSize", "pageNo", "searchCondition"], ["params", "request"]
-            )
             set_dict = {
-                "pageSize": 20,
-                "pageNo": 1,
-                "searchCondition": {}
+                "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
+                "fields": [
+                    {"name": "code", "type": "TEXT"},
+                    {"name": "name", "type": "TEXT"},
+                    {"name": "taxRate", "type": "NUMBER"}
+                ],
+                "systemParams": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="税配置-分页数据服务",
+                set_dict=set_dict,
+                fields_to_filter=["pageable", "fields", "systemParams"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -204,30 +171,19 @@ class TestTaxManagement(GenMdBaseTest):
     )
     @pytest.mark.skip(reason="业务用不上")
     def test_find_tax_by_id(self):
-        """根据ID查找税配置数据用例 - GEN_TAX_TYPE_CF_FIND_DATA_BY_ID_SERVICE"""
+        """根据ID查找税配置数据用例"""
         try:
             if not self.tax_id:
                 self.test_save_tax()
 
-            api_path = self.get_api_path("税配置-根据ID查找数据服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.tax_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            # 验证返回的数据包含必要字段
-            tax_data = response.get("data", {}).get("data", {})
-            self.assert_util.assert_by_operator(tax_data.get("code"), "not_empty")
-            self.assert_util.assert_by_operator(tax_data.get("name"), "not_empty")
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="税配置-根据ID查找数据服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -242,25 +198,19 @@ class TestTaxManagement(GenMdBaseTest):
         tags=["税配置", "删除", "GEN_TAX_TYPE_CF_DELETE_ACTION_SERVICE"]
     )
     def test_delete_tax(self):
-        """删除税配置用例 - GEN_TAX_TYPE_CF_DELETE_ACTION_SERVICE"""
+        """删除税配置用例"""
         try:
             if not self.tax_id:
                 self.test_save_tax()
 
-            api_path = self.get_api_path("GEN-税配置-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.tax_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-税配置-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -277,33 +227,25 @@ class TestTaxManagement(GenMdBaseTest):
     )
     @pytest.mark.skip(reason="业务用不上")
     def test_tax_import(self):
-        """税配置标准导入用例 - GEN_TAX_TYPE_CF_GEI_IMPORT_SERVICE"""
+        """税配置标准导入用例"""
         try:
-            api_path = self.get_api_path("税配置标准导入服务")
-            params, url = self.get_api_params(api_path)
-
-            # 构建导入数据
             import_data = [
                 {
                     "code": self.mock_util.generate_unique_code(tag="IMPORT_TAX"),
-                    "name": f"导入测试税配置_{self.mock_util.get_timestamp()}",
-                    "taxRate": 9.0,
-                    "taxType": "VAT",
-                    "description": "导入的税配置描述"
+                    "name": f"导入测试税种_{self.mock_util.get_timestamp()}",
+                    "taxRate": 0.13,
+                    "remark": "导入测试税种描述"
                 }
             ]
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["data"], ["params", "request"]
-            )
             set_dict = {"data": import_data}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="税配置标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["data"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -319,30 +261,23 @@ class TestTaxManagement(GenMdBaseTest):
     )
     @pytest.mark.skip(reason="业务用不上")
     def test_tax_export(self):
-        """税配置标准导出用例 - GEN_TAX_TYPE_CF_GEI_EXPORT_SERVICE"""
+        """税配置标准导出用例"""
         try:
-            api_path = self.get_api_path("税配置标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["selectFields"], ["params", "request"]
-            )
             set_dict = {
                 "selectFields": [
                     {"name": "code", "type": "TEXT"},
                     {"name": "name", "type": "TEXT"},
                     {"name": "taxRate", "type": "NUMBER"},
-                    {"name": "taxType", "type": "TEXT"},
-                    {"name": "description", "type": "TEXT"}
+                    {"name": "remark", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="税配置标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["selectFields"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -358,26 +293,20 @@ class TestTaxManagement(GenMdBaseTest):
     )
     @pytest.mark.skip(reason="业务用不上")
     def test_tax_oss_import_task(self):
-        """税配置OSS导入任务用例 - GEN_TAX_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
+        """税配置OSS导入任务用例"""
         try:
-            api_path = self.get_api_path("税配置-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["fileKey", "taskName", "templateId"], ["params", "request"]
-            )
             set_dict = {
                 "fileKey": "test_tax_import_file.xlsx",
                 "taskName": f"税配置导入任务_{self.mock_util.get_timestamp()}",
                 "templateId": 1
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="税配置-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["fileKey", "taskName", "templateId"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -393,104 +322,26 @@ class TestTaxManagement(GenMdBaseTest):
     )
     @pytest.mark.skip(reason="业务用不上")
     def test_tax_export_task(self):
-        """税配置导出任务用例 - GEN_TAX_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST"""
+        """税配置导出任务用例"""
         try:
-            api_path = self.get_api_path("税配置-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
-            params['parmas'] =  {
-                "taskName": f"税管理-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
-                "multiSheetConfig": [
-                    {
-                        "modelKey": "GEN_MD$gen_tax_type_cf",
-                        "modelName": "税配置",
-                        "sheetNo": 0,
-                        "sheetName": "税配置",
-                        "headerConfigList": [
-                            {
-                                "name": "税码",
-                                "type": "TEXT",
-                                "field": "taxCode"
-                            },
-                            {
-                                "name": "国家",
-                                "type": "TEXT",
-                                "field": "counId.counName"
-                            },
-                            {
-                                "name": "类型",
-                                "type": "ENUM",
-                                "field": "taxcate",
-                                "multiSelect": False,
-                                "dictValues": [
-                                    {
-                                        "_row_id_": "进项",
-                                        "label": "进项",
-                                        "value": "J"
-                                    },
-                                    {
-                                        "_row_id_": "销项",
-                                        "label": "销项",
-                                        "value": "X"
-                                    }
-                                ]
-                            },
-                            {
-                                "name": "税率(%)",
-                                "type": "NUMBER",
-                                "field": "tax"
-                            }
-                        ]
-                    }
-                ],
+            set_dict = {
+                "taskName": f"税配置导出任务_{self.mock_util.get_timestamp()}",
                 "queryData": {
-                    "containerKey": "GEN_MD$GEN_TAX_TYPE_VIEW-table-container-GEN_MD$gen_tax_type_cf",
-                    "viewKey": "GEN_MD$GEN_TAX_TYPE_VIEW:list",
-                    "sceneKey": "GEN_MD$GEN_TAX_TYPE_VIEW",
-                    "params": {
-                        "request": {
-                            "pageable": {
-
-                            }
-                        },
-                        "selectFields": [
-                            {
-                                "field": "taxCode"
-                            },
-                            {
-                                "field": "taxcate"
-                            },
-                            {
-                                "field": "tax"
-                            },
-                            {
-                                "field": "counId",
-                                "selectFields": [
-                                    {
-                                        "field": "counName"
-                                    }
-                                ]
-                            }
-                        ],
-                        "modelKey": "GEN_MD$gen_tax_type_cf"
-                    }
-                },
-                "processConfig": {
-                    "processType": "TRANTOR",
-                    "model": "GEN_MD$gen_tax_type_cf",
-                    "modelName": "税配置",
-                    "containerKey": "GEN_MD$GEN_TAX_TYPE_VIEW-table-container-GEN_MD$gen_tax_type_cf",
-                    "viewKey": "GEN_MD$GEN_TAX_TYPE_VIEW:list",
-                    "sceneKey": "GEN_MD$GEN_TAX_TYPE_VIEW"
+                    "fields": [
+                        {"name": "code", "type": "TEXT"},
+                        {"name": "name", "type": "TEXT"},
+                        {"name": "taxRate", "type": "NUMBER"},
+                        {"name": "remark", "type": "TEXT"}
+                    ]
                 }
             }
-
-
-            response = self.http.post(url, json=params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="税配置-导入导出任务管理接口-提交导出任务",
+                set_dict=set_dict,
+                fields_to_filter=["taskName", "queryData"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")

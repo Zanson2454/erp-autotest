@@ -54,12 +54,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             obj_code = self.mock_util.generate_unique_code(tag="BARCODE_MD")
             barcode_name = f"条码主数据_{self.mock_util.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-条码主数据-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["code", "name", "description"], ["params", "request"]
-            )
             set_dict = {
                 "obj_code": obj_code,
                 "type": "MAT",
@@ -69,15 +63,13 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
                 "print_time":self.mock_util.get_timestamp(),
                 "status":"ENABLED"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
             
-            self.barcode_md_id = response.get("data", {}).get("data", {})
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            response, barcode_md_id = self.standard_api_call(
+                api_key="GEN-条码主数据-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=["code", "name", "description"],
+                store_id_as="barcode_md"
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -95,12 +87,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_query_barcode_md_page(self):
         """查询条码主数据分页列表用例 - GEN_BARCODE_MD_QUERY_PAGE_ACTION_SERVICE"""
         try:
-            api_path = self.get_api_path("GEN-条码主数据-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields"], ["params", "request"]
-            )
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
                 "fields": [
@@ -109,13 +95,13 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
                     {"name": "description", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-条码主数据-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=["pageable", "fields"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -136,20 +122,14 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             if not self.barcode_md_id:
                 self.test_save_barcode_md()
 
-            api_path = self.get_api_path("GEN-条码主数据-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.barcode_md_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-条码主数据-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -170,20 +150,14 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             if not self.barcode_md_id:
                 self.test_save_barcode_md()
 
-            api_path = self.get_api_path("GEN-条码主数据-启用服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.barcode_md_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-条码主数据-启用服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -204,20 +178,14 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             if not self.barcode_md_id:
                 self.test_save_barcode_md()
 
-            api_path = self.get_api_path("GEN-条码主数据-禁用服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.barcode_md_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-条码主数据-禁用服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -238,20 +206,14 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             if not self.barcode_md_id:
                 self.test_save_barcode_md()
 
-            api_path = self.get_api_path("GEN-条码主数据-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.barcode_md_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-条码主数据-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -276,12 +238,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             prefix = self.mock_util.generate_unique_code(tag="BARCODE_RULE")
             rule_name = f"条码规则_{self.mock_util.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-条码规则-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["prefix", "name", "remark","isUseBarcodeLabel","delimiter","bizType","bizFieldId"], ["params", "request"]
-            )
             set_dict = {
                 "prefix": prefix,
                 "name": rule_name,
@@ -291,15 +247,13 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
                 "bizType": "MAT",
                 "bizFieldId": {"id":self.barcode_field_id}
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
             
-            self.barcode_rule_id = response.get("data", {}).get("data", {})
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            response, barcode_rule_id = self.standard_api_call(
+                api_key="GEN-条码规则-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=["prefix", "name", "remark","isUseBarcodeLabel","delimiter","bizType","bizFieldId"],
+                store_id_as="barcode_rule"
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -316,12 +270,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_query_barcode_rule_page(self):
         """查询条码规则分页列表用例 - GEN_BARCODE_RULE_CF_QUERY_PAGE_ACTION_SERVICE"""
         try:
-            api_path = self.get_api_path("GEN-条码规则-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields", "systemParams"], ["params", "request"]
-            )
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
                 "fields": [
@@ -330,13 +278,13 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
                 ],
                 "systemParams": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-条码规则-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=["pageable", "fields", "systemParams"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -356,20 +304,14 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             if not self.barcode_rule_id:
                 self.test_save_barcode_rule()
 
-            api_path = self.get_api_path("GEN-条码规则-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.barcode_rule_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-条码规则-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -389,20 +331,14 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             if not self.barcode_rule_id:
                 self.test_save_barcode_rule()
 
-            api_path = self.get_api_path("GEN-条码规则-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.barcode_rule_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-条码规则-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -424,26 +360,18 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             bizFieldKey = self.mock_util.generate_unique_code(tag="BARCODE_FIELD")
             bizFieldName = f"条码字段_{self.mock_util.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-条码字段-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["bizFieldKey", "bizFieldName", "bizType"], ["params", "request"]
-            )
             set_dict = {
                 "bizFieldKey": bizFieldKey,
                 "bizFieldName": bizFieldName,
                 "bizType": "MAT"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
             
-            self.barcode_field_id = response.get("data", {}).get("data", {})
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            response, barcode_field_id = self.standard_api_call(
+                api_key="GEN-条码字段-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=["bizFieldKey", "bizFieldName", "bizType"],
+                store_id_as="barcode_field"
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -460,12 +388,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_query_barcode_field_page(self):
         """查询条码字段分页列表用例 - GEN_BARCODE_FILED_CF_QUERY_PAGE_ACTION_SERVICE"""
         try:
-            api_path = self.get_api_path("GEN-条码字段-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields", "systemParams"], ["params", "request"]
-            )
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
                 "fields": [
@@ -475,13 +397,13 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
                 ],
                 "systemParams": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-条码字段-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=["pageable", "fields", "systemParams"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -501,20 +423,14 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             if not self.barcode_field_id:
                 self.test_save_barcode_field()
 
-            api_path = self.get_api_path("GEN-条码字段-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.barcode_field_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-条码字段-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -534,20 +450,14 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             if not self.barcode_field_id:
                 self.test_save_barcode_field()
 
-            api_path = self.get_api_path("GEN-条码字段-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.barcode_field_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-条码字段-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -566,9 +476,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_barcode_md_import(self):
         """条码主数据标准导入用例 - GEN_BARCODE_MD_GEI_IMPORT_SERVICE"""
         try:
-            api_path = self.get_api_path("条码主数据标准导入服务")
-            params, url = self.get_api_params(api_path)
-
             import_data = [
                 {
                     "code": self.mock_util.generate_unique_code(tag="IMPORT_BARCODE_MD"),
@@ -577,17 +484,14 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
                 }
             ]
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["data"], ["params", "request"]
-            )
             set_dict = {"data": import_data}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="条码主数据标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["data"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -605,12 +509,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_barcode_md_export(self):
         """条码主数据标准导出用例 - GEN_BARCODE_MD_GEI_EXPORT_SERVICE"""
         try:
-            api_path = self.get_api_path("条码主数据标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["selectFields"], ["params", "request"]
-            )
             set_dict = {
                 "selectFields": [
                     {"name": "code", "type": "TEXT"},
@@ -618,13 +516,13 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
                     {"name": "description", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="条码主数据标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["selectFields"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -642,23 +540,17 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_barcode_md_oss_import_task(self):
         """条码主数据OSS导入任务用例 - GEN_BARCODE_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
         try:
-            api_path = self.get_api_path("条码主数据-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["fileKey", "taskName"], ["params", "request"]
-            )
             set_dict = {
                 "fileKey": "test_barcode_md_import_file.xlsx",
                 "taskName": f"条码主数据导入任务_{self.mock_util.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="条码主数据-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["fileKey", "taskName"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -676,12 +568,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_barcode_md_export_task(self):
         """条码主数据导出任务用例 - GEN_BARCODE_MD_API_GEI_TASK_EXPORT_DIRECT_POST"""
         try:
-            api_path = self.get_api_path("条码主数据-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["taskName", "queryData"], ["params", "request"]
-            )
             set_dict = {
                 "taskName": f"条码主数据导出任务_{self.mock_util.get_timestamp()}",
                 "queryData": {
@@ -692,13 +578,13 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
                     ]
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="条码主数据-导入导出任务管理接口-提交导出任务",
+                set_dict=set_dict,
+                fields_to_filter=["taskName", "queryData"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -717,9 +603,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_barcode_rule_import(self):
         """条码规则标准导入用例 - GEN_BARCODE_RULE_CF_GEI_IMPORT_SERVICE"""
         try:
-            api_path = self.get_api_path("条码规则标准导入服务")
-            params, url = self.get_api_params(api_path)
-
             import_data = [
                 {
                     "code": self.mock_util.generate_unique_code(tag="IMPORT_BARCODE_RULE"),
@@ -728,17 +611,14 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
                 }
             ]
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["data"], ["params", "request"]
-            )
             set_dict = {"data": import_data}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="条码规则标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["data"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -756,12 +636,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_barcode_rule_export(self):
         """条码规则标准导出用例 - GEN_BARCODE_RULE_CF_GEI_EXPORT_SERVICE"""
         try:
-            api_path = self.get_api_path("条码规则标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["selectFields"], ["params", "request"]
-            )
             set_dict = {
                 "selectFields": [
                     {"name": "code", "type": "TEXT"},
@@ -769,13 +643,13 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
                     {"name": "description", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="条码规则标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["selectFields"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -793,23 +667,17 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_barcode_rule_oss_import_task(self):
         """条码规则OSS导入任务用例 - GEN_BARCODE_RULE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
         try:
-            api_path = self.get_api_path("条码规则-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["fileKey", "taskName"], ["params", "request"]
-            )
             set_dict = {
                 "fileKey": "test_barcode_rule_import_file.xlsx",
                 "taskName": f"条码规则导入任务_{self.mock_util.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="条码规则-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["fileKey", "taskName"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -827,12 +695,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_barcode_rule_export_task(self):
         """条码规则导出任务用例 - GEN_BARCODE_RULE_CF_API_GEI_TASK_EXPORT_DIRECT_POST"""
         try:
-            api_path = self.get_api_path("条码规则-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["taskName", "queryData"], ["params", "request"]
-            )
             set_dict = {
                 "taskName": f"条码规则导出任务_{self.mock_util.get_timestamp()}",
                 "queryData": {
@@ -843,13 +705,13 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
                     ]
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="条码规则-导入导出任务管理接口-提交导出任务",
+                set_dict=set_dict,
+                fields_to_filter=["taskName", "queryData"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -868,9 +730,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_barcode_field_import(self):
         """条码规则允许业务字段标准导入用例 - GEN_BARCODE_FIELD_CF_GEI_IMPORT_SERVICE"""
         try:
-            api_path = self.get_api_path("条码规则允许业务字段标准导入服务")
-            params, url = self.get_api_params(api_path)
-
             import_data = [
                 {
                     "code": self.mock_util.generate_unique_code(tag="IMPORT_BARCODE_FIELD"),
@@ -879,17 +738,14 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
                 }
             ]
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["data"], ["params", "request"]
-            )
             set_dict = {"data": import_data}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="条码规则允许业务字段标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["data"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -907,12 +763,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_barcode_field_export(self):
         """条码规则允许业务字段标准导出用例 - GEN_BARCODE_FIELD_CF_GEI_EXPORT_SERVICE"""
         try:
-            api_path = self.get_api_path("条码规则允许业务字段标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["selectFields"], ["params", "request"]
-            )
             set_dict = {
                 "selectFields": [
                     {"name": "code", "type": "TEXT"},
@@ -920,13 +770,13 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
                     {"name": "description", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="条码规则允许业务字段标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["selectFields"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -944,23 +794,17 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_barcode_field_oss_import_task(self):
         """条码规则允许业务字段OSS导入任务用例 - GEN_BARCODE_FIELD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
         try:
-            api_path = self.get_api_path("条码规则允许业务字段-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["fileKey", "taskName"], ["params", "request"]
-            )
             set_dict = {
                 "fileKey": "test_barcode_field_import_file.xlsx",
                 "taskName": f"条码规则允许业务字段导入任务_{self.mock_util.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="条码规则允许业务字段-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["fileKey", "taskName"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -978,12 +822,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_barcode_field_export_task(self):
         """条码规则允许业务字段导出任务用例 - GEN_BARCODE_FIELD_CF_API_GEI_TASK_EXPORT_DIRECT_POST"""
         try:
-            api_path = self.get_api_path("条码规则允许业务字段-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["taskName", "queryData"], ["params", "request"]
-            )
             set_dict = {
                 "taskName": f"条码规则允许业务字段导出任务_{self.mock_util.get_timestamp()}",
                 "queryData": {
@@ -994,13 +832,13 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
                     ]
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="条码规则允许业务字段-导入导出任务管理接口-提交导出任务",
+                set_dict=set_dict,
+                fields_to_filter=["taskName", "queryData"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")

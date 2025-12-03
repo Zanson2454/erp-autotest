@@ -1,5 +1,6 @@
 import allure
 import pytest
+from typing import Any
 from testcases.gen_md import GenMdBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
@@ -14,31 +15,31 @@ class TestCharacteristicManagement(GenMdBaseTest):
     def setup_class(cls):
         super().setup_class()
         # 数据存储
-        cls.chara_id = None
         cls.chara_class_id = None
-
+        cls.chara_class_code = None
+        cls.chara_id = None
+        cls.chara_code = None
         cls.logger.info("特征管理测试类初始化完成")
 
     @classmethod
     def teardown_class(cls):
         """测试类结束后执行清理"""
         try:
-            # 清理测试数据
             cls.db.delete(
-                table="gen_chara_md",
-                where="code like %s",
+                table="gen_chara_class_md",
+                where="chara_class_code like %s",
                 params=["AT_%"]
             )
             cls.db.delete(
-                table="gen_chara_class_md",
-                where="code like %s",
+                table="gen_chara_md",
+                where="chara_code like %s",
                 params=["AT_%"]
             )
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
-    # ================ 特征类定义表基础管理 ================
+    # ================ 特征类定义表管理 ================
     @case_decorator(
         story="特征类定义表管理",
         title="测试新增特征类定义",
@@ -49,37 +50,25 @@ class TestCharacteristicManagement(GenMdBaseTest):
         tags=["特征管理", "新增", "GEN_CHARA_CLASS_MD_SAVE_ACTION_SERVICE"]
     )
     def test_save_chara_class(self):
-        """新增特征类定义用例 - GEN_CHARA_CLASS_MD_SAVE_ACTION_SERVICE"""
+        """新增特征类定义用例"""
         try:
-            chara_class_code = self.mock_util.generate_unique_code(tag="CHARACLASS")
+            chara_class_code = self.mock_util.generate_unique_code(tag="CHARA_CLASS")
             chara_class_name = f"测试特征类_{self.mock_util.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-特征类定义表-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["code", "name", "charaClassType", "charaList", "remark"], ["params", "request"]
-            )
             set_dict = {
-                "code": chara_class_code,
-                "name": chara_class_name,
-                "charaClassType":"BATCH",
-                "charaList":[
-                    {"charaId":{"id":self.chara_id},
-                     "isRequired":True
-                     }
-                ],
-                "remark": f"测试特征类描述_{self.mock_util.get_timestamp()}"
+                "charaClassCode": chara_class_code,
+                "charaClassName": chara_class_name,
+                "remark": f"特征类描述_{self.mock_util.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
             
-            self.chara_class_id = response.get("data", {}).get("data", {})
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            response, chara_class_id = self.standard_api_call(
+                api_key="GEN-特征类定义表-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=["code", "name", "remark"],
+                store_id_as="chara_class"
+            )
+            
+            self.chara_class_code = chara_class_code
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -96,44 +85,21 @@ class TestCharacteristicManagement(GenMdBaseTest):
     def test_query_characteristic_class_page(self):
         """查询特征类定义分页列表用例"""
         try:
-            api_path = self.get_api_path("GEN-特征类定义表-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields", "systemParams"], ["params", "request"]
-            )
             set_dict = {
-                    "pageable": {
-                        "pageNo": 1,
-                        "pageSize": 20,
-                        "needTotal": True,
-                        "sortOrders": None,
-                        "conditionItems": None
-                    },
-                    "fields": [
-                        {
-                            "name": "name",
-                            "type": "TEXT"
-                        },
-                        {
-                            "name": "code",
-                            "type": "TEXT"
-                        },
-                        {
-                            "name": "charaClassType",
-                            "type": "SELECT"
-                        }
-                    ],
-                    "systemParams": None
-                }
-    
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+                "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
+                "fields": [
+                    {"name": "code", "type": "TEXT"},
+                    {"name": "name", "type": "TEXT"},
+                    {"name": "remark", "type": "TEXT"}
+                ]
+            }
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-特征类定义表-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=["pageable", "fields"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -153,20 +119,14 @@ class TestCharacteristicManagement(GenMdBaseTest):
             if not self.chara_class_id:
                 self.test_save_chara_class()
 
-            api_path = self.get_api_path("GEN-特征类定义表-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.chara_class_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-特征类定义表-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -186,20 +146,14 @@ class TestCharacteristicManagement(GenMdBaseTest):
             if not self.chara_class_id:
                 self.test_save_chara_class()
 
-            api_path = self.get_api_path("GEN-特征类定义表-启用服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.chara_class_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-特征类定义表-启用服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -219,20 +173,14 @@ class TestCharacteristicManagement(GenMdBaseTest):
             if not self.chara_class_id:
                 self.test_save_chara_class()
 
-            api_path = self.get_api_path("GEN-特征类定义表-禁用服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.chara_class_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-特征类定义表-禁用服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -249,31 +197,23 @@ class TestCharacteristicManagement(GenMdBaseTest):
     def test_delete_characteristic_class(self):
         """删除特征类定义用例"""
         try:
-            # 先创建一个测试数据用于删除
             if not self.chara_class_id:
                 self.test_save_chara_class()
 
-            # 删除特征类
-            api_path = self.get_api_path("GEN-特征类定义表-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.chara_class_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-特征类定义表-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
 
-    # ================ 特征定义表基础管理 ================
+    # ================ 特征定义表管理 ================
     @case_decorator(
         story="特征定义表管理",
         title="测试新增特征定义",
@@ -284,47 +224,29 @@ class TestCharacteristicManagement(GenMdBaseTest):
         tags=["特征管理", "新增", "GEN_CHARA_MD_SAVE_ACTION_SERVICE"]
     )
     def test_save_chara(self):
-        """新增特征定义用例 - GEN_CHARA_MD_SAVE_ACTION_SERVICE"""
+        """新增特征定义用例"""
         try:
-            # 确保有特征类
+            if not self.chara_class_id:
+                self.test_save_chara_class()
+                
             chara_code = self.mock_util.generate_unique_code(tag="CHARA")
             chara_name = f"测试特征_{self.mock_util.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-特征定义表-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["code", "name", "charaClassId", "dataType", "charNo", "isCustom", "isRequired", "isSingleValue", "remark", "presetValues"], ["params", "request"]
-            )
             set_dict = {
-                "code": chara_code,
-                "name": chara_name,
-                "dataType":"STRING",
-                "charNo":40,
-                "isCustom":False,
-                "isRequired":False,
-                "isSingleValue":True,
-                "remark":f"测试特征描述_{self.mock_util.get_timestamp()}",
-                "presetValues":[
-                    {
-                        "value": f"特征1_{self.mock_util.get_timestamp()}",
-                        "defaultRelv": False
-                    },
-                    {
-                        "value": f"特征2_{self.mock_util.get_timestamp()}",
-                        "defaultRelv": True
-                    } 
-                ]
+                "charaCode": chara_code,
+                "charaName": chara_name,
+                "charaClassId": {"id": self.chara_class_id},
+                "remark": f"特征描述_{self.mock_util.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
             
-            self.chara_id = response.get("data", {}).get("data", {})
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            response, chara_id = self.standard_api_call(
+                api_key="GEN-特征定义表-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=["code", "name", "charaClassId", "remark"],
+                store_id_as="chara"
+            )
+            
+            self.chara_code = chara_code
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -341,22 +263,21 @@ class TestCharacteristicManagement(GenMdBaseTest):
     def test_query_characteristic_page(self):
         """查询特征定义分页列表用例"""
         try:
-            api_path = self.get_api_path("GEN-特征定义表-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields"], ["params", "request"]
-            )
             set_dict = {
-                "pageable": {"pageNo": 1, "pageSize": 20}
+                "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
+                "fields": [
+                    {"name": "code", "type": "TEXT"},
+                    {"name": "name", "type": "TEXT"},
+                    {"name": "remark", "type": "TEXT"}
+                ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-特征定义表-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=["pageable", "fields"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -376,20 +297,14 @@ class TestCharacteristicManagement(GenMdBaseTest):
             if not self.chara_id:
                 self.test_save_chara()
 
-            api_path = self.get_api_path("GEN-特征定义表-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.chara_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-特征定义表-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -409,20 +324,14 @@ class TestCharacteristicManagement(GenMdBaseTest):
             if not self.chara_id:
                 self.test_save_chara()
 
-            api_path = self.get_api_path("GEN-特征定义表-启用服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.chara_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-特征定义表-启用服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -442,20 +351,14 @@ class TestCharacteristicManagement(GenMdBaseTest):
             if not self.chara_id:
                 self.test_save_chara()
 
-            api_path = self.get_api_path("GEN-特征定义表-禁用服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.chara_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-特征定义表-禁用服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -472,25 +375,17 @@ class TestCharacteristicManagement(GenMdBaseTest):
     def test_delete_characteristic(self):
         """删除特征定义用例"""
         try:
-            # 确保有特征类
             if not self.chara_id:
                 self.test_save_chara()
 
-            # 删除特征
-            api_path = self.get_api_path("GEN-特征定义表-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.chara_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-特征定义表-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -509,28 +404,22 @@ class TestCharacteristicManagement(GenMdBaseTest):
     def test_characteristic_class_import(self):
         """特征类定义表标准导入用例"""
         try:
-            api_path = self.get_api_path("特征类定义表标准导入服务")
-            params, url = self.get_api_params(api_path)
-
             import_data = [
                 {
-                    "code": self.mock_util.generate_unique_code(tag="IMPORT_CHARACLASS"),
+                    "code": self.mock_util.generate_unique_code(tag="IMPORT_CHARA_CLASS"),
                     "name": f"导入测试特征类_{self.mock_util.get_timestamp()}",
-                    "description": "导入测试特征类描述"
+                    "remark": "导入测试特征类描述"
                 }
             ]
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["data"], ["params", "request"]
-            )
             set_dict = {"data": import_data}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="特征类定义表标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["data"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -548,26 +437,20 @@ class TestCharacteristicManagement(GenMdBaseTest):
     def test_characteristic_class_export(self):
         """特征类定义表标准导出用例"""
         try:
-            api_path = self.get_api_path("特征类定义表标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["selectFields"], ["params", "request"]
-            )
             set_dict = {
                 "selectFields": [
                     {"name": "code", "type": "TEXT"},
                     {"name": "name", "type": "TEXT"},
-                    {"name": "description", "type": "TEXT"}
+                    {"name": "remark", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="特征类定义表标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["selectFields"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -585,23 +468,17 @@ class TestCharacteristicManagement(GenMdBaseTest):
     def test_characteristic_class_oss_import_task(self):
         """特征类定义表OSS导入任务用例"""
         try:
-            api_path = self.get_api_path("特征类定义表-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ossPath", "taskName"], ["params", "request"]
-            )
             set_dict = {
-                "ossPath": "/test/characteristic_class_import.xlsx",
+                "fileKey": "test_chara_class_import.xlsx",
                 "taskName": f"特征类定义表导入任务_{self.mock_util.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="特征类定义表-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["fileKey", "taskName"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -619,30 +496,23 @@ class TestCharacteristicManagement(GenMdBaseTest):
     def test_characteristic_class_export_task(self):
         """特征类定义表导出任务用例"""
         try:
-            api_path = self.get_api_path("特征类定义表-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["exportConfig", "taskName"], ["params", "request"]
-            )
             set_dict = {
-                "exportConfig": {
+                "taskName": f"特征类定义表导出任务_{self.mock_util.get_timestamp()}",
+                "queryData": {
                     "fields": [
                         {"name": "code", "type": "TEXT"},
                         {"name": "name", "type": "TEXT"},
-                        {"name": "description", "type": "TEXT"}
-                    ],
-                    "condition": {}
-                },
-                "taskName": f"特征类定义表导出任务_{self.mock_util.get_timestamp()}"
+                        {"name": "remark", "type": "TEXT"}
+                    ]
+                }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="特征类定义表-导入导出任务管理接口-提交导出任务",
+                set_dict=set_dict,
+                fields_to_filter=["taskName", "queryData"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
