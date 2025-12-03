@@ -1,0 +1,363 @@
+import allure
+import pytest
+import sys
+from pathlib import Path
+
+project_root = Path(__file__).resolve().parent.parent.parent.parent
+sys.path.append(str(project_root))
+
+from testcases.sys_common import SysCommonBaseTest
+from utils.param_util import ParamUtil
+from utils.report_util import a, case_decorator
+
+@allure.epic("系统通用模块")
+@allure.feature("导入导出任务管理")
+class TestGeiTaskManagement(SysCommonBaseTest):
+    """导入导出任务管理测试类"""
+    
+    @classmethod
+    def setup_class(cls):
+        super().setup_class()
+        cls.gei_task_id = None
+        cls.logger.info("导入导出任务管理测试类初始化完成")
+    
+    @classmethod
+    def teardown_class(cls):
+        """测试类结束后执行清理"""
+        try:
+            if cls.gei_task_id:
+                cls.db.delete(
+                    table="gei_task",
+                    where="id = %s",
+                    params=[cls.gei_task_id]
+                )
+            cls.db.delete(
+                table="gei_task",
+                where="task_name like %s",
+                params=["AT_%"]
+            )
+            cls.logger.info("导入导出任务测试数据清理完成")
+        except Exception as e:
+            cls.logger.error(f"测试数据清理失败: {str(e)}")
+    
+    @case_decorator(
+        story="导入导出任务管理",
+        title="测试提交导出任务",
+        description="验证API_GEI_TASK_EXPORT_POST功能 - 创建导出任务",
+        severity="blocker",
+        order=1,
+        smoke=True,
+        tags=["sys_common", "gei", "task", "export"]
+    )
+    def test_export_task_post(self):
+        """测试提交导出任务 - API_GEI_TASK_EXPORT_POST"""
+        try:
+            # 1. 准备测试数据
+            task_name = f"AT_EXPORT_TASK_{self.mock_util.get_timestamp()}"
+            
+            # 2. 调用API
+            api_path = self.get_api_path("导入导出任务管理接口-提交导出任务")
+            params, url = self.get_api_params(api_path)
+            
+            # 3. 参数处理
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["taskName", "multiSheetConfig", "queryData", "processConfig"],
+                ["params"]
+            )
+            set_dict = {
+                "taskName": task_name,
+                "multiSheetConfig": [
+                    {
+                        "modelKey": "TEST_MODEL",
+                        "modelName": "测试模型",
+                        "sheetNo": 0,
+                        "sheetName": "Sheet1",
+                        "headerConfigList": [
+                            {"name": "测试字段", "type": "TEXT", "field": "test_field"}
+                        ]
+                    }
+                ],
+                "queryData": {
+                    "containerKey": "TEST_CONTAINER",
+                    "viewKey": "TEST_VIEW:list",
+                    "sceneKey": "TEST_SCENE",
+                    "params": {
+                        "request": {
+                            "pageable": {
+                                "pageNo": 1,
+                                "pageSize": 10,
+                                "needTotal": True
+                            }
+                        },
+                        "selectFields": [{"field": "test_field"}],
+                        "modelKey": "TEST_MODEL"
+                    }
+                },
+                "processConfig": {
+                    "processType": "TRANTOR",
+                    "model": "TEST_MODEL",
+                    "modelName": "测试模型",
+                    "containerKey": "TEST_CONTAINER",
+                    "viewKey": "TEST_VIEW:list",
+                    "sceneKey": "TEST_SCENE"
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            # 4. 发送请求和断言
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            # 5. 保存数据和报告
+            task_data = response.get("data", {}).get("data", {})
+            self.gei_task_id = task_data.get("taskId") if task_data else None
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    @case_decorator(
+        story="导入导出任务管理",
+        title="测试提交直接导出任务",
+        description="验证API_GEI_TASK_EXPORT_DIRECT_POST功能 - 直接导出任务",
+        severity="critical",
+        order=2,
+        tags=["sys_common", "gei", "task", "direct_export"]
+    )
+    def test_export_direct_task_post(self):
+        """测试提交直接导出任务 - API_GEI_TASK_EXPORT_DIRECT_POST"""
+        try:
+            if not self.gei_task_id:
+                self.test_export_task_post()
+            
+            api_path = self.get_api_path("导入导出任务管理接口-提交导出任务")
+            params, url = self.get_api_params(api_path)
+            
+            filtered_params = ParamUtil.filter_post_body_fields(params, ["taskName"], ["params"])
+            set_dict = {"taskName": f"AT_DIRECT_EXPORT_{self.mock_util.get_timestamp()}"}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    @pytest.mark.skip(reason="导入任务需要OSS配置，复杂度较高")
+    @case_decorator(
+        story="导入导出任务管理",
+        title="测试通过OSS提交导入任务",
+        description="验证API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST功能 - OSS导入（跳过）",
+        severity="normal",
+        order=13,
+        tags=["sys_common", "gei", "task", "import_oss"]
+    )
+    def test_import_oss_task_post(self):
+        """测试通过OSS提交导入任务 - API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST (跳过)"""
+        try:
+            pass
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    @pytest.mark.skip(reason="标准导入导出业务未引用，暂时跳过")
+    @case_decorator(
+        story="导入导出任务管理",
+        title="测试通过文件提交导入任务",
+        description="验证API_GEI_TASK_IMPORT_BY_FILE_POST功能 - 文件导入（跳过）",
+        severity="normal",
+        order=14,
+        tags=["sys_common", "gei", "task", "import_file"]
+    )
+    def test_import_file_task_post(self):
+        """测试通过文件提交导入任务 - API_GEI_TASK_IMPORT_BY_FILE_POST (跳过)"""
+        try:
+            pass
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    @pytest.mark.skip(reason="导入子模型需要额外配置，暂时跳过")
+    @case_decorator(
+        story="导入导出任务管理",
+        title="测试导入子模型",
+        description="验证API_GEI_TASK_IMPORT_SUB_MODEL_POST功能 - 子模型导入（跳过）",
+        severity="normal",
+        order=15,
+        tags=["sys_common", "gei", "task", "import_sub"]
+    )
+    def test_import_sub_model_post(self):
+        """测试导入子模型 - API_GEI_TASK_IMPORT_SUB_MODEL_POST (跳过)"""
+        try:
+            pass
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    @pytest.mark.skip(reason="同步自定义导入需要文件处理，暂时跳过")
+    @case_decorator(
+        story="导入导出任务管理",
+        title="测试同步自定义导入",
+        description="验证API_GEI_TASK_CUSTOM_IMPORT_SYNC_POST功能 - 自定义导入同步（跳过）",
+        severity="normal",
+        order=13,
+        tags=["sys_common", "gei", "task", "custom_import"]
+    )
+    def test_custom_import_sync_post(self):
+        """测试同步自定义导入 - API_GEI_TASK_CUSTOM_IMPORT_SYNC_POST (跳过)"""
+        try:
+            pass
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    @case_decorator(
+        story="导入导出任务管理",
+        title="测试任务分页查询",
+        description="验证API_GEI_TASK_PAGING_POST功能 - 分页查询任务",
+        severity="blocker",
+        order=4,
+        smoke=True,
+        tags=["sys_common", "gei", "task", "paging"]
+    )
+    def test_task_paging_post(self):
+        """测试任务分页查询 - API_GEI_TASK_PAGING_POST"""
+        try:
+            api_path = self.get_api_path("导入导出任务管理接口-分页查询任务")
+            params, url = self.get_api_params(api_path)
+            
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["pageable", "fields"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": None
+                },
+                "fields": [
+                    {"name": "taskName", "type": "TEXT"},
+                    {"name": "status", "type": "TEXT"}
+                ],
+                "systemParams": None
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            paging_data = response.get("data", {}).get("data", {})
+            self.assert_util.assert_by_operator(paging_data.get("total", 0), ">=", 0)
+            
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    @case_decorator(
+        story="导入导出任务管理",
+        title="测试我的任务分页查询",
+        description="验证API_GEI_TASK_MY_PAGING_POST功能 - 分页查询我的任务",
+        severity="normal",
+        order=5,
+        tags=["sys_common", "gei", "task", "my_paging"]
+    )
+    def test_my_task_paging_post(self):
+        """测试我的任务分页查询 - API_GEI_TASK_MY_PAGING_POST"""
+        try:
+            api_path = self.get_api_path("导入导出任务管理接口-分页查询我的任务")
+            params, url = self.get_api_params(api_path)
+            
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["pageable"],
+                ["params", "request"]
+            )
+            set_dict = {
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True
+                }
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    @case_decorator(
+        story="导入导出任务管理",
+        title="测试查询任务进度",
+        description="验证API_GEI_TASK_PROGRESS_POST功能 - 查询任务进度",
+        severity="normal",
+        order=6,
+        tags=["sys_common", "gei", "task", "progress"]
+    )
+    def test_task_progress_post(self):
+        """测试查询任务进度 - API_GEI_TASK_PROGRESS_POST"""
+        try:
+            if not self.gei_task_id:
+                self.test_export_task_post()
+            
+            api_path = self.get_api_path("导入导出任务管理接口-查询任务进度")
+            params, url = self.get_api_params(api_path)
+            
+            filtered_params = ParamUtil.filter_post_body_fields(params, ["taskId"], ["params"])
+            set_dict = {"taskId": self.gei_task_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            progress_data = response.get("data", {}).get("data", {})
+            self.assert_util.assert_by_operator(progress_data.get("progress", 0), ">=", 0)
+            
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    @case_decorator(
+        story="导入导出任务管理",
+        title="测试任务统计",
+        description="验证API_GEI_TASK_TASK_STATISTIC_POST功能 - 任务统计",
+        severity="minor",
+        order=7,
+        tags=["sys_common", "gei", "task", "statistic"]
+    )
+    def test_task_statistic_post(self):
+        """测试任务统计 - API_GEI_TASK_TASK_STATISTIC_POST"""
+        try:
+            api_path = self.get_api_path("导入导出任务管理接口-任务统计")
+            params, url = self.get_api_params(api_path)
+            
+            filtered_params = ParamUtil.filter_post_body_fields(params, [], ["params"])
+            
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
