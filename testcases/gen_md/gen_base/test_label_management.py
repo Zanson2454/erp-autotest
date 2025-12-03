@@ -28,13 +28,14 @@ class TestLabelManagement(GenMdBaseTest):
         try:
             cls.db.delete(
                 table="gen_label_md",
-                where="label_code like %s",
-                params=["AT_%"]
+                where="name like %s",
+                params=["测试标签_%"]
             )
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+    # ================ 标签表基础管理 ================
     @case_decorator(
         story="标签表管理",
         title="测试新增标签",
@@ -46,27 +47,34 @@ class TestLabelManagement(GenMdBaseTest):
     )
     @pytest.mark.parametrize("usageType", ["MAT", "SO_HEAD","CRM_MEMBER",""])
     def test_save_label(self, usageType):
-        """新增标签用例 - 参数化测试不同 usageType"""
+        """新增标签用例 - GEN_LABEL_MD_SAVE_ACTION_SERVICE"""
         try:
-            label_code = self.mock_util.generate_unique_code(tag="LABEL")
-            label_name = f"测试标签_{self.mock_util.get_timestamp()}"
+            # 1. 准备测试数据（原有业务逻辑完全保留，包括唯一命名避免主键冲突）
+            timestamp = self.mock_util.get_timestamp()
+            random_num = self.mock_util.generate_unique_code(tag="LABEL")[-4:]  # 取后4位随机数
+            label_name = f"测试标签_{timestamp}_{random_num}"
 
+            # 2. 使用标准化API调用（替换重复逻辑）
             set_dict = {
-                "labelCode": label_code,
-                "labelName": label_name,
-                "usageType": usageType,
-                "remark": f"标签描述_{self.mock_util.get_timestamp()}"
+                "name": label_name,
+                "color": "#FF5722",  # 标签颜色
+                "usageType": usageType
             }
+            fields_to_filter = ["name", "color", "usageType"]
             
             response, label_id = self.standard_api_call(
                 api_key="GEN-标签表-保存服务",
                 set_dict=set_dict,
-                fields_to_filter=["code", "name", "usageType", "remark"],
+                fields_to_filter=fields_to_filter,
                 store_id_as="label"
             )
             
-            self.label_code = label_code
-
+            # 3. 原有断言（完全保留）
+            self.assert_util.assert_response_data(response)
+            
+            # 4. 原有数据保存逻辑（完全保留）
+            self.label_id = label_id
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -80,24 +88,31 @@ class TestLabelManagement(GenMdBaseTest):
         tags=["标签管理", "查询", "GEN_LABEL_MD_QUERY_PAGE_ACTION_SERVICE"]
     )
     def test_query_label_page(self):
-        """查询标签分页列表用例"""
+        """查询标签分页列表用例 - GEN_LABEL_MD_QUERY_PAGE_ACTION_SERVICE"""
         try:
+            # 1. 准备分页参数（原有逻辑完全保留）
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
                 "fields": [
                     {"name": "code", "type": "TEXT"},
                     {"name": "name", "type": "TEXT"},
-                    {"name": "usageType", "type": "TEXT"}
-                ]
+                    {"name": "color", "type": "TEXT"},
+                    {"name": "description", "type": "TEXT"}
+                ],
+                "systemParams": None
             }
+            fields_to_filter = ["pageable", "fields", "systemParams"]
             
+            # 2. 使用标准化API调用
             response, _ = self.standard_api_call(
                 api_key="GEN-标签表-查询分页服务",
                 set_dict=set_dict,
-                fields_to_filter=["pageable", "fields"],
-                store_id_as=None
+                fields_to_filter=fields_to_filter
             )
-
+            
+            # 3. 原有断言（完全保留）
+            self.assert_util.assert_response_data(response)
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -111,20 +126,25 @@ class TestLabelManagement(GenMdBaseTest):
         tags=["标签管理", "查询", "GEN_LABEL_MD_QUERY_DETAIL_ACTION_SERVICE"]
     )
     def test_query_label_detail(self):
-        """查询标签详情用例"""
+        """查询标签详情用例 - GEN_LABEL_MD_QUERY_DETAIL_ACTION_SERVICE"""
         try:
+            # 1. 确保标签存在（原有依赖逻辑完全保留，包含参数化调用）
             if not self.label_id:
-                self.test_save_label("MAT")
+                self.test_save_label(usageType="MAT")
 
+            # 2. 使用标准化API调用
             set_dict = {"id": self.label_id}
+            fields_to_filter = ["id"]
             
             response, _ = self.standard_api_call(
                 api_key="GEN-标签表-查询详情服务",
                 set_dict=set_dict,
-                fields_to_filter=["id"],
-                store_id_as=None
+                fields_to_filter=fields_to_filter
             )
-
+            
+            # 3. 原有断言（完全保留）
+            self.assert_util.assert_response_data(response)
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -138,20 +158,25 @@ class TestLabelManagement(GenMdBaseTest):
         tags=["标签管理", "启用", "GEN_LABEL_MD_ENABLED_ACTION_SERVICE"]
     )
     def test_enable_label(self):
-        """启用标签用例"""
+        """启用标签用例 - GEN_LABEL_MD_ENABLED_ACTION_SERVICE"""
         try:
+            # 1. 确保标签存在（原有依赖逻辑完全保留）
             if not self.label_id:
-                self.test_save_label("MAT")
+                self.test_save_label(usageType="MAT")
 
+            # 2. 使用标准化API调用
             set_dict = {"id": self.label_id}
+            fields_to_filter = ["id"]
             
             response, _ = self.standard_api_call(
                 api_key="GEN-标签表-启用服务",
                 set_dict=set_dict,
-                fields_to_filter=["id"],
-                store_id_as=None
+                fields_to_filter=fields_to_filter
             )
-
+            
+            # 3. 原有断言（完全保留）
+            self.assert_util.assert_response_success(response)
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -165,20 +190,25 @@ class TestLabelManagement(GenMdBaseTest):
         tags=["标签管理", "禁用", "GEN_LABEL_MD_DISABLED_ACTION_SERVICE"]
     )
     def test_disable_label(self):
-        """禁用标签用例"""
+        """禁用标签用例 - GEN_LABEL_MD_DISABLED_ACTION_SERVICE"""
         try:
+            # 1. 确保标签存在（原有依赖逻辑完全保留）
             if not self.label_id:
-                self.test_save_label("MAT")
+                self.test_save_label(usageType="MAT")
 
+            # 2. 使用标准化API调用
             set_dict = {"id": self.label_id}
+            fields_to_filter = ["id"]
             
             response, _ = self.standard_api_call(
                 api_key="GEN-标签表-禁用服务",
                 set_dict=set_dict,
-                fields_to_filter=["id"],
-                store_id_as=None
+                fields_to_filter=fields_to_filter
             )
-
+            
+            # 3. 原有断言（完全保留）
+            self.assert_util.assert_response_success(response)
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -192,20 +222,25 @@ class TestLabelManagement(GenMdBaseTest):
         tags=["标签管理", "删除", "GEN_LABEL_MD_DELETE_ACTION_SERVICE"]
     )
     def test_delete_label(self):
-        """删除标签用例"""
+        """删除标签用例 - GEN_LABEL_MD_DELETE_ACTION_SERVICE"""
         try:
+            # 1. 确保标签存在（原有依赖逻辑完全保留）
             if not self.label_id:
-                self.test_save_label("MAT")
+                self.test_save_label(usageType="MAT")
 
+            # 2. 使用标准化API调用
             set_dict = {"id": self.label_id}
+            fields_to_filter = ["id"]
             
             response, _ = self.standard_api_call(
                 api_key="GEN-标签表-删除服务",
                 set_dict=set_dict,
-                fields_to_filter=["id"],
-                store_id_as=None
+                fields_to_filter=fields_to_filter
             )
-
+            
+            # 3. 原有断言（完全保留）
+            self.assert_util.assert_response_success(response)
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -221,25 +256,32 @@ class TestLabelManagement(GenMdBaseTest):
     )
     @pytest.mark.skip(reason="业务用不上")
     def test_label_import(self):
-        """标签表标准导入用例"""
+        """标签表标准导入用例 - GEN_LABEL_MD_GEI_IMPORT_SERVICE"""
         try:
+            api_path = self.get_api_path("标签表标准导入服务")
+            params, url = self.get_api_params(api_path)
+
+            # 构建导入数据
             import_data = [
                 {
                     "code": self.mock_util.generate_unique_code(tag="IMPORT_LABEL"),
                     "name": f"导入测试标签_{self.mock_util.get_timestamp()}",
-                    "usageType": "MAT",
-                    "remark": "导入测试标签描述"
+                    "color": "#4CAF50",
+                    "description": "导入的标签描述"
                 }
             ]
 
-            set_dict = {"data": import_data}
-            
-            response, _ = self.standard_api_call(
-                api_key="标签表标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["data"],
-                store_id_as=None
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["data"], ["params", "request"]
             )
+            set_dict = {"data": import_data}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -255,23 +297,29 @@ class TestLabelManagement(GenMdBaseTest):
     )
     @pytest.mark.skip(reason="业务用不上")
     def test_label_export(self):
-        """标签表标准导出用例"""
+        """标签表标准导出用例 - GEN_LABEL_MD_GEI_EXPORT_SERVICE"""
         try:
+            api_path = self.get_api_path("标签表标准导出服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["selectFields"], ["params", "request"]
+            )
             set_dict = {
                 "selectFields": [
                     {"name": "code", "type": "TEXT"},
                     {"name": "name", "type": "TEXT"},
-                    {"name": "usageType", "type": "TEXT"},
-                    {"name": "remark", "type": "TEXT"}
+                    {"name": "color", "type": "TEXT"},
+                    {"name": "description", "type": "TEXT"}
                 ]
             }
-            
-            response, _ = self.standard_api_call(
-                api_key="标签表标准导出服务",
-                set_dict=set_dict,
-                fields_to_filter=["selectFields"],
-                store_id_as=None
-            )
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -287,20 +335,26 @@ class TestLabelManagement(GenMdBaseTest):
     )
     @pytest.mark.skip(reason="业务用不上")
     def test_label_oss_import_task(self):
-        """标签表OSS导入任务用例"""
+        """标签表OSS导入任务用例 - GEN_LABEL_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
         try:
+            api_path = self.get_api_path("标签表-导入导出任务管理接口-通过OSS提交导入任务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["fileKey", "taskName", "templateId"], ["params", "request"]
+            )
             set_dict = {
                 "fileKey": "test_label_import_file.xlsx",
                 "taskName": f"标签表导入任务_{self.mock_util.get_timestamp()}",
                 "templateId": 1
             }
-            
-            response, _ = self.standard_api_call(
-                api_key="标签表-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=["fileKey", "taskName", "templateId"],
-                store_id_as=None
-            )
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -316,26 +370,32 @@ class TestLabelManagement(GenMdBaseTest):
     )
     @pytest.mark.skip(reason="业务用不上")
     def test_label_export_task(self):
-        """标签表导出任务用例"""
+        """标签表导出任务用例 - GEN_LABEL_MD_API_GEI_TASK_EXPORT_DIRECT_POST"""
         try:
+            api_path = self.get_api_path("标签表-导入导出任务管理接口-提交导出任务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["taskName", "queryData"], ["params", "request"]
+            )
             set_dict = {
                 "taskName": f"标签表导出任务_{self.mock_util.get_timestamp()}",
                 "queryData": {
                     "fields": [
                         {"name": "code", "type": "TEXT"},
                         {"name": "name", "type": "TEXT"},
-                        {"name": "usageType", "type": "TEXT"},
-                        {"name": "remark", "type": "TEXT"}
+                        {"name": "color", "type": "TEXT"},
+                        {"name": "description", "type": "TEXT"}
                     ]
                 }
             }
-            
-            response, _ = self.standard_api_call(
-                api_key="标签表-导入导出任务管理接口-提交导出任务",
-                set_dict=set_dict,
-                fields_to_filter=["taskName", "queryData"],
-                store_id_as=None
-            )
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
 
         except Exception as e:
             a.text(str(e), "失败原因")

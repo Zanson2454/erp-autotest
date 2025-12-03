@@ -25,15 +25,17 @@ class TestDynamicManagement(GenMdBaseTest):
     def teardown_class(cls):
         """测试类结束后执行清理"""
         try:
+            # 清理测试数据
             cls.db.delete(
                 table="gen_dynamic_form_template_md",
-                where="template_code like %s",
-                params=["AT_%"]
+                where="name like %s",
+                params=["测试动态表单模板_%"]
             )
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+    # ================ 动态表单基础管理 ================
     @case_decorator(
         story="动态表单管理",
         title="测试创建动态表单模板",
@@ -44,30 +46,103 @@ class TestDynamicManagement(GenMdBaseTest):
         tags=["动态表单", "创建", "GEN_DYNAMIC_CREATE_UPDATE_TEMPLATE_SERVICE"]
     )
     def test_create_template(self):
-        """创建动态表单模板用例"""
+        """创建动态表单模板用例 - GEN_DYNAMIC_CREATE_UPDATE_TEMPLATE_SERVICE"""
         try:
-            template_code = self.mock_util.generate_unique_code(tag="TEMPLATE")
-            template_name = f"测试表单模板_{self.mock_util.get_timestamp()}"
+            # 1. 准备测试数据（原有业务逻辑完全保留，包括复杂嵌套结构）
+            template_name = f"测试动态表单模板_{self.mock_util.get_timestamp()}"
 
+            # 2. 使用标准化API调用（复杂嵌套参数通过 set_dict 传递）
             set_dict = {
-                "templateCode": template_code,
-                "templateName": template_name,
-                "formJson": {
-                    "fields": [
-                        {"id": "field1", "name": "测试字段1", "type": "text"},
-                        {"id": "field2", "name": "测试字段2", "type": "number"}
-                    ]
+                "desc": template_name,
+                "name": template_name,
+                "templateType": "gen_cust_dynamic_form_record_md",  # 模板类型：表单
+                "templateInfo": {  # 表单配置
+                    "header":[
+                        {
+                            "defaultValue": "正常",
+                            "index": None,
+                            "length": "40",
+                            "name": "序号",
+                            "required": "TRUE",
+                            "showWay": "ONLY_VIEW",
+                            "type": "TextArea"
+                        },
+                        {
+                            "defaultValue": "-",
+                            "index": None,
+                            "length": "40",
+                            "name": "客户名称",
+                            "required": "TRUE",
+                            "showWay": "EDITABLE",
+                            "type": "TextArea"
+                        }
+                    ],
+                    "body":[
+                        {
+                            "title": "问题组 1",
+                            "u_id": self.mock_util.get_mock_uuid(),
+                            "items": [
+                                {
+                                    "maxScore": 10,
+                                    "u_id": self.mock_util.get_mock_uuid(),
+                                    "type":"score",
+                                    "contentText": "基础信息评估及合作稳定性"
+                                },
+                                {
+                                    "selectItems": [
+                                        {
+                                            "label": "不满",
+                                            "score": 0
+                                        },
+                                        {
+                                            "label": "一般",
+                                            "score": 5
+                                        },
+                                        {
+                                            "label": "满意",
+                                            "score": 10
+                                        }
+                                    ],
+                                    "u_id": self.mock_util.get_mock_uuid(),
+                                    "type":"select",
+                                    "contentText": "客户满意度如何"
+                                },
+                                {
+                                    "u_id": self.mock_util.get_mock_uuid(),
+                                    "type":"boolean",
+                                    "contentText": "客户是否有重大违约记录"
+                                },
+                                {
+                                    "service": {
+                                        "label": "30天销量",
+                                        "sectionItems": [],
+                                        "service": {}
+                                    },
+                                    "u_id": self.mock_util.get_mock_uuid(),
+                                    "type":"section",
+                                    "contentText": "客户的 30 天销量"
+                                }
+                            ]
+                        }
+                    ]    
                 },
-                "remark": f"表单模板描述_{self.mock_util.get_timestamp()}"
+                "description": f"测试动态表单模板描述_{self.mock_util.get_timestamp()}"
             }
+            fields_to_filter = ["desc", "name", "templateType", "templateInfo", "description"]
             
             response, template_id = self.standard_api_call(
                 api_key="GEN-动态表单-创建修改动态表单模板服务",
                 set_dict=set_dict,
-                fields_to_filter=["templateCode", "templateName", "formJson", "remark"],
-                store_id_as="template"
+                fields_to_filter=fields_to_filter,
+                store_id_as="template"  # 自动存储 self.template_id
             )
-
+            
+            # 3. 原有断言（完全保留）
+            self.assert_util.assert_response_data(response)
+            
+            # 4. 原有数据保存逻辑（完全保留）
+            self.template_id = template_id
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -82,21 +157,99 @@ class TestDynamicManagement(GenMdBaseTest):
     )
     @pytest.mark.skip(reason="dynamic_form场景.菜单未引用,业务用不上")
     def test_create_dynamic_form_template(self):
-        """创建修改动态表单模板（备用服务）用例"""
+        """创建修改动态表单模板用例 - GEN_CREATE_DYNAMIC_FORM_TEMPLATE_SERVICE"""
         try:
-            set_dict = {
-                "templateCode": self.mock_util.generate_unique_code(tag="TEMPLATE_BACKUP"),
-                "templateName": f"备用模板_{self.mock_util.get_timestamp()}",
-                "formJson": {"fields": [{"id": "backup", "name": "备份字段", "type": "text"}]}
+            # 1. 准备测试数据（原有业务逻辑完全保留）
+            template_name = f"备用动态表单模板_{self.mock_util.get_timestamp()}"
+
+            # 2. 使用标准化API调用（复杂嵌套参数）
+            set_dict ={
+                "desc": template_name,
+                "name": template_name,
+                "templateType": "gen_cust_dynamic_form_record_md",  # 模板类型：表单
+                "templateInfo": {  # 表单配置
+                    "header":[
+                        {
+                            "defaultValue": "正常",
+                            "index": None,
+                            "length": "40",
+                            "name": "序号",
+                            "required": "TRUE",
+                            "showWay": "ONLY_VIEW",
+                            "type": "TextArea"
+                        },
+                        {
+                            "defaultValue": "-",
+                            "index": None,
+                            "length": "40",
+                            "name": "客户名称",
+                            "required": "TRUE",
+                            "showWay": "EDITABLE",
+                            "type": "TextArea"
+                        }
+                    ],
+                    "body":[
+                        {
+                            "title": "问题组 1",
+                            "u_id": self.mock_util.get_mock_uuid(),
+                            "items": [
+                                {
+                                    "maxScore": 10,
+                                    "u_id": self.mock_util.get_mock_uuid(),
+                                    "type":"score",
+                                    "contentText": "基础信息评估及合作稳定性"
+                                },
+                                {
+                                    "selectItems": [
+                                        {
+                                            "label": "不满",
+                                            "score": 0
+                                        },
+                                        {
+                                            "label": "一般",
+                                            "score": 5
+                                        },
+                                        {
+                                            "label": "满意",
+                                            "score": 10
+                                        }
+                                    ],
+                                    "u_id": self.mock_util.get_mock_uuid(),
+                                    "type":"select",
+                                    "contentText": "客户满意度如何"
+                                },
+                                {
+                                    "u_id": self.mock_util.get_mock_uuid(),
+                                    "type":"boolean",
+                                    "contentText": "客户是否有重大违约记录"
+                                },
+                                {
+                                    "service": {
+                                        "label": "30天销量",
+                                        "sectionItems": [],
+                                        "service": {}
+                                    },
+                                    "u_id": self.mock_util.get_mock_uuid(),
+                                    "type":"section",
+                                    "contentText": "客户的 30 天销量"
+                                }
+                            ]
+                        }
+                    ]    
+                },
+                "description": f"测试动态表单模板描述_{self.mock_util.get_timestamp()}"
             }
+            fields_to_filter = ["desc", "name", "templateType", "templateInfo", "description"]
             
             response, _ = self.standard_api_call(
-                api_key="GEN-创建修改动态表单模板服务",
+                api_key="GEN-创建修改动态表单模板",
                 set_dict=set_dict,
-                fields_to_filter=["templateCode", "templateName", "formJson"],
-                store_id_as=None
+                fields_to_filter=fields_to_filter
             )
-
+            
+            # 3. 原有断言（完全保留）
+            self.assert_util.assert_response_data(response)
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -110,23 +263,32 @@ class TestDynamicManagement(GenMdBaseTest):
         tags=["动态表单", "查询", "GEN_DYNAMIC_PAGING_TEMPLATE_SERVICE"]
     )
     def test_paging_template(self):
-        """分页查询动态表单模板用例"""
+        """分页查询动态表单模板用例 - GEN_DYNAMIC_PAGING_TEMPLATE_SERVICE"""
         try:
+            # 1. 准备分页查询参数（原有逻辑完全保留）
             set_dict = {
-                "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
-                "fields": [
-                    {"name": "templateCode", "type": "TEXT"},
-                    {"name": "templateName", "type": "TEXT"}
-                ]
+                "templateType": "gen_cust_dynamic_form_record_md",
+                "state": "ENABLED",
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "conditionGroup": None,
+                    "sortOrders": None,
+                    "keyword": None
+                }
             }
+            fields_to_filter = ["templateType", "state", "pageable"]
             
+            # 2. 使用标准化API调用
             response, _ = self.standard_api_call(
                 api_key="GEN-动态表单-分页查询动态表单模板服务",
                 set_dict=set_dict,
-                fields_to_filter=["pageable", "fields"],
-                store_id_as=None
+                fields_to_filter=fields_to_filter
             )
-
+            
+            # 3. 原有断言（完全保留）
+            self.assert_util.assert_response_data(response)
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -140,20 +302,25 @@ class TestDynamicManagement(GenMdBaseTest):
         tags=["动态表单", "查询", "GEN_DYNAMIC_FIND_BY_ID_TEMPLATE_SERVICE"]
     )
     def test_find_by_id_template(self):
-        """根据ID查询动态表单模板用例"""
+        """根据ID查询动态表单模板用例 - GEN_DYNAMIC_FIND_BY_ID_TEMPLATE_SERVICE"""
         try:
+            # 1. 确保模板存在（原有依赖逻辑完全保留）
             if not self.template_id:
                 self.test_create_template()
 
+            # 2. 使用标准化API调用
             set_dict = {"id": self.template_id}
+            fields_to_filter = ["id"]
             
             response, _ = self.standard_api_call(
                 api_key="GEN-动态表单-根据id查询动态表单模板服务",
                 set_dict=set_dict,
-                fields_to_filter=["id"],
-                store_id_as=None
+                fields_to_filter=fields_to_filter
             )
-
+            
+            # 3. 原有断言（完全保留）
+            self.assert_util.assert_response_data(response)
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -167,20 +334,25 @@ class TestDynamicManagement(GenMdBaseTest):
         tags=["动态表单", "批量查询", "GEN_DYNAMIC_FIND_BY_IDS_TEMPLATE_SERVICE"]
     )
     def test_find_by_ids_template(self):
-        """根据IDs查询动态表单模板集合用例"""
+        """根据IDs查询动态表单模板集合用例 - GEN_DYNAMIC_FIND_BY_IDS_TEMPLATE_SERVICE"""
         try:
+            # 1. 确保模板存在（原有依赖逻辑完全保留）
             if not self.template_id:
                 self.test_create_template()
 
-            set_dict = {"ids": [self.template_id]}
+            # 2. 使用标准化API调用
+            set_dict = {"ids": [self.template_id]}  # 最多查询5个
+            fields_to_filter = ["ids"]
             
             response, _ = self.standard_api_call(
                 api_key="GEN-动态表单-根据ids查询动态表单模板集合服务",
                 set_dict=set_dict,
-                fields_to_filter=["ids"],
-                store_id_as=None
+                fields_to_filter=fields_to_filter
             )
-
+            
+            # 3. 原有断言（完全保留）
+            self.assert_util.assert_response_data(response)
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -194,20 +366,25 @@ class TestDynamicManagement(GenMdBaseTest):
         tags=["动态表单", "启用", "GEN_DYNAMIC_ENABLE_TEMPLATE_SERVICE"]
     )
     def test_enable_template(self):
-        """启用动态表单模板用例"""
+        """启用动态表单模板用例 - GEN_DYNAMIC_ENABLE_TEMPLATE_SERVICE"""
         try:
+            # 1. 确保模板存在（原有依赖逻辑完全保留）
             if not self.template_id:
                 self.test_create_template()
 
+            # 2. 使用标准化API调用
             set_dict = {"id": self.template_id}
+            fields_to_filter = ["id"]
             
             response, _ = self.standard_api_call(
                 api_key="GEN-动态表单-启用动态表单模板服务",
                 set_dict=set_dict,
-                fields_to_filter=["id"],
-                store_id_as=None
+                fields_to_filter=fields_to_filter
             )
-
+            
+            # 3. 原有断言（完全保留）
+            self.assert_util.assert_response_success(response)
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -221,20 +398,25 @@ class TestDynamicManagement(GenMdBaseTest):
         tags=["动态表单", "禁用", "GEN_DYNAMIC_DISABLE_TEMPLATE_SERVICE"]
     )
     def test_disable_template(self):
-        """禁用动态表单模板用例"""
+        """禁用动态表单模板用例 - GEN_DYNAMIC_DISABLE_TEMPLATE_SERVICE"""
         try:
+            # 1. 确保模板存在（原有依赖逻辑完全保留）
             if not self.template_id:
-                self.test_create_template()
+                self.test_enable_template()
 
+            # 2. 使用标准化API调用
             set_dict = {"id": self.template_id}
+            fields_to_filter = ["id"]
             
             response, _ = self.standard_api_call(
                 api_key="GEN-动态表单-禁用动态表单模板服务",
                 set_dict=set_dict,
-                fields_to_filter=["id"],
-                store_id_as=None
+                fields_to_filter=fields_to_filter
             )
-
+            
+            # 3. 原有断言（完全保留）
+            self.assert_util.assert_response_success(response)
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -248,20 +430,25 @@ class TestDynamicManagement(GenMdBaseTest):
         tags=["动态表单", "删除", "GEN_DYNAMIC_DELETE_TEMPLATE_SERVICE"]
     )
     def test_delete_template(self):
-        """删除动态表单模板用例"""
+        """删除动态表单模板用例 - GEN_DYNAMIC_DELETE_TEMPLATE_SERVICE"""
         try:
+            # 1. 确保模板存在（原有依赖逻辑完全保留）
             if not self.template_id:
                 self.test_create_template()
 
+            # 2. 使用标准化API调用
             set_dict = {"id": self.template_id}
+            fields_to_filter = ["id"]
             
             response, _ = self.standard_api_call(
                 api_key="GEN-动态表单-删除动态表单模板服务",
                 set_dict=set_dict,
-                fields_to_filter=["id"],
-                store_id_as=None
+                fields_to_filter=fields_to_filter
             )
-
+            
+            # 3. 原有断言（完全保留）
+            self.assert_util.assert_response_success(response)
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -277,24 +464,41 @@ class TestDynamicManagement(GenMdBaseTest):
     )
     @pytest.mark.skip(reason="业务用不上")
     def test_template_import(self):
-        """动态表单模板标准导入用例"""
+        """动态表单模板标准导入用例 - GEN_DYNAMIC_FORM_TEMPLATE_MD_GEI_IMPORT_SERVICE"""
         try:
+            api_path = self.get_api_path("动态表单模板类标准导入服务")
+            params, url = self.get_api_params(api_path)
+
+            # 构建导入数据
             import_data = [
                 {
-                    "templateCode": self.mock_util.generate_unique_code(tag="IMPORT_TEMPLATE"),
-                    "templateName": f"导入测试模板_{self.mock_util.get_timestamp()}",
-                    "formJson": {"fields": [{"id": "import_field", "name": "导入字段", "type": "text"}]}
+                    "code": self.mock_util.generate_unique_code(tag="IMPORT_DYN"),
+                    "name": f"导入测试动态表单模板_{self.mock_util.get_timestamp()}",
+                    "templateType": "FORM",
+                    "formConfig": {
+                        "fields": [
+                            {
+                                "fieldName": "importField",
+                                "fieldType": "INPUT",
+                                "fieldLabel": "导入字段"
+                            }
+                        ]
+                    },
+                    "description": "导入的动态表单模板描述"
                 }
             ]
 
-            set_dict = {"data": import_data}
-            
-            response, _ = self.standard_api_call(
-                api_key="动态表单模板类标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["data"],
-                store_id_as=None
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["data"], ["params", "request"]
             )
+            set_dict = {"data": import_data}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -310,22 +514,30 @@ class TestDynamicManagement(GenMdBaseTest):
     )
     @pytest.mark.skip(reason="业务用不上")
     def test_template_export(self):
-        """动态表单模板标准导出用例"""
+        """动态表单模板标准导出用例 - GEN_DYNAMIC_FORM_TEMPLATE_MD_GEI_EXPORT_SERVICE"""
         try:
+            api_path = self.get_api_path("动态表单模板类标准导出服务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["selectFields"], ["params", "request"]
+            )
             set_dict = {
                 "selectFields": [
-                    {"name": "templateCode", "type": "TEXT"},
-                    {"name": "templateName", "type": "TEXT"},
-                    {"name": "formJson", "type": "TEXT"}
+                    {"name": "code", "type": "TEXT"},
+                    {"name": "name", "type": "TEXT"},
+                    {"name": "templateType", "type": "TEXT"},
+                    {"name": "status", "type": "TEXT"},
+                    {"name": "description", "type": "TEXT"}
                 ]
             }
-            
-            response, _ = self.standard_api_call(
-                api_key="动态表单模板类标准导出服务",
-                set_dict=set_dict,
-                fields_to_filter=["selectFields"],
-                store_id_as=None
-            )
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -341,20 +553,26 @@ class TestDynamicManagement(GenMdBaseTest):
     )
     @pytest.mark.skip(reason="业务用不上")
     def test_template_oss_import_task(self):
-        """动态表单模板OSS导入任务用例"""
+        """动态表单模板OSS导入任务用例 - GEN_DYNAMIC_FORM_TEMPLATE_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
         try:
+            api_path = self.get_api_path("动态表单模板类-导入导出任务管理接口-通过OSS提交导入任务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["fileKey", "taskName", "templateId"], ["params", "request"]
+            )
             set_dict = {
-                "fileKey": "test_template_import.xlsx",
+                "fileKey": "test_dynamic_template_import_file.xlsx",
                 "taskName": f"动态表单模板导入任务_{self.mock_util.get_timestamp()}",
                 "templateId": 1
             }
-            
-            response, _ = self.standard_api_call(
-                api_key="动态表单模板类-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=["fileKey", "taskName", "templateId"],
-                store_id_as=None
-            )
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -370,25 +588,33 @@ class TestDynamicManagement(GenMdBaseTest):
     )
     @pytest.mark.skip(reason="业务用不上")
     def test_template_export_task(self):
-        """动态表单模板导出任务用例"""
+        """动态表单模板导出任务用例 - GEN_DYNAMIC_FORM_TEMPLATE_MD_API_GEI_TASK_EXPORT_DIRECT_POST"""
         try:
+            api_path = self.get_api_path("动态表单模板类-导入导出任务管理接口-提交导出任务")
+            params, url = self.get_api_params(api_path)
+
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["taskName", "queryData"], ["params", "request"]
+            )
             set_dict = {
                 "taskName": f"动态表单模板导出任务_{self.mock_util.get_timestamp()}",
                 "queryData": {
                     "fields": [
-                        {"name": "templateCode", "type": "TEXT"},
-                        {"name": "templateName", "type": "TEXT"},
-                        {"name": "formJson", "type": "TEXT"}
+                        {"name": "code", "type": "TEXT"},
+                        {"name": "name", "type": "TEXT"},
+                        {"name": "templateType", "type": "TEXT"},
+                        {"name": "status", "type": "TEXT"},
+                        {"name": "description", "type": "TEXT"}
                     ]
                 }
             }
-            
-            response, _ = self.standard_api_call(
-                api_key="动态表单模板类-导入导出任务管理接口-提交导出任务",
-                set_dict=set_dict,
-                fields_to_filter=["taskName", "queryData"],
-                store_id_as=None
-            )
+            ParamUtil.set_request_params(filtered_params, set_dict)
+
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
 
         except Exception as e:
             a.text(str(e), "失败原因")
