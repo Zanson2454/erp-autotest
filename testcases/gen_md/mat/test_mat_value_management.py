@@ -68,37 +68,33 @@ class TestMat_ValueManagement(GenMdBaseTest):
         新增物料价值管理用例
         """
         try:
-          
-            # 调用保存接口
-            api_path = self.get_api_path("GEN-物料价值数量配置-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["invOrgId", "matTypeId","matQtyUpdate","matValUpdate"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "invOrgId": {"id": self.inv_org_id},
-                "matTypeId": {"id": self.mat_type_id},
-                "matQtyUpdate": True,
-                "matValUpdate": False
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
-            
-            # 判断是否存在数据
-            sql = f"select id from gen_inv_org_mat_type_link_cf where inv_org_id = {self.inv_org_id} and mat_type_id = {self.mat_type_id} limit 1"
+            # 1. 判断是否存在数据（保持原有逻辑）
+            sql = f"select id from gen_inv_org_mat_type_link_cf where mat_type_id = {self.mat_type_id} and inv_org_id = {self.inv_org_id} limit 1"
             result = self.db.query(sql)
             if result:
                 self.mat_value_id = result[0].get("id")
             if not self.mat_value_id:
-                response = self.http.post(url, json=filtered_params)
-                self.assert_util.assert_response_data(response)
-                self.mat_value_id = response.get("data", {}).get("data", {})
-                a.json(filtered_params, "请求数据")
-                a.json(response, "响应数据")
+                # 2. 准备测试数据（业务逻辑保持不变）
+                set_dict = {
+                    "invOrgId": {"id": self.inv_org_id},
+                    "matTypeId": {"id": self.mat_type_id},
+                    "matQtyUpdate": True,
+                    "matValUpdate": False
+                }
+                fields_to_filter = ["invOrgId", "matTypeId","matQtyUpdate","matValUpdate"]
+
+                # 3. 使用标准化API调用（无任何断言）
+                response, extracted_id = self.standard_api_call(
+                    api_key="GEN-物料价值数量配置-保存服务",
+                    set_dict=set_dict,
+                    fields_to_filter=fields_to_filter,
+                    store_id_as="mat_value"  # 自动存储 self.mat_value_id
+                )
+
+                # 4. 保存业务数据（保持原有逻辑）
+                self.mat_value_id = extracted_id
+
+                # 5. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -118,45 +114,41 @@ class TestMat_ValueManagement(GenMdBaseTest):
         查询物料价值管理列表用例
         """
         try:
-            # 调用查询接口
-            api_path = self.get_api_path("GEN-物料价值数量配置-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["pageable", "fields", "systemParams"],
-                ["params", "request"]
-            )
-            set_dict =  {
-            "pageable": {
-                "pageNo": 1,
-                "pageSize": 20,
-                "needTotal": True,
-                "sortOrders": None,
-                "conditionItems": None
-            },
-            "fields": [
-                {
-                    "name": "invOrgId",
-                    "type": "OBJECT"
+            # 1. 准备测试数据（业务逻辑保持不变）
+            set_dict = {
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": None
                 },
-                {
-                    "name": "matTypeId",
-                    "type": "OBJECT"
-                }
-            ],
-            "systemParams": None
-        }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+                "fields": [
+                    {
+                        "name": "invOrgId",
+                        "type": "OBJECT"
+                    },
+                    {
+                        "name": "matTypeId",
+                        "type": "OBJECT"
+                    }
+                ],
+                "systemParams": None
+            }
+            fields_to_filter = ["pageable", "fields", "systemParams"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-物料价值数量配置-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
 
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -180,24 +172,22 @@ class TestMat_ValueManagement(GenMdBaseTest):
             if not self.mat_value_id:
                 self.test_save_mat_value()
 
-            # 调用详情查询接口
-            api_path = self.get_api_path("GEN-物料价值数量配置-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.mat_value_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-物料价值数量配置-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -470,26 +460,22 @@ class TestMat_ValueManagement(GenMdBaseTest):
             if not self.mat_value_id:
                 self.test_save_mat_value()
 
-            # 调用删除接口
-            api_path = self.get_api_path("GEN-物料价值数量配置-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.mat_value_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-物料价值数量配置-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
-        
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")

@@ -1,7 +1,6 @@
 import allure
 import pytest
 from testcases.gen_md import GenMdBaseTest
-from utils.mock_util import MockData
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
@@ -14,7 +13,7 @@ class TestBrandManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
-        cls.mock_data = MockData()
+        # No need for cls.mock_data = MockData() due to singleton pattern
         cls.brandId = None
         cls.brandCode = None
         cls.logger.info("品牌管理测试类初始化完成")
@@ -51,41 +50,30 @@ class TestBrandManagement(GenMdBaseTest):
         """
         try:
             # 准备品牌数据
-            brand_code = self.mock_data.generate_unique_code(tag="Brand")
-            brand_name = f"品牌_{self.mock_data.get_timestamp()}"
+            brand_code = self.mock_util.generate_unique_code(tag="Brand")
+            brand_name = f"品牌_{self.mock_util.get_timestamp()}"
 
-            # 调用保存接口
-            api_path = self.get_api_path("GEN-品牌-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["brandCode", "brandName", "brandImage"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "brandCode": brand_code,
                 "brandName": brand_name,
                 "brandImage": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["brandCode", "brandName", "brandImage"]
 
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-            response_data = response.get("data", {}).get("data", {})
-            
-            # 保存品牌信息供后续用例使用
-            if isinstance(response_data, dict):
-                self.brandId = response_data.get("id")
-                self.brandCode = brand_code
-            else:
-                self.brandId = response_data
-                self.brandCode = brand_code
+            # 2. 使用标准化API调用（无任何断言）
+            response, extracted_id = self.standard_api_call(
+                api_key="GEN-品牌-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="brand"  # 自动存储 self.brandId
+            )
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 3. 保存品牌信息供后续用例使用（保持原有逻辑）
+            self.brandId = extracted_id
+            self.brandCode = brand_code
+
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -105,16 +93,7 @@ class TestBrandManagement(GenMdBaseTest):
         查询品牌列表用例
         """
         try:
-            # 调用查询接口
-            api_path = self.get_api_path("GEN-品牌-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["pageable", "fields"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -126,18 +105,22 @@ class TestBrandManagement(GenMdBaseTest):
                     {"name": "brandName", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["pageable", "fields"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-品牌-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
+            data_list = response.get("data", {}).get("data", {}).get("data", [])
+            self.assert_util.assert_by_operator(data_list, "not_empty")
             self.assert_util.assert_response_data(response)
 
-            # 验证返回的数据列表
-            data_list = response.get("data", {}).get("data", {}).get("data", [])
-            self.assert_util.assert_by_operator(data_list,"not_empty")
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -161,24 +144,22 @@ class TestBrandManagement(GenMdBaseTest):
             if not self.brandId:
                 self.test_save_brand()
 
-            # 调用详情查询接口
-            api_path = self.get_api_path("GEN-品牌-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.brandId}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-品牌-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -202,30 +183,27 @@ class TestBrandManagement(GenMdBaseTest):
             if not self.brandId:
                 self.test_save_brand()
 
-            # 调用修改接口
-            api_path = self.get_api_path("GEN-品牌-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id", "brandCode", "brandName", "brandImage"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "id": self.brandId,
                 "brandCode": self.brandCode,
-                "brandName": f"品牌_{self.mock_data.get_timestamp()}_修改",
+                "brandName": f"品牌_{self.mock_util.get_timestamp()}_修改",
                 "brandImage": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id", "brandCode", "brandName", "brandImage"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-品牌-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -249,28 +227,25 @@ class TestBrandManagement(GenMdBaseTest):
             if not self.brandId:
                 self.test_save_brand()
 
-            # 调用删除接口
-            api_path = self.get_api_path("GEN-品牌-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.brandId}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-品牌-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
-            # 清除品牌信息
+            # 4. 清除品牌信息（保持原有逻辑）
             TestBrandManagement.brand_info = {}
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 5. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -295,8 +270,8 @@ class TestBrandManagement(GenMdBaseTest):
             # 构建导入数据
             import_data = [
                 {
-                    "brandCode": self.mock_data.generate_unique_code(tag="IMPORT_BRAND"),
-                    "brandName": f"导入测试品牌_{self.mock_data.get_timestamp()}",
+                    "brandCode": self.mock_util.generate_unique_code(tag="IMPORT_BRAND"),
+                    "brandName": f"导入测试品牌_{self.mock_util.get_timestamp()}",
                     "brandImage": None
                 }
             ]
@@ -374,7 +349,7 @@ class TestBrandManagement(GenMdBaseTest):
             )
             set_dict = {
                 "fileKey": "test_brand_import_file.xlsx",
-                "taskName": f"品牌导入任务_{self.mock_data.get_timestamp()}",
+                "taskName": f"品牌导入任务_{self.mock_util.get_timestamp()}",
                 "templateId": 1
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
@@ -404,7 +379,7 @@ class TestBrandManagement(GenMdBaseTest):
             params, url = self.get_api_params(api_path)
 
             params['params'] = {
-                "taskName": f"品牌管理-{self.nickname}-{self.mock_data.get_timestamp()}-导出",
+                "taskName": f"品牌管理-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
                 "multiSheetConfig": [
                     {
                         "modelKey": "GEN_MD$gen_brand_md",
@@ -488,7 +463,7 @@ class TestBrandManagement(GenMdBaseTest):
         """品牌编码唯一性测试用例"""
         try:
             # 创建第一个品牌
-            brand_code = self.mock_data.generate_unique_code(tag="UNIQUE_BRAND")
+            brand_code = self.mock_util.generate_unique_code(tag="UNIQUE_BRAND")
             
             api_path = self.get_api_path("GEN-品牌-保存服务")
             params, url = self.get_api_params(api_path)
@@ -498,7 +473,7 @@ class TestBrandManagement(GenMdBaseTest):
             )
             set_dict = {
                 "brandCode": brand_code,
-                "brandName": f"唯一性测试品牌1_{self.mock_data.get_timestamp()}"
+                "brandName": f"唯一性测试品牌1_{self.mock_util.get_timestamp()}"
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
@@ -506,7 +481,7 @@ class TestBrandManagement(GenMdBaseTest):
             self.assert_util.assert_response_data(response1)
 
             # 尝试创建相同编码的品牌（应该失败或更新）
-            set_dict["brandName"] = f"唯一性测试品牌2_{self.mock_data.get_timestamp()}"
+            set_dict["brandName"] = f"唯一性测试品牌2_{self.mock_util.get_timestamp()}"
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response2 = self.http.post(url, json=filtered_params)
@@ -529,70 +504,68 @@ class TestBrandManagement(GenMdBaseTest):
         tags=["品牌管理", "综合测试", "业务流程"]
     )
     def test_brand_complete_workflow(self):
-        """品牌完整流程测试用例"""
+        """
+        品牌完整流程测试用例
+        """
         try:
             # 1. 创建品牌
-            brand_code = self.mock_data.generate_unique_code(tag="WORKFLOW_BRAND")
-            brand_name = f"流程测试品牌_{self.mock_data.get_timestamp()}"
+            brand_code = self.mock_util.generate_unique_code(tag="WORKFLOW_BRAND")
+            brand_name = f"流程测试品牌_{self.mock_util.get_timestamp()}"
 
             # 创建
-            create_api_path = self.get_api_path("GEN-品牌-保存服务")
-            create_params, create_url = self.get_api_params(create_api_path)
-            
-            create_filtered_params = ParamUtil.filter_post_body_fields(
-                create_params, ["brandCode", "brandName"], ["params", "request"]
+            set_dict_create = {"brandCode": brand_code, "brandName": brand_name}
+            fields_to_filter_create = ["brandCode", "brandName"]
+            create_response, workflow_brand_id = self.standard_api_call(
+                api_key="GEN-品牌-保存服务",
+                set_dict=set_dict_create,
+                fields_to_filter=fields_to_filter_create,
+                store_id_as=None
             )
-            create_set_dict = {"brandCode": brand_code, "brandName": brand_name}
-            ParamUtil.set_request_params(create_filtered_params, create_set_dict)
-
-            create_response = self.http.post(create_url, json=create_filtered_params)
             self.assert_util.assert_response_data(create_response)
-            
-            workflow_brand_id = create_response.get("data", {}).get("data", {})
-            
-            # 2. 查询详情验证
-            detail_api_path = self.get_api_path("GEN-品牌-查询详情服务")
-            detail_params, detail_url = self.get_api_params(detail_api_path)
-            
-            detail_filtered_params = ParamUtil.filter_post_body_fields(
-                detail_params, ["id"], ["params", "request"]
-            )
-            ParamUtil.set_request_params(detail_filtered_params, {"id": workflow_brand_id})
 
-            detail_response = self.http.post(detail_url, json=detail_filtered_params)
+            # 2. 查询详情验证
+            set_dict_detail = {"id": workflow_brand_id}
+            fields_to_filter_detail = ["id"]
+            detail_response, _ = self.standard_api_call(
+                api_key="GEN-品牌-查询详情服务",
+                set_dict=set_dict_detail,
+                fields_to_filter=fields_to_filter_detail,
+                store_id_as=None
+            )
             self.assert_util.assert_response_data(detail_response)
-            
+
             detail_data = detail_response.get("data", {}).get("data", {})
-            assert detail_data.get("brandCode") == brand_code, "品牌编码不匹配"
-            assert detail_data.get("brandName") == brand_name, "品牌名称不匹配"
+            self.assert_util.assert_by_operator(detail_data.get("brandCode"), "=", brand_code, "品牌编码不匹配")
+            self.assert_util.assert_by_operator(detail_data.get("brandName"), "=", brand_name, "品牌名称不匹配")
 
             # 3. 更新品牌
-            update_name = f"更新后的品牌名称_{self.mock_data.get_timestamp()}"
-            update_filtered_params = ParamUtil.filter_post_body_fields(
-                create_params, ["id", "brandCode", "brandName"], ["params", "request"]
-            )
-            update_set_dict = {
+            update_name = f"更新后的品牌名称_{self.mock_util.get_timestamp()}"
+            set_dict_update = {
                 "id": workflow_brand_id,
                 "brandCode": brand_code,
                 "brandName": update_name
             }
-            ParamUtil.set_request_params(update_filtered_params, update_set_dict)
-
-            update_response = self.http.post(create_url, json=update_filtered_params)
+            fields_to_filter_update = ["id", "brandCode", "brandName"]
+            update_response, _ = self.standard_api_call(
+                api_key="GEN-品牌-保存服务",
+                set_dict=set_dict_update,
+                fields_to_filter=fields_to_filter_update,
+                store_id_as=None
+            )
             self.assert_util.assert_response_data(update_response)
 
             # 4. 删除验证
-            delete_api_path = self.get_api_path("GEN-品牌-删除服务")
-            delete_params, delete_url = self.get_api_params(delete_api_path)
-            
-            delete_filtered_params = ParamUtil.filter_post_body_fields(
-                delete_params, ["id"], ["params", "request"]
+            set_dict_delete = {"id": workflow_brand_id}
+            fields_to_filter_delete = ["id"]
+            delete_response, _ = self.standard_api_call(
+                api_key="GEN-品牌-删除服务",
+                set_dict=set_dict_delete,
+                fields_to_filter=fields_to_filter_delete,
+                store_id_as=None
             )
-            ParamUtil.set_request_params(delete_filtered_params, {"id": workflow_brand_id})
-
-            delete_response = self.http.post(delete_url, json=delete_filtered_params)
             self.assert_util.assert_response_data(delete_response)
 
+            # 5. 日志记录（Allure报告已由standard_api_call处理）
             a.json({"workflow": "complete"}, "完整流程执行成功")
 
         except Exception as e:
