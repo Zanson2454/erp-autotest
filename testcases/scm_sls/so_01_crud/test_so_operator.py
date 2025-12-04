@@ -164,8 +164,6 @@ class TestSalesOrderOperator(SlsBase):
         data = {
             "sceneKey": "SCM_SLS$sls_so_730",
             "viewKey": "SCM_SLS$sls_so_730:detail",
-            "appId": 0,
-            "teamId": 22,
             "serviceKey": "SCM_SLS$SLS_SO_QUERY_DETAIL_EVENT_SERVICE",
             "params": {
                 "request": {
@@ -203,8 +201,6 @@ class TestSalesOrderOperator(SlsBase):
         request_data = {
             "sceneKey": "SCM_SLS$sls_so_730",
             "viewKey": "SCM_SLS$sls_so_730:edit",
-            "appId": 0,
-            "teamId": 22,
             "serviceKey": "SCM_SLS$SLS_SO_QUERY_DETAIL_EVENT_SERVICE",
             "params": {
                 "request": {
@@ -258,8 +254,6 @@ class TestSalesOrderOperator(SlsBase):
             "viewTitle": "edit",
             "buttonKey": "SCM_SLS$sls_so_730-TERP_MIGRATE$sls_so-editView-footer-save",
             "buttonName": "保存",
-            "appId": 0,
-            "teamId": 22,
             "serviceKey": "SCM_SLS$SLS_SO_SAVE_ACTION_SERVICE",
             "params": {
                 "request": request_data["params"]["request"]
