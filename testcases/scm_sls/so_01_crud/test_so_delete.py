@@ -37,7 +37,7 @@ class TestSoDeleteManagement(SlsBase):
             order_id = self.create_sales_order(order_type="STND", submit=False)
             
             # 从配置文件获取API路径和参数
-            api_info = self.apis["销售订单单个删除服务"]
+            api_info = self.apis["SO-删除服务"]
             url = api_info["path"] if isinstance(api_info, dict) else api_info
             data = self.api_params[url].copy()
             

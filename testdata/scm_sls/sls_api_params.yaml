@@ -1,4 +1,343 @@
 api_params:
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_MasterData_SaveAndEnableDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_MasterData_SaveAndEnableDataService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_MasterData_MultiEnableDataService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_MasterData_MultiEnableDataService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_QueryStatisticsService:
+    params:
+      request:
+        aggregateField: null
+        conditionItems: null
+        groupByFields:
+        - null
+        conditionGroup: null
+        aggregateFunc: null
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_QueryStatisticsService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_MasterData_DisableDataService:
+    params:
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_MasterData_DisableDataService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_BatchDeleteDataByIdsService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_BatchDeleteDataByIdsService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_BatchDeleteDataByConditionService:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_BatchDeleteDataByConditionService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_BatchUpdateDataByConditionService:
+    params:
+      request:
+        data: {}
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_BatchUpdateDataByConditionService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_COUNT_DATA_SERVICE:
+    params:
+      request:
+      - null
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_COUNT_DATA_SERVICE
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_CreateDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_CreateDataService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_FindSingleDataByConditionService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_FindSingleDataByConditionService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_BatchCreateDataService:
+    params:
+      request:
+      - {}
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_BatchCreateDataService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_UpdateDataByIdService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_UpdateDataByIdService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_MasterData_EnableDataService:
+    params:
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_MasterData_EnableDataService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_BatchSaveDataService:
+    params:
+      request:
+      - {}
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_BatchSaveDataService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_MasterData_CreateAndEnableDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_MasterData_CreateAndEnableDataService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_MasterData_DeleteDataService:
+    params:
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_MasterData_DeleteDataService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_FindDataBySimpleConditionService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_FindDataBySimpleConditionService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_FindTreeDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_FindTreeDataService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_BatchUpdateDataByIdsService:
+    params:
+      request:
+      - {}
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_BatchUpdateDataByIdsService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_CopyDataConverterService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_CopyDataConverterService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_SUM_DATA_SERVICE:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+      fields:
+      - null
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_SUM_DATA_SERVICE
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_KvEqualPagingDataService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        sortOrders:
+        - fieldAlias: null
+          sortType: null
+        pageable:
+          conditionItems: null
+          pageNo: 1
+          conditionGroup: null
+          pageSize: 20
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_KvEqualPagingDataService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_FindSingleDataByIdService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_FindSingleDataByIdService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_FindOneByFieldLikeService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_FindOneByFieldLikeService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_DeleteDataByIdService:
+    params:
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_DeleteDataByIdService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_InvokeCodeRuleService:
+    params:
+      request:
+        formParams: {}
+        ruleKey: null
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_InvokeCodeRuleService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_MasterData_MultiDisableDataService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_MasterData_MultiDisableDataService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_FindDataByIdService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_FindDataByIdService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_TreeSearchService:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_TreeSearchService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_FindAllByFieldLikeService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        sortOrders:
+        - fieldAlias: null
+          sortType: null
+        pageable:
+          conditionItems: null
+          pageNo: 1
+          conditionGroup: null
+          pageSize: 20
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_FindAllByFieldLikeService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_BatchDeleteDataService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_BatchDeleteDataService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_FindIdByNameService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        sortOrders:
+        - fieldAlias: null
+          sortType: null
+        pageable:
+          conditionItems: null
+          pageNo: 1
+          conditionGroup: null
+          pageSize: 20
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_FindIdByNameService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_FindDataByIdsService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_FindDataByIdsService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_MasterData_SaveDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_MasterData_SaveDataService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_PagingDataService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        sortOrders:
+        - fieldAlias: null
+          sortType: null
+        pageable:
+          conditionItems: null
+          pageNo: 1
+          conditionGroup: null
+          pageSize: 20
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_PagingDataService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_MasterData_CreateDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_MasterData_CreateDataService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_MasterData_UpdateDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_MasterData_UpdateDataService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_FindListDataService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_FindListDataService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_CopyAndCreateDataByIdsService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_CopyAndCreateDataByIdsService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_FindOneDataService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_FindOneDataService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_FindTreeChildrenDataService:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_FindTreeChildrenDataService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_ReverseConstructTreeService:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+        commonConditionGroup: null
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_ReverseConstructTreeService
+  /api/trantor/service/engine/execute/SCM_SLS$SYS_SaveDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: SCM_SLS$SYS_SaveDataService
   /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_CANNEL_COMMIT_EVENT_SERVICE:
     params:
       request:
@@ -40,6 +379,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -134,6 +474,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -214,6 +555,7 @@ api_params:
         addrId: {}
         platformDiscountAmt: 0
         soTypeId: {}
+        slsPerson: {}
         slsCurrId: {}
         custPersonName: null
         isRev: false
@@ -303,6 +645,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -393,6 +736,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -428,7 +772,96 @@ api_params:
   /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_ITEM_FREEZE_EVENT_SERVICE:
     params:
       request:
-        id: null
+        itemNumber: 0
+        volumUomId: {}
+        orderNumber: 0
+        deliveryModeId: {}
+        salesPrice: 0
+        soItemDelQty: 0
+        nonDiscount: false
+        invLocId: {}
+        delPhone: null
+        soDocDate: 0
+        soCode: null
+        deliveryLackLimit: 0
+        createdAt: 0
+        matBasePrice: 0
+        serviceVendId: {}
+        soItemTypeId: {}
+        soAssociationItemId: {}
+        delAddrId: {}
+        soItemSlsQty: 0
+        soItemStatus: null
+        id: 0
+        taxRateId: {}
+        soItemTransferQty: 0
+        taxAmt: 0
+        invOrgId: {}
+        soExtItemCode: null
+        matName: null
+        updatedAt: 0
+        soId: {}
+        uomSlsId: {}
+        uomBaseId: {}
+        updatedBy: {}
+        originOrgId: 0
+        expressComId: {}
+        soSchlDelDate: 0
+        parentItemType: {}
+        soItemGrossPrice: 0
+        soItemSettQty: 0
+        version: 0
+        isCompleteSet: false
+        rebateAmt: 0
+        soItemCode: null
+        sourceLineCode: null
+        taxRate: 0
+        soSchedules:
+        - {}
+        netWeight: 0
+        soItemBaseQty: 0
+        discountInfo: null
+        matId: {}
+        parentItem: {}
+        charaList:
+        - {}
+        weightUomId: {}
+        deliveryOverdoseLimit: 0
+        discountAmt: 0
+        remark: null
+        atpCheck: false
+        bomWhether: false
+        isFreeze: false
+        matVolum: 0
+        isDeliveryCompleted: false
+        soItemOutstandingQty: 0
+        requestId: null
+        externalPriceInfo: null
+        mirrorRefItemId: 0
+        bomQty: 0
+        isPaymentCompleted: false
+        prItemCode: null
+        soItemBusinessStatus: null
+        usageType: null
+        soItemTypeGroupId: {}
+        netTradeAmt: 0
+        delAddrDetail: null
+        bomId: {}
+        subjectList:
+        - {}
+        isRev: false
+        soItemPrice: 0
+        deliveryType: null
+        delPersonName: null
+        parentItemNumber: 0
+        deliveryInterceptFail: false
+        salesAmt: 0
+        grossWeight: 0
+        deleted: 0
+        createdBy: {}
+        rebatePrice: 0
+        matCode: null
+        grossTradeAmt: 0
     serviceKey: SCM_SLS$SLS_SO_ITEM_FREEZE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_SLS$SO_MATCH_ACC_EVENT_SERVICE:
     params:
@@ -471,6 +904,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -544,6 +978,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -638,6 +1073,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -711,6 +1147,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -794,6 +1231,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -867,6 +1305,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -940,6 +1379,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -1013,6 +1453,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -1086,6 +1527,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -1159,6 +1601,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -1232,6 +1675,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -1307,7 +1751,9 @@ api_params:
         soItemSettQty: 0
         version: 0
         isCompleteSet: false
+        rebateAmt: 0
         soItemCode: null
+        sourceLineCode: null
         taxRate: 0
         soSchedules:
         - {}
@@ -1316,6 +1762,8 @@ api_params:
         discountInfo: null
         matId: {}
         parentItem: {}
+        charaList:
+        - {}
         weightUomId: {}
         deliveryOverdoseLimit: 0
         discountAmt: 0
@@ -1328,6 +1776,7 @@ api_params:
         soItemOutstandingQty: 0
         requestId: null
         externalPriceInfo: null
+        mirrorRefItemId: 0
         bomQty: 0
         isPaymentCompleted: false
         prItemCode: null
@@ -1337,6 +1786,8 @@ api_params:
         netTradeAmt: 0
         delAddrDetail: null
         bomId: {}
+        subjectList:
+        - {}
         isRev: false
         soItemPrice: 0
         deliveryType: null
@@ -1347,6 +1798,7 @@ api_params:
         grossWeight: 0
         deleted: 0
         createdBy: {}
+        rebatePrice: 0
         matCode: null
         grossTradeAmt: 0
     serviceKey: SCM_SLS$SO_ITEM_ASSEMBLE_BUILD_REV_EVENT_SERVICE
@@ -1393,7 +1845,9 @@ api_params:
         soItemSettQty: 0
         version: 0
         isCompleteSet: false
+        rebateAmt: 0
         soItemCode: null
+        sourceLineCode: null
         taxRate: 0
         soSchedules:
         - {}
@@ -1402,6 +1856,8 @@ api_params:
         discountInfo: null
         matId: {}
         parentItem: {}
+        charaList:
+        - {}
         weightUomId: {}
         deliveryOverdoseLimit: 0
         discountAmt: 0
@@ -1414,6 +1870,7 @@ api_params:
         soItemOutstandingQty: 0
         requestId: null
         externalPriceInfo: null
+        mirrorRefItemId: 0
         bomQty: 0
         isPaymentCompleted: false
         prItemCode: null
@@ -1423,6 +1880,8 @@ api_params:
         netTradeAmt: 0
         delAddrDetail: null
         bomId: {}
+        subjectList:
+        - {}
         isRev: false
         soItemPrice: 0
         deliveryType: null
@@ -1433,6 +1892,7 @@ api_params:
         grossWeight: 0
         deleted: 0
         createdBy: {}
+        rebatePrice: 0
         matCode: null
         grossTradeAmt: 0
     serviceKey: SCM_SLS$SO_B2B_ITEM_DETAIL_EVENT_SERVICE
@@ -1494,6 +1954,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -1567,6 +2028,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -1657,6 +2119,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -1786,7 +2249,9 @@ api_params:
         soItemSettQty: 0
         version: 0
         isCompleteSet: false
+        rebateAmt: 0
         soItemCode: null
+        sourceLineCode: null
         taxRate: 0
         soSchedules:
         - {}
@@ -1795,6 +2260,8 @@ api_params:
         discountInfo: null
         matId: {}
         parentItem: {}
+        charaList:
+        - {}
         weightUomId: {}
         deliveryOverdoseLimit: 0
         discountAmt: 0
@@ -1807,6 +2274,7 @@ api_params:
         soItemOutstandingQty: 0
         requestId: null
         externalPriceInfo: null
+        mirrorRefItemId: 0
         bomQty: 0
         isPaymentCompleted: false
         prItemCode: null
@@ -1816,6 +2284,8 @@ api_params:
         netTradeAmt: 0
         delAddrDetail: null
         bomId: {}
+        subjectList:
+        - {}
         isRev: false
         soItemPrice: 0
         deliveryType: null
@@ -1826,6 +2296,7 @@ api_params:
         grossWeight: 0
         deleted: 0
         createdBy: {}
+        rebatePrice: 0
         matCode: null
         grossTradeAmt: 0
     serviceKey: SCM_SLS$SO_B2B_ITEM_PAGING_EVENT_SERVICE
@@ -1877,6 +2348,7 @@ api_params:
         addrId: {}
         platformDiscountAmt: 0
         soTypeId: {}
+        slsPerson: {}
         slsCurrId: {}
         custPersonName: null
         isRev: false
@@ -1932,6 +2404,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -2012,6 +2485,7 @@ api_params:
         addrId: {}
         platformDiscountAmt: 0
         soTypeId: {}
+        slsPerson: {}
         slsCurrId: {}
         custPersonName: null
         isRev: false
@@ -2074,6 +2548,7 @@ api_params:
         addrId: {}
         platformDiscountAmt: 0
         soTypeId: {}
+        slsPerson: {}
         slsCurrId: {}
         custPersonName: null
         isRev: false
@@ -2195,7 +2670,9 @@ api_params:
         soItemSettQty: 0
         version: 0
         isCompleteSet: false
+        rebateAmt: 0
         soItemCode: null
+        sourceLineCode: null
         taxRate: 0
         soSchedules:
         - {}
@@ -2204,6 +2681,8 @@ api_params:
         discountInfo: null
         matId: {}
         parentItem: {}
+        charaList:
+        - {}
         weightUomId: {}
         deliveryOverdoseLimit: 0
         discountAmt: 0
@@ -2216,6 +2695,7 @@ api_params:
         soItemOutstandingQty: 0
         requestId: null
         externalPriceInfo: null
+        mirrorRefItemId: 0
         bomQty: 0
         isPaymentCompleted: false
         prItemCode: null
@@ -2225,6 +2705,8 @@ api_params:
         netTradeAmt: 0
         delAddrDetail: null
         bomId: {}
+        subjectList:
+        - {}
         isRev: false
         soItemPrice: 0
         deliveryType: null
@@ -2235,6 +2717,7 @@ api_params:
         grossWeight: 0
         deleted: 0
         createdBy: {}
+        rebatePrice: 0
         matCode: null
         grossTradeAmt: 0
     serviceKey: SCM_SLS$SLS_SO_ITEM_UNFREEZE_EVENT_SERVICE
@@ -2279,6 +2762,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -2406,6 +2890,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -2535,7 +3020,9 @@ api_params:
         soItemSettQty: 0
         version: 0
         isCompleteSet: false
+        rebateAmt: 0
         soItemCode: null
+        sourceLineCode: null
         taxRate: 0
         soSchedules:
         - {}
@@ -2544,6 +3031,8 @@ api_params:
         discountInfo: null
         matId: {}
         parentItem: {}
+        charaList:
+        - {}
         weightUomId: {}
         deliveryOverdoseLimit: 0
         discountAmt: 0
@@ -2556,6 +3045,7 @@ api_params:
         soItemOutstandingQty: 0
         requestId: null
         externalPriceInfo: null
+        mirrorRefItemId: 0
         bomQty: 0
         isPaymentCompleted: false
         prItemCode: null
@@ -2565,6 +3055,8 @@ api_params:
         netTradeAmt: 0
         delAddrDetail: null
         bomId: {}
+        subjectList:
+        - {}
         isRev: false
         soItemPrice: 0
         deliveryType: null
@@ -2575,6 +3067,7 @@ api_params:
         grossWeight: 0
         deleted: 0
         createdBy: {}
+        rebatePrice: 0
         matCode: null
         grossTradeAmt: 0
     serviceKey: SCM_SLS$SO_QUERY_SCHEDULE_LINE_DETAIL_EVENT_SERVICE
@@ -2636,6 +3129,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -2709,6 +3203,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -2782,6 +3277,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -2824,6 +3320,7 @@ api_params:
         isAutomaticComplete: false
         soItemTypeName: null
         isDelRelv: false
+        subjectAssignType: {}
         createdAt: 0
         requestId: null
         isAutoOutDnPost: false
@@ -2887,7 +3384,9 @@ api_params:
         soItemSettQty: 0
         version: 0
         isCompleteSet: false
+        rebateAmt: 0
         soItemCode: null
+        sourceLineCode: null
         taxRate: 0
         soSchedules:
         - {}
@@ -2896,6 +3395,8 @@ api_params:
         discountInfo: null
         matId: {}
         parentItem: {}
+        charaList:
+        - {}
         weightUomId: {}
         deliveryOverdoseLimit: 0
         discountAmt: 0
@@ -2908,6 +3409,7 @@ api_params:
         soItemOutstandingQty: 0
         requestId: null
         externalPriceInfo: null
+        mirrorRefItemId: 0
         bomQty: 0
         isPaymentCompleted: false
         prItemCode: null
@@ -2917,6 +3419,8 @@ api_params:
         netTradeAmt: 0
         delAddrDetail: null
         bomId: {}
+        subjectList:
+        - {}
         isRev: false
         soItemPrice: 0
         deliveryType: null
@@ -2927,6 +3431,7 @@ api_params:
         grossWeight: 0
         deleted: 0
         createdBy: {}
+        rebatePrice: 0
         matCode: null
         grossTradeAmt: 0
     serviceKey: SCM_SLS$SO_ITEM_MANUAL_CANCEL_COMPLETED_EVENT_SERVICE
@@ -2971,6 +3476,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -3051,6 +3557,7 @@ api_params:
         addrId: {}
         platformDiscountAmt: 0
         soTypeId: {}
+        slsPerson: {}
         slsCurrId: {}
         custPersonName: null
         isRev: false
@@ -3106,6 +3613,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -3138,38 +3646,6 @@ api_params:
         soTitle: null
         invLoc: {}
     serviceKey: SCM_SLS$SO_DELETE_EVENT_SERVICE
-  /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_TASK_SUBMIT_POST:
-    serviceKey: "ERP_GEN$API_TRANTOR_WORKFLOW_V2_TASK_SUBMIT_POST"
-    params:
-      _rootParams:
-        pageKey: "sys_common$approval_task_center"
-        sceneKey: "sys_common$approval_task_center"
-        buttonName: "同意"
-        buttonKey: "AGREE"
-      taskInstanceId: null
-      auditResult:
-        remark: "同意"
-        decisionType: "AGREE"
-      request:
-        taskId: 0
-        action: "APPROVE"
-        comment: "自动化测试审批通过"
-    pageKey: "sys_common$approval_task_center"
-    sceneKey: "sys_common$approval_task_center"
-    buttonName: "同意"
-    buttonKey: "AGREE"
-  /api/trantor/service/engine/execute/SCM_SLS$SO_DELETE_EVENT_SERVICE?tmodule=SCM_SLS:
-    sceneKey: "SCM_SLS$sls_so_730"
-    viewKey: "SCM_SLS$sls_so_730:list"
-    viewTitle: "list"
-    buttonKey: "SCM_SLS$sls_so_730-TERP_MIGRATE$sls_so-record-actions-1-button-3"
-    buttonName: "删除"
-    appId: 0
-    teamId: 22
-    serviceKey: "SCM_SLS$SO_DELETE_EVENT_SERVICE"
-    params:
-      request:
-        id: null
   /api/trantor/service/engine/execute/SCM_SLS$SO_IES_BUSINESS_RULES_QUERY_EVENT_SERVICE:
     params:
       request:
@@ -3218,6 +3694,7 @@ api_params:
         addrId: {}
         platformDiscountAmt: 0
         soTypeId: {}
+        slsPerson: {}
         slsCurrId: {}
         custPersonName: null
         isRev: false
@@ -3273,6 +3750,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -3356,6 +3834,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -3429,6 +3908,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -3509,6 +3989,7 @@ api_params:
         addrId: {}
         platformDiscountAmt: 0
         soTypeId: {}
+        slsPerson: {}
         slsCurrId: {}
         custPersonName: null
         isRev: false
@@ -3646,6 +4127,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -3735,6 +4217,7 @@ api_params:
         addrId: {}
         platformDiscountAmt: 0
         soTypeId: {}
+        slsPerson: {}
         slsCurrId: {}
         custPersonName: null
         isRev: false
@@ -3790,6 +4273,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -3911,6 +4395,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -3984,6 +4469,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -4133,6 +4619,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -4206,6 +4693,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -4279,6 +4767,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -4359,6 +4848,7 @@ api_params:
         addrId: {}
         platformDiscountAmt: 0
         soTypeId: {}
+        slsPerson: {}
         slsCurrId: {}
         custPersonName: null
         isRev: false
@@ -4414,6 +4904,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -4487,6 +4978,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -4577,6 +5069,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -4650,6 +5143,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -4723,6 +5217,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -4796,6 +5291,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -4831,31 +5327,30 @@ api_params:
   /api/trantor/service/engine/execute/SCM_SLS$SO_TYPE_CF_DISABLE_AND_CLEAR_CACHE_EVENT_SERVICE:
     params:
       request:
-        syncPrice: false
-        rebatePolicyHeadTrSoTypeIdsId: {}
-        soTypeDesc: null
-        soTypeName: null
-        isModifyApproval: false
-        createdAt: 0
-        effectiveDays: 0
-        requestId: null
-        id: 0
-        genTextTypeRef: {}
-        updatedAt: 0
         updatedBy: {}
         originOrgId: 0
         isRev: false
         attachmentProcedureHeadRef: {}
+        syncPrice: false
+        soTypeDesc: null
         version: 0
         currExchangeRateType: {}
         soTypeCode: null
         partnerProcedureHeadRef: {}
+        soTypeName: null
+        isModifyApproval: false
         btClass: null
+        createdAt: 0
         isDefault: false
         deleted: 0
         isSubmitApproval: false
+        effectiveDays: 0
         createdBy: {}
+        requestId: null
+        id: 0
+        genTextTypeRef: {}
         status: null
+        updatedAt: 0
     serviceKey: SCM_SLS$SO_TYPE_CF_DISABLE_AND_CLEAR_CACHE_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_SLS$SO_APPROVAL_REFUSE_STATUS_UPDATE_EVENT_SERVICE:
     params:
@@ -4898,6 +5393,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -5025,6 +5521,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -5098,6 +5595,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -5181,6 +5679,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -5254,6 +5753,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -5327,6 +5827,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -5402,7 +5903,9 @@ api_params:
         soItemSettQty: 0
         version: 0
         isCompleteSet: false
+        rebateAmt: 0
         soItemCode: null
+        sourceLineCode: null
         taxRate: 0
         soSchedules:
         - {}
@@ -5411,6 +5914,8 @@ api_params:
         discountInfo: null
         matId: {}
         parentItem: {}
+        charaList:
+        - {}
         weightUomId: {}
         deliveryOverdoseLimit: 0
         discountAmt: 0
@@ -5423,6 +5928,7 @@ api_params:
         soItemOutstandingQty: 0
         requestId: null
         externalPriceInfo: null
+        mirrorRefItemId: 0
         bomQty: 0
         isPaymentCompleted: false
         prItemCode: null
@@ -5432,6 +5938,8 @@ api_params:
         netTradeAmt: 0
         delAddrDetail: null
         bomId: {}
+        subjectList:
+        - {}
         isRev: false
         soItemPrice: 0
         deliveryType: null
@@ -5442,6 +5950,7 @@ api_params:
         grossWeight: 0
         deleted: 0
         createdBy: {}
+        rebatePrice: 0
         matCode: null
         grossTradeAmt: 0
     serviceKey: SCM_SLS$SO_ITEM_MANUAL_COMPLETED_EVENT_SERVICE
@@ -5486,6 +5995,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -5569,6 +6079,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -5642,6 +6153,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -5790,6 +6302,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -5865,7 +6378,9 @@ api_params:
         soItemSettQty: 0
         version: 0
         isCompleteSet: false
+        rebateAmt: 0
         soItemCode: null
+        sourceLineCode: null
         taxRate: 0
         soSchedules:
         - {}
@@ -5874,6 +6389,8 @@ api_params:
         discountInfo: null
         matId: {}
         parentItem: {}
+        charaList:
+        - {}
         weightUomId: {}
         deliveryOverdoseLimit: 0
         discountAmt: 0
@@ -5886,6 +6403,7 @@ api_params:
         soItemOutstandingQty: 0
         requestId: null
         externalPriceInfo: null
+        mirrorRefItemId: 0
         bomQty: 0
         isPaymentCompleted: false
         prItemCode: null
@@ -5895,6 +6413,8 @@ api_params:
         netTradeAmt: 0
         delAddrDetail: null
         bomId: {}
+        subjectList:
+        - {}
         isRev: false
         soItemPrice: 0
         deliveryType: null
@@ -5905,6 +6425,7 @@ api_params:
         grossWeight: 0
         deleted: 0
         createdBy: {}
+        rebatePrice: 0
         matCode: null
         grossTradeAmt: 0
     serviceKey: SCM_SLS$SLS_FULL_QTY_UPDATE_EVENT_SERVICE
@@ -5949,6 +6470,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -6046,6 +6568,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -6119,6 +6642,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -6192,6 +6716,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -6265,6 +6790,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -6362,6 +6888,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -6435,6 +6962,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -6508,6 +7036,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -6588,6 +7117,7 @@ api_params:
         addrId: {}
         platformDiscountAmt: 0
         soTypeId: {}
+        slsPerson: {}
         slsCurrId: {}
         custPersonName: null
         isRev: false
@@ -6649,6 +7179,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -6729,6 +7260,7 @@ api_params:
         addrId: {}
         platformDiscountAmt: 0
         soTypeId: {}
+        slsPerson: {}
         slsCurrId: {}
         custPersonName: null
         isRev: false
@@ -6791,6 +7323,7 @@ api_params:
         addrId: {}
         platformDiscountAmt: 0
         soTypeId: {}
+        slsPerson: {}
         slsCurrId: {}
         custPersonName: null
         isRev: false
@@ -6826,39 +7359,20 @@ api_params:
         desc: null
         updatedAt: 0
     serviceKey: SCM_SLS$GIFT_STRATEGY_OVERVIEW_EVENT_SERVICE
+  /api/trantor/service/engine/execute/SCM_SLS$material_sales_volume_forecasting_service: {}
   /api/trantor/service/engine/execute/SCM_SLS$query_sls_order_bom_detail:
     params:
       id: 0
     serviceKey: SCM_SLS$query_sls_order_bom_detail
-  /api/trantor/service/engine/execute/SCM_SLS$special_analysis_of_sales_revenue_DATA_STATISTIC_SERVICE:
-    params:
-      userContent: null
-      agentKey: null
-    serviceKey: SCM_SLS$special_analysis_of_sales_revenue_DATA_STATISTIC_SERVICE
   /api/trantor/service/engine/execute/SCM_SLS$PAGING_SO_ITEMS:
     params:
-      sceneKey: SCM_SLS$sls_so_item
-      viewKey: SCM_SLS$sls_so_item:list
-      viewTitle: list
-      appId: 0
-      teamId: 22
-      serviceKey: SCM_SLS$PAGING_SO_ITEMS
-      params:
-        pageable:
-          pageNo: 1
-          pageSize: 20
-          needTotal: true
-          sortOrders: null
-          conditionItems:
-            type: ConditionItems
-            logicOperator: AND
-            conditions:
-              soCode:
-                operator: CONTAINS
-                value: null
-              matId:
-                operator: IN
-                value: []
+      pageable:
+        sortOrders:
+        - {}
+        conditionItems: null
+        pageNo: 1
+        conditionGroup: null
+        pageSize: 20
     serviceKey: SCM_SLS$PAGING_SO_ITEMS
   /api/trantor/service/engine/execute/SCM_SLS$sales_income_analysis_scheduled_task:
     params:
@@ -6930,6 +7444,16 @@ api_params:
         usageType: null
         updatedAt: 0
     serviceKey: SCM_SLS$sls_so_detm_save_service
+  /api/trantor/service/engine/execute/SCM_SLS$sales_page_open_service:
+    params:
+      logType: null
+      pageType: null
+      data: {}
+      f_soDocDate:
+      - null
+      userContent: null
+      keyword: null
+    serviceKey: SCM_SLS$sales_page_open_service
   /api/trantor/service/engine/execute/SCM_SLS$sls_order_audit_rule_save:
     params:
       request:
@@ -6952,6 +7476,38 @@ api_params:
         status: null
         updatedAt: 0
     serviceKey: SCM_SLS$sls_order_audit_rule_save
+  /api/trantor/service/engine/execute/SCM_SLS$SLS_BIND_TYPE_ENABLE_ACTION_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        purpose: null
+        typeName: null
+        version: 0
+        typeCode: null
+        createdAt: 0
+        matchScope: null
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        tenantId: 0
+        id: 0
+        status: null
+        updatedAt: 0
+    serviceKey: SCM_SLS$SLS_BIND_TYPE_ENABLE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_SLS$SLS_BIND_POLICY_PAGE_ACTION_SERVICE:
+    params:
+      request:
+        pageable:
+          needTotal: false
+          sortOrders:
+          - {}
+          conditionItems: null
+          pageNo: 1
+          conditionGroup: null
+          pageSize: 20
+          keyword: null
+    serviceKey: SCM_SLS$SLS_BIND_POLICY_PAGE_ACTION_SERVICE
   /api/trantor/service/engine/execute/SCM_SLS$WH_FIND_RULE_ENABLED_SERVICE:
     params:
       request:
@@ -6980,13 +7536,26 @@ api_params:
         status: null
         updatedAt: 0
     serviceKey: SCM_SLS$WH_FIND_RULE_ENABLED_SERVICE
-  /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_BATCH_STRATEGY_DETM_CF_GEI_EXPORT_SERVICE:
+  /api/trantor/service/engine/execute/SCM_SLS$SLS_TOOL_AFTER_MAT_SELECT_RENDER_EVENT_SERVICE:
     params:
-      request: {}
-      selectFields:
-      - {}
-      modelKey: null
-    serviceKey: SCM_SLS$SLS_SO_BATCH_STRATEGY_DETM_CF_GEI_EXPORT_SERVICE
+      request:
+        slsOrgId:
+          id: 0
+        slsCurrId:
+          id: 0
+        soItems:
+        - matId:
+            id: 0
+        slsDcId:
+          id: 0
+        slsComId:
+          id: 0
+        baseCurrId:
+          id: 0
+        soTypeId:
+          id: 0
+        soDocDate: 0
+    serviceKey: SCM_SLS$SLS_TOOL_AFTER_MAT_SELECT_RENDER_EVENT_SERVICE
   /api/trantor/service/engine/execute/SCM_SLS$sales_order_item_page_b2b:
     params:
       request:
@@ -7039,6 +7608,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -7097,7 +7667,77 @@ api_params:
     serviceKey: SCM_SLS$SLS_SO_ITEM_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
   /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_SUBMIT_ACTION_SERVICE:
     params:
-      request: {}
+      request:
+        approveStatus: null
+        soExtCode: null
+        slsComId: {}
+        priceIdempotent: null
+        actualPaidAmt: 0
+        custPhone: null
+        soDocDate: 0
+        soCode: null
+        soNotes: null
+        slsOrgId: {}
+        buyerRemark: null
+        createdAt: 0
+        slsPersonName: null
+        id: 0
+        baseCurrId: {}
+        taxAmt: 0
+        updatedAt: 0
+        grossBaseAmt: 0
+        priceCalcDate: 0
+        netBaseAmt: 0
+        slsAttachmentLinks:
+        - {}
+        updatedBy: {}
+        originOrgId: 0
+        effectiveAt: 0
+        bizRuleGroup: 0
+        version: 0
+        currExchangeRateType: {}
+        sellerRemark: null
+        soCreateSource: null
+        btClass: null
+        reCalculate: false
+        totalAmt: 0
+        discountInfo: null
+        freightAmt: 0
+        slsTextLinks:
+        - {}
+        freezeType: null
+        mirrorRefId: 0
+        invOrg: {}
+        discountAmt: 0
+        soStatus: null
+        isFixedExchRate: false
+        soAssociationCode: null
+        slsPhone: null
+        externalBuyerId: null
+        exchRate: 0
+        merchantDiscountAmt: 0
+        soItems:
+        - {}
+        requestId: null
+        custId: {}
+        platformDiscountAmt: 0
+        addrId: {}
+        soTypeId: {}
+        slsPerson: {}
+        slsCurrId: {}
+        custPersonName: null
+        soBusinessStatus: null
+        deliveryInterceptFail: false
+        deleted: 0
+        slsPartnerLinks:
+        - {}
+        soDesc: null
+        createdBy: {}
+        addrDetail: null
+        slsDcId: {}
+        slsTmId: 0
+        soTitle: null
+        invLoc: {}
     serviceKey: SCM_SLS$SLS_SO_SUBMIT_ACTION_SERVICE
   /api/trantor/service/engine/execute/SCM_SLS$QUERY_RELATE_ORG_BY_SLS_ORG:
     params:
@@ -7131,6 +7771,9 @@ api_params:
           conditionGroup: {}
           pageSize: 20
     serviceKey: SCM_SLS$SO_ITEM_TYPE_PAGING_SERVICE
+  /api/trantor/service/engine/execute/SCM_SLS$query_inv_org_and_inv_loc:
+    params: {}
+    serviceKey: SCM_SLS$query_inv_org_and_inv_loc
   /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_TYPE_CF_GEI_EXPORT_SERVICE:
     params:
       request: {}
@@ -7138,6 +7781,34 @@ api_params:
       - {}
       modelKey: null
     serviceKey: SCM_SLS$SLS_SO_TYPE_CF_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_SLS$sls_so_type_detail_service:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        isRev: false
+        attachmentProcedureHeadRef: {}
+        syncPrice: false
+        soTypeDesc: null
+        version: 0
+        currExchangeRateType: {}
+        soTypeCode: null
+        partnerProcedureHeadRef: {}
+        soTypeName: null
+        isModifyApproval: false
+        btClass: null
+        createdAt: 0
+        isDefault: false
+        deleted: 0
+        isSubmitApproval: false
+        effectiveDays: 0
+        createdBy: {}
+        requestId: null
+        id: 0
+        genTextTypeRef: {}
+        status: null
+        updatedAt: 0
+    serviceKey: SCM_SLS$sls_so_type_detail_service
   /api/trantor/service/engine/execute/SCM_SLS$sls_dc_paging_service:
     params:
       request:
@@ -7177,6 +7848,10 @@ api_params:
         object: null
         status: null
     serviceKey: SCM_SLS$update_risk_project
+  /api/trantor/service/engine/execute/SCM_SLS$query_slsPerson_slsOrg_slsDc:
+    params:
+      slsPersonName: null
+    serviceKey: SCM_SLS$query_slsPerson_slsOrg_slsDc
   /api/trantor/service/engine/execute/SCM_SLS$SLS_RO_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       sheetConfig: {}
@@ -7221,30 +7896,6 @@ api_params:
       taskName: null
       selfRelationModel: false
     serviceKey: SCM_SLS$SLS_SO_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
-  /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_BATCH_STRATEGY_DETM_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
-    params:
-      sheetConfig: {}
-      fileName: null
-      sliceSize: 0
-      repeatDataStrategy: null
-      processConfig: {}
-      errStrategy: null
-      fileKey: null
-      appCode: null
-      templateId: 0
-      mergeData: false
-      multiSheetConfig:
-      - {}
-      taskCode: null
-      relationFieldConvert: false
-      service: null
-      modelMainField: null
-      selfRelationModelField: null
-      headerSelectiveRecord: {}
-      namespace: null
-      taskName: null
-      selfRelationModel: false
-    serviceKey: SCM_SLS$SLS_SO_BATCH_STRATEGY_DETM_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
   /api/trantor/service/engine/execute/SCM_SLS$SLS_CRATE_SUBMIT_APPROVAL_SERVICE:
     params:
       request:
@@ -7293,6 +7944,7 @@ api_params:
         addrId: {}
         platformDiscountAmt: 0
         soTypeId: {}
+        slsPerson: {}
         slsCurrId: {}
         custPersonName: null
         isRev: false
@@ -7355,6 +8007,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -7512,6 +8165,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -7569,6 +8223,11 @@ api_params:
           conditionGroup: {}
           pageSize: 20
     serviceKey: SCM_SLS$sls_so_item_tr_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/SCM_SLS$business_todo_assistant_doubao_DATA_STATISTIC_SERVICE:
+    params:
+      userContent: null
+      agentKey: null
+    serviceKey: SCM_SLS$business_todo_assistant_doubao_DATA_STATISTIC_SERVICE
   /api/trantor/service/engine/execute/SCM_SLS$GIFT_STRATEGY_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       sheetConfig: {}
@@ -7641,7 +8300,9 @@ api_params:
         soItemSettQty: 0
         version: 0
         isCompleteSet: false
+        rebateAmt: 0
         soItemCode: null
+        sourceLineCode: null
         taxRate: 0
         soSchedules:
         - {}
@@ -7650,6 +8311,8 @@ api_params:
         discountInfo: null
         matId: {}
         parentItem: {}
+        charaList:
+        - {}
         weightUomId: {}
         deliveryOverdoseLimit: 0
         discountAmt: 0
@@ -7662,6 +8325,7 @@ api_params:
         soItemOutstandingQty: 0
         requestId: null
         externalPriceInfo: null
+        mirrorRefItemId: 0
         bomQty: 0
         isPaymentCompleted: false
         prItemCode: null
@@ -7671,6 +8335,8 @@ api_params:
         netTradeAmt: 0
         delAddrDetail: null
         bomId: {}
+        subjectList:
+        - {}
         isRev: false
         soItemPrice: 0
         deliveryType: null
@@ -7681,6 +8347,7 @@ api_params:
         grossWeight: 0
         deleted: 0
         createdBy: {}
+        rebatePrice: 0
         matCode: null
         grossTradeAmt: 0
     serviceKey: SCM_SLS$SLS_SO_IT_TR_ONLINE_EDIT_SAVE_SERVICE
@@ -7725,6 +8392,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -7818,6 +8486,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -7850,6 +8519,25 @@ api_params:
         soTitle: null
         invLoc: {}
     serviceKey: SCM_SLS$SLS_SO_HEAD_TR_ONLINE_EDIT_SAVE_SERVICE
+  /api/trantor/service/engine/execute/SCM_SLS$SLS_BIND_TYPE_SAVE_ACTION_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        purpose: null
+        typeName: null
+        version: 0
+        typeCode: null
+        createdAt: 0
+        matchScope: null
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        tenantId: 0
+        id: 0
+        status: null
+        updatedAt: 0
+    serviceKey: SCM_SLS$SLS_BIND_TYPE_SAVE_ACTION_SERVICE
   /api/trantor/service/engine/execute/SCM_SLS$query_sls_order_detail:
     params:
       id: 0
@@ -7915,6 +8603,13 @@ api_params:
       - {}
       modelKey: null
     serviceKey: SCM_SLS$SLS_SO_HEAD_TR_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_SLS$sls_tool_so_frequency_query_service:
+    params:
+      request:
+        so_create_time_from: 0
+        so_create_time_to: 0
+        custId: 0
+    serviceKey: SCM_SLS$sls_tool_so_frequency_query_service
   /api/trantor/service/engine/execute/SCM_SLS$SLS_RO_HEAD_TR_GEI_EXPORT_SERVICE:
     params:
       request: {}
@@ -7959,6 +8654,10 @@ api_params:
         status: null
         updatedAt: 0
     serviceKey: SCM_SLS$WH_FIND_RULE_DELETE_SERVICE
+  /api/trantor/service/engine/execute/SCM_SLS$sales_master_AI_EMPLOYEE_5_SERVICE:
+    params:
+      userContent: null
+    serviceKey: SCM_SLS$sales_master_AI_EMPLOYEE_5_SERVICE
   /api/trantor/service/engine/execute/SCM_SLS$GIFT_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
     params:
       sheetConfig: {}
@@ -7983,6 +8682,10 @@ api_params:
       taskName: null
       selfRelationModel: false
     serviceKey: SCM_SLS$GIFT_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_SLS$time_operation_tool:
+    params:
+      time: 0
+    serviceKey: SCM_SLS$time_operation_tool
   /api/trantor/service/engine/execute/SCM_SLS$SO_MODIFY_SUBMIT:
     params:
       so_head:
@@ -8024,6 +8727,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -8056,6 +8760,80 @@ api_params:
         soTitle: null
         invLoc: {}
     serviceKey: SCM_SLS$SO_MODIFY_SUBMIT
+  /api/trantor/service/engine/execute/SCM_SLS$update_so_desc:
+    params:
+      request:
+        approveStatus: null
+        soExtCode: null
+        slsComId: {}
+        priceIdempotent: null
+        actualPaidAmt: 0
+        custPhone: null
+        soDocDate: 0
+        soCode: null
+        soNotes: null
+        slsOrgId: {}
+        buyerRemark: null
+        createdAt: 0
+        slsPersonName: null
+        id: 0
+        baseCurrId: {}
+        taxAmt: 0
+        updatedAt: 0
+        grossBaseAmt: 0
+        priceCalcDate: 0
+        netBaseAmt: 0
+        slsAttachmentLinks:
+        - {}
+        updatedBy: {}
+        originOrgId: 0
+        effectiveAt: 0
+        bizRuleGroup: 0
+        version: 0
+        currExchangeRateType: {}
+        sellerRemark: null
+        soCreateSource: null
+        btClass: null
+        reCalculate: false
+        totalAmt: 0
+        discountInfo: null
+        freightAmt: 0
+        slsTextLinks:
+        - {}
+        freezeType: null
+        mirrorRefId: 0
+        invOrg: {}
+        discountAmt: 0
+        soStatus: null
+        isFixedExchRate: false
+        soAssociationCode: null
+        slsPhone: null
+        externalBuyerId: null
+        exchRate: 0
+        merchantDiscountAmt: 0
+        soItems:
+        - {}
+        requestId: null
+        custId: {}
+        platformDiscountAmt: 0
+        addrId: {}
+        soTypeId: {}
+        slsPerson: {}
+        slsCurrId: {}
+        custPersonName: null
+        soBusinessStatus: null
+        deliveryInterceptFail: false
+        deleted: 0
+        slsPartnerLinks:
+        - {}
+        soDesc: null
+        createdBy: {}
+        addrDetail: null
+        slsDcId: {}
+        slsTmId: 0
+        soTitle: null
+        invLoc: {}
+    serviceKey: SCM_SLS$update_so_desc
   /api/trantor/service/engine/execute/SCM_SLS$SO_QUERY_PARTNER_BY_PARTNER_CLASS:
     params:
       prtnClassRef: null
@@ -8067,18 +8845,6 @@ api_params:
         conditionGroup: null
         pageSize: 20
     serviceKey: SCM_SLS$SO_QUERY_PARTNER_BY_PARTNER_CLASS
-  /api/trantor/service/engine/execute/SCM_SLS$QUERY_CUST_PARTNER_DETAIL:
-    params:
-      prtnClassRef: null
-      includeDetail: true
-      pageable:
-        sortOrders:
-        - {}
-        conditionItems: null
-        pageNo: 1
-        conditionGroup: null
-        pageSize: 20
-    serviceKey: SCM_SLS$QUERY_CUST_PARTNER_DETAIL
   /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_APPROVAL_RULE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       sheetConfig: {}
@@ -8101,6 +8867,7 @@ api_params:
       taskName: null
       selfRelationModel: false
     serviceKey: SCM_SLS$SLS_SO_APPROVAL_RULE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_SLS$query_material_sales_volume_training_data: {}
   /api/trantor/service/engine/execute/SCM_SLS$sls_dc_md_detail_by_id_service:
     params:
       request:
@@ -8127,6 +8894,51 @@ api_params:
         changeItem: {}
         heade: {}
     serviceKey: SCM_SLS$order_line_qty_sync_child
+  /api/trantor/service/engine/execute/SCM_SLS$SLS_BIND_POLICY_DETAIL_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_SLS$SLS_BIND_POLICY_DETAIL_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_SLS$customer_health_analyze:
+    params:
+      cust:
+        counId: {}
+        code: null
+        idCard: null
+        socialCreditCode: null
+        addressId: {}
+        bizScope: null
+        contactNum: null
+        createdAt: 0
+        addressDetail: null
+        registeredCapital: null
+        comCorporation: null
+        requestId: null
+        intro: null
+        id: 0
+        updatedAt: 0
+        taxpayersNum: null
+        outerCode: null
+        updatedBy: {}
+        originOrgId: 0
+        partnerTypeId: {}
+        finRisk: null
+        version: 0
+        bizLicenseNo: null
+        enterpriseType: null
+        personName: null
+        isInternal: false
+        labelList:
+        - {}
+        deleted: 0
+        createdBy: {}
+        name: null
+        tenantId: 0
+        currId: {}
+        partnerIdentity:
+        - null
+        classType: null
+        status: null
+    serviceKey: SCM_SLS$customer_health_analyze
   /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_TYPE_CF_GEI_IMPORT_SERVICE:
     params:
       request:
@@ -8135,6 +8947,10 @@ api_params:
         context:
           importMode: null
     serviceKey: SCM_SLS$SLS_SO_TYPE_CF_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_SLS$SLS_BIND_POLICY_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_SLS$SLS_BIND_POLICY_DELETE_ACTION_SERVICE
   /api/trantor/service/engine/execute/SCM_SLS$sls_so_item_tr_FIND_SINGLE_DATA_BY_ID_SERVICE:
     params:
       request:
@@ -8178,7 +8994,9 @@ api_params:
         soItemSettQty: 0
         version: 0
         isCompleteSet: false
+        rebateAmt: 0
         soItemCode: null
+        sourceLineCode: null
         taxRate: 0
         soSchedules:
         - {}
@@ -8187,6 +9005,8 @@ api_params:
         discountInfo: null
         matId: {}
         parentItem: {}
+        charaList:
+        - {}
         weightUomId: {}
         deliveryOverdoseLimit: 0
         discountAmt: 0
@@ -8199,6 +9019,7 @@ api_params:
         soItemOutstandingQty: 0
         requestId: null
         externalPriceInfo: null
+        mirrorRefItemId: 0
         bomQty: 0
         isPaymentCompleted: false
         prItemCode: null
@@ -8208,6 +9029,8 @@ api_params:
         netTradeAmt: 0
         delAddrDetail: null
         bomId: {}
+        subjectList:
+        - {}
         isRev: false
         soItemPrice: 0
         deliveryType: null
@@ -8218,6 +9041,7 @@ api_params:
         grossWeight: 0
         deleted: 0
         createdBy: {}
+        rebatePrice: 0
         matCode: null
         grossTradeAmt: 0
     serviceKey: SCM_SLS$sls_so_item_tr_FIND_SINGLE_DATA_BY_ID_SERVICE
@@ -8268,6 +9092,83 @@ api_params:
         material_id: 0
         channel_id: 0
     serviceKey: SCM_SLS$Sale
+  /api/trantor/service/engine/execute/SCM_SLS$customer_health_analyze_async:
+    params:
+      cust:
+        counId: {}
+        code: null
+        idCard: null
+        socialCreditCode: null
+        addressId: {}
+        bizScope: null
+        contactNum: null
+        createdAt: 0
+        addressDetail: null
+        registeredCapital: null
+        comCorporation: null
+        requestId: null
+        intro: null
+        id: 0
+        updatedAt: 0
+        taxpayersNum: null
+        outerCode: null
+        updatedBy: {}
+        originOrgId: 0
+        partnerTypeId: {}
+        finRisk: null
+        version: 0
+        bizLicenseNo: null
+        enterpriseType: null
+        personName: null
+        isInternal: false
+        labelList:
+        - {}
+        deleted: 0
+        createdBy: {}
+        name: null
+        tenantId: 0
+        currId: {}
+        partnerIdentity:
+        - null
+        classType: null
+        status: null
+    serviceKey: SCM_SLS$customer_health_analyze_async
+  /api/trantor/service/engine/execute/SCM_SLS$SLS_BIND_TYPE_BATCH_GET_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_SLS$SLS_BIND_TYPE_BATCH_GET_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_SLS$sls_tool_so_rtn_frequency_query_service:
+    params:
+      request:
+        so_create_time_from: 0
+        so_create_time_to: 0
+        custId: 0
+    serviceKey: SCM_SLS$sls_tool_so_rtn_frequency_query_service
+  /api/trantor/service/engine/execute/SCM_SLS$SO_ITEM_UPDATE_QTY_INFORM_OMS_SERVICE:
+    params:
+      request:
+        soItemIds:
+        - 0
+    serviceKey: SCM_SLS$SO_ITEM_UPDATE_QTY_INFORM_OMS_SERVICE
+  /api/trantor/service/engine/execute/SCM_SLS$SLS_BIND_TYPE_DISABLE_ACTION_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        purpose: null
+        typeName: null
+        version: 0
+        typeCode: null
+        createdAt: 0
+        matchScope: null
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        tenantId: 0
+        id: 0
+        status: null
+        updatedAt: 0
+    serviceKey: SCM_SLS$SLS_BIND_TYPE_DISABLE_ACTION_SERVICE
   /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_ITEM_TR_FIND_DATA_BY_ID_SERVICE:
     params:
       request:
@@ -8311,7 +9212,9 @@ api_params:
         soItemSettQty: 0
         version: 0
         isCompleteSet: false
+        rebateAmt: 0
         soItemCode: null
+        sourceLineCode: null
         taxRate: 0
         soSchedules:
         - {}
@@ -8320,6 +9223,8 @@ api_params:
         discountInfo: null
         matId: {}
         parentItem: {}
+        charaList:
+        - {}
         weightUomId: {}
         deliveryOverdoseLimit: 0
         discountAmt: 0
@@ -8332,6 +9237,7 @@ api_params:
         soItemOutstandingQty: 0
         requestId: null
         externalPriceInfo: null
+        mirrorRefItemId: 0
         bomQty: 0
         isPaymentCompleted: false
         prItemCode: null
@@ -8341,6 +9247,8 @@ api_params:
         netTradeAmt: 0
         delAddrDetail: null
         bomId: {}
+        subjectList:
+        - {}
         isRev: false
         soItemPrice: 0
         deliveryType: null
@@ -8351,6 +9259,7 @@ api_params:
         grossWeight: 0
         deleted: 0
         createdBy: {}
+        rebatePrice: 0
         matCode: null
         grossTradeAmt: 0
     serviceKey: SCM_SLS$SLS_SO_ITEM_TR_FIND_DATA_BY_ID_SERVICE
@@ -8366,6 +9275,25 @@ api_params:
         pageSize: 20
       cust_id: 0
     serviceKey: SCM_SLS$ZDY_QueryAddrByCustId
+  /api/trantor/service/engine/execute/SCM_SLS$SLS_BIND_POLICY_DISABLE_ACTION_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        purpose: null
+        typeName: null
+        version: 0
+        typeCode: null
+        createdAt: 0
+        matchScope: null
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        tenantId: 0
+        id: 0
+        status: null
+        updatedAt: 0
+    serviceKey: SCM_SLS$SLS_BIND_POLICY_DISABLE_ACTION_SERVICE
   /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_APPROVAL_RULE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
     params:
       sheetConfig: {}
@@ -8398,6 +9326,11 @@ api_params:
         context:
           importMode: null
     serviceKey: SCM_SLS$SLS_DC_MD_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_SLS$submit_sales_order:
+    params:
+      socode_array:
+      - null
+    serviceKey: SCM_SLS$submit_sales_order
   /api/trantor/service/engine/execute/SCM_SLS$external_sales_order_creation:
     params:
       order_info:
@@ -8419,24 +9352,21 @@ api_params:
         soItemList:
         - {}
     serviceKey: SCM_SLS$external_sales_order_creation
+  /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_QUERY_NOT_MIRROR_ITEM_BY_SO_ID:
+    params:
+      id: 0
+    serviceKey: SCM_SLS$SLS_SO_QUERY_NOT_MIRROR_ITEM_BY_SO_ID
   /api/trantor/service/engine/execute/SCM_SLS$agent_sales_master_DATA_STATISTIC_SERVICE:
     params:
       userContent: null
       agentKey: null
     serviceKey: SCM_SLS$agent_sales_master_DATA_STATISTIC_SERVICE
-  /api/trantor/service/engine/execute/SCM_SLS$sales_order_batch_delete_service?tmodule=SCM_SLS:
-    sceneKey: "SCM_SLS$sls_so_730"
-    viewKey: "SCM_SLS$sls_so_730:list"
-    viewTitle: "list"
-    buttonKey: "SCM_SLS$sls_so_730-TERP_MIGRATE$sls_so-batch-actions-1-button-2"
-    buttonName: "批量删除"
-    appId: 0
-    teamId: 22
-    serviceKey: "SCM_SLS$sales_order_batch_delete_service"
+  /api/trantor/service/engine/execute/SCM_SLS$sales_order_batch_delete_service:
     params:
       request:
         ids:
         - 0
+    serviceKey: SCM_SLS$sales_order_batch_delete_service
   /api/trantor/service/engine/execute/SCM_SLS$GIFT_STRATEGY_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
     params:
       sheetConfig: {}
@@ -8461,6 +9391,11 @@ api_params:
       taskName: null
       selfRelationModel: false
     serviceKey: SCM_SLS$GIFT_STRATEGY_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_SLS$agent_sales_master_doubao_DATA_STATISTIC_SERVICE:
+    params:
+      userContent: null
+      agentKey: null
+    serviceKey: SCM_SLS$agent_sales_master_doubao_DATA_STATISTIC_SERVICE
   /api/trantor/service/engine/execute/SCM_SLS$SLS_AFTER_MAT_SELECT_RENDER_SERVICE:
     params:
       request:
@@ -8502,6 +9437,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -8608,6 +9544,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -8646,11 +9583,12 @@ api_params:
       - idempotentKey: null
         endDate: 0
         link: null
+        executorAI: null
         createdAt: 0
         orderLevel: 0
         executor: 0
         requestId: null
-        riskAction: 0
+        riskAction: {}
         promoter: 0
         id: 0
         updatedAt: 0
@@ -8661,16 +9599,44 @@ api_params:
         version: 0
         field1: null
         deleted: 0
+        orderCodeNumber: 0
         createdBy: {}
         name: null
         tenantId: 0
         toDoStrategy: 0
+        executeMatter: null
         field3: null
         field2: null
         field5: null
         field4: null
         status: null
     serviceKey: SCM_SLS$create_business_todo
+  /api/trantor/service/engine/execute/SCM_SLS$SLS_BIND_POLICY_SAVE_WITH_LINES_ACTION_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        policyName: null
+        seqNum: 0
+        policyCode: null
+        version: 0
+        slsOrgId: {}
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        slsDcId: {}
+        tenantId: 0
+        validFromDate: 0
+        typeId: {}
+        id: 0
+        lines:
+        - {}
+        validToDate: 0
+        desc: null
+        status: null
+        updatedAt: 0
+    serviceKey: SCM_SLS$SLS_BIND_POLICY_SAVE_WITH_LINES_ACTION_SERVICE
   /api/trantor/service/engine/execute/SCM_SLS$sls_item_type_group_save_service:
     params:
       request:
@@ -8715,6 +9681,10 @@ api_params:
       taskName: null
       selfRelationModel: false
     serviceKey: SCM_SLS$SLS_SO_ITEM_DETM_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_SLS$SLS_BIND_TYPE_DELETE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_SLS$SLS_BIND_TYPE_DELETE_ACTION_SERVICE
   /api/trantor/service/engine/execute/SCM_SLS$sls_sales_organization_paging_service:
     params:
       request:
@@ -8778,6 +9748,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -8810,28 +9781,36 @@ api_params:
         soTitle: null
         invLoc: {}
     serviceKey: SCM_SLS$sls_sales_order_create_init_service
-  /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_BATCH_STRATEGY_DETM_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+  /api/trantor/service/engine/execute/SCM_SLS$SLS_BIND_POLICY_ENABLE_ACTION_SERVICE:
     params:
-      sheetConfig: {}
-      sliceSize: 0
-      repeatDataStrategy: null
-      processConfig: {}
-      errStrategy: null
-      appCode: null
-      templateId: 0
-      mergeData: false
-      multiSheetConfig:
-      - {}
-      taskCode: null
-      service: null
-      modelMainField: null
-      queryData: {}
-      selfRelationModelField: null
-      headerSelectiveRecord: {}
-      namespace: null
-      taskName: null
-      selfRelationModel: false
-    serviceKey: SCM_SLS$SLS_SO_BATCH_STRATEGY_DETM_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        policyName: null
+        seqNum: 0
+        policyCode: null
+        version: 0
+        slsOrgId: {}
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        slsDcId: {}
+        tenantId: 0
+        validFromDate: 0
+        typeId: {}
+        id: 0
+        lines:
+        - {}
+        validToDate: 0
+        desc: null
+        status: null
+        updatedAt: 0
+    serviceKey: SCM_SLS$SLS_BIND_POLICY_ENABLE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/SCM_SLS$Intelligent_selection_prediction_model:
+    params:
+      data: null
+    serviceKey: SCM_SLS$Intelligent_selection_prediction_model
   /api/trantor/service/engine/execute/SCM_SLS$get_organization_details_by_id:
     params:
       id: 0
@@ -8847,6 +9826,20 @@ api_params:
           conditionGroup: {}
           pageSize: 20
     serviceKey: SCM_SLS$sls_item_type_group_paging_service
+  /api/trantor/service/engine/execute/SCM_SLS$SLS_BIND_TYPE_PAGE_ACTION_SERVICE:
+    params:
+      request:
+        pageable:
+          needTotal: false
+          sortOrders:
+          - {}
+          conditionItems: null
+          pageNo: 1
+          conditionGroup: null
+          pageSize: 20
+          keyword: null
+        status: null
+    serviceKey: SCM_SLS$SLS_BIND_TYPE_PAGE_ACTION_SERVICE
   /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_ITEM_TYPE_CF_GEI_IMPORT_SERVICE:
     params:
       request:
@@ -8928,6 +9921,25 @@ api_params:
         status: null
         updatedAt: 0
     serviceKey: SCM_SLS$WH_FIND_RULE_UPDATE_SERVICE
+  /api/trantor/service/engine/execute/SCM_SLS$SLS_BIND_TYPE_GET_ACTION_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        purpose: null
+        typeName: null
+        version: 0
+        typeCode: null
+        createdAt: 0
+        matchScope: null
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        tenantId: 0
+        id: 0
+        status: null
+        updatedAt: 0
+    serviceKey: SCM_SLS$SLS_BIND_TYPE_GET_ACTION_SERVICE
   /api/trantor/service/engine/execute/SCM_SLS$calculator_service:
     params:
       base_average_price: 0
@@ -8938,6 +9950,18 @@ api_params:
       base_revenue: 0
       current_price: 0
     serviceKey: SCM_SLS$calculator_service
+  /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_QUOTE_PAGING:
+    params:
+      pageable:
+        needTotal: false
+        sortOrders:
+        - {}
+        conditionItems: null
+        pageNo: 1
+        conditionGroup: null
+        pageSize: 20
+        keyword: null
+    serviceKey: SCM_SLS$SLS_SO_QUOTE_PAGING
   /api/trantor/service/engine/execute/SCM_SLS$RULE_ENGINE_QUERY_ALL_FACTOR_ACTION_EVENT:
     params:
       param: null
@@ -8968,6 +9992,53 @@ api_params:
       taskName: null
       selfRelationModel: false
     serviceKey: SCM_SLS$SLS_SO_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_SLS$customer_health_analyze_without_notify_chat:
+    params:
+      cust:
+        counId: {}
+        code: null
+        idCard: null
+        socialCreditCode: null
+        addressId: {}
+        bizScope: null
+        contactNum: null
+        createdAt: 0
+        addressDetail: null
+        registeredCapital: null
+        comCorporation: null
+        requestId: null
+        intro: null
+        id: 0
+        updatedAt: 0
+        taxpayersNum: null
+        outerCode: null
+        updatedBy: {}
+        originOrgId: 0
+        partnerTypeId: {}
+        finRisk: null
+        version: 0
+        bizLicenseNo: null
+        enterpriseType: null
+        personName: null
+        isInternal: false
+        labelList:
+        - {}
+        deleted: 0
+        createdBy: {}
+        name: null
+        tenantId: 0
+        currId: {}
+        partnerIdentity:
+        - null
+        classType: null
+        status: null
+    serviceKey: SCM_SLS$customer_health_analyze_without_notify_chat
+  /api/trantor/service/engine/execute/SCM_SLS$sales_forecasting_server:
+    params:
+      end_date: null
+      target_month: null
+      start_date: null
+    serviceKey: SCM_SLS$sales_forecasting_server
   /api/trantor/service/engine/execute/SCM_SLS$sales_gross_profit_specialized_analysis_assistant_DATA_STATISTIC_SERVICE:
     params:
       userContent: null
@@ -9017,6 +10088,10 @@ api_params:
         status: null
         updatedAt: 0
     serviceKey: SCM_SLS$sls_dc_save_service
+  /api/trantor/service/engine/execute/SCM_SLS$SO_ITEM_TYPE_CF_SAVE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: SCM_SLS$SO_ITEM_TYPE_CF_SAVE_ACTION_SERVICE
   /api/trantor/service/engine/execute/SCM_SLS$gift_strategy_page:
     params:
       request:
@@ -9044,6 +10119,80 @@ api_params:
       taskName: null
       selfRelationModel: false
     serviceKey: SCM_SLS$SLS_SO_ITEM_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/SCM_SLS$oms_channel_create_order_service:
+    params:
+      request:
+        approveStatus: null
+        soExtCode: null
+        slsComId: {}
+        priceIdempotent: null
+        actualPaidAmt: 0
+        custPhone: null
+        soDocDate: 0
+        soCode: null
+        soNotes: null
+        slsOrgId: {}
+        buyerRemark: null
+        createdAt: 0
+        slsPersonName: null
+        id: 0
+        baseCurrId: {}
+        taxAmt: 0
+        updatedAt: 0
+        grossBaseAmt: 0
+        priceCalcDate: 0
+        netBaseAmt: 0
+        slsAttachmentLinks:
+        - {}
+        updatedBy: {}
+        originOrgId: 0
+        effectiveAt: 0
+        bizRuleGroup: 0
+        version: 0
+        currExchangeRateType: {}
+        sellerRemark: null
+        soCreateSource: null
+        btClass: null
+        reCalculate: false
+        totalAmt: 0
+        discountInfo: null
+        freightAmt: 0
+        slsTextLinks:
+        - {}
+        freezeType: null
+        mirrorRefId: 0
+        invOrg: {}
+        discountAmt: 0
+        soStatus: null
+        isFixedExchRate: false
+        soAssociationCode: null
+        slsPhone: null
+        externalBuyerId: null
+        exchRate: 0
+        merchantDiscountAmt: 0
+        soItems:
+        - {}
+        requestId: null
+        custId: {}
+        platformDiscountAmt: 0
+        addrId: {}
+        soTypeId: {}
+        slsPerson: {}
+        slsCurrId: {}
+        custPersonName: null
+        soBusinessStatus: null
+        deliveryInterceptFail: false
+        deleted: 0
+        slsPartnerLinks:
+        - {}
+        soDesc: null
+        createdBy: {}
+        addrDetail: null
+        slsDcId: {}
+        slsTmId: 0
+        soTitle: null
+        invLoc: {}
+    serviceKey: SCM_SLS$oms_channel_create_order_service
   /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_SAVE_ACTION_SERVICE:
     params:
       request:
@@ -9092,6 +10241,7 @@ api_params:
         addrId: {}
         platformDiscountAmt: 0
         soTypeId: {}
+        slsPerson: {}
         slsCurrId: {}
         custPersonName: null
         isRev: false
@@ -9130,6 +10280,12 @@ api_params:
       taskName: null
       selfRelationModel: false
     serviceKey: SCM_SLS$SLS_SO_ITEM_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/SCM_SLS$query_sales_data:
+    params:
+      end_date: null
+      filename: null
+      start_date: null
+    serviceKey: SCM_SLS$query_sales_data
   /api/trantor/service/engine/execute/SCM_SLS$SO_RENDER_PRICE_ACTION_SERVICE:
     params:
       request:
@@ -9178,6 +10334,7 @@ api_params:
         addrId: {}
         platformDiscountAmt: 0
         soTypeId: {}
+        slsPerson: {}
         slsCurrId: {}
         custPersonName: null
         isRev: false
@@ -9200,6 +10357,13 @@ api_params:
         context:
           importMode: null
     serviceKey: SCM_SLS$GIFT_STRATEGY_CF_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/SCM_SLS$sls_tool_so_amt_query_service:
+    params:
+      request:
+        so_create_time_from: 0
+        so_create_time_to: 0
+        custId: 0
+    serviceKey: SCM_SLS$sls_tool_so_amt_query_service
   /api/trantor/service/engine/execute/SCM_SLS$ZDY_QuerySlsMatByMatOrgDc:
     params:
       sls_dc_id: 0
@@ -9299,6 +10463,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -9334,31 +10499,30 @@ api_params:
   /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_TYPE_CF_FIND_DATA_BY_ID_SERVICE:
     params:
       request:
-        syncPrice: false
-        rebatePolicyHeadTrSoTypeIdsId: {}
-        soTypeDesc: null
-        soTypeName: null
-        isModifyApproval: false
-        createdAt: 0
-        effectiveDays: 0
-        requestId: null
-        id: 0
-        genTextTypeRef: {}
-        updatedAt: 0
         updatedBy: {}
         originOrgId: 0
         isRev: false
         attachmentProcedureHeadRef: {}
+        syncPrice: false
+        soTypeDesc: null
         version: 0
         currExchangeRateType: {}
         soTypeCode: null
         partnerProcedureHeadRef: {}
+        soTypeName: null
+        isModifyApproval: false
         btClass: null
+        createdAt: 0
         isDefault: false
         deleted: 0
         isSubmitApproval: false
+        effectiveDays: 0
         createdBy: {}
+        requestId: null
+        id: 0
+        genTextTypeRef: {}
         status: null
+        updatedAt: 0
     serviceKey: SCM_SLS$SLS_SO_TYPE_CF_FIND_DATA_BY_ID_SERVICE
   /api/trantor/service/engine/execute/SCM_SLS$ZDY_INV_ORG_FILTER2:
     params:
@@ -9449,6 +10613,7 @@ api_params:
         slsTextLinks:
         - {}
         freezeType: null
+        mirrorRefId: 0
         invOrg: {}
         discountAmt: 0
         soStatus: null
@@ -9555,14 +10720,6 @@ api_params:
         status: null
         updatedAt: 0
     serviceKey: SCM_SLS$SO_APPROVAL_CF_DISABLE_AND_CLEAR_CACHE_ACTION_SERVICE
-  /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_BATCH_STRATEGY_DETM_CF_GEI_IMPORT_SERVICE:
-    params:
-      request:
-        sliceData:
-        - {}
-        context:
-          importMode: null
-    serviceKey: SCM_SLS$SLS_SO_BATCH_STRATEGY_DETM_CF_GEI_IMPORT_SERVICE
   /api/trantor/service/engine/execute/SCM_SLS$SLS_WH_FIND_RULE_CF_GEI_IMPORT_SERVICE:
     params:
       request:
@@ -9571,539 +10728,3 @@ api_params:
         context:
           importMode: null
     serviceKey: SCM_SLS$SLS_WH_FIND_RULE_CF_GEI_IMPORT_SERVICE
-  /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_SAVE_ACTION_SERVICE?tmodule=SCM_SLS:
-    sceneKey: SCM_SLS$sls_so_price
-    viewKey: SCM_SLS$sls_so_price:edit
-    viewTitle: edit
-    buttonKey: SCM_SLS$sls_so_price-TERP_MIGRATE$sls_so-editView-footer-save
-    buttonName: 保存
-    appId: 0
-    teamId: 22
-    serviceKey: SCM_SLS$SLS_SO_SAVE_ACTION_SERVICE
-    params:
-      request:
-        id: null
-        reCalculate: false
-        soCode: null
-        priceIdempotent: null
-        soTypeId:
-          id: null
-          context: {}
-          version: 4
-          deleted: 0
-          createdAt: 0
-          updatedAt: 0
-          createdBy: 0
-          updatedBy: 0
-          soTypeCode: null
-          soTypeName: null
-          partnerProcedureHeadRef:
-            id: 0
-          status: null
-          submitApproval: true
-          modifyApproval: false
-          btClass: null
-          effectiveDays: 5
-          isRev: false
-        isRev: false
-        soTitle: null
-        soNotes: null
-        soDocDate: 0
-        effectiveAt: 0
-        priceCalcDate: 0
-        soDesc: null
-        soAssociationCode: null
-        custId:
-          id: null
-          context: {}
-          version: 0
-          deleted: 0
-          createdAt: 0
-          updatedAt: 0
-          createdBy: 0
-          updatedBy: 0
-          code: null
-          status: null
-          name: null
-          partnerIdentity: []
-          partnerTypeId:
-            id: null
-            context: {}
-            version: 0
-            deleted: 0
-            createdAt: 0
-            updatedAt: 0
-            createdBy: 0
-            updatedBy: 0
-            code: null
-            name: null
-            desc: null
-            classType: null
-            isInternal: false
-            isAddrRequired: false
-            isBankRequired: false
-            status: null
-            isOverseasPartner: false
-            isNeedMaintainService: false
-            role: null
-            channelType: null
-          comCorporation: null
-          bizLicenseNo: null
-          enterpriseType: null
-          registeredCapital: null
-          socialCreditCode: null
-          taxpayersNum: null
-          bizScope: null
-          intro: null
-          addressDetail: null
-          classType: null
-          isInternal: false
-        addrId:
-          id: null
-        addrDetail: null
-        custPersonName: null
-        custPhone: null
-        slsPerson:
-          id: null
-          context: {}
-          name: null
-        slsPhone: null
-        slsOrgId:
-          id: null
-          context: {}
-          orgName: null
-          comOrgId:
-            id: null
-        slsDcId:
-          id: null
-          context: {}
-          code: null
-          name: null
-          isOnline: false
-        slsComId:
-          id: null
-        slsCurrId:
-          id: null
-          context: {}
-          version: 0
-          deleted: 0
-          createdAt: 0
-          updatedAt: 0
-          createdBy: 0
-          updatedBy: 0
-          currCode: null
-          currName: null
-          symbol: null
-          remark: null
-        baseCurrId:
-          id: null
-        isFixedExchRate: false
-        currExchangeRateType: null
-        exchRate: 1
-        totalAmt: null
-        discountAmt: null
-        grossBaseAmt: null
-        soItems:
-        - bomWhether: false
-          soSchlDelDate: 0
-          context: {}
-          soItemCode: null
-          matId:
-            id: null
-            context: {}
-            matCode: null
-            matName: null
-            imageUrl: null
-            genMatTypeCfId:
-              id: null
-            baseUomId: null
-            weightUomId: null
-            grossWeight: null
-            netWeight: null
-            atpGroupId: null
-            customMat: false
-            isKitSls: false
-            isCompleteSetDel: false
-            slsSoItemTypeGroupId: null
-            invOrgId:
-              id: null
-            invLovId:
-              id: null
-            allowShortageShortagePercent: 0
-            allowSurplusSurplusPercent: 0
-            slsOrgId:
-              id: null
-            slsDcId:
-              id: null
-            slsUomId:
-              id: null
-            slsBasePrice: null
-            specModel: null
-          matCode: null
-          matName: null
-          matBasePrice: null
-          soItemSlsQty: null
-          soItemGrossPrice: null
-          taxRateId: null
-          taxRate: null
-          taxAmt: null
-          grossTradeAmt: null
-          soItemTypeId:
-            id: null
-            context: {}
-            version: 0
-            deleted: 0
-            createdAt: 0
-            updatedAt: 0
-            createdBy: 0
-            updatedBy: 0
-            soItemTypeCode: null
-            soItemTypeName: null
-            delRelv: true
-            autoDelivery: false
-            checkInvLocRelv: true
-            status: null
-            isAutomaticComplete: true
-            isCompletePickControl: false
-            autoPr: false
-            autoOutDnPost: false
-            settlement: true
-            priceControlType: null
-          uomSlsId:
-            id: null
-            context: {}
-          uomBaseId:
-            id: null
-            context: {}
-          invOrgId:
-            id: null
-            context: {}
-          invLocId:
-            id: null
-            context: {}
-          weightUomId:
-            id: null
-            context: {}
-          grossWeight: null
-          netWeight: null
-          volumUomId:
-            context: {}
-          delAddrId:
-            id: null
-            context: {}
-          itemNumber: 1
-          atpCheck: true
-          salesPrice: null
-          matTypeId: null
-          soItemTypeGroupId: null
-          isCompleteSet: false
-          salesAmt: null
-          soItemBaseQty: null
-        slsPartnerLinks:
-        - context: {}
-          partnerTypeId:
-            id: null
-          partnerClass: null
-          partnerId:
-            id: null
-        slsAttachmentLinks: null
-        slsTextLinks: null
-  /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_MANUAL_SUBMIT?tmodule=SCM_SLS:
-    sceneKey: SCM_SLS$sls_so_price
-    viewKey: SCM_SLS$sls_so_price:list
-    viewTitle: list
-    buttonKey: SCM_SLS$sls_so_price-RdEaeGYQWColCWLGgyCot
-    buttonName: 提交
-    appId: 0
-    teamId: 22
-    serviceKey: SCM_SLS$SLS_SO_MANUAL_SUBMIT
-    params:
-      request:
-        id: null
-  /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_DATA_REFER_CREATE_EVENT_SERVICE?tmodule=SCM_SLS:
-    sceneKey: SCM_SLS$sls_so_730
-    viewKey: SCM_SLS$sls_so_730:edit
-    appId: 0
-    teamId: 22
-    serviceKey: SCM_SLS$SLS_SO_DATA_REFER_CREATE_EVENT_SERVICE
-    params:
-      request:
-        id: null
-  /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_DATA_COPY_EVENT_SERVICE?tmodule=SCM_SLS:
-    sceneKey: SCM_SLS$sls_so_price
-    viewKey: SCM_SLS$sls_so_price:list
-    viewTitle: list
-    buttonKey: SCM_SLS$sls_so_price-copy
-    buttonName: 复制
-    appId: 0
-    teamId: 22
-    serviceKey: SCM_SLS$SLS_SO_DATA_COPY_EVENT_SERVICE
-    params:
-      request:
-        id: null
-  /api/trantor/service/engine/execute/SCM_SLS$SO_DELETE_EVENT_SERVICE?tmodule=SCM_SLS:
-    sceneKey: SCM_SLS$sls_so_price
-    viewKey: SCM_SLS$sls_so_price:list
-    viewTitle: list
-    buttonKey: SCM_SLS$sls_so_price-delete
-    buttonName: 删除
-    appId: 0
-    teamId: 22
-    serviceKey: SCM_SLS$SO_DELETE_EVENT_SERVICE
-    params:
-      request:
-        id: null
-  /api/trantor/service/engine/execute/SCM_SLS$SLS_REPEAL_EVENT_SERVICE?tmodule=SCM_SLS:
-    sceneKey: SCM_SLS$sls_so_price
-    viewKey: SCM_SLS$sls_so_price:list
-    viewTitle: list
-    buttonKey: SCM_SLS$sls_so_price-repeal
-    buttonName: 作废
-    appId: 0
-    teamId: 22
-    serviceKey: SCM_SLS$SLS_REPEAL_EVENT_SERVICE
-    params:
-      request:
-        id: null
-  /api/trantor/service/engine/execute/SCM_SLS$SLS_SO_QUERY_DETAIL_EVENT_SERVICE?tmodule=SCM_SLS:
-    sceneKey: SCM_SLS$sls_so_price
-    viewKey: SCM_SLS$sls_so_price:detail
-    viewTitle: detail
-    appId: 0
-    teamId: 22
-    serviceKey: SCM_SLS$SLS_SO_QUERY_DETAIL_EVENT_SERVICE
-    params:
-      request:
-        id: null
-  /api/trantor/service/engine/execute/SCM_SLS$sales_order_batch_delete_service?tmodule=SCM_SLS:
-    sceneKey: SCM_SLS$sls_so_price
-    viewKey: SCM_SLS$sls_so_price:list
-    viewTitle: list
-    buttonKey: SCM_SLS$sls_so_price-TERP_MIGRATE$sls_so-batch-actions-1-button-2
-    buttonName: 批量删除
-    appId: 0
-    teamId: 22
-    serviceKey: SCM_SLS$sales_order_batch_delete_service
-    params:
-      request:
-        ids: []
-  /api/trantor/service/engine/execute/SCM_REB$REB_POLICY_SAVE_ACTION_SERVICE?tmodule=SCM_REB:
-    sceneKey: SCM_REB$REBATE
-    viewKey: SCM_REB$REBATE:bQu_FI0CgU_AP6_XVU29r
-    viewTitle: edit
-    buttonKey: SCM_REB$REBATE-e4gdMlXr1dpMcq6HoIv_n
-    buttonName: 提交
-    appId: 0
-    teamId: 22
-    serviceKey: SCM_REB$REB_POLICY_SAVE_ACTION_SERVICE
-    params:
-      request:
-        policyCode: ""
-        policyName: ""
-        status: null
-        id: null
-        rebDocType: "SO"
-        comOrgId:
-          id: 14507001
-        slsOrgIds: null
-        slsDcIds: null
-        acquireType: "AMT"
-        settAccTypeId:
-          id: 14007001
-        soTypeIds: null
-        soItemTypeIds: null
-        dnTypeIds: null
-        dnItemTypeIds: null
-        periodType: "MONTH"
-        periodBeginAt: null
-        periodEndAt: null
-        rebRules: []
-  /api/trantor/service/engine/execute/SCM_REB$REB_POLICY_SUBMIT_APPROVAL_ACTION_SERVICE?tmodule=SCM_REB:
-    sceneKey: SCM_REB$REBATE
-    viewKey: SCM_REB$REBATE:list
-    viewTitle: list
-    buttonKey: SCM_REB$REBATE-E7dK3WHCaMeBXR2K3Yn6d
-    buttonName: 提交
-    appId: 0
-    teamId: 22
-    serviceKey: SCM_REB$REB_POLICY_SUBMIT_APPROVAL_ACTION_SERVICE
-    params:
-      request:
-        id: null
-/api/trantor/service/engine/execute/SCM_REB$REB_POLICY_PERIOD_RECALC_ACTION_SERVICE?tmodule=SCM_REB:
-  sceneKey: SCM_REB$REBATE
-  viewKey: SCM_REB$REBATE:5uCsaenWWhh98UB6-FArW
-  viewTitle: detail
-  buttonKey: SCM_REB$REBATE-9V9JwvPX2qW62WPuSSd7D
-  buttonName: 重新计算
-  appId: 0
-  teamId: 22
-  serviceKey: SCM_REB$REB_POLICY_PERIOD_RECALC_ACTION_SERVICE
-  params:
-    request:
-      periodId: null
-  /api/trantor/service/engine/execute/SCM_SLS$SLS_REBATE_POLICY_ENABLE_SERVICE?tmodule=SCM_SLS:
-    sceneKey: SCM_SLS$sls_rebate_policy
-    viewKey: SCM_SLS$sls_rebate_policy:list
-    viewTitle: list
-    buttonKey: SCM_SLS$sls_rebate_policy-enable
-    buttonName: 启用
-    appId: 0
-    teamId: 22
-    serviceKey: SCM_SLS$SLS_REBATE_POLICY_ENABLE_SERVICE
-    params:
-      request:
-        id: null
-  /api/trantor/service/engine/execute/SCM_REB$REB_POLICY_DISABLE_ACTION_SERVICE?tmodule=SCM_REB:
-    sceneKey: SCM_REB$REBATE
-    viewKey: SCM_REB$REBATE:list
-    viewTitle: list
-    buttonKey: SCM_REB$REBATE-pLKnqWeLBDRvZFMLkX-u3
-    buttonName: 停用
-    appId: 0
-    teamId: 22
-    serviceKey: SCM_REB$REB_POLICY_DISABLE_ACTION_SERVICE
-    params:
-      request:
-        id: null
-        context: {}
-        version: null
-        deleted: 0
-        createdAt: null
-        updatedAt: null
-        createdBy: null
-        updatedBy: null
-        policyCode: null
-        policyName: null
-        rebDocType: "SO"
-        acquireType: "AMT"
-        comOrgId:
-          id: null
-          context: {}
-        settAccTypeId:
-          id: null
-          context: {}
-        periodType: "MONTH"
-        periodBeginAt: null
-        periodEndAt: null
-        status: "ENABLED"
-  /api/trantor/service/engine/execute/SCM_REB$REB_POLICY_DELETE_ACTION_SERVICE?tmodule=SCM_REB:
-    sceneKey: SCM_REB$REBATE
-    viewKey: SCM_REB$REBATE:list
-    viewTitle: list
-    buttonKey: SCM_REB$REBATE-m2kwCYt36Xpu3RahnHVp0
-    buttonName: 删除
-    appId: 0
-    teamId: 22
-    serviceKey: SCM_REB$REB_POLICY_DELETE_ACTION_SERVICE
-    params:
-      request:
-        id: null
-        context: {}
-        version: 1
-        deleted: 0
-        createdAt: 1758683183000
-        updatedAt: 1758683183000
-        createdBy: 540175374525637
-        updatedBy: 540175374525637
-        policyCode: "AT_RP83182842001764"
-        policyName: "自动化测试返利政策_20250924110622"
-        rebDocType: "SO"
-        acquireType: "AMT"
-        comOrgId:
-          id: 14507001
-          context: {}
-        settAccTypeId:
-          id: 14007001
-          context: {}
-        periodType: "MONTH"
-        periodBeginAt: 1758683183000
-        periodEndAt: 1790219183000
-        status: "DRAFT"
-  /api/trantor/service/engine/execute/ERP_ACC$acc_trans_record_page_service?tmodule=ERP_ACC:
-    sceneKey: ERP_ACC$ADV_ACC_MANAVE_NEW
-    viewKey: ERP_ACC$ADV_ACC_MANAVE_NEW:detail
-    appId: 0
-    teamId: 22
-    serviceKey: ERP_ACC$acc_trans_record_page_service
-    params:
-      accId: 14072001
-      pageable:
-        pageNo: 1
-        pageSize: 20
-        needTotal: true
-        sortOrders: null
-        conditionItems: null
-  /api/trantor/service/engine/execute/SCM_REB$SYS_PagingDataService?tmodule=SCM_REB&modelKey=SCM_REB%24rebate_cb_item_tr:
-    sceneKey: SCM_REB$REBATE_ORDER_ITEM
-    viewKey: SCM_REB$REBATE_ORDER_ITEM:list
-    containerKey: SCM_REB$REBATE_ITEM-VFSwLoBGM715kBVcVKwVy
-    appId: 0
-    teamId: 22
-    serviceKey: SCM_REB$SYS_PagingDataService
-    params:
-      request:
-        pageable:
-          pageNo: 1
-          pageSize: 20
-          needTotal: true
-          sortOrders: null
-          conditionGroup: null
-        modelKey: SCM_REB$rebate_cb_item_tr
-  /api/trantor/service/engine/execute/SCM_REB$REB_CB_HEAD_CONFIRM_DETAILS_ACTION_SERVICE?tmodule=SCM_REB:
-    sceneKey: SCM_REB$REBATE_ORDER_ITEM
-    viewKey: SCM_REB$REBATE_ORDER_ITEM:list
-    viewTitle: list
-    buttonKey: SCM_REB$REBATE_ITEM-a3vsKUlWjVsGqslCF8j5a
-    buttonName: 返利确认
-    appId: 0
-    teamId: 22
-    serviceKey: SCM_REB$REB_CB_HEAD_CONFIRM_DETAILS_ACTION_SERVICE
-    params:
-      request:
-        ids: [2007001]
-  /api/trantor/service/engine/execute/SCM_REB$REB_CB_HEAD_PAGING_ACTION_SERVICE?tmodule=SCM_REB:
-    sceneKey: SCM_REB$REBATE_ORDER
-    viewKey: SCM_REB$REBATE_ORDER:list
-    appId: 0
-    teamId: 22
-    serviceKey: SCM_REB$REB_CB_HEAD_PAGING_ACTION_SERVICE
-    params:
-      request:
-        pageable:
-          pageNo: 1
-          pageSize: 20
-          needTotal: true
-          sortOrders: null
-          conditionItems: null
-        fields:
-          - name: cbCode
-            type: TEXT
-          - name: confirmAt
-            type: DATE
-        systemParams: null
-  /api/trantor/service/engine/execute/SCM_REB$REB_CB_HEAD_SUBMIT_APPROVAL_ACTION_SERVICE?tmodule=SCM_REB:
-    sceneKey: SCM_REB$REBATE_ORDER
-    viewKey: SCM_REB$REBATE_ORDER:list
-    viewTitle: list
-    buttonKey: SCM_REB$REBATE_ORDER-SwL634IIkTdN9x73T4j6e
-    buttonName: 提交
-    appId: 0
-    teamId: 22
-    serviceKey: SCM_REB$REB_CB_HEAD_SUBMIT_APPROVAL_ACTION_SERVICE
-    params:
-      request:
-        id: 2006002
-        context: {}
-        version: 1
-        deleted: 0
-        createdAt: 1761122316000
-        updatedAt: 1761122316000
-        createdBy: 618373053188357
-        updatedBy: 618373053188357
-        cbCode: "CODE2025102216383510094"
-        policyId:
-          id: 2013009
-        confirmAt: 1761122316000
-        confirmTotalAmt: 1
-        status: "DRAFT"
