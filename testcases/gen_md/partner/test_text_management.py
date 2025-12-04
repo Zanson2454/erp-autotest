@@ -9,7 +9,7 @@ from utils.report_util import a, case_decorator
 @allure.feature("文本管理")
 class TestTextManagement(GenMdBaseTest):
     """文本管理测试类"""
-
+    
     @classmethod
     def setup_class(cls):
         super().setup_class()
@@ -19,7 +19,6 @@ class TestTextManagement(GenMdBaseTest):
         
         cls.call_times=0
         
-
     @classmethod
     def teardown_class(cls):
         """测试类结束后执行清理"""
@@ -56,32 +55,28 @@ class TestTextManagement(GenMdBaseTest):
             text_code = self.mock_util.generate_unique_code(tag="TXT")
             text_name = f"文本类型_{self.mock_util.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-文本类型-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["textCode", "textName", "btClass", "desc"],
-                ["params", "request"]
-            )
             set_dict = {
                 "textCode": text_code,
                 "textName": text_name,
                 "btClass": 'SLS',
                 "desc": f"自动化文本-{self.mock_util.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["textCode", "textName", "btClass", "desc"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, extracted_id = self.standard_api_call(
+                api_key="GEN-文本类型-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+            
             self.assert_util.assert_response_data(response)
             
             # 赋值
             self.text_type_id  = response.get("data", {}).get("data", {})
             
-
-            a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -97,14 +92,6 @@ class TestTextManagement(GenMdBaseTest):
     def test_query_text_type_page(self):
         """查询文本类型分页用例"""
         try:
-            api_path = self.get_api_path("GEN-文本类型-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["pageable", "fields", "systemParams"],
-                ["params", "request"]
-            )
             set_dict =  {
                 "pageable": {
                     "pageNo": 1,
@@ -129,14 +116,18 @@ class TestTextManagement(GenMdBaseTest):
                 ],
                 "systemParams": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["pageable", "fields", "systemParams"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-文本类型-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -155,23 +146,19 @@ class TestTextManagement(GenMdBaseTest):
             if not self.text_type_id:
                 self.test_save_text_type()
 
-            api_path = self.get_api_path("GEN-文本类型-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
             set_dict = {"id": self.text_type_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-文本类型-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -244,7 +231,7 @@ class TestTextManagement(GenMdBaseTest):
                         "params": {
                             "request": {
                                 "pageable": {
-
+        
                                 }
                             },
                             "selectFields": [
@@ -282,7 +269,7 @@ class TestTextManagement(GenMdBaseTest):
 
             a.json(params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -301,23 +288,19 @@ class TestTextManagement(GenMdBaseTest):
             if not self.text_type_id:
                 self.test_save_text_type()
 
-            api_path = self.get_api_path("GEN-文本类型-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
             set_dict = {"id": self.text_type_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-文本类型-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -340,14 +323,6 @@ class TestTextManagement(GenMdBaseTest):
             code = self.mock_util.generate_unique_code(tag="TXTGROUP")
             name = f"文本组_{self.mock_util.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-文本组-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["code", "name", "itemList"],
-                ["params", "request"]
-            )
             set_dict = {
                 "code": code,
                 "name": name,
@@ -358,16 +333,21 @@ class TestTextManagement(GenMdBaseTest):
                     }
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["code", "name", "itemList"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, extracted_id = self.standard_api_call(
+                api_key="GEN-文本组-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+            
             self.assert_util.assert_response_data(response)
             
             self.text_group_id = response.get("data", {}).get("data", {})
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -383,14 +363,6 @@ class TestTextManagement(GenMdBaseTest):
     def test_query_text_group_page(self):
         """查询文本组分页用例"""
         try:
-            api_path = self.get_api_path("GEN-文本组-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["pageable", "fields", "systemParams"],
-                ["params", "request"]
-            )
             set_dict =  {
                 "pageable": {
                     "pageNo": 1,
@@ -411,15 +383,18 @@ class TestTextManagement(GenMdBaseTest):
                 ],
                 "systemParams": None
             }
+            fields_to_filter = ["pageable", "fields", "systemParams"]
    
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-文本组-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -439,23 +414,19 @@ class TestTextManagement(GenMdBaseTest):
             if not self.text_group_id:
                 self.test_save_text_group()
 
-            api_path = self.get_api_path("GEN-文本组-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
             set_dict = {"id": self.text_group_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-文本组-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -510,7 +481,7 @@ class TestTextManagement(GenMdBaseTest):
                         "params": {
                             "request": {
                                 "pageable": {
-
+        
                                 }
                             },
                             "selectFields": [
@@ -543,7 +514,7 @@ class TestTextManagement(GenMdBaseTest):
 
             a.json(params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -562,23 +533,19 @@ class TestTextManagement(GenMdBaseTest):
             if not self.text_group_id:
                 self.test_save_text_group()
 
-            api_path = self.get_api_path("GEN-文本组-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
             set_dict = {"id": self.text_group_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-文本组-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -617,7 +584,7 @@ class TestTextManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -655,7 +622,7 @@ class TestTextManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -698,7 +665,7 @@ class TestTextManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -736,7 +703,7 @@ class TestTextManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -774,7 +741,7 @@ class TestTextManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -817,7 +784,7 @@ class TestTextManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise 

@@ -72,9 +72,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
         cls.addr_id = cls.init_data.get("addr_info", [])[0].get("id", None)
         cls.bank_id = cls.init_data.get("bank_info", [])[0].get("bank_id", None)
         cls.sub_bank_id = cls.init_data.get("bank_info", [])[0].get("sub_bank_id", None)
-       
-       
-
+        
     @classmethod
     def teardown_class(cls):
         """测试类结束后执行清理"""
@@ -104,16 +102,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
             code = self.mock_util.generate_unique_code(tag="OUT_CUST")
             bizLicenseNo = self.mock_util.get_mock_enterprise_credentials()
 
-            api_path = self.get_api_path("GEN-合作伙伴-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["code","name","addrList", "addressDetail", "addressId", "attachmentList", "bankList","textList","userList","contactList","contactNum","counId","enterpriseType",
-                 "cateList","bizLicenseNo","socialCreditCode","taxpayersNum","bizScope","classType","comCorporation","intro","outerCode","partiesList","partnerIdentity","partnerTypeId","qualificationsList",
-                 "registeredCapital",],
-                ["params", "request"]
-            )
+            # 调用保存接口
             set_dict = {
                 "partnerIdentity":["CUSTOMER"], #客户
                 "partnerTypeId": {"id":self.out_cust_type_id},
@@ -184,17 +173,25 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
                     }
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["code","name","addrList", "addressDetail", "addressId", "attachmentList", "bankList","textList","userList","contactList","contactNum","counId","enterpriseType",
+                             "cateList","bizLicenseNo","socialCreditCode","taxpayersNum","bizScope","classType","comCorporation","intro","outerCode","partiesList","partnerIdentity","partnerTypeId","qualificationsList",
+                             "registeredCapital",]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用
+            response, extracted_id = self.standard_api_call(
+                api_key="GEN-合作伙伴-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="partner"
+            )
+            
             self.assert_util.assert_response_data(response)
             
-            self.partner_id = response.get("data", {}).get("data", {})
+            self.partner_id = extracted_id
             self.partner_code = code
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -214,16 +211,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
             code = self.mock_util.generate_unique_code(tag="INNER_CUST")
             bizLicenseNo = self.mock_util.get_mock_enterprise_credentials()
 
-            api_path = self.get_api_path("GEN-合作伙伴-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["code","name","addrList", "addressDetail", "addressId", "attachmentList", "bankList","textList","userList","contactList","contactNum","counId","enterpriseType",
-                 "cateList","bizLicenseNo","socialCreditCode","taxpayersNum","bizScope","classType","comCorporation","intro","outerCode","partiesList","partnerIdentity","partnerTypeId","qualificationsList",
-                 "registeredCapital",],
-                ["params", "request"]
-            )
+            # 调用保存接口
             set_dict = {
                 "partnerIdentity":["CUSTOMER"], #客户
                 "partnerTypeId": {"id":self.inter_cust_type_id},
@@ -294,17 +282,25 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
                     }
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["code","name","addrList", "addressDetail", "addressId", "attachmentList", "bankList","textList","userList","contactList","contactNum","counId","enterpriseType",
+                             "cateList","bizLicenseNo","socialCreditCode","taxpayersNum","bizScope","classType","comCorporation","intro","outerCode","partiesList","partnerIdentity","partnerTypeId","qualificationsList",
+                             "registeredCapital",]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用
+            response, extracted_id = self.standard_api_call(
+                api_key="GEN-合作伙伴-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="partner"
+            )
+            
             self.assert_util.assert_response_data(response)
             
-            self.partner_id = response.get("data", {}).get("data", {})
+            self.partner_id = extracted_id
             self.partner_code = code
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -324,15 +320,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
             code = self.mock_util.generate_unique_code(tag="PERSON_CUST")
             name = self.mock_util.get_mock_name()
 
-            api_path = self.get_api_path("GEN-合作伙伴-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["code","name","personName","idCard","addrList", "addressDetail", "addressId", "attachmentList", "bankList","textList","userList","contactList","contactNum","counId","enterpriseType",
-                 "cateList","outerCode","partiesList","partnerIdentity","partnerTypeId","qualificationsList"],
-                ["params", "request"]
-            )
+            # 调用保存接口
             set_dict = {
                 "partnerIdentity":["CUSTOMER"], #客户
                 "partnerTypeId": {"id":self.person_cust_type_id},
@@ -374,24 +362,28 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
                     }
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["code","name","personName","idCard","addrList", "addressDetail", "addressId", "attachmentList", "bankList","textList","userList","contactList","contactNum","counId","enterpriseType",
+                             "cateList","outerCode","partiesList","partnerIdentity","partnerTypeId","qualificationsList"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用
+            response, extracted_id = self.standard_api_call(
+                api_key="GEN-合作伙伴-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="partner"
+            )
+            
             self.assert_util.assert_response_data(response)
             
-            self.partner_id = response.get("data", {}).get("data", {})
+            self.partner_id = extracted_id
             self.partner_code = code
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
         
-        
-    
-
     @case_decorator(
         story="合作伙伴主数据",
         title="测试查询合作伙伴分页",
@@ -403,14 +395,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
     def test_query_business_partner_page(self):
         """查询合作伙伴分页用例"""
         try:
-            api_path = self.get_api_path("GEN-合作伙伴-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["pageable", "fields"],
-                ["params", "request"]
-            )
+            # 调用查询接口
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -422,14 +407,19 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
                     {"name": "partnerName", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["pageable", "fields"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="GEN-合作伙伴-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -448,23 +438,21 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
             if not self.partner_id:
                 self.test_save_business_partner()
 
-            api_path = self.get_api_path("GEN-合作伙伴-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 调用详情查询接口
             set_dict = {"id": self.partner_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="GEN-合作伙伴-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -483,23 +471,21 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
             if not self.partner_id:
                 self.test_save_business_partner()
 
-            api_path = self.get_api_path("合作伙伴-根据ID查找数据服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 调用接口
             set_dict = {"id": self.partner_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="合作伙伴-根据ID查找数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -515,14 +501,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
     def test_business_partner_paging_data(self):
         """合作伙伴分页数据服务用例"""
         try:
-            api_path = self.get_api_path("合作伙伴-分页数据服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["pageable", "queryCondition"],
-                ["params", "request"]
-            )
+            # 调用接口
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -531,14 +510,19 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
                 },
                 "queryCondition": {}
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["pageable", "queryCondition"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="合作伙伴-分页数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -557,24 +541,21 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
             if not self.partner_id:
                 self.test_save_business_partner()
 
-            api_path = self.get_api_path("GEN-合作伙伴-启用服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
-            # 注意：启用接口ID传单个值，不是列表
+            # 调用接口
             set_dict = {"id": self.partner_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="GEN-合作伙伴-启用服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -593,24 +574,21 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
             if not self.partner_id:
                 self.test_save_business_partner()
 
-            api_path = self.get_api_path("GEN-合作伙伴-禁用服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
-            # 注意：禁用接口ID传单个值，不是列表
+            # 调用接口
             set_dict = {"id": self.partner_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="GEN-合作伙伴-禁用服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -709,7 +687,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
                     "params": {
                         "request": {
                             "pageable": {
-
+        
                             }
                         },
                         "selectFields": [
@@ -755,7 +733,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
 
             a.json(params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -774,24 +752,21 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
             if not self.partner_id:
                 self.test_save_business_partner()
 
-            api_path = self.get_api_path("GEN-合作伙伴-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
-            # 注意：删除接口ID传单个值，不是列表
+            # 调用删除接口
             set_dict = {"id": self.partner_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="GEN-合作伙伴-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -830,7 +805,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -848,7 +823,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
         """合作伙伴标准导入用例"""
         try:
             api_path = self.get_api_path("合作伙伴标准导入服务")
-            params, url = self.get_api_params(api_path)
+            params,  url = self.get_api_params(api_path)
 
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
@@ -868,7 +843,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -911,7 +886,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise 
@@ -948,7 +923,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise

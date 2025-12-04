@@ -9,7 +9,7 @@ from utils.report_util import a, case_decorator
 @allure.feature("相关方类型配置")
 class TestPartnerTypeManagement(GenMdBaseTest):
     """相关方类型配置管理测试类"""
-
+    
     @classmethod
     def setup_class(cls):
         super().setup_class()
@@ -57,14 +57,6 @@ class TestPartnerTypeManagement(GenMdBaseTest):
             partnerCode = self.mock_util.generate_unique_code(tag="PT")
             partnerName = f"相关方类型_{self.mock_util.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-相关方类型-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["btClass", "partnerClass", "partnerCode", "partnerName", "desc"],
-                ["params", "request"]
-            )
             set_dict = {
                 "btClass": btClass,
                 "partnerClass": partnerClass,
@@ -72,17 +64,23 @@ class TestPartnerTypeManagement(GenMdBaseTest):
                 "partnerName": partnerName,
                 "desc": f"自动化测试相关方类型-{self.mock_util.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["btClass", "partnerClass", "partnerCode", "partnerName", "desc"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, extracted_id = self.standard_api_call(
+                api_key="GEN-相关方类型-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+            
             self.assert_util.assert_response_data(response)
             
             # 保存返回的ID供后续测试方法使用
             self.partner_type_id = response.get("data", {}).get("data", {})
+            self.partner_type_code = partnerCode
 
-            a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -98,46 +96,42 @@ class TestPartnerTypeManagement(GenMdBaseTest):
     def test_query_partner_type_page(self):
         """查询相关方类型分页用例"""
         try:
-            api_path = self.get_api_path("GEN-相关方类型-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["pageable", "fields", "systemParams"],
-                ["params", "request"]
-            )
             set_dict = {
-            "pageable": {
-                "pageNo": 1,
-                "pageSize": 20,
-                "needTotal": True,
-                "sortOrders": None,
-                "conditionItems": None
-            },
-            "fields": [
-                {
-                    "name": "partnerName",
-                    "type": "TEXT"
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": None
                 },
-                {
-                    "name": "btClass",
-                    "type": "SELECT"
-                },
-                {
-                    "name": "partnerCode",
-                    "type": "TEXT"
-                }
-            ],
-            "systemParams": None
-        }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+                "fields": [
+                    {
+                        "name": "partnerName",
+                        "type": "TEXT"
+                    },
+                    {
+                        "name": "btClass",
+                        "type": "SELECT"
+                    },
+                    {
+                        "name": "partnerCode",
+                        "type": "TEXT"
+                    }
+                ],
+                "systemParams": None
+            }
+            fields_to_filter = ["pageable", "fields", "systemParams"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-相关方类型-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -156,23 +150,19 @@ class TestPartnerTypeManagement(GenMdBaseTest):
             if not self.partner_type_id:
                 self.test_save_partner_type(btClass="SLS_ORG", partnerClass="CUSTOMER")
 
-            api_path = self.get_api_path("GEN-相关方类型-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
             set_dict = {"id": self.partner_type_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-相关方类型-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -191,23 +181,19 @@ class TestPartnerTypeManagement(GenMdBaseTest):
             if not self.partner_type_id:
                 self.test_save_partner_type(btClass="SLS_ORG", partnerClass="CUSTOMER")
 
-            api_path = self.get_api_path("GEN-相关方类型定义配置表-根据ID查找数据服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
             set_dict = {"id": self.partner_type_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-相关方类型定义配置表-根据ID查找数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -223,14 +209,6 @@ class TestPartnerTypeManagement(GenMdBaseTest):
     def test_query_partner_by_type_page(self):
         """根据类型查询相关方分页用例"""
         try:
-            api_path = self.get_api_path("GEN-相关方类型-根据类型查询相关方分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["typeId", "pageable"],
-                ["params", "request"]
-            )
             set_dict = {
                 "typeId": 1,  # 示例类型ID
                 "pageable": {
@@ -239,18 +217,21 @@ class TestPartnerTypeManagement(GenMdBaseTest):
                     "needTotal": True
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["typeId", "pageable"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-相关方类型-根据类型查询相关方分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
-
 
 
     @pytest.mark.skip(reason="业务未引用，暂时跳过")
@@ -274,29 +255,29 @@ class TestPartnerTypeManagement(GenMdBaseTest):
                 ["params", "request"]
             )
             set_dict =  {
-            "pageable": {
-                "pageNo": 1,
-                "pageSize": 20,
-                "needTotal": True,
-                "sortOrders": None,
-                "conditionItems": None
-            },
-            "fields": [
-                {
-                    "name": "partnerName",
-                    "type": "TEXT"
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": None
                 },
-                {
-                    "name": "btClass",
-                    "type": "SELECT"
-                },
-                {
-                    "name": "partnerCode",
-                    "type": "TEXT"
-                }
-            ],
-            "systemParams": None
-        }
+                "fields": [
+                    {
+                        "name": "partnerName",
+                        "type": "TEXT"
+                    },
+                    {
+                        "name": "btClass",
+                        "type": "SELECT"
+                    },
+                    {
+                        "name": "partnerCode",
+                        "type": "TEXT"
+                    }
+                ],
+                "systemParams": None
+            }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response = self.http.post(url, json=filtered_params)
@@ -304,7 +285,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -393,7 +374,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
 
             a.json(params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -412,23 +393,19 @@ class TestPartnerTypeManagement(GenMdBaseTest):
             if not self.partner_type_id:
                 self.test_save_partner_type(btClass="SLS_ORG", partnerClass="CUSTOMER")
 
-            api_path = self.get_api_path("GEN-相关方类型-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
             set_dict = {"id": self.partner_type_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-相关方类型-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -467,7 +444,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -505,7 +482,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -548,7 +525,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise 
@@ -571,14 +548,6 @@ class TestPartnerTypeManagement(GenMdBaseTest):
             code = self.mock_util.generate_unique_code(tag="PG")
             name = f"相关方组_{self.mock_util.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-相关方组-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["code", "name", "itemList"],
-                ["params", "request"]
-            )
             set_dict = {
                 "code": code,
                 "name": name,
@@ -591,16 +560,21 @@ class TestPartnerTypeManagement(GenMdBaseTest):
                     }
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["code", "name", "itemList"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, extracted_id = self.standard_api_call(
+                api_key="GEN-相关方组-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+            
             self.assert_util.assert_response_data(response)
             
             self.partner_group_id = response.get("data", {}).get("data", {})
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -616,14 +590,6 @@ class TestPartnerTypeManagement(GenMdBaseTest):
     def test_query_partner_group_page(self):
         """查询相关方组分页用例"""
         try:
-            api_path = self.get_api_path("GEN-相关方组-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["pageable", "fields", "systemParams"],
-                ["params", "request"]
-            )
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -638,14 +604,18 @@ class TestPartnerTypeManagement(GenMdBaseTest):
                 ],
                 "systemParams": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["pageable", "fields", "systemParams"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-相关方组-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -664,23 +634,19 @@ class TestPartnerTypeManagement(GenMdBaseTest):
             if not self.partner_group_id:
                 self.test_save_partner_group()
 
-            api_path = self.get_api_path("GEN-相关方组-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
             set_dict = {"id": self.partner_group_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-相关方组-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -699,23 +665,19 @@ class TestPartnerTypeManagement(GenMdBaseTest):
             if not self.partner_group_id:
                 self.test_save_partner_group()
 
-            api_path = self.get_api_path("GEN-相关方组-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
             set_dict = {"id": self.partner_group_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-相关方组-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -798,7 +760,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
 
             a.json(params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -838,7 +800,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -877,7 +839,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -920,7 +882,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise 
