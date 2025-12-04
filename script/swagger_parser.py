@@ -620,7 +620,7 @@ if __name__ == "__main__":
     )
     
     # 获取指定团队和模块的Swagger文档
-    swagger_doc = parser.fetch_swagger_doc("TERP", "sys_common")
+    swagger_doc = parser.fetch_swagger_doc("TERP", "GEN_MD")
     
     # 解析所有接口
     endpoints = parser.parse_endpoints()
@@ -629,7 +629,7 @@ if __name__ == "__main__":
     #parser.save_paths_to_yaml(endpoints, module="SCM_INV")
     
     # 保存路径信息到gen_path.yaml（包含系统服务）
-    parser.save_paths_to_yaml(endpoints, module="sys_common", include_sys_services=True)
+    parser.save_paths_to_yaml(endpoints, module="GEN_MD", include_sys_services=True)
     
     # 保存统一结构到unified_api.yaml（不包含系统服务）
     # parser.save_unified_api_yaml(endpoints, module="SCM_INV")
