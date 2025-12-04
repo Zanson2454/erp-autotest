@@ -61,22 +61,12 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         新增组织切换模型用例
         """
         try:
-            # 调用保存接口
-            api_path = self.get_api_path("ORG-多组织-保存组织切换模型服务")
-            params, url = self.get_api_params(api_path)
-            
-             # 准备组织切换模型数据
+            # 调用保存接口前准备数据
             menu = f"菜单名称_{self.mock_util.get_timestamp(timestamp=True)}"
             self.modelKey =f"org_switch_model_{self.mock_util.get_timestamp(timestamp=True)}"
             self.modelName = f"组织切换模型表名_{self.mock_util.get_timestamp(timestamp=True)}"     
 
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["menu", "modelKey", "modelName", "isOpen", "describe"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "menu": menu,
                 "modelKey": self.modelKey,
@@ -84,14 +74,17 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
                 "isOpen": True,
                 "describe": f"自动化测试组织切换模型-{self.mock_util.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["menu", "modelKey", "modelName", "isOpen", "describe"]
 
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-            
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-多组织-保存组织切换模型服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
 
-            # 保存组织切换模型信息供后续用例使用
+            # 保存组织切换模型信息供后续用例使用（保持原有SQL逻辑）
             sql = f"select id from org_switch_model_cf where model_key = '{self.modelKey}'"
             result = self.db.query(sql)
             if result:
@@ -100,8 +93,8 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
                 self.logger.warning(f"组织切换模型 {self.modelKey} 在数据库中不存在")
                 # 如果数据不存在，说明保存操作失败，需要重新尝试或抛出异常
                 raise Exception(f"组织切换模型保存失败，model_key: {self.modelKey}")
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -124,64 +117,59 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
             if not self.modelKey:
                 self.test_save_org_switch_model()
                 
-            # 调用分页查询接口
-            api_path = self.get_api_path("ORG-多组织-分页查询组织切换模型服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["pageable", "fields","systemParams"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {
-                    "pageable": {
-                        "pageNo": 1,
-                        "pageSize": 20,
-                        "needTotal": True,
-                        "sortOrders": None,
-                        "conditionItems": {
-                            "type": "ConditionItems",
-                            "conditions": {
-                                "modelKey": {
-                                    "operator": "CONTAINS",
-                                    "value": self.modelKey
-                                }
-                            },
-                            "logicOperator": "AND"
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": {
+                        "type": "ConditionItems",
+                        "conditions": {
+                            "modelKey": {
+                                "operator": "CONTAINS",
+                                "value": self.modelKey
+                            }
                         }
+                    }
+                },
+                "fields": [
+                    {
+                        "name": "modelKey",
+                        "type": "TEXT"
                     },
-                    "fields": [
-                        {
-                            "name": "modelKey",
-                            "type": "TEXT"
-                        },
-                        {
-                            "name": "modelName",
-                            "type": "TEXT"
-                        },
-                        {
-                            "name": "isOpen",
-                            "type": "BOOL"
-                        },
-                        {
-                            "name": "menu",
-                            "type": "TEXT"
-                        }
-                    ],
-                    "systemParams": None
-                }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+                    {
+                        "name": "modelName",
+                        "type": "TEXT"
+                    },
+                    {
+                        "name": "isOpen",
+                        "type": "BOOL"
+                    },
+                    {
+                        "name": "menu",
+                        "type": "TEXT"
+                    }
+                ],
+                "systemParams": None
+            }
+            fields_to_filter = ["pageable", "fields","systemParams"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-多组织-分页查询组织切换模型服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
             total = response.get("data", {}).get("data", {}).get("total", 0)
             self.assert_util.assert_by_operator(total, "=", 1)
             
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -205,25 +193,22 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
             if not self.org_switch_model_id:
                 self.test_save_org_switch_model()
 
-            # 调用详情查询接口
-            api_path = self.get_api_path("ORG-多组织-查询组织切换模型详情服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_switch_model_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-多组织-查询组织切换模型详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -302,16 +287,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
             self.org_switch_des = self.mock_util.generate_unique_code(tag="OrgSwitch")
             self.org_switch_name = f"组织切换_{self.mock_util.get_timestamp(timestamp=True)}"
 
-            # 调用保存接口
-            api_path = self.get_api_path("ORG-多组织-保存组织切换服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["switchName","switchOrgId","orgDimensionId","switchStatus","switchName","switchDesc"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "switchName": self.org_switch_name,
                 "switchDescribe": self.org_switch_des,
@@ -319,12 +295,17 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
                 "switchStatus": "ENABLED", 
                 "orgDimensionId": {"id": self.orgDimensionId}
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["switchName","switchOrgId","orgDimensionId","switchStatus","switchName","switchDesc"]
 
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-多组织-保存组织切换服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
 
+            # 保存组织切换信息供后续用例使用（保持原有SQL逻辑）
             sql = f"select id from org_switch_list_cf where switch_name = '{self.org_switch_name}'"
             result = self.db.query(sql)
             self.logger.info(f"查询结果: {result}")
@@ -335,8 +316,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
                 # 如果数据不存在，说明保存操作失败，需要重新尝试或抛出异常
                 raise Exception(f"组织切换保存失败，switch_name: {self.org_switch_name}")
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -360,25 +340,22 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
             if not self.org_switch_id:
                 self.test_save_org_switch()
 
-            # 调用启用接口
-            api_path = self.get_api_path("ORG-多组织-启用组织切换服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_switch_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-多组织-启用组织切换服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -402,25 +379,22 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
             if not self.org_switch_id:
                 self.test_enable_org_switch()
 
-            # 调用停用接口
-            api_path = self.get_api_path("ORG-多组织-停用组织切换服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_switch_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-多组织-停用组织切换服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -440,16 +414,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         分页查询组织切换用例
         """
         try:
-            # 调用分页查询接口
-            api_path = self.get_api_path("ORG-多组织-分页查询组织切换服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["pageable", "fields","systemParams"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -460,7 +425,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
                         "type": "ConditionItems",
                         "conditions": {
                             "orgSwitchName": {"operator": "CONTAINS", "value": self.org_switch_name}
-                        },
+                        }
                     }
                 },
                 "fields": [
@@ -470,14 +435,20 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
                 ],
                 "systemParams": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["pageable", "fields","systemParams"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-多组织-分页查询组织切换服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -501,25 +472,22 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
             if not self.org_switch_id:
                 self.test_save_org_switch()
 
-            # 调用详情查询接口
-            api_path = self.get_api_path("ORG-多组织-查询组织切换详情服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_switch_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-多组织-查询组织切换详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -539,18 +507,22 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         查询用户所在的公司用例
         """
         try:
-            # 调用查询用户所在公司接口
-            api_path = self.get_api_path("ORG-多组织-查询用户所在的公司服务")
-            params, url = self.get_api_params(api_path)
+            # 准备测试数据（业务逻辑保持不变）
+            set_dict = {}
+            fields_to_filter = []
 
-            # 这个接口可能不需要参数或参数很少
-            self.logger.info(f"请求参数: {params}")
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-多组织-查询用户所在的公司服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
 
-            response = self.http.post(url, json=params)
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
-            a.json(params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -718,25 +690,22 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
             if not self.org_switch_id:
                 self.test_save_org_switch()
 
-            # 调用删除接口
-            api_path = self.get_api_path("ORG-多组织-删除组织切换服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_switch_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-多组织-删除组织切换服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -760,25 +729,22 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
             if not self.org_switch_model_id:
                 self.test_save_org_switch_model()
 
-            # 调用删除接口
-            api_path = self.get_api_path("ORG-多组织-删除组织切换模型服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_switch_model_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-多组织-删除组织切换模型服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")

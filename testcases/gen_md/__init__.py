@@ -4,6 +4,8 @@
 """
 import sys
 from pathlib import Path
+import json
+import requests
 
 # 获取项目根目录
 project_root = Path(__file__).resolve().parent.parent.parent
@@ -157,87 +159,62 @@ class GenMdBaseTest(BaseTest):
             params['params']['request'][key] = value
         return params
 
-    def standard_api_call(self, api_key, set_dict=None, fields_to_filter=None, 
-                         store_id_as=None):
+    def standard_api_call(self, api_key, set_dict=None, fields_to_filter=None, store_id_as=None, use_param_util=True):
         """
-        标准化API调用方法，替换20+行重复的CRUD调用逻辑（纯执行，无断言）
-        
-        参数:
-            api_key: API键名，如 "GEN-地址库-保存服务"
-            set_dict: 要设置的参数字典，默认为None
-            fields_to_filter: 需要过滤的字段列表，默认为None（使用通用字段）
-            store_id_as: ID存储属性名，默认为None（返回extracted_id）
-        
-        返回:
-            tuple: (response, extracted_id) - 响应对象和提取的ID
-            
-        功能:
-            1. 获取API路径和参数模板
-            2. 过滤POST body字段
-            3. 设置请求参数
-            4. 发送POST请求
-            5. 提取并存储响应ID
-            6. 记录Allure报告
-            注意：不包含任何断言逻辑，验证由调用方负责
+        标准化API调用模板 - 纯执行和报告工具，无断言逻辑
+        :param api_key: API服务名称键
+        :param set_dict: 要设置的参数字典
+        :param fields_to_filter: 需要过滤的字段列表
+        :param store_id_as: ID存储属性名（用于自动保存self.xxx_id）
+        :param use_param_util: 是否使用ParamUtil过滤/设置（默认True）；False时直接使用set_dict作为params
+        :return: (response, extracted_id)
         """
         try:
-            # 1. 获取API路径和参数模板
+            # 1. 获取API路径和基础参数
             api_path = self.get_api_path(api_key)
             params, url = self.get_api_params(api_path)
             
-            # 2. 确定要过滤的字段（使用默认或传入的）
-            if fields_to_filter is None:
-                # 通用CRUD字段，根据API类型智能选择
-                if "保存" in api_key or "新增" in api_key or "创建" in api_key:
-                    fields_to_filter = ["id"]  # 保存操作通常过滤id
-                elif "查询" in api_key or "列表" in api_key:
-                    fields_to_filter = ["pageable", "fields", "conditionItems"]
-                elif "详情" in api_key or "获取" in api_key:
-                    fields_to_filter = ["id"]
-                elif "删除" in api_key or "禁用" in api_key:
-                    fields_to_filter = ["id"]
-                else:
+            # 2. 参数处理 - 分支逻辑
+            if use_param_util:
+                # 标准流程：使用ParamUtil过滤和设置
+                if fields_to_filter is None:
                     fields_to_filter = []
+                filtered_params = ParamUtil.filter_post_body_fields(
+                    params, fields_to_filter, ["params", "request"]
+                )
+                if set_dict:
+                    ParamUtil.set_request_params(filtered_params, set_dict)
+            else:
+                # 特殊流程：直接使用set_dict作为params内容，无过滤/设置
+                if set_dict is None:
+                    set_dict = {}
+                filtered_params = {"params": set_dict}
             
-            # 3. 过滤POST body字段
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, fields_to_filter, ["params", "request"]
-            )
+            # 3. 发送请求
+            self.logger.info(f"接口请求的地址>>>{url}")
+            self.logger.info(f"接口请求的方法>>>POST")
+            self.logger.info(f"接口请求的json参数>>>{json.dumps(filtered_params, ensure_ascii=False, indent=2)}")
             
-            # 4. 设置请求参数（如果提供了set_dict）
-            if set_dict:
-                ParamUtil.set_request_params(filtered_params, set_dict)
-            
-            # 5. 发送POST请求
             response = self.http.post(url, json=filtered_params)
             
-            # 6. 提取响应ID（CRUD操作通常在 data.data 或 data.id）
-            extracted_id = None
-            if "保存" in api_key or "新增" in api_key or "创建" in api_key:
-                # 保存操作返回新创建的ID
-                extracted_id = response.get("data", {}).get("data", {})
-                if isinstance(extracted_id, dict):
-                    extracted_id = extracted_id.get("id", extracted_id)
-            elif "详情" in api_key or "获取" in api_key:
-                # 详情操作返回对象ID
-                extracted_id = response.get("data", {}).get("data", {}).get("id")
-            
-            # 7. 存储ID到实例属性（如果指定了store_id_as）
-            if store_id_as and extracted_id:
-                setattr(self, f"{store_id_as}_id", extracted_id)
-                self.logger.info(f"自动存储 {store_id_as}_id: {extracted_id}")
-            
-            # 8. 记录Allure报告
+            # 4. Allure报告
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
             
-            # 9. 返回响应和提取的ID
+            # 5. ID提取和存储
+            extracted_id = response.get("data", {}).get("data", {})
+            if store_id_as:
+                setattr(self, f"{store_id_as}_id", extracted_id)
+            
             return response, extracted_id
             
+        except requests.exceptions.RequestException as e:
+            self.logger.error(f"standard_api_call HTTP请求失败 [{api_key}]: {str(e)}")
+            a.text(f"HTTP请求失败: {str(e)}", "请求失败")
+            raise
         except Exception as e:
-            # 异常时记录Allure报告并重新抛出
-            a.text(str(e), "API调用失败原因")
-            self.logger.error(f"standard_api_call 失败 [{api_key}]: {str(e)}")
+            self.logger.error(f"standard_api_call 执行失败 [{api_key}]: {str(e)}")
+            a.text(f"执行失败: {str(e)}", "执行异常")
             raise
 
 

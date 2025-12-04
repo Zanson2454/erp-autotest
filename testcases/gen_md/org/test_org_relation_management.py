@@ -60,16 +60,9 @@ class TestOrg_RelationManagement(GenMdBaseTest):
             # 准备组织关联管理数据
             orgRelationEnabledTime = self.mock_util.get_timestamp(timestamp=True)
             orgRelationDisabledTime = self.mock_util.get_timestamp(timestamp=True,day_offset=30)
-            # 调用保存接口
-            api_path = self.get_api_path("ORG-组织关联-保存服务")
-            params, url = self.get_api_params(api_path)
+            # 调用保存接口前准备数据
 
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["orgHeadDimensionId", "orgHeadUnitId","orgRelationDimensionId","orgRelationUnitId","orgRelationDisabledTime","orgRelationEnabledTime","orgRelationStatus"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "orgHeadDimensionId": {"id":self.org_head_dimension_id},
                 "orgHeadUnitId": {"id":self.org_head_unit_id},
@@ -79,15 +72,20 @@ class TestOrg_RelationManagement(GenMdBaseTest):
                 "orgRelationEnabledTime": orgRelationEnabledTime,
                 "orgRelationStatus": "ENABLED"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["orgHeadDimensionId", "orgHeadUnitId","orgRelationDimensionId","orgRelationUnitId","orgRelationDisabledTime","orgRelationEnabledTime","orgRelationStatus"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织关联-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
-            
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -107,16 +105,7 @@ class TestOrg_RelationManagement(GenMdBaseTest):
         查询组织关联管理列表用例
         """
         try:
-            # 调用查询接口
-            api_path = self.get_api_path("GEN-组织关联-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["pageable", "fields"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -149,14 +138,20 @@ class TestOrg_RelationManagement(GenMdBaseTest):
                 ],
                 "systemParams": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["pageable", "fields"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-组织关联-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
-            
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -176,6 +171,7 @@ class TestOrg_RelationManagement(GenMdBaseTest):
         查询组织关联管理详情用例
         """
         try:
+            # 获取组织关联管理信息（保持原有SQL逻辑）
             sql = f"select id from org_relation_cf where {self.query_condition}"
             result = self.db.query(sql)
             if not result or not result[0].get("id",None):
@@ -183,25 +179,22 @@ class TestOrg_RelationManagement(GenMdBaseTest):
                 result = self.db.query(sql)
             self.org_relation_id = result[0].get("id",None)
 
-            # 调用详情查询接口
-            api_path = self.get_api_path("GEN-组织关联-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_relation_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-组织关联-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
-            
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -221,36 +214,35 @@ class TestOrg_RelationManagement(GenMdBaseTest):
         启用组织关联用例
         """
         try:
-            # 获取组织关联管理ID
+            # 获取组织关联管理ID（保持原有SQL逻辑）
             sql = f"select id,org_relation_status from org_relation_cf where {self.query_condition}"
             result = self.db.query(sql)
             if not result or not result[0].get("id",None):
                 self.test_save_org_relation()
                 result = self.db.query(sql)
             self.org_relation_id = result[0].get("id",None)
-            # 调用启用接口
-            api_path = self.get_api_path("ORG-组织关联-启用服务")
-            params, url = self.get_api_params(api_path)
+            # 调用启用接口前准备数据
 
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_relation_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织关联-启用服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
             
             sql = f"select org_relation_status from org_relation_cf where id = {self.org_relation_id}"
             org_relation_status = self.db.query(sql)[0].get("org_relation_status",None)
             self.assert_util.assert_by_operator(org_relation_status, "=", "ENABLED")
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -270,7 +262,7 @@ class TestOrg_RelationManagement(GenMdBaseTest):
         禁用组织关联用例
         """
         try:
-            # 获取组织关联管理ID
+            # 获取组织关联管理ID（保持原有SQL逻辑）
             sql = f"select id,org_relation_status from org_relation_cf where {self.query_condition}"
             result = self.db.query(sql)
             if not result or not result[0].get("id",None):
@@ -278,29 +270,26 @@ class TestOrg_RelationManagement(GenMdBaseTest):
                 result = self.db.query(sql)
             self.org_relation_id = result[0].get("id",None)
 
-            # 调用禁用接口
-            api_path = self.get_api_path("ORG-组织关联-禁用服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_relation_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织关联-禁用服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
             
             sql = f"select org_relation_status from org_relation_cf where id = {self.org_relation_id}"
             org_relation_status = self.db.query(sql)[0].get("org_relation_status",None)
             self.assert_util.assert_by_operator(org_relation_status, "=", "DISABLED")
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")

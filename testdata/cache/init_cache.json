@@ -1,11 +1,5 @@
 {
-  "currency_info": [
-    {
-      "curr_id": 2000001,
-      "curr_code": "CNY",
-      "curr_name": "人民币"
-    }
-  ],
+  "currency_info": [],
   "country_info": [
     {
       "coun_id": 2000001,

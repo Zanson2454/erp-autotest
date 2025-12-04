@@ -1,7 +1,6 @@
 import allure
 import pytest
 from testcases.gen_md import GenMdBaseTest
-from utils.mock_util import MockData
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
@@ -58,17 +57,8 @@ class TestOrg_TypeManagement(GenMdBaseTest):
             # 准备组织类型管理数据
             org_type_code = self.mock_util.generate_unique_code(tag="OrgType")
             org_type_name = f"组织类型管理_{self.mock_util.get_timestamp()}"
-
+            
             # 调用保存接口
-            api_path = self.get_api_path("ORG-组织类型-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["org_type_code", "org_type_name","attrList"],
-                ["params", "request"]
-            )
             set_dict = {
                 "code": org_type_code,
                 "name": org_type_name,
@@ -84,17 +74,21 @@ class TestOrg_TypeManagement(GenMdBaseTest):
                     }
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["org_type_code", "org_type_name","attrList"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用
+            response, extracted_id = self.standard_api_call(
+                api_key="ORG-组织类型-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="org_type"
+            )
+            
             self.assert_util.assert_response_data(response)
-            self.org_type_id = response.get("data", {}).get("data", {}).get("id", None)
-
-
-            a.json(filtered_params, "请求数据")
+            self.org_type_id = extracted_id.get("id", None)
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -114,15 +108,6 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         """
         try:
             # 调用查询接口
-            api_path = self.get_api_path("GEN-组织类型-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["pageable", "fields"],
-                ["params", "request"]
-            )
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -134,19 +119,23 @@ class TestOrg_TypeManagement(GenMdBaseTest):
                     {"name": "org_type_name", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["pageable", "fields"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="GEN-组织类型-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_data(response)
 
             # 验证返回的数据列表
             data_list = response.get("data", {}).get("data", {}).get("data", [])
             self.assert_util.assert_by_operator(data_list, "not_empty")
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -170,24 +159,19 @@ class TestOrg_TypeManagement(GenMdBaseTest):
                 self.test_save_org_type()
 
             # 调用详情查询接口
-            api_path = self.get_api_path("ORG-组织类型-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
             set_dict = {"id": self.org_type_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织类型-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_data(response)
-            a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -211,32 +195,27 @@ class TestOrg_TypeManagement(GenMdBaseTest):
                 self.test_save_org_type()
 
             # 调用启用接口
-            api_path = self.get_api_path("ORG-组织类型-启用服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
             set_dict = {"id": self.org_type_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织类型-启用服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_success(response)
 
-            sql = f"select status from org_business_type_cf where id ={self.org_type_id}"
+            sql = f"select status from org_business_type_cf where id = {self.org_type_id}"
             if self.db.query(sql):
                 status = self.db.query(sql)[0]["status"]
                 self.assert_util.assert_by_operator(status, "=", "ENABLED")
             else:
                 self.logger.info("组织类型管理信息不存在")
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -260,33 +239,28 @@ class TestOrg_TypeManagement(GenMdBaseTest):
                 self.test_enabled_org_type()
 
             # 调用禁用接口
-            api_path = self.get_api_path("ORG-组织类型-禁用服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
             set_dict = {"id": self.org_type_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织类型-禁用服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_success(response)
 
-            sql = f"select status from org_business_type_cf where id ={self.org_type_id}"
+            sql = f"select status from org_business_type_cf where id = {self.org_type_id}"
             self.logger.info(f"data: {self.db.query(sql)}")
             if self.db.query(sql):
                 status = self.db.query(sql)[0]["status"]
                 self.assert_util.assert_by_operator(status, "=", "DISABLED")
             else:
                 self.logger.info("组织类型管理信息不存在")
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -305,24 +279,25 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         查询组织架构类型列表用例
         """
         try:
-            # 调用查询接口
-            api_path = self.get_api_path("ORG-组织架构-查询组织类型列表服务")
-            params, url = self.get_api_params(api_path)
-
-            # 设置参数
-            params["params"] = {
+            # 调用查询接口 - 直接参数设置
+            set_dict = {
                 "request": {
                     "orgDimensionCode": "SCM_ORG_GRP"
                 }
             }
-            self.logger.info(f"请求参数: {params}")
 
-            response = self.http.post(url, json=params)
+            # 使用标准化API调用 - 特殊直接参数
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织架构-查询组织类型列表服务",
+                set_dict=set_dict,
+                fields_to_filter=None,
+                use_param_util=False
+            )
+            
             self.assert_util.assert_response_data(response, "组织类型列表为空")
 
-            a.json(params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -342,11 +317,7 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         """
         try:
             # 调用查询接口
-            api_path = self.get_api_path("GEN-组织类型-查询分页服务")
-            params, url = self.get_api_params(api_path)
-            
-            # 设置参数
-            params["params"]["request"] = {
+            set_dict = {
                 "pageable": {
                     "pageNo": 1,
                     "pageSize": 20,
@@ -361,15 +332,19 @@ class TestOrg_TypeManagement(GenMdBaseTest):
                 ],
                 "systemParams": None
             }
-            self.logger.info(f"请求参数: {params}")
+            fields_to_filter = ["pageable", "fields", "systemParams"]
 
-            # 发送请求，添加查询参数
-            response = self.http.post(url, params={"tmodule": "GEN_MD"}, json=params)
+            # 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="GEN-组织类型-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_data(response, "组织业务类型列表不为空")
 
-            a.json(params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -393,23 +368,19 @@ class TestOrg_TypeManagement(GenMdBaseTest):
                 self.test_save_org_type()
 
             # 调用删除接口
-            api_path = self.get_api_path("ORG-组织类型-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
             set_dict = {"id": self.org_type_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织类型-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_success(response)
 
-            sql = f"select deleted from org_business_type_cf where id ={self.org_type_id}"
+            sql = f"select deleted from org_business_type_cf where id = {self.org_type_id}"
             result = self.db.query(sql)
             if result:
                 deleted = result[0]["deleted"]
@@ -417,10 +388,9 @@ class TestOrg_TypeManagement(GenMdBaseTest):
             else:
                 self.logger.warning(f"组织类型ID {self.org_type_id} 在数据库中不存在")
                 # 如果数据不存在，说明删除操作已经成功，可以跳过断言
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise

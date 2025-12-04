@@ -53,7 +53,7 @@ class TestIdentityManagement(GenMdBaseTest):
         启用组织身份用例
         """
         try:
-            # 创建组织身份数据
+            # 创建组织身份数据（保持原有DB insert逻辑）
             identity_code = self.mock_util.generate_unique_code(tag="Org_Identity")
             identity_name = f"测试组织身份(自动化)_{self.mock_util.get_timestamp()}"
             
@@ -73,28 +73,25 @@ class TestIdentityManagement(GenMdBaseTest):
             org_identity_id = self.db.insert("org_identity_cf", data)
             self.logger.info(f"创建组织身份成功，ID: {org_identity_id}")
 
-            # 调用启用接口
-            api_path = self.get_api_path("ORG-组织身份-启用服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "id": org_identity_id
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织身份-启用服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
             TestIdentityManagement.identity_id = org_identity_id
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -119,27 +116,24 @@ class TestIdentityManagement(GenMdBaseTest):
             if not TestIdentityManagement.identity_id:
                 self.test_enable_identity()
             
-            # 调用禁用接口
-            api_path = self.get_api_path("ORG-组织身份-禁用服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "id": TestIdentityManagement.identity_id
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织身份-禁用服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
