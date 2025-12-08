@@ -518,3 +518,269 @@ class TestAllowFieldManagement(ErpCondBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
+
+    @case_decorator(
+        story="允许字段管理",
+        title="测试允许字段删除",
+        description="验证allow_field_delete功能",
+        severity="critical",
+        file_level_order=17,
+        tags=["允许字段", "删除", "allow_field_delete"]
+    )
+    def test_allow_field_delete(self):
+        """允许字段删除用例 - allow_field_delete"""
+        try:
+            if not self.allow_field_id:
+                self.test_save_master_data()
+            
+            set_dict = {"id": self.allow_field_id}
+            fields_to_filter = ["id"]
+            
+            response, _ = self.standard_api_call(
+                api_key="允许字段删除字段",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+            
+            self.assert_util.assert_response_data(response)
+            
+            # 重置ID
+            self.allow_field_id = None
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="允许字段管理",
+        title="测试允许字段模型删除",
+        description="验证allow_field_model_delete功能",
+        severity="critical",
+        file_level_order=18,
+        tags=["允许字段", "模型删除", "allow_field_model_delete"]
+    )
+    def test_allow_field_model_delete(self):
+        """允许字段模型删除用例 - allow_field_model_delete"""
+        try:
+            if not self.allow_field_id:
+                self.test_save_master_data()
+            
+            set_dict = {"id": self.allow_field_id}
+            fields_to_filter = ["id"]
+            
+            response, _ = self.standard_api_call(
+                api_key="允许字段模型删除",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+            
+            self.assert_util.assert_response_data(response)
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="允许字段管理",
+        title="测试新允许字段保存",
+        description="验证new_allowed_field_save_service功能",
+        severity="blocker",
+        file_level_order=19,
+        tags=["允许字段", "保存", "new_allowed_field_save_service"]
+    )
+    def test_new_allowed_field_save_service(self):
+        """新允许字段保存用例 - new_allowed_field_save_service"""
+        try:
+            # 准备测试数据
+            code = self.mock_util.generate_unique_code(tag="AF")
+            name = f"新测试允许字段_{self.mock_util.get_timestamp()}"
+            
+            set_dict = {
+                "code": code,
+                "name": name,
+                "modelId": 1,  # 假设模型ID，需要根据实际调整
+                "fieldType": "TEXT"
+            }
+            fields_to_filter = ["code", "name", "modelId", "fieldType"]
+            
+            # 标准化API调用
+            response, extracted_data = self.standard_api_call(
+                api_key="新允许字段保存",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="allow_field"
+            )
+            
+            # 保存ID
+            self.allow_field_id = extracted_data
+            self.assert_util.assert_by_operator(self.allow_field_id, "not_empty")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="允许字段管理",
+        title="测试允许字段查看详情",
+        description="验证allow_field_view_detail_service功能",
+        severity="critical",
+        file_level_order=20,
+        tags=["允许字段", "详情查询", "allow_field_view_detail_service"]
+    )
+    def test_allow_field_view_detail_service(self):
+        """允许字段查看详情用例 - allow_field_view_detail_service"""
+        try:
+            if not self.allow_field_id:
+                self.test_save_master_data()
+            
+            set_dict = {"id": self.allow_field_id}
+            fields_to_filter = ["id"]
+            
+            response, _ = self.standard_api_call(
+                api_key="允许字段查看详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+            
+            self.assert_util.assert_response_data(response)
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="允许字段管理",
+        title="测试允许字段模型字段选择渲染",
+        description="验证allow_select_model_render_service功能",
+        severity="normal",
+        file_level_order=21,
+        tags=["允许字段", "渲染服务", "allow_select_model_render_service"]
+    )
+    def test_allow_select_model_render_service(self):
+        """允许字段模型字段选择渲染用例 - allow_select_model_render_service"""
+        try:
+            set_dict = {
+                "modelId": 1  # 假设模型ID
+            }
+            fields_to_filter = ["modelId"]
+            
+            response, _ = self.standard_api_call(
+                api_key="允许字段模型字段选择渲染服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+            
+            self.assert_util.assert_response_data(response)
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="允许字段管理",
+        title="测试根据模型选择字段数据源",
+        description="验证allow_select_field_service功能",
+        severity="normal",
+        file_level_order=22,
+        tags=["允许字段", "字段选择", "allow_select_field_service"]
+    )
+    def test_allow_select_field_service(self):
+        """根据模型选择字段数据源用例 - allow_select_field_service"""
+        try:
+            set_dict = {
+                "modelId": 1,  # 目标模型ID
+                "fieldType": "SELECTABLE",  # 可选择字段类型
+                "excludeSystemFields": True,  # 排除系统字段
+                "includeCustomFields": True  # 包含自定义字段
+            }
+            fields_to_filter = ["modelId", "fieldType", "excludeSystemFields", "includeCustomFields"]
+            
+            response, _ = self.standard_api_call(
+                api_key="根据模型选择字段数据源",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+            
+            self.assert_util.assert_response_data(response)
+            self.logger.info("根据模型选择字段数据源查询成功")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="允许字段管理",
+        title="测试模型数据选择服务",
+        description="验证allow_mode_select_service功能",
+        severity="normal",
+        file_level_order=23,
+        tags=["允许字段", "模型选择", "allow_mode_select_service"]
+    )
+    def test_allow_mode_select_service(self):
+        """模型数据选择服务用例 - allow_mode_select_service"""
+        try:
+            set_dict = {
+                "category": "MATCHING",  # 匹配相关模型类别
+                "status": "ACTIVE",      # 活动状态
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 50,
+                    "needTotal": True
+                },
+                "filters": {
+                    "hasFields": True,  # 只返回有字段定义的模型
+                    "allowCondition": True  # 支持条件规则的模型
+                }
+            }
+            fields_to_filter = ["category", "status", "pageable", "filters"]
+            
+            response, _ = self.standard_api_call(
+                api_key="模型数据选择服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+            
+            self.assert_util.assert_response_data(response)
+            self.logger.info("模型数据选择服务查询成功")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="允许字段管理",
+        title="测试审单规则允许模型",
+        description="验证gen_condition_rule_model_source功能 - GEN-条件-审单规则允许模型",
+        severity="normal",
+        file_level_order=22,
+        tags=["允许字段", "审单规则", "gen_condition_rule_model_source", "GEN-条件-审单规则允许模型"]
+    )
+    def test_gen_condition_rule_model_source(self):
+        """审单规则允许模型用例 - gen_condition_rule_model_source"""
+        try:
+            set_dict = {
+                "ruleType": "APPROVAL",  # 审批规则类型
+                "modelCategory": "CONDITION",  # 条件模型类别
+                "status": "ACTIVE"  # 状态过滤
+            }
+            fields_to_filter = ["ruleType", "modelCategory", "status"]
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-条件-审单规则允许模型",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+            
+            self.assert_util.assert_response_data(response)
+            self.logger.info("审单规则允许模型查询成功")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
