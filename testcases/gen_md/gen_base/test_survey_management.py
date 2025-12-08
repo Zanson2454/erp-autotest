@@ -97,20 +97,25 @@ class TestSurveyManagement(GenMdBaseTest):
             fields_to_filter = ["title", "surveyType", "surveyObj", "startDate", "endDate", "surveyMissionItem"]
 
             # 2. 使用标准化API调用（无任何断言）
-            response, extracted_id = self.standard_api_call(
+            response, extracted_data = self.standard_api_call(
                 api_key="GEN-评分任务-创建评分任务服务",
                 set_dict=set_dict,
                 fields_to_filter=fields_to_filter,
                 store_id_as="survey_mission_head"  # 自动存储 self.survey_mission_head_id
             )
-
+            
             # 3. 保存业务数据（保持原有逻辑）
-            self.survey_mission_head_id = extracted_id
-            sql = f"select id from gen_survey_mission_item_md where gen_survey_mission_md_id = {self.survey_mission_head_id}"
-            self.survey_mission_item_id = self.db.query(sql)[0].get("id")
+            self.survey_mission_head_id = extracted_data.get("id") if isinstance(extracted_data, dict) else extracted_data
+            self.assert_util.assert_by_operator(self.survey_mission_head_id, "not_empty")
+            sql = "SELECT id FROM gen_survey_mission_item_md WHERE gen_survey_mission_md_id = %s LIMIT 1"
+            result = self.db.query(sql, (self.survey_mission_head_id,))
+            if not result:
+                raise ValueError(f"未找到任务项记录，任务ID: {self.survey_mission_head_id}")
+            self.survey_mission_item_id = result[0].get("id")
+            self.assert_util.assert_by_operator(self.survey_mission_item_id, "not_empty")
 
             # 4. 日志记录（Allure报告已由standard_api_call处理）
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -142,12 +147,15 @@ class TestSurveyManagement(GenMdBaseTest):
             )
 
             # 3. 业务验证（保持原有逻辑）
-            sql = f"select state from gen_survey_mission_md where id = {self.survey_mission_head_id}"
-            state = self.db.query(sql)[0].get("state")
+            sql = "SELECT state FROM gen_survey_mission_md WHERE id = %s LIMIT 1"
+            result = self.db.query(sql, (self.survey_mission_head_id,))
+            if not result:
+                raise ValueError(f"未找到任务记录，任务ID: {self.survey_mission_head_id}")
+            state = result[0].get("state")
             self.assert_util.assert_by_operator(state, "=", "RELEASED")
 
             # 4. 日志记录（Allure报告已由standard_api_call处理）
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -263,16 +271,17 @@ class TestSurveyManagement(GenMdBaseTest):
             fields_to_filter = ["missionId", "score", "comment", "surveyRecord", "surveyDate", "type", "user", "template", "surveyObj", "surveyMission", "surveyMissionItem"]
 
             # 2. 使用标准化API调用（无任何断言）
-            response, extracted_id = self.standard_api_call(
+            response, extracted_data = self.standard_api_call(
                 api_key="GEN-评分任务-业务人员进行评分服务",
                 set_dict=set_dict,
                 fields_to_filter=fields_to_filter,
                 store_id_as="survey_detail"  # 自动存储 self.survey_detail_id
             )
-
+            
             # 3. 保存业务数据（保持原有逻辑）
-            self.survey_detail_id = extracted_id
-
+            # API不返回新ID，使用现有self.survey_detail_id
+            a.text("评分API调用成功，无新ID返回，使用现有详情ID", "ID处理")
+            
             # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
@@ -293,15 +302,24 @@ class TestSurveyManagement(GenMdBaseTest):
             if not self.survey_detail_id:
                 if not self.survey_mission_head_id:
                     self.test_release_survey_mission()
-                sql = f"select id from  gen_survey_detail_md where survey_mission= {self.survey_mission_head_id}"
-                self.survey_detail_id = self.db.query(sql)[0].get("id")
-                if not self.survey_detail_id:
+                # 参数化查询评分详情ID（保持SQL修复）
+                sql = "SELECT id FROM gen_survey_detail_md WHERE survey_mission = %s LIMIT 1"
+                result = self.db.query(sql, (self.survey_mission_head_id,))
+                if not result:
+                    # 如果没有详情记录，创建评分来生成
                     self.test_survey_score()
-
+                    # 重新查询
+                    result = self.db.query(sql, (self.survey_mission_head_id,))
+                    if not result:
+                        raise ValueError(f"未找到评分详情记录，任务ID: {self.survey_mission_head_id}")
+                self.survey_detail_id = result[0].get("id")
+                self.assert_util.assert_by_operator(self.survey_detail_id, "not_empty")
+                a.text(f"评分详情ID验证通过: {self.survey_detail_id}", "ID验证")
+            
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.survey_detail_id}
             fields_to_filter = ["id"]
-
+            
             # 2. 使用标准化API调用（无任何断言）
             response, _ = self.standard_api_call(
                 api_key="GEN-评分详情-查询评分详情服务",
@@ -309,12 +327,12 @@ class TestSurveyManagement(GenMdBaseTest):
                 fields_to_filter=fields_to_filter,
                 store_id_as=None
             )
-
+            
             # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
-
+            
             # 4. 日志记录（Allure报告已由standard_api_call处理）
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
