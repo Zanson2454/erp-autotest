@@ -1,0 +1,897 @@
+api_params:
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_BatchSaveDataService:
+    params:
+      request:
+      - {}
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_BatchSaveDataService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_MasterData_SaveAndEnableDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_MasterData_SaveAndEnableDataService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_BatchUpdateDataByIdsService:
+    params:
+      request:
+      - {}
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_BatchUpdateDataByIdsService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_BatchDeleteDataService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_BatchDeleteDataService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_BatchUpdateDataByConditionService:
+    params:
+      request:
+        data: {}
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_BatchUpdateDataByConditionService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_MasterData_SaveDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_MasterData_SaveDataService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_FindSingleDataByConditionService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_FindSingleDataByConditionService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_ReverseConstructTreeService:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_ReverseConstructTreeService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_MasterData_MultiDisableDataService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_MasterData_MultiDisableDataService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_TreeSearchService:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_TreeSearchService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_BatchDeleteDataByIdsService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_BatchDeleteDataByIdsService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_MasterData_CreateAndEnableDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_MasterData_CreateAndEnableDataService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_CreateDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_CreateDataService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_CopyDataConverterService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_CopyDataConverterService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_FindDataByIdService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_FindDataByIdService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_COUNT_DATA_SERVICE:
+    params:
+      request:
+      - null
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_COUNT_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_FindTreeDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_FindTreeDataService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_FindSingleDataByIdService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_FindSingleDataByIdService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_FindDataByIdsService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_FindDataByIdsService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_SUM_DATA_SERVICE:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+      fields:
+      - null
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_SUM_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_MasterData_DisableDataService:
+    params:
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_MasterData_DisableDataService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_MasterData_CreateDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_MasterData_CreateDataService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_MasterData_UpdateDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_MasterData_UpdateDataService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_FindListDataService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_FindListDataService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_DeleteDataByIdService:
+    params:
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_DeleteDataByIdService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_InvokeCodeRuleService:
+    params:
+      request:
+        formParams: {}
+        ruleKey: null
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_InvokeCodeRuleService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_QueryStatisticsService:
+    params:
+      request:
+        aggregateField: null
+        conditionItems: null
+        groupByFields:
+        - null
+        conditionGroup: null
+        aggregateFunc: null
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_QueryStatisticsService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_CopyAndCreateDataByIdsService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_CopyAndCreateDataByIdsService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_MasterData_DeleteDataService:
+    params:
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_MasterData_DeleteDataService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_FindOneDataService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_FindOneDataService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_BatchCreateDataService:
+    params:
+      request:
+      - {}
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_BatchCreateDataService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_FindTreeChildrenDataService:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_FindTreeChildrenDataService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_MasterData_MultiEnableDataService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_MasterData_MultiEnableDataService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_SaveDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_SaveDataService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_PagingDataService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        sortOrders:
+        - fieldAlias: null
+          sortType: null
+        pageable:
+          conditionItems: null
+          pageNo: 1
+          conditionGroup: null
+          pageSize: 20
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_PagingDataService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_BatchDeleteDataByConditionService:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_BatchDeleteDataByConditionService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_UpdateDataByIdService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_UpdateDataByIdService
+  /api/trantor/service/engine/execute/ERP_ACC$SYS_MasterData_EnableDataService:
+    params:
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: ERP_ACC$SYS_MasterData_EnableDataService
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ACC_TRNAS_EVEVNT_SERVICE:
+    params:
+      request:
+        accObjectList:
+        - {}
+        conditionMatchParams: null
+        accObjectClass: null
+    serviceKey: ERP_ACC$ADV_CM_ACC_TRNAS_EVEVNT_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ORG_RENDERING_TYPE_EVENT_SERVICE:
+    params:
+      request:
+        usedAmount: 0
+        amountBaList:
+        - {}
+        advCmAccTypeRef: {}
+        effectiveStartAt: 0
+        accObject: {}
+        advCmAccCode: null
+        createdAt: 0
+        availableAmount: 0
+        transRecordList:
+        - {}
+        overdueDays: 0
+        accObjectClass: null
+        advCmAccHigherLevelId: {}
+        fixedAmount: 0
+        id: 0
+        updatedAt: 0
+        updatedBy: {}
+        originOrgId: 0
+        advCmAccName: null
+        cmCgRef: {}
+        advCmAccUpperConcern: null
+        version: 0
+        advCmAccSingleLimit: 0
+        advCmAccChildList:
+        - {}
+        effectiveEndAt: 0
+        deleted: 0
+        createdBy: {}
+        cmOrgRef: {}
+        advCmAccLinkId: {}
+        currId: {}
+        advCmAccStatus: null
+        repaymentDays: 0
+    serviceKey: ERP_ACC$ADV_CM_ORG_RENDERING_TYPE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$ACC_MD_SAVE_EVENT_SERVICE:
+    params:
+      request:
+        usedAmount: 0
+        amountBaList:
+        - {}
+        advCmAccTypeRef: {}
+        effectiveStartAt: 0
+        accObject: {}
+        advCmAccCode: null
+        createdAt: 0
+        availableAmount: 0
+        transRecordList:
+        - {}
+        overdueDays: 0
+        accObjectClass: null
+        advCmAccHigherLevelId: {}
+        fixedAmount: 0
+        id: 0
+        updatedAt: 0
+        updatedBy: {}
+        originOrgId: 0
+        advCmAccName: null
+        cmCgRef: {}
+        advCmAccUpperConcern: null
+        version: 0
+        advCmAccSingleLimit: 0
+        advCmAccChildList:
+        - {}
+        effectiveEndAt: 0
+        deleted: 0
+        createdBy: {}
+        cmOrgRef: {}
+        advCmAccLinkId: {}
+        currId: {}
+        advCmAccStatus: null
+        repaymentDays: 0
+    serviceKey: ERP_ACC$ACC_MD_SAVE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_TYPE_UN_FREEZE_EVENT_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        usageMode: null
+        advCmAccClass: {}
+        cmCgRef: {}
+        isHigherLevelSync: false
+        advCmAccItemList:
+        - {}
+        version: 0
+        advCmAccTypeStatus: null
+        cmCoRef: {}
+        isPayment: false
+        createdAt: 0
+        advCmAccTypeName: null
+        deleted: 0
+        cmCrRef: {}
+        createdBy: {}
+        matchSchemeId: {}
+        id: 0
+        advCmAccTypeCode: null
+        updatedAt: 0
+    serviceKey: ERP_ACC$ADV_CM_TYPE_UN_FREEZE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_TYPE_FREEZE_EVENT_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        usageMode: null
+        advCmAccClass: {}
+        cmCgRef: {}
+        isHigherLevelSync: false
+        advCmAccItemList:
+        - {}
+        version: 0
+        advCmAccTypeStatus: null
+        cmCoRef: {}
+        isPayment: false
+        createdAt: 0
+        advCmAccTypeName: null
+        deleted: 0
+        cmCrRef: {}
+        createdBy: {}
+        matchSchemeId: {}
+        id: 0
+        advCmAccTypeCode: null
+        updatedAt: 0
+    serviceKey: ERP_ACC$ADV_CM_TYPE_FREEZE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ACC_CHECK_EVENT_SERVICE:
+    params:
+      request:
+        accObjectList:
+        - {}
+        conditionMatchParams: null
+        accObjectClass: null
+    serviceKey: ERP_ACC$ADV_CM_ACC_CHECK_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ACC_MATCH_EVENT_SERVICE:
+    params:
+      request:
+        accObjectList:
+        - {}
+        conditionMatchParams: null
+        accObjectClass: null
+    serviceKey: ERP_ACC$ADV_CM_ACC_MATCH_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ORG_DELETE_EVENT_SERVICE:
+    params:
+      request: {}
+    serviceKey: ERP_ACC$ADV_CM_ORG_DELETE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ACC_AMOUNT_ATUO_FILL_EVENT_SERVICE:
+    params:
+      request:
+        usedAmount: 0
+        amountBaList:
+        - {}
+        advCmAccTypeRef: {}
+        effectiveStartAt: 0
+        accObject: {}
+        advCmAccCode: null
+        createdAt: 0
+        availableAmount: 0
+        transRecordList:
+        - {}
+        overdueDays: 0
+        accObjectClass: null
+        advCmAccHigherLevelId: {}
+        fixedAmount: 0
+        id: 0
+        updatedAt: 0
+        updatedBy: {}
+        originOrgId: 0
+        advCmAccName: null
+        cmCgRef: {}
+        advCmAccUpperConcern: null
+        version: 0
+        advCmAccSingleLimit: 0
+        advCmAccChildList:
+        - {}
+        effectiveEndAt: 0
+        deleted: 0
+        createdBy: {}
+        cmOrgRef: {}
+        advCmAccLinkId: {}
+        currId: {}
+        advCmAccStatus: null
+        repaymentDays: 0
+    serviceKey: ERP_ACC$ADV_CM_ACC_AMOUNT_ATUO_FILL_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ACC_MD_DELETE_EVENT_SERVICE:
+    params:
+      request:
+        usedAmount: 0
+        amountBaList:
+        - {}
+        advCmAccTypeRef: {}
+        effectiveStartAt: 0
+        accObject: {}
+        advCmAccCode: null
+        createdAt: 0
+        availableAmount: 0
+        transRecordList:
+        - {}
+        overdueDays: 0
+        accObjectClass: null
+        advCmAccHigherLevelId: {}
+        fixedAmount: 0
+        id: 0
+        updatedAt: 0
+        updatedBy: {}
+        originOrgId: 0
+        advCmAccName: null
+        cmCgRef: {}
+        advCmAccUpperConcern: null
+        version: 0
+        advCmAccSingleLimit: 0
+        advCmAccChildList:
+        - {}
+        effectiveEndAt: 0
+        deleted: 0
+        createdBy: {}
+        cmOrgRef: {}
+        advCmAccLinkId: {}
+        currId: {}
+        advCmAccStatus: null
+        repaymentDays: 0
+    serviceKey: ERP_ACC$ADV_CM_ACC_MD_DELETE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ACC_CLASS_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: ERP_ACC$ADV_CM_ACC_CLASS_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ACC_CLASS_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      sheetConfig: {}
+      fileName: null
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      fileKey: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      relationFieldConvert: false
+      service: null
+      modelMainField: null
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: ERP_ACC$ADV_CM_ACC_CLASS_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_CS_TYPE_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: ERP_ACC$ADV_CM_CS_TYPE_CF_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_CR_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: ERP_ACC$ADV_CM_CR_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ARCHIVES_FREEZE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: ERP_ACC$ADV_CM_ARCHIVES_FREEZE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_CR_HEAD_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: ERP_ACC$ADV_CM_CR_HEAD_CF_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ACC_MD_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: ERP_ACC$ADV_CM_ACC_MD_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ACC_CLASS_HEAD_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: ERP_ACC$ADV_CM_ACC_CLASS_HEAD_CF_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ACC_TRANS_HEAD_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: ERP_ACC$ADV_CM_ACC_TRANS_HEAD_CF_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_CS_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      sheetConfig: {}
+      fileName: null
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      fileKey: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      relationFieldConvert: false
+      service: null
+      modelMainField: null
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: ERP_ACC$ADV_CM_CS_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ACC_TRANS_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      sheetConfig: {}
+      fileName: null
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      fileKey: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      relationFieldConvert: false
+      service: null
+      modelMainField: null
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: ERP_ACC$ADV_CM_ACC_TRANS_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ACC_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: ERP_ACC$ADV_CM_ACC_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ACC_HEAD_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: ERP_ACC$ADV_CM_ACC_HEAD_CF_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$acc_trans_record_page_service:
+    params:
+      accId: 0
+      pageable:
+        needTotal: false
+        sortOrders:
+        - {}
+        conditionItems: null
+        pageNo: 1
+        conditionGroup: null
+        pageSize: 20
+        keyword: null
+    serviceKey: ERP_ACC$acc_trans_record_page_service
+  /api/trantor/service/engine/execute/ERP_ACC$account_profile_query_customer_info:
+    params:
+      request:
+        id: 0
+    serviceKey: ERP_ACC$account_profile_query_customer_info
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_CS_TYPE_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: ERP_ACC$ADV_CM_CS_TYPE_CF_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ACC_TRANS_HEAD_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: ERP_ACC$ADV_CM_ACC_TRANS_HEAD_CF_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ACC_MD_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: ERP_ACC$ADV_CM_ACC_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ACC_TRANS_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: ERP_ACC$ADV_CM_ACC_TRANS_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ACC_AMOUNT_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: ERP_ACC$ADV_CM_ACC_AMOUNT_CF_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_CS_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: ERP_ACC$ADV_CM_CS_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_CR_HEAD_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: ERP_ACC$ADV_CM_CR_HEAD_CF_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ARCHIVES_UN_FREEZE_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: ERP_ACC$ADV_CM_ARCHIVES_UN_FREEZE_ACTION_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ACC_AMOUNT_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      sheetConfig: {}
+      fileName: null
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      fileKey: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      relationFieldConvert: false
+      service: null
+      modelMainField: null
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: ERP_ACC$ADV_CM_ACC_AMOUNT_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ACC_CLASS_HEAD_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: ERP_ACC$ADV_CM_ACC_CLASS_HEAD_CF_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ACC_AMOUNT_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: ERP_ACC$ADV_CM_ACC_AMOUNT_CF_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_ACC_AMOUNT_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: ERP_ACC$ADV_CM_ACC_AMOUNT_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/ERP_ACC$ADV_CM_CR_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      sheetConfig: {}
+      fileName: null
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      fileKey: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      relationFieldConvert: false
+      service: null
+      modelMainField: null
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: ERP_ACC$ADV_CM_CR_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST

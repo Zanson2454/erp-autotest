@@ -1,2 +1,121 @@
-# Empty __init__.py for package
-pass
+"""
+ERP账户模块的测试初始化
+提供配置加载等通用功能
+"""
+import sys
+from pathlib import Path
+import json
+import requests
+
+# 获取项目根目录
+project_root = Path(__file__).resolve().parent.parent.parent
+sys.path.append(str(project_root))
+
+from typing import Any,Dict
+from testcases.comm.base_test import BaseTest,LoginService
+from data_factory.base import DataFactory
+from utils.cache_util import CacheUtil
+from utils.request_util import HttpUtil
+from utils.mock_util import MockData
+from utils.param_util import ParamUtil
+from utils.report_util import a  # Allure reporting utility (a.json, a.text)
+
+class ErpAccBaseTest(BaseTest):
+    """ERP账户模块的基础测试类，负责加载通用配置和提供API访问方法"""
+    
+    # 类型提示：继承的动态属性
+    yaml_util: Any
+    
+    # 登录两个门户，分别保存 session/user_info 并初始化 http 工具
+    _PORTAL_TYPE_KEYS: Dict[str, str] = {
+    "admin": "TERP_PORTAL",
+    "cust": "TERP_CUST_PC"
+    }   
+    
+    # 添加单例实例持有者，作为类变量
+    _mock_instance = None
+    
+    @classmethod
+    def setup_class(cls):
+        """
+        测试类初始化 - 加载通用配置
+        1. 调用父类初始化方法 (包括登录、数据库连接等)
+        2. 多门户多用户登录，获取 session
+        3. 初始化通用配置文件路径
+        4. 加载API路径和参数配置
+        5. 初始化 http 工具，自动带上门户请求头
+        """
+        super().setup_class()
+        
+        # 优化单例创建：仅在 super().setup_class() 后执行
+        # 确保环境就绪，不干扰 pytest 测试收集过程
+        if cls._mock_instance is None:
+            cls._mock_instance = MockData()
+        
+        # 设置类级 mock_util 以兼容现有代码 (cls.mock_util)
+        # 现有测试类可继续使用 cls.mock_data 或迁移到 cls.mock_util
+        cls.mock_util = cls._mock_instance
+        
+        # 初始化登录服务，避免重复创建
+        cls.login_service = LoginService(cls.env_config)
+        
+        # 登录 admin 门户
+        admin_result = cls.login_service.login(portal_key=cls._PORTAL_TYPE_KEYS["admin"])
+        if admin_result.status != admin_result.status.SUCCESS:
+            raise RuntimeError(f"admin 登录失败: {admin_result.error_message}")
+        
+        # 初始化 http 实例，绑定 admin 门户的 url、session 和 headers
+        cls.http = HttpUtil(
+            url=admin_result.portal_url,
+            session=admin_result.session,
+            headers=admin_result.portal_headers
+        )
+     
+        # 初始化配置文件路径 - 针对erp_acc模块
+        cls.acc_api_path = Path(project_root) / "testdata" / "erp_acc" / "acc_api_path.yaml"
+        cls.acc_api_params = Path(project_root) / "testdata" / "erp_acc" / "acc_api_params.yaml"
+        
+        # 加载API路径配置和参数配置
+        cls.apis = cls.yaml_util.read_yaml(cls.acc_api_path).get("apis", {})
+        cls.api_params = cls.yaml_util.read_yaml(cls.acc_api_params).get("api_params", {}) if Path(cls.acc_api_params).exists() else {}
+        
+        # 初始化DataFactory（必须在init_sql_cache之前调用）
+        DataFactory.__init__(env_name="test")
+        
+        # 加载缓存数据：账户模块依赖的初始化SQL (如果存在)
+        # 注意：如果没有专门的acc_init_sql.yaml，可以复用md_init_sql或创建新的
+        sql_config_path = str(project_root / "config" / "erp" / "acc_init_sql.yaml")
+        if Path(sql_config_path).exists():
+            DataFactory.init_sql_cache(
+                sql_config_path=sql_config_path,
+                db_config_name="erp_db",  # 数据库配置名称
+                cache_key="acc_init_cache",  # 缓存key
+                cache_dir="testdata/cache"  # 缓存目录
+            )
+            cls.acc_cache_data = CacheUtil.get('acc_init_cache')
+        else:
+            # 复用主数据缓存
+            cls.acc_cache_data = cls.md_cache_data if hasattr(cls, 'md_cache_data') else {}
+        
+        # 设置路径参数和用户信息 - 针对ERP_ACC模块
+        cls.path_params = {"tmodule":"ERP_ACC"}
+        cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
+        cls.user_id = cls.init_data["user_info"]['user_info']["id"]
+    
+    def get_api_path(self, api_key):
+        """
+        获取API路径
+        """
+        return super().get_api_path(api_key, self.apis)
+    
+    def get_api_params(self, api_path, with_query_params=None):
+        """
+        获取API请求参数和完整URL
+        """
+        return super().get_api_params(api_path, self.api_params, with_query_params)
+
+
+if __name__ == "__main__":
+    ErpAccBaseTest.setup_class()
+    print(ErpAccBaseTest.nickname)
+    # print(ErpAccBaseTest.cust_user_info)
