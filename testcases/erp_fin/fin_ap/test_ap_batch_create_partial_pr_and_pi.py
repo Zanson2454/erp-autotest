@@ -7,7 +7,7 @@ import time
 from datetime import datetime
 from decimal import Decimal
 
-from testcases.fin.fin_ap import ApBaseTest
+from testcases.erp_fin.fin_ap import ApBaseTest
 from utils.param_util import ParamUtil
 from utils.mock_util import MockData
 from utils.report_util import a, case_decorator

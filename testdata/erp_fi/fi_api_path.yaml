@@ -1,362 +1,125 @@
 version: '1.0'
-total_apis: 809
+total_apis: 902
 apis:
-  会计科目-提交服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_SUBMIT_EVENT_SERVICE
+  (系统)更新主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_MasterData_UpdateDataService
     method: POST
-  总账-期末处理-试算平衡服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_END_TRIAL_BALANCE_EVENT_SERVICE
+  (系统)删除主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_MasterData_DeleteDataService
     method: POST
-  总账-期末处理-试算平衡-数据渲染服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_END_TRIAL_BALANCE_DATA_PROCESS_EVENT_SERVICE
+  (系统)反向构建树以及同步查询出所有同级服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_ReverseConstructTreeService
     method: POST
-  总账-凭证-反过账Event服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_ACCOUNT_REVERSE_EVENT_SERVICE
+  (系统)COUNT服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_COUNT_DATA_SERVICE
     method: POST
-  总账-凭证-查询凭证行辅助维度服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_QUERY_ADS_BY_ITEM_EVENT_SERVICE
+  (系统)SUM服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_SUM_DATA_SERVICE
     method: POST
-  辅助维度-删除服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AD_DELETE_EVENT_SERVICE
+  (系统)根据IDS复制并新增数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_CopyAndCreateDataByIdsService
     method: POST
-  总账-账簿-反初始化服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IB_AB_TYPE_AGAINST_ACCOUNT_EVENT_SERVICE
+  (系统)根据IDS批量更新数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_BatchUpdateDataByIdsService
     method: POST
-  FIN-核算账簿-启用服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_TYPE_ENABLE_SERVICE
+  (系统)树搜索:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_TreeSearchService
     method: POST
-  FIN-核算体系-详情信息服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AS_SYS_VIEW_CF_DETAIL_EVENT_SERVICE
+  (系统)批量保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_BatchSaveDataService
     method: POST
-  资产管理-账簿-建账:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_INIT_DATA_SERVICE
+  (系统)根据IDS批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_BatchDeleteDataByIdsService
     method: POST
-  FIN-现金流-现金流项目绑定核算组织数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_ORG_ASS_LIST_EVENT_SERVICE
+  (系统)批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_BatchDeleteDataService
     method: POST
-  会计引擎-条件生成服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_GEN_CONDITION_ID_EVENT_SERVICE
+  (系统)新增数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_CreateDataService
     method: POST
-  会计引擎-凭证模板启用服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TMPL_ENABLE_SERVICE
+  (系统)查询数据详情服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_FindDataByIdService
     method: POST
-  总账-凭证-凭证列表提交服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_SUBMIT_BY_ID_EVENT_SERVICE
+  (系统)查询单条数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_FindOneDataService
     method: POST
-  工业品超市-账簿查询-利润表查询服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$GYPCS_FIN_GLM_INCOME_STATEMENT_QUERY_EVENT_SERVICE
+  (系统)查询分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_PagingDataService
     method: POST
-  FIN-现金流-现金流项目详情服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_CF_DETAIL_EVENT_SERVICE
+  (系统)调用取号规则服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_InvokeCodeRuleService
     method: POST
-  FIN-现金流-现金流项目分页服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_CF_PAGE_EVENT_SERVICE
+  (系统)新增主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_MasterData_CreateDataService
     method: POST
-  FIN-现金流-现金流项目类型分页服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CFT_TYPE_CF_PAGE_EVENT_SERVICE
+  (系统)保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_SaveDataService
     method: POST
-  账簿查询-辅助余额查询服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABS_BALANCE_QUERY_PAGE_EVENT_SERVICE
+  (系统)保存主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_MasterData_SaveDataService
     method: POST
-  总账系统保存服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AE_GLS_TYPE_SAVE_SERVICE
+  (系统)新增并启用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_MasterData_CreateAndEnableDataService
     method: POST
-  FIN-核算体系-核算组织详情服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AS_SYS_ORG_CF_DETAIL_EVENT_SERVICE
+  (系统)根据条件批量更新数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_BatchUpdateDataByConditionService
     method: POST
-  会计科目-新增下级-根据ID查询页面数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_NEW_CHILD_INFO_QUERY_BY_ID_EVENT_SERVICE
+  (系统)查询统计服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_QueryStatisticsService
     method: POST
-  总账-凭证-凭证整理提交服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VOUCHER_ORG_SUBMIT_EVENT_SERVICE
+  (系统)转换复制数据:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_CopyDataConverterService
     method: POST
-  总账-凭证-流量检查服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_AB_ITEM_AMT_CHECK_EVENT_SERVICE
+  (系统)通过条件组查询数据列表:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_FindListDataService
     method: POST
-  总账-凭证-凭证整理行修改服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VOUCHER_ORG_ITEM_EDIT_EVENT_SERVICE
+  (系统)通过条件组查询树模型子数据列表:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_FindTreeChildrenDataService
     method: POST
-  会计科目-查询科目表下的科目树服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_TREE_QUERY_BY_AB_COA_EVENT_SERVICE
+  (系统)批量启用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_MasterData_MultiEnableDataService
     method: POST
-  会计引擎-获取凭证结构行服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_DSD_CF_CONVERT_TO_CNSLD_ITEM_SERVICE
+  (系统)批量停用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_MasterData_MultiDisableDataService
     method: POST
-  会计引擎-校验规则设置默认服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SET_DEFAULT_DSD_VLD_SERVICE
+  (系统)通过字段 Like 查询分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_FindAllByFieldLikeService
     method: POST
-  会计科目-维度分配服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_DISTRIBUTE_AD_EVENT_SERVICE
+  (系统)根据条件批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_BatchDeleteDataByConditionService
     method: POST
-  总账-凭证-凭证批量记账服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_ACCOUNTING_BATCH_EVENT_SERVICE
+  (系统)树查询数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_FindTreeDataService
     method: POST
-  总账-期末处理-试算平衡-保存数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_END_TRIAL_BALANCE_SAVE_DATA_EVENT_SERVICE
+  (系统)批量新增数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_BatchCreateDataService
     method: POST
-  FIN-现金流-现金流项目类型保存服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CFT_TYPE_CF_SAVE_EVENT_SERVICE
+  (系统)保存并启用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_MasterData_SaveAndEnableDataService
     method: POST
-  会计引擎-关键字账簿映射表查询服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_LEDG_EXH_HEAD_CF_DETAIL_SERVICE
+  (系统)更新数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_UpdateDataByIdService
     method: POST
-  总账-初始化-期初余额查询服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBE_ITEM_TABLE_QUERY_EVENT_SERVICE
+  (系统)停用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_MasterData_DisableDataService
     method: POST
-  会计引擎-分页来源业务单据生成凭证所属总账系统服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_GLS_TYPE_PAGE_BY_SRC_DOC_SERVICE
+  (系统)根据IDS查询数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_FindDataByIdsService
     method: POST
-  总账-规则凭证类型-保存事件服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_TYPE_SAVE_EVENT_SERVICE
+  (系统)根据条件查询单条数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_FindSingleDataByConditionService
     method: POST
-  会计要素头表-启用服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AE_HEAD_ENABLE_EVENT_SERVICE
+  (系统)删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_DeleteDataByIdService
     method: POST
-  会计引擎-关键字科目映射表保存服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_ACC_EXH_HEAD_CF_SAVE_SERVICE
+  (系统)启用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_MasterData_EnableDataService
     method: POST
-  核算系统-用户账簿-提交服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_USER_SUBMIT_EVENT_SERVICE
+  (系统)根据ID查询单条数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_FindSingleDataByIdService
     method: POST
-  会计科目-会计要素头下的要素分页服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AE_BY_AE_HEAD_PAGE_EVENT_SERVICE
-    method: POST
-  账簿查询-总分类账查询服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_GL_QUERY_TYPE_PAGE_EVENT_SERVICE
-    method: POST
-  会计引擎-凭证模板停用服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TMPL_DISABLE_SERVICE
-    method: POST
-  总账-初始化-辅助维度余额保存服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBE_AD_INFO_SUBMIT_EVENT_SERVICE
-    method: POST
-  总账-凭证-详情查询服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_QUERY_DETAIL_EVENT_SERVICE
-    method: POST
-  账簿查询-科目余额查询服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_BSA_BALANCE_QUERY_PAGE_EVENT_SERVICE
-    method: POST
-  会计引擎-凭证记录推送更新服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$DSD_TR_PUSHED_SERVICE
-    method: POST
-  会计引擎-关键字科目映射详情服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_ACC_EXH_HEAD_CF_DETAIL_SERVICE
-    method: POST
-  会计引擎-生成单据记录服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_IMPORT_DOC_SERVICE
-    method: POST
-  资产管理-账簿-停用:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_INACTIVE_SERVICE
-    method: POST
-  会计引擎-关键字科目映射表分页查询服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_ACC_EXH_HEAD_CF_PAGE_SERVICE
-    method: POST
-  账簿查询-现金流量明细查询服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_DETAILL_QUERY_LIST_EVENT_SERVICE
-    method: POST
-  FIN-核算体系-绑定的核算组织列表服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AS_SYS_ORG_VIEW_CF_LIST_EVENT_SERVICE
-    method: POST
-  会计引擎-单据记录分页服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DOC_TR_PAGE_SERVICE
-    method: POST
-  FIN-现金流-现金流项目-科目分配服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_WITH_AA_SUBMIT_EVENT_SERVICE
-    method: POST
-  账簿查询-辅助明细账查询服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ASL_TYPE_QUERY_PAGE_EVENT_SERVICE
-    method: POST
-  总账-凭证-自动分析服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_FLOW_AUTO_ANALYSIS_EVENT_SERVICE
-    method: POST
-  账簿查询-总分类账查询-异步服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_LEDGE_QUERY_PAGE_ASYNC_EVENT_SERVICE
-    method: POST
-  会计引擎-科目映射头删除服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_ACC_EXH_HEAD_CF_DELETE_SERVICE
-    method: POST
-  会计引擎-获取内部对象下钻字段服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_INTERNAL_OBJECT_FIELD_GET_ACTION_SERVICE
-    method: POST
-  会计引擎-业务模块删除服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BM_MODULE_DELETE_SERVICE
-    method: POST
-  总账-凭证-凭证记账服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_ACCOUNTING_EVENT_SERVICE
-    method: POST
-  会计引擎-业务单据注册分页查询服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BD_DOC_DEF_CF_PAGE_SERVICE
-    method: POST
-  期末结账-任务状态轮询服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_END_TASK_RUNNING_CHECK_EVENT_SERVICE
-    method: POST
-  总账-凭证-凭证作废服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_INVALID_ACTION_SERVICE
-    method: POST
-  FIN-核算账簿-创建/更新服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_TYPE_CF_SAVE_EVENT_SERVICE
-    method: POST
-  会计科目-科目表下的科目信息分页服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_BY_COA_PAGE_EVENT_SERVICE
-    method: POST
-  总账-凭证-凭证整理行查询服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VOUCHER_ORG_ITEM_PAGE_EVENT_SERVICE
-    method: POST
-  会计科目-导入服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_IMPORT_DATA_EVENT_SERVICE
-    method: POST
-  FIN-现金流-现金流项目类型删除服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CFT_TYPE_CF_DELETE_EVENT_SERVICE
-    method: POST
-  获取业务系统树-组件用服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SYS_TREE_MOD_SERVICE
-    method: POST
-  会计引擎-凭证结构保存服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_DEF_CF_SAVE_SERVICE
-    method: POST
-  会计引擎-业务单据注册删除服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BD_DOC_CF_DELETE_SERVICE
-    method: POST
-  总账-初始化-现金流量项目金额检查服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBC_CASH_ITEM_CHECK_EVENT_SERVICE
-    method: POST
-  账簿查询-辅助明细查询-异步服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ASL_TYPE_QUERY_PAGE_ASYNC_EVENT_SERVICE
-    method: POST
-  外部对象分页查询服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_OUTER_OBJECT_PAGE_SERVICE
-    method: POST
-  FIN-现金流-现金流项目-根据ID查询科目维度信息服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_QUERY_AA_AD_BY_AB_ID_EVENT_SERVICE
-    method: POST
-  规则凭证详情事件服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_DETAIL_EVENT_SERVICE
-    method: POST
-  会计引擎-外部对象删除服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_OUTER_OBJECT_DELETE_SERVICE
-    method: POST
-  FIN-核算体系-数据创建服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AS_SYS_VIEW_CF_SAVE_EVENT_SERVICE
-    method: POST
-  会计引擎-业务单据注册分页查询(废弃)服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BD_DOC_DEF_QUERY_SERVICE
-    method: POST
-  总账-规则凭证-保存事件服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_SAVE_EVENT_SERVICE
-    method: POST
-  会计引擎-生成凭证记录服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_GEN_DSD_SERVICE
-    method: POST
-  会计引擎-凭证结构分页查询服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_DEF_CF_PAGE_SERVICE
-    method: POST
-  会计引擎-查询合并规则详情服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_QUERY_CNSLD_HEAD_SERVICE
-    method: POST
-  账簿查询-明细分类账查询-异步:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_GENERAL_LEDGE_ASYNC_QUERY_EVENT_SERVICE
-    method: POST
-  会计引擎-根据单据输出凭证记录服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_GEN_AND_SAVE_DSD_TR_SERVICE
-    method: POST
-  辅助维度-启用服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_GLM_AD_ENABLE_EVENT_SERVICE
-    method: POST
-  辅助维度-反启用服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_GLM_AD_DISABLE_EVENT_SERVICE
-    method: POST
-  会计引擎-保存映射服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_EXH_MAPPING_HEAD_CF_SAVE_SERVICE
-    method: POST
-  会计引擎-重新生成凭证记录服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_RE_GEN_DSD_SERVICE
-    method: POST
-  账簿查询-辅助明细账查询1服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ASL_TYPE_PAGE_EVENT_SERVICE
-    method: POST
-  FIN-核算体系-数据分页服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AS_SYS_VIEW_CF_PAGE_EVENT_SERVICE
-    method: POST
-  FIN-现金流-现金流项目保存服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_CF_SAVE_EVENT_SERVICE
-    method: POST
-  会计引擎-保存校验规则服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SAVE_DSD_VLD_SERVICE
-    method: POST
-  总账-初始化-汇率筛选服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IB_RATE_QUERY_BY_CURR_AND_RT_EVENT_SERVICE
-    method: POST
-  总账-凭证-凭证删除服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_DELETE_EVENT_SERVICE
-    method: POST
-  总账-凭证-凭证提交服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_SUBMIT_EVENT_SERVICE
-    method: POST
-  会计引擎-凭证记录-批量推送服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TR_BATCH_PUSH_SERVICE
-    method: POST
-  账簿查询-报表组件-总分类账查询服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_LEDGE_QUERY_PAGE_EVENT_SERVICE
-    method: POST
-  资产管理-类别-删除:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_DELETE_SERVICE
-    method: POST
-  会计引擎-分录合并规则保存服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_DSD_CNSLD_CF_SAVE_SERVICE
-    method: POST
-  会计科目-科目表下的根节点查询服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_ROOT_HEAD_QUERY_BY_COA_EVENT_SERVICE
-    method: POST
-  分页分录规则服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_DSD_CNSLD_CF_PAGE_SERVICE
-    method: POST
-  会计引擎-凭证模板复制服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TMPL_CF_COPY_SERVICE
-    method: POST
-  总账-凭证-凭证冲销服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_OFFSET_EVENT_SERVICE
-    method: POST
-  会计引擎-业务单据注册详情查询服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BD_DOC_CF_QUERY_SERVICE
-    method: POST
-  账簿查询-账簿关联的科目及其叶子节点服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_TYPE_SUBJECT_ITEM_LIST_EVENT_SERVICE
-    method: POST
-  会计引擎-校验规则取消默认服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SET_NON_DEFAULT_DSD_VLD_SERVICE
-    method: POST
-  账簿查询-辅助余额查询-异步服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABS_BALANCE_QUERY_PAGE_ASYNC_EVENT_SERVICE
-    method: POST
-  总账-凭证-获取凭证号服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_VOUCH_NUMBER_EVENT_SERVICE
-    method: POST
-  会计引擎-删除单据记录-业务事件:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DELETE_DSD_TR_EVENT_SERVICE
-    method: POST
-  会计引擎-作废单据记录服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_INVALID_DOC_SERVICE
-    method: POST
-  会计引擎-查询映射服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_EXH_MAPPING_HEAD_CF_DETAIL_SERVICE
-    method: POST
-  会计引擎-删除单据记录服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DELETE_DOC_SERVICE
-    method: POST
-  条件验证服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_VAL_CONDITION_EVENT_SERVICE
-    method: POST
-  科目辅助维度类型-删除服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ADS_HEAD_DELETE_BY_ID_EVENT_SERVICE
-    method: POST
-  期末结账-分页查询服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_BLM_END_CUTOFF_LIST_QUERY_EVENT_SERVICE
-    method: POST
-  核算系统-用户账簿-单个查询服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_USER_QUERY_ONE_EVENT_SERVICE
-    method: POST
-  总账-初始化-试算平衡服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBE_TRIAL_BALANCE_VIEW_QUERY_EVENT_SERVICE
+  (系统)通过字段 Like 查询单条数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$SYS_FindOneByFieldLikeService
     method: POST
   会计引擎-凭证记录按总账系统查询服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_QUERY_DSD_TR_BY_GLS_SERVICE
@@ -364,11 +127,17 @@ apis:
   会计引擎-重新校验单据记录服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_RECHECK_DOC_SERVICE
     method: POST
+  会计科目-提交服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_SUBMIT_EVENT_SERVICE
+    method: POST
   账簿查询-账簿关联的叶子节点会计期间信息服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_TYPE_CALENDER_ITEM_LEAF_LIST_SERVICE
     method: POST
   会计引擎-配置匹配服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_MATCH_DOC_DSD_REL_CF_SERVICE
+    method: POST
+  总账-期末处理-试算平衡服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_END_TRIAL_BALANCE_EVENT_SERVICE
     method: POST
   总账-凭证-凭证取消作废服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_CANCEL_INVALID_ACTION_SERVICE
@@ -379,14 +148,26 @@ apis:
   总账-凭证-凭证审核服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_APPROVAL_EVENT_SERVICE
     method: POST
+  总账-期末处理-试算平衡-数据渲染服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_END_TRIAL_BALANCE_DATA_PROCESS_EVENT_SERVICE
+    method: POST
   会计引擎-凭证模板删除服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TMPL_CF_DELETE_SERVICE
     method: POST
   资产管理-类别-提交:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_SUBMIT_SERVICE
     method: POST
+  总账-凭证-反过账Event服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_ACCOUNT_REVERSE_EVENT_SERVICE
+    method: POST
+  总账-凭证-查询凭证行辅助维度服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_QUERY_ADS_BY_ITEM_EVENT_SERVICE
+    method: POST
   总账-凭证-获取当前账簿调整期间服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_AD_PERIOD_EVENT_SERVICE
+    method: POST
+  辅助维度-删除服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AD_DELETE_EVENT_SERVICE
     method: POST
   FIN-核算系统-适用会计政策数据返回服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_SUIT_AP_TYPE_CF_RETURN_EVENT_SERVICE
@@ -394,14 +175,44 @@ apis:
   科目辅助维度类型-分页查询服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ADS_HEAD_QUERY_PAGE_EVENT_SERVICE
     method: POST
+  总账-账簿-反初始化服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IB_AB_TYPE_AGAINST_ACCOUNT_EVENT_SERVICE
+    method: POST
   FIN-核算系统-根据会计期间类型查询已启用会计期间服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CALENDAR_ITEMS_QUERY_BY_HEAD_EVENT_SERVICE
+    method: POST
+  FIN-核算账簿-启用服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_TYPE_ENABLE_SERVICE
+    method: POST
+  FIN-核算体系-详情信息服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AS_SYS_VIEW_CF_DETAIL_EVENT_SERVICE
     method: POST
   总账-期末处理-试算平衡-异步服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_END_TRIAL_BALANCE_ASYNC_EVENT_SERVICE
     method: POST
+  资产管理-账簿-建账:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_INIT_DATA_SERVICE
+    method: POST
+  FIN-现金流-现金流项目绑定核算组织数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_ORG_ASS_LIST_EVENT_SERVICE
+    method: POST
+  会计引擎-条件生成服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_GEN_CONDITION_ID_EVENT_SERVICE
+    method: POST
   会计引擎-凭证记录内部推送服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TR_INNER_PUSH_SERVICE
+    method: POST
+  会计科目-停用服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_DISABLED_BY_ID_EVENT_SERVICE
+    method: POST
+  会计引擎-凭证模板启用服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TMPL_ENABLE_SERVICE
+    method: POST
+  会计科目-根据编码或名称模糊搜索已启用的科目服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ENABLED_AA_BY_CODE_OR_NAME_SERVICE
+    method: POST
+  总账-凭证-凭证列表提交服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_SUBMIT_BY_ID_EVENT_SERVICE
     method: POST
   FIN-核算体系-核算组织分页服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AS_SYS_ORG_VIEW_CF_PAGE_EVENT_SERVICE
@@ -409,11 +220,29 @@ apis:
   工业品超市-账簿查询-资产负债表查询服务:
     path: /api/trantor/service/engine/execute/ERP_FI$GYPCS_FIN_GLM_BALANCE_SHEET_QUERY_EVENT_SERVICE
     method: POST
+  工业品超市-账簿查询-利润表查询服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$GYPCS_FIN_GLM_INCOME_STATEMENT_QUERY_EVENT_SERVICE
+    method: POST
+  FIN-现金流-现金流项目详情服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_CF_DETAIL_EVENT_SERVICE
+    method: POST
   期末结账-任务批量创建服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_END_TASK_BATCH_CREATE_EVENT_SERVICE
     method: POST
+  FIN-现金流-现金流项目分页服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_CF_PAGE_EVENT_SERVICE
+    method: POST
+  FIN-现金流-现金流项目类型分页服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CFT_TYPE_CF_PAGE_EVENT_SERVICE
+    method: POST
+  账簿查询-辅助余额查询服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABS_BALANCE_QUERY_PAGE_EVENT_SERVICE
+    method: POST
   外部对象创建组件用服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_OUTER_OBJECT_MOD_SAVE_SERVICE
+    method: POST
+  总账系统保存服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AE_GLS_TYPE_SAVE_SERVICE
     method: POST
   账簿查询-现金流量查询服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_QUERY_LIST_EVENT_SERVICE
@@ -424,11 +253,23 @@ apis:
   总账-规则凭证-修改事件服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_UPDATE_EVENT_SERVICE
     method: POST
+  FIN-核算体系-核算组织详情服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AS_SYS_ORG_CF_DETAIL_EVENT_SERVICE
+    method: POST
   会计引擎-业务单据启用服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BD_DOC_CF_ENABLE_SERVICE
     method: POST
   会计引擎-删除校验规则服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DELETE_DSD_VLD_SERVICE
+    method: POST
+  会计科目-新增下级-根据ID查询页面数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_NEW_CHILD_INFO_QUERY_BY_ID_EVENT_SERVICE
+    method: POST
+  总账-凭证-凭证整理提交服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VOUCHER_ORG_SUBMIT_EVENT_SERVICE
+    method: POST
+  总账-凭证-流量检查服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_AB_ITEM_AMT_CHECK_EVENT_SERVICE
     method: POST
   FIN-现金流-现金流项目-树查询服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_TREE_QUERY_EVENT_SERVICE
@@ -448,8 +289,29 @@ apis:
   科目辅助维度设置-提交服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ADS_SAVE_EVENT_SERVICE
     method: POST
+  总账-凭证-凭证整理行修改服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VOUCHER_ORG_ITEM_EDIT_EVENT_SERVICE
+    method: POST
   会计科目-根据ID查询页面数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_INFO_QUERY_BY_ID_EVENT_SERVICE
+    method: POST
+  会计科目-查询科目表下的科目树服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_TREE_QUERY_BY_AB_COA_EVENT_SERVICE
+    method: POST
+  会计引擎-获取凭证结构行服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_DSD_CF_CONVERT_TO_CNSLD_ITEM_SERVICE
+    method: POST
+  会计引擎-校验规则设置默认服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SET_DEFAULT_DSD_VLD_SERVICE
+    method: POST
+  会计科目-维度分配服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_DISTRIBUTE_AD_EVENT_SERVICE
+    method: POST
+  总账-凭证-凭证批量记账服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_ACCOUNTING_BATCH_EVENT_SERVICE
+    method: POST
+  总账-期末处理-试算平衡-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_END_TRIAL_BALANCE_SAVE_DATA_EVENT_SERVICE
     method: POST
   总账-初始化-期初余额保存服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBE_ITEM_TABLE_SUBMIT_EVENT_SERVICE
@@ -460,11 +322,32 @@ apis:
   外部对象保存服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_OUTER_OBJECT_SAVE_SERVICE
     method: POST
+  FIN-现金流-现金流项目类型保存服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CFT_TYPE_CF_SAVE_EVENT_SERVICE
+    method: POST
   总账-调整期间结账-列表查询服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AD_PERIOD_LIST_EVENT_SERVICE
     method: POST
+  会计引擎-关键字账簿映射表查询服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_LEDG_EXH_HEAD_CF_DETAIL_SERVICE
+    method: POST
+  总账-初始化-期初余额查询服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBE_ITEM_TABLE_QUERY_EVENT_SERVICE
+    method: POST
+  会计引擎-分页来源业务单据生成凭证所属总账系统服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_GLS_TYPE_PAGE_BY_SRC_DOC_SERVICE
+    method: POST
+  总账-规则凭证类型-保存事件服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_TYPE_SAVE_EVENT_SERVICE
+    method: POST
+  会计要素头表-启用服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AE_HEAD_ENABLE_EVENT_SERVICE
+    method: POST
   资产管理-账簿-提交:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_SUBMIT_SERVICE
+    method: POST
+  会计引擎-关键字科目映射表保存服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_ACC_EXH_HEAD_CF_SAVE_SERVICE
     method: POST
   会计引擎-批量输出凭证记录服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BATCH_GEN_DSD_AND_SAVE_SERVICE
@@ -472,8 +355,20 @@ apis:
   保存凭证记录服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SAVE_DSD_TR_SERVICE
     method: POST
+  核算系统-用户账簿-提交服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_USER_SUBMIT_EVENT_SERVICE
+    method: POST
   账簿查询-账簿关联的会计日历信息服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_TYPE_CALENDER_ITEM_LIST_EVENT_SERVICE
+    method: POST
+  会计科目-会计要素头下的要素分页服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AE_BY_AE_HEAD_PAGE_EVENT_SERVICE
+    method: POST
+  账簿查询-总分类账查询服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_GL_QUERY_TYPE_PAGE_EVENT_SERVICE
+    method: POST
+  会计引擎-凭证模板停用服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TMPL_DISABLE_SERVICE
     method: POST
   会计政策-提交服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_GLM_AP_TYPE_SUBMIT_EVENT_SERVICE
@@ -487,17 +382,29 @@ apis:
   FIN-核算账簿-反启用服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_TYPE_CF_NOT_ENABLE_EVENT_SERVICE
     method: POST
+  总账-初始化-辅助维度余额保存服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBE_AD_INFO_SUBMIT_EVENT_SERVICE
+    method: POST
   会计科目-取消分配服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_CANCEL_DISTRIBUTE_EVENT_SERVICE
     method: POST
   会计引擎-总账系统分页查询服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BD_GLS_TYPE_PAGE_SERVICE
     method: POST
+  总账-凭证-详情查询服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_QUERY_DETAIL_EVENT_SERVICE
+    method: POST
   会计引擎-凭证记录-批量重新推送服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TR_BATCH_PUSH_AGAIN_SERVICE
     method: POST
+  账簿查询-科目余额查询服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_BSA_BALANCE_QUERY_PAGE_EVENT_SERVICE
+    method: POST
   总账-规则凭证-财务金额公式查询事件服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_FIN_FORMULA_QUERY_EVENT_SERVICE
+    method: POST
+  会计引擎-凭证记录推送更新服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$DSD_TR_PUSHED_SERVICE
     method: POST
   FIN-核算账簿-删除服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AP_TYPE_CF_DELETE_EVENT_SERVICE
@@ -511,8 +418,29 @@ apis:
   总账-初始化-辅助维度期初余额查询服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBE_AD_CF_TABLE_QUERY_EVENT_SERVICE
     method: POST
+  会计引擎-关键字科目映射详情服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_ACC_EXH_HEAD_CF_DETAIL_SERVICE
+    method: POST
+  会计引擎-生成单据记录服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_IMPORT_DOC_SERVICE
+    method: POST
+  资产管理-账簿-停用:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_INACTIVE_SERVICE
+    method: POST
+  会计引擎-关键字科目映射表分页查询服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_ACC_EXH_HEAD_CF_PAGE_SERVICE
+    method: POST
   会计科目-根节点下的所有科目查询服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_QUERY_BY_ROOT_AA_EVENT_SERVICE
+    method: POST
+  账簿查询-现金流量明细查询服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_DETAILL_QUERY_LIST_EVENT_SERVICE
+    method: POST
+  FIN-核算体系-绑定的核算组织列表服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AS_SYS_ORG_VIEW_CF_LIST_EVENT_SERVICE
+    method: POST
+  会计引擎-单据记录分页服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DOC_TR_PAGE_SERVICE
     method: POST
   会计科目-分配服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_DISTRIBUTE_EVENT_SERVICE
@@ -520,11 +448,35 @@ apis:
   总账-账簿-初始化服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IB_AB_TYPE_INITIALIZE_EVENT_SERVICE
     method: POST
+  FIN-现金流-现金流项目-科目分配服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_WITH_AA_SUBMIT_EVENT_SERVICE
+    method: POST
+  账簿查询-辅助明细账查询服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ASL_TYPE_QUERY_PAGE_EVENT_SERVICE
+    method: POST
+  总账-凭证-自动分析服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_FLOW_AUTO_ANALYSIS_EVENT_SERVICE
+    method: POST
+  账簿查询-总分类账查询-异步服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_LEDGE_QUERY_PAGE_ASYNC_EVENT_SERVICE
+    method: POST
   会计引擎-业务单据反启用服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BD_DOC_CF_DISABLE_SERVICE
     method: POST
   会计引擎-账簿映射头删除服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_LEDG_EXH_HEAD_CF_DELETE_SERVICE
+    method: POST
+  会计引擎-科目映射头删除服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_ACC_EXH_HEAD_CF_DELETE_SERVICE
+    method: POST
+  会计引擎-获取内部对象下钻字段服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_INTERNAL_OBJECT_FIELD_GET_ACTION_SERVICE
+    method: POST
+  会计引擎-业务模块删除服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BM_MODULE_DELETE_SERVICE
+    method: POST
+  总账-凭证-凭证记账服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_ACCOUNTING_EVENT_SERVICE
     method: POST
   会计科目-维度数据查询服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_LIST_AD_QUERY_EVENT_SERVICE
@@ -532,20 +484,41 @@ apis:
   会计引擎-业务模块详情服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BM_MODULE_DETAIL_SERVICE
     method: POST
+  会计科目-启用服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_ENABLED_BY_ID_EVENT_SERVICE
+    method: POST
   会计要素表-提交服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AE_SUBMIT_EVENT_SERVICE
+    method: POST
+  会计引擎-业务单据注册分页查询服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BD_DOC_DEF_CF_PAGE_SERVICE
+    method: POST
+  期末结账-任务状态轮询服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_END_TASK_RUNNING_CHECK_EVENT_SERVICE
     method: POST
   会计引擎-凭证记录合并服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_DSD_TR_CNSLD_SERVICE
     method: POST
+  总账-凭证-凭证作废服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_INVALID_ACTION_SERVICE
+    method: POST
   业务系统反启用服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SR_SYS_CF_DISABLE_SERVICE
+    method: POST
+  FIN-核算账簿-创建/更新服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_TYPE_CF_SAVE_EVENT_SERVICE
+    method: POST
+  会计科目-科目表下的科目信息分页服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_BY_COA_PAGE_EVENT_SERVICE
     method: POST
   会计科目-根据用户ID查询用户组织服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ORG_QUERY_BY_USER_ID_EVENT_SERVICE
     method: POST
   会计引擎-业务模块查询事件服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BM_MODULE_FIND_SERVICE
+    method: POST
+  总账-凭证-凭证整理行查询服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VOUCHER_ORG_ITEM_PAGE_EVENT_SERVICE
     method: POST
   业务系统启用服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SR_SYS_CF_ENABLE_SERVICE
@@ -559,14 +532,38 @@ apis:
   会计引擎-生成凭证服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BUILD_DSD_BY_AES_FIELD_MAPPING_SERVICE
     method: POST
+  会计科目-导入服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_IMPORT_DATA_EVENT_SERVICE
+    method: POST
   总账-凭证-加载凭证行原币金额服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_LOAD_ORIG_CURR_AMT_EVENT_SERVICE
     method: POST
   会计引擎-分页映射服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_EXH_MAPPING_HEAD_CF_PAGE_SERVICE
     method: POST
+  FIN-现金流-现金流项目类型删除服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CFT_TYPE_CF_DELETE_EVENT_SERVICE
+    method: POST
+  获取业务系统树-组件用服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SYS_TREE_MOD_SERVICE
+    method: POST
   会计科目-所有根节点科目查询服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_ALL_ROOT_HEAD_QUERY_EVENT_SERVICE
+    method: POST
+  会计引擎-凭证结构保存服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_DEF_CF_SAVE_SERVICE
+    method: POST
+  会计引擎-业务单据注册删除服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BD_DOC_CF_DELETE_SERVICE
+    method: POST
+  总账-初始化-现金流量项目金额检查服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBC_CASH_ITEM_CHECK_EVENT_SERVICE
+    method: POST
+  账簿查询-辅助明细查询-异步服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ASL_TYPE_QUERY_PAGE_ASYNC_EVENT_SERVICE
+    method: POST
+  外部对象分页查询服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_OUTER_OBJECT_PAGE_SERVICE
     method: POST
   期末结账-任务创建服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_END_TASK_CREATE_EVENT_SERVICE
@@ -580,11 +577,20 @@ apis:
   科目辅助维度类型-根据ID返回数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ADS_HEAD_QUERY_BY_ID_EVENT_SERVICE
     method: POST
+  FIN-现金流-现金流项目-根据ID查询科目维度信息服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_QUERY_AA_AD_BY_AB_ID_EVENT_SERVICE
+    method: POST
   FIN-会计政策-停用服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AP_TYPE_CF_DISABLE_EVENT_SERVICE
     method: POST
+  规则凭证详情事件服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_DETAIL_EVENT_SERVICE
+    method: POST
   会计引擎-关键字账簿映射表保存服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_LEDG_EXH_HEAD_CF_SAVE_SERVICE
+    method: POST
+  会计引擎-外部对象删除服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_OUTER_OBJECT_DELETE_SERVICE
     method: POST
   会计引擎-过滤数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DOC_ITEM_FILTER_SERVICE
@@ -604,11 +610,20 @@ apis:
   FIN-核算体系-数据删除服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AS_SYS_VIEW_CF_DELETE_EVENT_SERVICE
     method: POST
+  FIN-核算体系-数据创建服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AS_SYS_VIEW_CF_SAVE_EVENT_SERVICE
+    method: POST
   会计引擎-凭证结构查询服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_DEF_QUERY_SERVICE
     method: POST
+  会计引擎-业务单据注册分页查询(废弃)服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BD_DOC_DEF_QUERY_SERVICE
+    method: POST
   总账-期末结账-规则凭证查询服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_QUERY_EVENT_SERVICE
+    method: POST
+  总账-规则凭证-保存事件服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_SAVE_EVENT_SERVICE
     method: POST
   会计引擎-凭证注册删除服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_DEF_CF_DELETE_SERVICE
@@ -619,8 +634,32 @@ apis:
   会计引擎-业务单据注册保存服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BD_DOC_CF_SAVE_SERVICE
     method: POST
+  会计引擎-生成凭证记录服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_GEN_DSD_SERVICE
+    method: POST
+  会计引擎-凭证结构分页查询服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_DEF_CF_PAGE_SERVICE
+    method: POST
+  会计引擎-查询合并规则详情服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_QUERY_CNSLD_HEAD_SERVICE
+    method: POST
+  账簿查询-明细分类账查询-异步:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_GENERAL_LEDGE_ASYNC_QUERY_EVENT_SERVICE
+    method: POST
+  会计引擎-根据单据输出凭证记录服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_GEN_AND_SAVE_DSD_TR_SERVICE
+    method: POST
   资产管理-账簿-启用:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_ENABLE_SERVICE
+    method: POST
+  辅助维度-启用服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_GLM_AD_ENABLE_EVENT_SERVICE
+    method: POST
+  辅助维度-反启用服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_GLM_AD_DISABLE_EVENT_SERVICE
+    method: POST
+  会计引擎-保存映射服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_EXH_MAPPING_HEAD_CF_SAVE_SERVICE
     method: POST
   总账-凭证整理-处理服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VOUCHER_ORG_PROCESS_EVENT_SERVICE
@@ -646,17 +685,32 @@ apis:
   辅助维度-提交服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AD_SUBMIT_EVENT_SERVICE
     method: POST
+  会计引擎-重新生成凭证记录服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_RE_GEN_DSD_SERVICE
+    method: POST
+  账簿查询-辅助明细账查询1服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ASL_TYPE_PAGE_EVENT_SERVICE
+    method: POST
+  FIN-核算体系-数据分页服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AS_SYS_VIEW_CF_PAGE_EVENT_SERVICE
+    method: POST
   总账-凭证-凭证列表批量提交服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_SUBMIT_BY_ID_BATCH_EVENT_SERVICE
     method: POST
   FIN-核算系统-核算体系下的核算组织服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ORG_QUERY_BY_AS_SYS_EVENT_SERVICE
     method: POST
+  FIN-现金流-现金流项目保存服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_CF_SAVE_EVENT_SERVICE
+    method: POST
   核算系统-用户账簿-分页查询服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_USER_PAGE_QUERY_EVENT_SERVICE
     method: POST
   会计要素头表-反启用服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AE_HEAD_DISABLE_EVENT_SERVICE
+    method: POST
+  会计引擎-保存校验规则服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SAVE_DSD_VLD_SERVICE
     method: POST
   会计引擎-凭证结构启用服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_DEF_ENABLE_SERVICE
@@ -673,11 +727,32 @@ apis:
   反结账-分页查询服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_BLM_END_CUTOFF_REVERSE_LIST_QUERY_EVENT_SERVICE
     method: POST
+  总账-初始化-汇率筛选服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IB_RATE_QUERY_BY_CURR_AND_RT_EVENT_SERVICE
+    method: POST
   会计引擎-删除分录规则服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_DSD_CNSLD_CF_DELETE_SERVICE
     method: POST
+  总账-凭证-凭证删除服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_DELETE_EVENT_SERVICE
+    method: POST
+  总账-凭证-凭证提交服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_SUBMIT_EVENT_SERVICE
+    method: POST
+  会计引擎-凭证记录-批量推送服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TR_BATCH_PUSH_SERVICE
+    method: POST
   会计引擎-凭证记录重新推送服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TR_PUSH_AGAIN_SERVICE
+    method: POST
+  账簿查询-报表组件-总分类账查询服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_LEDGE_QUERY_PAGE_EVENT_SERVICE
+    method: POST
+  资产管理-类别-删除:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_DELETE_SERVICE
+    method: POST
+  会计引擎-分录合并规则保存服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_DSD_CNSLD_CF_SAVE_SERVICE
     method: POST
   会计引擎-关键字账簿映射表分页查询服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_LEDG_EXH_HEAD_CF_PAGE_SERVICE
@@ -685,14 +760,32 @@ apis:
   会计科目表-提交服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_COA_TYPE_SUBMIT_EVENT_SERVICE
     method: POST
+  会计科目-科目表下的根节点查询服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_ROOT_HEAD_QUERY_BY_COA_EVENT_SERVICE
+    method: POST
+  分页分录规则服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_DSD_CNSLD_CF_PAGE_SERVICE
+    method: POST
+  会计引擎-凭证模板复制服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TMPL_CF_COPY_SERVICE
+    method: POST
   总账-期末结账-执行事件服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_EXECUTE_EVENT_SERVICE
     method: POST
   总账-初始化-现金流量项目金额查询服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBC_CASH_ITEM_QUERY_EVENT_SERVICE
     method: POST
+  总账-凭证-凭证冲销服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_OFFSET_EVENT_SERVICE
+    method: POST
   FIN-核算体系-核算组织树展示服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AS_SYS_ORG_CF_TREE_QUERY_EVENT_SERVICE
+    method: POST
+  会计引擎-业务单据注册详情查询服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BD_DOC_CF_QUERY_SERVICE
+    method: POST
+  账簿查询-账簿关联的启用的科目及其叶子节点服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_HEAD_ENABLED_LIST_EVENT_SERVICE
     method: POST
   会计引擎-删除映射服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_EXH_MAPPING_HEAD_CF_DELETE_SERVICE
@@ -712,8 +805,23 @@ apis:
   总账-凭证-凭证暂存服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_SAVE_EVENT_SERVICE
     method: POST
+  账簿查询-账簿关联的科目及其叶子节点服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_TYPE_SUBJECT_ITEM_LIST_EVENT_SERVICE
+    method: POST
   会计科目-根据组织ID集合查询组织树服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_QUERY_ORG_TREE_BY_ORGIDS_EVENT_SERVICE
+    method: POST
+  会计引擎-校验规则取消默认服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SET_NON_DEFAULT_DSD_VLD_SERVICE
+    method: POST
+  账簿查询-辅助余额查询-异步服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABS_BALANCE_QUERY_PAGE_ASYNC_EVENT_SERVICE
+    method: POST
+  总账-凭证-获取凭证号服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_VOUCH_NUMBER_EVENT_SERVICE
+    method: POST
+  会计引擎-删除单据记录-业务事件:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DELETE_DSD_TR_EVENT_SERVICE
     method: POST
   会计引擎-分录规则取消默认服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_DSD_CNSLD_CANCEL_DEFAULT_SERVICE
@@ -721,17 +829,62 @@ apis:
   会计引擎-凭证模板查询详情服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TMPL_CF_DETAIL_SERVICE
     method: POST
+  会计引擎-作废单据记录服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_INVALID_DOC_SERVICE
+    method: POST
+  会计引擎-查询映射服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_EXH_MAPPING_HEAD_CF_DETAIL_SERVICE
+    method: POST
   会计科目-根据编码或名称模糊搜索服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_LIST_QUERY_BY_CODE_OR_NAME_SERVICE
     method: POST
   外部对象分页组件用服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_OUTER_OBJECT_PAGE_MOD_SERVICE
     method: POST
+  会计引擎-删除单据记录服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DELETE_DOC_SERVICE
+    method: POST
+  条件验证服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_VAL_CONDITION_EVENT_SERVICE
+    method: POST
+  科目辅助维度类型-删除服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ADS_HEAD_DELETE_BY_ID_EVENT_SERVICE
+    method: POST
+  期末结账-分页查询服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_BLM_END_CUTOFF_LIST_QUERY_EVENT_SERVICE
+    method: POST
+  核算系统-用户账簿-单个查询服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_USER_QUERY_ONE_EVENT_SERVICE
+    method: POST
   会计引擎-业务模块保存服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BM_MODULE_SAVE_SERVICE
     method: POST
+  总账-初始化-试算平衡服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBE_TRIAL_BALANCE_VIEW_QUERY_EVENT_SERVICE
+    method: POST
+  财务大屏-查询经营方案列表服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_AI_DASHBOARD_FIND_PLAN_SERVICE
+    method: POST
+  凭证类型-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VT_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  总分类账历史数据-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_LEDGE_HISTORY_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  资产管理-生成单据-异步:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_DEP_POST_ASYNC
+    method: POST
   核算账簿-导入导出任务管理接口-通过OSS提交导入任务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  资产卡片-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  财务报表实例表-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_INSTANCE_TR_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  资产管理-会计期间行表-根据头ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$ASSERT_COM_PERIOD_ITEM_CF_FIND_BY_HEAD_ID_SERVICE
     method: POST
   现金流量项目表-保存数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CFS_TYPE_CF_SAVE_DATA_SERVICE
@@ -742,6 +895,9 @@ apis:
   资产政策-批量删除数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_POLICY_CF_BATCH_DELETE_DATA_SERVICE
     method: POST
+  总账系统表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_GLS_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
   现金流量项目-复制数据转换服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_CF_COPY_DATA_CONVERTER_SERVICE
     method: POST
@@ -751,11 +907,29 @@ apis:
   核算组织现金流科目关联表标准导出服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_SUB_ASS_CF_GEI_EXPORT_SERVICE
     method: POST
+  报表实例-单元格重算:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_INSTANCE_CELL_RECALCULATION_SERVICE
+    method: POST
   资产政策-导入导出任务管理接口-提交导出任务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_POLICY_CF_API_GEI_TASK_EXPORT_DIRECT_POST
     method: POST
+  会计引擎-单据记录按照总账系统导出-提交服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_EXPORT_SUBMIT_DSD_TR_BY_GLS_SERVICE
+    method: POST
   现金流量项目-查找树子数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_CF_FIND_TREE_CHILDREN_DATA_SERVICE
+    method: POST
+  查询科目树（只查下面一级）:
+    path: /api/trantor/service/engine/execute/ERP_FI$QUERY_AA_HEAD_TREE_ONE_LEVEL
+    method: POST
+  财务-自定义报表公式校验服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_FORMULA_PARSE_SERVICE
+    method: POST
+  调汇方案头-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_EXCH_ADJ_RULE_HEAD_CF_SAVE_DATA_SERVICE
+    method: POST
+  总账-凭证-智能获取服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_AI_QUERY_EVENT_SERVICE
     method: POST
   资产价值明细账-复制数据转换子服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_VALUE_DETAIL_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
@@ -769,8 +943,17 @@ apis:
   总账系统表-导入导出任务管理接口-通过OSS提交导入任务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_GLS_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
     method: POST
+  资产变更单头标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_CHANGE_HEAD_TR_GEI_EXPORT_SERVICE
+    method: POST
   资产状态-批量禁用主数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_STATUS_CF_MASTER_DATA_MULTI_DISABLE_DATA_SERVICE
+    method: POST
+  资产类别折旧汇总标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_DEPRECIATION_TR_GEI_EXPORT_SERVICE
+    method: POST
+  财务报表定义表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_DEFINITION_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
     method: POST
   已建账账簿分页服务:
     path: /api/trantor/service/engine/execute/ERP_FI$already_created_account_book_pagination_service
@@ -778,11 +961,29 @@ apis:
   期间类型-启用主数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_CALENDAR_HEAD_CF_MASTER_DATA_ENABLE_DATA_SERVI
     method: POST
+  账簿查询-报表组件-明细分类账导出服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_GENERAL_LEDGE_EXPORT_SERVICE
+    method: POST
+  总账-凭证-查询凭证现金流量明细:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_CASH_DETAIL_QUERY_SERVICE
+    method: POST
   账簿类型-保存主数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABT_TYPE_CF_MASTER_DATA_SAVE_DATA_SERVICE
     method: POST
   会计期间-查找树子数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_ITEM_CF_FIND_TREE_CHILDREN_DATA_SERVICE
+    method: POST
+  现金流量项目-反向构建树服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_CF_REVERSE_CONSTRUCT_TREE_SERVICE
+    method: POST
+  财务指标项表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_COMPONENT_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  资产变更单头-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_CHANGE_HEAD_TR_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  会计科目表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_COA_TYPE_CF_DELETE_DATA_BY_ID_SERVICE
     method: POST
   账簿类型-根据ID删除数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABT_TYPE_CF_DELETE_DATA_BY_ID_SERVICE
@@ -790,11 +991,35 @@ apis:
   会计政策标准导出服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AP_TYPE_CF_GEI_EXPORT_SERVICE
     method: POST
+  业务系统注册表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SR_SYS_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
   核算组织现金流科目关联表-保存数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_SUB_ASS_CF_SAVE_DATA_SERVICE
     method: POST
+  总账系统表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_GLS_TYPE_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  凭证录入行表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_ITEM_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  资产处置单头-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DISPOSAL_HEAD_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  财务大屏-查询指标历史记录:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_HISTORY_TR_QUERY_SERVICE
+    method: POST
+  期间类型-禁用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_CALENDAR_HEAD_CF_MASTER_DATA_DISABLE_SERVICE
+    method: POST
+  总帐-初始化-期初余额-导出服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBE_ITEM_QUERY_EXPORT_SERVICE
+    method: POST
   映射配置穷举头表-根据ID删除数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_EXH_MAPPING_HEAD_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  财务报表组表-保存主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_GROUP_CF_MASTER_DATA_SAVE_DATA_SERVICE
     method: POST
   资产状态-保存数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_STATUS_CF_SAVE_DATA_SERVICE
@@ -808,17 +1033,38 @@ apis:
   核算组织现金流科目关联表-导入导出任务管理接口-提交导出任务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_SUB_ASS_CF_API_GEI_TASK_EXPORT_DIRECT_POST
     method: POST
+  凭证号整理子表-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_NUMBER_ORGANIZE_ITEM_TR_FIND_DATA_BY_ID_SERVICE
+    method: POST
   资产政策-根据ID删除数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_POLICY_CF_DELETE_DATA_BY_ID_SERVICE
     method: POST
   凭证导入模型标准导入服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_IMPORT_VO_GEI_IMPORT_SERVICE
     method: POST
+  会计期间-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_ITEM_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  会计科目标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_HEAD_CF_GEI_IMPORT_SERVICE
+    method: POST
+  期间类型-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_CALENDAR_HEAD_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
   现金流量期初余额录入头表-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBC_HEAD_TR_FIND_DATA_BY_ID_SERVICE
     method: POST
   会计期间-删除服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_CALENDAR_ITEM_DELETED_EVENT_SERVICE
+    method: POST
+  凭证录入行表-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_ITEM_TR_SAVE_DATA_SERVICE
+    method: POST
+  现金流使用组织关联表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_CFT_ORG_ASS_CF_PAGING_DATA_SERVICE
+    method: POST
+  资产卡片-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_MD_PAGING_DATA_SERVICE
     method: POST
   业务系统注册表-批量删除数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SR_SYS_CF_BATCH_DELETE_DATA_SERVICE
@@ -829,8 +1075,23 @@ apis:
   财务报表定义表-保存数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_DEFINITION_CF_SAVE_DATA_SERVICE
     method: POST
+  业务模块注册表标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BM_MODULE_CF_GEI_IMPORT_SERVICE
+    method: POST
   辅助维度表-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AD_CF_PAGING_DATA_SERVICE
+    method: POST
+  资产状态-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_STATUS_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  资产变更单头-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_CHANGE_HEAD_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  业务模块注册表-反向构建树-递归建树服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BM_MODULE_CF_REVERSE_CONSTRUCT_TREE_SERVICE_BUILD_TREE
+    method: POST
+  规则凭证录入头表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_HEAD_TR_PAGING_DATA_SERVICE
     method: POST
   凭证模板表-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TMPL_CF_PAGING_DATA_SERVICE
@@ -838,14 +1099,23 @@ apis:
   财务指标配置表-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_DEFINITION_CF_PAGING_DATA_SERVICE
     method: POST
+  凭证导出信息视图-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_EXPORT_INFO_VIEW_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
   资产管理-资产变更-查询详情:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_QUERY_CARD_CHANGE_DETAIL_SREVICE
     method: POST
   凭证类型-复制数据转换子服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VT_TYPE_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
     method: POST
+  财务指标-查询多个指标_copy:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_DEFINITION_QUERY_DATA_SERVICE_copy
+    method: POST
   资产状态-复制数据转换子服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_STATUS_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  凭证模板明细表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TMPL_DETAIL_CF_PAGING_DATA_SERVICE
     method: POST
   会计政策-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AP_TYPE_CF_FIND_DATA_BY_ID_SERVICE
@@ -853,11 +1123,23 @@ apis:
   资产变更单头-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_CHANGE_HEAD_TR_FIND_DATA_BY_ID_SERVICE
     method: POST
+  资产使用部门折旧汇总-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_DEPART_DEPRECIATION_TR_FIND_DATA_BY_ID_SERVICE
+    method: POST
   资产变更单头-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_CHANGE_HEAD_TR_PAGING_DATA_SERVICE
     method: POST
   资产价值明细账-根据ID删除数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_VALUE_DETAIL_TR_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  资产账簿-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_TYPE_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  新版会计科目-导入服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_GLM_AA_IMPORT_NEW_SERVICE
+    method: POST
+  财务报表组表-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_GROUP_CF_FIND_DATA_BY_ID_SERVICE
     method: POST
   资产政策-导入导出任务管理接口-通过OSS提交导入任务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_POLICY_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
@@ -868,14 +1150,23 @@ apis:
   资产账簿-期末结账-结账:
     path: /api/trantor/service/engine/execute/ERP_FI$ASSET_AB_POST_SERVICE
     method: POST
+  辅助余额维度值表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABS_AD_VALUE_TR_PAGING_DATA_SERVICE
+    method: POST
   财务报表定义表-复制数据转换服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_DEFINITION_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  凭证类型-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VT_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
     method: POST
   会计政策-复制数据转换子服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AP_TYPE_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
     method: POST
   总账-初始化-余额导入-导入导出任务管理接口-通过OSS提交导入任务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_GLM_IB_IMPORT_VO_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  资产类别-查找树子数据服务（递归）:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_CF_FIND_TREE_DATA_SERVICE_CHILD
     method: POST
   现金流量项目表-复制数据转换子服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CFS_TYPE_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
@@ -889,11 +1180,17 @@ apis:
   现金流量项目-反向构建树-递归建树服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_CF_REVERSE_CONSTRUCT_TREE_SERVICE_BUILD_TREE
     method: POST
+  财务指标-查询公司指标数据:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_METRICS_QUERY_DATA_SERVICE
+    method: POST
   账簿类型标准导入服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABT_TYPE_CF_GEI_IMPORT_SERVICE
     method: POST
   资产价值明细账标准导出服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_VALUE_DETAIL_TR_GEI_EXPORT_SERVICE
+    method: POST
+  凭证记录-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TR_FIND_DATA_BY_ID_SERVICE
     method: POST
   资产管理-资产变更-提交:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_CHANGE_SUBMIT_SERVICE
@@ -913,17 +1210,38 @@ apis:
   期间类型-导入导出任务管理接口-通过OSS提交导入任务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
     method: POST
+  财务指标项表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_COMPONENT_CF_GEI_EXPORT_SERVICE
+    method: POST
   财务报表任务表-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_TASK_CF_FIND_DATA_BY_ID_SERVICE
     method: POST
   资产类别-查找树数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_CF_FIND_TREE_DATA_SERVICE
     method: POST
+  核算组织现金流科目关联表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_SUB_ASS_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  会计引擎-触发删除单据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DELETE_DOC_EXTERNAL_ACTION_SERVICE
+    method: POST
   资产账簿-保存数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_TYPE_CF_SAVE_DATA_SERVICE
     method: POST
+  账簿类型-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABT_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  启用叶子节点会计期间分页:
+    path: /api/trantor/service/engine/execute/ERP_FI$CALENDAR_ITEM_ENABLE_LEAF_PAGING_SERVICE
+    method: POST
+  会计期间查询:
+    path: /api/trantor/service/engine/execute/ERP_FI$AI_FIN_COMMON_CALENDAR_ITEM_QUERY_SERVICE
+    method: POST
   核算账簿-批量删除数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_TYPE_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  业务单据记录-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DOC_TR_PAGING_DATA_SERVICE
     method: POST
   现金流使用组织关联表-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_CFT_ORG_ASS_CF_FIND_DATA_BY_ID_SERVICE
@@ -931,8 +1249,23 @@ apis:
   财务报表组表-导入导出任务管理接口-提交导出任务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_GROUP_CF_API_GEI_TASK_EXPORT_DIRECT_POST
     method: POST
+  资产卡片-分页数据服务-资产处置专用:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_TYPE_CF_PAGING_DISPOSAL_SERVICE
+    method: POST
+  规则凭证录入头表-启用-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_HEAD_ENABLED_PAGING_SERVICE
+    method: POST
+  总账-汇率查询:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_EXCHANGE_RATE_QUERY_SERVICE
+    method: POST
   账簿类型-复制数据转换服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABT_TYPE_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  现金流量期初余额录入行表标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBC_CASH_ITEM_TR_GEI_IMPORT_SERVICE
+    method: POST
+  资产价值明细账-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_VALUE_DETAIL_TR_API_GEI_TASK_EXPORT_DIRECT_POST
     method: POST
   资产使用部门折旧汇总-保存数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_DEPART_DEPRECIATION_TR_SAVE_DATA_SERVICE
@@ -942,837 +1275,6 @@ apis:
     method: POST
   凭证模板表-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TMPL_CF_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  资产政策标准导入服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_POLICY_CF_GEI_IMPORT_SERVICE
-    method: POST
-  规则凭证录入头表-批量禁用主数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_HEAD_TR_MASTER_DATA_MULTI_DISABLE_DATA_SERVICE
-    method: POST
-  凭证录入行表标准导出服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_ITEM_TR_GEI_EXPORT_SERVICE
-    method: POST
-  资产管理-资产变更-查询资产卡片信息:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_CHANGE_QUERY_SERVICE
-    method: POST
-  会计科目表-折叠关联关系服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_COA_TYPE_CF_FOLDING_ASSOCIATED_SERVICE
-    method: POST
-  资产折旧明细-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DEPRECIATION_DETAIL_TR_PAGING_DATA_SERVICE
-    method: POST
-  现金流量项目-查找树子数据服务（递归）:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_CF_FIND_TREE_DATA_SERVICE_CHILD
-    method: POST
-  资产管理-取消计提折旧:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_DEP_CANCEL
-    method: POST
-  会计科目-反向构建树服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_HEAD_CF_REVERSE_CONSTRUCT_TREE_SERVICE
-    method: POST
-  凭证结构表-保存数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_DEF_CF_SAVE_DATA_SERVICE
-    method: POST
-  业务系统注册表-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SR_SYS_CF_PAGING_DATA_SERVICE
-    method: POST
-  资产类别-查询启用数据:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_CF_PAGING_ENABLED_DATA_SERVICE
-    method: POST
-  资产使用部门折旧汇总标准导入服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_DEPART_DEPRECIATION_TR_GEI_IMPORT_SERVICE
-    method: POST
-  会计要素表行表-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AE_ITEM_CF_PAGING_DATA_SERVICE
-    method: POST
-  根据IDS批量查询凭证详情:
-    path: /api/trantor/service/engine/execute/ERP_FI$BATCH_QUERY_VE_DETAIL
-    method: POST
-  会计科目表-复制数据转换子服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_COA_TYPE_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
-    method: POST
-  会计科目表-分页查询:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_COA_TYPE_PAGE_QUERY_SERVICE
-    method: POST
-  资产类别-反向构建树-查询父节点服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_CF_REVERSE_CONSTRUCT_TREE_SERVICE_FIND_PARENT_NODES
-    method: POST
-  资产政策标准导出服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_POLICY_CF_GEI_EXPORT_SERVICE
-    method: POST
-  核算组织现金流科目关联表-复制数据转换服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_SUB_ASS_CF_COPY_DATA_CONVERTER_SERVICE
-    method: POST
-  账簿查询-报表组件-总分类账导出服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_LEDGE_EXPORT_SERVICE
-    method: POST
-  凭证记录-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TR_PAGING_DATA_SERVICE
-    method: POST
-  现金流量期初余额录入头表-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBC_HEAD_TR_PAGING_DATA_SERVICE
-    method: POST
-  业务系统注册表-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SR_SYS_CF_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  凭证类型标准导出服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VT_TYPE_CF_GEI_EXPORT_SERVICE
-    method: POST
-  会计政策-批量删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AP_TYPE_CF_BATCH_DELETE_DATA_SERVICE
-    method: POST
-  资产账簿-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_TYPE_CF_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  凭证记录-导入导出任务管理接口-提交导出任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TR_API_GEI_TASK_EXPORT_DIRECT_POST
-    method: POST
-  总账系统表-复制数据转换服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_GLS_TYPE_CF_COPY_DATA_CONVERTER_SERVICE
-    method: POST
-  凭证录入头表-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_HEAD_TR_PAGING_DATA_SERVICE
-    method: POST
-  资产类别-折叠关联关系服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_CF_FOLDING_ASSOCIATED_SERVICE
-    method: POST
-  业务系统注册表-导入导出任务管理接口-通过OSS提交导入任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SR_SYS_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-    method: POST
-  会计政策-保存主数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AP_TYPE_CF_MASTER_DATA_SAVE_DATA_SERVICE
-    method: POST
-  FIN-财务通用-会计日历根据头表和LocalDataTime查询叶子结点行表信息:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_ITEM_QUERY_BY_ID_TIME_SERVICE
-    method: POST
-  资产处置单头标准导出服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DISPOSAL_HEAD_TR_GEI_EXPORT_SERVICE
-    method: POST
-  财务报表任务表-保存数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_TASK_CF_SAVE_DATA_SERVICE
-    method: POST
-  会计要素头表-复制数据转换子服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AE_HEAD_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
-    method: POST
-  资产卡片导入模型-导入导出任务管理接口-通过OSS提交导入任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_IMPORT_DTO_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-    method: POST
-  资产政策-复制数据转换子服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_POLICY_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
-    method: POST
-  期间类型-导入导出任务管理接口-提交导出任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST
-    method: POST
-  业务单据注册表-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BD_DOC_CF_PAGING_DATA_SERVICE
-    method: POST
-  辅助维度类型头表-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ADS_HEAD_CF_PAGING_DATA_SERVICE
-    method: POST
-  业务系统注册表-复制数据转换服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SR_SYS_CF_COPY_DATA_CONVERTER_SERVICE
-    method: POST
-  总账系统表-复制数据转换子服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_GLS_TYPE_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
-    method: POST
-  核算体系-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AS_SYS_CF_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  资产卡片标准导出服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_MD_GEI_EXPORT_SERVICE
-    method: POST
-  财务报表实例表-复制数据转换服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_INSTANCE_TR_COPY_DATA_CONVERTER_SERVICE
-    method: POST
-  资产类别-导入导出任务管理接口-通过OSS提交导入任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-    method: POST
-  财务指标项表-导入导出任务管理接口-通过OSS提交导入任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_COMPONENT_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-    method: POST
-  资产政策-保存数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_POLICY_CF_SAVE_DATA_SERVICE
-    method: POST
-  核算组织现金流科目关联表-复制数据转换子服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_SUB_ASS_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
-    method: POST
-  业务模块注册表-反向构建树-查询父节点服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BM_MODULE_CF_REVERSE_CONSTRUCT_TREE_SERVICE_FIND_PARENT_NODES
-    method: POST
-  期间类型-反向构建树-查询父节点服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_HEAD_CF_REVERSE_CONSTRUCT_TREE_SERVICE_FIND_PARENT_NODES
-    method: POST
-  财务指标项表-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_COMPONENT_CF_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  总账-凭证-导出查询:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_EXPORT_QUERY
-    method: POST
-  总账-导出现金流量项目历史数据:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_HISTORY_EXPORT_SERVICE
-    method: POST
-  财务指标项表-复制数据转换服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_COMPONENT_CF_COPY_DATA_CONVERTER_SERVICE
-    method: POST
-  资产账簿-复制数据转换子服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_TYPE_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
-    method: POST
-  会计政策-保存数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AP_TYPE_CF_SAVE_DATA_SERVICE
-    method: POST
-  资产价值明细账-导入导出任务管理接口-通过OSS提交导入任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_VALUE_DETAIL_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-    method: POST
-  资产类别-反向构建树服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_CF_REVERSE_CONSTRUCT_TREE_SERVICE
-    method: POST
-  资产类别折旧汇总-批量删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_DEPRECIATION_TR_BATCH_DELETE_DATA_SERVICE
-    method: POST
-  核算组织现金流科目关联表标准导入服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_SUB_ASS_CF_GEI_IMPORT_SERVICE
-    method: POST
-  资产处置单头-保存数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DISPOSAL_HEAD_TR_SAVE_DATA_SERVICE
-    method: POST
-  业务单据注册表-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BD_DOC_CF_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  资产价值明细账-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_VALUE_DETAIL_TR_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  期间类型-保存主数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_CALENDAR_HEAD_CF_MASTER_DATA_SAVE_DATA_SERVICE
-    method: POST
-  映射配置穷举头表-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_EXH_MAPPING_HEAD_CF_PAGING_DATA_SERVICE
-    method: POST
-  凭证模板明细表-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TMPL_DETAIL_CF_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  财务报表定义表-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_DEFINITION_CF_PAGING_DATA_SERVICE
-    method: POST
-  规则凭证类型-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_TYPE_CF_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  凭证类型-复制数据转换服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VT_TYPE_CF_COPY_DATA_CONVERTER_SERVICE
-    method: POST
-  资产类别折旧汇总-根据ID删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_DEPRECIATION_TR_DELETE_DATA_BY_ID_SERVICE
-    method: POST
-  总账-现金流量项目历史数据-异步:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_HISTORY_QUERY_ASYNC_SERVICE
-    method: POST
-  核算账簿-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_TYPE_CF_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  资产卡片-获取资产卡片下的账簿:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_MD_FIND_ACCOUNT_SERVICE
-    method: POST
-  会计政策标准导入服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AP_TYPE_CF_GEI_IMPORT_SERVICE
-    method: POST
-  会计要素表行表-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AE_ITEM_CF_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  凭证录入头表标准导出服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_HEAD_TR_GEI_EXPORT_SERVICE
-    method: POST
-  凭证录入头表-导入导出任务管理接口-通过OSS提交导入任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_HEAD_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-    method: POST
-  卡片生成单据:
-    path: /api/trantor/service/engine/execute/ERP_FI$card_generate_bill
-    method: POST
-  会计政策-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AP_TYPE_CF_PAGING_DATA_SERVICE
-    method: POST
-  账簿查询-辅助余额导出服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABS_BALANCE_QUERY_EXPORT_SERVICE
-    method: POST
-  资产账簿-计提折旧:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_DEP
-    method: POST
-  辅助维度表-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AD_CF_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  凭证类型-保存主数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VT_TYPE_CF_MASTER_DATA_SAVE_DATA_SERVICE
-    method: POST
-  资产状态-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_STATUS_CF_PAGING_DATA_SERVICE
-    method: POST
-  凭证结构表-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_DEF_CF_PAGING_DATA_SERVICE
-    method: POST
-  资产使用部门折旧汇总-复制数据转换子服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_DEPART_DEPRECIATION_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
-    method: POST
-  凭证记录-保存数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TR_SAVE_DATA_SERVICE
-    method: POST
-  账簿类型-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABT_TYPE_CF_PAGING_DATA_SERVICE
-    method: POST
-  资产账簿-分页数据服务-资产卡片查询专用:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_TYPE_CF_CARD_PAGING_SERVICE
-    method: POST
-  资产使用部门折旧汇总-导入导出任务管理接口-通过OSS提交导入任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_DEPART_DEPRECIATION_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-    method: POST
-  资产价值明细账_普通模型-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_VALUE_DETAIL_TR_VO_PAGING_DATA_SERVICE
-    method: POST
-  财务指标项表-导入导出任务管理接口-提交导出任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_COMPONENT_CF_API_GEI_TASK_EXPORT_DIRECT_POST
-    method: POST
-  资产处置单头-导入导出任务管理接口-提交导出任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DISPOSAL_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST
-    method: POST
-  会计要素头表-批量删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AE_HEAD_CF_BATCH_DELETE_DATA_SERVICE
-    method: POST
-  现金流量明细查询视图表标准导出服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_CI_VIEW_GEI_EXPORT_SERVICE
-    method: POST
-  现金流量期初余额根据录入头查询行分页查询:
-    path: /api/trantor/service/engine/execute/ERP_FI$fin_glm_ibc_cash_item_tr_paging_by_head_service
-    method: POST
-  规则凭证录入头表-根据ID删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_HEAD_TR_DELETE_DATA_BY_ID_SERVICE
-    method: POST
-  资产状态-禁用主数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_STATUS_CF_MASTER_DATA_DISABLE_DATA_SERVICE
-    method: POST
-  财务报表实例表-导入导出任务管理接口-通过OSS提交导入任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_INSTANCE_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-    method: POST
-  财务指标配置表-复制数据转换服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_DEFINITION_CF_COPY_DATA_CONVERTER_SERVICE
-    method: POST
-  会计期间-查找树子数据服务（递归）:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN__CALENDAR_ITEM_CF_FIND_TREE_DATA_SERVICE_CHILD
-    method: POST
-  财务报表任务表-保存主数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_TASK_CF_MASTER_DATA_SAVE_DATA_SERVICE
-    method: POST
-  资产价值明细账标准导入服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_VALUE_DETAIL_TR_GEI_IMPORT_SERVICE
-    method: POST
-  会计期间-反向构建树-递归建树服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_ITEM_CF_REVERSE_CONSTRUCT_TREE_SERVICE_BUILD_TREE
-    method: POST
-  财务报表实例表-导入导出任务管理接口-提交导出任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_INSTANCE_TR_API_GEI_TASK_EXPORT_DIRECT_POST
-    method: POST
-  核算账簿-折叠关联关系服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_TYPE_CF_FOLDING_ASSOCIATED_SERVICE
-    method: POST
-  账簿类型-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABT_TYPE_CF_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  账簿类型-折叠关联关系服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABT_TYPE_CF_FOLDING_ASSOCIATED_SERVICE
-    method: POST
-  凭证录入头表-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_HEAD_TR_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  规则凭证类型-根据ID删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_TYPE_CF_DELETE_DATA_BY_ID_SERVICE
-    method: POST
-  资产变更单头-导入导出任务管理接口-通过OSS提交导入任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_CHANGE_HEAD_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-    method: POST
-  资产类别折旧汇总-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_DEPRECIATION_TR_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  资产账簿-分页数据服务-资产处置专用:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_TYPE_CF_PAGING_DATA_DISPOSAL_SERVICE
-    method: POST
-  现金流量项目表-保存主数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CFS_TYPE_CF_MASTER_DATA_SAVE_DATA_SERVICE
-    method: POST
-  资产卡片标准导入服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_MD_GEI_IMPORT_SERVICE
-    method: POST
-  财务报表组表-复制数据转换子服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_GROUP_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
-    method: POST
-  资产账簿-期末结账-反结账:
-    path: /api/trantor/service/engine/execute/ERP_FI$ASSET_AB_REVERSE_POST_SERVICE
-    method: POST
-  资产账簿-导入导出任务管理接口-通过OSS提交导入任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-    method: POST
-  现金流量期初余额录入头表-复制数据转换子服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBC_HEAD_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
-    method: POST
-  财务报表实例表-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_INSTANCE_TR_PAGING_DATA_SERVICE
-    method: POST
-  会计科目-反向构建树-查询父节点服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_HEAD_CF_REVERSE_CONSTRUCT_TREE_SERVICE_FIND_PARENT_NODES
-    method: POST
-  资产类别-查找树子数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_CF_FIND_TREE_CHILDREN_DATA_SERVICE
-    method: POST
-  会计科目-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_HEAD_CF_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  业务模块注册表-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BM_MODULE_CF_PAGING_DATA_SERVICE
-    method: POST
-  卡片删除:
-    path: /api/trantor/service/engine/execute/ERP_FI$delete_card
-    method: POST
-  资产账簿-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_TYPE_CF_PAGING_DATA_SERVICE
-    method: POST
-  资产折旧明细-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DEPRECIATION_DETAIL_TR_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  现金流量期初余额录入头表-根据ID删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBC_HEAD_TR_DELETE_DATA_BY_ID_SERVICE
-    method: POST
-  校验规则-复制数据转换服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_VLD_COPY_DATA_CONVERTER_SERVICE
-    method: POST
-  现金流量项目表-复制数据转换服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CFS_TYPE_CF_COPY_DATA_CONVERTER_SERVICE
-    method: POST
-  资产变更单头-复制数据转换服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_CHANGE_HEAD_TR_COPY_DATA_CONVERTER_SERVICE
-    method: POST
-  现金流量明细查询视图表-复制数据转换服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_CI_VIEW_COPY_DATA_CONVERTER_SERVICE
-    method: POST
-  核算账簿用户关系表-保存数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_USER_LINK_CF_SAVE_DATA_SERVICE
-    method: POST
-  资产类别标准导入服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_CF_GEI_IMPORT_SERVICE
-    method: POST
-  字段映射配置子表-创建并启用主数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_FILED_MAPPING_ITEM_CF_MASTER_DATA_CREATE_AND_ENABLE_DATA_SERVICE
-    method: POST
-  业务模块注册表-导入导出任务管理接口-通过OSS提交导入任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BM_MODULE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-    method: POST
-  会计政策-根据ID删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AP_TYPE_CF_DELETE_DATA_BY_ID_SERVICE
-    method: POST
-  FIN-财务通用-会计日历根据头表和LocalDataTime查询上一个叶子结点行表信息:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_ITEM_PREVIOUS_QUERY_SERVICE
-    method: POST
-  账簿类型-复制数据转换子服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABT_TYPE_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
-    method: POST
-  期间类型-反向构建树-递归建树服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_HEAD_CF_REVERSE_CONSTRUCT_TREE_SERVICE_BUILD_TREE
-    method: POST
-  资产政策-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_POLICY_CF_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  现金流量项目-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_CF_PAGING_DATA_SERVICE
-    method: POST
-  财务报表实例表标准导入服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_INSTANCE_TR_GEI_IMPORT_SERVICE
-    method: POST
-  财务报表组表-复制数据转换服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_GROUP_CF_COPY_DATA_CONVERTER_SERVICE
-    method: POST
-  资产账簿-分页数据服务_资产变更专用:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CHANGE_PAGING_SERVICE
-    method: POST
-  资产管理-计提折旧-异步:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_DEP_ASYNC
-    method: POST
-  财务报表实例表-批量删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_INSTANCE_TR_BATCH_DELETE_DATA_SERVICE
-    method: POST
-  财务指标配置表-根据ID删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_DEFINITION_CF_DELETE_DATA_BY_ID_SERVICE
-    method: POST
-  凭证现金流量明细-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_CASH_DETAIL_PAGING_DATA_SERVICE
-    method: POST
-  资产价值明细账-批量删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_VALUE_DETAIL_TR_BATCH_DELETE_DATA_SERVICE
-    method: POST
-  财务报表定义表-根据ID删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_DEFINITION_CF_DELETE_DATA_BY_ID_SERVICE
-    method: POST
-  资产处置单头标准导入服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DISPOSAL_HEAD_TR_GEI_IMPORT_SERVICE
-    method: POST
-  凭证录入头表-批量删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_HEAD_TR_BATCH_DELETE_DATA_SERVICE
-    method: POST
-  资产卡片-导入导出任务管理接口-通过OSS提交导入任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-    method: POST
-  资产管理-类别-停用:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_DISABLE_SERVICE
-    method: POST
-  资产类别折旧汇总-保存数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_DEPRECIATION_TR_SAVE_DATA_SERVICE
-    method: POST
-  业务单据结构分页组件用:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BD_DOC_CF_PAGE_MOD_SERVER
-    method: POST
-  业务单据凭证映射配置表-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DOC_DSD_REL_CF_PAGING_DATA_SERVICE
-    method: POST
-  财务报表定义表-批量删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_DEFINITION_CF_BATCH_DELETE_DATA_SERVICE
-    method: POST
-  总账系统表-保存数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_GLS_TYPE_CF_SAVE_DATA_SERVICE
-    method: POST
-  财务指标配置表-批量删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_DEFINITION_CF_BATCH_DELETE_DATA_SERVICE
-    method: POST
-  现金流量期初余额录入头表-复制数据转换服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBC_HEAD_TR_COPY_DATA_CONVERTER_SERVICE
-    method: POST
-  凭证录入行表-复制数据转换服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_ITEM_TR_COPY_DATA_CONVERTER_SERVICE
-    method: POST
-  账簿类型-导入导出任务管理接口-提交导出任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABT_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
-    method: POST
-  账簿类型标准导出服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABT_TYPE_CF_GEI_EXPORT_SERVICE
-    method: POST
-  资产折旧明细-复制数据转换子服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DEPRECIATION_DETAIL_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
-    method: POST
-  资产管理-会计期间头表-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$ASSERT_COM_PERIOD_HEAD_CF_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  业务模块注册表-反向构建树服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BM_MODULE_CF_REVERSE_CONSTRUCT_TREE_SERVICE
-    method: POST
-  账簿查询-科目余额导出查询服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_BSA_BALANCE_QUERY_PAGE_EXPORT_EVENT
-    method: POST
-  分录规则头-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_CNSLD_CF_HEAD_PAGING_DATA_SERVICE
-    method: POST
-  现金流量项目-根据ID查找单表数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
-    method: POST
-  资产使用部门折旧汇总-根据ID删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_DEPART_DEPRECIATION_TR_DELETE_DATA_BY_ID_SERVICE
-    method: POST
-  资产卡片使用部门-反向构建树-递归建树服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_USAGE_DEPART_MD_REVERSE_CONSTRUCT_TREE_SERVICE_BUILD_TREE
-    method: POST
-  规则凭证录入头表-批量删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_HEAD_TR_BATCH_DELETE_DATA_SERVICE
-    method: POST
-  规则凭证类型-复制数据转换服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_TYPE_CF_COPY_DATA_CONVERTER_SERVICE
-    method: POST
-  资产处置单头-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DISPOSAL_HEAD_TR_PAGING_DATA_SERVICE
-    method: POST
-  规则凭证录入头表-复制数据转换服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_HEAD_TR_COPY_DATA_CONVERTER_SERVICE
-    method: POST
-  资产卡片台账报表查询:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_LEDGER_QUERY
-    method: POST
-  总账系统表-批量删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_GLS_TYPE_CF_BATCH_DELETE_DATA_SERVICE
-    method: POST
-  总账凭证整理:
-    path: /api/trantor/service/engine/execute/ERP_FI$fin_glm_ve_arrange_service
-    method: POST
-  资产使用部门折旧汇总-导入导出任务管理接口-提交导出任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_DEPART_DEPRECIATION_TR_API_GEI_TASK_EXPORT_DIRECT_POST
-    method: POST
-  会计期间-反向构建树-查询父节点服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_ITEM_CF_REVERSE_CONSTRUCT_TREE_SERVICE_FIND_PARENT_NODES
-    method: POST
-  资产政策-复制数据转换服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_POLICY_CF_COPY_DATA_CONVERTER_SERVICE
-    method: POST
-  初始化资产卡片表单:
-    path: /api/trantor/service/engine/execute/ERP_FI$initialize_asset_card_form
-    method: POST
-  财务指标-查询多个指标:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_DEFINITION_QUERY_DATA_SERVICE
-    method: POST
-  校验规则-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_VLD_PAGING_DATA_SERVICE
-    method: POST
-  资产使用部门折旧汇总-批量删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_DEPART_DEPRECIATION_TR_BATCH_DELETE_DATA_SERVICE
-    method: POST
-  资产类别-分页查询已启用数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_CF_PAGING_DATA_ENABLE_SERVICE
-    method: POST
-  现金流量项目-查找树数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_CF_FIND_TREE_DATA_SERVICE
-    method: POST
-  资产状态-折叠关联关系服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_STATUS_CF_FOLDING_ASSOCIATED_SERVICE
-    method: POST
-  校验规则-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_VLD_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  资产管理-资产变更-保存:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_CHANGE_SAVE_SERVICE
-    method: POST
-  总分类账历史数据-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_LEDGE_HISTORY_TR_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  分录规则头-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_CNSLD_CF_HEAD_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  财务指标配置表-保存数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_DEFINITION_CF_SAVE_DATA_SERVICE
-    method: POST
-  现金流量期初余额录入行表-导入导出任务管理接口-通过OSS提交导入任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBC_CASH_ITEM_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-    method: POST
-  根据会计政策和资产类别查询:
-    path: /api/trantor/service/engine/execute/ERP_FI$query_by_accounting_policy_and_asset_type
-    method: POST
-  核算组织现金流科目关联表-导入导出任务管理接口-通过OSS提交导入任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_SUB_ASS_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-    method: POST
-  财务指标-查询全部指标:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_DEFINITION_QUERY_ALL_DATA_SERVICE
-    method: POST
-  总账-调整期间-分页查询服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AD_PERIOD_LIST_PAGE_SERVICE
-    method: POST
-  财务报表实例表-根据ID删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_INSTANCE_TR_DELETE_DATA_BY_ID_SERVICE
-    method: POST
-  分录规则头-复制数据转换服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_CNSLD_CF_HEAD_COPY_DATA_CONVERTER_SERVICE
-    method: POST
-  资产处置单头-复制数据转换子服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DISPOSAL_HEAD_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
-    method: POST
-  财务报表任务表-启用数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_TASK_CF_ENABLED_DATA_SERVICE
-    method: POST
-  现金流量项目表-根据ID删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CFS_TYPE_CF_DELETE_DATA_BY_ID_SERVICE
-    method: POST
-  资产价值明细账-保存数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_VALUE_DETAIL_TR_SAVE_DATA_SERVICE
-    method: POST
-  财务报表任务表-期间查询:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_TASK_CF_CALENDAR_PAGING_DATA_SERVICE
-    method: POST
-  财务报表任务表-复制数据转换子服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_TASK_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
-    method: POST
-  项目-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$GEN_PROJ_CF_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  资产处置单头-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DISPOSAL_HEAD_TR_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  财务报表任务表-复制数据转换服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_TASK_CF_COPY_DATA_CONVERTER_SERVICE
-    method: POST
-  AI_财务报表上下文通知:
-    path: /api/trantor/service/engine/execute/ERP_FI$AI_FIN_REPORT_CONTEXT_NOTIFY
-    method: POST
-  资产类别折旧汇总-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_DEPRECIATION_TR_PAGING_DATA_SERVICE
-    method: POST
-  资产卡片台账_普通模型标准导出服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_MD_LEDGER_VO_GEI_EXPORT_SERVICE
-    method: POST
-  期间类型根据ID查询服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_HEAD_CF_FIND_BY_ID_SERVICE
-    method: POST
-  资产账簿-分页数据服务_资产账铺专用:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_TYPE_CF_PAGING_SERVICE
-    method: POST
-  凭证类型-导入导出任务管理接口-通过OSS提交导入任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VT_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-    method: POST
-  总分类账历史数据-复制数据转换子服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_LEDGE_HISTORY_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
-    method: POST
-  资产管理-生成单据-异步:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_DEP_POST_ASYNC
-    method: POST
-  资产卡片-导入导出任务管理接口-提交导出任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_MD_API_GEI_TASK_EXPORT_DIRECT_POST
-    method: POST
-  财务报表实例表-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_INSTANCE_TR_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  资产管理-会计期间行表-根据头ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$ASSERT_COM_PERIOD_ITEM_CF_FIND_BY_HEAD_ID_SERVICE
-    method: POST
-  总账系统表标准导出服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_GLS_TYPE_CF_GEI_EXPORT_SERVICE
-    method: POST
-  报表实例-单元格重算:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_INSTANCE_CELL_RECALCULATION_SERVICE
-    method: POST
-  查询科目树（只查下面一级）:
-    path: /api/trantor/service/engine/execute/ERP_FI$QUERY_AA_HEAD_TREE_ONE_LEVEL
-    method: POST
-  财务-自定义报表公式校验服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_FORMULA_PARSE_SERVICE
-    method: POST
-  资产变更单头标准导出服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_CHANGE_HEAD_TR_GEI_EXPORT_SERVICE
-    method: POST
-  资产类别折旧汇总标准导出服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_DEPRECIATION_TR_GEI_EXPORT_SERVICE
-    method: POST
-  财务报表定义表-导入导出任务管理接口-通过OSS提交导入任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_DEFINITION_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-    method: POST
-  账簿查询-报表组件-明细分类账导出服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_GENERAL_LEDGE_EXPORT_SERVICE
-    method: POST
-  总账-凭证-查询凭证现金流量明细:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_CASH_DETAIL_QUERY_SERVICE
-    method: POST
-  现金流量项目-反向构建树服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_CF_REVERSE_CONSTRUCT_TREE_SERVICE
-    method: POST
-  财务指标项表-根据ID删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_COMPONENT_CF_DELETE_DATA_BY_ID_SERVICE
-    method: POST
-  资产变更单头-根据ID删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_CHANGE_HEAD_TR_DELETE_DATA_BY_ID_SERVICE
-    method: POST
-  会计科目表-根据ID删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_COA_TYPE_CF_DELETE_DATA_BY_ID_SERVICE
-    method: POST
-  业务系统注册表-导入导出任务管理接口-提交导出任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SR_SYS_CF_API_GEI_TASK_EXPORT_DIRECT_POST
-    method: POST
-  总账系统表-根据ID删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_GLS_TYPE_CF_DELETE_DATA_BY_ID_SERVICE
-    method: POST
-  凭证录入行表-复制数据转换子服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_ITEM_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
-    method: POST
-  资产处置单头-导入导出任务管理接口-通过OSS提交导入任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DISPOSAL_HEAD_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-    method: POST
-  期间类型-禁用主数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_CALENDAR_HEAD_CF_MASTER_DATA_DISABLE_SERVICE
-    method: POST
-  财务报表组表-保存主数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_GROUP_CF_MASTER_DATA_SAVE_DATA_SERVICE
-    method: POST
-  凭证号整理子表-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_NUMBER_ORGANIZE_ITEM_TR_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  会计期间-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_ITEM_CF_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  会计科目标准导入服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_HEAD_CF_GEI_IMPORT_SERVICE
-    method: POST
-  期间类型-根据ID删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_CALENDAR_HEAD_CF_DELETE_DATA_BY_ID_SERVICE
-    method: POST
-  凭证录入行表-保存数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_ITEM_TR_SAVE_DATA_SERVICE
-    method: POST
-  现金流使用组织关联表-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_CFT_ORG_ASS_CF_PAGING_DATA_SERVICE
-    method: POST
-  资产卡片-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_MD_PAGING_DATA_SERVICE
-    method: POST
-  业务模块注册表标准导入服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BM_MODULE_CF_GEI_IMPORT_SERVICE
-    method: POST
-  资产状态-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_STATUS_CF_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  资产变更单头-复制数据转换子服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_CHANGE_HEAD_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
-    method: POST
-  业务模块注册表-反向构建树-递归建树服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BM_MODULE_CF_REVERSE_CONSTRUCT_TREE_SERVICE_BUILD_TREE
-    method: POST
-  规则凭证录入头表-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_HEAD_TR_PAGING_DATA_SERVICE
-    method: POST
-  凭证导出信息视图-导入导出任务管理接口-提交导出任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_EXPORT_INFO_VIEW_API_GEI_TASK_EXPORT_DIRECT_POST
-    method: POST
-  凭证模板明细表-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TMPL_DETAIL_CF_PAGING_DATA_SERVICE
-    method: POST
-  资产使用部门折旧汇总-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_DEPART_DEPRECIATION_TR_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  资产账簿-复制数据转换服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_TYPE_CF_COPY_DATA_CONVERTER_SERVICE
-    method: POST
-  新版会计科目-导入服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_GLM_AA_IMPORT_NEW_SERVICE
-    method: POST
-  财务报表组表-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_GROUP_CF_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  辅助余额维度值表-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABS_AD_VALUE_TR_PAGING_DATA_SERVICE
-    method: POST
-  凭证类型-导入导出任务管理接口-提交导出任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VT_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
-    method: POST
-  资产类别-查找树子数据服务（递归）:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_CF_FIND_TREE_DATA_SERVICE_CHILD
-    method: POST
-  财务指标-查询公司指标数据:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_METRICS_QUERY_DATA_SERVICE
-    method: POST
-  凭证记录-根据ID查找数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TR_FIND_DATA_BY_ID_SERVICE
-    method: POST
-  财务指标项表标准导出服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_COMPONENT_CF_GEI_EXPORT_SERVICE
-    method: POST
-  核算组织现金流科目关联表-根据ID删除数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_SUB_ASS_CF_DELETE_DATA_BY_ID_SERVICE
-    method: POST
-  会计引擎-触发删除单据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DELETE_DOC_EXTERNAL_ACTION_SERVICE
-    method: POST
-  账簿类型-导入导出任务管理接口-通过OSS提交导入任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABT_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-    method: POST
-  启用叶子节点会计期间分页:
-    path: /api/trantor/service/engine/execute/ERP_FI$CALENDAR_ITEM_ENABLE_LEAF_PAGING_SERVICE
-    method: POST
-  AI_会计期间查询:
-    path: /api/trantor/service/engine/execute/ERP_FI$AI_FIN_COMMON_CALENDAR_ITEM_QUERY_SERVICE
-    method: POST
-  业务单据记录-分页数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DOC_TR_PAGING_DATA_SERVICE
-    method: POST
-  资产卡片-分页数据服务-资产处置专用:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_TYPE_CF_PAGING_DISPOSAL_SERVICE
-    method: POST
-  现金流量期初余额录入行表标准导入服务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBC_CASH_ITEM_TR_GEI_IMPORT_SERVICE
-    method: POST
-  资产价值明细账-导入导出任务管理接口-提交导出任务:
-    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_VALUE_DETAIL_TR_API_GEI_TASK_EXPORT_DIRECT_POST
     method: POST
   凭证结构搜索:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_DEF_CF_PAGE_SERVER
@@ -1795,26 +1297,77 @@ apis:
   财务实例分组表-分页查询服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_INSTANCE_CF_PAGING_DATA_SERVICE
     method: POST
+  资产政策标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_POLICY_CF_GEI_IMPORT_SERVICE
+    method: POST
+  凭证录入头表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_HEAD_TR_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  规则凭证录入头表-批量禁用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_HEAD_TR_MASTER_DATA_MULTI_DISABLE_DATA_SERVICE
+    method: POST
   资产类别-启用主数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_CF_MASTER_DATA_ENABLE_DATA_SERVICE
     method: POST
   财务指标项表-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_COMPONENT_CF_PAGING_DATA_SERVICE
     method: POST
+  凭证录入行表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_ITEM_TR_GEI_EXPORT_SERVICE
+    method: POST
+  资产管理-资产变更-查询资产卡片信息:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_CHANGE_QUERY_SERVICE
+    method: POST
+  会计科目表-折叠关联关系服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_COA_TYPE_CF_FOLDING_ASSOCIATED_SERVICE
+    method: POST
+  资产折旧明细-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DEPRECIATION_DETAIL_TR_PAGING_DATA_SERVICE
+    method: POST
+  现金流量项目-查找树子数据服务（递归）:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_CF_FIND_TREE_DATA_SERVICE_CHILD
+    method: POST
+  资产管理-取消计提折旧:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_DEP_CANCEL
+    method: POST
   财务指标项表-复制数据转换子服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_COMPONENT_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  会计科目-反向构建树服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_HEAD_CF_REVERSE_CONSTRUCT_TREE_SERVICE
+    method: POST
+  凭证结构表-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_DEF_CF_SAVE_DATA_SERVICE
+    method: POST
+  业务系统注册表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SR_SYS_CF_PAGING_DATA_SERVICE
     method: POST
   资产管理-资产变更-查询不在资产账簿当前期间的资产卡片:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_QUERY_CARD_NOT_EXITS_AB_TYPE_SERVICE
     method: POST
+  资产类别-查询启用数据:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_CF_PAGING_ENABLED_DATA_SERVICE
+    method: POST
   FI-凭证-具象化导入服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_GLM_VE_IMPORT_TEMPLETE_SERVICE
+    method: POST
+  资产使用部门折旧汇总标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_DEPART_DEPRECIATION_TR_GEI_IMPORT_SERVICE
     method: POST
   资产价值明细账-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_VALUE_DETAIL_TR_PAGING_DATA_SERVICE
     method: POST
+  会计要素表行表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AE_ITEM_CF_PAGING_DATA_SERVICE
+    method: POST
+  根据IDS批量查询凭证详情:
+    path: /api/trantor/service/engine/execute/ERP_FI$BATCH_QUERY_VE_DETAIL
+    method: POST
   期间类型标准导出服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_HEAD_CF_GEI_EXPORT_SERVICE
+    method: POST
+  会计期间分页-存货专用:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_ITEM_IV_PAGING_DATA_SERVICE
     method: POST
   查询启用的叶子节点资产类别:
     path: /api/trantor/service/engine/execute/ERP_FI$query_enabled_leaf_asset_category
@@ -1822,20 +1375,74 @@ apis:
   资产使用部门折旧汇总-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_DEPART_DEPRECIATION_TR_PAGING_DATA_SERVICE
     method: POST
+  会计科目表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_COA_TYPE_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  会计科目表-分页查询:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_COA_TYPE_PAGE_QUERY_SERVICE
+    method: POST
+  资产类别-反向构建树-查询父节点服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_CF_REVERSE_CONSTRUCT_TREE_SERVICE_FIND_PARENT_NODES
+    method: POST
+  资产政策标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_POLICY_CF_GEI_EXPORT_SERVICE
+    method: POST
+  核算组织现金流科目关联表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_SUB_ASS_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
   财务指标项表标准导入服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_COMPONENT_CF_GEI_IMPORT_SERVICE
+    method: POST
+  账簿查询-报表组件-总分类账导出服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_LEDGE_EXPORT_SERVICE
+    method: POST
+  凭证记录-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TR_PAGING_DATA_SERVICE
     method: POST
   财务指标配置表-导入导出任务管理接口-通过OSS提交导入任务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_DEFINITION_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
     method: POST
+  现金流量期初余额录入头表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBC_HEAD_TR_PAGING_DATA_SERVICE
+    method: POST
+  业务系统注册表-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SR_SYS_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  凭证类型标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VT_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
   业务系统注册表标准导出服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SR_SYS_CF_GEI_EXPORT_SERVICE
+    method: POST
+  会计科目-叶子节点-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_HEAD_CF_LEAF_PAGING_DATA_SERVICE
+    method: POST
+  会计政策-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AP_TYPE_CF_BATCH_DELETE_DATA_SERVICE
     method: POST
   资产账簿标准导出服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_TYPE_CF_GEI_EXPORT_SERVICE
     method: POST
+  资产账簿-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_TYPE_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  凭证记录-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  调汇方案头-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_EXCH_ADJ_RULE_HEAD_CF_PAGING_DATA_SERVICE
+    method: POST
   资产类别-反向构建树-递归建树服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_CF_REVERSE_CONSTRUCT_TREE_SERVICE_BUILD_TREE
+    method: POST
+  总账系统表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_GLS_TYPE_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  凭证录入头表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_HEAD_TR_PAGING_DATA_SERVICE
+    method: POST
+  资产类别-折叠关联关系服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_CF_FOLDING_ASSOCIATED_SERVICE
     method: POST
   账簿查询-辅助明细账导出服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ASL_TYPE_EXPORT_SERVICE
@@ -1846,17 +1453,38 @@ apis:
   凭证录入头表-导入导出任务管理接口-提交导出任务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST
     method: POST
+  业务系统注册表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SR_SYS_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
   业务系统注册表标准导入服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SR_SYS_CF_GEI_IMPORT_SERVICE
     method: POST
   分录规则头-复制数据转换子服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_CNSLD_CF_HEAD_COPY_DATA_CONVERTER_SERVICE_CHILD
     method: POST
+  会计政策-保存主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AP_TYPE_CF_MASTER_DATA_SAVE_DATA_SERVICE
+    method: POST
+  FIN-财务通用-会计日历根据头表和LocalDataTime查询叶子结点行表信息:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_ITEM_QUERY_BY_ID_TIME_SERVICE
+    method: POST
   现金流量表-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CFI_CUR_TR_PAGING_DATA_SERVICE
     method: POST
+  资产处置单头标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DISPOSAL_HEAD_TR_GEI_EXPORT_SERVICE
+    method: POST
   现金流量项目表-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CFS_TYPE_CF_PAGING_DATA_SERVICE
+    method: POST
+  财务报表任务表-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_TASK_CF_SAVE_DATA_SERVICE
+    method: POST
+  资产折旧明细标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DEPRECIATION_DETAIL_TR_GEI_EXPORT_SERVICE
+    method: POST
+  会计要素头表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AE_HEAD_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
     method: POST
   会计政策-折叠关联关系服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AP_TYPE_CF_FOLDING_ASSOCIATED_SERVICE
@@ -1864,14 +1492,38 @@ apis:
   资产使用部门折旧汇总标准导出服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_DEPART_DEPRECIATION_TR_GEI_EXPORT_SERVICE
     method: POST
+  会计引擎-凭证记录按总账系统导出服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_EXPORT_DSD_TR_BY_GLS_SERVICE
+    method: POST
   凭证录入头表标准导入服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_HEAD_TR_GEI_IMPORT_SERVICE
+    method: POST
+  资产卡片导入模型-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_IMPORT_DTO_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  资产政策-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_POLICY_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  期间类型-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  业务单据注册表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BD_DOC_CF_PAGING_DATA_SERVICE
+    method: POST
+  辅助维度类型头表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ADS_HEAD_CF_PAGING_DATA_SERVICE
     method: POST
   财务报表组表-根据ID删除数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_GROUP_CF_DELETE_DATA_BY_ID_SERVICE
     method: POST
+  业务系统注册表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SR_SYS_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
   资产管理-生成单据:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_DEP_POST
+    method: POST
+  总账系统表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_GLS_TYPE_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
     method: POST
   资产卡片-分页数据服务-查询处置过得资产卡片:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_MD_PAGING_ALL_DATA_SERVICE
@@ -1879,20 +1531,44 @@ apis:
   凭证记录-批量删除数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TR_BATCH_DELETE_DATA_SERVICE
     method: POST
+  核算体系-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AS_SYS_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  资产卡片标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_MD_GEI_EXPORT_SERVICE
+    method: POST
   财务报表组表-批量删除数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_GROUP_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  财务报表实例表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_INSTANCE_TR_COPY_DATA_CONVERTER_SERVICE
     method: POST
   财务指标项表-批量删除数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_COMPONENT_CF_BATCH_DELETE_DATA_SERVICE
     method: POST
+  资产类别-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
   财务报表定义表（废弃）-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_GLM_FS_DEFINITION_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  财务指标项表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_COMPONENT_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
     method: POST
   资产变更单头-批量删除数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_CHANGE_HEAD_TR_BATCH_DELETE_DATA_SERVICE
     method: POST
+  资产政策-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_POLICY_CF_SAVE_DATA_SERVICE
+    method: POST
   财务报表任务表-停用数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_TASK_CF_DISABLED_DATA_SERVICE
+    method: POST
+  核算组织现金流科目关联表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_SUB_ASS_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  业务模块注册表-反向构建树-查询父节点服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BM_MODULE_CF_REVERSE_CONSTRUCT_TREE_SERVICE_FIND_PARENT_NODES
     method: POST
   总账-凭证-编辑现金流量项目:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_CASH_DETAIL_CHANGE_SERVICE
@@ -1906,6 +1582,12 @@ apis:
   财务指标配置表-复制数据转换子服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_DEFINITION_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
     method: POST
+  期间类型-反向构建树-查询父节点服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_HEAD_CF_REVERSE_CONSTRUCT_TREE_SERVICE_FIND_PARENT_NODES
+    method: POST
+  财务指标项表-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_COMPONENT_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
   财务报表定义表标准导入服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_DEFINITION_CF_GEI_IMPORT_SERVICE
     method: POST
@@ -1915,8 +1597,14 @@ apis:
   凭证号整理头表-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_NUMBER_ORGANIZE_HEAD_TR_PAGING_DATA_SERVICE
     method: POST
+  总账-凭证-导出查询:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_EXPORT_QUERY
+    method: POST
   总账-凭证-导出服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_EXPORT_SERVICE
+    method: POST
+  总账-导出现金流量项目历史数据:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_HISTORY_EXPORT_SERVICE
     method: POST
   资产账簿-导入导出任务管理接口-提交导出任务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
@@ -1930,6 +1618,18 @@ apis:
   资产变更单头标准导入服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_CHANGE_HEAD_TR_GEI_IMPORT_SERVICE
     method: POST
+  财务指标项表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_COMPONENT_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  财务大屏-期间列表查询:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_AI_DASHBOARD_QUERY_PERIODS_LIST_SERVICE
+    method: POST
+  资产账簿-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_TYPE_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  会计政策-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AP_TYPE_CF_SAVE_DATA_SERVICE
+    method: POST
   资产类别折旧汇总-复制数据转换服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_DEPRECIATION_TR_COPY_DATA_CONVERTER_SERVICE
     method: POST
@@ -1942,11 +1642,26 @@ apis:
   资产价值明细账-复制数据转换服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_VALUE_DETAIL_TR_COPY_DATA_CONVERTER_SERVICE
     method: POST
+  资产价值明细账-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_VALUE_DETAIL_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
   总账-初始化-余额导入标准导入服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_GLM_IB_IMPORT_VO_GEI_IMPORT_SERVICE
     method: POST
+  资产类别-反向构建树服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_CF_REVERSE_CONSTRUCT_TREE_SERVICE
+    method: POST
   财务指标配置表标准导入服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_DEFINITION_CF_GEI_IMPORT_SERVICE
+    method: POST
+  调汇方案头-批量启用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_EXCH_ADJ_RULE_HEAD_CF_MASTER_DATA_MULTI_ENABLE_DATA_SERVICE
+    method: POST
+  业务单据记录标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DOC_TR_GEI_EXPORT_SERVICE
+    method: POST
+  资产类别折旧汇总-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_DEPRECIATION_TR_BATCH_DELETE_DATA_SERVICE
     method: POST
   财务指标配置表-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_DEFINITION_CF_FIND_DATA_BY_ID_SERVICE
@@ -1957,11 +1672,23 @@ apis:
   规则凭证录入头表-批量启用主数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_HEAD_TR_MASTER_DATA_MULTI_ENABLE_DATA_SERVICE
     method: POST
+  调汇方案头-启用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_EXCH_ADJ_RULE_HEAD_CF_MASTER_DATA_ENABLE_DATA_SERVICE
+    method: POST
   资产账簿-根据ID删除数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_TYPE_CF_DELETE_DATA_BY_ID_SERVICE
     method: POST
   资产状态-启用主数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_STATUS_CF_MASTER_DATA_ENABLE_DATA_SERVICE
+    method: POST
+  核算组织现金流科目关联表标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_SUB_ASS_CF_GEI_IMPORT_SERVICE
+    method: POST
+  资产处置单头-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DISPOSAL_HEAD_TR_SAVE_DATA_SERVICE
+    method: POST
+  业务单据注册表-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BD_DOC_CF_FIND_DATA_BY_ID_SERVICE
     method: POST
   财务报表组表-导入导出任务管理接口-通过OSS提交导入任务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_GROUP_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
@@ -1972,11 +1699,32 @@ apis:
   期间类型-反向构建树服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_HEAD_CF_REVERSE_CONSTRUCT_TREE_SERVICE
     method: POST
+  资产价值明细账-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_VALUE_DETAIL_TR_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  期间类型-保存主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_CALENDAR_HEAD_CF_MASTER_DATA_SAVE_DATA_SERVICE
+    method: POST
+  映射配置穷举头表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_EXH_MAPPING_HEAD_CF_PAGING_DATA_SERVICE
+    method: POST
   批量卡片生成单据:
     path: /api/trantor/service/engine/execute/ERP_FI$batch_card_generate_bill
     method: POST
+  凭证模板明细表-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TMPL_DETAIL_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  财务报表定义表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_DEFINITION_CF_PAGING_DATA_SERVICE
+    method: POST
   资产管理-资产明细分页查询:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_VALUE_PAGE_SERVICE
+    method: POST
+  规则凭证类型-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_TYPE_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  凭证类型-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VT_TYPE_CF_COPY_DATA_CONVERTER_SERVICE
     method: POST
   资产类别-禁用主数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_CF_MASTER_DATA_DISABLE_DATA_SERVICE
@@ -1987,8 +1735,14 @@ apis:
   资产卡片台账分页查询服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_LEDGER_QUERY_SERVICE
     method: POST
+  资产类别折旧汇总-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_DEPRECIATION_TR_DELETE_DATA_BY_ID_SERVICE
+    method: POST
   会计科目表-复制数据转换服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_COA_TYPE_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  总账-现金流量项目历史数据-异步:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_HISTORY_QUERY_ASYNC_SERVICE
     method: POST
   资产卡片使用部门-反向构建树服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_USAGE_DEPART_MD_REVERSE_CONSTRUCT_TREE_SERVICE
@@ -1996,8 +1750,32 @@ apis:
   资产账簿-批量删除数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_TYPE_CF_BATCH_DELETE_DATA_SERVICE
     method: POST
+  核算账簿-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_TYPE_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  凭证录入头表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_HEAD_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  资产卡片-获取资产卡片下的账簿:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_MD_FIND_ACCOUNT_SERVICE
+    method: POST
+  会计政策标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AP_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
   凭证记录标准导出服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TR_GEI_EXPORT_SERVICE
+    method: POST
+  会计要素表行表-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AE_ITEM_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  凭证录入头表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_HEAD_TR_GEI_EXPORT_SERVICE
+    method: POST
+  资产折旧明细-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DEPRECIATION_DETAIL_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  凭证录入头表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_HEAD_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
     method: POST
   资产折旧明细-保存数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DEPRECIATION_DETAIL_TR_SAVE_DATA_SERVICE
@@ -2005,14 +1783,26 @@ apis:
   凭证类型标准导入服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VT_TYPE_CF_GEI_IMPORT_SERVICE
     method: POST
+  卡片生成单据:
+    path: /api/trantor/service/engine/execute/ERP_FI$card_generate_bill
+    method: POST
+  会计政策-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AP_TYPE_CF_PAGING_DATA_SERVICE
+    method: POST
   业务单据记录-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DOC_TR_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  账簿查询-辅助余额导出服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABS_BALANCE_QUERY_EXPORT_SERVICE
     method: POST
   报表实例-查询:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_INSTANCE_QUERY_SERVICE
     method: POST
   业务系统注册表-复制数据转换子服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SR_SYS_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  总账-初始化-汇率查询:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IB_EXCHANGE_RATE_QUERY_SERVICE
     method: POST
   期间类型-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_HEAD_CF_FIND_DATA_BY_ID_SERVICE
@@ -2023,14 +1813,50 @@ apis:
   凭证号整理头表-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_NUMBER_ORGANIZE_HEAD_TR_FIND_DATA_BY_ID_SERVICE
     method: POST
+  资产账簿-计提折旧:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_DEP
+    method: POST
+  辅助维度表-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AD_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  凭证类型-保存主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VT_TYPE_CF_MASTER_DATA_SAVE_DATA_SERVICE
+    method: POST
+  资产状态-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_STATUS_CF_PAGING_DATA_SERVICE
+    method: POST
+  凭证结构表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_DEF_CF_PAGING_DATA_SERVICE
+    method: POST
   FIN-财务通用-会计日历LocalDataTime查询叶子结点行表信息:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_ITEM_QUERY_BY_TIME_SERVICE
     method: POST
-  AI_查询多个财务指标:
+  查询多个财务指标:
     path: /api/trantor/service/engine/execute/ERP_FI$AI_FI_KPI_DEFINITION_QUERY_DATA_SERVICE
     method: POST
   财务指标配置表-导入导出任务管理接口-提交导出任务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_DEFINITION_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  调汇方案头-禁用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_EXCH_ADJ_RULE_HEAD_CF_MASTER_DATA_DISABLE_DATA_SERVICE
+    method: POST
+  资产使用部门折旧汇总-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_DEPART_DEPRECIATION_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  凭证记录-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TR_SAVE_DATA_SERVICE
+    method: POST
+  财务大屏-公司列表查询:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_AI_DASHBOARD_QUERY_ORG_LIST_SERVICE
+    method: POST
+  账簿类型-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABT_TYPE_CF_PAGING_DATA_SERVICE
+    method: POST
+  资产账簿-分页数据服务-资产卡片查询专用:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_TYPE_CF_CARD_PAGING_SERVICE
+    method: POST
+  调汇方案头-批量禁用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_EXCH_ADJ_RULE_HEAD_CF_MASTER_DATA_MULTI_DISABLE_DATA_SERVICE
     method: POST
   资产管理-资产变更-生成单据:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_CHANGE_POST_SERVICE
@@ -2038,14 +1864,44 @@ apis:
   资产处置单头-批量删除数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DISPOSAL_HEAD_TR_BATCH_DELETE_DATA_SERVICE
     method: POST
-  AI_核算账簿查询:
+  资产使用部门折旧汇总-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_DEPART_DEPRECIATION_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  核算账簿查询:
     path: /api/trantor/service/engine/execute/ERP_FI$AI_FIN_GLM_AB_TYPE_CF_QUERY_SERVICE
+    method: POST
+  资产价值明细账_普通模型-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_VALUE_DETAIL_TR_VO_PAGING_DATA_SERVICE
     method: POST
   会计要素头表-复制数据转换服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AE_HEAD_CF_COPY_DATA_CONVERTER_SERVICE
     method: POST
   外部对象分页组件用:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_OUTER_OBJECT_PAGE_MOD_COMPILE
+    method: POST
+  财务指标项表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_COMPONENT_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  资产处置单头-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DISPOSAL_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  会计要素头表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AE_HEAD_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  凭证录入头表-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_HEAD_TR_SAVE_DATA_SERVICE
+    method: POST
+  现金流量明细查询视图表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_CI_VIEW_GEI_EXPORT_SERVICE
+    method: POST
+  现金流量期初余额根据录入头查询行分页查询:
+    path: /api/trantor/service/engine/execute/ERP_FI$fin_glm_ibc_cash_item_tr_paging_by_head_service
+    method: POST
+  规则凭证录入头表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_HEAD_TR_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  资产状态-禁用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_STATUS_CF_MASTER_DATA_DISABLE_DATA_SERVICE
     method: POST
   资产类别折旧汇总标准导入服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_DEPRECIATION_TR_GEI_IMPORT_SERVICE
@@ -2059,8 +1915,23 @@ apis:
   资产卡片使用部门-反向构建树-查询父节点服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_USAGE_DEPART_MD_REVERSE_CONSTRUCT_TREE_SERVICE_FIND_PARENT_NODES
     method: POST
+  财务报表实例表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_INSTANCE_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  财务指标配置表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_DEFINITION_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  会计期间-查找树子数据服务（递归）:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN__CALENDAR_ITEM_CF_FIND_TREE_DATA_SERVICE_CHILD
+    method: POST
   期间类型分页:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_HEAD_CF_PAGING_DATA_SERVICE
+    method: POST
+  财务报表任务表-保存主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_TASK_CF_MASTER_DATA_SAVE_DATA_SERVICE
+    method: POST
+  资产价值明细账标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_VALUE_DETAIL_TR_GEI_IMPORT_SERVICE
     method: POST
   财务报表定义表标准导出服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_DEFINITION_CF_GEI_EXPORT_SERVICE
@@ -2068,14 +1939,41 @@ apis:
   核算账簿标准导入服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_TYPE_CF_GEI_IMPORT_SERVICE
     method: POST
+  会计期间-反向构建树-递归建树服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_ITEM_CF_REVERSE_CONSTRUCT_TREE_SERVICE_BUILD_TREE
+    method: POST
+  规则凭证录入头表-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_HEAD_TR_SAVE_DATA_SERVICE
+    method: POST
+  财务报表实例表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_INSTANCE_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
   资产类别折旧汇总-导入导出任务管理接口-通过OSS提交导入任务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_DEPRECIATION_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
     method: POST
   总账-初始化-余额导入模版服务:
     path: /api/trantor/service/engine/execute/ERP_FI$INIT_IGM_IB_IMPORT_TEMPLETE
     method: POST
+  核算账簿-折叠关联关系服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_TYPE_CF_FOLDING_ASSOCIATED_SERVICE
+    method: POST
+  账簿类型-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABT_TYPE_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  账簿类型-折叠关联关系服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABT_TYPE_CF_FOLDING_ASSOCIATED_SERVICE
+    method: POST
+  凭证录入头表-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_HEAD_TR_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  规则凭证类型-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_TYPE_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
   总分类账历史数据-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_LEDGE_HISTORY_TR_PAGING_DATA_SERVICE
+    method: POST
+  资产变更单头-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_CHANGE_HEAD_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
     method: POST
   凭证号整理子表-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_NUMBER_ORGANIZE_ITEM_TR_PAGING_DATA_SERVICE
@@ -2086,11 +1984,26 @@ apis:
   资产卡片-复制数据转换子服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_MD_COPY_DATA_CONVERTER_SERVICE_CHILD
     method: POST
-  AI_获取指定会计期间的上个期间:
+  调汇方案头-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_EXCH_ADJ_RULE_HEAD_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  总账-汇率调整规则-执行-业务事件:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_EXCH_ADJ_RULE_EXECUTE_SERVICE
+    method: POST
+  获取指定会计期间的上个期间:
     path: /api/trantor/service/engine/execute/ERP_FI$AI_FIN_COMMON_CALENDAR_ITEM_PREVIOUS_QUERY_SERVICE
+    method: POST
+  资产类别折旧汇总-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_DEPRECIATION_TR_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  资产账簿-分页数据服务-资产处置专用:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_TYPE_CF_PAGING_DATA_DISPOSAL_SERVICE
     method: POST
   资产卡片使用部门-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_USAGE_DEPART_MD_PAGING_DATA_SERVICE
+    method: POST
+  现金流量项目表-保存主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CFS_TYPE_CF_MASTER_DATA_SAVE_DATA_SERVICE
     method: POST
   凭证号整理头表-复制数据转换子服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_NUMBER_ORGANIZE_HEAD_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
@@ -2107,6 +2020,12 @@ apis:
   规则凭证类型-复制数据转换子服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_TYPE_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
     method: POST
+  资产卡片标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_MD_GEI_IMPORT_SERVICE
+    method: POST
+  财务报表组表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_GROUP_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
   资产类别-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_CF_PAGING_DATA_SERVICE
     method: POST
@@ -2119,20 +2038,32 @@ apis:
   财务报表组表-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_GROUP_CF_PAGING_DATA_SERVICE
     method: POST
+  资产账簿-期末结账-反结账:
+    path: /api/trantor/service/engine/execute/ERP_FI$ASSET_AB_REVERSE_POST_SERVICE
+    method: POST
   业务系统注册表-保存数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_SR_SYS_CF_SAVE_DATA_SERVICE
     method: POST
   凭证类型-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VT_TYPE_CF_PAGING_DATA_SERVICE
     method: POST
+  资产账簿-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
   凭证记录-根据ID删除数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TR_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  现金流量期初余额录入头表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBC_HEAD_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
     method: POST
   现金流量明细查询视图表-导入导出任务管理接口-提交导出任务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_CI_VIEW_API_GEI_TASK_EXPORT_DIRECT_POST
     method: POST
   资产卡片-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_MD_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  经营方案通知:
+    path: /api/trantor/service/engine/execute/ERP_FI$AI_BUSI_SOLUTION_NOTIFY
     method: POST
   会计期间-期间自动创建服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AUTO_CREATE_CALENDAR_ITEM_EVENT_SERVICE
@@ -2143,17 +2074,38 @@ apis:
   明细分类账历史数据-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_GENERAL_LEDGE_HISTORY_TR_PAGING_DATA_SERVICE
     method: POST
+  财务报表实例表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_INSTANCE_TR_PAGING_DATA_SERVICE
+    method: POST
+  会计科目-反向构建树-查询父节点服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_HEAD_CF_REVERSE_CONSTRUCT_TREE_SERVICE_FIND_PARENT_NODES
+    method: POST
   资产类别-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_CF_FIND_DATA_BY_ID_SERVICE
     method: POST
   会计日历-停用服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_CALENDAR_ITEM_DISABLED_EVENT_SERVICE
     method: POST
+  资产类别-查找树子数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_CF_FIND_TREE_CHILDREN_DATA_SERVICE
+    method: POST
   财务指标配置表标准导出服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_DEFINITION_CF_GEI_EXPORT_SERVICE
     method: POST
+  会计科目-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_HEAD_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
   辅助维度类型头表-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ADS_HEAD_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  业务模块注册表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BM_MODULE_CF_PAGING_DATA_SERVICE
+    method: POST
+  调汇方案头-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_EXCH_ADJ_RULE_HEAD_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  经营方案分析:
+    path: /api/trantor/service/engine/execute/ERP_FI$AI_BUSI_SOLUTION_ANALYSIS
     method: POST
   财务报表组表标准导出服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_GROUP_CF_GEI_EXPORT_SERVICE
@@ -2161,11 +2113,29 @@ apis:
   现金流量期初余额录入头表-保存数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBC_HEAD_TR_SAVE_DATA_SERVICE
     method: POST
+  卡片删除:
+    path: /api/trantor/service/engine/execute/ERP_FI$delete_card
+    method: POST
   凭证号整理头表-复制数据转换服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_NUMBER_ORGANIZE_HEAD_TR_COPY_DATA_CONVERTER_SERVICE
     method: POST
   现金流量项目-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  资产账簿-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_TYPE_CF_PAGING_DATA_SERVICE
+    method: POST
+  资产折旧明细-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DEPRECIATION_DETAIL_TR_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  现金流量期初余额录入头表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBC_HEAD_TR_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  校验规则-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_VLD_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  现金流量项目表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CFS_TYPE_CF_COPY_DATA_CONVERTER_SERVICE
     method: POST
   资产状态-根据ID删除数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_STATUS_CF_DELETE_DATA_BY_ID_SERVICE
@@ -2179,11 +2149,32 @@ apis:
   根据账簿分页查询折旧明细:
     path: /api/trantor/service/engine/execute/ERP_FI$get_depreciation_details_by_asset_ab
     method: POST
+  资产变更单头-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_CHANGE_HEAD_TR_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  现金流量明细查询视图表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_CI_VIEW_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  核算账簿用户关系表-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_USER_LINK_CF_SAVE_DATA_SERVICE
+    method: POST
   会计科目表-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_COA_TYPE_CF_FIND_DATA_BY_ID_SERVICE
     method: POST
+  调整期编码回显:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_AD_PERIOD_CODE_ECHO_SERVICE
+    method: POST
+  总账-凭证-批量修改打印状态服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_PRINT_STATUS_BY_ID_BATCH_SERVICE
+    method: POST
   财务报表实例表-保存主数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_INSTANCE_TR_MASTER_DATA_SAVE_DATA_SERVICE
+    method: POST
+  调汇方案头-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_EXCH_ADJ_RULE_HEAD_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  资产类别标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_CF_GEI_IMPORT_SERVICE
     method: POST
   现金流量项目-折叠关联关系服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_CF_FOLDING_ASSOCIATED_SERVICE
@@ -2197,6 +2188,21 @@ apis:
   会计期间根据ID查询服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_ITEM_CF_FIND_BY_ID_SERVICE
     method: POST
+  新增子级回显:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_ADD_SON_SERVICE
+    method: POST
+  期初余额导出视图模型标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_GLM_IB_EXPORT_VO_GEI_EXPORT_SERVICE
+    method: POST
+  字段映射配置子表-创建并启用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_FILED_MAPPING_ITEM_CF_MASTER_DATA_CREATE_AND_ENABLE_DATA_SERVICE
+    method: POST
+  业务模块注册表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BM_MODULE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  会计政策-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AP_TYPE_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
   核算组织现金流科目关联表-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_SUB_ASS_CF_FIND_DATA_BY_ID_SERVICE
     method: POST
@@ -2206,8 +2212,17 @@ apis:
   资产处置单头-根据ID删除数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DISPOSAL_HEAD_TR_DELETE_DATA_BY_ID_SERVICE
     method: POST
+  FIN-财务通用-会计日历根据头表和LocalDataTime查询上一个叶子结点行表信息:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_ITEM_PREVIOUS_QUERY_SERVICE
+    method: POST
   会计期间分页:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_ITEM_CF_PAGING_DATA_SERVICE
+    method: POST
+  账簿类型-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABT_TYPE_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  期间类型-反向构建树-递归建树服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_HEAD_CF_REVERSE_CONSTRUCT_TREE_SERVICE_BUILD_TREE
     method: POST
   资产状态-复制数据转换服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_STATUS_CF_COPY_DATA_CONVERTER_SERVICE
@@ -2215,11 +2230,23 @@ apis:
   核算账簿-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_TYPE_CF_PAGING_DATA_SERVICE
     method: POST
+  资产政策-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_POLICY_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
   项目-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$GEN_PROJ_CF_PAGING_DATA_SERVICE
     method: POST
+  现金流量项目-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_CF_PAGING_DATA_SERVICE
+    method: POST
+  财务报表实例表标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_INSTANCE_TR_GEI_IMPORT_SERVICE
+    method: POST
   资产状态-批量删除数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_STATUS_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  会计引擎-单据记录导出服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DOC_TR_EXPORT_SERVICE
     method: POST
   资产卡片台账搜索模型-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$ASSET_CARD_LEDGER_QUERY_REQ_PAGING_DATA_SERVICE
@@ -2232,6 +2259,9 @@ apis:
     method: POST
   财务报表组表标准导入服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_GROUP_CF_GEI_IMPORT_SERVICE
+    method: POST
+  财务报表组表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_GROUP_CF_COPY_DATA_CONVERTER_SERVICE
     method: POST
   会计日历-启用服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_CALENDAR_ITEM_ENABLED_EVENT_SERVICE
@@ -2251,14 +2281,38 @@ apis:
   凭证录入行表-导入导出任务管理接口-提交导出任务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_ITEM_TR_API_GEI_TASK_EXPORT_DIRECT_POST
     method: POST
+  资产账簿-分页数据服务_资产变更专用:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CHANGE_PAGING_SERVICE
+    method: POST
   财务报表定义表-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_DEFINITION_CF_FIND_DATA_BY_ID_SERVICE
     method: POST
   凭证类型-批量删除数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VT_TYPE_CF_BATCH_DELETE_DATA_SERVICE
     method: POST
+  资产管理-计提折旧-异步:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_DEP_ASYNC
+    method: POST
+  财务报表实例表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_INSTANCE_TR_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  财务指标配置表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_DEFINITION_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  凭证现金流量明细-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_CASH_DETAIL_PAGING_DATA_SERVICE
+    method: POST
   现金流量表-复制数据转换子服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CFI_CUR_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  调汇方案头-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_EXCH_ADJ_RULE_HEAD_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  资产价值明细账-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_VALUE_DETAIL_TR_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  财务报表定义表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_DEFINITION_CF_DELETE_DATA_BY_ID_SERVICE
     method: POST
   资产管理-取消计提折旧-异步:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_DEP_CANCEL_ASYNC
@@ -2266,11 +2320,35 @@ apis:
   凭证导入模型-导入导出任务管理接口-通过OSS提交导入任务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_IMPORT_VO_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
     method: POST
+  资产处置单头标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DISPOSAL_HEAD_TR_GEI_IMPORT_SERVICE
+    method: POST
+  凭证录入头表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_HEAD_TR_BATCH_DELETE_DATA_SERVICE
+    method: POST
   用户-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$USER_PAGING_DATA_SERVICE
     method: POST
   现金流量明细查询视图表-复制数据转换子服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_CI_VIEW_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  资产卡片-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  资产管理-类别-停用:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_DISABLE_SERVICE
+    method: POST
+  资产类别折旧汇总-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_DEPRECIATION_TR_SAVE_DATA_SERVICE
+    method: POST
+  业务单据结构分页组件用:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BD_DOC_CF_PAGE_MOD_SERVER
+    method: POST
+  会计科目-查找树子数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AA_HEAD_CF_FIND_TREE_CHILDREN_DATA_SERVICE
+    method: POST
+  业务单据凭证映射配置表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DOC_DSD_REL_CF_PAGING_DATA_SERVICE
     method: POST
   凭证记录-复制数据转换子服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
@@ -2299,6 +2377,9 @@ apis:
   财务大屏-组织分页查询:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_DASHBOARD_PAGE_QUERY_ORG_SERVICE
     method: POST
+  财务报表定义表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_DEFINITION_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
   现金流科目维度关联表-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_AA_REL_AD_CF_FIND_DATA_BY_ID_SERVICE
     method: POST
@@ -2308,20 +2389,56 @@ apis:
   财务报表任务表-导入导出任务管理接口-提交导出任务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_TASK_CF_API_GEI_TASK_EXPORT_DIRECT_POST
     method: POST
+  总账系统表-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_GLS_TYPE_CF_SAVE_DATA_SERVICE
+    method: POST
   总账系统表-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_GLS_TYPE_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  财务指标配置表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_DEFINITION_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  现金流量期初余额录入头表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBC_HEAD_TR_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  凭证录入行表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_ITEM_TR_COPY_DATA_CONVERTER_SERVICE
     method: POST
   规则凭证录入头表-禁用主数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_HEAD_TR_MASTER_DATA_DISABLE_DATA_SERVICE
     method: POST
+  账簿类型-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABT_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  账簿类型标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_ABT_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  财务大屏-保存经营方案并计算指标服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_AI_DASHBOARD_SAVE_AND_CALCULATE_SERVICE
+    method: POST
+  资产折旧明细-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DEPRECIATION_DETAIL_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
   核算账簿-根据ID删除数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_TYPE_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  资产管理-会计期间头表-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$ASSERT_COM_PERIOD_HEAD_CF_FIND_DATA_BY_ID_SERVICE
     method: POST
   财务报表实例表标准导出服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_INSTANCE_TR_GEI_EXPORT_SERVICE
     method: POST
+  业务模块注册表-反向构建树服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BM_MODULE_CF_REVERSE_CONSTRUCT_TREE_SERVICE
+    method: POST
+  账簿查询-科目余额导出查询服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_BSA_BALANCE_QUERY_PAGE_EXPORT_EVENT
+    method: POST
   会计期间-反向构建树服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_ITEM_CF_REVERSE_CONSTRUCT_TREE_SERVICE
+    method: POST
+  分录规则头-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_CNSLD_CF_HEAD_PAGING_DATA_SERVICE
     method: POST
   业务单据凭证映射配置表-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DOC_DSD_REL_CF_FIND_DATA_BY_ID_SERVICE
@@ -2329,8 +2446,20 @@ apis:
   期间类型标准导入服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_HEAD_CF_GEI_IMPORT_SERVICE
     method: POST
+  现金流量项目-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  资产使用部门折旧汇总-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_DEPART_DEPRECIATION_TR_DELETE_DATA_BY_ID_SERVICE
+    method: POST
   现金流量表-复制数据转换服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CFI_CUR_TR_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  资产卡片使用部门-反向构建树-递归建树服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_USAGE_DEPART_MD_REVERSE_CONSTRUCT_TREE_SERVICE_BUILD_TREE
+    method: POST
+  规则凭证录入头表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_HEAD_TR_BATCH_DELETE_DATA_SERVICE
     method: POST
   会计政策-导入导出任务管理接口-提交导出任务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AP_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
@@ -2338,11 +2467,23 @@ apis:
   模型字段定义-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_MDL_FLD_DEF_CF_FIND_DATA_BY_ID_SERVICE
     method: POST
+  规则凭证类型-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_TYPE_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
   资产卡片-复制数据转换服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_MD_COPY_DATA_CONVERTER_SERVICE
     method: POST
   总账-查询现金流量项目历史数据:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_HISTORY_PAGE_QUERY_SERVICE
+    method: POST
+  总账-汇率调整规则-保存业务事件:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_EXCH_ADJ_RULE_HEAD_SAVE_SERVICE
+    method: POST
+  资产处置单头-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DISPOSAL_HEAD_TR_PAGING_DATA_SERVICE
+    method: POST
+  规则凭证录入头表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_HEAD_TR_COPY_DATA_CONVERTER_SERVICE
     method: POST
   资产使用部门折旧汇总-复制数据转换服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_DEPART_DEPRECIATION_TR_COPY_DATA_CONVERTER_SERVICE
@@ -2350,14 +2491,41 @@ apis:
   资产价值明细使用部门-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_VALUE_USAGE_DEPART_MD_PAGING_DATA_SERVICE
     method: POST
+  资产卡片台账报表查询:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_LEDGER_QUERY
+    method: POST
+  总账系统表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_GLS_TYPE_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  总账凭证整理:
+    path: /api/trantor/service/engine/execute/ERP_FI$fin_glm_ve_arrange_service
+    method: POST
   会计要素头表-保存数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AE_HEAD_CF_SAVE_DATA_SERVICE
     method: POST
   现金流量表-保存数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CFI_CUR_TR_SAVE_DATA_SERVICE
     method: POST
+  资产使用部门折旧汇总-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_DEPART_DEPRECIATION_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
   规则凭证类型-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_RULE_VE_TYPE_CF_PAGING_DATA_SERVICE
+    method: POST
+  会计期间-反向构建树-查询父节点服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_ITEM_CF_REVERSE_CONSTRUCT_TREE_SERVICE_FIND_PARENT_NODES
+    method: POST
+  资产政策-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_POLICY_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  初始化资产卡片表单:
+    path: /api/trantor/service/engine/execute/ERP_FI$initialize_asset_card_form
+    method: POST
+  财务指标-查询多个指标:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_DEFINITION_QUERY_DATA_SERVICE
+    method: POST
+  校验规则-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_VLD_PAGING_DATA_SERVICE
     method: POST
   会计政策-复制数据转换服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AP_TYPE_CF_COPY_DATA_CONVERTER_SERVICE
@@ -2368,11 +2536,56 @@ apis:
   资产变更单头-保存数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_CHANGE_HEAD_TR_SAVE_DATA_SERVICE
     method: POST
+  资产使用部门折旧汇总-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_DEPART_DEPRECIATION_TR_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  资产类别-分页查询已启用数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_CF_PAGING_DATA_ENABLE_SERVICE
+    method: POST
+  现金流量项目-查找树数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AB_ITEM_CF_FIND_TREE_DATA_SERVICE
+    method: POST
+  资产状态-折叠关联关系服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_STATUS_CF_FOLDING_ASSOCIATED_SERVICE
+    method: POST
+  校验规则-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_VLD_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  财务大屏-查询经营方案服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_AI_DASHBOARD_QUERY_PLAN_SERVICE
+    method: POST
+  总帐-初始化-期初余额-导出GEI服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBE_ITEM_QUERY_EXPORT_GEI_SERVICE
+    method: POST
+  资产管理-资产变更-保存:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_CHANGE_SAVE_SERVICE
+    method: POST
+  总分类账历史数据-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_LEDGE_HISTORY_TR_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  分录规则头-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_CNSLD_CF_HEAD_FIND_DATA_BY_ID_SERVICE
+    method: POST
   分录规则行-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_CNSLD_CF_ITEM_FIND_DATA_BY_ID_SERVICE
     method: POST
+  财务指标配置表-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_DEFINITION_CF_SAVE_DATA_SERVICE
+    method: POST
   外部对象创建组件:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_OUTER_OBJECT_MOD_SAVE_COMPILE
+    method: POST
+  现金流量期初余额录入行表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_IBC_CASH_ITEM_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  财务大屏-根据经营方案计算指标服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_AI_DASHBOARD_CALCULATE_KPI_BY_PLAN_SERVICE
+    method: POST
+  根据会计政策和资产类别查询:
+    path: /api/trantor/service/engine/execute/ERP_FI$query_by_accounting_policy_and_asset_type
+    method: POST
+  核算组织现金流科目关联表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CASH_SUB_ASS_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
     method: POST
   会计期间-根据期间类型查询期间完整树:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_ITEM_CF_TREE_BY_HEAD_SERVICE
@@ -2389,8 +2602,23 @@ apis:
   校验规则-复制数据转换子服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_VLD_COPY_DATA_CONVERTER_SERVICE_CHILD
     method: POST
+  财务指标-查询全部指标:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_KPI_DEFINITION_QUERY_ALL_DATA_SERVICE
+    method: POST
+  总账-调整期间-分页查询服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_AD_PERIOD_LIST_PAGE_SERVICE
+    method: POST
+  财务大屏-保存经营方案服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_AI_DASHBOARD_SAVE_PLAN_SERVICE
+    method: POST
   凭证录入行表-分页数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_ITEM_TR_PAGING_DATA_SERVICE
+    method: POST
+  财务报表实例表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_INSTANCE_TR_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  分录规则头-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DSD_CNSLD_CF_HEAD_COPY_DATA_CONVERTER_SERVICE
     method: POST
   财务报表任务表-根据ID删除数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_TASK_CF_DELETE_DATA_BY_ID_SERVICE
@@ -2398,11 +2626,32 @@ apis:
   资产处置单头-复制数据转换服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DISPOSAL_HEAD_TR_COPY_DATA_CONVERTER_SERVICE
     method: POST
+  资产处置单头-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DISPOSAL_HEAD_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  财务报表任务表-启用数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_TASK_CF_ENABLED_DATA_SERVICE
+    method: POST
   凭证类型-根据ID删除数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VT_TYPE_CF_DELETE_DATA_BY_ID_SERVICE
     method: POST
+  现金流量项目表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_CFS_TYPE_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  资产价值明细账-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_VALUE_DETAIL_TR_SAVE_DATA_SERVICE
+    method: POST
+  业务单据记录-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_DOC_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
   业务模块注册表-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_BM_MODULE_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  财务报表任务表-期间查询:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_TASK_CF_CALENDAR_PAGING_DATA_SERVICE
+    method: POST
+  财务报表任务表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_TASK_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
     method: POST
   凭证导出信息视图标准导出服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_EXPORT_INFO_VIEW_GEI_EXPORT_SERVICE
@@ -2416,8 +2665,17 @@ apis:
   资产变更单头-导入导出任务管理接口-提交导出任务:
     path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_CHANGE_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST
     method: POST
+  项目-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$GEN_PROJ_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
   明细分类账历史数据-保存数据服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_GENERAL_LEDGE_HISTORY_TR_SAVE_DATA_SERVICE
+    method: POST
+  资产处置单头-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_DISPOSAL_HEAD_TR_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  财务报表任务表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_TASK_CF_COPY_DATA_CONVERTER_SERVICE
     method: POST
   财务报表任务表标准导入服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_FS_TASK_CF_GEI_IMPORT_SERVICE
@@ -2425,6 +2683,27 @@ apis:
   总账系统表标准导入服务:
     path: /api/trantor/service/engine/execute/ERP_FI$FIN_AES_GLS_TYPE_CF_GEI_IMPORT_SERVICE
     method: POST
+  财务报表上下文通知:
+    path: /api/trantor/service/engine/execute/ERP_FI$AI_FIN_REPORT_CONTEXT_NOTIFY
+    method: POST
+  资产类别折旧汇总-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_TYPE_DEPRECIATION_TR_PAGING_DATA_SERVICE
+    method: POST
+  凭证录入头表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_HEAD_TR_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  资产卡片台账_普通模型标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_CARD_MD_LEDGER_VO_GEI_EXPORT_SERVICE
+    method: POST
+  期间类型根据ID查询服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_COMMON_CALENDAR_HEAD_CF_FIND_BY_ID_SERVICE
+    method: POST
   是否初始化卡片筛选账簿:
     path: /api/trantor/service/engine/execute/ERP_FI$initialize_card_filter_account_book
+    method: POST
+  调汇方案头-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_FI$FIN_GLM_VE_EXCH_ADJ_RULE_HEAD_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  资产账簿-分页数据服务_资产账铺专用:
+    path: /api/trantor/service/engine/execute/ERP_FI$FI_ASSET_AB_TYPE_CF_PAGING_SERVICE
     method: POST
