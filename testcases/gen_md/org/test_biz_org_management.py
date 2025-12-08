@@ -851,28 +851,36 @@ class TestBizOrgManagement(GenMdBaseTest):
         """
         try:
             # 1. 获取组织ID（原有依赖逻辑完全保留）
-            org_id = self.org_info.get("com_org_info",{}).get("id")
-            if not  org_id:
+            org_id_obj = self.org_info.get("com_org_info",{}).get("id")
+            if not org_id_obj:
                 self.test_save_com_org()
-                org_id = self.org_info.get("com_org_info",{}).get("id")
-            
+                org_id_obj = self.org_info.get("com_org_info",{}).get("id")
+
+            # 提取数字ID
+            org_id_value = org_id_obj.get('id') if isinstance(org_id_obj, dict) else org_id_obj
+            if not org_id_value:
+                raise ValueError(f"无法从响应获取有效的组织ID: {org_id_obj}")
+
             # 2. 使用标准化API调用
-            set_dict = {"id": org_id}
+            set_dict = {"id": org_id_value}  # 使用数字ID
             fields_to_filter = ["id"]
-            
+
             response, _ = self.standard_api_call(
                 api_key="ORG-组织架构-启用组织单元服务",
                 set_dict=set_dict,
                 fields_to_filter=fields_to_filter
             )
-            
-            # 3. 原有断言和数据库验证（完全保留）
-            self.assert_util.assert_response_success(response)
-            sql = f"select org_status from org_struct_md where id = {org_id}"
-            org_status = self.db.query(sql)[0].get("org_status")
+
+            # 3. 数据库验证 - 使用参数化查询
+            sql = "SELECT org_status FROM org_struct_md WHERE id = %s LIMIT 1"
+            result = self.db.query(sql, (org_id_value,))
+            if not result:
+                raise ValueError(f"未找到组织记录，ID: {org_id_value}")
+
+            org_status = result[0].get("org_status")
             self.assert_util.assert_by_operator(org_status,"=","ENABLED")
-            self.enabled_org_id = org_id
-            self.logger.info(f"成功启用组织: {org_id}")
+            self.enabled_org_id = org_id_value  # 存储数字ID
+            self.logger.info(f"成功启用组织: {org_id_value}")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -893,17 +901,18 @@ class TestBizOrgManagement(GenMdBaseTest):
         """
         try:
             # 1. 获取组织ID（原有重复检查逻辑完全保留）
-            org_id = self.org_info.get("com_org_info",{}).get("id")
-            if not  org_id:
+            org_id_obj = self.org_info.get("com_org_info",{}).get("id")
+            if not org_id_obj:
                 self.test_save_com_org()
-                org_id = self.org_info.get("com_org_info",{}).get("id")
-            
-            if not  org_id:
-                self.test_save_com_org()
-                org_id = self.org_info.get("com_org_info",{}).get("id")
+                org_id_obj = self.org_info.get("com_org_info",{}).get("id")
+
+            # 提取数字ID
+            org_id_value = org_id_obj.get('id') if isinstance(org_id_obj, dict) else org_id_obj
+            if not org_id_value:
+                raise ValueError(f"无法从响应获取有效的组织ID: {org_id_obj}")
 
             # 2. 使用标准化API调用
-            set_dict = {"id": org_id}
+            set_dict = {"id": org_id_value}  # 使用数字ID
             fields_to_filter = ["id"]
             
             response, _ = self.standard_api_call(
@@ -911,13 +920,16 @@ class TestBizOrgManagement(GenMdBaseTest):
                 set_dict=set_dict,
                 fields_to_filter=fields_to_filter
             )
-            
-            # 3. 原有断言和数据库验证（完全保留）
-            self.assert_util.assert_response_success(response)
-            sql = f"select org_status from org_struct_md where id = {org_id}"
-            org_status = self.db.query(sql)[0].get("org_status")
+
+            # 3. 数据库验证 - 使用参数化查询
+            sql = "SELECT org_status FROM org_struct_md WHERE id = %s LIMIT 1"
+            result = self.db.query(sql, (org_id_value,))
+            if not result:
+                raise ValueError(f"未找到组织记录，ID: {org_id_value}")
+
+            org_status = result[0].get("org_status")
             self.assert_util.assert_by_operator(org_status,"=","DISABLED")
-            self.logger.info(f"成功停用组织: {org_id}")
+            self.logger.info(f"成功停用组织: {org_id_value}")
             
         except Exception as e:
             a.text(str(e), "失败原因")

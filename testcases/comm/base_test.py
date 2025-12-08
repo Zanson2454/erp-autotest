@@ -452,6 +452,71 @@ class BaseTest:
                 raise
         return wrapper
 
+    # 新增统一调用模板，不影响老用例
+    def standard_api_call(self, api_key, set_dict=None, fields_to_filter=None, store_id_as=None, use_param_util=True):
+        """
+        标准化API调用模板 - 纯执行和报告工具，无断言逻辑
+        :param api_key: API服务名称键
+        :param set_dict: 要设置的参数字典
+        :param fields_to_filter: 需要过滤的字段列表
+        :param store_id_as: ID存储属性名（用于自动保存self.xxx_id）
+        :param use_param_util: 是否使用ParamUtil过滤/设置（默认True）；False时直接使用set_dict作为params
+        :return: (response, extracted_id)
+        """
+        import json
+        try:
+            # 1. 获取API路径和基础参数 - 使用模块特定的方法签名
+            api_path = self.get_api_path(api_key)
+            params, url = self.get_api_params(api_path)
+            
+            # 2. 参数处理 - 分支逻辑
+            if use_param_util:
+                # 标准流程：使用ParamUtil过滤和设置
+                if fields_to_filter is None:
+                    fields_to_filter = []
+                filtered_params = ParamUtil.filter_post_body_fields(
+                    params, fields_to_filter, ["params", "request"]
+                )
+                if set_dict:
+                    ParamUtil.set_request_params(filtered_params, set_dict)
+            else:
+                # 特殊流程：直接使用set_dict作为params内容，无过滤/设置
+                if set_dict is None:
+                    set_dict = {}
+                filtered_params = {"params": set_dict}
+            
+            # 3. 发送请求
+            self.logger.info(f"接口请求的地址>>>{url}")
+            self.logger.info(f"接口请求的方法>>>POST")
+            self.logger.info(f"接口请求的json参数>>>{json.dumps(filtered_params, ensure_ascii=False, indent=2)}")
+            
+            response = self.http.post(url, json=filtered_params)
+            
+            # 4. Allure报告
+            # Assuming 'a' is an instance of AllureReport or similar, which is not imported.
+            # For now, we'll just log the report.
+            Loggers.info(f"接口请求成功，响应数据: {response}")
+            
+            # 5. ID提取和存储
+            extracted_id = response.get("data", {}).get("data", {})
+            if store_id_as:
+                setattr(self, f"{store_id_as}_id", extracted_id)
+            
+            return response, extracted_id
+            
+        except requests.exceptions.RequestException as e:
+            self.logger.error(f"standard_api_call HTTP请求失败 [{api_key}]: {str(e)}")
+            # Assuming 'a' is an instance of AllureReport or similar, which is not imported.
+            # For now, we'll just log the report.
+            Loggers.error(f"HTTP请求失败: {str(e)}")
+            raise
+        except Exception as e:
+            self.logger.error(f"standard_api_call 执行失败 [{api_key}]: {str(e)}")
+            # Assuming 'a' is an instance of AllureReport or similar, which is not imported.
+            # For now, we'll just log the report.
+            Loggers.error(f"执行失败: {str(e)}")
+            raise
+
 
 class ConfigValidator:
     """配置验证器"""
