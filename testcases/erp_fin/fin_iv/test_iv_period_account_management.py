@@ -59,7 +59,7 @@ class TestIvPeriodAccountManagement(FinBaseTest):
     def test_paging_period_account(self):
         """测试分页查询期间账"""
         try:
-            api_path = self.get_api_path("FIN_IV_ACC_PERIOD_TR_PAGING_DATA_SERVICE")
+            api_path = self.get_api_path("期间账分页数据服务")
             params, url = self.get_api_params(api_path)
             
             pageable = {
@@ -100,7 +100,7 @@ class TestIvPeriodAccountManagement(FinBaseTest):
             period_code = self.mock_util.generate_unique_code(tag="IV_PERIOD")
             period_name = f"期间账_{self.mock_util.get_timestamp()}"
             
-            api_path = self.get_api_path("FIN_IV_ACC_PERIOD_TR_SAVE_DATA_SERVICE")
+            api_path = self.get_api_path("保存期间账数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -143,7 +143,7 @@ class TestIvPeriodAccountManagement(FinBaseTest):
             if not self.period_account_id:
                 self.test_save_period_account()
             
-            api_path = self.get_api_path("FIN_IV_ACC_PERIOD_TR_FIND_DATA_BY_ID_SERVICE")
+            api_path = self.get_api_path("根据ID查找期间账数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -178,7 +178,7 @@ class TestIvPeriodAccountManagement(FinBaseTest):
             if not self.period_account_id:
                 self.test_save_period_account()
             
-            api_path = self.get_api_path("FIN_IV_ACC_PERIOD_TR_COPY_DATA_CONVERTER_SERVICE")
+            api_path = self.get_api_path("期间账复制数据转换服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -321,7 +321,7 @@ class TestIvPeriodAccountManagement(FinBaseTest):
     def test_page_service_period(self):
         """测试期间账分页查询"""
         try:
-            api_path = self.get_api_path("IV_ACC_PERIOD_TR_PAGE_SERVICE")
+            api_path = self.get_api_path("期间账分页查询服务")
             params, url = self.get_api_params(api_path)
             
             page_request = {

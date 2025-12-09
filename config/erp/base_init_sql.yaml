@@ -31,15 +31,6 @@ base_info:
       WHERE deleted=0 LIMIT 1
     description: "查询工作日日历信息"
 
-  # 期间类型  
-  calender_info:
-    sql: |
-     SELECT id ,calendar_code,calendar_name,`status`
-      FROM fin_common_calendar_head_cf  
-      WHERE deleted=0 and `status`= 'ENABLED' LIMIT 1
-    description: "查询期间类型信息"
-
-
   # 地址信息，四级地址ID
   addr_info:
     sql: |

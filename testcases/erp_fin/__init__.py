@@ -94,18 +94,28 @@ class FinBaseTest(BaseTest):
         # DataFactory init (env=test)
         DataFactory.__init__(env_name="test")
         
+      
+        # MD cache reuse (for org_info, currency, etc. - shared with gen_md)
+        # 需要先初始化 md_init_cache，然后再获取
+        DataFactory.init_sql_cache(
+            sql_config_path=str(project_root / "config" / "erp" / "md_init_sql.yaml"),  # 主数据依赖的初始化sql
+            db_config_name="erp_db",
+            cache_key="md_init_cache",  # 缓存key
+            cache_dir="testdata/cache"
+        )
+        cls.md_cache_data = CacheUtil.get('md_init_cache')
+        cls.logger.info(f"md_cache_data: {cls.md_cache_data is not None}")
+        
         # 缓存加载：财务主数据依赖 (use md_init_sql.yaml or fin specific like pur/sls_init_sql.yaml)
         # Fallback to md cache for org/currency, etc.
         DataFactory.init_sql_cache(
-            sql_config_path=str(project_root / "config" / "erp" / "base_init_sql.yaml"),  # base or fin specific
+            sql_config_path=str(project_root / "config" / "erp" / "fin_init_sql.yaml"),  # base or fin specific
             db_config_name="erp_db",
             cache_key="fin_init_cache",  # fin specific cache key
             cache_dir="testdata/cache"
         )
         cls.fin_cache_data = CacheUtil.get('fin_init_cache')
         
-        # MD cache reuse (for org_info, currency, etc. - shared with gen_md)
-        cls.md_cache_data = CacheUtil.get('md_init_cache')  # fallback if not in fin_cache
         
         # 初始化配置数据 (from init_data, e.g., currency)
         if cls.init_data:
@@ -118,6 +128,24 @@ class FinBaseTest(BaseTest):
             cls.inv_org_id = cls.md_cache_data.get("org_info",{}).get("inv_org_info",[])[0].get("id")
             cls.cust_id = cls.md_cache_data.get("partner_info",{}).get("cust_info",[])[0].get("id")
         
+        if cls.fin_cache_data:
+            calender_head_info = cls.fin_cache_data.get("calender_info",{}).get("calender_head_info",[])
+            calender_item_info = cls.fin_cache_data.get("calender_info",{}).get("calender_item_info",[])
+            if calender_head_info:
+                cls.calendar_head_id = calender_head_info[0].get("id")
+                cls.logger.info(f"获取到 calendar_head_id: {cls.calendar_head_id}")
+            else:
+                cls.calendar_head_id = None
+                cls.logger.warning("calender_head_info 为空，无法获取 calendar_head_id")
+            # 从 calender_item_info 中筛选 period_type='MONTH' 的项
+            month_items = [item for item in calender_item_info if item.get("period_type") == "MONTH"]
+            if month_items:
+                cls.calendar_item_id = month_items[0].get("id")
+                cls.logger.info(f"获取到 calendar_item_id: {cls.calendar_item_id}, period_code: {month_items[0].get('period_code')}")
+            else:
+                cls.calendar_item_id = None
+                cls.logger.warning("calender_item_info 中没有 period_type='MONTH' 的项，无法获取 calendar_item_id")
+
         # 设置路径参数和用户信息
         cls.path_params = {"tmodule": "FIN"}  # erp_fin module
         cls.nickname = cls.init_data["user_info"]['user_info']["nickname"] if cls.init_data and "user_info" in cls.init_data else "test_user"
@@ -138,17 +166,11 @@ class FinBaseTest(BaseTest):
     @classmethod
     def teardown_class(cls):
         """测试类清理 (beyond super)"""
-        super().teardown_class()
+        # BaseTest 没有 teardown_class 方法，直接执行清理逻辑
         # fin specific cleanup if needed (e.g., clear fin_cache)
         cls.logger.info("ERP财务模块测试类清理完成")
 
 
 if __name__ == "__main__":
     FinBaseTest.setup_class()
-    print(FinBaseTest.nickname)
-    print(f"FIN APIs loaded: {len(FinBaseTest.apis)}")
-    # Test cache
-    if hasattr(FinBaseTest, 'fin_cache_data'):
-        print(f"FIN Cache keys: {list(FinBaseTest.fin_cache_data.keys())}")
-    if hasattr(FinBaseTest, 'md_cache_data'):
-        print(f"MD Cache keys: {list(FinBaseTest.md_cache_data.keys())}")
+    print(FinBaseTest.fin_cache_data)

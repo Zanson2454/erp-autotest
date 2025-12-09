@@ -64,7 +64,7 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
     def test_acc_ref_paging(self):
         """测试账户参考分页查询"""
         try:
-            api_path = self.get_api_path("FIN_IV_ACC_CATE_TYPE_CF_PAGING_DATA_SERVICE")
+            api_path = self.get_api_path("账户参考配置表-分页数据服务")
             params, url = self.get_api_params(api_path)
             
             pageable = {
@@ -104,7 +104,7 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
             ref_code = self.mock_util.generate_unique_code(tag="IV_ACC_REF")
             ref_name = f"账户参考_{self.mock_util.get_timestamp()}"
             
-            api_path = self.get_api_path("FIN_IV_ACC_CATE_TYPE_CF_MASTER_DATA_SAVE_DATA_SERVICE")
+            api_path = self.get_api_path("账户参考配置表-保存主数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -146,7 +146,7 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
             if not self.acc_ref_id:
                 self.test_acc_ref_save()
             
-            api_path = self.get_api_path("FIN_IV_ACC_CATE_TYPE_CF_FIND_DATA_BY_ID_SERVICE")
+            api_path = self.get_api_path("账户参考配置表-根据ID查找数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -183,7 +183,7 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
             self.test_acc_ref_save()
             ref_ids.append(self.acc_ref_id)
             
-            api_path = self.get_api_path("FIN_IV_ACC_CATE_TYPE_CF_BATCH_DELETE_DATA_SERVICE")
+            api_path = self.get_api_path("账户参考配置表-批量删除数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -215,7 +215,7 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
             if not self.acc_ref_id:
                 self.test_acc_ref_save()
             
-            api_path = self.get_api_path("FIN_IV_ACC_CATE_TYPE_CF_COPY_DATA_CONVERTER_SERVICE")
+            api_path = self.get_api_path("账户参考配置表-复制数据转换服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -249,7 +249,7 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
             task_name = f"IV_ACC_REF_{timestamp}_EXPORT"
             
             export_params = {
-                "serviceKey": "FIN_IV_ACC_CATE_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
+                "serviceKey": "账户参考配置表-导入导出任务管理接口-提交导出任务",
                 "teamId": 22,
                 "params": {
                     "taskName": task_name,
@@ -293,7 +293,7 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
                 }
             }
             
-            api_path = self.get_api_path("FIN_IV_ACC_CATE_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST")
+            api_path = self.get_api_path("账户参考配置表-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = export_params
@@ -319,7 +319,7 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
     def test_acc_ref_gei_import(self):
         """测试账户参考标准导入（跳过）"""
         try:
-            api_path = self.get_api_path("FIN_IV_ACC_CATE_TYPE_CF_GEI_IMPORT_SERVICE")
+            api_path = self.get_api_path("账户参考配置表标准导入服务")
             params, url = self.get_api_params(api_path)
             
             # 导入参数示例 (实际需文件)
@@ -356,7 +356,7 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
             if not self.acc_ref_id:
                 self.test_acc_ref_save()
             
-            api_path = self.get_api_path("FIN_IV_ACC_CATE_TYPE_CF_DELETE_DATA_BY_ID_SERVICE")
+            api_path = self.get_api_path("账户参考配置表-根据ID删除数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -387,7 +387,7 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
     def test_mat_link_paging(self):
         """测试物料关联分页查询"""
         try:
-            api_path = self.get_api_path("FIN_IV_MAT_ACC_CATE_LINK_CF_PAGING_DATA_SERVICE")
+            api_path = self.get_api_path("物料类型与分类参考关联表-分页数据服务")
             params, url = self.get_api_params(api_path)
             
             pageable = {
@@ -426,7 +426,7 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
             link_code = self.mock_util.generate_unique_code(tag="IV_MAT_LINK")
             link_name = f"物料关联_{self.mock_util.get_timestamp()}"
             
-            api_path = self.get_api_path("FIN_IV_MAT_ACC_CATE_LINK_CF_MASTER_DATA_SAVE_DATA_SERVICE")
+            api_path = self.get_api_path("物料类型与分类参考关联表-保存主数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -469,7 +469,7 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
             if not self.mat_link_id:
                 self.test_mat_link_save()
             
-            api_path = self.get_api_path("FIN_IV_MAT_ACC_CATE_LINK_CF_FIND_DATA_BY_ID_SERVICE")
+            api_path = self.get_api_path("物料类型与分类参考关联表-根据ID查找数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -506,7 +506,7 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
             self.test_mat_link_save()
             link_ids.append(self.mat_link_id)
             
-            api_path = self.get_api_path("FIN_IV_MAT_ACC_CATE_LINK_CF_BATCH_DELETE_DATA_SERVICE")
+            api_path = self.get_api_path("物料类型与分类参考关联表-批量删除数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -538,7 +538,7 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
             if not self.mat_link_id:
                 self.test_mat_link_save()
             
-            api_path = self.get_api_path("FIN_IV_MAT_ACC_CATE_LINK_CF_COPY_DATA_CONVERTER_SERVICE")
+            api_path = self.get_api_path("物料类型与分类参考关联表-复制数据转换服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -572,7 +572,7 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
             task_name = f"IV_MAT_LINK_{timestamp}_EXPORT"
             
             export_params = {
-                "serviceKey": "FIN_IV_MAT_ACC_CATE_LINK_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
+                "serviceKey": "物料类型与分类参考关联表-导入导出任务管理接口-提交导出任务",
                 "teamId": 22,
                 "params": {
                     "taskName": task_name,
@@ -618,7 +618,7 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
                 }
             }
             
-            api_path = self.get_api_path("FIN_IV_MAT_ACC_CATE_LINK_CF_API_GEI_TASK_EXPORT_DIRECT_POST")
+            api_path = self.get_api_path("物料类型与分类参考关联表-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = export_params
@@ -644,7 +644,7 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
     def test_mat_link_gei_import(self):
         """测试物料关联标准导入（跳过）"""
         try:
-            api_path = self.get_api_path("FIN_IV_MAT_ACC_CATE_LINK_CF_GEI_IMPORT_SERVICE")
+            api_path = self.get_api_path("物料类型与分类参考关联表标准导入服务")
             params, url = self.get_api_params(api_path)
             
             import_data = {
@@ -680,7 +680,7 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
             if not self.mat_link_id:
                 self.test_mat_link_save()
             
-            api_path = self.get_api_path("FIN_IV_MAT_ACC_CATE_LINK_CF_DELETE_DATA_BY_ID_SERVICE")
+            api_path = self.get_api_path("物料类型与分类参考关联表-根据ID删除数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -712,7 +712,7 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
             if not self.acc_ref_id:
                 self.test_acc_ref_save()
             
-            api_path = self.get_api_path("FIN_IV_ACC_CATE_TYPE_CF_GEI_EXPORT_SERVICE")
+            api_path = self.get_api_path("账户参考配置表标准导出服务")
             params, url = self.get_api_params(api_path)
             
             export_data = {
@@ -748,7 +748,7 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
             if not self.mat_link_id:
                 self.test_mat_link_save()
             
-            api_path = self.get_api_path("FIN_IV_MAT_ACC_CATE_LINK_CF_GEI_EXPORT_SERVICE")
+            api_path = self.get_api_path("物料类型与分类参考关联表标准导出服务")
             params, url = self.get_api_params(api_path)
             
             export_data = {

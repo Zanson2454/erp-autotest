@@ -56,7 +56,7 @@ class TestIvPricingRuleManagement(FinBaseTest):
     def test_paging_pricing_rule(self):
         """测试分页查询计价规则"""
         try:
-            api_path = self.get_api_path("FIN_IV_RULE_CF_PAGING_DATA_SERVICE")
+            api_path = self.get_api_path("计价规则分页数据服务")
             params, url = self.get_api_params(api_path)
             
             pageable = {
@@ -97,7 +97,7 @@ class TestIvPricingRuleManagement(FinBaseTest):
             rule_code = self.mock_util.generate_unique_code(tag="IV_RULE")
             rule_name = f"计价规则_{self.mock_util.get_timestamp()}"
             
-            api_path = self.get_api_path("FIN_IV_RULE_CF_SAVE_DATA_SERVICE")  # 假设保存服务
+            api_path = self.get_api_path("保存计价规则数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -140,7 +140,7 @@ class TestIvPricingRuleManagement(FinBaseTest):
             if not self.pricing_rule_id:
                 self.test_save_pricing_rule()
             
-            api_path = self.get_api_path("FIN_IV_RULE_CF_FIND_DATA_BY_ID_SERVICE")
+            api_path = self.get_api_path("根据ID查找计价规则数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -178,7 +178,7 @@ class TestIvPricingRuleManagement(FinBaseTest):
                 self.test_save_pricing_rule()
                 rule_ids.append(self.pricing_rule_id)
             
-            api_path = self.get_api_path("FIN_IV_RULE_CF_BATCH_DELETE_DATA_SERVICE")
+            api_path = self.get_api_path("批量删除计价规则数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -210,7 +210,7 @@ class TestIvPricingRuleManagement(FinBaseTest):
             if not self.pricing_rule_id:
                 self.test_save_pricing_rule()
             
-            api_path = self.get_api_path("FIN_IV_RULE_CF_COPY_DATA_CONVERTER_SERVICE")
+            api_path = self.get_api_path("计价规则复制数据转换服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -318,7 +318,7 @@ class TestIvPricingRuleManagement(FinBaseTest):
             if not self.pricing_rule_id:
                 self.test_save_pricing_rule()
             
-            api_path = self.get_api_path("FIN_IV_RULE_CF_GEI_EXPORT_SERVICE")
+            api_path = self.get_api_path("计价规则标准导出服务")
             params, url = self.get_api_params(api_path)
             
             export_data = {

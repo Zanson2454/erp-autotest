@@ -56,7 +56,7 @@ class TestIvVoucherItemManagement(FinBaseTest):
     def test_paging_voucher_item(self):
         """测试分页查询凭证行"""
         try:
-            api_path = self.get_api_path("FIN_IV_VOUCHER_ITEM_TR_PAGING_DATA_SERVICE")
+            api_path = self.get_api_path("凭证行分页数据服务")
             params, url = self.get_api_params(api_path)
             
             pageable = {
@@ -96,7 +96,7 @@ class TestIvVoucherItemManagement(FinBaseTest):
             if not self.voucher_item_id:
                 self.test_save_voucher_item()
             
-            api_path = self.get_api_path("FIN_IV_VOUCHER_ITEM_TR_FIND_DATA_BY_ID_SERVICE")
+            api_path = self.get_api_path("根据ID查找凭证行数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -132,7 +132,7 @@ class TestIvVoucherItemManagement(FinBaseTest):
             item_code = self.mock_util.generate_unique_code(tag="IV_ITEM")
             item_name = f"凭证行_{self.mock_util.get_timestamp()}"
             
-            api_path = self.get_api_path("FIN_IV_VOUCHER_ITEM_TR_SAVE_DATA_SERVICE")  # 假设保存服务
+            api_path = self.get_api_path("保存凭证行数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -174,7 +174,7 @@ class TestIvVoucherItemManagement(FinBaseTest):
             if not self.voucher_item_id:
                 self.test_save_voucher_item()
             
-            api_path = self.get_api_path("FIN_IV_VOUCHER_ITEM_TR_SAVE_DATA_SERVICE")  # 假设更新用保存
+            api_path = self.get_api_path("更新凭证行数据服务")
             params, url = self.get_api_params(api_path)
             
             updated_name = f"更新凭证行_{self.mock_util.get_timestamp()}"
@@ -211,7 +211,7 @@ class TestIvVoucherItemManagement(FinBaseTest):
             if not self.voucher_item_id:
                 self.test_save_voucher_item()
             
-            api_path = self.get_api_path("FIN_IV_VOUCHER_ITEM_TR_DELETE_DATA_BY_ID_SERVICE")  # 假设删除服务
+            api_path = self.get_api_path("删除凭证行数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(

@@ -59,7 +59,7 @@ class TestIvCostPriceManagement(FinBaseTest):
             if not self.cost_price_id:
                 self.test_save_cost_price()
             
-            api_path = self.get_api_path("FIN_IV_PRICE_MD_FIND_DATA_BY_ID_SERVICE")
+            api_path = self.get_api_path("存货成本价格-根据ID查找数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -94,7 +94,7 @@ class TestIvCostPriceManagement(FinBaseTest):
             if not self.cost_price_id:
                 self.test_save_cost_price()
             
-            api_path = self.get_api_path("FIN_IV_PRICE_MD_COPY_DATA_CONVERTER_SERVICE")
+            api_path = self.get_api_path("存货成本价格-复制数据转换服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -123,7 +123,7 @@ class TestIvCostPriceManagement(FinBaseTest):
     def test_paging_cost_price(self):
         """测试分页查询成本价格"""
         try:
-            api_path = self.get_api_path("FIN_IV_PRICE_MD_PAGING_DATA_SERVICE")
+            api_path = self.get_api_path("存货成本价格-分页数据服务")
             params, url = self.get_api_params(api_path)
             
             pageable = {
@@ -164,7 +164,7 @@ class TestIvCostPriceManagement(FinBaseTest):
             price_code = self.mock_util.generate_unique_code(tag="IV_PRICE")
             price_name = f"成本价格_{self.mock_util.get_timestamp()}"
             
-            api_path = self.get_api_path("FIN_IV_PRICE_MD_SAVE_DATA_SERVICE")
+            api_path = self.get_api_path("存货成本价格-保存数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -209,7 +209,7 @@ class TestIvCostPriceManagement(FinBaseTest):
             self.test_save_cost_price()
             price_ids.append(self.cost_price_id)
             
-            api_path = self.get_api_path("FIN_IV_PRICE_MD_BATCH_DELETE_DATA_SERVICE")
+            api_path = self.get_api_path("存货成本价格-批量删除数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -241,7 +241,7 @@ class TestIvCostPriceManagement(FinBaseTest):
             if not self.cost_price_id:
                 self.test_save_cost_price()
             
-            api_path = self.get_api_path("FIN_IV_PRICE_MD_GEI_EXPORT_SERVICE")
+            api_path = self.get_api_path("存货成本价格标准导出服务")
             params, url = self.get_api_params(api_path)
             
             export_data = {
@@ -277,7 +277,7 @@ class TestIvCostPriceManagement(FinBaseTest):
             if not self.cost_price_id:
                 self.test_save_cost_price()
             
-            api_path = self.get_api_path("FIN_IV_PRICE_MD_DELETE_DATA_BY_ID_SERVICE")
+            api_path = self.get_api_path("存货成本价格-根据ID删除数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -357,7 +357,7 @@ class TestIvCostPriceManagement(FinBaseTest):
                 }
             }
             
-            api_path = self.get_api_path("FIN_IV_PRICE_MD_API_GEI_TASK_EXPORT_DIRECT_POST")
+            api_path = self.get_api_path("存货成本价格-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = export_params

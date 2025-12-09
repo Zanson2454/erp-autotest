@@ -197,24 +197,31 @@ class ParamUtil:
         return params
     
     @staticmethod
-    def set_request_params(params: Dict[str, Any], param_dict: Dict[str, Any]) -> Dict[str, Any]:
+    def set_request_params(params: Dict[str, Any], param_dict: Dict[str, Any], path: Optional[List[str]] = None) -> Dict[str, Any]:
         """
         批量设置请求参数，简化嵌套访问
         
         参数:
             params: 请求参数字典
             param_dict: 要设置的参数字典 {key: value, ...}
+            path: 参数路径，默认为 ["params", "request"]，支持自定义路径如 ["params", "reuqest"]
         
         返回:
             更新后的参数字典
         """
-        if 'params' not in params:
-            params['params'] = {}
-        if 'request' not in params['params']:
-            params['params']['request'] = {}
-            
+        if path is None:
+            path = ["params", "request"]
+        
+        # 确保路径存在
+        current = params
+        for p in path:
+            if p not in current:
+                current[p] = {}
+            current = current[p]
+        
+        # 设置参数值
         for key, value in param_dict.items():
-            params['params']['request'][key] = value
+            current[key] = value
         return params
     
     @staticmethod

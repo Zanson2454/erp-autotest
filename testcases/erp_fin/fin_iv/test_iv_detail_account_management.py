@@ -56,7 +56,7 @@ class TestIvDetailAccountManagement(FinBaseTest):
     def test_paging_detail_account(self):
         """测试分页查询明细账"""
         try:
-            api_path = self.get_api_path("FIN_IV_ACC_DETAIL_TR_PAGING_DATA_SERVICE")
+            api_path = self.get_api_path("存货价值明细账-分页数据服务")
             params, url = self.get_api_params(api_path)
             
             pageable = {
@@ -97,7 +97,7 @@ class TestIvDetailAccountManagement(FinBaseTest):
             detail_code = self.mock_util.generate_unique_code(tag="IV_DETAIL")
             detail_name = f"明细账_{self.mock_util.get_timestamp()}"
             
-            api_path = self.get_api_path("FIN_IV_ACC_DETAIL_TR_SAVE_DATA_SERVICE")
+            api_path = self.get_api_path("存货价值明细账-保存数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -140,7 +140,7 @@ class TestIvDetailAccountManagement(FinBaseTest):
             if not self.detail_account_id:
                 self.test_save_detail_account()
             
-            api_path = self.get_api_path("FIN_IV_ACC_DETAIL_TR_FIND_DATA_BY_ID_SERVICE")
+            api_path = self.get_api_path("存货价值明细账-根据ID查找数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -175,7 +175,7 @@ class TestIvDetailAccountManagement(FinBaseTest):
             if not self.detail_account_id:
                 self.test_save_detail_account()
             
-            api_path = self.get_api_path("FIN_IV_ACC_DETAIL_TR_COPY_DATA_CONVERTER_SERVICE")
+            api_path = self.get_api_path("存货价值明细账-复制数据转换服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -255,7 +255,7 @@ class TestIvDetailAccountManagement(FinBaseTest):
                 }
             }
             
-            api_path = self.get_api_path("FIN_IV_ACC_DETAIL_TR_API_GEI_TASK_EXPORT_DIRECT_POST")
+            api_path = self.get_api_path("存货价值明细账-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = export_params
@@ -283,7 +283,7 @@ class TestIvDetailAccountManagement(FinBaseTest):
             if not self.detail_account_id:
                 self.test_save_detail_account()
             
-            api_path = self.get_api_path("FIN_IV_ACC_DETAIL_TR_GEI_EXPORT_SERVICE")
+            api_path = self.get_api_path("存货价值明细账标准导出服务")
             params, url = self.get_api_params(api_path)
             
             export_data = {

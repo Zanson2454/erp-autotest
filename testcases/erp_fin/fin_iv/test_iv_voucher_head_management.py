@@ -57,7 +57,7 @@ class TestIvVoucherHeadManagement(FinBaseTest):
     def test_paging_voucher_head(self):
         """测试分页查询凭证头"""
         try:
-            api_path = self.get_api_path("FIN_IV_VOUCHER_HEAD_TR_PAGING_DATA_SERVICE")
+            api_path = self.get_api_path("凭证头分页数据服务")
             params, url = self.get_api_params(api_path)
             
             pageable = {
@@ -97,7 +97,7 @@ class TestIvVoucherHeadManagement(FinBaseTest):
             # 先保存一个用于查找
             self.test_save_voucher_head()
             
-            api_path = self.get_api_path("FIN_IV_VOUCHER_HEAD_TR_FIND_DATA_BY_ID_SERVICE")
+            api_path = self.get_api_path("根据ID查找凭证头数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -133,7 +133,7 @@ class TestIvVoucherHeadManagement(FinBaseTest):
             head_code = self.mock_util.generate_unique_code(tag="IV_HEAD")
             head_name = f"凭证头_{self.mock_util.get_timestamp()}"
             
-            api_path = self.get_api_path("FIN_IV_VOUCHER_HEAD_TR_SAVE_DATA_SERVICE")  # 假设有保存服务
+            api_path = self.get_api_path("保存凭证头数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -174,7 +174,7 @@ class TestIvVoucherHeadManagement(FinBaseTest):
             if not self.voucher_head_id:
                 self.test_save_voucher_head()
             
-            api_path = self.get_api_path("FIN_IV_VOUCHER_HEAD_TR_COPY_DATA_CONVERTER_SERVICE")
+            api_path = self.get_api_path("凭证头复制数据转换服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -206,7 +206,7 @@ class TestIvVoucherHeadManagement(FinBaseTest):
             if not self.voucher_head_id:
                 self.test_save_voucher_head()
             
-            api_path = self.get_api_path("FIN_IV_VOUCHER_HEAD_TR_FOLDING_ASSOCIATED_SERVICE")
+            api_path = self.get_api_path("凭证头折叠关联服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -319,7 +319,7 @@ class TestIvVoucherHeadManagement(FinBaseTest):
             if not self.voucher_head_id:
                 self.test_save_voucher_head()
             
-            api_path = self.get_api_path("FIN_IV_VOUCHER_HEAD_TR_GEI_EXPORT_SERVICE")
+            api_path = self.get_api_path("凭证头标准导出服务")
             params, url = self.get_api_params(api_path)
             
             # 导出参数（简化）

@@ -63,7 +63,7 @@ class TestIvExecuteRecordManagement(FinBaseTest):
             record_name = f"执行记录_{self.mock_util.get_timestamp()}"
             
             # 调用API
-            api_path = self.get_api_path("FIN_IV_EXECUTE_RECORD_TR_SAVE_DATA_SERVICE")
+            api_path = self.get_api_path("存货核算执行记录-保存数据服务")
             params, url = self.get_api_params(api_path)
             
             # 参数处理
@@ -109,7 +109,7 @@ class TestIvExecuteRecordManagement(FinBaseTest):
                 self.test_save_execute_record()
             
             # 调用API
-            api_path = self.get_api_path("FIN_IV_EXECUTE_RECORD_TR_PAGING_DATA_SERVICE")
+            api_path = self.get_api_path("存货核算执行记录-分页数据服务")
             params, url = self.get_api_params(api_path)
             
             # 分页参数
@@ -155,7 +155,7 @@ class TestIvExecuteRecordManagement(FinBaseTest):
                 self.test_save_execute_record()
             
             # 调用API
-            api_path = self.get_api_path("FIN_IV_EXECUTE_RECORD_TR_FIND_DATA_BY_ID_SERVICE")
+            api_path = self.get_api_path("存货核算执行记录-根据ID查找数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -191,7 +191,7 @@ class TestIvExecuteRecordManagement(FinBaseTest):
                 self.test_save_execute_record()
             
             # 调用保存API进行更新（假设使用同一保存接口）
-            api_path = self.get_api_path("FIN_IV_EXECUTE_RECORD_TR_SAVE_DATA_SERVICE")
+            api_path = self.get_api_path("存货核算执行记录-保存数据服务")
             params, url = self.get_api_params(api_path)
             
             updated_name = f"更新执行记录_{self.mock_util.get_timestamp()}"
@@ -232,7 +232,7 @@ class TestIvExecuteRecordManagement(FinBaseTest):
                 self.test_save_execute_record()
             
             # 调用API
-            api_path = self.get_api_path("FIN_IV_EXECUTE_RECORD_TR_DELETE_DATA_BY_ID_SERVICE")
+            api_path = self.get_api_path("存货核算执行记录-根据ID删除数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -245,7 +245,7 @@ class TestIvExecuteRecordManagement(FinBaseTest):
             self.assert_util.assert_response_success(response)
             
             # 验证删除（尝试查找应失败或返回空）
-            delete_api_path = self.get_api_path("FIN_IV_EXECUTE_RECORD_TR_FIND_DATA_BY_ID_SERVICE")
+            delete_api_path = self.get_api_path("存货核算执行记录-根据ID查找数据服务")
             delete_params, delete_url = self.get_api_params(delete_api_path)
             delete_filtered = ParamUtil.filter_post_body_fields(delete_params, ["id"], ["params", "request"])
             ParamUtil.set_request_params(delete_filtered, {"id": self.execute_record_id})
@@ -277,7 +277,7 @@ class TestIvExecuteRecordManagement(FinBaseTest):
                 record_ids.append(self.execute_record_id)
             
             # 调用API
-            api_path = self.get_api_path("FIN_IV_EXECUTE_RECORD_TR_BATCH_DELETE_DATA_SERVICE")
+            api_path = self.get_api_path("存货核算执行记录-批量删除数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -309,7 +309,7 @@ class TestIvExecuteRecordManagement(FinBaseTest):
             if not self.execute_record_id:
                 self.test_save_execute_record()
             
-            api_path = self.get_api_path("FIN_IV_EXECUTE_RECORD_TR_COPY_DATA_CONVERTER_SERVICE")
+            api_path = self.get_api_path("存货核算执行记录-复制数据转换服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(

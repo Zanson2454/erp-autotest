@@ -55,7 +55,7 @@ class TestIvRuleDetailManagement(FinBaseTest):
     def test_standard_export_rule_detail(self):
         """测试标准导出规则明细"""
         try:
-            api_path = self.get_api_path("FIN_IV_RULE_DETAIL_CF_GEI_EXPORT_SERVICE")
+            api_path = self.get_api_path("规则明细标准导出服务")
             params, url = self.get_api_params(api_path)
             
             export_data = {
@@ -165,7 +165,7 @@ class TestIvRuleDetailManagement(FinBaseTest):
             detail_code = self.mock_util.generate_unique_code(tag="IV_RULE_D")
             detail_name = f"规则明细_{self.mock_util.get_timestamp()}"
             
-            api_path = self.get_api_path("FIN_IV_RULE_DETAIL_CF_SAVE_DATA_SERVICE")  # 假设保存服务
+            api_path = self.get_api_path("保存规则明细数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -207,7 +207,7 @@ class TestIvRuleDetailManagement(FinBaseTest):
             if not self.rule_detail_id:
                 self.test_save_rule_detail()
             
-            api_path = self.get_api_path("FIN_IV_RULE_DETAIL_CF_PAGING_DATA_SERVICE")  # 假设分页服务
+            api_path = self.get_api_path("规则明细分页数据服务")
             params, url = self.get_api_params(api_path)
             
             pageable = {

@@ -56,7 +56,7 @@ class TestIvPricingRouteManagement(FinBaseTest):
     def test_paging_pricing_route(self):
         """测试分页查询计价路由"""
         try:
-            api_path = self.get_api_path("FIN_IV_ROUTE_CF_PAGING_DATA_SERVICE")
+            api_path = self.get_api_path("计价路由分页数据服务")
             params, url = self.get_api_params(api_path)
             
             pageable = {
@@ -97,7 +97,7 @@ class TestIvPricingRouteManagement(FinBaseTest):
             route_code = self.mock_util.generate_unique_code(tag="IV_ROUTE")
             route_name = f"计价路由_{self.mock_util.get_timestamp()}"
             
-            api_path = self.get_api_path("FIN_IV_ROUTE_CF_SAVE_DATA_SERVICE")
+            api_path = self.get_api_path("保存计价路由数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -140,7 +140,7 @@ class TestIvPricingRouteManagement(FinBaseTest):
             if not self.pricing_route_id:
                 self.test_save_pricing_route()
             
-            api_path = self.get_api_path("FIN_IV_ROUTE_CF_FIND_DATA_BY_ID_SERVICE")
+            api_path = self.get_api_path("根据ID查找计价路由数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -177,7 +177,7 @@ class TestIvPricingRouteManagement(FinBaseTest):
             self.test_save_pricing_route()
             route_ids.append(self.pricing_route_id)
             
-            api_path = self.get_api_path("FIN_IV_ROUTE_CF_BATCH_DELETE_DATA_SERVICE")
+            api_path = self.get_api_path("批量删除计价路由数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -209,7 +209,7 @@ class TestIvPricingRouteManagement(FinBaseTest):
             if not self.pricing_route_id:
                 self.test_save_pricing_route()
             
-            api_path = self.get_api_path("FIN_IV_ROUTE_CF_COPY_DATA_CONVERTER_SERVICE")
+            api_path = self.get_api_path("计价路由复制数据转换服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -317,7 +317,7 @@ class TestIvPricingRouteManagement(FinBaseTest):
             if not self.pricing_route_id:
                 self.test_save_pricing_route()
             
-            api_path = self.get_api_path("FIN_IV_ROUTE_CF_GEI_EXPORT_SERVICE")
+            api_path = self.get_api_path("计价路由标准导出服务")
             params, url = self.get_api_params(api_path)
             
             export_data = {

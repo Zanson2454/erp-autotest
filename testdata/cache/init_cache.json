@@ -27,14 +27,6 @@
       "wc_head_name": "hgv"
     }
   ],
-  "calender_info": [
-    {
-      "id": 2000001,
-      "calendar_code": "ACC_CALEDAR_STND",
-      "calendar_name": "标准会计日期",
-      "status": "ENABLED"
-    }
-  ],
   "addr_info": [
     {
       "id": 70028089

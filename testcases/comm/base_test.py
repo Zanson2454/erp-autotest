@@ -221,7 +221,7 @@ class LoginService:
         
         try:
             session = self.session_manager.get_session()
-            Loggers.info(f"Session headers: {session.headers}")
+            # Loggers.info(f"Session headers: {session.headers}")
             Loggers.info(f"Session cookies: {session.cookies.get_dict()}")
             
             response = session.get(url)
@@ -229,7 +229,7 @@ class LoginService:
             
             if response.status_code == self.LOGIN_SUCCESS_CODE:
                 response_data = response.json()
-                Loggers.info(f"获取用户信息响应: {response_data}")
+                # Loggers.info(f"获取用户信息响应: {response_data}")
                 return response_data.get("data")
             else:
                 Loggers.error(f"获取用户信息失败 - 状态码: {response.status_code}")

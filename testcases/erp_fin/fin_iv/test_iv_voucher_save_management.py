@@ -16,7 +16,7 @@ from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
-@allure.epic("ERP财务模块")
+@allure.epic("ERP业财集成-存货价值")
 @allure.feature("存货价值凭证")
 class TestIvVoucherSaveManagement(FinBaseTest):
     """存货价值凭证测试类"""
@@ -62,7 +62,7 @@ class TestIvVoucherSaveManagement(FinBaseTest):
             doc_date = self.mock_util.get_timestamp()
             
             # 调用API
-            api_path = self.get_api_path("IV_SAVE_DOC_TR_EVENT_SERVICE")
+            api_path = self.get_api_path("保存业务单据记录服务")
             params, url = self.get_api_params(api_path)
             
             # 参数处理（示例字段）
@@ -109,7 +109,7 @@ class TestIvVoucherSaveManagement(FinBaseTest):
                 self.test_save_doc_event()
             
             # 假设使用通用查询服务或头表查询
-            api_path = self.get_api_path("FIN_IV_VOUCHER_HEAD_TR_FIND_DATA_BY_ID_SERVICE")  # 关联头表查询
+            api_path = self.get_api_path("根据ID查询凭证头数据服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
