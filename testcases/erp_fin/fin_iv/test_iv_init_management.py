@@ -241,8 +241,18 @@ class TestIvInitManagement(FinBaseTest):
     def test_find_init_cf_by_com_org_id(self):
         """测试根据公司组织查找数据"""
         try:
-            if not self.init_cf_id:
+            # 确保初始化配置已创建并启用（依赖 test_execute_post_initialization，file_level_order=4）
+            # 
+            # 说明：file_level_order 只能控制 pytest 的执行顺序，有以下局限性：
+            # 1. 当只运行单个测试方法时（如 pytest test_xxx.py::TestClass::test_method），
+            #    pytest 不会运行其他测试方法，file_level_order 不起作用
+            # 2. 即使运行整个文件，如果前面的测试失败，后面的测试仍会执行，但状态可能不正确
+            # 3. 查询接口可能要求配置必须是 ENABLED 状态，而不仅仅是存在
+            # 
+            # 因此，需要在测试方法中显式检查和调用依赖方法，确保状态正确
+            if not self.init_config_id:
                 self.test_initialize_configuration()
+                self.test_execute_post_initialization()
             
             api_path = self.get_api_path("存货价值初始化配置表-根据公司组织查找数据服务")
             params, url = self.get_api_params(api_path)
