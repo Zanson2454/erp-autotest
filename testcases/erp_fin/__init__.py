@@ -120,6 +120,9 @@ class FinBaseTest(BaseTest):
         # 初始化配置数据 (from init_data, e.g., currency)
         if cls.init_data:
             cls.curr_id = cls.init_data.get("currency_info",[])[0].get("curr_id")
+            cls.tax_rate = cls.init_data.get("tax_info",[])[0].get("tax")
+            cls.tax_code_id = cls.init_data.get("tax_info",[])[0].get("id")
+            cls.basic_unit_id = cls.init_data.get("uom_info",{}).get("qty_uom_info",[])[0].get("uom_id")
         
         # 初始化MD (org, partner, etc.)
         if cls.md_cache_data:
@@ -127,9 +130,28 @@ class FinBaseTest(BaseTest):
             cls.sls_org_id = cls.md_cache_data.get("org_info",{}).get("sls_org_info",[])[0].get("id")
             cls.inv_org_id = cls.md_cache_data.get("org_info",{}).get("inv_org_info",[])[0].get("id")
             cls.cust_id = cls.md_cache_data.get("partner_info",{}).get("cust_info",[])[0].get("id")
-        
+            cls.mat_id = cls.md_cache_data.get("mat_info",{}).get("mat_md",{}).get("FINP",[])[0].get("id")
+            cls.mat_type_cf=cls.md_cache_data.get("mat_info",{}).get("mat_type_cf",{}).get("FINP",[])[0].get("id")
+            
         if cls.fin_cache_data:
+            sett_item_type_info_list = cls.fin_cache_data.get("sett_item_info",{}).get("sett_item_type_info",[])
+            if sett_item_type_info_list:
+                cls.sett_item_type_info = sett_item_type_info_list[0].get("id")
+                cls.logger.info(f"获取到 sett_item_type_info: {cls.sett_item_type_info}")
+            else:
+                cls.sett_item_type_info = None
+                cls.logger.warning("sett_item_type_info 为空，无法获取 sett_item_type_info")
+            
+            sett_doc_type_info_list = cls.fin_cache_data.get("sett_doc_info",{}).get("sett_doc_type_info",[])
+            if sett_doc_type_info_list:
+                cls.sett_doc_type_info = sett_doc_type_info_list[0].get("id")
+                cls.logger.info(f"获取到 sett_doc_type_info: {cls.sett_doc_type_info}")
+            else:
+                cls.sett_doc_type_info = None
+                cls.logger.warning("sett_doc_type_info 为空，无法获取 sett_doc_type_info")
+            
             calender_head_info = cls.fin_cache_data.get("calender_info",{}).get("calender_head_info",[])
+            
             calender_item_info = cls.fin_cache_data.get("calender_info",{}).get("calender_item_info",[])
             if calender_head_info:
                 cls.calendar_head_id = calender_head_info[0].get("id")
@@ -163,6 +185,60 @@ class FinBaseTest(BaseTest):
         """
         return ParamUtil.get_api_params(self.api_params, api_path, with_query_params)
     
+    def create_settlement_item(self,status="CREATED"):
+        """
+        创建结算项公共方法(status: "CREATED"-已创建, "RECONCILED"-已对账)
+        """
+        api_path = self.get_api_path("SETT-ITEM-手动创建服务")
+        params, url = self.get_api_params(api_path)
+        filtered_params = ParamUtil.filter_post_body_fields(
+            params, ["settItemCode","settItemStatus","settItemTypeId","settDate",
+            "partnerType","ptHeadId","remark","comOrgId","purSlsOrgType",
+            "invOrgId","matId","taxRate","basicUnitId","genMatTypeCfId",
+            "settQty","settDocPrice","settDocAmt","netDocAmt","taxAmt",
+            "docCurrId","baseCurrId","exchRate","grossBaseAmt","netBaseAmt",
+            "settDocTypeId","settDocId","dnCode","dnItemCode","poSoCode",
+            "poSoItemCode","asyncExecutionStatus","partnerId","taxCodeId",
+            "purSlsOrgId"],["params","request"])
+        set_dict = {
+            "settItemCode": "AUTOTEST-SETTI"+str(self.mock_util.get_timestamp(timestamp=True)),
+            "settItemStatus": status,
+            "settItemTypeId": {"id": self.sett_item_type_info},
+            "settDate": self.mock_util.get_timestamp(timestamp=True),
+            "partnerType": "CUSTOMER",
+            "ptHeadId": None,
+            "remark": "自动化测试创建结算项",
+            "comOrgId": {"id": self.com_org_id},
+            "purSlsOrgType": "SLS",
+            "invOrgId": {"id": self.inv_org_id},
+            "matId": {"id": self.mat_id},
+            "taxRate": self.tax_rate,
+            "basicUnitId": {"id": self.basic_unit_id},
+            "genMatTypeCfId": {"id": self.mat_type_cf},
+            "settQty": 10,
+            "settDocPrice": 30,
+            "settDocAmt": 300,
+            "netDocAmt": 265.486726,
+            "taxAmt": 34.513274,
+            "docCurrId": {"id": self.curr_id},
+            "baseCurrId": {"id": self.curr_id},
+            "exchRate": 1.00,
+            "grossBaseAmt": 300,
+            "netBaseAmt": 265.486726,
+            "settDocTypeId":{"id": self.sett_doc_type_info} ,
+            "settDocId": None,
+            "dnCode": None,
+            "dnItemCode": None,
+            "poSoCode": None,
+            "poSoItemCode": None,
+            "asyncExecutionStatus": "CREATED",
+            "partnerId": {"id": self.cust_id},
+            "taxCodeId": {"id": self.tax_code_id},
+            "purSlsOrgId": {"id": self.sls_org_id},
+        }
+        ParamUtil.set_request_params(filtered_params, set_dict)
+        result = self.http.post(url, json=filtered_params, description="创建结算项")
+        self.assert_util.assert_response_success(result)
     @classmethod
     def teardown_class(cls):
         """测试类清理 (beyond super)"""
@@ -173,4 +249,5 @@ class FinBaseTest(BaseTest):
 
 if __name__ == "__main__":
     FinBaseTest.setup_class()
-    print(FinBaseTest.fin_cache_data)
+    test = FinBaseTest()
+    test.create_settlement_item()
