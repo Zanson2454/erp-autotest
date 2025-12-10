@@ -32,40 +32,27 @@ class TestIvInitManagement(FinBaseTest):
         cls.init_config_id = None
         cls.logger.info("存货价值初始化管理测试类初始化完成")
         
-    # @classmethod
-    # def teardown_class(cls):
-    #     """测试类结束后执行清理"""
-    #     try:
-    #         cls.db.delete(
-    #             table="fin_iv_init_cf",
-    #             where="code like %s",
-    #             params=["AT_%"]
-    #         )
-    #         cls.db.delete(
-    #             table="fin_iv_init_cf_value",
-    #             where="code like %s",
-    #             params=["AT_%"]
-    #         )
-    #         cls.db.delete(
-    #             table="fin_iv_init_config",  # 配置表
-    #             where="code like %s",
-    #             params=["AT_%"]
-    #         )
-    #         cls.db.delete(
-    #             table="fin_iv_execute_record",  # 执行记录表
-    #             where="config_id = %s or code like %s",
-    #             params=[cls.init_config_id, "AT_%"]
-    #         )
-    #         cls.logger.info("测试数据清理完成")
-    #     except Exception as e:
-    #         cls.logger.error(f"测试数据清理失败: {str(e)}")
+      
+        
+    @classmethod
+    def teardown_class(cls):
+        """测试类结束后执行清理"""
+        try:
+            # cls.db.delete(
+            #     table="fin_iv_init_cf",  # 存货价值初始化配置表
+            #     where="com_org_id = %s and iv_type = 'PERIOD_METHOD'",
+            #     params=[cls.com_org_id]
+            # )
+            cls.logger.info("测试数据清理完成")
+        except Exception as e:
+            cls.logger.error(f"测试数据清理失败: {str(e)}")
     
     @case_decorator(
         story="存货核算初始化配置管理",
         title="测试初始化配置",
         description="验证存货核算初始化配置初始化功能",
         severity="normal",
-        order=1,
+        file_level_order=1,
         tags=["iv", "init", "initialize"]
     )
     def test_initialize_configuration(self):
@@ -105,11 +92,22 @@ class TestIvInitManagement(FinBaseTest):
             }
             # 使用自定义路径 reuqest（注意拼写），而不是默认的 request
             ParamUtil.set_request_params(filtered_params, set_dict, path=["params", "reuqest"])
-            
+            # 调用前先删除初始化数据，防止触发唯一性校验
+            self.db.delete(
+                table="fin_iv_init_cf",  # 存货价值初始化配置表
+                where="com_org_id = %s and iv_type = 'PERIOD_METHOD'",
+                params=[self.com_org_id]
+            )
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
-            
             self.init_config_id = response.get("data", {}).get("data", {}).get("id")
+            
+            
+            response2 = self.http.post(url, json=filtered_params)
+            err_code = response2.get("err", {}).get("code")
+            self.assert_util.assert_by_operator(err_code, "=", "fin.iv.init.cf.company.already.initialized")
+            
+            
             a.json(filtered_params, "初始化配置请求")
             a.json(response, "初始化配置响应")
             
@@ -124,7 +122,7 @@ class TestIvInitManagement(FinBaseTest):
         title="测试分页数据",
         description="验证分页查询存货价值初始化配置表",
         severity="normal",
-        order=2,
+        file_level_order=2,
         tags=["iv", "init", "value", "paging"]
     )
     def test_paging_init_cf_data(self):
@@ -151,80 +149,118 @@ class TestIvInitManagement(FinBaseTest):
             
             # 分页查询不需要验证特定ID，只要返回数据即可
             records = response.get("data", {}).get("data", {}).get("data", [])
-            assert isinstance(records, list), "分页查询应返回列表数据"
-            
+            total_count = response.get("data", {}).get("data", {}).get("total", 0)
+            self.assert_util.assert_by_operator(total_count, ">", 0, "总记录数应大于等于0")
+         
             a.json(response, "分页查询响应")
             
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
     
-    # @case_decorator(
-    #     story="存货价值初始化配置表",
-    #     title="测试根据ID查找数据",
-    #     description="验证根据ID查找存货价值初始化配置表数据",
-    #     severity="normal",
-    #     order=3,
-    #     tags=["iv", "init", "value", "find_by_id"]
-    # )
-    # def test_find_init_cf_by_id(self):
-    #     """测试根据ID查找数据"""
-    #     try:
-    #         if not self.init_cf_id:
-    #             self.test_save_init_cf_data()
+    @case_decorator(
+        story="存货价值初始化配置表",
+        title="测试根据ID查找数据",
+        description="验证根据ID查找存货价值初始化配置表数据",
+        severity="normal",
+        file_level_order=3,
+        tags=["iv", "init", "value", "find_by_id"]
+    )
+    def test_find_init_cf_by_id(self):
+        """测试根据ID查找数据"""
+        try:
+            if not self.init_cf_id:
+                self.test_initialize_configuration()
             
-    #         api_path = self.get_api_path("存货价值初始化配置表-根据ID查找数据服务")
-    #         params, url = self.get_api_params(api_path)
+            api_path = self.get_api_path("存货价值初始化配置表-根据ID查找数据服务")
+            params, url = self.get_api_params(api_path)
             
-    #         filtered_params = ParamUtil.filter_post_body_fields(
-    #             params, ["id"], ["params", "request"]
-    #         )
-    #         set_dict = {"id": self.init_cf_id}
-    #         ParamUtil.set_request_params(filtered_params, set_dict)
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], ["params", "request"]
+            )
+            set_dict = {"id": self.init_cf_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
             
-    #         response = self.http.post(url, json=filtered_params)
-    #         self.assert_util.assert_response_data(response)
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
             
-    #         config_data = response.get("data", {}).get("data", {})
-    #         assert config_data.get("id") == self.init_cf_id, "详情查询ID不匹配"
+            config_data = response.get("data", {}).get("data", {})
+            assert config_data.get("id") == self.init_cf_id, "详情查询ID不匹配"
             
-    #         a.json(response, "根据ID查找响应")
+            a.json(response, "根据ID查找响应")
             
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
     
-    # @case_decorator(
-    #     story="存货价值初始化配置表",
-    #     title="测试根据公司组织查找数据",
-    #     description="验证根据公司组织查找存货价值初始化配置表数据",
-    #     severity="normal",
-    #     order=4,
-    #     tags=["iv", "init", "value", "find_by_com_org"]
-    # )
-    # def test_find_init_cf_by_com_org_id(self):
-    #     """测试根据公司组织查找数据"""
-    #     try:
-    #         if not self.init_cf_id:
-    #             self.test_save_init_cf_data()
+    
+    @case_decorator(
+        story="存货核算初始化配置管理",
+        title="测试执行初始化后处理-启用初始化配置",
+        description="验证存货核算初始化配置执行后处理流程",
+        severity="normal",
+        file_level_order=4,
+        tags=["iv", "init", "post_process"]
+    )
+    def test_execute_post_initialization(self):
+        """测试执行初始化后处理"""
+        try:
+            if not self.init_config_id:
+                self.test_initialize_configuration()
             
-    #         api_path = self.get_api_path("存货价值初始化配置表-根据公司组织查找数据服务")
-    #         params, url = self.get_api_params(api_path)
+            api_path = self.get_api_path("存货核算初始化配置-执行初始化后处理流程")
+            params, url = self.get_api_params(api_path)
             
-    #         filtered_params = ParamUtil.filter_post_body_fields(
-    #             params, ["comOrgId"], ["params", "request"]
-    #         )
-    #         set_dict = {"comOrgId": self.com_org_id}
-    #         ParamUtil.set_request_params(filtered_params, set_dict)
+            # 根据API配置，参数路径是 params.reuqest（注意拼写），参考 test_initialize_configuration
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], ["params", "reuqest"]
+            )
+            set_dict = {"id": self.init_config_id}
+            ParamUtil.set_request_params(filtered_params, set_dict, path=["params", "reuqest"])
             
-    #         response = self.http.post(url, json=filtered_params)
-    #         self.assert_util.assert_response_data(response)
+            response = self.http.post(url, json=filtered_params)
+            enableStatus = response.get("data", {}).get("data", {}).get("enableStatus")
+            self.assert_util.assert_by_operator(enableStatus, "=", "ENABLED", "启用状态应为ENABLED")
+
             
-    #         a.json(response, "根据公司组织查找响应")
+            a.json(response, "初始化后处理响应")
             
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    
+    @case_decorator(
+        story="存货价值初始化配置表",
+        title="测试根据公司组织查找数据",
+        description="验证根据公司组织查找存货价值初始化配置表数据",
+        severity="normal",
+        file_level_order=5,
+        tags=["iv", "init", "value", "find_by_com_org"]
+    )
+    def test_find_init_cf_by_com_org_id(self):
+        """测试根据公司组织查找数据"""
+        try:
+            if not self.init_cf_id:
+                self.test_initialize_configuration()
+            
+            api_path = self.get_api_path("存货价值初始化配置表-根据公司组织查找数据服务")
+            params, url = self.get_api_params(api_path)
+            
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["comOrgId"], ["params", "request"]
+            )
+            set_dict = {"comOrgId": {"id": self.com_org_id}}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            a.json(response, "根据公司组织查找响应")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
     
     # @case_decorator(
     #     story="存货价值初始化配置表",
@@ -739,38 +775,7 @@ class TestIvInitManagement(FinBaseTest):
     #         a.text(str(e), "失败原因")
     #         raise
     
-    # @case_decorator(
-    #     story="存货核算初始化配置管理",
-    #     title="测试执行初始化后处理",
-    #     description="验证存货核算初始化配置执行后处理流程",
-    #     severity="normal",
-    #     order=19,
-    #     tags=["iv", "init", "post_process"]
-    # )
-    # def test_execute_post_initialization(self):
-    #     """测试执行初始化后处理"""
-    #     try:
-    #         if not self.init_config_id:
-    #             self.test_confirm_begin()
-    #             self.test_execute_initialization()
-            
-    #         api_path = self.get_api_path("存货核算初始化配置-执行初始化后处理流程")
-    #         params, url = self.get_api_params(api_path)
-            
-    #         filtered_params = ParamUtil.filter_post_body_fields(
-    #             params, ["configId"], ["params", "request"]
-    #         )
-    #         set_dict = {"configId": self.init_config_id}
-    #         ParamUtil.set_request_params(filtered_params, set_dict)
-            
-    #         response = self.http.post(url, json=filtered_params)
-    #         self.assert_util.assert_response_success(response)
-            
-    #         a.json(response, "初始化后处理响应")
-            
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+    
     
     # @pytest.mark.skip(reason="异步任务发起需要监控任务状态，复杂度较高")
     # @case_decorator(
