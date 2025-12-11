@@ -115,14 +115,48 @@ class TestIvInitManagement(FinBaseTest):
             a.text(str(e), "失败原因")
             raise
         
-    
+    @case_decorator(
+        story="存货价值初始化配置表",
+        title="测试根据ID删除数据",
+        description="验证根据ID删除存货价值初始化配置表数据",
+        severity="normal",
+        file_level_order=2,
+        tags=["iv", "init", "value", "delete"]
+    )
+    def test_delete_init_cf_by_id(self):
+        """测试根据ID删除数据"""
+        try:
+            if not self.init_cf_id:
+                self.test_initialize_configuration()
+            
+            api_path = self.get_api_path("存货价值初始化配置表-根据ID删除数据服务")
+            params, url = self.get_api_params(api_path)
+            
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], ["params", "reuqest"]
+            )
+            set_dict = {"id": self.init_cf_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+            
+            # 验证删除
+            self.init_cf_id = None  # 重置ID
+            a.json(filtered_params, "删除请求数据")
+            a.json(response, "删除响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
     
     @case_decorator(
         story="存货价值初始化配置表",
         title="测试分页数据",
         description="验证分页查询存货价值初始化配置表",
         severity="normal",
-        file_level_order=2,
+        file_level_order=3,
         tags=["iv", "init", "value", "paging"]
     )
     def test_paging_init_cf_data(self):
@@ -163,7 +197,7 @@ class TestIvInitManagement(FinBaseTest):
         title="测试根据ID查找数据",
         description="验证根据ID查找存货价值初始化配置表数据",
         severity="normal",
-        file_level_order=3,
+        file_level_order=4,
         tags=["iv", "init", "value", "find_by_id"]
     )
     def test_find_init_cf_by_id(self):
@@ -199,7 +233,7 @@ class TestIvInitManagement(FinBaseTest):
         title="测试执行初始化后处理-启用初始化配置",
         description="验证存货核算初始化配置执行后处理流程",
         severity="normal",
-        file_level_order=4,
+        file_level_order=5,
         tags=["iv", "init", "post_process"]
     )
     def test_execute_post_initialization(self):
@@ -221,6 +255,8 @@ class TestIvInitManagement(FinBaseTest):
             response = self.http.post(url, json=filtered_params)
             enableStatus = response.get("data", {}).get("data", {}).get("enableStatus")
             self.assert_util.assert_by_operator(enableStatus, "=", "ENABLED", "启用状态应为ENABLED")
+            
+        # todo,需要了解初始化后处理了哪些内容
 
             
             a.json(response, "初始化后处理响应")
@@ -235,7 +271,7 @@ class TestIvInitManagement(FinBaseTest):
         title="测试根据公司组织查找数据",
         description="验证根据公司组织查找存货价值初始化配置表数据",
         severity="normal",
-        file_level_order=5,
+        file_level_order=6,
         tags=["iv", "init", "value", "find_by_com_org"]
     )
     def test_find_init_cf_by_com_org_id(self):
@@ -272,6 +308,41 @@ class TestIvInitManagement(FinBaseTest):
             a.text(str(e), "失败原因")
             raise
     
+    
+    @case_decorator(
+        story="存货核算初始化配置管理",
+        title="测试反启用配置",
+        description="验证存货核算初始化配置反启用功能",
+        severity="normal",
+        file_level_order=7,
+        tags=["iv", "init", "disable"]
+    )
+    def test_disable_configuration(self):
+        """测试反启用配置"""
+        try:
+            if not self.init_config_id:
+                self.test_initialize_configuration()
+                self.test_execute_post_initialization()
+            
+            api_path = self.get_api_path("存货核算初始化配置-反启用配置")
+            params, url = self.get_api_params(api_path)
+            
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], ["params", "reuqest"]
+            )
+            set_dict = {"id": self.init_config_id}
+            ParamUtil.set_request_params(filtered_params, set_dict, path=["params", "reuqest"])
+            
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+            
+            a.json(response, "反启用配置响应")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+        
+        
     # @case_decorator(
     #     story="存货价值初始化配置表",
     #     title="测试更新数据",
@@ -321,40 +392,7 @@ class TestIvInitManagement(FinBaseTest):
     #         a.text(str(e), "失败原因")
     #         raise
     
-    # @case_decorator(
-    #     story="存货价值初始化配置表",
-    #     title="测试根据ID删除数据",
-    #     description="验证根据ID删除存货价值初始化配置表数据",
-    #     severity="normal",
-    #     order=6,
-    #     tags=["iv", "init", "value", "delete"]
-    # )
-    # def test_delete_init_cf_by_id(self):
-    #     """测试根据ID删除数据"""
-    #     try:
-    #         if not self.init_cf_id:
-    #             self.test_save_init_cf_data()
-            
-    #         api_path = self.get_api_path("存货价值初始化配置表-根据ID删除数据服务")
-    #         params, url = self.get_api_params(api_path)
-            
-    #         filtered_params = ParamUtil.filter_post_body_fields(
-    #             params, ["id"], ["params", "request"]
-    #         )
-    #         set_dict = {"id": self.init_cf_id}
-    #         ParamUtil.set_request_params(filtered_params, set_dict)
-            
-    #         response = self.http.post(url, json=filtered_params)
-    #         self.assert_util.assert_response_success(response)
-            
-    #         # 验证删除
-    #         self.init_cf_id = None  # 重置ID
-    #         a.json(filtered_params, "删除请求数据")
-    #         a.json(response, "删除响应数据")
-            
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+   
     
     # @case_decorator(
     #     story="存货价值初始化配置表",
@@ -476,145 +514,149 @@ class TestIvInitManagement(FinBaseTest):
     
     # # ==================== 存货核算初始化配置相关测试 ====================
     
-    # @case_decorator(
-    #     story="存货核算初始化配置管理",
-    #     title="测试期初确认",
-    #     description="验证存货核算初始化配置期初确认功能",
-    #     severity="critical",
-    #     order=10,
-    #     tags=["iv", "init", "confirm"]
-    # )
-    # def test_confirm_begin(self):
-    #     """测试期初确认"""
-    #     try:
-    #         # 准备测试数据  
-    #         config_code = self.mock_util.generate_unique_code(tag="AT_IV_INIT")
-    #         config_name = f"初始化配置_{self.mock_util.get_timestamp()}"
+    @case_decorator(
+        story="存货核算初始化配置管理",
+        title="测试期初确认",
+        description="验证存货核算初始化配置期初确认功能",
+        severity="critical",
+        file_level_order=8,
+        tags=["iv", "init", "confirm"]
+    )
+    def test_confirm_begin(self):
+        """测试期初确认"""
+        try:
+            if not self.init_config_id:
+                self.test_initialize_configuration()
+                self.test_execute_post_initialization()
+                
+            # 调用API
+            api_path = self.get_api_path("存货核算初始化配置-期初确认")
+            params, url = self.get_api_params(api_path)
             
-    #         # 调用API
-    #         api_path = self.get_api_path("存货核算初始化配置-期初确认")
-    #         params, url = self.get_api_params(api_path)
+            # 参数处理
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], ["params", "reuqest"]
+            )
+            set_dict = {
+                "id": self.init_config_id
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict,path=["params", "reuqest"])
             
-    #         # 参数处理
-    #         filtered_params = ParamUtil.filter_post_body_fields(
-    #             params, ["comOrgId", "invOrgId", "configCode"], ["params", "request"]
-    #         )
-    #         set_dict = {
-    #             "comOrgId": self.com_org_id,
-    #             "invOrgId": self.inv_org_id,
-    #             "configCode": config_code
-    #         }
-    #         ParamUtil.set_request_params(filtered_params, set_dict)
+            # 发送请求和断言
+            response = self.http.post(url, json=filtered_params)
+            beginStatus = response.get("data", {}).get("data", {}).get("beginStatus")
+            self.assert_util.assert_by_operator(beginStatus, "=", "CONFIRM", "期初确认状态应为CONFIRMED")
             
-    #         # 发送请求和断言
-    #         response = self.http.post(url, json=filtered_params)
-    #         self.assert_util.assert_response_success(response)
+            # 保存数据和报告
+            self.init_config_id = response.get("data", {}).get("data", {})
+            a.json(filtered_params, "请求数据")
+            a.json(response, "响应数据")
             
-    #         # 保存数据和报告
-    #         self.init_config_id = response.get("data", {}).get("data", {})
-    #         a.json(filtered_params, "请求数据")
-    #         a.json(response, "响应数据")
-            
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
     
-    # @case_decorator(
-    #     story="存货核算初始化配置管理",
-    #     title="测试执行初始化",
-    #     description="验证存货核算初始化配置执行初始化功能",
-    #     severity="critical",
-    #     order=11,
-    #     tags=["iv", "init", "execute"]
-    # )
-    # def test_execute_initialization(self):
-    #     """测试执行初始化"""
-    #     try:
-    #         if not self.init_config_id:
-    #             self.test_confirm_begin()
+    @case_decorator(
+        story="存货核算初始化配置管理",
+        title="测试期初反确认",
+        description="验证存货核算初始化配置期初反确认功能",
+        severity="critical",
+        file_level_order=9,
+        tags=["iv", "init", "reverse_confirm"]
+    )
+    def test_reverse_confirm_begin(self):
+        """测试期初反确认"""
+        try:
+            if not self.init_config_id:
+                self.test_confirm_begin()
             
-    #         # 调用API
-    #         api_path = self.get_api_path("存货核算初始化配置-执行初始化-无事务")
-    #         params, url = self.get_api_params(api_path)
+            api_path = self.get_api_path("存货核算初始化配置-期初反确认")
+            params, url = self.get_api_params(api_path)
             
-    #         filtered_params = ParamUtil.filter_post_body_fields(
-    #             params, ["configId"], ["params", "request"]
-    #         )
-    #         set_dict = {"configId": self.init_config_id}
-    #         ParamUtil.set_request_params(filtered_params, set_dict)
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], ["params", "reuqest"]
+            )
+            set_dict = {"id": self.init_config_id}
+            ParamUtil.set_request_params(filtered_params, set_dict, path=["params", "reuqest"])
             
-    #         response = self.http.post(url, json=filtered_params)
-    #         self.assert_util.assert_response_data(response)
+            response = self.http.post(url, json=filtered_params)
+            beginStatus = response.get("data", {}).get("data", {}).get("beginStatus")
+            self.assert_util.assert_by_operator(beginStatus, "=", "WAIT_CONFIRM", "期初确认状态应为WAIT_CONFIRM")
             
-    #         a.json(response, "执行初始化响应")
+            a.json(response, "期初反确认响应")
             
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+        
+    @case_decorator(
+        story="存货核算初始化配置管理",
+        title="测试执行初始化",
+        description="验证存货核算初始化配置执行初始化功能",
+        severity="critical",
+        file_level_order=12,
+        tags=["iv", "init", "execute"]
+    )
+    @pytest.mark.skip(reason="实际无调用",description="代码内部处理事务，服务不需要加锁")
+    def test_execute_initialization(self):
+        """测试执行初始化"""
+        try:
+            if not self.init_config_id:
+                self.test_confirm_begin()
+            
+            # 调用API
+            api_path = self.get_api_path("存货核算初始化配置-执行初始化-无事务")
+            params, url = self.get_api_params(api_path)
+            
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["configId"], ["params", "request"]
+            )
+            set_dict = {"configId": self.init_config_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
+            
+            a.json(response, "执行初始化响应")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
     
-    # @case_decorator(
-    #     story="存货核算初始化配置管理",
-    #     title="测试期初反确认",
-    #     description="验证存货核算初始化配置期初反确认功能",
-    #     severity="critical",
-    #     order=12,
-    #     tags=["iv", "init", "reverse_confirm"]
-    # )
-    # def test_reverse_confirm_begin(self):
-    #     """测试期初反确认"""
-    #     try:
-    #         if not self.init_config_id:
-    #             self.test_confirm_begin()
-            
-    #         api_path = self.get_api_path("存货核算初始化配置-期初反确认")
-    #         params, url = self.get_api_params(api_path)
-            
-    #         filtered_params = ParamUtil.filter_post_body_fields(
-    #             params, ["configId"], ["params", "request"]
-    #         )
-    #         set_dict = {"configId": self.init_config_id}
-    #         ParamUtil.set_request_params(filtered_params, set_dict)
-            
-    #         response = self.http.post(url, json=filtered_params)
-    #         self.assert_util.assert_response_success(response)
-            
-    #         a.json(response, "期初反确认响应")
-            
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+
     
-    # @case_decorator(
-    #     story="存货核算初始化配置管理",
-    #     title="测试反初始化",
-    #     description="验证存货核算初始化配置反初始化功能",
-    #     severity="critical",
-    #     order=13,
-    #     tags=["iv", "init", "reverse_init"]
-    # )
-    # def test_reverse_initialization(self):
-    #     """测试反初始化"""
-    #     try:
-    #         if not self.init_config_id:
-    #             self.test_confirm_begin()
+    @case_decorator(
+        story="存货核算初始化配置管理",
+        title="测试反初始化",
+        description="验证存货核算初始化配置反初始化功能",
+        severity="critical",
+        file_level_order=13,
+        tags=["iv", "init", "reverse_init"]
+    )
+    def test_reverse_initialization(self):
+        """测试反初始化"""
+        try:
+            if not self.init_config_id:
+                self.test_confirm_begin()
+                self.test_execute_post_initialization()
             
-    #         api_path = self.get_api_path("存货核算初始化配置-反初始")
-    #         params, url = self.get_api_params(api_path)
+            api_path = self.get_api_path("存货核算初始化配置-反初始")
+            params, url = self.get_api_params(api_path)
             
-    #         filtered_params = ParamUtil.filter_post_body_fields(
-    #             params, ["configId"], ["params", "request"]
-    #         )
-    #         set_dict = {"configId": self.init_config_id}
-    #         ParamUtil.set_request_params(filtered_params, set_dict)
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["configId"], ["params", "request"]
+            )
+            set_dict = {"configId": self.init_config_id}
+            ParamUtil.set_request_params(filtered_params, set_dict)
             
-    #         response = self.http.post(url, json=filtered_params)
-    #         self.assert_util.assert_response_data(response)
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
             
-    #         a.json(response, "反初始化响应")
+            a.json(response, "反初始化响应")
             
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
     
     # @case_decorator(
     #     story="存货核算初始化配置管理",
@@ -681,37 +723,7 @@ class TestIvInitManagement(FinBaseTest):
     #         a.text(str(e), "失败原因")
     #         raise
     
-    # @case_decorator(
-    #     story="存货核算初始化配置管理",
-    #     title="测试反启用配置",
-    #     description="验证存货核算初始化配置反启用功能",
-    #     severity="normal",
-    #     order=16,
-    #     tags=["iv", "init", "disable"]
-    # )
-    # def test_disable_configuration(self):
-    #     """测试反启用配置"""
-    #     try:
-    #         if not self.init_config_id:
-    #             self.test_confirm_begin()
-            
-    #         api_path = self.get_api_path("存货核算初始化配置-反启用配置")
-    #         params, url = self.get_api_params(api_path)
-            
-    #         filtered_params = ParamUtil.filter_post_body_fields(
-    #             params, ["configId"], ["params", "request"]
-    #         )
-    #         set_dict = {"configId": self.init_config_id}
-    #         ParamUtil.set_request_params(filtered_params, set_dict)
-            
-    #         response = self.http.post(url, json=filtered_params)
-    #         self.assert_util.assert_response_success(response)
-            
-    #         a.json(response, "反启用配置响应")
-            
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+
     
     # @case_decorator(
     #     story="存货价值初始化配置表",
@@ -753,74 +765,75 @@ class TestIvInitManagement(FinBaseTest):
     #         a.text(str(e), "失败原因")
     #         raise
     
-    # @case_decorator(
-    #     story="存货核算初始化配置管理",
-    #     title="测试执行核算",
-    #     description="验证存货核算初始化配置执行核算功能",
-    #     severity="critical",
-    #     order=18,
-    #     tags=["iv", "init", "accounting"]
-    # )
-    # def test_execute_accounting(self):
-    #     """测试执行核算"""
-    #     try:
-    #         if not self.init_config_id:
-    #             self.test_confirm_begin()
+    @case_decorator(
+        story="存货核算初始化配置管理",
+        title="测试执行核算",
+        description="验证存货核算初始化配置执行核算功能",
+        severity="critical",
+        file_level_order=11,
+        tags=["iv", "init", "accounting"]
+    )
+    def test_execute_accounting(self):
+        """测试执行核算"""
+        try:
+            if not self.init_config_id:
+                self.test_initialize_configuration()
+                self.test_execute_post_initialization()
             
-    #         api_path = self.get_api_path("存货核算初始化配置-执行核算-无事务")
-    #         params, url = self.get_api_params(api_path)
+            api_path = self.get_api_path("存货核算初始化配置-执行核算-无事务")
+            params, url = self.get_api_params(api_path)
             
-    #         filtered_params = ParamUtil.filter_post_body_fields(
-    #             params, ["configId"], ["params", "request"]
-    #         )
-    #         set_dict = {"configId": self.init_config_id}
-    #         ParamUtil.set_request_params(filtered_params, set_dict)
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], ["params", "request"]   
+            )
+            set_dict = {"id": self.init_config_id}
+            ParamUtil.set_request_params(filtered_params, set_dict, path=["params", "request"])
             
-    #         response = self.http.post(url, json=filtered_params)
-    #         self.assert_util.assert_response_data(response)
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_data(response)
             
-    #         a.json(response, "执行核算响应")
+            a.json(response, "执行核算响应")
             
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
     
     
     
     # @pytest.mark.skip(reason="异步任务发起需要监控任务状态，复杂度较高")
-    # @case_decorator(
-    #     story="存货核算初始化配置管理",
-    #     title="测试异步执行初始化",
-    #     description="验证存货核算初始化配置异步执行初始化功能",
-    #     severity="normal",
-    #     order=20,
-    #     tags=["iv", "init", "async"]
-    # )
-    # def test_execute_initialization_async(self):
-    #     """测试异步执行初始化（跳过）"""
-    #     try:
-    #         if not self.init_config_id:
-    #             self.test_confirm_begin()
+    @case_decorator(
+        story="存货核算初始化配置管理",
+        title="测试异步执行初始化",
+        description="验证存货核算初始化配置异步执行初始化功能",
+        severity="normal",
+        file_level_order=10,
+        tags=["iv", "init", "async"]
+    )
+    def test_execute_initialization_async(self):
+        """测试异步执行初始化（跳过）"""
+        try:
+            if not self.init_config_id:
+                self.test_confirm_begin()
             
-    #         api_path = self.get_api_path("存货核算初始化配置-执行初始化-异步任务发起")
-    #         params, url = self.get_api_params(api_path)
+            api_path = self.get_api_path("存货核算初始化配置-执行初始化-异步任务发起")
+            params, url = self.get_api_params(api_path)
             
-    #         filtered_params = ParamUtil.filter_post_body_fields(
-    #             params, ["configId"], ["params", "request"]
-    #         )
-    #         set_dict = {"configId": self.init_config_id}
-    #         ParamUtil.set_request_params(filtered_params, set_dict)
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], ["params", "reuqest"]
+            )
+            set_dict = {"id": self.init_config_id}
+            ParamUtil.set_request_params(filtered_params, set_dict, path=["params", "reuqest"])
             
-    #         response = self.http.post(url, json=filtered_params)
-    #         self.assert_util.assert_response_success(response)
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
             
-    #         # 实际实现中需添加任务状态轮询
-    #         task_id = response.get("data", {}).get("taskId")
-    #         a.json(response, "异步初始化响应，任务ID: {}".format(task_id))
+            # 实际实现中需添加任务状态轮询
+            task_id = response.get("data", {}).get("taskId")
+            a.json(response, "异步初始化响应，任务ID: {}".format(task_id))
             
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
     
     # @pytest.mark.skip(reason="异步核算任务需要监控，复杂度较高")
     # @case_decorator(
