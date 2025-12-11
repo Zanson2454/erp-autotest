@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 import json
 import requests
+import time
 
 # 获取项目根目录
 project_root = Path(__file__).resolve().parent.parent.parent
@@ -187,7 +188,7 @@ class FinBaseTest(BaseTest):
     
     def create_settlement_item(self,status="CREATED"):
         """
-        创建结算项公共方法(status: "CREATED"-已创建, "RECONCILED"-已对账)
+        创建结算项公共方法(status: "CREATED"-已创建)，返回结算项id
         """
         api_path = self.get_api_path("SETT-ITEM-手动创建服务")
         params, url = self.get_api_params(api_path)
@@ -239,6 +240,35 @@ class FinBaseTest(BaseTest):
         ParamUtil.set_request_params(filtered_params, set_dict)
         result = self.http.post(url, json=filtered_params, description="创建结算项")
         self.assert_util.assert_response_success(result)
+        # 响应数据是列表格式，取第一个元素的id
+        data_list = result.get("data", {}).get("data", [])
+        if not data_list or len(data_list) == 0:
+            raise ValueError("创建结算项失败：响应数据为空")
+        return data_list[0].get("id")
+    def create_settlement_doc(self):
+        """
+        创建结算单公共方法,status: "CREATED"-已创建",返回结算单id
+        """
+        sett_item_id=self.create_settlement_item("CREATED")
+        api_path = self.get_api_path("SETT-ITEM-结算项确认及汇单-关联操作-异步服务")
+        params, url = self.get_api_params(api_path)
+        data = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
+        data=ParamUtil.convert_param_type(data, ["params", "request"], "array")
+        data["params"]["request"][0]["id"] = sett_item_id
+        result = self.http.post(url, json=data, description=f"结算项对账确认 - ID: {sett_item_id}")
+        self.assert_util.assert_response_success(result)
+         #等待异步任务执行
+        time.sleep(3)  # 等待3秒
+        sql =f"select id, sett_item_status, async_execution_status, sett_doc_id from sett_item_tr where deleted=0 and id={sett_item_id} limit 1;"
+        sql_result = self.db.query(sql)
+        if not sql_result:
+            raise ValueError(f"结算项对账确认失败: {sql_result}")
+        return sql_result[0]["sett_doc_id"]
+        
+        
+        
+        
+        
     @classmethod
     def teardown_class(cls):
         """测试类清理 (beyond super)"""
@@ -250,4 +280,4 @@ class FinBaseTest(BaseTest):
 if __name__ == "__main__":
     FinBaseTest.setup_class()
     test = FinBaseTest()
-    test.create_settlement_item()
+    test.create_settlement_item("RECONCILED")
