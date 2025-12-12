@@ -1580,7 +1580,7 @@ apis:
     path: /api/trantor/service/engine/execute/ERP_FIN$FIN_BRM_BUS_SCENE_SET_CONFIG_COPY_DATA_CONVERTER_SERVICE
     method: POST
   结算行项类型定义表-保存数据服务:
-    path: /api/trantor/service/engine/execute/ERP_FIN$FIN_SETT_ITEM_TYPE_CF_SAVE_DATA_SERVICE
+    path: /api/trantor/service/engine/execute/ERP_FIN$SETT_ITEM_TYPE_CF_SAVE_DATA_SERVICE
     method: POST
   结算汇单记录-批量删除数据服务:
     path: /api/trantor/service/engine/execute/ERP_FIN$SETT_AGGREGATE_RECORD_TR_BATCH_DELETE_DATA_SERVICE

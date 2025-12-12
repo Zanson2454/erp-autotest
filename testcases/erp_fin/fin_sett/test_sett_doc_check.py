@@ -10,7 +10,6 @@ if str(project_root) not in sys.path:
 
 from testcases.erp_fin import FinBaseTest
 from utils.param_util import ParamUtil
-from data_factory.fin_sett_factory import FinSettlementFactory
 from utils.report_util import a, case_decorator
 
 @allure.epic("ERP通业财模块")

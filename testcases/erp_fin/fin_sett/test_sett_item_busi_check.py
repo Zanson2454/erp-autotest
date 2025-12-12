@@ -10,7 +10,6 @@ if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
 from testcases.erp_fin import FinBaseTest
-from data_factory.fin_sett_factory import FinSettlementFactory
 from utils.log_util import Loggers
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
