@@ -6,10 +6,9 @@ import pytest
 import requests
 from functools import wraps
 from dataclasses import dataclass
-from typing import Dict, Any, Optional, Union
+from typing import Dict, Any, Optional
 from enum import Enum
 from pathlib import Path
-import json
 
 
 
@@ -26,170 +25,6 @@ from utils.exception_util import safe_api_call
 from utils.param_util import ParamUtil
 from data_factory.base import DataFactory 
 from utils.mysql_util import DBManager
-
-
-class ConfigManager:
-    """配置管理器 - 集中管理所有配置相关操作"""
-    
-    # 配置缓存
-    _config_cache: Dict[str, Dict[str, Any]] = {}
-    
-    # 配置默认值
-    DEFAULT_CONFIG = {
-        "database": {
-            "erp_db": {},
-            "iam_db": {}
-        },
-        "portal_config": {
-            "terp": {}
-        }
-    }
-    
-    @classmethod
-    def get_config(cls, env: str = "test", refresh: bool = False) -> Dict[str, Any]:
-        """
-        获取配置，支持缓存
-        
-        :param env: 环境名称
-        :param refresh: 是否强制刷新缓存
-        :return: 配置字典
-        """
-        # 检查缓存
-        if env in cls._config_cache and not refresh:
-            Loggers.info(f"从缓存加载配置 [env={env}]")
-            return cls._config_cache[env]
-        
-        # 加载新配置
-        Loggers.info(f"加载新配置 [env={env}]")
-        try:
-            data_factory = DataFactory(env_name=env)
-            config = data_factory.get_env_config()
-            
-            if config is None:
-                Loggers.warning(f"配置加载失败，使用默认配置 [env={env}]")
-                config = cls.DEFAULT_CONFIG.copy()
-            else:
-                # 合并默认配置
-                config = cls._merge_configs(cls.DEFAULT_CONFIG, config)
-            
-            # 验证配置
-            cls.validate_config(config)
-            
-            # 缓存配置
-            cls._config_cache[env] = config
-            
-            Loggers.info(f"配置加载成功 [env={env}]")
-            return config
-            
-        except Exception as e:
-            Loggers.error(f"配置加载异常 [env={env}]: {str(e)}")
-            raise RuntimeError(f"配置加载失败: {str(e)}") from e
-    
-    @staticmethod
-    def _merge_configs(default: Dict[str, Any], override: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        递归合并配置字典
-        
-        :param default: 默认配置
-        :param override: 覆盖配置
-        :return: 合并后的配置
-        """
-        result = default.copy()
-        for key, value in override.items():
-            if key in result and isinstance(result[key], dict) and isinstance(value, dict):
-                result[key] = ConfigManager._merge_configs(result[key], value)
-            else:
-                result[key] = value
-        return result
-    
-    @classmethod
-    def validate_config(cls, config: Dict[str, Any]) -> None:
-        """
-        验证配置完整性
-        
-        :param config: 配置字典
-        :raises ValueError: 配置验证失败时抛出
-        """
-        # 验证基础配置结构
-        required_structures = [
-            ("portal_config", dict),
-            ("database", dict)
-        ]
-        
-        for key, expected_type in required_structures:
-            if key not in config or not isinstance(config[key], expected_type):
-                raise ValueError(f"配置缺少必要结构: {key} (类型应为 {expected_type.__name__})")
-        
-        # 验证 portal_config 结构
-        portal_config = config.get("portal_config", {})
-        if "terp" in portal_config:
-            terp_config = portal_config["terp"]
-            # 验证常用的 portal_key 配置
-            common_portal_keys = ["TERP_PORTAL", "TERP_CUST_PC"]
-            for portal_key in common_portal_keys:
-                if portal_key in terp_config:
-                    portal = terp_config[portal_key]
-                    required_keys = ["portal_url", "iam_url"]
-                    missing_keys = [k for k in required_keys if not portal.get(k)]
-                    if missing_keys:
-                        Loggers.warning(f"Portal 配置 [{portal_key}] 缺少可选字段: {missing_keys}")
-        
-        # 验证数据库配置
-        db_config = config.get("database", {})
-        for db_name in ["erp_db", "iam_db"]:
-            if db_name in db_config:
-                db = db_config[db_name]
-                required_db_keys = ["host", "port", "database", "username", "password"]
-                missing_keys = [k for k in required_db_keys if not db.get(k)]
-                if missing_keys:
-                    Loggers.warning(f"数据库配置 [{db_name}] 缺少字段: {missing_keys}")
-    
-    @classmethod
-    def get_safe_config(cls, config: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        获取安全的配置副本（隐藏敏感信息）
-        
-        :param config: 原始配置
-        :return: 安全的配置副本
-        """
-        safe_config = json.loads(json.dumps(config))  # 深拷贝
-        
-        # 隐藏密码
-        def mask_passwords(data: Any) -> Any:
-            if isinstance(data, dict):
-                return {
-                    k: ("******" if k.lower() == "password" else mask_passwords(v))
-                    for k, v in data.items()
-                }
-            elif isinstance(data, list):
-                return [mask_passwords(item) for item in data]
-            else:
-                return data
-        
-        return mask_passwords(safe_config)
-    
-    @classmethod
-    def clear_cache(cls) -> None:
-        """清空配置缓存"""
-        cls._config_cache.clear()
-        Loggers.info("配置缓存已清空")
-    
-    @classmethod
-    def get_portal_config(cls, config: Dict[str, Any], portal_key: str, tenant_key: str = "terp") -> Dict[str, Any]:
-        """
-        获取特定门户的配置
-        
-        :param config: 完整配置
-        :param portal_key: 门户键名
-        :param tenant_key: 租户键名
-        :return: 门户配置
-        """
-        return config.get("portal_config", {}).get(tenant_key, {}).get(portal_key, {})
-
-
-class ConfigError(Exception):
-    """配置相关异常"""
-    pass
 
 
 class LoginStatus(Enum):
@@ -216,58 +51,19 @@ class AuthenticationError(Exception):
     pass
 
 class SessionManager:
-    """会话管理器 - 专门负责HTTP会话，支持多进程隔离"""
-    
-    _process_sessions: Dict[int, requests.Session] = {}
+    """会话管理器 - 专门负责HTTP会话"""
     
     def __init__(self, base_headers: Dict[str, str]):
-        self.base_headers = base_headers
-        # 为当前进程创建独立会话
-        self._ensure_session_for_current_process()
-    
-    def _ensure_session_for_current_process(self) -> None:
-        """确保当前进程有独立的会话实例"""
-        import os
-        process_id = os.getpid()
-        
-        if process_id not in self._process_sessions:
-            Loggers.info(f"为进程 {process_id} 创建新的会话实例")
-            session = requests.Session()
-            session.headers.update(self.base_headers)
-            self._process_sessions[process_id] = session
+        self.session = requests.Session()
+        self.session.headers.update(base_headers)
     
     def update_headers(self, headers: Dict[str, str]):
         """更新请求头"""
-        import os
-        process_id = os.getpid()
-        session = self._process_sessions.get(process_id)
-        if session:
-            session.headers.update(headers)
+        self.session.headers.update(headers)
     
     def get_session(self) -> requests.Session:
-        """获取当前进程的会话对象"""
-        import os
-        process_id = os.getpid()
-        
-        # 确保会话存在
-        self._ensure_session_for_current_process()
-        
-        return self._process_sessions[process_id]
-    
-    def clear_session(self) -> None:
-        """清除当前进程的会话"""
-        import os
-        process_id = os.getpid()
-        
-        if process_id in self._process_sessions:
-            Loggers.info(f"清除进程 {process_id} 的会话实例")
-            del self._process_sessions[process_id]
-    
-    @classmethod
-    def clear_all_sessions(cls) -> None:
-        """清除所有进程的会话（仅在单进程模式下使用）"""
-        cls._process_sessions.clear()
-        Loggers.info("已清除所有会话实例")
+        """获取会话对象"""
+        return self.session
 
     
 
@@ -282,8 +78,6 @@ class LoginService:
     def __init__(self, config: Dict[str, Any]):
         self.config = config
         self.session_manager = SessionManager(self.build_headers())
-        # 使用 ConfigManager 获取安全配置用于日志
-        self.safe_config = ConfigManager.get_safe_config(config)
         
     @staticmethod
     def build_headers(origin: Optional[str] = None, referer: Optional[str] = None, cookie: Optional[str] = None) -> Dict[str, str]:
@@ -309,14 +103,7 @@ class LoginService:
         """
         try:
             # 1. 准备登录数据,从配置中读取
-            auth_config = ConfigManager.get_portal_config(self.config, portal_key, tenant_key)
-            
-            if not auth_config:
-                Loggers.error(f"未找到门户配置: tenant_key={tenant_key}, portal_key={portal_key}")
-                return LoginResult(
-                    status=LoginStatus.FAILED,
-                    error_message=f"未找到门户配置: {tenant_key}/{portal_key}"
-                )
+            auth_config = self.config.get("portal_config", {}).get(tenant_key, {}).get(portal_key, {})
             
             # 检查是否配置了 cookie（支持直接使用 cookie 登录）
             cookie = auth_config.get("cookie", "")
@@ -350,11 +137,7 @@ class LoginService:
                 Loggers.info(f"登录URL: {login_url}")
                 Loggers.info(f"登录账号: {login_data['account']}")
                 Loggers.info(f"登录请求头: {iam_headers}")
-                # 隐藏密码后打印登录数据
-                safe_login_data = login_data.copy()
-                if 'password' in safe_login_data:
-                    safe_login_data['password'] = '******'
-                Loggers.info(f"登录数据: {safe_login_data}")
+                Loggers.info(f"登录数据: {login_data}")
                 self.session_manager.update_headers(iam_headers)
                 login_response = self.session_manager.get_session().post(
                     login_url, 
@@ -418,7 +201,7 @@ class LoginService:
         - cookie 登录：cookie 在 login 方法中已设置到 session.headers
         - 账号密码登录：cookie 由 requests.Session 自动管理
         """
-        portal_config = ConfigManager.get_portal_config(self.config, portal_key, tenant_key)
+        portal_config = self.config.get("portal_config", {}).get(tenant_key, {}).get(portal_key, {})
         portal_url = portal_config.get("portal_url", "")
         portal_referer = portal_config.get("portal_referer", "")
         
@@ -465,24 +248,19 @@ class BaseTestInitializer:
     
     def __init__(self, env_name: str):
         self.env_name = env_name
+        self.data_factory = DataFactory(env_name=env_name)
     
     def initialize_environment(self) -> Dict[str, Any]:
         """初始化环境配置"""
         Loggers.info(f"初始化环境: {self.env_name}")
-        # 使用 ConfigManager 获取配置
-        config = ConfigManager.get_config(env=self.env_name)
-        
-        # 打印安全的配置信息
-        safe_config = ConfigManager.get_safe_config(config)
-        Loggers.info(f"环境配置加载成功，配置摘要: {json.dumps(safe_config, ensure_ascii=False, indent=2)[:500]}...")
-        
+        config = self.data_factory.get_env_config()
+        if config is None:
+            raise RuntimeError(f"环境配置获取失败: {self.env_name}")
         return config
     
     def initialize_base_data(self) -> Dict[str, Any]:
         """初始化基础数据"""
-        # 创建 DataFactory 实例
-        data_factory = DataFactory(env_name=self.env_name)
-        raw_data = data_factory.get_base_data(project="erp")
+        raw_data = self.data_factory.get_base_data(project="erp")
         if not raw_data:
             raise RuntimeError("基础数据获取失败，请检查数据工厂配置和数据库连接！")
         return raw_data
@@ -557,13 +335,13 @@ class BaseTest:
         try:
             # 获取环境
             env = os.getenv("TEST_ENV", "test")
-            Loggers.info(f"开始初始化测试基类 [env={env}]")
             
             # 使用初始化器
             initializer = BaseTestInitializer(env)
             
             # 分步初始化
             cls.env_config = initializer.initialize_environment() # 获取环境基础配置
+            Loggers.info(f"环境配置: {cls.env_config}")
             cls.init_data = initializer.initialize_base_data() # 获取基础数据
             
             # 认证初始化
@@ -612,10 +390,6 @@ class BaseTest:
             duration = time.time() - self.test_start_time
             method_name = getattr(method, '__name__', 'unknown_method')
             self.logger.info(f"测试方法 {method_name} 执行完成，耗时: {duration:.3f}秒")
-        
-        # 清理会话，确保会话隔离
-        if hasattr(self, 'login_service') and hasattr(self.login_service, 'session_manager'):
-            self.login_service.session_manager.clear_session()
 
     def set_request_param(self, params, key, value):
         """设置请求参数"""
@@ -745,56 +519,47 @@ class BaseTest:
 
 
 class ConfigValidator:
-    """配置验证器（保留向后兼容）"""
+    """配置验证器"""
+    
+    REQUIRED_CONFIG_KEYS = [
+        "iam_url", "portal_url", "admin_url",
+        "iam_referer", "portal_referer", "admin_referer"
+    ]
+    
+    REQUIRED_AUTH_KEYS = ["username", "password"]
     
     @classmethod
     def validate_env_config(cls, config: Dict[str, Any]) -> None:
-        """验证环境配置（向后兼容方法）"""
-        ConfigManager.validate_config(config)
+        """验证环境配置"""
+        # 验证基础配置
+        missing_keys = [key for key in cls.REQUIRED_CONFIG_KEYS if not config.get(key)]
+        if missing_keys:
+            raise ValueError(f"环境配置缺少必要字段: {missing_keys}")
+        
+        # 验证认证配置
+        auth_config = config.get("tenants", {}).get("terp", {}).get("auth", {})
+        missing_auth_keys = [key for key in cls.REQUIRED_AUTH_KEYS if not auth_config.get(key)]
+        if missing_auth_keys:
+            raise ValueError(f"认证配置缺少必要字段: {missing_auth_keys}")
     
     @classmethod
     def validate_database_config(cls, config: Dict[str, Any]) -> None:
-        """验证数据库配置（向后兼容方法）"""
-        ConfigManager.validate_config(config)
+        """验证数据库配置"""
+        db_config = config.get("database", {}).get("erp_db", {})
+        required_db_keys = ["host", "port", "database", "username", "password"]
+        missing_db_keys = [key for key in required_db_keys if not db_config.get(key)]
+        if missing_db_keys:
+            raise ValueError(f"数据库配置缺少必要字段: {missing_db_keys}")
 
 
 
 if __name__ == "__main__":
-    try:
-        # 测试配置管理器
-        print("=== 测试配置管理器 ===")
-        config = ConfigManager.get_config()
-        safe_config = ConfigManager.get_safe_config(config)
-        print("配置加载成功！")
-        print(f"配置包含 portal_config: {'portal_config' in config}")
-        print(f"配置包含 database: {'database' in config}")
-        
-        # 测试测试基类
-        print("\n=== 测试测试基类 ===")
-        BaseTest.setup_class()
-        
-        # 打印安全的配置信息
-        safe_env_config = ConfigManager.get_safe_config(BaseTest.env_config)
-        print("环境配置摘要:")
-        print(json.dumps(safe_env_config, ensure_ascii=False, indent=2)[:500] + "...")
-        
-        print("\n基础数据加载状态:", "成功" if BaseTest.init_data else "失败")
-        
-        if BaseTest.user_info:
-            print("\n用户信息:")
-            print(f"昵称: {BaseTest.user_info.get('nickname', '未知')}")
-            print(f"用户名: {BaseTest.user_info.get('username', '未知')}")
-        
-        # 测试缓存功能
-        print("\n=== 测试配置缓存 ===")
-        config_from_cache = ConfigManager.get_config()
-        print(f"缓存命中: {config is config_from_cache}")
-        
-        # 清理缓存
-        ConfigManager.clear_cache()
-        print("配置缓存已清理")
-        
-    except Exception as e:
-        print(f"测试失败: {str(e)}")
-        import traceback
-        traceback.print_exc()
+    BaseTest.setup_class()
+    print(BaseTest.env_config)
+    print(BaseTest.init_data)
+    if BaseTest.user_info:
+        print(BaseTest.user_info['nickname'])
+   
+   
+    # login_result = LoginService(BaseTest.env_config).login(portal_key="TERP_CUST_PC",tenant_key="terp")
+    # print(login_result)
