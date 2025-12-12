@@ -121,7 +121,9 @@ class FinBaseTest(BaseTest):
         # 初始化配置数据 (from init_data, e.g., currency)
         if cls.init_data:
             cls.curr_id = cls.init_data.get("currency_info",[])[0].get("curr_id")
-            cls.tax_rate = cls.init_data.get("tax_info",[])[0].get("tax")
+            # 确保tax_rate是float类型（从数据库查询的Decimal类型已在data_factory/base.py中转换）
+            tax_rate_value = cls.init_data.get("tax_info",[])[0].get("tax")
+            cls.tax_rate = float(tax_rate_value) if tax_rate_value is not None else None
             cls.tax_code_id = cls.init_data.get("tax_info",[])[0].get("id")
             cls.basic_unit_id = cls.init_data.get("uom_info",{}).get("qty_uom_info",[])[0].get("uom_id")
         

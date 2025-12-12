@@ -16,6 +16,8 @@ sys.path.insert(0, str(project_root))
 
 from utils.exception_util import safe_api_call, APIException
 from utils.log_util import Loggers
+from utils.response_util import DecimalEncoder
+from decimal import Decimal
 
 class HttpUtil:
     """HTTP 工具类，提供增强的 HTTP 请求功能
@@ -86,6 +88,24 @@ class HttpUtil:
         if description:
             Loggers.info(f"请求描述: {description}", depth=4)
         
+        # 转换kwargs中的Decimal类型为float（requests库不支持Decimal类型）
+        def convert_decimal_to_float(obj):
+            """递归转换字典和列表中的Decimal类型为float"""
+            if isinstance(obj, Decimal):
+                return float(obj)
+            elif isinstance(obj, dict):
+                return {k: convert_decimal_to_float(v) for k, v in obj.items()}
+            elif isinstance(obj, list):
+                return [convert_decimal_to_float(item) for item in obj]
+            return obj
+        
+        # 转换json参数中的Decimal类型
+        if 'json' in kwargs and kwargs['json'] is not None:
+            kwargs['json'] = convert_decimal_to_float(kwargs['json'])
+        # 转换data参数中的Decimal类型（如果data是字典或列表）
+        if 'data' in kwargs and kwargs['data'] is not None and isinstance(kwargs['data'], (dict, list)):
+            kwargs['data'] = convert_decimal_to_float(kwargs['data'])
+        
         # 发送请求
         try:
             response = self.session.request(method, full_url, **kwargs)
@@ -94,7 +114,7 @@ class HttpUtil:
             
             try:
                 response_json = response.json()
-                Loggers.info(f"响应内容: {json.dumps(response_json, ensure_ascii=False, indent=2)}", depth=4)
+                Loggers.info(f"响应内容: {json.dumps(response_json, ensure_ascii=False, indent=2, cls=DecimalEncoder)}", depth=4)
             except ValueError:
                 Loggers.info(f"响应内容: {response.text}", depth=4)
             
@@ -107,7 +127,7 @@ class HttpUtil:
             if hasattr(e, 'response') and e.response is not None:
                 try:
                     error_detail = e.response.json()
-                    Loggers.error(f"错误详情: {json.dumps(error_detail, ensure_ascii=False, indent=2)}", depth=4)
+                    Loggers.error(f"错误详情: {json.dumps(error_detail, ensure_ascii=False, indent=2, cls=DecimalEncoder)}", depth=4)
                 except ValueError:
                     Loggers.error(f"错误响应: {e.response.text}", depth=4)
             raise
@@ -130,11 +150,11 @@ class HttpUtil:
         Loggers.info("接口请求的方法>>>{}", method, depth=4)
         
         if data is not None:
-            Loggers.info("接口请求的data参数>>>\n{}", json.dumps(data, ensure_ascii=False, indent=2), depth=4)
+            Loggers.info("接口请求的data参数>>>\n{}", json.dumps(data, ensure_ascii=False, indent=2, cls=DecimalEncoder), depth=4)
         if json_data is not None:
-            Loggers.info("接口请求的json参数>>>\n{}", json.dumps(json_data, ensure_ascii=False, indent=2), depth=4)
+            Loggers.info("接口请求的json参数>>>\n{}", json.dumps(json_data, ensure_ascii=False, indent=2, cls=DecimalEncoder), depth=4)
         if params is not None:
-            Loggers.info("接口请求的params参数>>>\n{}", json.dumps(params, ensure_ascii=False, indent=2), depth=4)
+            Loggers.info("接口请求的params参数>>>\n{}", json.dumps(params, ensure_ascii=False, indent=2, cls=DecimalEncoder), depth=4)
         if headers is not None:
-            Loggers.info("接口请求的headers参数>>>\n{}", json.dumps(headers, ensure_ascii=False, indent=2), depth=4)
+            Loggers.info("接口请求的headers参数>>>\n{}", json.dumps(headers, ensure_ascii=False, indent=2, cls=DecimalEncoder), depth=4)
 

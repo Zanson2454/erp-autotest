@@ -44,6 +44,19 @@ class SQLInitializer:
 
     @classmethod
     def _execute_sql_recursive(cls, config):
+        """递归执行SQL查询，并将结果中的Decimal类型转换为float"""
+        from decimal import Decimal
+        
+        def convert_decimal_to_float(obj):
+            """递归转换字典和列表中的Decimal类型为float"""
+            if isinstance(obj, Decimal):
+                return float(obj)
+            elif isinstance(obj, dict):
+                return {k: convert_decimal_to_float(v) for k, v in obj.items()}
+            elif isinstance(obj, list):
+                return [convert_decimal_to_float(item) for item in obj]
+            return obj
+        
         result = {}
         for key, value in config.items():
             if isinstance(value, dict) and 'sql' in value:
@@ -52,8 +65,10 @@ class SQLInitializer:
                     # 确保DBManager类配置已初始化，然后创建实例
                     db_instance = DBManager()
                     query_result = db_instance.query(sql)
-                    result[key] = query_result
-                    Loggers.info(f"SQL执行结果: {key} -> {query_result}")
+                    # 转换查询结果中的Decimal类型为float
+                    converted_result = convert_decimal_to_float(query_result)
+                    result[key] = converted_result
+                    Loggers.info(f"SQL执行结果: {key} -> {converted_result}")
                 except Exception as e:
                     Loggers.error(f"执行查询 {key} 时出错: {str(e)}")
                     result[key] = None
