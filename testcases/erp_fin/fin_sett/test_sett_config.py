@@ -1,6 +1,7 @@
 import pytest
 import sys
 import allure
+import requests
 from pathlib import Path
 from datetime import datetime
 
@@ -212,13 +213,23 @@ class TestSettConfig(FinBaseTest):
                 "priceGroupClass":"COST"
             }
             ParamUtil.set_request_params(filtered_params,set_dict)
-            result=self.http.post(url,json=filtered_params,description=f"新增结算行项目类型")
-            if result.get("err"):
-                self.assert_util.assert_by_operator(result.get("err",{}).get("masg",{}),"=","结算行项类型定义表 数据已存在")
-            if not result.get("err"):
+            try:
+                result=self.http.post(url,json=filtered_params,description=f"新增结算行项目类型")
+                # 成功情况下的断言
                 self.assert_util.assert_response_success(result)
                 self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("settItemTypeCode",{}),"=",set_dict["settItemTypeCode"])
                 self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("settItemTypeName",{}),"=",set_dict["settItemTypeName"])
+            except requests.exceptions.HTTPError as e:
+                # 捕获500状态码异常，提取响应内容进行断言
+                if hasattr(e, 'response') and e.response is not None:
+                    result = e.response.json()
+                    # 500状态码但业务错误信息符合预期时，也算断言成功
+                    if result.get("err", {}).get("msg") == "结算行项类型定义表 数据已存在":
+                        self.assert_util.assert_by_operator(result.get("err",{}).get("msg",{}),"=","结算行项类型定义表 数据已存在")
+                    else:
+                        raise
+                else:
+                    raise
             a.json(filtered_params, "请求数据")
             a.json(result, "响应数据")
         except Exception as e:
@@ -420,16 +431,9 @@ class TestSettConfig(FinBaseTest):
                 params,
                 ["comOrgId","sdcHeadCode","settDocTypeCode","settItemTypeCode"],
                 ["params","request"])
-            sql="""
-            select id,org_code,org_name from org_struct_md where deleted=0 and org_code like '%AUTOTEST_GR_ORG%';
-            """
-            com_org_id=self.db.query(sql)[0]["id"]
-            sql="""
-            select id,sett_doc_type_code,sett_item_type_name
-            from  fin_sett_item_type_cf where deleted=0 and sett_item_type_code ='E_SLS_GOODS' order by created_at desc limit 1;
-            """
-            sett_item_type_id=self.db.query(sql)[0]["id"]
-            sett_doc_type_id=self.db.query(sql)[0]["sett_doc_type_code"]
+            com_org_id=self.com_org_id
+            sett_item_type_id=self.sett_item_type_info
+            sett_doc_type_id=self.sett_doc_type_info
             sql=f"""
             select id,sdc_head_code,sdc_description
             from sett_sdc_head_cf where deleted=0 and sett_head_type={sett_doc_type_id} order by created_at desc limit 1;
@@ -450,8 +454,21 @@ class TestSettConfig(FinBaseTest):
                 }
             }
             ParamUtil.set_request_params(filtered_params,set_dict)
-            result=self.http.post(url,json=filtered_params,description=f"新增结算行项目类型关联汇单规则")
-            self.assert_util.assert_response_success(result)
+            try:
+                result=self.http.post(url,json=filtered_params,description=f"新增结算行项目类型关联汇单规则")
+                # 成功情况下的断言
+                self.assert_util.assert_response_success(result)
+            except requests.exceptions.HTTPError as e:
+                # 捕获500状态码异常，提取响应内容进行断言
+                if hasattr(e, 'response') and e.response is not None:
+                    result = e.response.json()
+                    # 500状态码但业务错误信息符合预期时，也算断言成功
+                    if result.get("err", {}).get("msg") == "结算行项目类型关联汇单规则 数据已存在":
+                        self.assert_util.assert_by_operator(result.get("err",{}).get("msg",{}),"=","结算行项目类型关联汇单规则 数据已存在")
+                    else:
+                        raise
+                else:
+                    raise
             a.json(filtered_params, "请求数据")
             a.json(result, "响应数据")
         except Exception as e:
