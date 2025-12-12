@@ -257,17 +257,49 @@ class FinBaseTest(BaseTest):
         data["params"]["request"][0]["id"] = sett_item_id
         result = self.http.post(url, json=data, description=f"结算项对账确认 - ID: {sett_item_id}")
         self.assert_util.assert_response_success(result)
-         #等待异步任务执行
-        time.sleep(3)  # 等待3秒
-        sql =f"select id, sett_item_status, async_execution_status, sett_doc_id from sett_item_tr where deleted=0 and id={sett_item_id} limit 1;"
-        sql_result = self.db.query(sql)
-        if not sql_result:
-            raise ValueError(f"结算项对账确认失败: {sql_result}")
+        
+        #等待异步任务执行完成，当状态为PROCESSING时一直等待，最长超时10秒
+        start_time = time.time()
+        timeout = 10
+        while True:
+            sql = f"select id, sett_item_status, async_execution_status, sett_doc_id from sett_item_tr where deleted=0 and id={sett_item_id} limit 1;"
+            sql_result = self.db.query(sql)
+            if not sql_result:
+                raise ValueError(f"结算项对账确认失败: 未找到结算项ID {sett_item_id}")
+            if sql_result[0].get("async_execution_status") != "PROCESSING":
+                break
+            if time.time() - start_time >= timeout:
+                raise TimeoutError(f"等待异步任务执行超时（{timeout}秒）")
+            time.sleep(0.5)
+        
         return sql_result[0]["sett_doc_id"]
         
-        
-        
-        
+    def create_confirmed_settlement_doc(self):
+        """
+        创建已确认结算单公共方法,返回结算单id
+        """
+        api_path = self.get_api_path("SETT-DOC-运营端结算单确认下推应收应付-异步服务")
+        params, url = self.get_api_params(api_path)
+        data = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
+        data = ParamUtil.convert_param_type(data, ["params", "request","id"], "array")
+        data["params"]["request"]["id"][0] = self.create_settlement_doc()
+        result = self.http.post(url, json=data, description=f"结算单确认 - ID: {data['params']['request']['id'][0]}")
+        self.assert_util.assert_response_success(result)
+        #等待异步任务执行完成，当状态为PROCESSING时一直等待，最长超时10秒
+        start_time = time.time()
+        timeout = 10
+        while True:
+            sql = f"select id, sett_doc_status, trading_doc_id from sett_doc_tr where deleted=0 and id={data['params']['request']['id'][0]} limit 1;"
+            sql_result = self.db.query(sql)
+            if not sql_result:
+                raise ValueError(f"结算单确认失败: 未找到结算单ID {data['params']['request']['id'][0]}")
+            if sql_result[0].get("trading_doc_id") is not None:
+                break
+            if time.time() - start_time >= timeout:
+                raise TimeoutError(f"等待异步任务执行超时（{timeout}秒）")
+            time.sleep(0.5)
+        return data["params"]["request"]["id"][0]
+            
         
     @classmethod
     def teardown_class(cls):
