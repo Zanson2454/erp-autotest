@@ -15,7 +15,7 @@ project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
 
 from typing import Any, Dict
-from testcases.comm.base_test import BaseTest,LoginService
+from testcases.comm.base_test_new import BaseTest,LoginService
 # 移除非必要导入，使用父类或utils中的LoginService
 from data_factory.base import DataFactory
 from utils.cache_util import CacheUtil
