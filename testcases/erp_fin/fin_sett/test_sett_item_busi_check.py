@@ -387,13 +387,12 @@ class TestSettItemBusiCheck(FinBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
-        
+     
          
 if __name__ == "__main__":
     # 运行参数化测试的示例
     test = TestSettItemBusiCheck()
     test.setup_class()
-    test.test_sett_item_record()
     #test.test_batch_get_scope(test.BATCH_GET_SCOPE_TEST_CASES[0])
 
         

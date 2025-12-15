@@ -23,3 +23,9 @@ sett_item_info:
     sql: |
      select id,sett_item_type_code,sett_item_type_name  from fin_sett_item_type_cf where deleted=0  and sett_item_type_code='E_SLS_GODS' limit 1;
     description: "查询外部-销售（标准）结算项类型信息"
+#销售发票类型配置
+sb_type_info:
+  sb_type_info:
+    sql: |
+     select id,name,push_aes,auto_push_aes from fin_tm_sb_type_md where deleted=0 and sb_type_code='STND';
+    description: "查询标准销售发票类型信息"
