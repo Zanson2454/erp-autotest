@@ -6,6 +6,13 @@
       "curr_name": "人民币"
     }
   ],
+  "exchange_rate_type_info": [
+    {
+      "exchange_rate_type_id": 2000001,
+      "exchange_rate_type_code": "HR",
+      "exchange_rate_type_name": "固定汇率"
+    }
+  ],
   "country_info": [
     {
       "coun_id": 2000001,
@@ -20,23 +27,16 @@
       "timezone_format": "UTC"
     }
   ],
-  "gen_wc_head_info": [
-    {
-      "gen_wc_head_id": 2000003,
-      "wc_head_code": "ihg",
-      "wc_head_name": "hgv"
-    }
-  ],
   "addr_info": [
     {
       "id": 70028089
     }
   ],
-  "exchange_rate_type_info": [
+  "gen_wc_head_info": [
     {
-      "exchange_rate_type_id": 2000001,
-      "exchange_rate_type_code": "HR",
-      "exchange_rate_type_name": "固定汇率"
+      "gen_wc_head_id": 2000003,
+      "wc_head_code": "ihg",
+      "wc_head_name": "hgv"
     }
   ],
   "uom_info": {

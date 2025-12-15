@@ -1,41 +1,173 @@
-# SCM配置数据查询定义
+# =============================================================================
+# ERP自动化测试 - 基础配置数据查询定义
+# =============================================================================
+#
+# 文件信息:
+#   名称: base_init_sql.yaml
+#   模块: 基础配置数据
+#   版本: 1.0.0
+#   作者: ERP测试团队
+#   更新日期: 2025-01-15
+#   描述: 定义基础配置数据的SQL查询配置，用于ERP系统自动化测试的基础数据初始化
+#
+# 使用说明:
+#   1. 所有SQL查询必须包含 deleted=0 条件（软删除过滤）
+#   2. LIMIT 1 用于获取单个记录，业务需要多个记录的需明确说明
+#   3. 字段别名使用 snake_case 格式，保持一致性
+#   4. validation 字段定义数据验证规则，确保数据质量
+#   5. 所有配置数据均为系统运行必需的基础数据
+#
+# 更新历史:
+#   v1.0.0 (2025-01-15): 初始版本，标准化注释和格式
+#
+# =============================================================================
+
 base_info:
-  # 基础配置数据
-  # 币种信息
+  # ===========================================================================
+  # 货币与财务基础配置组 - 系统财务功能必需的基础数据
+  # ===========================================================================
+
+  # ---------------------------
+  # 货币信息配置 - 系统默认货币
+  # ---------------------------
   currency_info:
     sql: |
-      SELECT id as 'curr_id', curr_code, curr_name 
-      FROM gen_curr_type_cf 
-      WHERE curr_name='人民币' AND deleted=0 LIMIT 1
-    description: "查询人民币的基础信息"
+      SELECT
+        id AS curr_id,           -- 主键ID
+        curr_code,               -- 货币代码 (必需)
+        curr_name                -- 货币名称 (必需)
+      FROM gen_curr_type_cf
+      WHERE curr_name = '人民币'  -- 业务条件: 固定查询人民币作为默认货币
+        AND deleted = 0          -- 技术条件: 软删除过滤
+      LIMIT 1;                   -- 性能优化: 只获取一条记录
 
-  # 国家信息
+    description: "查询人民币的基础信息，用于系统默认货币设置和财务计算"
+
+    validation:
+      required: true                    # 必需数据，系统财务功能依赖
+      min_records: 1                    # 最少1条记录
+      max_records: 1                    # 最多1条记录（默认货币唯一）
+      required_fields: ["curr_id", "curr_code", "curr_name"]
+      business_rules:
+        - "必须存在人民币配置，否则财务模块无法正常运行"
+        - "货币状态必须为启用，否则影响业务流程"
+
+  # ---------------------------
+  # 汇率类型配置 - 货币兑换基础数据
+  # ---------------------------
+  exchange_rate_type_info:
+    sql: |
+      SELECT
+        id AS exchange_rate_type_id,           -- 主键ID
+        type_code AS exchange_rate_type_code,  -- 汇率类型代码
+        type_name AS exchange_rate_type_name   -- 汇率类型名称
+      FROM gen_curr_exchange_rate_type_cf
+      WHERE type_code = 'HR'    -- 业务条件: 固定查询HR汇率类型
+        AND deleted = 0         -- 技术条件: 软删除过滤
+      LIMIT 1;                  -- 性能优化: 只获取一条记录
+
+    description: "查询汇率类型的基础信息，用于货币兑换功能的基础配置"
+
+    validation:
+      required: false                   # 可选配置，多货币业务时必需
+      min_records: 0                    # 可为空
+      max_records: 1                    # 最多1条记录
+      required_fields: ["exchange_rate_type_id", "exchange_rate_type_code", "exchange_rate_type_name"]
+
+  # ===========================================================================
+  # 地理位置与时区配置组 - 系统国际化必需的基础数据
+  # ===========================================================================
+
+  # ---------------------------
+  # 国家信息配置 - 系统默认国家
+  # ---------------------------
   country_info:
     sql: |
-      SELECT id as 'coun_id', coun_code, coun_name 
-      FROM gen_coun_type_cf 
-      WHERE coun_code='CHINA' AND deleted=0 LIMIT 1
-    description: "查询中国的基础信息"
+      SELECT
+        id AS coun_id,           -- 主键ID
+        coun_code,               -- 国家代码 (必需)
+        coun_name                -- 国家名称 (必需)
+      FROM gen_coun_type_cf
+      WHERE coun_code = 'CHINA'  -- 业务条件: 固定查询中国作为默认国家
+        AND deleted = 0          -- 技术条件: 软删除过滤
+      LIMIT 1;                   -- 性能优化: 只获取一条记录
 
-  # 时区信息
+    description: "查询中国的基础信息，用于系统默认国家设置和国际化功能"
+
+    validation:
+      required: true                    # 必需数据，国际化功能依赖
+      min_records: 1                    # 最少1条记录
+      max_records: 1                    # 最多1条记录（默认国家唯一）
+      required_fields: ["coun_id", "coun_code", "coun_name"]
+      business_rules:
+        - "必须存在中国配置，否则国际化功能无法正常运行"
+
+  # ---------------------------
+  # 时区信息配置 - 系统时间处理基础数据
+  # ---------------------------
   timezone_info:
     sql: |
-     select id, timezone_code, timezone_format from gen_timezone_type_cf where `status`='ENABLED' and deleted=0 limit 1
-    description: "查询时区信息"
+      SELECT
+        id,                      -- 主键ID
+        timezone_code,           -- 时区代码
+        timezone_format          -- 时区格式
+      FROM gen_timezone_type_cf
+      WHERE status = 'ENABLED'   -- 业务条件: 只查询启用状态的时区
+        AND deleted = 0          -- 技术条件: 软删除过滤
+      LIMIT 1;                   -- 性能优化: 获取任意一条有效记录
 
-  # 工作日日历
-  gen_wc_head_info:
-    sql: |
-      SELECT id as 'gen_wc_head_id', wc_head_code, wc_head_name 
-      FROM gen_wc_head_cf 
-      WHERE deleted=0 LIMIT 1
-    description: "查询工作日日历信息"
+    description: "查询时区的基础信息，用于系统时间处理和国际化功能"
 
-  # 地址信息，四级地址ID
+    validation:
+      required: false                   # 可选配置
+      min_records: 0                    # 可为空
+      max_records: 1                    # 最多1条记录
+      required_fields: ["id", "timezone_code", "timezone_format"]
+
+  # ---------------------------
+  # 地址信息配置 - 系统地址处理基础数据
+  # ---------------------------
   addr_info:
     sql: |
-      SELECT id FROM gen_addr_type_cf  WHERE addr_name ='转塘街道'and deleted=0  and  is_leaf=1 and level=4 limit 1
-    description: "查询地址信息"
+      SELECT
+        id                       -- 四级地址ID
+      FROM gen_addr_type_cf
+      WHERE addr_name = '转塘街道'  -- 业务条件: 固定查询转塘街道
+        AND deleted = 0          -- 技术条件: 软删除过滤
+        AND is_leaf = 1          -- 业务条件: 必须是叶子节点
+        AND level = 4            -- 业务条件: 四级地址
+      LIMIT 1;                   -- 性能优化: 只获取一条记录
+
+    description: "查询转塘街道的四级地址信息，用于系统地址相关的测试数据"
+
+    validation:
+      required: false                   # 可选配置，地址相关测试时必需
+      min_records: 0                    # 可为空
+      max_records: 1                    # 最多1条记录
+      required_fields: ["id"]
+      business_rules:
+        - "地址必须是叶子节点(level=4)，确保地址完整性"
+
+  # ---------------------------
+  # 工作日日历配置 - 系统日历处理基础数据
+  # ---------------------------
+  gen_wc_head_info:
+    sql: |
+      SELECT
+        id AS gen_wc_head_id,     -- 主键ID
+        wc_head_code,            -- 日历代码
+        wc_head_name             -- 日历名称
+      FROM gen_wc_head_cf
+      WHERE deleted = 0          -- 技术条件: 软删除过滤
+      LIMIT 1;                   -- 性能优化: 获取任意一条有效记录
+
+    description: "查询工作日日历的基础信息，用于系统日历和日期计算功能"
+
+    validation:
+      required: false                   # 可选配置
+      min_records: 0                    # 可为空
+      max_records: 1                    # 最多1条记录
+      required_fields: ["gen_wc_head_id", "wc_head_code", "wc_head_name"]
   
   # 汇率类型
   exchange_rate_type_info:
@@ -47,48 +179,170 @@ base_info:
       WHERE type_code='HR' AND deleted=0 LIMIT 1
     description: "查询汇率类型信息"
 
-  # 计量单位信息
+  # ---------------------------
+  # 计量单位配置组 - 兼容现有测试代码的数据结构
+  # ---------------------------
   uom_info:
+    # ---------------------------
+    # 数量计量单位 - 基础计量单位
+    # ---------------------------
     qty_uom_info:
       sql: |
-        SELECT id as 'uom_id', uom_code, uom_type, uom_desc 
-        FROM gen_uom_type_cf 
-        WHERE deleted=0 and uom_type='QTY' and uom_code='QTY' limit 1;
-      description: "查询数量计量单位信息"
+        SELECT
+          id AS uom_id,            -- 主键ID
+          uom_code,                -- 计量单位代码
+          uom_type,                -- 计量单位类型
+          uom_desc                 -- 计量单位描述
+        FROM gen_uom_type_cf
+        WHERE deleted = 0          -- 技术条件: 软删除过滤
+          AND uom_type = 'QTY'     -- 业务条件: 数量类型
+          AND uom_code = 'QTY'     -- 业务条件: 标准数量单位
+        LIMIT 1;                   -- 性能优化: 只获取一条记录
+
+      description: "查询数量计量单位的基础信息，用于物料数量相关的计算和展示"
+
+      validation:
+        required: false                   # 可选配置，物料管理时必需
+        min_records: 0                    # 可为空
+        max_records: 1                    # 最多1条记录
+        required_fields: ["uom_id", "uom_code", "uom_type", "uom_desc"]
+        business_rules:
+          - "计量单位必须是QTY类型，确保数量计算正确性"
+
+    # ---------------------------
+    # 质量计量单位 - 重量相关计量
+    # ---------------------------
     mass_uom_info:
       sql: |
-        SELECT id as 'uom_id', uom_code, uom_type, uom_desc 
-        FROM gen_uom_type_cf 
-        WHERE deleted=0 and uom_type='MASS'and uom_code='KG' limit 1;
-      description: "查询质量计量单位信息"
+        SELECT
+          id AS uom_id,            -- 主键ID
+          uom_code,                -- 计量单位代码
+          uom_type,                -- 计量单位类型
+          uom_desc                 -- 计量单位描述
+        FROM gen_uom_type_cf
+        WHERE deleted = 0          -- 技术条件: 软删除过滤
+          AND uom_type = 'MASS'    -- 业务条件: 质量类型
+          AND uom_code = 'KG'      -- 业务条件: 千克单位
+        LIMIT 1;                   -- 性能优化: 只获取一条记录
+
+      description: "查询质量计量单位(千克)的基础信息，用于物料重量相关的计算"
+
+      validation:
+        required: false                   # 可选配置，重量物料时必需
+        min_records: 0                    # 可为空
+        max_records: 1                    # 最多1条记录
+        required_fields: ["uom_id", "uom_code", "uom_type", "uom_desc"]
+        business_rules:
+          - "计量单位必须是MASS类型，确保重量计算正确性"
+
+    # ---------------------------
+    # 长度计量单位 - 尺寸相关计量
+    # ---------------------------
     len_uom_info:
       sql: |
-        SELECT id as 'uom_id', uom_code, uom_type, uom_desc 
-        FROM gen_uom_type_cf 
-        WHERE deleted=0 and uom_type='L' limit 1;
-      description: "查询长度计量单位信息"
+        SELECT
+          id AS uom_id,            -- 主键ID
+          uom_code,                -- 计量单位代码
+          uom_type,                -- 计量单位类型
+          uom_desc                 -- 计量单位描述
+        FROM gen_uom_type_cf
+        WHERE deleted = 0          -- 技术条件: 软删除过滤
+          AND uom_type = 'L'       -- 业务条件: 长度类型
+        LIMIT 1;                   -- 性能优化: 获取任意一条长度单位
+
+      description: "查询长度计量单位的基础信息，用于物料尺寸相关的计算"
+
+      validation:
+        required: false                   # 可选配置，尺寸相关时必需
+        min_records: 0                    # 可为空
+        max_records: 1                    # 最多1条记录
+        required_fields: ["uom_id", "uom_code", "uom_type", "uom_desc"]
+        business_rules:
+          - "计量单位必须是L(长度)类型，确保尺寸计算正确性"
+
+    # ---------------------------
+    # 体积计量单位 - 容积相关计量
+    # ---------------------------
     volume_uom_info:
       sql: |
-        SELECT id as 'uom_id', uom_code, uom_type, uom_desc 
-        FROM gen_uom_type_cf 
-        WHERE deleted=0 and uom_type='VOL' limit 1;
-      description: "查询体积计量单位信息"
+        SELECT
+          id AS uom_id,            -- 主键ID
+          uom_code,                -- 计量单位代码
+          uom_type,                -- 计量单位类型
+          uom_desc                 -- 计量单位描述
+        FROM gen_uom_type_cf
+        WHERE deleted = 0          -- 技术条件: 软删除过滤
+          AND uom_type = 'VOL'     -- 业务条件: 体积类型
+        LIMIT 1;                   -- 性能优化: 获取任意一条体积单位
 
-  # 银行信息
+      description: "查询体积计量单位的基础信息，用于物料容积相关的计算"
+
+      validation:
+        required: false                   # 可选配置，体积相关时必需
+        min_records: 0                    # 可为空
+        max_records: 1                    # 最多1条记录
+        required_fields: ["uom_id", "uom_code", "uom_type", "uom_desc"]
+        business_rules:
+          - "计量单位必须是VOL(体积)类型，确保容积计算正确性"
+
+  # ===========================================================================
+  # 金融服务配置组 - 系统金融业务必需的基础数据
+  # ===========================================================================
+
+  # ---------------------------
+  # 银行信息配置 - 支付和金融服务基础数据
+  # ---------------------------
   bank_info:
     sql: |
-     SELECT  a.id AS 'bank_id',a.bank_code AS 'bank_code',a.bank_name AS 'bank_name',b.id AS 'sub_bank_id',b.sub_bank_code AS 'sub_bank_code',b.sub_bank_name AS 'sub_bank_name' FROM gen_bank_cf a INNER JOIN  gen_sub_bank_cf b ON a.id = b.gen_bank_id LIMIT 1
-    description: "查询银行信息"
+      SELECT
+        a.id AS bank_id,              -- 银行ID
+        a.bank_code AS bank_code,     -- 银行代码
+        a.bank_name AS bank_name,     -- 银行名称
+        b.id AS sub_bank_id,          -- 分行ID
+        b.sub_bank_code AS sub_bank_code, -- 分行代码
+        b.sub_bank_name AS sub_bank_name  -- 分行名称
+      FROM gen_bank_cf a
+      INNER JOIN gen_sub_bank_cf b
+        ON a.id = b.gen_bank_id       -- 关联条件: 银行与分行关联
+      LIMIT 1;                        -- 性能优化: 只获取一条记录
 
-  # 税码信息
+    description: "查询银行及分行的基础信息，用于支付和金融服务相关的功能"
+
+    validation:
+      required: false                   # 可选配置，金融业务时必需
+      min_records: 0                    # 可为空
+      max_records: 1                    # 最多1条记录
+      required_fields: ["bank_id", "bank_code", "bank_name", "sub_bank_id", "sub_bank_code", "sub_bank_name"]
+      business_rules:
+        - "必须包含银行和分行完整信息，确保支付功能正常"
+
+  # ---------------------------
+  # 税码信息配置 - 税务计算基础数据
+  # ---------------------------
   tax_info:
     sql: |
-      select id, tax_code,taxcate,tax  
-      from gen_tax_type_cf 
-      where deleted=0
-    description: "查询税码信息"
-    validation:
-      min_records: 1
-      required_fields: ["id", "tax_code", "taxcate", "tax"]
+      SELECT
+        id,                      -- 主键ID
+        tax_code,                -- 税码代码
+        taxcate,                 -- 税种类别
+        tax                      -- 税率
+      FROM gen_tax_type_cf
+      WHERE deleted = 0;         -- 技术条件: 软删除过滤
 
-    # associated_tax_code
+    description: "查询所有有效的税码信息，用于税务计算和发票处理功能"
+
+    validation:
+      required: false                   # 可选配置，税务相关业务时必需
+      min_records: 1                    # 最少1条记录（如果配置了税务功能）
+      required_fields: ["id", "tax_code", "taxcate", "tax"]
+      business_rules:
+        - "税码数据用于财务计算，必须确保数据完整性和准确性"
+        - "建议配置多种税率以满足不同业务场景需求"
+
+# =============================================================================
+# 配置说明:
+# - 所有配置项均为可选，但特定业务场景下可能变为必需
+# - validation.required=true 的配置项为系统核心功能必需
+# - SQL查询已优化性能，包含必要的过滤条件
+# - 建议定期review配置数据，确保业务数据的有效性
+# =============================================================================

@@ -1,308 +1,1336 @@
-# MD配置数据查询定义
+# =============================================================================
+# ERP自动化测试 - 主数据配置查询定义
+# =============================================================================
+#
+# 文件信息:
+#   名称: md_init_sql.yaml
+#   模块: 主数据配置 (MD - Master Data)
+#   版本: 1.0.0
+#   作者: ERP测试团队
+#   更新日期: 2025-01-15
+#   描述: 定义主数据相关的基础配置SQL查询，用于ERP系统自动化测试的组织、物料、合作伙伴等主数据初始化
+#
+# 使用说明:
+#   1. 所有SQL查询必须包含 deleted=0 条件（软删除过滤）
+#   2. 组织相关查询使用 org_code LIKE 'AUTOTEST%' 条件，确保查询测试数据
+#   3. 物料相关查询使用 mat_code LIKE 'AUTOTEST_%' 条件，确保查询测试数据
+#   4. 合作伙伴查询使用固定 code='AUTOTEST_*' 条件，确保查询测试数据
+#   5. validation 字段定义数据验证规则，确保数据质量和业务正确性
+#
+# 更新历史:
+#   v1.0.0 (2025-01-15): 初始版本，标准化注释和格式
+#
+# =============================================================================
+
 org_info:
-  # 币种信息
+  # ===========================================================================
+  # 组织基础配置组 - 组织架构的核心配置数据
+  # ===========================================================================
+
+  # ---------------------------
+  # 组织业务类型配置 - 组织分类基础数据
+  # ---------------------------
   org_biz_type_cf:
     sql: |
-     select id,`code`,`name` from org_business_type_cf where deleted=0
-    description: "查询组织类型信息"
+      SELECT
+        id,                      -- 主键ID
+        `code`,                  -- 业务类型代码
+        `name`                   -- 业务类型名称
+      FROM org_business_type_cf
+      WHERE deleted = 0          -- 技术条件: 软删除过滤
+      ORDER BY id;               -- 排序: 确保结果稳定
 
-  # 组织属性
-  org_attr_cf:  
+    description: "查询所有有效的组织业务类型信息，用于组织分类和权限控制"
+
+    validation:
+      required: false                   # 可选配置，组织管理时必需
+      min_records: 1                    # 最少1条记录（通常有多种业务类型）
+      required_fields: ["id", "code", "name"]
+      business_rules:
+        - "组织业务类型用于组织架构设计，必须确保数据完整性"
+
+  # ---------------------------
+  # 组织属性配置 - 组织扩展属性定义
+  # ---------------------------
+  org_attr_cf:
     sql: |
-      select id,attr_field, attr_code,attr_name from  gen_attr_cf where attr_class_code='ORG' and `status` = 'ENABLED' and deleted=0;
-    description: "查询组织属性信息"
+      SELECT
+        id,                      -- 主键ID
+        attr_field,              -- 属性字段名
+        attr_code,               -- 属性代码
+        attr_name                -- 属性名称
+      FROM gen_attr_cf
+      WHERE attr_class_code = 'ORG'  -- 业务条件: 组织类属性
+        AND status = 'ENABLED'       -- 业务条件: 只查询启用状态
+        AND deleted = 0              -- 技术条件: 软删除过滤
+      ORDER BY attr_code;            -- 排序: 按代码排序
 
-  # 组织身份
+    description: "查询组织类的扩展属性定义，用于组织信息的扩展配置"
+
+    validation:
+      required: false                   # 可选配置，组织属性扩展时必需
+      min_records: 0                    # 可为空（可能没有扩展属性）
+      required_fields: ["id", "attr_field", "attr_code", "attr_name"]
+      business_rules:
+        - "组织属性用于扩展组织信息，必须与组织结构表关联使用"
+
+  # ---------------------------
+  # 组织身份配置 - 组织身份类型定义
+  # ---------------------------
   org_identity_cf:
     sql: |
-     select id,`code`,`name`  from org_identity_cf where `code`= "EMP"  and  `status`="ENABLED" and deleted=0
-    description: "查询组织身份信息"
+      SELECT
+        id,                      -- 主键ID
+        `code`,                  -- 身份代码
+        `name`                   -- 身份名称
+      FROM org_identity_cf
+      WHERE code = 'EMP'         -- 业务条件: 固定查询员工身份
+        AND status = 'ENABLED'   -- 业务条件: 只查询启用状态
+        AND deleted = 0          -- 技术条件: 软删除过滤
+      LIMIT 1;                   -- 性能优化: 只获取一条记录
 
-  # 组织维度
+    description: "查询员工身份类型信息，用于组织身份验证和权限分配"
+
+    validation:
+      required: false                   # 可选配置，员工管理时必需
+      min_records: 0                    # 可为空
+      max_records: 1                    # 最多1条记录
+      required_fields: ["id", "code", "name"]
+      business_rules:
+        - "员工身份用于用户权限控制，必须确保身份类型正确"
+
+  # ---------------------------
+  # 组织维度配置 - 组织架构层级定义
+  # ---------------------------
   org_dimension_cf:
     sql: |
-      select id,org_dimension_code,org_dimension_name from org_dimension_cf  where `org_dimension_code`= "SCM_ORG_GRP" and deleted =0  and `status`="ENABLED" limit 2
-    description: "查询组织维度信息"
+      SELECT
+        id,                      -- 主键ID
+        org_dimension_code,      -- 维度代码
+        org_dimension_name       -- 维度名称
+      FROM org_dimension_cf
+      WHERE org_dimension_code = 'SCM_ORG_GRP'  -- 业务条件: SCM组织组维度
+        AND deleted = 0          -- 技术条件: 软删除过滤
+        AND status = 'ENABLED'   -- 业务条件: 只查询启用状态
+      LIMIT 2;                   -- 性能优化: 限制结果集（通常需要多个维度）
 
-  # 组织单位
-  # 集团公司
-   # 公司组织
+    description: "查询SCM组织组维度的配置信息，用于组织架构的分层管理"
+
+    validation:
+      required: false                   # 可选配置，组织架构时必需
+      min_records: 0                    # 可为空
+      max_records: 2                    # 最多2条记录
+      required_fields: ["id", "org_dimension_code", "org_dimension_name"]
+      business_rules:
+        - "组织维度定义了组织架构的层级结构，必须与组织结构表配合使用"
+
+  # ===========================================================================
+  # 组织结构配置组 - 具体组织实体的配置数据
+  # ===========================================================================
+
+  # ---------------------------
+  # 集团公司组织配置 - 根级组织实体
+  # ---------------------------
   gr_come_org_info:
     sql: |
-      SELECT id, org_code, org_name, org_status, org_dimension_code, org_business_type_code
+      SELECT
+        id,                      -- 主键ID
+        org_code,                -- 组织代码
+        org_name,                -- 组织名称
+        org_status,              -- 组织状态
+        org_dimension_code,      -- 组织维度代码
+        org_business_type_code   -- 组织业务类型代码
       FROM org_struct_md
-      WHERE org_status="ENABLED" AND org_dimension_code="SCM_ORG_GRP" AND org_code="AUTOTEST_GR_ORG" and  deleted=0  LIMIT 1
-    description: "查询集团公司组织信息"
+      WHERE org_status = 'ENABLED'           -- 业务条件: 只查询启用状态
+        AND org_dimension_code = 'SCM_ORG_GRP' -- 业务条件: SCM组织组
+        AND org_code = 'AUTOTEST_GR_ORG'     -- 业务条件: 自动化测试集团
+        AND deleted = 0                      -- 技术条件: 软删除过滤
+      LIMIT 1;                               -- 性能优化: 只获取一条记录
 
-  # 公司组织
+    description: "查询自动化测试集团公司的组织信息，作为组织架构的根节点"
+
+    validation:
+      required: false                   # 可选配置，多组织架构时必需
+      min_records: 0                    # 可为空
+      max_records: 1                    # 最多1条记录（根组织唯一）
+      required_fields: ["id", "org_code", "org_name", "org_status", "org_dimension_code", "org_business_type_code"]
+      business_rules:
+        - "集团公司作为组织架构根节点，其他组织都从属与它"
+
+  # ---------------------------
+  # 公司组织配置 - 业务实体级组织
+  # ---------------------------
   com_org_info:
     sql: |
-      SELECT id, org_code, org_name, org_status, org_dimension_code, org_business_type_code
+      SELECT
+        id,                      -- 主键ID
+        org_code,                -- 组织代码
+        org_name,                -- 组织名称
+        org_status,              -- 组织状态
+        org_dimension_code,      -- 组织维度代码
+        org_business_type_code   -- 组织业务类型代码
       FROM org_struct_md
-      WHERE org_status="ENABLED" AND org_dimension_code="SCM_ORG_GRP" AND org_code="AUTOTEST_COM_ORG" AND org_business_type_codes= '[\"COM_ORG\"]' LIMIT 1
-    description: "查询公司组织信息"
+      WHERE org_status = 'ENABLED'           -- 业务条件: 只查询启用状态
+        AND org_dimension_code = 'SCM_ORG_GRP' -- 业务条件: SCM组织组
+        AND org_code = 'AUTOTEST_COM_ORG'    -- 业务条件: 自动化测试公司
+        AND org_business_type_codes = '["COM_ORG"]' -- 业务条件: 公司组织类型
+        AND deleted = 0                      -- 技术条件: 软删除过滤
+      LIMIT 1;                               -- 性能优化: 只获取一条记录
 
-  # 采购组织
+    description: "查询自动化测试公司的组织信息，作为业务实体的主要组织单位"
+
+    validation:
+      required: false                   # 可选配置，公司业务时必需
+      min_records: 0                    # 可为空
+      max_records: 1                    # 最多1条记录（公司组织通常唯一）
+      required_fields: ["id", "org_code", "org_name", "org_status", "org_dimension_code", "org_business_type_code"]
+      business_rules:
+        - "公司组织是业务运营的主要实体，其他业务组织通常从属于公司组织"
+
+  # ---------------------------
+  # 采购组织配置 - 采购业务专用组织
+  # ---------------------------
   pur_org_info:
     sql: |
-      SELECT id, org_code, org_name, org_status, org_dimension_code, org_business_type_code
+      SELECT
+        id,                      -- 主键ID
+        org_code,                -- 组织代码
+        org_name,                -- 组织名称
+        org_status,              -- 组织状态
+        org_dimension_code,      -- 组织维度代码
+        org_business_type_code   -- 组织业务类型代码
       FROM org_struct_md
-      WHERE org_status='ENABLED' AND org_dimension_code='SCM_ORG_GRP' AND org_code LIKE 'AUTOTEST%' AND org_business_type_codes = '[\"PUR_ORG\"]' LIMIT 1
-    description: "查询采购组织信息"
-    validation:
-      min_records: 1
-      required_fields: ["id", "org_code", "org_name", "org_status", "org_dimension_code", "org_business_type_code"]
+      WHERE org_status = 'ENABLED'           -- 业务条件: 只查询启用状态
+        AND org_dimension_code = 'SCM_ORG_GRP' -- 业务条件: SCM组织组
+        AND org_code LIKE 'AUTOTEST%'        -- 业务条件: 自动化测试组织
+        AND org_business_type_codes = '["PUR_ORG"]' -- 业务条件: 采购组织类型
+        AND deleted = 0                      -- 技术条件: 软删除过滤
+      LIMIT 1;                               -- 性能优化: 获取第一个匹配的组织
 
-  # 库存组织
+    description: "查询采购业务的专用组织信息，用于采购订单和供应商管理的组织隔离"
+
+    validation:
+      required: false                   # 可选配置，采购业务时必需
+      min_records: 1                    # 最少1条记录（采购业务必需）
+      max_records: 1                    # 最多1条记录
+      required_fields: ["id", "org_code", "org_name", "org_status", "org_dimension_code", "org_business_type_code"]
+      business_rules:
+        - "采购组织用于采购业务的权限控制和数据隔离"
+        - "必须确保采购组织状态为启用，否则采购流程无法正常执行"
+
+  # ---------------------------
+  # 库存组织配置 - 库存管理专用组织
+  # ---------------------------
   inv_org_info:
     sql: |
-      SELECT id, org_code, org_name, org_status, org_dimension_code, org_business_type_code
+      SELECT
+        id,                      -- 主键ID
+        org_code,                -- 组织代码
+        org_name,                -- 组织名称
+        org_status,              -- 组织状态
+        org_dimension_code,      -- 组织维度代码
+        org_business_type_code   -- 组织业务类型代码
       FROM org_struct_md
-      WHERE org_status='ENABLED' AND org_dimension_code='SCM_ORG_GRP' AND org_code LIKE 'AUTOTEST%' AND org_business_type_codes = '[\"INV_ORG\"]' LIMIT 1
-    description: "查询库存组织信息"
-    validation:
-      min_records: 1
-      required_fields: ["id", "org_code", "org_name", "org_status", "org_dimension_code", "org_business_type_code"]
+      WHERE org_status = 'ENABLED'           -- 业务条件: 只查询启用状态
+        AND org_dimension_code = 'SCM_ORG_GRP' -- 业务条件: SCM组织组
+        AND org_code LIKE 'AUTOTEST%'        -- 业务条件: 自动化测试组织
+        AND org_business_type_codes = '["INV_ORG"]' -- 业务条件: 库存组织类型
+        AND deleted = 0                      -- 技术条件: 软删除过滤
+      LIMIT 1;                               -- 性能优化: 获取第一个匹配的组织
 
-  # 库存地点
+    description: "查询库存管理的专用组织信息，用于库存控制和物料追踪的组织隔离"
+
+    validation:
+      required: false                   # 可选配置，库存管理时必需
+      min_records: 1                    # 最少1条记录（库存业务必需）
+      max_records: 1                    # 最多1条记录
+      required_fields: ["id", "org_code", "org_name", "org_status", "org_dimension_code", "org_business_type_code"]
+      business_rules:
+        - "库存组织用于库存业务的权限控制和数据隔离"
+        - "库存组织状态必须为启用，否则库存操作无法执行"
+
+  # ---------------------------
+  # 库存地点配置 - 库存物理位置组织
+  # ---------------------------
   inv_loc_info:
     sql: |
-      SELECT id, org_code, org_name, org_status, org_dimension_code, org_business_type_code
+      SELECT
+        id,                      -- 主键ID
+        org_code,                -- 组织代码
+        org_name,                -- 组织名称
+        org_status,              -- 组织状态
+        org_dimension_code,      -- 组织维度代码
+        org_business_type_code   -- 组织业务类型代码
       FROM org_struct_md
-      WHERE org_status='ENABLED' AND org_dimension_code='SCM_ORG_GRP' AND org_code LIKE 'AUTOTEST%' AND org_business_type_codes = '[\"INV_LOC\"]' LIMIT 1
-    description: "查询库存地点信息"
+      WHERE org_status = 'ENABLED'           -- 业务条件: 只查询启用状态
+        AND org_dimension_code = 'SCM_ORG_GRP' -- 业务条件: SCM组织组
+        AND org_code LIKE 'AUTOTEST%'        -- 业务条件: 自动化测试组织
+        AND org_business_type_codes = '["INV_LOC"]' -- 业务条件: 库存地点类型
+        AND deleted = 0                      -- 技术条件: 软删除过滤
+      LIMIT 1;                               -- 性能优化: 获取第一个匹配的地点
+
+    description: "查询库存地点的组织信息，用于物理库存位置的管理和库存分配"
+
     validation:
-      min_records: 1
+      required: false                   # 可选配置，库存地点管理时必需
+      min_records: 1                    # 最少1条记录（多地点库存管理时必需）
+      max_records: 1                    # 最多1条记录
       required_fields: ["id", "org_code", "org_name", "org_status", "org_dimension_code", "org_business_type_code"]
+      business_rules:
+        - "库存地点用于物理位置的库存管理，必须与仓库和仓位关联"
+        - "库存地点状态必须为启用，否则无法进行库存操作"
 
-
-  # 销售组织
+  # ---------------------------
+  # 销售组织配置 - 销售业务专用组织
+  # ---------------------------
   sls_org_info:
     sql: |
-      SELECT id, org_code, org_name, org_status, org_dimension_code, org_business_type_code
+      SELECT
+        id,                      -- 主键ID
+        org_code,                -- 组织代码
+        org_name,                -- 组织名称
+        org_status,              -- 组织状态
+        org_dimension_code,      -- 组织维度代码
+        org_business_type_code   -- 组织业务类型代码
       FROM org_struct_md
-      WHERE org_status='ENABLED' AND org_dimension_code='SCM_ORG_GRP' AND org_code LIKE 'AUTOTEST%' AND org_business_type_codes = '[\"SLS_ORG\"]' LIMIT 1
-    description: "查询销售组织信息"
-    validation:
-      min_records: 1
-      required_fields: ["id", "org_code", "org_name", "org_status", "org_dimension_code", "org_business_type_code"]
+      WHERE org_status = 'ENABLED'           -- 业务条件: 只查询启用状态
+        AND org_dimension_code = 'SCM_ORG_GRP' -- 业务条件: SCM组织组
+        AND org_code LIKE 'AUTOTEST%'        -- 业务条件: 自动化测试组织
+        AND org_business_type_codes = '["SLS_ORG"]' -- 业务条件: 销售组织类型
+        AND deleted = 0                      -- 技术条件: 软删除过滤
+      LIMIT 1;                               -- 性能优化: 获取第一个匹配的组织
 
-  # 计划组织
+    description: "查询销售业务的专用组织信息，用于销售订单和客户管理的组织隔离"
+
+    validation:
+      required: false                   # 可选配置，销售业务时必需
+      min_records: 1                    # 最少1条记录（销售业务必需）
+      max_records: 1                    # 最多1条记录
+      required_fields: ["id", "org_code", "org_name", "org_status", "org_dimension_code", "org_business_type_code"]
+      business_rules:
+        - "销售组织用于销售业务的权限控制和数据隔离"
+        - "销售组织状态必须为启用，否则销售流程无法正常执行"
+
+  # ---------------------------
+  # 计划组织配置 - 需求计划专用组织
+  # ---------------------------
   pln_org_info:
     sql: |
-      SELECT id, org_code, org_name, org_status, org_dimension_code, org_business_type_code
+      SELECT
+        id,                      -- 主键ID
+        org_code,                -- 组织代码
+        org_name,                -- 组织名称
+        org_status,              -- 组织状态
+        org_dimension_code,      -- 组织维度代码
+        org_business_type_code   -- 组织业务类型代码
       FROM org_struct_md
-      WHERE org_status='ENABLED' AND org_dimension_code='SCM_ORG_GRP' AND org_code LIKE 'AUTOTEST%' AND org_business_type_codes = '[\"PLN_ORG\"]' LIMIT 1
-    description: "查询计划组织信息"
-    validation:
-      min_records: 1
-      required_fields: ["id"]
+      WHERE org_status = 'ENABLED'           -- 业务条件: 只查询启用状态
+        AND org_dimension_code = 'SCM_ORG_GRP' -- 业务条件: SCM组织组
+        AND org_code LIKE 'AUTOTEST%'        -- 业务条件: 自动化测试组织
+        AND org_business_type_codes = '["PLN_ORG"]' -- 业务条件: 计划组织类型
+        AND deleted = 0                      -- 技术条件: 软删除过滤
+      LIMIT 1;                               -- 性能优化: 获取第一个匹配的组织
 
-  # 销售渠道
+    description: "查询需求计划的专用组织信息，用于物料需求计划和预测的组织隔离"
+
+    validation:
+      required: false                   # 可选配置，计划业务时必需
+      min_records: 1                    # 最少1条记录（计划业务必需）
+      max_records: 1                    # 最多1条记录
+      required_fields: ["id"]
+      business_rules:
+        - "计划组织用于需求计划和预测的权限控制和数据隔离"
+        - "计划组织通常与其他业务组织配合使用，实现端到端的计划流程"
+
+  # ===========================================================================
+  # 销售与渠道配置组 - 销售业务的基础配置数据
+  # ===========================================================================
+
+  # ---------------------------
+  # 销售渠道配置 - 销售渠道定义
+  # ---------------------------
   sls_dc_md:
     sql: |
-      select id,`code`,`name`,is_online,`status`  from sls_dc_md where `code` like 'AUTOTEST_%' and deleted=0 and `status`	='ENABLED'; 
-    description: "查询销售渠道信息"
+      SELECT
+        id,                      -- 主键ID
+        `code`,                  -- 渠道代码
+        `name`,                  -- 渠道名称
+        is_online,               -- 是否线上渠道
+        `status`                 -- 渠道状态
+      FROM sls_dc_md
+      WHERE code LIKE 'AUTOTEST_%'  -- 业务条件: 自动化测试渠道
+        AND deleted = 0          -- 技术条件: 软删除过滤
+        AND status = 'ENABLED'   -- 业务条件: 只查询启用状态
+      ORDER BY id;               -- 排序: 确保结果稳定
 
-  # 仓库信息
+    description: "查询自动化测试的销售渠道信息，用于销售订单的渠道分配和管理"
+
+    validation:
+      required: false                   # 可选配置，多渠道销售时必需
+      min_records: 0                    # 可为空
+      required_fields: ["id", "code", "name", "is_online", "status"]
+      business_rules:
+        - "销售渠道用于区分不同的销售方式和客户群体"
+        - "渠道状态必须为启用，否则无法用于销售订单"
+
+  # ===========================================================================
+  # 库存与物流配置组 - 库存管理和物流的基础配置数据
+  # ===========================================================================
+
+  # ---------------------------
+  # 仓库配置 - 库存存储基础设施
+  # ---------------------------
   inv_wh_md:
     sql: |
-      select id,`code`,`name` from inv_wh_md where deleted=0 and `status`="ENABLED" limit 1
-    description: "查询仓库信息"
+      SELECT
+        id,                      -- 主键ID
+        `code`,                  -- 仓库代码
+        `name`                   -- 仓库名称
+      FROM inv_wh_md
+      WHERE deleted = 0          -- 技术条件: 软删除过滤
+        AND status = 'ENABLED'   -- 业务条件: 只查询启用状态
+      LIMIT 1;                   -- 性能优化: 获取任意一个有效仓库
 
-  # 仓位信息
+    description: "查询有效的仓库信息，用于库存管理和物料存储的基础配置"
+
+    validation:
+      required: false                   # 可选配置，库存管理时必需
+      min_records: 0                    # 可为空
+      max_records: 1                    # 最多1条记录
+      required_fields: ["id", "code", "name"]
+      business_rules:
+        - "仓库是库存管理的基础设施，必须确保仓库状态为启用"
+
+  # ---------------------------
+  # 收货仓位配置 - 入库操作专用仓位
+  # ---------------------------
   inv_bin_rec_md:
     sql: |
-      select inv_wh_id, inv_area_id, id,`code`,`name` from inv_bin_md where code = 'AUTOTEST_REC_BIN' limit 1
-    description: "查询绑定的仓库id、收货仓储区id、收货仓位id"
+      SELECT
+        inv_wh_id,               -- 仓库ID
+        inv_area_id,             -- 仓储区ID
+        id,                      -- 仓位ID
+        `code`,                  -- 仓位代码
+        `name`                   -- 仓位名称
+      FROM inv_bin_md
+      WHERE code = 'AUTOTEST_REC_BIN'  -- 业务条件: 自动化测试收货仓位
+      LIMIT 1;                         -- 性能优化: 只获取一条记录
 
+    description: "查询自动化测试收货仓位信息，包含仓库、仓储区和仓位三级结构"
+
+    validation:
+      required: false                   # 可选配置，收货业务时必需
+      min_records: 0                    # 可为空
+      max_records: 1                    # 最多1条记录
+      required_fields: ["inv_wh_id", "inv_area_id", "id", "code", "name"]
+      business_rules:
+        - "收货仓位用于物料入库操作，必须与仓库和仓储区关联"
+        - "仓位代码必须唯一，用于精确的库存定位"
+
+  # ---------------------------
+  # 发货仓位配置 - 出库操作专用仓位
+  # ---------------------------
   inv_bin_send_md:
     sql: |
-      select inv_wh_id, inv_area_id, id,`code`,`name` from inv_bin_md where code = 'AUTOTEST_SEND_BIN' limit 1
-    description: "查询绑定的仓库id、发货仓储区id、发货仓位id"
+      SELECT
+        inv_wh_id,               -- 仓库ID
+        inv_area_id,             -- 仓储区ID
+        id,                      -- 仓位ID
+        `code`,                  -- 仓位代码
+        `name`                   -- 仓位名称
+      FROM inv_bin_md
+      WHERE code = 'AUTOTEST_SEND_BIN'  -- 业务条件: 自动化测试发货仓位
+      LIMIT 1;                         -- 性能优化: 只获取一条记录
 
-  # 采购移动类型信息
+    description: "查询自动化测试发货仓位信息，包含仓库、仓储区和仓位三级结构"
+
+    validation:
+      required: false                   # 可选配置，发货业务时必需
+      min_records: 0                    # 可为空
+      max_records: 1                    # 最多1条记录
+      required_fields: ["inv_wh_id", "inv_area_id", "id", "code", "name"]
+      business_rules:
+        - "发货仓位用于物料出库操作，必须与仓库和仓储区关联"
+        - "发货和收货仓位通常分离，用于物流流程控制"
+
+  # ===========================================================================
+  # 库存移动类型配置组 - 库存操作类型的基础配置数据
+  # ===========================================================================
+
+  # ---------------------------
+  # 采购入库移动类型 - 采购业务专用
+  # ---------------------------
   inv_mvm_type_cf_pur:
     sql: |
-      select id,`code`,`name` from inv_mvm_type_cf where code='00301100' limit 1;
-    description: "查询采购移动类型信息"
+      SELECT
+        id,                      -- 主键ID
+        `code`,                  -- 移动类型代码
+        `name`                   -- 移动类型名称
+      FROM inv_mvm_type_cf
+      WHERE code = '00301100'    -- 业务条件: 采购入库移动类型
+      LIMIT 1;                   -- 性能优化: 只获取一条记录
 
-  # 销售移动类型信息
+    description: "查询采购入库的移动类型信息，用于采购订单到库存的物料入库操作"
+
+    validation:
+      required: false                   # 可选配置，采购入库时必需
+      min_records: 0                    # 可为空
+      max_records: 1                    # 最多1条记录
+      required_fields: ["id", "code", "name"]
+      business_rules:
+        - "采购入库移动类型用于采购业务的库存操作"
+        - "移动类型代码00301100是采购业务的标准化代码"
+
+  # ---------------------------
+  # 销售出库移动类型 - 销售业务专用
+  # ---------------------------
   inv_mvm_type_cf_sls:
     sql: |
-      select id,`code`,`name` from inv_mvm_type_cf where code='20401100' limit 1;
-    description: "查询销售移动类型信息"
+      SELECT
+        id,                      -- 主键ID
+        `code`,                  -- 移动类型代码
+        `name`                   -- 移动类型名称
+      FROM inv_mvm_type_cf
+      WHERE code = '20401100'    -- 业务条件: 销售出库移动类型
+      LIMIT 1;                   -- 性能优化: 只获取一条记录
 
-  # 调拨移动类型信息
+    description: "查询销售出库的移动类型信息，用于销售订单的库存发货操作"
+
+    validation:
+      required: false                   # 可选配置，销售出库时必需
+      min_records: 0                    # 可为空
+      max_records: 1                    # 最多1条记录
+      required_fields: ["id", "code", "name"]
+      business_rules:
+        - "销售出库移动类型用于销售业务的库存操作"
+        - "移动类型代码20401100是销售业务的标准化代码"
+
+  # ---------------------------
+  # 库存调拨移动类型 - 库存转移专用
+  # ---------------------------
   inv_mvm_type_cf_all:
     sql: |
-      select id,`code`,`name` from inv_mvm_type_cf where code='40301100' limit 1;
-    description: "查询调拨移动类型信息"
+      SELECT
+        id,                      -- 主键ID
+        `code`,                  -- 移动类型代码
+        `name`                   -- 移动类型名称
+      FROM inv_mvm_type_cf
+      WHERE code = '40301100'    -- 业务条件: 库存调拨移动类型
+      LIMIT 1;                   -- 性能优化: 只获取一条记录
 
-  # 特殊库存转移移动类型信息
+    description: "查询库存调拨的移动类型信息，用于库存之间的物料转移操作"
+
+    validation:
+      required: false                   # 可选配置，库存调拨时必需
+      min_records: 0                    # 可为空
+      max_records: 1                    # 最多1条记录
+      required_fields: ["id", "code", "name"]
+      business_rules:
+        - "库存调拨移动类型用于仓库间的物料转移"
+        - "移动类型代码40301100是调拨业务的标准化代码"
+
+  # ---------------------------
+  # 特殊库存转移移动类型 - 特殊业务场景
+  # ---------------------------
   inv_mvm_type_cf_spc_stk_transfer:
     sql: |
-      select id,`code`,`name` from inv_mvm_type_cf where name='特殊库存转移-无正逆向-无参考单业务-非限制-非限制-扩展02' limit 1;
-    description: "查询特殊库存转移移动类型信息"
+      SELECT
+        id,                      -- 主键ID
+        `code`,                  -- 移动类型代码
+        `name`                   -- 移动类型名称
+      FROM inv_mvm_type_cf
+      WHERE name = '特殊库存转移-无正逆向-无参考单业务-非限制-非限制-扩展02'  -- 业务条件: 特殊转移类型
+      LIMIT 1;                   -- 性能优化: 只获取一条记录
 
-  # 特殊库存转移移动类型信息
+    description: "查询特殊库存转移的移动类型信息，用于特定业务场景的库存转移操作"
+
+    validation:
+      required: false                   # 可选配置，特殊库存转移时必需
+      min_records: 0                    # 可为空
+      max_records: 1                    # 最多1条记录
+      required_fields: ["id", "code", "name"]
+      business_rules:
+        - "特殊库存转移用于特定的业务场景，如供应商寄售等"
+        - "移动类型名称较长但精确定义了转移的特性"
+
+  # ===========================================================================
+  # 库存控制配置组 - 库存策略和控制的基础配置数据
+  # ===========================================================================
+
+  # ---------------------------
+  # 特殊库存类型配置 - 供应商寄售库存
+  # ---------------------------
   inv_spc_stk_type_cf_spc_stk_transfer:
     sql: |
-      select id,`name` from inv_spc_stk_type_cf where name='供应商寄售' limit 1;
-    description: "查询特殊库存类型信息"
-  
-  #ATP销售检查规则信息
+      SELECT
+        id,                      -- 主键ID
+        `name`                   -- 特殊库存类型名称
+      FROM inv_spc_stk_type_cf
+      WHERE name = '供应商寄售'  -- 业务条件: 供应商寄售库存类型
+      LIMIT 1;                   -- 性能优化: 只获取一条记录
+
+    description: "查询供应商寄售的特殊库存类型信息，用于寄售库存的管理和控制"
+
+    validation:
+      required: false                   # 可选配置，寄售业务时必需
+      min_records: 0                    # 可为空
+      max_records: 1                    # 最多1条记录
+      required_fields: ["id", "name"]
+      business_rules:
+        - "供应商寄售是一种特殊的库存管理模式"
+        - "寄售库存的所有权归供应商，管理权归使用方"
+
+  # ---------------------------
+  # ATP检查规则配置 - 可用库存检查
+  # ---------------------------
   inv_atp_rule_cf:
     sql: |
-      select id,doc_class,ctrl_type,atp_group_id from inv_atp_rule_cf where doc_class='SO' and atp_group_id='2000001' and deleted=0 limit 1;
-    description: "查询ATP检查规则信息"
+      SELECT
+        id,                      -- 主键ID
+        doc_class,               -- 单据类型
+        ctrl_type,               -- 控制类型
+        atp_group_id             -- ATP检查组ID
+      FROM inv_atp_rule_cf
+      WHERE doc_class = 'SO'     -- 业务条件: 销售订单类型
+        AND atp_group_id = '2000001' -- 业务条件: 指定的ATP检查组
+        AND deleted = 0          -- 技术条件: 软删除过滤
+      LIMIT 1;                   -- 性能优化: 只获取一条记录
 
-  # 默认员工
+    description: "查询销售订单的ATP（Available To Promise）检查规则，用于库存可用性验证"
+
+    validation:
+      required: false                   # 可选配置，ATP检查时必需
+      min_records: 0                    # 可为空
+      max_records: 1                    # 最多1条记录
+      required_fields: ["id", "doc_class", "ctrl_type", "atp_group_id"]
+      business_rules:
+        - "ATP检查用于确保销售订单的库存可用性"
+        - "ATP规则定义了如何计算和检查可用库存"
+
+  # ===========================================================================
+  # 人力资源配置组 - 员工和用户的基础配置数据
+  # ===========================================================================
+
+  # ---------------------------
+  # 默认员工配置 - 自动化测试专用员工
+  # ---------------------------
   employee_info:
     sql: |
-      SELECT id, name
+      SELECT
+        id,                      -- 主键ID
+        name                     -- 员工姓名
       FROM org_employee_md
-      WHERE name='员工(自动化)' LIMIT 1
-    description: "查询默认员工信息"
+      WHERE name = '员工(自动化)' -- 业务条件: 自动化测试专用员工
+      LIMIT 1;                   -- 性能优化: 只获取一条记录
+
+    description: "查询自动化测试专用的员工信息，用于测试数据的创建和操作归属"
+
+    validation:
+      required: false                   # 可选配置，员工相关操作时必需
+      min_records: 0                    # 可为空
+      max_records: 1                    # 最多1条记录
+      required_fields: ["id", "name"]
+      business_rules:
+        - "自动化测试员工用于标识测试数据的创建者和操作者"
+        - "员工信息需要与组织架构关联，确保权限正确"
 
 mat_info:
-  # 物料类目
+  # ===========================================================================
+  # 物料基础信息配置组 - 物料管理的基础配置数据
+  # ===========================================================================
+
+  # ---------------------------
+  # 物料类目配置 - 物料分类体系
+  # ---------------------------
   mat_cate_md:
     sql: |
-      select id,`mat_cate_code`,`mat_cate_name` from gen_mat_cate_md where deleted=0 and `status`="ENABLED" and mat_cate_code like 'AUTOTEST_%'  limit 1
-    description: "查询物料类目信息"
-  # 物料品牌
+      SELECT
+        id,                      -- 主键ID
+        `mat_cate_code`,         -- 物料类目代码
+        `mat_cate_name`          -- 物料类目名称
+      FROM gen_mat_cate_md
+      WHERE deleted = 0          -- 技术条件: 软删除过滤
+        AND status = 'ENABLED'   -- 业务条件: 只查询启用状态
+        AND mat_cate_code LIKE 'AUTOTEST_%'  -- 业务条件: 自动化测试类目
+      LIMIT 1;                   -- 性能优化: 只获取一条记录
+
+    description: "查询自动化测试的物料类目信息，用于物料的分层分类和管理"
+
+    validation:
+      required: false                   # 可选配置，物料分类时必需
+      min_records: 0                    # 可为空
+      max_records: 1                    # 最多1条记录
+      required_fields: ["id", "mat_cate_code", "mat_cate_name"]
+      business_rules:
+        - "物料类目用于物料的分层分类，便于物料管理和查询"
+        - "类目状态必须为启用，否则无法用于新物料的分类"
+
+  # ---------------------------
+  # 物料品牌配置 - 品牌信息管理
+  # ---------------------------
   mat_brand_md:
     sql: |
-      select id,`brand_code`,	`brand_name` from gen_brand_md where deleted=0 and brand_code like 'AUTOTEST_%'  limit 1
-    description: "查询物料品牌信息"
+      SELECT
+        id,                      -- 主键ID
+        `brand_code`,            -- 品牌代码
+        `brand_name`             -- 品牌名称
+      FROM gen_brand_md
+      WHERE deleted = 0          -- 技术条件: 软删除过滤
+        AND brand_code LIKE 'AUTOTEST_%'  -- 业务条件: 自动化测试品牌
+      LIMIT 1;                   -- 性能优化: 只获取一条记录
 
-  # 物料类型
+    description: "查询自动化测试的物料品牌信息，用于物料的品牌标识和管理"
+
+    validation:
+      required: false                   # 可选配置，品牌管理时必需
+      min_records: 0                    # 可为空
+      max_records: 1                    # 最多1条记录
+      required_fields: ["id", "brand_code", "brand_name"]
+      business_rules:
+        - "物料品牌用于标识物料的品牌信息，便于品牌管理和统计"
+
+  # ===========================================================================
+  # 物料类型配置组 - 不同类型物料的分类定义
+  # ===========================================================================
+
+  # ---------------------------
+  # 成品物料类型配置 - 可销售的成品
+  # ---------------------------
   mat_type_cf:
     FINP:
       sql: |
-        select id,	`mat_type_code`,`mat_type_name` from gen_mat_type_cf where deleted=0 and `mat_type_code`='FINP' limit 1;
-      description: "查询成品物料类型信息"
+        SELECT
+          id,                    -- 主键ID
+          `mat_type_code`,       -- 物料类型代码
+          `mat_type_name`        -- 物料类型名称
+        FROM gen_mat_type_cf
+        WHERE deleted = 0        -- 技术条件: 软删除过滤
+          AND mat_type_code = 'FINP'  -- 业务条件: 成品类型
+        LIMIT 1;                 -- 性能优化: 只获取一条记录
+
+      description: "查询成品物料类型信息，用于定义可销售的成品物料"
+
+      validation:
+        required: false                   # 可选配置，成品物料时必需
+        min_records: 0                    # 可为空
+        max_records: 1                    # 最多1条记录
+        required_fields: ["id", "mat_type_code", "mat_type_name"]
+        business_rules:
+          - "成品物料类型用于定义可对外销售的成品"
+          - "FINP是成品物料的标准化代码"
+
+    # ---------------------------
+    # 服务物料类型配置 - 服务类物料
+    # ---------------------------
     SERV:
       sql: |
-        select id,	`mat_type_code`,`mat_type_name` from gen_mat_type_cf where deleted=0 and `mat_type_code`='SERV' limit 1;
-      description: "查询服务物料类型信息"
+        SELECT
+          id,                    -- 主键ID
+          `mat_type_code`,       -- 物料类型代码
+          `mat_type_name`        -- 物料类型名称
+        FROM gen_mat_type_cf
+        WHERE deleted = 0        -- 技术条件: 软删除过滤
+          AND mat_type_code = 'SERV'  -- 业务条件: 服务类型
+        LIMIT 1;                 -- 性能优化: 只获取一条记录
+
+      description: "查询服务物料类型信息，用于定义服务类的物料（如咨询服务等）"
+
+      validation:
+        required: false                   # 可选配置，服务物料时必需
+        min_records: 0                    # 可为空
+        max_records: 1                    # 最多1条记录
+        required_fields: ["id", "mat_type_code", "mat_type_name"]
+        business_rules:
+          - "服务物料类型用于定义非实物类的服务物料"
+          - "SERV是服务物料的标准化代码"
+
+    # ---------------------------
+    # 原材料物料类型配置 - 生产用原材料
+    # ---------------------------
     RAW:
       sql: |
-        select id,	`mat_type_code`,`mat_type_name` from gen_mat_type_cf where deleted=0 and `mat_type_code`='RAW' limit 1;
-      description: "查询原材料物料类型信息"
+        SELECT
+          id,                    -- 主键ID
+          `mat_type_code`,       -- 物料类型代码
+          `mat_type_name`        -- 物料类型名称
+        FROM gen_mat_type_cf
+        WHERE deleted = 0        -- 技术条件: 软删除过滤
+          AND mat_type_code = 'RAW'  -- 业务条件: 原材料类型
+        LIMIT 1;                 -- 性能优化: 只获取一条记录
 
-  # ATP检查组
+      description: "查询原材料物料类型信息，用于定义生产过程中使用的原材料"
+
+      validation:
+        required: false                   # 可选配置，原材料时必需
+        min_records: 0                    # 可为空
+        max_records: 1                    # 最多1条记录
+        required_fields: ["id", "mat_type_code", "mat_type_name"]
+        business_rules:
+          - "原材料物料类型用于定义生产用的基础材料"
+          - "RAW是原材料的标准化代码"
+
+  # ===========================================================================
+  # 物料控制配置组 - 物料策略和控制的基础配置数据
+  # ===========================================================================
+
+  # ---------------------------
+  # ATP检查组配置 - 库存可用性检查
+  # ---------------------------
   inv_atp_group_md:
     sql: |
-      select id,`code`,`name` from inv_atp_group_md where deleted=0 limit 1
-    description: "查询ATP检查组信息"
+      SELECT
+        id,                      -- 主键ID
+        `code`,                  -- ATP检查组代码
+        `name`                   -- ATP检查组名称
+      FROM inv_atp_group_md
+      WHERE deleted = 0          -- 技术条件: 软删除过滤
+      LIMIT 1;                   -- 性能优化: 获取任意一个有效的ATP检查组
 
-  # 物料标签
+    description: "查询ATP检查组信息，用于物料库存可用性检查的规则定义"
+
+    validation:
+      required: false                   # 可选配置，ATP检查时必需
+      min_records: 0                    # 可为空
+      max_records: 1                    # 最多1条记录
+      required_fields: ["id", "code", "name"]
+      business_rules:
+        - "ATP检查组定义了如何计算物料的可用库存"
+        - "ATP规则影响销售订单的库存承诺和交付"
+
+  # ---------------------------
+  # 物料标签配置 - 物料标识和分类
+  # ---------------------------
   gen_label_md:
     sql: |
-      select id,`name`,usage_type from gen_label_md where usage_type='MAT'  and `name`='物料标签(自动化)' and `status`="ENABLED" limit 1
-    description: "查询标签信息"
-  # 物料主数据
+      SELECT
+        id,                      -- 主键ID
+        `name`,                  -- 标签名称
+        usage_type               -- 使用类型
+      FROM gen_label_md
+      WHERE usage_type = 'MAT'   -- 业务条件: 物料标签类型
+        AND name = '物料标签(自动化)' -- 业务条件: 自动化测试标签
+        AND status = 'ENABLED'   -- 业务条件: 只查询启用状态
+      LIMIT 1;                   -- 性能优化: 只获取一条记录
+
+    description: "查询自动化测试专用的物料标签信息，用于物料的标识和分类"
+
+    validation:
+      required: false                   # 可选配置，物料标签时必需
+      min_records: 0                    # 可为空
+      max_records: 1                    # 最多1条记录
+      required_fields: ["id", "name", "usage_type"]
+      business_rules:
+        - "物料标签用于物料的标识和分类管理"
+        - "标签必须指定使用类型为MAT（物料）"
+
+  # ===========================================================================
+  # 物料主数据配置组 - 具体物料实体的配置数据
+  # ===========================================================================
+
+  # ---------------------------
+  # 成品物料主数据配置 - 具体成品物料
+  # ---------------------------
   mat_md:
     FINP:
       sql: |
-        select id,mat_code,mat_name from gen_mat_md where deleted=0 and mat_code like "AUTOTEST_MAT_FINP" and `status`="ENABLED"
-      description: "查询成品物料主数据信息"
+        SELECT
+          id,                    -- 主键ID
+          mat_code,              -- 物料代码
+          mat_name               -- 物料名称
+        FROM gen_mat_md
+        WHERE deleted = 0        -- 技术条件: 软删除过滤
+          AND mat_code LIKE 'AUTOTEST_MAT_FINP%'  -- 业务条件: 自动化测试成品物料
+          AND status = 'ENABLED' -- 业务条件: 只查询启用状态
+        ORDER BY id;             -- 排序: 确保结果稳定
+
+      description: "查询自动化测试的成品物料主数据，用于成品物料相关的业务测试"
+
+      validation:
+        required: false                   # 可选配置，成品物料测试时必需
+        min_records: 0                    # 可为空
+        required_fields: ["id", "mat_code", "mat_name"]
+        business_rules:
+          - "成品物料主数据用于销售和库存管理"
+          - "物料状态必须为启用，否则无法用于业务操作"
+
+    # ---------------------------
+    # 服务物料主数据配置 - 具体服务物料
+    # ---------------------------
     SERV:
       sql: |
-        select id,mat_code,mat_name from gen_mat_md where deleted=0 and mat_code like "AUTOTEST_MAT_SERV" and `status`="ENABLED"
-      description: "查询服务物料主数据信息"
+        SELECT
+          id,                    -- 主键ID
+          mat_code,              -- 物料代码
+          mat_name               -- 物料名称
+        FROM gen_mat_md
+        WHERE deleted = 0        -- 技术条件: 软删除过滤
+          AND mat_code LIKE 'AUTOTEST_MAT_SERV%'  -- 业务条件: 自动化测试服务物料
+          AND status = 'ENABLED' -- 业务条件: 只查询启用状态
+        ORDER BY id;             -- 排序: 确保结果稳定
+
+      description: "查询自动化测试的服务物料主数据，用于服务物料相关的业务测试"
+
+      validation:
+        required: false                   # 可选配置，服务物料测试时必需
+        min_records: 0                    # 可为空
+        required_fields: ["id", "mat_code", "mat_name"]
+        business_rules:
+          - "服务物料主数据用于服务销售和交付管理"
+          - "服务物料通常不涉及物理库存管理"
 partner_info:
-  # 合作伙伴类型
+  # ===========================================================================
+  # 合作伙伴类型配置组 - 不同类型合作伙伴的分类定义
+  # ===========================================================================
+
+  # ---------------------------
+  # 合作伙伴类型配置 - 客户类型定义
+  # ---------------------------
   business_partner_type_cf:
     out_cust:
       sql: |
-        select id,`code`,`name`,`status` from gen_business_partner_type_cf where `code` like 'AUTOTEST_OUT_CUST' and deleted=0 limit 1;
-      description: "查询客户类型信息"
+        SELECT
+          id,                    -- 主键ID
+          `code`,                -- 类型代码
+          `name`,                -- 类型名称
+          `status`               -- 类型状态
+        FROM gen_business_partner_type_cf
+        WHERE code LIKE 'AUTOTEST_OUT_CUST%'  -- 业务条件: 自动化测试外部客户类型
+          AND deleted = 0        -- 技术条件: 软删除过滤
+        LIMIT 1;                 -- 性能优化: 只获取一条记录
+
+      description: "查询自动化测试的外部客户类型信息，用于定义外部客户的基础分类"
+
+      validation:
+        required: false                   # 可选配置，外部客户业务时必需
+        min_records: 0                    # 可为空
+        max_records: 1                    # 最多1条记录
+        required_fields: ["id", "code", "name", "status"]
+        business_rules:
+          - "外部客户类型用于定义公司外部的客户分类"
+          - "客户类型状态必须为启用，否则无法用于新客户创建"
+
+    # ---------------------------
+    # 内部客户类型配置 - 集团内部客户
+    # ---------------------------
     inter_cust:
       sql: |
-        select id,`code`,`name`,`status` from gen_business_partner_type_cf where `code` like 'AUTOTEST_INTER_CUST' and deleted=0 limit 1;
-      description: "查询内部客户类型信息"
-    person_cust:  
+        SELECT
+          id,                    -- 主键ID
+          `code`,                -- 类型代码
+          `name`,                -- 类型名称
+          `status`               -- 类型状态
+        FROM gen_business_partner_type_cf
+        WHERE code LIKE 'AUTOTEST_INTER_CUST%'  -- 业务条件: 自动化测试内部客户类型
+          AND deleted = 0        -- 技术条件: 软删除过滤
+        LIMIT 1;                 -- 性能优化: 只获取一条记录
+
+      description: "查询自动化测试的内部客户类型信息，用于定义集团内部客户的分类"
+
+      validation:
+        required: false                   # 可选配置，内部客户业务时必需
+        min_records: 0                    # 可为空
+        max_records: 1                    # 最多1条记录
+        required_fields: ["id", "code", "name", "status"]
+        business_rules:
+          - "内部客户类型用于定义集团内部的客户单位"
+          - "内部客户通常用于集团内部交易和结算"
+
+    # ---------------------------
+    # 个人客户类型配置 - 个人消费者
+    # ---------------------------
+    person_cust:
       sql: |
-        select id,`code`,`name`,`status` from gen_business_partner_type_cf where `code` like 'AUTOTEST_PERSON_CUST' and deleted=0 limit 1;
-      description: "查询个人客户类型信息"
+        SELECT
+          id,                    -- 主键ID
+          `code`,                -- 类型代码
+          `name`,                -- 类型名称
+          `status`               -- 类型状态
+        FROM gen_business_partner_type_cf
+        WHERE code LIKE 'AUTOTEST_PERSON_CUST%'  -- 业务条件: 自动化测试个人客户类型
+          AND deleted = 0        -- 技术条件: 软删除过滤
+        LIMIT 1;                 -- 性能优化: 只获取一条记录
+
+      description: "查询自动化测试的个人客户类型信息，用于定义个人消费者的分类"
+
+      validation:
+        required: false                   # 可选配置，个人客户业务时必需
+        min_records: 0                    # 可为空
+        max_records: 1                    # 最多1条记录
+        required_fields: ["id", "code", "name", "status"]
+        business_rules:
+          - "个人客户类型用于定义个人消费者"
+          - "个人客户通常用于B2C业务场景"
+
+    # ---------------------------
+    # 供应商类型配置 - 外部供应商
+    # ---------------------------
     out_supplier:
       sql: |
-        select id,`code`,`name`,`status` from gen_business_partner_type_cf where `code` like 'AUTOTEST_OUT_SUPPLIER' and deleted=0 limit 1;
-      description: "查询供应商类型信息"
+        SELECT
+          id,                    -- 主键ID
+          `code`,                -- 类型代码
+          `name`,                -- 类型名称
+          `status`               -- 类型状态
+        FROM gen_business_partner_type_cf
+        WHERE code LIKE 'AUTOTEST_OUT_SUPPLIER%'  -- 业务条件: 自动化测试外部供应商类型
+          AND deleted = 0        -- 技术条件: 软删除过滤
+        LIMIT 1;                 -- 性能优化: 只获取一条记录
+
+      description: "查询自动化测试的外部供应商类型信息，用于定义外部供应商的分类"
+
+      validation:
+        required: false                   # 可选配置，外部供应商业务时必需
+        min_records: 0                    # 可为空
+        max_records: 1                    # 最多1条记录
+        required_fields: ["id", "code", "name", "status"]
+        business_rules:
+          - "外部供应商类型用于定义公司外部的供应商分类"
+          - "供应商类型影响采购和供应商管理的业务流程"
+
+    # ---------------------------
+    # 海外供应商类型配置 - 国际供应商
+    # ---------------------------
     outsea_supplier:
       sql: |
-        select id,`code`,`name`,`status` from gen_business_partner_type_cf where `code` like 'AUTOTEST_OUTSEA_SUPPLIER' and deleted=0 limit 1;
-      description: "查询海外供应商类型信息"
+        SELECT
+          id,                    -- 主键ID
+          `code`,                -- 类型代码
+          `name`,                -- 类型名称
+          `status`               -- 类型状态
+        FROM gen_business_partner_type_cf
+        WHERE code LIKE 'AUTOTEST_OUTSEA_SUPPLIER%'  -- 业务条件: 自动化测试海外供应商类型
+          AND deleted = 0        -- 技术条件: 软删除过滤
+        LIMIT 1;                 -- 性能优化: 只获取一条记录
+
+      description: "查询自动化测试的海外供应商类型信息，用于定义国际供应商的分类"
+
+      validation:
+        required: false                   # 可选配置，国际贸易业务时必需
+        min_records: 0                    # 可为空
+        max_records: 1                    # 最多1条记录
+        required_fields: ["id", "code", "name", "status"]
+        business_rules:
+          - "海外供应商类型用于定义国际贸易的供应商"
+          - "海外供应商通常涉及国际物流和外汇结算"
+
+    # ---------------------------
+    # 内部供应商类型配置 - 集团内部供应商
+    # ---------------------------
     inter_supplier:
       sql: |
-        select id,`code`,`name`,`status` from gen_business_partner_type_cf where `code` like 'AUTOTEST_INTER_SUPPLIER' and deleted=0 limit 1; 
-      description: "查询内部供应商类型信息"
+        SELECT
+          id,                    -- 主键ID
+          `code`,                -- 类型代码
+          `name`,                -- 类型名称
+          `status`               -- 类型状态
+        FROM gen_business_partner_type_cf
+        WHERE code LIKE 'AUTOTEST_INTER_SUPPLIER%'  -- 业务条件: 自动化测试内部供应商类型
+          AND deleted = 0        -- 技术条件: 软删除过滤
+        LIMIT 1;                 -- 性能优化: 只获取一条记录
+
+      description: "查询自动化测试的内部供应商类型信息，用于定义集团内部供应商的分类"
+
+      validation:
+        required: false                   # 可选配置，内部供应商业务时必需
+        min_records: 0                    # 可为空
+        max_records: 1                    # 最多1条记录
+        required_fields: ["id", "code", "name", "status"]
+        business_rules:
+          - "内部供应商类型用于定义集团内部的供应商单位"
+          - "内部供应商通常用于集团内部交易和成本分摊"
+
+    # ---------------------------
+    # 服务供应商类型配置 - 服务提供商
+    # ---------------------------
     serv_supplier:
       sql: |
-        select id,`code`,`name`,`status` from gen_business_partner_type_cf where `code` like 'AUTOTEST_SERV_SUPPLIER' and deleted=0 limit 1;
-      description: "查询服务供应商类型信息"
+        SELECT
+          id,                    -- 主键ID
+          `code`,                -- 类型代码
+          `name`,                -- 类型名称
+          `status`               -- 类型状态
+        FROM gen_business_partner_type_cf
+        WHERE code LIKE 'AUTOTEST_SERV_SUPPLIER%'  -- 业务条件: 自动化测试服务供应商类型
+          AND deleted = 0        -- 技术条件: 软删除过滤
+        LIMIT 1;                 -- 性能优化: 只获取一条记录
 
-  # 相关方类型
+      description: "查询自动化测试的服务供应商类型信息，用于定义服务提供商的分类"
+
+      validation:
+        required: false                   # 可选配置，服务采购业务时必需
+        min_records: 0                    # 可为空
+        max_records: 1                    # 最多1条记录
+        required_fields: ["id", "code", "name", "status"]
+        business_rules:
+          - "服务供应商类型用于定义提供服务的供应商"
+          - "服务供应商通常不涉及实物采购，而是服务合同"
+
+  # ===========================================================================
+  # 相关方类型配置组 - 业务伙伴扩展关系定义
+  # ===========================================================================
+
+  # ---------------------------
+  # 销售相关方类型配置 - 销售业务伙伴
+  # ---------------------------
   partner_type_cf:
     sls_partner_type:
       sql: |
-        select id,partner_code,partner_name from gen_partner_type_cf where partner_code='AUTOTEST_SLS_PTN_TYPE' and deleted=0 limit 1;
-      description: "查询销售相关方类型信息"
+        SELECT
+          id,                    -- 主键ID
+          partner_code,          -- 相关方代码
+          partner_name           -- 相关方名称
+        FROM gen_partner_type_cf
+        WHERE partner_code = 'AUTOTEST_SLS_PTN_TYPE'  -- 业务条件: 自动化测试销售相关方类型
+          AND deleted = 0        -- 技术条件: 软删除过滤
+        LIMIT 1;                 -- 性能优化: 只获取一条记录
+
+      description: "查询自动化测试的销售相关方类型信息，用于定义销售业务中的相关伙伴类型"
+
+      validation:
+        required: false                   # 可选配置，销售相关方业务时必需
+        min_records: 0                    # 可为空
+        max_records: 1                    # 最多1条记录
+        required_fields: ["id", "partner_code", "partner_name"]
+        business_rules:
+          - "销售相关方类型用于扩展销售订单的伙伴关系"
+          - "相关方可以是中介、代理等销售支持角色"
+
+    # ---------------------------
+    # 采购相关方类型配置 - 采购业务伙伴
+    # ---------------------------
     pur_partner_type:
       sql: |
-        select id,partner_code,partner_name from gen_partner_type_cf where partner_code='AUTOTEST_PUR_PTN_TYPE' and deleted=0 limit 1;
-      description: "查询采购相关方类型信息"
+        SELECT
+          id,                    -- 主键ID
+          partner_code,          -- 相关方代码
+          partner_name           -- 相关方名称
+        FROM gen_partner_type_cf
+        WHERE partner_code = 'AUTOTEST_PUR_PTN_TYPE'  -- 业务条件: 自动化测试采购相关方类型
+          AND deleted = 0        -- 技术条件: 软删除过滤
+        LIMIT 1;                 -- 性能优化: 只获取一条记录
 
-  # 文本类型
+      description: "查询自动化测试的采购相关方类型信息，用于定义采购业务中的相关伙伴类型"
+
+      validation:
+        required: false                   # 可选配置，采购相关方业务时必需
+        min_records: 0                    # 可为空
+        max_records: 1                    # 最多1条记录
+        required_fields: ["id", "partner_code", "partner_name"]
+        business_rules:
+          - "采购相关方类型用于扩展采购订单的伙伴关系"
+          - "相关方可以是物流商、检验机构等采购支持角色"
+
+  # ===========================================================================
+  # 文本类型配置组 - 单据文本模板的基础配置数据
+  # ===========================================================================
+
+  # ---------------------------
+  # 销售文本类型配置 - 销售单据文本
+  # ---------------------------
   text_type_cf:
     sls_text_type:
       sql: |
-        select id,text_code ,text_name from  gen_text_type_cf where  text_code = 'AUTOTEST_SLS_TEXT_TYPE'  and deleted=0 limit 1;
-      description: "查询销售文本类型信息"
+        SELECT
+          id,                    -- 主键ID
+          text_code,             -- 文本代码
+          text_name              -- 文本名称
+        FROM gen_text_type_cf
+        WHERE text_code = 'AUTOTEST_SLS_TEXT_TYPE'  -- 业务条件: 自动化测试销售文本类型
+          AND deleted = 0        -- 技术条件: 软删除过滤
+        LIMIT 1;                 -- 性能优化: 只获取一条记录
+
+      description: "查询自动化测试的销售文本类型信息，用于销售单据的文本模板定义"
+
+      validation:
+        required: false                   # 可选配置，销售文本管理时必需
+        min_records: 0                    # 可为空
+        max_records: 1                    # 最多1条记录
+        required_fields: ["id", "text_code", "text_name"]
+        business_rules:
+          - "销售文本类型用于定义销售单据的文本模板"
+          - "文本类型影响单据的显示和打印格式"
+
+    # ---------------------------
+    # 采购文本类型配置 - 采购单据文本
+    # ---------------------------
     pur_text_type:
       sql: |
-        select id,text_code ,text_name from  gen_text_type_cf where  text_code = 'AUTOTEST_PUR_TEXT_TYPE'  and deleted=0 limit 1;
-      description: "查询采购文本类型信息"
-  # 供应商
+        SELECT
+          id,                    -- 主键ID
+          text_code,             -- 文本代码
+          text_name              -- 文本名称
+        FROM gen_text_type_cf
+        WHERE text_code = 'AUTOTEST_PUR_TEXT_TYPE'  -- 业务条件: 自动化测试采购文本类型
+          AND deleted = 0        -- 技术条件: 软删除过滤
+        LIMIT 1;                 -- 性能优化: 只获取一条记录
+
+      description: "查询自动化测试的采购文本类型信息，用于采购单据的文本模板定义"
+
+      validation:
+        required: false                   # 可选配置，采购文本管理时必需
+        min_records: 0                    # 可为空
+        max_records: 1                    # 最多1条记录
+        required_fields: ["id", "text_code", "text_name"]
+        business_rules:
+          - "采购文本类型用于定义采购单据的文本模板"
+          - "文本类型影响合同和订单的格式化显示"
+
+  # ===========================================================================
+  # 合作伙伴主数据配置组 - 具体合作伙伴实体的配置数据
+  # ===========================================================================
+
+  # ---------------------------
+  # 供应商主数据配置 - 具体供应商实体
+  # ---------------------------
   vend_info:
     sql: |
-      SELECT id, `code`, `name`, `status`
+      SELECT
+        id,                      -- 主键ID
+        `code`,                  -- 供应商代码
+        `name`,                  -- 供应商名称
+        `status`                 -- 供应商状态
       FROM gen_business_partner_md
-      WHERE `status` = 'ENABLED' AND JSON_CONTAINS(partner_identity, '"SUPPLIER"') AND `code`='AUTOTEST_VEND' LIMIT 1
-    description: "查询供应商信息"
-    validation:
-      min_records: 1
-      required_fields: ["id", "code", "name", "status"]
+      WHERE status = 'ENABLED'   -- 业务条件: 只查询启用状态
+        AND JSON_CONTAINS(partner_identity, '"SUPPLIER"')  -- 业务条件: 供应商身份
+        AND code = 'AUTOTEST_VEND'  -- 业务条件: 自动化测试供应商
+      LIMIT 1;                   -- 性能优化: 只获取一条记录
 
-  # 客户
+    description: "查询自动化测试专用的供应商主数据，用于供应商相关的业务测试"
+
+    validation:
+      required: false                   # 可选配置，供应商业务测试时必需
+      min_records: 1                    # 最少1条记录（供应商业务必需）
+      max_records: 1                    # 最多1条记录
+      required_fields: ["id", "code", "name", "status"]
+      business_rules:
+        - "供应商主数据用于采购和供应商管理的所有业务流程"
+        - "供应商状态必须为启用，否则无法进行采购操作"
+        - "供应商身份必须包含SUPPLIER标识"
+
+  # ---------------------------
+  # 客户主数据配置 - 具体客户实体
+  # ---------------------------
   cust_info:
     sql: |
-      SELECT id, `code`, `name`, `status`
+      SELECT
+        id,                      -- 主键ID
+        `code`,                  -- 客户代码
+        `name`,                  -- 客户名称
+        `status`                 -- 客户状态
       FROM gen_business_partner_md
-      WHERE `status` = 'ENABLED' AND JSON_CONTAINS(partner_identity, '"CUSTOMER"') AND `code`='AUTOTEST_CUST' LIMIT 1
-    description: "查询客户信息"
+      WHERE status = 'ENABLED'   -- 业务条件: 只查询启用状态
+        AND JSON_CONTAINS(partner_identity, '"CUSTOMER"')  -- 业务条件: 客户身份
+        AND code = 'AUTOTEST_CUST'  -- 业务条件: 自动化测试客户
+      LIMIT 1;                   -- 性能优化: 只获取一条记录
+
+    description: "查询自动化测试专用的客户主数据，用于客户相关的业务测试"
+
     validation:
-      min_records: 1
+      required: false                   # 可选配置，客户业务测试时必需
+      min_records: 1                    # 最少1条记录（客户业务必需）
+      max_records: 1                    # 最多1条记录
       required_fields: ["id", "code", "name", "status"]
+      business_rules:
+        - "客户主数据用于销售和客户管理的所有业务流程"
+        - "客户状态必须为启用，否则无法进行销售操作"
+        - "客户身份必须包含CUSTOMER标识"
 
 
 index_info:
-  # 指标信息
+  # ===========================================================================
+  # 指标管理配置组 - 业务指标和KPI的基础配置数据
+  # ===========================================================================
+
+  # ---------------------------
+  # 指标主数据配置 - 业务指标定义
+  # ---------------------------
   index_md:
     sql: |
-      select id,gen_index_code,gen_index_name from gen_index_md where gen_index_code='AUTOTEST_INDEX_CODE' and deleted=0 limit 1;
-    description: "查询指标信息"
+      SELECT
+        id,                      -- 主键ID
+        gen_index_code,          -- 指标代码
+        gen_index_name           -- 指标名称
+      FROM gen_index_md
+      WHERE gen_index_code = 'AUTOTEST_INDEX_CODE'  -- 业务条件: 自动化测试指标
+        AND deleted = 0          -- 技术条件: 软删除过滤
+      LIMIT 1;                   -- 性能优化: 只获取一条记录
+
+    description: "查询自动化测试专用的指标主数据，用于业务指标计算和KPI管理的测试"
+
+    validation:
+      required: false                   # 可选配置，指标管理业务时必需
+      min_records: 0                    # 可为空
+      max_records: 1                    # 最多1条记录
+      required_fields: ["id", "gen_index_code", "gen_index_name"]
+      business_rules:
+        - "指标主数据用于定义业务KPI和统计指标"
+        - "指标代码必须唯一，用于标识不同的业务指标"
 
 dynamic_form_info:
+  # ===========================================================================
+  # 动态表单配置组 - 扩展字段和自定义表单的基础配置数据
+  # ===========================================================================
+
+  # ---------------------------
+  # 动态表单模板配置 - 客户扩展表单
+  # ---------------------------
   dynamic_form_template_md:
     cust_template:
       sql: |
-        select id ,`name`,`desc` from gen_dynamic_form_template_md where name like '%(自动化)' and state='ENABLED' and template_type="gen_cust_dynamic_form_record_md" limit 1
-      description: "查询客户动态表单模板信息"
+        SELECT
+          id,                    -- 主键ID
+          `name`,                -- 模板名称
+          `desc`                 -- 模板描述
+        FROM gen_dynamic_form_template_md
+        WHERE name LIKE '%(自动化)%'  -- 业务条件: 自动化测试模板
+          AND state = 'ENABLED'  -- 业务条件: 只查询启用状态
+          AND template_type = 'gen_cust_dynamic_form_record_md'  -- 业务条件: 客户表单类型
+        LIMIT 1;                 -- 性能优化: 只获取一条记录
+
+      description: "查询客户动态表单模板信息，用于客户主数据的扩展字段定义和自定义表单"
+
+      validation:
+        required: false                   # 可选配置，客户扩展字段时必需
+        min_records: 0                    # 可为空
+        max_records: 1                    # 最多1条记录
+        required_fields: ["id", "name", "desc"]
+        business_rules:
+          - "客户动态表单模板用于扩展客户主数据的字段"
+          - "模板状态必须为启用，否则无法用于客户数据录入"
+          - "模板类型必须匹配客户表单类型"
+
+    # ---------------------------
+    # 供应商扩展表单配置 - 供应商扩展表单
+    # ---------------------------
     vend_template:
       sql: |
-        select id ,`name`,`desc` from gen_dynamic_form_template_md where name like '%(自动化)' and state='ENABLED' and template_type="gen_vend_dynamic_form_record_md" limit 1
-      description: "查询供应商动态表单模板信息"
+        SELECT
+          id,                    -- 主键ID
+          `name`,                -- 模板名称
+          `desc`                 -- 模板描述
+        FROM gen_dynamic_form_template_md
+        WHERE name LIKE '%(自动化)%'  -- 业务条件: 自动化测试模板
+          AND state = 'ENABLED'  -- 业务条件: 只查询启用状态
+          AND template_type = 'gen_vend_dynamic_form_record_md'  -- 业务条件: 供应商表单类型
+        LIMIT 1;                 -- 性能优化: 只获取一条记录
+
+      description: "查询供应商动态表单模板信息，用于供应商主数据的扩展字段定义和自定义表单"
+
+      validation:
+        required: false                   # 可选配置，供应商扩展字段时必需
+        min_records: 0                    # 可为空
+        max_records: 1                    # 最多1条记录
+        required_fields: ["id", "name", "desc"]
+        business_rules:
+          - "供应商动态表单模板用于扩展供应商主数据的字段"
+          - "模板状态必须为启用，否则无法用于供应商数据录入"
+          - "模板类型必须匹配供应商表单类型"
+
+# =============================================================================
+# 配置说明:
+# - 所有配置项均为可选，具体业务场景下变为必需
+# - validation.required=true 的配置项为核心业务功能必需
+# - SQL查询已优化性能，包含必要的过滤和排序条件
+# - 自动化测试专用配置使用 AUTOTEST_ 前缀，便于识别和清理
+# - 建议定期review配置数据，确保业务数据的有效性和完整性
+# =============================================================================

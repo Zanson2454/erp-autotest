@@ -15,7 +15,15 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
     def setup_class(cls):
         super().setup_class()
         cls.mat_unit_conversion_id = None
-        cls.uomId = cls.init_data.get("uom_info",{}).get("qty_uom_info",[])[0].get("uom_id")
+
+        # 安全获取计量单位ID，避免IndexError
+        cls.uomId = None
+        uom_info = cls.init_data.get("uom_info", {})
+        if uom_info:
+            qty_uom_info = uom_info.get("qty_uom_info", [])
+            if qty_uom_info and len(qty_uom_info) > 0:
+                cls.uomId = qty_uom_info[0].get("uom_id")
+
         cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
         cls.user_id = cls.init_data["user_info"]['user_info']["id"]
         cls.logger.info("物料单位转换管理测试类初始化完成")
