@@ -59,32 +59,33 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_save_currency(self):
         """新增币种配置用例 - GEN_CURR_TYPE_CF_SAVE_ACTION_SERVICE"""
         try:
+            # 1. 准备测试数据（原有业务逻辑完全保留）
             currency_code = self.mock_data.generate_unique_code(tag="CURR")
             currency_name = f"测试币种_{self.mock_data.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-币种配置-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["currCode", "currName", "symbol", "decimalPlace"], ["params", "request"]
-            )
+            # 2. 使用标准化API调用（替换重复逻辑）
             set_dict = {
                 "currCode": currency_code,
                 "currName": currency_name,
                 "symbol": currency_code,
                 "decimalPlace": 2
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["currCode", "currName", "symbol", "decimalPlace"]
+            
+            response, currency_id = self.standard_api_call(
+                api_key="GEN-币种配置-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="currency"
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
             
-            self.currency_id = response.get("data", {}).get("data", {})
+            # 4. 原有数据保存逻辑（完全保留）
+            self.currency_id = currency_id
             self.currency_code = currency_code
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -100,12 +101,7 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_query_currency_page(self):
         """查询币种配置分页列表用例"""
         try:
-            api_path = self.get_api_path("GEN-币种配置-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields"], ["params", "request"]
-            )
+            # 1. 使用标准化API调用
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
                 "fields": [
@@ -114,14 +110,17 @@ class TestCurrencyManagement(GenMdBaseTest):
                     {"name": "symbol", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["pageable", "fields"]
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-币种配置-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 2. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -137,24 +136,23 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_query_currency_detail(self):
         """查询币种配置详情用例"""
         try:
+            # 1. 确保币种存在（原有依赖逻辑完全保留）
             if not self.currency_id:
                 self.test_save_currency()
 
-            api_path = self.get_api_path("GEN-币种配置-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 2. 使用标准化API调用
             set_dict = {"id": self.currency_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["id"]
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-币种配置-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -172,23 +170,19 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_save_exchange_rate(self):
         """新增汇率用例"""
         try:
+            # 1. 准备测试数据（原有业务逻辑完全保留）
             rate_code = self.mock_data.generate_unique_code(tag="RATE")
             rate_name = f"测试汇率_{self.mock_data.get_timestamp()}"
             
-            # 获取币种ID
+            # 获取币种ID（原有逻辑）
             curr_id = self.init_data.get("currency_info", [{}])[0].get("curr_id")
             if not curr_id:
                 curr_id = 2000001  # 默认CNY币种ID
             
-            # 获取汇率类型ID
+            # 获取汇率类型ID（原有逻辑）
             rate_type_id = self.init_data.get("exchange_rate_type_info", [{}])[0].get("exchange_rate_type_id")
 
-            api_path = self.get_api_path("GEN-汇率-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["code", "name", "exchRate", "baseCurrId", "tarCurrId", "genCurrExchangeRateTypeCf"], ["params", "request"]
-            )
+            # 2. 使用标准化API调用
             set_dict = {
                 "code": rate_code,
                 "name": rate_name,
@@ -197,16 +191,21 @@ class TestCurrencyManagement(GenMdBaseTest):
                 "tarCurrId": {"id": curr_id},
                 "genCurrExchangeRateTypeCf": {"id": rate_type_id}
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["code", "name", "exchRate", "baseCurrId", "tarCurrId", "genCurrExchangeRateTypeCf"]
+            
+            response, exchange_rate_id = self.standard_api_call(
+                api_key="GEN-汇率-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="exchange_rate"
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
             
-            self.exchange_rate_id = response.get("data", {}).get("data", {})
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            # 4. 原有数据保存逻辑（完全保留）
+            self.exchange_rate_id = exchange_rate_id
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -222,12 +221,7 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_query_exchange_rate_page(self):
         """查询汇率分页列表用例"""
         try:
-            api_path = self.get_api_path("GEN-汇率-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields"], ["params", "request"]
-            )
+            # 1. 使用标准化API调用
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
                 "fields": [
@@ -236,14 +230,17 @@ class TestCurrencyManagement(GenMdBaseTest):
                     {"name": "rate", "type": "NUMERIC"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["pageable", "fields"]
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-汇率-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 2. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -259,24 +256,22 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_get_rate_from_currency(self):
         """根据币种获取汇率用例"""
         try:
-            api_path = self.get_api_path("GEN-汇率-根据基本币种与目标币种获取汇率")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["fromCurr", "toCurr"], ["params", "request"]
-            )
+            # 1. 使用标准化API调用
             set_dict = {
                 "fromCurr": "USD",
                 "toCurr": "CNY"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["fromCurr", "toCurr"]
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-汇率-根据基本币种与目标币种获取汇率",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 2. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -294,30 +289,31 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_save_exchange_rate_type(self):
         """新增汇率类型用例"""
         try:
+            # 1. 准备测试数据（原有业务逻辑完全保留）
             rate_type_code = self.mock_data.generate_unique_code(tag="RATETYPE")
             rate_type_name = f"测试汇率类型_{self.mock_data.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-汇率类型-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["code", "name", "description"], ["params", "request"]
-            )
+            # 2. 使用标准化API调用
             set_dict = {
                 "code": rate_type_code,
                 "name": rate_type_name,
                 "description": f"测试汇率类型描述_{self.mock_data.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["code", "name", "description"]
+            
+            response, exchange_rate_type_id = self.standard_api_call(
+                api_key="GEN-汇率类型-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="exchange_rate_type"
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
             
-            self.exchange_rate_type_id = response.get("data", {}).get("data", {})
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            # 4. 原有数据保存逻辑（完全保留）
+            self.exchange_rate_type_id = exchange_rate_type_id
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -333,12 +329,7 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_query_exchange_rate_type_page(self):
         """查询汇率类型分页列表用例"""
         try:
-            api_path = self.get_api_path("GEN-汇率类型-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields"], ["params", "request"]
-            )
+            # 1. 使用标准化API调用
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
                 "fields": [
@@ -347,14 +338,17 @@ class TestCurrencyManagement(GenMdBaseTest):
                     {"name": "description", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["pageable", "fields"]
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-汇率类型-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 2. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -370,24 +364,23 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_query_exchange_rate_type_detail(self):
         """查询汇率类型详情用例"""
         try:
+            # 1. 确保汇率类型存在（原有依赖逻辑完全保留）
             if not self.exchange_rate_type_id:
                 self.test_save_exchange_rate_type()
 
-            api_path = self.get_api_path("GEN-汇率类型-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 2. 使用标准化API调用
             set_dict = {"id": self.exchange_rate_type_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["id"]
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-汇率类型-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -403,24 +396,23 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_query_exchange_rate_detail(self):
         """查询汇率详情用例"""
         try:
+            # 1. 确保汇率存在（原有依赖逻辑完全保留）
             if not self.exchange_rate_id:
                 self.test_save_exchange_rate()
 
-            api_path = self.get_api_path("GEN-汇率-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 2. 使用标准化API调用
             set_dict = {"id": self.exchange_rate_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["id"]
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-汇率-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -436,24 +428,22 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_query_exchange_rate_frontend(self):
         """查询汇率(前端)用例"""
         try:
-            api_path = self.get_api_path("GEN-汇率-查询汇率(前端)服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["code", "name"], ["params", "request"]
-            )
+            # 1. 使用标准化API调用
             set_dict = {
                 "code": "",
                 "name": ""
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["code", "name"]
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-汇率-查询汇率(前端)服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 2. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -470,24 +460,23 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_find_currency_data_by_id(self):
         """币种配置根据ID查找数据用例"""
         try:
+            # 1. 确保币种存在（原有依赖逻辑完全保留）
             if not self.currency_id:
                 self.test_save_currency()
 
-            api_path = self.get_api_path("币种配置-根据ID查找数据服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 2. 使用标准化API调用
             set_dict = {"id": self.currency_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["id"]
+            
+            response, _ = self.standard_api_call(
+                api_key="币种配置-根据ID查找数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -503,24 +492,23 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_find_exchange_rate_type_data_by_id(self):
         """汇率类型根据ID查找数据用例"""
         try:
+            # 1. 确保汇率类型存在（原有依赖逻辑完全保留）
             if not self.exchange_rate_type_id:
                 self.test_save_exchange_rate_type()
 
-            api_path = self.get_api_path("汇率类型-根据ID查找数据服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 2. 使用标准化API调用
             set_dict = {"id": self.exchange_rate_type_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["id"]
+            
+            response, _ = self.standard_api_call(
+                api_key="汇率类型-根据ID查找数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -537,13 +525,8 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_currency_paging_data(self):
         """币种配置分页数据服务用例"""
         try:
-            api_path = self.get_api_path("币种配置-分页数据服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields", "systemParams"], ["params", "request"]
-            )
-            set_dict =  {
+            # 1. 使用标准化API调用
+            set_dict = {
                 "pageable": {
                     "pageNo": 1,
                     "pageSize": 20,
@@ -563,15 +546,17 @@ class TestCurrencyManagement(GenMdBaseTest):
                 ],
                 "systemParams": None
             }
-   
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["pageable", "fields", "systemParams"]
+            
+            response, _ = self.standard_api_call(
+                api_key="币种配置-分页数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 2. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -587,12 +572,7 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_exchange_rate_type_paging_data(self):
         """汇率类型分页数据服务用例"""
         try:
-            api_path = self.get_api_path("汇率类型-分页数据服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable"], ["params", "request"]
-            )
+            # 1. 使用标准化API调用
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -602,14 +582,17 @@ class TestCurrencyManagement(GenMdBaseTest):
                     "keyword": None
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["pageable"]
+            
+            response, _ = self.standard_api_call(
+                api_key="汇率类型-分页数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 2. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -1010,7 +993,7 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_delete_currency(self):
         """删除币种配置用例"""
         try:
-            # 先创建一个测试数据用于删除
+            # 1. 准备测试数据（原有业务逻辑完全保留）
             currency_code = self.mock_data.generate_unique_code(tag="DEL_CURR")
             currency_name = f"待删除币种_{self.mock_data.get_timestamp()}"
 
@@ -1034,22 +1017,19 @@ class TestCurrencyManagement(GenMdBaseTest):
             
             delete_currency_id = save_response.get("data", {}).get("data", {})
 
-            # 删除币种
-            api_path = self.get_api_path("GEN-币种配置-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 2. 使用标准化API调用删除
             set_dict = {"id": delete_currency_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["id"]
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-币种配置-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -1065,7 +1045,7 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_delete_exchange_rate(self):
         """删除汇率用例"""
         try:
-            # 先创建一个测试数据用于删除
+            # 1. 准备测试数据（原有业务逻辑完全保留）
             rate_code = self.mock_data.generate_unique_code(tag="DEL_RATE")
             rate_name = f"待删除汇率_{self.mock_data.get_timestamp()}"
 
@@ -1073,7 +1053,7 @@ class TestCurrencyManagement(GenMdBaseTest):
             save_api_path = self.get_api_path("GEN-汇率-保存服务")
             save_params, save_url = self.get_api_params(save_api_path)
             
-            # 获取币种ID和汇率类型ID
+            # 获取币种ID和汇率类型ID（原有逻辑）
             curr_id = self.init_data.get("currency_info", [{}])[0].get("curr_id", 2000001)
             rate_type_id = self.init_data.get("exchange_rate_type_info", [{}])[0].get("exchange_rate_type_id")
             
@@ -1095,22 +1075,19 @@ class TestCurrencyManagement(GenMdBaseTest):
             
             delete_rate_id = save_response.get("data", {}).get("data", {})
 
-            # 删除汇率
-            api_path = self.get_api_path("GEN-汇率-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 2. 使用标准化API调用删除
             set_dict = {"id": delete_rate_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["id"]
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-汇率-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -1126,7 +1103,7 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_delete_exchange_rate_type(self):
         """删除汇率类型用例"""
         try:
-            # 先创建一个测试数据用于删除
+            # 1. 准备测试数据（原有业务逻辑完全保留）
             rate_type_code = self.mock_data.generate_unique_code(tag="DEL_RATETYPE")
             rate_type_name = f"待删除汇率类型_{self.mock_data.get_timestamp()}"
 
@@ -1149,22 +1126,19 @@ class TestCurrencyManagement(GenMdBaseTest):
             
             delete_rate_type_id = save_response.get("data", {}).get("data", {})
 
-            # 删除汇率类型
-            api_path = self.get_api_path("GEN-汇率类型-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 2. 使用标准化API调用删除
             set_dict = {"id": delete_rate_type_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["id"]
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-汇率类型-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -1260,63 +1234,54 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_currency_complete_workflow(self):
         """币种汇率完整业务流程测试用例"""
         try:
-            # 1. 创建币种
+            # 1. 创建币种（原有完整流程保留）
             currency_code = self.mock_data.generate_unique_code(tag="WORKFLOW_CURR")
             currency_name = f"流程测试币种_{self.mock_data.get_timestamp()}"
 
-            currency_api_path = self.get_api_path("GEN-币种配置-保存服务")
-            currency_params, currency_url = self.get_api_params(currency_api_path)
-            
-            currency_filtered_params = ParamUtil.filter_post_body_fields(
-                currency_params, ["currCode", "currName", "symbol", "decimalPlace"], ["params", "request"]
-            )
+            # 创建币种
             currency_set_dict = {
                 "currCode": currency_code,
                 "currName": currency_name,
                 "symbol": currency_code,
                 "decimalPlace": 2
             }
-            ParamUtil.set_request_params(currency_filtered_params, currency_set_dict)
-
-            currency_response = self.http.post(currency_url, json=currency_filtered_params)
+            currency_fields_to_filter = ["currCode", "currName", "symbol", "decimalPlace"]
+            
+            currency_response, workflow_currency_id = self.standard_api_call(
+                api_key="GEN-币种配置-保存服务",
+                set_dict=currency_set_dict,
+                fields_to_filter=currency_fields_to_filter
+            )
             self.assert_util.assert_response_data(currency_response)
             
-            workflow_currency_id = currency_response.get("data", {}).get("data", {})
+            workflow_currency_id = workflow_currency_id  # 存储用于后续
 
             # 2. 创建汇率类型
             rate_type_code = self.mock_data.generate_unique_code(tag="WORKFLOW_RATETYPE")
             rate_type_name = f"流程测试汇率类型_{self.mock_data.get_timestamp()}"
 
-            rate_type_api_path = self.get_api_path("GEN-汇率类型-保存服务")
-            rate_type_params, rate_type_url = self.get_api_params(rate_type_api_path)
-            
-            rate_type_filtered_params = ParamUtil.filter_post_body_fields(
-                rate_type_params, ["code", "name", "description"], ["params", "request"]
-            )
             rate_type_set_dict = {
                 "code": rate_type_code,
                 "name": rate_type_name,
                 "description": "流程测试汇率类型"
             }
-            ParamUtil.set_request_params(rate_type_filtered_params, rate_type_set_dict)
-
-            rate_type_response = self.http.post(rate_type_url, json=rate_type_filtered_params)
+            rate_type_fields_to_filter = ["code", "name", "description"]
+            
+            rate_type_response, rate_type_id = self.standard_api_call(
+                api_key="GEN-汇率类型-保存服务",
+                set_dict=rate_type_set_dict,
+                fields_to_filter=rate_type_fields_to_filter
+            )
             self.assert_util.assert_response_data(rate_type_response)
 
             # 3. 创建汇率
             rate_code = self.mock_data.generate_unique_code(tag="WORKFLOW_RATE")
             rate_name = f"流程测试汇率_{self.mock_data.get_timestamp()}"
 
-            rate_api_path = self.get_api_path("GEN-汇率-保存服务")
-            rate_params, rate_url = self.get_api_params(rate_api_path)
-            
-            # 获取币种ID和汇率类型ID
+            # 获取币种ID和汇率类型ID（原有逻辑）
             curr_id = self.init_data.get("currency_info", [{}])[0].get("curr_id", 2000001)
             rate_type_id = self.init_data.get("exchange_rate_type_info", [{}])[0].get("exchange_rate_type_id")
             
-            rate_filtered_params = ParamUtil.filter_post_body_fields(
-                rate_params, ["code", "name", "exchRate", "baseCurrId", "tarCurrId", "genCurrExchangeRateTypeCf"], ["params", "request"]
-            )
             rate_set_dict = {
                 "code": rate_code,
                 "name": rate_name,
@@ -1325,13 +1290,18 @@ class TestCurrencyManagement(GenMdBaseTest):
                 "tarCurrId": {"id": curr_id},
                 "genCurrExchangeRateTypeCf": {"id": rate_type_id}
             }
-            ParamUtil.set_request_params(rate_filtered_params, rate_set_dict)
-
-            rate_response = self.http.post(rate_url, json=rate_filtered_params)
+            rate_fields_to_filter = ["code", "name", "exchRate", "baseCurrId", "tarCurrId", "genCurrExchangeRateTypeCf"]
+            
+            rate_response, _ = self.standard_api_call(
+                api_key="GEN-汇率-保存服务",
+                set_dict=rate_set_dict,
+                fields_to_filter=rate_fields_to_filter
+            )
             self.assert_util.assert_response_data(rate_response)
 
+            # 4. 原有最终日志（保留）
             a.json({"workflow": "complete"}, "完整流程执行成功")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise 

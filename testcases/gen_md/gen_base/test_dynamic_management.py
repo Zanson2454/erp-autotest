@@ -48,14 +48,10 @@ class TestDynamicManagement(GenMdBaseTest):
     def test_create_template(self):
         """创建动态表单模板用例 - GEN_DYNAMIC_CREATE_UPDATE_TEMPLATE_SERVICE"""
         try:
+            # 1. 准备测试数据（原有业务逻辑完全保留，包括复杂嵌套结构）
             template_name = f"测试动态表单模板_{self.mock_util.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-动态表单-创建修改动态表单模板服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["code", "name", "templateType", "formConfig", "description"], ["params", "request"]
-            )
+            # 2. 使用标准化API调用（复杂嵌套参数通过 set_dict 传递）
             set_dict = {
                 "desc": template_name,
                 "name": template_name,
@@ -129,20 +125,24 @@ class TestDynamicManagement(GenMdBaseTest):
                             ]
                         }
                     ]    
-                    
                 },
                 "description": f"测试动态表单模板描述_{self.mock_util.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["desc", "name", "templateType", "templateInfo", "description"]
+            
+            response, template_id = self.standard_api_call(
+                api_key="GEN-动态表单-创建修改动态表单模板服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="template"  # 自动存储 self.template_id
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
             
-            self.template_id = response.get("data", {}).get("data", {}).get("id")
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            # 4. 原有数据保存逻辑（完全保留）
+            self.template_id = template_id
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -159,14 +159,10 @@ class TestDynamicManagement(GenMdBaseTest):
     def test_create_dynamic_form_template(self):
         """创建修改动态表单模板用例 - GEN_CREATE_DYNAMIC_FORM_TEMPLATE_SERVICE"""
         try:
+            # 1. 准备测试数据（原有业务逻辑完全保留）
             template_name = f"备用动态表单模板_{self.mock_util.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-创建修改动态表单模板")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["code", "name", "templateConfig", "status"], ["params", "request"]
-            )
+            # 2. 使用标准化API调用（复杂嵌套参数）
             set_dict ={
                 "desc": template_name,
                 "name": template_name,
@@ -240,18 +236,20 @@ class TestDynamicManagement(GenMdBaseTest):
                             ]
                         }
                     ]    
-                    
                 },
                 "description": f"测试动态表单模板描述_{self.mock_util.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["desc", "name", "templateType", "templateInfo", "description"]
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-创建修改动态表单模板",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -267,13 +265,8 @@ class TestDynamicManagement(GenMdBaseTest):
     def test_paging_template(self):
         """分页查询动态表单模板用例 - GEN_DYNAMIC_PAGING_TEMPLATE_SERVICE"""
         try:
-            api_path = self.get_api_path("GEN-动态表单-分页查询动态表单模板服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["templateType", "state", "pageable"], ["params", "request"]
-            )
-            set_dict =  {
+            # 1. 准备分页查询参数（原有逻辑完全保留）
+            set_dict = {
                 "templateType": "gen_cust_dynamic_form_record_md",
                 "state": "ENABLED",
                 "pageable": {
@@ -284,15 +277,18 @@ class TestDynamicManagement(GenMdBaseTest):
                     "keyword": None
                 }
             }
-    
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["templateType", "state", "pageable"]
+            
+            # 2. 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="GEN-动态表单-分页查询动态表单模板服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -308,24 +304,23 @@ class TestDynamicManagement(GenMdBaseTest):
     def test_find_by_id_template(self):
         """根据ID查询动态表单模板用例 - GEN_DYNAMIC_FIND_BY_ID_TEMPLATE_SERVICE"""
         try:
+            # 1. 确保模板存在（原有依赖逻辑完全保留）
             if not self.template_id:
                 self.test_create_template()
 
-            api_path = self.get_api_path("GEN-动态表单-根据id查询动态表单模板服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 2. 使用标准化API调用
             set_dict = {"id": self.template_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["id"]
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-动态表单-根据id查询动态表单模板服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -341,24 +336,23 @@ class TestDynamicManagement(GenMdBaseTest):
     def test_find_by_ids_template(self):
         """根据IDs查询动态表单模板集合用例 - GEN_DYNAMIC_FIND_BY_IDS_TEMPLATE_SERVICE"""
         try:
+            # 1. 确保模板存在（原有依赖逻辑完全保留）
             if not self.template_id:
                 self.test_create_template()
 
-            api_path = self.get_api_path("GEN-动态表单-根据ids查询动态表单模板集合服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ids"], ["params", "request"]
-            )
+            # 2. 使用标准化API调用
             set_dict = {"ids": [self.template_id]}  # 最多查询5个
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["ids"]
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-动态表单-根据ids查询动态表单模板集合服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -374,24 +368,23 @@ class TestDynamicManagement(GenMdBaseTest):
     def test_enable_template(self):
         """启用动态表单模板用例 - GEN_DYNAMIC_ENABLE_TEMPLATE_SERVICE"""
         try:
+            # 1. 确保模板存在（原有依赖逻辑完全保留）
             if not self.template_id:
                 self.test_create_template()
 
-            api_path = self.get_api_path("GEN-动态表单-启用动态表单模板服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 2. 使用标准化API调用
             set_dict = {"id": self.template_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["id"]
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-动态表单-启用动态表单模板服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -407,24 +400,23 @@ class TestDynamicManagement(GenMdBaseTest):
     def test_disable_template(self):
         """禁用动态表单模板用例 - GEN_DYNAMIC_DISABLE_TEMPLATE_SERVICE"""
         try:
+            # 1. 确保模板存在（原有依赖逻辑完全保留）
             if not self.template_id:
                 self.test_enable_template()
 
-            api_path = self.get_api_path("GEN-动态表单-禁用动态表单模板服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 2. 使用标准化API调用
             set_dict = {"id": self.template_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["id"]
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-动态表单-禁用动态表单模板服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -440,24 +432,23 @@ class TestDynamicManagement(GenMdBaseTest):
     def test_delete_template(self):
         """删除动态表单模板用例 - GEN_DYNAMIC_DELETE_TEMPLATE_SERVICE"""
         try:
+            # 1. 确保模板存在（原有依赖逻辑完全保留）
             if not self.template_id:
                 self.test_create_template()
 
-            api_path = self.get_api_path("GEN-动态表单-删除动态表单模板服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 2. 使用标准化API调用
             set_dict = {"id": self.template_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["id"]
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-动态表单-删除动态表单模板服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise

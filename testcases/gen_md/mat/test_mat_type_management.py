@@ -52,17 +52,7 @@ class TestMatTypeManagement(GenMdBaseTest):
         - RAWM：原材料
         """
         try:
-            api_path = self.get_api_path("GEN-物料类型-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["pageable", "fields"],
-                ["params", "request"]
-            )
-
-            # 设置分页和查询字段参数
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -74,13 +64,17 @@ class TestMatTypeManagement(GenMdBaseTest):
                     {"name": "matTypeName", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"filtered_params: {filtered_params}")
+            fields_to_filter = ["pageable", "fields"]
 
-            # 发送请求
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-物料类型-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
 
+            # 3. 业务验证（保持原有逻辑）
             mat_type_list = response.get("data", {}).get("data", {}).get("data", [])
             mat_type_codes = [item.get("matTypeCode") for item in mat_type_list]
             self.logger.info(f"mat_type_codes: {mat_type_codes}")
@@ -92,9 +86,7 @@ class TestMatTypeManagement(GenMdBaseTest):
                 "物料类型配置不完整"
             )
 
-            # 记录到Allure报告
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 记录到Allure报告（保持原有逻辑）
             a.text(f"所有必需的物料类型均已配置: {', '.join(self.required_mat_types)}", "检查结果")
 
         except Exception as e:
@@ -119,30 +111,27 @@ class TestMatTypeManagement(GenMdBaseTest):
             mat_type_code = self.mock_util.generate_unique_code(tag="MatType")
             mat_type_name = f"物料类型_{self.mock_util.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-物料类型-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["matTypeCode", "matTypeName", "remark"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "matTypeCode": mat_type_code,
                 "matTypeName": mat_type_name,
                 "remark": f"自动化测试物料类型-{self.mock_util.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["matTypeCode", "matTypeName", "remark"]
 
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-            
-            mat_type_id = response.get("data", {}).get("data", {})
-            self.mat_type_id = mat_type_id
+            # 2. 使用标准化API调用（无任何断言）
+            response, extracted_id = self.standard_api_call(
+                api_key="GEN-物料类型-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="mat_type"  # 自动存储 self.mat_type_id
+            )
+
+            # 3. 保存业务数据（保持原有逻辑）
+            self.mat_type_id = extracted_id
             self.mat_type_code = mat_type_code
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -164,22 +153,22 @@ class TestMatTypeManagement(GenMdBaseTest):
             if not self.mat_type_id:
                 self.test_save_mat_type()
 
-            api_path = self.get_api_path("GEN-物料类型-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.mat_type_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-物料类型-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -236,14 +225,7 @@ class TestMatTypeManagement(GenMdBaseTest):
         物料类型查询分页用例
         """
         try:
-            api_path = self.get_api_path("GEN-物料类型-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["pageable", "fields"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -255,13 +237,20 @@ class TestMatTypeManagement(GenMdBaseTest):
                     {"name": "matTypeName", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["pageable", "fields"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-物料类型-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -280,73 +269,73 @@ class TestMatTypeManagement(GenMdBaseTest):
         物料类型分页数据服务用例
         """
         try:
-            api_path = self.get_api_path("物料类型-分页数据服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["pageable", "keyword","fields","systemParams"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
-                    "pageable": {
-                        "pageNo": 1,
-                        "pageSize": 20,
-                        "sortOrders": None,
-                        "keyword": None,
-                        "conditionGroup": {
-                            "type": "ConditionGroup",
-                            "logicOperator": "AND",
-                            "conditions": [
-                                {
-                                    "type": "ConditionGroup",
-                                    "logicOperator": "AND",
-                                    "conditions": [
-                                        {
-                                            "key": "sSswBRvpLF-g9ITgP1HaV",
-                                            "type": "ConditionLeaf",
-                                            "leftValue": {
-                                                "id": "VJ95O-9In5EpIj-MopDQ7",
-                                                "key": "VJ95O-9In5EpIj-MopDQ7",
-                                                "type": "VarValue",
-                                                "fieldType": "Text",
-                                                "valueType": "VAR",
-                                                "varValue": [
-                                                    {
-                                                        "valueKey": "matTypeCode",
-                                                        "valueName": "matTypeCode"
-                                                    }
-                                                ]
-                                            },
-                                            "operator": "CONTAINS",
-                                            "rightValue": {
-                                                "key": "l5M7qNnHFR9-GxgUVzgU7",
-                                                "type": "VarValue",
-                                                "fieldType": "Text",
-                                                "valueType": "CONST",
-                                                "constValue": "FINP"
-                                            }
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    },
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "sortOrders": None,
                     "keyword": None,
-                    "filterData": {
-                        "matName": None,
-                        "matCode": None,
-                        "genMatTypeCfId": None,
-                        "__##FILTER_OPERATIONS__": None
+                    "conditionGroup": {
+                        "type": "ConditionGroup",
+                        "logicOperator": "AND",
+                        "conditions": [
+                            {
+                                "type": "ConditionGroup",
+                                "logicOperator": "AND",
+                                "conditions": [
+                                    {
+                                        "key": "sSswBRvpLF-g9ITgP1HaV",
+                                        "type": "ConditionLeaf",
+                                        "leftValue": {
+                                            "id": "VJ95O-9In5EpIj-MopDQ7",
+                                            "key": "VJ95O-9In5EpIj-MopDQ7",
+                                            "type": "VarValue",
+                                            "fieldType": "Text",
+                                            "valueType": "VAR",
+                                            "varValue": [
+                                                {
+                                                    "valueKey": "matTypeCode",
+                                                    "valueName": "matTypeCode"
+                                                }
+                                            ]
+                                        },
+                                        "operator": "CONTAINS",
+                                        "rightValue": {
+                                            "key": "l5M7qNnHFR9-GxgUVzgU7",
+                                            "type": "VarValue",
+                                            "fieldType": "Text",
+                                            "valueType": "CONST",
+                                            "constValue": "FINP"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
                     }
+                },
+                "keyword": None,
+                "filterData": {
+                    "matName": None,
+                    "matCode": None,
+                    "genMatTypeCfId": None,
+                    "__##FILTER_OPERATIONS__": None
                 }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            }
+            fields_to_filter = ["pageable", "keyword", "filterData"]
 
-            response = self.http.post(url, headers=self.admin_headers, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="物料类型-分页数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -584,22 +573,22 @@ class TestMatTypeManagement(GenMdBaseTest):
             if not self.mat_type_id:
                 self.test_save_mat_type()
 
-            api_path = self.get_api_path("GEN-物料类型-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.mat_type_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-物料类型-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")

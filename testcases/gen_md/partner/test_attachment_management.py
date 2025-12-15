@@ -51,14 +51,7 @@ class TestAttachmentManagement(GenMdBaseTest):
             attachment_code = self.mock_util.generate_unique_code(tag="ATT")
             attachment_name = f"附件类型_{self.mock_util.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-附件类型-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["attachmentCode", "attachmentName", "btClass", "desc", "url"],
-                ["params", "request"]
-            )
+            # 调用保存接口
             set_dict = {
                 "attachmentCode": attachment_code,
                 "attachmentName": attachment_name,
@@ -66,16 +59,21 @@ class TestAttachmentManagement(GenMdBaseTest):
                 "desc": f"自动化测试附件类型-{self.mock_util.get_timestamp()}",
                 "url": "https://www.baidu.com",
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["attachmentCode", "attachmentName", "btClass", "desc", "url"]
 
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            # 使用标准化API调用
+            response, extracted_id = self.standard_api_call(
+                api_key="GEN-附件类型-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="attachment_type"
+            )
             
-            self.attachment_type_id = response.get("data", {}).get("data", {})
-
-            a.json(filtered_params, "请求数据")
+            self.assert_util.assert_response_data(response)
+            self.attachment_type_id = extracted_id
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -91,14 +89,7 @@ class TestAttachmentManagement(GenMdBaseTest):
     def test_query_attachment_type_page(self):
         """查询附件类型分页用例"""
         try:
-            api_path = self.get_api_path("GEN-附件类型-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["pageable", "fields","systemParams"],
-                ["params", "request"]
-            )
+            # 调用查询接口
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -113,14 +104,19 @@ class TestAttachmentManagement(GenMdBaseTest):
                 ],
                 "systemParams": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["pageable", "fields","systemParams"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="GEN-附件类型-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -139,23 +135,21 @@ class TestAttachmentManagement(GenMdBaseTest):
             if not self.attachment_type_id:
                 self.test_save_attachment_type()
 
-            api_path = self.get_api_path("GEN-附件类型-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 调用详情查询接口
             set_dict = {"id": self.attachment_type_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="GEN-附件类型-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -174,23 +168,21 @@ class TestAttachmentManagement(GenMdBaseTest):
             if not self.attachment_type_id:
                 self.test_save_attachment_type()
 
-            api_path = self.get_api_path("GEN-附件类型-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 调用删除接口
             set_dict = {"id": self.attachment_type_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="GEN-附件类型-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -259,7 +251,7 @@ class TestAttachmentManagement(GenMdBaseTest):
                     "params": {
                         "request": {
                             "pageable": {
-
+        
                             }
                         },
                         "selectFields": [
@@ -289,13 +281,12 @@ class TestAttachmentManagement(GenMdBaseTest):
                 }
             }
 
-
             response = self.http.post(url, json=params)
             self.assert_util.assert_response_success(response)
 
             a.json(params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -315,14 +306,7 @@ class TestAttachmentManagement(GenMdBaseTest):
             code = self.mock_util.generate_unique_code(tag="ATTG")
             name = f"附件组_{self.mock_util.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-附件组-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["code", "name", "itemList"],
-                ["params", "request"]
-            )
+            # 调用保存接口
             set_dict = {
                 "code": code,
                 "name": name,
@@ -334,18 +318,22 @@ class TestAttachmentManagement(GenMdBaseTest):
                         "isRequired": False
                     }
                 ]
-               
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["code", "name", "itemList"]
 
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            # 使用标准化API调用
+            response, extracted_id = self.standard_api_call(
+                api_key="GEN-附件组-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="attachment_group"
+            )
             
-            self.attachment_group_id = response.get("data", {}).get("data", {})
-
-            a.json(filtered_params, "请求数据")
+            self.assert_util.assert_response_data(response)
+            self.attachment_group_id = extracted_id
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -361,14 +349,7 @@ class TestAttachmentManagement(GenMdBaseTest):
     def test_query_attachment_group_page(self):
         """查询附件组分页用例"""
         try:
-            api_path = self.get_api_path("GEN-附件组-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["pageable", "fields","systemParams"],
-                ["params", "request"]
-            )
+            # 调用查询接口
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -383,14 +364,19 @@ class TestAttachmentManagement(GenMdBaseTest):
                 ],
                 "systemParams": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["pageable", "fields","systemParams"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="GEN-附件组-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -409,23 +395,21 @@ class TestAttachmentManagement(GenMdBaseTest):
             if not self.attachment_group_id:
                 self.test_save_attachment_group()
 
-            api_path = self.get_api_path("GEN-附件组-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 调用详情查询接口
             set_dict = {"id": self.attachment_group_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="GEN-附件组-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -444,23 +428,21 @@ class TestAttachmentManagement(GenMdBaseTest):
             if not self.attachment_group_id:
                 self.test_save_attachment_group()
 
-            api_path = self.get_api_path("GEN-附件组-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 调用删除接口
             set_dict = {"id": self.attachment_group_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="GEN-附件组-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -512,7 +494,7 @@ class TestAttachmentManagement(GenMdBaseTest):
                     "params": {
                         "request": {
                             "pageable": {
-
+        
                             }
                         },
                         "selectFields": [
@@ -539,13 +521,12 @@ class TestAttachmentManagement(GenMdBaseTest):
                 }
             }
 
-
             response = self.http.post(url, json=params)
             self.assert_util.assert_response_success(response)
 
             a.json(params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -585,7 +566,7 @@ class TestAttachmentManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -624,7 +605,7 @@ class TestAttachmentManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -667,7 +648,7 @@ class TestAttachmentManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -706,7 +687,7 @@ class TestAttachmentManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -745,7 +726,7 @@ class TestAttachmentManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -788,7 +769,7 @@ class TestAttachmentManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise 

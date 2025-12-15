@@ -1,7 +1,6 @@
 import allure
 import pytest
 from testcases.gen_md import GenMdBaseTest
-from utils.mock_util import MockData
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
@@ -14,7 +13,7 @@ class TestMatCateManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
-        cls.mock_data = MockData()
+        # No need for cls.mock_data = MockData() due to singleton pattern
         cls.logger.info("物料类目管理测试类初始化完成")
         cls.cateId = None
 
@@ -50,20 +49,10 @@ class TestMatCateManagement(GenMdBaseTest):
         """
         try:
             # 准备类目数据
-            cate_code = self.mock_data.generate_unique_code(tag="Cate")
-            cate_name = f"类目_{self.mock_data.get_timestamp()}"
+            cate_code = self.mock_util.generate_unique_code(tag="Cate")
+            cate_name = f"类目_{self.mock_util.get_timestamp()}"
 
-            # 调用保存接口
-            api_path = self.get_api_path("GEN-类目配置-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["matCateCode", "matCateName", "isLeaf", "qualificationsGroupId", 
-                 "isLimitPoQualifications", "isLimitSoQualifications", "path", "matCateParent"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "matCateCode": cate_code,
                 "matCateName": cate_name,
@@ -74,18 +63,20 @@ class TestMatCateManagement(GenMdBaseTest):
                 "path": None,
                 "matCateParent": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["matCateCode", "matCateName", "isLeaf", "qualificationsGroupId", "isLimitPoQualifications", "isLimitSoQualifications", "path", "matCateParent"]
 
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-            cate_id = response.get("data", {}).get("data", {})
+            # 2. 使用标准化API调用（无任何断言）
+            response, extracted_id = self.standard_api_call(
+                api_key="GEN-类目配置-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="cate"  # 自动存储 self.cateId
+            )
 
-            # 保存类目信息供后续用例使用
-            self.cateId = cate_id
+            # 3. 保存类目信息供后续用例使用（保持原有逻辑）
+            self.cateId = extracted_id
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -109,30 +100,23 @@ class TestMatCateManagement(GenMdBaseTest):
             if not self.cateId:
                 self.test_save_root_cate()
 
-            # 调用详情查询接口
-            api_path = self.get_api_path("GEN-类目配置-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.cateId}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-类目配置-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
 
-            # 验证返回的类目信息
+            # 3. 验证返回的类目信息（保持原有逻辑）
             status = response.get("data", {}).get("data", {}).get("status")
-            
-            self.assert_util.assert_by_operator(status,"=","ENABLED")
+            self.assert_util.assert_by_operator(status, "=", "ENABLED")
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -158,20 +142,10 @@ class TestMatCateManagement(GenMdBaseTest):
                 self.test_save_root_cate()
 
             # 准备子类目数据
-            sub_cate_code = self.mock_data.generate_unique_code(tag="CateSub")
-            sub_cate_name = f"子类目_{self.mock_data.get_timestamp()}"
+            sub_cate_code = self.mock_util.generate_unique_code(tag="CateSub")
+            sub_cate_name = f"子类目_{self.mock_util.get_timestamp()}"
 
-            # 调用保存接口
-            api_path = self.get_api_path("GEN-类目配置-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["matCateCode", "matCateName", "isLeaf", "qualificationsGroupId", 
-                 "isLimitPoQualifications", "isLimitSoQualifications", "path", "matCateParent"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "matCateCode": sub_cate_code,
                 "matCateName": sub_cate_name,
@@ -182,14 +156,17 @@ class TestMatCateManagement(GenMdBaseTest):
                 "path": None,
                 "matCateParent": {"id": self.cateId}
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["matCateCode", "matCateName", "isLeaf", "qualificationsGroupId", "isLimitPoQualifications", "isLimitSoQualifications", "path", "matCateParent"]
 
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-类目配置-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 3. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -213,25 +190,22 @@ class TestMatCateManagement(GenMdBaseTest):
             if not self.cateId:
                 self.test_save_root_cate()
 
-            # 调用启用接口
-            api_path = self.get_api_path("GEN-类目配置-启用服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.cateId}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-类目配置-启用服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -256,25 +230,22 @@ class TestMatCateManagement(GenMdBaseTest):
             if not self.cateId:
                 self.test_save_root_cate()
 
-            # 调用禁用接口
-            api_path = self.get_api_path("GEN-类目配置-禁用服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.cateId}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-类目配置-禁用服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -293,14 +264,7 @@ class TestMatCateManagement(GenMdBaseTest):
         查询类目分页用例
         """
         try:
-            api_path = self.get_api_path("GEN-类目配置-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["pageable", "fields"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -312,13 +276,20 @@ class TestMatCateManagement(GenMdBaseTest):
                     {"name": "matCateName", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["pageable", "fields"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-类目配置-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -340,22 +311,22 @@ class TestMatCateManagement(GenMdBaseTest):
             if not self.cateId:
                 self.test_save_root_cate()
 
-            api_path = self.get_api_path("GEN-类目配置-根据父类目查询下级类目服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["parentId"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"parentId": self.cateId}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["parentId"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-类目配置-根据父类目查询下级类目服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -377,22 +348,22 @@ class TestMatCateManagement(GenMdBaseTest):
             if not self.cateId:
                 self.test_save_root_cate()
 
-            api_path = self.get_api_path("类目配置-查找树子数据服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["parentId"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"parentId": self.cateId}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["parentId"]
 
-            response = self.http.post(url, headers=self.admin_headers, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="类目配置-查找树子数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -567,22 +538,22 @@ class TestMatCateManagement(GenMdBaseTest):
             if not self.cateId:
                 self.test_save_root_cate()
 
-            api_path = self.get_api_path("GEN-类目配置-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.cateId}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-类目配置-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")

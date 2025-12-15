@@ -33,32 +33,29 @@ class TestOrgOther(GenMdBaseTest):
         判断当前登录人是否在当前组织内用例
         """
         try:
-            # 调用判断接口
-            api_path = self.get_api_path("ORG-多组织-当前登陆人是否在当当前组织内服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["orgId", "userId"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "orgId": self.com_org_id,
                 "userId": self.user_id
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["orgId", "userId"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-多组织-当前登陆人是否在当当前组织内服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
             # 验证返回结果是布尔值
             result = response.get("data", {}).get("data")
             self.assert_util.assert_by_operator(result, "in", [True, False])
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -78,16 +75,7 @@ class TestOrgOther(GenMdBaseTest):
         钉钉同步组织架构用例
         """
         try:
-            # 调用钉钉同步接口
-            api_path = self.get_api_path("ORG-组织-钉钉同步组织架构服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["syncConfig", "orgId"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "syncConfig": {
                     "syncType": "FULL",  # 全量同步
@@ -97,15 +85,20 @@ class TestOrgOther(GenMdBaseTest):
                 },
                 "orgId": self.com_org_id
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["syncConfig", "orgId"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织-钉钉同步组织架构服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
             # 钉钉同步可能需要配置，这里只验证接口可访问
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -126,25 +119,23 @@ class TestOrgOther(GenMdBaseTest):
         公司组织预留字段转币种用例
         """
         try:
-            # 调用币种转换接口
-            api_path = self.get_api_path("公司组织预留字段转币种服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["orgId", "fieldName", "fieldValue"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "orgId": self.com_org_id,
                 "fieldName": "def6",  # 通常def6字段用于存储币种ID
                 "fieldValue": "CNY"   # 人民币
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["orgId", "fieldName", "fieldValue"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="公司组织预留字段转币种服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
             # 验证返回的币种信息
@@ -152,8 +143,7 @@ class TestOrgOther(GenMdBaseTest):
             if currency_data:
                 self.assert_util.assert_by_operator(currency_data.get("currCode"), "not_empty")
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")

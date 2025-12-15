@@ -1,7 +1,7 @@
 import allure
 import pytest
 from testcases.gen_md import GenMdBaseTest
-from utils.mock_util import MockData
+from utils.mock_util import MockData  # 保持导入以兼容，但实际使用 self.mock_util
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
@@ -14,7 +14,7 @@ class TestBankSystemManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
-        cls.mock_data = MockData()
+        # MockData 单例自动处理，无需手动创建
         cls.bank_id = None
         cls.bank_code = None
         cls.sub_bank_id = None
@@ -44,39 +44,27 @@ class TestBankSystemManagement(GenMdBaseTest):
     def test_save_bank(self):
         """新增银行用例"""
         try:
-            bank_code = self.mock_data.generate_unique_code(tag="Bank")
-            bank_name = f"银行_{self.mock_data.get_timestamp()}"
+            bank_code = self.mock_util.generate_unique_code(tag="Bank")
+            bank_name = f"银行_{self.mock_util.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-银行配置-保存服务")
-            params, url = self.get_api_params(api_path)
-        
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["bankCode", "bankName","bankMneCode","bankSwiftCode"], ["params", "request"]
-            )
             set_dict = {
                 "bankCode": bank_code, 
                 "bankName": bank_name,
-                "bankMneCode":f"bankMneCode_{self.mock_data.get_timestamp()}",
-                "bankSwiftCode":f"bankSwiftCode_{self.mock_data.get_timestamp()}"
-                }
+                "bankMneCode":f"bankMneCode_{self.mock_util.get_timestamp()}",
+                "bankSwiftCode":f"bankSwiftCode_{self.mock_util.get_timestamp()}"
+            }
             
             self.logger.info(f"set_dict: {set_dict}")
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"filtered_params: {filtered_params},url: {url}")
-            response = self.http.post(url, json=filtered_params)
-            self.logger.info(f"response: {response}")
-            self.assert_util.assert_response_success(response)
-            response_data = response.get("data", {}).get("data")
-            if not response_data:
-                raise ValueError("保存银行失败：响应数据中没有返回bank_id")
-            self.bank_id = response_data
-            self.bank_code = bank_code
-
-            self.logger.info(f"保存银行成功，bank_id: {self.bank_id}, bank_code: {self.bank_code}")
             
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            response, bank_id = self.standard_api_call(
+                api_key="GEN-银行配置-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=["bankCode", "bankName","bankMneCode","bankSwiftCode"],
+                store_id_as="bank"
+            )
+            
+            self.bank_code = bank_code
+            self.logger.info(f"保存银行成功，bank_id: {self.bank_id}, bank_code: {self.bank_code}")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -93,12 +81,6 @@ class TestBankSystemManagement(GenMdBaseTest):
     def test_query_bank_list(self):
         """查询银行列表用例"""
         try:
-            api_path = self.get_api_path("GEN-银行配置-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields", "systemParams"], ["params", "request"]
-            )
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
                 "fields": [
@@ -107,16 +89,16 @@ class TestBankSystemManagement(GenMdBaseTest):
                 ],
                 "systemParams": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-银行配置-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=["pageable", "fields", "systemParams"],
+                store_id_as=None
+            )
+            
             data_list = response.get("data", {}).get("data", {}).get("data", [])
             self.assert_util.assert_by_operator(data_list, "not_empty")
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -136,20 +118,14 @@ class TestBankSystemManagement(GenMdBaseTest):
             if not self.bank_id:
                 self.test_save_bank()
 
-            api_path = self.get_api_path("GEN-银行配置-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.bank_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-银行配置-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -169,20 +145,14 @@ class TestBankSystemManagement(GenMdBaseTest):
             if not self.bank_id:
                 self.test_save_bank()
 
-            api_path = self.get_api_path("GEN-银行配置-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.bank_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-银行配置-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -201,30 +171,23 @@ class TestBankSystemManagement(GenMdBaseTest):
     def test_save_sub_bank(self):
         """新增银行支行用例"""
         try:
-            sub_bank_code = self.mock_data.generate_unique_code(tag="SubBank")
-            sub_bank_name = f"银行支行_{self.mock_data.get_timestamp()}"
+            sub_bank_code = self.mock_util.generate_unique_code(tag="SubBank")
+            sub_bank_name = f"银行支行_{self.mock_util.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-银行支行-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["subBankCode", "subBankName","genBankId"], ["params", "request"]
-            )
             set_dict = {
                 "subBankCode": sub_bank_code, 
                 "subBankName": sub_bank_name,
                 "genBankId": {"id":self.bank_id}
-                }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            }
             
-            self.sub_bank_id = response.get("data", {}).get("data", {})
+            response, sub_bank_id = self.standard_api_call(
+                api_key="GEN-银行支行-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=["subBankCode", "subBankName","genBankId"],
+                store_id_as="sub_bank"
+            )
+            
             self.sub_bank_code = sub_bank_code
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -241,12 +204,6 @@ class TestBankSystemManagement(GenMdBaseTest):
     def test_query_sub_bank_list(self):
         """查询银行支行列表用例"""
         try:
-            api_path = self.get_api_path("GEN-银行支行-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields", "systemParams"], ["params", "request"]
-            )
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
                 "fields": [
@@ -255,16 +212,16 @@ class TestBankSystemManagement(GenMdBaseTest):
                 ],
                 "systemParams": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-银行支行-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=["pageable", "fields", "systemParams"],
+                store_id_as=None
+            )
+            
             data_list = response.get("data", {}).get("data", {}).get("data", [])
             self.assert_util.assert_by_operator(data_list, "not_empty")
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -284,20 +241,14 @@ class TestBankSystemManagement(GenMdBaseTest):
             if not self.sub_bank_id:
                 self.test_save_sub_bank()
 
-            api_path = self.get_api_path("GEN-银行支行-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.sub_bank_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-银行支行-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -317,20 +268,14 @@ class TestBankSystemManagement(GenMdBaseTest):
             if not self.sub_bank_id:
                 self.test_save_sub_bank()
 
-            api_path = self.get_api_path("GEN-银行支行-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.sub_bank_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-银行支行-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -352,20 +297,14 @@ class TestBankSystemManagement(GenMdBaseTest):
             if not self.bank_id:
                 self.test_save_bank()
 
-            api_path = self.get_api_path("银行配置-根据ID查找数据服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.bank_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="银行配置-根据ID查找数据服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -386,20 +325,14 @@ class TestBankSystemManagement(GenMdBaseTest):
             if not self.sub_bank_id:
                 self.test_save_sub_bank()
 
-            api_path = self.get_api_path("银行支行-根据ID查找数据服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.sub_bank_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="银行支行-根据ID查找数据服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -417,12 +350,6 @@ class TestBankSystemManagement(GenMdBaseTest):
     def test_bank_paging_data(self):
         """银行配置分页数据服务用例"""
         try:
-            api_path = self.get_api_path("银行配置-分页数据服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields", "systemParams"], ["params", "request"]
-            )
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -437,13 +364,13 @@ class TestBankSystemManagement(GenMdBaseTest):
                 ],
                 "systemParams": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="银行配置-分页数据服务",
+                set_dict=set_dict,
+                fields_to_filter=["pageable", "fields", "systemParams"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -460,12 +387,6 @@ class TestBankSystemManagement(GenMdBaseTest):
     def test_sub_bank_paging_data(self):
         """银行支行分页数据服务用例"""
         try:
-            api_path = self.get_api_path("银行支行-分页数据服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable"], ["params", "request"]
-            )
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -475,13 +396,13 @@ class TestBankSystemManagement(GenMdBaseTest):
                     "keyword": None
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="银行支行-分页数据服务",
+                set_dict=set_dict,
+                fields_to_filter=["pageable"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -500,27 +421,21 @@ class TestBankSystemManagement(GenMdBaseTest):
     def test_bank_import(self):
         """银行配置标准导入用例"""
         try:
-            api_path = self.get_api_path("银行配置标准导入服务")
-            params, url = self.get_api_params(api_path)
-
             import_data = [
                 {
-                    "bank_code": self.mock_data.generate_unique_code(tag="IMPORT_BANK"),
-                    "bank_name": f"导入测试银行_{self.mock_data.get_timestamp()}"
+                    "bank_code": self.mock_util.generate_unique_code(tag="IMPORT_BANK"),
+                    "bank_name": f"导入测试银行_{self.mock_util.get_timestamp()}"
                 }
             ]
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["data"], ["params", "request"]
-            )
             set_dict = {"data": import_data}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="银行配置标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["data"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -538,25 +453,19 @@ class TestBankSystemManagement(GenMdBaseTest):
     def test_bank_export(self):
         """银行配置标准导出用例"""
         try:
-            api_path = self.get_api_path("银行配置标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["selectFields"], ["params", "request"]
-            )
             set_dict = {
                 "selectFields": [
                     {"name": "bank_code", "type": "TEXT"},
                     {"name": "bank_name", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="银行配置标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["selectFields"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -575,27 +484,21 @@ class TestBankSystemManagement(GenMdBaseTest):
     def test_sub_bank_import(self):
         """银行支行标准导入用例"""
         try:
-            api_path = self.get_api_path("银行支行标准导入服务")
-            params, url = self.get_api_params(api_path)
-
             import_data = [
                 {
-                    "sub_bank_code": self.mock_data.generate_unique_code(tag="IMPORT_SUBBANK"),
-                    "sub_bank_name": f"导入测试银行支行_{self.mock_data.get_timestamp()}"
+                    "sub_bank_code": self.mock_util.generate_unique_code(tag="IMPORT_SUBBANK"),
+                    "sub_bank_name": f"导入测试银行支行_{self.mock_util.get_timestamp()}"
                 }
             ]
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["data"], ["params", "request"]
-            )
             set_dict = {"data": import_data}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="银行支行标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["data"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -613,25 +516,19 @@ class TestBankSystemManagement(GenMdBaseTest):
     def test_sub_bank_export(self):
         """银行支行标准导出用例"""
         try:
-            api_path = self.get_api_path("银行支行标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["selectFields"], ["params", "request"]
-            )
             set_dict = {
                 "selectFields": [
                     {"name": "sub_bank_code", "type": "TEXT"},
                     {"name": "sub_bank_name", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="银行支行标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["selectFields"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -650,23 +547,17 @@ class TestBankSystemManagement(GenMdBaseTest):
     def test_bank_oss_import_task(self):
         """银行配置OSS导入任务用例"""
         try:
-            api_path = self.get_api_path("银行配置-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ossPath", "taskName"], ["params", "request"]
-            )
             set_dict = {
                 "ossPath": "/test/bank_import.xlsx",
-                "taskName": f"银行配置导入任务_{self.mock_data.get_timestamp()}"
+                "taskName": f"银行配置导入任务_{self.mock_util.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="银行配置-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["ossPath", "taskName"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -684,12 +575,6 @@ class TestBankSystemManagement(GenMdBaseTest):
     def test_bank_export_task(self):
         """银行配置导出任务用例"""
         try:
-            api_path = self.get_api_path("银行配置-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["exportConfig", "taskName"], ["params", "request"]
-            )
             set_dict = {
                 "exportConfig": {
                     "fields": [
@@ -698,15 +583,15 @@ class TestBankSystemManagement(GenMdBaseTest):
                     ],
                     "condition": {}
                 },
-                "taskName": f"银行配置导出任务_{self.mock_data.get_timestamp()}"
+                "taskName": f"银行配置导出任务_{self.mock_util.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="银行配置-导入导出任务管理接口-提交导出任务",
+                set_dict=set_dict,
+                fields_to_filter=["exportConfig", "taskName"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -725,23 +610,17 @@ class TestBankSystemManagement(GenMdBaseTest):
     def test_sub_bank_oss_import_task(self):
         """银行支行OSS导入任务用例"""
         try:
-            api_path = self.get_api_path("银行支行-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ossPath", "taskName"], ["params", "request"]
-            )
             set_dict = {
                 "ossPath": "/test/sub_bank_import.xlsx",
-                "taskName": f"银行支行导入任务_{self.mock_data.get_timestamp()}"
+                "taskName": f"银行支行导入任务_{self.mock_util.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="银行支行-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["ossPath", "taskName"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -759,12 +638,6 @@ class TestBankSystemManagement(GenMdBaseTest):
     def test_sub_bank_export_task(self):
         """银行支行导出任务用例"""
         try:
-            api_path = self.get_api_path("银行支行-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["exportConfig", "taskName"], ["params", "request"]
-            )
             set_dict = {
                 "exportConfig": {
                     "fields": [
@@ -773,15 +646,15 @@ class TestBankSystemManagement(GenMdBaseTest):
                     ],
                     "condition": {}
                 },
-                "taskName": f"银行支行导出任务_{self.mock_data.get_timestamp()}"
+                "taskName": f"银行支行导出任务_{self.mock_util.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            
+            response, _ = self.standard_api_call(
+                api_key="银行支行-导入导出任务管理接口-提交导出任务",
+                set_dict=set_dict,
+                fields_to_filter=["exportConfig", "taskName"],
+                store_id_as=None
+            )
 
         except Exception as e:
             a.text(str(e), "失败原因")

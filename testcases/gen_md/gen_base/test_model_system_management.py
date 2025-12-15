@@ -44,32 +44,33 @@ class TestModelSystemManagement(GenMdBaseTest):
     def test_query_model_system_page(self):
         """模型系统分页查询用例 - GEN_MODEL_SYSTEM_PAGING_ACTION_SERVICE"""
         try:
-            api_path = self.get_api_path("模型系统分页查询服务")
-            params, url = self.get_api_params(api_path)
-
-            params['params']={
-                "request": {
-                    "modelKey": "GEN_MD$gen_coun_type_cf",
-                    "pageable": {
-                        "pageNo": "1",
-                        "pageSize": "10"
-                    }
+            # 1. 准备分页查询参数（原有业务逻辑完全保留）
+            set_dict = {
+                "modelKey": "GEN_MD$gen_coun_type_cf",
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 10
                 }
             }
-
-            response = self.http.post(url, json=params)
+            fields_to_filter = ["modelKey", "pageable"]
+            
+            # 2. 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="模型系统分页查询服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 3. 原有断言和数据保存逻辑（完全保留）
             self.assert_util.assert_response_data(response)
-
+            
             # 保存模型系统ID用于后续测试
             data_list = response.get("data", {}).get("data", {}).get("data", []).get("data", [])
             if data_list:
                 self.model_system_id = data_list[0].get("id")
                 # 收集多个ID用于根据ID集合查询测试
                 self.model_system_ids = [item.get("id") for item in data_list[:3] if item.get("id")]
-
-            a.json(params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -85,28 +86,26 @@ class TestModelSystemManagement(GenMdBaseTest):
     def test_query_model_system_by_ids(self):
         """模型根据ID集合查询详情用例 - GEN_MODEL_SYSTEM_QUERY_BY_IDS_ACTION_SERVICE"""
         try:
+            # 1. 确保有ID数据（原有依赖逻辑完全保留）
             if not self.model_system_id:
                 self.test_query_model_system_page()
 
-    
-            api_path = self.get_api_path("模型根据ID集合查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ids","modelKey"], ["params", "request"]
-            )
+            # 2. 使用标准化API调用
             set_dict = {
                 "ids": [self.model_system_id],
                 "modelKey":"GEN_MD$gen_coun_type_cf"
-                }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            }
+            fields_to_filter = ["ids", "modelKey"]
+            
+            response, _ = self.standard_api_call(
+                api_key="模型根据ID集合查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise

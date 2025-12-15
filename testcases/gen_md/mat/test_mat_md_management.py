@@ -124,11 +124,16 @@ class TestStndMatManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             # 3. 发起请求
-            response = self.http.post(url, json=filtered_params)
+            response, extracted_id = self.standard_api_call(
+                api_key="GEN-物料主数据-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=["matCode", "matName", "cateId", "genMatTypeCfId", "baseUomId", "matAbbr", "outerCode", "brandId", "isKitSls", "bomUseId", "isCompleteSetDel", "specModel", "bizStatus", "remark", "customMat", "labelList", "id", "weightUomId", "grossWeight", "netWeight", "volumeUomId", "matVolume", "lengthUnitId", "length", "width", "height", "purchaseReferPrice", "saleReferPrice", "shelfLife", "costPrice", "atpGroupId", "matPurList", "matSlsList", "matInvList", "matWmList"],
+                store_id_as="mat"
+            )
             self.assert_util.assert_response_data(response,"保存失败")
 
-            self.matId = response.get("data",{}).get("data",{})
-            self.logger.info(f"保存成功，物料ID: {TestStndMatManagement.matId}")
+            self.matId = extracted_id
+            self.logger.info(f"保存成功，物料ID: {self.matId}")
 
             # 4. 断言与附件
             a.json(params, "请求数据")
@@ -175,7 +180,12 @@ class TestStndMatManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             self.logger.info(f"请求参数: {filtered_params}")
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-物料主数据-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=["cateId", "pageable"],
+                store_id_as=None
+            )
             self.assert_util.assert_response_data(response)
 
             # 验证返回的数据列表
@@ -220,7 +230,12 @@ class TestStndMatManagement(GenMdBaseTest):
             self.logger.info(f"详情请求参数: {filtered_params}")
 
             # 发起请求
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-物料主数据-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
             status = response.get("data",{}).get("data",{}).get("status",{})
             self.assert_util.assert_response_data(response, "详情查询失败")
             self.assert_util.assert_by_operator(status, "=", "INACTIVE")
@@ -229,44 +244,6 @@ class TestStndMatManagement(GenMdBaseTest):
             a.json(filtered_params, "详情请求数据")
             a.json(response, "详情响应数据")
             a.text(f"物料详情查询成功", "在库状态")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
-
-    @case_decorator(
-        story="标准物料管理",
-        title="测试根据ID查找物料数据",
-        description="验证根据ID查找物料数据服务",
-        severity="normal",
-        file_level_order=4,
-        tags=["标准物料管理", "查找", "ID"]
-    )
-    @pytest.mark.skip(reason="业务未引用，暂时跳过")
-    def test_find_mat_by_id(self):
-        """
-        根据ID查找物料数据用例
-        """
-        try:
-            if not self.matId:
-                self.test_save_mat()
-
-            api_path = self.get_api_path("物料主数据-根据ID查找数据服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
-            set_dict = {"id": self.matId}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -299,7 +276,12 @@ class TestStndMatManagement(GenMdBaseTest):
             set_dict = {"id": self.matId}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-物料主数据-启用服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -336,7 +318,12 @@ class TestStndMatManagement(GenMdBaseTest):
             set_dict = {"id": self.matId}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-物料主数据-禁用服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -409,7 +396,12 @@ class TestStndMatManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-物料主数据-批量打标服务",
+                set_dict=set_dict,
+                fields_to_filter=["mat_ids", "label_list"],
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -449,7 +441,12 @@ class TestStndMatManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-物料主数据-批量取消打标服务",
+                set_dict=set_dict,
+                fields_to_filter=["mat_ids", "label_list"],
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -773,7 +770,12 @@ class TestStndMatManagement(GenMdBaseTest):
             }}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, headers=self.admin_headers, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="物料主数据-分页数据服务",
+                set_dict=set_dict,
+                fields_to_filter=["pageNo", "pageSize"],
+                store_id_as=None
+            )
             self.assert_util.assert_response_data(response)
 
             a.json(filtered_params, "请求数据")
@@ -810,7 +812,12 @@ class TestStndMatManagement(GenMdBaseTest):
             set_dict = {"id": self.matId}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-物料主数据-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")

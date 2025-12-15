@@ -164,8 +164,6 @@ class TestSalesOrderOperator(SlsBase):
         data = {
             "sceneKey": "SCM_SLS$sls_so_730",
             "viewKey": "SCM_SLS$sls_so_730:detail",
-            "appId": 0,
-            "teamId": 22,
             "serviceKey": "SCM_SLS$SLS_SO_QUERY_DETAIL_EVENT_SERVICE",
             "params": {
                 "request": {
@@ -203,8 +201,6 @@ class TestSalesOrderOperator(SlsBase):
         request_data = {
             "sceneKey": "SCM_SLS$sls_so_730",
             "viewKey": "SCM_SLS$sls_so_730:edit",
-            "appId": 0,
-            "teamId": 22,
             "serviceKey": "SCM_SLS$SLS_SO_QUERY_DETAIL_EVENT_SERVICE",
             "params": {
                 "request": {
@@ -214,7 +210,7 @@ class TestSalesOrderOperator(SlsBase):
         }
         
         # 编辑订单 - 使用配置文件中的API
-        api_info = self.apis["销售订单详情查询服务"]
+        api_info = self.apis["销售订单页面完整查询"]
         url = api_info["path"] if isinstance(api_info, dict) else api_info
         data = request_data
         
@@ -248,7 +244,7 @@ class TestSalesOrderOperator(SlsBase):
         }
         
         # 发送请求 - 使用保存服务
-        api_info = self.apis["销售订单保存服务"]
+        api_info = self.apis["SLS-销售订单-保存服务"]
         url = api_info["path"] if isinstance(api_info, dict) else api_info
         
         # 构造请求数据，按照curl命令的格式
@@ -258,8 +254,6 @@ class TestSalesOrderOperator(SlsBase):
             "viewTitle": "edit",
             "buttonKey": "SCM_SLS$sls_so_730-TERP_MIGRATE$sls_so-editView-footer-save",
             "buttonName": "保存",
-            "appId": 0,
-            "teamId": 22,
             "serviceKey": "SCM_SLS$SLS_SO_SAVE_ACTION_SERVICE",
             "params": {
                 "request": request_data["params"]["request"]
@@ -293,7 +287,7 @@ class TestSalesOrderOperator(SlsBase):
         self.order_id = self.so_head_id_save
         
         # 先获取订单详情，包含完整的订单行信息
-        detail_api_info = self.apis["销售订单详情查询服务"]
+        detail_api_info = self.apis["销售订单页面完整查询"]
         detail_url = detail_api_info["path"] if isinstance(detail_api_info, dict) else detail_api_info
         # 使用不带查询参数的URL作为键名
         detail_url_key = detail_url.split('?')[0]

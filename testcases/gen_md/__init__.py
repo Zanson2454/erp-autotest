@@ -4,6 +4,8 @@
 """
 import sys
 from pathlib import Path
+import json
+import requests
 
 # 获取项目根目录
 project_root = Path(__file__).resolve().parent.parent.parent
@@ -14,6 +16,9 @@ from testcases.comm.base_test import BaseTest,LoginService
 from data_factory.base import DataFactory
 from utils.cache_util import CacheUtil
 from utils.request_util import HttpUtil
+from utils.mock_util import MockData
+from utils.param_util import ParamUtil
+from utils.report_util import a  # Allure reporting utility (a.json, a.text)
 
 class GenMdBaseTest(BaseTest):
     """通用基础模块的基础测试类，负责加载通用配置和提供API访问方法"""
@@ -28,6 +33,8 @@ class GenMdBaseTest(BaseTest):
     "cust": "TERP_CUST_PC"
     }   
     
+    # 添加单例实例持有者，作为类变量
+    _mock_instance = None
     
     @classmethod
     def setup_class(cls):
@@ -40,50 +47,60 @@ class GenMdBaseTest(BaseTest):
         5. 初始化 http 工具，自动带上门户请求头
         """
         super().setup_class()
-
-        cls.login_service = LoginService(cls.env_config)  # 初始化一次登录服务，避免重复创建
-        # 登录 admin
+        
+        # 优化单例创建：仅在 super().setup_class() 后执行
+        # 确保环境就绪，不干扰 pytest 测试收集过程
+        if cls._mock_instance is None:
+            cls._mock_instance = MockData()
+        
+        # 设置类级 mock_util 以兼容现有代码 (cls.mock_util)
+        # 现有测试类可继续使用 cls.mock_data 或迁移到 cls.mock_util
+        cls.mock_util = cls._mock_instance
+        
+        # 初始化登录服务，避免重复创建
+        cls.login_service = LoginService(cls.env_config)
+        
+        # 登录 admin 门户
         admin_result = cls.login_service.login(portal_key=cls._PORTAL_TYPE_KEYS["admin"])
         if admin_result.status != admin_result.status.SUCCESS:
             raise RuntimeError(f"admin 登录失败: {admin_result.error_message}")
         
-        # 初始化 cust 的 headers
         cls.admin_headers = admin_result.portal_headers
-        if cls.admin_headers:
-            cls.cust_portal_headers = cls.admin_headers.copy()  
-        cust_portal_referer = cls.env_config.get("portal_config",{}).get('terp',{}).get("TERP_CUST_PC",{}).get("portal_referer")
-        cls.cust_portal_headers["Referer"] = cust_portal_referer
-        cls.logger.info(f"cust_portal_headers: {cls.cust_portal_headers}")
-        # cls.logger.info(f"cust_portal_headers: {cls.cust_portal_headers}")
+        # 初始化 cust 门户的 headers
+       
+
   
-        # 初始化 http 实例
+        # 初始化 http 实例，绑定 admin 门户的 url、session 和 headers
         cls.http = HttpUtil(
             url=admin_result.portal_url,
             session=admin_result.session,
             headers=admin_result.portal_headers
         )
      
-
         # 初始化配置文件路径
         cls.md_api_path = Path(project_root) / "testdata" / "gen_md" / "md_api_path.yaml"
         cls.md_api_params = Path(project_root) / "testdata" / "gen_md" / "md_api_params.yaml"
+        
         # 加载API路径配置和参数配置
         cls.apis = cls.yaml_util.read_yaml(cls.md_api_path).get("apis", {})
         cls.api_params = cls.yaml_util.read_yaml(cls.md_api_params).get("api_params", {})
+        
         # 初始化DataFactory（必须在init_sql_cache之前调用）
         DataFactory.__init__(env_name="test")
-        # 加载缓存数据
+        
+        # 加载缓存数据：主数据依赖的初始化SQL
         DataFactory.init_sql_cache(
-            sql_config_path=str(project_root / "config" / "erp" / "md_init_sql.yaml"), # 主数据依赖的初始化sql 存放路径
-            db_config_name="erp_db", # 数据库配置名称
-            cache_key="md_init_cache", # 缓存key
-            cache_dir="testdata/cache" # 缓存目录
+            sql_config_path=str(project_root / "config" / "erp" / "md_init_sql.yaml"),  # 主数据依赖的初始化sql 存放路径
+            db_config_name="erp_db",  # 数据库配置名称
+            cache_key="md_init_cache",  # 缓存key
+            cache_dir="testdata/cache"  # 缓存目录
         )
         cls.md_cache_data = CacheUtil.get('md_init_cache')
+        
+        # 设置路径参数和用户信息
         cls.path_params = {"tmodule":"GEN_MD"}
         cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
         cls.user_id = cls.init_data["user_info"]['user_info']["id"]
-
     
     def get_api_path(self, api_key):
         """
@@ -96,47 +113,6 @@ class GenMdBaseTest(BaseTest):
         获取API请求参数和完整URL
         """
         return super().get_api_params(api_path, self.api_params, with_query_params)
-      
-    def set_request_param(self, params, key, value):
-        """
-        设置请求参数中的值，简化嵌套访问
-        
-        参数:
-            params: 请求参数字典
-            key: 参数键名
-            value: 参数值
-        
-        返回:
-            更新后的参数字典
-        """
-        if 'params' not in params:
-            params['params'] = {}
-        if 'request' not in params['params']:
-            params['params']['request'] = {}
-            
-        params['params']['request'][key] = value
-        return params
-    
-    def set_request_params(self, params, param_dict):
-        """
-        批量设置请求参数，简化嵌套访问
-        
-        参数:
-            params: 请求参数字典
-            param_dict: 要设置的参数字典 {key: value, ...}
-        
-        返回:
-            更新后的参数字典
-        """
-        if 'params' not in params:
-            params['params'] = {}
-        if 'request' not in params['params']:
-            params['params']['request'] = {}
-            
-        for key, value in param_dict.items():
-            params['params']['request'][key] = value
-        return params
-
 
 
 if __name__ == "__main__":

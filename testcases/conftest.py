@@ -237,6 +237,7 @@ def handle_test_failure(item: pytest.Item, report: pytest.TestReport) -> None:
                 )
             except Exception as e:
                 Loggers.error(f"截图失败: {e}") 
+@pytest.hookimpl(trylast=True)
 def pytest_collection_modifyitems(session, config, items):
     """
     智能排序方案：支持两种模式
@@ -252,10 +253,17 @@ def pytest_collection_modifyitems(session, config, items):
     
     原理：给每个文件分配编号，排序键 = 文件编号*1000 + file_level_order
     这样可以确保文件1的order=999也会排在文件2的order=1之前
+    
+    注意：使用 trylast=True 确保在 pytest-ordering 之后执行，覆盖其排序结果
     """
     def get_file_level_order(item):
         """从函数的 _file_level_order 属性中获取排序值"""
-        return getattr(item.function, '_file_level_order', None)
+        # 检查函数本身和 __wrapped__ 属性
+        func = item.function
+        order = getattr(func, '_file_level_order', None)
+        if order is None and hasattr(func, '__wrapped__'):
+            order = getattr(func.__wrapped__, '_file_level_order', None)
+        return order
     
     # 分离两种模式的测试用例
     file_level_items = [item for item in items if get_file_level_order(item) is not None]

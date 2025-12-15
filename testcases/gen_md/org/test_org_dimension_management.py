@@ -69,21 +69,12 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
         新增组织维度管理用例
         """
         try:
-            
 
-            # 调用保存接口
-            api_path = self.get_api_path("ORG-组织维度-保存服务")
-            params, url = self.get_api_params(api_path)
-
+            # 调用保存接口前准备数据
             self.org_dimension_code = self.mock_util.generate_unique_code(tag="Org_Dimension")
             self.org_dimension_name = f"组织维度(自动化)_{self.mock_util.get_timestamp()}"
 
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["orgDimensionCode","orgDimensionName","orgDimensionDescribe","isSupMultiRoot","orgBusinessTypeList"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "orgDimensionCode": self.org_dimension_code,
                 "orgDimensionName": self.org_dimension_name,
@@ -96,15 +87,21 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
                     {"orgBusinessTypeId": {"id": self.invLocTypeId}}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["orgDimensionCode","orgDimensionName","orgDimensionDescribe","isSupMultiRoot","orgBusinessTypeList"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, extracted_id = self.standard_api_call(
+                api_key="ORG-组织维度-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="org_dimension"
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
-            self.org_dimension_id = response.get("data", {}).get("data", {})
-            
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            self.org_dimension_id = extracted_id
+
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -128,28 +125,25 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
             if not self.org_dimension_id:
                 self.test_save_org_dimension()
 
-            # 调用详情查询接口
-            api_path = self.get_api_path("ORG-组织维度-详情服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_dimension_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织维度-详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
             status = response.get("data", {}).get("data", {}).get("status", None)
             self.assert_util.assert_by_operator(status, "=", "INACTIVE")
             
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -174,58 +168,54 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
             if not self.org_dimension_code:
                 self.test_save_org_dimension()
                 
-            # 调用查询接口
-            api_path = self.get_api_path("ORG-组织维度-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["pageable", "fields", "systemParams"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict =  {
-            "pageable": {
-                "pageNo": 1,
-                "pageSize": 20,
-                "needTotal": True,
-                "sortOrders": None,
-                "conditionItems": {
-                    "type": "ConditionItems",
-                    "conditions": {
-                        "orgDimensionCode": {
-                            "operator": "CONTAINS",
-                            "value": self.org_dimension_code
-                        }
-                    },
-                    "logicOperator": "AND"
-                }
-            },
-            "fields": [
-                {
-                    "name": "orgDimensionCode",
-                    "type": "TEXT"
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": {
+                        "type": "ConditionItems",
+                        "conditions": {
+                            "orgDimensionCode": {
+                                "operator": "CONTAINS",
+                                "value": self.org_dimension_code
+                            }
+                        },
+                        "logicOperator": "AND"
+                    }
                 },
-                {
-                    "name": "orgDimensionName",
-                    "type": "TEXT"
-                }
-            ],
-            "systemParams": None
-        }
+                "fields": [
+                    {
+                        "name": "orgDimensionCode",
+                        "type": "TEXT"
+                    },
+                    {
+                        "name": "orgDimensionName",
+                        "type": "TEXT"
+                    }
+                ],
+                "systemParams": None
+            }
+            fields_to_filter = ["pageable", "fields", "systemParams"]
 
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织维度-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
 
-            response = self.http.post(url, json=filtered_params)
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
             # 验证返回的数据列表
             total = response.get("data", {}).get("data", {}).get("total", 0)
             self.assert_util.assert_by_operator(total, "=", 1)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -250,29 +240,26 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
             if not self.org_dimension_id:
                 self.test_save_org_dimension()
 
-            # 调用启用接口
-            api_path = self.get_api_path("ORG-组织维度-启用服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_dimension_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织维度-启用服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
             
             sql = f"select status from org_dimension_cf where id ={self.org_dimension_id}"
             status = self.db.query(sql)[0]["status"]
             self.assert_util.assert_by_operator(status, "=", "ENABLED")
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -296,28 +283,25 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
             if not self.org_dimension_id:
                 self.test_enabled_org_dimension()
 
-            # 调用禁用接口
-            api_path = self.get_api_path("ORG-组织维度-禁用服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_dimension_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织维度-禁用服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
             sql = f"select status from org_dimension_cf where id ={self.org_dimension_id}"
             status = self.db.query(sql)[0]["status"]
             self.assert_util.assert_by_operator(status, "=", "DISABLED")
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -342,27 +326,26 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
                 self.test_save_org_dimension()
                 self.test_enabled_org_dimension()
 
-            # 调用查询启用列表接口
-            api_path = self.get_api_path("ORG-组织维度-查询启用的组织维度列表服务")
-            params, url = self.get_api_params(api_path)
+            # 准备测试数据（业务逻辑保持不变）
+            set_dict = {}
+            fields_to_filter = []
 
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                [],
-                ["params", "request"]
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织维度-查询启用的组织维度列表服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
             )
-            self.logger.info(f"请求参数: {filtered_params}")
 
-            response = self.http.post(url, json=filtered_params)
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
             # 验证返回的数据列表
             data_list = response.get("data", {}).get("data", [])
             self.assert_util.assert_by_operator(data_list, "not_empty")
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -386,28 +369,25 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
             if not self.org_dimension_id:
                 self.test_save_org_dimension()
 
-            # 调用删除接口
-            api_path = self.get_api_path("ORG-组织维度-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_dimension_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织维度-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
             sql = f"select deleted from org_dimension_cf where id ={self.org_dimension_id}"
             deleted = self.db.query(sql)[0]["deleted"]
             self.assert_util.assert_by_operator(deleted, "!=", 0)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")

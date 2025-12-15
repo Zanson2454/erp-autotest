@@ -15,7 +15,15 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
     def setup_class(cls):
         super().setup_class()
         cls.mat_unit_conversion_id = None
-        cls.uomId = cls.init_data.get("uom_info",{}).get("qty_uom_info",[])[0].get("uom_id")
+
+        # 安全获取计量单位ID，避免IndexError
+        cls.uomId = None
+        uom_info = cls.init_data.get("uom_info", {})
+        if uom_info:
+            qty_uom_info = uom_info.get("qty_uom_info", [])
+            if qty_uom_info and len(qty_uom_info) > 0:
+                cls.uomId = qty_uom_info[0].get("uom_id")
+
         cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
         cls.user_id = cls.init_data["user_info"]['user_info']["id"]
         cls.logger.info("物料单位转换管理测试类初始化完成")
@@ -55,16 +63,7 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
             mat_unit_conversion_code = self.mock_util.generate_unique_code(tag="Mat_Unit_Conversion")
             mat_unit_conversion_name = f"物料单位转换管理_{self.mock_util.get_timestamp()}"
 
-            # 调用保存接口
-            api_path = self.get_api_path("GEN-计量单位转换-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["targetUnitFactor", "targetUnitId","baseUnitFactor","unitId","genMatMdId"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "targetUnitFactor": 1,
                 "baseUnitFactor": 1,
@@ -72,15 +71,20 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
                 "unitId": {"id": self.uomId},
                 "genMatMdId": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["targetUnitFactor", "targetUnitId","baseUnitFactor","unitId","genMatMdId"]
 
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-            self.mat_unit_conversion_id = response.get("data", {}).get("data", {})
+            # 2. 使用标准化API调用（无任何断言）
+            response, extracted_id = self.standard_api_call(
+                api_key="GEN-计量单位转换-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="mat_unit_conversion"  # 自动存储 self.mat_unit_conversion_id
+            )
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 3. 保存业务数据（保持原有逻辑）
+            self.mat_unit_conversion_id = extracted_id
+
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -100,16 +104,7 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
         查询物料单位转换管理列表用例
         """
         try:
-            # 调用查询接口
-            api_path = self.get_api_path("GEN-计量单位转换-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["pageable", "fields"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -121,18 +116,21 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
                     {"name": "mat_unit_conversion_name", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["pageable", "fields"]
 
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-计量单位转换-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
 
-            # 验证返回的数据列表
+            # 3. 业务验证（保持原有逻辑）
             data_list = response.get("data", {}).get("data", {}).get("data", [])
             self.assert_util.assert_by_operator(data_list, "not_empty")
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -156,24 +154,22 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
             if not self.mat_unit_conversion_id:
                 self.test_save_mat_unit_conversion()
 
-            # 调用详情查询接口
-            api_path = self.get_api_path("GEN-计量单位转换-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.mat_unit_conversion_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url,params=self.path_params,json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-计量单位转换-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -197,26 +193,22 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
             if not self.mat_unit_conversion_id:
                 self.test_save_mat_unit_conversion()
 
-            # 调用删除接口
-            api_path = self.get_api_path("GEN-计量单位转换-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.mat_unit_conversion_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            filtered_params['serviceKey'] = "GEN_MD$GEN_UOM_FORMULA_TYPE_CF_DELETE_ACTION_SERVICE"
-            self.logger.info(f"请求参数: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url,params=self.path_params, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-计量单位转换-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")

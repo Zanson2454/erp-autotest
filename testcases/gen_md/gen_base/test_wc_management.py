@@ -63,31 +63,31 @@ class TestWcManagement(GenMdBaseTest):
             wc_code = self.mock_util.generate_unique_code(tag="WC")
             wc_name = f"测试工作日日历_{self.mock_util.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-工作日日历头表-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["code", "name", "startDate", "endDate", "description"], ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "wcHeadCode": wc_code,
                 "wcHeadName": wc_name,
-                "defaultRestDate":["SUNDAY", "SATURDAY"],
+                "defaultRestDate": ["SUNDAY", "SATURDAY"],
                 "itemList": self.wc_items,
                 "startDate": self.mock_util.get_timestamp(timestamp=True),  # 日历开始日期
-                "finishDate":None,
+                "finishDate": None,
                 "description": f"测试工作日日历描述_{self.mock_util.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["code", "name", "startDate", "endDate", "description"]
 
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-            
-            self.wc_id = response.get("data", {}).get("data", {})
+            # 2. 使用标准化API调用（无任何断言）
+            response, extracted_id = self.standard_api_call(
+                api_key="GEN-工作日日历头表-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="wc"  # 自动存储 self.wc_id
+            )
+
+            # 3. 保存业务数据（保持原有逻辑）
+            self.wc_id = extracted_id
             self.wc_code = wc_code
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -104,31 +104,35 @@ class TestWcManagement(GenMdBaseTest):
     def test_generate_wc(self):
         """工作日日历生成用例 - GEN_WC_GENERATE_ACTION_SERVICE"""
         try:
-            api_path = self.get_api_path("GEN-工作日日历头表-日历生成服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id", "generateType", "year"], ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "startDate": self.mock_util.get_timestamp(timestamp=True),
-                "finishDate":None,
-                "itemList":[
+                "finishDate": None,
+                "itemList": [
                     {
-                    #    "isWorkDay": False,
-                       "date": self.mock_util.get_timestamp(timestamp=True),
-                    #    "week": "WEDNESDAY" 
+                        # "isWorkDay": False,
+                        "date": self.mock_util.get_timestamp(timestamp=True),
+                        # "week": "WEDNESDAY" 
                     }
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id", "generateType", "year"]
 
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+            # 2. 使用标准化API调用（无任何断言）
+            response, extracted_id = self.standard_api_call(
+                api_key="GEN-工作日日历头表-日历生成服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 保存业务数据（保持原有逻辑）
             self.wc_items = response.get("data", {}).get("data", {})
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 业务验证（保持原有逻辑）
+            self.assert_util.assert_response_data(response)
+
+            # 5. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -145,12 +149,7 @@ class TestWcManagement(GenMdBaseTest):
     def test_query_wc_page(self):
         """查询工作日日历分页列表用例 - GEN_WC_HEAD_CF_QUERY_PAGE_ACTION_SERVICE"""
         try:
-            api_path = self.get_api_path("GEN-工作日日历头表-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields"], ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
                 "fields": [
@@ -161,13 +160,20 @@ class TestWcManagement(GenMdBaseTest):
                     {"name": "description", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["pageable", "fields"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-工作日日历头表-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -187,20 +193,22 @@ class TestWcManagement(GenMdBaseTest):
             if not self.wc_id:
                 self.test_save_wc()
 
-            api_path = self.get_api_path("GEN-工作日日历头表-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.wc_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-工作日日历头表-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -220,20 +228,22 @@ class TestWcManagement(GenMdBaseTest):
             if not self.wc_id:
                 self.test_save_wc()
 
-            api_path = self.get_api_path("GEN-工作日日历头表-启用服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.wc_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-工作日日历头表-启用服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -253,20 +263,22 @@ class TestWcManagement(GenMdBaseTest):
             if not self.wc_id:
                 self.test_save_wc()
 
-            api_path = self.get_api_path("GEN-工作日日历头表-停用服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.wc_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-工作日日历头表-停用服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -286,20 +298,22 @@ class TestWcManagement(GenMdBaseTest):
             if not self.wc_id:
                 self.test_save_wc()
 
-            api_path = self.get_api_path("GEN-工作日日历头表-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.wc_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-工作日日历头表-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")

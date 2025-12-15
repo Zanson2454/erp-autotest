@@ -15,7 +15,7 @@ class TestAdmOrgManagement(GenMdBaseTest):
     def setup_class(cls):
         super().setup_class()
         cls.org_info = {}
-        cls.mock_data = MockData()
+        # cls.mock_data = MockData()  # Remove, use self.mock_util singleton
         
         # 获取初始化数据中的第一个数据
         cls.currId = cls.init_data["currency_info"][0]["curr_id"] if cls.init_data.get("currency_info") else None
@@ -61,19 +61,11 @@ class TestAdmOrgManagement(GenMdBaseTest):
         保存行政组织用例
         """
         try:
-            org_code = self.mock_data.generate_unique_code(tag="AdmOrg")
-            org_name = self.mock_data.get_mock_company()
-            org_enable_date = self.mock_data.get_mock_date(include_time=False, days_offset=1)
+            org_code = self.mock_util.generate_unique_code(tag="AdmOrg")
+            org_name = self.mock_util.get_mock_company()
+            org_enable_date = self.mock_util.get_mock_date(include_time=False, days_offset=1)
 
-            api_path = self.get_api_path("ORG-组织架构-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["orgCode", "orgName", "orgSort", "orgEnableDate", "orgBusinessTypeIds", "orgDimensionCode"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "orgCode": org_code,
                 "orgName": org_name,
@@ -82,10 +74,17 @@ class TestAdmOrgManagement(GenMdBaseTest):
                 "orgBusinessTypeIds": [self.admOrgTypeId],
                 "orgDimensionCode": "ADM_ORG_GRP"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"filtered_params: {filtered_params}")
+            fields_to_filter = ["orgCode", "orgName", "orgSort", "orgEnableDate", "orgBusinessTypeIds", "orgDimensionCode"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, extracted_id = self.standard_api_call(
+                api_key="ORG-组织架构-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
             org_id = response.get("data", {}).get("data", {}).get("id")
             self.org_info.update({
@@ -96,8 +95,8 @@ class TestAdmOrgManagement(GenMdBaseTest):
                 }
             })
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
+
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -123,26 +122,25 @@ class TestAdmOrgManagement(GenMdBaseTest):
                 self.test_save_adm_org()
                 org_id = TestAdmOrgManagement.org_info.get("adm_org_info", {}).get("id")
 
-            api_path = self.get_api_path("ORG-组织架构-启用组织单元服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "id": org_id
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"filtered_params: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织架构-启用组织单元服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
+
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -168,26 +166,25 @@ class TestAdmOrgManagement(GenMdBaseTest):
                 self.test_save_adm_org()
                 org_id = TestAdmOrgManagement.org_info.get("adm_org_info", {}).get("id")
 
-            api_path = self.get_api_path("ORG-组织架构-停用组织单元服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "id": org_id
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"filtered_params: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织架构-停用组织单元服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
+
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -206,7 +203,7 @@ class TestAdmOrgManagement(GenMdBaseTest):
         删除行政组织用例
         """
         try:
-            # 获取行政组织信息
+            # 获取行政组织信息（保持原有SQL逻辑）
             sql ="""
                 select id  from org_struct_md where org_status="DRAFT" and org_dimension_code="ADM_ORG_GRP" and org_code like "AT_%" and deleted=0 limit 1;
             """
@@ -217,31 +214,28 @@ class TestAdmOrgManagement(GenMdBaseTest):
             else:
                 org_id = result[0]["id"]
 
-      
-            
-            api_path = self.get_api_path("ORG-组织架构-删除组织单元服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "id": org_id
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"filtered_params: {filtered_params}")
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织架构-删除组织单元服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
 
-            # 清除组织信息
+            # 清除组织信息（保持原有逻辑）
             TestAdmOrgManagement.org_info = {}
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
+
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -260,27 +254,26 @@ class TestAdmOrgManagement(GenMdBaseTest):
         查询行政组织用例
         """
         try:
-            api_path = self.get_api_path("ORG-组织架构-新组织搜索服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["orgDimensionCode", "orgStatus"],
-                ["params", "request"]
-            )
+            # 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "orgDimensionCode": "ADM_ORG_GRP",
                 "orgStatus": ["ENABLED", "INACTIVE", "DRAFT", "DISABLED"]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"filtered_params: {filtered_params}")
+            fields_to_filter = ["orgDimensionCode", "orgStatus"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织架构-新组织搜索服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 日志记录（Allure报告已由standard_api_call处理）
+
         except Exception as e:
             a.text(str(e), "失败原因")
             raise

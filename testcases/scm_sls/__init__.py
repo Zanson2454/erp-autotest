@@ -947,8 +947,6 @@ class SlsBase(BaseTest):
                 "sceneKey": "AI$todo_workbench",
                 "viewKey": "AI$todo_workbench:list",
                 "viewTitle": "list",
-                "appId": 0,
-                "teamId": 22,
                 "serviceKey": "sys_common$API_TRANTOR_WORKFLOW_V2_TASK_SUBMIT_POST",
                 "params": {
                     "taskInstanceId": target_task.get("taskId"),  # 使用taskId而不是id

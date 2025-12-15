@@ -34,7 +34,7 @@ wheels/
 
 # 忽略虚拟环境
 venv/
-.env/
+.env
 .venv/
 env/
 ENV/

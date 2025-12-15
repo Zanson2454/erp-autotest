@@ -1,17 +1,8 @@
-import argparse
 import re
 import json
 from pathlib import Path
 import yaml
 from collections import defaultdict
-
-def parse_args():
-    parser = argparse.ArgumentParser(description="统计ERP自动化用例接口覆盖率")
-    parser.add_argument('--api_path_yaml', required=True, help='接口路径yaml文件，如 md_api_path.yaml')
-    parser.add_argument('--case_dir', required=True, help='用例目录，如 testcases')
-    parser.add_argument('--output_json', required=True, help='输出json文件路径，如 case_coverage_stat.json')
-    parser.add_argument('--module_stat', action='store_true', help='是否生成模块统计报告')
-    return parser.parse_args()
 
 def load_yaml(path):
     path = Path(path).expanduser().resolve()
@@ -22,18 +13,32 @@ def extract_module_from_api_name(api_name):
     """
     从API名称中提取模块名称
     例如: "ORG-组织架构-保存服务" -> "ORG"
+    "(系统)xxx" -> "SYS"
     """
+    if api_name.startswith("(系统)"):
+        return "SYS"  # 系统级服务统一为 SYS 模块
     if '-' in api_name:
-        return api_name.split('-')[0]
+        return api_name.split('-')[0]  # 如 "GEN-地址库-xxx" -> "GEN"
     elif '_' in api_name:
-        # 处理如 "GEN_MD$XXX" 这种格式
+        # 处理 "GEN_MD$XXX" 格式，保留完整模块
         parts = api_name.split('_')
-        if len(parts) >= 2:
-            return f"{parts[0]}_{parts[1]}"
-        return parts[0]
+        if len(parts) >= 2 and parts[0] == "GEN":
+            return "GEN_MD"  # 统一 GEN_MD 格式
+        return f"{parts[0]}_{parts[1]}" if len(parts) >= 2 else parts[0]
     else:
         # 其他情况，取前3个字符作为模块
         return api_name[:3] if len(api_name) >= 3 else api_name
+
+def filter_system_apis(apis):
+    """
+    过滤掉以 "(系统)" 开头的系统级 API
+    返回过滤后的 apis 字典
+    """
+    filtered = {}
+    for api_name, config in apis.items():
+        if not api_name.startswith("(系统)"):
+            filtered[api_name] = config
+    return filtered
 
 def extract_covered_details(case_dir, apis):
     all_paths = {v['path']: k for k, v in apis.items()}
@@ -157,12 +162,53 @@ def generate_module_statistics(apis, covered_detail, covered_paths):
     
     return sorted_modules
 
-def main():
-    args = parse_args()
-    api_path_yaml = load_yaml(args.api_path_yaml)
+def print_module_report(stats, module_stat):
+    """
+    打印模块统计报告
+    """
+    if not module_stat or 'module_statistics' not in stats:
+        return
+    
+    print("\n" + "="*80)
+    print("模块覆盖率统计报告")
+    print("="*80)
+    print(f"{'模块名称':<20} {'总接口数':<10} {'已覆盖':<10} {'覆盖率':<10} {'未覆盖':<10}")
+    print("-" * 80)
+    
+    for module_stat in stats['module_statistics']:
+        module_name = module_stat["module_name"]
+        total_apis = module_stat["total_apis"]
+        covered_apis = module_stat["covered_apis"]
+        coverage_rate = module_stat["coverage"]
+        uncovered_count = len(module_stat["uncovered_apis"])
+        
+        print(f"{module_name:<20} {total_apis:<10} {covered_apis:<10} {coverage_rate:<10} {uncovered_count:<10}")
+    
+    print("-" * 80)
+    print(f"{'总计':<20} {stats['total']:<10} {stats['covered']:<10} {stats['coverage']}<10 {len(stats['uncovered']):<10}")
+    print("="*80)
+
+def generate_coverage_stats(api_path_yaml, case_dir, output_json, module_stat=False):
+    """
+    生成接口覆盖率统计
+    
+    Args:
+        api_path_yaml (str): API路径YAML文件路径
+        case_dir (str): 用例目录路径
+        output_json (str): 输出JSON文件路径
+        module_stat (bool): 是否生成模块统计报告
+    
+    Returns:
+        dict: 统计结果字典
+    """
+    api_path_yaml = load_yaml(api_path_yaml)
     apis = api_path_yaml.get('apis', {})
-    case_dir = Path(args.case_dir).expanduser().resolve()
-    output_json = Path(args.output_json).expanduser().resolve()
+    
+    # 过滤掉 "(系统)" 前缀的系统级 API
+    apis = filter_system_apis(apis)
+    
+    case_dir = Path(case_dir).expanduser().resolve()
+    output_json = Path(output_json).expanduser().resolve()
     
     all_paths = {v['path']: k for k, v in apis.items()}
     covered_detail, covered_paths = extract_covered_details(case_dir, apis)
@@ -190,34 +236,16 @@ def main():
     }
     
     # 如果需要模块统计
-    if args.module_stat:
+    if module_stat:
         module_stats = generate_module_statistics(apis, covered_detail, covered_paths)
         stat["module_statistics"] = module_stats
-        
-        # 打印模块统计结果
-        print("\n" + "="*80)
-        print("模块覆盖率统计报告")
-        print("="*80)
-        print(f"{'模块名称':<20} {'总接口数':<10} {'已覆盖':<10} {'覆盖率':<10} {'未覆盖':<10}")
-        print("-" * 80)
-        
-        for module_stat in module_stats:
-            module_name = module_stat["module_name"]
-            total_apis = module_stat["total_apis"]
-            covered_apis = module_stat["covered_apis"]
-            coverage_rate = module_stat["coverage"]
-            uncovered_count = len(module_stat["uncovered_apis"])
-            
-            print(f"{module_name:<20} {total_apis:<10} {covered_apis:<10} {coverage_rate:<10} {uncovered_count:<10}")
-        
-        print("-" * 80)
-        print(f"{'总计':<20} {total:<10} {covered:<10} {coverage}%<10 {len(uncovered):<10}")
-        print("="*80)
     
     # 保存结果
+    output_json.parent.mkdir(parents=True, exist_ok=True)
     with open(output_json, 'w', encoding='utf-8') as f:
         json.dump(stat, f, ensure_ascii=False, indent=2)
     
+    # 打印基本统计
     print(f"\n统计完成，结果已保存到: {output_json}")
     print(f"接口总数: {total}，已覆盖: {covered}，覆盖率: {coverage}%")
     print(f"覆盖详情条目: {len(covered_detail)}，未覆盖接口: {len(uncovered)}，详情见json文件")
@@ -226,8 +254,30 @@ def main():
     if not uncovered:
         print("所有接口均已覆盖！")
     
-    if args.module_stat:
-        print(f"\n模块统计: 共 {len(stat['module_statistics'])} 个模块，详细统计见上方报告")
+    if module_stat:
+        print(f"\n模块统计: 共 {len(stat['module_statistics'])} 个模块，详细统计见下方报告")
+        print_module_report(stat, module_stat)
+    
+    return stat
 
 if __name__ == '__main__':
-    main() 
+    # 示例用法：统计 GEN_MD 模块覆盖率
+    # 注意：请根据实际项目结构调整 api_path_yaml 路径
+    # 常见路径可能是 testdata/gen_md/md_api_path.yaml 或 config/erp/md_api_path.yaml
+    api_yaml_path = 'testdata/gen_md/md_api_path.yaml'  # 请确认实际路径
+    case_directory = 'testcases/gen_md'
+    output_file = 'reports/gen_md_coverage.json'
+    
+    # 生成统计（包括模块统计）
+    stats = generate_coverage_stats(
+        api_path_yaml=api_yaml_path,
+        case_dir=case_directory,
+        output_json=output_file,
+        module_stat=True
+    )
+    
+    # 可以进一步处理 stats，例如只查看 GEN 模块
+    if 'module_statistics' in stats:
+        gen_module = next((m for m in stats['module_statistics'] if m['module_name'] == 'GEN'), None)
+        if gen_module:
+            print(f"\nGEN_MD 模块覆盖率: {gen_module['coverage']} (已覆盖 {gen_module['covered_apis']}/{gen_module['total_apis']})")

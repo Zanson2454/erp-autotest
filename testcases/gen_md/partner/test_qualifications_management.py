@@ -9,7 +9,7 @@ from utils.report_util import a, case_decorator
 @allure.feature("资质管理")
 class TestQualificationsManagement(GenMdBaseTest):
     """资质管理测试类"""
-
+    
     @classmethod
     def setup_class(cls):
         super().setup_class()
@@ -51,29 +51,26 @@ class TestQualificationsManagement(GenMdBaseTest):
             code = self.mock_util.generate_unique_code(tag="QT")
             name = f"资质类型_{self.mock_util.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-资质类型-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["code", "name", "description"],
-                ["params", "request"]
-            )
             set_dict = {
                 "code": code,
                 "name": name,
                 "description":f"自动化测试资质类型-{self.mock_util.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["code", "name", "description"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, extracted_id = self.standard_api_call(
+                api_key="GEN-资质类型-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+            
             self.assert_util.assert_response_data(response)
             
             self.qualification_type_id = response.get("data", {}).get("data", {})
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -89,14 +86,6 @@ class TestQualificationsManagement(GenMdBaseTest):
     def test_query_qualification_type_page(self):
         """查询资质类型分页用例"""
         try:
-            api_path = self.get_api_path("GEN-资质类型-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["pageable", "fields", "systemParams"],
-                ["params", "request"]
-            )
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -117,14 +106,18 @@ class TestQualificationsManagement(GenMdBaseTest):
                 ],
                 "systemParams": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["pageable", "fields", "systemParams"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-资质类型-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -143,23 +136,19 @@ class TestQualificationsManagement(GenMdBaseTest):
             if not self.qualification_type_id:
                 self.test_save_qualification_type()
 
-            api_path = self.get_api_path("GEN-资质类型-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
             set_dict = {"id": self.qualification_type_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-资质类型-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -180,73 +169,72 @@ class TestQualificationsManagement(GenMdBaseTest):
 
             params["params"] = {
                     
-                    "taskName": f"资质类型-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
-                    "multiSheetConfig": [
-                        {
-                            "modelKey": "GEN_MD$gen_qualifications_type_cf",
-                            "modelName": "资质类型",
-                            "sheetNo": 0,
-                            "sheetName": "资质类型",
-                            "headerConfigList": [
-                                {
-                                    "name": "资质类型编码",
-                                    "type": "TEXT",
-                                    "field": "code"
-                                },
-                                {
-                                    "name": "资质类型名称",
-                                    "type": "TEXT",
-                                    "field": "name"
-                                },
-                                {
-                                    "name": "资质类型描述",
-                                    "type": "TEXT",
-                                    "field": "description"
-                                }
-                            ]
-                        }
-                    ],
-                    "queryData": {
-                        "containerKey": "GEN_MD$GEN_QUALIFICATIONS_TYPE_VIEW-table-container-GEN_MD$gen_qualifications_type_cf",
-                        "viewKey": "GEN_MD$GEN_QUALIFICATIONS_TYPE_VIEW:list",
-                        "sceneKey": "GEN_MD$GEN_QUALIFICATIONS_TYPE_VIEW",
-                        "params": {
-                            "request": {
-                                "pageable": {
-
-                                }
-                            },
-                            "selectFields": [
-                                {
-                                    "field": "code"
-                                },
-                                {
-                                    "field": "name"
-                                },
-                                {
-                                    "field": "description"
-                                }
-                            ],
-                            "modelKey": "GEN_MD$gen_qualifications_type_cf"
-                        }
-                    },
-                    "processConfig": {
-                        "processType": "TRANTOR",
-                        "model": "GEN_MD$gen_qualifications_type_cf",
+                "taskName": f"资质类型-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
+                "multiSheetConfig": [
+                    {
+                        "modelKey": "GEN_MD$gen_qualifications_type_cf",
                         "modelName": "资质类型",
-                        "containerKey": "GEN_MD$GEN_QUALIFICATIONS_TYPE_VIEW-table-container-GEN_MD$gen_qualifications_type_cf",
-                        "viewKey": "GEN_MD$GEN_QUALIFICATIONS_TYPE_VIEW:list",
-                        "sceneKey": "GEN_MD$GEN_QUALIFICATIONS_TYPE_VIEW"
+                        "sheetNo": 0,
+                        "sheetName": "资质类型",
+                        "headerConfigList": [
+                            {
+                                "name": "资质类型编码",
+                                "type": "TEXT",
+                                "field": "code"
+                            },
+                            {
+                                "name": "资质类型名称",
+                                "type": "TEXT",
+                                "field": "name"
+                            },
+                            {
+                                "name": "资质类型描述",
+                                "type": "TEXT",
+                                "field": "description"
+                            }
+                        ]
                     }
+                ],
+                "queryData": {
+                    "containerKey": "GEN_MD$GEN_QUALIFICATIONS_TYPE_VIEW-table-container-GEN_MD$gen_qualifications_type_cf",
+                    "viewKey": "GEN_MD$GEN_QUALIFICATIONS_TYPE_VIEW:list",
+                    "sceneKey": "GEN_MD$GEN_QUALIFICATIONS_TYPE_VIEW",
+                    "params": {
+                        "request": {
+                            "pageable": {
+        
+                            }
+                        },
+                        "selectFields": [
+                            {
+                                "field": "code"
+                            },
+                            {
+                                "field": "name"
+                            },
+                            {
+                                "field": "description"
+                            }
+                        ],
+                        "modelKey": "GEN_MD$gen_qualifications_type_cf"
+                    }
+                },
+                "processConfig": {
+                    "processType": "TRANTOR",
+                    "model": "GEN_MD$gen_qualifications_type_cf",
+                    "modelName": "资质类型",
+                    "containerKey": "GEN_MD$GEN_QUALIFICATIONS_TYPE_VIEW-table-container-GEN_MD$gen_qualifications_type_cf",
+                    "viewKey": "GEN_MD$GEN_QUALIFICATIONS_TYPE_VIEW:list",
+                    "sceneKey": "GEN_MD$GEN_QUALIFICATIONS_TYPE_VIEW"
                 }
+            }
           
-
             response = self.http.post(url, json=params)
             self.assert_util.assert_response_success(response)
 
             a.json(params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -265,23 +253,19 @@ class TestQualificationsManagement(GenMdBaseTest):
             if not self.qualification_type_id:
                 self.test_save_qualification_type()
 
-            api_path = self.get_api_path("GEN-资质类型-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
             set_dict = {"id": self.qualification_type_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-资质类型-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -305,14 +289,6 @@ class TestQualificationsManagement(GenMdBaseTest):
             group_code = self.mock_util.generate_unique_code(tag="QG")
             group_name = f"资质组_{self.mock_util.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-资质组-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["code", "name", "itemList"],
-                ["params", "request"]
-            )
             set_dict = {
                 "code": group_code,
                 "name": group_name,
@@ -325,16 +301,21 @@ class TestQualificationsManagement(GenMdBaseTest):
                     }
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["code", "name", "itemList"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, extracted_id = self.standard_api_call(
+                api_key="GEN-资质组-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+            
             self.assert_util.assert_response_data(response)
             
             self.qualification_group_id = response.get("data", {}).get("data", {})
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -350,14 +331,6 @@ class TestQualificationsManagement(GenMdBaseTest):
     def test_query_qualification_group_page(self):
         """查询资质组分页用例"""
         try:
-            api_path = self.get_api_path("GEN-资质组-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["pageable", "fields", "systemParams"],
-                ["params", "request"]
-            )
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -370,14 +343,18 @@ class TestQualificationsManagement(GenMdBaseTest):
                 ],
                 "systemParams": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["pageable", "fields", "systemParams"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-资质组-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -396,23 +373,19 @@ class TestQualificationsManagement(GenMdBaseTest):
             if not self.qualification_group_id:
                 self.test_save_qualification_group()
 
-            api_path = self.get_api_path("GEN-资质组-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
             set_dict = {"id": self.qualification_group_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-资质组-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -470,7 +443,7 @@ class TestQualificationsManagement(GenMdBaseTest):
                     "params": {
                         "request": {
                             "pageable": {
-
+        
                             }
                         },
                         "selectFields": [
@@ -500,13 +473,12 @@ class TestQualificationsManagement(GenMdBaseTest):
                 }
             }
 
-
             response = self.http.post(url, json=params)
             self.assert_util.assert_response_success(response)
 
             a.json(params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -525,23 +497,19 @@ class TestQualificationsManagement(GenMdBaseTest):
             if not self.qualification_group_id:
                 self.test_save_qualification_group()
 
-            api_path = self.get_api_path("GEN-资质组-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
             set_dict = {"id": self.qualification_group_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-资质组-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
             self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
+            
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -580,7 +548,7 @@ class TestQualificationsManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -618,7 +586,7 @@ class TestQualificationsManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -661,7 +629,7 @@ class TestQualificationsManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -699,7 +667,7 @@ class TestQualificationsManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -737,7 +705,7 @@ class TestQualificationsManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -780,7 +748,7 @@ class TestQualificationsManagement(GenMdBaseTest):
 
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise 

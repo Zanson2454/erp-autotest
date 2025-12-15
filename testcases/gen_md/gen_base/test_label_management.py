@@ -49,34 +49,32 @@ class TestLabelManagement(GenMdBaseTest):
     def test_save_label(self, usageType):
         """新增标签用例 - GEN_LABEL_MD_SAVE_ACTION_SERVICE"""
         try:
-            # 使用更唯一的标签名称，避免主键冲突
+            # 1. 准备测试数据（原有业务逻辑完全保留，包括唯一命名避免主键冲突）
             timestamp = self.mock_util.get_timestamp()
             random_num = self.mock_util.generate_unique_code(tag="LABEL")[-4:]  # 取后4位随机数
             label_name = f"测试标签_{timestamp}_{random_num}"
 
-            api_path = self.get_api_path("GEN-标签表-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["code", "name", "color"], ["params", "request"]
-            )
+            # 2. 使用标准化API调用（替换重复逻辑）
             set_dict = {
                 "name": label_name,
                 "color": "#FF5722",  # 标签颜色
                 "usageType": usageType
             }
+            fields_to_filter = ["name", "color", "usageType"]
             
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"filtered_params: {filtered_params}")
-            response = self.http.post(url, json=filtered_params)
-            self.logger.info(f"response: {response}")
+            response, label_id = self.standard_api_call(
+                api_key="GEN-标签表-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="label"
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
             
-            self.label_id = response.get("data", {}).get("data", {})
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            # 4. 原有数据保存逻辑（完全保留）
+            self.label_id = label_id
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -92,12 +90,7 @@ class TestLabelManagement(GenMdBaseTest):
     def test_query_label_page(self):
         """查询标签分页列表用例 - GEN_LABEL_MD_QUERY_PAGE_ACTION_SERVICE"""
         try:
-            api_path = self.get_api_path("GEN-标签表-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields", "systemParams"], ["params", "request"]
-            )
+            # 1. 准备分页参数（原有逻辑完全保留）
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
                 "fields": [
@@ -108,14 +101,18 @@ class TestLabelManagement(GenMdBaseTest):
                 ],
                 "systemParams": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["pageable", "fields", "systemParams"]
+            
+            # 2. 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="GEN-标签表-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -131,25 +128,23 @@ class TestLabelManagement(GenMdBaseTest):
     def test_query_label_detail(self):
         """查询标签详情用例 - GEN_LABEL_MD_QUERY_DETAIL_ACTION_SERVICE"""
         try:
+            # 1. 确保标签存在（原有依赖逻辑完全保留，包含参数化调用）
             if not self.label_id:
                 self.test_save_label(usageType="MAT")
 
-            api_path = self.get_api_path("GEN-标签表-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 2. 使用标准化API调用
             set_dict = {"id": self.label_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["id"]
             
+            response, _ = self.standard_api_call(
+                api_key="GEN-标签表-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -165,24 +160,23 @@ class TestLabelManagement(GenMdBaseTest):
     def test_enable_label(self):
         """启用标签用例 - GEN_LABEL_MD_ENABLED_ACTION_SERVICE"""
         try:
+            # 1. 确保标签存在（原有依赖逻辑完全保留）
             if not self.label_id:
                 self.test_save_label(usageType="MAT")
 
-            api_path = self.get_api_path("GEN-标签表-启用服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 2. 使用标准化API调用
             set_dict = {"id": self.label_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["id"]
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-标签表-启用服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -198,24 +192,23 @@ class TestLabelManagement(GenMdBaseTest):
     def test_disable_label(self):
         """禁用标签用例 - GEN_LABEL_MD_DISABLED_ACTION_SERVICE"""
         try:
+            # 1. 确保标签存在（原有依赖逻辑完全保留）
             if not self.label_id:
                 self.test_save_label(usageType="MAT")
 
-            api_path = self.get_api_path("GEN-标签表-禁用服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 2. 使用标准化API调用
             set_dict = {"id": self.label_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["id"]
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-标签表-禁用服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -231,24 +224,23 @@ class TestLabelManagement(GenMdBaseTest):
     def test_delete_label(self):
         """删除标签用例 - GEN_LABEL_MD_DELETE_ACTION_SERVICE"""
         try:
+            # 1. 确保标签存在（原有依赖逻辑完全保留）
             if not self.label_id:
                 self.test_save_label(usageType="MAT")
 
-            api_path = self.get_api_path("GEN-标签表-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 2. 使用标准化API调用
             set_dict = {"id": self.label_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            fields_to_filter = ["id"]
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-标签表-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            # 3. 原有断言（完全保留）
             self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
+            
         except Exception as e:
             a.text(str(e), "失败原因")
             raise

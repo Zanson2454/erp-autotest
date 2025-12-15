@@ -66,27 +66,27 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
             uom_code = self.mock_util.generate_unique_code(tag="UOM")
             uom_name = f"测试计量单位_{self.mock_util.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-计量单位-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            # 构建请求参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["uomCode", "uomDigit", "uomDesc", "uomType"], ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "uomCode": uom_code,
                 "uomDigit": 2,
                 "uomDesc": uom_name,
                 "uomType": "L"  # 长度维度
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["uomCode", "uomDigit", "uomDesc", "uomType"]
 
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-            
-            self.uom_id = response.get("data", {}).get("data", {})
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 2. 使用标准化API调用（无任何断言）
+            response, extracted_id = self.standard_api_call(
+                api_key="GEN-计量单位-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="uom"  # 自动存储 self.uom_id
+            )
+
+            # 3. 保存业务数据（保持原有逻辑）
+            self.uom_id = extracted_id
+
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -103,47 +103,47 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
     def test_query_uom_type_page(self):
         """查询计量单位分页列表用例 - GEN_UOM_TYPE_CF_QUERY_PAGE_ACTION_SERVICE"""
         try:
-            api_path = self.get_api_path("GEN-计量单位-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields", "systemParams"], ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
-            "pageable": {
-                "pageNo": 1,
-                "pageSize": 20,
-                "needTotal": True,
-                "sortOrders": None,
-                "conditionItems": None
-            },
-            "fields": [
-                {
-                    "name": "uomType",
-                    "type": "SELECT"
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": None
                 },
-                {
-                    "name": "uomDesc",
-                    "type": "TEXT"
-                },
-                {
-                    "name": "uomCode",
-                    "type": "TEXT"
-                }
-            ],
-            "systemParams": None
-        }
+                "fields": [
+                    {
+                        "name": "uomType",
+                        "type": "SELECT"
+                    },
+                    {
+                        "name": "uomDesc",
+                        "type": "TEXT"
+                    },
+                    {
+                        "name": "uomCode",
+                        "type": "TEXT"
+                    }
+                ],
+                "systemParams": None
+            }
+            fields_to_filter = ["pageable", "fields", "systemParams"]
 
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-计量单位-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
 
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
+            # 3. 业务验证（保持原有逻辑）
             data_list = response.get("data", {}).get("data", {}).get("data", [])
             self.assert_util.assert_by_operator(data_list, "not_empty")
+            self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -160,22 +160,24 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
     def test_query_uom_type_paging_data(self):
         """计量单位分页数据服务用例 - GEN_UOM_TYPE_CF_PAGING_DATA_SERVICE"""
         try:
-            api_path = self.get_api_path("计量单位-分页数据服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable"], ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 10, "needTotal": True}
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["pageable"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="计量单位-分页数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -195,20 +197,22 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
             if not self.uom_id:
                 self.test_save_uom_type()
 
-            api_path = self.get_api_path("GEN-计量单位-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.uom_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-计量单位-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -262,25 +266,27 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
             if not self.uom_id:
                 self.test_save_uom_type()
 
-            api_path = self.get_api_path("GEN-计量单位-单位转换(前端)服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["matId", "unitId", "targetUnitId", "orgAmount"], ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "matId": self.mat_id,
                 "unitId": self.uom_id,
                 "targetUnitId": self.uom_id,
                 "orgAmount": 1
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["matId", "unitId", "targetUnitId", "orgAmount"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-计量单位-单位转换(前端)服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -300,20 +306,22 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
             if not self.uom_id:
                 self.test_save_uom_type()
 
-            api_path = self.get_api_path("GEN-计量单位-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.uom_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-计量单位-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -335,32 +343,32 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
             if not self.uom_id:
                 self.test_save_uom_type()
 
-            api_path = self.get_api_path("GEN-计量单位转换-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["baseUnitFactor", "targetUnitFactor", "targetUnitId", "unitId", "genMatMdId"], ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "baseUnitFactor": 1,
                 "targetUnitFactor": 1,
-                "targetUnitId":{
+                "targetUnitId": {
                     "id": self.uom_id
                 },
-                "unitId":{
+                "unitId": {
                     "id": self.uom_id
                 },
                 "genMatMdId": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["baseUnitFactor", "targetUnitFactor", "targetUnitId", "unitId", "genMatMdId"]
 
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-            
-            self.uom_formula_id = response.get("data", {}).get("data", {})
+            # 2. 使用标准化API调用（无任何断言）
+            response, extracted_id = self.standard_api_call(
+                api_key="GEN-计量单位转换-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="uom_formula"  # 自动存储 self.uom_formula_id
+            )
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 3. 保存业务数据（保持原有逻辑）
+            self.uom_formula_id = extracted_id
+
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -377,12 +385,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
     def test_query_uom_formula_page(self):
         """查询计量单位转换分页列表用例 - GEN_UOM_FORMULA_TYPE_CF_QUERY_PAGE_ACTION_SERVICE"""
         try:
-            api_path = self.get_api_path("GEN-计量单位转换-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields", "systemParams"], ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
                 "fields": [
@@ -394,14 +397,20 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
                 ],
                 "systemParams": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["pageable", "fields", "systemParams"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-计量单位转换-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -421,20 +430,22 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
             if not self.uom_formula_id:
                 self.test_save_uom_formula()
 
-            api_path = self.get_api_path("GEN-计量单位转换-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.uom_formula_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-计量单位转换-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -454,20 +465,22 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
             if not self.uom_formula_id:
                 self.test_save_uom_formula()
 
-            api_path = self.get_api_path("GEN-计量单位转换-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.uom_formula_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-计量单位转换-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -734,12 +747,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
             if not self.uom_id:
                 self.test_save_uom_type()
 
-            api_path = self.get_api_path("GEN-UNIT-获取基本单位转换系数服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["fromUnit", "toUnit"], ["params", "request"]
-            )
+            # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "unitId": {
                     "id": self.uom_id
@@ -752,17 +760,22 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
                     "id": self.mat_id
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["fromUnit", "toUnit"]  # Original filter, but set_dict uses nested IDs
 
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用（无任何断言）
+            response, _ = self.standard_api_call(
+                api_key="GEN-UNIT-获取基本单位转换系数服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+
+            # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
-
-            # 验证返回的转换系数
             coefficient_data = response.get("data", {}).get("data", {})
             self.assert_util.assert_by_operator(coefficient_data, "not_empty")
 
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 日志记录（Allure报告已由standard_api_call处理）
 
         except Exception as e:
             a.text(str(e), "失败原因")

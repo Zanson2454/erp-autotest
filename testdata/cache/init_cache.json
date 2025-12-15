@@ -2,20 +2,20 @@
   "currency_info": [
     {
       "curr_id": 2000001,
-      "curr_code": "CNY",
+      "curr_code": "RMB",
       "curr_name": "人民币"
     }
   ],
-  "language_info": [
+  "exchange_rate_type_info": [
     {
-      "language_id": 2000001,
-      "language_code": "CHINESE",
-      "language_name": "中文"
+      "exchange_rate_type_id": 2000001,
+      "exchange_rate_type_code": "HR",
+      "exchange_rate_type_name": "固定汇率"
     }
   ],
   "country_info": [
     {
-      "coun_id": 14037001,
+      "coun_id": 2000001,
       "coun_code": "CHINA",
       "coun_name": "中国"
     }
@@ -27,31 +27,16 @@
       "timezone_format": "UTC"
     }
   ],
-  "gen_wc_head_info": [
-    {
-      "gen_wc_head_id": 2000003,
-      "wc_head_code": "ihg",
-      "wc_head_name": "hgv"
-    }
-  ],
-  "calender_info": [
-    {
-      "id": 2002001,
-      "calendar_code": "01",
-      "calendar_name": "基准会计期间类型",
-      "status": "ENABLED"
-    }
-  ],
   "addr_info": [
     {
       "id": 70028089
     }
   ],
-  "exchange_rate_type_info": [
+  "gen_wc_head_info": [
     {
-      "exchange_rate_type_id": 2000001,
-      "exchange_rate_type_code": "HR",
-      "exchange_rate_type_name": "固定汇率"
+      "gen_wc_head_id": 2000003,
+      "wc_head_code": "ihg",
+      "wc_head_name": "hgv"
     }
   ],
   "uom_info": {
@@ -90,12 +75,12 @@
   },
   "bank_info": [
     {
-      "bank_id": 2000005,
-      "bank_code": "CMB",
-      "bank_name": "招商银行",
-      "sub_bank_id": 1000006,
-      "sub_bank_code": "308902839019",
-      "sub_bank_name": "招商银行深圳红山支行"
+      "bank_id": 2000018,
+      "bank_code": "BCM",
+      "bank_name": "交通银行",
+      "sub_bank_id": 1069226,
+      "sub_bank_code": "301242000088",
+      "sub_bank_name": "交通银行股份有限公司吉林铁东支行"
     }
   ],
   "tax_info": [
@@ -122,6 +107,12 @@
       "tax_code": "tax_code",
       "taxcate": "J",
       "tax": 0.13
+    },
+    {
+      "id": 14083001,
+      "tax_code": "ZERO",
+      "taxcate": "X",
+      "tax": 0.0
     }
   ]
 }
