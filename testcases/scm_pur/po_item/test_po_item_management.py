@@ -46,9 +46,24 @@ class TestPoItemManagement(ScmPurBaseTest):
             cls.pur_employee_id = org_info.get("employee_info", [{}])[0].get("id")
         
         if cls.init_data:
-            cls.pur_curr_id = cls.init_data.get("currency_info", [{}])[0].get("curr_id")
-            cls.uom_pur_id = cls.init_data.get("uom_info", {}).get("qty_uom_info", [{}])[0].get("uom_id")
-            cls.tax_rate_id = cls.init_data.get("tax_info", [{}])[0].get("id")
+            currency_info = cls.init_data.get("currency_info") or []
+            if currency_info:
+                cls.pur_curr_id = currency_info[0].get("curr_id")
+            else:
+                cls.pur_curr_id = None
+            
+            uom_info = cls.init_data.get("uom_info", {})
+            qty_uom_info = uom_info.get("qty_uom_info") or []
+            if qty_uom_info:
+                cls.uom_pur_id = qty_uom_info[0].get("uom_id")
+            else:
+                cls.uom_pur_id = None
+            
+            tax_info = cls.init_data.get("tax_info") or []
+            if tax_info:
+                cls.tax_rate_id = tax_info[0].get("id")
+            else:
+                cls.tax_rate_id = None
         
         if cls.pur_cache_data:
             pur_config = cls.pur_cache_data.get("pur_config", {})

@@ -30,27 +30,59 @@ class TestPoManagement(ScmPurBaseTest):
         cls.pur_remark = None
         
         if cls.md_cache_data:
-            mat_info = cls.md_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP", [{}])[0]
+            finp_list = cls.md_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP") or []
+            mat_info = finp_list[0] if finp_list else {}
             org_info = cls.md_cache_data.get("org_info", {})
             partner_info = cls.md_cache_data.get("partner_info", {})
             
             cls.mat_id = mat_info.get("id")
             cls.mat_code = mat_info.get("mat_code")
-            cls.inv_org_id = org_info.get("inv_org_info", [{}])[0].get("id")
-            cls.inv_loc_id = org_info.get("inv_loc_info", [{}])[0].get("id")
-            cls.pur_org_id = org_info.get("pur_org_info", [{}])[0].get("id")
-            cls.com_org_id = org_info.get("gr_come_org_info", [{}])[0].get("id")
-            cls.vend_id = partner_info.get("vend_info", [{}])[0].get("id")
-            cls.pur_employee_id = org_info.get("employee_info", [{}])[0].get("id")
+            
+            inv_org_info = org_info.get("inv_org_info") or []
+            cls.inv_org_id = inv_org_info[0].get("id") if inv_org_info else None
+            
+            inv_loc_info = org_info.get("inv_loc_info") or []
+            cls.inv_loc_id = inv_loc_info[0].get("id") if inv_loc_info else None
+            
+            pur_org_info = org_info.get("pur_org_info") or []
+            cls.pur_org_id = pur_org_info[0].get("id") if pur_org_info else None
+            
+            gr_come_org_info = org_info.get("gr_come_org_info") or []
+            cls.com_org_id = gr_come_org_info[0].get("id") if gr_come_org_info else None
+            
+            vend_info = partner_info.get("vend_info") or []
+            cls.vend_id = vend_info[0].get("id") if vend_info else None
+            
+            employee_info = org_info.get("employee_info") or []
+            cls.pur_employee_id = employee_info[0].get("id") if employee_info else None
         
         if cls.init_data:
-            cls.pur_curr_id = cls.init_data.get("currency_info", [{}])[0].get("curr_id")
-            cls.uom_pur_id = cls.init_data.get("uom_info", {}).get("qty_uom_info", [{}])[0].get("uom_id")
-            cls.tax_rate_id = cls.init_data.get("tax_info", [{}])[0].get("id")
+            currency_info = cls.init_data.get("currency_info") or []
+            if currency_info:
+                cls.pur_curr_id = currency_info[0].get("curr_id")
+            else:
+                cls.pur_curr_id = None
+            
+            uom_info = cls.init_data.get("uom_info", {})
+            qty_uom_info = uom_info.get("qty_uom_info") or []
+            if qty_uom_info:
+                cls.uom_pur_id = qty_uom_info[0].get("uom_id")
+            else:
+                cls.uom_pur_id = None
+            
+            tax_info = cls.init_data.get("tax_info") or []
+            if tax_info:
+                cls.tax_rate_id = tax_info[0].get("id")
+            else:
+                cls.tax_rate_id = None
         
         if cls.pur_cache_data:
             pur_config = cls.pur_cache_data.get("pur_config", {})
-            cls.po_type_id = pur_config.get("po_type_info", [{}])[0].get("id")
+            po_type_info = pur_config.get("po_type_info") or []
+            if po_type_info:
+                cls.po_type_id = po_type_info[0].get("id")
+            else:
+                cls.po_type_id = None
             
             po_item_types = pur_config.get("po_item_type_info", [])
             cls.po_item_type_id = next(

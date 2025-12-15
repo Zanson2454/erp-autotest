@@ -150,7 +150,8 @@ class PurPoFactory:
             )
             pur_curr_id = self._get_default_value(
                 pur_curr_id,
-                ["init_data", "currency_info", 0, "curr_id"]
+                ["init_data", "currency_info", 0, "curr_id"],
+                default="2000001"  # 默认人民币
             )
             
             # 获取采购相关方类型ID（用于partner参数）
@@ -196,7 +197,22 @@ class PurPoFactory:
                 "attachment": []
             })
             
-            response = self.http.post(url, json=filtered_params, params={"tmodule": "SCM_PUR"})
+            try:
+                response = self.http.post(url, json=filtered_params, params={"tmodule": "SCM_PUR"})
+            except Exception as http_error:
+                # 捕获HTTP错误（如500、504等）
+                error_detail = str(http_error)
+                self.logger.error(f"HTTP请求失败: {error_detail}")
+                self.logger.error(f"请求URL: {url}")
+                self.logger.error(f"请求参数: {filtered_params}")
+                # 尝试获取响应内容
+                if hasattr(http_error, 'response') and http_error.response is not None:
+                    try:
+                        error_response = http_error.response.json()
+                        self.logger.error(f"错误响应内容: {error_response}")
+                    except:
+                        self.logger.error(f"错误响应文本: {http_error.response.text}")
+                raise Exception(f"采购订单创建失败（HTTP错误）: {error_detail}") from http_error
             
             if response.get("success"):
                 self.logger.info("采购订单创建成功")
@@ -205,12 +221,17 @@ class PurPoFactory:
                     "response": response
                 }
             else:
-                error_msg = response.get("message", "未知错误")
+                error_msg = response.get("message") or response.get("errorMessage") or response.get("error") or "未知错误"
                 self.logger.error(f"采购订单创建失败: {error_msg}")
+                self.logger.error(f"完整响应内容: {response}")
                 raise Exception(f"采购订单创建失败: {error_msg}")
                 
         except Exception as e:
             self.logger.error(f"创建采购订单异常: {str(e)}")
+            # 如果不是我们自定义的异常，记录完整的异常信息
+            if not isinstance(e, Exception) or "采购订单创建失败" not in str(e):
+                import traceback
+                self.logger.error(f"异常堆栈: {traceback.format_exc()}")
             raise
     
     def _build_po_items(self, mat_items: List[Dict], vend_id: str, pur_employee_id: str) -> List[Dict]:
@@ -224,7 +245,7 @@ class PurPoFactory:
         default_uom_pur_id = self._get_default_value(None, ["init_data", "uom_info", "qty_uom_info", 0, "uom_id"])
         default_po_item_type_id = None
         default_tax_rate_id = self._get_default_value(None, ["init_data", "tax_info", 0, "id"])
-        default_pur_curr_id = self._get_default_value(None, ["init_data", "currency_info", 0, "curr_id"])
+        default_pur_curr_id = self._get_default_value(None, ["init_data", "currency_info", 0, "curr_id"], default="2000001")
         
         # 获取 STND 类型的订单明细类型ID
         if self.pur_cache_data:

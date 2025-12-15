@@ -6,8 +6,8 @@ base_info:
     sql: |
       SELECT id as 'curr_id', curr_code, curr_name 
       FROM gen_curr_type_cf 
-      WHERE curr_code='CNY' AND deleted=0 LIMIT 1
-    description: "查询人民币的基础信息"
+      WHERE (curr_code='CNY' OR curr_code='RMB') AND deleted=0 LIMIT 1
+    description: "查询人民币的基础信息（兼容CNY和RMB）"
     insert_sql: |
       INSERT INTO `gen_curr_type_cf` (`curr_code`, `curr_name`, `curr_iso_name`, `decimal_place`, `symbol`, `remark`, `created_by`, `updated_by`, `created_at`, `updated_at`, `version`, `deleted`, `request_id`, `origin_org_id`, `tenant_id`) VALUES
       ('CNY', '人民币', NULL, NULL, NULL, NULL, 1, 1, NOW(), NOW(), 0, 0, NULL, 0, 0);

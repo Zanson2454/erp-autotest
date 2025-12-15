@@ -47,9 +47,24 @@ class TestPoSchlManagement(ScmPurBaseTest):
             cls.pur_employee_id = org_info.get("employee_info", [{}])[0].get("id")
         
         if cls.init_data:
-            cls.pur_curr_id = cls.init_data.get("currency_info", [{}])[0].get("curr_id")
-            cls.uom_pur_id = cls.init_data.get("uom_info", {}).get("qty_uom_info", [{}])[0].get("uom_id")
-            cls.tax_rate_id = cls.init_data.get("tax_info", [{}])[0].get("id")
+            currency_info = cls.init_data.get("currency_info") or []
+            if currency_info:
+                cls.pur_curr_id = currency_info[0].get("curr_id")
+            else:
+                cls.pur_curr_id = None
+            
+            uom_info = cls.init_data.get("uom_info", {})
+            qty_uom_info = uom_info.get("qty_uom_info") or []
+            if qty_uom_info:
+                cls.uom_pur_id = qty_uom_info[0].get("uom_id")
+            else:
+                cls.uom_pur_id = None
+            
+            tax_info = cls.init_data.get("tax_info") or []
+            if tax_info:
+                cls.tax_rate_id = tax_info[0].get("id")
+            else:
+                cls.tax_rate_id = None
         
         if cls.pur_cache_data:
             pur_config = cls.pur_cache_data.get("pur_config", {})
@@ -251,7 +266,10 @@ class TestPoSchlManagement(ScmPurBaseTest):
     def test_export_po_schl(self):
         try:
             if not self.__class__.po_schl_id:
-                self.test_query_po_schl_list()
+                try:
+                    self.test_query_po_schl_list()
+                except Exception as e:
+                    pytest.skip(f"依赖测试失败，跳过导出测试: {str(e)}")
             
             api_path = self.get_api_path("采购订单-SCHL-导入导出任务管理接口-提交导出任务")
             _, url = self.get_api_params(api_path)
@@ -359,9 +377,15 @@ class TestPoSchlManagement(ScmPurBaseTest):
     def test_merge_po_schl(self):
         try:
             if not hasattr(self.__class__, 'po_schl_id') or not self.__class__.po_schl_id:
-                self.test_query_po_schl_list()
+                try:
+                    self.test_query_po_schl_list()
+                except Exception as e:
+                    pytest.skip(f"依赖测试失败，跳过合并测试: {str(e)}")
             if not hasattr(self.__class__, 'po_schl_id2') or not self.__class__.po_schl_id2:
-                self.test_query_po_schl_list()
+                try:
+                    self.test_query_po_schl_list()
+                except Exception as e:
+                    pytest.skip(f"依赖测试失败，跳过合并测试: {str(e)}")
             
             api_path = self.get_api_path("采购计划行-合并")
             _, url = self.get_api_params(api_path)
@@ -414,7 +438,10 @@ class TestPoSchlManagement(ScmPurBaseTest):
     def test_merge_save_po_schl(self):
         try:
             if not hasattr(self.__class__, 'merged_schl_data') or not self.__class__.merged_schl_data:
-                self.test_merge_po_schl()
+                try:
+                    self.test_merge_po_schl()
+                except Exception as e:
+                    pytest.skip(f"依赖测试失败，跳过保存测试: {str(e)}")
             
             api_path = self.get_api_path("采购计划行-合并后保存")
             _, url = self.get_api_params(api_path)

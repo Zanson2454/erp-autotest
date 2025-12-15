@@ -110,7 +110,7 @@ class TestPrHeadTypeManagement(ScmPurBaseTest):
         """采购申请类型定义表分页查询测试"""
         try:
             # 1. 获取API配置
-            api_path = self.get_api_path("采购申请类型定义表-分页数据服务")
+            api_path = self.get_api_path("PR-申请类型定义分页查询服务")
             params, url = self.get_api_params(api_path)
             
             # 2. 过滤参数 - 只过滤pageable
