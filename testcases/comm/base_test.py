@@ -553,51 +553,69 @@ class BaseTest:
     
     @classmethod
     def setup_class(cls) -> None:
-        """测试类初始化 - 简化版"""
+        """测试类初始化 - 模板方法模式优化"""
         try:
             # 获取环境
             env = os.getenv("TEST_ENV", "test")
             Loggers.info(f"开始初始化测试基类 [env={env}]")
-            
+
             # 使用初始化器
             initializer = BaseTestInitializer(env)
-            
-            # 分步初始化
-            cls.env_config = initializer.initialize_environment() # 获取环境基础配置
-            cls.init_data = initializer.initialize_base_data() # 获取基础数据
-            
-            # 认证初始化
-            login_result = initializer.initialize_authentication(cls.env_config)
-            cls.user_info = login_result.user_info # 获取用户信息
-            cls.session = login_result.session # 获取会话
-            cls.http = HttpUtil(
-                url=login_result.portal_url,
-                session=login_result.session,
-                headers=login_result.portal_headers
-            )
-            
-            # 数据库初始化
-            cls.db = initializer.initialize_database(cls.env_config,db_name="erp_db") # 获取数据库连接
-            cls.iam_db = initializer.initialize_database(cls.env_config,db_name="iam_db") # 获取数据库连接
-            
 
-            
-            # 工具类初始化
-            utilities = initializer.initialize_utilities() # 获取工具类
-            for name, util in utilities.items(): # 设置工具类
-                setattr(cls, name, util) # 设置工具类
-            
-            
-      
-            
-            # 更新初始化数据
-            cls.init_data["user_info"] = {"user_info": cls.user_info}
-            
+            # 模板方法：按顺序执行初始化步骤
+            cls._initialize_config(initializer)      # 1. 配置初始化
+            cls._initialize_data(initializer)        # 2. 数据初始化
+            cls._initialize_auth(initializer)        # 3. 认证初始化
+            cls._initialize_database(initializer)    # 4. 数据库初始化
+            cls._initialize_utilities(initializer)   # 5. 工具类初始化
+            cls._post_initialize()                   # 6. 后处理
+
             Loggers.info("测试基类初始化完成")
-            
+
         except Exception as e:
             Loggers.error(f"BaseTest初始化失败: {str(e)}")
             raise
+
+    @classmethod
+    def _initialize_config(cls, initializer: BaseTestInitializer) -> None:
+        """配置初始化 - 可被子类重写"""
+        cls.env_config = initializer.initialize_environment()
+
+    @classmethod
+    def _initialize_data(cls, initializer: BaseTestInitializer) -> None:
+        """数据初始化 - 可被子类重写"""
+        cls.init_data = initializer.initialize_base_data()
+
+    @classmethod
+    def _initialize_auth(cls, initializer: BaseTestInitializer) -> None:
+        """认证初始化 - 可被子类重写"""
+        login_result = initializer.initialize_authentication(cls.env_config)
+        cls.user_info = login_result.user_info
+        cls.session = login_result.session
+        cls.http = HttpUtil(
+            url=login_result.portal_url,
+            session=login_result.session,
+            headers=login_result.portal_headers
+        )
+
+    @classmethod
+    def _initialize_database(cls, initializer: BaseTestInitializer) -> None:
+        """数据库初始化 - 可被子类重写"""
+        cls.db = initializer.initialize_database(cls.env_config, db_name="erp_db")
+        cls.iam_db = initializer.initialize_database(cls.env_config, db_name="iam_db")
+
+    @classmethod
+    def _initialize_utilities(cls, initializer: BaseTestInitializer) -> None:
+        """工具类初始化 - 可被子类重写"""
+        utilities = initializer.initialize_utilities()
+        for name, util in utilities.items():
+            setattr(cls, name, util)
+
+    @classmethod
+    def _post_initialize(cls) -> None:
+        """后处理 - 可被子类重写"""
+        # 更新初始化数据
+        cls.init_data["user_info"] = {"user_info": cls.user_info}
     
     def setup_method(self, method: Optional[pytest.Function] = None) -> None:
         """测试方法前置设置"""
