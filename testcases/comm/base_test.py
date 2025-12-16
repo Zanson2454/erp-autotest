@@ -700,12 +700,13 @@ class BaseTest:
     def standard_api_call(self, api_key, set_dict=None, fields_to_filter=None, store_id_as=None, use_param_util=True):
         """
         标准化API调用模板 - 纯执行和报告工具，无断言逻辑
+        统一返回响应数据（无论成功还是失败），由业务断言来判断响应是否正确
         :param api_key: API服务名称键
         :param set_dict: 要设置的参数字典
         :param fields_to_filter: 需要过滤的字段列表
         :param store_id_as: ID存储属性名（用于自动保存self.xxx_id）
         :param use_param_util: 是否使用ParamUtil过滤/设置（默认True）；False时直接使用set_dict作为params
-        :return: (response, extracted_id)
+        :return: (response, extracted_id) - response包含成功或失败的响应数据，extracted_id在成功时提取，失败时为None
         """
         import json
         try:
@@ -729,17 +730,12 @@ class BaseTest:
                     set_dict = {}
                 filtered_params = {"params": set_dict}
             
-            # 3. 发送请求
-            self.logger.info(f"接口请求的地址>>>{url}")
-            self.logger.info(f"接口请求的方法>>>POST")
-            self.logger.info(f"接口请求的json参数>>>{json.dumps(filtered_params, ensure_ascii=False, indent=2)}")
-            
+            # 3. 发送请求（请求信息由 http.post 内部打印完整URL）
             response = self.http.post(url, json=filtered_params)
             
-            # 4. Allure报告
-            # Assuming 'a' is an instance of AllureReport or similar, which is not imported.
-            # For now, we'll just log the report.
-            Loggers.info(f"接口请求成功，响应数据: {response}")
+            # 4. 记录响应
+            Loggers.info(f"接口请求响应，状态码: 200")
+            Loggers.info(f"响应数据: {json.dumps(response, ensure_ascii=False, indent=2)}")
             
             # 5. ID提取和存储
             data_obj = response.get("data", {}).get("data", {})
@@ -750,10 +746,29 @@ class BaseTest:
             
             return response, extracted_id
             
+        except requests.exceptions.HTTPError as e:
+            # 统一处理HTTP错误：从异常中提取响应数据并返回，由业务断言来判断是否正确
+            if hasattr(e, 'response') and e.response is not None:
+                try:
+                    response = e.response.json()
+                    self.logger.info(f"接口请求响应，状态码: {e.response.status_code}")
+                    self.logger.info(f"响应数据: {json.dumps(response, ensure_ascii=False, indent=2)}")
+                    Loggers.info(f"接口请求响应，状态码: {e.response.status_code}")
+                    Loggers.info(f"响应数据: {json.dumps(response, ensure_ascii=False, indent=2)}")
+                    # 错误响应时，extracted_id 为 None
+                    return response, None
+                except ValueError:
+                    # 如果响应不是JSON格式，记录文本内容并抛出异常
+                    self.logger.error(f"错误响应不是JSON格式: {e.response.text}")
+                    Loggers.error(f"错误响应不是JSON格式: {e.response.text}")
+                    raise
+            else:
+                # 如果没有响应对象，抛出异常
+                self.logger.error(f"standard_api_call HTTP请求失败 [{api_key}]: {str(e)}")
+                Loggers.error(f"HTTP请求失败: {str(e)}")
+                raise
         except requests.exceptions.RequestException as e:
             self.logger.error(f"standard_api_call HTTP请求失败 [{api_key}]: {str(e)}")
-            # Assuming 'a' is an instance of AllureReport or similar, which is not imported.
-            # For now, we'll just log the report.
             Loggers.error(f"HTTP请求失败: {str(e)}")
             raise
         except Exception as e:

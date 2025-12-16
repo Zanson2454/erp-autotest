@@ -46,10 +46,10 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
                 params=["AT_%"]
             )
             # 物料关联表：通过关联账户参考的 acc_cate_code 来清理
-            # 注意：物料关联表可能没有 code 字段，需要通过 acc_cate_id 关联清理
-            cls.db.execute(
-                "DELETE FROM fin_iv_mat_acc_cate_link_cf WHERE acc_cate_id IN (SELECT id FROM fin_iv_acc_cate_type_cf WHERE acc_cate_code LIKE %s)",
-                ["AT_%"]
+            cls.db.delete(
+                table="fin_iv_mat_acc_cate_link_cf",
+                where="acc_cate_id in (select id from fin_iv_acc_cate_type_cf where acc_cate_code like %s)",
+                params=["AT_%"]
             )
             cls.logger.info("测试数据清理完成")
         except Exception as e:
@@ -170,308 +170,325 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    # @case_decorator(
-    #     story="账户参考配置表",
-    #     title="测试批量删除账户参考",
-    #     description="验证批量删除账户参考配置功能（后端接口要求批量操作）",
-    #     severity="normal",
-    #     file_level_order=16,
-    #     tags=["iv", "acc", "ref", "batch_delete"]
-    # )
-    # def test_acc_ref_batch_delete(self):
-    #     """测试批量删除账户参考（后端接口明确要求批量操作）"""
-    #     try:
-    #         # 创建测试数据用于批量删除
-    #         if not self.acc_ref_id:
-    #             self.test_acc_ref_save()
+    @case_decorator(
+        story="账户参考配置表",
+        title="测试批量删除账户参考",
+        description="验证批量删除账户参考配置功能（后端接口要求批量操作）",
+        severity="normal",
+        file_level_order=17,
+        tags=["iv", "acc", "ref", "batch_delete"]
+    )
+    def test_acc_ref_batch_delete(self):
+        """测试批量删除账户参考（后端接口明确要求批量操作）"""
+        try:
+            # 创建测试数据用于批量删除
+            if not self.acc_ref_id:
+                self.test_acc_ref_save()
             
-    #         # 创建额外的测试数据
-    #         ref_code2 = self.mock_util.generate_unique_code(tag="IV_ACC_REF")
-    #         ref_name2 = f"账户参考_{self.mock_util.get_timestamp()}_批量删除"
-    #         set_dict2 = {
-    #             "accCateCode": ref_code2,
-    #             "accCateName": ref_name2
-    #         }
-    #         fields_to_filter2 = ["accCateCode", "accCateName"]
-    #         response2, extracted_id2 = self.standard_api_call(
-    #             api_key="账户参考配置表-保存主数据服务",
-    #             set_dict=set_dict2,
-    #             fields_to_filter=fields_to_filter2,
-    #             store_id_as=None
-    #         )
-    #         self.assert_util.assert_response_data(response2)
+            # 创建额外的测试数据
+            ref_code2 = self.mock_util.generate_unique_code(tag="IV_ACC_REF")
+            ref_name2 = f"账户参考_{self.mock_util.get_timestamp()}_批量删除"
+            set_dict2 = {
+                "accCateCode": ref_code2,
+                "accCateName": ref_name2
+            }
+            fields_to_filter2 = ["accCateCode", "accCateName"]
+            response2, extracted_id2 = self.standard_api_call(
+                api_key="账户参考配置表-保存主数据服务",
+                set_dict=set_dict2,
+                fields_to_filter=fields_to_filter2,
+                store_id_as=None
+            )
+            self.assert_util.assert_response_data(response2)
             
-    #         # 批量删除（后端接口明确要求批量操作）
-    #         ref_ids = [self.acc_ref_id, extracted_id2]
-    #         set_dict = {"ids": ref_ids}
-    #         fields_to_filter = ["ids"]
+            # 批量删除（后端接口明确要求批量操作）
+            ref_ids = [self.acc_ref_id, extracted_id2]
+            set_dict = {"ids": ref_ids}
+            fields_to_filter = ["ids"]
             
-    #         response, _ = self.standard_api_call(
-    #             api_key="账户参考配置表-批量删除数据服务",
-    #             set_dict=set_dict,
-    #             fields_to_filter=fields_to_filter,
-    #             store_id_as=None
-    #         )
+            response, _ = self.standard_api_call(
+                api_key="账户参考配置表-批量删除数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
             
-    #         # 业务断言
-    #         self.assert_util.assert_response_success(response)
+            # 业务断言
+            self.assert_util.assert_response_success(response)
             
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
     
-    # @case_decorator(
-    #     story="账户参考配置表",
-    #     title="测试复制数据转换",
-    #     description="验证账户参考配置复制数据转换功能",
-    #     severity="normal",
-    #     file_level_order=3,
-    #     tags=["iv", "acc", "ref", "copy"]
-    # )
-    # def test_acc_ref_copy_converter(self):
-    #     """测试复制数据转换"""
-    #     try:
-    #         # 检查并创建依赖数据
-    #         if not self.acc_ref_id:
-    #             self.test_acc_ref_save()
+    @case_decorator(
+        story="账户参考配置表",
+        title="测试复制数据转换",
+        description="验证账户参考配置复制数据转换功能",
+        severity="normal",
+        file_level_order=3,
+        tags=["iv", "acc", "ref", "copy"]
+    )
+    def test_acc_ref_copy_converter(self):
+        """测试复制数据转换"""
+        try:
+            # 检查并创建依赖数据
+            if not self.acc_ref_id:
+                self.test_acc_ref_save()
             
-    #         # 使用标准化API调用
-    #         set_dict = {"sourceId": self.acc_ref_id}
-    #         fields_to_filter = ["sourceId"]
+            # 使用标准化API调用
+            set_dict = {"sourceId": self.acc_ref_id}
+            fields_to_filter = ["sourceId"]
             
-    #         response, _ = self.standard_api_call(
-    #             api_key="账户参考配置表-复制数据转换服务",
-    #             set_dict=set_dict,
-    #             fields_to_filter=fields_to_filter,
-    #             store_id_as=None
-    #         )
+            response, _ = self.standard_api_call(
+                api_key="账户参考配置表-复制数据转换服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
             
-    #         # 业务断言
-    #         self.assert_util.assert_response_data(response)
+            # 业务断言
+            self.assert_util.assert_response_data(response)
             
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
     
-    # @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
-    # @case_decorator(
-    #     story="账户参考配置表",
-    #     title="测试账户参考导出任务",
-    #     description="验证账户参考配置表导入导出任务提交功能",
-    #     severity="minor",
-    #     file_level_order=10,
-    #     tags=["iv", "acc", "ref", "export", "task"]
-    # )
-    # def test_acc_ref_export_direct_post(self):
-    #     """测试账户参考导出任务（跳过）"""
-    #     try:
-    #         timestamp = self.mock_util.get_timestamp()
-    #         task_name = f"IV_ACC_REF_{self.nickname}_{timestamp}_导出"
+    @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
+    @case_decorator(
+        story="账户参考配置表",
+        title="测试账户参考导出任务",
+        description="验证账户参考配置表导入导出任务提交功能",
+        severity="minor",
+        file_level_order=10,
+        tags=["iv", "acc", "ref", "export", "task"]
+    )
+    def test_acc_ref_export_direct_post(self):
+        """测试账户参考导出任务（跳过）"""
+        try:
+            timestamp = self.mock_util.get_timestamp()
+            task_name = f"IV_ACC_REF_{self.nickname}_{timestamp}_导出"
             
-    #         # 复杂API参数，使用use_param_util=False
-    #         export_params = {
-    #             "serviceKey": "账户参考配置表-导入导出任务管理接口-提交导出任务",
-    #             "params": {
-    #                 "taskName": task_name,
-    #                 "multiSheetConfig": [
-    #                     {
-    #                         "modelKey": "ERP_FIN$fin_iv_acc_cate_type_cf",
-    #                         "modelName": "账户参考配置表",
-    #                         "sheetNo": 0,
-    #                         "sheetName": "账户参考数据",
-    #                         "headerConfigList": [
-    #                             {"name": "配置编码", "type": "TEXT", "field": "code"},
-    #                             {"name": "账户类别", "type": "TEXT", "field": "accCateType"}
-    #                         ]
-    #                     }
-    #                 ],
-    #                 "queryData": {
-    #                     "containerKey": "ERP_FIN$fin_iv_acc_cate_type_cf",
-    #                     "viewKey": "ERP_FIN$fin_iv_acc_cate_type_cf:list",
-    #                     "sceneKey": "ERP_FIN$fin_iv_acc_cate_type_cf",
-    #                     "params": {
-    #                         "request": {
-    #                             "pageable": {
-    #                                 "sortOrders": []
-    #                             }
-    #                         },
-    #                         "selectFields": [
-    #                             {"field": "code"},
-    #                             {"field": "accCateType"}
-    #                         ],
-    #                         "modelKey": "ERP_FIN$fin_iv_acc_cate_type_cf"
-    #                     }
-    #                 },
-    #                 "processConfig": {
-    #                     "processType": "TRANTOR",
-    #                     "model": "ERP_FIN$fin_iv_acc_cate_type_cf",
-    #                     "modelName": "账户参考配置表",
-    #                     "containerKey": "ERP_FIN$fin_iv_acc_cate_type_cf",
-    #                     "viewKey": "ERP_FIN$fin_iv_acc_cate_type_cf:list",
-    #                     "sceneKey": "ERP_FIN$fin_iv_acc_cate_type_cf"
-    #                 }
-    #             }
-    #         }
+            # 复杂API参数，使用use_param_util=False
+            export_params = {
+                "serviceKey": "账户参考配置表-导入导出任务管理接口-提交导出任务",
+                "params": {
+                    "taskName": task_name,
+                    "multiSheetConfig": [
+                        {
+                            "modelKey": "ERP_FIN$fin_iv_acc_cate_type_cf",
+                            "modelName": "账户参考配置表",
+                            "sheetNo": 0,
+                            "sheetName": "账户参考数据",
+                            "headerConfigList": [
+                                {"name": "配置编码", "type": "TEXT", "field": "code"},
+                                {"name": "账户类别", "type": "TEXT", "field": "accCateType"}
+                            ]
+                        }
+                    ],
+                    "queryData": {
+                        "containerKey": "ERP_FIN$fin_iv_acc_cate_type_cf",
+                        "viewKey": "ERP_FIN$fin_iv_acc_cate_type_cf:list",
+                        "sceneKey": "ERP_FIN$fin_iv_acc_cate_type_cf",
+                        "params": {
+                            "request": {
+                                "pageable": {
+                                    "sortOrders": []
+                                }
+                            },
+                            "selectFields": [
+                                {"field": "code"},
+                                {"field": "accCateType"}
+                            ],
+                            "modelKey": "ERP_FIN$fin_iv_acc_cate_type_cf"
+                        }
+                    },
+                    "processConfig": {
+                        "processType": "TRANTOR",
+                        "model": "ERP_FIN$fin_iv_acc_cate_type_cf",
+                        "modelName": "账户参考配置表",
+                        "containerKey": "ERP_FIN$fin_iv_acc_cate_type_cf",
+                        "viewKey": "ERP_FIN$fin_iv_acc_cate_type_cf:list",
+                        "sceneKey": "ERP_FIN$fin_iv_acc_cate_type_cf"
+                    }
+                }
+            }
             
-    #         # 使用standard_api_call的use_param_util=False处理复杂参数
-    #         response, _ = self.standard_api_call(
-    #             api_key="账户参考配置表-导入导出任务管理接口-提交导出任务",
-    #             set_dict=export_params,
-    #             use_param_util=False  # 复杂参数，直接使用set_dict
-    #         )
+            # 使用standard_api_call的use_param_util=False处理复杂参数
+            response, _ = self.standard_api_call(
+                api_key="账户参考配置表-导入导出任务管理接口-提交导出任务",
+                set_dict=export_params,
+                use_param_util=False  # 复杂参数，直接使用set_dict
+            )
             
-    #         # 业务断言
-    #         self.assert_util.assert_response_success(response)
+            # 业务断言
+            self.assert_util.assert_response_success(response)
             
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
     
-    # @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
-    # @case_decorator(
-    #     story="账户参考配置表",
-    #     title="测试账户参考标准导入",
-    #     description="验证账户参考配置表标准导入服务功能",
-    #     severity="minor",
-    #     file_level_order=13,
-    #     tags=["iv", "acc", "ref", "import"]
-    # )
-    # def test_acc_ref_gei_import(self):
-    #     """测试账户参考标准导入（跳过）"""
-    #     try:
-    #         # 导入参数示例 (实际需文件)
-    #         set_dict = {
-    #             "filePath": "test_acc_ref_import.xlsx",  # 假设文件
-    #             "importType": "EXCEL"
-    #         }
-    #         fields_to_filter = ["filePath", "importType"]
+    @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
+    @case_decorator(
+        story="账户参考配置表",
+        title="测试账户参考标准导入",
+        description="验证账户参考配置表标准导入服务功能",
+        severity="minor",
+        file_level_order=13,
+        tags=["iv", "acc", "ref", "import"]
+    )
+    def test_acc_ref_gei_import(self):
+        """测试账户参考标准导入（跳过）"""
+        try:
+            # 导入参数示例 (实际需文件)
+            set_dict = {
+                "filePath": "test_acc_ref_import.xlsx",  # 假设文件
+                "importType": "EXCEL"
+            }
+            fields_to_filter = ["filePath", "importType"]
             
-    #         response, _ = self.standard_api_call(
-    #             api_key="账户参考配置表标准导入服务",
-    #             set_dict=set_dict,
-    #             fields_to_filter=fields_to_filter,
-    #             store_id_as=None
-    #         )
+            response, _ = self.standard_api_call(
+                api_key="账户参考配置表标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
             
-    #         # 业务断言
-    #         self.assert_util.assert_response_success(response)
+            # 业务断言
+            self.assert_util.assert_response_success(response)
             
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
     
-    # @case_decorator(
-    #     story="账户参考配置表",
-    #     title="测试根据ID删除账户参考",
-    #     description="验证根据ID删除账户参考配置功能",
-    #     severity="normal",
-    #     file_level_order=18,
-    #     tags=["iv", "acc", "ref", "delete"]
-    # )
-    # def test_acc_ref_delete_by_id(self):
-    #     """测试根据ID删除账户参考"""
-    #     try:
-    #         # 检查并创建依赖数据
-    #         if not self.acc_ref_id:
-    #             self.test_acc_ref_save()
+    @case_decorator(
+        story="账户参考配置表",
+        title="测试根据ID删除账户参考",
+        description="验证根据ID删除账户参考配置功能",
+        severity="normal",
+        file_level_order=18,
+        tags=["iv", "acc", "ref", "delete"]
+    )
+    def test_acc_ref_delete_by_id(self):
+        """测试根据ID删除账户参考"""
+        try:
+            # 检查并创建依赖数据
+            if not self.acc_ref_id:
+                self.test_acc_ref_save()
             
-    #         # 使用标准化API调用
-    #         set_dict = {"id": self.acc_ref_id}
-    #         fields_to_filter = ["id"]
+            # 使用标准化API调用
+            set_dict = {"id": self.acc_ref_id}
+            fields_to_filter = ["id"]
             
-    #         response, _ = self.standard_api_call(
-    #             api_key="账户参考配置表-根据ID删除数据服务",
-    #             set_dict=set_dict,
-    #             fields_to_filter=fields_to_filter,
-    #             store_id_as=None
-    #         )
+            response, _ = self.standard_api_call(
+                api_key="账户参考配置表-根据ID删除数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
             
-    #         # 业务断言
-    #         self.assert_util.assert_response_success(response)
+            # 业务断言
+            self.assert_util.assert_response_success(response)
             
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
     
-    # # === 物料类型与分类参考关联表测试 ===
+    # === 物料类型与分类参考关联表测试 ===
     
-    # @case_decorator(
-    #     story="物料类型与分类参考关联表",
-    #     title="测试物料关联分页查询",
-    #     description="验证物料类型与分类参考关联表分页查询功能",
-    #     severity="normal",
-    #     file_level_order=4,
-    #     tags=["iv", "mat", "link", "paging"]
-    # )
-    # def test_mat_link_paging(self):
-    #     """测试物料关联分页查询"""
-    #     try:
-    #         # 使用标准化API调用
-    #         set_dict = {
-    #             "pageable": {
-    #                 "pageNo": 1,
-    #                 "pageSize": 20,
-    #                 "needTotal": True,
-    #                 "sortOrders": None,
-    #                 "conditionItems": None
-    #             }
-    #         }
-    #         fields_to_filter = ["pageable"]
+    @case_decorator(
+        story="物料类型与分类参考关联表",
+        title="测试物料关联分页查询",
+        description="验证物料类型与分类参考关联表分页查询功能",
+        severity="normal",
+        file_level_order=4,
+        tags=["iv", "mat", "link", "paging"]
+    )
+    def test_mat_link_paging(self):
+        """测试物料关联分页查询"""
+        try:
+            # 使用标准化API调用
+            set_dict = {
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": None
+                }
+            }
+            fields_to_filter = ["pageable"]
             
-    #         response, _ = self.standard_api_call(
-    #             api_key="物料类型与分类参考关联表-分页数据服务",
-    #             set_dict=set_dict,
-    #             fields_to_filter=fields_to_filter,
-    #             store_id_as=None
-    #         )
+            response, _ = self.standard_api_call(
+                api_key="物料类型与分类参考关联表-分页数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
             
-    #         # 业务断言
-    #         self.assert_util.assert_response_data(response)
+            # 业务断言
+            self.assert_util.assert_response_data(response)
             
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
     
-    # @case_decorator(
-    #     story="物料类型与分类参考关联表",
-    #     title="测试保存物料关联配置",
-    #     description="验证保存物料类型与分类参考关联表功能",
-    #     severity="critical",
-    #     file_level_order=1,
-    #     smoke=True,
-    #     tags=["iv", "mat", "link", "save"]
-    # )
-    # def test_mat_link_save(self):
-    #     """测试保存物料关联配置"""
-    #     try:
-    #         # 检查并创建依赖数据（账户参考）
-    #         if not self.acc_ref_id:
-    #             self.test_acc_ref_save()
+    @case_decorator(
+        story="物料类型与分类参考关联表",
+        title="测试保存物料关联配置",
+        description="验证保存物料类型与分类参考关联表功能",
+        severity="critical",
+        file_level_order=1,
+        smoke=True,
+        tags=["iv", "mat", "link", "save"]
+    )
+    def test_mat_link_save(self):
+        """测试保存物料关联配置"""
+        try:
+            # 检查并创建依赖数据（账户参考）
+            if not self.acc_ref_id:
+                self.test_acc_ref_save()
             
-    #         # 使用标准化API调用
-    #         # 注意：物料关联表只需要 matTypeId 和 accCateId 字段
-    #         set_dict = {
-    #             "matTypeId": 1,  # 示例物料类型ID
-    #             "accCateId": self.acc_ref_id  # 关联账户参考
-    #         }
-    #         fields_to_filter = ["matTypeId", "accCateId"]
+            # 注意：物料关联表可能没有 code 字段，需要通过 acc_cate_id 关联清理
+            self.db.execute(
+                "DELETE FROM fin_iv_mat_acc_cate_link_cf WHERE mat_type_id = %s and acc_cate_id = %s",
+                [self.mat_type_id, self.acc_ref_id]
+            )
+            # 使用标准化API调用
+            # 注意：物料关联表只需要 matTypeId 和 accCateId 字段
+            set_dict = {
+                "matTypeId":  self.mat_type_id,  # 示例物料类型ID
+                "accCateId":  self.acc_ref_id  # 关联账户参考
+            }
+            fields_to_filter = ["matTypeId", "accCateId"]
             
-    #         response, extracted_id = self.standard_api_call(
-    #             api_key="物料类型与分类参考关联表-保存主数据服务",
-    #             set_dict=set_dict,
-    #             fields_to_filter=fields_to_filter,
-    #             store_id_as="mat_link"  # 自动存储为 self.mat_link_id
-    #         )
+            response, extracted_id = self.standard_api_call(
+                api_key="物料类型与分类参考关联表-保存主数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="mat_link"  # 自动存储为 self.mat_link_id
+            )
+            # 业务断言
+            self.assert_util.assert_response_data(response)
             
-    #         # 业务断言
-    #         self.assert_util.assert_response_data(response)
-            
-    #         # ID已通过 store_id_as="mat_link" 自动存储为 self.mat_link_id
-            
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
-    
+            # 重复创建（应该返回错误）
+            # standard_api_call 统一返回响应数据，由业务断言来判断是否正确
+            response2, extracted_id2 = self.standard_api_call(
+                api_key="物料类型与分类参考关联表-保存主数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="mat_link"  # 自动存储为 self.mat_link_id
+            )
+            # 业务断言-接口报错，数据已存在
+            err_code = response2.get("err", {}).get("code")
+            msg = response2.get("info", {}).get("msg")
+            # 业务断言
+            self.assert_util.assert_by_operator(err_code, "=", "M1017")
+            self.assert_util.assert_by_operator(msg, "=", "物料类型与分类参考关联表数据已存在")
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+        
+
     # @case_decorator(
     #     story="物料类型与分类参考关联表",
     #     title="测试根据ID查找物料关联",
