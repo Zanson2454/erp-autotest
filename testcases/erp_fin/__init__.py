@@ -170,7 +170,13 @@ class FinBaseTest(BaseTest):
             else:
                 cls.calendar_item_id = None
                 cls.logger.warning("calender_item_info 中没有 period_type='MONTH' 的项，无法获取 calendar_item_id")
-
+            sb_type_info_list = cls.fin_cache_data.get("sb_type_info",{}).get("sb_type_info",[])
+            if sb_type_info_list:
+                cls.sb_type_info = sb_type_info_list[0].get("id")
+                cls.logger.info(f"获取到 sb_type_info: {cls.sb_type_info}")
+            else:
+                cls.sb_type_info = None
+                cls.logger.warning("sb_type_info 为空，无法获取 sb_type_info")
         # 设置路径参数和用户信息
         cls.path_params = {"tmodule": "FIN"}  # erp_fin module
         cls.nickname = cls.init_data["user_info"]['user_info']["nickname"] if cls.init_data and "user_info" in cls.init_data else "test_user"

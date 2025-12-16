@@ -191,7 +191,7 @@ class TestSettItemCheck(FinBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
-
+        
 
 if __name__ == "__main__":
     test = TestSettItemCheck()
