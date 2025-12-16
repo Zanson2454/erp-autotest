@@ -44,7 +44,7 @@ class TestSettDocAssoc(FinBaseTest):
     def test_sett_item_remittance(self):
         """测试结算项汇单（发票立账）"""
         try:
-            sett_item_id = self.create_settlement_item("CREATED")
+            sett_item_id = self.create_settlement_item("E_SLS_GOODS")
             api_path = self.get_api_path("SETT-ITEM-结算项确认及汇单-关联操作-异步服务")
             params, url = self.get_api_params(api_path)
             data = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
@@ -73,7 +73,7 @@ class TestSettDocAssoc(FinBaseTest):
             self.db.update("sett_doc_assoc_doc_type_cf", 
                        {"accounting_mode": "RECEIVABLE_BASED"}, 
                        f"company_organization='{self.com_org_id}' and settlement_type='{self.sett_doc_type_info}' and deleted=0")
-            sett_item_id = self.create_settlement_item("CREATED")
+            sett_item_id = self.create_settlement_item("E_SLS_GOODS")
             api_path = self.get_api_path("SETT-ITEM-结算项确认及汇单-关联操作-异步服务")
             params, url = self.get_api_params(api_path)
             data = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
@@ -115,7 +115,7 @@ class TestSettDocAssoc(FinBaseTest):
     def test_sett_item_billing(self):
         """测试结算项开票功能"""
         try:
-            sett_item_id = self.create_settlement_item("CREATED")
+            sett_item_id = self.create_settlement_item("E_SLS_GOODS")
             #执行结算项-批量转换销售发票校验服务
             api_path = self.get_api_path("结算项-批量转换销售发票校验")
             params, url = self.get_api_params(api_path)

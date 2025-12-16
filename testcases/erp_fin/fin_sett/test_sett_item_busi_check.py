@@ -28,12 +28,12 @@ class TestSettItemBusiCheck(FinBaseTest):
     def get_sett_item_id(self):
         """获取不同状态的结算项ID 已创建，已对账，已汇单 """
         #已创建结算项
-        created_sett_item_id=self.create_settlement_item("CREATED")
+        created_sett_item_id=self.create_settlement_item("E_SLS_GOODS")
         #已对账结算项
-        reconciled_sett_item_id=self.create_settlement_item("CREATED")
+        reconciled_sett_item_id=self.create_settlement_item("E_SLS_GOODS")
         self.db.update("sett_item_tr", {"sett_item_status":"RECONCILED"}, f"id={reconciled_sett_item_id}")
         #已汇单结算项
-        self.create_settlement_doc()
+        self.create_settlement_doc("E_SLS_GOODS")
         sql="""
         select id from sett_item_tr where deleted=0 and sett_item_status='SETT_DOC_CREATED' order by created_at desc limit 1;
         """

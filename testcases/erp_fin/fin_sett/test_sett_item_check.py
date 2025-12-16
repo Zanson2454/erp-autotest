@@ -49,7 +49,7 @@ class TestSettItemCheck(FinBaseTest):
 
             result = self.db.query(sql)
             if not result:
-                self.create_settlement_item("CREATED")
+                self.create_settlement_item("E_SLS_GOODS")
                 result = self.db.query(sql)
             request_id = result[0]["id"]
             
@@ -111,7 +111,7 @@ class TestSettItemCheck(FinBaseTest):
     def test_add_sett_item(self):
         """测试新增结算项"""
         try:
-            self.create_settlement_item("CREATED")
+            self.create_settlement_item("E_SLS_GOODS")
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -140,7 +140,7 @@ class TestSettItemCheck(FinBaseTest):
             """
             request_id=self.db.query(sql)[0]["id"]
             if not request_id:
-                self.create_settlement_item("CREATED")
+                self.create_settlement_item("E_SLS_GOODS")
                 request_id = self.db.query(sql)[0]["id"]
             
             filtered_params = ParamUtil.filter_post_body_fields(

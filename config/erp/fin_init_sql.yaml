@@ -21,8 +21,8 @@ sett_doc_info:
 sett_item_info:
   sett_item_type_info:
     sql: |
-     select id,sett_item_type_code,sett_item_type_name  from fin_sett_item_type_cf where deleted=0  and sett_item_type_code='E_SLS_GODS' limit 1;
-    description: "查询外部-销售（标准）结算项类型信息"
+     select id,bt_class,sett_item_type_code,sett_item_type_name,sett_doc_type_code,is_acq_cost,is_count_qty  from fin_sett_item_type_cf where deleted=0;
+    description: "查询结算项类型信息"
 #销售发票类型配置
 sb_type_info:
   sb_type_info:

@@ -131,19 +131,24 @@ class FinBaseTest(BaseTest):
         if cls.md_cache_data:
             cls.com_org_id = cls.md_cache_data.get("org_info",{}).get("gr_come_org_info",[])[0].get("id")
             cls.sls_org_id = cls.md_cache_data.get("org_info",{}).get("sls_org_info",[])[0].get("id")
+            cls.pur_org_id = cls.md_cache_data.get("org_info",{}).get("pur_org_info",[])[0].get("id")
             cls.inv_org_id = cls.md_cache_data.get("org_info",{}).get("inv_org_info",[])[0].get("id")
             cls.cust_id = cls.md_cache_data.get("partner_info",{}).get("cust_info",[])[0].get("id")
+            cls.vend_id = cls.md_cache_data.get("partner_info",{}).get("vend_info",[])[0].get("id")
             cls.mat_id = cls.md_cache_data.get("mat_info",{}).get("mat_md",{}).get("FINP",[])[0].get("id")
             cls.mat_type_cf=cls.md_cache_data.get("mat_info",{}).get("mat_type_cf",{}).get("FINP",[])[0].get("id")
             
         if cls.fin_cache_data:
             sett_item_type_info_list = cls.fin_cache_data.get("sett_item_info",{}).get("sett_item_type_info",[])
-            if sett_item_type_info_list:
-                cls.sett_item_type_info = sett_item_type_info_list[0].get("id")
-                cls.logger.info(f"获取到 sett_item_type_info: {cls.sett_item_type_info}")
-            else:
-                cls.sett_item_type_info = None
-                cls.logger.warning("sett_item_type_info 为空，无法获取 sett_item_type_info")
+            # 过滤掉sett_item_type_code为None的项，并构建字典
+            cls.sett_item_type_info = {
+                item.get("sett_item_type_code"): item 
+                for item in sett_item_type_info_list 
+                if item.get("sett_item_type_code")
+            }
+            available_codes = list(cls.sett_item_type_info.keys())
+            cls.logger.info(f"获取到 sett_item_type_info，可用code列表: {available_codes}")
+
             
             sett_doc_type_info_list = cls.fin_cache_data.get("sett_doc_info",{}).get("sett_doc_type_info",[])
             if sett_doc_type_info_list:
@@ -182,6 +187,7 @@ class FinBaseTest(BaseTest):
         cls.nickname = cls.init_data["user_info"]['user_info']["nickname"] if cls.init_data and "user_info" in cls.init_data else "test_user"
         cls.user_id = cls.init_data["user_info"]['user_info']["id"] if cls.init_data and "user_info" in cls.init_data else 1
     
+    
     def get_api_path(self, api_key):
         """
         获取API路径 (erp_fin specific, using ParamUtil)
@@ -194,10 +200,22 @@ class FinBaseTest(BaseTest):
         """
         return ParamUtil.get_api_params(self.api_params, api_path, with_query_params)
     
-    def create_settlement_item(self,status="CREATED"):
+    
+    def create_settlement_item(self,sett_item_type_code="E_SLS_GOODS"):
         """
-        创建结算项公共方法(status: "CREATED"-已创建)，返回结算项id
+        创建结算项公共方法，通过结算行项目类型编码创建不同结算项
         """
+        #获取对应key的sett_item_type_info的值
+        if not self.sett_item_type_info:
+            raise ValueError("sett_item_type_info 未初始化，请检查 setup_class 是否正确执行")
+        sett_item_type_info = self.sett_item_type_info.get(sett_item_type_code)
+        if not sett_item_type_info:
+            available_codes = list(self.sett_item_type_info.keys())
+            raise ValueError(
+                f"未找到对应key的sett_item_type_info: {sett_item_type_code}\n"
+                f"可用的sett_item_type_code列表: {available_codes}"
+            )
+        sett_item_type_name = sett_item_type_info.get("sett_item_type_name")
         api_path = self.get_api_path("SETT-ITEM-手动创建服务")
         params, url = self.get_api_params(api_path)
         filtered_params = ParamUtil.filter_post_body_fields(
@@ -211,21 +229,21 @@ class FinBaseTest(BaseTest):
             "purSlsOrgId"],["params","request"])
         set_dict = {
             "settItemCode": "AUTOTEST-SETTI"+str(self.mock_util.get_timestamp(timestamp=True)),
-            "settItemStatus": status,
-            "settItemTypeId": {"id": self.sett_item_type_info},
+            "settItemStatus": "CREATED",
+            "settItemTypeId": {"id": sett_item_type_info.get("id")},
             "settDate": self.mock_util.get_timestamp(timestamp=True),
-            "partnerType": "CUSTOMER",
+            "partnerType": "CUSTOMER" if sett_item_type_info.get("bt_class") == "SALES" else "SUPPLIER",
             "ptHeadId": None,
-            "remark": "自动化测试创建结算项",
+            "remark": f"自动化测试创建结算项-{sett_item_type_name}",
             "comOrgId": {"id": self.com_org_id},
-            "purSlsOrgType": "SLS",
+            "purSlsOrgType": "SLS" if sett_item_type_info.get("bt_class") == "SALES" else "PUR",
             "invOrgId": {"id": self.inv_org_id},
             "matId": {"id": self.mat_id},
             "taxRate": self.tax_rate,
             "basicUnitId": {"id": self.basic_unit_id},
             "genMatTypeCfId": {"id": self.mat_type_cf},
-            "settQty": 10,
-            "settDocPrice": 30,
+            "settQty": 10 if sett_item_type_info.get("is_count_qty") else None,
+            "settDocPrice": 30 if sett_item_type_info.get("is_count_qty") else None,
             "settDocAmt": 300,
             "netDocAmt": 265.486726,
             "taxAmt": 34.513274,
@@ -234,16 +252,16 @@ class FinBaseTest(BaseTest):
             "exchRate": 1.00,
             "grossBaseAmt": 300,
             "netBaseAmt": 265.486726,
-            "settDocTypeId":{"id": self.sett_doc_type_info} ,
+            "settDocTypeId":{"id": sett_item_type_info.get("sett_doc_type_code")} ,
             "settDocId": None,
             "dnCode": None,
             "dnItemCode": None,
             "poSoCode": None,
             "poSoItemCode": None,
             "asyncExecutionStatus": "CREATED",
-            "partnerId": {"id": self.cust_id},
+            "partnerId": {"id": self.cust_id if sett_item_type_info.get("bt_class") == "SALES" else self.vend_id},
             "taxCodeId": {"id": self.tax_code_id},
-            "purSlsOrgId": {"id": self.sls_org_id},
+            "purSlsOrgId": {"id": self.sls_org_id if sett_item_type_info.get("bt_class") == "SALES" else self.pur_org_id},
         }
         ParamUtil.set_request_params(filtered_params, set_dict)
         result = self.http.post(url, json=filtered_params, description="创建结算项")
@@ -253,11 +271,11 @@ class FinBaseTest(BaseTest):
         if not data_list or len(data_list) == 0:
             raise ValueError("创建结算项失败：响应数据为空")
         return data_list[0].get("id")
-    def create_settlement_doc(self):
+    def create_settlement_doc(self, sett_item_type_code="E_SLS_GOODS"):
         """
-        创建结算单公共方法,status: "CREATED"-已创建",返回结算单id
+        创建结算单公共方法,通过结算项类型编码创建不同结算单
         """
-        sett_item_id=self.create_settlement_item("CREATED")
+        sett_item_id=self.create_settlement_item(sett_item_type_code)
         api_path = self.get_api_path("SETT-ITEM-结算项确认及汇单-关联操作-异步服务")
         params, url = self.get_api_params(api_path)
         data = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
@@ -282,7 +300,7 @@ class FinBaseTest(BaseTest):
         
         return sql_result[0]["sett_doc_id"]
         
-    def create_confirmed_settlement_doc(self):
+    def create_confirmed_settlement_doc(self, sett_item_type_code="E_SLS_GOODS"):
         """
         创建已确认结算单公共方法,返回结算单id
         """
@@ -290,7 +308,7 @@ class FinBaseTest(BaseTest):
         params, url = self.get_api_params(api_path)
         data = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
         data = ParamUtil.convert_param_type(data, ["params", "request","id"], "array")
-        data["params"]["request"]["id"][0] = self.create_settlement_doc()
+        data["params"]["request"]["id"][0] = self.create_settlement_doc(sett_item_type_code)
         result = self.http.post(url, json=data, description=f"结算单确认 - ID: {data['params']['request']['id'][0]}")
         self.assert_util.assert_response_success(result)
         #等待异步任务执行完成，当状态为PROCESSING时一直等待，最长超时10秒
@@ -320,4 +338,7 @@ class FinBaseTest(BaseTest):
 if __name__ == "__main__":
     FinBaseTest.setup_class()
     test = FinBaseTest()
-    test.create_settlement_item("RECONCILED")
+    test.create_settlement_item("E_PUR_GOODS")
+    test.create_settlement_item("E_SLS_GOODS")
+    test.create_settlement_item("E_SLS_FRET_C")
+    test.create_settlement_item("E_PUR_FRET_C")

@@ -28,8 +28,8 @@ class TestSettDocBusiCheck(FinBaseTest):
     def get_sett_doc_id(self):
         """获取不同状态的结算单ID 已创建，已确认 """
         try:
-            created_sett_doc_id = self.create_settlement_doc()
-            confirmed_sett_doc_id = self.create_confirmed_settlement_doc()
+            created_sett_doc_id = self.create_settlement_doc("E_SLS_GOODS")
+            confirmed_sett_doc_id = self.create_confirmed_settlement_doc("E_SLS_GOODS")
             return [created_sett_doc_id, confirmed_sett_doc_id]
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -237,7 +237,7 @@ class TestSettDocBusiCheck(FinBaseTest):
             api_path = self.get_api_path("结算单-详情视图查询服务")
             params, url = self.get_api_params(api_path)
             filtered_data = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
-            filtered_data["params"]["request"]["id"] = self.create_settlement_doc()
+            filtered_data["params"]["request"]["id"] = self.create_settlement_doc("E_SLS_GOODS")
             result = self.http.post(url, json=filtered_data, description=f"修改结算单")
             self.assert_util.assert_response_success(result)   
             self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("id",{}),"=",filtered_data["params"]["request"]["id"])
@@ -263,7 +263,7 @@ class TestSettDocBusiCheck(FinBaseTest):
             #过滤请求参数
             filtered_data = ParamUtil.filter_post_body_fields(params, ["id","settItems"], ["params", "request"])
             #获取已创建的结算单id
-            filtered_data["params"]["request"]["id"] = self.create_settlement_doc()
+            filtered_data["params"]["request"]["id"] = self.create_settlement_doc("E_SLS_GOODS")
             
             #获取符合条件的结算行项目类型
             sql = f"""

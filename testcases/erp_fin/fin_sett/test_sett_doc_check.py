@@ -38,7 +38,7 @@ class TestSettDocCheck(FinBaseTest):
             api_path = self.get_api_path("结算单表-根据ID查找数据服务")
             params, url = self.get_api_params(api_path)
             filtered_data = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
-            filtered_data["params"]["request"]["id"] = self.create_settlement_doc()
+            filtered_data["params"]["request"]["id"] = self.create_settlement_doc("E_SLS_GOODS")
             result = self.http.post(url, json=filtered_data, description=f"查询结算单详情")
             self.assert_util.assert_response_success(result)
             a.json(filtered_data, "请求数据")
