@@ -432,7 +432,7 @@ class TestSettConfig(FinBaseTest):
                 ["comOrgId","sdcHeadCode","settDocTypeCode","settItemTypeCode"],
                 ["params","request"])
             com_org_id=self.com_org_id
-            sett_item_type_id=self.sett_item_type_info
+            sett_item_type_id=self.sett_item_type_info["E_SLS_GOODS"]["id"]
             sett_doc_type_id=self.sett_doc_type_info
             sql=f"""
             select id,sdc_head_code,sdc_description
