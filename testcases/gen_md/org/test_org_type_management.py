@@ -85,8 +85,7 @@ class TestOrg_TypeManagement(GenMdBaseTest):
             )
             
             self.assert_util.assert_response_data(response)
-            self.org_type_id = extracted_id.get("id", None)
-            
+            # extracted_id 已经是 ID 值（int），store_id_as="org_type" 已自动存储为 self.org_type_id
             a.json(response, "响应数据")
             
         except Exception as e:
