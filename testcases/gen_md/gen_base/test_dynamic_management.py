@@ -333,6 +333,7 @@ class TestDynamicManagement(GenMdBaseTest):
         file_level_order=5,
         tags=["动态表单", "批量查询", "GEN_DYNAMIC_FIND_BY_IDS_TEMPLATE_SERVICE"]
     )
+    @pytest.mark.skip(reason="业务未引用")
     def test_find_by_ids_template(self):
         """根据IDs查询动态表单模板集合用例 - GEN_DYNAMIC_FIND_BY_IDS_TEMPLATE_SERVICE"""
         try:

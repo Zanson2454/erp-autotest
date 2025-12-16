@@ -32,6 +32,8 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
         if cls.md_cache_data:
             gr_come_org_info = cls.md_cache_data.get("org_info", {}).get("gr_come_org_info", [])
             cls.com_org_id = gr_come_org_info[0].get("id") if gr_come_org_info else None
+            mat_type_info = cls.md_cache_data.get("mat_info", {}).get("mat_type_cf", {}).get("FINP", [])
+            cls.mat_type_id = mat_type_info[0].get("id") if mat_type_info else None
     
     @classmethod
     def teardown_class(cls):
@@ -44,10 +46,10 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
                 params=["AT_%"]
             )
             # 物料关联表：通过关联账户参考的 acc_cate_code 来清理
-            # 注意：物料关联表可能没有 code 字段，需要通过 acc_cate_id 关联清理
-            cls.db.execute(
-                "DELETE FROM fin_iv_mat_acc_cate_link_cf WHERE acc_cate_id IN (SELECT id FROM fin_iv_acc_cate_type_cf WHERE acc_cate_code LIKE %s)",
-                ["AT_%"]
+            cls.db.delete(
+                table="fin_iv_mat_acc_cate_link_cf",
+                where="acc_cate_id in (select id from fin_iv_acc_cate_type_cf where acc_cate_code like %s)",
+                params=["AT_%"]
             )
             cls.logger.info("测试数据清理完成")
         except Exception as e:
@@ -126,7 +128,6 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
             # 业务断言
             self.assert_util.assert_response_data(response)
             
-            # ID已通过 store_id_as="acc_ref" 自动存储为 self.acc_ref_id
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -174,7 +175,7 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
         title="测试批量删除账户参考",
         description="验证批量删除账户参考配置功能（后端接口要求批量操作）",
         severity="normal",
-        file_level_order=16,
+        file_level_order=17,
         tags=["iv", "acc", "ref", "batch_delete"]
     )
     def test_acc_ref_batch_delete(self):
@@ -447,11 +448,16 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
             if not self.acc_ref_id:
                 self.test_acc_ref_save()
             
+            # 注意：物料关联表可能没有 code 字段，需要通过 acc_cate_id 关联清理
+            self.db.execute(
+                "DELETE FROM fin_iv_mat_acc_cate_link_cf WHERE mat_type_id = %s and acc_cate_id = %s",
+                [self.mat_type_id, self.acc_ref_id]
+            )
             # 使用标准化API调用
             # 注意：物料关联表只需要 matTypeId 和 accCateId 字段
             set_dict = {
-                "matTypeId": 1,  # 示例物料类型ID
-                "accCateId": self.acc_ref_id  # 关联账户参考
+                "matTypeId":  self.mat_type_id,  # 示例物料类型ID
+                "accCateId":  self.acc_ref_id  # 关联账户参考
             }
             fields_to_filter = ["matTypeId", "accCateId"]
             
@@ -461,16 +467,28 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
                 fields_to_filter=fields_to_filter,
                 store_id_as="mat_link"  # 自动存储为 self.mat_link_id
             )
-            
             # 业务断言
             self.assert_util.assert_response_data(response)
             
-            # ID已通过 store_id_as="mat_link" 自动存储为 self.mat_link_id
-            
+            # 重复创建（应该返回错误）
+            # standard_api_call 统一返回响应数据，由业务断言来判断是否正确
+            response2, extracted_id2 = self.standard_api_call(
+                api_key="物料类型与分类参考关联表-保存主数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="mat_link"  # 自动存储为 self.mat_link_id
+            )
+            # 业务断言-接口报错，数据已存在
+            err_code = response2.get("err", {}).get("code")
+            msg = response2.get("info", {}).get("msg")
+            # 业务断言
+            self.assert_util.assert_by_operator(err_code, "=", "M1017")
+            self.assert_util.assert_by_operator(msg, "=", "物料类型与分类参考关联表数据已存在")
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
-    
+        
+
     @case_decorator(
         story="物料类型与分类参考关联表",
         title="测试根据ID查找物料关联",
@@ -521,24 +539,9 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
         try:
             # 创建测试数据用于批量删除
             if not self.mat_link_id:
-                self.test_mat_link_save()
-            
-            # 创建额外的测试数据
-            set_dict2 = {
-                "matTypeId": 1,
-                "accCateId": self.acc_ref_id
-            }
-            fields_to_filter2 = ["matTypeId", "accCateId"]
-            response2, extracted_id2 = self.standard_api_call(
-                api_key="物料类型与分类参考关联表-保存主数据服务",
-                set_dict=set_dict2,
-                fields_to_filter=fields_to_filter2,
-                store_id_as=None
-            )
-            self.assert_util.assert_response_data(response2)
-            
+                self.test_mat_link_save()       
             # 批量删除（后端接口明确要求批量操作）
-            link_ids = [self.mat_link_id, extracted_id2]
+            link_ids = [self.mat_link_id]
             set_dict = {"ids": link_ids}
             fields_to_filter = ["ids"]
             
@@ -579,7 +582,7 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
                 api_key="物料类型与分类参考关联表-复制数据转换服务",
                 set_dict=set_dict,
                 fields_to_filter=fields_to_filter,
-                store_id_as=None
+                store_id_as=None  
             )
             
             # 业务断言
@@ -731,6 +734,7 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
             a.text(str(e), "失败原因")
             raise
     
+    @pytest.mark.skip(reason="标准导出实际未引用")
     @case_decorator(
         story="账户参考配置表",
         title="测试账户参考标准导出",
@@ -767,6 +771,7 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
             a.text(str(e), "失败原因")
             raise
     
+    @pytest.mark.skip(reason="标准导出实际未引用")
     @case_decorator(
         story="物料类型与分类参考关联表",
         title="测试物料关联标准导出",
