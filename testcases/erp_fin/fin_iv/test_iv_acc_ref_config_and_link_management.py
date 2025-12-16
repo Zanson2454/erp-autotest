@@ -39,18 +39,20 @@ class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
     def teardown_class(cls):
         """测试类结束后执行清理"""
         try:
-            # 账户参考配置表：使用 acc_cate_code 字段（数据库字段名）
-            cls.db.delete(
-                table="fin_iv_acc_cate_type_cf",
-                where="acc_cate_code like %s",
-                params=["AT_%"]
-            )
+           
             # 物料关联表：通过关联账户参考的 acc_cate_code 来清理
             cls.db.delete(
                 table="fin_iv_mat_acc_cate_link_cf",
                 where="acc_cate_id in (select id from fin_iv_acc_cate_type_cf where acc_cate_code like %s)",
                 params=["AT_%"]
             )
+            # 账户参考配置表：使用 acc_cate_code 字段（数据库字段名）
+            cls.db.delete(
+                table="fin_iv_acc_cate_type_cf",
+                where="acc_cate_code like %s",
+                params=["AT_%"]
+            )
+            # pass
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")

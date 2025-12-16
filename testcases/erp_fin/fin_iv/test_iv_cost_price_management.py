@@ -12,7 +12,6 @@ project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
 
 from testcases.erp_fin import FinBaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
@@ -21,60 +20,99 @@ from utils.report_util import a, case_decorator
 class TestIvCostPriceManagement(FinBaseTest):
     """存货成本价格测试类"""
     
-    cost_price_id = None
-    
     @classmethod
     def setup_class(cls):
         super().setup_class()
         cls.cost_price_id = None
         cls.logger.info("存货成本价格测试类初始化完成")
+        # 初始化MD（从md_cache_data获取主数据）
         if cls.md_cache_data:
-            cls.com_org_id = cls.md_cache_data.get("org_info",{}).get("gr_come_org_info",[])[0].get("id")
-            cls.inv_org_id = cls.md_cache_data.get("org_info",{}).get("inv_org_info",[])[0].get("id")
+            gr_come_org_info = cls.md_cache_data.get("org_info", {}).get("gr_come_org_info", [])
+            cls.com_org_id = gr_come_org_info[0].get("id") if gr_come_org_info else None
+            inv_org_info = cls.md_cache_data.get("org_info", {}).get("inv_org_info", [])
+            cls.inv_org_id = inv_org_info[0].get("id") if inv_org_info else None
+            # 获取物料ID（FINP类型）
+            mat_md = cls.md_cache_data.get("mat_info", {}).get("mat_md", {})
+            finp_list = mat_md.get("FINP", [])
+            cls.mat_id = finp_list[0].get("id") if finp_list else None
     
     @classmethod
     def teardown_class(cls):
         """测试类结束后执行清理"""
         try:
-            cls.db.delete(
-                table="fin_iv_price_md",
-                where="code like %s",
-                params=["AT_%"]
-            )
+            # cls.db.delete(
+            #     table="fin_iv_price_md",
+            #     where="code like %s",
+            #     params=["AT_%"]
+            # )
+            pass
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
     
     @case_decorator(
         story="存货成本价格",
-        title="测试根据ID查找成本价格",
-        description="验证存货成本价格根据ID查找功能",
-        severity="normal",
-        order=1,
-        tags=["iv", "cost", "price", "find"]
+        title="测试保存成本价格",
+        description="验证保存存货成本价格功能",
+        severity="critical",
+        file_level_order=1,
+        smoke=True,
+        tags=["iv", "cost", "price", "save"]
     )
-    def test_find_cost_price_by_id(self):
-        """测试根据ID查找成本价格"""
+    def test_save_cost_price(self):
+        """测试保存成本价格"""
         try:
-            if not self.cost_price_id:
-                self.test_save_cost_price()
+            # 检查依赖数据
+            if not self.com_org_id:
+                raise ValueError("com_org_id 未初始化，请检查 md_cache_data")
+            if not self.inv_org_id:
+                raise ValueError("inv_org_id 未初始化，请检查 md_cache_data")
+            if not self.mat_id:
+                raise ValueError("mat_id 未初始化，请检查 md_cache_data")
             
-            api_path = self.get_api_path("存货成本价格-根据ID查找数据服务")
-            params, url = self.get_api_params(api_path)
-            
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
+            # 确保唯一，能新增成功
+            sql = self.db.delete(
+                table="fin_iv_price_md",
+                where="com_org_id = %s and mat_id =%s and  inv_org_id=%s",
+                params=(self.com_org_id, self.mat_id, self.inv_org_id)
             )
-            set_dict = {"id": self.cost_price_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            # 使用标准化API调用
+            # 根据 curl 请求，参数需要是对象格式，且包含 ivType、costPrice、enableStatus 等字段
+            set_dict = {
+                "comOrgId": {"id": self.com_org_id},
+                "invOrgId": {"id": self.inv_org_id},
+                "matId": {"id": self.mat_id},
+                "ivType": "PERIOD_METHOD",
+                "costPrice": 100.0,
+                "enableStatus": "ENABLE",
+                "batchCode": None,
+                "currId": None
+            }
+            fields_to_filter = ["comOrgId", "invOrgId", "matId", "ivType", "costPrice", "enableStatus", "batchCode", "currId"]
+            
+            response, extracted_id = self.standard_api_call(
+                api_key="IV-存货成本-数据提交服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="cost_price"  # 自动存储为 self.cost_price_id
+            )
+            # 业务断言
             self.assert_util.assert_response_data(response)
             
-            price_data = response.get("data", {}).get("data", {})
-            assert price_data.get("id") == self.cost_price_id, "查找ID不匹配"
+            # 唯一键验证
+            response2,extracted_id2 = self.standard_api_call(
+                api_key="IV-存货成本-数据提交服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None  
+            )
             
-            a.json(response, "查找响应")
+            errCode = response2.get("err", {}).get("code")
+            errMsg = response2.get("err", {}).get("msg")
+            self.assert_util.assert_by_operator(errCode, "=", "FIN_IV_PRICE_EXIST", "唯一键验证失败")
+            self.assert_util.assert_by_operator(errMsg, "=", "新增失败,成本价格已存在", "唯一键验证失败")
+            
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -82,31 +120,36 @@ class TestIvCostPriceManagement(FinBaseTest):
     
     @case_decorator(
         story="存货成本价格",
-        title="测试复制数据转换",
-        description="验证存货成本价格复制数据转换功能",
+        title="测试根据ID查找成本价格",
+        description="验证存货成本价格根据ID查找功能",
         severity="normal",
-        order=2,
-        tags=["iv", "cost", "price", "copy"]
+        file_level_order=2,
+        tags=["iv", "cost", "price", "find"]
     )
-    def test_copy_data_converter_price(self):
-        """测试复制数据转换"""
+    def test_find_cost_price_by_id(self):
+        """测试根据ID查找成本价格"""
         try:
+            # 检查并创建依赖数据
             if not self.cost_price_id:
                 self.test_save_cost_price()
             
-            api_path = self.get_api_path("存货成本价格-复制数据转换服务")
-            params, url = self.get_api_params(api_path)
+            # 使用标准化API调用
+            set_dict = {"id": self.cost_price_id}
+            fields_to_filter = ["id"]
             
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["sourceId"], ["params", "request"]
+            response, _ = self.standard_api_call(
+                api_key="存货成本价格-根据ID查找数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
             )
-            set_dict = {"sourceId": self.cost_price_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            # 业务断言
             self.assert_util.assert_response_data(response)
             
-            a.json(response, "复制转换响应")
+            # 验证返回的数据
+            price_data = response.get("data", {}).get("data", {})
+            self.assert_util.assert_by_operator(price_data.get("id"), "=", self.cost_price_id, "查找ID不匹配")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -117,77 +160,33 @@ class TestIvCostPriceManagement(FinBaseTest):
         title="测试分页查询成本价格",
         description="验证存货成本价格分页查询功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         tags=["iv", "cost", "price", "paging"]
     )
     def test_paging_cost_price(self):
         """测试分页查询成本价格"""
         try:
-            api_path = self.get_api_path("存货成本价格-分页数据服务")
-            params, url = self.get_api_params(api_path)
-            
-            pageable = {
-                "pageNo": 1,
-                "pageSize": 20,
-                "needTotal": True,
-                "sortOrders": None,
-                "conditionItems": None
-            }
-            
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable"], ["params", "request"]
-            )
-            ParamUtil.set_request_params(filtered_params, {"pageable": pageable})
-            
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-            
-            records = response.get("data", {}).get("data", {}).get("data", [])
-            a.json(response, "分页查询响应")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
-    
-    @case_decorator(
-        story="存货成本价格",
-        title="测试保存成本价格",
-        description="验证保存存货成本价格功能",
-        severity="critical",
-        order=4,
-        smoke=True,
-        tags=["iv", "cost", "price", "save"]
-    )
-    def test_save_cost_price(self):
-        """测试保存成本价格"""
-        try:
-            price_code = self.mock_util.generate_unique_code(tag="IV_PRICE")
-            price_name = f"成本价格_{self.mock_util.get_timestamp()}"
-            
-            api_path = self.get_api_path("存货成本价格-保存数据服务")
-            params, url = self.get_api_params(api_path)
-            
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["comOrgId", "code", "name", "costPrice", "effectiveDate"], ["params", "request"]
-            )
+            # 使用标准化API调用
             set_dict = {
-                "comOrgId": self.com_org_id,
-                "code": price_code,
-                "name": price_name,
-                "costPrice": 100.0,
-                "effectiveDate": "2025-01-01",
-                "currencyId": self.curr_id if hasattr(self, 'curr_id') else 1
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": None
+                }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["pageable"]
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="存货成本价格-分页数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+            
+            # 业务断言
             self.assert_util.assert_response_data(response)
-            
-            self.cost_price_id = response.get("data", {}).get("data", {}).get("id")
-            assert self.cost_price_id, "保存成本价格失败"
-            
-            a.json(filtered_params, "保存请求")
-            a.json(response, "保存响应")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -195,101 +194,69 @@ class TestIvCostPriceManagement(FinBaseTest):
     
     @case_decorator(
         story="存货成本价格",
-        title="测试批量删除成本价格",
-        description="验证批量删除存货成本价格功能",
+        title="测试复制数据转换",
+        description="验证存货成本价格复制数据转换功能",
         severity="normal",
-        order=5,
-        tags=["iv", "cost", "price", "batch_delete"]
+        file_level_order=4,
+        tags=["iv", "cost", "price", "copy"]
     )
-    def test_batch_delete_cost_price(self):
-        """测试批量删除成本价格"""
+    def test_copy_data_converter_price(self):
+        """测试复制数据转换"""
         try:
-            price_ids = [self.cost_price_id] if self.cost_price_id else []
-            # 创建额外价格用于批量
-            self.test_save_cost_price()
-            price_ids.append(self.cost_price_id)
+            # 检查并创建依赖数据
+            if not self.cost_price_id:
+                self.test_save_cost_price()
             
-            api_path = self.get_api_path("存货成本价格-批量删除数据服务")
-            params, url = self.get_api_params(api_path)
+            # 使用标准化API调用
+            set_dict = {"sourceId": self.cost_price_id}
+            fields_to_filter = ["sourceId"]
             
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ids"], ["params", "request"]
+            response, _ = self.standard_api_call(
+                api_key="存货成本价格-复制数据转换服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
             )
-            set_dict = {"ids": price_ids}
-            ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
-            
-            a.json(response, "批量删除响应")
+            # 业务断言
+            self.assert_util.assert_response_data(response)
             
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
     
+    @pytest.mark.skip(reason="标准导出服务未引用")
     @case_decorator(
         story="存货成本价格",
         title="测试标准导出服务",
         description="验证存货成本价格标准导出服务功能",
         severity="minor",
-        order=6,
+        file_level_order=10,
         tags=["iv", "cost", "price", "export", "standard"]
     )
     def test_standard_export_cost_price(self):
         """测试标准导出服务"""
         try:
+            # 检查并创建依赖数据
             if not self.cost_price_id:
                 self.test_save_cost_price()
             
-            api_path = self.get_api_path("存货成本价格标准导出服务")
-            params, url = self.get_api_params(api_path)
-            
-            export_data = {
+            # 使用标准化API调用
+            set_dict = {
                 "priceIds": [self.cost_price_id],
                 "exportType": "EXCEL"
             }
+            fields_to_filter = ["priceIds", "exportType"]
             
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, list(export_data.keys()), ["params", "request"]
+            response, _ = self.standard_api_call(
+                api_key="存货成本价格标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
             )
-            ParamUtil.set_request_params(filtered_params, export_data)
             
-            response = self.http.post(url, json=filtered_params)
+            # 业务断言
             self.assert_util.assert_response_success(response)
-            
-            a.json(response, "标准导出响应")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
-    
-    @case_decorator(
-        story="存货成本价格",
-        title="测试根据ID删除成本价格",
-        description="验证根据ID删除存货成本价格功能",
-        severity="normal",
-        order=7,
-        tags=["iv", "cost", "price", "delete"]
-    )
-    def test_delete_cost_price_by_id(self):
-        """测试根据ID删除成本价格"""
-        try:
-            if not self.cost_price_id:
-                self.test_save_cost_price()
-            
-            api_path = self.get_api_path("存货成本价格-根据ID删除数据服务")
-            params, url = self.get_api_params(api_path)
-            
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
-            set_dict = {"id": self.cost_price_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
-            
-            a.json(response, "删除响应")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -301,7 +268,7 @@ class TestIvCostPriceManagement(FinBaseTest):
         title="测试导入导出任务提交",
         description="验证存货成本价格导入导出任务管理接口-提交导出任务功能",
         severity="minor",
-        order=8,
+        file_level_order=11,
         tags=["iv", "cost", "price", "export", "task"]
     )
     def test_export_task_direct_post_price(self):
@@ -310,6 +277,7 @@ class TestIvCostPriceManagement(FinBaseTest):
             timestamp = self.mock_util.get_timestamp()
             task_name = f"IV_COST_PRICE_{timestamp}_EXPORT"
             
+            # 复杂API参数，使用use_param_util=False
             export_params = {
                 "serviceKey": "FIN_IV_PRICE_MD_API_GEI_TASK_EXPORT_DIRECT_POST",
                 "teamId": 22,
@@ -357,15 +325,81 @@ class TestIvCostPriceManagement(FinBaseTest):
                 }
             }
             
-            api_path = self.get_api_path("存货成本价格-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
+            # 使用standard_api_call的use_param_util=False处理复杂参数
+            response, _ = self.standard_api_call(
+                api_key="存货成本价格-导入导出任务管理接口-提交导出任务",
+                set_dict=export_params,
+                use_param_util=False  # 复杂参数，直接使用set_dict
+            )
             
-            filtered_params = export_params
-            response = self.http.post(url, json=filtered_params)
+            # 业务断言
             self.assert_util.assert_response_success(response)
             
-            a.json(export_params, "导出任务请求")
-            a.json(response, "导出任务响应")
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    @case_decorator(
+        story="存货成本价格",
+        title="测试批量删除成本价格",
+        description="验证批量删除存货成本价格功能",
+        severity="normal",
+        file_level_order=17,
+        tags=["iv", "cost", "price", "batch_delete"]
+    )
+    def test_batch_delete_cost_price(self):
+        """测试批量删除成本价格"""
+        try:
+            # 创建测试数据用于批量删除
+            if not self.cost_price_id:
+                self.test_save_cost_price()
+          
+            # 批量删除
+            price_ids = [self.cost_price_id]
+            set_dict = {"ids": price_ids}
+            fields_to_filter = ["ids"]
+            response, _ = self.standard_api_call(
+                api_key="存货成本价格-批量删除数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+            
+            # 业务断言
+            self.assert_util.assert_response_success(response)
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    @case_decorator(
+        story="存货成本价格",
+        title="测试根据ID删除成本价格",
+        description="验证根据ID删除存货成本价格功能",
+        severity="normal",
+        file_level_order=18,
+        tags=["iv", "cost", "price", "delete"]
+    )
+    def test_delete_cost_price_by_id(self):
+        """测试根据ID删除成本价格"""
+        try:
+            # 检查并创建依赖数据
+            if not self.cost_price_id:
+                self.test_save_cost_price()
+            
+            # 使用标准化API调用
+            set_dict = {"id": self.cost_price_id}
+            fields_to_filter = ["id"]
+            
+            response, _ = self.standard_api_call(
+                api_key="存货成本价格-根据ID删除数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+            
+            # 业务断言
+            self.assert_util.assert_response_success(response)
             
         except Exception as e:
             a.text(str(e), "失败原因")
