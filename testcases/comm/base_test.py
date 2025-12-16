@@ -742,7 +742,9 @@ class BaseTest:
             Loggers.info(f"接口请求成功，响应数据: {response}")
             
             # 5. ID提取和存储
-            extracted_id = response.get("data", {}).get("data", {})
+            data_obj = response.get("data", {}).get("data", {})
+            # 优先提取 id 字段，如果不存在则使用整个对象（兼容不同响应结构）
+            extracted_id = data_obj.get("id") if isinstance(data_obj, dict) and "id" in data_obj else data_obj
             if store_id_as:
                 setattr(self, f"{store_id_as}_id", extracted_id)
             
