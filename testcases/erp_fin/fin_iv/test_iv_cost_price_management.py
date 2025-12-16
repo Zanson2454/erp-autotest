@@ -262,7 +262,7 @@ class TestIvCostPriceManagement(FinBaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @pytest.mark.skip(reason="导入导出任务需要OSS配置，复杂度较高")
+
     @case_decorator(
         story="存货成本价格",
         title="测试导入导出任务提交",
@@ -272,68 +272,177 @@ class TestIvCostPriceManagement(FinBaseTest):
         tags=["iv", "cost", "price", "export", "task"]
     )
     def test_export_task_direct_post_price(self):
-        """测试导入导出任务提交（跳过）"""
+        """测试导入导出任务提交"""
         try:
-            timestamp = self.mock_util.get_timestamp()
-            task_name = f"IV_COST_PRICE_{timestamp}_EXPORT"
+            # 检查并创建依赖数据
+            if not self.cost_price_id:
+                self.test_save_cost_price()
             
-            # 复杂API参数，使用use_param_util=False
-            export_params = {
-                "serviceKey": "FIN_IV_PRICE_MD_API_GEI_TASK_EXPORT_DIRECT_POST",
+            # 获取API路径和URL
+            api_path = self.get_api_path("存货成本价格-导入导出任务管理接口-提交导出任务")
+            params, url = self.get_api_params(api_path)
+            
+            # 按照CURL真实入参格式构建参数
+            params = {
+                "serviceKey": "ERP_FIN$FIN_IV_PRICE_MD_API_GEI_TASK_EXPORT_DIRECT_POST",
                 "teamId": 22,
                 "params": {
-                    "taskName": task_name,
+                    "taskName": f"存货成本价格-{self.nickname or '自动化测试'}-{self.mock_util.get_timestamp()}-导出",
                     "multiSheetConfig": [
                         {
                             "modelKey": "ERP_FIN$fin_iv_price_md",
                             "modelName": "存货成本价格",
                             "sheetNo": 0,
-                            "sheetName": "成本价格数据",
+                            "sheetName": "存货成本价格",
                             "headerConfigList": [
-                                {"name": "价格编码", "type": "TEXT", "field": "code"},
-                                {"name": "成本价格", "type": "NUMBER", "field": "costPrice"},
-                                {"name": "生效日期", "type": "DATE", "field": "effectiveDate"}
+                                {
+                                    "name": "公司组织",
+                                    "type": "TEXT",
+                                    "field": "comOrgId.orgName"
+                                },
+                                {
+                                    "name": "库存组织",
+                                    "type": "TEXT",
+                                    "field": "invOrgId.orgName"
+                                },
+                                {
+                                    "name": "存货核算类型",
+                                    "type": "ENUM",
+                                    "field": "ivType",
+                                    "multiSelect": False,
+                                    "dictValues": [
+                                        {
+                                            "_row_id_": "tzQaRtC",
+                                            "label": "永续成本法",
+                                            "value": "CONTINUOUS_METHOD"
+                                        },
+                                        {
+                                            "_row_id_": "7nuaKMp",
+                                            "label": "期间成本法",
+                                            "value": "PERIOD_METHOD"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "物料",
+                                    "type": "TEXT",
+                                    "field": "matId.matName"
+                                },
+                                {
+                                    "name": "批次",
+                                    "type": "TEXT",
+                                    "field": "batchCode"
+                                },
+                                {
+                                    "name": "币别",
+                                    "type": "TEXT",
+                                    "field": "currId.currName"
+                                },
+                                {
+                                    "name": "成本价格",
+                                    "type": "DECIMAL",
+                                    "field": "costPrice",
+                                    "precision": 6
+                                },
+                                {
+                                    "name": "启用状态",
+                                    "type": "ENUM",
+                                    "field": "enableStatus",
+                                    "multiSelect": False,
+                                    "dictValues": [
+                                        {
+                                            "label": "已启用",
+                                            "value": "ENABLE"
+                                        },
+                                        {
+                                            "label": "未启用",
+                                            "value": "DISABLE"
+                                        }
+                                    ]
+                                }
                             ]
                         }
                     ],
                     "queryData": {
-                        "containerKey": "ERP_FIN$fin_iv_price_md",
-                        "viewKey": "ERP_FIN$fin_iv_price_md:list",
-                        "sceneKey": "ERP_FIN$fin_iv_price_md",
+                        "appId": 0,
+                        "teamId": 22,
+                        "containerKey": "ERP_FIN$IV_PRICE_MD_VIEW-table-container-ERP_FIN$fin_iv_price_md",
+                        "viewKey": "ERP_FIN$IV_PRICE_MD_VIEW:list",
+                        "sceneKey": "ERP_FIN$IV_PRICE_MD_VIEW",
                         "params": {
                             "request": {
                                 "pageable": {
-                                    "sortOrders": []
+                                    "pageNo": 1,
+                                    "pageSize": 20
                                 }
                             },
                             "selectFields": [
-                                {"field": "code"},
-                                {"field": "costPrice"},
-                                {"field": "effectiveDate"}
+                                {
+                                    "field": "ivType"
+                                },
+                                {
+                                    "field": "batchCode"
+                                },
+                                {
+                                    "field": "costPrice"
+                                },
+                                {
+                                    "field": "enableStatus"
+                                },
+                                {
+                                    "field": "comOrgId",
+                                    "selectFields": [
+                                        {
+                                            "field": "orgName"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "field": "invOrgId",
+                                    "selectFields": [
+                                        {
+                                            "field": "orgName"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "field": "matId",
+                                    "selectFields": [
+                                        {
+                                            "field": "matName"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "field": "currId",
+                                    "selectFields": [
+                                        {
+                                            "field": "currName"
+                                        }
+                                    ]
+                                }
                             ],
                             "modelKey": "ERP_FIN$fin_iv_price_md"
                         }
                     },
                     "processConfig": {
                         "processType": "TRANTOR",
+                        "appId": 0,
+                        "teamId": 22,
                         "model": "ERP_FIN$fin_iv_price_md",
                         "modelName": "存货成本价格",
-                        "containerKey": "ERP_FIN$fin_iv_price_md",
-                        "viewKey": "ERP_FIN$fin_iv_price_md:list",
-                        "sceneKey": "ERP_FIN$fin_iv_price_md"
+                        "containerKey": "ERP_FIN$IV_PRICE_MD_VIEW-table-container-ERP_FIN$fin_iv_price_md",
+                        "viewKey": "ERP_FIN$IV_PRICE_MD_VIEW:list",
+                        "sceneKey": "ERP_FIN$IV_PRICE_MD_VIEW"
                     }
                 }
             }
             
-            # 使用standard_api_call的use_param_util=False处理复杂参数
-            response, _ = self.standard_api_call(
-                api_key="存货成本价格-导入导出任务管理接口-提交导出任务",
-                set_dict=export_params,
-                use_param_util=False  # 复杂参数，直接使用set_dict
-            )
-            
-            # 业务断言
+            response = self.http.post(url, json=params)
             self.assert_util.assert_response_success(response)
+            
+            a.json(params, "请求数据")
+            a.json(response, "响应数据")
             
         except Exception as e:
             a.text(str(e), "失败原因")
