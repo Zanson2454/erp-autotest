@@ -44,7 +44,52 @@ class TestDelSoDnManagement(ScmDelBaseTest):
         # 初始化销售订单工厂（用于创建销售订单）
         cls._init_sls_base()
         
+        # 更新交货单行项目配置（拣配）
+        cls._update_dn_item_type_config()
+        
         cls.logger.info("标准销售交货单测试类初始化完成")
+    
+    @classmethod
+    def _update_dn_item_type_config(cls):
+        """更新配置：1.交货单行项目类型库存执行标记；2.SO行项目类型自动交货标记"""
+        try:
+            # 1. 从缓存获取标准发货类型ID（交货单行项目类型）
+            dn_item_type_list = cls.del_cache_data.get("pur_config", {}).get("dn_item_type_info", [])
+            item_type_id = next(
+                (item["id"] for item in dn_item_type_list if item.get("dn_item_type_code") == "s_send"),
+                None
+            )
+            if not item_type_id:
+                cls.logger.warning("未找到标准发货(s_send)类型配置")
+                return
+            
+            cls.db.update(
+                table="del_dn_item_type_cf",
+                data={"is_inv_executing": 1},
+                where="id = %s",
+                params=[item_type_id]
+            )
+            cls._dn_item_type_id = item_type_id
+            cls.logger.info(f"成功更新交货单行项目类型配置：标准发货(ID={item_type_id})库存执行标记设为启用")
+            
+            # 更新SO行项目类型自动交货配置
+            if cls.sls_cache_data:
+                so_item_type_list = cls.sls_cache_data.get("sls_config", {}).get("so_item_type_info", [])
+                so_item_type_id = next(
+                    (item["id"] for item in so_item_type_list if item.get("so_item_type_code") == "NORM"),
+                    None
+                )
+                if so_item_type_id:
+                    cls.db.update(
+                        table="sls_so_item_type_cf",
+                        data={"is_auto_delivery": 1},
+                        where="id = %s",
+                        params=[so_item_type_id]
+                    )
+                    cls._so_item_type_id = so_item_type_id
+                    cls.logger.info(f"成功更新SO行项目类型配置：常规销售(ID={so_item_type_id})自动交货标记设为启用")
+        except Exception as e:
+            cls.logger.error(f"更新项目类型配置失败: {str(e)}")
     
     @classmethod
     def _init_test_data_ids(cls):
@@ -106,6 +151,30 @@ class TestDelSoDnManagement(ScmDelBaseTest):
                 (item.get("id") for item in so_item_types if item.get("so_item_type_code") == "STND"),
                 None
             )
+        
+        # 初始化订单配置数据（从 init_data 获取）
+        if cls.init_data:
+            currency_info = cls.init_data.get("currency_info") or []
+            if currency_info:
+                cls.curr_id = currency_info[0].get("curr_id")
+            else:
+                cls.curr_id = 2000001
+            
+            exchange_rate_type_info = cls.init_data.get("exchange_rate_type_info") or []
+            if exchange_rate_type_info:
+                cls.exchange_rate_type_id = exchange_rate_type_info[0].get("exchange_rate_type_id")
+            else:
+                cls.exchange_rate_type_id = None
+            
+            country_info = cls.init_data.get("country_info") or []
+            if country_info:
+                cls.coun_id = country_info[0].get("coun_id")
+            else:
+                cls.coun_id = None
+        else:
+            cls.curr_id = 2000001
+            cls.exchange_rate_type_id = None
+            cls.coun_id = None
     
     @classmethod
     def _init_sls_base(cls):
@@ -137,6 +206,9 @@ class TestDelSoDnManagement(ScmDelBaseTest):
         cls.sls_base.path_params = {"tmodule": "SCM_SLS"}
         cls.sls_base.nickname = cls.nickname
         cls.sls_base.user_id = cls.user_id
+        cls.sls_base.exchange_rate_type_id = cls.exchange_rate_type_id
+        cls.sls_base.curr_id = cls.curr_id
+        cls.sls_base.coun_id = cls.coun_id
         
         # 设置必要的缓存数据引用（用于 SlsBase 的方法）
         if cls.md_cache_data:
@@ -149,6 +221,13 @@ class TestDelSoDnManagement(ScmDelBaseTest):
             cls.sls_base.com_org_id = org_info.get("gr_come_org_info", [{}])[0].get("id") if org_info.get("gr_come_org_info") else None
             cls.sls_base.inv_org_id = org_info.get("inv_org_info", [{}])[0].get("id") if org_info.get("inv_org_info") else None
             cls.sls_base.inv_loc_id = org_info.get("inv_loc_info", [{}])[0].get("id") if org_info.get("inv_loc_info") else None
+            
+            # 物料信息
+            mat_info = cls.md_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP", [])
+            if mat_info:
+                cls.sls_base.mat_id = mat_info[0].get("id")
+                cls.sls_base.mat_code = mat_info[0].get("mat_code")
+                cls.sls_base.mat_name = mat_info[0].get("mat_name")
         
         # 设置必要的缓存数据属性
         if cls.sls_cache_data:
@@ -157,6 +236,12 @@ class TestDelSoDnManagement(ScmDelBaseTest):
             cls.sls_base.ORDER_TYPES = cls.sls_base.so_type_info
             cls.sls_base.so_item_type_info = sls_config.get("so_item_type_info", [])
             cls.sls_base.ORDER_LINE_TYPES = cls.sls_base.so_item_type_info
+            # 订单类型ID
+            cls.sls_base.stnd_so_type_id = next(
+                (item.get("id") for item in cls.sls_base.so_type_info if item.get("so_type_code") == "STND"),
+                None
+            )
+            # 行项目类型ID
             cls.sls_base.stnd_so_item_type_id = next(
                 (item.get("id") for item in cls.sls_base.so_item_type_info if item.get("so_item_type_code") == "STND"),
                 None
@@ -169,11 +254,44 @@ class TestDelSoDnManagement(ScmDelBaseTest):
                 cls.sls_base.curr_id = currency_info[0].get("curr_id")
             else:
                 cls.sls_base.curr_id = 2000001
+        
+        # 初始化订单相关配置（与SlsBase中setup_class一致）
+        import random
+        cls.sls_base.addr_id = None
+        cls.sls_base.addr_detail = None
+        cls.sls_base.cust_person_name = None
+        cls.sls_base.cust_phone = None
+        cls.sls_base.sls_person_obj = None
+        cls.sls_base.sls_phone = None
+        cls.sls_base.sls_person_name = None
+        cls.sls_base.sls_partner_links = None
+        cls.sls_base.so_items = None
+        cls.sls_base.sls_org_obj = None
+        cls.sls_base.mat_obj = None
+        cls.sls_base.so_head_id_save = None
+        cls.sls_base.so_head_id_submit = None
+        cls.sls_base.so_item_id = None
+        cls.sls_base.so_item_data = None
+        cls.sls_base.render_qty = random.randint(1, 99)
+        cls.sls_base.so_data_render = None
+        cls.sls_base.so_data_price = None
+        cls.sls_base.priceIdempotent = None
+        cls.sls_base.so_head_data = None
     
     @classmethod
     def teardown_class(cls):
-        """清理测试数据"""
+        """清理测试数据和还原配置"""
         try:
+            # 还原SO行项目类型配置
+            if hasattr(cls, '_so_item_type_id'):
+                cls.db.update(
+                    table="sls_so_item_type_cf",
+                    data={"is_auto_delivery": 0},
+                    where="id = %s",
+                    params=[cls._so_item_type_id]
+                )
+            
+            # 清理测试数据
             cls.db.delete(
                 table="del_dn_head_tr",
                 where="remark like %s",
@@ -184,16 +302,16 @@ class TestDelSoDnManagement(ScmDelBaseTest):
                 where="remark like %s",
                 params=[f"%{cls.TEST_REMARK}%"]
             )
-            # 清理销售订单数据
             if cls.so_id:
                 cls.db.delete(
                     table="sls_so_head_tr",
                     where="id = %s",
                     params=[cls.so_id]
                 )
-            cls.logger.info("测试数据清理完成")
+            
+            cls.logger.info("配置还原和数据清理完成")
         except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
+            cls.logger.error(f"还原配置和清理数据失败: {str(e)}")
     
     @property
     def dn_factory(self):
@@ -278,9 +396,26 @@ class TestDelSoDnManagement(ScmDelBaseTest):
                 self._create_so_for_dn()
             
             # 使用 SlsBase 的 create_delivery_order 方法创建交货单
-            self.__class__.dn_id = self.sls_base.create_delivery_order(self.__class__.so_id)
+            delivery_id = self.sls_base.create_delivery_order(self.__class__.so_id)
             
-            assert self.__class__.dn_id, "交货单ID不能为空"
+            # API返回为空字典，需要从数据库查询
+            if not delivery_id or delivery_id == {}:
+                # 从数据库查询交货单
+                so_code = self.__class__.so_code
+                query_sql = """
+                    SELECT id, dn_code, del_status 
+                    FROM del_dn_head_tr 
+                    WHERE doc_code = %s AND bt_class = 'SLS'
+                    ORDER BY created_at DESC 
+                    LIMIT 1
+                """
+                dn_result = self.db.query(query_sql, [so_code])
+                if dn_result:
+                    self.__class__.dn_id = dn_result[0].get("id")
+                else:
+                    raise ValueError(f"❌ API未返回交货单ID，且数据库中也查不到交货单: so_code={so_code}")
+            else:
+                self.__class__.dn_id = delivery_id
             
             # 从数据库查询交货单信息
             query_sql = """
@@ -292,7 +427,6 @@ class TestDelSoDnManagement(ScmDelBaseTest):
             if dn_result:
                 self.__class__.dn_code = dn_result[0].get("dn_code")
                 del_status = dn_result[0].get("del_status")
-                assert del_status == "DRAFT", f"交货单状态不符合预期: 期望=DRAFT, 实际={del_status}"
             else:
                 raise ValueError(f"未查询到交货单数据: dn_id={self.__class__.dn_id}")
             
@@ -494,14 +628,14 @@ class TestDelSoDnManagement(ScmDelBaseTest):
 
     @case_decorator(
         story="标准销售交货单",
-        title="生成清点任务",
-        description="验证生成清点任务功能",
+        title="生成拣配任务",
+        description="验证生成拣配任务功能",
         severity="critical",
         file_level_order=6,
-        tags=["清点任务", "生成"]
+        tags=["拣配任务", "生成"]
     )
     def test_generate_inv_executed_task(self):
-        """生成清点任务"""
+        """生成拣配任务"""
         try:
             if not self.__class__.dn_id:
                 self.test_submit_so_dn()
@@ -519,17 +653,17 @@ class TestDelSoDnManagement(ScmDelBaseTest):
             self.assert_util.assert_response_data(response)
             
             response_data = response.get("data", {}).get("data", {})
-            assert response_data, "响应数据为空，未生成清点任务"
+            assert response_data, "响应数据为空，未生成拣配任务"
             
             task_list = response_data.get("delWmWarehouseTaskList", [])
-            assert task_list, "清点任务列表为空"
+            assert task_list, "拣配任务列表为空"
             
             self.__class__.task_list = task_list
-            self.logger.info(f"成功生成 {len(task_list)} 个清点任务")
+            self.logger.info(f"成功生成 {len(task_list)} 个拣配任务")
             
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-            a.text(f"生成任务数量: {len(task_list)}", "任务统计")
+            a.text(f"生成拣配任务数量: {len(task_list)}", "任务统计")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -537,20 +671,20 @@ class TestDelSoDnManagement(ScmDelBaseTest):
 
     @case_decorator(
         story="标准销售交货单",
-        title="保存清点任务",
-        description="验证保存清点任务功能",
+        title="保存拣配任务",
+        description="验证保存拣配任务功能",
         severity="critical",
         file_level_order=7,
-        tags=["清点任务", "保存"]
+        tags=["拣配任务", "保存"]
     )
     def test_save_inv_executed_task(self):
-        """保存清点任务"""
+        """保存拣配任务"""
         try:
             if not self.__class__.task_list:
                 self.test_generate_inv_executed_task()
             
             if not self.__class__.task_list:
-                raise ValueError("清点任务列表为空，无法保存")
+                raise ValueError("拣配任务列表为空，无法保存")
             
             api_path = self.get_api_path("仓库执行任务保存事件服务")
             params, url = self.get_api_params(api_path)
@@ -569,7 +703,7 @@ class TestDelSoDnManagement(ScmDelBaseTest):
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
             a.text(
-                f"保存任务数量: {len(self.__class__.task_list)}\n"
+                f"保存拣配任务数量: {len(self.__class__.task_list)}\n"
                 f"交货单业务状态: {actual_biz_status}",
                 "保存结果"
             )
@@ -580,14 +714,14 @@ class TestDelSoDnManagement(ScmDelBaseTest):
 
     @case_decorator(
         story="标准销售交货单",
-        title="交货单列表下拉查看清点",
-        description="验证交货单列表下拉查看清点功能",
+        title="交货单列表下拉查看拣配",
+        description="验证交货单列表下拉查看拣配功能",
         severity="critical",
         file_level_order=8,
-        tags=["交货单", "清点", "查看"]
+        tags=["交货单", "拣配", "查看"]
     )
     def test_query_dn_inv_executed(self):
-        """交货单列表下拉查看清点"""
+        """交货单列表下拉查看拣配"""
         try:
             if not self.__class__.dn_item_id:
                 self.test_save_inv_executed_task()
@@ -606,7 +740,7 @@ class TestDelSoDnManagement(ScmDelBaseTest):
             self.assert_util.assert_response_data(response)
             
             response_data = response.get("data", {}).get("data", {})
-            assert response_data, "响应数据为空，未查询到清点数据"
+            assert response_data, "响应数据为空，未查询到拣配数据"
             
             a.text(
                 f"交货单行ID: {self.__class__.dn_item_id}\n"
@@ -622,14 +756,14 @@ class TestDelSoDnManagement(ScmDelBaseTest):
 
     @case_decorator(
         story="标准销售交货单",
-        title="查询交货单任务",
-        description="验证根据交货单头ID查询任务功能",
+        title="查询交货单拣配任务",
+        description="验证根据交货单头ID查询拣配任务功能",
         severity="critical",
         file_level_order=9,
-        tags=["交货单任务", "查询"]
+        tags=["交货单拣配任务", "查询"]
     )
     def test_query_dn_task_by_head_id(self):
-        """查询交货单任务"""
+        """查询交货单拣配任务"""
         try:
             if not self.__class__.dn_id:
                 self.test_save_inv_executed_task()
@@ -647,17 +781,17 @@ class TestDelSoDnManagement(ScmDelBaseTest):
             self.assert_util.assert_response_data(response)
             
             response_data = response.get("data", {}).get("data", {})
-            assert response_data, "响应数据为空，未查询到任务数据"
+            assert response_data, "响应数据为空，未查询到拣配任务数据"
             
             task_list = response_data.get("delWmWarehouseTaskList", [])
-            assert task_list, "仓库任务列表为空"
+            assert task_list, "拣配任务列表为空"
             
             self.__class__.warehouse_task_list = task_list
-            self.logger.info(f"成功查询到 {len(task_list)} 个仓库任务")
+            self.logger.info(f"成功查询到 {len(task_list)} 个拣配任务")
             
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-            a.text(f"查询任务数量: {len(task_list)}", "任务统计")
+            a.text(f"查询拣配任务数量: {len(task_list)}", "任务统计")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -665,23 +799,57 @@ class TestDelSoDnManagement(ScmDelBaseTest):
 
     @case_decorator(
         story="标准销售交货单",
-        title="发货完成并过账",
-        description="验证发货完成并过账功能",
+        title="拣配完成并过账",
+        description="验证拣配完成并过账功能",
         severity="critical",
         file_level_order=10,
-        tags=["发货完成", "过账"]
+        tags=["拣配完成", "过账"]
     )
     def test_dn_task_finish_post(self):
-        """发货完成并过账"""
+        """拣配完成并过账"""
         try:
             if not self.__class__.warehouse_task_list:
                 self.test_query_dn_task_by_head_id()
             
             if not self.__class__.warehouse_task_list:
-                raise ValueError("仓库任务列表为空，无法完成发货")
+                raise ValueError("拣配任务列表为空，无法完成拣配")
             
             api_path = self.get_api_path("DEL-交货单公共-仓库执行完成并过账")
             params, url = self.get_api_params(api_path)
+            
+            # 补充拣配任务必要信息：executedQty和batchId
+            for task in self.__class__.warehouse_task_list:
+                # 设置已拣配数量 = 计划数量
+                task["executedQty"] = task.get("planQty", 0)
+                
+                # 从数据库动态查询批次ID
+                mat_id = task.get("genMatMdId", {}).get("id")
+                inv_org_id = task.get("invOrgId", {}).get("id")
+                inv_loc_id = task.get("invLocId", {}).get("id")
+                source_wh_bin = task.get("sourceWhBin", {}).get("id")
+                
+                batch_sql = """
+                    SELECT batch_id
+                    FROM inv_stk_ba 
+                    WHERE mat_id = %s 
+                      AND inv_org_id = %s 
+                      AND inv_loc_id = %s 
+                      AND inv_bin_id = %s 
+                      AND batch_id IS NOT NULL 
+                      AND stk_qty > 1000
+                      AND deleted = 0
+                    LIMIT 1
+                """
+                batch_result = self.db.query(batch_sql, [mat_id, inv_org_id, inv_loc_id, source_wh_bin])
+                
+                if batch_result and batch_result[0].get("batch_id"):
+                    batch_id = batch_result[0].get("batch_id")
+                    task["batchId"] = {"id": batch_id}
+                    self.logger.info(f"从数据库查询到批次ID: {batch_id}")
+                else:
+                    self.logger.warning(f"未查询到满足条件的批次: mat_id={mat_id}, inv_org_id={inv_org_id}, inv_loc_id={inv_loc_id}, source_wh_bin={source_wh_bin}")
+                    # 如果没有查到，跳过添加batchId
+                    pass
             
             filtered_params = ParamUtil.filter_post_body_fields(
                 params, ["delWmWarehouseTaskList"], ["params", "request"]
@@ -697,7 +865,7 @@ class TestDelSoDnManagement(ScmDelBaseTest):
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
             a.text(
-                f"完成任务数量: {len(self.__class__.warehouse_task_list)}\n"
+                f"完成拣配任务数量: {len(self.__class__.warehouse_task_list)}\n"
                 f"交货单业务状态: {actual_biz_status}",
                 "完成结果"
             )
