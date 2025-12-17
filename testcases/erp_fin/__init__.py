@@ -130,6 +130,7 @@ class FinBaseTest(BaseTest):
         # 初始化MD (org, partner, etc.)
         if cls.md_cache_data:
             cls.com_org_id = cls.md_cache_data.get("org_info",{}).get("gr_come_org_info",[])[0].get("id")
+            cls.com_org_id_copy = cls.md_cache_data.get("org_info",{}).get("com_org_info",[])[0].get("id")
             cls.sls_org_id = cls.md_cache_data.get("org_info",{}).get("sls_org_info",[])[0].get("id")
             cls.pur_org_id = cls.md_cache_data.get("org_info",{}).get("pur_org_info",[])[0].get("id")
             cls.inv_org_id = cls.md_cache_data.get("org_info",{}).get("inv_org_info",[])[0].get("id")

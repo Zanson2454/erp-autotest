@@ -81,7 +81,7 @@ class TestSettDocAssoc(FinBaseTest):
             data["params"]["request"][0]["id"] = sett_item_id
             result = self.http.post(url, json=data, description=f"结算项自动确认和自动过账 - ID: {sett_item_id}")
             self.assert_util.assert_response_success(result)
-            time.sleep(10)
+            time.sleep(15)
             #查询生成的结算单是否自动生成了应收应付
             sql=f"""
             select sett_doc_status,sett_doc_code,trading_doc_id from sett_doc_tr where id in (select sett_doc_id from sett_item_tr where id={sett_item_id})
