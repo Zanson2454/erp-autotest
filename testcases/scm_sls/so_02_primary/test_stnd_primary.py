@@ -110,8 +110,11 @@ class TestStandardSalesOrder(SlsBase):
             params, url = self.get_api_params(api_path)
             query_payload = copy.deepcopy(params)
 
-            pageable = query_payload.setdefault("params", {}).setdefault("pageable", {})
-            condition_items = pageable.setdefault("conditionItems", {})
+            pageable = query_payload.get("params", {}).get("pageable", {})
+            condition_items = pageable.get("conditionItems")
+            if not isinstance(condition_items, dict):
+                condition_items = {}
+            
             condition_items.setdefault("type", "ConditionItems")
             condition_items.setdefault("logicOperator", "AND")
             conditions = condition_items.setdefault("conditions", {})
@@ -120,6 +123,14 @@ class TestStandardSalesOrder(SlsBase):
                 "value": self.order_code
             }
             conditions.setdefault("matId", {"operator": "IN", "value": []})
+            
+            # 重新设置回结构中
+            pageable["conditionItems"] = condition_items
+            if "params" not in query_payload:
+                query_payload["params"] = {}
+            if "pageable" not in query_payload["params"]:
+                query_payload["params"]["pageable"] = {}
+            query_payload["params"]["pageable"] = pageable
 
             last_response = None
             order_item = None
@@ -236,8 +247,11 @@ class TestStandardSalesOrder(SlsBase):
             params, url = self.get_api_params(api_path)
             
             query_payload = copy.deepcopy(params)
-            pageable = query_payload.setdefault("params", {}).setdefault("pageable", {})
-            condition_items = pageable.setdefault("conditionItems", {})
+            pageable = query_payload.get("params", {}).get("pageable", {})
+            condition_items = pageable.get("conditionItems")
+            if not isinstance(condition_items, dict):
+                condition_items = {}
+            
             condition_items.setdefault("type", "ConditionItems")
             condition_items.setdefault("logicOperator", "AND")
             conditions = condition_items.setdefault("conditions", {})
@@ -246,6 +260,14 @@ class TestStandardSalesOrder(SlsBase):
                 "value": self.order_code
             }
             conditions.setdefault("matId", {"operator": "IN", "value": []})
+            
+            # 重新设置回结构中
+            pageable["conditionItems"] = condition_items
+            if "params" not in query_payload:
+                query_payload["params"] = {}
+            if "pageable" not in query_payload["params"]:
+                query_payload["params"]["pageable"] = {}
+            query_payload["params"]["pageable"] = pageable
 
             last_response = None
             order_item = None

@@ -42,7 +42,10 @@ class TestDelPoDnManagement(ScmDelBaseTest):
         
         # 初始化采购配置
         cls._init_pur_config()
-        
+
+        # 更新交货单行项目配置
+        cls._update_dn_item_type_config()
+
         cls.logger.info("标准采购交货单测试类初始化完成")
     
     @classmethod
@@ -125,7 +128,31 @@ class TestDelPoDnManagement(ScmDelBaseTest):
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
-    
+
+    @classmethod
+    def _update_dn_item_type_config(cls):
+        """更新标准收货行项目类型配置，确保库存执行标记为启用状态"""
+        try:
+            # 从缓存获取标准收货类型ID
+            dn_item_type_list = cls.del_cache_data.get("pur_config", {}).get("dn_item_type_info", [])
+            item_type_id = next(
+                (item["id"] for item in dn_item_type_list if item.get("dn_item_type_code") == "s_revi"),
+                None
+            )
+            if not item_type_id:
+                cls.logger.warning("未找到标准收货(s_revi)类型配置")
+                return
+            
+            cls.db.update(
+                table="del_dn_item_type_cf",
+                data={"is_inv_executing": 1},
+                where="id = %s",
+                params=[item_type_id]
+            )
+            cls.logger.info(f"成功更新交货单行项目类型配置：标准收货(ID={item_type_id})库存执行标记设为启用")
+        except Exception as e:
+            cls.logger.error(f"更新交货单行项目类型配置失败: {str(e)}")
+
     @property
     def dn_factory(self):
         """获取交货单工厂实例（单例模式）"""
