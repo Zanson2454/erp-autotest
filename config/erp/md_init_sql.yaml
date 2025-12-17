@@ -202,7 +202,35 @@ org_info:
       FROM org_struct_md
       WHERE org_status = 'ENABLED'           -- 业务条件: 只查询启用状态
         AND org_dimension_code = 'SCM_ORG_GRP' -- 业务条件: SCM组织组
-        AND org_code LIKE 'AUTOTEST%'        -- 业务条件: 自动化测试组织
+        AND org_code = 'AUTOTEST_PUR_ORG'        -- 业务条件: 自动化测试组织
+        AND org_business_type_codes = '["PUR_ORG"]' -- 业务条件: 采购组织类型
+        AND deleted = 0                      -- 技术条件: 软删除过滤
+      LIMIT 1;                               -- 性能优化: 获取第一个匹配的组织
+
+    description: "查询采购业务的专用组织信息，用于采购订单和供应商管理的组织隔离"
+
+    validation:
+      required: false                   # 可选配置，采购业务时必需
+      min_records: 1                    # 最少1条记录（采购业务必需）
+      max_records: 1                    # 最多1条记录
+      required_fields: ["id", "org_code", "org_name", "org_status", "org_dimension_code", "org_business_type_code"]
+      business_rules:
+        - "采购组织用于采购业务的权限控制和数据隔离"
+        - "必须确保采购组织状态为启用，否则采购流程无法正常执行"
+
+  pur_org_info2:
+    sql: |
+      SELECT
+        id,                      -- 主键ID
+        org_code,                -- 组织代码
+        org_name,                -- 组织名称
+        org_status,              -- 组织状态
+        org_dimension_code,      -- 组织维度代码
+        org_business_type_code   -- 组织业务类型代码
+      FROM org_struct_md
+      WHERE org_status = 'ENABLED'           -- 业务条件: 只查询启用状态
+        AND org_dimension_code = 'SCM_ORG_GRP' -- 业务条件: SCM组织组
+        AND org_code = 'AUTOTEST_PUR_ORG2'        -- 业务条件: 自动化测试组织
         AND org_business_type_codes = '["PUR_ORG"]' -- 业务条件: 采购组织类型
         AND deleted = 0                      -- 技术条件: 软删除过滤
       LIMIT 1;                               -- 性能优化: 获取第一个匹配的组织
@@ -324,7 +352,35 @@ org_info:
       FROM org_struct_md
       WHERE org_status = 'ENABLED'           -- 业务条件: 只查询启用状态
         AND org_dimension_code = 'SCM_ORG_GRP' -- 业务条件: SCM组织组
-        AND org_code LIKE 'AUTOTEST%'        -- 业务条件: 自动化测试组织
+        AND org_code = 'AUTOTEST_SLS_ORG'        -- 业务条件: 自动化测试组织
+        AND org_business_type_codes = '["SLS_ORG"]' -- 业务条件: 销售组织类型
+        AND deleted = 0                      -- 技术条件: 软删除过滤
+      LIMIT 1;                               -- 性能优化: 获取第一个匹配的组织
+
+    description: "查询销售业务的专用组织信息，用于销售订单和客户管理的组织隔离"
+
+    validation:
+      required: false                   # 可选配置，销售业务时必需
+      min_records: 1                    # 最少1条记录（销售业务必需）
+      max_records: 1                    # 最多1条记录
+      required_fields: ["id", "org_code", "org_name", "org_status", "org_dimension_code", "org_business_type_code"]
+      business_rules:
+        - "销售组织用于销售业务的权限控制和数据隔离"
+        - "销售组织状态必须为启用，否则销售流程无法正常执行"
+
+  sls_org_info2:
+    sql: |
+      SELECT
+        id,                      -- 主键ID
+        org_code,                -- 组织代码
+        org_name,                -- 组织名称
+        org_status,              -- 组织状态
+        org_dimension_code,      -- 组织维度代码
+        org_business_type_code   -- 组织业务类型代码
+      FROM org_struct_md
+      WHERE org_status = 'ENABLED'           -- 业务条件: 只查询启用状态
+        AND org_dimension_code = 'SCM_ORG_GRP' -- 业务条件: SCM组织组
+        AND org_code = 'AUTOTEST_SLS_ORG2'        -- 业务条件: 自动化测试组织
         AND org_business_type_codes = '["SLS_ORG"]' -- 业务条件: 销售组织类型
         AND deleted = 0                      -- 技术条件: 软删除过滤
       LIMIT 1;                               -- 性能优化: 获取第一个匹配的组织
