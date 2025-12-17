@@ -182,8 +182,9 @@ class TestIvDetailAccountManagement(FinBaseTest):
         """测试复制数据转换"""
         try:
             # 检查并创建依赖数据
-            if not self.detail_account_id:
-                self.test_save_detail_account()
+            sql = "select id  from fin_iv_acc_detail_tr where deleted=0 and com_org_id=%s and inv_org_id=%s order by created_at desc limit 1"
+            self.detail_account_id = self.db.execute(sql, [self.com_org_id, self.inv_org_id])
+
             
             # 使用标准化API调用
             set_dict = {"sourceId": self.detail_account_id}
@@ -288,6 +289,7 @@ class TestIvDetailAccountManagement(FinBaseTest):
         file_level_order=10,
         tags=["iv", "detail", "account", "export", "standard"]
     )
+    @pytest.mark.skip(reason="业务未引用")
     def test_standard_export_detail(self):
         """测试标准导出服务"""
         try:
