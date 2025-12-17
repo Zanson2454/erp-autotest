@@ -445,14 +445,12 @@ class TestIvInitManagement(FinBaseTest):
                 store_id_as=None
             )
             self.assert_util.assert_response_success(response)
-            
-            # 实际实现中需添加任务状态轮询
-            task_id = response.get("data", {}).get("taskId")
-            
+            asyncExecutionStatus = response.get("data", {}).get("data", {}).get("asyncExecutionStatus")
+            self.assert_util.assert_by_operator(asyncExecutionStatus, "=", "CREATED", "异步任务发起初始化状态应为CREATED")
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
-    
+            
     
     # @case_decorator(
     #     story="存货价值初始化配置表",
