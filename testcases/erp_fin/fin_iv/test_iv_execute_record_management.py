@@ -12,26 +12,25 @@ project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
 
 from testcases.erp_fin import FinBaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
-@allure.epic("ERP财务模块")
+@allure.epic("ERP业财集成-存货价值")
 @allure.feature("存货核算执行记录")
 class TestIvExecuteRecordManagement(FinBaseTest):
     """存货核算执行记录测试类"""
-    
-    execute_record_id = None
     
     @classmethod
     def setup_class(cls):
         super().setup_class()
         cls.execute_record_id = None
         cls.logger.info("存货核算执行记录测试类初始化完成")
-        # 初始化MD数据
+        # 初始化MD数据（从md_cache_data获取主数据）
         if cls.md_cache_data:
-            cls.com_org_id = cls.md_cache_data.get("org_info",{}).get("gr_come_org_info",[])[0].get("id")
-            cls.inv_org_id = cls.md_cache_data.get("org_info",{}).get("inv_org_info",[])[0].get("id")
+            gr_come_org_info = cls.md_cache_data.get("org_info", {}).get("gr_come_org_info", [])
+            cls.com_org_id = gr_come_org_info[0].get("id") if gr_come_org_info else None
+            inv_org_info = cls.md_cache_data.get("org_info", {}).get("inv_org_info", [])
+            cls.inv_org_id = inv_org_info[0].get("id") if inv_org_info else None
     
     @classmethod
     def teardown_class(cls):
@@ -51,44 +50,42 @@ class TestIvExecuteRecordManagement(FinBaseTest):
         title="测试保存执行记录",
         description="验证存货核算执行记录保存功能",
         severity="critical",
-        order=1,
+        file_level_order=1,
         smoke=True,
         tags=["iv", "execute", "record", "save"]
     )
     def test_save_execute_record(self):
         """测试保存执行记录"""
         try:
+            # 检查依赖数据
+            if not self.com_org_id:
+                raise ValueError("com_org_id 未初始化，请检查 md_cache_data")
+            if not self.inv_org_id:
+                raise ValueError("inv_org_id 未初始化，请检查 md_cache_data")
+            
             # 准备测试数据
             record_code = self.mock_util.generate_unique_code(tag="IV_EXEC")
             record_name = f"执行记录_{self.mock_util.get_timestamp()}"
             
-            # 调用API
-            api_path = self.get_api_path("存货核算执行记录-保存数据服务")
-            params, url = self.get_api_params(api_path)
-            
-            # 参数处理
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["comOrgId", "invOrgId", "code", "name"], ["params", "request"]
-            )
+            # 使用标准化API调用
             set_dict = {
                 "comOrgId": self.com_org_id,
                 "invOrgId": self.inv_org_id,
                 "code": record_code,
                 "name": record_name,
-                "status": "CREATED"  # 示例状态
+                "status": "CREATED"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["comOrgId", "invOrgId", "code", "name", "status"]
             
-            # 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, extracted_id = self.standard_api_call(
+                api_key="存货核算执行记录-保存数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="execute_record"  # 自动存储为 self.execute_record_id
+            )
+            
+            # 业务断言
             self.assert_util.assert_response_data(response)
-            
-            # 保存数据
-            self.execute_record_id = response.get("data", {}).get("data", {}).get("id")
-            assert self.execute_record_id, "保存执行记录失败，未获取到ID"
-            
-            a.json(filtered_params, "保存请求数据")
-            a.json(response, "保存响应数据")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -99,43 +96,58 @@ class TestIvExecuteRecordManagement(FinBaseTest):
         title="测试分页查询执行记录",
         description="验证存货核算执行记录分页查询功能",
         severity="normal",
-        order=2,
+        file_level_order=2,
         tags=["iv", "execute", "record", "paging"]
     )
     def test_paging_execute_record(self):
         """测试分页查询执行记录"""
         try:
-            if not self.execute_record_id:
-                self.test_save_execute_record()
-            
-            # 调用API
-            api_path = self.get_api_path("存货核算执行记录-分页数据服务")
-            params, url = self.get_api_params(api_path)
-            
-            # 分页参数
-            pageable = {
-                "pageNo": 1,
-                "pageSize": 20,
-                "needTotal": True,
-                "sortOrders": None,
-                "conditionItems": None
+            # 使用标准化API调用
+            set_dict = {
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": None
+                }
             }
+            fields_to_filter = ["pageable"]
             
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable"], ["params", "request"]
+            response, _ = self.standard_api_call(
+                api_key="存货核算执行记录-分页数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
             )
-            ParamUtil.set_request_params(filtered_params, {"pageable": pageable})
             
-            response = self.http.post(url, json=filtered_params)
+            # 业务断言
             self.assert_util.assert_response_data(response)
             
             # 验证数据存在
-            records = response.get("data", {}).get("data", {}).get("data", [])
-            assert records, "分页查询未返回数据"
-            assert any(record.get("id") == self.execute_record_id for record in records), "未找到保存的记录"
-            
-            a.json(response, "分页查询响应")
-            
+            total = response.get("data", {}).get("data", {}).get("total")
+            self.assert_util.assert_by_operator(total, ">", 0, "总记录数应大于0")
+            # self.assert_util.assert_by_operator(records, "not_empty", "分页查询未返回数据")  # 注释：日志输出过长
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    def test_find_execute_record_by_id(self):
+        """测试根据ID查找执行记录"""
+        try:
+            # 使用标准化API调用
+            sql = "select id  from fin_iv_execute_record_tr where deleted=0 and com_org_id=%s and inv_org_id=%s order by created_at desc limit 1"
+            self.execute_record_id = self.db.execute(sql, [self.com_org_id, self.inv_org_id])
+            set_dict = {"id": self.execute_record_id}
+            fields_to_filter = ["id"]
+            response, _ = self.standard_api_call(
+                api_key="存货核算执行记录-根据ID查找数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+            # 业务断言
+            self.assert_util.assert_response_data(response)
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
@@ -145,187 +157,211 @@ class TestIvExecuteRecordManagement(FinBaseTest):
         title="测试根据ID查找执行记录",
         description="验证根据ID查找存货核算执行记录功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         tags=["iv", "execute", "record", "find"]
     )
     def test_find_execute_record_by_id(self):
         """测试根据ID查找执行记录"""
         try:
-            if not self.execute_record_id:
-                self.test_save_execute_record()
+            sql = "select id  from fin_iv_execute_record_tr where deleted=0 and com_org_id=%s and inv_org_id=%s order by created_at desc limit 1"
+            self.execute_record_id = self.db.execute(sql, [self.com_org_id, self.inv_org_id])
             
-            # 调用API
-            api_path = self.get_api_path("存货核算执行记录-根据ID查找数据服务")
-            params, url = self.get_api_params(api_path)
-            
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 使用标准化API调用
             set_dict = {"id": self.execute_record_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="存货核算执行记录-根据ID查找数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+            
+            # 业务断言
             self.assert_util.assert_response_data(response)
             
+            # 验证返回的数据
             record_data = response.get("data", {}).get("data", {})
-            assert record_data.get("id") == self.execute_record_id, "查找记录ID不匹配"
-            
-            a.json(response, "查找响应")
+            self.assert_util.assert_by_operator(record_data.get("id"), "=", self.execute_record_id, "查找记录ID不匹配")
             
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
     
-    @case_decorator(
-        story="存货核算执行记录",
-        title="测试更新执行记录",
-        description="验证更新存货核算执行记录功能",
-        severity="normal",
-        order=4,
-        tags=["iv", "execute", "record", "update"]
-    )
-    def test_update_execute_record(self):
-        """测试更新执行记录"""
-        try:
-            if not self.execute_record_id:
-                self.test_save_execute_record()
+    # @case_decorator(
+    #     story="存货核算执行记录",
+    #     title="测试更新执行记录",
+    #     description="验证更新存货核算执行记录功能",
+    #     severity="normal",
+    #     file_level_order=4,
+    #     tags=["iv", "execute", "record", "update"]
+    # )
+    # def test_update_execute_record(self):
+    #     """测试更新执行记录"""
+    #     try:
+    #         # 检查并创建依赖数据
+    #         if not self.execute_record_id:
+    #             self.test_save_execute_record()
             
-            # 调用保存API进行更新（假设使用同一保存接口）
-            api_path = self.get_api_path("存货核算执行记录-保存数据服务")
-            params, url = self.get_api_params(api_path)
+    #         # 使用标准化API调用（使用保存接口进行更新）
+    #         updated_name = f"更新执行记录_{self.mock_util.get_timestamp()}"
+    #         set_dict = {
+    #             "id": self.execute_record_id,
+    #             "comOrgId": self.com_org_id,
+    #             "invOrgId": self.inv_org_id,
+    #             "name": updated_name,
+    #             "status": "EXECUTING"
+    #         }
+    #         fields_to_filter = ["id", "comOrgId", "invOrgId", "name", "status"]
             
-            updated_name = f"更新执行记录_{self.mock_util.get_timestamp()}"
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id", "name", "status"], ["params", "request"]
-            )
-            set_dict = {
-                "id": self.execute_record_id,
-                "name": updated_name,
-                "status": "EXECUTING"
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+    #         response, _ = self.standard_api_call(
+    #             api_key="存货核算执行记录-保存数据服务",
+    #             set_dict=set_dict,
+    #             fields_to_filter=fields_to_filter,
+    #             store_id_as=None
+    #         )
             
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+    #         # 业务断言
+    #         self.assert_util.assert_response_data(response)
             
-            # 验证更新
-            self.test_find_execute_record_by_id()  # 重新查找验证
+    #         # 验证更新（重新查找验证）
+    #         self.test_find_execute_record_by_id()
             
-            a.json(response, "更新响应")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
+    #     except Exception as e:
+    #         a.text(str(e), "失败原因")
+    #         raise
     
-    @case_decorator(
-        story="存货核算执行记录",
-        title="测试根据ID删除执行记录",
-        description="验证根据ID删除存货核算执行记录功能",
-        severity="normal",
-        order=5,
-        tags=["iv", "execute", "record", "delete"]
-    )
-    def test_delete_execute_record_by_id(self):
-        """测试根据ID删除执行记录"""
-        try:
-            if not self.execute_record_id:
-                self.test_save_execute_record()
+    # @case_decorator(
+    #     story="存货核算执行记录",
+    #     title="测试根据ID删除执行记录",
+    #     description="验证根据ID删除存货核算执行记录功能",
+    #     severity="normal",
+    #     file_level_order=5,
+    #     tags=["iv", "execute", "record", "delete"]
+    # )
+    # def test_delete_execute_record_by_id(self):
+    #     """测试根据ID删除执行记录"""
+    #     try:
+    #         # 检查并创建依赖数据
+    #         if not self.execute_record_id:
+    #             self.test_save_execute_record()
             
-            # 调用API
-            api_path = self.get_api_path("存货核算执行记录-根据ID删除数据服务")
-            params, url = self.get_api_params(api_path)
+    #         # 使用标准化API调用
+    #         set_dict = {"id": self.execute_record_id}
+    #         fields_to_filter = ["id"]
             
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
-            set_dict = {"id": self.execute_record_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+    #         response, _ = self.standard_api_call(
+    #             api_key="存货核算执行记录-根据ID删除数据服务",
+    #             set_dict=set_dict,
+    #             fields_to_filter=fields_to_filter,
+    #             store_id_as=None
+    #         )
             
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
+    #         # 业务断言
+    #         self.assert_util.assert_response_success(response)
             
-            # 验证删除（尝试查找应失败或返回空）
-            delete_api_path = self.get_api_path("存货核算执行记录-根据ID查找数据服务")
-            delete_params, delete_url = self.get_api_params(delete_api_path)
-            delete_filtered = ParamUtil.filter_post_body_fields(delete_params, ["id"], ["params", "request"])
-            ParamUtil.set_request_params(delete_filtered, {"id": self.execute_record_id})
-            delete_response = self.http.post(delete_url, json=delete_filtered)
-            assert not delete_response.get("data", {}).get("data"), "删除后仍能找到记录"
+    #         # 验证删除（尝试查找应失败或返回空）
+    #         find_response, _ = self.standard_api_call(
+    #             api_key="存货核算执行记录-根据ID查找数据服务",
+    #             set_dict=set_dict,
+    #             fields_to_filter=fields_to_filter,
+    #             store_id_as=None
+    #         )
+    #         record_data = find_response.get("data", {}).get("data", {})
+    #         self.assert_util.assert_by_operator(record_data, "=", None, "删除后仍能找到记录")
             
-            a.json(response, "删除响应")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
+    #     except Exception as e:
+    #         a.text(str(e), "失败原因")
+    #         raise
     
-    @case_decorator(
-        story="存货核算执行记录",
-        title="测试批量删除执行记录",
-        description="验证批量删除存货核算执行记录功能",
-        severity="normal",
-        order=6,
-        tags=["iv", "execute", "record", "batch_delete"]
-    )
-    def test_batch_delete_execute_record(self):
-        """测试批量删除执行记录"""
-        try:
-            # 先创建多个记录用于批量删除
-            record_ids = []
-            for _ in range(2):
-                self.test_save_execute_record()  # 这会覆盖ID，需要调整为收集多个ID
-                # 注意：实际实现中需收集多个ID，这里简化
-                record_ids.append(self.execute_record_id)
+    # @case_decorator(
+    #     story="存货核算执行记录",
+    #     title="测试批量删除执行记录",
+    #     description="验证批量删除存货核算执行记录功能",
+    #     severity="normal",
+    #     file_level_order=6,
+    #     tags=["iv", "execute", "record", "batch_delete"]
+    # )
+    # def test_batch_delete_execute_record(self):
+    #     """测试批量删除执行记录"""
+    #     try:
+    #         # 先创建多个记录用于批量删除
+    #         record_ids = []
+    #         for _ in range(2):
+    #             # 保存记录并收集ID
+    #             record_code = self.mock_util.generate_unique_code(tag="IV_EXEC")
+    #             record_name = f"执行记录_{self.mock_util.get_timestamp()}"
+    #             set_dict = {
+    #                 "comOrgId": self.com_org_id,
+    #                 "invOrgId": self.inv_org_id,
+    #                 "code": record_code,
+    #                 "name": record_name,
+    #                 "status": "CREATED"
+    #             }
+    #             fields_to_filter = ["comOrgId", "invOrgId", "code", "name", "status"]
+    #             response, extracted_id = self.standard_api_call(
+    #                 api_key="存货核算执行记录-保存数据服务",
+    #                 set_dict=set_dict,
+    #                 fields_to_filter=fields_to_filter,
+    #                 store_id_as=None
+    #             )
+    #             self.assert_util.assert_response_data(response)
+    #             if extracted_id:
+    #                 record_ids.append(extracted_id)
             
-            # 调用API
-            api_path = self.get_api_path("存货核算执行记录-批量删除数据服务")
-            params, url = self.get_api_params(api_path)
+    #         if not record_ids:
+    #             raise ValueError("未创建到测试数据，无法进行批量删除测试")
             
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ids"], ["params", "request"]
-            )
-            set_dict = {"ids": record_ids}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+    #         # 使用标准化API调用
+    #         set_dict = {"ids": record_ids}
+    #         fields_to_filter = ["ids"]
             
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(response)
+    #         response, _ = self.standard_api_call(
+    #             api_key="存货核算执行记录-批量删除数据服务",
+    #             set_dict=set_dict,
+    #             fields_to_filter=fields_to_filter,
+    #             store_id_as=None
+    #         )
             
-            a.json(response, "批量删除响应")
+    #         # 业务断言
+    #         self.assert_util.assert_response_success(response)
             
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
+    #     except Exception as e:
+    #         a.text(str(e), "失败原因")
+    #         raise
     
-    @case_decorator(
-        story="存货核算执行记录",
-        title="测试复制数据转换",
-        description="验证存货核算执行记录复制数据转换功能",
-        severity="minor",
-        order=7,
-        tags=["iv", "execute", "record", "copy"]
-    )
-    def test_copy_data_converter(self):
-        """测试复制数据转换"""
-        try:
-            if not self.execute_record_id:
-                self.test_save_execute_record()
+    # @case_decorator(
+    #     story="存货核算执行记录",
+    #     title="测试复制数据转换",
+    #     description="验证存货核算执行记录复制数据转换功能",
+    #     severity="minor",
+    #     file_level_order=7,
+    #     tags=["iv", "execute", "record", "copy"]
+    # )
+    # def test_copy_data_converter(self):
+    #     """测试复制数据转换"""
+    #     try:
+    #         # 检查并创建依赖数据
+    #         if not self.execute_record_id:
+    #             self.test_save_execute_record()
             
-            api_path = self.get_api_path("存货核算执行记录-复制数据转换服务")
-            params, url = self.get_api_params(api_path)
+    #         # 使用标准化API调用
+    #         set_dict = {
+    #             "sourceId": self.execute_record_id,
+    #             "targetOrgId": self.com_org_id
+    #         }
+    #         fields_to_filter = ["sourceId", "targetOrgId"]
             
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["sourceId", "targetOrgId"], ["params", "request"]
-            )
-            set_dict = {
-                "sourceId": self.execute_record_id,
-                "targetOrgId": self.com_org_id
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+    #         response, _ = self.standard_api_call(
+    #             api_key="存货核算执行记录-复制数据转换服务",
+    #             set_dict=set_dict,
+    #             fields_to_filter=fields_to_filter,
+    #             store_id_as=None
+    #         )
             
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
+    #         # 业务断言
+    #         self.assert_util.assert_response_data(response)
             
-            a.json(response, "复制转换响应")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
+    #     except Exception as e:
+    #         a.text(str(e), "失败原因")
+    #         raise

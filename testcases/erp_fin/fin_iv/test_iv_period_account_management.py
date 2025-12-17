@@ -12,28 +12,25 @@ project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
 
 from testcases.erp_fin import FinBaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
-from utils.mock_util import MockData  # 如果需要额外mock
 
 
-@allure.epic("ERP财务模块")
+@allure.epic("ERP业财集成-存货价值")
 @allure.feature("存货价值期间账")
 class TestIvPeriodAccountManagement(FinBaseTest):
     """存货价值期间账测试类"""
-    
-    period_account_id = None
-    mock_data = None
     
     @classmethod
     def setup_class(cls):
         super().setup_class()
         cls.period_account_id = None
-        cls.mock_data = MockData()
         cls.logger.info("存货价值期间账测试类初始化完成")
+        # 初始化MD数据（从md_cache_data获取主数据）
         if cls.md_cache_data:
-            cls.com_org_id = cls.md_cache_data.get("org_info",{}).get("gr_come_org_info",[])[0].get("id")
-            cls.inv_org_id = cls.md_cache_data.get("org_info",{}).get("inv_org_info",[])[0].get("id")
+            gr_come_org_info = cls.md_cache_data.get("org_info", {}).get("gr_come_org_info", [])
+            cls.com_org_id = gr_come_org_info[0].get("id") if gr_come_org_info else None
+            inv_org_info = cls.md_cache_data.get("org_info", {}).get("inv_org_info", [])
+            cls.inv_org_id = inv_org_info[0].get("id") if inv_org_info else None
     
     @classmethod
     def teardown_class(cls):
@@ -53,33 +50,33 @@ class TestIvPeriodAccountManagement(FinBaseTest):
         title="测试分页查询期间账",
         description="验证存货价值期间账分页查询功能",
         severity="normal",
-        order=1,
+        file_level_order=1,
         tags=["iv", "period", "account", "paging"]
     )
     def test_paging_period_account(self):
         """测试分页查询期间账"""
         try:
-            api_path = self.get_api_path("期间账分页数据服务")
-            params, url = self.get_api_params(api_path)
-            
-            pageable = {
-                "pageNo": 1,
-                "pageSize": 20,
-                "needTotal": True,
-                "sortOrders": None,
-                "conditionItems": None
+            # 使用标准化API调用
+            set_dict = {
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": None
+                }
             }
+            fields_to_filter = ["pageable"]
             
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable"], ["params", "request"]
+            response, _ = self.standard_api_call(
+                api_key="期间账分页数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
             )
-            ParamUtil.set_request_params(filtered_params, {"pageable": pageable})
             
-            response = self.http.post(url, json=filtered_params)
+            # 业务断言
             self.assert_util.assert_response_data(response)
-            
-            records = response.get("data", {}).get("data", {}).get("data", [])
-            a.json(response, "分页查询响应")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -90,22 +87,22 @@ class TestIvPeriodAccountManagement(FinBaseTest):
         title="测试保存期间账",
         description="验证保存存货价值期间账功能",
         severity="critical",
-        order=2,
+        file_level_order=2,
         smoke=True,
         tags=["iv", "period", "account", "save"]
     )
     def test_save_period_account(self):
         """测试保存期间账"""
         try:
+            # 检查依赖数据
+            if not self.com_org_id:
+                raise ValueError("com_org_id 未初始化，请检查 md_cache_data")
+            
+            # 准备测试数据
             period_code = self.mock_util.generate_unique_code(tag="IV_PERIOD")
             period_name = f"期间账_{self.mock_util.get_timestamp()}"
             
-            api_path = self.get_api_path("保存期间账数据服务")
-            params, url = self.get_api_params(api_path)
-            
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["comOrgId", "code", "name", "periodStart", "periodEnd"], ["params", "request"]
-            )
+            # 使用标准化API调用
             set_dict = {
                 "comOrgId": self.com_org_id,
                 "code": period_code,
@@ -114,16 +111,17 @@ class TestIvPeriodAccountManagement(FinBaseTest):
                 "periodEnd": "2025-12-31",
                 "balance": 0.0
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["comOrgId", "code", "name", "periodStart", "periodEnd", "balance"]
             
-            response = self.http.post(url, json=filtered_params)
+            response, extracted_id = self.standard_api_call(
+                api_key="保存期间账数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="period_account"  # 自动存储为 self.period_account_id
+            )
+            
+            # 业务断言
             self.assert_util.assert_response_data(response)
-            
-            self.period_account_id = response.get("data", {}).get("data", {}).get("id")
-            assert self.period_account_id, "保存期间账失败"
-            
-            a.json(filtered_params, "保存请求")
-            a.json(response, "保存响应")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -134,31 +132,33 @@ class TestIvPeriodAccountManagement(FinBaseTest):
         title="测试根据ID查找期间账",
         description="验证根据ID查找存货价值期间账功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         tags=["iv", "period", "account", "find"]
     )
     def test_find_period_account_by_id(self):
         """测试根据ID查找期间账"""
         try:
+            # 检查并创建依赖数据
             if not self.period_account_id:
                 self.test_save_period_account()
             
-            api_path = self.get_api_path("根据ID查找期间账数据服务")
-            params, url = self.get_api_params(api_path)
-            
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
+            # 使用标准化API调用
             set_dict = {"id": self.period_account_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["id"]
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="根据ID查找期间账数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+            
+            # 业务断言
             self.assert_util.assert_response_data(response)
             
+            # 验证返回的数据
             account_data = response.get("data", {}).get("data", {})
-            assert account_data.get("id") == self.period_account_id, "查找ID不匹配"
-            
-            a.json(response, "查找响应")
+            self.assert_util.assert_by_operator(account_data.get("id"), "=", self.period_account_id, "查找ID不匹配")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -169,28 +169,29 @@ class TestIvPeriodAccountManagement(FinBaseTest):
         title="测试复制数据转换",
         description="验证存货价值期间账复制数据转换功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         tags=["iv", "period", "account", "copy"]
     )
     def test_copy_data_converter_period(self):
         """测试复制数据转换"""
         try:
+            # 检查并创建依赖数据
             if not self.period_account_id:
                 self.test_save_period_account()
             
-            api_path = self.get_api_path("期间账复制数据转换服务")
-            params, url = self.get_api_params(api_path)
-            
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["sourceId"], ["params", "request"]
-            )
+            # 使用标准化API调用
             set_dict = {"sourceId": self.period_account_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["sourceId"]
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="期间账复制数据转换服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+            
+            # 业务断言
             self.assert_util.assert_response_data(response)
-            
-            a.json(response, "复制转换响应")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -279,32 +280,32 @@ class TestIvPeriodAccountManagement(FinBaseTest):
         title="测试标准导出服务",
         description="验证存货价值期间账标准导出服务功能",
         severity="minor",
-        order=6,
+        file_level_order=6,
         tags=["iv", "period", "account", "export", "standard"]
     )
     def test_standard_export_period(self):
         """测试标准导出服务"""
         try:
+            # 检查并创建依赖数据
             if not self.period_account_id:
                 self.test_save_period_account()
             
-            api_path = self.get_api_path("FIN_IV_ACC_PERIOD_TR_GEI_EXPORT_SERVICE")
-            params, url = self.get_api_params(api_path)
-            
-            export_data = {
+            # 使用标准化API调用
+            set_dict = {
                 "accountIds": [self.period_account_id],
                 "exportType": "EXCEL"
             }
+            fields_to_filter = ["accountIds", "exportType"]
             
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, list(export_data.keys()), ["params", "request"]
+            response, _ = self.standard_api_call(
+                api_key="FIN_IV_ACC_PERIOD_TR_GEI_EXPORT_SERVICE",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
             )
-            ParamUtil.set_request_params(filtered_params, export_data)
             
-            response = self.http.post(url, json=filtered_params)
+            # 业务断言
             self.assert_util.assert_response_success(response)
-            
-            a.json(response, "标准导出响应")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -315,16 +316,14 @@ class TestIvPeriodAccountManagement(FinBaseTest):
         title="测试期间账分页查询",
         description="验证期间账分页查询服务",
         severity="normal",
-        order=7,
+        file_level_order=7,
         tags=["iv", "period", "account", "page"]
     )
     def test_page_service_period(self):
         """测试期间账分页查询"""
         try:
-            api_path = self.get_api_path("期间账分页查询服务")
-            params, url = self.get_api_params(api_path)
-            
-            page_request = {
+            # 使用标准化API调用
+            set_dict = {
                 "pageable": {
                     "pageNo": 1,
                     "pageSize": 10,
@@ -336,16 +335,17 @@ class TestIvPeriodAccountManagement(FinBaseTest):
                 ],
                 "systemParams": None
             }
+            fields_to_filter = ["pageable", "fields", "systemParams"]
             
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields"], ["params", "request"]
+            response, _ = self.standard_api_call(
+                api_key="期间账分页查询服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
             )
-            ParamUtil.set_request_params(filtered_params, page_request)
             
-            response = self.http.post(url, json=filtered_params)
+            # 业务断言
             self.assert_util.assert_response_data(response)
-            
-            a.json(response, "期间账分页查询响应")
             
         except Exception as e:
             a.text(str(e), "失败原因")

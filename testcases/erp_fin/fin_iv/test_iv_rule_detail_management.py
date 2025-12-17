@@ -12,11 +12,10 @@ project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
 
 from testcases.erp_fin import FinBaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
-@allure.epic("ERP财务模块")
+@allure.epic("ERP业财集成-存货价值")
 @allure.feature("存货计价规则明细")
 class TestIvRuleDetailManagement(FinBaseTest):
     """存货计价规则明细测试类"""
@@ -28,8 +27,10 @@ class TestIvRuleDetailManagement(FinBaseTest):
         super().setup_class()
         cls.rule_detail_id = None
         cls.logger.info("存货计价规则明细测试类初始化完成")
+        # 初始化MD数据（从md_cache_data获取主数据）
         if cls.md_cache_data:
-            cls.com_org_id = cls.md_cache_data.get("org_info",{}).get("gr_come_org_info",[])[0].get("id")
+            gr_come_org_info = cls.md_cache_data.get("org_info", {}).get("gr_come_org_info", [])
+            cls.com_org_id = gr_come_org_info[0].get("id") if gr_come_org_info else None
     
     @classmethod
     def teardown_class(cls):
@@ -49,29 +50,28 @@ class TestIvRuleDetailManagement(FinBaseTest):
         title="测试标准导出规则明细",
         description="验证存货计价规则明细标准导出服务功能",
         severity="normal",
-        order=1,
+        file_level_order=1,
         tags=["iv", "rule", "detail", "export", "standard"]
     )
     def test_standard_export_rule_detail(self):
         """测试标准导出规则明细"""
         try:
-            api_path = self.get_api_path("规则明细标准导出服务")
-            params, url = self.get_api_params(api_path)
-            
-            export_data = {
-                "detailIds": [],  # 可为空或指定ID
+            # 使用标准化API调用
+            set_dict = {
+                "detailIds": [],
                 "exportType": "EXCEL"
             }
+            fields_to_filter = ["detailIds", "exportType"]
             
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, list(export_data.keys()), ["params", "request"]
+            response, _ = self.standard_api_call(
+                api_key="规则明细标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
             )
-            ParamUtil.set_request_params(filtered_params, export_data)
             
-            response = self.http.post(url, json=filtered_params)
+            # 业务断言
             self.assert_util.assert_response_success(response)
-            
-            a.json(response, "标准导出响应")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -156,21 +156,21 @@ class TestIvRuleDetailManagement(FinBaseTest):
         title="测试保存规则明细",
         description="验证保存存货计价规则明细功能",
         severity="normal",
-        order=3,
+        file_level_order=3,
         tags=["iv", "rule", "detail", "save"]
     )
     def test_save_rule_detail(self):
         """测试保存规则明细"""
         try:
+            # 检查依赖数据
+            if not self.com_org_id:
+                raise ValueError("com_org_id 未初始化，请检查 md_cache_data")
+            
+            # 准备测试数据
             detail_code = self.mock_util.generate_unique_code(tag="IV_RULE_D")
             detail_name = f"规则明细_{self.mock_util.get_timestamp()}"
             
-            api_path = self.get_api_path("保存规则明细数据服务")
-            params, url = self.get_api_params(api_path)
-            
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["comOrgId", "code", "name", "paramValue"], ["params", "request"]
-            )
+            # 使用标准化API调用
             set_dict = {
                 "comOrgId": self.com_org_id,
                 "code": detail_code,
@@ -178,16 +178,17 @@ class TestIvRuleDetailManagement(FinBaseTest):
                 "paramValue": "test_param",
                 "description": "自动化规则明细"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            fields_to_filter = ["comOrgId", "code", "name", "paramValue", "description"]
             
-            response = self.http.post(url, json=filtered_params)
+            response, extracted_id = self.standard_api_call(
+                api_key="保存规则明细数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="rule_detail"  # 自动存储为 self.rule_detail_id
+            )
+            
+            # 业务断言
             self.assert_util.assert_response_data(response)
-            
-            self.rule_detail_id = response.get("data", {}).get("data", {}).get("id")
-            assert self.rule_detail_id, "保存规则明细失败"
-            
-            a.json(filtered_params, "保存请求")
-            a.json(response, "保存响应")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -198,38 +199,41 @@ class TestIvRuleDetailManagement(FinBaseTest):
         title="测试分页查询规则明细",
         description="验证存货计价规则明细分页查询功能",
         severity="normal",
-        order=4,
+        file_level_order=4,
         tags=["iv", "rule", "detail", "paging"]
     )
     def test_paging_rule_detail(self):
         """测试分页查询规则明细"""
         try:
+            # 检查并创建依赖数据
             if not self.rule_detail_id:
                 self.test_save_rule_detail()
             
-            api_path = self.get_api_path("规则明细分页数据服务")
-            params, url = self.get_api_params(api_path)
-            
-            pageable = {
-                "pageNo": 1,
-                "pageSize": 20,
-                "needTotal": True,
-                "sortOrders": None,
-                "conditionItems": None
+            # 使用标准化API调用
+            set_dict = {
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": None
+                }
             }
+            fields_to_filter = ["pageable"]
             
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable"], ["params", "request"]
+            response, _ = self.standard_api_call(
+                api_key="规则明细分页数据服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
             )
-            ParamUtil.set_request_params(filtered_params, {"pageable": pageable})
             
-            response = self.http.post(url, json=filtered_params)
+            # 业务断言
             self.assert_util.assert_response_data(response)
             
+            # 验证数据存在
             records = response.get("data", {}).get("data", {}).get("data", [])
             assert any(record.get("id") == self.rule_detail_id for record in records), "未找到保存的明细"
-            
-            a.json(response, "分页查询响应")
             
         except Exception as e:
             a.text(str(e), "失败原因")
