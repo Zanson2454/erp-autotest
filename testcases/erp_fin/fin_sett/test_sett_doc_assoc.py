@@ -25,26 +25,26 @@ class TestSettDocAssoc(FinBaseTest):
         cls.logger.info("结算管理业务检查测试类初始化完成")
         cls.db.update("sett_doc_assoc_doc_type_cf", 
                        {"accounting_mode": "INVOICE_BASED","auto_confirm":True,"auto_post":True}, 
-                       f"company_organization='{cls.com_org_id}' and settlement_type='{cls.sett_doc_type_info}' and deleted=0")
+                       f"company_organization='{cls.com_org_id_2}' and settlement_type='{cls.sett_doc_type_info}' and deleted=0")
     @classmethod
     def teardown_class(cls):
         super().teardown_class()
         cls.db.update("sett_doc_assoc_doc_type_cf", 
                        {"accounting_mode": "RECEIVABLE_BASED","auto_confirm":False,"auto_post":False}, 
-                       f"company_organization='{cls.com_org_id}' and settlement_type='{cls.sett_doc_type_info}' and deleted=0")
+                       f"company_organization='{cls.com_org_id_2}' and settlement_type='{cls.sett_doc_type_info}' and deleted=0")
     @case_decorator(
         story="结算项管理",
         title="测试结算项汇单（发票立账）",
         description="测试发票立账和结算项的汇单功能",
         severity="critical",
-        order=0,
+        order=1,
         smoke=False,
         tags=["结算项管理", "结算项汇单","SETT_ITEM_CONFIRM_AND_REMAINTTANCE_ASSOCIATE_ASYNC_EVENT_SERVICE"]
     )
     def test_sett_item_remittance(self):
         """测试结算项汇单（发票立账）"""
         try:
-            sett_item_id = self.create_settlement_item("E_SLS_GOODS")
+            sett_item_id = self.create_settlement_item("E_SLS_GOODS",org=2)
             api_path = self.get_api_path("SETT-ITEM-结算项确认及汇单-关联操作-异步服务")
             params, url = self.get_api_params(api_path)
             data = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
@@ -63,7 +63,7 @@ class TestSettDocAssoc(FinBaseTest):
         title="测试结算项汇单（应收立账）",
         description="测试结算单自动确认和自动过账功能",
         severity="critical",
-        order=1,
+        order=3,
         smoke=False,
         tags=["结算项管理", "结算项汇单","SETT_ITEM_CONFIRM_AND_REMAINTTANCE_ASSOCIATE_ASYNC_EVENT_SERVICE"]
     )
@@ -72,8 +72,8 @@ class TestSettDocAssoc(FinBaseTest):
         try:
             self.db.update("sett_doc_assoc_doc_type_cf", 
                        {"accounting_mode": "RECEIVABLE_BASED"}, 
-                       f"company_organization='{self.com_org_id}' and settlement_type='{self.sett_doc_type_info}' and deleted=0")
-            sett_item_id = self.create_settlement_item("E_SLS_GOODS")
+                       f"company_organization='{self.com_org_id_2}' and settlement_type='{self.sett_doc_type_info}' and deleted=0")
+            sett_item_id = self.create_settlement_item("E_SLS_GOODS",org=2)
             api_path = self.get_api_path("SETT-ITEM-结算项确认及汇单-关联操作-异步服务")
             params, url = self.get_api_params(api_path)
             data = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
@@ -115,7 +115,7 @@ class TestSettDocAssoc(FinBaseTest):
     def test_sett_item_billing(self):
         """测试结算项开票功能"""
         try:
-            sett_item_id = self.create_settlement_item("E_SLS_GOODS")
+            sett_item_id = self.create_settlement_item("E_SLS_GOODS",org=2)
             #执行结算项-批量转换销售发票校验服务
             api_path = self.get_api_path("结算项-批量转换销售发票校验")
             params, url = self.get_api_params(api_path)

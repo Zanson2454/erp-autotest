@@ -289,11 +289,11 @@ class FinBaseTest(BaseTest):
         if not data_list or len(data_list) == 0:
             raise ValueError("创建结算项失败：响应数据为空")
         return data_list[0].get("id")
-    def create_settlement_doc(self, sett_item_type_code="E_SLS_GOODS"):
+    def create_settlement_doc(self, sett_item_type_code="E_SLS_GOODS",org=1):
         """
         创建结算单公共方法,通过结算项类型编码创建不同结算单
         """
-        sett_item_id=self.create_settlement_item(sett_item_type_code)
+        sett_item_id=self.create_settlement_item(sett_item_type_code,org)
         api_path = self.get_api_path("SETT-ITEM-结算项确认及汇单-关联操作-异步服务")
         params, url = self.get_api_params(api_path)
         data = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
@@ -306,8 +306,8 @@ class FinBaseTest(BaseTest):
         start_time = time.time()
         timeout = 10
         while True:
-            sql = f"select id, sett_item_status, async_execution_status, sett_doc_id from sett_item_tr where deleted=0 and id={sett_item_id} limit 1;"
-            sql_result = self.db.query(sql)
+            sql = "select id, sett_item_status, async_execution_status, sett_doc_id from sett_item_tr where deleted=0 and id=%s limit 1"
+            sql_result = self.db.query(sql, (sett_item_id,))
             if not sql_result:
                 raise ValueError(f"结算项对账确认失败: 未找到结算项ID {sett_item_id}")
             if sql_result[0].get("async_execution_status") != "PROCESSING":
@@ -316,9 +316,12 @@ class FinBaseTest(BaseTest):
                 raise TimeoutError(f"等待异步任务执行超时（{timeout}秒）")
             time.sleep(0.5)
         
-        return sql_result[0]["sett_doc_id"]
+        sett_doc_id = sql_result[0].get("sett_doc_id")
+        if sett_doc_id is None:
+            raise ValueError(f"结算项对账确认失败: 结算项ID {sett_item_id} 未生成结算单")
+        return sett_doc_id
         
-    def create_confirmed_settlement_doc(self, sett_item_type_code="E_SLS_GOODS"):
+    def create_confirmed_settlement_doc(self, sett_item_type_code="E_SLS_GOODS",org=1):
         """
         创建已确认结算单公共方法,返回结算单id
         """
@@ -326,23 +329,27 @@ class FinBaseTest(BaseTest):
         params, url = self.get_api_params(api_path)
         data = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
         data = ParamUtil.convert_param_type(data, ["params", "request","id"], "array")
-        data["params"]["request"]["id"][0] = self.create_settlement_doc(sett_item_type_code)
+        data["params"]["request"]["id"][0] = self.create_settlement_doc(sett_item_type_code,org)
         result = self.http.post(url, json=data, description=f"结算单确认 - ID: {data['params']['request']['id'][0]}")
         self.assert_util.assert_response_success(result)
         #等待异步任务执行完成，当状态为PROCESSING时一直等待，最长超时10秒
+        sett_doc_id = data["params"]["request"]["id"][0]
+        if sett_doc_id is None:
+            raise ValueError("结算单确认失败: 结算单ID不能为None")
         start_time = time.time()
         timeout = 10
         while True:
-            sql = f"select id, sett_doc_status, trading_doc_id from sett_doc_tr where deleted=0 and id={data['params']['request']['id'][0]} limit 1;"
-            sql_result = self.db.query(sql)
+
+            sql = "select id, sett_doc_status, trading_doc_id from sett_doc_tr where deleted=0 and id=%s limit 1"
+            sql_result = self.db.query(sql, (sett_doc_id,))
             if not sql_result:
-                raise ValueError(f"结算单确认失败: 未找到结算单ID {data['params']['request']['id'][0]}")
+                raise ValueError(f"结算单确认失败: 未找到结算单ID {sett_doc_id}")
             if sql_result[0].get("trading_doc_id") is not None:
                 break
             if time.time() - start_time >= timeout:
                 raise TimeoutError(f"等待异步任务执行超时（{timeout}秒）")
             time.sleep(0.5)
-        return data["params"]["request"]["id"][0]
+        return sett_doc_id
             
         
     @classmethod

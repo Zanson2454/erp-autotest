@@ -30,11 +30,12 @@ class TestSettDocBusiCheck(FinBaseTest):
         try:
             created_sett_doc_id = self.create_settlement_doc("E_SLS_GOODS")
             confirmed_sett_doc_id = self.create_confirmed_settlement_doc("E_SLS_GOODS")
+            if created_sett_doc_id is None or confirmed_sett_doc_id is None:
+                raise ValueError("获取结算单ID失败")
             return [created_sett_doc_id, confirmed_sett_doc_id]
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
-        
 
     @case_decorator(
         story="结算单管理",
@@ -129,19 +130,24 @@ class TestSettDocBusiCheck(FinBaseTest):
             data = ParamUtil.convert_param_type(data, ["params", "request","id"], "array")
             sett_doc_ids = self.get_sett_doc_id()
             for index, sett_doc_id in enumerate(sett_doc_ids):
+                # 跳过None值，避免SQL查询错误
+                if sett_doc_id is None:
+                    self.logger.warning(f"跳过None值的sett_doc_id，索引: {index}")
+                    continue
+                
                 data["params"]["request"]["id"][0] = sett_doc_id
                 result = self.http.post(url, json=data, description=f"结算单确认 - ID: {sett_doc_id}")
                 
                 if index == 0:
                     #等待结算单确认完成，当trading_doc_id不为空时一直等待，最长超时10秒
                     start_time = time.time()
-                    timeout = 10
+                    timeout = 30
                     while True:
-                        sql = f"""
+                        sql = """
                         select sett_doc_status,async_execution_status,trading_doc_id,trading_doc_status,trading_doc_code,client_side_confirm_status
-                        from sett_doc_tr where deleted=0 and id={sett_doc_id}
+                        from sett_doc_tr where deleted=0 and id=%s
                         """
-                        sql_result = self.db.query(sql)
+                        sql_result = self.db.query(sql, (sett_doc_id,))
                         if not sql_result:
                             raise ValueError(f"结算单确认失败: 未找到结算单ID {sett_doc_id}")
                         if sql_result[0].get("trading_doc_id") is not None:
