@@ -82,6 +82,7 @@ class TestIvDetailAccountManagement(FinBaseTest):
             a.text(str(e), "失败原因")
             raise
     
+    @pytest.mark.skip(reason="业务未引用")
     @case_decorator(
         story="存货价值明细账",
         title="测试保存明细账",
@@ -143,9 +144,10 @@ class TestIvDetailAccountManagement(FinBaseTest):
         """测试根据ID查找明细账"""
         try:
             # 检查并创建依赖数据
-            if not self.detail_account_id:
-                self.test_save_detail_account()
-            
+        
+            sql = "select id  from fin_iv_acc_detail_tr where deleted=0 and com_org_id=%s and inv_org_id=%s order by created_at desc limit 1"
+            self.detail_account_id = self.db.execute(sql, [self.com_org_id, self.inv_org_id])
+
             # 使用标准化API调用
             set_dict = {"id": self.detail_account_id}
             fields_to_filter = ["id"]
