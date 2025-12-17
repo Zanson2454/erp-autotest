@@ -9,6 +9,7 @@ from pathlib import Path
 import json
 import requests
 import time
+import random
 
 # 获取项目根目录
 project_root = Path(__file__).resolve().parent.parent.parent
@@ -350,7 +351,139 @@ class FinBaseTest(BaseTest):
                 raise TimeoutError(f"等待异步任务执行超时（{timeout}秒）")
             time.sleep(0.5)
         return sett_doc_id
-            
+    
+    
+    def create_ar_doc(self, ar_type="STND", org=1):
+        """
+        创建应收单公共方法,返回应收单id
+        :param ar_type: 应收单类型代码，默认"STND"（标准财务应收单）
+        :param org: 组织编号，1或2，默认1
+        :return: 应收单ID
+        """
+        # 根据org参数选择组织
+        if org == 1:
+            com_org_id = self.com_org_id
+            sls_org_id = self.sls_org_id
+            inv_org_id = self.inv_org_id
+        elif org == 2:
+            com_org_id = self.com_org_id_2
+            sls_org_id = self.sls_org_id_2
+            inv_org_id = self.inv_org_id_2
+        else:
+            raise ValueError("org 参数错误，请输入 1 或 2")
+        
+        # 检查必要的基础数据
+        if not com_org_id or not sls_org_id or not self.cust_id or not self.curr_id:
+            raise ValueError("缺少必要的基础数据，请检查init_data和md_cache_data")
+        
+        # 获取税率，如果没有则使用默认值13.0
+        tax_rate = self.tax_rate if self.tax_rate else 13.0
+        
+        # 应收日期（当前时间戳，毫秒）
+        ar_date = int(time.time() * 1000)
+        
+        # 应收单行项基础参数（使用随机数）
+        ar_qty = random.randint(10, 1000)  # 数量：随机10-1000
+        gross_doc_price = round(random.uniform(1.0, 100.0), 2)  # 含税单价：随机1.0-100.0，保留2位小数
+        
+        # 计算金额（动态计算，不写死）
+        gross_doc_amt = ar_qty * gross_doc_price  # 含税金额 = 数量 × 含税单价
+        tax_amt = round(gross_doc_amt * tax_rate / (100 + tax_rate), 2)  # 税额 = 含税金额 × 税率 / (100 + 税率)
+        net_doc_amt = round(gross_doc_amt - tax_amt, 2)  # 不含税金额 = 含税金额 - 税额
+        if ar_type == "STND":
+            sett_item_type_id = self.sett_item_type_info.get("E_SLS_GOODS").get("id")
+        else:
+            raise ValueError("ar_type 参数错误，请输入 STND")
+        # 应收单行项数据
+        ar_item = {
+            "settItemTypeId": {"id": sett_item_type_id},
+            "taxAmt": tax_amt,
+            "grossBaseAmt": gross_doc_amt,
+            "netBaseAmt": net_doc_amt,
+            "grossDocAmt": gross_doc_amt,
+            "netDocAmt": net_doc_amt,
+            "matId": {"id": self.mat_id},
+            "taxCodeId": {"id": self.tax_code_id},
+            "taxRate": tax_rate,
+            "arQty": ar_qty,
+            "grossDocPrice": gross_doc_price,
+            "invOrgId": inv_org_id  
+        }
+        
+        # 应收单计划行数据
+        ar_schl = {
+            "dueDate": ar_date,
+            "arDocAmt": gross_doc_amt,
+            "arBaseAmt": gross_doc_amt,
+            "arPercent": 100,
+            "receivedDocAmt": 0,
+            "unreceivedDocAmt": gross_doc_amt,
+            "receivedBaseAmt": 0,
+            "unreceivedBaseAmt": gross_doc_amt,
+            "collectionClearingStatus": "UNCLEARED"
+        }
+        
+        # 构建应收单请求体
+        set_dict = {
+            "docTypeId": {"id": 14003001, "arTypeCode": ar_type},  # 标准财务应收单
+            "comOrgId": {"id": com_org_id},
+            "slsOrgId": {"id": sls_org_id},
+            "payOrgId": {"id": com_org_id},
+            "arDate": ar_date,
+            "settPartnerId": {"id": self.cust_id},
+            "settPartnerType": "CUSTOMER",
+            "docCurrId": {"id": self.curr_id},
+            "baseCurrId": {"id": self.curr_id},
+            "exchRate": 1.0,
+            "arStatus": "DRAFT",
+            "collectionClearingStatus": "UNCLEARED",
+            "billingClearingStatus": "UNCLEARED",
+            "headOffsetStatus": "UNOFFSET",
+            "arItems": [ar_item],
+            "arSchls": [ar_schl],
+            "grossDocAmt": gross_doc_amt,
+            "netDocAmt": net_doc_amt,
+            "grossBaseAmt": gross_doc_amt,
+            "netBaseAmt": net_doc_amt,
+            "taxAmt": tax_amt,
+            "uncollectedDocAmt": gross_doc_amt,
+            "uncollectedBaseAmt": gross_doc_amt,
+            "unbilledDocAmt": gross_doc_amt,
+            "unbilledBaseAmt": gross_doc_amt,
+            "unoffsetDocAmt": gross_doc_amt,
+            "unoffsetBaseAmt": gross_doc_amt
+        }
+        
+        # 需要过滤的字段列表
+        fields_to_filter = [
+            "docTypeId", "comOrgId", "slsOrgId", "payOrgId", "arDate",
+            "settPartnerId", "settPartnerType", "docCurrId", "baseCurrId",
+            "exchRate", "arStatus", "collectionClearingStatus", "billingClearingStatus",
+            "headOffsetStatus", "arItems", "arSchls", "grossDocAmt", "netDocAmt",
+            "grossBaseAmt", "netBaseAmt", "taxAmt", "uncollectedDocAmt",
+            "uncollectedBaseAmt", "unbilledDocAmt", "unbilledBaseAmt",
+            "unoffsetDocAmt", "unoffsetBaseAmt"
+        ]
+        
+        # 使用标准化API调用
+        response, extracted_id = self.standard_api_call(
+            api_key="AR-应收单保存服务",
+            set_dict=set_dict,
+            fields_to_filter=fields_to_filter
+        )
+        
+        # 业务断言
+        self.assert_util.assert_response_data(response)
+        
+        # 返回应收单ID
+        if extracted_id is None:
+            # 如果standard_api_call没有提取到ID，从响应中获取
+            data = response.get("data", {}).get("data", {})
+            extracted_id = data.get("id")
+            if extracted_id is None:
+                raise ValueError("应收单保存失败：未返回应收单ID")
+        
+        return extracted_id
         
     @classmethod
     def teardown_class(cls):
@@ -363,7 +496,4 @@ class FinBaseTest(BaseTest):
 if __name__ == "__main__":
     FinBaseTest.setup_class()
     test = FinBaseTest()
-    test.create_settlement_item("E_PUR_GOODS")
-    test.create_settlement_item("E_SLS_GOODS")
-    test.create_settlement_item("E_SLS_FRET_C")
-    test.create_settlement_item("E_PUR_FRET_C")
+    test.create_ar_doc()
