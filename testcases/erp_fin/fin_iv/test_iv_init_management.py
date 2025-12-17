@@ -420,22 +420,53 @@ class TestIvInitManagement(FinBaseTest):
             raise
     
     
+    # @case_decorator(
+    #     story="存货核算初始化配置管理",
+    #     title="测试异步执行初始化",
+    #     description="验证存货核算初始化配置异步执行初始化功能",
+    #     severity="normal",
+    #     file_level_order=10,
+    #     tags=["iv", "init", "async"]
+    # )
+    # def test_execute_initialization_async(self):
+    #     """测试异步执行初始化"""
+    #     try:
+    #         # 检查并创建依赖数据
+    #         if not self.init_cf_id:
+    #             self.test_confirm_begin()
+            
+    #         # 使用use_param_util=False手动构造参数（因为需要reuqest路径）
+    #         set_dict = {"id": self.init_cf_id}
+    #         fields_to_filter = ["id"]
+    #         response, _ = self.standard_api_call(
+    #             api_key="存货核算初始化配置-执行初始化-异步任务发起",
+    #             set_dict=set_dict,
+    #             fields_to_filter=fields_to_filter,
+    #             store_id_as=None
+    #         )
+    #         self.assert_util.assert_response_success(response)
+    #         asyncExecutionStatus = response.get("data", {}).get("data", {}).get("asyncExecutionStatus")
+    #         self.assert_util.assert_by_operator(asyncExecutionStatus, "=", "CREATED", "异步任务发起初始化状态应为CREATED")
+    #     except Exception as e:
+    #         a.text(str(e), "失败原因")
+    #         raise
+    
     @case_decorator(
         story="存货核算初始化配置管理",
-        title="测试异步执行初始化",
-        description="验证存货核算初始化配置异步执行初始化功能",
+        title="测试异步执行初始化并等待完成",
+        description="验证存货核算初始化配置异步执行初始化功能，并等待异步任务完成",
         severity="normal",
         file_level_order=10,
-        tags=["iv", "init", "async"]
+        tags=["iv", "init", "async", "wait"]
     )
-    def test_execute_initialization_async(self):
-        """测试异步执行初始化"""
+    def test_execute_initialization_async_and_wait(self):
+        """测试异步执行初始化并等待完成"""
         try:
             # 检查并创建依赖数据
             if not self.init_cf_id:
                 self.test_confirm_begin()
             
-            # 使用use_param_util=False手动构造参数（因为需要reuqest路径）
+            # 1. 发起异步任务
             set_dict = {"id": self.init_cf_id}
             fields_to_filter = ["id"]
             response, _ = self.standard_api_call(
@@ -447,10 +478,48 @@ class TestIvInitManagement(FinBaseTest):
             self.assert_util.assert_response_success(response)
             asyncExecutionStatus = response.get("data", {}).get("data", {}).get("asyncExecutionStatus")
             self.assert_util.assert_by_operator(asyncExecutionStatus, "=", "CREATED", "异步任务发起初始化状态应为CREATED")
+            
+            # 2. 定义查询函数
+            def query_init_status():
+                """查询初始化配置状态"""
+                response, _ = self.standard_api_call(
+                    api_key="存货核算初始化配置-查询详情服务",
+                    set_dict={"id": self.init_cf_id},
+                    fields_to_filter=["id"]
+                )
+                self.assert_util.assert_response_success(response)
+                return response.get("data", {}).get("data", {})
+            
+            # 3. 等待异步任务完成
+            result = self.async_wait_util.wait_for_async_status(
+                query_func=query_init_status,
+                status_field="asyncExecutionStatus",
+                success_status="SUCCEEDED",
+                failed_status="FAILED",
+                failure_reason_field="asyncExecutionFailureReason",
+                max_wait=10,  # 最大等待60秒
+                interval=1  # 每3秒查询一次
+            )
+            
+            # 4. 断言等待结果
+            if result.status == self.wait_status.SUCCESS:
+                # 验证异步任务成功
+                init_status = result.last_data.get("initStatus")
+                self.assert_util.assert_by_operator(
+                    init_status, "=", "INIT",
+                    f"初始化任务应成功完成，实际状态: {init_status}"
+                )
+                asyncExecutionStatus = result.last_data.get("asyncExecutionStatus")
+                self.assert_util.assert_by_operator(
+                    asyncExecutionStatus, "=", "SUCCEEDED", 
+                    f"异步任务状态应为SUCCEEDED，实际状态: {asyncExecutionStatus}"
+                )
+                a.text(f"✅ 初始化任务成功完成，总耗时: {result.total_wait_time:.2f}秒", "任务完成")
+                
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
-            
+        
     
     # @case_decorator(
     #     story="存货价值初始化配置表",

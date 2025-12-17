@@ -24,6 +24,7 @@ from utils.yaml_util import YamlUtil
 from utils.request_util import HttpUtil
 from utils.exception_util import safe_api_call
 from utils.param_util import ParamUtil
+from utils.async_wait_util import AsyncWaitUtil, WaitStatus
 from data_factory.base import DataFactory 
 from utils.mysql_util import DBManager
 
@@ -530,6 +531,8 @@ class BaseTestInitializer:
             "mock_util": MockData(),
             "cache": CacheUtil(),
             "yaml_util": YamlUtil(),
+            "async_wait_util": AsyncWaitUtil,
+            "wait_status": WaitStatus,
             "safe_api_call": safe_api_call
         }
 
