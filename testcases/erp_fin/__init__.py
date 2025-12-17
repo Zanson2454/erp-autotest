@@ -130,10 +130,15 @@ class FinBaseTest(BaseTest):
         # 初始化MD (org, partner, etc.)
         if cls.md_cache_data:
             cls.com_org_id = cls.md_cache_data.get("org_info",{}).get("gr_come_org_info",[])[0].get("id")
-            cls.com_org_id_copy = cls.md_cache_data.get("org_info",{}).get("com_org_info",[])[0].get("id")
             cls.sls_org_id = cls.md_cache_data.get("org_info",{}).get("sls_org_info",[])[0].get("id")
             cls.pur_org_id = cls.md_cache_data.get("org_info",{}).get("pur_org_info",[])[0].get("id")
             cls.inv_org_id = cls.md_cache_data.get("org_info",{}).get("inv_org_info",[])[0].get("id")
+            
+            cls.com_org_id_2 = cls.md_cache_data.get("org_info",{}).get("com_org_info",[])[0].get("id")
+            cls.inv_org_id_2 = cls.md_cache_data.get("org_info",{}).get("inv_org_info2",[])[0].get("id")
+            cls.sls_org_id_2 = cls.md_cache_data.get("org_info",{}).get("sls_org_info2",[])[0].get("id")
+            cls.pur_org_id_2 = cls.md_cache_data.get("org_info",{}).get("pur_org_info2",[])[0].get("id")
+            
             cls.cust_id = cls.md_cache_data.get("partner_info",{}).get("cust_info",[])[0].get("id")
             cls.vend_id = cls.md_cache_data.get("partner_info",{}).get("vend_info",[])[0].get("id")
             cls.mat_id = cls.md_cache_data.get("mat_info",{}).get("mat_md",{}).get("FINP",[])[0].get("id")
@@ -202,10 +207,22 @@ class FinBaseTest(BaseTest):
         return ParamUtil.get_api_params(self.api_params, api_path, with_query_params)
     
     
-    def create_settlement_item(self,sett_item_type_code="E_SLS_GOODS"):
+    def create_settlement_item(self,sett_item_type_code="E_SLS_GOODS",org=1):
         """
         创建结算项公共方法，通过结算行项目类型编码创建不同结算项
         """
+        if org == 1:
+            com_org_id = self.com_org_id
+            inv_org_id = self.inv_org_id
+            sls_org_id = self.sls_org_id
+            pur_org_id = self.pur_org_id
+        elif org == 2:
+            com_org_id = self.com_org_id_2
+            inv_org_id = self.inv_org_id_2
+            sls_org_id = self.sls_org_id_2
+            pur_org_id = self.pur_org_id_2
+        else:
+            raise ValueError("org 参数错误，请输入 1 或 2")
         #获取对应key的sett_item_type_info的值
         if not self.sett_item_type_info:
             raise ValueError("sett_item_type_info 未初始化，请检查 setup_class 是否正确执行")
@@ -236,9 +253,9 @@ class FinBaseTest(BaseTest):
             "partnerType": "CUSTOMER" if sett_item_type_info.get("bt_class") == "SALES" else "SUPPLIER",
             "ptHeadId": None,
             "remark": f"自动化测试创建结算项-{sett_item_type_name}",
-            "comOrgId": {"id": self.com_org_id},
+            "comOrgId": {"id": com_org_id},
             "purSlsOrgType": "SLS" if sett_item_type_info.get("bt_class") == "SALES" else "PUR",
-            "invOrgId": {"id": self.inv_org_id},
+            "invOrgId": {"id": inv_org_id},
             "matId": {"id": self.mat_id},
             "taxRate": self.tax_rate,
             "basicUnitId": {"id": self.basic_unit_id},
@@ -262,7 +279,7 @@ class FinBaseTest(BaseTest):
             "asyncExecutionStatus": "CREATED",
             "partnerId": {"id": self.cust_id if sett_item_type_info.get("bt_class") == "SALES" else self.vend_id},
             "taxCodeId": {"id": self.tax_code_id},
-            "purSlsOrgId": {"id": self.sls_org_id if sett_item_type_info.get("bt_class") == "SALES" else self.pur_org_id},
+            "purSlsOrgId": {"id": sls_org_id if sett_item_type_info.get("bt_class") == "SALES" else pur_org_id},
         }
         ParamUtil.set_request_params(filtered_params, set_dict)
         result = self.http.post(url, json=filtered_params, description="创建结算项")
