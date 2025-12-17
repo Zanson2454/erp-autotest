@@ -716,7 +716,20 @@ class BaseTest:
         try:
             # 1. 获取API路径和基础参数 - 使用模块特定的方法签名
             api_path = self.get_api_path(api_key)
+            if api_path is None:
+                raise ValueError(
+                    f"未找到API配置: {api_key}\n"
+                    f"请检查:\n"
+                    f"1. API key是否正确: '{api_key}'\n"
+                    f"2. 配置文件是否正确加载 (apis配置是否存在)\n"
+                    f"3. 配置文件路径是否正确"
+                )
             params, url = self.get_api_params(api_path)
+            if url is None:
+                raise ValueError(
+                    f"API路径配置错误: api_path={api_path}\n"
+                    f"请检查API参数配置文件中的路径配置"
+                )
             
             # 2. 参数处理 - 分支逻辑
             if use_param_util:

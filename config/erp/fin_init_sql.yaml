@@ -7,7 +7,7 @@ calender_info:
 
   calender_item_info:
     sql: |
-     select  id,period_code,period_name,`status`,period_type from fin_common_calendar_item_cf where deleted=0 and gen_calendar_head_cf_id = (select  id from fin_common_calendar_head_cf where calendar_code = 'AUTOTEST_CALEDAR' and status='ENABLED' and  deleted=0 limit 1);
+     select  id,period_code,period_name,`status`,period_type from fin_common_calendar_item_cf where deleted=0 and gen_calendar_head_cf_id = (select  id from fin_common_calendar_head_cf where calendar_code = 'AUTOTEST_CALEDAR' and status='ENABLED' and  deleted=0 limit 1)  order by id desc limit 1;
     description: "查询期间行信息"
 
 # 结算单配置

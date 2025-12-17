@@ -419,38 +419,6 @@ class TestIvInitManagement(FinBaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    
-    # @case_decorator(
-    #     story="存货核算初始化配置管理",
-    #     title="测试异步执行初始化",
-    #     description="验证存货核算初始化配置异步执行初始化功能",
-    #     severity="normal",
-    #     file_level_order=10,
-    #     tags=["iv", "init", "async"]
-    # )
-    # def test_execute_initialization_async(self):
-    #     """测试异步执行初始化"""
-    #     try:
-    #         # 检查并创建依赖数据
-    #         if not self.init_cf_id:
-    #             self.test_confirm_begin()
-            
-    #         # 使用use_param_util=False手动构造参数（因为需要reuqest路径）
-    #         set_dict = {"id": self.init_cf_id}
-    #         fields_to_filter = ["id"]
-    #         response, _ = self.standard_api_call(
-    #             api_key="存货核算初始化配置-执行初始化-异步任务发起",
-    #             set_dict=set_dict,
-    #             fields_to_filter=fields_to_filter,
-    #             store_id_as=None
-    #         )
-    #         self.assert_util.assert_response_success(response)
-    #         asyncExecutionStatus = response.get("data", {}).get("data", {}).get("asyncExecutionStatus")
-    #         self.assert_util.assert_by_operator(asyncExecutionStatus, "=", "CREATED", "异步任务发起初始化状态应为CREATED")
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
-    
     @case_decorator(
         story="存货核算初始化配置管理",
         title="测试异步执行初始化并等待完成",
@@ -460,13 +428,30 @@ class TestIvInitManagement(FinBaseTest):
         tags=["iv", "init", "async", "wait"]
     )
     def test_execute_initialization_async_and_wait(self):
-        """测试异步执行初始化并等待完成"""
+        """
+        测试异步执行初始化并等待完成
+        
+        测试流程：
+        1. 发起异步初始化任务
+        2. 验证任务已创建（状态为CREATED）
+        3. 轮询查询任务状态，等待任务完成
+        4. 验证初始化状态和异步执行状态
+        
+        业务说明：
+        - 存货核算初始化是一个异步任务，需要等待后台处理完成
+        - 异步任务状态流转：CREATED -> PROCESSING -> SUCCEEDED/FAILED
+        - 初始化状态流转：WAIT_INIT -> INIT（成功时）
+        """
         try:
-            # 检查并创建依赖数据
+            # ========== 前置条件检查 ==========
+            # 确保初始化配置已创建并确认开始，否则先执行前置用例
+            # init_cf_id 是初始化配置的ID，由前置用例 test_confirm_begin() 创建
             if not self.init_cf_id:
                 self.test_confirm_begin()
             
-            # 1. 发起异步任务
+            # ========== 步骤1：发起异步初始化任务 ==========
+            # 调用异步任务发起接口，触发后台初始化处理
+            # 该接口会立即返回，不会等待任务完成，任务在后台异步执行
             set_dict = {"id": self.init_cf_id}
             fields_to_filter = ["id"]
             response, _ = self.standard_api_call(
@@ -475,48 +460,154 @@ class TestIvInitManagement(FinBaseTest):
                 fields_to_filter=fields_to_filter,
                 store_id_as=None
             )
+            # 验证接口调用成功（HTTP状态码200，响应success=true）
             self.assert_util.assert_response_success(response)
-            asyncExecutionStatus = response.get("data", {}).get("data", {}).get("asyncExecutionStatus")
-            self.assert_util.assert_by_operator(asyncExecutionStatus, "=", "CREATED", "异步任务发起初始化状态应为CREATED")
             
-            # 2. 定义查询函数
+            # 验证异步任务已创建（CREATED状态表示任务已成功提交到队列）
+            # 此时任务还未开始执行，只是进入了任务队列等待处理
+            asyncExecutionStatus = response.get("data", {}).get("data", {}).get("asyncExecutionStatus")
+            self.assert_util.assert_by_operator(
+                asyncExecutionStatus, "=", "CREATED", 
+                "异步任务发起初始化状态应为CREATED，表示任务已成功提交到队列"
+            )
+            
+            # ========== 步骤2：定义查询函数 ==========
+            # 定义查询函数，用于轮询检查初始化配置的状态
+            # 该函数会被异步等待工具多次调用，直到任务完成或超时
+            # 注意：函数内部需要处理异常，避免异常导致轮询中断
             def query_init_status():
-                """查询初始化配置状态"""
+                """
+                查询初始化配置状态
+                
+                功能说明：
+                - 调用查询详情接口，获取初始化配置的当前状态
+                - 返回的数据包含异步任务执行状态和初始化业务状态
+                
+                返回数据字段说明：
+                - asyncExecutionStatus: 异步执行状态
+                  * CREATED: 任务已创建，等待执行
+                  * PROCESSING: 任务执行中
+                  * SUCCEEDED: 任务执行成功
+                  * FAILED: 任务执行失败
+                - initStatus: 初始化业务状态
+                  * WAIT_INIT: 等待初始化
+                  * INIT: 初始化完成
+                - asyncExecutionFailureReason: 失败原因（仅在失败时存在）
+                
+                返回：
+                    dict: 包含初始化配置的完整数据
+                """
                 response, _ = self.standard_api_call(
-                    api_key="存货核算初始化配置-查询详情服务",
+                    api_key="存货价值初始化配置表-根据ID查找数据服务",
                     set_dict={"id": self.init_cf_id},
                     fields_to_filter=["id"]
                 )
                 self.assert_util.assert_response_success(response)
                 return response.get("data", {}).get("data", {})
             
-            # 3. 等待异步任务完成
+            # ========== 步骤3：等待异步任务完成 ==========
+            # 使用异步等待工具轮询查询任务状态，直到任务完成或超时
+            # 工具会自动：
+            # - 按interval间隔（1秒）调用query_init_status函数
+            # - 检查asyncExecutionStatus字段的值
+            # - 如果状态为SUCCEEDED则返回成功，停止轮询
+            # - 如果状态为FAILED则返回失败并记录失败原因，停止轮询
+            # - 如果超过max_wait时间（10秒）仍未完成则返回超时，停止轮询
+            # - 自动记录每次轮询的结果到Allure报告中
             result = self.async_wait_util.wait_for_async_status(
-                query_func=query_init_status,
-                status_field="asyncExecutionStatus",
-                success_status="SUCCEEDED",
-                failed_status="FAILED",
-                failure_reason_field="asyncExecutionFailureReason",
-                max_wait=10,  # 最大等待60秒
-                interval=1  # 每3秒查询一次
+                query_func=query_init_status,  # 查询函数，每次轮询时调用
+                status_field="asyncExecutionStatus",  # 要检查的状态字段名
+                success_status="SUCCEEDED",  # 成功状态值，达到此状态时停止等待
+                failed_status="FAILED",  # 失败状态值，达到此状态时立即返回失败
+                failure_reason_field="asyncExecutionFailureReason",  # 失败原因字段名，用于记录失败详情
+                max_wait=10,  # 最大等待时间（秒），超过此时间仍未完成则返回超时
+                interval=1  # 轮询间隔（秒），每1秒查询一次状态
             )
             
-            # 4. 断言等待结果
+            # ========== 步骤4：断言等待结果 ==========
+            # 根据等待结果进行断言验证
+            # result.status 的可能值：
+            # - SUCCESS: 等待成功，任务已完成
+            # - FAILED: 任务执行失败
+            # - TIMEOUT: 等待超时，任务未在指定时间内完成
+            # - ERROR: 查询过程出错
+            
             if result.status == self.wait_status.SUCCESS:
-                # 验证异步任务成功
+                # 等待成功，验证业务状态
+                
+                # 4.1 验证初始化状态
+                # 初始化成功后，initStatus应该从WAIT_INIT变为INIT
+                # 这表示初始化业务逻辑已成功执行
                 init_status = result.last_data.get("initStatus")
                 self.assert_util.assert_by_operator(
                     init_status, "=", "INIT",
-                    f"初始化任务应成功完成，实际状态: {init_status}"
+                    f"初始化任务应成功完成，initStatus应为INIT，实际状态: {init_status}"
                 )
+                
+                # 4.2 验证异步执行状态
+                # 异步任务执行成功后，asyncExecutionStatus应该为SUCCEEDED
+                # 这表示异步任务本身已成功完成
                 asyncExecutionStatus = result.last_data.get("asyncExecutionStatus")
                 self.assert_util.assert_by_operator(
                     asyncExecutionStatus, "=", "SUCCEEDED", 
                     f"异步任务状态应为SUCCEEDED，实际状态: {asyncExecutionStatus}"
                 )
-                a.text(f"✅ 初始化任务成功完成，总耗时: {result.total_wait_time:.2f}秒", "任务完成")
+                
+                # 4.3 验证失败原因为空
+                # 任务成功时，asyncExecutionFailureReason应该为None
+                # 如果存在失败原因，说明任务虽然状态是SUCCEEDED，但可能有警告信息
+                asyncExecutionFailureReason = result.last_data.get("asyncExecutionFailureReason")
+                self.assert_util.assert_by_operator(
+                    asyncExecutionFailureReason, "=", None, 
+                    f"异步任务失败原因应为None，实际原因: {asyncExecutionFailureReason}"
+                )
+                
+                # 记录成功信息到Allure报告，便于查看测试执行详情
+                a.text(
+                    f"✅ 初始化任务成功完成\n"
+                    f"总耗时: {result.total_wait_time:.2f}秒\n"
+                    f"检查次数: {result.attempts}次\n"
+                    f"初始化状态: {init_status}\n"
+                    f"异步执行状态: {asyncExecutionStatus}",
+                    "任务完成"
+                )
+            elif result.status == self.wait_status.FAILED:
+                # 任务失败，抛出异常并记录失败原因
+                # 失败原因通常包含业务错误信息，有助于定位问题
+                failure_reason = result.error_message or "未知原因"
+                raise AssertionError(
+                    f"异步初始化任务失败: {failure_reason}\n"
+                    f"等待时间: {result.total_wait_time:.2f}秒\n"
+                    f"检查次数: {result.attempts}次\n"
+                    f"最后数据: {result.last_data}"
+                )
+            elif result.status == self.wait_status.TIMEOUT:
+                # 等待超时，抛出异常
+                # 超时可能的原因：
+                # 1. 任务执行时间过长，超过max_wait设置
+                # 2. 系统负载过高，任务处理缓慢
+                # 3. 任务卡住，未正常执行
+                raise AssertionError(
+                    f"等待异步初始化任务超时\n"
+                    f"最大等待时间: 10秒\n"
+                    f"实际等待时间: {result.total_wait_time:.2f}秒\n"
+                    f"检查次数: {result.attempts}次\n"
+                    f"最后状态: {result.last_data.get('asyncExecutionStatus') if result.last_data else '未知'}\n"
+                    f"建议：检查任务是否正常执行，或增加max_wait时间"
+                )
+            else:
+                # 其他错误（如查询过程出错、网络异常等）
+                # 这种情况通常是查询接口调用失败，而非业务逻辑问题
+                raise AssertionError(
+                    f"等待异步初始化任务时发生错误: {result.error_message}\n"
+                    f"等待时间: {result.total_wait_time:.2f}秒\n"
+                    f"检查次数: {result.attempts}次\n"
+                    f"建议：检查网络连接和接口可用性"
+                )
                 
         except Exception as e:
+            # 记录异常信息到Allure报告，便于问题排查
+            # 异常信息包含完整的错误堆栈和上下文信息
             a.text(str(e), "失败原因")
             raise
         

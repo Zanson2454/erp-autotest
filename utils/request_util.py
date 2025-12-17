@@ -78,6 +78,9 @@ class HttpUtil:
             Dict[str, Any]: 响应数据
         """
         # 构建完整URL
+        # 检查url是否为None，避免lstrip调用失败
+        if url is None:
+            raise ValueError(f"URL不能为None，请检查API配置是否正确。当前URL: {url}")
         full_url = urljoin(self.url, url.lstrip('/'))
         
         # 记录请求信息
