@@ -836,7 +836,7 @@ class TestIvInitManagement(FinBaseTest):
         title="测试复制数据转换服务",
         description="验证存货价值初始化配置表复制数据转换功能",
         severity="normal",
-        order=8,
+        file_level_order=16,
         tags=["iv", "init", "value", "copy"]
     )
     def test_copy_data_converter(self):
@@ -862,81 +862,116 @@ class TestIvInitManagement(FinBaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    # @case_decorator(
-    #     story="存货价值初始化配置表",
-    #     title="测试复制数据转换子服务",
-    #     description="验证存货价值初始化配置表复制数据转换子服务功能",
-    #     severity="normal",
-    #     order=9,
-    #     tags=["iv", "init", "value", "copy_child"]
-    # )
-    # def test_copy_data_converter_child(self):
-    #     """测试复制数据转换子服务"""
-    #     try:
-    #         if not self.init_cf_id:
-    #             self.test_save_init_cf_data()
+    @case_decorator(
+        story="存货价值初始化配置表",
+        title="测试复制数据转换子服务",
+        description="验证存货价值初始化配置表复制数据转换子服务功能",
+        severity="normal",
+        file_level_order=17,
+        tags=["iv", "init", "value", "copy_child"]
+    )
+    def test_copy_data_converter_child(self):
+        """测试复制数据转换子服务"""
+        try:
+            if not self.continuous_method_init_cf_id:
+                self.test_initialize_configuration(iv_type="CONTINUOUS_METHOD")
             
-    #         api_path = self.get_api_path("存货价值初始化配置表-复制数据转换子服务")
-    #         params, url = self.get_api_params(api_path)
+            # 复制子服务需要源ID和modelKey参数
+            # modelKey 用于后端服务构建URL路径，不能为null
+            # 使用use_param_util=False手动构建参数结构，确保modelKey在params层级，不在request层级
+            set_dict = {
+                "request": {
+                    "id": self.continuous_method_init_cf_id
+                },
+                "modelKey": "ERP_FIN$fin_iv_init_cf"
+            }
             
-    #         # 复制子服务通常需要源ID参数
-    #         filtered_params = ParamUtil.filter_post_body_fields(
-    #             params, ["id"], ["params", "request"]
-    #         )
-    #         set_dict = {"id": self.init_cf_id}
-    #         ParamUtil.set_request_params(filtered_params, set_dict)
+            response, _ = self.standard_api_call(
+                api_key="存货价值初始化配置表-复制数据转换子服务",
+                set_dict=set_dict,
+                fields_to_filter=None,
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
+            self.assert_util.assert_response_data(response)
             
-    #         response = self.http.post(url, json=filtered_params)
-    #         self.assert_util.assert_response_data(response)
-            
-    #         a.json(filtered_params, "复制数据转换子服务请求")
-    #         a.json(response, "复制数据转换子服务响应")
-            
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
     
-    # # ==================== 存货核算初始化配置相关测试 ====================
+
+    @case_decorator(
+        story="存货核算初始化配置管理",
+        title="测试执行初始化",
+        description="验证存货核算初始化配置执行初始化功能",
+        severity="critical",
+        file_level_order=18,
+        tags=["iv", "init", "execute"]
+    )
+    @pytest.mark.skip(reason="实际无调用，代码内部处理事务，服务不需要加锁")
+    def test_execute_initialization(self):
+        """测试执行初始化"""
+        try:
+            # 检查并创建依赖数据
+            if not self.init_config_id:
+                self.test_confirm_begin()
+            
+            # 使用标准化API调用
+            set_dict = {"configId": self.init_config_id}
+            fields_to_filter = ["configId"]
+            
+            response, _ = self.standard_api_call(
+                api_key="存货核算初始化配置-执行初始化-无事务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+            
+            # 业务断言
+            self.assert_util.assert_response_data(response)
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
     
 
     
-
-        
-    # @case_decorator(
-    #     story="存货核算初始化配置管理",
-    #     title="测试执行初始化",
-    #     description="验证存货核算初始化配置执行初始化功能",
-    #     severity="critical",
-    #     file_level_order=12,
-    #     tags=["iv", "init", "execute"]
-    # )
-    # @pytest.mark.skip(reason="实际无调用",description="代码内部处理事务，服务不需要加锁")
-    # def test_execute_initialization(self):
-    #     """测试执行初始化"""
-    #     try:
-    #         # 检查并创建依赖数据
-    #         if not self.init_config_id:
-    #             self.test_confirm_begin()
-            
-    #         # 使用标准化API调用
-    #         set_dict = {"configId": self.init_config_id}
-    #         fields_to_filter = ["configId"]
-            
-    #         response, _ = self.standard_api_call(
-    #             api_key="存货核算初始化配置-执行初始化-无事务",
-    #             set_dict=set_dict,
-    #             fields_to_filter=fields_to_filter,
-    #             store_id_as=None
-    #         )
-            
-    #         # 业务断言
-    #         self.assert_util.assert_response_data(response)
-            
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
     
-
+    @case_decorator(
+        story="存货核算初始化配置管理",
+        title="测试执行核算",
+        description="验证存货核算初始化配置执行核算功能",
+        severity="critical",
+        file_level_order=19,
+        tags=["iv", "init", "accounting"]
+    )
+    @pytest.mark.skip(reason="实际无调用")
+    def test_execute_accounting(self):
+        """测试执行核算"""
+        try:
+            # 检查并创建依赖数据
+            if not self.init_config_id:
+                self.test_initialize_configuration()
+                self.test_execute_post_initialization()
+            
+            # 使用标准化API调用
+            set_dict = {"id": self.init_config_id}
+            fields_to_filter = ["id"]
+            
+            response, _ = self.standard_api_call(
+                api_key="存货核算初始化配置-执行核算-无事务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None
+            )
+            
+            # 业务断言
+            self.assert_util.assert_response_data(response)
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
     
     
     
@@ -1046,41 +1081,6 @@ class TestIvInitManagement(FinBaseTest):
     #     except Exception as e:
     #         a.text(str(e), "失败原因")
     #         raise
-    
-    # @case_decorator(
-    #     story="存货核算初始化配置管理",
-    #     title="测试执行核算",
-    #     description="验证存货核算初始化配置执行核算功能",
-    #     severity="critical",
-    #     file_level_order=11,
-    #     tags=["iv", "init", "accounting"]
-    # )
-    # def test_execute_accounting(self):
-    #     """测试执行核算"""
-    #     try:
-    #         # 检查并创建依赖数据
-    #         if not self.init_config_id:
-    #             self.test_initialize_configuration()
-    #             self.test_execute_post_initialization()
-            
-    #         # 使用标准化API调用
-    #         set_dict = {"id": self.init_config_id}
-    #         fields_to_filter = ["id"]
-            
-    #         response, _ = self.standard_api_call(
-    #             api_key="存货核算初始化配置-执行核算-无事务",
-    #             set_dict=set_dict,
-    #             fields_to_filter=fields_to_filter,
-    #             store_id_as=None
-    #         )
-            
-    #         # 业务断言
-    #         self.assert_util.assert_response_data(response)
-            
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
-    
     
     
     
