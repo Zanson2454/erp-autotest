@@ -25,7 +25,14 @@ sett_item_info:
     description: "查询结算项类型信息"
 #销售发票类型配置
 sb_type_info:
-  sb_type_info:
+  sb_bill_type_info:
     sql: |
-     select id,name,push_aes,auto_push_aes from fin_tm_sb_type_md where deleted=0 and sb_type_code='STND';
-    description: "查询标准销售发票类型信息"
+      select id,sb_type_code,name,push_aes,auto_push_aes from fin_tm_sb_type_md where deleted=0;
+    description: "查询销售发票类型信息"
+#应收单类型配置
+ar_type_info:
+  ar_type_md_info:
+    sql: |
+     select id,ar_type_code,name,account_type,fin_doc_type_id,rel_pn_type_id,is_acc_doc_relv,schl_sum_by_dn,schl_sum_by_so,is_enable_cost_acq,push_aes,auto_push_aes,biz_type,rel_ap_type,exchange_rate_type
+     from fin_arm_ar_type_md where deleted=0;
+    description: "查询应收单类型信息"
