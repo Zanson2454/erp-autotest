@@ -155,7 +155,26 @@ class FinBaseTest(BaseTest):
             }
             available_codes = list(cls.sett_item_type_info.keys())
             cls.logger.info(f"获取到 sett_item_type_info，可用code列表: {available_codes}")
+            
+            ar_type_md_info_list = cls.fin_cache_data.get("ar_type_info",{}).get("ar_type_md_info",[])
+            cls.ar_type_md_info = {
+                item.get("ar_type_code"): item
+                for item in ar_type_md_info_list
+                if item.get("ar_type_code")
+            }
+            available_codes = list(cls.ar_type_md_info.keys())
+            cls.logger.info(f"获取到 ar_type_md_info，可用code列表: {available_codes}")
 
+            
+            sb_type_info_list = cls.fin_cache_data.get("sb_type_info",{}).get("sb_bill_type_info",[])
+            cls.sb_type_info={
+                item.get("sb_type_code"): item
+                for item in sb_type_info_list
+                if item.get("sb_type_code")
+            }
+            
+            available_codes = list(cls.sb_type_info.keys())
+            cls.logger.info(f"获取到 sb_type_info，可用code列表: {available_codes}")
             
             sett_doc_type_info_list = cls.fin_cache_data.get("sett_doc_info",{}).get("sett_doc_type_info",[])
             if sett_doc_type_info_list:
@@ -183,13 +202,6 @@ class FinBaseTest(BaseTest):
             else:
                 cls.calendar_item_id = None
                 cls.logger.warning("calender_item_info 中没有 period_type='MONTH' 的项，无法获取 calendar_item_id")
-            sb_type_info_list = cls.fin_cache_data.get("sb_type_info",{}).get("sb_type_info",[])
-            if sb_type_info_list:
-                cls.sb_type_info = sb_type_info_list[0].get("id")
-                cls.logger.info(f"获取到 sb_type_info: {cls.sb_type_info}")
-            else:
-                cls.sb_type_info = None
-                cls.logger.warning("sb_type_info 为空，无法获取 sb_type_info")
        
        
         # 设置路径参数和用户信息
@@ -306,24 +318,29 @@ class FinBaseTest(BaseTest):
         result = self.http.post(url, json=data, description=f"结算项对账确认 - ID: {sett_item_id}")
         self.assert_util.assert_response_success(result)
         
-        #等待异步任务执行完成，当状态为PROCESSING时一直等待，最长超时10秒
-        start_time = time.time()
-        timeout = 10
-        while True:
+        def query_sett_item_status():
             sql = "select id, sett_item_status, async_execution_status, sett_doc_id from sett_item_tr where deleted=0 and id=%s limit 1"
             sql_result = self.db.query(sql, (sett_item_id,))
             if not sql_result:
                 raise ValueError(f"结算项对账确认失败: 未找到结算项ID {sett_item_id}")
-            if sql_result[0].get("async_execution_status") != "PROCESSING":
-                break
-            if time.time() - start_time >= timeout:
-                raise TimeoutError(f"等待异步任务执行超时（{timeout}秒）")
-            time.sleep(0.5)
+            return sql_result[0]
         
-        sett_doc_id = sql_result[0].get("sett_doc_id")
-        if sett_doc_id is None:
-            raise ValueError(f"结算项对账确认失败: 结算项ID {sett_item_id} 未生成结算单")
-        return sett_doc_id
+        result = self.async_wait_util.wait_for_async_status(
+            query_func=query_sett_item_status,
+            status_field="async_execution_status",
+            success_status="SUCCEEDED",
+            failed_status="FAILED",
+            max_wait=10,
+            interval=0.5
+        )
+        if result.status == self.wait_status.SUCCESS:
+            sett_doc_id = result.last_data.get("sett_doc_id")
+            if sett_doc_id is None:
+                raise ValueError(f"结算项对账确认失败: 结算项ID {sett_item_id} 未生成结算单")
+            return sett_doc_id
+        else:
+            raise ValueError(f"结算项对账确认失败: {result.error_message}")
+        
         
     def create_confirmed_settlement_doc(self, sett_item_type_code="E_SLS_GOODS",org=1):
         """
@@ -340,6 +357,7 @@ class FinBaseTest(BaseTest):
         sett_doc_id = data["params"]["request"]["id"][0]
         if sett_doc_id is None:
             raise ValueError("结算单确认失败: 结算单ID不能为None")
+        
         start_time = time.time()
         timeout = 10
         while True:
@@ -356,12 +374,13 @@ class FinBaseTest(BaseTest):
         return sett_doc_id
     
     
-    def create_ar_doc(self, ar_type="STND", org=1):
+    def create_ar_doc(self, ar_type="STND", org=1,status="DRAFT"):
         """
-        创建应收单公共方法,返回应收单id
+        创建应收单公共方法,返回应收单数据
         :param ar_type: 应收单类型代码，默认"STND"（标准财务应收单）
         :param org: 组织编号，1或2，默认1
-        :return: 应收单ID
+        :param status: 应收单状态，默认"DRAFT"（草稿）
+        :return: 应收单数据
         """
         # 根据org参数选择组织
         if org == 1:
@@ -390,13 +409,10 @@ class FinBaseTest(BaseTest):
         gross_doc_price = round(random.uniform(1.0, 100.0), 2)  # 含税单价：随机1.0-100.0，保留2位小数
         
         # 计算金额（动态计算，不写死）
-        gross_doc_amt = ar_qty * gross_doc_price  # 含税金额 = 数量 × 含税单价
+        gross_doc_amt = round(ar_qty * gross_doc_price, 2)  # 含税金额 = 数量 × 含税单价
         tax_amt = round(gross_doc_amt * tax_rate / (100 + tax_rate), 2)  # 税额 = 含税金额 × 税率 / (100 + 税率)
         net_doc_amt = round(gross_doc_amt - tax_amt, 2)  # 不含税金额 = 含税金额 - 税额
-        if ar_type == "STND":
-            sett_item_type_id = self.sett_item_type_info.get("E_SLS_GOODS").get("id")
-        else:
-            raise ValueError("ar_type 参数错误，请输入 STND")
+        sett_item_type_id = self.sett_item_type_info.get("E_SLS_GOODS").get("id")
         # 应收单行项数据
         ar_item = {
             "settItemTypeId": {"id": sett_item_type_id},
@@ -426,9 +442,10 @@ class FinBaseTest(BaseTest):
             "collectionClearingStatus": "UNCLEARED"
         }
         
+        ar_type_md_info = self.ar_type_md_info.get(ar_type)
         # 构建应收单请求体
         set_dict = {
-            "docTypeId": {"id": 14003001, "arTypeCode": ar_type},  # 标准财务应收单
+            "docTypeId": {"id": ar_type_md_info.get("id"), "arTypeCode": ar_type}, 
             "comOrgId": {"id": com_org_id},
             "slsOrgId": {"id": sls_org_id},
             "payOrgId": {"id": com_org_id},
@@ -478,15 +495,18 @@ class FinBaseTest(BaseTest):
         # 业务断言
         self.assert_util.assert_response_data(response)
         
-        # 返回应收单ID
+        data = response.get("data", {}).get("data", {})
+        extracted_id = data.get("id")
         if extracted_id is None:
-            # 如果standard_api_call没有提取到ID，从响应中获取
-            data = response.get("data", {}).get("data", {})
-            extracted_id = data.get("id")
-            if extracted_id is None:
-                raise ValueError("应收单保存失败：未返回应收单ID")
+            raise ValueError("应收单保存失败：未返回应收单ID")
         
-        return extracted_id
+        if status == "DONE":
+            self.db.update("fin_arm_ar_head_tr", {"ar_status":"DONE","async_execution_status":"SUCCEEDED"}, f"id='{extracted_id}'")
+        elif status == "CONFIRM":
+            self.db.update("fin_arm_ar_head_tr", {"ar_status":"CONFIRM","async_execution_status":"SUCCEEDED"}, f"id='{extracted_id}'")
+        else:
+            raise ValueError("status 参数错误，请输入 DRAFT, CONFIRM, DONE")
+        return data
         
     @classmethod
     def teardown_class(cls):
@@ -497,6 +517,6 @@ class FinBaseTest(BaseTest):
 
 
 if __name__ == "__main__":
-    FinBaseTest.setup_class()
     test = FinBaseTest()
-    test.create_ar_doc()
+    test.setup_class()
+    test.create_ar_doc(ar_type="STND",status="DONE")
