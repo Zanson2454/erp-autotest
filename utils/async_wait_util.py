@@ -10,6 +10,8 @@ from typing import Callable, Dict, Any, Optional, Tuple
 from enum import Enum
 from pathlib import Path
 import sys
+from decimal import Decimal
+from datetime import datetime, date
 
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
@@ -38,8 +40,8 @@ class AsyncWaitResult:
         self.polling_history: list = []
     
     def to_dict(self) -> Dict[str, Any]:
-        """转换为字典格式"""
-        return {
+        """转换为字典格式（自动处理 JSON 序列化）"""
+        raw_dict = {
             "status": self.status.value,
             "attempts": self.attempts,
             "total_wait_time": round(self.total_wait_time, 2),
@@ -47,6 +49,41 @@ class AsyncWaitResult:
             "error_message": self.error_message,
             "polling_history": self.polling_history
         }
+        # 递归处理所有值，确保 JSON 可序列化
+        return AsyncWaitResult._make_json_serializable(raw_dict)
+    
+    @staticmethod
+    def _make_json_serializable(obj: Any) -> Any:
+        """
+        递归转换对象为 JSON 可序列化格式
+        
+        支持的类型：
+        - Decimal: 转换为 float
+        - datetime/date: 转换为 ISO 格式字符串
+        - Enum: 转换为 value
+        - dict: 递归处理所有值
+        - list/tuple: 递归处理所有元素
+        """
+        if obj is None:
+            return None
+        elif isinstance(obj, Decimal):
+            return float(obj)
+        elif isinstance(obj, (datetime, date)):
+            return obj.isoformat()
+        elif isinstance(obj, Enum):
+            return obj.value
+        elif isinstance(obj, dict):
+            return {k: AsyncWaitResult._make_json_serializable(v) for k, v in obj.items()}
+        elif isinstance(obj, (list, tuple)):
+            return [AsyncWaitResult._make_json_serializable(item) for item in obj]
+        elif isinstance(obj, (str, int, float, bool)):
+            return obj
+        else:
+            # 对于其他类型，尝试转换为字符串
+            try:
+                return str(obj)
+            except Exception:
+                return f"<non-serializable: {type(obj).__name__}>"
 
 
 class AsyncWaitUtil:
@@ -190,7 +227,7 @@ class AsyncWaitUtil:
                 "等待结果"
             )
         
-        # 记录最终结果
+        # 记录最终结果（to_dict 已自动处理 JSON 序列化）
         a.json(result.to_dict(), "异步等待结果")
         
         return result

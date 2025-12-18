@@ -41,6 +41,18 @@ class TestIvInitManagement(FinBaseTest):
     def teardown_class(cls):
         """测试类结束后执行清理"""
         try:
+            if cls.continuous_method_init_cf_id:
+                cls.db.delete(
+                    table="fin_iv_init_cf",
+                    where="id = %s",
+                    params=[cls.continuous_method_init_cf_id]
+                )
+            if cls.period_method_init_cf_id:
+                cls.db.delete(
+                    table="fin_iv_init_cf",
+                    where="id = %s",
+                    params=[cls.period_method_init_cf_id]
+                )
             # cls.db.delete(
             #     table="fin_iv_init_cf",  # 存货价值初始化配置表
             #     where="com_org_id = %s and iv_type = 'PERIOD_METHOD'",
@@ -975,37 +987,33 @@ class TestIvInitManagement(FinBaseTest):
     
     
     
-    # @case_decorator(
-    #     story="存货核算初始化配置管理",
-    #     title="测试结账",
-    #     description="验证存货核算初始化配置结账功能",
-    #     severity="critical",
-    #     order=14,
-    #     tags=["iv", "init", "close"]
-    # )
-    # def test_close_account(self):
-    #     """测试结账"""
-    #     try:
-    #         if not self.init_config_id:
-    #             self.test_confirm_begin()
+    @case_decorator(
+        story="存货核算初始化配置管理",
+        title="测试结账",
+        description="验证存货核算初始化配置结账功能",
+        severity="critical",
+        file_level_order=20,
+        tags=["iv", "init", "close"]
+    )
+    def test_close_account(self):
+        """测试结账"""
+        try:
+            if not self.continuous_method_init_cf_id:
+                self.test_initialize_configuration(iv_type="CONTINUOUS_METHOD")
+            set_dict = {"id": self.continuous_method_init_cf_id}
+            fields_to_filter = ["id"]
+            response, _ = self.standard_api_call(
+                api_key="存货核算初始化配置-结账",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as=None,
+                param_path=["params", "reuqest"]
+            )
+            self.assert_util.assert_response_data(response)
             
-    #         api_path = self.get_api_path("存货核算初始化配置-结账")
-    #         params, url = self.get_api_params(api_path)
-            
-    #         filtered_params = ParamUtil.filter_post_body_fields(
-    #             params, ["configId"], ["params", "request"]
-    #         )
-    #         set_dict = {"configId": self.init_config_id}
-    #         ParamUtil.set_request_params(filtered_params, set_dict)
-            
-    #         response = self.http.post(url, json=filtered_params)
-    #         self.assert_util.assert_response_success(response)
-            
-    #         a.json(response, "结账响应")
-            
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
     
     # @case_decorator(
     #     story="存货核算初始化配置管理",
