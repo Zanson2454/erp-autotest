@@ -166,7 +166,7 @@ class TestRebateGet(SlsBase):
             # 查询返利确认订单行列表
             self.logger.info("查询返利确认订单行列表")
             
-            api_path = self.get_api_path("SLS-返利确认订单行-查询服务")
+            api_path = self.get_api_path("(系统)查询分页数据服务")
             params, url = self.get_api_params(api_path)
             
             # 如果参数为空，使用默认参数
@@ -281,7 +281,7 @@ class TestRebateGet(SlsBase):
             # 查询返利确认单列表
             self.logger.info("查询返利确认单列表")
             
-            api_path = self.get_api_path("SLS-返利确认单-查询服务")
+            api_path = self.get_api_path("REB-返利确认单-分页服务")
             params, url = self.get_api_params(api_path)
             
             try:
@@ -371,7 +371,7 @@ class TestRebateGet(SlsBase):
             # 查询我的待办任务列表
             self.logger.info("查询我的待办任务列表")
             
-            api_path = self.get_api_path("SLS-待办任务-查询服务")
+            api_path = self.get_api_path("(系统)查询分页数据服务")
             params, url = self.get_api_params(api_path)
             
             try:
@@ -445,7 +445,7 @@ class TestRebateGet(SlsBase):
             # 查询返利账户流水记录
             self.logger.info("查询返利账户流水记录")
             
-            api_path = self.get_api_path("SLS-返利账户流水-查询服务")
+            api_path = self.get_api_path("(系统)查询分页数据服务")
             params, url = self.get_api_params(api_path)
             
             # 设置查询参数
@@ -602,7 +602,7 @@ class TestRebateGet(SlsBase):
             self.logger.info(f"查询返利政策ID {policy_id} 对应的周期ID")
             try:
                 # 尝试通过API查询周期信息
-                api_path = self.get_api_path("SLS-返利政策-查询服务")
+                api_path = self.get_api_path("REB-返利政策-分页服务")
                 params, url = self.get_api_params(api_path)
                 
                 # 设置查询参数
@@ -634,7 +634,7 @@ class TestRebateGet(SlsBase):
                 self.logger.warning(f"API查询周期失败: {str(e)}，使用默认计算方式: {period_id}")
             
             # 4. 调用重新计算API
-            api_path = self.get_api_path("SLS-返利政策-重新计算服务")
+            api_path = self.get_api_path("REB-返利周期-重算服务")
             params, url = self.get_api_params(api_path)
             
             # 5. 设置periodId参数
@@ -664,7 +664,7 @@ class TestRebateGet(SlsBase):
     def _submit_rebate_confirmation(self, rebate_conf_id):
         """提交返利确认单"""
         try:
-            api_path = self.get_api_path("SLS-返利确认单-提交服务")
+            api_path = self.get_api_path("REB-返利确认单-提交审核服务")
             params, url = self.get_api_params(api_path)
             
             # 设置提交参数
@@ -693,7 +693,7 @@ class TestRebateGet(SlsBase):
         """查询并确认返利确认订单行"""
         try:
             # 查询返利确认订单行列表
-            api_path = self.get_api_path("SLS-返利确认订单行-查询服务")
+            api_path = self.get_api_path("(系统)查询分页数据服务")
             params, url = self.get_api_params(api_path)
             
             # 调试：打印API路径和参数
@@ -767,7 +767,7 @@ class TestRebateGet(SlsBase):
     def _confirm_rebate_confirmation_item(self, item_id):
         """确认返利确认单行"""
         try:
-            api_path = self.get_api_path("SLS-返利确认单行-确认服务")
+            api_path = self.get_api_path("REB-返利确认单-汇总返利明细行确认服务")
             params, url = self.get_api_params(api_path)
             
             # 设置确认参数
@@ -797,7 +797,7 @@ class TestRebateGet(SlsBase):
     def _approve_todo_task(self, task_id):
         """审批待办任务"""
         try:
-            api_path = self.get_api_path("SLS-待办任务-处理服务")
+            api_path = self.get_api_path("REB-返利确认单-审批通过服务")
             params, url = self.get_api_params(api_path)
             
             # 设置审批参数
@@ -849,7 +849,7 @@ class TestRebateGet(SlsBase):
                 
                 # 停用返利政策
                 try:
-                    api_path = self.get_api_path("SLS-返利政策-停用服务")
+                    api_path = self.get_api_path("REB-返利政策-停用服务")
                     params, url = self.get_api_params(api_path)
                     
                     filtered_params = ParamUtil.filter_post_body_fields(

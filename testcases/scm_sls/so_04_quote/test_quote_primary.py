@@ -137,74 +137,56 @@ class TestQuotePrimary(SlsBase):
             if not self.quote_id:
                 self.test_02_submit_draft_quote()
             
-            # 2. 调用报价转订单API
-            api_path = self.get_api_path("SLS-销售报价-转订单服务")
-            params, url = self.get_api_params(api_path)
+            # 2. 使用销售订单复制服务复制报价单
+            copy_api_path = self.get_api_path("销售订单复制服务")
+            copy_params, copy_url = self.get_api_params(copy_api_path)
             
-            # 3. 构造转订单参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], 
+            copy_filtered_params = ParamUtil.filter_post_body_fields(
+                copy_params, ["id"], 
                 ["params", "request"]
             )
+            ParamUtil.set_request_params(copy_filtered_params, {"id": self.quote_id})
             
-            set_dict = {
-                "id": self.quote_id
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            copy_response = self.http.post(copy_url, json=copy_filtered_params)
+            self.assert_util.assert_response_data(copy_response)
+            copied_data = copy_response.get("data", {}).get("data", {})
             
-            # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-            
-            # 5. 获取转订单后的数据
-            response_data = response.get("data", {}).get("data", {})
-            a.json(response_data, "报价单转订单响应数据")
-            
-            # 6. 调用保存服务真正保存订单到数据库
-            save_api_path = self.get_api_path("销售订单保存服务")
+            # 3. 使用复制后的数据保存为订单（使用保存服务）
+            save_api_path = self.get_api_path("SLS-销售订单-保存服务")
             save_params, save_url = self.get_api_params(save_api_path)
             
-            # 构造保存参数 - 传递完整的订单数据
+            # 构造保存参数 - 使用复制后的数据，但修改订单编码和描述
             save_filtered_params = ParamUtil.filter_post_body_fields(
-                save_params, ["id", "soCode", "soDesc", "soDocDate", "baseCurrId", "slsCurrId", 
-                             "exchRate", "grossBaseAmt", "netBaseAmt", "totalAmt", "taxAmt", 
-                             "soCreateSource", "slsOrgId", "slsComId", "slsDcId", "soTypeId", 
-                             "custId", "soStatus", "soBusinessStatus", "btClass", "soItems"], 
+                save_params, ["soCode", "soDesc", "custId", "slsOrgId", "slsComId", "slsDcId", 
+                             "soTypeId", "baseCurrId", "slsCurrId", "soItems"], 
                 ["params", "request"]
             )
             
-            # 使用转订单返回的完整数据
+            # 使用复制后的数据，但生成新的订单编码
+            order_code = self.mock_util.generate_unique_code(tag="SO")
             save_set_dict = {
-                "id": response_data.get("id"),
-                "soCode": response_data.get("soCode"),
-                "soDesc": response_data.get("soDesc"),
-                "soDocDate": response_data.get("soDocDate"),
-                "baseCurrId": response_data.get("baseCurrId"),
-                "slsCurrId": response_data.get("slsCurrId"),
-                "exchRate": response_data.get("exchRate"),
-                "grossBaseAmt": response_data.get("grossBaseAmt"),
-                "netBaseAmt": response_data.get("netBaseAmt"),
-                "totalAmt": response_data.get("totalAmt"),
-                "taxAmt": response_data.get("taxAmt"),
-                "soCreateSource": response_data.get("soCreateSource"),
-                "slsOrgId": response_data.get("slsOrgId"),
-                "slsComId": response_data.get("slsComId"),
-                "slsDcId": response_data.get("slsDcId"),
-                "soTypeId": response_data.get("soTypeId"),
-                "custId": response_data.get("custId"),
-                "soStatus": response_data.get("soStatus"),
-                "soBusinessStatus": response_data.get("soBusinessStatus"),
-                "btClass": response_data.get("btClass"),
-                "soItems": response_data.get("soItems", [])
+                "soCode": order_code,
+                "soDesc": f"从报价单{copied_data.get('soCode', '')}创建的订单",
+                "custId": copied_data.get("custId", {}),
+                "slsOrgId": copied_data.get("slsOrgId", {}),
+                "slsComId": copied_data.get("slsComId", {}),
+                "slsDcId": copied_data.get("slsDcId", {}),
+                "soTypeId": copied_data.get("soTypeId", {}),
+                "baseCurrId": copied_data.get("baseCurrId", {}),
+                "slsCurrId": copied_data.get("slsCurrId", {}),
+                "soItems": copied_data.get("soItems", [])
             }
             ParamUtil.set_request_params(save_filtered_params, save_set_dict)
             
-            # 发送保存请求
+            # 4. 发送保存请求和断言
             save_response = self.http.post(save_url, json=save_filtered_params)
             self.assert_util.assert_response_data(save_response)
             
-            # 7. 保存订单ID - 使用保存订单后返回的ID
+            # 5. 获取保存后的订单数据
             save_response_data = save_response.get("data", {}).get("data", {})
+            a.json(save_response_data, "报价单转订单响应数据")
+            
+            # 6. 保存订单ID
             self.order_id = save_response_data.get("id")
             if not self.order_id:
                 raise ValueError("保存订单后无法获取订单ID")

@@ -86,3 +86,7 @@ case_coverage_stat.json
 test.mdc
 docs/
 reports/fin_case_coverage.json
+
+# 忽略 Allure 结果和报告（根目录）
+allure-results/
+allure-report/

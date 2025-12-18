@@ -1,0 +1,2470 @@
+api_params:
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_FindOneDataService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_FindOneDataService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_MasterData_DisableDataService:
+    params:
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_MasterData_DisableDataService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_MasterData_CreateDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_MasterData_CreateDataService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_CopyDataConverterService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_CopyDataConverterService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_MasterData_EnableDataService:
+    params:
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_MasterData_EnableDataService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_FindDataByIdsService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_FindDataByIdsService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_BatchSaveDataService:
+    params:
+      request:
+      - {}
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_BatchSaveDataService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_MasterData_UpdateDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_MasterData_UpdateDataService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_QueryStatisticsService:
+    params:
+      request:
+        aggregateField: null
+        conditionItems: null
+        groupByFields:
+        - null
+        conditionGroup: null
+        aggregateFunc: null
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_QueryStatisticsService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_PagingDataService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        sortOrders:
+        - fieldAlias: null
+          sortType: null
+        pageable:
+          conditionItems: null
+          pageNo: 1
+          conditionGroup: null
+          pageSize: 20
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_PagingDataService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_FindTreeDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_FindTreeDataService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_SaveDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_SaveDataService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_BatchCreateDataService:
+    params:
+      request:
+      - {}
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_BatchCreateDataService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_BatchDeleteDataService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_BatchDeleteDataService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_FindAllByFieldLikeService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        sortOrders:
+        - fieldAlias: null
+          sortType: null
+        pageable:
+          conditionItems: null
+          pageNo: 1
+          conditionGroup: null
+          pageSize: 20
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_FindAllByFieldLikeService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_MasterData_MultiDisableDataService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_MasterData_MultiDisableDataService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_COUNT_DATA_SERVICE:
+    params:
+      request:
+      - null
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_COUNT_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_DeleteDataByIdService:
+    params:
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_DeleteDataByIdService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_MasterData_SaveDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_MasterData_SaveDataService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_TreeSearchService:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_TreeSearchService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_BatchDeleteDataByIdsService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_BatchDeleteDataByIdsService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_MasterData_MultiEnableDataService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_MasterData_MultiEnableDataService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_MasterData_SaveAndEnableDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_MasterData_SaveAndEnableDataService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_FindSingleDataByConditionService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_FindSingleDataByConditionService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_CreateDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_CreateDataService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_BatchDeleteDataByConditionService:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_BatchDeleteDataByConditionService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_UpdateDataByIdService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_UpdateDataByIdService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_ReverseConstructTreeService:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+        commonConditionGroup: null
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_ReverseConstructTreeService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_MasterData_DeleteDataService:
+    params:
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_MasterData_DeleteDataService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_MasterData_CreateAndEnableDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_MasterData_CreateAndEnableDataService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_FindListDataService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_FindListDataService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_InvokeCodeRuleService:
+    params:
+      request:
+        formParams: {}
+        ruleKey: null
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_InvokeCodeRuleService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_BatchUpdateDataByIdsService:
+    params:
+      request:
+      - {}
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_BatchUpdateDataByIdsService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_FindOneByFieldLikeService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_FindOneByFieldLikeService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_CopyAndCreateDataByIdsService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_CopyAndCreateDataByIdsService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_FindSingleDataByIdService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_FindSingleDataByIdService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_FindTreeChildrenDataService:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_FindTreeChildrenDataService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_BatchUpdateDataByConditionService:
+    params:
+      request:
+        data: {}
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_BatchUpdateDataByConditionService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_FindDataByIdService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_FindDataByIdService
+  /api/trantor/service/engine/execute/ERP_PRICE$SYS_SUM_DATA_SERVICE:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+      fields:
+      - null
+      modelKey: null
+    serviceKey: ERP_PRICE$SYS_SUM_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$external_price_master_data_import_event_SERVICE:
+    params:
+      request:
+        ladderUnitModelFieldKey: null
+        updatedBy: {}
+        originOrgId: 0
+        ladderModelFieldKey: null
+        matchRecordKeyword: null
+        ladderType: null
+        ladderClassType: null
+        matchRecordCode: null
+        importKey: null
+        version: 0
+        usageGroupId: {}
+        idempotent: null
+        enabledImport: false
+        importTemplate: null
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        id: 0
+        usageType: null
+        desc: null
+        matchRecordType: null
+        updatedAt: 0
+    serviceKey: ERP_PRICE$external_price_master_data_import_event_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_BATCH_DELETE_MATCH_SCOPE_DATA_EVENT_SERVICE:
+    params:
+      request:
+        var9: null
+        var8: 0
+        var7: 0
+        createdAt: 0
+        requestId: null
+        var6: 0
+        var5: 0
+        var4: 0
+        id: 0
+        var3: 0
+        matchScopeCode: null
+        var2: 0
+        var1: 0
+        updatedAt: 0
+        var16: null
+        updatedBy: {}
+        originOrgId: 0
+        priceStrategyId: 0
+        var12: null
+        var13: null
+        var14: null
+        var15: null
+        priceStrategyCode: null
+        var10: null
+        var11: null
+        version: 0
+        deleted: 0
+        createdBy: {}
+    serviceKey: ERP_PRICE$PRICE_BATCH_DELETE_MATCH_SCOPE_DATA_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_ADJ_APPROVED_EVENT_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        orderNumber: 0
+        priceTypeName: null
+        priceAdjCode: null
+        priceTypeId: {}
+        matchRecordName: null
+        version: 0
+        createdAt: 0
+        priceAdjItemList:
+        - {}
+        deleted: 0
+        matchRecordId: 0
+        priceAdjStatus: null
+        createdBy: {}
+        requestId: null
+        priceAdjName: null
+        id: 0
+        isApproved: false
+        updatedAt: 0
+    serviceKey: ERP_PRICE$PRICE_ADJ_APPROVED_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_MATCH_SCOPE_TABLE_EVENT_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        fieldName: null
+        originOrgId: 0
+        priceStrategyId: 0
+        fieldKey: null
+        priceStrategyCode: null
+        version: 0
+        relationModelKey: null
+        modelKey: null
+        fieldSort: 0
+        createdAt: 0
+        modelName: null
+        deleted: 0
+        matchScopeField: null
+        createdBy: {}
+        matchScopeFieldCode: null
+        requestId: null
+        id: 0
+        fieldType: null
+        updatedAt: 0
+    serviceKey: ERP_PRICE$PRICE_MATCH_SCOPE_TABLE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_AUTO_CALCULATION_EVENT_SERVICE:
+    params:
+      request:
+        docType: null
+        id: 0
+        usageType: null
+    serviceKey: ERP_PRICE$PRICE_AUTO_CALCULATION_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_ADJ_LIST_SUBMIT_EVENT_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        orderNumber: 0
+        priceTypeName: null
+        priceAdjCode: null
+        priceTypeId: {}
+        matchRecordName: null
+        version: 0
+        createdAt: 0
+        priceAdjItemList:
+        - {}
+        deleted: 0
+        matchRecordId: 0
+        priceAdjStatus: null
+        createdBy: {}
+        requestId: null
+        priceAdjName: null
+        id: 0
+        isApproved: false
+        updatedAt: 0
+    serviceKey: ERP_PRICE$PRICE_ADJ_LIST_SUBMIT_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_ADJ_SUBMIT_EVENT_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        orderNumber: 0
+        priceTypeName: null
+        priceAdjCode: null
+        priceTypeId: {}
+        matchRecordName: null
+        version: 0
+        createdAt: 0
+        priceAdjItemList:
+        - {}
+        deleted: 0
+        matchRecordId: 0
+        priceAdjStatus: null
+        createdBy: {}
+        requestId: null
+        priceAdjName: null
+        id: 0
+        isApproved: false
+        updatedAt: 0
+    serviceKey: ERP_PRICE$PRICE_ADJ_SUBMIT_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_ADJ_APPROVE_CANCEL_EVENT_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        orderNumber: 0
+        priceTypeName: null
+        priceAdjCode: null
+        priceTypeId: {}
+        matchRecordName: null
+        version: 0
+        createdAt: 0
+        priceAdjItemList:
+        - {}
+        deleted: 0
+        matchRecordId: 0
+        priceAdjStatus: null
+        createdBy: {}
+        requestId: null
+        priceAdjName: null
+        id: 0
+        isApproved: false
+        updatedAt: 0
+    serviceKey: ERP_PRICE$PRICE_ADJ_APPROVE_CANCEL_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_AUTO_CALCULATION_CACHE_EVENT_SERVICE:
+    params:
+      request:
+        docType: null
+        id: 0
+        usageType: null
+    serviceKey: ERP_PRICE$PRICE_AUTO_CALCULATION_CACHE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_DETAIL_EVENT_SERVICE:
+    params:
+      request:
+        calculationType: null
+        ladderUnitModelFieldKey: null
+        enabledAllocation: false
+        ladderPriceQtyFieldKey: null
+        taxCalculationClass: null
+        priceQtyFieldKeyId: 0
+        priceUnitType: null
+        usageGroupId: {}
+        isApproval: false
+        customCalcFunc: null
+        createdAt: 0
+        isLadder: false
+        priceTypeClass: null
+        priceTypeCode: null
+        requestId: null
+        id: 0
+        updatedAt: 0
+        updatedBy: {}
+        originOrgId: 0
+        priceTypeName: null
+        priceQtyFieldKey: null
+        ladderPriceUnitIdFieldKey: null
+        priceUnitIdFieldKeyId: 0
+        ladderModelFieldKey: null
+        matchSeqId: {}
+        defValType: null
+        ladderType: null
+        ladderClassType: null
+        isAllowManual: false
+        version: 0
+        priceUnitIdFieldKey: null
+        deleted: 0
+        createdBy: {}
+        matchSchemeId: {}
+        ladderPriceUnitIdFieldKeyId: 0
+        isHeaderCondition: false
+        enabledAdj: false
+        ladderPriceQtyFieldKeyId: 0
+        matchSeqCode: null
+    serviceKey: ERP_PRICE$PRICE_TYPE_DETAIL_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_PAGING_EVENT_SERVICE:
+    params:
+      request:
+        calculationType: null
+        enabledAllocation: false
+        ladderPriceQtyFieldKey: null
+        taxCalculationClass: null
+        priceQtyFieldKeyId: {}
+        priceUnitType: null
+        usageGroupId: {}
+        isApproval: false
+        customCalcFunc: null
+        isLadder: false
+        priceTypeClass: null
+        priceTypeCode: null
+        id: 0
+        usageType: null
+        matchSeqItemCfDTOList:
+        - {}
+        priceTypeName: null
+        priceQtyFieldKey: null
+        ladderPriceUnitIdFieldKey: null
+        priceUnitIdFieldKeyId: {}
+        defValType: null
+        ladderType: null
+        ladderClassType: null
+        isAllowManual: false
+        priceUnitIdFieldKey: null
+        deleted: 0
+        matchSchemeId: {}
+        ladderPriceUnitIdFieldKeyId: {}
+        isHeaderCondition: false
+        enabledAdj: false
+        ladderPriceQtyFieldKeyId: {}
+    serviceKey: ERP_PRICE$PRICE_TYPE_PAGING_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$DOC_PRODUCE_RESULT_EVENT_SERVICE:
+    params:
+      request:
+        subTotalTo: null
+        fromNo: 0
+        baseCurrGrossAmount: 0
+        baseCurrGrossPrice: 0
+        pricingAmount: 0
+        docLineCode: null
+        priceProcedureId: 0
+        docUomNum: 0
+        createdAt: 0
+        isTransferValue: false
+        matchStatus: null
+        uomBaseName: null
+        formulaType: null
+        priceTypeCode: null
+        price: 0
+        docUomName: null
+        percentage: 0
+        docCurrGrossAmount: 0
+        docCurrGrossPrice: 0
+        id: 0
+        baseCurrId: 0
+        transferValueType: null
+        updatedAt: 0
+        updatedBy: {}
+        baseCurrAmount: 0
+        priceStrategyLogId: 0
+        docCode: null
+        toNo: 0
+        version: 0
+        pricingUnitPrice: 0
+        priceProcedureCode: null
+        matchSeqCode: null
+        specialCode: null
+        calculationType: null
+        baseCurrSymbol: null
+        isMustHaveRecord: false
+        baseCurrPrice: 0
+        priceUnitType: null
+        pricingUnitNum: 0
+        subtotalType: null
+        isOnlyView: false
+        stepNo: 0
+        amount: 0
+        uomBaseNum: 0
+        priceTypeName: null
+        docType: null
+        matchSeqId: 0
+        pricingUnitName: null
+        isAllowManual: false
+        pricingSymbol: null
+        priceTypeId: 0
+        deleted: 0
+        createdBy: {}
+        baseCurrValue: 0
+        priceTypeLogCode: null
+        priceStrategyLogCode: null
+        isHeaderCondition: false
+        formula: null
+    serviceKey: ERP_PRICE$DOC_PRODUCE_RESULT_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_ADJ_QUERY_EVENT_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        orderNumber: 0
+        priceTypeName: null
+        priceAdjCode: null
+        priceTypeId: {}
+        matchRecordName: null
+        version: 0
+        createdAt: 0
+        priceAdjItemList:
+        - {}
+        deleted: 0
+        matchRecordId: 0
+        priceAdjStatus: null
+        createdBy: {}
+        requestId: null
+        priceAdjName: null
+        id: 0
+        isApproved: false
+        updatedAt: 0
+    serviceKey: ERP_PRICE$PRICE_ADJ_QUERY_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_CONDITION_DELETE_EVENT_SERVICE:
+    params:
+      request:
+        calculationType: null
+        ladderUnitModelFieldKey: null
+        enabledAllocation: false
+        ladderPriceQtyFieldKey: null
+        taxCalculationClass: null
+        priceQtyFieldKeyId: 0
+        priceUnitType: null
+        usageGroupId: {}
+        isApproval: false
+        customCalcFunc: null
+        createdAt: 0
+        isLadder: false
+        priceTypeClass: null
+        priceTypeCode: null
+        requestId: null
+        id: 0
+        updatedAt: 0
+        updatedBy: {}
+        originOrgId: 0
+        priceTypeName: null
+        priceQtyFieldKey: null
+        ladderPriceUnitIdFieldKey: null
+        priceUnitIdFieldKeyId: 0
+        ladderModelFieldKey: null
+        matchSeqId: {}
+        defValType: null
+        ladderType: null
+        ladderClassType: null
+        isAllowManual: false
+        version: 0
+        priceUnitIdFieldKey: null
+        deleted: 0
+        createdBy: {}
+        matchSchemeId: {}
+        ladderPriceUnitIdFieldKeyId: 0
+        isHeaderCondition: false
+        enabledAdj: false
+        ladderPriceQtyFieldKeyId: 0
+        matchSeqCode: null
+    serviceKey: ERP_PRICE$PRICE_TYPE_CONDITION_DELETE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_COMMON_CALCULATION_EVENT_SERVICE:
+    params:
+      request:
+        docType: null
+        id: 0
+        usageType: null
+    serviceKey: ERP_PRICE$PRICE_COMMON_CALCULATION_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_ADJ_APPROVED_STATUS_EVENT_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        orderNumber: 0
+        priceTypeName: null
+        priceAdjCode: null
+        priceTypeId: {}
+        matchRecordName: null
+        version: 0
+        createdAt: 0
+        priceAdjItemList:
+        - {}
+        deleted: 0
+        matchRecordId: 0
+        priceAdjStatus: null
+        createdBy: {}
+        requestId: null
+        priceAdjName: null
+        id: 0
+        isApproved: false
+        updatedAt: 0
+    serviceKey: ERP_PRICE$PRICE_ADJ_APPROVED_STATUS_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_UPDATE_EVENT_SERVICE:
+    params:
+      request:
+        calculationType: null
+        ladderUnitModelFieldKey: null
+        enabledAllocation: false
+        ladderPriceQtyFieldKey: null
+        taxCalculationClass: null
+        priceQtyFieldKeyId: 0
+        priceUnitType: null
+        usageGroupId: {}
+        isApproval: false
+        customCalcFunc: null
+        createdAt: 0
+        isLadder: false
+        priceTypeClass: null
+        priceTypeCode: null
+        requestId: null
+        id: 0
+        updatedAt: 0
+        updatedBy: {}
+        originOrgId: 0
+        priceTypeName: null
+        priceQtyFieldKey: null
+        ladderPriceUnitIdFieldKey: null
+        priceUnitIdFieldKeyId: 0
+        ladderModelFieldKey: null
+        matchSeqId: {}
+        defValType: null
+        ladderType: null
+        ladderClassType: null
+        isAllowManual: false
+        version: 0
+        priceUnitIdFieldKey: null
+        deleted: 0
+        createdBy: {}
+        matchSchemeId: {}
+        ladderPriceUnitIdFieldKeyId: 0
+        isHeaderCondition: false
+        enabledAdj: false
+        ladderPriceQtyFieldKeyId: 0
+        matchSeqCode: null
+    serviceKey: ERP_PRICE$PRICE_TYPE_UPDATE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_ANALYSIS_EVENT_SERVICE:
+    params:
+      request:
+        businessCode: null
+        businessType: null
+        version: 0
+    serviceKey: ERP_PRICE$PRICE_ANALYSIS_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_UPDATE_MATCH_SCOPE_DATA_EVENT_SERVICE:
+    params:
+      request:
+        var9: null
+        var8: 0
+        var7: 0
+        createdAt: 0
+        requestId: null
+        var6: 0
+        var5: 0
+        var4: 0
+        id: 0
+        var3: 0
+        matchScopeCode: null
+        var2: 0
+        var1: 0
+        updatedAt: 0
+        var16: null
+        updatedBy: {}
+        originOrgId: 0
+        priceStrategyId: 0
+        var12: null
+        var13: null
+        var14: null
+        var15: null
+        priceStrategyCode: null
+        var10: null
+        var11: null
+        version: 0
+        deleted: 0
+        createdBy: {}
+    serviceKey: ERP_PRICE$PRICE_UPDATE_MATCH_SCOPE_DATA_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_DELETE_EVENT_SERVICE:
+    params:
+      request:
+        calculationType: null
+        ladderUnitModelFieldKey: null
+        enabledAllocation: false
+        ladderPriceQtyFieldKey: null
+        taxCalculationClass: null
+        priceQtyFieldKeyId: 0
+        priceUnitType: null
+        usageGroupId: {}
+        isApproval: false
+        customCalcFunc: null
+        createdAt: 0
+        isLadder: false
+        priceTypeClass: null
+        priceTypeCode: null
+        requestId: null
+        id: 0
+        updatedAt: 0
+        updatedBy: {}
+        originOrgId: 0
+        priceTypeName: null
+        priceQtyFieldKey: null
+        ladderPriceUnitIdFieldKey: null
+        priceUnitIdFieldKeyId: 0
+        ladderModelFieldKey: null
+        matchSeqId: {}
+        defValType: null
+        ladderType: null
+        ladderClassType: null
+        isAllowManual: false
+        version: 0
+        priceUnitIdFieldKey: null
+        deleted: 0
+        createdBy: {}
+        matchSchemeId: {}
+        ladderPriceUnitIdFieldKeyId: 0
+        isHeaderCondition: false
+        enabledAdj: false
+        ladderPriceQtyFieldKeyId: 0
+        matchSeqCode: null
+    serviceKey: ERP_PRICE$PRICE_TYPE_DELETE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$EXTERNAL_PRICE_MASTER_DATA_EVENT_SERVICE:
+    params:
+      request:
+        ladderUnitModelFieldKey: null
+        updatedBy: {}
+        originOrgId: 0
+        ladderModelFieldKey: null
+        matchRecordKeyword: null
+        ladderType: null
+        ladderClassType: null
+        matchRecordCode: null
+        importKey: null
+        version: 0
+        usageGroupId: {}
+        idempotent: null
+        enabledImport: false
+        importTemplate: null
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        id: 0
+        usageType: null
+        desc: null
+        matchRecordType: null
+        updatedAt: 0
+    serviceKey: ERP_PRICE$EXTERNAL_PRICE_MASTER_DATA_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_MANUAL_PRICE_RECORD_EVENT_SERVICE:
+    params:
+      request:
+        docType: null
+        id: 0
+        usageType: null
+    serviceKey: ERP_PRICE$PRICE_MANUAL_PRICE_RECORD_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_SAVE_EVENT_SERVICE:
+    params:
+      request:
+        calculationType: null
+        enabledAllocation: false
+        ladderPriceQtyFieldKey: null
+        taxCalculationClass: null
+        priceQtyFieldKeyId: {}
+        priceUnitType: null
+        usageGroupId: {}
+        isApproval: false
+        customCalcFunc: null
+        isLadder: false
+        priceTypeClass: null
+        priceTypeCode: null
+        id: 0
+        usageType: null
+        matchSeqItemCfDTOList:
+        - {}
+        priceTypeName: null
+        priceQtyFieldKey: null
+        ladderPriceUnitIdFieldKey: null
+        priceUnitIdFieldKeyId: {}
+        defValType: null
+        ladderType: null
+        ladderClassType: null
+        isAllowManual: false
+        priceUnitIdFieldKey: null
+        deleted: 0
+        matchSchemeId: {}
+        ladderPriceUnitIdFieldKeyId: {}
+        isHeaderCondition: false
+        enabledAdj: false
+        ladderPriceQtyFieldKeyId: {}
+    serviceKey: ERP_PRICE$PRICE_TYPE_SAVE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_STRATEGY_PAGING_EVENT_SERVICE:
+    params:
+      request:
+        usageType: null
+    serviceKey: ERP_PRICE$PRICE_STRATEGY_PAGING_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_CLEAR_CACHE_PRICE_EVENT_SERVICE:
+    params:
+      request:
+        docType: null
+        id: 0
+        usageType: null
+    serviceKey: ERP_PRICE$PRICE_CLEAR_CACHE_PRICE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$GEN_RULE_ENGINE_QUERY_BY_ID_EVENT_SERVICE:
+    params:
+      request:
+        fieldAlias: null
+        fieldName: null
+        dictValues: null
+        usageGroupId: {}
+        createdAt: 0
+        mainFieldKey: null
+        relatedModelName: null
+        isSearch: false
+        requestId: null
+        prop: null
+        relatedModelKey: null
+        id: 0
+        key: null
+        usageType: null
+        updatedAt: 0
+        mainFieldName: null
+        updatedBy: {}
+        originOrgId: 0
+        fieldKey: null
+        uniqueKey: null
+        modelAlias: null
+        sort: 0
+        version: 0
+        defValue: null
+        dataSourceName: null
+        modelKey: null
+        isShow: false
+        modelName: null
+        columnType: null
+        parentKey: null
+        deleted: 0
+        createdBy: {}
+        dataSourceServiceKey: null
+        fieldType: null
+    serviceKey: ERP_PRICE$GEN_RULE_ENGINE_QUERY_BY_ID_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_STRATEGY_OVERVIEW_EVENT_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        priceStrategyCode: null
+        priority: 0
+        version: 0
+        usageGroupId: {}
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        matchSchemeId: {}
+        requestId: null
+        procedureList:
+        - {}
+        id: 0
+        scopeKeyword: null
+        usageType: null
+        desc: null
+        status: null
+        updatedAt: 0
+    serviceKey: ERP_PRICE$PRICE_STRATEGY_OVERVIEW_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_MATCH_SCOPE_DATA_PAGE_EVENT_SERVICE:
+    params:
+      request:
+        priceStrategyId: 0
+        keyword: null
+    serviceKey: ERP_PRICE$PRICE_MATCH_SCOPE_DATA_PAGE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_BATCH_CREATE_MATCH_SCOPE_DATA_EVENT_SERVICE:
+    params:
+      request:
+        priceStrategyId: 0
+    serviceKey: ERP_PRICE$PRICE_BATCH_CREATE_MATCH_SCOPE_DATA_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$CREATE_PRICE_STRATEGY_EVENT_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        priceStrategyCode: null
+        priority: 0
+        version: 0
+        usageGroupId: {}
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        matchSchemeId: {}
+        requestId: null
+        procedureList:
+        - {}
+        id: 0
+        scopeKeyword: null
+        usageType: null
+        desc: null
+        status: null
+        updatedAt: 0
+    serviceKey: ERP_PRICE$CREATE_PRICE_STRATEGY_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_ADJ_SAVE_EVENT_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        orderNumber: 0
+        priceTypeName: null
+        priceAdjCode: null
+        priceTypeId: {}
+        matchRecordName: null
+        version: 0
+        createdAt: 0
+        priceAdjItemList:
+        - {}
+        deleted: 0
+        matchRecordId: 0
+        priceAdjStatus: null
+        createdBy: {}
+        requestId: null
+        priceAdjName: null
+        id: 0
+        isApproved: false
+        updatedAt: 0
+    serviceKey: ERP_PRICE$PRICE_ADJ_SAVE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_MASTER_DATA_FIND_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        originOrgId: 0
+        updatedBy: 0
+        ladderType: null
+        matchRecordCode: null
+        version: 0
+        usageGroupId: {}
+        createdAt: 0
+        deleted: 0
+        matchRecordId:
+        - {}
+        createdBy: 0
+        id: 0
+        matchRecordType: null
+        desc: null
+        updatedAt: 0
+    serviceKey: ERP_PRICE$PRICE_MASTER_DATA_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_CF_DELETE_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        calculationType: null
+        ladderUnitModelFieldKey: null
+        enabledAllocation: false
+        ladderPriceQtyFieldKey: null
+        taxCalculationClass: null
+        priceQtyFieldKeyId: 0
+        priceUnitType: null
+        usageGroupId: {}
+        isApproval: false
+        customCalcFunc: null
+        createdAt: 0
+        isLadder: false
+        priceTypeClass: null
+        priceTypeCode: null
+        requestId: null
+        id: 0
+        updatedAt: 0
+        updatedBy: {}
+        originOrgId: 0
+        priceTypeName: null
+        priceQtyFieldKey: null
+        ladderPriceUnitIdFieldKey: null
+        priceUnitIdFieldKeyId: 0
+        ladderModelFieldKey: null
+        matchSeqId: {}
+        defValType: null
+        ladderType: null
+        ladderClassType: null
+        isAllowManual: false
+        version: 0
+        priceUnitIdFieldKey: null
+        deleted: 0
+        createdBy: {}
+        matchSchemeId: {}
+        ladderPriceUnitIdFieldKeyId: 0
+        isHeaderCondition: false
+        enabledAdj: false
+        ladderPriceQtyFieldKeyId: 0
+        matchSeqCode: null
+    serviceKey: ERP_PRICE$PRICE_TYPE_CF_DELETE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_CF_MASTER_DATA_ENABLE_DATA_SERVICE:
+    params:
+      request:
+        calculationType: null
+        ladderUnitModelFieldKey: null
+        enabledAllocation: false
+        ladderPriceQtyFieldKey: null
+        taxCalculationClass: null
+        priceQtyFieldKeyId: 0
+        priceUnitType: null
+        usageGroupId: {}
+        isApproval: false
+        customCalcFunc: null
+        createdAt: 0
+        isLadder: false
+        priceTypeClass: null
+        priceTypeCode: null
+        requestId: null
+        id: 0
+        updatedAt: 0
+        updatedBy: {}
+        originOrgId: 0
+        priceTypeName: null
+        priceQtyFieldKey: null
+        ladderPriceUnitIdFieldKey: null
+        priceUnitIdFieldKeyId: 0
+        ladderModelFieldKey: null
+        matchSeqId: {}
+        defValType: null
+        ladderType: null
+        ladderClassType: null
+        isAllowManual: false
+        version: 0
+        priceUnitIdFieldKey: null
+        deleted: 0
+        createdBy: {}
+        matchSchemeId: {}
+        ladderPriceUnitIdFieldKeyId: 0
+        isHeaderCondition: false
+        enabledAdj: false
+        ladderPriceQtyFieldKeyId: 0
+        matchSeqCode: null
+    serviceKey: ERP_PRICE$PRICE_TYPE_CF_MASTER_DATA_ENABLE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$price_import_adapter_service:
+    params:
+      sheetConfig: {}
+      fileName: null
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      fileKey: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      relationFieldConvert: false
+      service: null
+      modelMainField: null
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: ERP_PRICE$price_import_adapter_service
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: ERP_PRICE$PRICE_TYPE_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_CF_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: ERP_PRICE$PRICE_TYPE_CF_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_ADJ_HEAD_TR_DELETE_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        orderNumber: 0
+        priceTypeName: null
+        priceAdjCode: null
+        priceTypeId: {}
+        matchRecordName: null
+        version: 0
+        createdAt: 0
+        priceAdjItemList:
+        - {}
+        deleted: 0
+        matchRecordId: 0
+        priceAdjStatus: null
+        createdBy: {}
+        requestId: null
+        priceAdjName: null
+        id: 0
+        isApproved: false
+        updatedAt: 0
+    serviceKey: ERP_PRICE$PRICE_ADJ_HEAD_TR_DELETE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_STRATEGY_CF_FIND_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        priceStrategyCode: null
+        priority: 0
+        version: 0
+        usageGroupId: {}
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        matchSchemeId: {}
+        requestId: null
+        procedureList:
+        - {}
+        id: 0
+        scopeKeyword: null
+        usageType: null
+        desc: null
+        status: null
+        updatedAt: 0
+    serviceKey: ERP_PRICE$PRICE_STRATEGY_CF_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_GLOBAL_CF_FIND_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        code: null
+        deleted: 0
+        name: null
+        description: null
+        id: 0
+        value: null
+    serviceKey: ERP_PRICE$PRICE_GLOBAL_CF_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_GLOBAL_CF_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: ERP_PRICE$PRICE_GLOBAL_CF_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_STRATEGY_CF_COPY_DATA_CONVERTER_SERVICE_CHILD:
+    params:
+      request:
+        id: null
+      modelKey: null
+    serviceKey: ERP_PRICE$PRICE_STRATEGY_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_CF_BATCH_DELETE_DATA_SERVICE:
+    params:
+      request:
+        ids:
+        - 0
+    serviceKey: ERP_PRICE$PRICE_TYPE_CF_BATCH_DELETE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_CF_COPY_DATA_CONVERTER_SERVICE_CHILD:
+    params:
+      request:
+        id: null
+      modelKey: null
+    serviceKey: ERP_PRICE$PRICE_TYPE_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_STRATEGY_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: ERP_PRICE$PRICE_STRATEGY_CF_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TRANSFER_VALUE_CF_FIND_SINGLE_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        priceProcedureCfId: {}
+        fieldName: null
+        updatedBy: {}
+        originOrgId: 0
+        fieldKey: null
+        version: 0
+        modelKey: null
+        modelName: null
+        createdAt: 0
+        modelJson: null
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        id: 0
+        transferValueType: null
+        updatedAt: 0
+    serviceKey: ERP_PRICE$PRICE_TRANSFER_VALUE_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_STRATEGY_CF_MASTER_DATA_MULTI_ENABLE_DATA_SERVICE:
+    params:
+      request:
+        ids:
+        - 0
+    serviceKey: ERP_PRICE$PRICE_STRATEGY_CF_MASTER_DATA_MULTI_ENABLE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$GEN_PRICE_STRATEGY_ENABLED:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        priceStrategyCode: null
+        priority: 0
+        version: 0
+        usageGroupId: {}
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        matchSchemeId: {}
+        requestId: null
+        procedureList:
+        - {}
+        id: 0
+        scopeKeyword: null
+        usageType: null
+        desc: null
+        status: null
+        updatedAt: 0
+    serviceKey: ERP_PRICE$GEN_PRICE_STRATEGY_ENABLED
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_STRATEGY_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      sheetConfig: {}
+      fileName: null
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      fileKey: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      relationFieldConvert: false
+      service: null
+      modelMainField: null
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: ERP_PRICE$PRICE_STRATEGY_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_CHARA_ADJ_PRICE_DETAIL_ACTION_SERVICE:
+    params:
+      request:
+        extra: {}
+        tenantId: 0
+        context: {}
+        id: 0
+        dataPermissionConditionGroup:
+          conditions:
+          - logicOperator: {}
+          logicOperator:
+            name: null
+            value: null
+            ordinal: 0
+        version: 0
+    serviceKey: ERP_PRICE$PRICE_CHARA_ADJ_PRICE_DETAIL_ACTION_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TRANSFER_VALUE_CF_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: ERP_PRICE$PRICE_TRANSFER_VALUE_CF_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_MASTER_DATA_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: ERP_PRICE$PRICE_MASTER_DATA_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_CF_MASTER_DATA_SAVE_DATA_SERVICE:
+    params:
+      request:
+        calculationType: null
+        ladderUnitModelFieldKey: null
+        enabledAllocation: false
+        ladderPriceQtyFieldKey: null
+        taxCalculationClass: null
+        priceQtyFieldKeyId: 0
+        priceUnitType: null
+        usageGroupId: {}
+        isApproval: false
+        customCalcFunc: null
+        createdAt: 0
+        isLadder: false
+        priceTypeClass: null
+        priceTypeCode: null
+        requestId: null
+        id: 0
+        updatedAt: 0
+        updatedBy: {}
+        originOrgId: 0
+        priceTypeName: null
+        priceQtyFieldKey: null
+        ladderPriceUnitIdFieldKey: null
+        priceUnitIdFieldKeyId: 0
+        ladderModelFieldKey: null
+        matchSeqId: {}
+        defValType: null
+        ladderType: null
+        ladderClassType: null
+        isAllowManual: false
+        version: 0
+        priceUnitIdFieldKey: null
+        deleted: 0
+        createdBy: {}
+        matchSchemeId: {}
+        ladderPriceUnitIdFieldKeyId: 0
+        isHeaderCondition: false
+        enabledAdj: false
+        ladderPriceQtyFieldKeyId: 0
+        matchSeqCode: null
+    serviceKey: ERP_PRICE$PRICE_TYPE_CF_MASTER_DATA_SAVE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_CHARA_ADJ_PRICE_PAGE_SERVICE:
+    params:
+      request:
+        matId:
+          id: 0
+        charaName:
+          charaName: null
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+        charaValue:
+          charaValue: null
+    serviceKey: ERP_PRICE$PRICE_CHARA_ADJ_PRICE_PAGE_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_CF_MASTER_DATA_DISABLE_DATA_SERVICE:
+    params:
+      request:
+        calculationType: null
+        ladderUnitModelFieldKey: null
+        enabledAllocation: false
+        ladderPriceQtyFieldKey: null
+        taxCalculationClass: null
+        priceQtyFieldKeyId: 0
+        priceUnitType: null
+        usageGroupId: {}
+        isApproval: false
+        customCalcFunc: null
+        createdAt: 0
+        isLadder: false
+        priceTypeClass: null
+        priceTypeCode: null
+        requestId: null
+        id: 0
+        updatedAt: 0
+        updatedBy: {}
+        originOrgId: 0
+        priceTypeName: null
+        priceQtyFieldKey: null
+        ladderPriceUnitIdFieldKey: null
+        priceUnitIdFieldKeyId: 0
+        ladderModelFieldKey: null
+        matchSeqId: {}
+        defValType: null
+        ladderType: null
+        ladderClassType: null
+        isAllowManual: false
+        version: 0
+        priceUnitIdFieldKey: null
+        deleted: 0
+        createdBy: {}
+        matchSchemeId: {}
+        ladderPriceUnitIdFieldKeyId: 0
+        isHeaderCondition: false
+        enabledAdj: false
+        ladderPriceQtyFieldKeyId: 0
+        matchSeqCode: null
+    serviceKey: ERP_PRICE$PRICE_TYPE_CF_MASTER_DATA_DISABLE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_STRATEGY_CF_COPY_DATA_CONVERTER_SERVICE:
+    params:
+      request:
+        id: 0
+    serviceKey: ERP_PRICE$PRICE_STRATEGY_CF_COPY_DATA_CONVERTER_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_FIND_SINGLE_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        calculationType: null
+        enabledAllocation: false
+        ladderPriceQtyFieldKey: null
+        taxCalculationClass: null
+        priceQtyFieldKeyId: {}
+        priceUnitType: null
+        usageGroupId: {}
+        isApproval: false
+        customCalcFunc: null
+        isLadder: false
+        priceTypeClass: null
+        priceTypeCode: null
+        id: 0
+        usageType: null
+        matchSeqItemCfDTOList:
+        - {}
+        priceTypeName: null
+        priceQtyFieldKey: null
+        ladderPriceUnitIdFieldKey: null
+        priceUnitIdFieldKeyId: {}
+        defValType: null
+        ladderType: null
+        ladderClassType: null
+        isAllowManual: false
+        priceUnitIdFieldKey: null
+        deleted: 0
+        matchSchemeId: {}
+        ladderPriceUnitIdFieldKeyId: {}
+        isHeaderCondition: false
+        enabledAdj: false
+        ladderPriceQtyFieldKeyId: {}
+    serviceKey: ERP_PRICE$PRICE_TYPE_FIND_SINGLE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_ADJ_HEAD_TR_PAGING_DATA_SERVICE_oyQmuH1:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: ERP_PRICE$PRICE_ADJ_HEAD_TR_PAGING_DATA_SERVICE_oyQmuH1
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_STRATEGY_CF_PAGING_DATA_SERVICE_oyQmuH1:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: ERP_PRICE$PRICE_STRATEGY_CF_PAGING_DATA_SERVICE_oyQmuH1
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_CF_MASTER_DATA_MULTI_DISABLE_DATA_SERVICE:
+    params:
+      request:
+        ids:
+        - 0
+    serviceKey: ERP_PRICE$PRICE_TYPE_CF_MASTER_DATA_MULTI_DISABLE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_MASTER_DATA_COPY_DATA_CONVERTER_SERVICE_CHILD:
+    params:
+      request:
+        id: null
+      modelKey: null
+    serviceKey: ERP_PRICE$PRICE_MASTER_DATA_COPY_DATA_CONVERTER_SERVICE_CHILD
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_FIND_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        calculationType: null
+        enabledAllocation: false
+        ladderPriceQtyFieldKey: null
+        taxCalculationClass: null
+        priceQtyFieldKeyId: {}
+        priceUnitType: null
+        usageGroupId: {}
+        isApproval: false
+        customCalcFunc: null
+        isLadder: false
+        priceTypeClass: null
+        priceTypeCode: null
+        id: 0
+        usageType: null
+        matchSeqItemCfDTOList:
+        - {}
+        priceTypeName: null
+        priceQtyFieldKey: null
+        ladderPriceUnitIdFieldKey: null
+        priceUnitIdFieldKeyId: {}
+        defValType: null
+        ladderType: null
+        ladderClassType: null
+        isAllowManual: false
+        priceUnitIdFieldKey: null
+        deleted: 0
+        matchSchemeId: {}
+        ladderPriceUnitIdFieldKeyId: {}
+        isHeaderCondition: false
+        enabledAdj: false
+        ladderPriceQtyFieldKeyId: {}
+    serviceKey: ERP_PRICE$PRICE_TYPE_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_CHARA_MAT_REFRESH_ACTION_SERVICE:
+    params:
+      request: {}
+    serviceKey: ERP_PRICE$PRICE_CHARA_MAT_REFRESH_ACTION_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_MATCH_SCOPE_FIELD_CF_FIND_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        fieldName: null
+        originOrgId: 0
+        priceStrategyId: 0
+        fieldKey: null
+        priceStrategyCode: null
+        version: 0
+        relationModelKey: null
+        modelKey: null
+        fieldSort: 0
+        createdAt: 0
+        modelName: null
+        deleted: 0
+        matchScopeField: null
+        createdBy: {}
+        matchScopeFieldCode: null
+        requestId: null
+        id: 0
+        fieldType: null
+        updatedAt: 0
+    serviceKey: ERP_PRICE$PRICE_MATCH_SCOPE_FIELD_CF_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$query_price_master_detail:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems:
+            conditions: {}
+            logicOperator: null
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+        id: 0
+    serviceKey: ERP_PRICE$query_price_master_detail
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_PROCEDURE_CF_FIND_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        fromNo: 0
+        isView: false
+        isMustHaveRecord: false
+        taxCalculationClass: null
+        priceSubtotalTo:
+        - {}
+        createdAt: 0
+        formulaType: null
+        priceTypeCode: null
+        requestId: null
+        subtotalType: null
+        priceProcedureName: null
+        id: 0
+        isOnlyView: false
+        updatedAt: 0
+        formulaJson: null
+        stepNo: 0
+        settItemTypeId: {}
+        updatedBy: {}
+        originOrgId: 0
+        priceStrategyId: {}
+        isCopyRefDocPrice: false
+        accNo: 0
+        matchFormulaJson: null
+        partnerTypeId: {}
+        priceStrategyCode: null
+        toNo: 0
+        priceTypeId: {}
+        taxCode: {}
+        version: 0
+        settSubjectType: null
+        deleted: 0
+        createdBy: {}
+        formula: null
+        matchFormula: null
+        priceProcedureCode: null
+    serviceKey: ERP_PRICE$PRICE_PROCEDURE_CF_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_CHARA_ADJ_PRICE_SAVE_SERVICE:
+    params:
+      request: {}
+    serviceKey: ERP_PRICE$PRICE_CHARA_ADJ_PRICE_SAVE_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_STRATEGY_CF_DELETE_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        priceStrategyCode: null
+        priority: 0
+        version: 0
+        usageGroupId: {}
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        matchSchemeId: {}
+        requestId: null
+        procedureList:
+        - {}
+        id: 0
+        scopeKeyword: null
+        usageType: null
+        desc: null
+        status: null
+        updatedAt: 0
+    serviceKey: ERP_PRICE$PRICE_STRATEGY_CF_DELETE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_MATCH_RECORD_HEAD_PAGE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+        matchRecordCode: null
+    serviceKey: ERP_PRICE$PRICE_MATCH_RECORD_HEAD_PAGE
+  /api/trantor/service/engine/execute/ERP_PRICE$price_strategy_page:
+    params:
+      request:
+        id: 0
+    serviceKey: ERP_PRICE$price_strategy_page
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_MATCH_SCOPE_FIELD_CF_FIND_SINGLE_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        fieldName: null
+        originOrgId: 0
+        priceStrategyId: 0
+        fieldKey: null
+        priceStrategyCode: null
+        version: 0
+        relationModelKey: null
+        modelKey: null
+        fieldSort: 0
+        createdAt: 0
+        modelName: null
+        deleted: 0
+        matchScopeField: null
+        createdBy: {}
+        matchScopeFieldCode: null
+        requestId: null
+        id: 0
+        fieldType: null
+        updatedAt: 0
+    serviceKey: ERP_PRICE$PRICE_MATCH_SCOPE_FIELD_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_STRATEGY_CF_BATCH_DELETE_DATA_SERVICE:
+    params:
+      request:
+        ids:
+        - 0
+    serviceKey: ERP_PRICE$PRICE_STRATEGY_CF_BATCH_DELETE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_MATCH_SCOPE_FIELD_CF_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: ERP_PRICE$PRICE_MATCH_SCOPE_FIELD_CF_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TRANSFER_VALUE_CF_FIND_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        priceProcedureCfId: {}
+        fieldName: null
+        updatedBy: {}
+        originOrgId: 0
+        fieldKey: null
+        version: 0
+        modelKey: null
+        modelName: null
+        createdAt: 0
+        modelJson: null
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        id: 0
+        transferValueType: null
+        updatedAt: 0
+    serviceKey: ERP_PRICE$PRICE_TRANSFER_VALUE_CF_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_STRATEGY_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: ERP_PRICE$PRICE_STRATEGY_CF_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_BATCH_DELETE_DATA_SERVICE:
+    params:
+      request:
+        ids:
+        - 0
+    serviceKey: ERP_PRICE$PRICE_TYPE_BATCH_DELETE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_STRATEGY_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: ERP_PRICE$PRICE_STRATEGY_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_CF_MASTER_DATA_MULTI_ENABLE_DATA_SERVICE:
+    params:
+      request:
+        ids:
+        - 0
+    serviceKey: ERP_PRICE$PRICE_TYPE_CF_MASTER_DATA_MULTI_ENABLE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_ADJ_HEAD_TR_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: ERP_PRICE$PRICE_ADJ_HEAD_TR_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_MASTER_DATA_MASTER_DATA_SAVE_DATA_SERVICE:
+    params:
+      request:
+        originOrgId: 0
+        updatedBy: 0
+        ladderType: null
+        matchRecordCode: null
+        version: 0
+        usageGroupId: {}
+        createdAt: 0
+        deleted: 0
+        matchRecordId:
+        - {}
+        createdBy: 0
+        id: 0
+        matchRecordType: null
+        desc: null
+        updatedAt: 0
+    serviceKey: ERP_PRICE$PRICE_MASTER_DATA_MASTER_DATA_SAVE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_STRATEGY_CF_MASTER_DATA_ENABLE_DATA_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        priceStrategyCode: null
+        priority: 0
+        version: 0
+        usageGroupId: {}
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        matchSchemeId: {}
+        requestId: null
+        procedureList:
+        - {}
+        id: 0
+        scopeKeyword: null
+        usageType: null
+        desc: null
+        status: null
+        updatedAt: 0
+    serviceKey: ERP_PRICE$PRICE_STRATEGY_CF_MASTER_DATA_ENABLE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: ERP_PRICE$PRICE_TYPE_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_MATCH_SCOPE_CF_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: ERP_PRICE$PRICE_MATCH_SCOPE_CF_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_STRATEGY_CF_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: ERP_PRICE$PRICE_STRATEGY_CF_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_MATCH_RECORD_LOG_FIND_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        docUomBaseNum: 0
+        uomMassId: 0
+        volumUomId: 0
+        pricingUnitId: 0
+        pricingUnitNum: 0
+        createdAt: 0
+        matchStatus: null
+        baseValue: 0
+        conditionId: 0
+        matVolum: 0
+        requestId: null
+        startTime: 0
+        id: 0
+        priceTypeLogId: 0
+        basePrice: 0
+        updatedAt: 0
+        uomBaseId: 0
+        uomBaseNum: 0
+        updatedBy: {}
+        originOrgId: 0
+        docUomBaseId: 0
+        matchRecordMdId: 0
+        matchRecordLogCode: null
+        matchRecordKeyword: null
+        currTypeId: 0
+        priority: 0
+        taxCode: 0
+        version: 0
+        baseAmount: 0
+        matchValueType: null
+        basePreValue: 0
+        grossWeight: 0
+        netWeight: 0
+        deleted: 0
+        isBaseValueEdit: false
+        matchRecordJson: null
+        createdBy: {}
+        priceTypeLogCode: null
+        endTime: 0
+    serviceKey: ERP_PRICE$PRICE_MATCH_RECORD_LOG_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_GLOBAL_CF_FIND_DATA_BY_CODE_SERVICE:
+    params:
+      request:
+        code: null
+        deleted: 0
+        name: null
+        description: null
+        id: 0
+        value: null
+    serviceKey: ERP_PRICE$PRICE_GLOBAL_CF_FIND_DATA_BY_CODE_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_MASTER_DATA_BATCH_DELETE_DATA_SERVICE:
+    params:
+      request:
+        ids:
+        - 0
+    serviceKey: ERP_PRICE$PRICE_MASTER_DATA_BATCH_DELETE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_CF_FIND_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        calculationType: null
+        ladderUnitModelFieldKey: null
+        enabledAllocation: false
+        ladderPriceQtyFieldKey: null
+        taxCalculationClass: null
+        priceQtyFieldKeyId: 0
+        priceUnitType: null
+        usageGroupId: {}
+        isApproval: false
+        customCalcFunc: null
+        createdAt: 0
+        isLadder: false
+        priceTypeClass: null
+        priceTypeCode: null
+        requestId: null
+        id: 0
+        updatedAt: 0
+        updatedBy: {}
+        originOrgId: 0
+        priceTypeName: null
+        priceQtyFieldKey: null
+        ladderPriceUnitIdFieldKey: null
+        priceUnitIdFieldKeyId: 0
+        ladderModelFieldKey: null
+        matchSeqId: {}
+        defValType: null
+        ladderType: null
+        ladderClassType: null
+        isAllowManual: false
+        version: 0
+        priceUnitIdFieldKey: null
+        deleted: 0
+        createdBy: {}
+        matchSchemeId: {}
+        ladderPriceUnitIdFieldKeyId: 0
+        isHeaderCondition: false
+        enabledAdj: false
+        ladderPriceQtyFieldKeyId: 0
+        matchSeqCode: null
+    serviceKey: ERP_PRICE$PRICE_TYPE_CF_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_PROCEDURE_CF_FIND_SINGLE_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        fromNo: 0
+        isView: false
+        isMustHaveRecord: false
+        taxCalculationClass: null
+        priceSubtotalTo:
+        - {}
+        createdAt: 0
+        formulaType: null
+        priceTypeCode: null
+        requestId: null
+        subtotalType: null
+        priceProcedureName: null
+        id: 0
+        isOnlyView: false
+        updatedAt: 0
+        formulaJson: null
+        stepNo: 0
+        settItemTypeId: {}
+        updatedBy: {}
+        originOrgId: 0
+        priceStrategyId: {}
+        isCopyRefDocPrice: false
+        accNo: 0
+        matchFormulaJson: null
+        partnerTypeId: {}
+        priceStrategyCode: null
+        toNo: 0
+        priceTypeId: {}
+        taxCode: {}
+        version: 0
+        settSubjectType: null
+        deleted: 0
+        createdBy: {}
+        formula: null
+        matchFormula: null
+        priceProcedureCode: null
+    serviceKey: ERP_PRICE$PRICE_PROCEDURE_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_CF_COPY_DATA_CONVERTER_SERVICE:
+    params:
+      request:
+        id: 0
+    serviceKey: ERP_PRICE$PRICE_TYPE_CF_COPY_DATA_CONVERTER_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$GEN_PRICE_STRATEGY_DISABLED:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        priceStrategyCode: null
+        priority: 0
+        version: 0
+        usageGroupId: {}
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        matchSchemeId: {}
+        requestId: null
+        procedureList:
+        - {}
+        id: 0
+        scopeKeyword: null
+        usageType: null
+        desc: null
+        status: null
+        updatedAt: 0
+    serviceKey: ERP_PRICE$GEN_PRICE_STRATEGY_DISABLED
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_MASTER_DATA_DELETE_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        originOrgId: 0
+        updatedBy: 0
+        ladderType: null
+        matchRecordCode: null
+        version: 0
+        usageGroupId: {}
+        createdAt: 0
+        deleted: 0
+        matchRecordId:
+        - {}
+        createdBy: 0
+        id: 0
+        matchRecordType: null
+        desc: null
+        updatedAt: 0
+    serviceKey: ERP_PRICE$PRICE_MASTER_DATA_DELETE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_CF_FIND_SINGLE_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        calculationType: null
+        ladderUnitModelFieldKey: null
+        enabledAllocation: false
+        ladderPriceQtyFieldKey: null
+        taxCalculationClass: null
+        priceQtyFieldKeyId: 0
+        priceUnitType: null
+        usageGroupId: {}
+        isApproval: false
+        customCalcFunc: null
+        createdAt: 0
+        isLadder: false
+        priceTypeClass: null
+        priceTypeCode: null
+        requestId: null
+        id: 0
+        updatedAt: 0
+        updatedBy: {}
+        originOrgId: 0
+        priceTypeName: null
+        priceQtyFieldKey: null
+        ladderPriceUnitIdFieldKey: null
+        priceUnitIdFieldKeyId: 0
+        ladderModelFieldKey: null
+        matchSeqId: {}
+        defValType: null
+        ladderType: null
+        ladderClassType: null
+        isAllowManual: false
+        version: 0
+        priceUnitIdFieldKey: null
+        deleted: 0
+        createdBy: {}
+        matchSchemeId: {}
+        ladderPriceUnitIdFieldKeyId: 0
+        isHeaderCondition: false
+        enabledAdj: false
+        ladderPriceQtyFieldKeyId: 0
+        matchSeqCode: null
+    serviceKey: ERP_PRICE$PRICE_TYPE_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_MATCH_RECORD_LOG_FIND_SINGLE_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        docUomBaseNum: 0
+        uomMassId: 0
+        volumUomId: 0
+        pricingUnitId: 0
+        pricingUnitNum: 0
+        createdAt: 0
+        matchStatus: null
+        baseValue: 0
+        conditionId: 0
+        matVolum: 0
+        requestId: null
+        startTime: 0
+        id: 0
+        priceTypeLogId: 0
+        basePrice: 0
+        updatedAt: 0
+        uomBaseId: 0
+        uomBaseNum: 0
+        updatedBy: {}
+        originOrgId: 0
+        docUomBaseId: 0
+        matchRecordMdId: 0
+        matchRecordLogCode: null
+        matchRecordKeyword: null
+        currTypeId: 0
+        priority: 0
+        taxCode: 0
+        version: 0
+        baseAmount: 0
+        matchValueType: null
+        basePreValue: 0
+        grossWeight: 0
+        netWeight: 0
+        deleted: 0
+        isBaseValueEdit: false
+        matchRecordJson: null
+        createdBy: {}
+        priceTypeLogCode: null
+        endTime: 0
+    serviceKey: ERP_PRICE$PRICE_MATCH_RECORD_LOG_FIND_SINGLE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_STRATEGY_CF_MASTER_DATA_DISABLE_DATA_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        priceStrategyCode: null
+        priority: 0
+        version: 0
+        usageGroupId: {}
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        matchSchemeId: {}
+        requestId: null
+        procedureList:
+        - {}
+        id: 0
+        scopeKeyword: null
+        usageType: null
+        desc: null
+        status: null
+        updatedAt: 0
+    serviceKey: ERP_PRICE$PRICE_STRATEGY_CF_MASTER_DATA_DISABLE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$price_import_service:
+    params:
+      request: {}
+    serviceKey: ERP_PRICE$price_import_service
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      sheetConfig: {}
+      fileName: null
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      fileKey: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      relationFieldConvert: false
+      service: null
+      modelMainField: null
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: ERP_PRICE$PRICE_TYPE_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/ERP_PRICE$GEN_MATCH_RECORD_MD_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: ERP_PRICE$GEN_MATCH_RECORD_MD_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_MATCH_SCOPE_CF_FIND_SINGLE_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        var9: null
+        var8: 0
+        var7: 0
+        createdAt: 0
+        requestId: null
+        var6: 0
+        var5: 0
+        var4: 0
+        id: 0
+        var3: 0
+        matchScopeCode: null
+        var2: 0
+        var1: 0
+        updatedAt: 0
+        var16: null
+        updatedBy: {}
+        originOrgId: 0
+        priceStrategyId: 0
+        var12: null
+        var13: null
+        var14: null
+        var15: null
+        priceStrategyCode: null
+        var10: null
+        var11: null
+        version: 0
+        deleted: 0
+        createdBy: {}
+    serviceKey: ERP_PRICE$PRICE_MATCH_SCOPE_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_GLOBAL_CF_SAVE_DATA_SERVICE:
+    params:
+      request:
+        code: null
+        deleted: 0
+        name: null
+        description: null
+        id: 0
+        value: null
+    serviceKey: ERP_PRICE$PRICE_GLOBAL_CF_SAVE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_MASTER_DATA_FIND_SINGLE_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        originOrgId: 0
+        updatedBy: 0
+        ladderType: null
+        matchRecordCode: null
+        version: 0
+        usageGroupId: {}
+        createdAt: 0
+        deleted: 0
+        matchRecordId:
+        - {}
+        createdBy: 0
+        id: 0
+        matchRecordType: null
+        desc: null
+        updatedAt: 0
+    serviceKey: ERP_PRICE$PRICE_MASTER_DATA_FIND_SINGLE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_PROCEDURE_CF_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: ERP_PRICE$PRICE_PROCEDURE_CF_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: ERP_PRICE$PRICE_TYPE_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_STRATEGY_CF_FIND_SINGLE_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        priceStrategyCode: null
+        priority: 0
+        version: 0
+        usageGroupId: {}
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        matchSchemeId: {}
+        requestId: null
+        procedureList:
+        - {}
+        id: 0
+        scopeKeyword: null
+        usageType: null
+        desc: null
+        status: null
+        updatedAt: 0
+    serviceKey: ERP_PRICE$PRICE_STRATEGY_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_MATCH_SCOPE_CF_FIND_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        var9: null
+        var8: 0
+        var7: 0
+        createdAt: 0
+        requestId: null
+        var6: 0
+        var5: 0
+        var4: 0
+        id: 0
+        var3: 0
+        matchScopeCode: null
+        var2: 0
+        var1: 0
+        updatedAt: 0
+        var16: null
+        updatedBy: {}
+        originOrgId: 0
+        priceStrategyId: 0
+        var12: null
+        var13: null
+        var14: null
+        var15: null
+        priceStrategyCode: null
+        var10: null
+        var11: null
+        version: 0
+        deleted: 0
+        createdBy: {}
+    serviceKey: ERP_PRICE$PRICE_MATCH_SCOPE_CF_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_MASTER_DATA_COPY_DATA_CONVERTER_SERVICE:
+    params:
+      request:
+        id: 0
+    serviceKey: ERP_PRICE$PRICE_MASTER_DATA_COPY_DATA_CONVERTER_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_GLOBAL_CF_COPY_DATA_CONVERTER_SERVICE:
+    params:
+      request:
+        id: 0
+    serviceKey: ERP_PRICE$PRICE_GLOBAL_CF_COPY_DATA_CONVERTER_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_CF_PAGING_DATA_SERVICE_oyQmuH1:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: ERP_PRICE$PRICE_TYPE_CF_PAGING_DATA_SERVICE_oyQmuH1
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_STRATEGY_CF_MASTER_DATA_MULTI_DISABLE_DATA_SERVICE:
+    params:
+      request:
+        ids:
+        - 0
+    serviceKey: ERP_PRICE$PRICE_STRATEGY_CF_MASTER_DATA_MULTI_DISABLE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_GLOBAL_CF_COPY_DATA_CONVERTER_SERVICE_CHILD:
+    params:
+      request:
+        id: null
+      modelKey: null
+    serviceKey: ERP_PRICE$PRICE_GLOBAL_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_MATCH_RECORD_LOG_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: ERP_PRICE$PRICE_MATCH_RECORD_LOG_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_PRICE$PRICE_TYPE_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: ERP_PRICE$PRICE_TYPE_GEI_EXPORT_SERVICE

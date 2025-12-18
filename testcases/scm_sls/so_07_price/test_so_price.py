@@ -96,7 +96,7 @@ class TestSoPrice(SlsBase):
             # 通过API查询销售价格列表，找到测试创建的记录，然后删除
             try:
                 # 查询销售价格列表，获取测试创建的记录
-                api_path = ParamUtil.get_api_path(cls.apis, "SLS-销售价格-查询销售价格列表服务")
+                api_path = ParamUtil.get_api_path(cls.apis, "GEN-条件主数据-分页查询服务")
                 params, url = ParamUtil.get_api_params(cls.api_params, api_path)
                 
                 filtered_params = ParamUtil.filter_post_body_fields(
@@ -121,7 +121,6 @@ class TestSoPrice(SlsBase):
                     
                     # 筛选出测试创建的记录（通过物料ID匹配）
                     test_record_ids = []
-                    cls.logger.info(f"查询到 {len(records)} 条销售价格记录，开始筛选测试数据")
                     for record in records:
                         # 检查记录是否匹配测试物料（14633001）
                         # 尝试多种可能的字段名和结构
@@ -150,14 +149,11 @@ class TestSoPrice(SlsBase):
                                 record_id = record.get("id")
                                 if record_id:
                                     test_record_ids.append(record_id)
-                                    cls.logger.info(f"找到匹配的测试记录: ID={record_id}, mat_id={mat_id}")
                         except (ValueError, TypeError):
-                            cls.logger.debug(f"无法解析物料ID: {mat_id}, record: {record.get('id')}")
                             continue
                     
                     # 删除匹配的记录
                     if test_record_ids:
-                        cls.logger.info(f"找到 {len(test_record_ids)} 条测试创建的销售价格记录，准备删除")
                         for record_id in test_record_ids:
                             try:
                                 # 尝试通过ID删除
@@ -175,19 +171,13 @@ class TestSoPrice(SlsBase):
                                         )
                                         if result > 0:
                                             deleted_count += result
-                                            cls.logger.info(f"已删除销售价格记录 ID: {record_id}")
                                             break
-                                    except Exception as e:
-                                        cls.logger.debug(f"删除记录 ID {record_id} 失败: {str(e)}")
+                                    except Exception:
                                         continue
-                            except Exception as e:
-                                cls.logger.debug(f"删除销售价格记录 ID {record_id} 失败: {str(e)}")
-                    else:
-                        cls.logger.info("未找到测试创建的销售价格记录")
-                else:
-                    cls.logger.warning("查询销售价格列表失败，无法清理数据")
-            except Exception as e:
-                cls.logger.debug(f"通过API查询并清理销售价格数据失败: {str(e)}")
+                            except Exception:
+                                pass
+            except Exception:
+                pass
             
             cls.logger.info("销售订单价格校验测试数据清理完成")
         except Exception as e:
@@ -204,8 +194,8 @@ class TestSoPrice(SlsBase):
     def test_01_check_price_exists(self):
         """测试检查销售价格列表中是否存在指定物料的销售价格"""
         try:
-            # 1. 调用API
-            api_path = self.get_api_path("SLS-销售价格-查询销售价格列表服务")
+            # 1. 调用API - 使用条件主数据分页查询服务（根据curl，这是正确的API）
+            api_path = self.get_api_path("GEN-条件主数据-分页查询服务")
             params, url = self.get_api_params(api_path)
             
             # 2. 参数处理
@@ -214,33 +204,12 @@ class TestSoPrice(SlsBase):
                 ["params", "request"]
             )
             
-            # 3. 构造条件查询，根据物料ID筛选
-            # 根据curl，conditionItems的结构如下：
-            condition_items = {
-                "type": "ConditionItems",
-                "logicOperator": "AND",
-                "conditions": {
-                    "var9": {
-                        "operator": "EQ",
-                        "value": [
-                            {
-                                "_row_id_": self.fixed_mat_id,
-                                "matCode": self.fixed_mat_code,
-                                "matName": self.fixed_mat_name,
-                                "id": self.fixed_mat_id
-                            }
-                        ]
-                    }
-                }
-            }
-            
-            # 4. 设置查询参数
+            # 3. 设置查询参数（根据curl格式）
             set_dict = {
                 "registerId": self.fixed_match_record_id,  # 使用固定的匹配记录ID
                 "pageable": {
                     "pageNo": 1,
-                    "pageSize": 10,
-                    "conditionItems": condition_items
+                    "pageSize": 10
                 }
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
@@ -334,13 +303,73 @@ class TestSoPrice(SlsBase):
                             
                             a.text(f"原价格: {original_price}, 新价格: {new_price}", "价格信息")
                         except (ValueError, TypeError):
-                            self.logger.warning(f"无法解析价格: {original_price}")
                             a.text(f"无法解析价格: {original_price}", "价格信息")
                 else:
-                    # 如果查询到记录但没有匹配的物料，记录警告
-                    self.logger.warning(f"查询到 {len(records)} 条记录，但未找到物料ID为 {self.fixed_mat_id} 的记录")
-                    a.text(f"查询到 {len(records)} 条记录，但未找到指定物料的销售价格", "校验结果")
-                    raise ValueError(f"未找到物料ID为 {self.fixed_mat_id} 的销售价格记录")
+                    # 如果查询到记录但没有匹配的物料，说明该物料不存在销售价格，需要创建价格
+                    a.text(f"查询到 {len(records)} 条记录，但未找到指定物料的销售价格，开始创建价格", "校验结果")
+                    
+                    # 为该物料创建并提交销售价格
+                    self._create_and_submit_price()
+                    
+                    # 创建后重新查询价格列表
+                    response = self.http.post(url, json=filtered_params, description="重新查询销售价格列表")
+                    self.assert_util.assert_response_data(response)
+                    
+                    response_data = response.get("data", {}).get("data", {})
+                    records = response_data.get("records", []) or response_data.get("data", [])
+                    total = response_data.get("total", 0)
+                    
+                    if records and total > 0:
+                        # 再次查找物料记录
+                        for record in records:
+                            var9 = record.get("var9") or record.get("var_9") or {}
+                            mat_id = None
+                            
+                            if isinstance(var9, dict):
+                                mat_id = var9.get("id") or var9.get("matId") or var9.get("mat_id")
+                            elif isinstance(var9, (int, str)):
+                                try:
+                                    mat_id = int(var9)
+                                except (ValueError, TypeError):
+                                    pass
+                            
+                            if not mat_id:
+                                mat_id = record.get("matId") or record.get("mat_id")
+                                if isinstance(mat_id, dict):
+                                    mat_id = mat_id.get("id")
+                            
+                            try:
+                                if mat_id:
+                                    mat_id = int(mat_id)
+                                if mat_id == self.fixed_mat_id:
+                                    found_record = record
+                                    a.text(f"创建价格后，找到物料的销售价格记录，物料ID: {mat_id}", "价格校验结果")
+                                    
+                                    # 保存价格记录供后续用例使用
+                                    self.found_price_record = found_record
+                                    
+                                    # 获取原价格并计算新价格
+                                    original_price = found_record.get("out1") or found_record.get("outNew1") or found_record.get("price")
+                                    if original_price:
+                                        try:
+                                            original_price = float(original_price)
+                                            new_price = original_price + 1
+                                            
+                                            self.original_price = original_price
+                                            self.new_price = new_price
+                                            
+                                            a.text(f"原价格: {original_price}, 新价格: {new_price}", "价格信息")
+                                        except (ValueError, TypeError):
+                                            self.logger.warning(f"无法解析价格: {original_price}")
+                                            a.text(f"无法解析价格: {original_price}", "价格信息")
+                                    break
+                            except (ValueError, TypeError):
+                                continue
+                        
+                        if not self.found_price_record:
+                            raise ValueError(f"创建价格后，仍未找到物料ID为 {self.fixed_mat_id} 的销售价格记录")
+                    else:
+                        raise ValueError(f"创建价格后，查询销售价格列表仍为空")
             else:
                 # 如果没有记录，说明该物料不存在销售价格，先创建价格
                 a.text(f"销售价格校验结果：物料 {self.fixed_mat_name}(ID: {self.fixed_mat_id}) 不存在销售价格，开始创建价格", "校验结果")
@@ -485,22 +514,22 @@ class TestSoPrice(SlsBase):
             
             a.text(f"价格调整单保存成功，ID: {price_adj_id}", "创建价格")
             
-            # 4. 提交价格调整单
-            api_path = self.get_api_path("SLS-销售价格-价格维护单列表提交服务")
-            params, url = self.get_api_params(api_path)
+            # 4. 提交价格调整单（使用列表提交服务）
+            submit_api_path = self.get_api_path("SLS-销售价格-价格维护单列表提交服务")
+            submit_params, submit_url = self.get_api_params(submit_api_path)
             
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"],
+            submit_filtered_params = ParamUtil.filter_post_body_fields(
+                submit_params, ["id"],
                 ["params", "request"]
             )
             
-            set_dict = {
+            submit_set_dict = {
                 "id": price_adj_id
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            ParamUtil.set_request_params(submit_filtered_params, submit_set_dict)
             
             # 5. 发送提交请求
-            response = self.http.post(url, json=filtered_params, description="提交价格维护单")
+            response = self.http.post(submit_url, json=submit_filtered_params, description="提交价格维护单")
             self.assert_util.assert_response_data(response)
             
             # 6. 验证提交结果
@@ -521,8 +550,7 @@ class TestSoPrice(SlsBase):
                         if db_result:
                             price_adj_info = db_result[0]
                             break
-                    except Exception as e:
-                        self.logger.debug(f"查询表 {table_name} 失败: {str(e)}")
+                    except Exception:
                         continue
                 
                 if price_adj_info:
@@ -654,22 +682,34 @@ class TestSoPrice(SlsBase):
             
             # 6. 获取时间信息
             # 原价格的时间范围
-            start_time = price_record.get("startTime") or price_record.get("startTimeNew")
-            if not start_time:
-                start_time = self.mock_util.get_timestamp(timestamp=True)
-            original_end_time = price_record.get("endTime") or 253402271999000
+            start_time = price_record.get("startTime") or price_record.get("startTimeNew") or 0
+            original_end_time = price_record.get("endTime") or price_record.get("endTimeNew") or 253402271999000
             
             # 新价格的时间范围：为了让新价格立即生效，设置为当前时间开始
-            # 结束时间为当前时间+1小时，确保订单创建时价格仍然有效
-            start_time_new = self.mock_util.get_timestamp(timestamp=True)
-            end_time_new = start_time_new + 3600000  # 新价格结束时间设为开始时间+1小时（3600000毫秒）
+            # 结束时间为最大时间戳，确保订单创建时价格仍然有效
+            current_timestamp = self.mock_util.get_timestamp(timestamp=True)
+            start_time_new = current_timestamp
+            end_time_new = 253402271999000  # 最大时间戳，确保价格长期有效
             
             # 原价格的结束时间：设置为新价格开始时间之前（减去1秒），避免时间重叠
             # 但要确保原价格的结束时间大于其开始时间（至少大1毫秒）
-            end_time = min(start_time_new - 1000, original_end_time)
-            # 如果计算出的结束时间小于等于开始时间，则设置为开始时间+1毫秒（确保结束时间大于开始时间）
-            if end_time <= start_time:
-                end_time = start_time + 1
+            # 如果原价格的开始时间已经大于等于新价格的开始时间，则设置原价格的结束时间为新价格开始时间之前
+            if start_time >= start_time_new:
+                # 如果原价格开始时间已经大于等于新价格开始时间，则设置原价格结束时间为开始时间+1秒
+                end_time = start_time + 1000
+            else:
+                # 原价格开始时间小于新价格开始时间，设置原价格结束时间为新价格开始时间之前
+                end_time = start_time_new - 1000
+                # 确保原价格的结束时间大于开始时间
+                if end_time <= start_time:
+                    end_time = start_time + 1
+                # 确保原价格的结束时间不超过原始结束时间
+                if end_time > original_end_time:
+                    end_time = original_end_time
+            
+            # 确保新价格的结束时间大于开始时间
+            if end_time_new <= start_time_new:
+                end_time_new = start_time_new + 1
             
             # 7. 获取或生成 matchIdempotentKey
             match_idempotent_key = price_record.get("matchIdempotentKey")
@@ -698,8 +738,8 @@ class TestSoPrice(SlsBase):
                     "id": str(curr_id),
                     "currName": "人民币"
                 },
-                "startTime": start_time,
-                "endTime": end_time,
+                "startTime": start_time_new,  # 使用新价格的时间范围
+                "endTime": end_time_new,  # 使用新价格的时间范围
                 "matchIdempotentKey": match_idempotent_key,
                 "deleted": 0,
                 "outNew1": new_price,  # 新价格（原价格+1）
@@ -727,7 +767,7 @@ class TestSoPrice(SlsBase):
             # 9. 直接调用价格维护单编辑并提交服务（id为null表示新建）
             price_adj_name = f"订单价格维护_{self.mock_util.get_timestamp()}"
             
-            api_path = self.get_api_path("SLS-销售价格-价格维护单编辑并提交服务")
+            api_path = self.get_api_path("SLS-销售价格-价格调整保存服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -749,19 +789,38 @@ class TestSoPrice(SlsBase):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            # 10. 发送提交请求
-            response = self.http.post(url, json=filtered_params, description="维护并提交价格")
+            # 10. 发送保存请求
+            response = self.http.post(url, json=filtered_params, description="保存价格维护单")
             self.assert_util.assert_response_data(response)
             
-            # 11. 获取提交后的价格调整单ID
+            # 11. 获取保存后的价格调整单ID
             response_data = response.get("data", {}).get("data", {})
             price_adj_id = response_data.get("id")
             if price_adj_id:
                 self.price_adj_id = price_adj_id
-                a.text(f"价格维护单提交成功，ID: {price_adj_id}", "价格维护结果")
+                a.text(f"价格维护单保存成功，ID: {price_adj_id}", "价格维护结果")
             
-            # 12. 验证提交结果
-            time.sleep(0.5)  # 等待数据持久化
+            # 12. 提交价格维护单
+            if price_adj_id:
+                submit_api_path = self.get_api_path("SLS-销售价格-价格维护单列表提交服务")
+                submit_params, submit_url = self.get_api_params(submit_api_path)
+                
+                submit_filtered_params = ParamUtil.filter_post_body_fields(
+                    submit_params, ["id"],
+                    ["params", "request"]
+                )
+                
+                submit_set_dict = {
+                    "id": price_adj_id
+                }
+                ParamUtil.set_request_params(submit_filtered_params, submit_set_dict)
+                
+                submit_response = self.http.post(submit_url, json=submit_filtered_params, description="提交价格维护单")
+                self.assert_util.assert_response_data(submit_response)
+                a.text(f"价格维护单提交成功", "价格维护结果")
+            
+            # 13. 验证提交结果
+            time.sleep(1.0)  # 等待数据持久化和价格生效
             try:
                 table_names = ["gen_price_adj_head_tr", "price_adj_head_tr", "erp_price_adj_head_tr"]
                 price_adj_info = None
@@ -780,8 +839,7 @@ class TestSoPrice(SlsBase):
                             if price_adj_id:
                                 self.price_adj_id = price_adj_info.get("id") or price_adj_id
                             break
-                    except Exception as e:
-                        self.logger.debug(f"查询表 {table_name} 失败: {str(e)}")
+                    except Exception:
                         continue
                 
                 if price_adj_info:
@@ -793,10 +851,8 @@ class TestSoPrice(SlsBase):
                     a.text(f"价格维护单提交成功，状态: {status}", "价格维护结果")
                     a.text(f"价格已从 {original_price} 更新为 {new_price}", "价格更新确认")
                 else:
-                    self.logger.warning(f"无法查询价格维护单状态，名称: {price_adj_name}")
                     a.text(f"价格维护单提交成功，但无法查询状态", "价格维护结果")
             except Exception as e:
-                self.logger.warning(f"无法查询价格维护单状态: {str(e)}")
                 a.text(f"价格维护单提交成功，但无法查询状态: {str(e)}", "价格维护结果")
             
             a.json(filtered_params, "价格维护请求数据")
@@ -863,16 +919,12 @@ class TestSoPrice(SlsBase):
                             
                             a.text(f"价格验证成功：订单中物料价格为 {price_to_check}，与维护后的价格 {expected_price} 一致", "订单价格验证")
                         else:
-                            self.logger.warning("订单行中未找到价格字段 salesPrice 或 soItemGrossPrice")
                             a.text("订单行中未找到价格字段 salesPrice 或 soItemGrossPrice", "订单价格验证")
                     else:
-                        self.logger.warning(f"订单中未找到物料ID为 {self.fixed_mat_id} 的订单行")
                         a.text(f"订单中未找到物料ID为 {self.fixed_mat_id} 的订单行", "订单价格验证")
                 else:
-                    self.logger.warning("订单返回数据中未找到订单行数据")
                     a.text("订单返回数据中未找到订单行数据", "订单价格验证")
             else:
-                self.logger.warning("订单返回数据为空")
                 a.text("订单返回数据为空，无法验证价格", "订单价格验证")
             
             # 6. 记录订单信息

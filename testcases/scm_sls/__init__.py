@@ -70,10 +70,50 @@ class SlsBase(BaseTest):
         # 初始化配置文件路径
         cls.sls_api_path = Path(project_root) / "testdata" / "scm_sls" / "sls_api_path.yaml"
         cls.sls_api_params = Path(project_root) / "testdata" / "scm_sls" / "sls_api_params.yaml"
+        cls.reb_api_path = Path(project_root) / "testdata" / "scm_sls" / "reb_api_path.yaml"
+        cls.reb_api_params = Path(project_root) / "testdata" / "scm_sls" / "reb_api_params.yaml"
+        cls.common_api_path = Path(project_root) / "testdata" / "sys_common" / "common_api_path.yaml"
+        cls.common_api_params = Path(project_root) / "testdata" / "sys_common" / "common_api_params.yaml"
+        cls.acc_api_path = Path(project_root) / "testdata" / "scm_sls" / "acc_api_path.yaml"
+        cls.acc_api_params = Path(project_root) / "testdata" / "scm_sls" / "acc_api_params.yaml"
+        cls.price_api_path = Path(project_root) / "testdata" / "scm_sls" / "price_api_path.yaml"
+        cls.price_api_params = Path(project_root) / "testdata" / "scm_sls" / "price_api_params.yaml"
+        cls.cond_api_path = Path(project_root) / "testdata" / "scm_sls" / "cond_api_path.yaml"
+        cls.cond_api_params = Path(project_root) / "testdata" / "scm_sls" / "cond_api_params.yaml"
         
         # 加载API路径配置和参数配置
         cls.apis = cls.yaml_util.read_yaml(cls.sls_api_path).get("apis", {})
         cls.api_params = cls.yaml_util.read_yaml(cls.sls_api_params).get("api_params", {})
+        
+        # 加载返利API路径配置和参数配置，合并到apis和api_params中
+        reb_apis = cls.yaml_util.read_yaml(cls.reb_api_path).get("apis", {})
+        reb_api_params = cls.yaml_util.read_yaml(cls.reb_api_params).get("api_params", {})
+        cls.apis.update(reb_apis)
+        cls.api_params.update(reb_api_params)
+        
+        # 加载系统通用API路径配置和参数配置，合并到apis和api_params中（用于待办任务等通用功能）
+        common_apis = cls.yaml_util.read_yaml(cls.common_api_path).get("apis", {})
+        common_api_params = cls.yaml_util.read_yaml(cls.common_api_params).get("api_params", {})
+        cls.apis.update(common_apis)
+        cls.api_params.update(common_api_params)
+        
+        # 加载账户管理API路径配置和参数配置，合并到apis和api_params中（用于返利账户流水查询等）
+        acc_apis = cls.yaml_util.read_yaml(cls.acc_api_path).get("apis", {})
+        acc_api_params = cls.yaml_util.read_yaml(cls.acc_api_params).get("api_params", {})
+        cls.apis.update(acc_apis)
+        cls.api_params.update(acc_api_params)
+        
+        # 加载价格模块API路径配置和参数配置，合并到apis和api_params中（用于价格调整、价格维护等）
+        price_apis = cls.yaml_util.read_yaml(cls.price_api_path).get("apis", {})
+        price_api_params = cls.yaml_util.read_yaml(cls.price_api_params).get("api_params", {})
+        cls.apis.update(price_apis)
+        cls.api_params.update(price_api_params)
+        
+        # 加载条件模块API路径配置和参数配置，合并到apis和api_params中（用于匹配记录查询等）
+        cond_apis = cls.yaml_util.read_yaml(cls.cond_api_path).get("apis", {})
+        cond_api_params = cls.yaml_util.read_yaml(cls.cond_api_params).get("api_params", {})
+        cls.apis.update(cond_apis)
+        cls.api_params.update(cond_api_params)
         
         # 初始化DataFactory（必须在init_sql_cache之前调用）
         DataFactory.__init__(env_name="test")
@@ -643,7 +683,7 @@ class SlsBase(BaseTest):
             if not self.quote_data:
                 self._prepare_quote_data()
             
-            api_path = self.get_api_path("SLS-销售报价-前端定价服务")
+            api_path = self.get_api_path("SLS-销售订单-前端定价服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -673,7 +713,7 @@ class SlsBase(BaseTest):
             if not self.quote_data:
                 self._prepare_quote_data()
             
-            api_path = self.get_api_path("SLS-销售报价-保存服务")
+            api_path = self.get_api_path("SLS-销售订单-保存服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -707,7 +747,7 @@ class SlsBase(BaseTest):
             self._quote_save()
             
             # 再提交
-            api_path = self.get_api_path("SLS-销售报价-提交服务")
+            api_path = self.get_api_path("SLS-销售订单-提交服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -832,7 +872,7 @@ class SlsBase(BaseTest):
             self.logger.info(f"开始创建返利政策: {policy_name} ({policy_code})")
             
             # 2. 创建返利政策
-            api_path = self.get_api_path("SLS-返利政策-保存服务")
+            api_path = self.get_api_path("REB-返利政策-保存服务")
             params, url = self.get_api_params(api_path)
             
             # 设置返利政策参数
@@ -866,7 +906,7 @@ class SlsBase(BaseTest):
             self.logger.info(f"返利政策创建成功，ID: {policy_id}")
             
             # 3. 提交返利政策
-            api_path = self.get_api_path("SLS-返利政策-提交服务")
+            api_path = self.get_api_path("REB-返利政策-提交审批服务")
             params, url = self.get_api_params(api_path)
             
             # 设置提交参数
@@ -883,79 +923,19 @@ class SlsBase(BaseTest):
             self.logger.info(f"返利政策提交成功，ID: {policy_id}")
             
             # 4. 审批通过返利政策
-            api_path = self.get_api_path("SLS-待办任务-查询服务")
+            # 等待一下，确保审批任务已创建
+            time.sleep(2)
+            
+            # 直接使用返利政策审批通过服务
+            api_path = self.get_api_path("REB-返利政策-审批通过服务")
             params, url = self.get_api_params(api_path)
             
-            # 查询待办任务
+            # 设置审批参数
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable"], ["params", "request"]
+                params, ["id"], ["params", "request"]
             )
-            set_dict = {
-                "pageable": {
-                    "pageNo": 1,
-                    "pageSize": 20,
-                    "needTotal": True,
-                    "sortOrders": None,
-                    "conditionItems": None
-                }
-            }
+            set_dict = {"id": policy_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
-            
-            # 查询待办任务
-            task_response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_success(task_response)
-            
-            # 获取待办任务列表
-            task_data = task_response.get("data", {}).get("data", {})
-            task_list = task_data.get("data", []) if isinstance(task_data, dict) else task_data
-            
-            if not task_list:
-                raise Exception("未找到待办任务")
-            
-            # 找到返利政策相关的待办任务
-            target_task = None
-            
-            # 检查task_list是否为列表
-            if isinstance(task_list, list):
-                for task in task_list:
-                    # 检查task是否为字典类型
-                    if isinstance(task, dict):
-                        task_name = task.get("taskName", "")
-                        if "返利政策" in task_name or "rebate" in task_name.lower():
-                            target_task = task
-                            break
-                
-                if not target_task:
-                    # 如果没找到返利政策相关的任务，取第一个任务
-                    if task_list and len(task_list) > 0:
-                        target_task = task_list[0]
-                        self.logger.warning(f"未找到返利政策相关的待办任务，使用第一个任务: {target_task.get('taskName')}")
-                    else:
-                        raise Exception("未找到任何待办任务")
-            else:
-                raise Exception(f"待办任务列表格式错误，期望列表，实际: {type(task_list)}")
-            
-            task_id = target_task.get("id")
-            self.logger.info(f"找到待办任务，ID: {task_id}, 任务名: {target_task.get('taskName')}")
-            
-            # 处理待办任务（审批通过）
-            api_path = self.get_api_path("SLS-待办任务-处理服务")
-            params, url = self.get_api_params(api_path)
-            
-            # 设置任务处理参数 - 使用用户提供的正确参数结构
-            filtered_params = {
-                "sceneKey": "AI$todo_workbench",
-                "viewKey": "AI$todo_workbench:list",
-                "viewTitle": "list",
-                "serviceKey": "sys_common$API_TRANTOR_WORKFLOW_V2_TASK_SUBMIT_POST",
-                "params": {
-                    "taskInstanceId": target_task.get("taskId"),  # 使用taskId而不是id
-                    "auditResult": {
-                        "remark": "同意",
-                        "decisionType": "AGREE"
-                    }
-                }
-            }
             
             # 发送审批请求
             approve_response = self.http.post(url, json=filtered_params)

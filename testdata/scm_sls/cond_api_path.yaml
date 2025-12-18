@@ -1,0 +1,393 @@
+version: '1.0'
+total_apis: 130
+apis:
+  (系统)根据IDS查询数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_FindDataByIdsService
+    method: POST
+  (系统)批量保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_BatchSaveDataService
+    method: POST
+  (系统)根据IDS批量更新数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_BatchUpdateDataByIdsService
+    method: POST
+  (系统)查询数据详情服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_FindDataByIdService
+    method: POST
+  (系统)新增并启用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_MasterData_CreateAndEnableDataService
+    method: POST
+  (系统)批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_BatchDeleteDataService
+    method: POST
+  (系统)新增数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_CreateDataService
+    method: POST
+  (系统)保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_SaveDataService
+    method: POST
+  (系统)COUNT服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_COUNT_DATA_SERVICE
+    method: POST
+  (系统)启用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_MasterData_EnableDataService
+    method: POST
+  (系统)根据条件批量更新数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_BatchUpdateDataByConditionService
+    method: POST
+  (系统)查询统计服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_QueryStatisticsService
+    method: POST
+  (系统)更新数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_UpdateDataByIdService
+    method: POST
+  (系统)根据IDS复制并新增数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_CopyAndCreateDataByIdsService
+    method: POST
+  (系统)删除主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_MasterData_DeleteDataService
+    method: POST
+  (系统)反向构建树以及同步查询出所有同级服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_ReverseConstructTreeService
+    method: POST
+  (系统)通过条件组查询树模型子数据列表:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_FindTreeChildrenDataService
+    method: POST
+  (系统)树搜索:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_TreeSearchService
+    method: POST
+  (系统)树查询数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_FindTreeDataService
+    method: POST
+  (系统)查询分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_PagingDataService
+    method: POST
+  (系统)保存主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_MasterData_SaveDataService
+    method: POST
+  (系统)删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_DeleteDataByIdService
+    method: POST
+  (系统)通过条件组查询数据列表:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_FindListDataService
+    method: POST
+  (系统)转换复制数据:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_CopyDataConverterService
+    method: POST
+  (系统)调用取号规则服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_InvokeCodeRuleService
+    method: POST
+  (系统)停用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_MasterData_DisableDataService
+    method: POST
+  (系统)新增主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_MasterData_CreateDataService
+    method: POST
+  (系统)根据条件查询单条数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_FindSingleDataByConditionService
+    method: POST
+  (系统)SUM服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_SUM_DATA_SERVICE
+    method: POST
+  (系统)根据IDS批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_BatchDeleteDataByIdsService
+    method: POST
+  (系统)批量新增数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_BatchCreateDataService
+    method: POST
+  (系统)保存并启用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_MasterData_SaveAndEnableDataService
+    method: POST
+  (系统)根据ID查询单条数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_FindSingleDataByIdService
+    method: POST
+  (系统)根据条件批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_BatchDeleteDataByConditionService
+    method: POST
+  (系统)查询单条数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_FindOneDataService
+    method: POST
+  (系统)更新主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_MasterData_UpdateDataService
+    method: POST
+  (系统)批量启用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_MasterData_MultiEnableDataService
+    method: POST
+  (系统)批量停用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$SYS_MasterData_MultiDisableDataService
+    method: POST
+  GEN-条件引擎-查看条件表结构服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_CONDITION_TABLE_PROR_EVENT_SERVICE
+    method: POST
+  GEN-条件注册-分页查询服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_HEAD_PAGING_QUERY_EVENT_SERVICE
+    method: POST
+  GEN-条件主数据-批量保存服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_MD_BATCH_SAVE_EVENT_SERVICE
+    method: POST
+  GEN-条件主数据-分页查询服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_MD_PAGING_QUERY_EVENT_SERVICE
+    method: POST
+  GEN-条件主数据-按用途组和字段类型分页查询允许字段:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_PAGING_EVENT_SERVICE
+    method: POST
+  GEN-条件主数据-允许字段删除服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_DELETE_EVENT_SERVICE
+    method: POST
+  GEN-条件主数据-更新服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_MD_UPDATE_EVENT_SERVICE
+    method: POST
+  GEN-条件主数据-同条件数据查询服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_MD_SAME_CONDITION_QUERY_EVENT_SERVICE
+    method: POST
+  GEN-条件引擎-查询允许模型字段服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_MODE_LIST_EVENT_SERVICE
+    method: POST
+  GEN-条件引擎-保存条件信息服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_CREATE_MATCH_RECORD_DATA_EVENT_SERVICE
+    method: POST
+  GEN-条件引擎-更新条件数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_UPDATE_MATCH_RECORD_EVENT_SERVICE
+    method: POST
+  GEN-条件引擎-根据用途查询模型字段信息服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_QUERY_CONDITION_DATA_LIST_EVENT_SERVICE
+    method: POST
+  GEN-条件引擎-创建允许字段服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_SAVE_ALLOW_FIELD_EVENT_SERVICE
+    method: POST
+  GEN-条件主数据-允许字段按key查询服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_QUERY_LIST_BY_KEY_EVENT_SERVICE
+    method: POST
+  GEN-条件主数据-允许字段批量保存服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_BATCH_SAVE_EVENT_SERVICE
+    method: POST
+  GEN-条件引擎-批量删除条件数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_BATCH_DELETE_MATCH_RECORD_EVENT_SERVICE
+    method: POST
+  GEN-阶梯主数据-保存服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_LADDER_MD_SAVE_EVENT_SERVICE
+    method: POST
+  GEN-条件注册-删除服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_HEAD_DELETE_EVENT_SERVICE
+    method: POST
+  GEN-规则引擎-创建规则服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_RULE_ENGINE_CREATE_EVENT_SERVICE
+    method: POST
+  GEN-条件引擎-保存存取顺序服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_SAVE_MATCH_SEQ_EVENT_SERVICE
+    method: POST
+  GEN-条件引擎-清除存取顺序缓存服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_CLEAR_CACHE_MATCH_SEQ_EVENT_SERVICE
+    method: POST
+  GEN-条件引擎-查询允许字段服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_LIST_EVENT_SERVICE
+    method: POST
+  GEN-条件主数据-允许字段分页查询服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_PAGING_EVENT_SERVICE
+    method: POST
+  GEN-条件引擎-创建条件表信息服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_CREATE_MATCH_RECORD_HEAD_EVENT_SERVICE
+    method: POST
+  GEN-条件注册-编辑服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_HEAD_UPDATE_EVENT_SERVICE
+    method: POST
+  GEN-规则引擎-查询全部的因子库和函数因子库服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_RULE_ENGINE_QUERY_ALL_FACTOR_EVENT_SERVICE
+    method: POST
+  允许字段表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  匹配方案-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SCHEME_CF_PAGING_DATA_SERVICE
+    method: POST
+  用途组-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  匹配方案-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SCHEME_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  允许字段表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  用途组标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_GEI_IMPORT_SERVICE
+    method: POST
+  存取顺序-批量启用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_MASTER_DATA_MULTI_ENABLE_DATA_SERVICE
+    method: POST
+  新允许字段保存:
+    path: /api/trantor/service/engine/execute/ERP_COND$new_allowed_field_save_service
+    method: POST
+  存取顺序-分页数据服务_oyQmuH1:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_PAGING_DATA_SERVICE_oyQmuH1
+    method: POST
+  用途组-分页数据服务_oyQmuH3:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_PAGING_DATA_SERVICE_oyQmuH3
+    method: POST
+  用途组-分页数据服务_oyQmuH2:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_PAGING_DATA_SERVICE_oyQmuH2
+    method: POST
+  存取顺序-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  存取顺序-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  匹配方案-保存主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SCHEME_CF_MASTER_DATA_SAVE_DATA_SERVICE
+    method: POST
+  存取顺序-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_PAGING_DATA_SERVICE
+    method: POST
+  存取顺序标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_GEI_IMPORT_SERVICE
+    method: POST
+  匹配方案-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SCHEME_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  存取顺序-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  用途组-保存主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_MASTER_DATA_SAVE_DATA_SERVICE
+    method: POST
+  匹配方案-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SCHEME_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  存取顺序-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  存取顺序-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  允许字段删除字段:
+    path: /api/trantor/service/engine/execute/ERP_COND$allow_field_delete
+    method: POST
+  匹配条件注册表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_HEAD_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  用途组-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  允许字段表-查询允许模型下的字段:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_LIST__SERVICE
+    method: POST
+  存取顺序-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  允许字段_普通模型-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_VO_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  允许字段表标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_GEI_IMPORT_SERVICE
+    method: POST
+  模型数据选择服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$allow_mode_select_service
+    method: POST
+  允许字段模型字段选择渲染服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$allow_select_model_render_service
+    method: POST
+  允许字段表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  存取顺序-批量禁用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_MASTER_DATA_MULTI_DISABLE_DATA_SERVICE
+    method: POST
+  允许字段模型选择-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOWD_MODEL_SELECT_VO_PAGING_DATA_SERVICE
+    method: POST
+  用途组-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  允许字段模型删除:
+    path: /api/trantor/service/engine/execute/ERP_COND$allow_field_model_delete
+    method: POST
+  允许字段查看详情服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$allow_field_view_detail_service
+    method: POST
+  允许字段表-查找树子数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_FIND_TREE_CHILDREN_DATA_SERVICE
+    method: POST
+  允许字段表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  用途组标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_GEI_EXPORT_SERVICE
+    method: POST
+  用途组-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  存取顺序-启用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_MASTER_DATA_ENABLE_DATA_SERVICE
+    method: POST
+  存取顺序-保存主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_MASTER_DATA_SAVE_DATA_SERVICE
+    method: POST
+  允许字段表-保存主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_MASTER_DATA_SAVE_DATA_SERVICE
+    method: POST
+  允许字段表-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  用途组-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  存取顺序标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_GEI_EXPORT_SERVICE
+    method: POST
+  匹配条件注册表-分页数据服务_oyQmuH4:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_HEAD_CF_PAGING_DATA_SERVICE_oyQmuH4
+    method: POST
+  匹配条件注册表-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_HEAD_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  允许字段表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_PAGING_DATA_SERVICE
+    method: POST
+  GEN-条件-审单规则允许模型:
+    path: /api/trantor/service/engine/execute/ERP_COND$gen_condition_rule_model_source
+    method: POST
+  存取顺序-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  存取顺序-禁用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_MASTER_DATA_DISABLE_DATA_SERVICE
+    method: POST
+  根据模型选择字段数据源:
+    path: /api/trantor/service/engine/execute/ERP_COND$allow_select_field_service
+    method: POST
+  允许字段表-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_SAVE_DATA_SERVICE
+    method: POST
+  存取顺序-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  用途组-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  用途组-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_PAGING_DATA_SERVICE
+    method: POST
+  匹配方案-分页数据服务_oyQmuH1:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SCHEME_CF_PAGING_DATA_SERVICE_oyQmuH1
+    method: POST
+  用途组-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  匹配方案-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SCHEME_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  匹配条件注册表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_HEAD_CF_PAGING_DATA_SERVICE
+    method: POST
+  用途组-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  匹配方案-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SCHEME_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  允许字段_普通模型-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_VO_PAGING_DATA_SERVICE
+    method: POST
+  匹配方案-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SCHEME_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
