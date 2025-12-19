@@ -273,12 +273,14 @@ def test_{action}_{object}(self):
             "{field1}": value1,
             "{field2}": value2
         }
-        fields_to_filter = ["{field1}", "{field2}"]
+        # fields_to_filter 可选：如果为 None，会自动从 set_dict.keys() 获取
+        # 如果需要显式控制传递的字段（如某些字段值为 None 但需要传递），可以明确指定
+        fields_to_filter = ["{field1}", "{field2}"]  # 可选，不指定时会自动从 set_dict 获取
         
         response, extracted_id = self.standard_api_call(
             api_key="{API服务名称}",
             set_dict=set_dict,
-            fields_to_filter=fields_to_filter,
+            fields_to_filter=fields_to_filter,  # 可选：为 None 时自动从 set_dict.keys() 获取
             store_id_as="{object}"  # 可选：自动存储为 self.{object}_id
         )
         
@@ -355,6 +357,8 @@ def standard_api_call(
     api_key,                    # API服务名称键（必填）
     set_dict=None,              # 要设置的参数字典（可选）
     fields_to_filter=None,      # 需要过滤的字段列表（可选）
+                                # 如果为 None 且有 set_dict，会自动从 set_dict.keys() 获取
+                                # 如果需要显式控制传递的字段，可以明确指定
     store_id_as=None,           # ID存储属性名，如"partner"会存储为self.partner_id（可选）
     use_param_util=True         # 是否使用ParamUtil过滤/设置，默认True（可选）
 ) -> tuple[dict, Any]:          # 返回(response, extracted_id)
@@ -369,11 +373,20 @@ def standard_api_call(
 #### 使用示例
 ```python
 # 示例1：创建接口（自动存储ID）
+# fields_to_filter 可选：不指定时会自动从 set_dict.keys() 获取
 response, id = self.standard_api_call(
     api_key="GEN-币种配置-保存服务",
     set_dict={"currCode": "USD", "currName": "美元"},
-    fields_to_filter=["currCode", "currName"],
+    fields_to_filter=["currCode", "currName"],  # 可选，不指定时自动从 set_dict 获取
     store_id_as="currency"  # 自动存储为 self.currency_id
+)
+self.assert_util.assert_response_data(response)
+
+# 示例1简化版：不指定 fields_to_filter，自动从 set_dict 获取
+response, id = self.standard_api_call(
+    api_key="GEN-币种配置-保存服务",
+    set_dict={"currCode": "USD", "currName": "美元"},
+    store_id_as="currency"
 )
 self.assert_util.assert_response_data(response)
 

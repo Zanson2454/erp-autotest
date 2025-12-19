@@ -26,10 +26,20 @@ erp-autotest/
 │   └── allure_api.py         # Allure 报告 API
 ├── testcases/                # 测试用例目录
 │   ├── conftest.py          # pytest 全局配置
+│   ├── comm/                # 通用测试基类
+│   │   └── base_test.py    # 基础测试类
+│   ├── gen_md/             # 主数据管理测试
+│   ├── erp_fin/            # 财务管理测试
+│   │   ├── fin_ap/         # 应付管理
+│   │   ├── fin_ar/         # 应收管理
+│   │   ├── fin_iv/         # 存货价值
+│   │   └── fin_sett/       # 结算管理
 │   ├── scm_sls/            # 销售管理测试
 │   ├── scm_pur/            # 采购管理测试
-│   ├── prd/                # 生产管理测试
-│   ├── fin/                # 财务管理测试
+│   ├── scm_inv/            # 库存管理测试
+│   ├── scm_del/            # 配送管理测试
+│   ├── erp_prd/            # 生产管理测试
+│   ├── erp_acc/            # 会计管理测试
 │   └── sys_common/         # 系统通用测试
 ├── utils/                   # 工具类库
 │   ├── request_util.py     # HTTP 请求工具
@@ -51,7 +61,10 @@ erp-autotest/
 │   └── erp/                # ERP 项目配置
 │       ├── base_init_sql.yaml    # 基础数据初始化 SQL
 │       ├── md_init_sql.yaml      # 主数据初始化 SQL
-│       └── sls_init_sql.yaml     # 销售管理初始化 SQL
+│       ├── sls_init_sql.yaml     # 销售管理初始化 SQL
+│       ├── fin_init_sql.yaml     # 财务管理初始化 SQL
+│       ├── pur_init_sql.yaml     # 采购管理初始化 SQL
+│       └── del_init_sql.yaml     # 配送管理初始化 SQL
 ├── static/                  # 静态资源
 ├── reports/                 # 测试报告目录
 │   ├── allure-results/     # Allure 结果数据
@@ -60,7 +73,14 @@ erp-autotest/
 │   └── junit/             # JUnit 报告
 ├── logs/                   # 日志文件目录
 ├── testdata/               # 测试数据目录
+│   ├── cache/             # 缓存数据（init_cache.json, md_init_cache.json等）
+│   └── {module}/          # 各模块API配置（api_params.yaml, api_path.yaml）
 ├── data_factory/           # 数据工厂目录
+│   ├── base.py            # 数据工厂基类
+│   └── {module}_factory.py # 各模块数据工厂
+├── script/                 # 脚本工具
+│   ├── swagger_parser.py  # Swagger API解析工具
+│   └── case_coverage_stat.py # 用例覆盖率统计
 ├── pytest.ini             # pytest 配置
 ├── requirements.txt        # Python 依赖
 ├── Dockerfile             # Docker 镜像构建
@@ -211,60 +231,292 @@ curl "http://localhost:8000/executor/status/{task_id}"
 
 ## 测试用例编写
 
-### 基础测试类
-```python
-from testcases.scm_sls import SlsBase
-from utils.report_util import case_decorator
-import allure
+### 基础测试类结构
 
-@allure.epic("销售管理")
-@allure.feature("销售订单管理")
-class TestSalesOrder(SlsBase):
+所有测试类必须继承对应的基类：
+- **通用基类**: `BaseTest` (位于 `testcases.comm.base_test`)
+- **主数据模块**: `GenMdBaseTest` (继承 `BaseTest`)
+- **财务模块**: `FinBaseTest`、`ApBaseTest`、`ArBaseTest` (继承 `BaseTest`)
+- **销售模块**: `SlsBaseTest` (继承 `BaseTest`)
+
+### 标准测试类模板
+
+```python
+import allure
+import pytest
+from testcases.{module} import {Module}BaseTest
+from utils.report_util import a, case_decorator
+
+@allure.epic("模块名称")
+@allure.feature("功能模块")
+class Test{Module}Management({Module}BaseTest):
+    """模块管理测试类"""
     
-    @case_decorator(
-        story="销售订单",
-        title="创建销售订单",
-        description="验证销售订单创建功能",
-        severity="critical",
-        order=1,
-        tags=["销售订单", "创建"]
-    )
-    def test_create_sales_order(self):
-        """创建销售订单测试"""
-        # 测试实现
-        pass
+    @classmethod
+    def setup_class(cls):
+        super().setup_class()
+        cls.{module}_id = None
+        cls.logger.info("{模块}管理测试类初始化完成")
+        
+        # 初始化配置数据（从init_data获取）
+        if cls.init_data:
+            cls.curr_id = cls.init_data["currency_info"][0]["curr_id"] if cls.init_data.get("currency_info") else None
+            cls.coun_id = cls.init_data["country_info"][0]["coun_id"] if cls.init_data.get("country_info") else None
+        
+        # 初始化MD数据（从md_cache_data获取主数据）
+        if cls.md_cache_data:
+            cust_info = cls.md_cache_data.get("partner_info", {}).get("cust_info", [])
+            cls.cust_id = cust_info[0].get("id") if cust_info else None
+    
+    @classmethod
+    def teardown_class(cls):
+        """测试类结束后执行清理"""
+        try:
+            cls.db.delete(table="{table_name}", where="{code_field} like %s", params=["AT_%"])
+            cls.logger.info("测试数据清理完成")
+        except Exception as e:
+            cls.logger.error(f"测试数据清理失败: {str(e)}")
+```
+
+### 标准测试方法模板（推荐使用 standard_api_call）
+
+```python
+@case_decorator(
+    story="业务故事",
+    title="测试{功能}",
+    description="验证{具体功能}",
+    severity="critical",
+    file_level_order=1,  # 使用文件级排序，确保文件内串行执行
+    smoke=True,  # 可选
+    tags=["{模块}", "{功能}"]
+)
+def test_save_{object}(self):
+    """测试方法说明"""
+    try:
+        # 1. 准备测试数据
+        {object}_code = self.mock_util.generate_unique_code(tag="AT")
+        {object}_name = f"{对象名称}_{self.mock_util.get_timestamp()}"
+        
+        # 2. 使用标准化API调用（推荐方式）
+        set_dict = {
+            "{field1}": value1,
+            "{field2}": value2
+        }
+        fields_to_filter = ["{field1}", "{field2}"]
+        
+        response, extracted_id = self.standard_api_call(
+            api_key="{API服务名称}",
+            set_dict=set_dict,
+            fields_to_filter=fields_to_filter,
+            store_id_as="{object}"  # 可选：自动存储为 self.{object}_id
+        )
+        
+        # 3. 业务断言（standard_api_call不包含断言）
+        self.assert_util.assert_response_data(response)
+        
+        # 4. 保存数据（如果store_id_as未设置）
+        if not hasattr(self, '{object}_id'):
+            self.{object}_id = extracted_id
+        
+    except Exception as e:
+        a.text(str(e), "失败原因")
+        raise
+```
+
+### standard_api_call 方法详解
+
+`standard_api_call` 是统一的标准API调用方法，自动处理参数过滤、设置、请求发送和日志记录。
+
+**方法签名**:
+```python
+def standard_api_call(
+    self, 
+    api_key,                    # API服务名称键（必填）
+    set_dict=None,              # 要设置的参数字典（可选）
+    fields_to_filter=None,      # 需要过滤的字段列表（可选）
+    store_id_as=None,           # ID存储属性名，如"partner"会存储为self.partner_id（可选）
+    use_param_util=True,        # 是否使用ParamUtil过滤/设置，默认True（可选）
+    param_path=None             # 参数路径，默认为["params", "request"]（可选）
+) -> tuple[dict, Any]:          # 返回(response, extracted_id)
+```
+
+**使用示例**:
+```python
+# 示例1：创建接口（自动存储ID）
+response, id = self.standard_api_call(
+    api_key="GEN-币种配置-保存服务",
+    set_dict={"currCode": "USD", "currName": "美元"},
+    fields_to_filter=["currCode", "currName"],
+    store_id_as="currency"  # 自动存储为 self.currency_id
+)
+self.assert_util.assert_response_data(response)
+
+# 示例2：查询接口
+response, _ = self.standard_api_call(
+    api_key="GEN-币种配置-查询分页服务",
+    set_dict={
+        "pageable": {"pageNo": 1, "pageSize": 20},
+        "fields": [{"name": "currCode", "type": "TEXT"}]
+    },
+    fields_to_filter=["pageable", "fields"]
+)
+
+# 示例3：复杂参数（使用use_param_util=False）
+params = {
+    "serviceKey": "{SERVICE_KEY}",
+    "params": {
+        "taskName": f"任务名称",
+        "config": {...}
+    }
+}
+response = self.http.post(url, json=params)
+```
+
+### 数据获取模式
+
+#### 基础数据获取（init_data）
+`init_data` 在 `BaseTest.setup_class()` 中通过 `initializer.initialize_base_data()` 初始化，包含基础配置数据（币种、国家、地址、银行等）。
+
+**安全获取方式**:
+```python
+if cls.init_data:
+    cls.curr_id = cls.init_data["currency_info"][0]["curr_id"] if cls.init_data.get("currency_info") else None
+    cls.coun_id = cls.init_data["country_info"][0]["coun_id"] if cls.init_data.get("country_info") else None
+    cls.addr_id = cls.init_data["addr_info"][0]["id"] if cls.init_data.get("addr_info") else None
+    cls.bank_id = cls.init_data["bank_info"][0]["bank_id"] if cls.init_data.get("bank_info") else None
+```
+
+#### 主数据获取（md_cache_data）
+`md_cache_data` 在 `GenMdBaseTest.setup_class()` 中通过 `CacheUtil.get('md_init_cache')` 获取，包含主数据（合作伙伴、组织、物料等）。
+
+**安全获取方式**:
+```python
+if cls.md_cache_data:
+    # 合作伙伴信息
+    cust_info = cls.md_cache_data.get("partner_info", {}).get("cust_info", [])
+    cls.cust_id = cust_info[0].get("id") if cust_info else None
+    
+    # 组织信息
+    gr_come_org_info = cls.md_cache_data.get("org_info", {}).get("gr_come_org_info", [])
+    cls.com_org_id = gr_come_org_info[0].get("id") if gr_come_org_info else None
+    
+    # 物料信息
+    mat_md = cls.md_cache_data.get("mat_info", {}).get("mat_md", {})
+    finp_list = mat_md.get("FINP", [])
+    cls.mat_id = finp_list[0].get("id") if finp_list else None
+```
+
+### 执行顺序控制
+
+使用 `case_decorator` 的 `file_level_order` 参数控制文件内执行顺序，**禁止使用** `@pytest.mark.run(file_level_order=N)`。
+
+**执行顺序规范**:
+- 创建(1-3) < 查询(4-6) < 更新(7-9) < 导出(10-12) < 导入(13-15) < 删除(16-18)
+
+```python
+@case_decorator(
+    story="业务故事",
+    title="测试创建",
+    file_level_order=1,  # 创建操作
+    severity="critical"
+)
+def test_save_xxx(self):
+    pass
+
+@case_decorator(
+    story="业务故事",
+    title="测试查询",
+    file_level_order=4,  # 查询操作
+    severity="critical"
+)
+def test_query_xxx(self):
+    pass
 ```
 
 ### 数据驱动测试
 ```python
-@pytest.mark.parametrize("order_type", ["STND", "THRD", "CENT"])
-def test_order_types(self, order_type):
-    """测试不同订单类型"""
-    # 测试实现
-    pass
+@pytest.mark.parametrize("iv_type, title", [
+    ("PERIOD_METHOD", "测试期间成本法"),
+    ("CONTINUOUS_METHOD", "测试永续成本法")
+])
+@case_decorator(
+    story="业务故事",
+    title="测试初始化配置",
+    file_level_order=1,
+    severity="critical"
+)
+def test_initialize_configuration(self, iv_type, title):
+    """测试初始化配置"""
+    import allure
+    allure.dynamic.title(title)  # 动态设置测试标题
+    
+    try:
+        # 测试实现
+        pass
+    except Exception as e:
+        a.text(str(e), "失败原因")
+        raise
 ```
 
 ## 工具类使用
 
-### HTTP 请求
-```python
-from utils.request_util import HttpUtil
+### 数据生成（Mock工具）
+**统一使用 `self.mock_util`**（从BaseTest继承），禁止使用 `cls.mock_data = MockData()`。
 
-http = HttpUtil("https://api.example.com")
-response = http.post("/api/orders", json={"order_id": "123"})
+```python
+# 在测试方法中使用
+code = self.mock_util.generate_unique_code(tag="AT")
+timestamp = self.mock_util.get_timestamp()
+name = self.mock_util.get_mock_name()
+company = self.mock_util.get_mock_company()
+phone = self.mock_util.get_mock_phone_number()
+date = self.mock_util.get_mock_date(include_time=False, days_offset=0)
+```
+
+### 断言验证
+```python
+# 标准断言
+self.assert_util.assert_response_success(response)    # 成功响应
+self.assert_util.assert_response_data(response)       # 数据响应
+self.assert_util.assert_by_operator(actual, "=", expected)  # 自定义断言
+self.assert_util.assert_all_in(required, actual, "错误信息")  # 包含验证
+```
+
+### 报告记录
+```python
+from utils.report_util import a
+
+a.json(data, "数据说明")
+a.text(message, "文本说明")
+self.logger.info(f"关键信息: {info}")
+```
+
+### HTTP 请求
+在测试类中，HTTP客户端已通过基类初始化，直接使用 `self.http`：
+
+```python
+# 在测试方法中使用
+response = self.http.post(url, json=params)
+response = self.http.get(url, params=query_params)
 ```
 
 ### 数据库操作
+在测试类中，数据库连接已通过基类初始化，直接使用 `self.db`：
+
 ```python
-from utils.mysql_util import DBManager
+# 查询数据（使用参数化查询，避免SQL注入）
+sql = "SELECT org_status FROM org_struct_md WHERE id = %s LIMIT 1"
+result = self.db.query(sql, (org_id_value,))  # 参数必须是元组或列表
 
-# 类方法模式
-DBManager.init(config)
-result = DBManager.query("SELECT * FROM orders")
+# 删除数据
+self.db.delete(
+    table="table_name",
+    where="code like %s",
+    params=["AT_%"]
+)
 
-# 实例模式
-db = DBManager(host="localhost", database="test", user="root", password="pass")
-result = db.query("SELECT * FROM orders")
+# 插入数据
+self.db.insert(table="table_name", data={"code": "AT_001", "name": "测试"})
 ```
 
 ### 配置管理
@@ -330,12 +582,52 @@ http://localhost:8000/allure/
 
 ## 最佳实践
 
-### 测试用例编写
-1. **命名规范**: 使用描述性的测试方法名
-2. **数据准备**: 使用数据工厂生成测试数据
-3. **断言验证**: 使用专门的断言工具类
-4. **异常处理**: 合理处理测试异常情况
-5. **清理资源**: 测试完成后清理测试数据
+### 测试用例编写规范
+
+#### 必须遵循的规则
+1. **优先使用standard_api_call**: 新代码必须使用`standard_api_call`方法，除非有特殊需求
+2. **异常处理**: 所有测试方法必须有try-catch
+3. **数据清理**: teardown_class必须清理测试数据，**禁止用循环遍历表名**，必须一个表一个表地单独调用
+4. **执行顺序**: 统一使用 `case_decorator` 的 `file_level_order` 参数，禁止使用 `@pytest.mark.run(file_level_order=N)`
+5. **唯一标识**: 所有测试数据使用"AT_"前缀避免冲突
+6. **Mock工具**: 统一使用`self.mock_util`（从BaseTest继承），禁止使用`cls.mock_data = MockData()`
+7. **业务断言**: `standard_api_call`不包含断言，必须在调用后手动添加业务断言
+8. **数据获取**: 从 `init_data` 和 `md_cache_data` 获取，禁止写死参数
+
+#### 命名规范
+- **测试类**: `Test{Module}Management` (如 `TestMatCateManagement`)
+- **测试方法**: `test_{action}_{object}` (如 `test_save_mat_type`)
+- **文件名**: `test_{module}_management.py`
+- **变量**: snake_case，常量：UPPER_CASE
+
+#### 数据清理规范
+```python
+@classmethod
+def teardown_class(cls):
+    """测试类结束后执行清理"""
+    try:
+        # 禁止用循环遍历表名，必须一个表一个表地单独调用
+        cls.db.delete(table="table1", where="code like %s", params=["AT_%"])
+        cls.db.delete(table="table2", where="code like %s", params=["AT_%"])
+        cls.logger.info("测试数据清理完成")
+    except Exception as e:
+        cls.logger.error(f"测试数据清理失败: {str(e)}")
+```
+
+#### 跳过测试规范
+```python
+# 标准文件导入导出
+@pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
+
+# OSS操作
+@pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
+
+# 业务未引用
+@pytest.mark.skip(reason="业务未引用，暂时跳过")
+
+# 功能未实现
+@pytest.mark.skip(reason="功能未实现")
+```
 
 ### 配置管理
 1. **环境隔离**: 不同环境使用不同配置文件
@@ -345,7 +637,7 @@ http://localhost:8000/allure/
 
 ### 性能优化
 1. **并行执行**: 使用 pytest-xdist 并行执行
-2. **数据缓存**: 使用缓存减少重复数据查询
+2. **数据缓存**: 使用缓存减少重复数据查询（init_cache.json, md_init_cache.json）
 3. **连接池**: 数据库连接使用连接池
 4. **资源清理**: 及时释放测试资源
 
@@ -375,6 +667,17 @@ http://localhost:8000/allure/
 - 确认配置文件路径正确
 - 查看配置加载日志
 
+### 5. standard_api_call 使用问题
+- 确认API服务名称键是否正确（检查 `testdata/{module}/api_path.yaml`）
+- 验证 `fields_to_filter` 参数是否包含所有需要设置的字段
+- 检查 `set_dict` 中的字段名是否与API定义一致
+- 查看日志中的请求参数和响应数据
+
+### 6. 数据获取问题
+- 确认 `init_data` 或 `md_cache_data` 是否正确初始化
+- 使用安全的数据获取方式（先判断列表是否存在且非空）
+- 检查缓存文件（`testdata/cache/init_cache.json`）是否存在且有效
+
 ## 版本历史
 
 ### v1.0.0 (当前版本)
@@ -387,6 +690,10 @@ http://localhost:8000/allure/
 - ✅ 钉钉通知集成
 - ✅ Docker 容器化支持
 - ✅ Erda 平台 CI/CD 集成
+- ✅ standard_api_call 标准化API调用方法
+- ✅ 数据缓存机制（init_data, md_cache_data）
+- ✅ 完整的测试用例编写规范
+- ✅ 支持多模块测试（主数据、财务、销售、采购、库存等）
 
 ## 贡献指南
 
@@ -401,12 +708,19 @@ http://localhost:8000/allure/
 - 使用类型注解
 - 编写完整的文档字符串
 - 添加必要的单元测试
+- 遵循 KISS 原则和 SOLID 原则
+- 字典取值优先使用 `.get()`，取不到key默认为None
+- 路径获取统一用 `pathlib` 的 `Path` 获取
 
 ### 测试规范
-- 测试用例命名清晰明确
-- 使用数据驱动测试
-- 合理使用测试标记
+- 测试用例命名清晰明确（`test_{action}_{object}`）
+- 使用数据驱动测试（`@pytest.mark.parametrize`）
+- 合理使用测试标记（`@case_decorator`）
 - 确保测试用例独立性
+- 优先使用 `standard_api_call` 方法
+- 所有测试方法必须有异常处理（try-catch）
+- 测试类必须有数据清理（teardown_class）
+- 使用 `file_level_order` 控制执行顺序
 
 ## 许可证
 
