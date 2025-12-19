@@ -280,10 +280,8 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         try:
             # 调用查询接口 - 直接参数设置
             set_dict = {
-                "request": {
                     "orgDimensionCode": "SCM_ORG_GRP"
                 }
-            }
 
             # 使用标准化API调用 - 特殊直接参数
             response, _ = self.standard_api_call(
