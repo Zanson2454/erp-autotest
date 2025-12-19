@@ -64,19 +64,36 @@ class TestRebateUse(SlsBase):
             # 2. 提交销售单
             self.logger.info("开始提交销售单")
             
+            # 先查询订单详情，获取完整的订单数据（包括订单行的soItemCode）
+            detail_api_path = self.get_api_path("销售订单页面完整查询")
+            detail_params, detail_url = self.get_api_params(detail_api_path)
+            
+            filtered_detail_params = ParamUtil.filter_post_body_fields(
+                detail_params, ["id"], ["params", "request"]
+            )
+            detail_set_dict = {"id": so_id}
+            ParamUtil.set_request_params(filtered_detail_params, detail_set_dict)
+            
+            detail_response = self.http.post(detail_url, json=filtered_detail_params)
+            self.assert_util.assert_response_success(detail_response)
+            
+            # 获取完整的订单数据
+            order_detail = detail_response.get("data", {}).get("data", {})
+            if not order_detail:
+                raise Exception(f"查询订单详情失败，订单ID: {so_id}")
+            
             # 获取销售订单提交API
             submit_api_path = self.get_api_path("SLS-销售订单-提交服务")
             submit_params, submit_url = self.get_api_params(submit_api_path)
             
-            # 设置提交参数
+            # 设置提交参数，使用完整的订单数据
             filtered_submit_params = ParamUtil.filter_post_body_fields(
                 submit_params, ["sceneKey", "viewKey", "viewTitle", "buttonKey", "buttonName", "appId", "teamId", "serviceKey", "params"], 
                 []
             )
             
-            submit_set_dict = {
-                "id": so_id
-            }
+            # 使用查询到的完整订单数据作为提交参数
+            submit_set_dict = order_detail
             ParamUtil.set_request_params(filtered_submit_params, submit_set_dict)
             
             # 发送提交请求
@@ -88,32 +105,26 @@ class TestRebateUse(SlsBase):
             # 3. 查询返利账户流水记录
             self.logger.info("开始查询返利账户流水记录")
             
-            # 获取返利账户流水查询API
-            query_api_path = self.get_api_path("SLS-返利账户流水-查询服务")
+            # 使用账户流水分页查询API
+            query_api_path = self.get_api_path("ACC-账户流水-分页查询")
             query_params, query_url = self.get_api_params(query_api_path)
             
-            # 如果参数为空，使用硬编码的参数
-            if not query_params:
-                self.logger.warning("未找到返利账户流水查询参数，使用硬编码参数")
-                filtered_query_params = {
-                    "sceneKey": "ERP_ACC$ADV_ACC_MANAVE_NEW",
-                    "viewKey": "ERP_ACC$ADV_ACC_MANAVE_NEW:detail",
-                    "appId": 0,
-                    "teamId": 22,
-                    "serviceKey": "ERP_ACC$acc_trans_record_page_service",
-                    "params": {
-                        "accId": 14072001,
-                        "pageable": {
-                            "pageNo": 1,
-                            "pageSize": 20,
-                            "needTotal": True,
-                            "sortOrders": None,
-                            "conditionItems": None
-                        }
-                    }
+            # 设置查询参数
+            filtered_query_params = ParamUtil.filter_post_body_fields(
+                query_params, ["accId", "pageable"], ["params"]
+            )
+            
+            set_dict = {
+                "accId": 14072001,
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": None
                 }
-            else:
-                filtered_query_params = query_params
+            }
+            ParamUtil.set_request_params(filtered_query_params, set_dict)
             
             # 等待一段时间让返利账户流水记录生成
             self.logger.info("等待返利账户流水记录生成...")
@@ -181,7 +192,7 @@ class TestRebateUse(SlsBase):
                 
                 # 停用返利政策
                 try:
-                    api_path = self.get_api_path("SLS-返利政策-停用服务")
+                    api_path = self.get_api_path("REB-返利政策-停用服务")
                     params, url = self.get_api_params(api_path)
                     
                     filtered_params = ParamUtil.filter_post_body_fields(

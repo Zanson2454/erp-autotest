@@ -92,12 +92,6 @@ class TestSoDeleteManagement(SlsBase):
 
             self.assert_util.assert_response_success(result)
 
-            # 验证所有订单已被删除
-            query_api_info = self.apis["SLS-AI工具-查询订单列表"]
-            if isinstance(query_api_info, dict):
-                query_url = query_api_info.get("path", "")
-            else:
-                query_url = query_api_info
             # 简化验证逻辑 - 只记录删除结果
             self.logger.info(f"批量删除完成，删除的订单ID: {order_ids}")
             self.logger.info("批量删除测试成功完成")

@@ -104,7 +104,6 @@ class TestIvInitManagement(FinBaseTest):
                 "currentPeriod": None
             }
             
-            fields_to_filter = ["comOrgId", "ivType", "periodHeadId", "startPeriod", "enableStatus", "beginStatus", "initStatus", "accountingStatus", "accountStatus", "asyncExecutionStatus", "asyncExecutionFailureReason", "currentPeriod"]
             
             # 调用前先删除初始化数据，防止触发唯一性校验
             self.db.delete(
@@ -119,7 +118,6 @@ class TestIvInitManagement(FinBaseTest):
             response, extracted_id = self.standard_api_call(
                 api_key="存货核算初始化配置-初始化配置",
                 set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
                 store_id_as=f"{iv_type_lower}_init_cf",  # 会存储为 self.continuous_method_init_cf_id 或 self.period_method_init_cf_id
                 param_path=["params", "reuqest"]  # 使用reuqest路径（接口定义中的拼写错误）
             )

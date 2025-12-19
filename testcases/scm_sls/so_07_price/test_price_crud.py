@@ -93,7 +93,7 @@ class TestPriceCrud(SlsBase):
             # 通过API查询销售价格列表，找到测试创建的记录，然后删除
             try:
                 # 查询销售价格列表，获取测试创建的记录
-                api_path = ParamUtil.get_api_path(cls.apis, "SLS-销售价格-查询销售价格列表服务")
+                api_path = ParamUtil.get_api_path(cls.apis, "GEN-条件主数据-分页查询服务")
                 params, url = ParamUtil.get_api_params(cls.api_params, api_path)
                 
                 filtered_params = ParamUtil.filter_post_body_fields(
@@ -1074,8 +1074,8 @@ class TestPriceCrud(SlsBase):
     def test_08_query_price_list(self):
         """测试查询销售价格列表"""
         try:
-            # 1. 调用API
-            api_path = self.get_api_path("SLS-销售价格-查询销售价格列表服务")
+            # 1. 调用API - 使用条件主数据分页查询服务（根据curl，这是正确的API）
+            api_path = self.get_api_path("GEN-条件主数据-分页查询服务")
             params, url = self.get_api_params(api_path)
             
             # 2. 参数处理
@@ -1084,12 +1084,12 @@ class TestPriceCrud(SlsBase):
                 ["params", "request"]
             )
             
-            # 3. 设置查询参数，使用固定的 registerId
+            # 3. 设置查询参数（根据curl格式）
             set_dict = {
                 "registerId": self.fixed_match_record_id,  # 使用固定的匹配记录ID
                 "pageable": {
                     "pageNo": 1,
-                    "pageSize": 10
+                    "pageSize": 100  # 增加页面大小以获取更多记录
                 }
             }
             ParamUtil.set_request_params(filtered_params, set_dict)

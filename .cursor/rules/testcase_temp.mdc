@@ -19,16 +19,14 @@ alwaysApply: true
   - [导入规范](#导入规范)
   - [测试类模板](#测试类模板)
   - [测试方法模板](#测试方法模板)
-- [四、核心方法](#四核心方法)
-  - [standard_api_call 详解](#standard_api_call-详解)
-- [五、工具使用](#五工具使用)
+- [四、工具使用](#四工具使用)
   - [数据生成](#数据生成)
   - [断言验证](#断言验证)
   - [报告记录](#报告记录)
-- [六、规则和规范](#六规则和规范)
+- [五、规则和规范](#五规则和规范)
   - [必须遵循的规则](#必须遵循的规则)
   - [专项规范](#专项规范)
-- [七、常见模式和场景](#七常见模式和场景)
+- [六、常见模式和场景](#六常见模式和场景)
   - [标准CRUD流程](#标准crud流程)
   - [特殊场景处理](#特殊场景处理)
 
@@ -164,7 +162,7 @@ if cls.md_cache_data:
 
 ### 核心规则摘要
 
-1. **优先使用standard_api_call**: 新代码必须使用`standard_api_call`方法，除非有特殊需求
+1. **必须使用standard_api_call**: 所有新代码必须使用`standard_api_call`方法，除非有特殊需求（如复杂API参数需要使用use_param_util=False）
 2. **顺序控制**: 使用 `case_decorator` 的 `file_level_order`，禁止使用 `@pytest.mark.run(file_level_order=N)`
 3. **数据获取**: 从 `init_data` 和 `md_cache_data` 获取，禁止写死参数
 4. **Mock工具**: 统一使用`self.mock_util`，禁止使用`cls.mock_data = MockData()`
@@ -185,7 +183,6 @@ if cls.md_cache_data:
 import allure
 import pytest
 from testcases.{module} import {Module}BaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 ```
 
@@ -250,7 +247,6 @@ class Test{Module}Management({Module}BaseTest):
 
 ### 测试方法模板
 
-#### 方式一：使用standard_api_call（推荐）
 ```python
 @case_decorator(
     story="业务故事",
@@ -268,17 +264,17 @@ def test_{action}_{object}(self):
         {object}_code = self.mock_util.generate_unique_code(tag="{Prefix}")
         {object}_name = f"{对象名称}_{self.mock_util.get_timestamp()}"
         
-        # 2. 使用标准化API调用（推荐方式）
+        # 2. 使用标准化API调用
         set_dict = {
             "{field1}": value1,
             "{field2}": value2
         }
-        fields_to_filter = ["{field1}", "{field2}"]
-        
+        # fields_to_filter 可选：不传时自动从 set_dict.keys() 获取
+        # 如果需要显式控制传递的字段（如某些字段值为 None 但需要传递），可以明确指定
         response, extracted_id = self.standard_api_call(
             api_key="{API服务名称}",
             set_dict=set_dict,
-            fields_to_filter=fields_to_filter,
+            # fields_to_filter 可选：不传时自动从 set_dict.keys() 获取
             store_id_as="{object}"  # 可选：自动存储为 self.{object}_id
         )
         
@@ -302,109 +298,9 @@ def test_{action}_{object}(self):
         raise
 ```
 
-#### 方式二：传统方式（不推荐，仅特殊场景使用）
-```python
-@case_decorator(
-    story="业务故事",
-    title="测试{功能}",
-    file_level_order={序号},
-    severity="blocker",
-    tags=["{模块}"]
-)
-def test_{action}_{object}(self):
-    """测试方法说明"""
-    try:
-        # 1. 准备测试数据
-        {object}_code = self.mock_util.generate_unique_code(tag="{Prefix}")
-        
-        # 2. 调用API
-        api_path = self.get_api_path("{API服务名称}")
-        params, url = self.get_api_params(api_path)
-        
-        # 3. 参数处理
-        filtered_params = ParamUtil.filter_post_body_fields(
-            params, ["{field1}", "{field2}"], ["params", "request"]
-        )
-        set_dict = {"{field1}": value1, "{field2}": value2}
-        ParamUtil.set_request_params(filtered_params, set_dict)
-        
-        # 4. 发送请求和断言
-        response = self.http.post(url, json=filtered_params)
-        self.assert_util.assert_response_data(response)
-        
-        # 5. 保存数据和报告
-        self.{object}_id = response.get("data", {}).get("data", {})
-        a.json(filtered_params, "请求数据")
-        a.json(response, "响应数据")
-        
-    except Exception as e:
-        a.text(str(e), "失败原因")
-        raise
-```
-
 ---
 
-## 四、核心方法
-
-### standard_api_call 详解
-
-#### 方法签名
-```python
-def standard_api_call(
-    self, 
-    api_key,                    # API服务名称键（必填）
-    set_dict=None,              # 要设置的参数字典（可选）
-    fields_to_filter=None,      # 需要过滤的字段列表（可选）
-    store_id_as=None,           # ID存储属性名，如"partner"会存储为self.partner_id（可选）
-    use_param_util=True         # 是否使用ParamUtil过滤/设置，默认True（可选）
-) -> tuple[dict, Any]:          # 返回(response, extracted_id)
-```
-
-#### use_param_util 参数说明
-- **默认值**: `True` - 使用 ParamUtil 过滤和设置参数（标准流程）
-- **设置为 False**: 直接使用 `set_dict` 作为 `params` 内容，不经过 ParamUtil 处理
-- **使用场景**: 复杂API参数（如导出任务、OSS导入等需要复杂配置的场景）
-- **注意**: 当 `use_param_util=False` 时，`fields_to_filter` 参数会被忽略
-
-#### 使用示例
-```python
-# 示例1：创建接口（自动存储ID）
-response, id = self.standard_api_call(
-    api_key="GEN-币种配置-保存服务",
-    set_dict={"currCode": "USD", "currName": "美元"},
-    fields_to_filter=["currCode", "currName"],
-    store_id_as="currency"  # 自动存储为 self.currency_id
-)
-self.assert_util.assert_response_data(response)
-
-# 示例2：查询接口
-response, _ = self.standard_api_call(
-    api_key="GEN-币种配置-查询分页服务",
-    set_dict={
-        "pageable": {"pageNo": 1, "pageSize": 20},
-        "fields": [{"name": "currCode", "type": "TEXT"}]
-    },
-    fields_to_filter=["pageable", "fields"]
-)
-
-# 示例3：详情/删除接口
-response, _ = self.standard_api_call(
-    api_key="GEN-币种配置-查询详情服务",
-    set_dict={"id": self.currency_id},
-    fields_to_filter=["id"]
-)
-```
-
-#### 方法优势
-- **自动处理**: 自动获取API配置、过滤参数、设置参数、发送请求、记录日志
-- **ID自动提取**: 自动从响应中提取ID（`response.get("data", {}).get("data", {})`）
-- **ID自动存储**: 通过`store_id_as`参数自动存储ID到实例属性
-- **统一日志**: 自动记录请求URL、方法、参数和响应
-- **减少重复**: 避免重复编写API调用代码
-
----
-
-## 五、工具使用
+## 四、工具使用
 
 ### 数据生成
 ```python
@@ -434,11 +330,11 @@ self.logger.info(f"关键信息: {info}")
 
 ---
 
-## 六、规则和规范
+## 五、规则和规范
 
 ### 必须遵循的规则
 
-1. **优先使用standard_api_call**: 新代码必须使用`standard_api_call`方法，除非有特殊需求
+1. **必须使用standard_api_call**: 所有新代码必须使用`standard_api_call`方法，除非有特殊需求（如复杂API参数需要使用use_param_util=False）
 2. **异常处理**: 所有测试方法必须有try-catch
 3. **数据清理**: teardown_class必须清理测试数据，禁止用循环遍历表名
 4. **执行顺序**: 
@@ -557,7 +453,7 @@ cls.cust_user_info = cls.user_infos["cust"]
 
 ---
 
-## 七、常见模式和场景
+## 六、常见模式和场景
 
 ### 标准CRUD流程
 1. `test_save_*` (file_level_order=1-3) - 创建
@@ -609,12 +505,87 @@ if not self.dependency_id:
     self.test_create_dependency()
 ```
 
+#### 异步接口测试
+```python
+@case_decorator(
+    story="业务故事",
+    title="测试异步{功能}并等待完成",
+    description="验证{具体功能}的异步执行和状态流转",
+    severity="normal",
+    file_level_order={序号},
+    tags=["{模块}", "{功能}", "async", "wait"]
+)
+def test_async_{action}_{object}(self):
+    """测试异步{功能}并等待完成"""
+    try:
+        # 1. 前置条件：确保依赖数据已存在
+        if not self.{object}_id:
+            self.test_save_{object}() # 假设前置创建方法
+
+        # 2. 发起异步任务
+        # 假设有一个API用于触发异步操作
+        set_dict = {"id": self.{object}_id}
+        response, _ = self.standard_api_call(
+            api_key="{API服务名称}-异步任务发起", # 例如 "XXX-执行初始化-异步任务发起"
+            set_dict=set_dict
+            # fields_to_filter 可选：不传时自动从 set_dict.keys() 获取
+        )
+        self.assert_util.assert_response_success(response)
+        
+        # 可选：验证异步任务是否成功提交
+        # async_status_after_trigger = response.get("data", {}).get("data", {}).get("asyncExecutionStatus")
+        # self.assert_util.assert_by_operator(async_status_after_trigger, "=", "CREATED", "异步任务应为CREATED状态")
+
+        # 3. 定义查询函数：用于轮询检查异步任务状态
+        def query_{object}_status():
+            """查询{对象}的当前状态"""
+            # 假设有一个API用于查询异步任务的详情或状态
+            query_response, _ = self.standard_api_call(
+                api_key="{API服务名称}-查询详情服务", # 例如 "XXX-查询详情服务"
+                set_dict={"id": self.{object}_id}
+                # fields_to_filter 可选：不传时自动从 set_dict.keys() 获取
+            )
+            self.assert_util.assert_response_success(query_response)
+            return query_response.get("data", {}).get("data", {})
+
+        # 4. 等待异步任务完成
+        result = self.async_wait_util.wait_for_async_status(
+            query_func=query_{object}_status,
+            status_field="asyncExecutionStatus", # 异步任务状态字段名
+            success_status="SUCCEEDED",         # 成功状态值
+            failed_status="FAILED",             # 失败状态值
+            failure_reason_field="asyncExecutionFailureReason", # 失败原因字段名
+            max_wait=60,                        # 最大等待时间（秒）
+            interval=3.0                        # 轮询间隔（秒）
+        )
+
+        # 5. 断言等待结果
+        if result.status == self.wait_status.SUCCESS:
+            # 任务成功，进一步验证业务状态或数据
+            final_async_status = result.last_data.get("asyncExecutionStatus")
+            self.assert_util.assert_by_operator(
+                final_async_status, "=", "SUCCEEDED",
+                f"异步任务应成功完成，实际状态: {final_async_status}"
+            )
+            # 示例：验证业务状态字段
+            # final_biz_status = result.last_data.get("bizStatus")
+            # self.assert_util.assert_by_operator(final_biz_status, "=", "COMPLETED", "业务状态应为COMPLETED")
+            a.text(f"✅ 异步任务成功完成，总耗时: {result.total_wait_time:.2f}秒", "异步任务结果")
+        elif result.status == self.wait_status.FAILED:
+            raise AssertionError(f"❌ 异步任务执行失败: {result.error_message}")
+        else: # TIMEOUT or ERROR
+            raise AssertionError(f"⚠️ 等待异步任务超时或检查出错: {result.error_message}")
+
+    except Exception as e:
+        a.text(str(e), "失败原因")
+        raise
+```
+
 #### 复杂API参数（使用use_param_util=False）
 ```python
 # 直接构造复杂参数结构（使用use_param_util=False）
 params = {
     "serviceKey": "{SERVICE_KEY}",
-    "teamId": 22,
     "params": {
         "taskName": f"{模块}-自动化测试-{timestamp}-{操作}",
         "multiSheetConfig": [...],
@@ -622,8 +593,7 @@ params = {
         "processConfig": {...}
     }
 }
-response = self.http.post(url, json=params)
-```
+
 
 #### 数据库查询验证
 ```python
@@ -669,11 +639,12 @@ def test_query_org_tree(self, org_parent_id, title):
                 org_parent_id = result[0]["id"]
         
         # 使用标准化API调用
+        # fields_to_filter 可选：不传时自动从 set_dict.keys() 获取
         set_dict = {"orgParentId": org_parent_id}
         response, _ = self.standard_api_call(
             api_key="API服务名称",
-            set_dict=set_dict,
-            fields_to_filter=["orgParentId"]
+            set_dict=set_dict
+            # fields_to_filter 可选：不传时自动从 set_dict.keys() 获取
         )
         self.assert_util.assert_response_data(response)
     except Exception as e:

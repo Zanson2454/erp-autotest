@@ -49,7 +49,7 @@ class TestRebateCrud(SlsBase):
         """测试创建返利政策并保存"""
         try:
             # 1. 调用创建返利政策API
-            api_path = self.get_api_path("SLS-返利政策-保存服务")
+            api_path = self.get_api_path("REB-返利政策-保存服务")
             params, url = self.get_api_params(api_path)
             
             # 2. 构造返利政策数据
@@ -136,7 +136,7 @@ class TestRebateCrud(SlsBase):
                 self.test_01_create_and_save_rebate_policy()
             
             # 2. 调用提交返利政策API
-            api_path = self.get_api_path("SLS-返利政策-提交服务")
+            api_path = self.get_api_path("REB-返利政策-提交审批服务")
             params, url = self.get_api_params(api_path)
             
             # 3. 参数处理 - 需要传递完整的返利政策数据
@@ -234,7 +234,7 @@ class TestRebateCrud(SlsBase):
             a.text(f"找到审批任务，taskInstanceId: {task_instance_id}", "审批任务信息")
             
             # 4. 调用审核通过API
-            api_path = self.get_api_path("SLS-返利政策-审核通过服务")
+            api_path = self.get_api_path("REB-返利政策-审批通过服务")
             params, url = self.get_api_params(api_path)
             
             # 5. 参数处理 - 工作流审批API需要特殊参数
@@ -294,7 +294,7 @@ class TestRebateCrud(SlsBase):
                 self.test_03_approve_rebate_policy()
             
             # 2. 调用停用返利政策API
-            api_path = self.get_api_path("SLS-返利政策-停用服务")
+            api_path = self.get_api_path("REB-返利政策-停用服务")
             params, url = self.get_api_params(api_path)
             
             # 3. 参数处理 - 需要传递完整的返利政策数据
@@ -410,7 +410,7 @@ class TestRebateCrud(SlsBase):
                 raise Exception(f"返利政策当前状态为 {current_status}，不是启用状态，无法测试停用功能")
             
             # 3. 调用停用返利政策API
-            api_path = self.get_api_path("SLS-返利政策-停用服务")
+            api_path = self.get_api_path("REB-返利政策-停用服务")
             params, url = self.get_api_params(api_path)
             
             # 4. 参数处理 - 使用详情数据构建停用请求

@@ -67,7 +67,7 @@ class TestQuoteCrud(SlsBase):
             a.text(f"草稿态报价单创建成功，ID: {self.quote_id_draft}", "草稿报价单ID")
             
             # 2. 编辑草稿态报价单
-            api_path = self.get_api_path("SLS-销售报价-保存服务")
+            api_path = self.get_api_path("SLS-销售订单-保存服务")
             params, url = self.get_api_params(api_path)
             
             # 3. 参数处理
@@ -139,7 +139,7 @@ class TestQuoteCrud(SlsBase):
                 self.test_01_create_and_edit_draft_quote()
             
             # 2. 调用复制API
-            api_path = self.get_api_path("SLS-销售报价-复制服务")
+            api_path = self.get_api_path("销售订单复制服务")
             params, url = self.get_api_params(api_path)
             
             # 3. 参数处理
@@ -160,7 +160,7 @@ class TestQuoteCrud(SlsBase):
             copied_quote_data = response_data
             
             # 6. 保存复制的报价单
-            save_api_path = self.get_api_path("SLS-销售报价-保存服务")
+            save_api_path = self.get_api_path("SLS-销售订单-保存服务")
             save_params, save_url = self.get_api_params(save_api_path)
             
             # 7. 参数处理
@@ -218,7 +218,7 @@ class TestQuoteCrud(SlsBase):
                 self.test_02_copy_and_save_draft_quote()
             
             # 2. 调用删除API
-            api_path = self.get_api_path("SLS-销售报价-删除服务")
+            api_path = self.get_api_path("SO-删除服务")
             params, url = self.get_api_params(api_path)
             
             # 3. 参数处理
@@ -282,7 +282,7 @@ class TestQuoteCrud(SlsBase):
                 self.test_04_create_submitted_quote()
             
             # 2. 调用作废API
-            api_path = self.get_api_path("SLS-销售报价-作废服务")
+            api_path = self.get_api_path("订单作废服务")
             params, url = self.get_api_params(api_path)
             
             # 3. 参数处理
@@ -333,7 +333,7 @@ class TestQuoteCrud(SlsBase):
                 quote_id = self.quote_id_draft
             
             # 2. 调用详情查询API
-            api_path = self.get_api_path("SLS-销售报价-详情查询服务")
+            api_path = self.get_api_path("销售订单页面完整查询")
             params, url = self.get_api_params(api_path)
             
             # 3. 参数处理
@@ -399,7 +399,7 @@ class TestQuoteCrud(SlsBase):
                 self.logger.info(f"创建第{i+1}个草稿态报价单，ID: {quote_id}")
             
             # 2. 调用批量删除API
-            api_path = self.get_api_path("SLS-销售报价-批量删除服务")
+            api_path = self.get_api_path("销售订单批量删除服务")
             params, url = self.get_api_params(api_path)
             
             # 3. 参数处理

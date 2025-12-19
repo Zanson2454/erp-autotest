@@ -704,9 +704,13 @@ class BaseTest:
         """
         标准化API调用模板 - 纯执行和报告工具，无断言逻辑
         统一返回响应数据（无论成功还是失败），由业务断言来判断响应是否正确
+        
         :param api_key: API服务名称键
         :param set_dict: 要设置的参数字典
         :param fields_to_filter: 需要过滤的字段列表
+            - 如果为 None（未指定），会自动从 set_dict.keys() 获取字段列表（兼容原有用例）
+            - 如果已指定（如 ["id"] 或 ["pageable"]），使用指定的值（优先使用指定值）
+            - 这样既支持自动推断，也支持显式指定，完全兼容原有用例
         :param store_id_as: ID存储属性名（用于自动保存self.xxx_id）
         :param use_param_util: 是否使用ParamUtil过滤/设置（默认True）；False时直接使用set_dict作为params
         :param param_path: 参数路径，默认为["params", "request"]，支持自定义路径如["params", "reuqest"]（用于处理接口定义中的拼写错误）
@@ -734,8 +738,16 @@ class BaseTest:
             # 2. 参数处理 - 分支逻辑
             if use_param_util:
                 # 标准流程：使用ParamUtil过滤和设置
+                # fields_to_filter 处理逻辑：
+                # 1. 如果已指定（不是 None），使用指定的值（优先使用指定值，完全兼容原有用例）
+                # 2. 如果未指定（为 None）且有 set_dict，自动从 set_dict.keys() 获取字段列表（方便新用例）
+                # 这样既支持自动推断，也支持显式指定，完全兼容原有用例
                 if fields_to_filter is None:
-                    fields_to_filter = []
+                    if set_dict:
+                        fields_to_filter = list(set_dict.keys())
+                    else:
+                        fields_to_filter = []
+                # 如果 fields_to_filter 已指定，直接使用指定的值，不会覆盖
                 # 使用自定义路径或默认路径
                 if param_path is None:
                     param_path = ["params", "request"]

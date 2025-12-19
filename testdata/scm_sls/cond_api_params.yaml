@@ -1,0 +1,2264 @@
+api_params:
+  /api/trantor/service/engine/execute/ERP_COND$SYS_FindDataByIdsService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: ERP_COND$SYS_FindDataByIdsService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_BatchSaveDataService:
+    params:
+      request:
+      - {}
+      modelKey: null
+    serviceKey: ERP_COND$SYS_BatchSaveDataService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_BatchUpdateDataByIdsService:
+    params:
+      request:
+      - {}
+      modelKey: null
+    serviceKey: ERP_COND$SYS_BatchUpdateDataByIdsService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_FindDataByIdService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: ERP_COND$SYS_FindDataByIdService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_MasterData_CreateAndEnableDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_COND$SYS_MasterData_CreateAndEnableDataService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_BatchDeleteDataService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: ERP_COND$SYS_BatchDeleteDataService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_CreateDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_COND$SYS_CreateDataService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_SaveDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_COND$SYS_SaveDataService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_COUNT_DATA_SERVICE:
+    params:
+      request:
+      - null
+      modelKey: null
+    serviceKey: ERP_COND$SYS_COUNT_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$SYS_MasterData_EnableDataService:
+    params:
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: ERP_COND$SYS_MasterData_EnableDataService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_BatchUpdateDataByConditionService:
+    params:
+      request:
+        data: {}
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: ERP_COND$SYS_BatchUpdateDataByConditionService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_QueryStatisticsService:
+    params:
+      request:
+        aggregateField: null
+        conditionItems: null
+        groupByFields:
+        - null
+        conditionGroup: null
+        aggregateFunc: null
+      modelKey: null
+    serviceKey: ERP_COND$SYS_QueryStatisticsService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_UpdateDataByIdService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_COND$SYS_UpdateDataByIdService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_CopyAndCreateDataByIdsService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: ERP_COND$SYS_CopyAndCreateDataByIdsService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_MasterData_DeleteDataService:
+    params:
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: ERP_COND$SYS_MasterData_DeleteDataService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_ReverseConstructTreeService:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: ERP_COND$SYS_ReverseConstructTreeService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_FindTreeChildrenDataService:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: ERP_COND$SYS_FindTreeChildrenDataService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_TreeSearchService:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: ERP_COND$SYS_TreeSearchService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_FindTreeDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_COND$SYS_FindTreeDataService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_PagingDataService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        sortOrders:
+        - fieldAlias: null
+          sortType: null
+        pageable:
+          conditionItems: null
+          pageNo: 1
+          conditionGroup: null
+          pageSize: 20
+      modelKey: null
+    serviceKey: ERP_COND$SYS_PagingDataService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_MasterData_SaveDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_COND$SYS_MasterData_SaveDataService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_DeleteDataByIdService:
+    params:
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: ERP_COND$SYS_DeleteDataByIdService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_FindListDataService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: ERP_COND$SYS_FindListDataService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_CopyDataConverterService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_COND$SYS_CopyDataConverterService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_InvokeCodeRuleService:
+    params:
+      request:
+        formParams: {}
+        ruleKey: null
+      modelKey: null
+    serviceKey: ERP_COND$SYS_InvokeCodeRuleService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_MasterData_DisableDataService:
+    params:
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: ERP_COND$SYS_MasterData_DisableDataService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_MasterData_CreateDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_COND$SYS_MasterData_CreateDataService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_FindSingleDataByConditionService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: ERP_COND$SYS_FindSingleDataByConditionService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_SUM_DATA_SERVICE:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+      fields:
+      - null
+      modelKey: null
+    serviceKey: ERP_COND$SYS_SUM_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$SYS_BatchDeleteDataByIdsService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: ERP_COND$SYS_BatchDeleteDataByIdsService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_BatchCreateDataService:
+    params:
+      request:
+      - {}
+      modelKey: null
+    serviceKey: ERP_COND$SYS_BatchCreateDataService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_MasterData_SaveAndEnableDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_COND$SYS_MasterData_SaveAndEnableDataService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_FindSingleDataByIdService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        id: 0
+      modelKey: null
+    serviceKey: ERP_COND$SYS_FindSingleDataByIdService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_BatchDeleteDataByConditionService:
+    params:
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: ERP_COND$SYS_BatchDeleteDataByConditionService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_FindOneDataService:
+    params:
+      selectFields:
+      - selectFields:
+        - {}
+        field: null
+      request:
+        conditionItems: null
+        conditionGroup: null
+      modelKey: null
+    serviceKey: ERP_COND$SYS_FindOneDataService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_MasterData_UpdateDataService:
+    params:
+      request: {}
+      modelKey: null
+    serviceKey: ERP_COND$SYS_MasterData_UpdateDataService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_MasterData_MultiEnableDataService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: ERP_COND$SYS_MasterData_MultiEnableDataService
+  /api/trantor/service/engine/execute/ERP_COND$SYS_MasterData_MultiDisableDataService:
+    params:
+      request:
+        ids:
+        - 0
+      modelKey: null
+    serviceKey: ERP_COND$SYS_MasterData_MultiDisableDataService
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_CONDITION_TABLE_PROR_EVENT_SERVICE:
+    params:
+      request:
+        idempotentKey: null
+        var9: null
+        var8: 0
+        var7: 0
+        matchRecordCode: null
+        matchRecordMdCode: null
+        out2: 0
+        out3: 0
+        createdAt: 0
+        out4: 0
+        genMatchLadderMdJson: null
+        out5: null
+        conditionId: 0
+        matchRecordId: 0
+        requestId: null
+        out1: 0
+        var6: 0
+        var5: 0
+        var4: 0
+        startTime: 0
+        var3: 0
+        id: 0
+        var2: 0
+        out6: null
+        var1: 0
+        out7: null
+        out8: null
+        out9: null
+        updatedAt: 0
+        var16: null
+        updatedBy: {}
+        originOrgId: 0
+        var12: null
+        var13: null
+        var14: null
+        var15: null
+        var10: null
+        matchIdempotentKey: null
+        var11: null
+        version: 0
+        deleted: 0
+        createdBy: {}
+        endTime: 0
+        out10: null
+    serviceKey: ERP_COND$GEN_MATCH_CONDITION_TABLE_PROR_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_HEAD_PAGING_QUERY_EVENT_SERVICE:
+    params:
+      request:
+        ladderUnitModelFieldKey: null
+        updatedBy: {}
+        originOrgId: 0
+        ladderModelFieldKey: null
+        matchRecordKeyword: null
+        ladderType: null
+        ladderClassType: null
+        matchRecordCode: null
+        importKey: null
+        version: 0
+        usageGroupId: {}
+        idempotent: null
+        enabledImport: false
+        importTemplate: null
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        id: 0
+        usageType: null
+        desc: null
+        matchRecordType: null
+        updatedAt: 0
+    serviceKey: ERP_COND$GEN_MATCH_RECORD_HEAD_PAGING_QUERY_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_MD_BATCH_SAVE_EVENT_SERVICE:
+    params:
+      request:
+        idempotentKey: null
+        var9: null
+        var8: 0
+        var7: 0
+        matchRecordCode: null
+        matchRecordMdCode: null
+        out2: 0
+        out3: 0
+        createdAt: 0
+        out4: 0
+        genMatchLadderMdJson: null
+        out5: null
+        conditionId: 0
+        matchRecordId: 0
+        requestId: null
+        out1: 0
+        var6: 0
+        var5: 0
+        var4: 0
+        startTime: 0
+        var3: 0
+        id: 0
+        var2: 0
+        out6: null
+        var1: 0
+        out7: null
+        out8: null
+        out9: null
+        updatedAt: 0
+        var16: null
+        updatedBy: {}
+        originOrgId: 0
+        var12: null
+        var13: null
+        var14: null
+        var15: null
+        var10: null
+        matchIdempotentKey: null
+        var11: null
+        version: 0
+        deleted: 0
+        createdBy: {}
+        endTime: 0
+        out10: null
+    serviceKey: ERP_COND$GEN_MATCH_RECORD_MD_BATCH_SAVE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_MD_PAGING_QUERY_EVENT_SERVICE:
+    params:
+      request:
+        idempotentKey: null
+        var9: null
+        var8: 0
+        var7: 0
+        matchRecordCode: null
+        matchRecordMdCode: null
+        out2: 0
+        out3: 0
+        createdAt: 0
+        out4: 0
+        genMatchLadderMdJson: null
+        out5: null
+        conditionId: 0
+        matchRecordId: 0
+        requestId: null
+        out1: 0
+        var6: 0
+        var5: 0
+        var4: 0
+        startTime: 0
+        var3: 0
+        id: 0
+        var2: 0
+        out6: null
+        var1: 0
+        out7: null
+        out8: null
+        out9: null
+        updatedAt: 0
+        var16: null
+        updatedBy: {}
+        originOrgId: 0
+        var12: null
+        var13: null
+        var14: null
+        var15: null
+        var10: null
+        matchIdempotentKey: null
+        var11: null
+        version: 0
+        deleted: 0
+        createdBy: {}
+        endTime: 0
+        out10: null
+    serviceKey: ERP_COND$GEN_MATCH_RECORD_MD_PAGING_QUERY_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_PAGING_EVENT_SERVICE:
+    params:
+      request:
+        fieldAlias: null
+        fieldName: null
+        dictValues: null
+        usageGroupId: {}
+        createdAt: 0
+        mainFieldKey: null
+        relatedModelName: null
+        isSearch: false
+        requestId: null
+        prop: null
+        relatedModelKey: null
+        id: 0
+        key: null
+        usageType: null
+        updatedAt: 0
+        mainFieldName: null
+        updatedBy: {}
+        originOrgId: 0
+        fieldKey: null
+        uniqueKey: null
+        modelAlias: null
+        sort: 0
+        version: 0
+        defValue: null
+        dataSourceName: null
+        modelKey: null
+        isShow: false
+        modelName: null
+        columnType: null
+        parentKey: null
+        deleted: 0
+        createdBy: {}
+        dataSourceServiceKey: null
+        fieldType: null
+    serviceKey: ERP_COND$GEN_ALLOW_PAGING_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_DELETE_EVENT_SERVICE:
+    params:
+      request:
+        fieldAlias: null
+        fieldName: null
+        dictValues: null
+        usageGroupId: {}
+        createdAt: 0
+        mainFieldKey: null
+        relatedModelName: null
+        isSearch: false
+        requestId: null
+        prop: null
+        relatedModelKey: null
+        id: 0
+        key: null
+        usageType: null
+        updatedAt: 0
+        mainFieldName: null
+        updatedBy: {}
+        originOrgId: 0
+        fieldKey: null
+        uniqueKey: null
+        modelAlias: null
+        sort: 0
+        version: 0
+        defValue: null
+        dataSourceName: null
+        modelKey: null
+        isShow: false
+        modelName: null
+        columnType: null
+        parentKey: null
+        deleted: 0
+        createdBy: {}
+        dataSourceServiceKey: null
+        fieldType: null
+    serviceKey: ERP_COND$GEN_ALLOW_FIELD_ITEM_DELETE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_MD_UPDATE_EVENT_SERVICE:
+    params:
+      request:
+        idempotentKey: null
+        var9: null
+        var8: 0
+        var7: 0
+        matchRecordCode: null
+        matchRecordMdCode: null
+        out2: 0
+        out3: 0
+        createdAt: 0
+        out4: 0
+        genMatchLadderMdJson: null
+        out5: null
+        conditionId: 0
+        matchRecordId: 0
+        requestId: null
+        out1: 0
+        var6: 0
+        var5: 0
+        var4: 0
+        startTime: 0
+        var3: 0
+        id: 0
+        var2: 0
+        out6: null
+        var1: 0
+        out7: null
+        out8: null
+        out9: null
+        updatedAt: 0
+        var16: null
+        updatedBy: {}
+        originOrgId: 0
+        var12: null
+        var13: null
+        var14: null
+        var15: null
+        var10: null
+        matchIdempotentKey: null
+        var11: null
+        version: 0
+        deleted: 0
+        createdBy: {}
+        endTime: 0
+        out10: null
+    serviceKey: ERP_COND$GEN_MATCH_RECORD_MD_UPDATE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_MD_SAME_CONDITION_QUERY_EVENT_SERVICE:
+    params:
+      request:
+        idempotentKey: null
+        var9: null
+        var8: 0
+        var7: 0
+        matchRecordCode: null
+        matchRecordMdCode: null
+        out2: 0
+        out3: 0
+        createdAt: 0
+        out4: 0
+        genMatchLadderMdJson: null
+        out5: null
+        conditionId: 0
+        matchRecordId: 0
+        requestId: null
+        out1: 0
+        var6: 0
+        var5: 0
+        var4: 0
+        startTime: 0
+        var3: 0
+        id: 0
+        var2: 0
+        out6: null
+        var1: 0
+        out7: null
+        out8: null
+        out9: null
+        updatedAt: 0
+        var16: null
+        updatedBy: {}
+        originOrgId: 0
+        var12: null
+        var13: null
+        var14: null
+        var15: null
+        var10: null
+        matchIdempotentKey: null
+        var11: null
+        version: 0
+        deleted: 0
+        createdBy: {}
+        endTime: 0
+        out10: null
+    serviceKey: ERP_COND$GEN_MATCH_RECORD_MD_SAME_CONDITION_QUERY_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_MODE_LIST_EVENT_SERVICE:
+    params:
+      request:
+        fieldAlias: null
+        fieldName: null
+        dictValues: null
+        usageGroupId: {}
+        createdAt: 0
+        mainFieldKey: null
+        relatedModelName: null
+        isSearch: false
+        requestId: null
+        prop: null
+        relatedModelKey: null
+        id: 0
+        key: null
+        usageType: null
+        updatedAt: 0
+        mainFieldName: null
+        updatedBy: {}
+        originOrgId: 0
+        fieldKey: null
+        uniqueKey: null
+        modelAlias: null
+        sort: 0
+        version: 0
+        defValue: null
+        dataSourceName: null
+        modelKey: null
+        isShow: false
+        modelName: null
+        columnType: null
+        parentKey: null
+        deleted: 0
+        createdBy: {}
+        dataSourceServiceKey: null
+        fieldType: null
+    serviceKey: ERP_COND$GEN_ALLOW_MODE_LIST_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_CREATE_MATCH_RECORD_DATA_EVENT_SERVICE:
+    params:
+      request:
+        registerId: 0
+    serviceKey: ERP_COND$GEN_CREATE_MATCH_RECORD_DATA_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_UPDATE_MATCH_RECORD_EVENT_SERVICE:
+    params:
+      request:
+        idempotentKey: null
+        var9: null
+        var8: 0
+        var7: 0
+        matchRecordCode: null
+        matchRecordMdCode: null
+        out2: 0
+        out3: 0
+        createdAt: 0
+        out4: 0
+        genMatchLadderMdJson: null
+        out5: null
+        conditionId: 0
+        matchRecordId: 0
+        requestId: null
+        out1: 0
+        var6: 0
+        var5: 0
+        var4: 0
+        startTime: 0
+        var3: 0
+        id: 0
+        var2: 0
+        out6: null
+        var1: 0
+        out7: null
+        out8: null
+        out9: null
+        updatedAt: 0
+        var16: null
+        updatedBy: {}
+        originOrgId: 0
+        var12: null
+        var13: null
+        var14: null
+        var15: null
+        var10: null
+        matchIdempotentKey: null
+        var11: null
+        version: 0
+        deleted: 0
+        createdBy: {}
+        endTime: 0
+        out10: null
+    serviceKey: ERP_COND$GEN_UPDATE_MATCH_RECORD_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_QUERY_CONDITION_DATA_LIST_EVENT_SERVICE:
+    params:
+      request:
+        registerId: 0
+        keyword: null
+    serviceKey: ERP_COND$GEN_QUERY_CONDITION_DATA_LIST_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_SAVE_ALLOW_FIELD_EVENT_SERVICE:
+    params:
+      request:
+        fieldAlias: null
+        fieldName: null
+        dictValues: null
+        usageGroupId: {}
+        createdAt: 0
+        mainFieldKey: null
+        relatedModelName: null
+        isSearch: false
+        requestId: null
+        prop: null
+        relatedModelKey: null
+        id: 0
+        key: null
+        usageType: null
+        updatedAt: 0
+        mainFieldName: null
+        updatedBy: {}
+        originOrgId: 0
+        fieldKey: null
+        uniqueKey: null
+        modelAlias: null
+        sort: 0
+        version: 0
+        defValue: null
+        dataSourceName: null
+        modelKey: null
+        isShow: false
+        modelName: null
+        columnType: null
+        parentKey: null
+        deleted: 0
+        createdBy: {}
+        dataSourceServiceKey: null
+        fieldType: null
+    serviceKey: ERP_COND$GEN_SAVE_ALLOW_FIELD_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_QUERY_LIST_BY_KEY_EVENT_SERVICE:
+    params:
+      request:
+        fieldAlias: null
+        fieldName: null
+        dictValues: null
+        usageGroupId: {}
+        createdAt: 0
+        mainFieldKey: null
+        relatedModelName: null
+        isSearch: false
+        requestId: null
+        prop: null
+        relatedModelKey: null
+        id: 0
+        key: null
+        usageType: null
+        updatedAt: 0
+        mainFieldName: null
+        updatedBy: {}
+        originOrgId: 0
+        fieldKey: null
+        uniqueKey: null
+        modelAlias: null
+        sort: 0
+        version: 0
+        defValue: null
+        dataSourceName: null
+        modelKey: null
+        isShow: false
+        modelName: null
+        columnType: null
+        parentKey: null
+        deleted: 0
+        createdBy: {}
+        dataSourceServiceKey: null
+        fieldType: null
+    serviceKey: ERP_COND$GEN_ALLOW_FIELD_ITEM_QUERY_LIST_BY_KEY_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_BATCH_SAVE_EVENT_SERVICE:
+    params:
+      request:
+        fieldAlias: null
+        fieldName: null
+        dictValues: null
+        usageGroupId: {}
+        createdAt: 0
+        mainFieldKey: null
+        relatedModelName: null
+        isSearch: false
+        requestId: null
+        prop: null
+        relatedModelKey: null
+        id: 0
+        key: null
+        usageType: null
+        updatedAt: 0
+        mainFieldName: null
+        updatedBy: {}
+        originOrgId: 0
+        fieldKey: null
+        uniqueKey: null
+        modelAlias: null
+        sort: 0
+        version: 0
+        defValue: null
+        dataSourceName: null
+        modelKey: null
+        isShow: false
+        modelName: null
+        columnType: null
+        parentKey: null
+        deleted: 0
+        createdBy: {}
+        dataSourceServiceKey: null
+        fieldType: null
+    serviceKey: ERP_COND$GEN_ALLOW_FIELD_ITEM_BATCH_SAVE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_BATCH_DELETE_MATCH_RECORD_EVENT_SERVICE:
+    params:
+      request:
+        idempotentKey: null
+        var9: null
+        var8: 0
+        var7: 0
+        matchRecordCode: null
+        matchRecordMdCode: null
+        out2: 0
+        out3: 0
+        createdAt: 0
+        out4: 0
+        genMatchLadderMdJson: null
+        out5: null
+        conditionId: 0
+        matchRecordId: 0
+        requestId: null
+        out1: 0
+        var6: 0
+        var5: 0
+        var4: 0
+        startTime: 0
+        var3: 0
+        id: 0
+        var2: 0
+        out6: null
+        var1: 0
+        out7: null
+        out8: null
+        out9: null
+        updatedAt: 0
+        var16: null
+        updatedBy: {}
+        originOrgId: 0
+        var12: null
+        var13: null
+        var14: null
+        var15: null
+        var10: null
+        matchIdempotentKey: null
+        var11: null
+        version: 0
+        deleted: 0
+        createdBy: {}
+        endTime: 0
+        out10: null
+    serviceKey: ERP_COND$GEN_BATCH_DELETE_MATCH_RECORD_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_LADDER_MD_SAVE_EVENT_SERVICE:
+    params:
+      request:
+        idempotentKey: null
+        var9: null
+        var8: 0
+        var7: 0
+        matchRecordCode: null
+        matchRecordMdCode: null
+        out2: 0
+        out3: 0
+        createdAt: 0
+        out4: 0
+        genMatchLadderMdJson: null
+        out5: null
+        conditionId: 0
+        matchRecordId: 0
+        requestId: null
+        out1: 0
+        var6: 0
+        var5: 0
+        var4: 0
+        startTime: 0
+        var3: 0
+        id: 0
+        var2: 0
+        out6: null
+        var1: 0
+        out7: null
+        out8: null
+        out9: null
+        updatedAt: 0
+        var16: null
+        updatedBy: {}
+        originOrgId: 0
+        var12: null
+        var13: null
+        var14: null
+        var15: null
+        var10: null
+        matchIdempotentKey: null
+        var11: null
+        version: 0
+        deleted: 0
+        createdBy: {}
+        endTime: 0
+        out10: null
+    serviceKey: ERP_COND$GEN_LADDER_MD_SAVE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_HEAD_DELETE_EVENT_SERVICE:
+    params:
+      request:
+        ladderUnitModelFieldKey: null
+        updatedBy: {}
+        originOrgId: 0
+        ladderModelFieldKey: null
+        matchRecordKeyword: null
+        ladderType: null
+        ladderClassType: null
+        matchRecordCode: null
+        importKey: null
+        version: 0
+        usageGroupId: {}
+        idempotent: null
+        enabledImport: false
+        importTemplate: null
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        id: 0
+        usageType: null
+        desc: null
+        matchRecordType: null
+        updatedAt: 0
+    serviceKey: ERP_COND$GEN_MATCH_RECORD_HEAD_DELETE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_RULE_ENGINE_CREATE_EVENT_SERVICE:
+    params:
+      request:
+        fieldAlias: null
+        fieldName: null
+        dictValues: null
+        usageGroupId: {}
+        createdAt: 0
+        mainFieldKey: null
+        relatedModelName: null
+        isSearch: false
+        requestId: null
+        prop: null
+        relatedModelKey: null
+        id: 0
+        key: null
+        usageType: null
+        updatedAt: 0
+        mainFieldName: null
+        updatedBy: {}
+        originOrgId: 0
+        fieldKey: null
+        uniqueKey: null
+        modelAlias: null
+        sort: 0
+        version: 0
+        defValue: null
+        dataSourceName: null
+        modelKey: null
+        isShow: false
+        modelName: null
+        columnType: null
+        parentKey: null
+        deleted: 0
+        createdBy: {}
+        dataSourceServiceKey: null
+        fieldType: null
+    serviceKey: ERP_COND$GEN_RULE_ENGINE_CREATE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_SAVE_MATCH_SEQ_EVENT_SERVICE:
+    params:
+      request:
+        seqItemList:
+        - {}
+        updatedBy: {}
+        originOrgId: 0
+        version: 0
+        usageGroupId: {}
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        id: 0
+        matchSeqCode: null
+        usageType: null
+        desc: null
+        updatedAt: 0
+    serviceKey: ERP_COND$GEN_SAVE_MATCH_SEQ_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_CLEAR_CACHE_MATCH_SEQ_EVENT_SERVICE:
+    params:
+      request:
+        seqItemList:
+        - {}
+        updatedBy: {}
+        originOrgId: 0
+        version: 0
+        usageGroupId: {}
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        id: 0
+        matchSeqCode: null
+        usageType: null
+        desc: null
+        updatedAt: 0
+    serviceKey: ERP_COND$GEN_CLEAR_CACHE_MATCH_SEQ_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_LIST_EVENT_SERVICE:
+    params:
+      request:
+        fieldAlias: null
+        fieldName: null
+        dictValues: null
+        usageGroupId: {}
+        createdAt: 0
+        mainFieldKey: null
+        relatedModelName: null
+        isSearch: false
+        requestId: null
+        prop: null
+        relatedModelKey: null
+        id: 0
+        key: null
+        usageType: null
+        updatedAt: 0
+        mainFieldName: null
+        updatedBy: {}
+        originOrgId: 0
+        fieldKey: null
+        uniqueKey: null
+        modelAlias: null
+        sort: 0
+        version: 0
+        defValue: null
+        dataSourceName: null
+        modelKey: null
+        isShow: false
+        modelName: null
+        columnType: null
+        parentKey: null
+        deleted: 0
+        createdBy: {}
+        dataSourceServiceKey: null
+        fieldType: null
+    serviceKey: ERP_COND$GEN_ALLOW_FIELD_LIST_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_PAGING_EVENT_SERVICE:
+    params:
+      request:
+        fieldAlias: null
+        fieldName: null
+        dictValues: null
+        usageGroupId: {}
+        createdAt: 0
+        mainFieldKey: null
+        relatedModelName: null
+        isSearch: false
+        requestId: null
+        prop: null
+        relatedModelKey: null
+        id: 0
+        key: null
+        usageType: null
+        updatedAt: 0
+        mainFieldName: null
+        updatedBy: {}
+        originOrgId: 0
+        fieldKey: null
+        uniqueKey: null
+        modelAlias: null
+        sort: 0
+        version: 0
+        defValue: null
+        dataSourceName: null
+        modelKey: null
+        isShow: false
+        modelName: null
+        columnType: null
+        parentKey: null
+        deleted: 0
+        createdBy: {}
+        dataSourceServiceKey: null
+        fieldType: null
+    serviceKey: ERP_COND$GEN_ALLOW_FIELD_ITEM_PAGING_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_CREATE_MATCH_RECORD_HEAD_EVENT_SERVICE:
+    params:
+      request:
+        ladderUnitModelFieldKey: null
+        updatedBy: {}
+        originOrgId: 0
+        ladderModelFieldKey: null
+        matchRecordKeyword: null
+        ladderType: null
+        ladderClassType: null
+        matchRecordCode: null
+        importKey: null
+        version: 0
+        usageGroupId: {}
+        idempotent: null
+        enabledImport: false
+        importTemplate: null
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        id: 0
+        usageType: null
+        desc: null
+        matchRecordType: null
+        updatedAt: 0
+    serviceKey: ERP_COND$GEN_CREATE_MATCH_RECORD_HEAD_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_HEAD_UPDATE_EVENT_SERVICE:
+    params:
+      request:
+        ladderUnitModelFieldKey: null
+        updatedBy: {}
+        originOrgId: 0
+        ladderModelFieldKey: null
+        matchRecordKeyword: null
+        ladderType: null
+        ladderClassType: null
+        matchRecordCode: null
+        importKey: null
+        version: 0
+        usageGroupId: {}
+        idempotent: null
+        enabledImport: false
+        importTemplate: null
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        id: 0
+        usageType: null
+        desc: null
+        matchRecordType: null
+        updatedAt: 0
+    serviceKey: ERP_COND$GEN_MATCH_RECORD_HEAD_UPDATE_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_RULE_ENGINE_QUERY_ALL_FACTOR_EVENT_SERVICE:
+    params:
+      request:
+        fieldAlias: null
+        fieldName: null
+        dictValues: null
+        usageGroupId: {}
+        createdAt: 0
+        mainFieldKey: null
+        relatedModelName: null
+        isSearch: false
+        requestId: null
+        prop: null
+        relatedModelKey: null
+        id: 0
+        key: null
+        usageType: null
+        updatedAt: 0
+        mainFieldName: null
+        updatedBy: {}
+        originOrgId: 0
+        fieldKey: null
+        uniqueKey: null
+        modelAlias: null
+        sort: 0
+        version: 0
+        defValue: null
+        dataSourceName: null
+        modelKey: null
+        isShow: false
+        modelName: null
+        columnType: null
+        parentKey: null
+        deleted: 0
+        createdBy: {}
+        dataSourceServiceKey: null
+        fieldType: null
+    serviceKey: ERP_COND$GEN_RULE_ENGINE_QUERY_ALL_FACTOR_EVENT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_COPY_DATA_CONVERTER_SERVICE:
+    params:
+      request:
+        id: 0
+    serviceKey: ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_COPY_DATA_CONVERTER_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SCHEME_CF_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: ERP_COND$GEN_MATCH_SCHEME_CF_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_DELETE_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        usageGroupCode: null
+        version: 0
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        usageGroupName: null
+        id: 0
+        usageType: null
+        desc: null
+        updatedAt: 0
+    serviceKey: ERP_COND$GEN_USAGE_GROUP_CF_DELETE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SCHEME_CF_COPY_DATA_CONVERTER_SERVICE:
+    params:
+      request:
+        id: 0
+    serviceKey: ERP_COND$GEN_MATCH_SCHEME_CF_COPY_DATA_CONVERTER_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_COPY_DATA_CONVERTER_SERVICE_CHILD:
+    params:
+      request:
+        id: null
+      modelKey: null
+    serviceKey: ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+  /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: ERP_COND$GEN_USAGE_GROUP_CF_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_MASTER_DATA_MULTI_ENABLE_DATA_SERVICE:
+    params:
+      request:
+        ids:
+        - 0
+    serviceKey: ERP_COND$GEN_MATCH_SEQ_HEAD_CF_MASTER_DATA_MULTI_ENABLE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$new_allowed_field_save_service:
+    params:
+      request:
+        fieldAlias: null
+        fieldName: null
+        dictValues: null
+        usageGroupId: {}
+        createdAt: 0
+        mainFieldKey: null
+        relatedModelName: null
+        isSearch: false
+        requestId: null
+        prop: null
+        relatedModelKey: null
+        id: 0
+        key: null
+        usageType: null
+        updatedAt: 0
+        mainFieldName: null
+        updatedBy: {}
+        originOrgId: 0
+        fieldKey: null
+        uniqueKey: null
+        modelAlias: null
+        sort: 0
+        version: 0
+        defValue: null
+        dataSourceName: null
+        modelKey: null
+        isShow: false
+        modelName: null
+        columnType: null
+        parentKey: null
+        deleted: 0
+        createdBy: {}
+        dataSourceServiceKey: null
+        fieldType: null
+    serviceKey: ERP_COND$new_allowed_field_save_service
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_PAGING_DATA_SERVICE_oyQmuH1:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+        usageGroupId: 0
+    serviceKey: ERP_COND$GEN_MATCH_SEQ_HEAD_CF_PAGING_DATA_SERVICE_oyQmuH1
+  /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_PAGING_DATA_SERVICE_oyQmuH3:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+        usageType: null
+    serviceKey: ERP_COND$GEN_USAGE_GROUP_CF_PAGING_DATA_SERVICE_oyQmuH3
+  /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_PAGING_DATA_SERVICE_oyQmuH2:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: ERP_COND$GEN_USAGE_GROUP_CF_PAGING_DATA_SERVICE_oyQmuH2
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_BATCH_DELETE_DATA_SERVICE:
+    params:
+      request:
+        ids:
+        - 0
+    serviceKey: ERP_COND$GEN_MATCH_SEQ_HEAD_CF_BATCH_DELETE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_DELETE_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        seqItemList:
+        - {}
+        updatedBy: {}
+        originOrgId: 0
+        version: 0
+        usageGroupId: {}
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        id: 0
+        matchSeqCode: null
+        usageType: null
+        desc: null
+        updatedAt: 0
+    serviceKey: ERP_COND$GEN_MATCH_SEQ_HEAD_CF_DELETE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SCHEME_CF_MASTER_DATA_SAVE_DATA_SERVICE:
+    params:
+      request:
+        matchSchemeCode: null
+        updatedBy: {}
+        originOrgId: 0
+        matchSeqId: {}
+        version: 0
+        isPriority: false
+        matchSchemeName: null
+        createdAt: 0
+        deleted: 0
+        matchRecordId: {}
+        createdBy: {}
+        requestId: null
+        id: 0
+        desc: null
+        updatedAt: 0
+    serviceKey: ERP_COND$GEN_MATCH_SCHEME_CF_MASTER_DATA_SAVE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: ERP_COND$GEN_MATCH_SEQ_HEAD_CF_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: ERP_COND$GEN_MATCH_SEQ_HEAD_CF_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SCHEME_CF_FIND_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        matchSchemeCode: null
+        updatedBy: {}
+        originOrgId: 0
+        matchSeqId: {}
+        version: 0
+        isPriority: false
+        matchSchemeName: null
+        createdAt: 0
+        deleted: 0
+        matchRecordId: {}
+        createdBy: {}
+        requestId: null
+        id: 0
+        desc: null
+        updatedAt: 0
+    serviceKey: ERP_COND$GEN_MATCH_SCHEME_CF_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: ERP_COND$GEN_MATCH_SEQ_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_MASTER_DATA_SAVE_DATA_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        usageGroupCode: null
+        version: 0
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        usageGroupName: null
+        id: 0
+        usageType: null
+        desc: null
+        updatedAt: 0
+    serviceKey: ERP_COND$GEN_USAGE_GROUP_CF_MASTER_DATA_SAVE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SCHEME_CF_FIND_SINGLE_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        matchSchemeCode: null
+        updatedBy: {}
+        originOrgId: 0
+        matchSeqId: {}
+        version: 0
+        isPriority: false
+        matchSchemeName: null
+        createdAt: 0
+        deleted: 0
+        matchRecordId: {}
+        createdBy: {}
+        requestId: null
+        id: 0
+        desc: null
+        updatedAt: 0
+    serviceKey: ERP_COND$GEN_MATCH_SCHEME_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_FIND_SINGLE_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        seqItemList:
+        - {}
+        updatedBy: {}
+        originOrgId: 0
+        version: 0
+        usageGroupId: {}
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        id: 0
+        matchSeqCode: null
+        usageType: null
+        desc: null
+        updatedAt: 0
+    serviceKey: ERP_COND$GEN_MATCH_SEQ_HEAD_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      sheetConfig: {}
+      fileName: null
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      fileKey: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      relationFieldConvert: false
+      service: null
+      modelMainField: null
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: ERP_COND$GEN_MATCH_SEQ_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/ERP_COND$allow_field_delete:
+    params:
+      request:
+        fieldAlias: null
+        fieldName: null
+        dictValues: null
+        usageGroupId: {}
+        createdAt: 0
+        mainFieldKey: null
+        relatedModelName: null
+        isSearch: false
+        requestId: null
+        prop: null
+        relatedModelKey: null
+        id: 0
+        key: null
+        usageType: null
+        updatedAt: 0
+        mainFieldName: null
+        updatedBy: {}
+        originOrgId: 0
+        fieldKey: null
+        uniqueKey: null
+        modelAlias: null
+        sort: 0
+        version: 0
+        defValue: null
+        dataSourceName: null
+        modelKey: null
+        isShow: false
+        modelName: null
+        columnType: null
+        parentKey: null
+        deleted: 0
+        createdBy: {}
+        dataSourceServiceKey: null
+        fieldType: null
+    serviceKey: ERP_COND$allow_field_delete
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_HEAD_CF_FIND_SINGLE_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        ladderUnitModelFieldKey: null
+        updatedBy: {}
+        originOrgId: 0
+        ladderModelFieldKey: null
+        matchRecordKeyword: null
+        ladderType: null
+        ladderClassType: null
+        matchRecordCode: null
+        importKey: null
+        version: 0
+        usageGroupId: {}
+        idempotent: null
+        enabledImport: false
+        importTemplate: null
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        id: 0
+        usageType: null
+        desc: null
+        matchRecordType: null
+        updatedAt: 0
+    serviceKey: ERP_COND$GEN_MATCH_RECORD_HEAD_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_COPY_DATA_CONVERTER_SERVICE:
+    params:
+      request:
+        id: 0
+    serviceKey: ERP_COND$GEN_USAGE_GROUP_CF_COPY_DATA_CONVERTER_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_LIST__SERVICE:
+    params:
+      request:
+        useGroupId: 0
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+        modelKey: null
+    serviceKey: ERP_COND$GEN_ALLOW_FIELD_ITEM_LIST__SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_COPY_DATA_CONVERTER_SERVICE:
+    params:
+      request:
+        id: 0
+    serviceKey: ERP_COND$GEN_MATCH_SEQ_HEAD_CF_COPY_DATA_CONVERTER_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_VO_FIND_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        modelName: null
+        fieldAlias: null
+        fieldName: null
+        fieldKey: null
+        modelAlias: null
+        express: null
+        id: 0
+        fieldType: null
+        modelKey: null
+        usageGroupId: {}
+    serviceKey: ERP_COND$GEN_ALLOW_FIELD_ITEM_VO_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_GEI_IMPORT_SERVICE:
+    params:
+      request:
+        sliceData:
+        - {}
+        context:
+          importMode: null
+    serviceKey: ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_GEI_IMPORT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$allow_mode_select_service:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: ERP_COND$allow_mode_select_service
+  /api/trantor/service/engine/execute/ERP_COND$allow_select_model_render_service:
+    params:
+      request:
+        fieldAlias: null
+        fieldName: null
+        dictValues: null
+        usageGroupId: {}
+        mainFieldKey: null
+        relatedModelName: null
+        isSearch: false
+        prop: null
+        relatedModelKey: null
+        id: null
+        key: null
+        usageType: null
+        mainFieldName: null
+        fieldKey: null
+        uniqueKey: null
+        modelAlias: null
+        defValue: null
+        dataSourceName: null
+        modelKey: null
+        isShow: false
+        modelName: null
+        columnType: null
+        parentKey: null
+        otherColumns:
+        - {}
+        dataSourceServiceKey: null
+        fieldType: null
+    serviceKey: ERP_COND$allow_select_model_render_service
+  /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_DELETE_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        fieldAlias: null
+        fieldName: null
+        dictValues: null
+        usageGroupId: {}
+        createdAt: 0
+        mainFieldKey: null
+        relatedModelName: null
+        isSearch: false
+        requestId: null
+        prop: null
+        relatedModelKey: null
+        id: 0
+        key: null
+        usageType: null
+        updatedAt: 0
+        mainFieldName: null
+        updatedBy: {}
+        originOrgId: 0
+        fieldKey: null
+        uniqueKey: null
+        modelAlias: null
+        sort: 0
+        version: 0
+        defValue: null
+        dataSourceName: null
+        modelKey: null
+        isShow: false
+        modelName: null
+        columnType: null
+        parentKey: null
+        deleted: 0
+        createdBy: {}
+        dataSourceServiceKey: null
+        fieldType: null
+    serviceKey: ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_DELETE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_MASTER_DATA_MULTI_DISABLE_DATA_SERVICE:
+    params:
+      request:
+        ids:
+        - 0
+    serviceKey: ERP_COND$GEN_MATCH_SEQ_HEAD_CF_MASTER_DATA_MULTI_DISABLE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOWD_MODEL_SELECT_VO_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: ERP_COND$GEN_ALLOWD_MODEL_SELECT_VO_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
+    params:
+      sheetConfig: {}
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      service: null
+      modelMainField: null
+      queryData: {}
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: ERP_COND$GEN_USAGE_GROUP_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/ERP_COND$allow_field_model_delete:
+    params:
+      request:
+        fieldAlias: null
+        fieldName: null
+        dictValues: null
+        usageGroupId: {}
+        createdAt: 0
+        mainFieldKey: null
+        relatedModelName: null
+        isSearch: false
+        requestId: null
+        prop: null
+        relatedModelKey: null
+        id: 0
+        key: null
+        usageType: null
+        updatedAt: 0
+        mainFieldName: null
+        updatedBy: {}
+        originOrgId: 0
+        fieldKey: null
+        uniqueKey: null
+        modelAlias: null
+        sort: 0
+        version: 0
+        defValue: null
+        dataSourceName: null
+        modelKey: null
+        isShow: false
+        modelName: null
+        columnType: null
+        parentKey: null
+        deleted: 0
+        createdBy: {}
+        dataSourceServiceKey: null
+        fieldType: null
+    serviceKey: ERP_COND$allow_field_model_delete
+  /api/trantor/service/engine/execute/ERP_COND$allow_field_view_detail_service:
+    params:
+      request:
+        fieldAlias: null
+        fieldName: null
+        dictValues: null
+        usageGroupId: {}
+        createdAt: 0
+        mainFieldKey: null
+        relatedModelName: null
+        isSearch: false
+        requestId: null
+        prop: null
+        relatedModelKey: null
+        id: 0
+        key: null
+        usageType: null
+        updatedAt: 0
+        mainFieldName: null
+        updatedBy: {}
+        originOrgId: 0
+        fieldKey: null
+        uniqueKey: null
+        modelAlias: null
+        sort: 0
+        version: 0
+        defValue: null
+        dataSourceName: null
+        modelKey: null
+        isShow: false
+        modelName: null
+        columnType: null
+        parentKey: null
+        deleted: 0
+        createdBy: {}
+        dataSourceServiceKey: null
+        fieldType: null
+    serviceKey: ERP_COND$allow_field_view_detail_service
+  /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_FIND_TREE_CHILDREN_DATA_SERVICE:
+    params:
+      request: {}
+    serviceKey: ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_FIND_TREE_CHILDREN_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      sheetConfig: {}
+      fileName: null
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      fileKey: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      relationFieldConvert: false
+      service: null
+      modelMainField: null
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: ERP_COND$GEN_USAGE_GROUP_CF_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_COPY_DATA_CONVERTER_SERVICE_CHILD:
+    params:
+      request:
+        id: null
+      modelKey: null
+    serviceKey: ERP_COND$GEN_USAGE_GROUP_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_MASTER_DATA_ENABLE_DATA_SERVICE:
+    params:
+      request:
+        seqItemList:
+        - {}
+        updatedBy: {}
+        originOrgId: 0
+        version: 0
+        usageGroupId: {}
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        id: 0
+        matchSeqCode: null
+        usageType: null
+        desc: null
+        updatedAt: 0
+    serviceKey: ERP_COND$GEN_MATCH_SEQ_HEAD_CF_MASTER_DATA_ENABLE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_MASTER_DATA_SAVE_DATA_SERVICE:
+    params:
+      request:
+        seqItemList:
+        - {}
+        updatedBy: {}
+        originOrgId: 0
+        version: 0
+        usageGroupId: {}
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        id: 0
+        matchSeqCode: null
+        usageType: null
+        desc: null
+        updatedAt: 0
+    serviceKey: ERP_COND$GEN_MATCH_SEQ_HEAD_CF_MASTER_DATA_SAVE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_MASTER_DATA_SAVE_DATA_SERVICE:
+    params:
+      request:
+        fieldAlias: null
+        fieldName: null
+        dictValues: null
+        usageGroupId: {}
+        createdAt: 0
+        mainFieldKey: null
+        relatedModelName: null
+        isSearch: false
+        requestId: null
+        prop: null
+        relatedModelKey: null
+        id: 0
+        key: null
+        usageType: null
+        updatedAt: 0
+        mainFieldName: null
+        updatedBy: {}
+        originOrgId: 0
+        fieldKey: null
+        uniqueKey: null
+        modelAlias: null
+        sort: 0
+        version: 0
+        defValue: null
+        dataSourceName: null
+        modelKey: null
+        isShow: false
+        modelName: null
+        columnType: null
+        parentKey: null
+        deleted: 0
+        createdBy: {}
+        dataSourceServiceKey: null
+        fieldType: null
+    serviceKey: ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_MASTER_DATA_SAVE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_FIND_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        fieldAlias: null
+        fieldName: null
+        dictValues: null
+        usageGroupId: {}
+        createdAt: 0
+        mainFieldKey: null
+        relatedModelName: null
+        isSearch: false
+        requestId: null
+        prop: null
+        relatedModelKey: null
+        id: 0
+        key: null
+        usageType: null
+        updatedAt: 0
+        mainFieldName: null
+        updatedBy: {}
+        originOrgId: 0
+        fieldKey: null
+        uniqueKey: null
+        modelAlias: null
+        sort: 0
+        version: 0
+        defValue: null
+        dataSourceName: null
+        modelKey: null
+        isShow: false
+        modelName: null
+        columnType: null
+        parentKey: null
+        deleted: 0
+        createdBy: {}
+        dataSourceServiceKey: null
+        fieldType: null
+    serviceKey: ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_FIND_SINGLE_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        usageGroupCode: null
+        version: 0
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        usageGroupName: null
+        id: 0
+        usageType: null
+        desc: null
+        updatedAt: 0
+    serviceKey: ERP_COND$GEN_USAGE_GROUP_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_GEI_EXPORT_SERVICE:
+    params:
+      request: {}
+      selectFields:
+      - {}
+      modelKey: null
+    serviceKey: ERP_COND$GEN_MATCH_SEQ_HEAD_CF_GEI_EXPORT_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_HEAD_CF_PAGING_DATA_SERVICE_oyQmuH4:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+        usageGroupId: 0
+    serviceKey: ERP_COND$GEN_MATCH_RECORD_HEAD_CF_PAGING_DATA_SERVICE_oyQmuH4
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_HEAD_CF_FIND_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        ladderUnitModelFieldKey: null
+        updatedBy: {}
+        originOrgId: 0
+        ladderModelFieldKey: null
+        matchRecordKeyword: null
+        ladderType: null
+        ladderClassType: null
+        matchRecordCode: null
+        importKey: null
+        version: 0
+        usageGroupId: {}
+        idempotent: null
+        enabledImport: false
+        importTemplate: null
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        id: 0
+        usageType: null
+        desc: null
+        matchRecordType: null
+        updatedAt: 0
+    serviceKey: ERP_COND$GEN_MATCH_RECORD_HEAD_CF_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_PAGING_DATA_SERVICE:
+    params:
+      request:
+        usageGroupCode: null
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$gen_condition_rule_model_source:
+    params:
+      modelKey: null
+    serviceKey: ERP_COND$gen_condition_rule_model_source
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_FIND_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        seqItemList:
+        - {}
+        updatedBy: {}
+        originOrgId: 0
+        version: 0
+        usageGroupId: {}
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        id: 0
+        matchSeqCode: null
+        usageType: null
+        desc: null
+        updatedAt: 0
+    serviceKey: ERP_COND$GEN_MATCH_SEQ_HEAD_CF_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_MASTER_DATA_DISABLE_DATA_SERVICE:
+    params:
+      request:
+        seqItemList:
+        - {}
+        updatedBy: {}
+        originOrgId: 0
+        version: 0
+        usageGroupId: {}
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        id: 0
+        matchSeqCode: null
+        usageType: null
+        desc: null
+        updatedAt: 0
+    serviceKey: ERP_COND$GEN_MATCH_SEQ_HEAD_CF_MASTER_DATA_DISABLE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$allow_select_field_service:
+    params:
+      request:
+        modelName: null
+        children:
+        - {}
+        modelKey: null
+    serviceKey: ERP_COND$allow_select_field_service
+  /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_SAVE_DATA_SERVICE:
+    params:
+      request:
+        fieldAlias: null
+        fieldName: null
+        dictValues: null
+        usageGroupId: {}
+        createdAt: 0
+        mainFieldKey: null
+        relatedModelName: null
+        isSearch: false
+        requestId: null
+        prop: null
+        relatedModelKey: null
+        id: 0
+        key: null
+        usageType: null
+        updatedAt: 0
+        mainFieldName: null
+        updatedBy: {}
+        originOrgId: 0
+        fieldKey: null
+        uniqueKey: null
+        modelAlias: null
+        sort: 0
+        version: 0
+        defValue: null
+        dataSourceName: null
+        modelKey: null
+        isShow: false
+        modelName: null
+        columnType: null
+        parentKey: null
+        deleted: 0
+        createdBy: {}
+        dataSourceServiceKey: null
+        fieldType: null
+    serviceKey: ERP_COND$GEN_ALLOW_FIELD_ITEM_CF_SAVE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SEQ_HEAD_CF_COPY_DATA_CONVERTER_SERVICE_CHILD:
+    params:
+      request:
+        id: null
+      modelKey: null
+    serviceKey: ERP_COND$GEN_MATCH_SEQ_HEAD_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+  /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_BATCH_DELETE_DATA_SERVICE:
+    params:
+      request:
+        ids:
+        - 0
+    serviceKey: ERP_COND$GEN_USAGE_GROUP_CF_BATCH_DELETE_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: ERP_COND$GEN_USAGE_GROUP_CF_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SCHEME_CF_PAGING_DATA_SERVICE_oyQmuH1:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: ERP_COND$GEN_MATCH_SCHEME_CF_PAGING_DATA_SERVICE_oyQmuH1
+  /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST:
+    params:
+      sheetConfig: {}
+      fileName: null
+      sliceSize: 0
+      repeatDataStrategy: null
+      processConfig: {}
+      errStrategy: null
+      fileKey: null
+      appCode: null
+      templateId: 0
+      mergeData: false
+      multiSheetConfig:
+      - {}
+      taskCode: null
+      relationFieldConvert: false
+      service: null
+      modelMainField: null
+      selfRelationModelField: null
+      headerSelectiveRecord: {}
+      namespace: null
+      taskName: null
+      selfRelationModel: false
+    serviceKey: ERP_COND$GEN_USAGE_GROUP_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SCHEME_CF_DELETE_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        matchSchemeCode: null
+        updatedBy: {}
+        originOrgId: 0
+        matchSeqId: {}
+        version: 0
+        isPriority: false
+        matchSchemeName: null
+        createdAt: 0
+        deleted: 0
+        matchRecordId: {}
+        createdBy: {}
+        requestId: null
+        id: 0
+        desc: null
+        updatedAt: 0
+    serviceKey: ERP_COND$GEN_MATCH_SCHEME_CF_DELETE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_RECORD_HEAD_CF_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: ERP_COND$GEN_MATCH_RECORD_HEAD_CF_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_USAGE_GROUP_CF_FIND_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        originOrgId: 0
+        usageGroupCode: null
+        version: 0
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        requestId: null
+        usageGroupName: null
+        id: 0
+        usageType: null
+        desc: null
+        updatedAt: 0
+    serviceKey: ERP_COND$GEN_USAGE_GROUP_CF_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SCHEME_CF_COPY_DATA_CONVERTER_SERVICE_CHILD:
+    params:
+      request:
+        id: null
+      modelKey: null
+    serviceKey: ERP_COND$GEN_MATCH_SCHEME_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+  /api/trantor/service/engine/execute/ERP_COND$GEN_ALLOW_FIELD_ITEM_VO_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: ERP_COND$GEN_ALLOW_FIELD_ITEM_VO_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/ERP_COND$GEN_MATCH_SCHEME_CF_BATCH_DELETE_DATA_SERVICE:
+    params:
+      request:
+        ids:
+        - 0
+    serviceKey: ERP_COND$GEN_MATCH_SCHEME_CF_BATCH_DELETE_DATA_SERVICE
