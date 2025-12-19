@@ -4,6 +4,7 @@
 包含：基于应收单生成销售发票、应收单转化销售发票、发票钩稽、发票自动钩稽等业务功能测试
 """
 
+from re import S
 import allure
 import pytest
 import sys
@@ -38,9 +39,9 @@ class TestSbBusinessFunction(FinBaseTest):
         smoke=False,
         tags=["销售发票", "生成"]
     )
-    def test_create_sb_by_ar(self):
+    def test_create_sb_by_ar_batch(self):
         """
-        测试基于应收单生成销售发票
+        测试基于应收单生成销售发票(批量操作)
         """
         try:
             # 1. 创建应收单并获取应收单行项ID列表
@@ -92,20 +93,19 @@ class TestSbBusinessFunction(FinBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-
     
     @case_decorator(
         story="销售发票钩稽",
-        title="测试销售发票钩稽",
+        title="测试销售发票钩稽",   
         description="验证销售发票的钩稽功能，自动匹配对应应收单进行钩稽",
         severity="normal",
         file_level_order=2,
         smoke=False,
         tags=["销售发票", "钩稽"]
     )
-    def test_query_sb_clearing(self):
+    def test_sb_clearing(self):
         """
-        测试销售发票钩稽查询
+        测试销售发票钩稽
         测试方面：
         1. 钩稽明细查询（查询发票与应收单的钩稽明细记录）
         2. 钩稽金额统计（已钩稽金额、未钩稽金额、部分钩稽金额等）
@@ -114,8 +114,128 @@ class TestSbBusinessFunction(FinBaseTest):
         5. 钩稽历史记录（查询发票的所有钩稽历史记录）
         """
         try:
-            pass
-  
+            #获取已完成状态的应收单
+            ar_doc_data = self.create_ar_doc(ar_type="STND", org=1, status="DONE")
+            #通过行操作生成销售发票
+            api_path = self.get_api_path("应收单-行操作-应收单转化销售发票保存-异步服务")
+            params, url = self.get_api_params(api_path)
+            data = ParamUtil.filter_post_body_fields(params, ["biCode","docTypeId","id"], ["request"])
+            data["params"]["request"] = {
+                "biCode": self.mock_util.generate_unique_code("AUTO"),
+                "docTypeId": {"id": self.sb_type_info.get("STND").get("id")},
+                "id": ar_doc_data.get("id")
+            }
+            result = self.http.post(url, json=data, description=f"应收单行批量转化销售发票 - ID: {ar_doc_data.get('id')}")
+            self.assert_util.assert_response_success(result)
+            
+            def query_ar_status():
+                sql="""
+                select id,ar_head_code,async_execution_status ,async_execution_failure_reason,billed_doc_amt,billing_doc_amt,unbilled_doc_amt from fin_arm_ar_head_tr where id=%s limit 1;
+                """
+                sql_result = self.db.query(sql, (ar_doc_data.get("id"),))
+                if not sql_result:
+                    raise ValueError(f"应收单ID {ar_doc_data.get('id')} 未找到")
+                return sql_result[0]
+            
+            result = self.async_wait_util.wait_for_async_status(
+                query_func=query_ar_status,
+                status_field="async_execution_status",
+                success_status="SUCCEEDED",
+                failed_status="FAILED",
+                max_wait=10,
+                interval=0.5
+            )
+        
+            if result.status == self.wait_status.SUCCESS:
+                ar_data = result.last_data
+                self.assert_util.assert_by_operator(ar_data.get("billed_doc_amt"), "=", 0)
+                expect_str = f"{ar_data.get('billing_doc_amt'):.6f}"
+                actual_str = f"{ar_doc_data.get('grossDocAmt'):.6f}"
+                self.assert_util.assert_by_operator(expect_str, "=", actual_str)
+                self.assert_util.assert_by_operator(ar_data.get("unbilled_doc_amt"), "=", 0)
+            elif result.status == self.wait_status.FAILED:
+                raise ValueError(f"应收单ID {ar_doc_data.get('id')} 销售发票生成失败: {result.last_data.get('async_execution_failure_reason')}")
+            
+            #查询生成的销售发票头id
+            sql="""
+            select sb_head_code,tm_sb_head_tr_id from fin_tm_sb_item_tr where rel_doc_head_id=%s and deleted=0;
+            """
+            sql_result = self.db.query(sql, (ar_doc_data.get("id"),))
+            sb_head_id = sql_result[0].get("tm_sb_head_tr_id")
+            #调用销售发票过账服务，触发发票与应收单的自动钩稽
+            set_dict = {"id": sb_head_id}
+            fields_to_filter = ["id"]
+            response, _ = self.standard_api_call(
+                api_key="销售发票自动钩稽-异步服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            
+            result = self.async_wait_util.wait_for_async_status(
+                query_func=query_sb_status,
+                status_field="async_execution_status",
+                success_status="SUCCEEDED",
+                failed_status="FAILED",
+                max_wait=10,
+                interval=0.5
+            )
+            if result.status == self.wait_status.SUCCESS:
+                sb_data = result.last_data
+                self.assert_util.assert_by_operator(sb_data.get("async_execution_status"), "=", "SUCCEEDED")
+            elif result.status == self.wait_status.FAILED:
+                raise ValueError(f"销售发票头ID {sb_head_id} 自动钩稽失败: {result.last_data.get('async_execution_failure_reason')}")
+            
+            def query_sb_status():
+                sql="""
+                select * from fin_tm_sb_head_tr where id=%s;
+                """
+                sql_result = self.db.query(sql, (sb_head_id,))
+                if not sql_result:
+                    raise ValueError(f"销售发票头ID {sb_head_id} 未找到")
+                return sql_result[0]
+            
+            self.assert_util.assert_response_success(response)
+            #查询钩稽结果
+            ar_head_sql=f"""
+            select * from fin_arm_ar_head_tr where id={ar_doc_data.get("id")} ;
+            """
+            ar_item_sql=f"""
+            select * from fin_arm_ar_item_tr where arm_ar_head_tr_id ={ar_doc_data.get("id")} ;
+            """
+            ar_head_result = self.db.query(ar_head_sql)
+            ar_item_result = self.db.query(ar_item_sql)
+            #断言应收单头票钩稽状态、票钩稽金额、未钩稽金额，钩稽中金额字段
+            self.assert_util.assert_by_operator(ar_head_result[0].get("billed_doc_amt"), "=", ar_doc_data.get("grossDocAmt"))
+            self.assert_util.assert_by_operator(ar_head_result[0].get("billing_doc_amt"), "=", 0)
+            self.assert_util.assert_by_operator(ar_head_result[0].get("unbilled_doc_amt"), "=", 0)
+            self.assert_util.assert_by_operator(ar_item_result[0].get("billing_clearing_status"), "=", "CLEARED")
+            #断言应收单行钩稽状态、钩稽金额字段
+            self.assert_util.assert_by_operator(ar_item_result[0].get("item_clearing_status"), "=", "CLEARED")
+            self.assert_util.assert_by_operator(ar_item_result[0].get("cleared_doc_amt"), "=", ar_doc_data.get("grossDocAmt"))
+            self.assert_util.assert_by_operator(ar_item_result[0].get("clearing_doc_amt"), "=",0)
+            self.assert_util.assert_by_operator(ar_item_result[0].get("uncleared_doc_amt"), "=",0)
+                
+            #断言销售发票头票钩稽状态、钩稽金额字段
+            sb_head_sql=f"""
+            select * from fin_tm_sb_head_tr where id={sb_head_id} ;
+            """
+            sb_item_sql=f"""
+            select * from fin_tm_sb_item_tr where tm_sb_head_tr_id ={sb_head_id} ;
+            """
+            sb_head_result = self.db.query(sb_head_sql)
+            sb_item_result = self.db.query(sb_item_sql)
+            self.assert_util.assert_by_operator(sb_head_result[0].get("clearing_status"), "=", "CLEARED")
+            self.assert_util.assert_by_operator(sb_head_result[0].get("cleared_doc_amt"), "=", ar_doc_data.get("grossDocAmt"))
+            self.assert_util.assert_by_operator(sb_head_result[0].get("clearing_doc_amt"), "=",0)
+            self.assert_util.assert_by_operator(sb_head_result[0].get("uncleared_doc_amt"), "=",0)
+            #断言销售发票行钩稽状态、钩稽金额字段
+            self.assert_util.assert_by_operator(sb_item_result[0].get("item_clearing_status"), "=", "CLEARED")
+            self.assert_util.assert_by_operator(sb_item_result[0].get("cleared_doc_amt"), "=", ar_doc_data.get("grossDocAmt"))
+            self.assert_util.assert_by_operator(sb_item_result[0].get("clearing_doc_amt"), "=",0)
+            self.assert_util.assert_by_operator(sb_item_result[0].get("uncleared_doc_amt"), "=",0)
+                                    
+                                                             
+            
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -260,4 +380,4 @@ class TestSbBusinessFunction(FinBaseTest):
 if __name__ == "__main__":
     test = TestSbBusinessFunction()
     test.setup_class()
-    test.test_create_sb_by_ar()
+    test.test_sb_clearing()

@@ -501,9 +501,9 @@ class FinBaseTest(BaseTest):
             raise ValueError("应收单保存失败：未返回应收单ID")
         
         if status == "DONE":
-            self.db.update("fin_arm_ar_head_tr", {"ar_status":"DONE","async_execution_status":"SUCCEEDED"}, f"id='{extracted_id}'")
+            self.db.update("fin_arm_ar_head_tr", {"ar_status":"DONE"}, f"id='{extracted_id}'")
         elif status == "CONFIRM":
-            self.db.update("fin_arm_ar_head_tr", {"ar_status":"CONFIRM","async_execution_status":"SUCCEEDED"}, f"id='{extracted_id}'")
+            self.db.update("fin_arm_ar_head_tr", {"ar_status":"CONFIRM"}, f"id='{extracted_id}'")
         else:
             raise ValueError("status 参数错误，请输入 DRAFT, CONFIRM, DONE")
         return data
