@@ -5,6 +5,7 @@
 """
 
 from re import S
+import re
 import allure
 import pytest
 import sys
@@ -105,13 +106,12 @@ class TestSbBusinessFunction(FinBaseTest):
     )
     def test_sb_clearing(self):
         """
-        测试销售发票钩稽
+        测试销售发票、应收单自动钩稽
         测试方面：
-        1. 钩稽明细查询（查询发票与应收单的钩稽明细记录）
-        2. 钩稽金额统计（已钩稽金额、未钩稽金额、部分钩稽金额等）
-        3. 钩稽状态查询（已钩稽、未钩稽、部分钩稽等状态）
-        4. 钩稽明细展示（钩稽日期、钩稽金额、钩稽单号、应收单信息等）
-        5. 钩稽历史记录（查询发票的所有钩稽历史记录）
+        1. 钩稽金额统计（已钩稽金额、未钩稽金额、部分钩稽金额等）
+        2. 钩稽状态查询（已钩稽、未钩稽、部分钩稽等状态）
+        3. 钩稽明细展示（钩稽日期、钩稽金额、钩稽单号、应收单信息等）
+        4. 钩稽历史记录（查询发票的所有钩稽历史记录）
         """
         try:
             #获取已完成状态的应收单
@@ -171,6 +171,15 @@ class TestSbBusinessFunction(FinBaseTest):
                 fields_to_filter=fields_to_filter
             )
             
+            def query_sb_status():
+                sql="""
+                select * from fin_tm_sb_head_tr where id=%s;
+                """
+                sql_result = self.db.query(sql, (sb_head_id,))
+                if not sql_result:
+                    raise ValueError(f"销售发票头ID {sb_head_id} 未找到")
+                return sql_result[0]
+            
             result = self.async_wait_util.wait_for_async_status(
                 query_func=query_sb_status,
                 status_field="async_execution_status",
@@ -185,14 +194,6 @@ class TestSbBusinessFunction(FinBaseTest):
             elif result.status == self.wait_status.FAILED:
                 raise ValueError(f"销售发票头ID {sb_head_id} 自动钩稽失败: {result.last_data.get('async_execution_failure_reason')}")
             
-            def query_sb_status():
-                sql="""
-                select * from fin_tm_sb_head_tr where id=%s;
-                """
-                sql_result = self.db.query(sql, (sb_head_id,))
-                if not sql_result:
-                    raise ValueError(f"销售发票头ID {sb_head_id} 未找到")
-                return sql_result[0]
             
             self.assert_util.assert_response_success(response)
             #查询钩稽结果
@@ -205,13 +206,13 @@ class TestSbBusinessFunction(FinBaseTest):
             ar_head_result = self.db.query(ar_head_sql)
             ar_item_result = self.db.query(ar_item_sql)
             #断言应收单头票钩稽状态、票钩稽金额、未钩稽金额，钩稽中金额字段
-            self.assert_util.assert_by_operator(ar_head_result[0].get("billed_doc_amt"), "=", ar_doc_data.get("grossDocAmt"))
+            self.assert_util.assert_by_operator(f"{ar_head_result[0].get('billed_doc_amt'):.6f}", "=", f"{ar_doc_data.get('grossDocAmt'):.6f}")
             self.assert_util.assert_by_operator(ar_head_result[0].get("billing_doc_amt"), "=", 0)
             self.assert_util.assert_by_operator(ar_head_result[0].get("unbilled_doc_amt"), "=", 0)
-            self.assert_util.assert_by_operator(ar_item_result[0].get("billing_clearing_status"), "=", "CLEARED")
+            self.assert_util.assert_by_operator(ar_head_result[0].get("billing_clearing_status"), "=", "CLEARED")
             #断言应收单行钩稽状态、钩稽金额字段
             self.assert_util.assert_by_operator(ar_item_result[0].get("item_clearing_status"), "=", "CLEARED")
-            self.assert_util.assert_by_operator(ar_item_result[0].get("cleared_doc_amt"), "=", ar_doc_data.get("grossDocAmt"))
+            self.assert_util.assert_by_operator(f"{ar_item_result[0].get('cleared_doc_amt'):.6f}", "=", f"{ar_doc_data.get('grossDocAmt'):.6f}")
             self.assert_util.assert_by_operator(ar_item_result[0].get("clearing_doc_amt"), "=",0)
             self.assert_util.assert_by_operator(ar_item_result[0].get("uncleared_doc_amt"), "=",0)
                 
@@ -225,17 +226,29 @@ class TestSbBusinessFunction(FinBaseTest):
             sb_head_result = self.db.query(sb_head_sql)
             sb_item_result = self.db.query(sb_item_sql)
             self.assert_util.assert_by_operator(sb_head_result[0].get("clearing_status"), "=", "CLEARED")
-            self.assert_util.assert_by_operator(sb_head_result[0].get("cleared_doc_amt"), "=", ar_doc_data.get("grossDocAmt"))
+            self.assert_util.assert_by_operator(f"{sb_head_result[0].get('cleared_doc_amt'):.6f}", "=", f"{ar_doc_data.get('grossDocAmt'):.6f}")
             self.assert_util.assert_by_operator(sb_head_result[0].get("clearing_doc_amt"), "=",0)
             self.assert_util.assert_by_operator(sb_head_result[0].get("uncleared_doc_amt"), "=",0)
             #断言销售发票行钩稽状态、钩稽金额字段
             self.assert_util.assert_by_operator(sb_item_result[0].get("item_clearing_status"), "=", "CLEARED")
-            self.assert_util.assert_by_operator(sb_item_result[0].get("cleared_doc_amt"), "=", ar_doc_data.get("grossDocAmt"))
+            self.assert_util.assert_by_operator(f"{sb_item_result[0].get('cleared_doc_amt'):.6f}", "=", f"{ar_doc_data.get('grossDocAmt'):.6f}")
             self.assert_util.assert_by_operator(sb_item_result[0].get("clearing_doc_amt"), "=",0)
             self.assert_util.assert_by_operator(sb_item_result[0].get("uncleared_doc_amt"), "=",0)
-                                    
-                                                             
-            
+            # 断言票钩稽记录是否生成                        
+            sql=f"""
+            select * from fin_brm_ibc_item_tr left join fin_brm_ibc_head_tr on brm_ibc_head_tr_id=fin_brm_ibc_head_tr.id where rel_doc_head_id in ({ar_doc_data.get("id")}, {sb_head_id});
+            """
+            result = self.db.query(sql)                                                 
+            if not result:
+                raise ValueError(f"应收单ID {ar_doc_data.get('id')} 和销售发票头ID {sb_head_id} 钩稽记录未找到")
+            for item in result:
+                self.assert_util.assert_by_operator(item.get("is_rel_clearing_rul"), "=", 1)
+                self.assert_util.assert_by_operator(item.get("clearing_type"), "=", "AUTO")
+                self.assert_util.assert_by_operator(item.get("clearing_business_category"), "=", "AR_AND_SB")
+                self.assert_util.assert_by_operator(item.get("clearing_class"), "=", "MATCH_CLEAR")
+                self.assert_util.assert_by_operator(f"{item.get('clearing_doc_amt'):.6f}", "=", f"{ar_doc_data.get('grossDocAmt'):.6f}")
+                self.assert_util.assert_by_operator(item.get("cleared_doc_amt"), "=", 0)
+                self.assert_util.assert_by_operator(f"{item.get('uncleared_doc_amt'):.6f}", "=", f"{ar_doc_data.get('grossDocAmt'):.6f}")
             
         except Exception as e:
             a.text(str(e), "失败原因")
