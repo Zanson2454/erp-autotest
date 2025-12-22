@@ -5,10 +5,10 @@
 """
 import allure
 import pytest
-from testcases.prd.master import PrdMasterBaseTest, MaterialType
+from testcases.erp_prd.master import PrdMasterBaseTest, MaterialType
 from utils.report_util import a
 from utils.param_util import ParamUtil
-from testcases.prd.basic.init_config import PrdConfigInitializer
+from testcases.erp_prd.basic.init_config import PrdConfigInitializer
 
 @allure.epic("生产管理")
 @allure.feature("主数据管理")

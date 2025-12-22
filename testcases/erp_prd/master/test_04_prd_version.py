@@ -7,11 +7,11 @@ import allure
 import pytest
 import time
 import uuid
-from testcases.prd import PrdBaseTest
+from testcases.erp_prd import PrdBaseTest
 from utils.report_util import a
 from utils.param_util import ParamUtil
 from utils.mysql_util import DBManager
-from testcases.prd.basic.init_config import PrdConfigInitializer
+from testcases.erp_prd.basic.init_config import PrdConfigInitializer
 
 @allure.epic("生产管理")
 @allure.feature("主数据管理")
