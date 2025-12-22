@@ -278,40 +278,7 @@ class TestDelSoDnManagement(ScmDelBaseTest):
         cls.sls_base.priceIdempotent = None
         cls.sls_base.so_head_data = None
     
-    @classmethod
-    def teardown_class(cls):
-        """清理测试数据和还原配置"""
-        try:
-            # 还原SO行项目类型配置
-            if hasattr(cls, '_so_item_type_id'):
-                cls.db.update(
-                    table="sls_so_item_type_cf",
-                    data={"is_auto_delivery": 0},
-                    where="id = %s",
-                    params=[cls._so_item_type_id]
-                )
-            
-            # 清理测试数据
-            cls.db.delete(
-                table="del_dn_head_tr",
-                where="remark like %s",
-                params=[f"%{cls.TEST_REMARK}%"]
-            )
-            cls.db.delete(
-                table="del_dn_item_tr",
-                where="remark like %s",
-                params=[f"%{cls.TEST_REMARK}%"]
-            )
-            if cls.so_id:
-                cls.db.delete(
-                    table="sls_so_head_tr",
-                    where="id = %s",
-                    params=[cls.so_id]
-                )
-            
-            cls.logger.info("配置还原和数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"还原配置和清理数据失败: {str(e)}")
+    
     
     @property
     def dn_factory(self):

@@ -72,23 +72,7 @@ class TestDelManualDnManagement(ScmDelBaseTest):
         
         cls.logger.info(f"手动标准销售交货单测试类初始化完成: dn_type_id={cls.dn_type_id}, dn_item_type_id={cls.dn_item_type_id}")
     
-    @classmethod
-    def teardown_class(cls):
-        """清理测试数据"""
-        try:
-            cls.db.delete(
-                table="del_dn_head_tr",
-                where="remark like %s",
-                params=[f"%{cls.TEST_REMARK}%"]
-            )
-            cls.db.delete(
-                table="del_dn_item_tr",
-                where="remark like %s",
-                params=[f"%{cls.TEST_REMARK}%"]
-            )
-            cls.logger.info("测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
+    
 
     @case_decorator(
         story="手动标准销售交货单",

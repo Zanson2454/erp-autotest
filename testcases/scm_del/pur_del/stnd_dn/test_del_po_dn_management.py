@@ -111,23 +111,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
                 None
             )
     
-    @classmethod
-    def teardown_class(cls):
-        """清理测试数据"""
-        try:
-            cls.db.delete(
-                table="del_dn_head_tr",
-                where="remark like %s",
-                params=[f"%{cls.TEST_REMARK}%"]
-            )
-            cls.db.delete(
-                table="del_dn_item_tr",
-                where="remark like %s",
-                params=[f"%{cls.TEST_REMARK}%"]
-            )
-            cls.logger.info("测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
+    
 
     @classmethod
     def _update_dn_item_type_config(cls):
