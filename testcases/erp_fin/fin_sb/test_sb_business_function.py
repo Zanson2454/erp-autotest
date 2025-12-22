@@ -445,7 +445,7 @@ class TestSbBusinessFunction(FinBaseTest):
             set_dict["bilCode"]=self.mock_util.generate_unique_code("AUTO")
             #修改金额参数，使其符合强制钩稽条件
             for item in set_dict["sbItems"]:
-                item["grossDocPrice"]=item["grossDocPrice"]+1
+                item["grossDocPrice"]=item["grossDocPrice"]+self.mock_util.get_mock_price(1,100)
                 item["grossDocAmt"]=item["grossDocPrice"]*item["valQty"]
                 item["netDocAmt"]=item["grossDocAmt"]/(1+0.13)
                 item["netDocPrice"]=item["netDocAmt"]/item["valQty"]
