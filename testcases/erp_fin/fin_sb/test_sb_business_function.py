@@ -254,7 +254,126 @@ class TestSbBusinessFunction(FinBaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    # ==================== 销售发票校验相关 ====================
+    
+    
+    @case_decorator(
+        story="销售发票开票记录查询",
+        title="测试销售发票开票记录查询",
+        description="验证销售发票开票记录查询功能",
+        severity="normal",
+        file_level_order=3,
+        smoke=False,
+        tags=["销售发票", "开票记录查询", ""]
+    )
+    def test_query_sb_billing_record(self):
+        """
+        测试销售发票开票记录查询
+        测试方面：
+        1. 开票记录查询异步任务
+        2. 开票记录异步任务轮询
+        3. 开票记录头信息查询
+        4. 开票记录行信息查询
+        """
+        try:
+            #获取已钩稽的发票ID
+            sql="""
+            select id,sb_head_code,cleared_doc_amt from fin_tm_sb_head_tr where deleted=0 and clearing_status= 'CLEARED' order by created_at desc limit 1;
+            """
+            sql_result = self.db.query(sql)
+            if not sql_result:
+                raise ValueError("未找到已钩稽的发票")
+            sb_head_id = sql_result[0].get("id")
+            
+            #获取taskKey，taskValue，status
+            set_dict = {
+                "docId": sb_head_id,
+                "docType": "BIL",
+                "clearingType":"IBC"
+            }
+            # 钩稽批数据轮询服务
+            fields_to_filter = ["docId","docType","clearingType"]
+            response, _ = self.standard_api_call(
+                api_key="钩稽信息数据清洗服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            self.assert_util.assert_response_success(response)
+            
+            # 钩稽批数据轮询服务,异步调用钩稽批数据轮询服务
+            set_dict={
+                "docId": sb_head_id,
+                "docType": "BIL",
+                "taskKey":response.get("data", {}).get("data", {}).get("taskKey"),
+                "taskValue":response.get("data", {}).get("data", {}).get("taskValue"),
+                "status":response.get("data", {}).get("data", {}).get("status"),
+            }
+            fields_to_filter = ["docId","docType","taskKey","taskValue","status"]
+            def query_task_status():
+                response, _ = self.standard_api_call(
+                    api_key="钩稽批数据轮询服务",
+                    set_dict=set_dict,
+                    fields_to_filter=fields_to_filter
+                )
+                self.assert_util.assert_response_success(response)
+                return response.get("data", {}).get("data", {})
+                
+            result = self.async_wait_util.wait_for_async_status(
+                query_func=query_task_status,
+                status_field="status",
+                success_status="SUCCESS",
+                failed_status="FAILED",
+                max_wait=10,
+                interval=0.5
+            )
+            if result.status == self.wait_status.SUCCESS:
+                #查询记录头信息
+                set_dict={
+                    "pageNo":1,
+                    "pageSize":10,
+                    "taskValue":result.last_data.get("taskValue"),
+                }
+                fields_to_filter=["pageNo","pageSize","taskValue"]
+                response, _ = self.standard_api_call(
+                    api_key="钩稽批数据头-翻页查询服务",
+                    set_dict=set_dict,
+                    fields_to_filter=fields_to_filter
+                )
+                self.assert_util.assert_response_success(response)
+                #断言开票记录头信息
+                records = response.get("data", {}).get("data", {}).get("records", [])
+                if not records:
+                    raise ValueError("开票记录头信息为空")
+                record = records[0]
+                self.assert_util.assert_by_operator(record.get("relDocHeadCode"), "=", sql_result[0].get("sb_head_code"))
+                self.assert_util.assert_by_operator(f"{record.get('clearedDocAmt'):.6f}", "=", f"{sql_result[0].get('cleared_doc_amt'):.6f}")
+                self.assert_util.assert_by_operator(record.get("taskValue"), "=", result.last_data.get("taskValue"))
+                self.assert_util.assert_by_operator(record.get("id"),"not_empty",None)
+                
+                #暂存记录头id
+                record_id=record.get("id")
+                #查询记录行信息
+                set_dict={
+                    "pageNo":1,
+                    "pageSize":10,
+                    "brmBatchDocHeadId":record_id
+                }
+                fields_to_filter=["pageNo","pageSize","brmBatchDocHeadId"]
+                response, _ = self.standard_api_call(
+                    api_key="钩稽批数据行-翻页查询服务",
+                    set_dict=set_dict,
+                    fields_to_filter=fields_to_filter
+                )
+                self.assert_util.assert_response_success(response)
+                #断言开票记录行信息
+                records = response.get("data", {}).get("data", {}).get("records", [])
+                self.assert_util.assert_by_operator(response.get("data", {}).get("data", {}).get("total"),">=",2)
+                for record in records:
+                    self.assert_util.assert_by_operator(record.get("brmBatchDocHeadId"),"=",record_id)
+                    self.assert_util.assert_by_operator(f"{record.get('clearedDocAmt'):.6f}", "=", f"{sql_result[0].get('cleared_doc_amt'):.6f}")
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+            
     
     @case_decorator(
         story="销售发票校验",
@@ -296,7 +415,11 @@ class TestSbBusinessFunction(FinBaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    # ==================== 销售发票其他业务功能 ====================
+    
+    
+    
+    
+    
     
     @case_decorator(
         story="销售发票其他功能",
@@ -393,4 +516,4 @@ class TestSbBusinessFunction(FinBaseTest):
 if __name__ == "__main__":
     test = TestSbBusinessFunction()
     test.setup_class()
-    test.test_sb_clearing()
+    test.test_query_sb_billing_record()
