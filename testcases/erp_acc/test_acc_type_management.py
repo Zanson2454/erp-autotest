@@ -22,6 +22,7 @@ class TestAccTypeManagement(ErpAccBaseTest):
         """测试类初始化"""
         super().setup_class()
         cls.acc_type_id = None
+        cls.acc_head_cf_id = None  # 信用账户类型抬头ID（用于详情查询）
         cls.logger.info("账户类型管理测试类初始化完成")
         
         # 初始化依赖数据（账户类型依赖组织等基础数据）
@@ -244,6 +245,167 @@ class TestAccTypeManagement(ErpAccBaseTest):
         except Exception as e:
             a.text(str(e), "创建账户类型失败原因")
             self.logger.error(f"创建账户类型失败: {str(e)}")
+            raise
+    
+    @case_decorator(
+        story="账户类型管理",
+        title="测试查询信用账户类型抬头分页列表",
+        description="验证使用SYS_PagingDataService查询adv_cm_acc_head_cf模型的分页数据",
+        severity="critical",
+        file_level_order=4,
+        smoke=True,
+        tags=["erp_acc", "account_type", "query", "paging", "adv_cm_acc_head_cf"]
+    )
+    def test_query_acc_head_cf_paging(self):
+        """测试查询信用账户类型抬头分页列表 - 使用standard_api_call"""
+        try:
+            # 1. 准备分页查询参数
+            pageable_params = {
+                "pageNo": 1,
+                "pageSize": 20,
+                "needTotal": True,
+                "sortOrders": None,
+                "conditionItems": None
+            }
+            
+            # 2. 获取API路径和基础参数
+            api_path = self.get_api_path("(系统)查询分页数据服务")
+            params, url = self.get_api_params(api_path, with_query_params="tmodule=ERP_ACC&modelKey=ERP_ACC%24adv_cm_acc_head_cf")
+            
+            # 3. 构建完整参数结构
+            # modelKey在params层级，需要手动添加到请求参数中
+            filtered_params = params.copy() if params else {}
+            if "params" not in filtered_params:
+                filtered_params["params"] = {}
+            if "request" not in filtered_params["params"]:
+                filtered_params["params"]["request"] = {}
+            
+            # 设置pageable参数
+            filtered_params["params"]["request"]["pageable"] = pageable_params
+            # 设置modelKey（在params层级，不在request下）
+            filtered_params["params"]["modelKey"] = "ERP_ACC$adv_cm_acc_head_cf"
+            
+            # 4. 发送请求
+            response = self.http.post(url, json=filtered_params)
+            
+            # 5. 业务断言
+            self.assert_util.assert_response_success(response)
+            query_data = response.get("data", {}).get("data", {})
+            records = query_data.get("records", [])
+            total = query_data.get("total", 0)
+            
+            # 验证分页结果
+            self.assert_util.assert_by_operator(total, ">=", 0, "总记录数异常")
+            self.assert_util.assert_by_operator(len(records), ">=", 0, "记录列表异常")
+            
+            # 如果有记录，验证记录结构
+            if records:
+                first_record = records[0]
+                self.assert_util.assert_by_operator(first_record.get("id"), "not_empty", None, "记录ID为空")
+                self.logger.info(f"查询到{total}条信用账户类型抬头记录，第一条记录ID: {first_record.get('id')}")
+            
+            # 6. Allure报告
+            request_params = {
+                "pageable": pageable_params,
+                "modelKey": "ERP_ACC$adv_cm_acc_head_cf"
+            }
+            a.json(request_params, "查询信用账户类型抬头参数")
+            a.json(response, "查询信用账户类型抬头结果")
+            a.text(f"查询结果: 共{total}条记录，当前页{len(records)}条", "查询统计")
+            self.logger.info(f"信用账户类型抬头分页查询成功，共{total}条记录")
+            
+        except Exception as e:
+            a.text(str(e), "查询信用账户类型抬头失败原因")
+            self.logger.error(f"查询信用账户类型抬头失败: {str(e)}")
+            raise
+    
+    @case_decorator(
+        story="账户类型管理",
+        title="测试查询信用账户类型抬头详情",
+        description="验证使用SYS_FindDataByIdService查询adv_cm_acc_head_cf模型的详情数据",
+        severity="critical",
+        file_level_order=5,
+        smoke=True,
+        tags=["erp_acc", "account_type", "query", "detail", "adv_cm_acc_head_cf"]
+    )
+    def test_query_acc_head_cf_detail(self):
+        """测试查询信用账户类型抬头详情"""
+        try:
+            # 1. 先查询分页列表获取一个ID（如果没有测试数据）
+            if not hasattr(self, 'acc_head_cf_id') or not self.acc_head_cf_id:
+                # 先执行分页查询获取一个ID
+                api_path = self.get_api_path("(系统)查询分页数据服务")
+                params, url = self.get_api_params(api_path, with_query_params="tmodule=ERP_ACC&modelKey=ERP_ACC%24adv_cm_acc_head_cf")
+                pageable_params = {
+                    "pageNo": 1,
+                    "pageSize": 1,
+                    "needTotal": True,
+                    "sortOrders": None,
+                    "conditionItems": None
+                }
+                filtered_params = params.copy() if params else {}
+                if "params" not in filtered_params:
+                    filtered_params["params"] = {}
+                if "request" not in filtered_params["params"]:
+                    filtered_params["params"]["request"] = {}
+                filtered_params["params"]["request"]["pageable"] = pageable_params
+                filtered_params["params"]["modelKey"] = "ERP_ACC$adv_cm_acc_head_cf"
+                query_response = self.http.post(url, json=filtered_params)
+                query_data = query_response.get("data", {}).get("data", {})
+                records = query_data.get("records", [])
+                if records and records[0].get("id"):
+                    self.acc_head_cf_id = records[0].get("id")
+                else:
+                    pytest.skip("未找到可用的信用账户类型抬头记录，跳过详情查询测试")
+            
+            # 2. 准备详情查询参数
+            detail_id = self.acc_head_cf_id
+            
+            # 3. 获取API路径和基础参数
+            api_path = self.get_api_path("(系统)查询数据详情服务")
+            params, url = self.get_api_params(api_path, with_query_params="tmodule=ERP_ACC&modelKey=ERP_ACC%24adv_cm_acc_head_cf")
+            
+            # 4. 构建完整参数结构
+            # id在params.request.id，modelKey在params.modelKey
+            filtered_params = params.copy() if params else {}
+            if "params" not in filtered_params:
+                filtered_params["params"] = {}
+            if "request" not in filtered_params["params"]:
+                filtered_params["params"]["request"] = {}
+            
+            # 设置id参数
+            filtered_params["params"]["request"]["id"] = detail_id
+            # 设置modelKey（在params层级，不在request下）
+            filtered_params["params"]["modelKey"] = "ERP_ACC$adv_cm_acc_head_cf"
+            
+            # 5. 发送请求
+            response = self.http.post(url, json=filtered_params)
+            
+            # 6. 业务断言
+            self.assert_util.assert_response_success(response)
+            detail_data = response.get("data", {}).get("data", {})
+            
+            # 验证详情数据
+            self.assert_util.assert_by_operator(detail_data, "not_empty", None, "详情数据为空")
+            self.assert_util.assert_by_operator(detail_data.get("id"), "=", detail_id, "详情ID不匹配")
+            
+            # 验证关键字段存在（根据实际业务字段调整）
+            if detail_data.get("id"):
+                self.logger.info(f"查询到信用账户类型抬头详情，ID: {detail_data.get('id')}")
+            
+            # 7. Allure报告
+            request_params = {
+                "id": detail_id,
+                "modelKey": "ERP_ACC$adv_cm_acc_head_cf"
+            }
+            a.json(request_params, "查询信用账户类型抬头详情参数")
+            a.json(response, "查询信用账户类型抬头详情结果")
+            a.text(f"查询详情成功，ID: {detail_id}", "查询结果")
+            self.logger.info(f"信用账户类型抬头详情查询成功，ID: {detail_id}")
+            
+        except Exception as e:
+            a.text(str(e), "查询信用账户类型抬头详情失败原因")
+            self.logger.error(f"查询信用账户类型抬头详情失败: {str(e)}")
             raise
     
     @case_decorator(
