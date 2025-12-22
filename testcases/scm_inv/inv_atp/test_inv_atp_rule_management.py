@@ -66,20 +66,6 @@ class TestInvAtpRuleManagement(ScmInvBaseTest):
         self.logger.info(f"✅ 创建ATP检查组: ID={self.__class__.atp_group_id}")
         assert self.__class__.atp_group_id, "ATP检查组创建失败"
 
-    @classmethod
-    def teardown_class(cls):
-        """清理测试数据"""
-        try:
-            # 清理ATP检查规则
-            if cls.atp_rule_id:
-                cls.db.delete(table="inv_atp_rule_cf", where="id=%s", params=[cls.atp_rule_id])
-            # 清理ATP检查组
-            if cls.atp_group_id:
-                cls.db.delete(table="inv_atp_group_md", where="id=%s", params=[cls.atp_group_id])
-            cls.logger.info("ATP检查规则测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
-
     def _prepare_request_params(self, filtered_params, fields=None):
         """准备请求参数：设置modelKey和selectFields"""
         filtered_params["params"]["modelKey"] = self.MODEL_KEY

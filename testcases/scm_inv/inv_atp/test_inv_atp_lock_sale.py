@@ -41,22 +41,6 @@ class TestInvAtpLockSale(ScmInvBaseTest):
         
         cls.logger.info("ATP销售单测试类初始化完成")
     
-    @classmethod
-    def teardown_class(cls):
-        """测试类结束后恢复ATP规则为弱控制"""
-        try:
-            if cls.atp_rule_id:
-                update_sql = f"""
-                    UPDATE inv_atp_rule_cf
-                    SET ctrl_type = 'WEAK'
-                    WHERE id = {cls.atp_rule_id}
-                      AND deleted = 0
-                """
-                cls.db.execute(update_sql)
-                cls.logger.info("✅ teardown_class: ATP规则已恢复为弱控制")
-        except Exception as e:
-            cls.logger.error(f"⚠️ teardown_class恢复弱控制失败: {str(e)}")
-
     @case_decorator(
         story="ATP销售单",
         title="创建销售单验证confirmQty为-5",

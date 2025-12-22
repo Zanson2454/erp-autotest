@@ -98,19 +98,6 @@ class TestBsTypeManagement(ScmInvBaseTest):
             "originOrgId": 0
         }
 
-    @classmethod
-    def teardown_class(cls):
-        """测试类结束后执行清理"""
-        try:
-            cls.db.delete(
-                table="inv_bs_type_cf",
-                where="name like %s",
-                params=["%AT%"]
-            )
-            cls.logger.info("测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
-
     @case_decorator(
         story="作业类型配置",
         title="测试保存作业类型",

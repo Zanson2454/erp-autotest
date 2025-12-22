@@ -135,7 +135,125 @@ class ScmInvBaseTest(BaseTest):
         for key, value in param_dict.items():
             params['params']['request'][key] = value
         return params
-
+    
+    @classmethod
+    def teardown_class(cls):
+        """
+        测试类清理 - 删除库存模块的测试数据
+        在所有 scm_inv 模块的测试完成后执行
+        """
+        try:
+            # 清理库存类型配置相关表
+            # inv_inv_type_cf 需要清理关联的翻译表
+            try:
+                cls.db.execute("""
+                    DELETE FROM inv_inv_type_trans_cf 
+                    WHERE created_by IN (
+                        SELECT DISTINCT created_by FROM inv_inv_type_cf WHERE code LIKE %s
+                    )
+                """, ["AT_%"])
+            except Exception as e:
+                cls.logger.warning(f"清理 inv_inv_type_trans_cf 失败: {str(e)}")
+            
+            try:
+                cls.db.delete(
+                    table="inv_inv_type_cf",
+                    where="code like %s",
+                    params=["AT_%"]
+                )
+            except Exception as e:
+                cls.logger.warning(f"清理 inv_inv_type_cf 失败: {str(e)}")
+            
+            # 清理移动类型配置
+            try:
+                cls.db.delete(
+                    table="inv_mvm_type_cf",
+                    where="remark = %s",
+                    params=["AUTOMATION_TEST"]
+                )
+            except Exception as e:
+                cls.logger.warning(f"清理 inv_mvm_type_cf 失败: {str(e)}")
+            
+            # 清理特殊库存类型配置
+            try:
+                cls.db.delete(
+                    table="inv_spc_stk_type_cf",
+                    where="code like %s",
+                    params=["AT_%"]
+                )
+            except Exception as e:
+                cls.logger.warning(f"清理 inv_spc_stk_type_cf 失败: {str(e)}")
+            
+            # 清理其他移动配置表
+            try:
+                cls.db.delete(
+                    table="inv_fb_type_cf",
+                    where="code like %s",
+                    params=["AT_%"]
+                )
+            except Exception as e:
+                cls.logger.warning(f"清理 inv_fb_type_cf 失败: {str(e)}")
+            
+            try:
+                cls.db.delete(
+                    table="inv_mvm_ext_type_cf",
+                    where="code like %s",
+                    params=["AT_%"]
+                )
+            except Exception as e:
+                cls.logger.warning(f"清理 inv_mvm_ext_type_cf 失败: {str(e)}")
+            
+            try:
+                cls.db.delete(
+                    table="inv_bs_type_cf",
+                    where="name like %s",
+                    params=["%AT%"]
+                )
+            except Exception as e:
+                cls.logger.warning(f"清理 inv_bs_type_cf 失败: {str(e)}")
+            
+            # 清理ATP相关表
+            try:
+                cls.db.delete(
+                    table="inv_atp_rule_cf",
+                    where="code like %s",
+                    params=["AUTOTEST_%"]
+                )
+            except Exception as e:
+                cls.logger.warning(f"清理 inv_atp_rule_cf 失败: {str(e)}")
+            
+            try:
+                cls.db.delete(
+                    table="inv_atp_group_md",
+                    where="code like %s",
+                    params=["AUTOTEST_ATP_%"]
+                )
+            except Exception as e:
+                cls.logger.warning(f"清理 inv_atp_group_md 失败: {str(e)}")
+            
+            # 清理移动单据相关表（可选，如果表存在）
+            try:
+                cls.db.delete(
+                    table="inv_move_doc_head",
+                    where="doc_code like %s",
+                    params=["AUTOTEST_%"]
+                )
+            except Exception as e:
+                cls.logger.warning(f"清理 inv_move_doc_head 失败: {str(e)}")
+            
+            try:
+                cls.db.delete(
+                    table="inv_move_doc_item",
+                    where="note like %s",
+                    params=["%AUTOTEST%"]
+                )
+            except Exception as e:
+                cls.logger.warning(f"清理 inv_move_doc_item 失败: {str(e)}")
+            
+            cls.logger.info("✅ 库存模块测试数据清理完成")
+            
+        except Exception as e:
+            cls.logger.error(f"❌ 库存模块测试数据清理出现严重错误: {str(e)}")
 
 
 if __name__ == "__main__":

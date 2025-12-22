@@ -31,28 +31,6 @@ class TestInvTypeManagement(ScmInvBaseTest):
         cls._save_executed = False  # 防重复执行标记
         cls.logger.info("库存类型配置管理测试类初始化完成")
 
-    @classmethod
-    def teardown_class(cls):
-        """测试类结束后执行清理"""
-        try:
-            # 先清理翻译表数据（使用created_by条件）
-            cls.db.execute("""
-                DELETE FROM inv_inv_type_trans_cf 
-                WHERE created_by IN (
-                    SELECT DISTINCT created_by FROM inv_inv_type_cf WHERE code LIKE %s
-                )
-            """, [f"{cls.TEST_PREFIX}_%"])
-            
-            # 再清理主表数据
-            cls.db.delete(
-                table="inv_inv_type_cf",
-                where="code like %s",
-                params=[f"{cls.TEST_PREFIX}_%"]
-            )
-            cls.logger.info("测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
-
     @case_decorator(
         story="库存类型配置",
         title="测试保存库存类型",

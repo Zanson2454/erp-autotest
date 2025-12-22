@@ -77,22 +77,6 @@ class TestPoItemManagement(ScmPurBaseTest):
         
         cls.logger.info("采购订单行管理测试类初始化完成")
     
-    @classmethod
-    def teardown_class(cls):
-        try:
-            cls.db.delete(
-                table="pur_po_head_tr",
-                where="pur_remark like %s",
-                params=[f"%{cls.TEST_REMARK}%"]
-            )
-            cls.db.delete(
-                table="pur_po_item_tr",
-                where="note like %s",
-                params=[f"%{cls.TEST_REMARK}%"]
-            )
-            cls.logger.info("测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
     
     @case_decorator(
         story="采购订单行",
