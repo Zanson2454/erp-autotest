@@ -511,36 +511,57 @@ class MobileVoucherCreator(ScmInvBaseTest):
         return item
     
     def verify_voucher_in_list(self, voucher_id):
-        """验证移动凭证是否在列表中"""
+        """验证移动凭证是否已经落库，可退化为详情查询保证一致性"""
         try:
-            # 1. 获取API配置
+            # 1. 先尝试通过详情接口直接确认落库
+            detail_api_path = self.get_api_path("INV-移动凭证-详情服务")
+            detail_params, detail_url = self.get_api_params(detail_api_path)
+            detail_body = ParamUtil.filter_post_body_fields(
+                detail_params,
+                ["id"],
+                ["params", "request"]
+            )
+            ParamUtil.set_request_params(detail_body, {"id": voucher_id})
+            detail_resp = self.http.post(detail_url, json=detail_body)
+            self.assert_util.assert_response_data(detail_resp)
+            voucher_detail = detail_resp.get("data", {}).get("data")
+            if voucher_detail:
+                return voucher_detail
+            
+            # 2. 如果详情接口未返回数据，再降级使用分页接口兜底
             api_path = self.get_api_path("INV-移动凭证-分页查询服务")
             params, url = self.get_api_params(api_path)
-            
-            # 2. 参数处理
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["moveVoucherId"], ["params", "request"]
+                params,
+                ["pageable", "fields"],
+                ["params", "request"]
             )
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
                     "pageSize": 20,
                     "needTotal": True,
-                    "sortOrders": None,
-                    "conditionItems": None
+                    "sortOrders": [{"fieldAlias": "createdAt", "sortType": "DESC"}],
+                    "conditionItems": {
+                        "type": "ConditionItems",
+                        "conditions": {
+                            "id": {
+                                "operator": "IN",
+                                "value": [voucher_id]
+                            }
+                        },
+                        "logicOperator": "AND"
+                    }
                 },
                 "fields": [
-                    {"name": "moveVoucherId", "type": "TEXT"}
-                ],
-                "systemParams": None
+                    {"name": "code", "type": "TEXT"},
+                    {"name": "sourceType", "type": "SELECT"},
+                    {"name": "docCode", "type": "TEXT"}
+                ]
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
-            
-            # 3. 发送请求和断言
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
-            
-            # 4. 查找目标凭证
             vouchers = response.get("data", {}).get("data", {}).get("data", [])
             for voucher in vouchers:
                 if voucher.get("id") == voucher_id:

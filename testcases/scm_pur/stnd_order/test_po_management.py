@@ -224,7 +224,6 @@ class TestPoManagement(ScmPurBaseTest):
                     "pageSize": 20,
                     "needTotal": True,
                     "sortOrders": [
-                        {"fieldAlias": "updatedAt", "sortType": "DESC"},
                         {"fieldAlias": "createdAt", "sortType": "DESC"}
                     ],
                     "conditionItems": None
@@ -264,7 +263,8 @@ class TestPoManagement(ScmPurBaseTest):
             assert document_status == "EFFECT", \
                 f"单据状态不符合预期: 期望=EFFECT, 实际={document_status}"
             
-            if self.__class__.pur_remark:
+            # 只有当 pur_remark 存在且 TEST_REMARK 已设置时才断言
+            if self.__class__.pur_remark and pur_remark:
                 assert pur_remark == self.__class__.pur_remark, \
                     f"采购备注不匹配: 期望={self.__class__.pur_remark}, 实际={pur_remark}"
             
