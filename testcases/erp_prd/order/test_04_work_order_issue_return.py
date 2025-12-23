@@ -9,7 +9,7 @@ import json
 import allure
 import pytest
 from pathlib import Path
-from testcases.prd import PrdBaseTest
+from testcases.erp_prd import PrdBaseTest
 from utils.report_util import a
 from utils.param_util import ParamUtil
 

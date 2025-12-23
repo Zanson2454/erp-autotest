@@ -161,19 +161,6 @@ class TestMvmTypeManagement(ScmInvBaseTest):
             ]
         }
 
-    @classmethod
-    def teardown_class(cls):
-        """测试类结束后执行清理"""
-        try:
-            cls.db.delete(
-                table="inv_mvm_type_cf",
-                where="remark = %s",
-                params=[cls.AUTOMATION_TEST_REMARK]
-            )
-            cls.logger.info("测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
-
     @case_decorator(
         story="移动类型配置",
         title="测试保存移动类型",

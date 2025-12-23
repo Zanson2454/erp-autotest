@@ -3,7 +3,7 @@
 覆盖草稿、已确认、已完成三种状态，动态获取ID，符合testcaserole规范
 """
 import allure
-from testcases.fin.fin_ap import ApBaseTest
+from testcases.erp_fin.fin_ap import ApBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 

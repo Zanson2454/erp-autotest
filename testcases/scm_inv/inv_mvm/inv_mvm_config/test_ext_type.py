@@ -31,19 +31,6 @@ class TestInvMvmConfigManagement(ScmInvBaseTest):
         cls._save_executed = False  # 防重复执行标记
         cls.logger.info("移动类型扩展配置管理测试类初始化完成")
 
-    @classmethod
-    def teardown_class(cls):
-        """测试类结束后执行清理"""
-        try:
-            cls.db.delete(
-                table="inv_mvm_ext_type_cf",
-                where="code like %s",
-                params=[f"{cls.TEST_PREFIX}%"]
-            )
-            cls.logger.info("测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
-
     @case_decorator(
         story="移动类型扩展配置",
         title="测试保存移动类型扩展",

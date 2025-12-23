@@ -24,18 +24,7 @@ class TestDelDnTypeManagement(ScmDelBaseTest):
         cls.dn_type_code = None
         cls.logger.info("交货单类型配置管理测试类初始化完成")
     
-    @classmethod
-    def teardown_class(cls):
-        """测试类结束后执行清理"""
-        try:
-            cls.db.delete(
-                table="del_dn_type_cf",
-                where="dn_type_code like %s",
-                params=["AT_%"]
-            )
-            cls.logger.info("交货单类型配置测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
+    
 
     @case_decorator(
         story="交货单类型配置新建",

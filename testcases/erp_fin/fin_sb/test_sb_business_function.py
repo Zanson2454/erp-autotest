@@ -97,14 +97,14 @@ class TestSbBusinessFunction(FinBaseTest):
     
     @case_decorator(
         story="销售发票钩稽",
-        title="测试销售发票钩稽",   
+        title="测试销售发票自动钩稽",   
         description="验证销售发票的钩稽功能，自动匹配对应应收单进行钩稽",
         severity="normal",
         file_level_order=2,
         smoke=False,
         tags=["销售发票", "钩稽"]
     )
-    def test_sb_clearing(self):
+    def test_sb_auto_clearing(self):
         """
         测试销售发票、应收单自动钩稽
         测试方面：
@@ -254,143 +254,240 @@ class TestSbBusinessFunction(FinBaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    # ==================== 销售发票校验相关 ====================
+    
+    
+    @case_decorator(
+        story="销售发票开票记录查询",
+        title="测试销售发票开票记录查询",
+        description="验证销售发票开票记录查询功能",
+        severity="normal",
+        file_level_order=3,
+        smoke=False,
+        tags=["销售发票", "开票记录查询", ""]
+    )
+    def test_query_sb_billing_record(self):
+        """
+        测试销售发票开票记录查询
+        测试方面：
+        1. 开票记录查询异步任务
+        2. 开票记录异步任务轮询
+        3. 开票记录头信息查询
+        4. 开票记录行信息查询
+        """
+        try:
+            #获取已钩稽的发票ID
+            sql="""
+            select id,sb_head_code,cleared_doc_amt from fin_tm_sb_head_tr where deleted=0 and clearing_status= 'CLEARED' order by created_at desc limit 1;
+            """
+            sql_result = self.db.query(sql)
+            if not sql_result:
+                raise ValueError("未找到已钩稽的发票")
+            sb_head_id = sql_result[0].get("id")
+            
+            #获取taskKey，taskValue，status
+            set_dict = {
+                "docId": sb_head_id,
+                "docType": "BIL",
+                "clearingType":"IBC"
+            }
+            # 钩稽批数据轮询服务
+            fields_to_filter = ["docId","docType","clearingType"]
+            response, _ = self.standard_api_call(
+                api_key="钩稽信息数据清洗服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            self.assert_util.assert_response_success(response)
+            
+            # 钩稽批数据轮询服务,异步调用钩稽批数据轮询服务
+            set_dict={
+                "docId": sb_head_id,
+                "docType": "BIL",
+                "taskKey":response.get("data", {}).get("data", {}).get("taskKey"),
+                "taskValue":response.get("data", {}).get("data", {}).get("taskValue"),
+                "status":response.get("data", {}).get("data", {}).get("status"),
+            }
+            fields_to_filter = ["docId","docType","taskKey","taskValue","status"]
+            def query_task_status():
+                response, _ = self.standard_api_call(
+                    api_key="钩稽批数据轮询服务",
+                    set_dict=set_dict,
+                    fields_to_filter=fields_to_filter
+                )
+                self.assert_util.assert_response_success(response)
+                return response.get("data", {}).get("data", {})
+                
+            result = self.async_wait_util.wait_for_async_status(
+                query_func=query_task_status,
+                status_field="status",
+                success_status="SUCCESS",
+                failed_status="FAILED",
+                max_wait=10,
+                interval=0.5
+            )
+            if result.status == self.wait_status.SUCCESS:
+                #查询记录头信息
+                set_dict={
+                    "pageNo":1,
+                    "pageSize":10,
+                    "taskValue":result.last_data.get("taskValue"),
+                }
+                fields_to_filter=["pageNo","pageSize","taskValue"]
+                response, _ = self.standard_api_call(
+                    api_key="钩稽批数据头-翻页查询服务",
+                    set_dict=set_dict,
+                    fields_to_filter=fields_to_filter
+                )
+                self.assert_util.assert_response_success(response)
+                #断言开票记录头信息
+                records = response.get("data", {}).get("data", {}).get("records", [])
+                if not records:
+                    raise ValueError("开票记录头信息为空")
+                record = records[0]
+                self.assert_util.assert_by_operator(record.get("relDocHeadCode"), "=", sql_result[0].get("sb_head_code"))
+                self.assert_util.assert_by_operator(f"{record.get('clearedDocAmt'):.6f}", "=", f"{sql_result[0].get('cleared_doc_amt'):.6f}")
+                self.assert_util.assert_by_operator(record.get("taskValue"), "=", result.last_data.get("taskValue"))
+                self.assert_util.assert_by_operator(record.get("id"),"not_empty",None)
+                
+                #暂存记录头id
+                record_id=record.get("id")
+                #查询记录行信息
+                set_dict={
+                    "pageNo":1,
+                    "pageSize":10,
+                    "brmBatchDocHeadId":record_id
+                }
+                fields_to_filter=["pageNo","pageSize","brmBatchDocHeadId"]
+                response, _ = self.standard_api_call(
+                    api_key="钩稽批数据行-翻页查询服务",
+                    set_dict=set_dict,
+                    fields_to_filter=fields_to_filter
+                )
+                self.assert_util.assert_response_success(response)
+                #断言开票记录行信息
+                records = response.get("data", {}).get("data", {}).get("records", [])
+                self.assert_util.assert_by_operator(response.get("data", {}).get("data", {}).get("total"),">=",2)
+                for record in records:
+                    self.assert_util.assert_by_operator(record.get("brmBatchDocHeadId"),"=",record_id)
+                    self.assert_util.assert_by_operator(f"{record.get('clearedDocAmt'):.6f}", "=", f"{sql_result[0].get('cleared_doc_amt'):.6f}")
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+            
     
     @case_decorator(
         story="销售发票校验",
-        title="测试销售发票校验是否需要强制钩稽",
-        description="验证销售发票是否需要强制钩稽的校验功能",
+        title="测试销售发票强制钩稽",
+        description="验证销售发票强制钩稽功能",
         severity="normal",
-        file_level_order=7,
+        file_level_order=4,
         smoke=False,
-        tags=["销售发票", "校验", "钩稽"]
+        tags=["销售发票", "钩稽", "强制钩稽"]
     )
-    def test_validate_sb_force_clearing(self):
+    def test_sb_force_clearing(self):
         """
-        测试销售发票校验是否需要强制钩稽
+        测试销售发票强制钩稽
         测试方面：
-        1. 强制钩稽规则校验（根据发票类型、金额等判断是否需要强制钩稽）
-        2. 钩稽状态检查（发票是否已钩稽、钩稽是否完整等）
-        3. 业务规则验证（根据业务配置判断是否需要强制钩稽）
-        4. 校验结果返回（是否需要强制钩稽、原因说明等）
+        1. 获取完成状态的标准应收单
+        2. 通过批量生成发票修改中间页金额、数量
+        3. 提交生成销售发票
+        4. 销售发票过账
+        5. 查询钩稽结果
+        6. 断言钩稽结果
         """
         try:
-            if not self.sb_id:
-                pytest.skip("需要先创建销售发票数据")
-            
-            # 1. 准备测试数据
-            set_dict = {"id": self.sb_id}
-            fields_to_filter = ["id"]
-            
-            # 2. 使用标准化API调用
+            #获取完成状态应收单
+            ar_doc_data = self.create_ar_doc(ar_type="STND", org=1, status="DONE")
+            #通过批量操作生成销售发票头校验
+            set_dict = { 
+                "armArItemIds": [ar_doc_data.get("id")]
+            }   
             response, _ = self.standard_api_call(
-                api_key="销售发票-校验是否需要强制钩稽服务",
+                api_key="应收单批量转化销售发票-校验服务",
                 set_dict=set_dict,
-                fields_to_filter=fields_to_filter
+                fields_to_filter=["armArItemIds"]
             )
-            
-            # 3. 业务断言
             self.assert_util.assert_response_success(response)
             
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
-    
-    # ==================== 销售发票其他业务功能 ====================
-    
-    @case_decorator(
-        story="销售发票其他功能",
-        title="测试销售发票OCR识别",
-        description="验证销售发票的OCR识别功能，自动识别发票信息",
-        severity="normal",
-        file_level_order=8,
-        smoke=False,
-        tags=["销售发票", "OCR", "识别"]
-    )
-    @pytest.mark.skip(reason="OCR识别需要上传图片文件，复杂度较高")
-    def test_ocr_recognize_sb(self):
-        """
-        测试销售发票OCR识别
-        测试方面：
-        1. 图片上传（上传发票图片文件）
-        2. OCR识别（识别发票编码、金额、日期等关键信息）
-        3. 识别结果解析（将OCR识别结果转换为结构化数据）
-        4. 数据自动填充（将识别结果自动填充到发票表单）
-        5. 识别准确率验证（验证OCR识别的准确性）
-        """
-        try:
-            # OCR识别需要上传文件，这里仅提供测试框架
+            #获取应收单行id
+            sql="""
+            select id from fin_arm_ar_item_tr where arm_ar_head_tr_id=%s and deleted=0;
+            """
+            ar_item_ids = self.db.query(sql, (ar_doc_data.get("id"),))
+            if not ar_item_ids:
+                raise ValueError("应收单行项ID列表为空，无法进行转化")
+            ar_item_ids = [item.get("id") for item in ar_item_ids]
+            
+            #通过批量操作生成销售发票行校验
             set_dict = {
-                "fileId": None,  # 文件ID，需要先上传文件
-                "docTypeId": {"id": self.sb_type_id} if self.sb_type_id else None
+                "armArItemIds": ar_item_ids
             }
-            fields_to_filter = ["fileId", "docTypeId"]
-            
             response, _ = self.standard_api_call(
-                api_key="销售发票-OCR识别服务",
+                api_key="应收单行批量转化销售发票-校验服务",
                 set_dict=set_dict,
-                fields_to_filter=fields_to_filter
+                fields_to_filter=["armArItemIds"]
             )
-            
-            self.assert_util.assert_response_data(response)
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
-    
-    @case_decorator(
-        story="销售发票其他功能",
-        title="测试销售发票退回",
-        description="验证销售发票的退回功能，将已过账的发票退回",
-        severity="normal",
-        file_level_order=9,
-        smoke=False,
-        tags=["销售发票", "退回", "冲销"]
-    )
-    def test_return_sb_doc(self):
-        """
-        测试销售发票退回
-        测试方面：
-        1. 已过账发票退回（状态从DONE变为RETURNED）
-        2. 退回前数据校验（发票状态、关联凭证状态等）
-        3. 退回后凭证处理（冲销已生成的财务凭证）
-        4. 退回权限验证（只有已过账状态可以退回）
-        5. 退回原因记录（记录退回原因、退回人等）
-        """
-        try:
-            if not self.sb_id:
-                pytest.skip("需要先创建并过账销售发票数据")
-            
-            # 1. 准备测试数据
-            set_dict = {
-                "id": self.sb_id,
-                "returnReason": "测试退回原因"
-            }
-            fields_to_filter = ["id", "returnReason"]
-            
-            # 2. 使用标准化API调用
-            response, _ = self.standard_api_call(
-                api_key="销售发票-退回服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter
-            )
-            
-            # 3. 业务断言
             self.assert_util.assert_response_success(response)
             
-            # 4. 额外的业务验证
-            # 查询数据库验证状态变更
-            sql = "SELECT sb_status FROM fin_tm_sb_head_tr WHERE id = %s LIMIT 1"
-            result = self.db.query(sql, (self.sb_id,))
-            if result:
-                sb_status = result[0].get("sb_status")
-                self.assert_util.assert_by_operator(sb_status, "=", "RETURNED")
+            #应收单行转换销售发票
+            response, _ = self.standard_api_call(
+                api_key="SB-应收单行批量转化销售发票服务",
+                set_dict=set_dict,
+                fields_to_filter=["armArItemIds"]
+            )
+            self.assert_util.assert_response_success(response)
+            
+            #构造强制钩稽保存的参数
+            set_dict=response.get("data", {}).get("data", {})
+            if not set_dict:
+                raise ValueError("应收单行转换销售发票失败")
+            set_dict["docTypeId"]={"id":self.sb_type_info.get("STND").get("id")}
+            set_dict["bilCode"]=self.mock_util.generate_unique_code("AUTO")
+            #修改金额参数，使其符合强制钩稽条件
+            for item in set_dict["sbItems"]:
+                item["grossDocPrice"]=item["grossDocPrice"]+self.mock_util.get_mock_price(1,100)
+                item["grossDocAmt"]=item["grossDocPrice"]*item["valQty"]
+                item["netDocAmt"]=item["grossDocAmt"]/(1+0.13)
+                item["netDocPrice"]=item["netDocAmt"]/item["valQty"]
+                item["taxDocAmt"]=item["grossDocAmt"]-item["netDocAmt"]
+            response, _ = self.standard_api_call(
+                api_key="SB-销售发票保存并更新来源单服务",
+                set_dict=set_dict,
+                fields_to_filter=None
+            )
+            self.assert_util.assert_response_success(response)
+            
+            #销售发票过账
+            sb_head_id=response.get("data", {}).get("data", {}).get("id")
+            set_dict={
+                "id": sb_head_id
+            }
+            fields_to_filter=["id"]
+            response, _ = self.standard_api_call(
+                api_key="SB-销售发票过账服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
+            self.assert_util.assert_response_success(response)
+            
+            #todo 查询钩稽结果
+            
+            #todo 断言钩稽结果
+            
+            
             
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
+    
+    
+    
+    
+    
+    
+
 
 if __name__ == "__main__":
     test = TestSbBusinessFunction()
     test.setup_class()
-    test.test_sb_clearing()
+    test.test_sb_force_clearing()

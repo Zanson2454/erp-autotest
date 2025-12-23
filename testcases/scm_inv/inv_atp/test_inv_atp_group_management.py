@@ -25,19 +25,6 @@ class TestInvAtpGroupManagement(ScmInvBaseTest):
         
         cls.logger.info("ATP检查组管理测试类初始化完成")
 
-    @classmethod
-    def teardown_class(cls):
-        """测试类结束后执行清理"""
-        try:
-            cls.db.delete(
-                table="inv_atp_group_md",
-                where="code like %s",
-                params=["AUTOTEST_ATP_%"]
-            )
-            cls.logger.info("ATP检查组测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
-
     #@pytest.mark.run(order=1)
     @case_decorator(
         story="ATP检查组管理",

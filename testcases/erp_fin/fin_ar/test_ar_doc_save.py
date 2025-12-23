@@ -3,7 +3,7 @@
 覆盖创建、编辑、提交、过账、状态校验等场景
 """
 import allure
-from testcases.fin.fin_ar import ArBaseTest, convert_decimal_to_float
+from testcases.erp_fin.fin_ar import ArBaseTest, convert_decimal_to_float
 from utils.param_util import ParamUtil
 from utils.mock_util import MockData
 from utils.report_util import a, case_decorator

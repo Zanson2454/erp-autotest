@@ -4,13 +4,13 @@
 提供主数据管理相关的通用方法和数据准备接口
 """
 import allure
-from testcases.prd import PrdBaseTest
+from testcases.erp_prd import PrdBaseTest
 from enum import Enum
 from typing import List, Dict, Optional
 from utils.mysql_util import DBManager
 import time
 from datetime import datetime
-from testcases.prd.basic.init_config import PrdConfigInitializer
+from testcases.erp_prd.basic.init_config import PrdConfigInitializer
 
 class MaterialType(Enum):
     """物料类型"""

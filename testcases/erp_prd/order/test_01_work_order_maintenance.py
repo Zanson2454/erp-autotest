@@ -10,7 +10,7 @@ import random
 import allure
 import pytest
 from pathlib import Path
-from testcases.prd.order import PrdBaseTest
+from testcases.erp_prd.order import PrdBaseTest
 from utils.report_util import a
 from utils.param_util import ParamUtil
 

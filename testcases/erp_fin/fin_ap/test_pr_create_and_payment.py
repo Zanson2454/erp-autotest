@@ -3,7 +3,7 @@
 """
 import allure
 import time
-from testcases.fin.fin_ap import ApBaseTest
+from testcases.erp_fin.fin_ap import ApBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 from data_factory.fin_ap_factory import FinApFactory

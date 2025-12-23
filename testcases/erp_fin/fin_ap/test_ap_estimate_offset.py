@@ -3,7 +3,7 @@
 完全独立的测试用例，不依赖其他测试文件
 """
 import allure
-from testcases.fin.fin_ap import ApBaseTest
+from testcases.erp_fin.fin_ap import ApBaseTest
 from utils.param_util import ParamUtil
 from utils.mock_util import MockData
 from utils.report_util import a, case_decorator

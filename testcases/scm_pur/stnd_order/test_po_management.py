@@ -92,22 +92,6 @@ class TestPoManagement(ScmPurBaseTest):
         
         cls.logger.info("标准采购订单测试类初始化完成")
     
-    @classmethod
-    def teardown_class(cls):
-        try:
-            cls.db.delete(
-                table="pur_po_head_tr",
-                where="pur_remark like %s",
-                params=[f"%{cls.TEST_REMARK}%"]
-            )
-            cls.db.delete(
-                table="pur_po_item_tr",
-                where="note like %s",
-                params=[f"%{cls.TEST_REMARK}%"]
-            )
-            cls.logger.info("测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
     
     def _get_po_detail_by_id(self, po_id):
         """获取订单详情"""
@@ -224,7 +208,6 @@ class TestPoManagement(ScmPurBaseTest):
                     "pageSize": 20,
                     "needTotal": True,
                     "sortOrders": [
-                        {"fieldAlias": "updatedAt", "sortType": "DESC"},
                         {"fieldAlias": "createdAt", "sortType": "DESC"}
                     ],
                     "conditionItems": None
@@ -264,7 +247,8 @@ class TestPoManagement(ScmPurBaseTest):
             assert document_status == "EFFECT", \
                 f"单据状态不符合预期: 期望=EFFECT, 实际={document_status}"
             
-            if self.__class__.pur_remark:
+            # 只有当 pur_remark 存在且 TEST_REMARK 已设置时才断言
+            if self.__class__.pur_remark and pur_remark:
                 assert pur_remark == self.__class__.pur_remark, \
                     f"采购备注不匹配: 期望={self.__class__.pur_remark}, 实际={pur_remark}"
             

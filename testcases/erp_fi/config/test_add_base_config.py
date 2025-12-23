@@ -14,7 +14,7 @@ if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
-from testcases.fi import FiBaseTest
+from testcases.erp_fi import FiBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 

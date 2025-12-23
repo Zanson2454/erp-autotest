@@ -3,7 +3,7 @@
 包含创建、编辑、提交、过账、状态校验等场景
 """
 import allure
-from testcases.fin.fin_ap import ApBaseTest
+from testcases.erp_fin.fin_ap import ApBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 from datetime import datetime
