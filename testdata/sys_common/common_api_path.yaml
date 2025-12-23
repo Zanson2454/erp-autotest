@@ -1,114 +1,6 @@
 version: '1.0'
-total_apis: 746
+total_apis: 779
 apis:
-  (系统)反向构建树结构数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_ReverseConstructTreeService
-    method: POST
-  (系统)批量启用主数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_MasterData_MultiEnableDataService
-    method: POST
-  (系统)查询分页数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_PagingDataService
-    method: POST
-  (系统)保存数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_SaveDataService
-    method: POST
-  (系统)保存并启用主数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_MasterData_SaveAndEnableDataService
-    method: POST
-  (系统)树搜索:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_TreeSearchService
-    method: POST
-  (系统)启用主数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_MasterData_EnableDataService
-    method: POST
-  (系统)根据条件批量更新数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_BatchUpdateDataByConditionService
-    method: POST
-  (系统)停用主数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_MasterData_DisableDataService
-    method: POST
-  (系统)更新数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_UpdateDataByIdService
-    method: POST
-  (系统)根据IDS批量删除数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_BatchDeleteDataByIdsService
-    method: POST
-  (系统)批量保存数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_BatchSaveDataService
-    method: POST
-  (系统)根据IDS查询数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_FindDataByIdsService
-    method: POST
-  (系统)根据条件查询单条数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_FindSingleDataByConditionService
-    method: POST
-  (系统)新增并启用主数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_MasterData_CreateAndEnableDataService
-    method: POST
-  (系统)调用取号规则服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_InvokeCodeRuleService
-    method: POST
-  (系统)根据条件批量删除数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_BatchDeleteDataByConditionService
-    method: POST
-  (系统)批量删除数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_BatchDeleteDataService
-    method: POST
-  (系统)新增主数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_MasterData_CreateDataService
-    method: POST
-  (系统)更新主数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_MasterData_UpdateDataService
-    method: POST
-  (系统)查询单条数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_FindOneDataService
-    method: POST
-  (系统)批量停用主数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_MasterData_MultiDisableDataService
-    method: POST
-  (系统)转换复制数据:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_CopyDataConverterService
-    method: POST
-  (系统)COUNT服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_COUNT_DATA_SERVICE
-    method: POST
-  (系统)树查询数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_FindTreeDataService
-    method: POST
-  (系统)SUM服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_SUM_DATA_SERVICE
-    method: POST
-  (系统)通过条件组查询数据列表:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_FindListDataService
-    method: POST
-  (系统)批量新增数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_BatchCreateDataService
-    method: POST
-  (系统)保存主数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_MasterData_SaveDataService
-    method: POST
-  (系统)删除数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_DeleteDataByIdService
-    method: POST
-  (系统)根据IDS批量更新数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_BatchUpdateDataByIdsService
-    method: POST
-  (系统)根据ID查询单条数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_FindSingleDataByIdService
-    method: POST
-  (系统)通过条件组查询树模型子数据列表:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_FindTreeChildrenDataService
-    method: POST
-  (系统)新增数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_CreateDataService
-    method: POST
-  (系统)查询数据详情服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_FindDataByIdService
-    method: POST
-  (系统)删除主数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$SYS_MasterData_DeleteDataService
-    method: POST
   投标文件比对结果标准导出服务:
     path: /api/trantor/service/engine/execute/sys_common$BID_DOCS_COMPARE_RESULT_GEI_EXPORT_SERVICE
     method: POST
@@ -117,6 +9,12 @@ apis:
     method: POST
   异步任务-任务定义-保存任务定义(/api/async-task/task-definition/save#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_ASYNC_TASK_TASK_DEFINITION_SAVE_POST
+    method: POST
+  图表渲染服务_豆包:
+    path: /api/trantor/service/engine/execute/sys_common$chart_rendering_service_doubao
+    method: POST
+  通知模板-保存数据服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_TEMPLATE_SAVE_DATA_SERVICE
     method: POST
   物料三级类目设计:
     path: /api/trantor/service/engine/execute/sys_common$material_category_design
@@ -129,6 +27,9 @@ apis:
     method: POST
   员工组织关联表-查找单条数据服务:
     path: /api/trantor/service/engine/execute/sys_common$ORG_EMPLOYEE_ORG_LINK_CF_FIND_ONE_DATA_SERVICE
+    method: POST
+  通知渠道账号-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_CHANNEL_ACCOUNT_FIND_DATA_BY_ID_SERVICE
     method: POST
   根据条件查询组织数据服务:
     path: /api/trantor/service/engine/execute/sys_common$ORG_ORG_UNIT_FIND_ALL_SERVICE
@@ -196,6 +97,9 @@ apis:
   用户组-分页查询(/api/trantor/portal/user-group/paging#GET):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_USER_GROUP_PAGING_GET
     method: POST
+  主任务-分页数据服务:
+    path: /api/trantor/service/engine/execute/sys_common$TASK_INSTANCE_PAGING_DATA_SERVICE
+    method: POST
   通知记录APP服务-分页查询记录(/api/notice/record/paging#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_NOTICE_RECORD_PAGING_POST
     method: POST
@@ -226,17 +130,26 @@ apis:
   审批流-流程实例-审批记录打印获取数据接口(/api/trantor/workflow/v2/print-workflow-record#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_PRINT_WORKFLOW_RECORD_POST
     method: POST
+  通知模板-分页查询通知模板(Trantor入参)(/api/notice/template/pagingByTrantor#POST):
+    path: /api/trantor/service/engine/execute/sys_common$API_NOTICE_TEMPLATE_PAGING_BY_TRANTOR_POST
+    method: POST
   导入模版列表查询(/api/trantor/portal/meta/list/ImportTemplate#GET):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_META_LIST_IMPORT_TEMPLATE_GET
     method: POST
   查询服务关联绑定的场景视图组件信息(/api/trantor/portal/role/permission/scene-view-resource-bound-by-service/find#GET):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_ROLE_PERMISSION_SCENE_VIEW_RESOURCE_BOUND_BY_SERVICE_FIND_GET
     method: POST
+  通知模板-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_TEMPLATE_FIND_DATA_BY_ID_SERVICE
+    method: POST
   组织业务类型表-批量禁用主数据服务:
     path: /api/trantor/service/engine/execute/sys_common$ORG_BUSINESS_TYPE_CF_MASTER_DATA_MULTI_DISABLE_DATA_SERVICE
     method: POST
   组织身份表-根据ID删除数据服务:
     path: /api/trantor/service/engine/execute/sys_common$ORG_IDENTITY_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  导入导出任务管理接口-分页查询任务(Trantor入参)(/api/gei/task/pagingByTrantor#POST):
+    path: /api/trantor/service/engine/execute/sys_common$API_GEI_TASK_PAGING_BY_TRANTOR_POST
     method: POST
   组织维度表-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/sys_common$ORG_DIMENSION_CF_FIND_DATA_BY_ID_SERVICE
@@ -319,6 +232,9 @@ apis:
   通知场景APP服务-根据ID批量查询通知场景详情(/api/notice/scene/queryByIds#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_NOTICE_SCENE_QUERY_BY_IDS_POST
     method: POST
+  打印模板-删除(/api/print/printTemplate/deleteByTrantor#POST):
+    path: /api/trantor/service/engine/execute/sys_common$API_PRINT_PRINT_TEMPLATE_DELETE_BY_TRANTOR_POST
+    method: POST
   调度中心-作业定义-按ID删除作业-禁用状态允许(/api/t-scheduler/job-definition/delete#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_T_SCHEDULER_JOB_DEFINITION_DELETE_POST
     method: POST
@@ -330,6 +246,9 @@ apis:
     method: POST
   组织维度表-禁用主数据服务:
     path: /api/trantor/service/engine/execute/sys_common$ORG_DIMENSION_CF_MASTER_DATA_DISABLE_DATA_SERVICE
+    method: POST
+  打印模板-分页查询打印模板列表(Trantor入参)(/api/print/printTemplate/pagingByTrantor#POST):
+    path: /api/trantor/service/engine/execute/sys_common$API_PRINT_PRINT_TEMPLATE_PAGING_BY_TRANTOR_POST
     method: POST
   Websocket前端http(s)接口-推送任务消息(调试用)(/api/mw/websocket/pushTaskMessage#GET):
     path: /api/trantor/service/engine/execute/sys_common$API_MW_WEBSOCKET_PUSH_TASK_MESSAGE_GET
@@ -400,6 +319,9 @@ apis:
   审批流-流程实例-发起人添加备注与自定义审批人(/api/trantor/workflow/v2/add-instance-remark-customized-candidate#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_ADD_INSTANCE_REMARK_CUSTOMIZED_CANDIDATE_POST
     method: POST
+  通知场景-折叠关联关系服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_SCENE_FOLDING_ASSOCIATED_SERVICE
+    method: POST
   审批流-审批流管理-校验工作流节点配置(/api/trantor/workflow/v2/validate#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_VALIDATE_POST
     method: POST
@@ -426,6 +348,9 @@ apis:
     method: POST
   审批流-运维-跳转到指定节点(/api/trantor/workflow/v2/devops/node-jump#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_DEVOPS_NODE_JUMP_POST
+    method: POST
+  主任务-折叠关联关系服务:
+    path: /api/trantor/service/engine/execute/sys_common$TASK_INSTANCE_FOLDING_ASSOCIATED_SERVICE
     method: POST
   IAM审计日志分页查询(/api/trantor/portal/iam-audit-log/page#GET):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_IAM_AUDIT_LOG_PAGE_GET
@@ -478,11 +403,20 @@ apis:
   作业定义-复制数据转换子服务:
     path: /api/trantor/service/engine/execute/sys_common$JOB_DEFINITION_COPY_DATA_CONVERTER_SERVICE_CHILD
     method: POST
+  通知渠道账号-分页数据服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_CHANNEL_ACCOUNT_PAGING_DATA_SERVICE
+    method: POST
+  站内信出参封装-分页数据服务:
+    path: /api/trantor/service/engine/execute/sys_common$STATION_NOTICE_RES_PAGING_DATA_SERVICE
+    method: POST
   组织维度业务类型关联表-查找列表数据服务:
     path: /api/trantor/service/engine/execute/sys_common$ORG_DIMENSION_BUSINESS_LINK_FIND_LIST_DATA_SERVICE
     method: POST
   智能体-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/sys_common$AGENT_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  站内信APP服务-分页查询站内信(Trantor入参)(/api/notice/station/pagingByTrantor#POST):
+    path: /api/trantor/service/engine/execute/sys_common$API_NOTICE_STATION_PAGING_BY_TRANTOR_POST
     method: POST
   审批流-运维-获取实例状态对应的条数(/api/trantor/workflow/v2/devops/count#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_DEVOPS_COUNT_POST
@@ -516,6 +450,9 @@ apis:
     method: POST
   打印模板-保存(/api/print/printTemplate/save#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_PRINT_PRINT_TEMPLATE_SAVE_POST
+    method: POST
+  打印模板-保存(Trantor入参)(/api/print/printTemplate/saveByTrantor#POST):
+    path: /api/trantor/service/engine/execute/sys_common$API_PRINT_PRINT_TEMPLATE_SAVE_BY_TRANTOR_POST
     method: POST
   组织维度表-批量禁用主数据服务:
     path: /api/trantor/service/engine/execute/sys_common$ORG_DIMENSION_CF_MASTER_DATA_MULTI_DISABLE_DATA_SERVICE
@@ -556,8 +493,14 @@ apis:
   员工信息表-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/sys_common$ORG_EMPLOYEE_MD_FIND_DATA_BY_ID_SERVICE
     method: POST
+  通知渠道-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_CHANNEL_FIND_DATA_BY_ID_SERVICE
+    method: POST
   水印模板-详情(/api/print/watermarkTemplate/detail#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_PRINT_WATERMARK_TEMPLATE_DETAIL_POST
+    method: POST
+  通知任务-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_TASK_FIND_DATA_BY_ID_SERVICE
     method: POST
   通知模板-批量停用通知模板(/api/notice/template/batchDisable#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_NOTICE_TEMPLATE_BATCH_DISABLE_POST
@@ -622,11 +565,17 @@ apis:
   打印场景实例-停用(/api/print/printSceneInstance/disable#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_PRINT_PRINT_SCENE_INSTANCE_DISABLE_POST
     method: POST
+  通知任务-分页数据服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_TASK_PAGING_DATA_SERVICE
+    method: POST
   审批流-流程定义-获取流程定义列表(/api/trantor/workflow/list#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_LIST_POST
     method: POST
   阿里云短信相关接口-查询短信模板列表(/api/notice/template/sms/aliyun/querySmsTemplateList#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_NOTICE_TEMPLATE_SMS_ALIYUN_QUERY_SMS_TEMPLATE_LIST_POST
+    method: POST
+  通知记录-分页数据服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_RECORD_PAGING_DATA_SERVICE
     method: POST
   多语应用管理-分页数据服务:
     path: /api/trantor/service/engine/execute/sys_common$I18N_APP_DTO_PAGING_DATA_SERVICE
@@ -700,6 +649,9 @@ apis:
   员工信息表-批量启用主数据服务:
     path: /api/trantor/service/engine/execute/sys_common$ORG_EMPLOYEE_MD_MASTER_DATA_MULTI_ENABLE_DATA_SERVICE
     method: POST
+  通知模板-折叠关联关系服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_TEMPLATE_FOLDING_ASSOCIATED_SERVICE
+    method: POST
   物料描述修复:
     path: /api/trantor/service/engine/execute/sys_common$material_description_repair
     method: POST
@@ -739,6 +691,9 @@ apis:
   投标文件比对结果聚合服务:
     path: /api/trantor/service/engine/execute/sys_common$bid_docs_comp_result_aggre_service
     method: POST
+  通知记录-展开关联关系服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_RECORD_UNFOLDING_ASSOCIATED_SERVICE
+    method: POST
   获取工作台应用(/api/trantor/portal/application/list#GET):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_APPLICATION_LIST_GET
     method: POST
@@ -769,6 +724,9 @@ apis:
   审批流-筛选项配置-更新筛选项(/api/trantor/workflow/v2/selection-criteria/update#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_SELECTION_CRITERIA_UPDATE_POST
     method: POST
+  水印模板-删除(Trantor入参)(/api/print/watermarkTemplate/deleteByTrantor#POST):
+    path: /api/trantor/service/engine/execute/sys_common$API_PRINT_WATERMARK_TEMPLATE_DELETE_BY_TRANTOR_POST
+    method: POST
   员工信息表标准导出服务:
     path: /api/trantor/service/engine/execute/sys_common$ORG_EMPLOYEE_MD_GEI_EXPORT_SERVICE
     method: POST
@@ -795,6 +753,12 @@ apis:
     method: POST
   通过用户id查询用户信息（明文）(/api/trantor/portal/user/{id}/plaintext#GET):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_USER_PLAINTEXT_GET
+    method: POST
+  通知记录-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_RECORD_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  通知渠道-查询渠道账户(Trantor入参)(/api/notice/channel/queryAccountsByTrantor#POST):
+    path: /api/trantor/service/engine/execute/sys_common$API_NOTICE_CHANNEL_QUERY_ACCOUNTS_BY_TRANTOR_POST
     method: POST
   打印场景-根据模型key查询列表(/api/print/printScene/listByModelKey#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_PRINT_PRINT_SCENE_LIST_BY_MODEL_KEY_POST
@@ -901,6 +865,9 @@ apis:
   调度中心-作业实例-根据业务标识查询作业实例(/api/t-scheduler/job-instance/find-by-biz-key#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_T_SCHEDULER_JOB_INSTANCE_FIND_BY_BIZ_KEY_POST
     method: POST
+  任务实例-分页数据服务:
+    path: /api/trantor/service/engine/execute/sys_common$ASYNCTASK_INSTANCE_PAGING_DATA_SERVICE
+    method: POST
   导入导出模版管理接口-模版文件下载(/api/gei/template/download#GET):
     path: /api/trantor/service/engine/execute/sys_common$API_GEI_TEMPLATE_DOWNLOAD_GET
     method: POST
@@ -958,6 +925,9 @@ apis:
   投标文件比对结果-导入导出任务管理接口-提交导出任务:
     path: /api/trantor/service/engine/execute/sys_common$BID_DOCS_COMPARE_RESULT_API_GEI_TASK_EXPORT_DIRECT_POST
     method: POST
+  数据渲染服务_豆包:
+    path: /api/trantor/service/engine/execute/sys_common$ai_data_rendering_service_doubao
+    method: POST
   组织架构表-查找树子数据服务(支持条件过滤):
     path: /api/trantor/service/engine/execute/sys_common$STRUCT_FIND_TREE_CHILDREN_DATA_SERVICE
     method: POST
@@ -1003,11 +973,11 @@ apis:
   导入导出任务管理接口-提交导出任务(/api/gei/task/export-direct#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_GEI_TASK_EXPORT_DIRECT_POST
     method: POST
-  员工信息表-折叠关联关系服务:
-    path: /api/trantor/service/engine/execute/sys_common$ORG_EMPLOYEE_MD_FOLDING_ASSOCIATED_SERVICE
-    method: POST
   审批流-员工-组织类型列表(/api/trantor/workflow/v2/find/all/org/bus/type#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_FIND_ALL_ORG_BUS_TYPE_POST
+    method: POST
+  通知任务-折叠关联关系服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_TASK_FOLDING_ASSOCIATED_SERVICE
     method: POST
   水印-预览(/api/print/waterMarkPreview#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_PRINT_WATER_MARK_PREVIEW_POST
@@ -1029,6 +999,12 @@ apis:
     method: POST
   员工信息表-批量创建数据服务:
     path: /api/trantor/service/engine/execute/sys_common$ORG_EMPLOYEE_MD_BATCH_CREATE_DATA_SERVICE
+    method: POST
+  打印场景-展开关联关系服务:
+    path: /api/trantor/service/engine/execute/sys_common$PRINT_SCENE_UNFOLDING_ASSOCIATED_SERVICE
+    method: POST
+  通知模板-展开关联关系服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_TEMPLATE_UNFOLDING_ASSOCIATED_SERVICE
     method: POST
   查找元信息:
     path: /api/trantor/service/engine/execute/sys_common$search_meta
@@ -1056,6 +1032,9 @@ apis:
     method: POST
   动态表单模板api-创建动态表单模板(/api/dynamic-form/app/template/createAndUpdate#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_DYNAMIC_FORM_APP_TEMPLATE_CREATE_AND_UPDATE_POST
+    method: POST
+  水印模板-保存(Trantor入参)(/api/print/watermarkTemplate/saveByTrantor#POST):
+    path: /api/trantor/service/engine/execute/sys_common$API_PRINT_WATERMARK_TEMPLATE_SAVE_BY_TRANTOR_POST
     method: POST
   重置密码(/api/trantor/portal/user/{id}/reset-password#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_USER_RESET_PASSWORD_POST
@@ -1111,6 +1090,9 @@ apis:
   微信小程序相关接口-获取公共模板的关键词列表(/api/notice/template/wxapp/getPublicTemplateKeywords#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_NOTICE_TEMPLATE_WXAPP_GET_PUBLIC_TEMPLATE_KEYWORDS_POST
     method: POST
+  保存报表至工作台服务:
+    path: /api/trantor/service/engine/execute/sys_common$save_chart_to_workspace
+    method: POST
   用户列表-用户解锁(/api/trantor/portal/user/{id}/unlock#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_USER_UNLOCK_POST
     method: POST
@@ -1134,6 +1116,9 @@ apis:
     method: POST
   组织身份表-批量启用主数据服务:
     path: /api/trantor/service/engine/execute/sys_common$ORG_IDENTITY_CF_MASTER_DATA_MULTI_ENABLE_DATA_SERVICE
+    method: POST
+  通知任务APP服务-分页查询任务(Trantor入参)(/api/notice/task/pagingByTrantor#POST):
+    path: /api/trantor/service/engine/execute/sys_common$API_NOTICE_TASK_PAGING_BY_TRANTOR_POST
     method: POST
   员工组织关联表-查找列表数据服务:
     path: /api/trantor/service/engine/execute/sys_common$ORG_EMPLOYEE_ORG_LINK_CF_FIND_LIST_DATA_SERVICE
@@ -1189,6 +1174,9 @@ apis:
   配置中心配置接口-分页查询配置(/api/config/admin/info/paging#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_CONFIG_ADMIN_INFO_PAGING_POST
     method: POST
+  报表-执行SQL(/api/trantor/runtime/report/execute#POST):
+    path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_RUNTIME_REPORT_EXECUTE_POST
+    method: POST
   用户组-新建(/api/trantor/portal/user-group/create#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_USER_GROUP_CREATE_POST
     method: POST
@@ -1231,6 +1219,9 @@ apis:
   审批流-审批流管理-分页查询(/api/trantor/workflow/v2/paging#GET):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_PAGING_GET
     method: POST
+  任务实例-折叠关联关系服务:
+    path: /api/trantor/service/engine/execute/sys_common$ASYNCTASK_INSTANCE_FOLDING_ASSOCIATED_SERVICE
+    method: POST
   调度中心-作业定义-保存作业-Trantor(/api/t-scheduler/job-definition/save#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_T_SCHEDULER_JOB_DEFINITION_SAVE_POST
     method: POST
@@ -1248,6 +1239,9 @@ apis:
     method: POST
   替换所有默认角色(/api/trantor/portal/role/default/replace-all#GET):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_ROLE_DEFAULT_REPLACE_ALL_GET
+    method: POST
+  审批流-运维-审批变量修改(/api/trantor/workflow/v2/devops/change-variable#POST):
+    path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_DEVOPS_CHANGE_VARIABLE_POST
     method: POST
   打印场景实例-调整优先级(/api/print/printSceneInstance/adjustPriority#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_PRINT_PRINT_SCENE_INSTANCE_ADJUST_PRIORITY_POST
@@ -1312,9 +1306,6 @@ apis:
   物料价格分析表-批量删除数据服务:
     path: /api/trantor/service/engine/execute/sys_common$AI_MAT_PRICE_ANALYSIS_TR_BATCH_DELETE_DATA_SERVICE
     method: POST
-  员工信息表-保存主数据服务:
-    path: /api/trantor/service/engine/execute/sys_common$ORG_EMPLOYEE_MD_MASTER_DATA_SAVE_DATA_SERVICE
-    method: POST
   利用AI刷新审批流程:
     path: /api/trantor/service/engine/execute/sys_common$USE_AI_TO_REFRESH_WORKFLOW_PROCESS
     method: POST
@@ -1336,8 +1327,14 @@ apis:
   获取指定用户的一次性登录code(/api/trantor/portal/user/get-login-once-code#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_USER_GET_LOGIN_ONCE_CODE_POST
     method: POST
+  通知场景-分页数据服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_SCENE_PAGING_DATA_SERVICE
+    method: POST
   审批流-运维-获取实例状态对应的条数(/api/trantor/workflow/v2/devops/count#GET):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_DEVOPS_COUNT_GET
+    method: POST
+  导入导出任务管理接口-分页查询任务子任务(Trantor入参)(/api/gei/task/pagingSubByTrantor#POST):
+    path: /api/trantor/service/engine/execute/sys_common$API_GEI_TASK_PAGING_SUB_BY_TRANTOR_POST
     method: POST
   组织架构表-复制数据转换子服务:
     path: /api/trantor/service/engine/execute/sys_common$ORG_STRUCT_MD_COPY_DATA_CONVERTER_SERVICE_CHILD
@@ -1357,7 +1354,7 @@ apis:
   打印-office预览(/api/print/officePreview#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_PRINT_OFFICE_PREVIEW_POST
     method: POST
-  审批流-实例服务-获取流程实例详情(/api/trantor/workflow/v2/instances/{bizId}#GET):
+  审批流-实例服务-获取流程实例列表(/api/trantor/workflow/v2/instances#GET):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_INSTANCES_GET
     method: POST
   审批流-流程实例-查看实例详情(/api/trantor/workflow/v2/instance-detail#POST):
@@ -1401,6 +1398,9 @@ apis:
     method: POST
   组织身份表-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/sys_common$ORG_IDENTITY_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  通知任务-展开关联关系服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_TASK_UNFOLDING_ASSOCIATED_SERVICE
     method: POST
   数组人组织单元-查找树数据服务:
     path: /api/trantor/service/engine/execute/sys_common$DIGITAL_HUMAN_ORG_UNIT_FIND_TREE_SERVICE
@@ -1447,6 +1447,9 @@ apis:
   审批流-实例服务-流程撤回(/api/trantor/workflow/v2/instances/terminate#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_INSTANCES_TERMINATE_POST
     method: POST
+  打印模板-分页数据服务:
+    path: /api/trantor/service/engine/execute/sys_common$PRINT_TEMPLATE_PAGING_DATA_SERVICE
+    method: POST
   用户组-查询关联用户列表(/api/trantor/portal/user-group/{id}/assigned-users#GET):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_USER_GROUP_ASSIGNED_USERS_GET
     method: POST
@@ -1486,14 +1489,23 @@ apis:
   打印-查询所有匹配到的打印场景实例(/api/print/findAllMatchedPrintSceneInstance#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_PRINT_FIND_ALL_MATCHED_PRINT_SCENE_INSTANCE_POST
     method: POST
+  打印模板-折叠关联关系服务:
+    path: /api/trantor/service/engine/execute/sys_common$PRINT_TEMPLATE_FOLDING_ASSOCIATED_SERVICE
+    method: POST
   调度中心-作业实例-删除作业实例(/api/t-scheduler/job-instance/delete#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_T_SCHEDULER_JOB_INSTANCE_DELETE_POST
+    method: POST
+  导入导出任务管理接口-分页查询我的任务(Trantor入参)(/api/gei/task/myPagingByTrantor#POST):
+    path: /api/trantor/service/engine/execute/sys_common$API_GEI_TASK_MY_PAGING_BY_TRANTOR_POST
     method: POST
   数据渲染服务_copy:
     path: /api/trantor/service/engine/execute/sys_common$ai_data_rendering_service_copy
     method: POST
   智能体-分页数据查询服务:
     path: /api/trantor/service/engine/execute/sys_common$AGENT_PAGE_DATA_SERVICE
+    method: POST
+  站内信出参封装-折叠关联关系服务:
+    path: /api/trantor/service/engine/execute/sys_common$STATION_NOTICE_RES_FOLDING_ASSOCIATED_SERVICE
     method: POST
   打印场景实例-查询列表(/api/print/printSceneInstance/list#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_PRINT_PRINT_SCENE_INSTANCE_LIST_POST
@@ -1546,6 +1558,9 @@ apis:
   角色-数据权限-角色授权树(/api/trantor/portal/role/permission/data-permission/only-tree#GET):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_ROLE_PERMISSION_DATA_PERMISSION_ONLY_TREE_GET
     method: POST
+  打印场景-保存数据服务:
+    path: /api/trantor/service/engine/execute/sys_common$PRINT_SCENE_SAVE_DATA_SERVICE
+    method: POST
   员工组织关联表-批量创建数据服务:
     path: /api/trantor/service/engine/execute/sys_common$ORG_EMPLOYEE_ORG_LINK_CF_BATCH_CREATE_DATA_SERVICE
     method: POST
@@ -1558,8 +1573,20 @@ apis:
   审批流-流程实例-重新提交(/api/trantor/workflow/v2/re-submit#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_RE_SUBMIT_POST
     method: POST
+  菜单查询服务:
+    path: /api/trantor/service/engine/execute/sys_common$menu_query_service
+    method: POST
+  通知记录-保存数据服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_RECORD_SAVE_DATA_SERVICE
+    method: POST
+  通知记录-折叠关联关系服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_RECORD_FOLDING_ASSOCIATED_SERVICE
+    method: POST
   审批流-运维-强制批量转交(/api/trantor/workflow/v2/devops/task/force-batch-transfer#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_DEVOPS_TASK_FORCE_BATCH_TRANSFER_POST
+    method: POST
+  审批流-实例服务-通过业务单据号查看实例列表(/api/trantor/workflow/v2/instances/all-details/{bizId}#GET):
+    path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_INSTANCES_ALL_DETAILS_GET
     method: POST
   组织维度表-分页数据服务（支持条件过滤）:
     path: /api/trantor/service/engine/execute/sys_common$ORG_DIMENSION_PAGING_DATA_SERVICE
@@ -1585,6 +1612,9 @@ apis:
   动态表单模板api-根据ids查询动态表单模板(/api/dynamic-form/app/template/findByIds#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_DYNAMIC_FORM_APP_TEMPLATE_FIND_BY_IDS_POST
     method: POST
+  通知场景列表查询(/api/trantor/portal/meta/list/NoticeScene#GET):
+    path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_META_LIST_NOTICE_SCENE_GET
+    method: POST
   图片OCR 与文档理解:
     path: /api/trantor/service/engine/execute/sys_common$image_ocr_doc_understanding
     method: POST
@@ -1606,6 +1636,9 @@ apis:
   组织业务类型表-查找列表数据服务:
     path: /api/trantor/service/engine/execute/sys_common$ORG_BUSINESS_TYPE_CF_FIND_LIST_DATA_SERVICE
     method: POST
+  echart 图表通用工具:
+    path: /api/trantor/service/engine/execute/sys_common$echart_general_tool
+    method: POST
   员工组织关联表-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/sys_common$ORG_EMPLOYEE_ORG_LINK_CF_FIND_DATA_BY_ID_SERVICE
     method: POST
@@ -1623,6 +1656,9 @@ apis:
     method: POST
   通知渠道-查询渠道账户(/api/notice/channel/queryAccounts#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_NOTICE_CHANNEL_QUERY_ACCOUNTS_POST
+    method: POST
+  通知渠道账号-折叠关联关系服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_CHANNEL_ACCOUNT_FOLDING_ASSOCIATED_SERVICE
     method: POST
   id查询IAM审计日志信息(/api/trantor/portal/iam-audit-log/{id}/find#GET):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_IAM_AUDIT_LOG_FIND_GET
@@ -1663,11 +1699,17 @@ apis:
   用户列表分页查询(/api/trantor/portal/user/paging#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_USER_PAGING_POST
     method: POST
+  ChatBI 服务:
+    path: /api/trantor/service/engine/execute/sys_common$ai_intelligent_report_service
+    method: POST
   打印模板-删除(/api/print/printTemplate/delete#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_PRINT_PRINT_TEMPLATE_DELETE_POST
     method: POST
   调度中心-作业实例-创建作业实例(/api/t-scheduler/job-instance/create#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_T_SCHEDULER_JOB_INSTANCE_CREATE_POST
+    method: POST
+  通知渠道-批量保存渠道账户(/api/notice/channel/saveAccountBatch#POST):
+    path: /api/trantor/service/engine/execute/sys_common$API_NOTICE_CHANNEL_SAVE_ACCOUNT_BATCH_POST
     method: POST
   审批流-审批流组管理-查询详情(/api/trantor/workflow/portal/workflow-group/{key}#GET):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_PORTAL_WORKFLOW_GROUP_GET
@@ -1678,6 +1720,9 @@ apis:
   数字人组织单元-查找树子数据服务:
     path: /api/trantor/service/engine/execute/sys_common$DIGITAL_HUMAN_ORGANIZATION_UNIT_FIND_TREE_CHILDREN
     method: POST
+  页面打开服务_豆包:
+    path: /api/trantor/service/engine/execute/sys_common$ai_page_open_service_doubao
+    method: POST
   组织维度业务类型关联表-禁用主数据服务:
     path: /api/trantor/service/engine/execute/sys_common$ORG_DIMENSION_BUSINESS_LINK_MASTER_DATA_DISABLE_DATA_SERVICE
     method: POST
@@ -1686,6 +1731,12 @@ apis:
     method: POST
   打印场景实例-保存(/api/print/printSceneInstance/save#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_PRINT_PRINT_SCENE_INSTANCE_SAVE_POST
+    method: POST
+  通知场景-展开关联关系服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_SCENE_UNFOLDING_ASSOCIATED_SERVICE
+    method: POST
+  角色-功能权限-场景权限授权树(/api/trantor/portal/role/permission/scene-permission/tree#GET):
+    path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_ROLE_PERMISSION_SCENE_PERMISSION_TREE_GET
     method: POST
   通知场景APP服务-创建通知场景(/api/notice/scene/create#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_NOTICE_SCENE_CREATE_POST
@@ -1746,6 +1797,9 @@ apis:
     method: POST
   导入导出任务管理接口-同步自定义导入，返回excel数据和头信息(/api/gei/task/custom-import-sync#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_GEI_TASK_CUSTOM_IMPORT_SYNC_POST
+    method: POST
+  水印模板-展开关联关系服务:
+    path: /api/trantor/service/engine/execute/sys_common$PRINT_WATERMARK_TEMPLATE_UNFOLDING_ASSOCIATED_SERVICE
     method: POST
   打印模板-下载office模板文件(/api/print/printTemplate/downloadOfficeFile#GET):
     path: /api/trantor/service/engine/execute/sys_common$API_PRINT_PRINT_TEMPLATE_DOWNLOAD_OFFICE_FILE_GET
@@ -1825,6 +1879,12 @@ apis:
   角色-分页查询门户角色(/api/trantor/portal/role/paging#GET):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_ROLE_PAGING_GET
     method: POST
+  水印模板-保存数据服务:
+    path: /api/trantor/service/engine/execute/sys_common$PRINT_WATERMARK_TEMPLATE_SAVE_DATA_SERVICE
+    method: POST
+  水印模板-折叠关联关系服务:
+    path: /api/trantor/service/engine/execute/sys_common$PRINT_WATERMARK_TEMPLATE_FOLDING_ASSOCIATED_SERVICE
+    method: POST
   查询角色数据权限树(/api/trantor/portal/role/permission/data/tree#GET):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_ROLE_PERMISSION_DATA_TREE_GET
     method: POST
@@ -1848,9 +1908,6 @@ apis:
     method: POST
   通过组织单元 ID 查询组织单元详情:
     path: /api/trantor/service/engine/execute/sys_common$get_ou_details_by_id
-    method: POST
-  组织身份表-折叠关联关系服务:
-    path: /api/trantor/service/engine/execute/sys_common$ORG_IDENTITY_CF_FOLDING_ASSOCIATED_SERVICE
     method: POST
   用户-分页数据服务:
     path: /api/trantor/service/engine/execute/sys_common$USER_PAGING_DATA_SERVICE
@@ -1902,6 +1959,9 @@ apis:
     method: POST
   调度中心-作业定义-按作业标识删除作业-禁用状态允许(/api/t-scheduler/job-definition/delete-by-key#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_T_SCHEDULER_JOB_DEFINITION_DELETE_BY_KEY_POST
+    method: POST
+  通知任务-保存数据服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_TASK_SAVE_DATA_SERVICE
     method: POST
   通知记录APP服务-批量重发(/api/notice/record/batchReSend#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_NOTICE_RECORD_BATCH_RE_SEND_POST
@@ -1966,6 +2026,9 @@ apis:
   审批流-钉钉应用接口信息-文件上传至钉钉网盘(/api/trantor/workflow/v2/dingding/upload-file#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_DINGDING_UPLOAD_FILE_POST
     method: POST
+  水印模板-分页数据服务:
+    path: /api/trantor/service/engine/execute/sys_common$PRINT_WATERMARK_TEMPLATE_PAGING_DATA_SERVICE
+    method: POST
   查询当前门户下所有菜单绑定场景所属模块的数据结构对象(/api/trantor/portal/role/permission/field/model/find#GET):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_ROLE_PERMISSION_FIELD_MODEL_FIND_GET
     method: POST
@@ -2014,6 +2077,9 @@ apis:
   通过员工编码查询员工详情:
     path: /api/trantor/service/engine/execute/sys_common$get_employee_details_by_emp_code
     method: POST
+  通知模板-分页查询通知模板(携带账户信息)(/api/notice/template/pagingWithAccountByTrantor#POST):
+    path: /api/trantor/service/engine/execute/sys_common$API_NOTICE_TEMPLATE_PAGING_WITH_ACCOUNT_BY_TRANTOR_POST
+    method: POST
   审批流-流程实例-流程启动(/api/trantor/workflow/v2/start#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_START_POST
     method: POST
@@ -2034,6 +2100,12 @@ apis:
     method: POST
   物料价格分析表-保存数据服务:
     path: /api/trantor/service/engine/execute/sys_common$AI_MAT_PRICE_ANALYSIS_TR_SAVE_DATA_SERVICE
+    method: POST
+  通知记录APP服务-分页查询记录(Trantor入参)(/api/notice/record/pagingByTrantor#POST):
+    path: /api/trantor/service/engine/execute/sys_common$API_NOTICE_RECORD_PAGING_BY_TRANTOR_POST
+    method: POST
+  通知渠道-分页数据服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_CHANNEL_PAGING_DATA_SERVICE
     method: POST
   国际化文案接口-文案保存(/api/i18n/admin/resource/save#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_I18N_ADMIN_RESOURCE_SAVE_POST
@@ -2056,6 +2128,9 @@ apis:
   审批流-流程任务实例-新工作台查询待办列表(/api/trantor/workflow/v2/task-instance/search-for-workbench#GET):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_TASK_INSTANCE_SEARCH_FOR_WORKBENCH_GET
     method: POST
+  打印场景-折叠关联关系服务:
+    path: /api/trantor/service/engine/execute/sys_common$PRINT_SCENE_FOLDING_ASSOCIATED_SERVICE
+    method: POST
   导入导出配置管理接口-查询表头选择记录(/api/gei/task/config/queryHeaderSelectiveRecord#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_GEI_TASK_CONFIG_QUERY_HEADER_SELECTIVE_RECORD_POST
     method: POST
@@ -2071,8 +2146,14 @@ apis:
   配置中心配置接口-配置删除(/api/config/admin/info/delete-by-id#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_CONFIG_ADMIN_INFO_DELETE_BY_ID_POST
     method: POST
+  水印模板-分页查询(Trantor入参)(/api/print/watermarkTemplate/pagingByTrantor#POST):
+    path: /api/trantor/service/engine/execute/sys_common$API_PRINT_WATERMARK_TEMPLATE_PAGING_BY_TRANTOR_POST
+    method: POST
   异步任务-任务实例-标记任务已读时间(/api/async-task/task-instance/user-mark#PUT):
     path: /api/trantor/service/engine/execute/sys_common$API_ASYNC_TASK_TASK_INSTANCE_USER_MARK_PUT
+    method: POST
+  水印-预览(Trantor入参)(/api/print/waterMarkPreviewByTrantor#POST):
+    path: /api/trantor/service/engine/execute/sys_common$API_PRINT_WATER_MARK_PREVIEW_BY_TRANTOR_POST
     method: POST
   国际化草稿文案接口-文案同步(/api/i18n/admin/resource/draft/sync#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_I18N_ADMIN_RESOURCE_DRAFT_SYNC_POST
@@ -2158,6 +2239,9 @@ apis:
   审批流-审批流组管理-分页查询(/api/trantor/workflow/portal/workflow-group/paging#GET):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_PORTAL_WORKFLOW_GROUP_PAGING_GET
     method: POST
+  通知渠道-查询渠道列表(Trantor入参)(/api/notice/channel/queryListByTrantor#POST):
+    path: /api/trantor/service/engine/execute/sys_common$API_NOTICE_CHANNEL_QUERY_LIST_BY_TRANTOR_POST
+    method: POST
   员工信息表-查找列表数据服务:
     path: /api/trantor/service/engine/execute/sys_common$ORG_EMPLOYEE_MD_FIND_LIST_DATA_SERVICE
     method: POST
@@ -2173,9 +2257,6 @@ apis:
   审批流-流程任务实例-获取任务对应组织 ID(/api/trantor/workflow/v2/task-instance/{taskInstanceId}/org-id#GET):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_TASK_INSTANCE_ORG_ID_GET
     method: POST
-  组织架构表-折叠关联关系服务:
-    path: /api/trantor/service/engine/execute/sys_common$ORG_STRUCT_MD_FOLDING_ASSOCIATED_SERVICE
-    method: POST
   导入导出任务管理接口-通过文件提交导入任务(/api/gei/task/import-by-file#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_GEI_TASK_IMPORT_BY_FILE_POST
     method: POST
@@ -2190,6 +2271,9 @@ apis:
     method: POST
   站内信APP服务-标记为已读(/api/notice/station/read#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_NOTICE_STATION_READ_POST
+    method: POST
+  通知场景-保存数据服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_SCENE_SAVE_DATA_SERVICE
     method: POST
   作业定义-保存数据服务:
     path: /api/trantor/service/engine/execute/sys_common$JOB_DEFINITION_SAVE_DATA_SERVICE
@@ -2212,6 +2296,9 @@ apis:
   用户-根据ID查找数据服务:
     path: /api/trantor/service/engine/execute/sys_common$USER_FIND_DATA_BY_ID_SERVICE
     method: POST
+  通知渠道-折叠关联关系服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_CHANNEL_FOLDING_ASSOCIATED_SERVICE
+    method: POST
   通知场景APP服务-更新通知场景(/api/notice/scene/update#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_NOTICE_SCENE_UPDATE_POST
     method: POST
@@ -2221,11 +2308,23 @@ apis:
   审批流-审批人代理管理-批量替换代理人(/api/trantor/workflow/v2/proxy/batch-replace-agent#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_PROXY_BATCH_REPLACE_AGENT_POST
     method: POST
+  通知模板-分页数据服务:
+    path: /api/trantor/service/engine/execute/sys_common$NOTICE_TEMPLATE_PAGING_DATA_SERVICE
+    method: POST
+  ChatBI SSE 服务:
+    path: /api/trantor/service/engine/execute/sys_common$ai_intelligent_report_sse_service
+    method: POST
+  打印场景-分页数据服务:
+    path: /api/trantor/service/engine/execute/sys_common$PRINT_SCENE_PAGING_DATA_SERVICE
+    method: POST
   服务调用:
     path: /api/trantor/service/engine/execute/sys_common$service_call
     method: POST
   通知模板-分页查询通知模板(/api/notice/template/paging#POST):
     path: /api/trantor/service/engine/execute/sys_common$API_NOTICE_TEMPLATE_PAGING_POST
+    method: POST
+  获取审批任务列表条件树:
+    path: /api/trantor/service/engine/execute/sys_common$get_approval_task_list_condition_tree
     method: POST
   组织维度表-导入导出任务管理接口-提交导出任务:
     path: /api/trantor/service/engine/execute/sys_common$ORG_DIMENSION_CF_API_GEI_TASK_EXPORT_DIRECT_POST

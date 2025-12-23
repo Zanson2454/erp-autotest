@@ -1,7 +1,22 @@
 version: '1.0'
-total_apis: 1
+total_apis: 6
 apis:
   Trantor-获取当前门户信息:
     path: /api/trantor/portal/current
+    method: GET
+  Trantor-获取最新版本信息:
+    path: /latest.json
+    method: GET
+  Trantor-获取WebSocket Token:
+    path: /api/mw/websocket/getToken
+    method: POST
+  Trantor-获取当前用户信息:
+    path: /api/trantor/portal/user/current
+    method: GET
+  Trantor-获取应用列表:
+    path: /api/trantor/portal/application/list
+    method: GET
+  Trantor-获取图标信息:
+    path: /api/trantor/portal/icon
     method: GET
 
