@@ -11,28 +11,23 @@ from pathlib import Path
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
 
-from testcases.erp_fin import FinBaseTest
+from testcases.erp_fin.fin_iv import IvBaseTest
 from utils.report_util import a, case_decorator
 
 
 @allure.epic("ERP业财集成-存货价值")
 @allure.feature("存货计价规则")
-class TestIvPricingRuleManagement(FinBaseTest):
+class TestIvPricingRuleManagement(IvBaseTest):
     """存货计价规则测试类"""
     
     pricing_rule_id = None
     
     @classmethod
     def setup_class(cls):
-        super().setup_class()
+        super().setup_class()  # IvBaseTest 会自动初始化存货核算配置和 com_org_id/gr_com_org_id/inv_org_id
         cls.pricing_rule_id = None
         cls.logger.info("存货计价规则测试类初始化完成")
-        # 初始化MD数据（从md_cache_data获取主数据）
-        if cls.md_cache_data:
-            gr_come_org_info = cls.md_cache_data.get("org_info", {}).get("gr_come_org_info", [])
-            cls.com_org_id = gr_come_org_info[0].get("id") if gr_come_org_info else None
-            inv_org_info = cls.md_cache_data.get("org_info", {}).get("inv_org_info", [])
-            cls.inv_org_id = inv_org_info[0].get("id") if inv_org_info else None
+        # 注意：com_org_id 和 inv_org_id 已在 FinBaseTest/IvBaseTest 中初始化，无需重复获取
     
     @classmethod
     def teardown_class(cls):

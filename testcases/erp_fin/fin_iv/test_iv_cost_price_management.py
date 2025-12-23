@@ -11,30 +11,24 @@ from pathlib import Path
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
 
-from testcases.erp_fin import FinBaseTest
+from testcases.erp_fin.fin_iv import IvBaseTest
 from utils.report_util import a, case_decorator
 
 
 @allure.epic("ERP财务模块")
 @allure.feature("存货成本价格")
-class TestIvCostPriceManagement(FinBaseTest):
+class TestIvCostPriceManagement(IvBaseTest):
     """存货成本价格测试类"""
     
     @classmethod
     def setup_class(cls):
-        super().setup_class()
+        super().setup_class()  # IvBaseTest 会自动初始化存货核算配置和 com_org_id/gr_com_org_id/inv_org_id/mat_id
         cls.cost_price_id = None
         cls.logger.info("存货成本价格测试类初始化完成")
-        # 初始化MD（从md_cache_data获取主数据）
-        if cls.md_cache_data:
-            gr_come_org_info = cls.md_cache_data.get("org_info", {}).get("gr_come_org_info", [])
-            cls.com_org_id = gr_come_org_info[0].get("id") if gr_come_org_info else None
-            inv_org_info = cls.md_cache_data.get("org_info", {}).get("inv_org_info", [])
-            cls.inv_org_id = inv_org_info[0].get("id") if inv_org_info else None
-            # 获取物料ID（FINP类型）
-            mat_md = cls.md_cache_data.get("mat_info", {}).get("mat_md", {})
-            finp_list = mat_md.get("FINP", [])
-            cls.mat_id = finp_list[0].get("id") if finp_list else None
+        # 注意：com_org_id、inv_org_id、mat_id 已在 FinBaseTest/IvBaseTest 中初始化，无需重复获取
+        # - com_org_id: 从 com_org_info 获取（IvBaseTest 已映射）
+        # - inv_org_id: 从 inv_org_info 获取（FinBaseTest 已初始化）
+        # - mat_id: 从 mat_md.FINP 获取（FinBaseTest 已初始化）
     
     @classmethod
     def teardown_class(cls):
@@ -285,7 +279,6 @@ class TestIvCostPriceManagement(FinBaseTest):
             # 按照CURL真实入参格式构建参数
             params = {
                 "serviceKey": "ERP_FIN$FIN_IV_PRICE_MD_API_GEI_TASK_EXPORT_DIRECT_POST",
-                "teamId": 22,
                 "params": {
                     "taskName": f"存货成本价格-{self.nickname or '自动化测试'}-{self.mock_util.get_timestamp()}-导出",
                     "multiSheetConfig": [
@@ -364,8 +357,6 @@ class TestIvCostPriceManagement(FinBaseTest):
                         }
                     ],
                     "queryData": {
-                        "appId": 0,
-                        "teamId": 22,
                         "containerKey": "ERP_FIN$IV_PRICE_MD_VIEW-table-container-ERP_FIN$fin_iv_price_md",
                         "viewKey": "ERP_FIN$IV_PRICE_MD_VIEW:list",
                         "sceneKey": "ERP_FIN$IV_PRICE_MD_VIEW",
@@ -427,8 +418,6 @@ class TestIvCostPriceManagement(FinBaseTest):
                     },
                     "processConfig": {
                         "processType": "TRANTOR",
-                        "appId": 0,
-                        "teamId": 22,
                         "model": "ERP_FIN$fin_iv_price_md",
                         "modelName": "存货成本价格",
                         "containerKey": "ERP_FIN$IV_PRICE_MD_VIEW-table-container-ERP_FIN$fin_iv_price_md",

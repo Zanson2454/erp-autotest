@@ -11,26 +11,21 @@ from pathlib import Path
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
 
-from testcases.erp_fin import FinBaseTest
+from testcases.erp_fin.fin_iv import IvBaseTest
 from utils.report_util import a, case_decorator
 
 
 @allure.epic("ERP业财集成-存货价值")
 @allure.feature("存货核算执行记录")
-class TestIvExecuteRecordManagement(FinBaseTest):
+class TestIvExecuteRecordManagement(IvBaseTest):
     """存货核算执行记录测试类"""
     
     @classmethod
     def setup_class(cls):
-        super().setup_class()
+        super().setup_class()  # IvBaseTest 会自动初始化存货核算配置和 com_org_id/gr_com_org_id/inv_org_id
         cls.execute_record_id = None
         cls.logger.info("存货核算执行记录测试类初始化完成")
-        # 初始化MD数据（从md_cache_data获取主数据）
-        if cls.md_cache_data:
-            gr_come_org_info = cls.md_cache_data.get("org_info", {}).get("gr_come_org_info", [])
-            cls.com_org_id = gr_come_org_info[0].get("id") if gr_come_org_info else None
-            inv_org_info = cls.md_cache_data.get("org_info", {}).get("inv_org_info", [])
-            cls.inv_org_id = inv_org_info[0].get("id") if inv_org_info else None
+        # 注意：com_org_id 和 inv_org_id 已在 FinBaseTest/IvBaseTest 中初始化，无需重复获取
     
     @classmethod
     def teardown_class(cls):
@@ -60,22 +55,24 @@ class TestIvExecuteRecordManagement(FinBaseTest):
             # 检查依赖数据
             if not self.com_org_id:
                 raise ValueError("com_org_id 未初始化，请检查 md_cache_data")
-            if not self.inv_org_id:
-                raise ValueError("inv_org_id 未初始化，请检查 md_cache_data")
             
             # 准备测试数据
             record_code = self.mock_util.generate_unique_code(tag="IV_EXEC")
-            record_name = f"执行记录_{self.mock_util.get_timestamp()}"
+            task_code = f"TASK_{self.mock_util.get_timestamp()}"
             
             # 使用标准化API调用
+            # 注意：根据 API 参数定义，fin_iv_execute_record_tr 表没有 invOrgId 字段
+            # 字段包括：comOrgId, periodId, executeStatus, executeType, taskCode, requestId 等
             set_dict = {
-                "comOrgId": self.com_org_id,
-                "invOrgId": self.inv_org_id,
-                "code": record_code,
-                "name": record_name,
-                "status": "CREATED"
+                "comOrgId": {"id": self.com_org_id},
+                "taskCode": task_code,
+                "executeType": "INIT",
+                "executeStatus": "CREATED",
+                "matchHeadQty": 0,
+                "matchItemQty": 0,
+                "executeItemQty": 0
             }
-            fields_to_filter = ["comOrgId", "invOrgId", "code", "name", "status"]
+            fields_to_filter = ["comOrgId", "taskCode", "executeType", "executeStatus", "matchHeadQty", "matchItemQty", "executeItemQty"]
             
             response, extracted_id = self.standard_api_call(
                 api_key="存货核算执行记录-保存数据服务",
@@ -132,26 +129,6 @@ class TestIvExecuteRecordManagement(FinBaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    def test_find_execute_record_by_id(self):
-        """测试根据ID查找执行记录"""
-        try:
-            # 使用标准化API调用
-            sql = "select id  from fin_iv_execute_record_tr where deleted=0 and com_org_id=%s and inv_org_id=%s order by created_at desc limit 1"
-            self.execute_record_id = self.db.execute(sql, [self.com_org_id, self.inv_org_id])
-            set_dict = {"id": self.execute_record_id}
-            fields_to_filter = ["id"]
-            response, _ = self.standard_api_call(
-                api_key="存货核算执行记录-根据ID查找数据服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as=None
-            )
-            # 业务断言
-            self.assert_util.assert_response_data(response)
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
-    
     @case_decorator(
         story="存货核算执行记录",
         title="测试根据ID查找执行记录",
@@ -163,8 +140,15 @@ class TestIvExecuteRecordManagement(FinBaseTest):
     def test_find_execute_record_by_id(self):
         """测试根据ID查找执行记录"""
         try:
-            sql = "select id  from fin_iv_execute_record_tr where deleted=0 and com_org_id=%s and inv_org_id=%s order by created_at desc limit 1"
-            self.execute_record_id = self.db.execute(sql, [self.com_org_id, self.inv_org_id])
+            # 注意：fin_iv_execute_record_tr 表没有 inv_org_id 字段，只有 com_org_id
+            sql = "SELECT id FROM fin_iv_execute_record_tr WHERE deleted=0 AND com_org_id=%s ORDER BY created_at DESC LIMIT 1"
+            result = self.db.query(sql, [self.com_org_id])
+            if result and len(result) > 0:
+                self.execute_record_id = result[0].get("id")
+            else:
+                # 如果没有现有记录，先创建一个
+                self.test_save_execute_record()
+                # test_save_execute_record 已通过 store_id_as="execute_record" 设置了 self.execute_record_id
             
             # 使用标准化API调用
             set_dict = {"id": self.execute_record_id}
