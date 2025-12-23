@@ -1,5 +1,5 @@
 version: '1.0'
-total_apis: 302
+total_apis: 303
 apis:
   查询 PII 脱敏配置:
     path: /api/trantor/pii/config
@@ -519,6 +519,9 @@ apis:
     method: GET
   获取版本信息:
     path: /api/trantor/version
+    method: GET
+  获取最新版本信息:
+    path: /latest.json
     method: GET
   根据 modelKey 获取模型详情:
     path: /api/trantor/struct-node/{modelKey}

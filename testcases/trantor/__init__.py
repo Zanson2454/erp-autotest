@@ -30,8 +30,8 @@ class TrantorBaseTest(BaseTest):
         super().setup_class()
 
         # 初始化配置文件路径
-        cls.trantor_api_path = Path(project_root) / "testdata" / "trantor" / "trantor_api_path.yaml"
-        cls.trantor_api_params = Path(project_root) / "testdata" / "trantor" / "trantor_api_params.yaml"
+        cls.trantor_api_path = Path(project_root) / "testdata" / "trantor" / "api_api_path.yaml"
+        cls.trantor_api_params = Path(project_root) / "testdata" / "trantor" / "api_api_params.yaml"
         
         # 加载API路径配置和参数配置
         cls.apis = cls.yaml_util.read_yaml(cls.trantor_api_path).get("apis", {})

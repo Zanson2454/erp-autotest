@@ -2011,6 +2011,7 @@ api_params:
     userContent: null
   /api/trantor2/runtime/preference/filter/{scope}: {}
   /api/trantor/version: {}
+  /latest.json: {}
   /api/trantor/struct-node/{modelKey}: {}
   /api/trantor/struct-node/{modelKey}/schema: {}
   /api/trantor/struct-node/{key}/diff-model-meta-by-model-key: {}
