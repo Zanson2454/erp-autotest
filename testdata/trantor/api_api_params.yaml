@@ -2243,6 +2243,7 @@ api_params:
   /api/trantor/portal/custom-theme: {}
   /api/trantor/portal/current: {}
   /api/trantor/portal/application/list: {}
+  /api/mw/websocket/getToken: {}
   /api/trantor/portal/access-url:
     sceneKey: null
     viewKey: null
