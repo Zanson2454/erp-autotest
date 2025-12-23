@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 配置：哪些模块不走并发（串行执行）
-SERIAL_MODULES="scm_inv"
+SERIAL_MODULES="scm_inv scm_sls"
 
 # 并发进程数
 WORKERS=4
