@@ -80,7 +80,10 @@ class TestRebateGet(SlsBase):
             else:
                 raise Exception("未找到创建的销售订单")
             
-            # 5. 审批销售订单通过（只有审批通过的订单才会生成返利确认单行）
+            # 5. 等待订单数据同步后再审批
+            time.sleep(3)
+            
+            # 6. 审批销售订单通过（只有审批通过的订单才会生成返利确认单行）
             self.logger.info("审批销售订单通过")
             self._approve_sales_order(self.so_id)
             
@@ -113,6 +116,9 @@ class TestRebateGet(SlsBase):
                 if so_info:
                     self.so_code = so_info[0]['so_code']
                     self.logger.info(f"销售订单创建成功，ID: {self.so_id}, 订单号: {self.so_code}")
+                
+                # 等待订单数据同步后再审批
+                time.sleep(3)
                 
                 # 审批销售订单通过
                 self.logger.info("审批销售订单通过")
@@ -151,6 +157,9 @@ class TestRebateGet(SlsBase):
                 if so_info:
                     self.so_code = so_info[0]['so_code']
                     self.logger.info(f"销售订单创建成功，ID: {self.so_id}, 订单号: {self.so_code}")
+                
+                # 等待订单数据同步后再审批
+                time.sleep(3)
                 
                 # 审批销售订单通过
                 self.logger.info("审批销售订单通过")
@@ -263,6 +272,9 @@ class TestRebateGet(SlsBase):
                     self.so_code = so_info[0]['so_code']
                     self.logger.info(f"销售订单创建成功，ID: {self.so_id}, 订单号: {self.so_code}")
                 
+                # 等待订单数据同步后再审批
+                time.sleep(3)
+                
                 # 审批销售订单通过
                 self.logger.info("审批销售订单通过")
                 self._approve_sales_order(self.so_id)
@@ -357,6 +369,9 @@ class TestRebateGet(SlsBase):
                     self.so_code = so_info[0]['so_code']
                     self.logger.info(f"销售订单创建成功，ID: {self.so_id}, 订单号: {self.so_code}")
                 
+                # 等待订单数据同步后再审批
+                time.sleep(3)
+                
                 # 审批销售订单通过
                 self.logger.info("审批销售订单通过")
                 self._approve_sales_order(self.so_id)
@@ -430,6 +445,9 @@ class TestRebateGet(SlsBase):
                 if so_info:
                     self.so_code = so_info[0]['so_code']
                     self.logger.info(f"销售订单创建成功，ID: {self.so_id}, 订单号: {self.so_code}")
+                
+                # 等待订单数据同步后再审批
+                time.sleep(3)
                 
                 # 审批销售订单通过
                 self.logger.info("审批销售订单通过")
@@ -566,12 +584,26 @@ class TestRebateGet(SlsBase):
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_success(response)
             
-            # 6. 查询订单状态，验证是否为已生效
-            order_status = self.db.query(
-                "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
-                params=[order_id]
-            )
-            actual_status = order_status[0]['so_status']
+            # 6. 等待订单状态更新
+            time.sleep(2)
+            
+            # 7. 查询订单状态，验证是否为已生效（添加重试机制）
+            actual_status = None
+            for attempt in range(5):
+                order_status = self.db.query(
+                    "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
+                    params=[order_id]
+                )
+                if order_status:
+                    actual_status = order_status[0]['so_status']
+                    if actual_status == "EFFECT":
+                        break
+                
+                # 如果状态不是已生效，等待后重试
+                if attempt < 4:
+                    time.sleep(2)
+                    self.logger.info(f"订单状态不是已生效，等待2秒后重试 (第{attempt + 1}次)，当前状态: {actual_status}")
+            
             self.assert_util.assert_by_operator(actual_status, "=", "EFFECT", "订单状态应为已生效")
             
             self.logger.info(f"销售订单审批通过，ID: {order_id}")

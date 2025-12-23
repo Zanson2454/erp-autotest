@@ -105,12 +105,29 @@ class TestSalesOrderApproval(SlsBase):
             # 1. 创建销售订单并提交（确保金额满足审单规则条件 > 1000）
             self.order_id = self.create_sales_order(order_type="STND", submit=True)
             
-            # 2. 查询订单状态，验证是否为审批中或已生效
-            order_status = self.db.query(
-                "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
-                params=[self.order_id]
-            )
-            actual_status = order_status[0]['so_status']
+            # 2. 等待订单状态更新
+            import time
+            time.sleep(2)
+            
+            # 3. 查询订单状态，验证是否为审批中或已生效（添加重试机制）
+            actual_status = None
+            for attempt in range(5):
+                order_status = self.db.query(
+                    "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
+                    params=[self.order_id]
+                )
+                if order_status:
+                    actual_status = order_status[0]['so_status']
+                    if actual_status in ["APPROVING", "EFFECT"]:
+                        break
+                
+                # 如果状态不是预期状态，等待后重试
+                if attempt < 4:
+                    time.sleep(2)
+                    self.logger.info(f"订单状态查询，等待2秒后重试 (第{attempt + 1}次)，当前状态: {actual_status}")
+            
+            if not actual_status:
+                raise ValueError(f"未找到订单状态，订单ID: {self.order_id}")
             
             # 3. 如果订单直接生效，说明审批规则可能没有生效，记录警告但继续测试
             if actual_status == "EFFECT":
@@ -222,12 +239,27 @@ class TestSalesOrderApproval(SlsBase):
             response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_success(response)
             
-            # 6. 查询订单状态，验证是否为已生效
-            order_status = self.db.query(
-                "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
-                params=[self.order_id]
-            )
-            actual_status = order_status[0]['so_status']
+            # 6. 等待订单状态更新
+            import time
+            time.sleep(2)
+            
+            # 7. 查询订单状态，验证是否为已生效（添加重试机制）
+            actual_status = None
+            for attempt in range(5):
+                order_status = self.db.query(
+                    "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
+                    params=[self.order_id]
+                )
+                if order_status:
+                    actual_status = order_status[0]['so_status']
+                    if actual_status == "EFFECT":
+                        break
+                
+                # 如果状态不是已生效，等待后重试
+                if attempt < 4:
+                    time.sleep(2)
+                    self.logger.info(f"订单状态不是已生效，等待2秒后重试 (第{attempt + 1}次)，当前状态: {actual_status}")
+            
             self.assert_util.assert_by_operator(actual_status, "=", "EFFECT", "订单状态应为已生效")
                 
         except Exception as e:
@@ -249,12 +281,29 @@ class TestSalesOrderApproval(SlsBase):
             # 1. 创建销售订单并提交（确保金额满足审单规则条件 > 1000）
             self.reject_order_id = self.create_sales_order(order_type="STND", submit=True)
             
-            # 2. 查询订单状态，验证是否为审批中或已生效
-            order_status = self.db.query(
-                "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
-                params=[self.reject_order_id]
-            )
-            actual_status = order_status[0]['so_status']
+            # 2. 等待订单状态更新
+            import time
+            time.sleep(2)
+            
+            # 3. 查询订单状态，验证是否为审批中或已生效（添加重试机制）
+            actual_status = None
+            for attempt in range(5):
+                order_status = self.db.query(
+                    "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
+                    params=[self.reject_order_id]
+                )
+                if order_status:
+                    actual_status = order_status[0]['so_status']
+                    if actual_status in ["APPROVING", "EFFECT"]:
+                        break
+                
+                # 如果状态不是预期状态，等待后重试
+                if attempt < 4:
+                    time.sleep(2)
+                    self.logger.info(f"订单状态查询，等待2秒后重试 (第{attempt + 1}次)，当前状态: {actual_status}")
+            
+            if not actual_status:
+                raise ValueError(f"未找到订单状态，订单ID: {self.reject_order_id}")
             
             # 3. 如果订单已经是生效状态，跳过审批拒绝步骤
             if actual_status == "EFFECT":

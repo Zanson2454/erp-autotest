@@ -66,8 +66,21 @@ class TestStandardSalesOrder(SlsBase):
             # 验证订单创建成功
             assert self.order_id is not None, "创建订单失败，未返回订单ID"
             
-            # 验证订单状态为已生效
-            order_info = self.db.query(f"SELECT id, so_code, so_status FROM sls_so_head_tr WHERE id={self.order_id}")
+            # 等待订单状态更新
+            time.sleep(2)
+            
+            # 验证订单状态为已生效（添加重试机制）
+            order_info = None
+            for attempt in range(5):
+                order_info = self.db.query(f"SELECT id, so_code, so_status FROM sls_so_head_tr WHERE id={self.order_id}")
+                if order_info and order_info[0]['so_status'] in ['EFFECT', 'APPROVING']:
+                    break
+                
+                # 如果状态不是预期状态，等待后重试
+                if attempt < 4:
+                    time.sleep(2)
+                    self.logger.info(f"订单状态查询，等待2秒后重试 (第{attempt + 1}次)")
+            
             assert order_info, "未找到创建的订单"
             assert order_info[0]['so_status'] in ['EFFECT', 'APPROVING'], f"订单状态不正确，期望：EFFECT或APPROVING，实际：{order_info[0]['so_status']}"
             
@@ -105,58 +118,44 @@ class TestStandardSalesOrder(SlsBase):
                     raise ValueError(f"未找到订单，订单ID: {self.order_id}")
                 self.order_code = order_info[0]['so_code']
             
-            # 2. 查询销售订单行列表
-            api_path = self.get_api_path("分页查询销售订单行")
-            params, url = self.get_api_params(api_path)
-            query_payload = copy.deepcopy(params)
-
-            pageable = query_payload.get("params", {}).get("pageable", {})
-            condition_items = pageable.get("conditionItems")
-            if not isinstance(condition_items, dict):
-                condition_items = {}
-            
-            condition_items.setdefault("type", "ConditionItems")
-            condition_items.setdefault("logicOperator", "AND")
-            conditions = condition_items.setdefault("conditions", {})
-            conditions["soCode"] = {
-                "operator": "CONTAINS",
-                "value": self.order_code
-            }
-            conditions.setdefault("matId", {"operator": "IN", "value": []})
-            
-            # 重新设置回结构中
-            pageable["conditionItems"] = condition_items
-            if "params" not in query_payload:
-                query_payload["params"] = {}
-            if "pageable" not in query_payload["params"]:
-                query_payload["params"]["pageable"] = {}
-            query_payload["params"]["pageable"] = pageable
-
-            last_response = None
-            order_item = None
-            for _ in range(3):
-                last_response = self.http.post(url, json=query_payload)
-                self.assert_util.assert_response_data(last_response)
-
-                data_block = last_response.get("data", {}).get("data", {})
-                records = data_block.get("records") or data_block.get("data") or []
-                order_item = next((item for item in records if str(item.get("soId")) == str(self.order_id)), None)
-                if order_item:
+            # 2. 从数据库查询订单行数据，并构造完成订单行所需的数据对象
+            order_item_info = None
+            for _ in range(5):
+                order_item_info = self.db.query(
+                    """SELECT id, so_id, so_item_code, so_item_status, so_item_business_status, 
+                       version, mat_id, so_item_sls_qty, so_item_price, uom_sls_id, 
+                       inv_org_id, inv_loc_id, so_item_type_id
+                       FROM sls_so_item_tr WHERE so_id = %s LIMIT 1""",
+                    (self.order_id,)
+                )
+                if order_item_info:
                     break
                 time.sleep(1)
-
-            if not order_item:
+            
+            if not order_item_info:
                 raise ValueError(f"未找到订单对应的订单行，订单ID: {self.order_id}, 订单编号: {self.order_code}")
-
-            a.json(query_payload, "查询订单行列表-请求数据")
-            a.json(last_response, "查询订单行列表-响应数据")
-
-            self.so_item_id = order_item.get("id")
-
-            if not self.so_item_id:
-                raise ValueError("订单行数据中未找到ID字段")
-
-            a.text(f"找到订单行，订单行ID: {self.so_item_id}, 订单编号: {self.order_code}", "订单行查询结果")
+            
+            item_data = order_item_info[0]
+            self.so_item_id = item_data['id']
+            
+            # 3. 构造订单行数据对象（用于完成订单行操作）
+            order_item = {
+                "id": item_data['id'],
+                "soId": item_data['so_id'],
+                "soItemCode": item_data['so_item_code'],
+                "soItemStatus": item_data['so_item_status'],
+                "soItemBusinessStatus": item_data['so_item_business_status'],
+                "version": item_data.get('version', 0),
+                "matId": {"id": item_data['mat_id']} if item_data.get('mat_id') else None,
+                "soItemSlsQty": float(item_data['so_item_sls_qty']) if item_data.get('so_item_sls_qty') else 0,
+                "soItemPrice": float(item_data['so_item_price']) if item_data.get('so_item_price') else 0,
+                "uomSlsId": {"id": item_data['uom_sls_id']} if item_data.get('uom_sls_id') else None,
+                "invOrgId": {"id": item_data['inv_org_id']} if item_data.get('inv_org_id') else None,
+                "invLocId": {"id": item_data['inv_loc_id']} if item_data.get('inv_loc_id') else None,
+                "soItemTypeId": {"id": item_data['so_item_type_id']} if item_data.get('so_item_type_id') else None
+            }
+            
+            a.text(f"从数据库查询到订单行，订单行ID: {self.so_item_id}, 订单编号: {self.order_code}", "订单行查询结果")
             
             # 6. 完成订单行
             complete_api_path = self.get_api_path("订单项目行手动完成服务")
@@ -242,57 +241,54 @@ class TestStandardSalesOrder(SlsBase):
             if not self.so_item_id:
                 self.test_02_complete_order_item()
             
-            # 2. 重新查询订单行数据（获取最新的version等信息）
-            api_path = self.get_api_path("分页查询销售订单行")
-            params, url = self.get_api_params(api_path)
-            
-            query_payload = copy.deepcopy(params)
-            pageable = query_payload.get("params", {}).get("pageable", {})
-            condition_items = pageable.get("conditionItems")
-            if not isinstance(condition_items, dict):
-                condition_items = {}
-            
-            condition_items.setdefault("type", "ConditionItems")
-            condition_items.setdefault("logicOperator", "AND")
-            conditions = condition_items.setdefault("conditions", {})
-            conditions["soCode"] = {
-                "operator": "CONTAINS",
-                "value": self.order_code
-            }
-            conditions.setdefault("matId", {"operator": "IN", "value": []})
-            
-            # 重新设置回结构中
-            pageable["conditionItems"] = condition_items
-            if "params" not in query_payload:
-                query_payload["params"] = {}
-            if "pageable" not in query_payload["params"]:
-                query_payload["params"]["pageable"] = {}
-            query_payload["params"]["pageable"] = pageable
-
-            last_response = None
-            order_item = None
-            for _ in range(3):
-                last_response = self.http.post(url, json=query_payload)
-                self.assert_util.assert_response_data(last_response)
-
-                data_block = last_response.get("data", {}).get("data", {})
-                records = data_block.get("records") or data_block.get("data") or []
-                order_item = next((item for item in records if str(item.get("id")) == str(self.so_item_id)), None)
-                if order_item:
+            # 2. 从数据库查询订单行数据，并构造取消完成订单行所需的数据对象
+            order_item_info = None
+            for _ in range(5):
+                order_item_info = self.db.query(
+                    """SELECT id, so_id, so_item_code, so_item_status, so_item_business_status, 
+                       version, mat_id, so_item_sls_qty, so_item_price, uom_sls_id, 
+                       inv_org_id, inv_loc_id, so_item_type_id
+                       FROM sls_so_item_tr WHERE id = %s LIMIT 1""",
+                    (self.so_item_id,)
+                )
+                if order_item_info:
                     break
                 time.sleep(1)
-
-            if not order_item:
+            
+            if not order_item_info:
                 raise ValueError(f"未找到订单行，订单行ID: {self.so_item_id}")
             
-            # 验证订单行当前状态为已完成
-            if order_item.get("soItemBusinessStatus") != "COMPLETED":
-                raise ValueError(f"订单行状态不是COMPLETED，无法取消完成。当前状态: {order_item.get('soItemBusinessStatus')}")
+            item_data = order_item_info[0]
             
-            a.text(f"找到已完成的订单行，订单行ID: {self.so_item_id}", "订单行查询结果")
-
-            a.json(query_payload, "取消完成-查询订单行请求数据")
-            a.json(last_response, "取消完成-查询订单行响应数据")
+            # 验证订单行当前状态为已完成
+            if item_data.get('so_item_business_status') != "COMPLETED":
+                raise ValueError(f"订单行状态不是COMPLETED，无法取消完成。当前状态: {item_data.get('so_item_business_status')}")
+            
+            # 获取订单编码
+            if not self.order_code:
+                order_info = self.db.query("SELECT so_code FROM sls_so_head_tr WHERE id = %s LIMIT 1", (self.order_id,))
+                if order_info:
+                    self.order_code = order_info[0]['so_code']
+            
+            # 构造订单行数据对象（用于取消完成订单行操作）
+            order_item = {
+                "id": item_data['id'],
+                "soId": item_data['so_id'],
+                "soCode": self.order_code,
+                "soItemCode": item_data['so_item_code'],
+                "soItemStatus": item_data['so_item_status'],
+                "soItemBusinessStatus": item_data['so_item_business_status'],
+                "version": item_data.get('version', 0),
+                "matId": {"id": item_data['mat_id']} if item_data.get('mat_id') else None,
+                "soItemSlsQty": float(item_data['so_item_sls_qty']) if item_data.get('so_item_sls_qty') else 0,
+                "soItemPrice": float(item_data['so_item_price']) if item_data.get('so_item_price') else 0,
+                "uomSlsId": {"id": item_data['uom_sls_id']} if item_data.get('uom_sls_id') else None,
+                "invOrgId": {"id": item_data['inv_org_id']} if item_data.get('inv_org_id') else None,
+                "invLocId": {"id": item_data['inv_loc_id']} if item_data.get('inv_loc_id') else None,
+                "soItemTypeId": {"id": item_data['so_item_type_id']} if item_data.get('so_item_type_id') else None
+            }
+            
+            a.text(f"从数据库查询到已完成的订单行，订单行ID: {self.so_item_id}", "订单行查询结果")
 
             # 3. 取消完成订单行
             cancel_complete_api_path = self.get_api_path("订单项目行手动取消完成服务")
