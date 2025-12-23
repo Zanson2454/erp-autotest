@@ -1,0 +1,7 @@
+version: '1.0'
+total_apis: 1
+apis:
+  Trantor-获取当前门户信息:
+    path: /api/trantor/portal/current
+    method: GET
+

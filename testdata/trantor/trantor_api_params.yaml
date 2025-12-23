@@ -1,0 +1,4 @@
+api_params:
+  /api/trantor/portal/current:
+    # GET请求，无需参数
+

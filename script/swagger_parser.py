@@ -22,19 +22,28 @@ class SwaggerParser:
         self.cookies = cookies or {}
         self.swagger_data = None
         
-    def fetch_swagger_doc(self, team: str, module: str) -> Dict[str, Any]:
+    def fetch_swagger_doc(self, team: Optional[str] = None, module: Optional[str] = None) -> Dict[str, Any]:
         """
         获取指定团队和模块的Swagger文档
         
         Args:
-            team: 团队名称
-            module: 模块名称
+            team: 团队名称，可选。当为None时，使用swagger-config路径
+            module: 模块名称，可选。当为None时，使用swagger-config路径
             
         Returns:
             Dict[str, Any]: Swagger文档数据
         """
         try:
-            url = urljoin(self.base_url, f'/v3/api-docs/{team}/{module}')
+            # 当team和module都为None时，使用swagger-config路径
+            if team is None and module is None:
+                url = urljoin(self.base_url, '/v3/api-docs/swagger-config')
+            elif team is not None and module is not None:
+                # 标准路径：/v3/api-docs/{team}/{module}
+                url = urljoin(self.base_url, f'/v3/api-docs/{team}/{module}')
+            else:
+                # 如果只有一个为None，抛出错误提示
+                raise ValueError("team和module必须同时提供或同时为None")
+            
             headers = {
                 'Accept': 'application/json,*/*',
                 'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
@@ -42,6 +51,7 @@ class SwaggerParser:
                 'Pragma': 'no-cache',
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36'
             }
+            logger.info(f"正在获取Swagger文档，URL: {url}")
             response = requests.get(url, headers=headers, cookies=self.cookies)
             response.raise_for_status()
             self.swagger_data = response.json()
@@ -620,7 +630,11 @@ if __name__ == "__main__":
     )
     
     # 获取指定团队和模块的Swagger文档
-    swagger_doc = parser.fetch_swagger_doc("TERP", "erp_cond")
+    # 方式1：传两个参数（原有用法）
+    # swagger_doc = parser.fetch_swagger_doc("PORTAL", "PORTAL")
+    
+    # 方式2：两者都为None，使用swagger-config路径（新用法）
+    swagger_doc = parser.fetch_swagger_doc(team='TERP', module='VEND')
     
     # 解析所有接口
     endpoints = parser.parse_endpoints()
@@ -629,7 +643,7 @@ if __name__ == "__main__":
     #parser.save_paths_to_yaml(endpoints, module="SCM_INV")
     
     # 保存路径信息到gen_path.yaml（包含系统服务）
-    parser.save_paths_to_yaml(endpoints, module="erp_cond", include_sys_services=True)
+    parser.save_paths_to_yaml(endpoints, module='VEND', include_sys_services=True)
     
     # 保存统一结构到unified_api.yaml（不包含系统服务）
     # parser.save_unified_api_yaml(endpoints, module="SCM_INV")
