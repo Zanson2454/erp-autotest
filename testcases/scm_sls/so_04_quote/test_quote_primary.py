@@ -81,37 +81,60 @@ class TestQuotePrimary(SlsBase):
         tags=["销售订单", "报价", "提交"]
     )
     def test_02_submit_draft_quote(self):
-        """测试提交草稿态报价单"""
+        """测试提交草稿态报价单（使用syncSubmit同步提交，不触发审批）"""
         try:
-            # 1. 确保有报价数据
+            # 1. 确保有草稿报价单
             if not self.quote_id:
                 self.test_01_create_draft_quote()
             
-            # 2. 使用不同的提交API
-            submit_params = {
-                "sceneKey": "SCM_SLS$sls_so_price",
-                "viewKey": "SCM_SLS$sls_so_price:list",
-                "viewTitle": "list",
-                "buttonKey": "SCM_SLS$sls_so_price-RdEaeGYQWColCWLGgyCot",
-                "buttonName": "提交",
-                "appId": 0,
-                "teamId": 22,
-                "serviceKey": "SCM_SLS$SLS_SO_MANUAL_SUBMIT",
-                "params": {
-                    "request": {
-                        "id": self.quote_id
-                    }
-                }
-            }
+            # 2. 使用保存服务并设置syncSubmit为true来同步提交（与手动操作保持一致，不触发审批）
+            api_path = self.get_api_path("SLS-销售订单-保存服务")
+            params, url = self.get_api_params(api_path)
             
-            # 3. 发送提交请求
-            response = self.http.post(
-                "https://t-erp-huoshan-portal-test.app.duandian.com/api/trantor/service/engine/execute/SCM_SLS$SLS_SO_MANUAL_SUBMIT?tmodule=SCM_SLS",
-                json=submit_params
+            # 3. 先查询草稿报价单的详细信息
+            query_api_path = self.get_api_path("销售订单页面完整查询")
+            query_params, query_url = self.get_api_params(query_api_path)
+            query_filtered_params = ParamUtil.filter_post_body_fields(
+                query_params, ["id"], ["params", "request"]
             )
+            ParamUtil.set_request_params(query_filtered_params, {"id": self.quote_id})
+            query_response = self.http.post(query_url, json=query_filtered_params)
+            self.assert_util.assert_response_data(query_response)
+            quote_detail = query_response.get("data", {}).get("data", {})
+            
+            if not quote_detail:
+                raise ValueError(f"查询报价单详情失败，报价单ID: {self.quote_id}")
+            
+            # 4. 使用保存服务并设置syncSubmit为true来提交
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id", "soCode", "soDesc", "custId", "slsOrgId", "slsComId", "slsDcId", "soTypeId", "baseCurrId", "slsCurrId", "effectiveAt", "soItems", "syncSubmit"], 
+                ["params", "request"]
+            )
+            
+            # 从查询结果中提取需要提交的字段，并设置syncSubmit为true
+            set_dict = {
+                "id": quote_detail.get("id"),
+                "soCode": quote_detail.get("soCode"),
+                "soDesc": quote_detail.get("soDesc"),
+                "custId": quote_detail.get("custId"),
+                "slsOrgId": quote_detail.get("slsOrgId"),
+                "slsComId": quote_detail.get("slsComId"),
+                "slsDcId": quote_detail.get("slsDcId"),
+                "soTypeId": quote_detail.get("soTypeId"),
+                "baseCurrId": quote_detail.get("baseCurrId"),
+                "slsCurrId": quote_detail.get("slsCurrId"),
+                "effectiveAt": quote_detail.get("effectiveAt"),
+                "soItems": quote_detail.get("soItems", [])
+            }
+            set_dict["syncSubmit"] = "true"
+            
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            # 5. 发送提交请求
+            response = self.http.post(url, json=filtered_params)
             self.assert_util.assert_response_data(response)
             
-            # 4. 保存提交后的报价单ID
+            # 6. 保存提交后的报价单ID
             response_data = response.get("data", {}).get("data", {})
             self.quote_id = response_data.get("id")
             
@@ -163,6 +186,7 @@ class TestQuotePrimary(SlsBase):
             )
             
             # 使用复制后的数据，但生成新的订单编码
+            # 从报价单生成订单时，需要将订单类型改为标准订单类型（STND），并移除effectiveAt字段
             order_code = self.mock_util.generate_unique_code(tag="SO")
             save_set_dict = {
                 "soCode": order_code,
@@ -171,10 +195,11 @@ class TestQuotePrimary(SlsBase):
                 "slsOrgId": copied_data.get("slsOrgId", {}),
                 "slsComId": copied_data.get("slsComId", {}),
                 "slsDcId": copied_data.get("slsDcId", {}),
-                "soTypeId": copied_data.get("soTypeId", {}),
+                "soTypeId": {"id": self.stnd_so_type_id},  # 改为标准订单类型
                 "baseCurrId": copied_data.get("baseCurrId", {}),
                 "slsCurrId": copied_data.get("slsCurrId", {}),
                 "soItems": copied_data.get("soItems", [])
+                # 注意：不包含effectiveAt字段，因为订单类型不需要该字段
             }
             ParamUtil.set_request_params(save_filtered_params, save_set_dict)
             

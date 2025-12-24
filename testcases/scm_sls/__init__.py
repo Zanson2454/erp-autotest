@@ -753,25 +753,24 @@ class SlsBase(BaseTest):
             raise
     
     def _quote_submit(self):
-        """报价单提交服务"""
+        """报价单提交服务（使用syncSubmit同步提交，不触发审批流程）"""
         try:
-            # 确保有可提交的报价单
+            # 确保有可提交的报价单数据
             if not self.quote_data:
                 self._prepare_quote_data()
             
-            # 先保存
-            self._quote_save()
-            
-            # 再提交
-            api_path = self.get_api_path("SLS-销售订单-提交服务")
+            # 使用保存服务，设置syncSubmit为true来同步提交（与手动创建保持一致，不触发审批）
+            api_path = self.get_api_path("SLS-销售订单-保存服务")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], 
+                params, ["soCode", "soDesc", "custId", "slsOrgId", "slsComId", "slsDcId", "soTypeId", "baseCurrId", "slsCurrId", "effectiveAt", "soItems", "syncSubmit"], 
                 ["params", "request"]
             )
             
-            set_dict = {"id": self.quote_id_save}
+            # 设置syncSubmit为true，实现同步提交（不触发审批流程）
+            set_dict = self.quote_data.copy()
+            set_dict["syncSubmit"] = "true"
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             response = self.http.post(url, json=filtered_params)
