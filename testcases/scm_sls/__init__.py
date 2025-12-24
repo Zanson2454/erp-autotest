@@ -80,6 +80,8 @@ class SlsBase(BaseTest):
         cls.price_api_params = Path(project_root) / "testdata" / "scm_sls" / "price_api_params.yaml"
         cls.cond_api_path = Path(project_root) / "testdata" / "scm_sls" / "cond_api_path.yaml"
         cls.cond_api_params = Path(project_root) / "testdata" / "scm_sls" / "cond_api_params.yaml"
+        cls.del_api_path = Path(project_root) / "testdata" / "scm_del" / "del_api_path.yaml"
+        cls.del_api_params = Path(project_root) / "testdata" / "scm_del" / "del_api_params.yaml"
         
         # 加载API路径配置和参数配置
         cls.apis = cls.yaml_util.read_yaml(cls.sls_api_path).get("apis", {})
@@ -114,6 +116,12 @@ class SlsBase(BaseTest):
         cond_api_params = cls.yaml_util.read_yaml(cls.cond_api_params).get("api_params", {})
         cls.apis.update(cond_apis)
         cls.api_params.update(cond_api_params)
+        
+        # 加载交货管理API路径配置和参数配置，合并到apis和api_params中（用于交货单操作等）
+        del_apis = cls.yaml_util.read_yaml(cls.del_api_path).get("apis", {})
+        del_api_params = cls.yaml_util.read_yaml(cls.del_api_params).get("api_params", {})
+        cls.apis.update(del_apis)
+        cls.api_params.update(del_api_params)
         
         # 初始化DataFactory（必须在init_sql_cache之前调用）
         DataFactory.__init__(env_name="test")
@@ -221,6 +229,8 @@ class SlsBase(BaseTest):
                     cls.thrd_so_type_id = so_type.get("id")
                 if so_type.get("so_type_code") == "CENT":
                     cls.cent_so_type_id = so_type.get("id")
+                if so_type.get("so_type_code") == "QUOTE":
+                    cls.quote_so_type_id = so_type.get("id")
             cls.so_item_type_info = sls_config.get("so_item_type_info") or []
             cls.ORDER_LINE_TYPES = cls.so_item_type_info  # 添加缺失的属性
             for so_item_type in cls.so_item_type_info:
@@ -643,6 +653,11 @@ class SlsBase(BaseTest):
             quote_name = f"自动化测试报价_{self.mock_util.get_timestamp()}"
             
             # 准备报价单基础数据
+            # 报价单类型需要有效截止时间（effectiveAt）
+            import time
+            current_time = int(time.time() * 1000)
+            effective_at = current_time + (5 * 24 * 60 * 60 * 1000)  # 5天后
+            
             self.quote_data = {
                 "soCode": quote_code,
                 "soDesc": quote_name,
@@ -650,9 +665,10 @@ class SlsBase(BaseTest):
                 "slsOrgId": {"id": self.sls_org_id},
                 "slsComId": {"id": self.com_org_id},
                 "slsDcId": {"id": self.sls_dc_id},
-                "soTypeId": {"id": self.stnd_so_type_id},
+                "soTypeId": {"id": self.quote_so_type_id if hasattr(self, 'quote_so_type_id') and self.quote_so_type_id else self.stnd_so_type_id},
                 "baseCurrId": {"id": self.curr_id},
                 "slsCurrId": {"id": self.curr_id},
+                "effectiveAt": effective_at,  # 报价单类型必需字段
                 "soItems": [
                     {
                         "matId": {"id": self.mat_id},
@@ -772,6 +788,57 @@ class SlsBase(BaseTest):
             raise
 
     # ==================== 交货单相关方法 ====================
+    
+    def query_delivery_notes_by_so_code(self, so_code):
+        """
+        根据销售订单号查询关联的交货单ID列表
+        :param so_code: 销售订单号
+        :return: 交货单ID列表
+        """
+        try:
+            # 通过doc_code字段查询关联的交货单
+            query_sql = """
+                SELECT DISTINCT h.id as dn_id, h.dn_code, h.del_status
+                FROM del_dn_head_tr h
+                INNER JOIN del_dn_item_tr i ON h.id = i.dn_id
+                WHERE (i.doc_code = %s OR h.doc_code = %s) 
+                  AND h.bt_class = 'SLS'
+                  AND h.del_status != 'DISCARDED'
+                ORDER BY h.created_at DESC
+            """
+            result = self.db.query(query_sql, (so_code, so_code))
+            if result:
+                dn_ids = [item['dn_id'] for item in result]
+                self.logger.info(f"查询到订单 {so_code} 关联的交货单: {dn_ids}")
+                return dn_ids
+            return []
+        except Exception as e:
+            self.logger.error(f"查询交货单失败: {str(e)}")
+            return []
+    
+    def discard_delivery_note(self, dn_id):
+        """
+        作废交货单
+        :param dn_id: 交货单ID
+        :return: 是否成功
+        """
+        try:
+            api_path = self.get_api_path("DEL-交货单作废服务")
+            params, url = self.get_api_params(api_path)
+            
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id"], ["params", "request"]
+            )
+            ParamUtil.set_request_params(filtered_params, {"id": dn_id})
+            
+            response = self.http.post(url, json=filtered_params, params={"tmodule": "SCM_DEL"})
+            self.assert_util.assert_response_success(response)
+            
+            self.logger.info(f"交货单 {dn_id} 作废成功")
+            return True
+        except Exception as e:
+            self.logger.error(f"作废交货单失败，dn_id: {dn_id}, 错误: {str(e)}")
+            raise
     
     def create_delivery_order(self, so_id):
         """

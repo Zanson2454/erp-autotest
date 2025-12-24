@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import time
 import pytest
 import allure
 from typing import Dict, Any
@@ -503,6 +504,12 @@ class TestSalesOrderOperator(SlsBase):
         # 1. 创建一个销售订单并提交
         self.order_id = self.create_sales_order(order_type="STND", submit=True)
         
+        # 获取订单号
+        order_info = self.db.query("SELECT so_code FROM sls_so_head_tr WHERE id = %s", (self.order_id,))
+        if not order_info:
+            raise ValueError(f"未找到订单，订单ID: {self.order_id}")
+        so_code = order_info[0]['so_code']
+        
         # 2. 取消提交订单
         api_info = self.apis["SLS-销售-取消提交服务"]
         url = api_info["path"] if isinstance(api_info, dict) else api_info
@@ -511,10 +518,46 @@ class TestSalesOrderOperator(SlsBase):
         
         result = self.http.post(url, json=data, description="取消提交")
         assert result is not None, "取消提交销售订单失败"
-        assert result.get('success', False), f"取消提交销售订单失败: {result.get('err', {}).get('msg', '未知错误')}"
+        
+        # 3. 如果取消提交失败，检查是否是下游交货单未作废的错误
+        if not result.get('success', False):
+            error_msg = result.get('err', {}).get('msg', '')
+            error_code = result.get('err', {}).get('code', '')
+            
+            # 检查是否是下游交货单未作废的错误
+            if 'tr.so.relate.dn.not.discarded' in error_code or '未作废' in error_msg:
+                self.logger.info(f"检测到下游交货单未作废的错误，开始作废关联的交货单。订单号: {so_code}")
+                
+                # 查询订单关联的交货单
+                dn_ids = self.query_delivery_notes_by_so_code(so_code)
+                
+                if dn_ids:
+                    # 作废所有关联的交货单
+                    for dn_id in dn_ids:
+                        try:
+                            self.discard_delivery_note(dn_id)
+                            self.logger.info(f"成功作废交货单: {dn_id}")
+                        except Exception as e:
+                            self.logger.error(f"作废交货单失败，dn_id: {dn_id}, 错误: {str(e)}")
+                            raise
+                    
+                    # 等待一下确保作废操作完成
+                    time.sleep(1)
+                    
+                    # 重新尝试取消提交订单
+                    result = self.http.post(url, json=data, description="取消提交（作废交货单后重试）")
+                    assert result is not None, "取消提交销售订单失败"
+                    assert result.get('success', False), f"取消提交销售订单失败（已作废交货单后重试）: {result.get('err', {}).get('msg', '未知错误')}"
+                else:
+                    # 如果没有查询到交货单，直接抛出原始错误
+                    raise AssertionError(f"取消提交销售订单失败: {error_msg}")
+            else:
+                # 其他错误直接抛出
+                raise AssertionError(f"取消提交销售订单失败: {error_msg}")
         
         # 验证订单状态
-        so_status = self.db.query(f"select id,so_code,so_status from sls_so_head_tr where id={self.order_id}")
+        so_status = self.db.query("SELECT id,so_code,so_status FROM sls_so_head_tr WHERE id = %s", (self.order_id,))
+        assert so_status and len(so_status) > 0, "未找到订单状态"
         assert so_status[0]['so_status'] == 'DRAFT', f"取消提交失败，订单状态: {so_status[0]['so_status']}"
 
     @allure.title("作废销售订单")

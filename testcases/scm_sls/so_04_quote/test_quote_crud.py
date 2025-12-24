@@ -281,28 +281,36 @@ class TestQuoteCrud(SlsBase):
             if not self.quote_id_submit:
                 self.test_04_create_submitted_quote()
             
-            # 2. 调用作废API
+            # 2. 获取作废API路径
             api_path = self.get_api_path("订单作废服务")
-            params, url = self.get_api_params(api_path)
+            _, url = self.get_api_params(api_path)
             
-            # 3. 参数处理
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], 
-                ["params", "request"]
-            )
-            
-            set_dict = {"id": self.quote_id_submit}
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            # 3. 构造请求体（按照用户提供的curl命令格式，只传递id参数）
+            request_body = {
+                "sceneKey": "SCM_SLS$sls_so_price",
+                "viewKey": "SCM_SLS$sls_so_price:list",
+                "viewTitle": "list",
+                "buttonKey": "SCM_SLS$sls_so_price-9s2Pxoo8-Zbl9Ll367f8G",
+                "buttonName": "作废",
+                "appId": 0,
+                "teamId": 22,
+                "serviceKey": "SCM_SLS$SLS_REPEAL_EVENT_SERVICE",
+                "params": {
+                    "request": {
+                        "id": self.quote_id_submit
+                    }
+                }
+            }
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response = self.http.post(url, json=request_body)
             self.assert_util.assert_response_data(response)
             
             # 5. 保存作废后的报价单ID
             response_data = response.get("data", {}).get("data", {})
             self.quote_id_submit = response_data.get("id")
             
-            a.json(filtered_params, "作废请求数据")
+            a.json(request_body, "作废请求数据")
             a.json(response, "作废响应数据")
             a.text(f"已生效报价单作废成功，ID: {self.quote_id_submit}", "作废结果")
             
