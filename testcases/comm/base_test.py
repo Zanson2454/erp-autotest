@@ -700,7 +700,7 @@ class BaseTest:
         return wrapper
 
     # 新增统一调用模板，不影响老用例
-    def standard_api_call(self, api_key, set_dict=None, fields_to_filter=None, store_id_as=None, use_param_util=True, param_path=None):
+    def standard_api_call(self, api_key, set_dict=None, fields_to_filter=None, store_id_as=None, use_param_util=True, param_path=None, method="POST"):
         """
         标准化API调用模板 - 纯执行和报告工具，无断言逻辑
         统一返回响应数据（无论成功还是失败），由业务断言来判断响应是否正确
@@ -714,9 +714,21 @@ class BaseTest:
         :param store_id_as: ID存储属性名（用于自动保存self.xxx_id）
         :param use_param_util: 是否使用ParamUtil过滤/设置（默认True）；False时直接使用set_dict作为params
         :param param_path: 参数路径，默认为["params", "request"]，支持自定义路径如["params", "reuqest"]（用于处理接口定义中的拼写错误）
+        :param method: HTTP请求方法，支持 "GET", "POST", "PUT", "DELETE", "PATCH"（默认"POST"）
+            - GET/DELETE: 参数通过 query string 传递（params参数）
+            - POST/PUT/PATCH: 参数通过 JSON body 传递（json参数）
         :return: (response, extracted_id) - response包含成功或失败的响应数据，extracted_id在成功时提取，失败时为None
         """
         import json
+        
+        # 规范化HTTP方法名（转大写）
+        method = method.upper() if method else "POST"
+        
+        # 验证HTTP方法
+        supported_methods = ["GET", "POST", "PUT", "DELETE", "PATCH"]
+        if method not in supported_methods:
+            raise ValueError(f"不支持的HTTP方法: {method}，支持的方法: {supported_methods}")
+        
         try:
             # 1. 获取API路径和基础参数 - 使用模块特定的方法签名
             api_path = self.get_api_path(api_key)
@@ -728,62 +740,116 @@ class BaseTest:
                     f"2. 配置文件是否正确加载 (apis配置是否存在)\n"
                     f"3. 配置文件路径是否正确"
                 )
-            params, url = self.get_api_params(api_path)
-            if url is None:
-                raise ValueError(
-                    f"API路径配置错误: api_path={api_path}\n"
-                    f"请检查API参数配置文件中的路径配置"
-                )
-            
-            # 2. 参数处理 - 分支逻辑
-            if use_param_util:
-                # 标准流程：使用ParamUtil过滤和设置
-                # fields_to_filter 处理逻辑：
-                # 1. 如果已指定（不是 None），使用指定的值（优先使用指定值，完全兼容原有用例）
-                # 2. 如果未指定（为 None）且有 set_dict，自动从 set_dict.keys() 获取字段列表（方便新用例）
-                # 这样既支持自动推断，也支持显式指定，完全兼容原有用例
-                if fields_to_filter is None:
-                    if set_dict:
-                        fields_to_filter = list(set_dict.keys())
-                    else:
-                        fields_to_filter = []
-                # 如果 fields_to_filter 已指定，直接使用指定的值，不会覆盖
-                # 使用自定义路径或默认路径
-                if param_path is None:
-                    param_path = ["params", "request"]
-                filtered_params = ParamUtil.filter_post_body_fields(
-                    params, fields_to_filter, param_path
-                )
-                if set_dict:
-                    ParamUtil.set_request_params(filtered_params, set_dict, path=param_path)
+            # 2. 根据HTTP方法选择参数传递方式
+            if method in ["GET", "DELETE"]:
+                # GET/DELETE: 使用 query parameters
+                params, url = self.get_api_params(api_path)
+                if url is None:
+                    raise ValueError(
+                        f"API路径配置错误: api_path={api_path}\n"
+                        f"请检查API参数配置文件中的路径配置"
+                    )
+                
+                # GET/DELETE 请求：使用 params 参数（query string）
+                request_kwargs = {"params": set_dict} if set_dict else {}
+                
             else:
-                # 特殊流程：直接使用set_dict作为params内容，无过滤/设置
-                if set_dict is None:
-                    set_dict = {}
-                # 如果指定了param_path，使用自定义路径；否则使用默认路径
-                if param_path is None:
-                    param_path = ["params", "request"]
-                # 构造参数结构
-                filtered_params = {}
-                current = filtered_params
-                for i, p in enumerate(param_path):
-                    if i == len(param_path) - 1:
-                        current[p] = set_dict
-                    else:
-                        current[p] = {}
-                        current = current[p]
+                # POST/PUT/PATCH: 使用 JSON body
+                params, url = self.get_api_params(api_path)
+                if url is None:
+                    raise ValueError(
+                        f"API路径配置错误: api_path={api_path}\n"
+                        f"请检查API参数配置文件中的路径配置"
+                    )
+                
+                # 3. 参数处理 - 分支逻辑（仅用于POST/PUT/PATCH）
+                if use_param_util:
+                    # 标准流程：使用ParamUtil过滤和设置
+                    # fields_to_filter 处理逻辑：
+                    # 1. 如果已指定（不是 None），使用指定的值（优先使用指定值，完全兼容原有用例）
+                    # 2. 如果未指定（为 None）且有 set_dict，自动从 set_dict.keys() 获取字段列表（方便新用例）
+                    # 这样既支持自动推断，也支持显式指定，完全兼容原有用例
+                    if fields_to_filter is None:
+                        if set_dict:
+                            fields_to_filter = list(set_dict.keys())
+                        else:
+                            fields_to_filter = []
+                    # 如果 fields_to_filter 已指定，直接使用指定的值，不会覆盖
+                    # 使用自定义路径或默认路径
+                    if param_path is None:
+                        param_path = ["params", "request"]
+                    filtered_params = ParamUtil.filter_post_body_fields(
+                        params, fields_to_filter, param_path
+                    )
+                    if set_dict:
+                        ParamUtil.set_request_params(filtered_params, set_dict, path=param_path)
+                else:
+                    # 特殊流程：直接使用set_dict作为params内容，无过滤/设置
+                    if set_dict is None:
+                        set_dict = {}
+                    # 如果指定了param_path，使用自定义路径；否则使用默认路径
+                    if param_path is None:
+                        param_path = ["params", "request"]
+                    # 构造参数结构
+                    filtered_params = {}
+                    current = filtered_params
+                    for i, p in enumerate(param_path):
+                        if i == len(param_path) - 1:
+                            current[p] = set_dict
+                        else:
+                            current[p] = {}
+                            current = current[p]
+                
+                # POST/PUT/PATCH 请求：使用 json 参数（body）
+                request_kwargs = {"json": filtered_params} if filtered_params else {}
             
-            # 3. 发送请求（请求信息由 http.post 内部打印完整URL）
-            response = self.http.post(url, json=filtered_params)
+            # 4. 发送请求（请求信息由 http 方法内部打印完整URL）
+            # 根据方法调用对应的 HTTP 方法
+            if method == "GET":
+                response = self.http.get(url, **request_kwargs)
+            elif method == "POST":
+                response = self.http.post(url, **request_kwargs)
+            elif method == "PUT":
+                response = self.http.put(url, **request_kwargs)
+            elif method == "DELETE":
+                response = self.http.delete(url, **request_kwargs)
+            elif method == "PATCH":
+                # PATCH 方法，如果 HttpUtil 没有 patch 方法，使用 put
+                if hasattr(self.http, "patch"):
+                    response = self.http.patch(url, **request_kwargs)
+                else:
+                    response = self.http.put(url, **request_kwargs)
+            else:
+                raise ValueError(f"不支持的HTTP方法: {method}")
             
-            # 4. 记录响应
+            # 5. 记录响应
             Loggers.info(f"接口请求响应，状态码: 200")
             Loggers.info(f"响应数据: {json.dumps(response, ensure_ascii=False, indent=2)}")
             
-            # 5. ID提取和存储
-            data_obj = response.get("data", {}).get("data", {})
-            # 优先提取 id 字段，如果不存在则使用整个对象（兼容不同响应结构）
-            extracted_id = data_obj.get("id") if isinstance(data_obj, dict) and "id" in data_obj else data_obj
+            # 6. ID提取和存储
+            # 兼容响应为字典或列表的情况，以及嵌套的列表结构
+            extracted_id = None
+            if isinstance(response, dict):
+                # 安全地获取 data 字段
+                data = response.get("data")
+                if isinstance(data, dict):
+                    # 继续获取嵌套的 data 字段
+                    data_obj = data.get("data", {})
+                    # 优先提取 id 字段，如果不存在则使用整个对象（兼容不同响应结构）
+                    extracted_id = data_obj.get("id") if isinstance(data_obj, dict) and "id" in data_obj else data_obj
+                elif isinstance(data, list):
+                    # 如果 data 是列表，不提取 id
+                    extracted_id = None
+                else:
+                    # data 是其他类型，尝试提取 id
+                    extracted_id = data.get("id") if isinstance(data, dict) and "id" in data else data
+            elif isinstance(response, list):
+                # 如果响应是列表，不提取 id，返回 None
+                extracted_id = None
+            else:
+                # 其他类型（如字符串、数字等），不提取 id
+                extracted_id = None
+            
             if store_id_as:
                 setattr(self, f"{store_id_as}_id", extracted_id)
             

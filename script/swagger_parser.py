@@ -22,19 +22,18 @@ class SwaggerParser:
         self.cookies = cookies or {}
         self.swagger_data = None
         
-    def fetch_swagger_doc(self, team: str, module: str) -> Dict[str, Any]:
+    def fetch_swagger_doc(self, team: Optional[str] = None, module: Optional[str] = None) -> Dict[str, Any]:
         """
         获取指定团队和模块的Swagger文档
         
         Args:
-            team: 团队名称
-            module: 模块名称
+            team: 团队名称，可选。当为None时，使用swagger-config路径
+            module: 模块名称，可选。当为None时，使用swagger-config路径
             
         Returns:
-            Dict[str, Any]: Swagger文档数据
+            Dict[str, Any]: Swagger文档数据（如果是swagger-config，会合并所有API文档）
         """
         try:
-            url = urljoin(self.base_url, f'/v3/api-docs/{team}/{module}')
             headers = {
                 'Accept': 'application/json,*/*',
                 'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
@@ -42,9 +41,126 @@ class SwaggerParser:
                 'Pragma': 'no-cache',
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36'
             }
-            response = requests.get(url, headers=headers, cookies=self.cookies)
-            response.raise_for_status()
-            self.swagger_data = response.json()
+            
+            # 当team和module都为None时，先尝试/v3/api-docs，再尝试swagger-config
+            if team is None and module is None:
+                # 先尝试 /v3/api-docs（可能直接返回文档或文档列表）
+                url = urljoin(self.base_url, '/v3/api-docs')
+                logger.info(f"正在获取Swagger文档，URL: {url}")
+                try:
+                    response = requests.get(url, headers=headers, cookies=self.cookies)
+                    response.raise_for_status()
+                    api_docs_data = response.json()
+                    
+                    # 检查是否是直接的Swagger文档（包含paths字段）
+                    if isinstance(api_docs_data, dict) and 'paths' in api_docs_data:
+                        logger.info("检测到直接的Swagger文档格式")
+                        self.swagger_data = api_docs_data
+                        return self.swagger_data
+                    
+                    # 检查是否是文档列表格式（包含urls字段）
+                    if isinstance(api_docs_data, dict) and 'urls' in api_docs_data and isinstance(api_docs_data['urls'], list):
+                        logger.info(f"检测到文档列表格式，包含 {len(api_docs_data['urls'])} 个API文档")
+                        config_data = api_docs_data
+                    # 检查是否是数组格式（直接是文档列表）
+                    elif isinstance(api_docs_data, list) and len(api_docs_data) > 0:
+                        logger.info(f"检测到数组格式，包含 {len(api_docs_data)} 个文档项")
+                        # 转换为urls格式
+                        config_data = {'urls': api_docs_data}
+                    else:
+                        # 记录实际返回的数据结构，便于调试
+                        logger.warning(f"/v3/api-docs 返回的数据格式不符合预期")
+                        logger.warning(f"返回数据类型: {type(api_docs_data)}")
+                        if isinstance(api_docs_data, dict):
+                            logger.warning(f"返回数据的键: {list(api_docs_data.keys())}")
+                        elif isinstance(api_docs_data, list):
+                            logger.warning(f"返回数组长度: {len(api_docs_data)}")
+                        # 如果不是预期格式，尝试swagger-config
+                        raise ValueError("不是预期的文档格式，尝试swagger-config")
+                except (requests.RequestException, ValueError) as e:
+                    logger.info(f"/v3/api-docs 获取失败或格式不符: {str(e)}，尝试 swagger-config")
+                    # 尝试 swagger-config
+                    url = urljoin(self.base_url, '/v3/api-docs/swagger-config')
+                    logger.info(f"正在获取Swagger配置，URL: {url}")
+                    response = requests.get(url, headers=headers, cookies=self.cookies)
+                    response.raise_for_status()
+                    config_data = response.json()
+                    logger.info(f"swagger-config 返回数据的键: {list(config_data.keys()) if isinstance(config_data, dict) else '不是字典类型'}")
+                
+                # 处理配置格式（包含urls字段）
+                if 'urls' in config_data and isinstance(config_data['urls'], list) and len(config_data['urls']) > 0:
+                    logger.info(f"检测到swagger-config格式，包含 {len(config_data['urls'])} 个API文档")
+                    # 合并所有API文档
+                    merged_doc = {
+                        'openapi': '3.0.0',
+                        'info': {'title': 'Merged API', 'version': '1.0.0'},
+                        'paths': {},
+                        'components': {'schemas': {}}
+                    }
+                    
+                    # 遍历所有URL并获取API文档
+                    for url_item in config_data['urls']:
+                        if isinstance(url_item, dict):
+                            # 优先使用url字段，如果没有则使用name字段
+                            doc_url = url_item.get('url') or url_item.get('name')
+                            doc_name = url_item.get('name', '')
+                        elif isinstance(url_item, str):
+                            doc_url = url_item
+                            doc_name = ''
+                        else:
+                            continue
+                        
+                        if not doc_url:
+                            continue
+                        
+                        # 构建完整的URL
+                        if doc_url.startswith('http'):
+                            full_url = doc_url
+                        else:
+                            # 相对路径，需要拼接base_url
+                            full_url = urljoin(self.base_url, doc_url.lstrip('/'))
+                        
+                        logger.info(f"正在获取API文档: {full_url} ({doc_name})")
+                        try:
+                            doc_response = requests.get(full_url, headers=headers, cookies=self.cookies)
+                            doc_response.raise_for_status()
+                            doc_data = doc_response.json()
+                            
+                            # 合并paths
+                            if 'paths' in doc_data:
+                                merged_doc['paths'].update(doc_data['paths'])
+                                logger.info(f"成功合并 {len(doc_data['paths'])} 个接口路径")
+                            
+                            # 合并components/schemas
+                            if 'components' in doc_data and 'schemas' in doc_data['components']:
+                                merged_doc['components']['schemas'].update(doc_data['components']['schemas'])
+                            
+                        except Exception as e:
+                            logger.warning(f"获取API文档失败 {full_url}: {str(e)}")
+                            continue
+                    
+                    self.swagger_data = merged_doc
+                    logger.info(f"合并完成，共 {len(merged_doc['paths'])} 个接口路径")
+                    if len(merged_doc['paths']) == 0:
+                        logger.warning("警告：合并后的文档中没有接口路径，请检查配置数据格式")
+                        logger.warning(f"配置数据内容: {config_data}")
+                else:
+                    # 如果不是配置格式，直接使用返回的数据
+                    logger.warning("返回的数据不是swagger-config格式（没有urls字段或urls为空），直接使用返回数据")
+                    logger.warning(f"返回数据的键: {list(config_data.keys()) if isinstance(config_data, dict) else '不是字典类型'}")
+                    logger.warning(f"返回数据内容: {config_data}")
+                    self.swagger_data = config_data
+                    
+            elif team is not None and module is not None:
+                # 标准路径：/v3/api-docs/{team}/{module}
+                url = urljoin(self.base_url, f'/v3/api-docs/{team}/{module}')
+                logger.info(f"正在获取Swagger文档，URL: {url}")
+                response = requests.get(url, headers=headers, cookies=self.cookies)
+                response.raise_for_status()
+                self.swagger_data = response.json()
+            else:
+                # 如果只有一个为None，抛出错误提示
+                raise ValueError("team和module必须同时提供或同时为None")
             
             # 添加调试日志
             logger.debug(f"Swagger文档内容: {self.swagger_data}")
@@ -282,17 +398,25 @@ class SwaggerParser:
                         logger.info(f"请求体schema: {schema}")
                         if schema:
                             # 解析请求体schema
-                            request_params = self._get_schema_value(schema)
+                            parsed_params = self._get_schema_value(schema)
+                            # 确保返回的是字典类型，如果为None则使用空字典
+                            if isinstance(parsed_params, dict):
+                                request_params = parsed_params
+                            else:
+                                request_params = {}
                             logger.info(f"解析后的请求参数: {request_params}")
 
                     # 处理URL参数
                     for param in info.get('parameters', []):
                         if param.get('in') == 'query':
                             param_schema = param.get('schema', {})
+                            # 确保 request_params 是字典类型
+                            if not isinstance(request_params, dict):
+                                request_params = {}
                             request_params[param['name']] = self._get_schema_value(param_schema)
                             
                      # 过滤掉 teamId 字段
-                    if 'teamId' in request_params:
+                    if isinstance(request_params, dict) and 'teamId' in request_params:
                         del request_params['teamId']
                         logger.info(f"已过滤掉 teamId 字段")
 
@@ -347,55 +471,6 @@ class SwaggerParser:
             logger.error(f"保存文件失败: {str(e)}")
             raise
             
-    def save_unified_api_yaml(self, endpoints: Dict[str, Dict[str, Any]], output_path: str = '', module: str = '', include_sys_services: bool = False) -> None:
-        """
-        生成统一结构的API配置YAML
-        Args:
-            endpoints: 解析后的接口信息
-            output_path: 输出文件路径（可选）
-            module: 模块名称（用于文件名前缀，可选）
-            include_sys_services: 是否包含系统服务接口，默认为False（保持原有行为）
-        """
-        try:
-            unified_dict = {}
-            for path, methods in endpoints.items():
-                # 根据参数决定是否跳过系统服务接口
-                if "$SYS_" in path and not include_sys_services:
-                    continue
-                for method, info in methods.items():
-                    service_name = info.get('summary', '').strip() or path.split('/')[-1]
-                    
-                    # 清理服务名称，去掉【编排服务】、【事件服务】等后缀
-                    service_name = service_name.replace('【系统服务】', '').replace('【事件服务】', '').replace('【编排服务】', '').strip()
-                    
-                    entry = {
-                        'path': path,
-                        'method': method.upper()
-                    }
-                    # body/params
-                    request_params = {}
-                    if 'requestBody' in info and info['requestBody']:
-                        schema = info['requestBody'].get('schema', {})
-                        request_params = self._get_schema_value(schema)
-                    for param in info.get('parameters', []):
-                        if param.get('in') == 'query':
-                            param_schema = param.get('schema', {})
-                            request_params[param['name']] = self._get_schema_value(param_schema)
-                    if request_params:
-                        entry['body'] = request_params
-                    unified_dict[service_name] = entry
-
-            # 保存
-            if not output_path:
-                prefix = module.split('_')[-1].lower() if module else 'api'
-                output_path = str(Path(__file__).parent / f"{prefix}_api_info.yaml")
-            with open(output_path, 'w', encoding='utf-8') as f:
-                yaml.dump(unified_dict, f, allow_unicode=True, sort_keys=False)
-            logger.info(f"统一API信息已保存到: {output_path}")
-        except Exception as e:
-            logger.error(f"保存统一YAML失败: {str(e)}")
-            raise
-            
     def _format_request_params(self, info: dict, operation_path: str) -> dict:
         """
         格式化请求参数，只保留 path 和 body 的映射关系
@@ -422,7 +497,17 @@ class SwaggerParser:
         
         return request_dict_content
         
-    def _get_schema_value(self, schema: dict) -> Any:
+    def _get_schema_value(self, schema: dict, visited_refs: set = None) -> Any:
+        """
+        解析schema值，支持循环引用检测
+        
+        Args:
+            schema: schema字典
+            visited_refs: 已访问的引用集合，用于检测循环引用
+        """
+        if visited_refs is None:
+            visited_refs = set()
+            
         if not schema:
             return {}
 
@@ -431,10 +516,10 @@ class SwaggerParser:
             result = {}
             for key, value in schema.items():
                 if isinstance(value, dict):
-                    result[key] = self._get_schema_value(value)
+                    result[key] = self._get_schema_value(value, visited_refs)
                 elif isinstance(value, list):
                     # 处理数组元素
-                    result[key] = [self._get_schema_value(item) if isinstance(item, dict) else item for item in value]
+                    result[key] = [self._get_schema_value(item, visited_refs) if isinstance(item, dict) else item for item in value]
                 else:
                     result[key] = value
             return result
@@ -445,13 +530,29 @@ class SwaggerParser:
             logger.info(f"发现$ref引用: {ref_path}")
             if ref_path.startswith('#/components/schemas/'):
                 ref_name = ref_path.split('/')[-1]
+                
+                # 检测循环引用
+                if ref_name in visited_refs:
+                    logger.warning(f"检测到循环引用: {ref_name}，跳过以避免无限递归")
+                    return {}  # 返回空字典避免循环引用
+                
+                # 添加到已访问集合
+                visited_refs.add(ref_name)
+                
                 if self.swagger_data:
                     ref_schema = self.swagger_data.get('components', {}).get('schemas', {}).get(ref_name, {})
                 else:
                     ref_schema = {}
                 logger.info(f"解析$ref: {ref_path} => {ref_name}")
                 logger.info(f"引用schema内容: {ref_schema}")
-                return self._get_schema_value(ref_schema)
+                
+                try:
+                    result = self._get_schema_value(ref_schema, visited_refs)
+                finally:
+                    # 处理完成后移除，允许在其他路径中再次访问
+                    visited_refs.discard(ref_name)
+                
+                return result
             logger.warning(f"不支持的 $ref 路径: {ref_path}")
             return {}
 
@@ -469,7 +570,7 @@ class SwaggerParser:
                 elif prop_name == 'pageSize':
                     result[prop_name] = 20
                 else:
-                    result[prop_name] = self._get_schema_value(prop_schema)
+                    result[prop_name] = self._get_schema_value(prop_schema, visited_refs)
             return result
 
         if schema.get('type') == 'array':
@@ -477,7 +578,7 @@ class SwaggerParser:
             logger.info(f"处理数组类型，items: {items}")
             if not items:
                 return [{}]
-            return [self._get_schema_value(items)]
+            return [self._get_schema_value(items, visited_refs)]
 
         # 处理基本类型
         schema_type = schema.get('type')
@@ -610,7 +711,6 @@ if __name__ == "__main__":
         'trantor_v2_lng': 'zh-CN',
         'Trantor2-ORIGIN-ORG-ID': '',
         'taid': '3bf8a069-d478-44ea-8e67-48172305f64f',
-        'emp_cookie': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiNDlhZmJlOTc3YTdhNGYwYjg1MDZiYjU5M2Q5YWVhNTEiLCJleHBpcmUiOjEyMDk2MDAsInBhdGgiOiIvIiwiZG9tYWluIjoidGVybWludXMuaW8iLCJodHRwT25seSI6dHJ1ZSwic2VjdXJlIjp0cnVlLCJpc3MiOiJpYW0oMi41LjI0LjExMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODkxNDUyNywibmJmIjoxNzQ3NzA0OTI3LCJpYXQiOjE3NDc3MDQ5MjcsImp0aSI6IjgzNjhkOTI0N2I2MTQ3N2Q4OTBlZDFhZDNkMTBiNTYyIn0.A1oO4mP5nS9T5jInIrMptxhmGXvj4OKm4wW3I4XpCRI',
         't_iam_test': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbklkIjoiZWE5MDJjMWFlMDBmNDhmOGI3YWI3NDExYTRlYmQxZjMiLCJleHBpcmUiOjI1OTIwMCwicGF0aCI6Ii8iLCJkb21haW4iOiJ0ZXJtaW51cy5pbyIsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOmZhbHNlLCJpc3MiOiJpYW0oMi41LjI1LjAxMzAuMC1TTkFQU0hPVCkiLCJzdWIiOiJpYW0gdXNlciIsImV4cCI6MTc0ODAwNTcyMSwibmJmIjoxNzQ3NzQ2NTIxLCJpYXQiOjE3NDc3NDY1MjEsImp0aSI6ImNjMGM4ZjY1ZjZjZDQ0MDViYWRiNmVkMTE4Y2Y5NDBjIn0.dAtadVIBUO72fpqvY8yOM2_70ZAWfLSQ-xA0-8ZCXIo'
     }
     
@@ -618,21 +718,46 @@ if __name__ == "__main__":
         base_url="https://t-erp-huoshan-console-test.app.duandian.com",
         cookies=cookies
     )
-    
-    # 获取指定团队和模块的Swagger文档
-    swagger_doc = parser.fetch_swagger_doc("TERP", "erp_cond")
-    
+
+    # 获取指定团队和模块的Swagger文档 1
+    swagger_doc = parser.fetch_swagger_doc("TERP", "sys_common")
+
     # 解析所有接口
     endpoints = parser.parse_endpoints()
     
     # 保存路径信息到gen_path.yaml（不包含系统服务，保持原有行为）
-    #parser.save_paths_to_yaml(endpoints, module="SCM_INV")
+    parser.save_paths_to_yaml(endpoints, module="sys_common")
     
-    # 保存路径信息到gen_path.yaml（包含系统服务）
-    parser.save_paths_to_yaml(endpoints, module="erp_cond", include_sys_services=True)
     
-    # 保存统一结构到unified_api.yaml（不包含系统服务）
-    # parser.save_unified_api_yaml(endpoints, module="SCM_INV")
     
-    # 保存统一结构到unified_api.yaml（包含系统服务）
-    #parser.save_unified_api_yaml(endpoints, module="SCM_INV", include_sys_services=True) 
+    
+    # # 获取trantor portal 侧接口2
+    # parser = SwaggerParser(
+    #     base_url="https://trantor2-portal.app.duandian.com",
+    #     cookies=cookies
+    # )
+    # # 获取trantor portal 侧接口（使用swagger-config自动合并所有API文档）
+    # swagger_doc = parser.fetch_swagger_doc() #trantor-portal 侧接口
+    
+    # # 解析所有接口
+    # endpoints = parser.parse_endpoints()
+    
+    # # 保存路径信息（会生成两个文件：api_api_path.yaml 和 api_api_params.yaml）
+    # parser.save_paths_to_yaml(endpoints, module=None, include_sys_services=True)
+    
+    
+    
+    # # 获取trantor console 侧接口 3
+    # parser = SwaggerParser(
+    #     base_url="https://t-erp-huoshan-console-test.app.duandian.com",
+    #     cookies=cookies
+    # )
+    # # 获取trantor console 侧接口（使用swagger-config自动合并所有API文档）
+    # swagger_doc = parser.fetch_swagger_doc() 
+    
+    # # 解析所有接口
+    # endpoints = parser.parse_endpoints()
+    
+    # # 保存路径信息
+    # parser.save_paths_to_yaml(endpoints, module=None, include_sys_services=True)
+    

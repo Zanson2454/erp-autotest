@@ -1,263 +1,4 @@
 api_params:
-  /api/trantor/service/engine/execute/sys_common$SYS_ReverseConstructTreeService:
-    params:
-      request:
-        conditionItems: {}
-        conditionGroup: {}
-      modelKey: null
-    serviceKey: sys_common$SYS_ReverseConstructTreeService
-  /api/trantor/service/engine/execute/sys_common$SYS_MasterData_MultiEnableDataService:
-    params:
-      request:
-        ids:
-        - 0
-      modelKey: null
-    serviceKey: sys_common$SYS_MasterData_MultiEnableDataService
-  /api/trantor/service/engine/execute/sys_common$SYS_PagingDataService:
-    params:
-      selectFields:
-      - selectFields:
-        - {}
-        field: null
-      request:
-        sortOrders:
-        - fieldAlias: null
-          sortType: null
-        pageable:
-          conditionItems: {}
-          pageNo: 1
-          conditionGroup: {}
-          pageSize: 20
-      modelKey: null
-    serviceKey: sys_common$SYS_PagingDataService
-  /api/trantor/service/engine/execute/sys_common$SYS_SaveDataService:
-    params:
-      request: {}
-      modelKey: null
-    serviceKey: sys_common$SYS_SaveDataService
-  /api/trantor/service/engine/execute/sys_common$SYS_MasterData_SaveAndEnableDataService:
-    params:
-      request: {}
-      modelKey: null
-    serviceKey: sys_common$SYS_MasterData_SaveAndEnableDataService
-  /api/trantor/service/engine/execute/sys_common$SYS_TreeSearchService:
-    params:
-      request:
-        conditionItems: null
-        conditionGroup: null
-      modelKey: null
-    serviceKey: sys_common$SYS_TreeSearchService
-  /api/trantor/service/engine/execute/sys_common$SYS_MasterData_EnableDataService:
-    params:
-      request:
-        id: 0
-      modelKey: null
-    serviceKey: sys_common$SYS_MasterData_EnableDataService
-  /api/trantor/service/engine/execute/sys_common$SYS_BatchUpdateDataByConditionService:
-    params:
-      request:
-        data: {}
-        conditionItems: null
-        conditionGroup: null
-      modelKey: null
-    serviceKey: sys_common$SYS_BatchUpdateDataByConditionService
-  /api/trantor/service/engine/execute/sys_common$SYS_MasterData_DisableDataService:
-    params:
-      request:
-        id: 0
-      modelKey: null
-    serviceKey: sys_common$SYS_MasterData_DisableDataService
-  /api/trantor/service/engine/execute/sys_common$SYS_UpdateDataByIdService:
-    params:
-      request: {}
-      modelKey: null
-    serviceKey: sys_common$SYS_UpdateDataByIdService
-  /api/trantor/service/engine/execute/sys_common$SYS_BatchDeleteDataByIdsService:
-    params:
-      request:
-        ids:
-        - 0
-      modelKey: null
-    serviceKey: sys_common$SYS_BatchDeleteDataByIdsService
-  /api/trantor/service/engine/execute/sys_common$SYS_BatchSaveDataService:
-    params:
-      request:
-      - {}
-      modelKey: null
-    serviceKey: sys_common$SYS_BatchSaveDataService
-  /api/trantor/service/engine/execute/sys_common$SYS_FindDataByIdsService:
-    params:
-      selectFields:
-      - selectFields:
-        - {}
-        field: null
-      request:
-        ids:
-        - 0
-      modelKey: null
-    serviceKey: sys_common$SYS_FindDataByIdsService
-  /api/trantor/service/engine/execute/sys_common$SYS_FindSingleDataByConditionService:
-    params:
-      selectFields:
-      - selectFields:
-        - {}
-        field: null
-      request:
-        conditionItems: null
-        conditionGroup: null
-      modelKey: null
-    serviceKey: sys_common$SYS_FindSingleDataByConditionService
-  /api/trantor/service/engine/execute/sys_common$SYS_MasterData_CreateAndEnableDataService:
-    params:
-      request: {}
-      modelKey: null
-    serviceKey: sys_common$SYS_MasterData_CreateAndEnableDataService
-  /api/trantor/service/engine/execute/sys_common$SYS_InvokeCodeRuleService:
-    params:
-      request:
-        formParams: {}
-        ruleKey: null
-      modelKey: null
-    serviceKey: sys_common$SYS_InvokeCodeRuleService
-  /api/trantor/service/engine/execute/sys_common$SYS_BatchDeleteDataByConditionService:
-    params:
-      request:
-        conditionItems: null
-        conditionGroup: null
-      modelKey: null
-    serviceKey: sys_common$SYS_BatchDeleteDataByConditionService
-  /api/trantor/service/engine/execute/sys_common$SYS_BatchDeleteDataService:
-    params:
-      request:
-        ids:
-        - 0
-      modelKey: null
-    serviceKey: sys_common$SYS_BatchDeleteDataService
-  /api/trantor/service/engine/execute/sys_common$SYS_MasterData_CreateDataService:
-    params:
-      request: {}
-      modelKey: null
-    serviceKey: sys_common$SYS_MasterData_CreateDataService
-  /api/trantor/service/engine/execute/sys_common$SYS_MasterData_UpdateDataService:
-    params:
-      request: {}
-      modelKey: null
-    serviceKey: sys_common$SYS_MasterData_UpdateDataService
-  /api/trantor/service/engine/execute/sys_common$SYS_FindOneDataService:
-    params:
-      selectFields:
-      - selectFields:
-        - {}
-        field: null
-      request:
-        conditionItems: {}
-        conditionGroup: {}
-      modelKey: null
-    serviceKey: sys_common$SYS_FindOneDataService
-  /api/trantor/service/engine/execute/sys_common$SYS_MasterData_MultiDisableDataService:
-    params:
-      request:
-        ids:
-        - 0
-      modelKey: null
-    serviceKey: sys_common$SYS_MasterData_MultiDisableDataService
-  /api/trantor/service/engine/execute/sys_common$SYS_CopyDataConverterService:
-    params:
-      request: {}
-      modelKey: null
-    serviceKey: sys_common$SYS_CopyDataConverterService
-  /api/trantor/service/engine/execute/sys_common$SYS_COUNT_DATA_SERVICE:
-    params:
-      request:
-      - null
-      modelKey: null
-    serviceKey: sys_common$SYS_COUNT_DATA_SERVICE
-  /api/trantor/service/engine/execute/sys_common$SYS_FindTreeDataService:
-    params:
-      request: {}
-      modelKey: null
-    serviceKey: sys_common$SYS_FindTreeDataService
-  /api/trantor/service/engine/execute/sys_common$SYS_SUM_DATA_SERVICE:
-    params:
-      request:
-        conditionItems: null
-        conditionGroup: null
-      fields:
-      - null
-      modelKey: null
-    serviceKey: sys_common$SYS_SUM_DATA_SERVICE
-  /api/trantor/service/engine/execute/sys_common$SYS_FindListDataService:
-    params:
-      selectFields:
-      - selectFields:
-        - {}
-        field: null
-      request:
-        conditionItems: {}
-        conditionGroup: {}
-      modelKey: null
-    serviceKey: sys_common$SYS_FindListDataService
-  /api/trantor/service/engine/execute/sys_common$SYS_BatchCreateDataService:
-    params:
-      request:
-      - {}
-      modelKey: null
-    serviceKey: sys_common$SYS_BatchCreateDataService
-  /api/trantor/service/engine/execute/sys_common$SYS_MasterData_SaveDataService:
-    params:
-      request: {}
-      modelKey: null
-    serviceKey: sys_common$SYS_MasterData_SaveDataService
-  /api/trantor/service/engine/execute/sys_common$SYS_DeleteDataByIdService:
-    params:
-      request:
-        id: 0
-      modelKey: null
-    serviceKey: sys_common$SYS_DeleteDataByIdService
-  /api/trantor/service/engine/execute/sys_common$SYS_BatchUpdateDataByIdsService:
-    params:
-      request:
-      - {}
-      modelKey: null
-    serviceKey: sys_common$SYS_BatchUpdateDataByIdsService
-  /api/trantor/service/engine/execute/sys_common$SYS_FindSingleDataByIdService:
-    params:
-      selectFields:
-      - selectFields:
-        - {}
-        field: null
-      request:
-        id: 0
-      modelKey: null
-    serviceKey: sys_common$SYS_FindSingleDataByIdService
-  /api/trantor/service/engine/execute/sys_common$SYS_FindTreeChildrenDataService:
-    params:
-      request:
-        conditionItems: {}
-        conditionGroup: {}
-      modelKey: null
-    serviceKey: sys_common$SYS_FindTreeChildrenDataService
-  /api/trantor/service/engine/execute/sys_common$SYS_CreateDataService:
-    params:
-      request: {}
-      modelKey: null
-    serviceKey: sys_common$SYS_CreateDataService
-  /api/trantor/service/engine/execute/sys_common$SYS_FindDataByIdService:
-    params:
-      selectFields:
-      - selectFields:
-        - {}
-        field: null
-      request:
-        id: 0
-      modelKey: null
-    serviceKey: sys_common$SYS_FindDataByIdService
-  /api/trantor/service/engine/execute/sys_common$SYS_MasterData_DeleteDataService:
-    params:
-      request:
-        id: 0
-      modelKey: null
-    serviceKey: sys_common$SYS_MasterData_DeleteDataService
   /api/trantor/service/engine/execute/sys_common$BID_DOCS_COMPARE_RESULT_GEI_EXPORT_SERVICE:
     params:
       request: {}
@@ -282,6 +23,31 @@ api_params:
   /api/trantor/service/engine/execute/sys_common$API_ASYNC_TASK_TASK_DEFINITION_SAVE_POST:
     params: {}
     serviceKey: sys_common$API_ASYNC_TASK_TASK_DEFINITION_SAVE_POST
+  /api/trantor/service/engine/execute/sys_common$chart_rendering_service_doubao:
+    params:
+      data: null
+      userPrompt: null
+    serviceKey: sys_common$chart_rendering_service_doubao
+  /api/trantor/service/engine/execute/sys_common$NOTICE_TEMPLATE_SAVE_DATA_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        templateAuditStatus: null
+        templateDesc: null
+        channelType: null
+        templateCode: null
+        templateStatus: null
+        createdAt: 0
+        templateConfig: null
+        createdBy: {}
+        templateName: null
+        sceneCode: null
+        channelName: null
+        id: 0
+        channelAccountId: {}
+        channelId: {}
+        updatedAt: 0
+    serviceKey: sys_common$NOTICE_TEMPLATE_SAVE_DATA_SERVICE
   /api/trantor/service/engine/execute/sys_common$material_category_design:
     params:
       userContent: null
@@ -294,21 +60,36 @@ api_params:
     serviceKey: sys_common$ORG_DIMENSION_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
   /api/trantor/service/engine/execute/sys_common$API_NOTICE_CHANNEL_CREATE_POST:
     params:
-      channelConfig: null
+      request: {}
+      pageNo: 1
       extra: {}
       context: {}
+      searchCount: false
       tenantId: 0
-      accounts:
+      pageSize: 20
+      orders:
       - {}
       id: 0
       dataPermissionConditionGroup: {}
       version: 0
-      spaceCode: null
     serviceKey: sys_common$API_NOTICE_CHANNEL_CREATE_POST
   /api/trantor/service/engine/execute/sys_common$ORG_EMPLOYEE_ORG_LINK_CF_FIND_ONE_DATA_SERVICE:
     params:
       request: {}
     serviceKey: sys_common$ORG_EMPLOYEE_ORG_LINK_CF_FIND_ONE_DATA_SERVICE
+  /api/trantor/service/engine/execute/sys_common$NOTICE_CHANNEL_ACCOUNT_FIND_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        createdAt: 0
+        updatedBy: {}
+        createdBy: {}
+        accountName: null
+        accountDesc: null
+        id: 0
+        channelId: {}
+        updatedAt: 0
+        accountConfig: null
+    serviceKey: sys_common$NOTICE_CHANNEL_ACCOUNT_FIND_DATA_BY_ID_SERVICE
   /api/trantor/service/engine/execute/sys_common$ORG_ORG_UNIT_FIND_ALL_SERVICE:
     params:
       request:
@@ -522,6 +303,7 @@ api_params:
       - {}
       pageNo: 1
       extra: {}
+      teamId: 0
       bizId: 0
       context: {}
       tenantId: 0
@@ -534,6 +316,17 @@ api_params:
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_USER_GROUP_PAGING_GET:
     params: {}
     serviceKey: sys_common$API_TRANTOR_PORTAL_USER_GROUP_PAGING_GET
+  /api/trantor/service/engine/execute/sys_common$TASK_INSTANCE_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: sys_common$TASK_INSTANCE_PAGING_DATA_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_NOTICE_RECORD_PAGING_POST:
     params: {}
     serviceKey: sys_common$API_NOTICE_RECORD_PAGING_POST
@@ -669,12 +462,15 @@ api_params:
       candidateIndex: null
       pageSize: 20
       statusListStr: null
+      processCreatorName: null
       modelKey: null
       createdEnd: 0
       pageNo: 1
       appId: 0
       teamId: 0
-      displaySnapshot: null
+      displaySnapshot: {}
+      sortField: null
+      isAsc: false
       keyword: null
       status: 0
     serviceKey: sys_common$API_TRANTOR_WORKFLOW_V2_TASK_INSTANCE_PAGING_GET
@@ -712,6 +508,21 @@ api_params:
       bizId: null
       modelKey: null
     serviceKey: sys_common$API_TRANTOR_WORKFLOW_V2_PRINT_WORKFLOW_RECORD_POST
+  /api/trantor/service/engine/execute/sys_common$API_NOTICE_TEMPLATE_PAGING_BY_TRANTOR_POST:
+    params:
+      request: {}
+      pageNo: 1
+      extra: {}
+      context: {}
+      searchCount: false
+      tenantId: 0
+      pageSize: 20
+      orders:
+      - {}
+      id: 0
+      dataPermissionConditionGroup: {}
+      version: 0
+    serviceKey: sys_common$API_NOTICE_TEMPLATE_PAGING_BY_TRANTOR_POST
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_META_LIST_IMPORT_TEMPLATE_GET:
     params: {}
     serviceKey: sys_common$API_TRANTOR_PORTAL_META_LIST_IMPORT_TEMPLATE_GET
@@ -722,6 +533,26 @@ api_params:
       portalId: 0
       serviceKey: null
     serviceKey: sys_common$API_TRANTOR_PORTAL_ROLE_PERMISSION_SCENE_VIEW_RESOURCE_BOUND_BY_SERVICE_FIND_GET
+  /api/trantor/service/engine/execute/sys_common$NOTICE_TEMPLATE_FIND_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        templateAuditStatus: null
+        templateDesc: null
+        channelType: null
+        templateCode: null
+        templateStatus: null
+        createdAt: 0
+        templateConfig: null
+        createdBy: {}
+        templateName: null
+        sceneCode: null
+        channelName: null
+        id: 0
+        channelAccountId: {}
+        channelId: {}
+        updatedAt: 0
+    serviceKey: sys_common$NOTICE_TEMPLATE_FIND_DATA_BY_ID_SERVICE
   /api/trantor/service/engine/execute/sys_common$ORG_BUSINESS_TYPE_CF_MASTER_DATA_MULTI_DISABLE_DATA_SERVICE:
     params:
       request:
@@ -743,6 +574,21 @@ api_params:
         status: null
         updatedAt: 0
     serviceKey: sys_common$ORG_IDENTITY_CF_DELETE_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/sys_common$API_GEI_TASK_PAGING_BY_TRANTOR_POST:
+    params:
+      request: {}
+      pageNo: 1
+      extra: {}
+      context: {}
+      searchCount: false
+      tenantId: 0
+      pageSize: 20
+      orders:
+      - {}
+      id: 0
+      dataPermissionConditionGroup: {}
+      version: 0
+    serviceKey: sys_common$API_GEI_TASK_PAGING_BY_TRANTOR_POST
   /api/trantor/service/engine/execute/sys_common$ORG_DIMENSION_CF_FIND_DATA_BY_ID_SERVICE:
     params:
       request:
@@ -1113,6 +959,21 @@ api_params:
       dataPermissionConditionGroup: {}
       version: 0
     serviceKey: sys_common$API_NOTICE_SCENE_QUERY_BY_IDS_POST
+  /api/trantor/service/engine/execute/sys_common$API_PRINT_PRINT_TEMPLATE_DELETE_BY_TRANTOR_POST:
+    params:
+      request: {}
+      pageNo: 1
+      extra: {}
+      context: {}
+      searchCount: false
+      tenantId: 0
+      pageSize: 20
+      orders:
+      - {}
+      id: 0
+      dataPermissionConditionGroup: {}
+      version: 0
+    serviceKey: sys_common$API_PRINT_PRINT_TEMPLATE_DELETE_BY_TRANTOR_POST
   /api/trantor/service/engine/execute/sys_common$API_T_SCHEDULER_JOB_DEFINITION_DELETE_POST:
     params:
       extra: {}
@@ -1158,6 +1019,21 @@ api_params:
         - {}
         updatedAt: 0
     serviceKey: sys_common$ORG_DIMENSION_CF_MASTER_DATA_DISABLE_DATA_SERVICE
+  /api/trantor/service/engine/execute/sys_common$API_PRINT_PRINT_TEMPLATE_PAGING_BY_TRANTOR_POST:
+    params:
+      request: {}
+      pageNo: 1
+      extra: {}
+      context: {}
+      searchCount: false
+      tenantId: 0
+      pageSize: 20
+      orders:
+      - {}
+      id: 0
+      dataPermissionConditionGroup: {}
+      version: 0
+    serviceKey: sys_common$API_PRINT_PRINT_TEMPLATE_PAGING_BY_TRANTOR_POST
   /api/trantor/service/engine/execute/sys_common$API_MW_WEBSOCKET_PUSH_TASK_MESSAGE_GET:
     params:
       targetUserId: 0
@@ -1388,6 +1264,16 @@ api_params:
       candidateRequests:
       - {}
     serviceKey: sys_common$API_TRANTOR_WORKFLOW_V2_ADD_INSTANCE_REMARK_CUSTOMIZED_CANDIDATE_POST
+  /api/trantor/service/engine/execute/sys_common$NOTICE_SCENE_FOLDING_ASSOCIATED_SERVICE:
+    params:
+      request:
+        sceneKeywords: null
+        name: null
+        noticeTemplates:
+        - {}
+        description: null
+        key: null
+    serviceKey: sys_common$NOTICE_SCENE_FOLDING_ASSOCIATED_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_VALIDATE_POST:
     params:
       teamName: null
@@ -1480,6 +1366,10 @@ api_params:
       jumpNode: {}
       remark: null
     serviceKey: sys_common$API_TRANTOR_WORKFLOW_V2_DEVOPS_NODE_JUMP_POST
+  /api/trantor/service/engine/execute/sys_common$TASK_INSTANCE_FOLDING_ASSOCIATED_SERVICE:
+    params:
+      request: {}
+    serviceKey: sys_common$TASK_INSTANCE_FOLDING_ASSOCIATED_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_IAM_AUDIT_LOG_PAGE_GET:
     params:
       'no': 0
@@ -1620,6 +1510,28 @@ api_params:
         id: null
       modelKey: null
     serviceKey: sys_common$JOB_DEFINITION_COPY_DATA_CONVERTER_SERVICE_CHILD
+  /api/trantor/service/engine/execute/sys_common$NOTICE_CHANNEL_ACCOUNT_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: sys_common$NOTICE_CHANNEL_ACCOUNT_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/sys_common$STATION_NOTICE_RES_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: sys_common$STATION_NOTICE_RES_PAGING_DATA_SERVICE
   /api/trantor/service/engine/execute/sys_common$ORG_DIMENSION_BUSINESS_LINK_FIND_LIST_DATA_SERVICE:
     params:
       request: {}
@@ -1631,6 +1543,21 @@ api_params:
         name: null
         desc: null
     serviceKey: sys_common$AGENT_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/sys_common$API_NOTICE_STATION_PAGING_BY_TRANTOR_POST:
+    params:
+      request: {}
+      pageNo: 1
+      extra: {}
+      context: {}
+      searchCount: false
+      tenantId: 0
+      pageSize: 20
+      orders:
+      - {}
+      id: 0
+      dataPermissionConditionGroup: {}
+      version: 0
+    serviceKey: sys_common$API_NOTICE_STATION_PAGING_BY_TRANTOR_POST
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_DEVOPS_COUNT_POST:
     params:
       createdEnd: 0
@@ -1734,6 +1661,21 @@ api_params:
       templateAddress: null
       desc: null
     serviceKey: sys_common$API_PRINT_PRINT_TEMPLATE_SAVE_POST
+  /api/trantor/service/engine/execute/sys_common$API_PRINT_PRINT_TEMPLATE_SAVE_BY_TRANTOR_POST:
+    params:
+      request: {}
+      pageNo: 1
+      extra: {}
+      context: {}
+      searchCount: false
+      tenantId: 0
+      pageSize: 20
+      orders:
+      - {}
+      id: 0
+      dataPermissionConditionGroup: {}
+      version: 0
+    serviceKey: sys_common$API_PRINT_PRINT_TEMPLATE_SAVE_BY_TRANTOR_POST
   /api/trantor/service/engine/execute/sys_common$ORG_DIMENSION_CF_MASTER_DATA_MULTI_DISABLE_DATA_SERVICE:
     params:
       request:
@@ -1767,19 +1709,22 @@ api_params:
     serviceKey: sys_common$API_TRANTOR_WORKFLOW_V2_COPY_POST
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_RUNTIME_REPORT_QUERY_POST:
     params:
+      originOrgId: 0
       columns:
       - {}
       pageSize: 20
       filters: {}
-      page: 0
       source: null
+      moduleKey: null
+      currentUserId: 0
+      tenantId: 0
+      page: 0
       dynamicConditions:
       - {}
       characterEncoding: null
       moduleExtConditions:
       - {}
       i18nLanguage: null
-      moduleKey: null
     serviceKey: sys_common$API_TRANTOR_RUNTIME_REPORT_QUERY_POST
   /api/trantor/service/engine/execute/sys_common$API_T_SCHEDULER_JOB_DEFINITION_DELETE_BATCH_BY_KEY_POST:
     params:
@@ -1854,6 +1799,22 @@ api_params:
     params:
       request: {}
     serviceKey: sys_common$ORG_EMPLOYEE_MD_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/sys_common$NOTICE_CHANNEL_FIND_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        createdAt: 0
+        updatedBy: {}
+        createdBy: {}
+        channelConfig: null
+        saveOuterTemplate: false
+        channelName: null
+        channelType: null
+        channelStatus: null
+        id: 0
+        noticeChannelAccount:
+        - {}
+        updatedAt: 0
+    serviceKey: sys_common$NOTICE_CHANNEL_FIND_DATA_BY_ID_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_PRINT_WATERMARK_TEMPLATE_DETAIL_POST:
     params:
       extra: {}
@@ -1863,6 +1824,23 @@ api_params:
       dataPermissionConditionGroup: {}
       version: 0
     serviceKey: sys_common$API_PRINT_WATERMARK_TEMPLATE_DETAIL_POST
+  /api/trantor/service/engine/execute/sys_common$NOTICE_TASK_FIND_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        sendTime: 0
+        receiverNumber: 0
+        createdAt: 0
+        taskCode: null
+        taskContent: null
+        createdBy: {}
+        failedNumber: 0
+        successNumber: 0
+        taskName: null
+        id: 0
+        taskStatus: null
+        updatedAt: 0
+    serviceKey: sys_common$NOTICE_TASK_FIND_DATA_BY_ID_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_NOTICE_TEMPLATE_BATCH_DISABLE_POST:
     params:
       extra: {}
@@ -2052,6 +2030,17 @@ api_params:
       dataPermissionConditionGroup: {}
       version: 0
     serviceKey: sys_common$API_PRINT_PRINT_SCENE_INSTANCE_DISABLE_POST
+  /api/trantor/service/engine/execute/sys_common$NOTICE_TASK_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: sys_common$NOTICE_TASK_PAGING_DATA_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_LIST_POST:
     params:
       pageNumber: 0
@@ -2094,6 +2083,17 @@ api_params:
       dataPermissionConditionGroup: {}
       version: 0
     serviceKey: sys_common$API_NOTICE_TEMPLATE_SMS_ALIYUN_QUERY_SMS_TEMPLATE_LIST_POST
+  /api/trantor/service/engine/execute/sys_common$NOTICE_RECORD_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: sys_common$NOTICE_RECORD_PAGING_DATA_SERVICE
   /api/trantor/service/engine/execute/sys_common$I18N_APP_DTO_PAGING_DATA_SERVICE:
     params:
       request:
@@ -2107,7 +2107,21 @@ api_params:
     serviceKey: sys_common$I18N_APP_DTO_PAGING_DATA_SERVICE
   /api/trantor/service/engine/execute/sys_common$AI_MAT_PRICE_ANALYSIS_TR_FIND_DATA_BY_ID_SERVICE:
     params:
-      request: {}
+      request:
+        updatedBy: {}
+        toDate: 0
+        version: 0
+        monthlyInventoryTurnover: 0
+        fromDate: 0
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        matId: 0
+        grossMargin: 0
+        id: 0
+        matCode: null
+        matName: null
+        updatedAt: 0
     serviceKey: sys_common$AI_MAT_PRICE_ANALYSIS_TR_FIND_DATA_BY_ID_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_PERMISSION_GRANT_POST:
     params:
@@ -2311,6 +2325,26 @@ api_params:
         ids:
         - 0
     serviceKey: sys_common$ORG_EMPLOYEE_MD_MASTER_DATA_MULTI_ENABLE_DATA_SERVICE
+  /api/trantor/service/engine/execute/sys_common$NOTICE_TEMPLATE_FOLDING_ASSOCIATED_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        templateAuditStatus: null
+        templateDesc: null
+        channelType: null
+        templateCode: null
+        templateStatus: null
+        createdAt: 0
+        templateConfig: null
+        createdBy: {}
+        templateName: null
+        sceneCode: null
+        channelName: null
+        id: 0
+        channelAccountId: {}
+        channelId: {}
+        updatedAt: 0
+    serviceKey: sys_common$NOTICE_TEMPLATE_FOLDING_ASSOCIATED_SERVICE
   /api/trantor/service/engine/execute/sys_common$material_description_repair:
     params:
       userContent: null
@@ -2419,6 +2453,39 @@ api_params:
       sectionId: null
       bidId: 0
     serviceKey: sys_common$bid_docs_comp_result_aggre_service
+  /api/trantor/service/engine/execute/sys_common$NOTICE_RECORD_UNFOLDING_ASSOCIATED_SERVICE:
+    params:
+      request:
+        failedMsg: null
+        channelType: null
+        extraParams: null
+        templateId: {}
+        createdAt: 0
+        sendContent: null
+        taskCode: null
+        sceneCode: null
+        receiverSnapshot: null
+        outId: 0
+        id: 0
+        recordCode: null
+        channelId: {}
+        updatedAt: 0
+        updatedBy: {}
+        sceneName: null
+        retryNeed: false
+        sendTime: 0
+        receiveTime: 0
+        retryTimes: 0
+        originRecordId: {}
+        recordStatus: null
+        receiverIdentity: null
+        createdBy: {}
+        templateName: null
+        taskName: null
+        channelName: null
+        taskId: {}
+        failedReason: null
+    serviceKey: sys_common$NOTICE_RECORD_UNFOLDING_ASSOCIATED_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_APPLICATION_LIST_GET:
     params: {}
     serviceKey: sys_common$API_TRANTOR_PORTAL_APPLICATION_LIST_GET
@@ -2598,6 +2665,21 @@ api_params:
       userId: 0
       updatedAt: 0
     serviceKey: sys_common$API_TRANTOR_WORKFLOW_V2_SELECTION_CRITERIA_UPDATE_POST
+  /api/trantor/service/engine/execute/sys_common$API_PRINT_WATERMARK_TEMPLATE_DELETE_BY_TRANTOR_POST:
+    params:
+      request: {}
+      pageNo: 1
+      extra: {}
+      context: {}
+      searchCount: false
+      tenantId: 0
+      pageSize: 20
+      orders:
+      - {}
+      id: 0
+      dataPermissionConditionGroup: {}
+      version: 0
+    serviceKey: sys_common$API_PRINT_WATERMARK_TEMPLATE_DELETE_BY_TRANTOR_POST
   /api/trantor/service/engine/execute/sys_common$ORG_EMPLOYEE_MD_GEI_EXPORT_SERVICE:
     params:
       request: {}
@@ -2691,6 +2773,54 @@ api_params:
     params:
       id: 0
     serviceKey: sys_common$API_TRANTOR_PORTAL_USER_PLAINTEXT_GET
+  /api/trantor/service/engine/execute/sys_common$NOTICE_RECORD_FIND_DATA_BY_ID_SERVICE:
+    params:
+      request:
+        failedMsg: null
+        channelType: null
+        extraParams: null
+        templateId: {}
+        createdAt: 0
+        sendContent: null
+        taskCode: null
+        sceneCode: null
+        receiverSnapshot: null
+        outId: 0
+        id: 0
+        recordCode: null
+        channelId: {}
+        updatedAt: 0
+        updatedBy: {}
+        sceneName: null
+        retryNeed: false
+        sendTime: 0
+        receiveTime: 0
+        retryTimes: 0
+        originRecordId: {}
+        recordStatus: null
+        receiverIdentity: null
+        createdBy: {}
+        templateName: null
+        taskName: null
+        channelName: null
+        taskId: {}
+        failedReason: null
+    serviceKey: sys_common$NOTICE_RECORD_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/sys_common$API_NOTICE_CHANNEL_QUERY_ACCOUNTS_BY_TRANTOR_POST:
+    params:
+      request: {}
+      pageNo: 1
+      extra: {}
+      context: {}
+      searchCount: false
+      tenantId: 0
+      pageSize: 20
+      orders:
+      - {}
+      id: 0
+      dataPermissionConditionGroup: {}
+      version: 0
+    serviceKey: sys_common$API_NOTICE_CHANNEL_QUERY_ACCOUNTS_BY_TRANTOR_POST
   /api/trantor/service/engine/execute/sys_common$API_PRINT_PRINT_SCENE_LIST_BY_MODEL_KEY_POST:
     params:
       createdByName: null
@@ -3109,6 +3239,17 @@ api_params:
       dataPermissionConditionGroup: {}
       version: 0
     serviceKey: sys_common$API_T_SCHEDULER_JOB_INSTANCE_FIND_BY_BIZ_KEY_POST
+  /api/trantor/service/engine/execute/sys_common$ASYNCTASK_INSTANCE_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: sys_common$ASYNCTASK_INSTANCE_PAGING_DATA_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_GEI_TEMPLATE_DOWNLOAD_GET:
     params:
       appId: 0
@@ -3301,6 +3442,13 @@ api_params:
       taskName: null
       selfRelationModel: false
     serviceKey: sys_common$BID_DOCS_COMPARE_RESULT_API_GEI_TASK_EXPORT_DIRECT_POST
+  /api/trantor/service/engine/execute/sys_common$ai_data_rendering_service_doubao:
+    params:
+      data:
+      - {}
+      userContent: null
+      modelKey: null
+    serviceKey: sys_common$ai_data_rendering_service_doubao
   /api/trantor/service/engine/execute/sys_common$STRUCT_FIND_TREE_CHILDREN_DATA_SERVICE:
     params:
       orgDimensionCode: null
@@ -3459,13 +3607,26 @@ api_params:
       selfRelationModel: false
       overlayStrategy: null
     serviceKey: sys_common$API_GEI_TASK_EXPORT_DIRECT_POST
-  /api/trantor/service/engine/execute/sys_common$ORG_EMPLOYEE_MD_FOLDING_ASSOCIATED_SERVICE:
-    params:
-      request: {}
-    serviceKey: sys_common$ORG_EMPLOYEE_MD_FOLDING_ASSOCIATED_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_FIND_ALL_ORG_BUS_TYPE_POST:
     params: {}
     serviceKey: sys_common$API_TRANTOR_WORKFLOW_V2_FIND_ALL_ORG_BUS_TYPE_POST
+  /api/trantor/service/engine/execute/sys_common$NOTICE_TASK_FOLDING_ASSOCIATED_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        sendTime: 0
+        receiverNumber: 0
+        createdAt: 0
+        taskCode: null
+        taskContent: null
+        createdBy: {}
+        failedNumber: 0
+        successNumber: 0
+        taskName: null
+        id: 0
+        taskStatus: null
+        updatedAt: 0
+    serviceKey: sys_common$NOTICE_TASK_FOLDING_ASSOCIATED_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_PRINT_WATER_MARK_PREVIEW_POST:
     params:
       imgUrl: null
@@ -3539,6 +3700,48 @@ api_params:
       request:
       - {}
     serviceKey: sys_common$ORG_EMPLOYEE_MD_BATCH_CREATE_DATA_SERVICE
+  /api/trantor/service/engine/execute/sys_common$PRINT_SCENE_UNFOLDING_ASSOCIATED_SERVICE:
+    params:
+      request:
+        templateType: null
+        printTemplateId: 0
+        description: null
+        templateFileName: null
+        templateCode: null
+        allowCustomWatermark: false
+        convertOfficeToPdf: false
+        startupRulesDesc: null
+        templateName: null
+        name: null
+        templateFfectiveEchanism: null
+        templateAddress: null
+        key: null
+        printTemplateName: null
+        desc: null
+        watermarkTemplateName: null
+        watermarkTemplateId: 0
+        status: null
+    serviceKey: sys_common$PRINT_SCENE_UNFOLDING_ASSOCIATED_SERVICE
+  /api/trantor/service/engine/execute/sys_common$NOTICE_TEMPLATE_UNFOLDING_ASSOCIATED_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        templateAuditStatus: null
+        templateDesc: null
+        channelType: null
+        templateCode: null
+        templateStatus: null
+        createdAt: 0
+        templateConfig: null
+        createdBy: {}
+        templateName: null
+        sceneCode: null
+        channelName: null
+        id: 0
+        channelAccountId: {}
+        channelId: {}
+        updatedAt: 0
+    serviceKey: sys_common$NOTICE_TEMPLATE_UNFOLDING_ASSOCIATED_SERVICE
   /api/trantor/service/engine/execute/sys_common$search_meta:
     params:
       request:
@@ -3618,6 +3821,21 @@ api_params:
       version: 0
       desc: null
     serviceKey: sys_common$API_DYNAMIC_FORM_APP_TEMPLATE_CREATE_AND_UPDATE_POST
+  /api/trantor/service/engine/execute/sys_common$API_PRINT_WATERMARK_TEMPLATE_SAVE_BY_TRANTOR_POST:
+    params:
+      request: {}
+      pageNo: 1
+      extra: {}
+      context: {}
+      searchCount: false
+      tenantId: 0
+      pageSize: 20
+      orders:
+      - {}
+      id: 0
+      dataPermissionConditionGroup: {}
+      version: 0
+    serviceKey: sys_common$API_PRINT_WATERMARK_TEMPLATE_SAVE_BY_TRANTOR_POST
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_USER_RESET_PASSWORD_POST:
     params:
       mobile: null
@@ -3853,6 +4071,10 @@ api_params:
       id: 0
       channelAccountId: 0
     serviceKey: sys_common$API_NOTICE_TEMPLATE_WXAPP_GET_PUBLIC_TEMPLATE_KEYWORDS_POST
+  /api/trantor/service/engine/execute/sys_common$save_chart_to_workspace:
+    params:
+      chartInfo: {}
+    serviceKey: sys_common$save_chart_to_workspace
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_USER_UNLOCK_POST:
     params:
       id: 0
@@ -3905,12 +4127,15 @@ api_params:
       candidateIndex: null
       pageSize: 20
       statusListStr: null
+      processCreatorName: null
       modelKey: null
       createdEnd: 0
       pageNo: 1
       appId: 0
       teamId: 0
-      displaySnapshot: null
+      displaySnapshot: {}
+      sortField: null
+      isAsc: false
       keyword: null
       status: 0
     serviceKey: sys_common$API_TRANTOR_WORKFLOW_V2_TASK_INSTANCE_SEARCH_GET
@@ -3951,6 +4176,21 @@ api_params:
         ids:
         - 0
     serviceKey: sys_common$ORG_IDENTITY_CF_MASTER_DATA_MULTI_ENABLE_DATA_SERVICE
+  /api/trantor/service/engine/execute/sys_common$API_NOTICE_TASK_PAGING_BY_TRANTOR_POST:
+    params:
+      request: {}
+      pageNo: 1
+      extra: {}
+      context: {}
+      searchCount: false
+      tenantId: 0
+      pageSize: 20
+      orders:
+      - {}
+      id: 0
+      dataPermissionConditionGroup: {}
+      version: 0
+    serviceKey: sys_common$API_NOTICE_TASK_PAGING_BY_TRANTOR_POST
   /api/trantor/service/engine/execute/sys_common$ORG_EMPLOYEE_ORG_LINK_CF_FIND_LIST_DATA_SERVICE:
     params:
       request: {}
@@ -4079,6 +4319,17 @@ api_params:
       pageable: {}
       id: 0
     serviceKey: sys_common$API_CONFIG_ADMIN_INFO_PAGING_POST
+  /api/trantor/service/engine/execute/sys_common$API_TRANTOR_RUNTIME_REPORT_EXECUTE_POST:
+    params:
+      measure:
+      - {}
+      source: null
+      conditions:
+      - {}
+      dimension:
+      - {}
+      moduleKey: null
+    serviceKey: sys_common$API_TRANTOR_RUNTIME_REPORT_EXECUTE_POST
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_USER_GROUP_CREATE_POST:
     params: {}
     serviceKey: sys_common$API_TRANTOR_PORTAL_USER_GROUP_CREATE_POST
@@ -4203,6 +4454,10 @@ api_params:
       updatedByIds:
       - {}
     serviceKey: sys_common$API_TRANTOR_WORKFLOW_V2_PAGING_GET
+  /api/trantor/service/engine/execute/sys_common$ASYNCTASK_INSTANCE_FOLDING_ASSOCIATED_SERVICE:
+    params:
+      request: {}
+    serviceKey: sys_common$ASYNCTASK_INSTANCE_FOLDING_ASSOCIATED_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_T_SCHEDULER_JOB_DEFINITION_SAVE_POST:
     params:
       app: null
@@ -4227,7 +4482,21 @@ api_params:
     serviceKey: sys_common$API_T_SCHEDULER_JOB_DEFINITION_SAVE_POST
   /api/trantor/service/engine/execute/sys_common$mat_price_analysis_FOLDING_SERVICE:
     params:
-      request: {}
+      request:
+        updatedBy: {}
+        toDate: 0
+        version: 0
+        monthlyInventoryTurnover: 0
+        fromDate: 0
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        matId: 0
+        grossMargin: 0
+        id: 0
+        matCode: null
+        matName: null
+        updatedAt: 0
     serviceKey: sys_common$mat_price_analysis_FOLDING_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_PROXY_GET:
     params:
@@ -4261,6 +4530,12 @@ api_params:
       roleIds:
       - {}
     serviceKey: sys_common$API_TRANTOR_PORTAL_ROLE_DEFAULT_REPLACE_ALL_GET
+  /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_DEVOPS_CHANGE_VARIABLE_POST:
+    params:
+      input: {}
+      bizId: null
+      modelKey: null
+    serviceKey: sys_common$API_TRANTOR_WORKFLOW_V2_DEVOPS_CHANGE_VARIABLE_POST
   /api/trantor/service/engine/execute/sys_common$API_PRINT_PRINT_SCENE_INSTANCE_ADJUST_PRIORITY_POST:
     params: {}
     serviceKey: sys_common$API_PRINT_PRINT_SCENE_INSTANCE_ADJUST_PRIORITY_POST
@@ -4430,10 +4705,6 @@ api_params:
         ids:
         - 0
     serviceKey: sys_common$AI_MAT_PRICE_ANALYSIS_TR_BATCH_DELETE_DATA_SERVICE
-  /api/trantor/service/engine/execute/sys_common$ORG_EMPLOYEE_MD_MASTER_DATA_SAVE_DATA_SERVICE:
-    params:
-      request: {}
-    serviceKey: sys_common$ORG_EMPLOYEE_MD_MASTER_DATA_SAVE_DATA_SERVICE
   /api/trantor/service/engine/execute/sys_common$USE_AI_TO_REFRESH_WORKFLOW_PROCESS:
     params:
       description: null
@@ -4488,9 +4759,36 @@ api_params:
       bufferSize: 0
       status: 0
     serviceKey: sys_common$API_TRANTOR_PORTAL_USER_GET_LOGIN_ONCE_CODE_POST
+  /api/trantor/service/engine/execute/sys_common$NOTICE_SCENE_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: sys_common$NOTICE_SCENE_PAGING_DATA_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_DEVOPS_COUNT_GET:
     params: {}
     serviceKey: sys_common$API_TRANTOR_WORKFLOW_V2_DEVOPS_COUNT_GET
+  /api/trantor/service/engine/execute/sys_common$API_GEI_TASK_PAGING_SUB_BY_TRANTOR_POST:
+    params:
+      request: {}
+      mainTaskId: null
+      pageNo: 1
+      extra: {}
+      context: {}
+      searchCount: false
+      tenantId: 0
+      pageSize: 20
+      orders:
+      - {}
+      id: 0
+      dataPermissionConditionGroup: {}
+      version: 0
+    serviceKey: sys_common$API_GEI_TASK_PAGING_SUB_BY_TRANTOR_POST
   /api/trantor/service/engine/execute/sys_common$ORG_STRUCT_MD_COPY_DATA_CONVERTER_SERVICE_CHILD:
     params:
       request:
@@ -4557,8 +4855,8 @@ api_params:
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_INSTANCES_GET:
     params:
       workflowKey: null
-      bizId: null
-      userId: null
+      bizIds:
+      - {}
     serviceKey: sys_common$API_TRANTOR_WORKFLOW_V2_INSTANCES_GET
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_INSTANCE_DETAIL_POST:
     params:
@@ -4616,12 +4914,7 @@ api_params:
     params: {}
     serviceKey: sys_common$API_TRANTOR_PORTAL_CUSTOM_THEME_GET
   /api/trantor/service/engine/execute/sys_common$ai_page_open_service:
-    params:
-      pageType: null
-      data: {}
-      userContent: null
-      keyword: null
-      params: {}
+    params: {}
     serviceKey: sys_common$ai_page_open_service
   /api/trantor/service/engine/execute/sys_common$ORG_STRUCT_MD_FIND_TREE_DATA_SERVICE: {}
   /api/trantor/service/engine/execute/sys_common$API_NOTICE_CHANNEL_UPDATE_ACCOUNT_POST:
@@ -4759,6 +5052,23 @@ api_params:
         status: null
         updatedAt: 0
     serviceKey: sys_common$ORG_IDENTITY_CF_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/sys_common$NOTICE_TASK_UNFOLDING_ASSOCIATED_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        sendTime: 0
+        receiverNumber: 0
+        createdAt: 0
+        taskCode: null
+        taskContent: null
+        createdBy: {}
+        failedNumber: 0
+        successNumber: 0
+        taskName: null
+        id: 0
+        taskStatus: null
+        updatedAt: 0
+    serviceKey: sys_common$NOTICE_TASK_UNFOLDING_ASSOCIATED_SERVICE
   /api/trantor/service/engine/execute/sys_common$DIGITAL_HUMAN_ORG_UNIT_FIND_TREE_SERVICE: {}
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_ROLE_PERMISSION_DATA_CONTROL_DIMENSION_FIND_GET:
     params:
@@ -4924,6 +5234,17 @@ api_params:
       deleteReason: null
       workflowUserInfo: {}
     serviceKey: sys_common$API_TRANTOR_WORKFLOW_V2_INSTANCES_TERMINATE_POST
+  /api/trantor/service/engine/execute/sys_common$PRINT_TEMPLATE_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: sys_common$PRINT_TEMPLATE_PAGING_DATA_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_USER_GROUP_ASSIGNED_USERS_GET:
     params:
       id: 0
@@ -4966,7 +5287,21 @@ api_params:
     serviceKey: sys_common$ORG_STRUCT_MD_REVERSE_CONSTRUCT_TREE_SERVICE_BUILD_TREE
   /api/trantor/service/engine/execute/sys_common$AI_MAT_PRICE_ANALYSIS_TR_DELETE_DATA_BY_ID_SERVICE:
     params:
-      request: {}
+      request:
+        updatedBy: {}
+        toDate: 0
+        version: 0
+        monthlyInventoryTurnover: 0
+        fromDate: 0
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        matId: 0
+        grossMargin: 0
+        id: 0
+        matCode: null
+        matName: null
+        updatedAt: 0
     serviceKey: sys_common$AI_MAT_PRICE_ANALYSIS_TR_DELETE_DATA_BY_ID_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_GEI_TEMPLATE_IMPORT_POST:
     params:
@@ -5015,6 +5350,24 @@ api_params:
       printSceneId: 0
       uploadToOss: false
     serviceKey: sys_common$API_PRINT_FIND_ALL_MATCHED_PRINT_SCENE_INSTANCE_POST
+  /api/trantor/service/engine/execute/sys_common$PRINT_TEMPLATE_FOLDING_ASSOCIATED_SERVICE:
+    params:
+      request:
+        templateType: null
+        designerUrl: null
+        createdByName: null
+        updatedByName: null
+        templateFileName: null
+        templateCode: null
+        convertOfficeToPdf: false
+        createdAt: 0
+        templateName: null
+        id: 0
+        templateRefModels: null
+        templateAddress: null
+        desc: null
+        updatedAt: 0
+    serviceKey: sys_common$PRINT_TEMPLATE_FOLDING_ASSOCIATED_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_T_SCHEDULER_JOB_INSTANCE_DELETE_POST:
     params:
       execTime: 0
@@ -5034,6 +5387,21 @@ api_params:
       jobType: {}
       status: null
     serviceKey: sys_common$API_T_SCHEDULER_JOB_INSTANCE_DELETE_POST
+  /api/trantor/service/engine/execute/sys_common$API_GEI_TASK_MY_PAGING_BY_TRANTOR_POST:
+    params:
+      request: {}
+      pageNo: 1
+      extra: {}
+      context: {}
+      searchCount: false
+      tenantId: 0
+      pageSize: 20
+      orders:
+      - {}
+      id: 0
+      dataPermissionConditionGroup: {}
+      version: 0
+    serviceKey: sys_common$API_GEI_TASK_MY_PAGING_BY_TRANTOR_POST
   /api/trantor/service/engine/execute/sys_common$ai_data_rendering_service_copy:
     params:
       data:
@@ -5054,6 +5422,20 @@ api_params:
           pageSize: 20
           keyword: null
     serviceKey: sys_common$AGENT_PAGE_DATA_SERVICE
+  /api/trantor/service/engine/execute/sys_common$STATION_NOTICE_RES_FOLDING_ASSOCIATED_SERVICE:
+    params:
+      request:
+        coverUrl: null
+        button: null
+        readStatus: null
+        createdByName: null
+        noticeTemplate: {}
+        digest: null
+        title: null
+        noticeSceneRes: {}
+        content: null
+        sendTime: 0
+    serviceKey: sys_common$STATION_NOTICE_RES_FOLDING_ASSOCIATED_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_PRINT_PRINT_SCENE_INSTANCE_LIST_POST:
     params:
       code: null
@@ -5212,6 +5594,28 @@ api_params:
       roleId: null
       portalCode: null
     serviceKey: sys_common$API_TRANTOR_PORTAL_ROLE_PERMISSION_DATA_PERMISSION_ONLY_TREE_GET
+  /api/trantor/service/engine/execute/sys_common$PRINT_SCENE_SAVE_DATA_SERVICE:
+    params:
+      request:
+        templateType: null
+        printTemplateId: 0
+        description: null
+        templateFileName: null
+        templateCode: null
+        allowCustomWatermark: false
+        convertOfficeToPdf: false
+        startupRulesDesc: null
+        templateName: null
+        name: null
+        templateFfectiveEchanism: null
+        templateAddress: null
+        key: null
+        printTemplateName: null
+        desc: null
+        watermarkTemplateName: null
+        watermarkTemplateId: 0
+        status: null
+    serviceKey: sys_common$PRINT_SCENE_SAVE_DATA_SERVICE
   /api/trantor/service/engine/execute/sys_common$ORG_EMPLOYEE_ORG_LINK_CF_BATCH_CREATE_DATA_SERVICE:
     params:
       request:
@@ -5248,6 +5652,76 @@ api_params:
       variables: {}
       taskInstanceId: 0
     serviceKey: sys_common$API_TRANTOR_WORKFLOW_V2_RE_SUBMIT_POST
+  /api/trantor/service/engine/execute/sys_common$menu_query_service:
+    params:
+      content: null
+    serviceKey: sys_common$menu_query_service
+  /api/trantor/service/engine/execute/sys_common$NOTICE_RECORD_SAVE_DATA_SERVICE:
+    params:
+      request:
+        failedMsg: null
+        channelType: null
+        extraParams: null
+        templateId: {}
+        createdAt: 0
+        sendContent: null
+        taskCode: null
+        sceneCode: null
+        receiverSnapshot: null
+        outId: 0
+        id: 0
+        recordCode: null
+        channelId: {}
+        updatedAt: 0
+        updatedBy: {}
+        sceneName: null
+        retryNeed: false
+        sendTime: 0
+        receiveTime: 0
+        retryTimes: 0
+        originRecordId: {}
+        recordStatus: null
+        receiverIdentity: null
+        createdBy: {}
+        templateName: null
+        taskName: null
+        channelName: null
+        taskId: {}
+        failedReason: null
+    serviceKey: sys_common$NOTICE_RECORD_SAVE_DATA_SERVICE
+  /api/trantor/service/engine/execute/sys_common$NOTICE_RECORD_FOLDING_ASSOCIATED_SERVICE:
+    params:
+      request:
+        failedMsg: null
+        channelType: null
+        extraParams: null
+        templateId: {}
+        createdAt: 0
+        sendContent: null
+        taskCode: null
+        sceneCode: null
+        receiverSnapshot: null
+        outId: 0
+        id: 0
+        recordCode: null
+        channelId: {}
+        updatedAt: 0
+        updatedBy: {}
+        sceneName: null
+        retryNeed: false
+        sendTime: 0
+        receiveTime: 0
+        retryTimes: 0
+        originRecordId: {}
+        recordStatus: null
+        receiverIdentity: null
+        createdBy: {}
+        templateName: null
+        taskName: null
+        channelName: null
+        taskId: {}
+        failedReason: null
+    serviceKey: sys_common$NOTICE_RECORD_FOLDING_ASSOCIATED_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_DEVOPS_TASK_FORCE_BATCH_TRANSFER_POST:
     params:
       approvalFlowGroups:
@@ -5255,6 +5729,10 @@ api_params:
       currentCandidate: {}
       targetCandidate: {}
     serviceKey: sys_common$API_TRANTOR_WORKFLOW_V2_DEVOPS_TASK_FORCE_BATCH_TRANSFER_POST
+  /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_INSTANCES_ALL_DETAILS_GET:
+    params:
+      bizId: null
+    serviceKey: sys_common$API_TRANTOR_WORKFLOW_V2_INSTANCES_ALL_DETAILS_GET
   /api/trantor/service/engine/execute/sys_common$ORG_DIMENSION_PAGING_DATA_SERVICE:
     params:
       request:
@@ -5325,6 +5803,9 @@ api_params:
       id: 0
       version: 0
     serviceKey: sys_common$API_DYNAMIC_FORM_APP_TEMPLATE_FIND_BY_IDS_POST
+  /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_META_LIST_NOTICE_SCENE_GET:
+    params: {}
+    serviceKey: sys_common$API_TRANTOR_PORTAL_META_LIST_NOTICE_SCENE_GET
   /api/trantor/service/engine/execute/sys_common$image_ocr_doc_understanding:
     params:
       attachments:
@@ -5373,6 +5854,11 @@ api_params:
     params:
       request: {}
     serviceKey: sys_common$ORG_BUSINESS_TYPE_CF_FIND_LIST_DATA_SERVICE
+  /api/trantor/service/engine/execute/sys_common$echart_general_tool:
+    params:
+      data: null
+      userPrompt: null
+    serviceKey: sys_common$echart_general_tool
   /api/trantor/service/engine/execute/sys_common$ORG_EMPLOYEE_ORG_LINK_CF_FIND_DATA_BY_ID_SERVICE:
     params:
       request:
@@ -5432,6 +5918,19 @@ api_params:
       version: 0
       channelId: 0
     serviceKey: sys_common$API_NOTICE_CHANNEL_QUERY_ACCOUNTS_POST
+  /api/trantor/service/engine/execute/sys_common$NOTICE_CHANNEL_ACCOUNT_FOLDING_ASSOCIATED_SERVICE:
+    params:
+      request:
+        createdAt: 0
+        updatedBy: {}
+        createdBy: {}
+        accountName: null
+        accountDesc: null
+        id: 0
+        channelId: {}
+        updatedAt: 0
+        accountConfig: null
+    serviceKey: sys_common$NOTICE_CHANNEL_ACCOUNT_FOLDING_ASSOCIATED_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_IAM_AUDIT_LOG_FIND_GET:
     params:
       id: 0
@@ -5534,6 +6033,11 @@ api_params:
       scope: null
       params: {}
     serviceKey: sys_common$API_TRANTOR_PORTAL_USER_PAGING_POST
+  /api/trantor/service/engine/execute/sys_common$ai_intelligent_report_service:
+    params:
+      userContent: null
+      sessionId: null
+    serviceKey: sys_common$ai_intelligent_report_service
   /api/trantor/service/engine/execute/sys_common$API_PRINT_PRINT_TEMPLATE_DELETE_POST:
     params:
       extra: {}
@@ -5562,6 +6066,21 @@ api_params:
       jobType: {}
       status: null
     serviceKey: sys_common$API_T_SCHEDULER_JOB_INSTANCE_CREATE_POST
+  /api/trantor/service/engine/execute/sys_common$API_NOTICE_CHANNEL_SAVE_ACCOUNT_BATCH_POST:
+    params:
+      request: {}
+      pageNo: 1
+      extra: {}
+      context: {}
+      searchCount: false
+      tenantId: 0
+      pageSize: 20
+      orders:
+      - {}
+      id: 0
+      dataPermissionConditionGroup: {}
+      version: 0
+    serviceKey: sys_common$API_NOTICE_CHANNEL_SAVE_ACCOUNT_BATCH_POST
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_PORTAL_WORKFLOW_GROUP_GET:
     params:
       key: null
@@ -5574,6 +6093,14 @@ api_params:
     params:
       request: {}
     serviceKey: sys_common$DIGITAL_HUMAN_ORGANIZATION_UNIT_FIND_TREE_CHILDREN_DATA_SERVICE
+  /api/trantor/service/engine/execute/sys_common$ai_page_open_service_doubao:
+    params:
+      logType: null
+      pageType: null
+      data: {}
+      userContent: null
+      keyword: null
+    serviceKey: sys_common$ai_page_open_service_doubao
   /api/trantor/service/engine/execute/sys_common$ORG_DIMENSION_BUSINESS_LINK_MASTER_DATA_DISABLE_DATA_SERVICE:
     params:
       request:
@@ -5628,6 +6155,21 @@ api_params:
       status: null
       watermarkTemplateId: 0
     serviceKey: sys_common$API_PRINT_PRINT_SCENE_INSTANCE_SAVE_POST
+  /api/trantor/service/engine/execute/sys_common$NOTICE_SCENE_UNFOLDING_ASSOCIATED_SERVICE:
+    params:
+      request:
+        sceneKeywords: null
+        name: null
+        noticeTemplates:
+        - {}
+        description: null
+        key: null
+    serviceKey: sys_common$NOTICE_SCENE_UNFOLDING_ASSOCIATED_SERVICE
+  /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_ROLE_PERMISSION_SCENE_PERMISSION_TREE_GET:
+    params:
+      roleId: null
+      portalCode: null
+    serviceKey: sys_common$API_TRANTOR_PORTAL_ROLE_PERMISSION_SCENE_PERMISSION_TREE_GET
   /api/trantor/service/engine/execute/sys_common$API_NOTICE_SCENE_CREATE_POST:
     params:
       noticeTemplateIds:
@@ -5928,6 +6470,19 @@ api_params:
       selfRelationModel: false
       overlayStrategy: null
     serviceKey: sys_common$API_GEI_TASK_CUSTOM_IMPORT_SYNC_POST
+  /api/trantor/service/engine/execute/sys_common$PRINT_WATERMARK_TEMPLATE_UNFOLDING_ASSOCIATED_SERVICE:
+    params:
+      request:
+        templateType: null
+        templateName: null
+        imageUrl: null
+        updatedByName: null
+        watermarkData: null
+        templateCode: null
+        text: null
+        id: 0
+        updatedAt: 0
+    serviceKey: sys_common$PRINT_WATERMARK_TEMPLATE_UNFOLDING_ASSOCIATED_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_PRINT_PRINT_TEMPLATE_DOWNLOAD_OFFICE_FILE_GET:
     params:
       printTemplateId: 0
@@ -6218,6 +6773,32 @@ api_params:
       enabled: false
       key: null
     serviceKey: sys_common$API_TRANTOR_PORTAL_ROLE_PAGING_GET
+  /api/trantor/service/engine/execute/sys_common$PRINT_WATERMARK_TEMPLATE_SAVE_DATA_SERVICE:
+    params:
+      request:
+        templateType: null
+        templateName: null
+        imageUrl: null
+        updatedByName: null
+        watermarkData: null
+        templateCode: null
+        text: null
+        id: 0
+        updatedAt: 0
+    serviceKey: sys_common$PRINT_WATERMARK_TEMPLATE_SAVE_DATA_SERVICE
+  /api/trantor/service/engine/execute/sys_common$PRINT_WATERMARK_TEMPLATE_FOLDING_ASSOCIATED_SERVICE:
+    params:
+      request:
+        templateType: null
+        templateName: null
+        imageUrl: null
+        updatedByName: null
+        watermarkData: null
+        templateCode: null
+        text: null
+        id: 0
+        updatedAt: 0
+    serviceKey: sys_common$PRINT_WATERMARK_TEMPLATE_FOLDING_ASSOCIATED_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_ROLE_PERMISSION_DATA_TREE_GET:
     params:
       portalCode: null
@@ -6303,21 +6884,6 @@ api_params:
     params:
       id: 0
     serviceKey: sys_common$get_ou_details_by_id
-  /api/trantor/service/engine/execute/sys_common$ORG_IDENTITY_CF_FOLDING_ASSOCIATED_SERVICE:
-    params:
-      request:
-        createdAt: 0
-        code: null
-        updatedBy: {}
-        deleted: 0
-        originOrgId: 0
-        createdBy: {}
-        name: null
-        id: 0
-        version: 0
-        status: null
-        updatedAt: 0
-    serviceKey: sys_common$ORG_IDENTITY_CF_FOLDING_ASSOCIATED_SERVICE
   /api/trantor/service/engine/execute/sys_common$USER_PAGING_DATA_SERVICE:
     params:
       request:
@@ -6484,6 +7050,23 @@ api_params:
       dataPermissionConditionGroup: {}
       version: 0
     serviceKey: sys_common$API_T_SCHEDULER_JOB_DEFINITION_DELETE_BY_KEY_POST
+  /api/trantor/service/engine/execute/sys_common$NOTICE_TASK_SAVE_DATA_SERVICE:
+    params:
+      request:
+        updatedBy: {}
+        sendTime: 0
+        receiverNumber: 0
+        createdAt: 0
+        taskCode: null
+        taskContent: null
+        createdBy: {}
+        failedNumber: 0
+        successNumber: 0
+        taskName: null
+        id: 0
+        taskStatus: null
+        updatedAt: 0
+    serviceKey: sys_common$NOTICE_TASK_SAVE_DATA_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_NOTICE_RECORD_BATCH_RE_SEND_POST:
     params:
       extra: {}
@@ -6671,6 +7254,17 @@ api_params:
       filePaths:
       - {}
     serviceKey: sys_common$API_TRANTOR_WORKFLOW_V2_DINGDING_UPLOAD_FILE_POST
+  /api/trantor/service/engine/execute/sys_common$PRINT_WATERMARK_TEMPLATE_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: sys_common$PRINT_WATERMARK_TEMPLATE_PAGING_DATA_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_PORTAL_ROLE_PERMISSION_FIELD_MODEL_FIND_GET:
     params:
       appIds:
@@ -6809,6 +7403,21 @@ api_params:
     params:
       code: null
     serviceKey: sys_common$get_employee_details_by_emp_code
+  /api/trantor/service/engine/execute/sys_common$API_NOTICE_TEMPLATE_PAGING_WITH_ACCOUNT_BY_TRANTOR_POST:
+    params:
+      request: {}
+      pageNo: 1
+      extra: {}
+      context: {}
+      searchCount: false
+      tenantId: 0
+      pageSize: 20
+      orders:
+      - {}
+      id: 0
+      dataPermissionConditionGroup: {}
+      version: 0
+    serviceKey: sys_common$API_NOTICE_TEMPLATE_PAGING_WITH_ACCOUNT_BY_TRANTOR_POST
   /api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_START_POST:
     params:
       variables: {}
@@ -6850,8 +7459,48 @@ api_params:
     serviceKey: sys_common$DIGITAL_HUMAN_ORGANIZATION_UNIT_FIND_TREE_DATA_SERVICE_CHILD
   /api/trantor/service/engine/execute/sys_common$AI_MAT_PRICE_ANALYSIS_TR_SAVE_DATA_SERVICE:
     params:
-      request: {}
+      request:
+        updatedBy: {}
+        toDate: 0
+        version: 0
+        monthlyInventoryTurnover: 0
+        fromDate: 0
+        createdAt: 0
+        deleted: 0
+        createdBy: {}
+        matId: 0
+        grossMargin: 0
+        id: 0
+        matCode: null
+        matName: null
+        updatedAt: 0
     serviceKey: sys_common$AI_MAT_PRICE_ANALYSIS_TR_SAVE_DATA_SERVICE
+  /api/trantor/service/engine/execute/sys_common$API_NOTICE_RECORD_PAGING_BY_TRANTOR_POST:
+    params:
+      request: {}
+      pageNo: 1
+      extra: {}
+      context: {}
+      searchCount: false
+      tenantId: 0
+      pageSize: 20
+      orders:
+      - {}
+      id: 0
+      dataPermissionConditionGroup: {}
+      version: 0
+    serviceKey: sys_common$API_NOTICE_RECORD_PAGING_BY_TRANTOR_POST
+  /api/trantor/service/engine/execute/sys_common$NOTICE_CHANNEL_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: sys_common$NOTICE_CHANNEL_PAGING_DATA_SERVICE
   /api/trantor/service/engine/execute/sys_common$DIGITAL_HUMAN_ORGANIZATION_UNIT_FIND_TREE_CHILDREN:
     params:
       request: {}
@@ -6927,15 +7576,40 @@ api_params:
       candidateIndex: null
       pageSize: 20
       statusListStr: null
+      processCreatorName: null
       modelKey: null
       createdEnd: 0
       pageNo: 1
       appId: 0
       teamId: 0
-      displaySnapshot: null
+      displaySnapshot: {}
+      sortField: null
+      isAsc: false
       keyword: null
       status: 0
     serviceKey: sys_common$API_TRANTOR_WORKFLOW_V2_TASK_INSTANCE_SEARCH_FOR_WORKBENCH_GET
+  /api/trantor/service/engine/execute/sys_common$PRINT_SCENE_FOLDING_ASSOCIATED_SERVICE:
+    params:
+      request:
+        templateType: null
+        printTemplateId: 0
+        description: null
+        templateFileName: null
+        templateCode: null
+        allowCustomWatermark: false
+        convertOfficeToPdf: false
+        startupRulesDesc: null
+        templateName: null
+        name: null
+        templateFfectiveEchanism: null
+        templateAddress: null
+        key: null
+        printTemplateName: null
+        desc: null
+        watermarkTemplateName: null
+        watermarkTemplateId: 0
+        status: null
+    serviceKey: sys_common$PRINT_SCENE_FOLDING_ASSOCIATED_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_GEI_TASK_CONFIG_QUERY_HEADER_SELECTIVE_RECORD_POST:
     params: {}
     serviceKey: sys_common$API_GEI_TASK_CONFIG_QUERY_HEADER_SELECTIVE_RECORD_POST
@@ -7005,9 +7679,39 @@ api_params:
       desc: null
       updatedAt: 0
     serviceKey: sys_common$API_CONFIG_ADMIN_INFO_DELETE_BY_ID_POST
+  /api/trantor/service/engine/execute/sys_common$API_PRINT_WATERMARK_TEMPLATE_PAGING_BY_TRANTOR_POST:
+    params:
+      request: {}
+      pageNo: 1
+      extra: {}
+      context: {}
+      searchCount: false
+      tenantId: 0
+      pageSize: 20
+      orders:
+      - {}
+      id: 0
+      dataPermissionConditionGroup: {}
+      version: 0
+    serviceKey: sys_common$API_PRINT_WATERMARK_TEMPLATE_PAGING_BY_TRANTOR_POST
   /api/trantor/service/engine/execute/sys_common$API_ASYNC_TASK_TASK_INSTANCE_USER_MARK_PUT:
     params: {}
     serviceKey: sys_common$API_ASYNC_TASK_TASK_INSTANCE_USER_MARK_PUT
+  /api/trantor/service/engine/execute/sys_common$API_PRINT_WATER_MARK_PREVIEW_BY_TRANTOR_POST:
+    params:
+      request: {}
+      pageNo: 1
+      extra: {}
+      context: {}
+      searchCount: false
+      tenantId: 0
+      pageSize: 20
+      orders:
+      - {}
+      id: 0
+      dataPermissionConditionGroup: {}
+      version: 0
+    serviceKey: sys_common$API_PRINT_WATER_MARK_PREVIEW_BY_TRANTOR_POST
   /api/trantor/service/engine/execute/sys_common$API_I18N_ADMIN_RESOURCE_DRAFT_SYNC_POST:
     params:
       versionId: 0
@@ -7497,6 +8201,21 @@ api_params:
       updatedByIds:
       - {}
     serviceKey: sys_common$API_TRANTOR_WORKFLOW_PORTAL_WORKFLOW_GROUP_PAGING_GET
+  /api/trantor/service/engine/execute/sys_common$API_NOTICE_CHANNEL_QUERY_LIST_BY_TRANTOR_POST:
+    params:
+      request: {}
+      pageNo: 1
+      extra: {}
+      context: {}
+      searchCount: false
+      tenantId: 0
+      pageSize: 20
+      orders:
+      - {}
+      id: 0
+      dataPermissionConditionGroup: {}
+      version: 0
+    serviceKey: sys_common$API_NOTICE_CHANNEL_QUERY_LIST_BY_TRANTOR_POST
   /api/trantor/service/engine/execute/sys_common$ORG_EMPLOYEE_MD_FIND_LIST_DATA_SERVICE:
     params:
       request: {}
@@ -7595,80 +8314,6 @@ api_params:
     params:
       taskInstanceId: null
     serviceKey: sys_common$API_TRANTOR_WORKFLOW_V2_TASK_INSTANCE_ORG_ID_GET
-  /api/trantor/service/engine/execute/sys_common$ORG_STRUCT_MD_FOLDING_ASSOCIATED_SERVICE:
-    params:
-      request:
-        extRebatePolicyHeadTrSlsOrgIdsId: {}
-        isLeaf: false
-        orgSort: 0
-        path: null
-        createdAt: 0
-        def30: null
-        def31: null
-        orgBusinessTypeCode: null
-        def32: null
-        def33: null
-        def34: null
-        def35: null
-        def36: null
-        def37: null
-        orgBusinessTypeCodes: null
-        def38: null
-        def39: null
-        id: 0
-        attachment2:
-        - null
-        attachment1:
-        - null
-        updatedAt: 0
-        orgName: null
-        updatedBy: {}
-        originOrgId: 0
-        orgDimensionCode: null
-        orgParentId: {}
-        version: 0
-        orgStatus: null
-        def20: null
-        def21: null
-        def22: null
-        def23: null
-        def24: null
-        def25: null
-        def26: null
-        def27: null
-        def28: null
-        orgBusinessTypeId: {}
-        def29: null
-        orgEnableDate: 0
-        def10: null
-        def11: null
-        orgCode: null
-        def12: null
-        def13: null
-        def14: null
-        def15: null
-        def16: null
-        def17: null
-        def18: null
-        def19: null
-        def3: null
-        def4: null
-        orgDimensionId: {}
-        def1: null
-        def2: null
-        comOrgId: {}
-        def40: null
-        deleted: 0
-        createdBy: {}
-        tenantId: 0
-        def9: null
-        orgBusinessTypeIds: null
-        partnerId: 0
-        def7: null
-        def8: null
-        def5: null
-        def6: null
-    serviceKey: sys_common$ORG_STRUCT_MD_FOLDING_ASSOCIATED_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_GEI_TASK_IMPORT_BY_FILE_POST:
     params:
       file: {}
@@ -7698,6 +8343,16 @@ api_params:
   /api/trantor/service/engine/execute/sys_common$API_NOTICE_STATION_READ_POST:
     params: {}
     serviceKey: sys_common$API_NOTICE_STATION_READ_POST
+  /api/trantor/service/engine/execute/sys_common$NOTICE_SCENE_SAVE_DATA_SERVICE:
+    params:
+      request:
+        sceneKeywords: null
+        name: null
+        noticeTemplates:
+        - {}
+        description: null
+        key: null
+    serviceKey: sys_common$NOTICE_SCENE_SAVE_DATA_SERVICE
   /api/trantor/service/engine/execute/sys_common$JOB_DEFINITION_SAVE_DATA_SERVICE:
     params:
       request:
@@ -7774,6 +8429,22 @@ api_params:
         updatedAt: 0
         username: null
     serviceKey: sys_common$USER_FIND_DATA_BY_ID_SERVICE
+  /api/trantor/service/engine/execute/sys_common$NOTICE_CHANNEL_FOLDING_ASSOCIATED_SERVICE:
+    params:
+      request:
+        createdAt: 0
+        updatedBy: {}
+        createdBy: {}
+        channelConfig: null
+        saveOuterTemplate: false
+        channelName: null
+        channelType: null
+        channelStatus: null
+        id: 0
+        noticeChannelAccount:
+        - {}
+        updatedAt: 0
+    serviceKey: sys_common$NOTICE_CHANNEL_FOLDING_ASSOCIATED_SERVICE
   /api/trantor/service/engine/execute/sys_common$API_NOTICE_SCENE_UPDATE_POST:
     params:
       noticeTemplateIds:
@@ -7807,6 +8478,33 @@ api_params:
       sourceCandidate: {}
       targetCandidate: {}
     serviceKey: sys_common$API_TRANTOR_WORKFLOW_V2_PROXY_BATCH_REPLACE_AGENT_POST
+  /api/trantor/service/engine/execute/sys_common$NOTICE_TEMPLATE_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: sys_common$NOTICE_TEMPLATE_PAGING_DATA_SERVICE
+  /api/trantor/service/engine/execute/sys_common$ai_intelligent_report_sse_service:
+    params:
+      userContent: null
+      sessionId: null
+    serviceKey: sys_common$ai_intelligent_report_sse_service
+  /api/trantor/service/engine/execute/sys_common$PRINT_SCENE_PAGING_DATA_SERVICE:
+    params:
+      request:
+        pageable:
+          sortOrders:
+          - {}
+          conditionItems: {}
+          pageNo: 1
+          conditionGroup: {}
+          pageSize: 20
+    serviceKey: sys_common$PRINT_SCENE_PAGING_DATA_SERVICE
   /api/trantor/service/engine/execute/sys_common$service_call:
     params:
       serviceKey: null
@@ -7841,6 +8539,9 @@ api_params:
   /api/trantor/service/engine/execute/sys_common$API_NOTICE_TEMPLATE_PAGING_POST:
     params: {}
     serviceKey: sys_common$API_NOTICE_TEMPLATE_PAGING_POST
+  /api/trantor/service/engine/execute/sys_common$get_approval_task_list_condition_tree:
+    params: {}
+    serviceKey: sys_common$get_approval_task_list_condition_tree
   /api/trantor/service/engine/execute/sys_common$ORG_DIMENSION_CF_API_GEI_TASK_EXPORT_DIRECT_POST:
     params:
       sheetConfig: {}

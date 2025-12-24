@@ -1,0 +1,933 @@
+version: '1.0'
+total_apis: 304
+apis:
+  查询 PII 脱敏配置:
+    path: /api/trantor/pii/config
+    method: GET
+  保存 PII 脱敏配置:
+    path: /api/trantor/pii/config
+    method: PUT
+  更新模型日志配置树:
+    path: /api/trantor/model/log-config/tree
+    method: PUT
+    description: 批量更新模型及其子模型的日志配置
+  获取用户个性化配置:
+    path: /api/trantor2default/preference/{type}
+    method: POST
+  保存当前用户个性化配置:
+    path: /api/trantor2default/preference/{type}/save
+    method: POST
+  删除用户个性化配置:
+    path: /api/trantor2default/preference/{type}/delete
+    method: POST
+  保存当前用户筛选器偏好:
+    path: /api/trantor2/runtime/preference/filter/save
+    method: POST
+    description: scope 需门户下唯一，否则会覆盖，同 scope 下 code 唯一，否则会覆盖
+  删除用户筛选器:
+    path: /api/trantor2/runtime/preference/filter/delete
+    method: POST
+  paging:
+    path: /api/trantor/diagnosing/iam-task/paging
+    method: GET
+  find-user-by-id:
+    path: /api/trantor/workflow/user/find-user-by-id
+    method: POST
+  find-token-by-user-id:
+    path: /api/trantor/workflow/user/find-token-by-user-id
+    method: POST
+  find-by-ids:
+    path: /api/trantor/workflow/user/find-by-ids
+    method: POST
+  save:
+    path: /api/trantor/workflow/group/save
+    method: POST
+  find-by-key:
+    path: /api/trantor/workflow/group/find-by-key
+    method: POST
+  find-by-in-keys:
+    path: /api/trantor/workflow/group/find-by-in-keys
+    method: POST
+  delete:
+    path: /api/trantor/ddl/delete
+    method: POST
+  log:
+    path: /api/trantor/trigger/internal/query/log
+    method: POST
+  更新模型搜索配置:
+    path: /api/trantor/struct-node/updateSearchModel
+    method: POST
+  修改模型分表配置:
+    path: /api/trantor/struct-node/updateModelShardingConfig
+    method: POST
+  批量修改模型分表配置:
+    path: /api/trantor/struct-node/updateModelShardingConfigBatch
+    method: POST
+  统计模型同步:
+    path: /api/trantor/struct-node/sync-statistic-model
+    method: POST
+  简化版的结构对象列表:
+    path: /api/trantor/struct-node/simple-list
+    method: POST
+  保存数据结构对象:
+    path: /api/trantor/struct-node/save
+    method: POST
+  保存索引:
+    path: /api/trantor/struct-node/save-index
+    method: POST
+  新增/修改模型字段:
+    path: /api/trantor/struct-node/save-field
+    method: POST
+  获取数据结构对象详情以及关联对象详情:
+    path: /api/trantor/portal/struct-node/related-by-alias
+    method: POST
+  查询当前模块下所有的物理表:
+    path: /api/trantor/struct-node/queryTables
+    method: POST
+  查询模型搜索数据全量同步记录:
+    path: /api/trantor/struct-node/querySearchModelSyncTasks
+    method: POST
+  查询模型搜索配置信息:
+    path: /api/trantor/struct-node/querySearchModelConfig
+    method: POST
+  数据结构对象列表:
+    path: /api/trantor/struct-node/all
+    method: POST
+  模型列表请求(ER 图):
+    path: /api/trantor/struct-node/list
+    method: POST
+  list-simple-by-modules:
+    path: /api/internal/trantor/portal/struct-node/list-simple-by-modules
+    method: POST
+  list-simple-by-keys:
+    path: /api/internal/trantor/portal/struct-node/list-simple-by-keys
+    method: POST
+  sysmodel:
+    path: /api/trantor/struct-node/init/sysmodel
+    method: POST
+  数据结构对象概要:
+    path: /api/trantor/struct-node/info
+    method: POST
+  给定模型 key 列表，生成 DDL:
+    path: /api/trantor/struct-node/generate-ddl-by-model-key
+    method: POST
+  手动触发模型搜索数据全量同步:
+    path: /api/trantor/struct-node/fullSyncSearchModel
+    method: POST
+  find-sample-model-by-alias:
+    path: /api/trantor/struct-node/find-sample-model-by-alias
+    method: POST
+  find-by-keys:
+    path: /api/internal/trantor/portal/struct-node/find-by-keys
+    method: POST
+  批量获取数据结构对象:
+    path: /api/trantor/struct-node/find-by-alias
+    method: POST
+  检测模型与元数据差异:
+    path: /api/trantor/struct-node/diffModelMetaWithSchema
+    method: POST
+  获取数据结构对象详情:
+    path: /api/trantor/struct-node/detail
+    method: POST
+  根据持久模型生成统计模型:
+    path: /api/trantor/struct-node/create-statistic-by-persistent-model
+    method: POST
+  清空缓存:
+    path: /api/trantor/struct-node/clear-cache
+    method: POST
+  递归获取模型及关联模型元数据:
+    path: /api/trantor/struct-node/cascade-info
+    method: POST
+  模型批量创建(根据 MySQL schema 生成):
+    path: /api/trantor/struct-node/batch-create
+    method: POST
+  '{serviceKey}':
+    path: /api/trantor/devops/service/debug/{serviceKey}
+    method: POST
+  service-params:
+    path: /api/trantor/service/internal/execute/service-params
+    method: POST
+  execute:
+    path: /api/internal/trantor/service/engine/execute
+    method: POST
+  报表-查询:
+    path: /api/trantor/runtime/report/query
+    method: POST
+  报表-执行SQL:
+    path: /api/trantor/runtime/report/execute
+    method: POST
+  query-user-org:
+    path: /api/trantor/rule/engine/org/employee/query-user-org
+    method: POST
+  query-user-org-and-all-child-org:
+    path: /api/trantor/rule/engine/org/employee/query-user-org-and-all-child-org
+    method: POST
+  query-user-for-iam:
+    path: /api/trantor/rule/engine/org/employee/query-user-for-iam
+    method: POST
+  query-user-and-all-child-user:
+    path: /api/trantor/rule/engine/org/employee/query-user-and-all-child-user
+    method: POST
+  query-user-all-child-org:
+    path: /api/trantor/rule/engine/org/employee/query-user-all-child-org
+    method: POST
+  queryFactorBySceneKey:
+    path: /api/trantor/rule/engine/factor/queryFactorBySceneKey
+    method: POST
+  '{resourceKey}':
+    path: /api/trantor/rule/engine/factor/queryAllFactor/{resourceKey}
+    method: POST
+  queryAllSysFactor:
+    path: /api/trantor/rule/engine/factor/queryAllSysFactor
+    method: POST
+  queryAllFactor:
+    path: /api/trantor/rule/engine/factor/queryAllFactor
+    method: POST
+  queryAllBusinessFactor:
+    path: /api/trantor/rule/engine/factor/queryAllBusinessFactor
+    method: POST
+  findSystemVariableVale:
+    path: /api/trantor/rule/engine/factor/findSystemVariableVale
+    method: POST
+  exec:
+    path: /api/trantor/rule/engine/factor/exec
+    method: POST
+  load:
+    path: /api/trantor/rule/engine/data/load
+    method: POST
+  更新:
+    path: /api/trantor/portal/user/{id}/update
+    method: POST
+  用户列表-用户解锁:
+    path: /api/trantor/portal/user/{id}/unlock
+    method: POST
+  重置密码:
+    path: /api/trantor/portal/user/{id}/reset-password
+    method: POST
+  用户-用户分配用户组:
+    path: /api/trantor/portal/user/{id}/remove-or-assign-user-groups
+    method: POST
+  用户-用户分配角色:
+    path: /api/trantor/portal/user/{id}/remove-or-assign-roles
+    method: POST
+  启用:
+    path: /api/trantor/portal/user/{id}/enabled
+    method: POST
+  禁用:
+    path: /api/trantor/portal/user/{id}/disabled
+    method: POST
+  注销:
+    path: /api/trantor/portal/user/{id}/destroy
+    method: POST
+  解绑当前用户第三方平台账号:
+    path: /api/trantor/portal/user/unbind-third-party-account
+    method: POST
+  用户列表分页查询:
+    path: /api/trantor/portal/user/paging
+    method: POST
+  用户列表分页查询（指定具体门户 [隔离iam的用户池]）:
+    path: /api/trantor/portal/user/paging/dynamic-portal
+    method: POST
+  获取指定用户的一次性登录code:
+    path: /api/trantor/portal/user/get-login-once-code
+    method: POST
+  查询当前用户第三方账号绑定状态:
+    path: /api/trantor/portal/user/find-third-party-bind-status
+    method: POST
+  创建:
+    path: /api/trantor/portal/user/create
+    method: POST
+  用户组-根据id更新:
+    path: /api/trantor/portal/user-group/{id}/update
+    method: POST
+  用户组-分配用户:
+    path: /api/trantor/portal/user-group/{id}/remove-or-assign-users
+    method: POST
+  用户组-分配角色:
+    path: /api/trantor/portal/user-group/{id}/remove-or-assign-roles
+    method: POST
+  用户组-关联用户-失效:
+    path: /api/trantor/portal/user-group/{id}/inactive-relation
+    method: POST
+  用户组-根据id删除:
+    path: /api/trantor/portal/user-group/{id}/delete
+    method: POST
+  用户组-复制:
+    path: /api/trantor/portal/user-group/{id}/copy
+    method: POST
+  用户组-关联用户-批量生效/失效:
+    path: /api/trantor/portal/user-group/{id}/change-active-by-user-ids-and-group-id
+    method: POST
+  用户组-关联用户-生效:
+    path: /api/trantor/portal/user-group/{id}/active-relation
+    method: POST
+  用户组-新建:
+    path: /api/trantor/portal/user-group/create
+    method: POST
+  批量获取数据结构对象详情:
+    path: /api/trantor/portal/struct-node/find-by-keys
+    method: POST
+  视图摘要:
+    path: /api/trantor/portal/scene/view/summary
+    method: POST
+  根据模型反查场景:
+    path: /api/trantor/portal/scene/find-by-model/{modelKey}
+    method: POST
+    description: 根据模型反查模型所在项目用了该模型的场景
+  角色-角色分配用户:
+    path: /api/trantor/portal/role/{id}/remove-or-assign-users
+    method: POST
+  角色-角色分配用户组:
+    path: /api/trantor/portal/role/{id}/remove-or-assign-user-groups
+    method: POST
+  角色-根据id修改角色:
+    path: /api/trantor/portal/role/update
+    method: POST
+  用户-用户绑定角色（增量刷新）:
+    path: /api/trantor/portal/role/relation/user/flush
+    method: POST
+  角色-角色绑定用户（增量保存）:
+    path: /api/trantor/portal/role/relation/role-bind-user/incremental-save
+    method: POST
+  查询规则引擎因子变量:
+    path: /api/trantor/portal/role/permission/variable/find-by-sceneKey
+    method: POST
+  执行目标服务查询数据:
+    path: /api/trantor/portal/role/permission/service/execute
+    method: POST
+    description: 该服务内部存在鉴权处理逻辑，只允许访问数据规则或数据控权维度引用的服务
+  角色-功能权限-查询资源引用服务摘要信息:
+    path: /api/trantor/portal/role/permission/find-ref-service-summary
+    method: POST
+  角色-数据权限-查询引用权限规则的服务摘要信息:
+    path: /api/trantor/portal/role/permission/data-permission/find-ref-service-summary
+    method: POST
+  角色-权限授权:
+    path: /api/trantor/portal/role/permission/assign
+    method: POST
+  角色-根据id删除角色:
+    path: /api/trantor/portal/role/delete
+    method: POST
+  角色-新建角色:
+    path: /api/trantor/portal/role/create
+    method: POST
+  角色-复制角色和授权:
+    path: /api/trantor/portal/role/copy-role-and-permission-grant
+    method: POST
+  清除权限缓存:
+    path: /api/trantor/portal/ops/permission-cache/invalidateAll
+    method: POST
+  根据项目编码 获取证书信息:
+    path: /api/trantor/portal/license/{teamCode}
+    method: GET
+  文件上传:
+    path: /api/trantor/portal/file/upload
+    method: POST
+  获取可上传url:
+    path: /api/trantor/portal/file/upload-url/{sceneKey}
+    method: POST
+  创建上传:
+    path: /api/trantor/portal/file/create-upload/{sceneKey}
+    method: POST
+  创建表单上传:
+    path: /api/trantor/portal/file/create-form-upload
+    method: POST
+  上传完成:
+    path: /api/trantor/portal/file/complete-upload/{sceneKey}
+    method: POST
+  表单上传完成:
+    path: /api/trantor/portal/file/complete-form-upload
+    method: POST
+  presend-message:
+    path: /api/trantor/meta/edit-session/presend-message
+    method: POST
+  create:
+    path: /api/trantor/ddl/create
+    method: POST
+  close:
+    path: /api/trantor/meta/edit-session/close
+    method: POST
+  更新MCP Server源:
+    path: /api/trantor/mcpserver/update
+    method: POST
+    description: 更新已有的MCP Server源配置
+  创建MCP Server源:
+    path: /api/trantor/mcpserver/create
+    method: POST
+    description: 创建新的MCP Server源配置
+  查询ER模型:
+    path: /api/trantor/er
+    method: POST
+  '403':
+    path: /api/trantor/diagnosing/permission/403
+    method: POST
+  step-over:
+    path: /api/trantor/devops/service/debug/step-over
+    method: POST
+  step-into:
+    path: /api/trantor/devops/service/debug/step-into
+    method: POST
+  resume:
+    path: /api/trantor/devops/service/debug/resume
+    method: POST
+  remove-breakpoint:
+    path: /api/trantor/devops/service/debug/remove-breakpoint
+    method: POST
+  interrupt:
+    path: /api/trantor/devops/service/debug/interrupt
+    method: POST
+  data:
+    path: /api/trantor/devops/service/debug/data
+    method: POST
+  add-breakpoint:
+    path: /api/trantor/devops/service/debug/add-breakpoint
+    method: POST
+  histogram-data:
+    path: /api/trantor/debug/histogram-data
+    method: POST
+  counter-data:
+    path: /api/trantor/debug/counter-data
+    method: POST
+  获取当前数据源同模块映射关系:
+    path: /api/trantor/datasource/debug/getModuleDatasourceMapping
+    method: POST
+  计算模型数据位于哪个物理表:
+    path: /api/trantor/datasource/debug/getDataCoordinate
+    method: POST
+  切换校验规则的默认属性，只能有一个校验规则为默认，切换为默认校验规则时，会将原来的默认校验规则取消:
+    path: /api/trantor/console/validation/switch-default
+    method: POST
+  保存校验规则，key 不存在则新建，存在则编辑:
+    path: /api/trantor/console/validation/save
+    method: POST
+  取号:
+    path: /api/trantor/code-rule/take-code
+    method: POST
+  系统取号:
+    path: /api/trantor/code-rule/sys-take-code
+    method: POST
+  批量取号:
+    path: /api/trantor/code-rule/batch-take-code
+    method: POST
+  send-notice:
+    path: /api/trantor/ai/send-notice
+    method: POST
+  recommend-questions:
+    path: /api/trantor/ai/recommend-questions
+    method: POST
+  recommend-prompt:
+    path: /api/trantor/ai/recommend-prompt
+    method: POST
+  上传个人知识库:
+    path: /api/trantor/ai/personal-knowledge/upload/{agentKey}
+    method: POST
+  删除个人知识库:
+    path: /api/trantor/ai/personal-knowledge/delete/{agentKey}
+    method: POST
+  new-session:
+    path: /api/trantor/ai/new-session
+    method: POST
+  init-user-questions:
+    path: /api/trantor/ai/init-user-questions
+    method: POST
+  查询历史会话记录,按照创建时间倒序排:
+    path: /api/trantor/ai/history
+    method: POST
+  修改历史会话记录标题:
+    path: /api/trantor/ai/history/modify-title
+    method: POST
+  查询历史会话消息，按照创建时间倒序排:
+    path: /api/trantor/ai/history/message
+    method: POST
+  点赞:
+    path: /api/trantor/ai/history/message/{messageId}/like
+    method: POST
+  点踩:
+    path: /api/trantor/ai/history/message/{messageId}/dislike
+    method: POST
+  获取当前用户的全局记忆:
+    path: /api/trantor/ai/global-memory
+    method: GET
+  置当前用户的全局记忆:
+    path: /api/trantor/ai/global-memory
+    method: POST
+  generate-proprietary-tool:
+    path: /api/trantor/ai/generate-proprietary-tool
+    method: POST
+  dynamic-value:
+    path: /api/trantor/ai/dynamic-value
+    method: POST
+  dynamic-prompt:
+    path: /api/trantor/ai/dynamic-prompt
+    method: POST
+  audio-transcription:
+    path: /api/trantor/ai/audio-transcription
+    method: POST
+  '{key}':
+    path: /api/internal/trantor/portal/struct-node/find-by-key/{key}
+    method: GET
+  批量保存记忆变量:
+    path: /api/trantor/ai/agent-memory/variables
+    method: POST
+  保存记忆片段:
+    path: /api/trantor/ai/agent-memory/fragments/save
+    method: POST
+  删除记忆片段:
+    path: /api/trantor/ai/agent-memory/fragments/delete
+    method: POST
+  completion:
+    path: /api/internal/agent/{agentKey}/completion
+    method: POST
+  更新智能体结果验证配置:
+    path: /api/trantor/agent/result-validation-config/update
+    method: POST
+  更新个人知识库配置:
+    path: /api/trantor/agent/personal-knowledge-base-config/update
+    method: POST
+  '{agentKey}':
+    path: /api/trantor/agent/execute/{agentKey}
+    method: POST
+  更新动态模型判断配置:
+    path: /api/trantor/agent/dynamic-llm-model-judge-config/update
+    method: POST
+  import:
+    path: /api/runtime/business-data/i18n/import
+    method: POST
+  export:
+    path: /api/runtime/business-data/i18n/export
+    method: POST
+  list:
+    path: /api/internal/trantor/meta/list
+    method: POST
+  条件查询门户使用的数据结构对象简化版列表:
+    path: /api/ai/struct-node/query
+    method: POST
+  清除缓存:
+    path: /api/ai/struct-node/invalid-cache
+    method: POST
+  缓存模型信息:
+    path: /api/ai/struct-node/cache
+    method: POST
+  update:
+    path: /api/ai/memory/update
+    method: POST
+  clear:
+    path: /api/trantor/devops/preference/cache/clear
+    method: GET
+  获取当前筛选器的用户自定义筛选器:
+    path: /api/trantor2/runtime/preference/filter/{scope}
+    method: GET
+  获取版本信息:
+    path: /api/trantor/version
+    method: GET
+  获取最新版本信息:
+    path: /latest.json
+    method: GET
+  根据 modelKey 获取模型详情:
+    path: /api/trantor/struct-node/{modelKey}
+    method: GET
+  获取模型元数据对应的物理表结构:
+    path: /api/trantor/struct-node/{modelKey}/schema
+    method: GET
+  检查指定模型元数据与数据库 Schema 差异:
+    path: /api/trantor/struct-node/{key}/diff-model-meta-by-model-key
+    method: GET
+  model:
+    path: /api/trantor/struct-node/rejudge/model
+    method: GET
+  查询模型分表配置:
+    path: /api/trantor/struct-node/queryModelShardingConfig
+    method: GET
+  获取字段类型枚举:
+    path: /api/trantor/struct-node/find-field-type
+    method: GET
+  检查项目下模型元数据与数据库 Schema 的差异:
+    path: /api/trantor/struct-node/diff-model-meta-by-team
+    method: GET
+  desensitizedRules:
+    path: /api/trantor/struct-node/desensitizedRules
+    method: GET
+  创建底层业务配置模型:
+    path: /api/trantor/setting/ops/create-setting-storage
+    method: GET
+  查询 portal 侧数据管理场景:
+    path: /api/trantor/runtime/scene/data-manager/{key}
+    method: GET
+    description: 通过场景标识查询 portal 侧数据管理场景详情
+  查询 portal 侧数据管理场景指定视图:
+    path: /api/trantor/runtime/scene/data-manager/view/{view}
+    method: GET
+  查询 portal 侧数据管理场景指定视图权限:
+    path: /api/trantor/runtime/scene/data-manager/view-permission/{view}
+    method: GET
+  查询 portal 侧数据管理场景，只加载简要的视图信息:
+    path: /api/trantor/runtime/scene/data-manager/light/{key}
+    method: GET
+  通过用户id查询用户信息:
+    path: /api/trantor/portal/user/{id}
+    method: GET
+  用户-查询用户关联用户组列表:
+    path: /api/trantor/portal/user/{id}/assigned-user-groups
+    method: GET
+  用户-查询用户关联角色列表:
+    path: /api/trantor/portal/user/{id}/assigned-roles
+    method: GET
+  登出:
+    path: /api/trantor/portal/user/logout
+    method: GET
+  登陆:
+    path: /api/trantor/portal/user/login
+    method: GET
+  获取用户信息:
+    path: /api/trantor/portal/user/get-user-info
+    method: GET
+  获取IAM应用列表:
+    path: /api/trantor/portal/user/get-iam-app-list
+    method: GET
+  获取当前应用前端配置:
+    path: /api/trantor/portal/user/get-front-end-config
+    method: GET
+  获取当前登陆用户:
+    path: /api/trantor/portal/user/current
+    method: GET
+  用户-查询当前用户已分配角色列表:
+    path: /api/trantor/portal/user/current/assigned-roles
+    method: GET
+  用户中心:
+    path: /api/trantor/portal/user/account
+    method: GET
+  用户组-查询关联用户列表:
+    path: /api/trantor/portal/user-group/{id}/assigned-users
+    method: GET
+  用户组-查询关联角色列表:
+    path: /api/trantor/portal/user-group/{id}/assigned-roles
+    method: GET
+  用户组-分页查询:
+    path: /api/trantor/portal/user-group/paging
+    method: GET
+  数据结构对象详情:
+    path: /api/trantor/portal/struct-node/{key}
+    method: GET
+  门户使用的数据结构对象简化版列表:
+    path: /api/trantor/portal/struct-node/simple-list
+    method: GET
+  门户使用的数据结构对象基本信息列表:
+    path: /api/trantor/portal/struct-node/list
+    method: GET
+  门户使用的数据结构对象详情列表:
+    path: /api/trantor/portal/struct-node/all
+    method: GET
+  角色-查询角色关联用户列表:
+    path: /api/trantor/portal/role/{id}/assigned-users
+    method: GET
+  角色-查询角色关联用户组列表:
+    path: /api/trantor/portal/role/{id}/assigned-user-groups
+    method: GET
+  用户-查询用户绑定角色:
+    path: /api/trantor/portal/role/relation/user/{userId}
+    method: GET
+  角色-查询角色绑定用户:
+    path: /api/trantor/portal/role/relation/role-bind-user/{roleId}
+    method: GET
+  角色-条件查询角色:
+    path: /api/trantor/portal/role/query
+    method: GET
+  角色-功能权限-角色授权树:
+    path: /api/trantor/portal/role/permission/function-permission/tree
+    method: GET
+  角色-功能权限-角色权限项分页列表:
+    path: /api/trantor/portal/role/permission/function-permission/paging
+    method: GET
+  角色-字段权限-角色授权树:
+    path: /api/trantor/portal/role/permission/field-permission/only-detail
+    method: GET
+  角色-数据权限-角色授权树:
+    path: /api/trantor/portal/role/permission/data-permission/only-detail
+    method: GET
+  角色-数据控权维度-授权列表:
+    path: /api/trantor/portal/role/permission/data-control-dimension/find
+    method: GET
+  角色-功能权限-接口访问控制列表:
+    path: /api/trantor/portal/role/permission/api-access-control/paging
+    method: GET
+  角色-功能权限-智能体权限授权列表:
+    path: /api/trantor/portal/role/permission/ai-agent/find
+    method: GET
+  角色-分页查询门户角色:
+    path: /api/trantor/portal/role/paging
+    method: GET
+  角色-取消默认:
+    path: /api/trantor/portal/role/default/delete
+    method: GET
+  角色-设置默认:
+    path: /api/trantor/portal/role/default/create
+    method: GET
+  获取门户关联:
+    path: /api/trantor/portal/relation
+    method: GET
+  查询门户公告配置:
+    path: /api/trantor/portal/portal-announcement
+    method: GET
+  分页查询门户公告发布历史记录:
+    path: /api/trantor/portal/portal-announcement/history
+    method: GET
+  tree:
+    path: /api/trantor/portal/overview/tree
+    method: GET
+  query:
+    path: /api/trantor/portal/overview/process/query
+    method: GET
+  query-by-scene:
+    path: /api/trantor/portal/overview/process/query-by-scene
+    method: GET
+  bpmn:
+    path: /api/trantor/portal/overview/process/bpmn
+    method: GET
+  folders:
+    path: /api/trantor/portal/overview/folders
+    method: GET
+  通知场景元数据列表查询:
+    path: /api/trantor/portal/notice/scene/list
+    method: GET
+  通知场景元数据ID查询:
+    path: /api/trantor/portal/notice/scene/getById/{sceneId}
+    method: GET
+  通知场景元数据编码查询:
+    path: /api/trantor/portal/notice/scene/getByCode/{sceneCode}
+    method: GET
+  打印场景列表查询:
+    path: /api/trantor/portal/meta/list/PrintScene
+    method: GET
+  通知场景列表查询:
+    path: /api/trantor/portal/meta/list/NoticeScene
+    method: GET
+  导入模版列表查询:
+    path: /api/trantor/portal/meta/list/ImportTemplate
+    method: GET
+  导出模版列表查询:
+    path: /api/trantor/portal/meta/list/ExportTemplate
+    method: GET
+  导入或导出模版详情查询:
+    path: /api/trantor/portal/meta/detail/ImportExportTemplate
+    method: GET
+  刷新证书信息:
+    path: /api/trantor/portal/license/flush
+    method: GET
+  查询图标:
+    path: /api/trantor/portal/icon
+    method: GET
+  id查询IAM审计日志信息:
+    path: /api/trantor/portal/iam-audit-log/{id}/find
+    method: GET
+  IAM审计日志分页查询:
+    path: /api/trantor/portal/iam-audit-log/page
+    method: GET
+  IAM审计日志列表查询:
+    path: /api/trantor/portal/iam-audit-log/find
+    method: GET
+  分页查询审计操作客体对象信息:
+    path: /api/trantor/portal/iam-audit-log/audit-object/paging
+    method: GET
+  获取可访问水印url:
+    path: /api/trantor/portal/file/url
+    method: GET
+  获取可访问url:
+    path: /api/trantor/portal/file/url/{sceneKey}
+    method: GET
+  查询功能引导配置:
+    path: /api/trantor/portal/feature-guide
+    method: GET
+  查询门户自定义主题配置:
+    path: /api/trantor/portal/custom-theme
+    method: GET
+  获取当前门户信息:
+    path: /api/trantor/portal/current
+    method: GET
+  获取工作台应用:
+    path: /api/trantor/portal/application/list
+    method: GET
+  获取WebSocket Token:
+    path: /api/mw/websocket/getToken
+    method: POST
+  根据场景和视图信息获取访问地址:
+    path: /api/trantor/portal/access-url
+    method: GET
+  platform:
+    path: /api/trantor/platform
+    method: GET
+  check:
+    path: /api/trantor/permission/migration/check
+    method: GET
+  获取模型日志配置树:
+    path: /api/trantor/model/log-config/tree/{modelKey}
+    method: GET
+    description: 根据模型 key 获取该模型及其所有子模型的日志配置树
+  查找资源:
+    path: /api/trantor/meta/query/tree-node/single/{key}
+    method: GET
+    description: portal侧
+  查找引用:
+    path: /api/trantor/meta/query/tree-node/find-usage/{key}
+    method: GET
+    description: portal侧
+  '{sessionId}':
+    path: /api/trantor/meta/edit-session/info/{sessionId}
+    method: GET
+  分页查询MCP Server源:
+    path: /api/trantor/mcpserver/page
+    method: GET
+    description: 分页查询MCP Server源列表
+  查询MCP Server源列表:
+    path: /api/trantor/mcpserver/list
+    method: GET
+    description: 根据源名称模糊查询MCP Server源列表
+  按类型查询MCP Server源:
+    path: /api/trantor/mcpserver/listByType
+    method: GET
+    description: 查询指定类型的MCP Server源列表
+  获取单个MCP Server源:
+    path: /api/trantor/mcpserver/get
+    method: GET
+    description: 根据源ID获取MCP Server源详情
+  根据源名称获取MCP Server源:
+    path: /api/trantor/mcpserver/getByName
+    method: GET
+    description: 根据源名称获取MCP Server源详情
+  获取内置MCP服务器列表:
+    path: /api/trantor/mcp/built-in/servers
+    method: GET
+    description: 返回内置的MCP服务器配置列表
+  获取内部端点:
+    path: /api/trantor/mcp/built-in/get-internal-endpoint
+    method: GET
+    description: 返回内置MCP的SSE端点地址
+  configs:
+    path: /api/trantor/devops/service/dice/configs
+    method: GET
+  page:
+    path: /api/trantor/devops/service/agent/page
+    method: GET
+  services:
+    path: /api/trantor/devops/runtime/microservice/ops/services
+    method: GET
+  config:
+    path: /api/trantor/devops/runtime/config
+    method: GET
+  size:
+    path: /api/trantor/devops/meta/cache/size
+    method: GET
+  module:
+    path: /api/trantor/devops/meta/cache/module
+    method: GET
+  init:
+    path: /api/trantor/devops/meta/cache/init
+    method: GET
+  get:
+    path: /api/internal/trantor/meta/get
+    method: GET
+  clean:
+    path: /api/trantor/devops/meta/cache/clean
+    method: GET
+  dice-env:
+    path: /api/trantor/devops/common/dice-env
+    method: GET
+  to_lower_case:
+    path: /api/trantor/debug/to_lower_case
+    method: GET
+  self_relation_model_meta:
+    path: /api/trantor/debug/self_relation_model_meta
+    method: GET
+  relation_current_alias:
+    path: /api/trantor/debug/relation_current_alias
+    method: GET
+  refresh_relation:
+    path: /api/trantor/debug/refresh_relation
+    method: GET
+  one_to_many_sync:
+    path: /api/trantor/debug/one_to_many_sync
+    method: GET
+  key_to_alias:
+    path: /api/trantor/debug/key_to_alias
+    method: GET
+  init_type:
+    path: /api/trantor/debug/init_type
+    method: GET
+  init_relation_field_alias:
+    path: /api/trantor/debug/init_relation_field_alias
+    method: GET
+  changeMultiTextDbType:
+    path: /api/trantor/debug/changeMultiTextDbType
+    method: GET
+  校验规则详情:
+    path: /api/trantor/console/validation
+    method: GET
+  查询字段校验规则:
+    path: /api/trantor/console/validation/query
+    method: GET
+  校验规则查询:
+    path: /api/trantor/console/validation/page
+    method: GET
+  '{traceId}':
+    path: /api/trantor/ai/test/agent/execute/param/{traceId}
+    method: GET
+  platform-key:
+    path: /api/trantor/ai/platform-key
+    method: GET
+  获取当前用户的个人知识库:
+    path: /api/trantor/ai/personal-knowledge/{agentKey}
+    method: GET
+  notice-connection:
+    path: /api/trantor/ai/notice-connection
+    method: GET
+  查询指定历史会话工具调用消息:
+    path: /api/trantor/ai/history/message/tool-call/{messageId}
+    method: GET
+  search:
+    path: /api/trantor/ai/agent/search
+    method: GET
+  related-work-scenes:
+    path: /api/trantor/ai/agent/related-work-scenes
+    method: GET
+  获取当前 agent 的记忆变量:
+    path: /api/trantor/ai/agent-memory/variables/{agentKey}
+    method: GET
+  获取记忆片段:
+    path: /api/trantor/ai/agent-memory/fragments/{agentKey}
+    method: GET
+  查询智能体结果验证配置:
+    path: /api/trantor/agent/result-validation-config/get
+    method: GET
+  查询个人知识库配置（单模块或全团队）:
+    path: /api/trantor/agent/personal-knowledge-base-config/get
+    method: GET
+  查询动态模型判断配置:
+    path: /api/trantor/agent/dynamic-llm-model-judge-config/get
+    method: GET
+  find:
+    path: /api/internal/trantor/portal/model-log-config/find
+    method: GET
+  find-by-domain:
+    path: /api/internal/trantor/portal/find-by-domain
+    method: GET
+  find-by-code:
+    path: /api/internal/trantor/portal/find-by-code
+    method: GET
+  all:
+    path: /api/internal/trantor/portal-config/all
+    method: GET
+  删除数据结构对象:
+    path: /api/trantor/struct-node/delete
+    method: DELETE
+  删除索引:
+    path: /api/trantor/struct-node/delete-index
+    method: DELETE
+  删除模型字段:
+    path: /api/trantor/struct-node/delete-field
+    method: DELETE
+  删除MCP Server源:
+    path: /api/trantor/mcpserver/delete
+    method: DELETE
+    description: 删除指定的MCP Server源
+  删除历史会话记录:
+    path: /api/trantor/ai/history/{conversationId}
+    method: DELETE

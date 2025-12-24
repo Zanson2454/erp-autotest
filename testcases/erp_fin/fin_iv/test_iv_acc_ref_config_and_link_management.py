@@ -11,27 +11,25 @@ from pathlib import Path
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
 
-from testcases.erp_fin import FinBaseTest
+from testcases.erp_fin.fin_iv import IvBaseTest
 from utils.report_util import a, case_decorator
 
 
 @allure.epic("ERP财务模块")
 @allure.feature("账户参考配置和物料关联配置")
-class TestIvAccRefConfigAndLinkManagement(FinBaseTest):
+class TestIvAccRefConfigAndLinkManagement(IvBaseTest):
     """账户参考配置表和物料类型与分类参考关联表测试类 (合并)"""
     
     @classmethod
     def setup_class(cls):
-        super().setup_class()
+        super().setup_class()  # IvBaseTest 会自动初始化存货核算配置和 com_org_id/gr_com_org_id
         cls.acc_ref_id = None
         cls.mat_link_id = None
         cls.logger.info("账户参考和物料关联配置测试类初始化完成")
-        # 初始化MD（从md_cache_data获取主数据）
-        # md_cache_data 在 FinBaseTest.setup_class() 中通过 CacheUtil.get('md_init_cache') 获取
-        # 对于复杂嵌套结构，先获取列表，再判断是否非空，最后获取第一个元素
+        # 初始化物料类型ID（从md_cache_data获取主数据）
+        # 注意：com_org_id 和 gr_com_org_id 已在 IvBaseTest.setup_class() 中初始化，无需重复获取
+        # mat_type_id 需要单独初始化，因为 FinBaseTest 初始化的是 mat_type_cf，不是 mat_type_id
         if cls.md_cache_data:
-            gr_come_org_info = cls.md_cache_data.get("org_info", {}).get("gr_come_org_info", [])
-            cls.com_org_id = gr_come_org_info[0].get("id") if gr_come_org_info else None
             mat_type_info = cls.md_cache_data.get("mat_info", {}).get("mat_type_cf", {}).get("FINP", [])
             cls.mat_type_id = mat_type_info[0].get("id") if mat_type_info else None
     
