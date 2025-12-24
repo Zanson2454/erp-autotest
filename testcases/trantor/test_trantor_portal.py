@@ -293,4 +293,33 @@ class TestTrantorPortal(TrantorBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
+    
+    @case_decorator(
+        story="AI全局记忆",
+        title="测试获取当前用户的全局记忆",
+        description="验证Trantor AI获取当前用户的全局记忆接口功能 - 获取/api/trantor/ai/global-memory",
+        severity="normal",
+        file_level_order=10,
+        tags=["trantor", "ai", "global-memory"]
+    )
+    def test_get_ai_global_memory(self):
+        """测试获取当前用户的全局记忆"""
+        try:
+            # 使用标准化API调用
+            # GET请求，无需参数
+            response, _ = self.standard_api_call(
+                api_key="获取当前用户的全局记忆",
+                set_dict=None,
+                method="GET"
+            )
+            
+            # 业务断言：验证响应数据
+            self.assert_util.assert_response_data(response)
+            
+            # 记录响应数据
+            a.json(response, "当前用户的全局记忆响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
 
