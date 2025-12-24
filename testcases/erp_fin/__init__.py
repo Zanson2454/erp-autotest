@@ -24,7 +24,6 @@ from utils.request_util import HttpUtil
 from utils.mock_util import MockData
 from utils.param_util import ParamUtil
 from utils.report_util import a  # Allure reporting utility (a.json, a.text)
-from utils.yaml_util import YamlUtil  # yaml_util for loading configs
 
 class FinBaseTest(BaseTest):
     """ERP财务模块的基础测试类，负责加载财务通用配置和提供API访问方法"""
@@ -32,8 +31,10 @@ class FinBaseTest(BaseTest):
     # 类型提示：继承的动态属性
     yaml_util: Any
     
-    # 门户配置（仅admin）
-    _ADMIN_PORTAL_KEY = "TERP_PORTAL"
+    # 登录两个门户，分别保存 session/user_info 并初始化 http 工具
+    _PORTAL_TYPE_KEYS: Dict[str, str] = {
+        "admin": "TERP_PORTAL"
+    }
     
     # Mock单例
     _mock_instance = None
@@ -42,54 +43,47 @@ class FinBaseTest(BaseTest):
     def setup_class(cls):
         """
         测试类初始化 - 加载财务通用配置
-        1. 调用父类初始化方法 (包括数据库连接、环境配置等)
-        2. 仅登录admin门户，获取 session/user_info/headers
+        1. 调用父类初始化方法 (包括登录、数据库连接等)
+        2. 多门户多用户登录，获取 session
         3. 初始化财务配置文件路径 (erp_fin specific)
         4. 加载API路径和参数配置 (from fin_api_path.yaml / fin_api_params.yaml)
-        5. 初始化 http 工具，自动带上admin门户请求头
+        5. 初始化 http 工具，自动带上门户请求头
         6. DataFactory和缓存初始化 (fin specific, fallback to md)
         7. 设置路径参数和用户信息
         """
         super().setup_class()
         
-        # Mock单例初始化 (兼容子模块如 fin_iv 的 self.mock_util)
+        # 优化单例创建：仅在 super().setup_class() 后执行
+        # 确保环境就绪，不干扰 pytest 测试收集过程
         if cls._mock_instance is None:
             cls._mock_instance = MockData()
+        
+        # 设置类级 mock_util 以兼容现有代码 (cls.mock_util)
+        # 现有测试类可继续使用 cls.mock_data 或迁移到 cls.mock_util
         cls.mock_util = cls._mock_instance
         
-        # 登录服务初始化 (使用utils中的LoginService)
+        # 初始化登录服务，避免重复创建
         cls.login_service = LoginService(cls.env_config)
         
-        # 仅登录admin门户
-        tenant_key = "terp"
-        admin_result = cls.login_service.login(portal_key=cls._ADMIN_PORTAL_KEY, tenant_key=tenant_key)
+        # 登录 admin 门户
+        admin_result = cls.login_service.login(portal_key=cls._PORTAL_TYPE_KEYS["admin"])
         if admin_result.status != admin_result.status.SUCCESS:
             raise RuntimeError(f"admin 登录失败: {admin_result.error_message}")
         
-        # 检查portal_url
-        portal_url = admin_result.portal_url or ""
-        if not isinstance(portal_url, str) or not portal_url:
-            raise ValueError("admin portal_url 不能为空且必须为字符串")
+        cls.admin_headers = admin_result.portal_headers
         
-        # 保存admin相关变量
-        cls.session = admin_result.session
-        cls.user_info = admin_result.user_info
-        cls.portal_url = portal_url
-        cls.portal_headers = admin_result.portal_headers
-        
-        # 初始化 http (仅admin)
+        # 初始化 http 实例，绑定 admin 门户的 url、session 和 headers
         cls.http = HttpUtil(
-            url=portal_url,
+            url=admin_result.portal_url,
             session=admin_result.session,
             headers=admin_result.portal_headers
         )
         
-        # 初始化配置文件路径 (erp_fin specific)
+        # 初始化配置文件路径
         cls.fin_api_path = Path(project_root) / "testdata" / "erp_fin" / "fin_api_path.yaml"
         cls.fin_api_params = Path(project_root) / "testdata" / "erp_fin" / "fin_api_params.yaml"
         
-        # 加载API配置
-        cls.yaml_util = YamlUtil()  # or inherit from super if available
+        # 加载API路径配置和参数配置
         cls.apis = cls.yaml_util.read_yaml(cls.fin_api_path).get("apis", {})
         cls.api_params = cls.yaml_util.read_yaml(cls.fin_api_params).get("api_params", {})
         
@@ -205,22 +199,22 @@ class FinBaseTest(BaseTest):
        
        
         # 设置路径参数和用户信息
-        cls.path_params = {"tmodule": "FIN"}  # erp_fin module
-        cls.nickname = cls.init_data["user_info"]['user_info']["nickname"] if cls.init_data and "user_info" in cls.init_data else "test_user"
-        cls.user_id = cls.init_data["user_info"]['user_info']["id"] if cls.init_data and "user_info" in cls.init_data else 1
+        cls.path_params = {"tmodule": "FIN"}
+        cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
+        cls.user_id = cls.init_data["user_info"]['user_info']["id"]
     
     
     def get_api_path(self, api_key):
         """
-        获取API路径 (erp_fin specific, using ParamUtil)
+        获取API路径
         """
-        return ParamUtil.get_api_path(self.apis, api_key)
+        return super().get_api_path(api_key, self.apis)
     
     def get_api_params(self, api_path, with_query_params=None):
         """
-        获取API请求参数和完整URL (erp_fin specific)
+        获取API请求参数和完整URL
         """
-        return ParamUtil.get_api_params(self.api_params, api_path, with_query_params)
+        return super().get_api_params(api_path, self.api_params, with_query_params)
     
     
     def create_settlement_item(self,sett_item_type_code="E_SLS_GOODS",org=1):

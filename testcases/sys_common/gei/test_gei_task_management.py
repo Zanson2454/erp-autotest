@@ -265,38 +265,54 @@ class TestGeiTaskManagement(SysCommonBaseTest):
             a.text(str(e), "失败原因")
             raise
     
+    @pytest.mark.parametrize("task_type, title", [
+        ("IMPORT", "测试我的任务分页查询-导入类型"),
+        ("EXPORT", "测试我的任务分页查询-导出类型")
+    ])
     @case_decorator(
         story="导入导出任务管理",
         title="测试我的任务分页查询",
         description="验证API_GEI_TASK_MY_PAGING_POST功能 - 分页查询我的任务",
         severity="normal",
-        order=5,
+        file_level_order=5,
         tags=["sys_common", "gei", "task", "my_paging"]
     )
-    def test_my_task_paging_post(self):
+    def test_my_task_paging_post(self, task_type, title):
         """测试我的任务分页查询 - API_GEI_TASK_MY_PAGING_POST"""
         try:
-            api_path = self.get_api_path("导入导出任务管理接口-分页查询我的任务")
-            params, url = self.get_api_params(api_path)
+            import allure
+            allure.dynamic.title(title)  # 动态设置测试标题
             
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据
+            # 根据 curl 请求，参数结构为: {"params":{"pageNo":1,"pageSize":20,"type":"IMPORT"}} 或 {"params":{"pageNo":1,"pageSize":20,"type":"EXPORT"}}
             set_dict = {
-                "pageable": {
-                    "pageNo": 1,
-                    "pageSize": 20,
-                    "needTotal": True
-                }
+                "pageNo": 1,
+                "pageSize": 20,
+                "type": task_type
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用
+            # 根据 curl 请求，参数直接放在 params 层级下，不使用默认的 params.request
+            response, _ = self.standard_api_call(
+                api_key="导入导出任务管理接口-分页查询我的任务(/api/gei/task/myPaging#POST)",
+                set_dict=set_dict,
+                param_path=["params"]  # 参数路径设置为["params"]，确保set_dict直接放在params层级
+            )
+            
+            # 3. 业务断言（standard_api_call不包含断言）
             self.assert_util.assert_response_data(response)
             
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            # 4. 验证返回数据
+            data = response.get("data", {}).get("data", {})
+            # 验证返回数据不为空
+            self.assert_util.assert_by_operator(
+                data is not None,
+                "=",
+                True,
+                "返回数据不应为空"
+            )
+            
+            self.logger.info(f"分页查询我的任务成功 (type={task_type}): {data}")
             
         except Exception as e:
             a.text(str(e), "失败原因")

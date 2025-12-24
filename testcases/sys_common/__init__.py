@@ -20,10 +20,10 @@ class SysCommonBaseTest(BaseTest):
     # 类型提示：继承的动态属性
     yaml_util: Any
     
-    # 登录两个门户，分别保存 session/user_info 并初始化 http 工具
+    # 门户配置（仅admin）
     _PORTAL_TYPE_KEYS: Dict[str, str] = {
         "admin": "TERP_PORTAL"
-    }   
+    }
     
     @classmethod
     def setup_class(cls):
@@ -37,21 +37,39 @@ class SysCommonBaseTest(BaseTest):
         """
         super().setup_class()
 
-        cls.login_service = LoginService(cls.env_config)  # 初始化一次登录服务，避免重复创建
-        # 登录 admin
-        admin_result = cls.login_service.login(portal_key=cls._PORTAL_TYPE_KEYS["admin"])
-        if admin_result.status != admin_result.status.SUCCESS:
-            raise RuntimeError(f"admin 登录失败: {admin_result.error_message}")
+        # 初始化登录服务，避免重复创建
+        cls.login_service = LoginService(cls.env_config)
         
-        # 初始化 cust 的 headers
-        cls.admin_headers = admin_result.portal_headers
-  
-        # 初始化 http 实例
-        cls.http = HttpUtil(
-            url=admin_result.portal_url,
-            session=admin_result.session,
-            headers=admin_result.portal_headers
-        )
+        # 登录门户，分别保存 session/user_info/headers/url
+        cls.sessions = {}
+        cls.user_infos = {}
+        cls.http_clients = {}
+        cls.portal_urls = {}
+        cls.portal_headers = {}
+        
+        tenant_key = "terp"
+        for role, portal_key in cls._PORTAL_TYPE_KEYS.items():
+            result = cls.login_service.login(portal_key=portal_key, tenant_key=tenant_key)
+            if result.status != result.status.SUCCESS:
+                raise RuntimeError(f"{role} 登录失败: {result.error_message}")
+            portal_url = result.portal_url or ""
+            if not isinstance(portal_url, str) or not portal_url:
+                raise ValueError(f"{role} portal_url 不能为空且必须为字符串")
+            cls.sessions[role] = result.session
+            cls.user_infos[role] = result.user_info
+            cls.portal_urls[role] = portal_url
+            cls.portal_headers[role] = result.portal_headers
+            cls.http_clients[role] = HttpUtil(
+                url=portal_url,
+                session=result.session,
+                headers=result.portal_headers
+            )
+
+        # 兼容原有写法
+        cls.http = cls.http_clients["admin"]
+        cls.admin_session = cls.sessions["admin"]
+        cls.admin_user_info = cls.user_infos["admin"]
+        cls.admin_headers = cls.portal_headers["admin"]
 
         # 初始化配置文件路径
         cls.common_api_path = Path(project_root) / "testdata" / "sys_common" / "common_api_path.yaml"
@@ -79,45 +97,7 @@ class SysCommonBaseTest(BaseTest):
         """
         return super().get_api_params(api_path, self.api_params, with_query_params)
       
-    def set_request_param(self, params, key, value):
-        """
-        设置请求参数中的值，简化嵌套访问
-        
-        参数:
-            params: 请求参数字典
-            key: 参数键名
-            value: 参数值
-        
-        返回:
-            更新后的参数字典
-        """
-        if 'params' not in params:
-            params['params'] = {}
-        if 'request' not in params['params']:
-            params['params']['request'] = {}
-            
-        params['params']['request'][key] = value
-        return params
-    
-    def set_request_params(self, params, param_dict):
-        """
-        批量设置请求参数，简化嵌套访问
-        
-        参数:
-            params: 请求参数字典
-            param_dict: 要设置的参数字典 {key: value, ...}
-        
-        返回:
-            更新后的参数字典
-        """
-        if 'params' not in params:
-            params['params'] = {}
-        if 'request' not in params['params']:
-            params['params']['request'] = {}
-            
-        for key, value in param_dict.items():
-            params['params']['request'][key] = value
-        return params
+   
 
 
 if __name__ == "__main__":
