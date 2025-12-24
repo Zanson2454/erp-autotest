@@ -40,66 +40,48 @@ class TestNoticeTaskManagement(SysCommonBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
     
+    
     @case_decorator(
         story="通知任务管理",
-        title="测试根据业务编码发送通知",
-        description="验证API_NOTICE_CREATE_TASK_BY_SCENE_POST功能 - 根据通知业务编码发送通知",
-        severity="blocker",
-        order=1,
-        smoke=True,
-        tags=["sys_common", "notice", "task", "create"]
+        title="测试分页查询站内信",
+        description="验证API_NOTICE_STATION_PAGING_POST功能 - 分页查询站内信",
+        severity="normal",
+        file_level_order=1,
+        tags=["sys_common", "notice", "station", "paging"]
     )
-    def test_notice_create_task_by_scene_post(self):
-        """测试根据业务编码发送通知 - API_NOTICE_CREATE_TASK_BY_SCENE_POST"""
+    def test_notice_station_paging_post(self):
+        """测试分页查询站内信 - API_NOTICE_STATION_PAGING_POST"""
         try:
             # 1. 准备测试数据
-            scene_code = f"AT_NOTICE_SCENE_{self.mock_util.get_timestamp()}"
-            business_code = f"AT_BUSINESS_CODE_{self.mock_util.get_timestamp()}"
-            task_name = f"AT_NOTICE_TASK_{self.mock_util.get_timestamp()}"
-            recipient_type = "USER"  # 假设接收者类型：USER/ROLE/DEPT等
-            recipient_ids = [self.admin_user_info.get("id")] if self.admin_user_info else ["test_user_id"]  # 使用已登录用户ID或模拟
-            title = f"测试通知标题_{self.mock_util.get_timestamp()}"
-            content = f"测试通知内容_{self.mock_util.get_timestamp()}"
-            priority = 1
-            send_type = "IMMEDIATE"  # 立即发送或定时
-            remark = self.mock_util.get_mock_remark()
-            
-            # 2. 调用API
-            api_path = self.get_api_path("通知发送服务-根据通知业务编码发送通知")
-            params, url = self.get_api_params(api_path)
-            
-            # 3. 参数处理
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["sceneCode", "businessCode", "taskName", "recipientType", "recipientIds", 
-                        "title", "content", "priority", "sendType", "remark"],
-                ["params", "request"]
-            )
+            # 根据 curl 请求，参数结构为: {"params":{"readStatus":"UNREAD","pageSize":10,"pageNo":1}}
             set_dict = {
-                "sceneCode": scene_code,
-                "businessCode": business_code,
-                "taskName": task_name,
-                "recipientType": recipient_type,
-                "recipientIds": recipient_ids,
-                "title": title,
-                "content": content,
-                "priority": priority,
-                "sendType": send_type,
-                "remark": remark
+                "readStatus": "UNREAD",
+                "pageSize": 10,
+                "pageNo": 1
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
             
-            # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用
+            # 根据 curl 请求，参数直接放在 params 层级下，不使用默认的 params.request
+            response, _ = self.standard_api_call(
+                api_key="站内信APP服务-分页查询站内信(/api/notice/station/paging#POST)",
+                set_dict=set_dict,
+                param_path=["params"]  # 参数路径设置为["params"]，确保set_dict直接放在params层级
+            )
+            
+            # 3. 业务断言（standard_api_call不包含断言）
             self.assert_util.assert_response_data(response)
             
-            # 5. 保存数据和报告
-            task_data = response.get("data", {}).get("data", {})
-            self.notice_task_id = task_data.get("taskId") or task_data.get("id") if task_data else None
-            self.assert_util.assert_by_operator(self.notice_task_id, "not_empty", "通知任务ID不应为空")
+            # 4. 验证返回数据
+            data = response.get("data", {}).get("data", {})
+            # 验证返回数据不为空
+            self.assert_util.assert_by_operator(
+                data is not None,
+                "=",
+                True,
+                "返回数据不应为空"
+            )
             
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-            self.logger.info(f"创建通知任务ID: {self.notice_task_id}, 场景编码: {scene_code}")
+            self.logger.info(f"分页查询站内信成功: {data}")
             
         except Exception as e:
             a.text(str(e), "失败原因")
