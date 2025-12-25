@@ -7,7 +7,6 @@ project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
 
 from testcases.sys_common import SysCommonBaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 @allure.epic("系统通用模块")
@@ -52,30 +51,35 @@ class TestGeiTemplateManagement(SysCommonBaseTest):
     def test_template_save_post(self):
         """测试保存模板 - API_GEI_TEMPLATE_SAVE_POST"""
         try:
+            # 1. 准备测试数据
             template_name = f"AT_TEMPLATE_{self.mock_util.get_timestamp()}"
-            
-            api_path = self.get_api_path("导入导出模版管理接口-保存模版")
-            params, url = self.get_api_params(api_path)
-            
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["templateName", "headerConfigList"],
-                ["params"]
-            )
             set_dict = {
                 "templateName": template_name,
                 "headerConfigList": [
                     {"name": "字段1", "type": "TEXT", "field": "field1"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用
+            response, extracted_id = self.standard_api_call(
+                api_key="导入导出模版管理接口-保存模版",
+                set_dict=set_dict,
+                fields_to_filter=["templateName", "headerConfigList"],
+                param_path=["params"],
+                store_id_as="gei_template"
+            )
+            
+            # 3. 业务断言
             self.assert_util.assert_response_data(response)
             
+            # 4. 保存模板ID
             template_data = response.get("data", {}).get("data", {})
-            self.gei_template_id = template_data.get("id") if template_data else None
+            if extracted_id:
+                self.gei_template_id = extracted_id
+            elif template_data:
+                self.gei_template_id = template_data.get("id")
             
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -93,23 +97,28 @@ class TestGeiTemplateManagement(SysCommonBaseTest):
     def test_template_copy_post(self):
         """测试复制模板 - API_GEI_TEMPLATE_COPY_POST"""
         try:
+            # 1. 前置条件：确保模板已存在
             if not self.gei_template_id:
                 self.test_template_save_post()
             
-            api_path = self.get_api_path("导入导出模版管理接口-复制模版")
-            params, url = self.get_api_params(api_path)
-            
-            filtered_params = ParamUtil.filter_post_body_fields(params, ["sourceId", "newName"], ["params"])
+            # 2. 准备测试数据
             set_dict = {
                 "sourceId": self.gei_template_id,
                 "newName": f"AT_COPY_TEMPLATE_{self.mock_util.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            # 3. 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="导入导出模版管理接口-复制模版",
+                set_dict=set_dict,
+                fields_to_filter=["sourceId", "newName"],
+                param_path=["params"]
+            )
+            
+            # 4. 业务断言
             self.assert_util.assert_response_data(response)
             
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -144,20 +153,25 @@ class TestGeiTemplateManagement(SysCommonBaseTest):
     def test_template_export_post(self):
         """测试导出模板 - API_GEI_TEMPLATE_EXPORT_POST"""
         try:
+            # 1. 前置条件：确保模板已存在
             if not self.gei_template_id:
                 self.test_template_save_post()
             
-            api_path = self.get_api_path("导入导出模版管理接口-导出")
-            params, url = self.get_api_params(api_path)
-            
-            filtered_params = ParamUtil.filter_post_body_fields(params, ["templateId"], ["params"])
+            # 2. 准备测试数据
             set_dict = {"templateId": self.gei_template_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            # 3. 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="导入导出模版管理接口-导出",
+                set_dict=set_dict,
+                fields_to_filter=["templateId"],
+                param_path=["params"]
+            )
+            
+            # 4. 业务断言
             self.assert_util.assert_response_success(response)
             
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -176,13 +190,7 @@ class TestGeiTemplateManagement(SysCommonBaseTest):
     def test_template_paging_post(self):
         """测试分页查询模板 - API_GEI_TEMPLATE_PAGING_POST"""
         try:
-            api_path = self.get_api_path("导入导出模版管理接口-分页查询模版")
-            params, url = self.get_api_params(api_path)
-            
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable"],
-                ["params", "request"]
-            )
+            # 1. 准备测试数据
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -190,12 +198,137 @@ class TestGeiTemplateManagement(SysCommonBaseTest):
                     "needTotal": True
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            # 2. 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="导入导出模版管理接口-分页查询模版",
+                set_dict=set_dict,
+                fields_to_filter=["pageable"],
+                param_path=["params", "request"]
+            )
+            
+            # 3. 业务断言
             self.assert_util.assert_response_data(response)
             
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
+            a.json(response, "响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    @case_decorator(
+        story="导入导出模板管理",
+        title="测试导出模板查询",
+        description="验证API_TRANTOR_PORTAL_META_LIST_EXPORT_TEMPLATE_GET功能 - 导出模板列表查询",
+        severity="normal",
+        order=3,
+        tags=["sys_common", "gei", "template", "export_query"]
+    )
+    def test_export_template_query_list(self):
+        """测试导出模板查询 - API_TRANTOR_PORTAL_META_LIST_EXPORT_TEMPLATE_GET"""
+        try:
+            # 1. 准备测试数据
+            set_dict = {
+                "serviceKey": "ERP_GEN$API_TRANTOR_PORTAL_META_LIST_EXPORT_TEMPLATE_GET",
+                "params": {
+                    "request": {
+                        "pageNo": "1",
+                        "pageSize": "20"
+                    }
+                }
+            }
+            
+            # 2. 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="导出模版列表查询(/api/trantor/portal/meta/list/ExportTemplate#GET)",
+                set_dict=set_dict,
+                param_path=[] # 空路径，让 set_dict 直接作为顶层参数
+            )
+            
+            # 3. 验证响应数据
+            self.assert_util.assert_response_data(response)
+            
+            # 验证返回数据
+            data = response.get("data", {}).get("data", {})
+            self.assert_util.assert_by_operator(
+                data is not None,
+                "=",
+                True,
+                "返回数据不应为空"
+            )
+            
+            # 验证返回的数据列表
+            data_list = data.get("data", [])
+            self.assert_util.assert_by_operator(
+                isinstance(data_list, list),
+                "=",
+                True,
+                "返回数据应为列表类型"
+            )
+            
+            self.logger.info(f"导出模板查询成功，共查询到 {len(data_list)} 条记录")
+            
+            a.json(set_dict, "请求数据")
+            a.json(response, "响应数据")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    @case_decorator(
+        story="导入导出模板管理",
+        title="测试导入模板查询",
+        description="验证API_TRANTOR_PORTAL_META_LIST_IMPORT_TEMPLATE_GET功能 - 导入模板列表查询",
+        severity="normal",
+        order=3,
+        tags=["sys_common", "gei", "template", "import_query"]
+    )
+    def test_import_template_query_list(self):
+        """测试导入模板查询 - API_TRANTOR_PORTAL_META_LIST_IMPORT_TEMPLATE_GET"""
+        try:
+            # 1. 准备测试数据
+            set_dict = {
+                "serviceKey": "ERP_GEN$API_TRANTOR_PORTAL_META_LIST_IMPORT_TEMPLATE_GET",
+                "params": {
+                    "request": {
+                        "pageNo": "1",
+                        "pageSize": "20"
+                    }
+                }
+            }
+            
+            # 2. 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="导入模版列表查询(/api/trantor/portal/meta/list/ImportTemplate#GET)",
+                set_dict=set_dict,
+                param_path=[] # 空路径，让 set_dict 直接作为顶层参数
+            )
+            
+            # 3. 验证响应数据
+            self.assert_util.assert_response_data(response)
+            
+            # 验证返回数据
+            data = response.get("data", {}).get("data", {})
+            self.assert_util.assert_by_operator(
+                data is not None,
+                "=",
+                True,
+                "返回数据不应为空"
+            )
+            
+            # 验证返回的数据列表
+            data_list = data.get("data", [])
+            self.assert_util.assert_by_operator(
+                isinstance(data_list, list),
+                "=",
+                True,
+                "返回数据应为列表类型"
+            )
+            
+            self.logger.info(f"导入模板查询成功，共查询到 {len(data_list)} 条记录")
+            
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -213,23 +346,29 @@ class TestGeiTemplateManagement(SysCommonBaseTest):
     def test_template_query_by_id_post(self):
         """测试根据ID查询模板 - API_GEI_TEMPLATE_QUERY_BY_ID_POST"""
         try:
+            # 1. 前置条件：确保模板已存在
             if not self.gei_template_id:
                 self.test_template_save_post()
             
-            api_path = self.get_api_path("导入导出模版管理接口-根据id查询模版")
-            params, url = self.get_api_params(api_path)
-            
-            filtered_params = ParamUtil.filter_post_body_fields(params, ["id"], ["params"])
+            # 2. 准备测试数据
             set_dict = {"id": self.gei_template_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            # 3. 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="导入导出模版管理接口-根据id查询模版",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                param_path=["params"]
+            )
+            
+            # 4. 业务断言
             self.assert_util.assert_response_data(response)
             
+            # 5. 验证返回的模板ID
             template_data = response.get("data", {}).get("data", {})
             self.assert_util.assert_by_operator(template_data.get("id"), "=", self.gei_template_id)
             
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -247,20 +386,25 @@ class TestGeiTemplateManagement(SysCommonBaseTest):
     def test_template_enable_post(self):
         """测试启用模板 - API_GEI_TEMPLATE_ENABLE_POST"""
         try:
+            # 1. 前置条件：确保模板已存在
             if not self.gei_template_id:
                 self.test_template_save_post()
             
-            api_path = self.get_api_path("导入导出模版管理接口-启用模版")
-            params, url = self.get_api_params(api_path)
-            
-            filtered_params = ParamUtil.filter_post_body_fields(params, ["id"], ["params"])
+            # 2. 准备测试数据
             set_dict = {"id": self.gei_template_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            # 3. 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="导入导出模版管理接口-启用模版",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                param_path=["params"]
+            )
+            
+            # 4. 业务断言
             self.assert_util.assert_response_success(response)
             
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -278,20 +422,25 @@ class TestGeiTemplateManagement(SysCommonBaseTest):
     def test_template_disable_post(self):
         """测试停用模板 - API_GEI_TEMPLATE_DISABLE_POST"""
         try:
+            # 1. 前置条件：确保模板已存在
             if not self.gei_template_id:
                 self.test_template_save_post()
             
-            api_path = self.get_api_path("导入导出模版管理接口-停用模版")
-            params, url = self.get_api_params(api_path)
-            
-            filtered_params = ParamUtil.filter_post_body_fields(params, ["id"], ["params"])
+            # 2. 准备测试数据
             set_dict = {"id": self.gei_template_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            # 3. 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="导入导出模版管理接口-停用模版",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                param_path=["params"]
+            )
+            
+            # 4. 业务断言
             self.assert_util.assert_response_success(response)
             
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -309,22 +458,28 @@ class TestGeiTemplateManagement(SysCommonBaseTest):
     def test_template_delete_post(self):
         """测试删除模板 - API_GEI_TEMPLATE_DELETE_POST"""
         try:
+            # 1. 前置条件：确保模板已存在
             if not self.gei_template_id:
                 self.test_template_save_post()
             
-            api_path = self.get_api_path("导入导出模版管理接口-删除模版")
-            params, url = self.get_api_params(api_path)
-            
-            filtered_params = ParamUtil.filter_post_body_fields(params, ["id"], ["params"])
+            # 2. 准备测试数据
             set_dict = {"id": self.gei_template_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            # 3. 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="导入导出模版管理接口-删除模版",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                param_path=["params"]
+            )
+            
+            # 4. 业务断言
             self.assert_util.assert_response_success(response)
             
+            # 5. 清理模板ID
             self.gei_template_id = None
             
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -342,16 +497,25 @@ class TestGeiTemplateManagement(SysCommonBaseTest):
     def test_template_download_get(self):
         """测试模板文件下载 - API_GEI_TEMPLATE_DOWNLOAD_GET"""
         try:
+            # 1. 前置条件：确保模板已存在
             if not self.gei_template_id:
                 self.test_template_save_post()
             
-            api_path = self.get_api_path("导入导出模版管理接口-模版文件下载")
-            url = self.get_api_url(api_path)
-            params = {"templateId": self.gei_template_id}
-            response = self.http.get(url, params=params)
+            # 2. 准备测试数据（GET请求参数通过query string传递）
+            set_dict = {"templateId": self.gei_template_id}
+            
+            # 3. 使用标准化API调用（GET请求）
+            response, _ = self.standard_api_call(
+                api_key="导入导出模版管理接口-模版文件下载",
+                set_dict=set_dict,
+                method="GET"
+            )
+            
+            # 4. 业务断言
             self.assert_util.assert_response_success(response)
             
-            a.text(f"下载URL: {url}", "下载链接")
+            a.json(set_dict, "请求参数")
+            a.text(f"下载成功，模板ID: {self.gei_template_id}", "下载结果")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -368,16 +532,25 @@ class TestGeiTemplateManagement(SysCommonBaseTest):
     def test_template_download_v2_get(self):
         """测试模板文件下载V2 - API_GEI_TEMPLATE_DOWNLOAD_V2_GET"""
         try:
+            # 1. 前置条件：确保模板已存在
             if not self.gei_template_id:
                 self.test_template_save_post()
             
-            api_path = self.get_api_path("导入导出模版管理接口-模版文件下载V2")
-            url = self.get_api_url(api_path)
-            params = {"templateId": self.gei_template_id}
-            response = self.http.get(url, params=params)
+            # 2. 准备测试数据（GET请求参数通过query string传递）
+            set_dict = {"templateId": self.gei_template_id}
+            
+            # 3. 使用标准化API调用（GET请求）
+            response, _ = self.standard_api_call(
+                api_key="导入导出模版管理接口-模版文件下载V2",
+                set_dict=set_dict,
+                method="GET"
+            )
+            
+            # 4. 业务断言
             self.assert_util.assert_response_success(response)
             
-            a.text(f"下载URL: {url}", "V2下载链接")
+            a.json(set_dict, "请求参数")
+            a.text(f"V2下载成功，模板ID: {self.gei_template_id}", "V2下载结果")
             
         except Exception as e:
             a.text(str(e), "失败原因")

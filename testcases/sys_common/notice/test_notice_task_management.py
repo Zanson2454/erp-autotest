@@ -1,3 +1,7 @@
+"""
+通知任务管理测试用例
+覆盖通知任务查询等功能
+"""
 import allure
 import pytest
 import sys
@@ -7,81 +11,220 @@ project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
 
 from testcases.sys_common import SysCommonBaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
+
 
 @allure.epic("系统通用模块")
 @allure.feature("通知任务管理")
 class TestNoticeTaskManagement(SysCommonBaseTest):
     """通知任务管理测试类"""
     
+    # API配置
+    API_KEY = "通知任务APP服务-分页查询任务(Trantor入参)(/api/notice/task/pagingByTrantor#POST)"
+    
     @classmethod
     def setup_class(cls):
+        """测试类初始化"""
         super().setup_class()
-        cls.notice_task_id = None
         cls.logger.info("通知任务管理测试类初始化完成")
     
-    @classmethod
-    def teardown_class(cls):
-        """测试类结束后执行清理"""
-        try:
-            if cls.notice_task_id:
-                cls.db.delete(
-                    table="notice_task",  # 假设通知任务表名为notice_task
-                    where="id = %s",
-                    params=[cls.notice_task_id]
-                )
-            cls.db.delete(
-                table="notice_task",
-                where="task_code like %s",
-                params=["AT_%"]
-            )
-            cls.logger.info("通知任务测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
+    def _build_base_params(self, condition_items=None):
+        """
+        构建基础请求参数
+        
+        :param condition_items: 查询条件，如果为None则不设置条件
+        :return: 完整的请求参数字典
+        """
+        pageable = {
+            "pageNo": 1,
+            "pageSize": 20,
+            "needTotal": True,
+            "sortOrders": None,
+            "conditionItems": condition_items
+        }
+        
+        return {
+            "params": {
+                "request": {
+                    "pageable": pageable,
+                    "fields": [
+                        {"name": "taskName", "type": "TEXT"},
+                        {"name": "taskStatus", "type": "SELECT"},
+                        {"name": "createdAt", "type": "DATE"},
+                        {"name": "createdBy", "type": "OBJECT"}
+                    ],
+                    "systemParams": None
+                }
+            },
+            "sceneKey": "sys_common$notify_task",
+            "viewKey": "sys_common$notify_task:list",
+            "appId": 0,
+            "teamId": 22,
+            "serviceKey": "sys_common$API_NOTICE_TASK_PAGING_BY_TRANTOR_POST",
+        }
     
+    def _validate_response(self, response, validate_func=None):
+        """
+        验证响应数据的通用方法
+        
+        :param response: API响应
+        :param validate_func: 可选的额外验证函数，接收data_list作为参数
+        :return: 数据列表
+        """
+        # 业务断言
+        self.assert_util.assert_response_data(response)
+        
+        # 验证返回数据
+        data = response.get("data", {}).get("data", {})
+        self.assert_util.assert_by_operator(
+            data is not None,
+            "=",
+            True,
+            "返回数据不应为空"
+        )
+        
+        # 验证返回的数据列表
+        data_list = data.get("data", [])
+        self.assert_util.assert_by_operator(
+            isinstance(data_list, list),
+            "=",
+            True,
+            "返回数据应为列表类型"
+        )
+        
+        # 执行额外的验证逻辑
+        if validate_func:
+            validate_func(data_list)
+        
+        return data_list
     
+    @pytest.mark.parametrize("test_scenario", [
+        {
+            "title": "测试通知任务列表查询",
+            "description": "验证通知任务列表查询功能 - API_NOTICE_TASK_PAGING_BY_TRANTOR_POST",
+            "file_level_order": 1,
+            "tags": ["sys_common", "notice", "task", "query_list"],
+            "condition_items": None,
+            "validate_func": None
+        },
+        {
+            "title": "测试通知任务列表查询-按状态查询(已完结)",
+            "description": "验证通知任务列表查询功能 - 按任务状态查询（PUSH_COMPLETED）",
+            "file_level_order": 2,
+            "tags": ["sys_common", "notice", "task", "query_list", "status"],
+            "condition_items": {
+                "type": "ConditionItems",
+                "conditions": {
+                    "taskStatus": {
+                        "operator": "IN",
+                        "value": ["PUSH_COMPLETED"]
+                    }
+                },
+                "logicOperator": "AND"
+            },
+            "validate_func": "validate_status_completed"
+        },
+        {
+            "title": "测试通知任务列表查询-按状态查询(推送中)",
+            "description": "验证通知任务列表查询功能 - 按任务状态查询（PUSHING）",
+            "file_level_order": 3,
+            "tags": ["sys_common", "notice", "task", "query_list", "status"],
+            "condition_items": {
+                "type": "ConditionItems",
+                "conditions": {
+                    "taskStatus": {
+                        "operator": "IN",
+                        "value": ["PUSHING"]
+                    }
+                },
+                "logicOperator": "AND"
+            },
+            "validate_func": "validate_status_pushing"
+        },
+        {
+            "title": "测试通知任务列表查询-按时间区间查询",
+            "description": "验证通知任务列表查询功能 - 按创建时间区间查询",
+            "file_level_order": 4,
+            "tags": ["sys_common", "notice", "task", "query_list", "date"],
+            "condition_items": {
+                "type": "ConditionItems",
+                "conditions": {
+                    "createdAt": {
+                        "operator": "BETWEEN_AND",
+                        "value": [1735660800000, 1767196799999]
+                    }
+                },
+                "logicOperator": "AND"
+            },
+            "validate_func": None
+        }
+    ])
     @case_decorator(
         story="通知任务管理",
-        title="测试分页查询站内信",
-        description="验证API_NOTICE_STATION_PAGING_POST功能 - 分页查询站内信",
+        title="测试通知任务列表查询",
+        description="验证通知任务列表查询功能",
         severity="normal",
         file_level_order=1,
-        tags=["sys_common", "notice", "station", "paging"]
+        tags=["sys_common", "notice", "task", "query_list"]
     )
-    def test_notice_station_paging_post(self):
-        """测试分页查询站内信 - API_NOTICE_STATION_PAGING_POST"""
+    def test_notice_task_query_list(self, test_scenario):
+        """测试通知任务列表查询 - 参数化测试"""
         try:
+            # 动态设置测试标题
+            allure.dynamic.title(test_scenario["title"])
+            allure.dynamic.description(test_scenario["description"])
+            
             # 1. 准备测试数据
-            # 根据 curl 请求，参数结构为: {"params":{"readStatus":"UNREAD","pageSize":10,"pageNo":1}}
-            set_dict = {
-                "readStatus": "UNREAD",
-                "pageSize": 10,
-                "pageNo": 1
-            }
+            set_dict = self._build_base_params(condition_items=test_scenario["condition_items"])
             
             # 2. 使用标准化API调用
-            # 根据 curl 请求，参数直接放在 params 层级下，不使用默认的 params.request
             response, _ = self.standard_api_call(
-                api_key="站内信APP服务-分页查询站内信(/api/notice/station/paging#POST)",
+                api_key=self.API_KEY,
                 set_dict=set_dict,
-                param_path=["params"]  # 参数路径设置为["params"]，确保set_dict直接放在params层级
+                param_path=[] # 空路径，让 set_dict 直接作为顶层参数
             )
             
-            # 3. 业务断言（standard_api_call不包含断言）
-            self.assert_util.assert_response_data(response)
+            # 3. 定义验证函数
+            validate_func = None
+            if test_scenario["validate_func"] == "validate_status_completed":
+                def validate_status_completed(data_list):
+                    """验证搜索结果：所有返回的任务状态应为已完结"""
+                    if data_list:
+                        for item in data_list:
+                            task_status = item.get("taskStatus", "")
+                            self.assert_util.assert_by_operator(
+                                task_status == "PUSH_COMPLETED",
+                                "=",
+                                True,
+                                f"搜索结果任务状态应为 PUSH_COMPLETED，实际任务状态: {task_status}"
+                            )
+                validate_func = validate_status_completed
+            elif test_scenario["validate_func"] == "validate_status_pushing":
+                def validate_status_pushing(data_list):
+                    """验证搜索结果：所有返回的任务状态应为推送中"""
+                    if data_list:
+                        for item in data_list:
+                            task_status = item.get("taskStatus", "")
+                            self.assert_util.assert_by_operator(
+                                task_status == "PUSHING",
+                                "=",
+                                True,
+                                f"搜索结果任务状态应为 PUSHING，实际任务状态: {task_status}"
+                            )
+                validate_func = validate_status_pushing
             
-            # 4. 验证返回数据
-            data = response.get("data", {}).get("data", {})
-            # 验证返回数据不为空
-            self.assert_util.assert_by_operator(
-                data is not None,
-                "=",
-                True,
-                "返回数据不应为空"
-            )
+            # 4. 验证响应数据
+            data_list = self._validate_response(response, validate_func=validate_func)
             
-            self.logger.info(f"分页查询站内信成功: {data}")
+            # 5. 记录日志
+            if test_scenario["validate_func"] == "validate_status_completed":
+                self.logger.info(f"按状态查询通知任务成功，状态: PUSH_COMPLETED，共查询到 {len(data_list)} 条记录")
+            elif test_scenario["validate_func"] == "validate_status_pushing":
+                self.logger.info(f"按状态查询通知任务成功，状态: PUSHING，共查询到 {len(data_list)} 条记录")
+            elif test_scenario["condition_items"] and test_scenario["condition_items"].get("conditions", {}).get("createdAt"):
+                self.logger.info(f"按时间区间查询通知任务成功，共查询到 {len(data_list)} 条记录")
+            else:
+                self.logger.info(f"通知任务列表查询成功，共查询到 {len(data_list)} 条记录")
             
         except Exception as e:
             a.text(str(e), "失败原因")
