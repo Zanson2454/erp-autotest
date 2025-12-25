@@ -8202,20 +8202,13 @@ api_params:
       - {}
     serviceKey: sys_common$API_TRANTOR_WORKFLOW_PORTAL_WORKFLOW_GROUP_PAGING_GET
   /api/trantor/service/engine/execute/sys_common$API_NOTICE_CHANNEL_QUERY_LIST_BY_TRANTOR_POST:
+    sceneKey: sys_common$notify_channel
+    viewKey: sys_common$notify_channel:list
+    appId: 0
+    teamId: 22
+    serviceKey: sys_common$API_NOTICE_CHANNEL_QUERY_LIST_BY_TRANTOR_POST
     params:
       request: {}
-      pageNo: 1
-      extra: {}
-      context: {}
-      searchCount: false
-      tenantId: 0
-      pageSize: 20
-      orders:
-      - {}
-      id: 0
-      dataPermissionConditionGroup: {}
-      version: 0
-    serviceKey: sys_common$API_NOTICE_CHANNEL_QUERY_LIST_BY_TRANTOR_POST
   /api/trantor/service/engine/execute/sys_common$ORG_EMPLOYEE_MD_FIND_LIST_DATA_SERVICE:
     params:
       request: {}
