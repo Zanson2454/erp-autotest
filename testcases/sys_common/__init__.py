@@ -94,8 +94,15 @@ class SysCommonBaseTest(BaseTest):
     def get_api_params(self, api_path, with_query_params=None):
         """
         获取API请求参数和完整URL
+        自动添加 tmodule 查询参数
         """
-        return super().get_api_params(api_path, self.api_params, with_query_params)
+        # 构建查询参数字符串
+        if with_query_params:
+            query_str = f"{with_query_params}&tmodule={self.path_params['tmodule'].lower()}"
+        else:
+            query_str = f"tmodule={self.path_params['tmodule'].lower()}"
+        
+        return super().get_api_params(api_path, self.api_params, query_str)
       
    
 
