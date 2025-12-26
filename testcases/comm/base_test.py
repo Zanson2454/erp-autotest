@@ -620,6 +620,30 @@ class BaseTest:
         # 更新初始化数据
         cls.init_data["user_info"] = {"user_info": cls.user_info}
     
+    @classmethod
+    def teardown_class(cls) -> None:
+        """测试类结束后关闭资源
+        
+        注意：子类重写时必须调用 super().teardown_class() 以确保资源正确释放
+        """
+        try:
+            # 关闭数据库连接
+            if hasattr(cls, 'db') and cls.db:
+                try:
+                    cls.db.close()
+                    Loggers.info("ERP数据库连接已关闭")
+                except Exception as e:
+                    Loggers.error(f"关闭ERP数据库连接失败: {str(e)}")
+            
+            if hasattr(cls, 'iam_db') and cls.iam_db:
+                try:
+                    cls.iam_db.close()
+                    Loggers.info("IAM数据库连接已关闭")
+                except Exception as e:
+                    Loggers.error(f"关闭IAM数据库连接失败: {str(e)}")
+        except Exception as e:
+            Loggers.error(f"teardown_class执行失败: {str(e)}")
+    
     def setup_method(self, method: Optional[pytest.Function] = None) -> None:
         """测试方法前置设置"""
         method_name = getattr(method, '__name__', 'unknown_method')
@@ -634,9 +658,9 @@ class BaseTest:
             method_name = getattr(method, '__name__', 'unknown_method')
             self.logger.info(f"测试方法 {method_name} 执行完成，耗时: {duration:.3f}秒")
         
-        # 清理会话，确保会话隔离
-        if hasattr(self, 'login_service') and hasattr(self.login_service, 'session_manager'):
-            self.login_service.session_manager.clear_session()
+        # 清理断言上下文（避免上下文污染）
+        if hasattr(self, 'assert_util') and hasattr(self.assert_util, 'clear_request_context'):
+            self.assert_util.clear_request_context()
 
     def set_request_param(self, params, key, value):
         """设置请求参数"""
@@ -785,25 +809,52 @@ class BaseTest:
                         ParamUtil.set_request_params(filtered_params, set_dict, path=param_path)
                 else:
                     # 特殊流程：直接使用set_dict作为params内容，无过滤/设置
+                    # 注意：保留原始params中的其他字段（如serviceKey等），避免丢失必要的顶层字段
                     if set_dict is None:
                         set_dict = {}
                     # 如果指定了param_path，使用自定义路径；否则使用默认路径
                     if param_path is None:
                         param_path = ["params", "request"]
-                    # 构造参数结构
-                    filtered_params = {}
+                    
+                    # 从原始params开始，保留其他字段（兼容原有逻辑）
+                    import copy
+                    filtered_params = copy.deepcopy(params) if params else {}
+                    
+                    # 构造嵌套路径并设置值
                     current = filtered_params
                     for i, p in enumerate(param_path):
                         if i == len(param_path) - 1:
+                            # 到达目标路径，设置值
                             current[p] = set_dict
                         else:
-                            current[p] = {}
+                            # 中间路径，确保存在
+                            if p not in current:
+                                current[p] = {}
                             current = current[p]
                 
                 # POST/PUT/PATCH 请求：使用 json 参数（body）
                 request_kwargs = {"json": filtered_params} if filtered_params else {}
             
-            # 4. 发送请求（请求信息由 http 方法内部打印完整URL）
+            # 4. 设置请求上下文（供断言失败时使用）
+            from urllib.parse import urljoin
+            full_url = urljoin(self.http.url, url.lstrip('/')) if hasattr(self.http, 'url') else url
+            
+            if method in ["GET", "DELETE"]:
+                self.assert_util.set_request_context(
+                    api_key=api_key,
+                    url=full_url,
+                    method=method,
+                    params=request_kwargs.get("params")
+                )
+            else:
+                self.assert_util.set_request_context(
+                    api_key=api_key,
+                    url=full_url,
+                    method=method,
+                    body=request_kwargs.get("json")
+                )
+            
+            # 5. 发送请求（请求信息由 http 方法内部打印完整URL）
             # 根据方法调用对应的 HTTP 方法
             if method == "GET":
                 response = self.http.get(url, **request_kwargs)
@@ -822,11 +873,11 @@ class BaseTest:
             else:
                 raise ValueError(f"不支持的HTTP方法: {method}")
             
-            # 5. 记录响应
+            # 6. 记录响应
             Loggers.info(f"接口请求响应，状态码: 200")
             Loggers.info(f"响应数据: {json.dumps(response, ensure_ascii=False, indent=2)}")
             
-            # 6. ID提取和存储
+            # 7. ID提取和存储
             # 兼容响应为字典或列表的情况，以及嵌套的列表结构
             extracted_id = None
             if isinstance(response, dict):
