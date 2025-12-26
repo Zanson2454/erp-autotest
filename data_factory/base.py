@@ -78,6 +78,7 @@ class SQLExecutor:
     """
     专门负责SQL执行的新组件
     职责：执行SQL查询、数据转换、结果处理
+    支持上下文管理器，自动管理数据库连接资源
     """
 
     def __init__(self, db_config: Dict[str, Any]):
@@ -89,6 +90,26 @@ class SQLExecutor:
         if self._db_manager is None:
             self._db_manager = DBManager(**self.db_config)
         return self._db_manager
+
+    def close(self) -> None:
+        """关闭数据库连接"""
+        if self._db_manager:
+            try:
+                self._db_manager.close()
+                Loggers.debug("SQLExecutor数据库连接已关闭")
+            except Exception as e:
+                Loggers.warning(f"关闭数据库连接时出错: {str(e)}")
+            finally:
+                self._db_manager = None
+
+    def __enter__(self):
+        """上下文管理器入口"""
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """上下文管理器出口，确保资源释放"""
+        self.close()
+        return False  # 不抑制异常
 
     def execute_sql_config(self, sql_config: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -134,6 +155,16 @@ class SQLInitializer:
 
     兼容性说明：保留原有API，支持向后兼容
     """
+    @staticmethod
+    def _get_default_expire_minutes() -> int:
+        """
+        获取默认缓存过期时间（分钟）
+        
+        :return: 过期时间（分钟），测试环境5分钟，生产环境1440分钟（24小时）
+        """
+        env = os.getenv("TEST_ENV", "test")
+        return 5 if env in ["test", "dev", "uat"] else 1440
+
     @classmethod
     def init_sql(cls, sql_config: dict, db_config: Dict[str, Any], cache_key: str = "init_cache", expire_minutes: int = None) -> Dict[str, Any]:
         """
@@ -148,10 +179,7 @@ class SQLInitializer:
         """
         # 如果未指定过期时间，根据环境自动判断
         if expire_minutes is None:
-            import os
-            env = os.getenv("TEST_ENV", "test")
-            # 测试环境使用5分钟，生产环境使用24小时
-            expire_minutes = 5 if env in ["test", "dev", "uat"] else 1440
+            expire_minutes = cls._get_default_expire_minutes()
         # 缓存检查
         if cache_key:
             CacheUtil.init(str(project_root / 'testdata' / 'cache'), expire_minutes=expire_minutes)
@@ -161,9 +189,9 @@ class SQLInitializer:
                 return cache_data
             Loggers.info(f"缓存数据不存在或已过期（超过{expire_minutes}分钟），开始初始化数据")
 
-        # 使用新的SQLExecutor执行查询
-        sql_executor = SQLExecutor(db_config)
-        result_data = sql_executor.execute_sql_config(sql_config)
+        # 使用上下文管理器确保数据库连接正确关闭
+        with SQLExecutor(db_config) as sql_executor:
+            result_data = sql_executor.execute_sql_config(sql_config)
 
         if not result_data:
             Loggers.warning("所有SQL查询均未返回数据，请检查数据库连接和SQL配置！")
@@ -223,10 +251,7 @@ class DataFactory:
         """
         # 如果未指定过期时间，根据环境自动判断
         if expire_minutes is None:
-            import os
-            env = os.getenv("TEST_ENV", "test")
-            # 测试环境使用5分钟，生产环境使用24小时
-            expire_minutes = 5 if env in ["test", "dev", "uat"] else 1440
+            expire_minutes = SQLInitializer._get_default_expire_minutes()
         sql_config_full = YamlUtil.get_project_config(project, "base_init_sql.yaml")
         sql_config = sql_config_full.get("base_info", {})  # 只取 base_info 层
         Loggers.info(f"加载SQL配置keys: {list(sql_config.keys())}")
@@ -280,10 +305,7 @@ class DataFactory:
         """
         # 如果未指定过期时间，根据环境自动判断
         if expire_minutes is None:
-            import os
-            env = os.getenv("TEST_ENV", "test")
-            # 测试环境使用5分钟，生产环境使用24小时
-            expire_minutes = 5 if env in ["test", "dev", "uat"] else 1440
+            expire_minutes = SQLInitializer._get_default_expire_minutes()
         # 1. 读取SQL配置
         sql_config = YamlUtil.read_yaml(sql_config_path)
         # 2. 获取数据库配置
@@ -324,10 +346,7 @@ class DataFactory:
         """
         # 如果未指定过期时间，根据环境自动判断
         if expire_minutes is None:
-            import os
-            env = os.getenv("TEST_ENV", "test")
-            # 测试环境使用5分钟，生产环境使用24小时
-            expire_minutes = 5 if env in ["test", "dev", "uat"] else 1440
+            expire_minutes = SQLInitializer._get_default_expire_minutes()
         CacheUtil.init(cache_dir, expire_minutes=expire_minutes)
         
         # 构建刷新回调函数字典
@@ -357,8 +376,9 @@ class DataFactory:
             def make_refresh_callback(sql_cfg, db_cfg):
                 def refresh_callback(cache_key: str) -> Dict[str, Any]:
                     Loggers.info(f"执行刷新回调: {cache_key}")
-                    sql_executor = SQLExecutor(db_cfg)
-                    result_data = sql_executor.execute_sql_config(sql_cfg)
+                    # 使用上下文管理器确保数据库连接正确关闭
+                    with SQLExecutor(db_cfg) as sql_executor:
+                        result_data = sql_executor.execute_sql_config(sql_cfg)
                     return result_data
                 return refresh_callback
             
