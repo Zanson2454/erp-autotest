@@ -195,34 +195,30 @@ class TestRebateUse(SlsBase):
             # 3. 查询返利账户流水记录
             self.logger.info("开始查询返利账户流水记录")
             
-            # 使用账户流水分页查询API
-            query_api_path = self.get_api_path("ACC-账户流水-分页查询")
-            query_params, query_url = self.get_api_params(query_api_path)
+            # 等待一段时间让返利账户流水记录生成
+            self.logger.info("等待返利账户流水记录生成...")
+            time.sleep(15)
             
-            # 设置查询参数
-            filtered_query_params = ParamUtil.filter_post_body_fields(
-                query_params, ["accId", "pageable"], ["params"]
-            )
-            
+            # 使用standard_api_call调用账户流水分页查询API
+            # 注意：该API的参数直接在params层级，不在params.request层级
+            # 使用use_param_util=False直接构造参数，避免参数处理问题
             set_dict = {
                 "accId": 14072001,
                 "pageable": {
                     "pageNo": 1,
                     "pageSize": 20,
                     "needTotal": True,
-                    "sortOrders": None,
-                    "conditionItems": None
+                    "sortOrders": None,  # 使用None，与其他测试用例一致
+                    "conditionItems": None  # 使用None，与其他测试用例一致
                 }
             }
-            ParamUtil.set_request_params(filtered_query_params, set_dict)
             
-            # 等待一段时间让返利账户流水记录生成
-            self.logger.info("等待返利账户流水记录生成...")
-            time.sleep(15)
-            
-            # 发送查询请求
-            query_response = self.http.post(query_url, json=filtered_query_params)
-            self.assert_util.assert_response_success(query_response)
+            query_response, _ = self.standard_api_call(
+                api_key="ACC-账户流水-分页查询",
+                set_dict=set_dict,
+                param_path=["params"],  # 参数直接在params层级，不在params.request层级
+                use_param_util=False  # 直接使用set_dict作为params，避免参数处理问题
+            )
             
             # 验证返利账户流水记录
             flow_data = query_response["data"]["data"]
