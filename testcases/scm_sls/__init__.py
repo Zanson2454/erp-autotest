@@ -839,6 +839,119 @@ class SlsBase(BaseTest):
             self.logger.error(f"作废交货单失败，dn_id: {dn_id}, 错误: {str(e)}")
             raise
     
+    def approve_sales_order_or_quote(self, order_id):
+        """
+        审批销售订单或报价单通过（如果状态为审批中）
+        :param order_id: 订单或报价单ID
+        :return: 是否成功审批（如果已经是生效状态则返回True但不执行审批）
+        """
+        try:
+            # 1. 查询订单状态
+            order_status = self.db.query(
+                "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
+                params=[order_id]
+            )
+            
+            if not order_status:
+                raise ValueError(f"未找到订单数据，订单ID: {order_id}")
+            
+            current_status = order_status[0]['so_status']
+            
+            # 2. 如果已经是生效状态，无需审批
+            if current_status == "EFFECT":
+                self.logger.info(f"订单已经是生效状态，无需审批。订单ID: {order_id}")
+                return True
+            
+            # 3. 如果不是审批中状态，记录警告但继续尝试审批
+            if current_status != "APPROVING":
+                self.logger.warning(f"订单状态不是审批中，当前状态: {current_status}。订单ID: {order_id}")
+            
+            # 4. 查询完整的订单数据
+            order_data = self.db.query(f"""
+                SELECT h.*, i.* 
+                FROM sls_so_head_tr h 
+                LEFT JOIN sls_so_item_tr i ON h.id = i.so_id 
+                WHERE h.id = {order_id}
+            """)
+            
+            if not order_data:
+                raise ValueError(f"未找到销售订单数据，订单ID: {order_id}")
+            
+            # 5. 调用审批通过API
+            api_path = self.get_api_path("SLS-销售订单-审批同意服务")
+            params, url = self.get_api_params(api_path)
+            
+            # 6. 构造完整的订单数据传递给API
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["id", "soCode", "soTitle", "soStatus", "custId", "slsOrgId", "slsComId", "slsDcId", "soTypeId", "baseCurrId", "slsCurrId", "soItems"], 
+                ["params", "request"]
+            )
+            
+            # 7. 获取订单行项目数据
+            so_items = []
+            for item in order_data:
+                if item.get('i.id'):  # 确保是订单行数据（使用别名）
+                    so_items.append({
+                        "id": item['i.id'],
+                        "soItemCode": item['so_item_code'],
+                        "matId": {"id": item['mat_id']},
+                        "matCode": item['mat_code'],
+                        "matName": item['mat_name'],
+                        "soItemSlsQty": float(item['so_item_sls_qty']) if item['so_item_sls_qty'] else 0,
+                        "soItemDelQty": float(item['so_item_del_qty']) if item['so_item_del_qty'] else 0,
+                        "soItemTransferQty": float(item['so_item_transfer_qty']) if item['so_item_transfer_qty'] else 0,
+                        "soItemPrice": float(item['so_item_price']) if item['so_item_price'] else 0,
+                        "uomSlsId": {"id": item['uom_sls_id']},
+                        "invOrgId": {"id": item['inv_org_id']},
+                        "invLocId": {"id": item['inv_loc_id']}
+                    })
+            
+            set_dict = {
+                "id": order_id,
+                "soCode": order_data[0]['so_code'],
+                "soTitle": order_data[0].get('so_title'),
+                "soStatus": order_data[0]['so_status'],
+                "custId": {"id": order_data[0]['cust_id']},
+                "slsOrgId": {"id": order_data[0]['sls_org_id']},
+                "slsComId": {"id": order_data[0]['sls_com_id']},
+                "slsDcId": {"id": order_data[0]['sls_dc_id']},
+                "soTypeId": {"id": order_data[0]['so_type_id']},
+                "baseCurrId": {"id": order_data[0]['base_curr_id']},
+                "slsCurrId": {"id": order_data[0]['sls_curr_id']},
+                "soItems": so_items
+            }
+            ParamUtil.set_request_params(filtered_params, set_dict)
+            
+            # 8. 发送请求和断言
+            response = self.http.post(url, json=filtered_params)
+            self.assert_util.assert_response_success(response)
+            
+            # 9. 等待订单状态更新
+            time.sleep(2)
+            
+            # 10. 查询订单状态，验证是否为已生效（添加重试机制）
+            actual_status = None
+            for attempt in range(5):
+                order_status = self.db.query(
+                    "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
+                    params=[order_id]
+                )
+                if order_status:
+                    actual_status = order_status[0]['so_status']
+                    if actual_status == "EFFECT":
+                        break
+                time.sleep(1)
+            
+            if actual_status != "EFFECT":
+                self.logger.warning(f"审批后订单状态不是已生效，当前状态: {actual_status}。订单ID: {order_id}")
+            
+            self.logger.info(f"订单审批通过成功，订单ID: {order_id}，状态: {actual_status}")
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"审批订单失败，订单ID: {order_id}, 错误: {str(e)}")
+            raise
+    
     def create_delivery_order(self, so_id):
         """
         基于销售订单创建交货单的公共方法

@@ -48,52 +48,10 @@ class TestSoPrice(SlsBase):
     def teardown_class(cls):
         """测试类结束后执行清理"""
         try:
-            # 清理价格调整单数据（价格调整单存储在gen_price_adj_head_tr表中）
-            # 根据规范，必须一个表一个表地单独调用清理方法
-            try:
-                cls.db.delete(
-                    table="gen_price_adj_head_tr",
-                    where="price_adj_name LIKE %s OR price_adj_name LIKE %s",
-                    params=["订单价格维护_%", "订单价格校验创建价格_%"]
-                )
-                cls.logger.info("已清理表 gen_price_adj_head_tr 中的测试价格调整单数据")
-            except Exception as e:
-                cls.logger.debug(f"清理表 gen_price_adj_head_tr 失败: {str(e)}")
+            # 注意：价格调整单数据（按 price_adj_name 清理）已移至 session 级别的 fixture 统一处理
+            # 见 testcases/scm_sls/conftest.py::scm_sls_module_cleanup
             
-            try:
-                cls.db.delete(
-                    table="price_adj_head_tr",
-                    where="price_adj_name LIKE %s OR price_adj_name LIKE %s",
-                    params=["订单价格维护_%", "订单价格校验创建价格_%"]
-                )
-                cls.logger.info("已清理表 price_adj_head_tr 中的测试价格调整单数据")
-            except Exception as e:
-                cls.logger.debug(f"清理表 price_adj_head_tr 失败: {str(e)}")
             
-            try:
-                cls.db.delete(
-                    table="erp_price_adj_head_tr",
-                    where="price_adj_name LIKE %s OR price_adj_name LIKE %s",
-                    params=["订单价格维护_%", "订单价格校验创建价格_%"]
-                )
-                cls.logger.info("已清理表 erp_price_adj_head_tr 中的测试价格调整单数据")
-            except Exception as e:
-                cls.logger.debug(f"清理表 erp_price_adj_head_tr 失败: {str(e)}")
-            
-            # 清理销售订单数据
-            try:
-                if cls.so_head_id_save:
-                    cls.db.delete(
-                        table="sls_so_head_tr",
-                        where="id = %s",
-                        params=[cls.so_head_id_save]
-                    )
-                    cls.logger.info(f"已清理测试销售订单，ID: {cls.so_head_id_save}")
-            except Exception as e:
-                cls.logger.debug(f"清理销售订单数据失败: {str(e)}")
-            
-            # 清理销售价格列表数据（匹配记录主数据）
-            # 通过API查询销售价格列表，找到测试创建的记录，然后删除
             try:
                 # 查询销售价格列表，获取测试创建的记录
                 api_path = ParamUtil.get_api_path(cls.apis, "GEN-条件主数据-分页查询服务")

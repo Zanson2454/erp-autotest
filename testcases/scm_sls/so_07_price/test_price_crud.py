@@ -43,54 +43,8 @@ class TestPriceCrud(SlsBase):
     def teardown_class(cls):
         """测试类结束后执行清理"""
         try:
-            # 清理销售价格数据（销售价格存储在sls_so_head_tr表中）
-            if cls.price_id_save:
-                cls.db.delete(
-                    table="sls_so_head_tr",
-                    where="id = %s",
-                    params=[cls.price_id_save]
-                )
-            if cls.price_id_submit:
-                cls.db.delete(
-                    table="sls_so_head_tr",
-                    where="id = %s",
-                    params=[cls.price_id_submit]
-                )
-            
-            # 清理价格调整单数据（价格调整单存储在gen_price_adj_head_tr表中）
-            # 根据规范，必须一个表一个表地单独调用清理方法
-            try:
-                cls.db.delete(
-                    table="gen_price_adj_head_tr",
-                    where="price_adj_name LIKE %s OR price_adj_name LIKE %s OR price_adj_name LIKE %s",
-                    params=["自动化测试价格调整_%", "hxy维护价格_%", "删除价格_%"]
-                )
-                cls.logger.info("已清理表 gen_price_adj_head_tr 中的测试价格调整单数据")
-            except Exception as e:
-                cls.logger.debug(f"清理表 gen_price_adj_head_tr 失败: {str(e)}")
-            
-            try:
-                cls.db.delete(
-                    table="price_adj_head_tr",
-                    where="price_adj_name LIKE %s OR price_adj_name LIKE %s OR price_adj_name LIKE %s",
-                    params=["自动化测试价格调整_%", "hxy维护价格_%", "删除价格_%"]
-                )
-                cls.logger.info("已清理表 price_adj_head_tr 中的测试价格调整单数据")
-            except Exception as e:
-                cls.logger.debug(f"清理表 price_adj_head_tr 失败: {str(e)}")
-            
-            try:
-                cls.db.delete(
-                    table="erp_price_adj_head_tr",
-                    where="price_adj_name LIKE %s OR price_adj_name LIKE %s OR price_adj_name LIKE %s",
-                    params=["自动化测试价格调整_%", "hxy维护价格_%", "删除价格_%"]
-                )
-                cls.logger.info("已清理表 erp_price_adj_head_tr 中的测试价格调整单数据")
-            except Exception as e:
-                cls.logger.debug(f"清理表 erp_price_adj_head_tr 失败: {str(e)}")
-            
-            # 清理销售价格列表数据（匹配记录主数据）
             # 通过API查询销售价格列表，找到测试创建的记录，然后删除
+            # 保持原逻辑
             try:
                 # 查询销售价格列表，获取测试创建的记录
                 api_path = ParamUtil.get_api_path(cls.apis, "GEN-条件主数据-分页查询服务")

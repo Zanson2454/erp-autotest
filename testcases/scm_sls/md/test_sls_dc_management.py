@@ -31,15 +31,7 @@ class TestSlsDcManagement(SlsBase):
     @classmethod
     def teardown_class(cls):
         """测试类结束后执行清理"""
-        try:
-            cls.db.delete(
-                table="sls_dc_md",
-                where="code like %s",
-                params=["AT_%"]
-            )
-            cls.logger.info("测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
+        cls.logger.info("测试类执行完成，数据将在 session 结束时统一清理")
 
     @case_decorator(
         story="销售渠道管理",

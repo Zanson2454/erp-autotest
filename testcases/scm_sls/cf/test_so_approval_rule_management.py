@@ -27,15 +27,9 @@ class TestSoApprovalRuleManagement(SlsBase):
     @classmethod
     def teardown_class(cls):
         """测试类结束后执行清理"""
-        try:
-            cls.db.delete(
-                table="sls_so_approval_rule_cf",
-                where="name like %s",
-                params=["测试审单规则_%"]
-            )
-            cls.logger.info("测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
+        # 数据清理已移至 session 级别的 fixture 统一处理
+        # 见 testcases/scm_sls/conftest.py::scm_sls_module_cleanup
+        cls.logger.info("测试类执行完成，数据将在 session 结束时统一清理")
 
     @case_decorator(
         story="销售审单规则管理",

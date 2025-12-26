@@ -28,25 +28,7 @@ class TestStandardSalesOrder(SlsBase):
         cls.order_code = None
         cls.logger.info("标准销售订单流程测试类初始化完成")
     
-    @classmethod
-    def teardown_class(cls):
-        """测试类结束后执行清理"""
-        try:
-            if cls.delivery_id:
-                cls.db.delete(
-                    table="sls_dn_head_tr",
-                    where="id = %s",
-                    params=[cls.delivery_id]
-                )
-            if cls.order_id:
-                cls.db.delete(
-                    table="sls_so_head_tr",
-                    where="id = %s",
-                    params=[cls.order_id]
-                )
-            cls.logger.info("测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
+    
     
     @case_decorator(
         story="标准销售订单流程",

@@ -1,6 +1,7 @@
 import allure
 import pytest
 import sys
+import time
 from pathlib import Path
 
 project_root = Path(__file__).resolve().parent.parent.parent
@@ -23,32 +24,7 @@ class TestQuoteCrud(SlsBase):
         cls.quote_id_submit = None
         cls.logger.info("报价单增删改查测试类初始化完成")
     
-    @classmethod
-    def teardown_class(cls):
-        """测试类结束后执行清理"""
-        try:
-            # 清理报价单数据
-            if cls.quote_id_draft:
-                cls.db.delete(
-                    table="sls_so_head_tr",
-                    where="id = %s",
-                    params=[cls.quote_id_draft]
-                )
-            if cls.quote_id_copy:
-                cls.db.delete(
-                    table="sls_so_head_tr",
-                    where="id = %s",
-                    params=[cls.quote_id_copy]
-                )
-            if cls.quote_id_submit:
-                cls.db.delete(
-                    table="sls_so_head_tr",
-                    where="id = %s",
-                    params=[cls.quote_id_submit]
-                )
-            cls.logger.info("报价单测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"报价单测试数据清理失败: {str(e)}")
+   
     
     @case_decorator(
         story="报价单管理",
@@ -281,11 +257,46 @@ class TestQuoteCrud(SlsBase):
             if not self.quote_id_submit:
                 self.test_04_create_submitted_quote()
             
-            # 2. 获取作废API路径
+            # 2. 查询报价单状态
+            quote_status = self.db.query(
+                "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
+                params=[self.quote_id_submit]
+            )
+            
+            if not quote_status:
+                raise ValueError(f"未找到报价单数据，报价单ID: {self.quote_id_submit}")
+            
+            current_status = quote_status[0]['so_status']
+            a.text(f"报价单当前状态: {current_status}", "状态检查")
+            
+            # 3. 如果状态是审批中，先审批通过
+            if current_status == "APPROVING":
+                self.logger.info(f"报价单状态为审批中，先审批通过。报价单ID: {self.quote_id_submit}")
+                a.text(f"报价单状态为审批中，先审批通过。报价单ID: {self.quote_id_submit}", "审批前置")
+                self.approve_sales_order_or_quote(self.quote_id_submit)
+                
+                # 等待状态更新
+                time.sleep(2)
+                
+                # 再次查询状态确认
+                quote_status = self.db.query(
+                    "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
+                    params=[self.quote_id_submit]
+                )
+                if quote_status:
+                    current_status = quote_status[0]['so_status']
+                    a.text(f"审批后报价单状态: {current_status}", "审批后状态")
+            
+            # 4. 如果状态不是已生效，记录警告
+            if current_status != "EFFECT":
+                self.logger.warning(f"报价单状态不是已生效，当前状态: {current_status}。报价单ID: {self.quote_id_submit}")
+                a.text(f"报价单状态不是已生效，当前状态: {current_status}。报价单ID: {self.quote_id_submit}", "状态警告")
+            
+            # 5. 获取作废API路径
             api_path = self.get_api_path("订单作废服务")
             _, url = self.get_api_params(api_path)
             
-            # 3. 构造请求体（按照用户提供的curl命令格式，只传递id参数）
+            # 6. 构造请求体（按照用户提供的curl命令格式，只传递id参数）
             request_body = {
                 "sceneKey": "SCM_SLS$sls_so_price",
                 "viewKey": "SCM_SLS$sls_so_price:list",
@@ -302,11 +313,11 @@ class TestQuoteCrud(SlsBase):
                 }
             }
             
-            # 4. 发送请求和断言
+            # 7. 发送请求和断言
             response = self.http.post(url, json=request_body)
             self.assert_util.assert_response_data(response)
             
-            # 5. 保存作废后的报价单ID
+            # 8. 保存作废后的报价单ID
             response_data = response.get("data", {}).get("data", {})
             self.quote_id_submit = response_data.get("id")
             

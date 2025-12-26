@@ -25,20 +25,7 @@ class TestRebateGet(SlsBase):
         cls.rebate_conf_id = None
         cls.logger.info("返利获得流程测试类初始化完成")
     
-    @classmethod
-    def teardown_class(cls):
-        """测试类结束后执行清理"""
-        try:
-            # 清理销售订单数据
-            if cls.so_id:
-                cls.db.delete(
-                    table="sls_so_head_tr",
-                    where="id = %s",
-                    params=[cls.so_id]
-                )
-            cls.logger.info("返利获得流程测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"返利获得流程测试数据清理失败: {str(e)}")
+    
     
     @case_decorator(
         story="返利获得流程",
