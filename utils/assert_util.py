@@ -7,7 +7,8 @@
 
 import os
 import sys
-from pathlib import  Path
+import json
+from pathlib import Path
 from typing import Dict, Any, List, Optional, Union
 
 
@@ -22,8 +23,81 @@ from utils.log_util import Loggers
 from utils.response_util import ResponseUtil
 
 logger = Loggers()
+
+
 class AssertHelper:
-    """断言辅助类，提供通用的断言方法"""
+    """断言辅助类，提供通用的断言方法
+    
+    优化说明：
+    1. 断言失败时记录完整的请求上下文（API服务名、URL、请求体）
+    2. 支持通过 _last_request_context 传递请求上下文
+    """
+    
+    # 类级别变量：存储最后一次请求的上下文信息
+    _last_request_context: Optional[Dict[str, Any]] = None
+    
+    @classmethod
+    def set_request_context(cls, api_key: str = None, url: str = None, 
+                           method: str = None, body: Any = None, 
+                           params: Any = None) -> None:
+        """设置请求上下文信息（供断言失败时使用）
+        
+        Args:
+            api_key: API服务名称
+            url: 完整URL
+            method: HTTP方法
+            body: 请求体（JSON）
+            params: 请求参数（Query String）
+        """
+        cls._last_request_context = {
+            "api_key": api_key,
+            "url": url,
+            "method": method,
+            "body": body,
+            "params": params
+        }
+    
+    @classmethod
+    def clear_request_context(cls) -> None:
+        """清除请求上下文"""
+        cls._last_request_context = None
+    
+    @classmethod
+    def _format_request_context(cls) -> str:
+        """格式化请求上下文为可读字符串"""
+        if not cls._last_request_context:
+            return ""
+        
+        ctx = cls._last_request_context
+        lines = ["\n" + "=" * 80]
+        lines.append("📋 请求上下文信息:")
+        lines.append("=" * 80)
+        
+        if ctx.get("api_key"):
+            lines.append(f"🔑 API服务名称: {ctx['api_key']}")
+        
+        if ctx.get("method"):
+            lines.append(f"📤 HTTP方法: {ctx['method']}")
+        
+        if ctx.get("url"):
+            lines.append(f"🌐 完整URL: {ctx['url']}")
+        
+        if ctx.get("body"):
+            try:
+                body_str = json.dumps(ctx['body'], ensure_ascii=False, indent=2)
+                lines.append(f"📦 请求体(Body):\n{body_str}")
+            except:
+                lines.append(f"📦 请求体(Body): {ctx['body']}")
+        
+        if ctx.get("params"):
+            try:
+                params_str = json.dumps(ctx['params'], ensure_ascii=False, indent=2)
+                lines.append(f"🔍 请求参数(Params):\n{params_str}")
+            except:
+                lines.append(f"🔍 请求参数(Params): {ctx['params']}")
+        
+        lines.append("=" * 80)
+        return "\n".join(lines)
 
     @staticmethod
     def assert_response_success(response: Dict[str, Any], message: str = '') -> None:
@@ -37,8 +111,31 @@ class AssertHelper:
         success = response.get("success", False)
         if not success:
             error_msg = message or "响应未成功"
-            # 添加response原始报文到错误信息中
-            logger.error(f"断言失败 - {error_msg}，原始响应: {response}")
+            
+            # 获取请求上下文
+            context_info = AssertHelper._format_request_context()
+            
+            # 格式化响应信息
+            try:
+                response_str = json.dumps(response, ensure_ascii=False, indent=2)
+            except:
+                response_str = str(response)
+            
+            # 构建完整错误信息
+            full_error_msg = (
+                f"{error_msg}\n"
+                f"{context_info}\n"
+                f"{'=' * 80}\n"
+                f"❌ 响应数据:\n"
+                f"{'=' * 80}\n"
+                f"{response_str}\n"
+                f"{'=' * 80}"
+            )
+            
+            # 记录错误日志
+            logger.error(full_error_msg)
+            
+            # 抛出断言错误（包含简化信息，避免pytest输出过长）
             raise AssertionError(f"{error_msg}，原始响应: {response}")
         else:
             logger.info(f"响应成功断言通过: success={success}")
