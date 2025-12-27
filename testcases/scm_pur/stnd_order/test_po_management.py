@@ -326,14 +326,20 @@ class TestPoManagement(ScmPurBaseTest):
             po_detail = self._get_po_detail_by_id(self.__class__.po_id)
             
             api_path = self.get_api_path("PO-订单头-冻结服务")
-            _, url = self.get_api_params(api_path)
+            params_template, url = self.get_api_params(api_path)
             
-            request_params = {
-                "serviceKey": "SCM_PUR$PUR_PO_FREEZE_SERVICE",
-                "params": {
-                    "request": po_detail
+            # 使用参数模板，确保结构正确
+            if params_template:
+                request_params = params_template.copy()
+                request_params["params"]["request"] = po_detail
+            else:
+                # 如果模板不存在，使用手动构造（向后兼容）
+                request_params = {
+                    "serviceKey": "SCM_PUR$PUR_PO_FREEZE_SERVICE",
+                    "params": {
+                        "request": po_detail
+                    }
                 }
-            }
             
             response = self.http.post(
                 url,
@@ -375,14 +381,20 @@ class TestPoManagement(ScmPurBaseTest):
             po_detail = self._get_po_detail_by_id(self.__class__.po_id)
             
             api_path = self.get_api_path("PO-订单头-取消冻结服务")
-            _, url = self.get_api_params(api_path)
+            params_template, url = self.get_api_params(api_path)
             
-            request_params = {
-                "serviceKey": "SCM_PUR$PUR_PO_HEAD_CANCEL_FREEZE_SERVICE",
-                "params": {
-                    "request": po_detail
+            # 使用参数模板，确保结构正确
+            if params_template:
+                request_params = params_template.copy()
+                request_params["params"]["request"] = po_detail
+            else:
+                # 如果模板不存在，使用手动构造（向后兼容）
+                request_params = {
+                    "serviceKey": "SCM_PUR$PUR_PO_HEAD_CANCEL_FREEZE_SERVICE",
+                    "params": {
+                        "request": po_detail
+                    }
                 }
-            }
             
             response = self.http.post(
                 url,
