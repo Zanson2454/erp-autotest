@@ -16,7 +16,6 @@ from utils.request_util import HttpUtil
 
 class ScmPurBaseTest(BaseTest):
     """采购模块的基础测试类，负责加载采购配置和提供API访问方法"""
-    
     # 类型注解
     yaml_util: Any
     

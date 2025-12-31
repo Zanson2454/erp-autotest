@@ -724,7 +724,7 @@ class BaseTest:
         return wrapper
 
     # 新增统一调用模板，不影响老用例
-    def standard_api_call(self, api_key, set_dict=None, fields_to_filter=None, store_id_as=None, use_param_util=True, param_path=None, method="POST"):
+    def standard_api_call(self, api_key, set_dict=None, fields_to_filter=None, store_id_as=None, use_param_util=True, param_path=None, method="POST", query_params=None):
         """
         标准化API调用模板 - 纯执行和报告工具，无断言逻辑
         统一返回响应数据（无论成功还是失败），由业务断言来判断响应是否正确
@@ -736,11 +736,12 @@ class BaseTest:
             - 如果已指定（如 ["id"] 或 ["pageable"]），使用指定的值（优先使用指定值）
             - 这样既支持自动推断，也支持显式指定，完全兼容原有用例
         :param store_id_as: ID存储属性名（用于自动保存self.xxx_id）
-        :param use_param_util: 是否使用ParamUtil过滤/设置（默认True）；False时直接使用set_dict作为params
-        :param param_path: 参数路径，默认为["params", "request"]，支持自定义路径如["params", "reuqest"]（用于处理接口定义中的拼写错误）
+        :param use_param_util: 是否使用ParamUtil过滤/设置（默认True）；False时可以手动构造完整结构
+        :param param_path: 参数路径，默认为["params", "request"]，支持自定义路径如["params"]（手动构造时）或["params", "reuqest"]（处理拼写错误）
         :param method: HTTP请求方法，支持 "GET", "POST", "PUT", "DELETE", "PATCH"（默认"POST"）
             - GET/DELETE: 参数通过 query string 传递（params参数）
             - POST/PUT/PATCH: 参数通过 JSON body 传递（json参数）
+        :param query_params: URL查询参数，支持字符串（如"tmodule=SCM_PUR&modelKey=XXX"）或字典（如{"tmodule": "SCM_PUR", "modelKey": "XXX"}）
         :return: (response, extracted_id) - response包含成功或失败的响应数据，extracted_id在成功时提取，失败时为None
         """
         import json
@@ -764,10 +765,20 @@ class BaseTest:
                     f"2. 配置文件是否正确加载 (apis配置是否存在)\n"
                     f"3. 配置文件路径是否正确"
                 )
+            
+            # 1.5 处理 query_params（可以是字符串或字典）
+            query_params_str = None
+            if query_params:
+                if isinstance(query_params, dict):
+                    from urllib.parse import urlencode
+                    query_params_str = urlencode(query_params)
+                else:
+                    query_params_str = query_params
+            
             # 2. 根据HTTP方法选择参数传递方式
             if method in ["GET", "DELETE"]:
                 # GET/DELETE: 使用 query parameters
-                params, url = self.get_api_params(api_path)
+                params, url = self.get_api_params(api_path, with_query_params=query_params_str)
                 if url is None:
                     raise ValueError(
                         f"API路径配置错误: api_path={api_path}\n"
@@ -779,7 +790,7 @@ class BaseTest:
                 
             else:
                 # POST/PUT/PATCH: 使用 JSON body
-                params, url = self.get_api_params(api_path)
+                params, url = self.get_api_params(api_path, with_query_params=query_params_str)
                 if url is None:
                     raise ValueError(
                         f"API路径配置错误: api_path={api_path}\n"

@@ -1,10 +1,5 @@
 import allure
 import pytest
-import sys
-from pathlib import Path
-
-project_root = Path(__file__).resolve().parent.parent.parent
-sys.path.append(str(project_root))
 from testcases.scm_pur import ScmPurBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
@@ -14,9 +9,8 @@ from utils.report_util import a, case_decorator
 class TestPoItemTypeManagement(ScmPurBaseTest):
     """采购订单行类型配置管理测试类"""
     
-    # 常量定义
+    # 常量定义（MODULE_NAME 继承自 ScmPurBaseTest）
     MODEL_KEY = "SCM_PUR$pur_po_item_type_cf"
-    MODULE_NAME = "SCM_PUR"
     
     @classmethod
     def setup_class(cls):
@@ -36,66 +30,58 @@ class TestPoItemTypeManagement(ScmPurBaseTest):
     def test_create_po_item_type(self):
         """创建采购订单行类型配置用例"""
         try:
-            # 1. 获取API配置
-            api_path = self.get_api_path("(系统)保存主数据服务")
-            params, url = self.get_api_params(api_path)
+            # 1. 生成测试数据
+            test_code = self.mock_util.generate_unique_code(tag="AUTOTEST_ITEM")
+            test_name = f"自动化测试订单行类型_{self.mock_util.get_timestamp()}"
             
-            # 2. 生成测试数据
-            timestamp = self.mock_util.get_timestamp()
-            test_code = f"AUTOTEST_ITEM_{timestamp}"
-            test_name = f"自动化测试订单行类型_{timestamp}"
+            # 2. 准备完整的 params 结构（包含 request 和 modelKey）
+            set_dict = {
+                "request": {
+                    "poItemType": test_code,
+                    "poItemTypeName": test_name,
+                    "autoComplete": False,
+                    "isReverse": False,
+                    "requireSupplyInvOrg": False,
+                    "requireSupplyInvLoc": False,
+                    "outsourcingSupplierRequired": False,
+                    "outsourcing": False,
+                    "enableShortSpinnerControl": False,
+                    "thirdPartyOrder": False,
+                    "operationOutsourced": False,
+                    "mtoOrder": False,
+                    "isAutoCreateDn": False,
+                    "isSettRelv": False,
+                    "requiredSlsSoItemTrId": False
+                },
+                "modelKey": self.MODEL_KEY  # modelKey 与 request 同级
+            }
             
-            # 3. 过滤参数 - 只保留业务字段
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["poItemType", "poItemTypeName", "remark", "autoComplete", 
-                 "isReverse", "requireSupplyInvOrg", "requireSupplyInvLoc",
-                 "outsourcingSupplierRequired", "outsourcing", "enableShortSpinnerControl",
-                 "thirdPartyOrder", "operationOutsourced", "mtoOrder",
-                 "isAutoCreateDn", "isSettRelv", "requiredSlsSoItemTrId"],
-                ["params", "request"]
+            # 3. 使用 standard_api_call 发送请求
+            #    - param_path=["params"]: set_dict 完整替换 params
+            #    - use_param_util=False: 不使用 ParamUtil，直接使用 set_dict
+            #    - query_params: URL 参数（?tmodule=SCM_PUR&modelKey=XXX）
+            response, extracted_id = self.standard_api_call(
+                api_key="(系统)保存主数据服务",
+                set_dict=set_dict,
+                param_path=["params"],
+                use_param_util=False,
+                query_params={"tmodule": self.MODULE_NAME, "modelKey": self.MODEL_KEY}
             )
             
-            # 4. 设置请求参数
-            ParamUtil.set_request_params(filtered_params, {
-                "poItemType": test_code,
-                "poItemTypeName": test_name,
-                "autoComplete": False,
-                "isReverse": False,
-                "requireSupplyInvOrg": False,
-                "requireSupplyInvLoc": False,
-                "outsourcingSupplierRequired": False,
-                "outsourcing": False,
-                "enableShortSpinnerControl": False,
-                "thirdPartyOrder": False,
-                "operationOutsourced": False,
-                "mtoOrder": False,
-                "isAutoCreateDn": False,
-                "isSettRelv": False,
-                "requiredSlsSoItemTrId": False
-            })
-            filtered_params["params"]["modelKey"] = self.MODEL_KEY
-            
-            # 5. 执行请求
-            response = self.http.post(
-                url, json=filtered_params,
-                params={"tmodule": self.MODULE_NAME, "modelKey": self.MODEL_KEY}
-            )
+            # 4. 业务断言
             self.assert_util.assert_response_data(response)
             
-            # 6. 验证结果
+            # 5. 验证结果
             result_data = response.get("data", {}).get("data", {})
             assert "id" in result_data and "poItemType" in result_data, "创建结果缺少必需字段"
             assert result_data.get("poItemType") == test_code, "订单行类型编码不匹配"
             
-            # 7. 保存测试数据
+            # 6. 保存测试数据
             self.__class__.po_item_type_id = result_data.get("id")
             self.__class__.po_item_type_code = result_data.get("poItemType")
             
+            # 7. 记录报告
             self.logger.info(f"✅ 采购订单行类型配置创建成功，ID: {self.__class__.po_item_type_id}, 编码: {self.__class__.po_item_type_code}")
-            
-            # 8. 记录报告
-            a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -113,42 +99,41 @@ class TestPoItemTypeManagement(ScmPurBaseTest):
     def test_paging_po_item_type(self):
         """采购订单行类型配置分页查询测试"""
         try:
-            # 1. 获取API配置
-            api_path = self.get_api_path("(系统)查询分页数据服务")
-            _, url = self.get_api_params(api_path)
-            
-            # 2. 构建完整请求参数（按照curl结构）
-            request_params = {
-                "params": {
-                    "request": {
-                        "pageable": {
-                            "pageNo": 1,
-                            "pageSize": 20,
-                            "sortOrders": None,
-                            "conditionItems": None
-                        }
-                    },
-                    "modelKey": self.MODEL_KEY
-                }
+            # 1. 准备完整的 params 结构（包含 request 和 modelKey）
+            set_dict = {
+                "request": {
+                    "pageable": {
+                        "pageNo": 1,
+                        "pageSize": 20,
+                        "sortOrders": None,
+                        "conditionItems": None
+                    }
+                },
+                "modelKey": self.MODEL_KEY  # modelKey 与 request 同级
             }
             
-            # 3. 执行请求（带上查询参数）
-            response = self.http.post(
-                url, 
-                json=request_params,
-                params={"tmodule": self.MODULE_NAME, "modelKey": self.MODEL_KEY}
+            # 2. 使用 standard_api_call 发送请求
+            #    - param_path=["params"]: set_dict 完整替换 params
+            #    - use_param_util=False: 不使用 ParamUtil，直接使用 set_dict
+            #    - query_params: URL 参数（?tmodule=SCM_PUR&modelKey=XXX）
+            response, _ = self.standard_api_call(
+                api_key="(系统)查询分页数据服务",
+                set_dict=set_dict,
+                param_path=["params"],
+                use_param_util=False,
+                query_params={"tmodule": self.MODULE_NAME, "modelKey": self.MODEL_KEY}
             )
+            
+            # 3. 业务断言
             self.assert_util.assert_response_success(response)
             
-            # 4. 记录报告
-            a.json(request_params, "请求数据")
-            a.json(response, "响应数据")
-            
-            # 5. 验证响应数据
-            data_list = response["data"]["data"]["data"]
+            # 4. 验证响应数据
+            data_list = response.get("data", {}).get("data", {}).get("data", [])
             assert len(data_list) > 0, "分页查询结果为空"
             
+            # 5. 记录报告
             self.logger.info(f"✅ 分页查询成功，共查询到 {len(data_list)} 条数据")
+            a.json(response, "响应数据")
                 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -265,38 +250,35 @@ class TestPoItemTypeManagement(ScmPurBaseTest):
             if not self.__class__.po_item_type_id:
                 pytest.skip("没有可用的采购订单行类型配置ID，跳过删除测试")
             
-            # 2. 获取API配置
-            api_path = self.get_api_path("(系统)删除数据服务")
-            params, url = self.get_api_params(api_path)
+            # 2. 准备完整的 params 结构（包含 request 和 modelKey）
+            set_dict = {
+                "request": {
+                    "id": self.__class__.po_item_type_id
+                },
+                "modelKey": self.MODEL_KEY  # modelKey 与 request 同级
+            }
             
-            # 3. 过滤参数 - 只保留id字段
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
+            # 3. 使用 standard_api_call 发送请求
+            #    - param_path=["params"]: set_dict 完整替换 params
+            #    - use_param_util=False: 不使用 ParamUtil，直接使用 set_dict
+            #    - query_params: URL 参数（?tmodule=SCM_PUR&modelKey=XXX）
+            response, _ = self.standard_api_call(
+                api_key="(系统)删除数据服务",
+                set_dict=set_dict,
+                param_path=["params"],
+                use_param_util=False,
+                query_params={"tmodule": self.MODULE_NAME, "modelKey": self.MODEL_KEY}
             )
             
-            # 4. 设置请求参数
-            ParamUtil.set_request_params(filtered_params, {"id": self.__class__.po_item_type_id})
-            filtered_params["params"]["modelKey"] = self.MODEL_KEY
+            # 4. 业务断言
+            self.assert_util.assert_response_success(response)
             
-            # 5. 执行请求
-            response = self.http.post(
-                url, json=filtered_params,
-                params={"tmodule": self.MODULE_NAME, "modelKey": self.MODEL_KEY}
-            )
-            
-            # 6. 验证删除结果
-            assert response.get("success") is True, "删除请求失败"
-            
-            self.logger.info(f"✅ 采购订单行类型配置删除成功，ID: {self.__class__.po_item_type_id}")
-            
-            # 7. 清空类变量
+            # 5. 清空类变量
             self.__class__.po_item_type_id = None
             self.__class__.po_item_type_code = None
             
-            # 8. 记录报告
-            a.json(filtered_params, "请求数据")
+            # 6. 记录报告
+            self.logger.info(f"✅ 采购订单行类型配置删除成功")
             a.json(response, "响应数据")
             
         except Exception as e:
