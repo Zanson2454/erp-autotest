@@ -510,7 +510,7 @@ class TestPoSchlManagement(ScmPurBaseTest):
             if hasattr(po_schl_date_del, 'timestamp'):
                 po_schl_date_del = int(po_schl_date_del.timestamp() * 1000)
             
-            params["params"]["request"]["record"] = {
+            params["params"]["record"] = {
                 "poSchlCode": schl_record.get("po_schl_code"),
                 "poCode": schl_record.get("po_code"),
                 "matId": {"id": schl_record.get("mat_id")},
