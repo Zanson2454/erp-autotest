@@ -20,6 +20,9 @@ class ScmPurBaseTest(BaseTest):
     # 类型注解
     yaml_util: Any
     
+    # 模块常量
+    MODULE_NAME = "SCM_PUR"  # 采购模块名称，用于 query params
+    
     # 登录两个门户，分别保存 session/user_info 并初始化 http 工具
     _PORTAL_TYPE_KEYS = {
         "admin": "TERP_PORTAL",
