@@ -139,10 +139,15 @@ erp-autotest/
 │   ├── report_util.py   # ReportEnhancer - 报告增强
 │   ├── mock_util.py     # MockData - 数据生成
 │   └── ...              # 其他工具
-├── testdata/             # 测试数据和配置
-│   ├── cache/           # 缓存文件（md_init_cache.json 等）
-│   ├── gen_md/          # 主数据配置（md_api_path.yaml 等）
-│   └── scm_pur/         # 采购配置（类似结构）
+├── testdata/             # 测试数据
+│   └── cache/           # 缓存文件（md_init_cache.json 等，框架自动生成）
+├── config/               # 配置文件
+│   ├── api/             # API配置文件（YAML格式）
+│   │   ├── gen_md/      # 主数据API配置（md_api_path.yaml 等）
+│   │   ├── scm_pur/     # 采购API配置（pur_api_path.yaml 等）
+│   │   └── ...          # 其他模块配置
+│   ├── env/             # 环境配置（dev/test/staging/prod.yaml）
+│   └── erp/             # 模块初始化 SQL（md_init_sql.yaml 等）
 ├── reports/              # 测试报告目录
 │   ├── allure-results/  # Allure 原始数据
 │   └── allure-report/   # Allure HTML 报告
