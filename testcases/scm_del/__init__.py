@@ -60,8 +60,8 @@ class ScmDelBaseTest(BaseTest):
         )
 
         # 初始化交货单模块配置文件路径
-        cls.del_api_path = Path(project_root) / "testdata" / "scm_del" / "del_api_path.yaml"
-        cls.del_api_params_path = Path(project_root) / "testdata" / "scm_del" / "del_api_params.yaml"
+        cls.del_api_path = Path(project_root) / "config" / "api" / "scm_del" / "del_api_path.yaml"
+        cls.del_api_params_path = Path(project_root) / "config" / "api" / "scm_del" / "del_api_params.yaml"
         # 加载API路径配置和参数配置
         cls.apis = cls.yaml_util.read_yaml(cls.del_api_path).get("apis", {})
         cls.api_params = cls.yaml_util.read_yaml(cls.del_api_params_path).get("api_params", {})

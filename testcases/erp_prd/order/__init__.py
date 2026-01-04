@@ -31,8 +31,8 @@ class PrdBaseTest(BaseTest):
         super().setup_class()
         
         # 初始化配置文件路径
-        cls.base_api_path = Path(project_root) / "testdata" / "prd" / "prd_api_path.yaml"
-        cls.base_api_params = Path(project_root) / "testdata" / "prd" / "prd_api_params.yaml"
+        cls.base_api_path = Path(project_root) / "config" / "api" / "scm_prd" / "prd_api_path.yaml"
+        cls.base_api_params = Path(project_root) / "config" / "api" / "scm_prd" / "prd_api_params.yaml"
         
         # 初始化YAML工具类
         cls.yaml_util = YamlUtil()
@@ -121,7 +121,7 @@ class PrdBaseTest(BaseTest):
             str: 对应的API路径
         """
         # 构建模块API路径配置文件路径
-        api_path_file = Path(project_root) / "testdata" / module_name / f"{module_name}_api_path.yaml"
+        api_path_file = Path(project_root) / "config" / "api" / module_name / f"{module_name}_api_path.yaml"
         
         # 读取API路径配置
         api_config = self.yaml_util.read_yaml(api_path_file)
@@ -147,7 +147,7 @@ class PrdBaseTest(BaseTest):
             tuple: (params, url)
         """
         # 构建模块API参数配置文件路径
-        api_params_file = Path(project_root) / "testdata" / module_name / f"{module_name}_api_params.yaml"
+        api_params_file = Path(project_root) / "config" / "api" / module_name / f"{module_name}_api_params.yaml"
         
         # 读取API参数配置
         api_config = self.yaml_util.read_yaml(api_params_file)

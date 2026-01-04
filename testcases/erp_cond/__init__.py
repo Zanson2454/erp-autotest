@@ -73,8 +73,8 @@ class ErpCondBaseTest(BaseTest):
         )
      
         # 初始化配置文件路径 - 针对erp_cond模块
-        cls.cond_api_path = Path(project_root) / "testdata" / "erp_cond" / "cond_api_path.yaml"
-        cls.cond_api_params = Path(project_root) / "testdata" / "erp_cond" / "cond_api_params.yaml"
+        cls.cond_api_path = Path(project_root) / "config" / "api" / "erp_cond" / "cond_api_path.yaml"
+        cls.cond_api_params = Path(project_root) / "config" / "api" / "erp_cond" / "cond_api_params.yaml"
         
         # 加载API路径配置和参数配置
         cls.apis = cls.yaml_util.read_yaml(cls.cond_api_path).get("apis", {})

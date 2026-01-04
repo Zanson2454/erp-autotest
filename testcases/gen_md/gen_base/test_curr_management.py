@@ -295,9 +295,9 @@ class TestCurrencyManagement(GenMdBaseTest):
 
             # 2. 使用标准化API调用
             set_dict = {
-                "code": rate_type_code,
-                "name": rate_type_name,
-                "description": f"测试汇率类型描述_{self.mock_data.get_timestamp()}"
+                "typeCode": rate_type_code,
+                "typeName": rate_type_name,
+                "typeDefault":False,
             }
             fields_to_filter = ["code", "name", "description"]
             

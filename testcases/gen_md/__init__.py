@@ -78,8 +78,8 @@ class GenMdBaseTest(BaseTest):
         )
      
         # 初始化配置文件路径
-        cls.md_api_path = Path(project_root) / "testdata" / "gen_md" / "md_api_path.yaml"
-        cls.md_api_params = Path(project_root) / "testdata" / "gen_md" / "md_api_params.yaml"
+        cls.md_api_path = Path(project_root) / "config" / "api" / "gen_md" / "md_api_path.yaml"
+        cls.md_api_params = Path(project_root) / "config" / "api" / "gen_md" / "md_api_params.yaml"
         
         # 加载API路径配置和参数配置
         cls.apis = cls.yaml_util.read_yaml(cls.md_api_path).get("apis", {})

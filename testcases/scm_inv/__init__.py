@@ -64,8 +64,8 @@ class ScmInvBaseTest(BaseTest):
      
 
         # 初始化库存模块配置文件路径
-        cls.inv_api_path = Path(project_root) / "testdata" / "scm_inv" / "inv_api_path.yaml"
-        cls.inv_api_params = Path(project_root) / "testdata" / "scm_inv" / "inv_api_params.yaml"
+        cls.inv_api_path = Path(project_root) / "config" / "api" / "scm_inv" / "inv_api_path.yaml"
+        cls.inv_api_params = Path(project_root) / "config" / "api" / "scm_inv" / "inv_api_params.yaml"
         # 加载库存API路径配置和参数配置
         cls.apis = cls.yaml_util.read_yaml(cls.inv_api_path).get("apis", {})
         cls.api_params = cls.yaml_util.read_yaml(cls.inv_api_params).get("api_params", {})

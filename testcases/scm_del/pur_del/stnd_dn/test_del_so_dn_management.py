@@ -182,8 +182,8 @@ class TestDelSoDnManagement(ScmDelBaseTest):
         # 加载销售模块API配置
         from utils.yaml_util import YamlUtil
         yaml_util = YamlUtil()
-        sls_api_path = project_root / "testdata" / "scm_sls" / "sls_api_path.yaml"
-        sls_api_params_path = project_root / "testdata" / "scm_sls" / "sls_api_params.yaml"
+        sls_api_path = project_root / "config" / "api" / "scm_sls" / "sls_api_path.yaml"
+        sls_api_params_path = project_root / "config" / "api" / "scm_sls" / "sls_api_params.yaml"
         cls.sls_apis = yaml_util.read_yaml(sls_api_path).get("apis", {})
         cls.sls_api_params = yaml_util.read_yaml(sls_api_params_path).get("api_params", {})
         

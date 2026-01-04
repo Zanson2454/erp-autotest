@@ -34,8 +34,8 @@ class SlsDelBaseTest(ScmDelBaseTest):
         cls.sls_cache_data = CacheUtil.get('sls_init_cache')
         
         # 加载销售模块API配置
-        sls_api_path = Path(project_root) / "testdata" / "scm_sls" / "sls_api_path.yaml"
-        sls_api_params_path = Path(project_root) / "testdata" / "scm_sls" / "sls_api_params.yaml"
+        sls_api_path = Path(project_root) / "config" / "api" / "scm_sls" / "sls_api_path.yaml"
+        sls_api_params_path = Path(project_root) / "config" / "api" / "scm_sls" / "sls_api_params.yaml"
         cls.sls_apis = cls.yaml_util.read_yaml(sls_api_path).get("apis", {})
         cls.sls_api_params = cls.yaml_util.read_yaml(sls_api_params_path).get("api_params", {})
         

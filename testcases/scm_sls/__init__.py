@@ -68,20 +68,20 @@ class SlsBase(BaseTest):
         )
      
         # 初始化配置文件路径
-        cls.sls_api_path = Path(project_root) / "testdata" / "scm_sls" / "sls_api_path.yaml"
-        cls.sls_api_params = Path(project_root) / "testdata" / "scm_sls" / "sls_api_params.yaml"
-        cls.reb_api_path = Path(project_root) / "testdata" / "scm_sls" / "reb_api_path.yaml"
-        cls.reb_api_params = Path(project_root) / "testdata" / "scm_sls" / "reb_api_params.yaml"
-        cls.common_api_path = Path(project_root) / "testdata" / "sys_common" / "common_api_path.yaml"
-        cls.common_api_params = Path(project_root) / "testdata" / "sys_common" / "common_api_params.yaml"
-        cls.acc_api_path = Path(project_root) / "testdata" / "scm_sls" / "acc_api_path.yaml"
-        cls.acc_api_params = Path(project_root) / "testdata" / "scm_sls" / "acc_api_params.yaml"
-        cls.price_api_path = Path(project_root) / "testdata" / "scm_sls" / "price_api_path.yaml"
-        cls.price_api_params = Path(project_root) / "testdata" / "scm_sls" / "price_api_params.yaml"
-        cls.cond_api_path = Path(project_root) / "testdata" / "scm_sls" / "cond_api_path.yaml"
-        cls.cond_api_params = Path(project_root) / "testdata" / "scm_sls" / "cond_api_params.yaml"
-        cls.del_api_path = Path(project_root) / "testdata" / "scm_del" / "del_api_path.yaml"
-        cls.del_api_params = Path(project_root) / "testdata" / "scm_del" / "del_api_params.yaml"
+        cls.sls_api_path = Path(project_root) / "config" / "api" / "scm_sls" / "sls_api_path.yaml"
+        cls.sls_api_params = Path(project_root) / "config" / "api" / "scm_sls" / "sls_api_params.yaml"
+        cls.reb_api_path = Path(project_root) / "config" / "api" / "scm_sls" / "reb_api_path.yaml"
+        cls.reb_api_params = Path(project_root) / "config" / "api" / "scm_sls" / "reb_api_params.yaml"
+        cls.common_api_path = Path(project_root) / "config" / "api" / "sys_common" / "common_api_path.yaml"
+        cls.common_api_params = Path(project_root) / "config" / "api" / "sys_common" / "common_api_params.yaml"
+        cls.acc_api_path = Path(project_root) / "config" / "api" / "scm_sls" / "acc_api_path.yaml"
+        cls.acc_api_params = Path(project_root) / "config" / "api" / "scm_sls" / "acc_api_params.yaml"
+        cls.price_api_path = Path(project_root) / "config" / "api" / "scm_sls" / "price_api_path.yaml"
+        cls.price_api_params = Path(project_root) / "config" / "api" / "scm_sls" / "price_api_params.yaml"
+        cls.cond_api_path = Path(project_root) / "config" / "api" / "scm_sls" / "cond_api_path.yaml"
+        cls.cond_api_params = Path(project_root) / "config" / "api" / "scm_sls" / "cond_api_params.yaml"
+        cls.del_api_path = Path(project_root) / "config" / "api" / "scm_del" / "del_api_path.yaml"
+        cls.del_api_params = Path(project_root) / "config" / "api" / "scm_del" / "del_api_params.yaml"
         
         # 加载API路径配置和参数配置
         cls.apis = cls.yaml_util.read_yaml(cls.sls_api_path).get("apis", {})

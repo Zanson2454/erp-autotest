@@ -72,8 +72,8 @@ class SysCommonBaseTest(BaseTest):
         cls.admin_headers = cls.portal_headers["admin"]
 
         # 初始化配置文件路径
-        cls.common_api_path = Path(project_root) / "testdata" / "sys_common" / "common_api_path.yaml"
-        cls.common_api_params = Path(project_root) / "testdata" / "sys_common" / "common_api_params.yaml"
+        cls.common_api_path = Path(project_root) / "config" / "api" / "sys_common" / "common_api_path.yaml"
+        cls.common_api_params = Path(project_root) / "config" / "api" / "sys_common" / "common_api_params.yaml"
         
         # 加载API路径配置和参数配置
         cls.apis = cls.yaml_util.read_yaml(cls.common_api_path).get("apis", {})

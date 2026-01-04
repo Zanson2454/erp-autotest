@@ -197,8 +197,8 @@ class TestDelPoDnManagement(ScmDelBaseTest):
             # 加载采购模块的API配置
             from utils.yaml_util import YamlUtil
             yaml_util = YamlUtil()
-            pur_api_path = project_root / "testdata" / "scm_pur" / "pur_api_path.yaml"
-            pur_api_params_path = project_root / "testdata" / "scm_pur" / "pur_api_params.yaml"
+            pur_api_path = project_root / "config" / "api" / "scm_pur" / "pur_api_path.yaml"
+            pur_api_params_path = project_root / "config" / "api" / "scm_pur" / "pur_api_params.yaml"
             pur_apis = yaml_util.read_yaml(pur_api_path).get("apis", {})
             pur_api_params = yaml_util.read_yaml(pur_api_params_path).get("api_params", {})
             

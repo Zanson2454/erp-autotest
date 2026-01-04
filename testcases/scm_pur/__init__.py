@@ -62,8 +62,8 @@ class ScmPurBaseTest(BaseTest):
         )
 
         # 初始化采购模块配置文件路径
-        cls.pur_api_path = Path(project_root) / "testdata" / "scm_pur" / "pur_api_path.yaml"
-        cls.pur_api_params_path = Path(project_root) / "testdata" / "scm_pur" / "pur_api_params.yaml"
+        cls.pur_api_path = Path(project_root) / "config" / "api" / "scm_pur" / "pur_api_path.yaml"
+        cls.pur_api_params_path = Path(project_root) / "config" / "api" / "scm_pur" / "pur_api_params.yaml"
         # 加载API路径配置和参数配置
         cls.apis = cls.yaml_util.read_yaml(cls.pur_api_path).get("apis", {})
         cls.api_params = cls.yaml_util.read_yaml(cls.pur_api_params_path).get("api_params", {})

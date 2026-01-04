@@ -22,8 +22,8 @@ class TestPiSbBusiCheck(BaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
-        cls.base_api_path = Path(project_root) / "testdata" / "erp_fin" / "fin_api_path.yaml"
-        cls.base_api_params = Path(project_root) / "testdata" / "erp_fin" / "fin_api_params.yaml"
+        cls.base_api_path = Path(project_root) / "config" / "api" / "erp_fin" / "fin_api_path.yaml"
+        cls.base_api_params = Path(project_root) / "config" / "api" / "erp_fin" / "fin_api_params.yaml"
         cls.yaml_util = YamlUtil()  
         cls.fin_path = cls.yaml_util.read_yaml(cls.base_api_path).get("apis", {})
         cls.fin_params = cls.yaml_util.read_yaml(cls.base_api_params).get("api_params", {})

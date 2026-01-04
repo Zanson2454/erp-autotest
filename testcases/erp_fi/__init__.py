@@ -92,8 +92,8 @@ class FiBaseTest(BaseTest):
         cls.cust_headers = cls.portal_headers["cust"]
      
         # 初始化配置文件路径 - 针对erp_fi模块
-        cls.fi_api_path = Path(project_root) / "testdata" / "erp_fi" / "fi_api_path.yaml"
-        cls.fi_api_params = Path(project_root) / "testdata" / "erp_fi" / "fi_api_params.yaml"
+        cls.fi_api_path = Path(project_root) / "config" / "api" / "erp_fi" / "fi_api_path.yaml"
+        cls.fi_api_params = Path(project_root) / "config" / "api" / "erp_fi" / "fi_api_params.yaml"
         
         # 加载API路径配置和参数配置
         cls.apis = cls.yaml_util.read_yaml(cls.fi_api_path).get("apis", {})

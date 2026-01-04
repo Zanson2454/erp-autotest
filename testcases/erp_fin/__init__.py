@@ -80,8 +80,8 @@ class FinBaseTest(BaseTest):
         )
         
         # 初始化配置文件路径
-        cls.fin_api_path = Path(project_root) / "testdata" / "erp_fin" / "fin_api_path.yaml"
-        cls.fin_api_params = Path(project_root) / "testdata" / "erp_fin" / "fin_api_params.yaml"
+        cls.fin_api_path = Path(project_root) / "config" / "api" / "erp_fin" / "fin_api_path.yaml"
+        cls.fin_api_params = Path(project_root) / "config" / "api" / "erp_fin" / "fin_api_params.yaml"
         
         # 加载API路径配置和参数配置
         cls.apis = cls.yaml_util.read_yaml(cls.fin_api_path).get("apis", {})
