@@ -69,68 +69,92 @@ ERP 自动化测试平台是一个面向企业级 ERP 系统的自动化测试�
 
 ### 主要依赖
 
-- **数据库**：PyMySQL 1.1.0, DBUtils 3.0.3
-- **HTTP 请求**：requests 2.31.0
-- **数据处理**：pandas 2.1.4, openpyxl 3.1.2
-- **配置管理**：PyYAML 6.0.1, python-dotenv 1.0.0
-- **日志**：loguru 0.7.2
-- **数据生成**：Faker 19.13.0
+- **数据库**：PyMySQL 1.1.0（数据库驱动）, DBUtils 3.0.3（连接池）
+- **HTTP 请求**：requests 2.31.0（会话管理、请求重试）
+- **数据处理**：pandas 2.1.4（数据转换）, openpyxl 3.1.2（Excel 操作）
+- **配置管理**：PyYAML 6.0.1（YAML 解析）, python-dotenv 1.0.0（环境变量）
+- **日志**：loguru 0.7.2（结构化日志）
+- **数据生成**：Faker 19.13.0（Mock 数据，支持中文）
 
-### 测试插件
+### 核心工具类
 
-- pytest-order：测试用例排序
-- pytest-xdist：并行执行
-- pytest-cov：代码覆盖率
-- pytest-rerunfailures：失败重试
-- pytest-timeout：超时控制
+- **DBManager** - 数据库连接管理（查增改删、事务处理、参数化查询）
+- **HttpUtil** - HTTP 请求工具（会话隔离、请求头管理）
+- **AssertHelper** - 断言助手（API 响应验证、错误信息记录）
+- **AsyncWaitUtil** - 异步等待工具（轮询机制、超时控制、状态追踪）
+- **CacheUtil** - 缓存管理（数据持久化、过期刷新、自动加载）
+- **ReportEnhancer** - 报告增强（步骤记录、性能指标、业务上下文）
+- **MockData** - 数据生成（编码、日期、电话、公司名等）
+- **ParamUtil** - 参数处理（字段过滤、嵌套路径、类型转换）
+
+### 测试增强插件
+
+- pytest-order：全局排序测试用例
+- pytest-xdist：并行执行测试（支持按文件分发）
+- pytest-cov：代码覆盖率统计
+- pytest-rerunfailures：失败重试机制
+- pytest-timeout：超时控制（防止卡死）
+- pytest-mock：Mock 数据和函数
+- pytest-assume：多断言支持
 
 ## 📁 项目结构
 
 ```
 erp-autotest/
 ├── config/                 # 配置文件目录
-│   ├── env/               # 环境配置文件（dev/test/staging/prod.yaml）
-│   └── erp/               # ERP 业务配置（SQL 初始化脚本等）
-├── data_factory/          # 数据工厂
-│   ├── base.py           # 基础数据工厂
-│   └── *.py              # 各模块数据工厂
+│   ├── env/               # 环境配置（dev/test/staging/prod.yaml）
+│   └── erp/               # 模块初始化 SQL（md_init_sql.yaml 等）
+├── data_factory/          # 数据工厂（当前完善中）
+│   ├── base.py           # 数据工厂基类 + 配置管理 + SQL 缓存
+│   ├── MD/               # 主数据工厂（partner_fc、org_fc 等）
+│   ├── CF/               # 配置工厂（待完善）
+│   └── BIZ/              # 业务工厂（待完善）
 ├── docs/                  # 项目文档
-│   └── cursor_testcase_generation.md  # 用例生成规范
-├── routers/               # FastAPI 路由
-│   ├── allure_api.py     # Allure 报告 API
-│   ├── api_manage.py     # API 管理
+│   └── STANDARD_API_CALL_GUIDE.md  # API 调用完整指南
+├── routers/               # FastAPI 路由（Web 后台）
+│   ├── allure_api.py     # 报告查看 API
+│   ├── api_manage.py     # 测试执行 API
 │   └── data_factory_api.py  # 数据工厂 API
-├── script/                # 脚本工具
+├── script/                # 工具脚本
 │   ├── case_coverage_stat.py    # 用例覆盖率统计
-│   ├── find_unreferenced_services.py  # 查找未引用服务
-│   └── swagger_parser.py  # Swagger 解析器
+│   ├── find_unreferenced_services.py  # 查找未引用 API
+│   └── swagger_parser.py  # Swagger 解析
 ├── testcases/             # 测试用例目录
 │   ├── comm/             # 公共测试基类
-│   │   └── base_test.py  # BaseTest 基类
-│   ├── gen_md/           # 主数据测试
-│   ├── erp_fin/          # 财务模块测试
-│   ├── erp_prd/          # 生产模块测试
-│   ├── scm_pur/          # 采购模块测试
-│   ├── scm_sls/          # 销售模块测试
-│   └── sys_common/       # 系统公共模块测试
-├── utils/                 # 工具类目录
-│   ├── assert_util.py    # 断言工具
-│   ├── async_wait_util.py  # 异步等待工具
-│   ├── cache_util.py     # 缓存工具
-│   ├── mysql_util.py     # MySQL 工具
-│   ├── request_util.py   # HTTP 请求工具
-│   ├── report_util.py    # 报告工具
-│   └── ...               # 其他工具类
-├── reports/               # 测试报告目录
-│   ├── allure-results/   # Allure 原始结果
-│   └── allure-report/    # Allure HTML 报告
-├── logs/                  # 日志目录
-├── testdata/              # 测试数据目录
-├── static/                # 静态资源目录
-├── main.py                # FastAPI 应用入口
-├── pytest.ini            # pytest 配置文件
-├── requirements.txt       # Python 依赖
-├── Dockerfile            # Docker 镜像构建文件
+│   │   ├── base_test.py  # BaseTest 基类（核心）
+│   │   └── conftest.py   # pytest 配置（钩子、排序逻辑）
+│   ├── gen_md/           # 主数据模块
+│   ├── scm_pur/          # 采购模块
+│   ├── scm_sls/          # 销售模块
+│   ├── erp_fin/          # 财务模块
+│   ├── scm_inv/          # 库存模块
+│   └── ...               # 其他模块（acc、prd、del 等）
+├── utils/                 # 工具类库（16 个工具）
+│   ├── mysql_util.py    # DBManager - 数据库操作
+│   ├── request_util.py  # HttpUtil - HTTP 请求
+│   ├── assert_util.py   # AssertHelper - 断言验证
+│   ├── async_wait_util.py # AsyncWaitUtil - 异步轮询
+│   ├── cache_util.py    # CacheUtil - 缓存管理
+│   ├── param_util.py    # ParamUtil - 参数处理
+│   ├── report_util.py   # ReportEnhancer - 报告增强
+│   ├── mock_util.py     # MockData - 数据生成
+│   └── ...              # 其他工具
+├── testdata/             # 测试数据和配置
+│   ├── cache/           # 缓存文件（md_init_cache.json 等）
+│   ├── gen_md/          # 主数据配置（md_api_path.yaml 等）
+│   └── scm_pur/         # 采购配置（类似结构）
+├── reports/              # 测试报告目录
+│   ├── allure-results/  # Allure 原始数据
+│   └── allure-report/   # Allure HTML 报告
+├── logs/                 # 日志目录
+├── static/               # 静态资源（Swagger UI 等）
+├── main.py               # FastAPI 应用入口
+├── pytest.ini            # pytest 全局配置
+├── conftest.py           # pytest 全局 fixture
+├── requirements.txt      # Python 依赖清单
+├── Dockerfile            # 容器化构建
+├── .env                  # 环境变量
+├── .gitignore            # Git 忽略配置
 └── dice.yml              # Erda 部署配置
 ```
 
@@ -166,39 +190,86 @@ pip install -r requirements.txt
 
 4. **配置环境**
 
-在 `config/env/` 目录下创建环境配置文件（如 `test.yaml`）：
+在 `config/env/` 目录下创建环境配置文件（如 `test.yaml`），包含门户配置和数据库配置：
 
 ```yaml
 # config/env/test.yaml
+# 门户配置（支持多个门户和多个租户）
+portal_config:
+  terp:                                    # 租户名称
+    TERP_PORTAL:                           # 后台管理门户
+      portal_url: "http://test.example.com"
+      iam_url: "http://iam.example.com"
+      login_type: "account"                # 登录方式：account 或 sso
+      account: "admin"
+      password: "password"
+    TERP_CUST_PC:                          # 客户端门户（可选）
+      portal_url: "http://customer.example.com"
+      iam_url: "http://iam.example.com"
+      login_type: "account"
+      account: "customer_user"
+      password: "password"
+
+# 数据库配置
 database:
-  host: localhost
-  port: 3306
-  database: erp_db
-  username: root
-  password: your_password
+  erp_db:                                  # ERP 业务库
+    host: "localhost"
+    port: 3306
+    database: "erp_db"
+    username: "root"
+    password: "password"
+  iam_db:                                  # IAM 库（可选）
+    host: "localhost"
+    port: 3306
+    database: "iam_db"
+    username: "root"
+    password: "password"
 
-api:
-  base_url: http://test.example.com
-  timeout: 30
-
+# Trantor 版本（可通过 --trantor_version 命令行参数覆盖）
 trantor_version: "2.5.25.0330.0-SNAPSHOT"
+
+# 缓存配置（可选）
+cache:
+  expire_minutes: 1440                     # 缓存过期时间（分钟），默认 24 小时
+  auto_refresh: true                       # 是否自动刷新过期缓存
 ```
 
-5. **运行测试**
+5. **初始化测试数据（首次运行）**
+
+框架会自动初始化测试数据，包括：
+- 执行 `config/erp/base_init_sql.yaml` 中的基础数据初始化脚本
+- 执行 `config/erp/md_init_sql.yaml` 中的主数据初始化脚本
+- 缓存初始化结果到 `testdata/cache/` 目录
+
+首次运行较慢，后续运行会复用缓存（支持自动过期刷新）。
+
+6. **运行测试**
 
 ```bash
-# 运行所有测试
+# 运行所有测试（使用 test 环境，默认）
 pytest
 
 # 运行指定模块测试
 pytest testcases/gen_md/
+pytest testcases/scm_pur/
 
-# 运行指定环境测试
+# 指定环境（dev/test/staging/prod）
 pytest --env=test
 
-# 运行并生成 Allure 报告
+# 指定 Trantor 版本
+pytest --trantor_version=2.5.25.0330.0-SNAPSHOT
+
+# 并行执行（4 个进程，按文件分发）
+pytest -n 4 --dist=loadfile
+
+# 生成 Allure 报告
 pytest --alluredir=./reports/allure-results
 allure serve ./reports/allure-results
+
+# 启动 Web 管理后台（集成报告查看和测试执行）
+python -m uvicorn main:app --host 0.0.0.0 --port 8000
+# 访问：http://localhost:8000/docs（API 文档）
+#      http://localhost:8000/allure（Allure 报告）
 ```
 
 ## 📖 使用指南
@@ -483,11 +554,99 @@ def test_xxx(self):
     pass
 ```
 
+### Q6: 缓存数据如何更新或清除？
+
+A: 缓存支持自动过期刷新机制（默认 24 小时）：
+
+```bash
+# 方式一：删除缓存文件，重新运行测试会自动生成
+rm testdata/cache/*.json
+
+# 方式二：设置缓存过期时间（在 setup_class 中）
+from utils.cache_util import CacheUtil
+CacheUtil.init(cache_dir="testdata/cache", expire_minutes=60)  # 1 小时过期
+
+# 方式三：手动刷新特定缓存
+CacheUtil.refresh_expired_cache()
+```
+
+### Q7: data_factory 如何使用？
+
+A: data_factory 框架当前处于完善阶段：
+- **已实现**：DataFactory 基类、ConfigLoader（配置加载）、SQL 缓存管理
+- **部分实现**：MD 工厂（PartnerFactory、OrgFactory、MatFactory 等）
+
+当前推荐直接使用 `standard_api_call` 创建测试数据，暂不依赖 data_factory：
+
+```python
+# 推荐做法：直接用 API 创建
+response, partner_id = self.standard_api_call(
+    api_key="GEN-合作伙伴-保存服务",
+    set_dict={"code": "AT_PARTNER001", "name": "测试合作伙伴"}
+)
+```
+
+### Q8: 多环境如何配置？
+
+A: 在 `config/env/` 目录下创建不同环境的配置文件，使用 `--env` 参数指定：
+
+```bash
+# 开发环境
+pytest --env=dev
+
+# 测试环境（默认）
+pytest --env=test
+
+# 预发布环境
+pytest --env=staging
+
+# 生产环境（使用前需谨慎）
+pytest --env=prod
+```
+
+### Q9: 测试用例执行顺序如何控制？
+
+A: 框架支持两种排序方式，可混用：
+
+```python
+# 方式一：文件级串行（推荐）- 同一文件内串行，不同文件可并行
+@case_decorator(file_level_order=1)
+def test_create_partner(self): pass
+
+@case_decorator(file_level_order=2)
+def test_update_partner(self): pass
+
+# 方式二：全局排序 - 所有文件统一排序
+@pytest.mark.order(1)
+def test_xxx(self): pass
+```
+
+### Q10: 如何进行失败重试？
+
+A: 使用 `--reruns` 参数进行自动重试：
+
+```bash
+# 重试 2 次，间隔 1 秒
+pytest --reruns 2 --reruns-delay 1
+
+# 仅对特定异常重试
+pytest --reruns 2 --reruns-error-type TimeoutError
+```
+
+或在代码中使用：
+
+```python
+@pytest.mark.flaky(reruns=2, reruns_delay=1)
+@case_decorator(...)
+def test_xxx(self): pass
+```
+
 ## 📚 相关文档
 
-- [用例生成规范](docs/cursor_testcase_generation.md)
-- [数据库操作规范](docs/ai_testcase_generation_prompt.md)
-- [API 文档](http://localhost:8000/docs)
+项目文档位于 `docs/` 目录，包括：
+
+- **STANDARD_API_CALL_GUIDE.md** - API 调用完整指南（必读）：详细说明 `standard_api_call` 的参数、用法和各种场景
+- **cursor_testcase_generation.md** - 用例编写详细规范（参考）：编写规范、代码示例、最佳实践
 
 ## 🤝 贡献指南
 
