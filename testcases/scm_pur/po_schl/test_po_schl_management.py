@@ -566,5 +566,3 @@ class TestPoSchlManagement(ScmPurBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-
-
