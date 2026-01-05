@@ -255,7 +255,6 @@ class TestPoSchlManagement(ScmPurBaseTest):
             
             request_params = {
                 "serviceKey": "SCM_PUR$PUR_PO_SCHL_TR_API_GEI_TASK_EXPORT_DIRECT_POST",
-                "teamId": 22,
                 "params": {
                     "taskName": task_name,
                     "multiSheetConfig": [
@@ -280,8 +279,6 @@ class TestPoSchlManagement(ScmPurBaseTest):
                         }
                     ],
                     "queryData": {
-                        "appId": 0,
-                        "teamId": 22,
                         "containerKey": "ERP_SCM$SCHL_VIEW-table-container-ERP_SCM$pur_po_schl_tr",
                         "viewKey": "SCM_PUR$SCHL_VIEW:list",
                         "sceneKey": "SCM_PUR$SCHL_VIEW",
@@ -321,8 +318,6 @@ class TestPoSchlManagement(ScmPurBaseTest):
                     },
                     "processConfig": {
                         "processType": "TRANTOR",
-                        "appId": 0,
-                        "teamId": 22,
                         "model": "SCM_PUR$pur_po_schl_tr",
                         "modelName": "采购订单-SCHL",
                         "containerKey": "ERP_SCM$SCHL_VIEW-table-container-ERP_SCM$pur_po_schl_tr",

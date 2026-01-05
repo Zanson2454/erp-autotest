@@ -581,7 +581,6 @@ class TestPoManagement(ScmPurBaseTest):
             
             request_params = {
                 "serviceKey": "SCM_PUR$PUR_PO_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST",
-                "teamId": 22,
                 "params": {
                     "taskName": task_name,
                     "multiSheetConfig": [
@@ -608,8 +607,6 @@ class TestPoManagement(ScmPurBaseTest):
                         }
                     ],
                     "queryData": {
-                        "appId": 0,
-                        "teamId": 22,
                         "containerKey": "PO-listView-table",
                         "viewKey": "SCM_PUR$TERP_MIGRATE_PO:5FK5Ssd3Ov6z1uVTvum6n",
                         "sceneKey": "SCM_PUR$TERP_MIGRATE_PO",
@@ -654,8 +651,6 @@ class TestPoManagement(ScmPurBaseTest):
                     },
                     "processConfig": {
                         "processType": "TRANTOR",
-                        "appId": 0,
-                        "teamId": 22,
                         "model": "SCM_PUR$pur_po_head_tr",
                         "modelName": "采购订单-H",
                         "containerKey": "PO-listView-table",

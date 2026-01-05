@@ -213,7 +213,6 @@ class TestPoItemManagement(ScmPurBaseTest):
             
             request_params = {
                 "serviceKey": "SCM_PUR$PUR_PO_ITEM_TR_API_GEI_TASK_EXPORT_DIRECT_POST",
-                "teamId": 22,
                 "params": {
                     "taskName": task_name,
                     "multiSheetConfig": [
@@ -239,8 +238,6 @@ class TestPoItemManagement(ScmPurBaseTest):
                         }
                     ],
                     "queryData": {
-                        "appId": 0,
-                        "teamId": 22,
                         "containerKey": "PO-ITEM-listView-table",
                         "viewKey": "SCM_PUR$TERP_MIGRATE_PO_ITEM_OPERATE:MNz_nhH3Nti4vkk6a8J-z",
                         "sceneKey": "SCM_PUR$TERP_MIGRATE_PO_ITEM_OPERATE",
@@ -284,8 +281,6 @@ class TestPoItemManagement(ScmPurBaseTest):
                     },
                     "processConfig": {
                         "processType": "TRANTOR",
-                        "appId": 0,
-                        "teamId": 22,
                         "model": "SCM_PUR$pur_po_item_tr",
                         "modelName": "采购订单-ITEM",
                         "containerKey": "PO-ITEM-listView-table",
