@@ -579,7 +579,6 @@ class TestInvStkBalancePurManagement(ScmInvBaseTest):
             # 3. 直接构造完整参数（不使用过滤机制）
             request_params = {
                 "serviceKey": "SCM_INV$INV_STK_BA_API_GEI_TASK_EXPORT_DIRECT_POST",
-                "teamId": 22,
                 "params": {
                     "taskName": task_name,
                     "multiSheetConfig": [{
@@ -604,8 +603,6 @@ class TestInvStkBalancePurManagement(ScmInvBaseTest):
                         ]
                     }],
                     "queryData": {
-                        "appId": 0,
-                        "teamId": 22,
                         "containerKey": "ERP_SCM$INV_STOCK_BALANCE_VIEW-TERP_MIGRATE$baStk3-table-container-TERP_MIGRATE$inv_stk_ba",
                         "viewKey": "SCM_INV$INV_STOCK_BALANCE_VIEW:list",
                         "sceneKey": "SCM_INV$INV_STOCK_BALANCE_VIEW",
@@ -644,8 +641,6 @@ class TestInvStkBalancePurManagement(ScmInvBaseTest):
                     },
                     "processConfig": {
                         "processType": "TRANTOR",
-                        "appId": 0,
-                        "teamId": 22,
                         "model": "SCM_INV$inv_stk_ba",
                         "modelName": "库存余额表",
                         "containerKey": "ERP_SCM$INV_STOCK_BALANCE_VIEW-TERP_MIGRATE$baStk3-table-container-TERP_MIGRATE$inv_stk_ba",

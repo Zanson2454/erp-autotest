@@ -161,7 +161,6 @@ class TestInvAtpRuleManagement(ScmInvBaseTest):
             # 设置导出配置
             export_config = {
                 "serviceKey": "SCM_INV$INV_ATP_RULE_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
-                "teamId": 22,
                 "taskName": task_name,
                 "multiSheetConfig": [{
                     "modelKey": "SCM_INV$inv_atp_rule_cf",
@@ -210,7 +209,6 @@ class TestInvAtpRuleManagement(ScmInvBaseTest):
                     ]
                 }],
                 "queryData": {
-                    "appId": 0, "teamId": 22,
                     "containerKey": "SCM_INV$INV_ATP_RULE_NEW_VIEW-table-container-SCM_INV$inv_atp_rule_cf",
                     "viewKey": "SCM_INV$INV_ATP_RULE_NEW_VIEW:list",
                     "sceneKey": "SCM_INV$INV_ATP_RULE_NEW_VIEW",
@@ -237,7 +235,7 @@ class TestInvAtpRuleManagement(ScmInvBaseTest):
                     }
                 },
                 "processConfig": {
-                    "processType": "TRANTOR", "appId": 0, "teamId": 22,
+                    "processType": "TRANTOR", 
                     "model": "SCM_INV$inv_atp_rule_cf", "modelName": "ATP检查规则",
                     "containerKey": "SCM_INV$INV_ATP_RULE_NEW_VIEW-table-container-SCM_INV$inv_atp_rule_cf",
                     "viewKey": "SCM_INV$INV_ATP_RULE_NEW_VIEW:list",
