@@ -233,10 +233,14 @@ class TestCharacteristicManagement(GenMdBaseTest):
             chara_name = f"测试特征_{self.mock_util.get_timestamp()}"
 
             set_dict = {
-                "charaCode": chara_code,
-                "charaName": chara_name,
-                "charaClassId": {"id": self.chara_class_id},
-                "remark": f"特征描述_{self.mock_util.get_timestamp()}"
+                "code": chara_code,
+                "name": chara_name,
+                "charNo": 20,
+                "dataType": "STRING",
+                "isCustom": True,
+                "isRequired": False,
+                "isSingleValue": True,
+                "remark": f"特征定义_{self.mock_util.get_timestamp()}"
             }
             
             response, chara_id = self.standard_api_call(
