@@ -224,7 +224,6 @@ class TestInvMvmConfigManagement(ScmInvBaseTest):
             timestamp = self.mock_util.get_timestamp()
             export_params = {
                 "serviceKey": "SCM_INV$INV_MVM_EXT_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
-                "teamId": self.DEFAULT_TEAM_ID,
                 "params": {
                     "taskName": f"移动类型扩展-{self.nickname}-{timestamp}-导出",
                     "multiSheetConfig": [
@@ -253,8 +252,6 @@ class TestInvMvmConfigManagement(ScmInvBaseTest):
                         }
                     ],
                     "queryData": {
-                        "appId": 0,
-                        "teamId": self.DEFAULT_TEAM_ID,
                         "containerKey": "SCM_INV$INV_MVM_EXT_TYPE_VIEW-table-container-SCM_INV$inv_mvm_ext_type_cf",
                         "viewKey": "SCM_INV$INV_MVM_EXT_TYPE_VIEW:list",
                         "sceneKey": "SCM_INV$INV_MVM_EXT_TYPE_VIEW",
@@ -285,8 +282,6 @@ class TestInvMvmConfigManagement(ScmInvBaseTest):
                     },
                     "processConfig": {
                         "processType": "TRANTOR",
-                        "appId": 0,
-                        "teamId": self.DEFAULT_TEAM_ID,
                         "model": "SCM_INV$inv_mvm_ext_type_cf",
                         "modelName": "移动类型扩展类型定义表",
                         "containerKey": "SCM_INV$INV_MVM_EXT_TYPE_VIEW-table-container-SCM_INV$inv_mvm_ext_type_cf",

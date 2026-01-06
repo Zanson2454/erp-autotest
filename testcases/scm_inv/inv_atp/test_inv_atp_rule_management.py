@@ -154,7 +154,7 @@ class TestInvAtpRuleManagement(ScmInvBaseTest):
             # 构建导出参数
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["serviceKey", "teamId", "taskName", "multiSheetConfig", "queryData", "processConfig"],
+                ["serviceKey", "taskName", "multiSheetConfig", "queryData", "processConfig"],
                 ["params"]
             )
             
@@ -245,7 +245,6 @@ class TestInvAtpRuleManagement(ScmInvBaseTest):
             
             # 应用配置
             filtered_params["serviceKey"] = export_config["serviceKey"]
-            filtered_params["teamId"] = export_config["teamId"]
             for key in ["taskName", "multiSheetConfig", "queryData", "processConfig"]:
                 filtered_params["params"][key] = export_config[key]
 

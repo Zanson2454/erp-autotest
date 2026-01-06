@@ -228,7 +228,6 @@ class TestSpcTypeManagement(ScmInvBaseTest):
             timestamp = self.mock_util.get_timestamp()
             export_params = {
                 "serviceKey": "SCM_INV$INV_SPC_STK_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
-                "teamId": self.DEFAULT_TEAM_ID,
                 "params": {
                     "taskName": f"特殊库存类型-{self.nickname}-{timestamp}-导出",
                     "multiSheetConfig": [
@@ -257,8 +256,6 @@ class TestSpcTypeManagement(ScmInvBaseTest):
                         }
                     ],
                     "queryData": {
-                        "appId": 0,
-                        "teamId": self.DEFAULT_TEAM_ID,
                         "containerKey": "SCM_INV$INV_SPC_TYPE_VIEW-table-container-SCM_INV$inv_spc_stk_type_cf",
                         "viewKey": "SCM_INV$INV_SPC_TYPE_VIEW:list",
                         "sceneKey": "SCM_INV$INV_SPC_TYPE_VIEW",
@@ -289,8 +286,6 @@ class TestSpcTypeManagement(ScmInvBaseTest):
                     },
                     "processConfig": {
                         "processType": "TRANTOR",
-                        "appId": 0,
-                        "teamId": self.DEFAULT_TEAM_ID,
                         "model": "SCM_INV$inv_spc_stk_type_cf",
                         "modelName": "特殊库存标识定义表",
                         "containerKey": "SCM_INV$INV_SPC_TYPE_VIEW-table-container-SCM_INV$inv_spc_stk_type_cf",

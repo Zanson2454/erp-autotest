@@ -100,14 +100,13 @@ class TestInvAtpGroupManagement(ScmInvBaseTest):
             # 构建导出参数
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["serviceKey", "teamId", "taskName", "multiSheetConfig", "queryData", "processConfig"],
+                ["serviceKey", "taskName", "multiSheetConfig", "queryData", "processConfig"],
                 ["params"]
             )
             
             # 设置导出配置
             export_config = {
                 "serviceKey": "SCM_INV$INV_ATP_GROUP_MD_API_GEI_TASK_EXPORT_DIRECT_POST",
-                "teamId": 22,
                 "taskName": task_name,
                 "multiSheetConfig": [{
                     "modelKey": "SCM_INV$inv_atp_group_md",
@@ -120,7 +119,6 @@ class TestInvAtpGroupManagement(ScmInvBaseTest):
                     ]
                 }],
                 "queryData": {
-                    "appId": 0, "teamId": 22,
                     "containerKey": "SCM_INV$INV_ATP_GROUP_VIEW-table-container-SCM_INV$inv_atp_group_md",
                     "viewKey": "SCM_INV$INV_ATP_GROUP_VIEW:list",
                     "sceneKey": "SCM_INV$INV_ATP_GROUP_VIEW",
@@ -140,7 +138,7 @@ class TestInvAtpGroupManagement(ScmInvBaseTest):
                     }
                 },
                 "processConfig": {
-                    "processType": "TRANTOR", "appId": 0, "teamId": 22,
+                    "processType": "TRANTOR",
                     "model": "SCM_INV$inv_atp_group_md", "modelName": "ATP检查组",
                     "containerKey": "SCM_INV$INV_ATP_GROUP_VIEW-table-container-SCM_INV$inv_atp_group_md",
                     "viewKey": "SCM_INV$INV_ATP_GROUP_VIEW:list",
@@ -150,7 +148,6 @@ class TestInvAtpGroupManagement(ScmInvBaseTest):
             
             # 应用配置
             filtered_params["serviceKey"] = export_config["serviceKey"]
-            filtered_params["teamId"] = export_config["teamId"]
             for key in ["taskName", "multiSheetConfig", "queryData", "processConfig"]:
                 filtered_params["params"][key] = export_config[key]
 
