@@ -90,3 +90,8 @@ reports/fin_case_coverage.json
 # 忽略 Allure 结果和报告（根目录）
 allure-results/
 allure-report/
+
+
+# 忽略测试中的文件
+test_data_factory/
+docs/test_data_factory_implementation_guide.md
