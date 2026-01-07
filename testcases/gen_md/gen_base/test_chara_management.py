@@ -27,12 +27,12 @@ class TestCharacteristicManagement(GenMdBaseTest):
         try:
             cls.db.delete(
                 table="gen_chara_class_md",
-                where="chara_class_code like %s",
+                where="code like %s",
                 params=["AT_%"]
             )
             cls.db.delete(
                 table="gen_chara_md",
-                where="chara_code like %s",
+                where="code like %s",
                 params=["AT_%"]
             )
             cls.logger.info("测试数据清理完成")
@@ -56,8 +56,16 @@ class TestCharacteristicManagement(GenMdBaseTest):
             chara_class_name = f"测试特征类_{self.mock_util.get_timestamp()}"
 
             set_dict = {
-                "charaClassCode": chara_class_code,
-                "charaClassName": chara_class_name,
+                "code": chara_class_code,
+                "name": chara_class_name,
+                "charaClassType":"MAT",
+                "charaList":[
+                    {
+                        "charaId":{"id":self.chara_id},
+                        "isKeyChara":False,
+                        "isRequired":False
+                        }
+                    ],
                 "remark": f"特征类描述_{self.mock_util.get_timestamp()}"
             }
             
@@ -134,10 +142,59 @@ class TestCharacteristicManagement(GenMdBaseTest):
 
     @case_decorator(
         story="特征类定义表管理",
+        title="测试编辑特征类定义",
+        description="验证GEN-特征类定义表-保存服务功能（编辑）",
+        severity="critical",
+        file_level_order=4,
+        tags=["特征管理", "编辑", "GEN_CHARA_CLASS_MD_SAVE_ACTION_SERVICE"]
+    )
+    def test_update_chara_class(self):
+        """编辑特征类定义用例"""
+        try:
+            # 先确保特征定义存在（特征类定义依赖特征定义）
+            if not self.chara_id:
+                self.test_save_chara()
+            
+            # 再确保特征类定义存在
+            if not self.chara_class_id:
+                self.test_save_chara_class()
+
+            chara_class_name = f"测试特征类_编辑_{self.mock_util.get_timestamp()}"
+
+            set_dict = {
+                "id": self.chara_class_id,
+                "code": self.chara_class_code,
+                "name": chara_class_name,
+                "charaClassType": "BATCH",
+                "charaList": [
+                    {
+                        "charaId": {"id": self.chara_id},
+                        "isKeyChara": False,
+                        "isRequired": False
+                    }
+                ],
+                "remark": f"特征类描述_编辑_{self.mock_util.get_timestamp()}"
+            }
+            
+            response, _ = self.standard_api_call(
+                api_key="GEN-特征类定义表-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=["id", "code", "name", "charaClassType", "charaList", "remark"],
+                store_id_as=None
+            )
+            
+            self.assert_util.assert_response_data(response)
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="特征类定义表管理",
         title="测试启用特征类定义",
         description="验证GEN-特征类定义表-启用服务功能",
         severity="normal",
-        file_level_order=4,
+        file_level_order=5,
         tags=["特征管理", "启用", "GEN_CHARA_CLASS_MD_ENABLED_ACTION_SERVICE"]
     )
     def test_enable_characteristic_class(self):
@@ -164,7 +221,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         title="测试禁用特征类定义",
         description="验证GEN-特征类定义表-禁用服务功能",
         severity="normal",
-        file_level_order=5,
+        file_level_order=6,
         tags=["特征管理", "禁用", "GEN_CHARA_CLASS_MD_DISABLED_ACTION_SERVICE"]
     )
     def test_disable_characteristic_class(self):
@@ -191,7 +248,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         title="测试删除特征类定义",
         description="验证GEN-特征类定义表-删除服务功能",
         severity="critical",
-        file_level_order=6,
+        file_level_order=7,
         tags=["特征管理", "删除", "GEN_CHARA_CLASS_MD_DELETE_ACTION_SERVICE"]
     )
     def test_delete_characteristic_class(self):
