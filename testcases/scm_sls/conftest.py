@@ -114,8 +114,8 @@ def _perform_cleanup(db, session_start_time):
         
         try:
             # 1.3 清理销售单主表和报价单主表（主表，后删除）
-            # 注意：报价单可能存储在 sls_so_head_tr 表中（通过 soTypeId 区分），也可能有独立的 sls_quote_head_tr 表
-            # 先清理 sls_so_head_tr，确保包含所有销售订单和报价单数据
+            # 注意：报价单存储在 sls_so_head_tr 表中（通过 soTypeId 区分）
+            # 清理 sls_so_head_tr，确保包含所有销售订单和报价单数据
             db.delete(
                 table="sls_so_head_tr",
                 where="created_at >= %s",
@@ -137,31 +137,9 @@ def _perform_cleanup(db, session_start_time):
         except Exception as e:
             Loggers.debug(f"清理表 del_dn_head_tr 失败: {str(e)}")
         
-        try:
-            # 1.5 清理独立的报价单主表（主表，后删除）
-            # 注意：报价单可能存储在 sls_so_head_tr 表中（已在上一步清理），也可能有独立的 sls_quote_head_tr 表
-            # 为了确保完整性，同时清理独立的报价单表（如果存在）
-            db.delete(
-                table="sls_quote_head_tr",
-                where="created_at >= %s",
-                params=[session_start_datetime]
-            )
-            Loggers.info(f"✅ 已清理表 sls_quote_head_tr 中测试开始后创建的数据（时间 >= {session_start_datetime}）")
-        except Exception as e:
-            Loggers.debug(f"清理表 sls_quote_head_tr 失败（可能表不存在，报价单可能存储在 sls_so_head_tr 中）: {str(e)}")
-        
         # 2. 清理价格调整单数据（test_price_crud.py, test_so_price.py）
         # 原逻辑：按 price_adj_name 清理，保持原条件
-        try:
-            db.delete(
-                table="gen_price_adj_head_tr",
-                where="price_adj_name LIKE %s OR price_adj_name LIKE %s OR price_adj_name LIKE %s",
-                params=["自动化测试价格调整_%", "hxy维护价格_%", "删除价格_%"]
-            )
-            Loggers.info("✅ 已清理表 gen_price_adj_head_tr 中的测试数据（test_price_crud.py 原逻辑）")
-        except Exception as e:
-            Loggers.debug(f"清理表 gen_price_adj_head_tr 失败: {str(e)}")
-        
+        # 注意：只清理 price_adj_head_tr 表，gen_price_adj_head_tr 和 erp_price_adj_head_tr 表不存在
         try:
             db.delete(
                 table="price_adj_head_tr",
@@ -172,27 +150,7 @@ def _perform_cleanup(db, session_start_time):
         except Exception as e:
             Loggers.debug(f"清理表 price_adj_head_tr 失败: {str(e)}")
         
-        try:
-            db.delete(
-                table="erp_price_adj_head_tr",
-                where="price_adj_name LIKE %s OR price_adj_name LIKE %s OR price_adj_name LIKE %s",
-                params=["自动化测试价格调整_%", "hxy维护价格_%", "删除价格_%"]
-            )
-            Loggers.info("✅ 已清理表 erp_price_adj_head_tr 中的测试数据（test_price_crud.py 原逻辑）")
-        except Exception as e:
-            Loggers.debug(f"清理表 erp_price_adj_head_tr 失败: {str(e)}")
-        
         # test_so_price.py 的价格调整单清理逻辑
-        try:
-            db.delete(
-                table="gen_price_adj_head_tr",
-                where="price_adj_name LIKE %s OR price_adj_name LIKE %s",
-                params=["订单价格维护_%", "订单价格校验创建价格_%"]
-            )
-            Loggers.info("✅ 已清理表 gen_price_adj_head_tr 中的测试数据（test_so_price.py 原逻辑）")
-        except Exception as e:
-            Loggers.debug(f"清理表 gen_price_adj_head_tr 失败: {str(e)}")
-        
         try:
             db.delete(
                 table="price_adj_head_tr",
@@ -202,16 +160,6 @@ def _perform_cleanup(db, session_start_time):
             Loggers.info("✅ 已清理表 price_adj_head_tr 中的测试数据（test_so_price.py 原逻辑）")
         except Exception as e:
             Loggers.debug(f"清理表 price_adj_head_tr 失败: {str(e)}")
-        
-        try:
-            db.delete(
-                table="erp_price_adj_head_tr",
-                where="price_adj_name LIKE %s OR price_adj_name LIKE %s",
-                params=["订单价格维护_%", "订单价格校验创建价格_%"]
-            )
-            Loggers.info("✅ 已清理表 erp_price_adj_head_tr 中的测试数据（test_so_price.py 原逻辑）")
-        except Exception as e:
-            Loggers.debug(f"清理表 erp_price_adj_head_tr 失败: {str(e)}")
         
         # ========== 清理主表数据（后删除） ==========
         
@@ -300,7 +248,7 @@ def _perform_cleanup(db, session_start_time):
             Loggers.debug(f"清理表 sls_so_item_type_group_cf 失败: {str(e)}")
         
         Loggers.info("✅ SCM_SLS 模块测试数据清理完成")
-        Loggers.info("⚠️  注意：原本按 id 删除的数据（如 sls_so_head_tr, sls_dn_head_tr, sls_quote_head_tr, rebate_policy_head_tr）")
+        Loggers.info("⚠️  注意：原本按 id 删除的数据（如 sls_so_head_tr, sls_dn_head_tr, rebate_policy_head_tr）")
         Loggers.info("    和通过 API 查询后删除的数据（gen_match_record_md）无法在 session 级别清理，")
         Loggers.info("    这些数据需要在各自的测试类中保持原清理逻辑")
         
