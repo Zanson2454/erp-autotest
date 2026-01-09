@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 应付初始化管理测试用例
-包含：财务域通用模块初始化表管理、财务初始化管理
+包含：财务域通用模块初始化表管理、应付初始化管理
 """
 
 import allure
@@ -44,16 +44,16 @@ class TestApInitManagement(ApBaseTest):
             cls.logger.error(f"测试数据清理失败: {str(e)}")
     
     @case_decorator(
-        story="财务初始化管理",
+        story="应付初始化管理",
         title="测试初始化配置",
-        description="验证财务初始化管理初始化功能",
+        description="验证应付初始化管理初始化功能",
         severity="critical",
         file_level_order=1,
         smoke=True,
         tags=["ap", "init", "initialize"]
     )
     def test_initialize_configuration(self):
-        """测试财务初始化配置"""
+        """测试应付初始化配置"""
         try:
             # 检查依赖数据
             if not self.gr_com_org_id:
@@ -100,7 +100,7 @@ class TestApInitManagement(ApBaseTest):
             raise
     
     @case_decorator(
-        story="财务初始化管理",
+        story="应付初始化管理",
         title="测试重复初始化配置报错",
         description="验证重复初始化配置会返回错误",
         severity="normal",
@@ -163,487 +163,375 @@ class TestApInitManagement(ApBaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    # @case_decorator(
-    #     story="财务初始化管理",
-    #     title="测试启用初始化配置",
-    #     description="验证财务初始化管理启用功能",
-    #     severity="normal",
-    #     file_level_order=3,
-    #     tags=["ap", "init", "enable"]
-    # )
-    # def test_enable_configuration(self):
-    #     """测试启用初始化配置"""
-    #     try:
-    #         # 确保已创建初始化配置
-    #         if not self.ap_init_id:
-    #             self.test_initialize_configuration()
+    @case_decorator(
+        story="应付初始化管理",
+        title="测试启用初始化配置",
+        description="验证应付初始化管理启用功能",
+        severity="normal",
+        file_level_order=3,
+        tags=["ap", "init", "enable"]
+    )
+    def test_enable_configuration(self):
+        """测试启用初始化配置"""
+        try:
+            # 确保已创建初始化配置
+            if not self.ap_init_id:
+                self.test_initialize_configuration()
             
-    #         com_org_obj = {"id": self.com_org_id}
+            set_dict = {
+                "id": self.ap_init_id
+            }
             
-    #         set_dict = {
-    #             "moduleCode": "AP",
-    #             "comOrg": com_org_obj
-    #         }
+            response, _ = self.standard_api_call(
+                api_key="IM-财务初始化管理-启用服务",
+                set_dict=set_dict,
+                store_id_as=None
+            )
             
-    #         fields_to_filter = ["moduleCode", "comOrg"]
+            # 业务断言（只验证响应成功，不校验状态）
+            self.assert_util.assert_response_success(response)
             
-    #         response, _ = self.standard_api_call(
-    #             api_key="IM-财务初始化管理-启用服务",
-    #             set_dict=set_dict,
-    #             fields_to_filter=fields_to_filter,
-    #             store_id_as=None
-    #         )
+            # 记录关键数据
+            a.json(response, "启用响应数据")
+            a.text(f"✅ 启用成功", "启用结果")
             
-    #         # 业务断言（只验证响应成功，不校验状态）
-    #         self.assert_util.assert_response_success(response)
-            
-    #         # 记录关键数据
-    #         a.json(response, "启用响应数据")
-    #         a.text(f"✅ 启用成功", "启用结果")
-            
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
     
-    # @case_decorator(
-    #     story="财务初始化管理",
-    #     title="测试反启用配置",
-    #     description="验证财务初始化管理反启用功能",
-    #     severity="normal",
-    #     file_level_order=4,
-    #     tags=["ap", "init", "disable"]
-    # )
-    # def test_disable_configuration(self):
-    #     """测试反启用配置"""
-    #     try:
-    #         # 确保已创建并启用初始化配置
-    #         if not self.ap_init_id:
-    #             self.test_initialize_configuration()
-    #             self.test_enable_configuration()
+    @case_decorator(
+        story="应付初始化管理",
+        title="测试反启用配置",
+        description="验证应付初始化管理反启用功能",
+        severity="normal",
+        file_level_order=4,
+        tags=["ap", "init", "disable"]
+    )
+    def test_disable_configuration(self):
+        """测试反启用配置"""
+        try:
+            # 确保已创建并启用初始化配置
+            if not self.ap_init_id:
+                self.test_enable_configuration()
             
-    #         com_org_obj = {"id": self.com_org_id}
             
-    #         set_dict = {
-    #             "moduleCode": "AP",
-    #             "comOrg": com_org_obj
-    #         }
+            set_dict = {
+               "id": self.ap_init_id
+            }
+
+            response, _ = self.standard_api_call(
+                api_key="IM-财务初始化管理-反启用服务",
+                set_dict=set_dict,
+                store_id_as=None
+            )
             
-    #         fields_to_filter = ["moduleCode", "comOrg"]
+            # 业务断言（只验证响应成功，不校验状态）
+            self.assert_util.assert_response_success(response)
             
-    #         response, _ = self.standard_api_call(
-    #             api_key="IM-财务初始化管理-反启用服务",
-    #             set_dict=set_dict,
-    #             fields_to_filter=fields_to_filter,
-    #             store_id_as=None
-    #         )
+            # 记录关键数据
+            a.json(response, "反启用响应数据")
+            a.text(f"✅ 反启用成功", "反启用结果")
             
-    #         # 业务断言（只验证响应成功，不校验状态）
-    #         self.assert_util.assert_response_success(response)
-            
-    #         # 记录关键数据
-    #         a.json(response, "反启用响应数据")
-    #         a.text(f"✅ 反启用成功", "反启用结果")
-            
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
     
-    # @case_decorator(
-    #     story="财务初始化管理",
-    #     title="测试反初始化",
-    #     description="验证财务初始化管理反初始化功能",
-    #     severity="critical",
-    #     file_level_order=5,
-    #     tags=["ap", "init", "reverse_init"]
-    # )
-    # def test_reverse_initialization(self):
-    #     """测试反初始化"""
-    #     try:
-    #         # 确保已创建初始化配置
-    #         if not self.ap_init_id:
-    #             self.test_initialize_configuration()
+    @case_decorator(
+        story="应付初始化管理",
+        title="测试初始化配置",
+        description="验证应付初始化管理初始化功能",
+        severity="critical",
+        file_level_order=5,
+        tags=["ap", "init", "im_initialization"]
+    )
+    def test_im_initialization(self):
+        """测试初始化"""
+        try:
+            # 确保已创建初始化配置
+            if not self.ap_init_id:
+                self.test_enable_configuration()
             
-    #         com_org_obj = {"id": self.com_org_id}
+            set_dict = {
+                "id": self.ap_init_id,
+                "moduleCode": "AP", 
+                "initialBalanceType":"UNRECORDED",
+                "initializationType":"UNINITIALIZED",
+                "startDate": self.mock_util.get_timestamp(timestamp=True),
+                "startType":"ENABLED",
+                "comOrg":{"id":self.gr_com_org_id }
+            }
             
-    #         set_dict = {
-    #             "moduleCode": "AP",
-    #             "comOrg": com_org_obj
-    #         }
+            response, _ = self.standard_api_call(
+                api_key="IM-财务初始化管理-初始化服务",
+                set_dict=set_dict,
+                store_id_as=None
+            )
             
-    #         fields_to_filter = ["moduleCode", "comOrg"]
+            # 业务断言
+            self.assert_util.assert_response_success(response)
             
-    #         response, _ = self.standard_api_call(
-    #             api_key="IM-财务初始化管理-反初始化服务",
-    #             set_dict=set_dict,
-    #             fields_to_filter=fields_to_filter,
-    #             store_id_as=None
-    #         )
+            # 记录关键数据
+            a.json(response, "初始化响应数据")
+            a.text(f"✅ 初始化成功", "初始化结果")
             
-    #         # 业务断言
-    #         self.assert_util.assert_response_success(response)
-            
-    #         # 记录关键数据
-    #         a.json(response, "反初始化响应数据")
-    #         a.text(f"✅ 反初始化成功", "反初始化结果")
-            
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+        
+
     
-    # @case_decorator(
-    #     story="财务域通用模块初始化表",
-    #     title="测试分页查询初始化配置",
-    #     description="验证分页查询财务域通用模块初始化表",
-    #     severity="normal",
-    #     file_level_order=6,
-    #     tags=["ap", "init", "paging"]
-    # )
-    # def test_paging_init_data(self):
-    #     """测试分页查询初始化配置"""
-    #     try:
-    #         # 检查并创建依赖数据
-    #         if not self.ap_init_id:
-    #             self.test_initialize_configuration()
-            
-    #         # 使用标准化API调用（根据模块代码分页查询）
-    #         # 注意：根据curl命令，pageable中包含systemParams.viewCondition
-    #         set_dict = {
-    #             "moduleCode": "AP",
-    #             "pageable": {
-    #                 "pageNo": 1,
-    #                 "pageSize": 20,
-    #                 "sortOrders": None,
-    #                 "systemParams": {
-    #                     "viewCondition": {
-    #                         "conditionKey": None,
-    #                         "rightValues": {}
-    #                     }
-    #                 }
-    #             }
-    #         }
-            
-    #         response, _ = self.standard_api_call(
-    #             api_key="财务域通用模块初始化表-分页数据服务_PmHKWs1_copy",
-    #             set_dict=set_dict,
-    #             store_id_as=None
-    #         )
-            
-    #         # 业务断言
-    #         self.assert_util.assert_response_data(response)
-            
-    #         # 验证返回数据
-    #         data_list = response.get("data", {}).get("data", {}).get("data", [])
-    #         self.assert_util.assert_by_operator(data_list, "not_empty", "没有进行应付初始化")
-            
-    #         # 记录关键数据
-    #         a.json(response, "分页查询响应数据")
-    #         a.text(f"✅ 查询成功，共返回 {len(data_list)} 条记录", "查询结果")
-            
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
     
-    # @case_decorator(
-    #     story="财务域通用模块初始化表",
-    #     title="测试根据ID查找数据",
-    #     description="验证根据ID查找财务域通用模块初始化表数据",
-    #     severity="normal",
-    #     file_level_order=7,
-    #     tags=["ap", "init", "find_by_id"]
-    # )
-    # def test_find_init_data_by_id(self):
-    #     """测试根据ID查找数据"""
-    #     try:
-    #         # 检查并创建依赖数据
-    #         if not self.ap_init_id:
-    #             self.test_initialize_configuration()
+    @case_decorator(
+        story="应付初始化管理",
+        title="测试反初始化",
+        description="验证应付初始化管理反初始化功能",
+        severity="critical",
+        file_level_order=6,
+        tags=["ap", "init", "reverse_init"]
+    )
+    def test_reverse_initialization(self):
+        """测试反初始化"""
+        try:
+            # 确保已创建初始化配置
+            if not self.ap_init_id:
+                self.test_im_initialization()
             
-    #         # 使用标准化API调用
-    #         set_dict = {"id": self.ap_init_id}
-    #         fields_to_filter = ["id"]
+            set_dict = {
+                "id": self.ap_init_id,
+                "initialBalanceType": "UNRECORDED",
+                "initializationType": "INITIALIZED",    
+                "moduleCode": "AP",
+                "startDate": self.mock_util.get_timestamp(timestamp=True),
+                "startType": "ENABLED",
+                "comOrg":{"id":self.gr_com_org_id }
+            }
             
-    #         response, _ = self.standard_api_call(
-    #             api_key="财务域通用模块初始化表-根据ID查找数据服务",
-    #             set_dict=set_dict,
-    #             fields_to_filter=fields_to_filter,
-    #             store_id_as=None
-    #         )
+            response, _ = self.standard_api_call(
+                api_key="IM-财务初始化管理-反初始化服务",
+                set_dict=set_dict,
+                store_id_as=None
+            )
             
-    #         # 业务断言
-    #         self.assert_util.assert_response_data(response)
+            # 业务断言
+            self.assert_util.assert_response_success(response)
             
-    #         # 验证返回的数据
-    #         init_data = response.get("data", {}).get("data", {})
-    #         self.assert_util.assert_by_operator(init_data.get("id"), "=", self.ap_init_id, "详情查询ID不匹配")
-    #         self.assert_util.assert_by_operator(init_data.get("moduleCode"), "=", "AP", "模块代码应为AP")
+            # 记录关键数据
+            a.json(response, "反初始化响应数据")
+            a.text(f"✅ 反初始化成功", "反初始化结果")
             
-    #         # 记录关键数据
-    #         a.json(response, "详情查询响应数据")
-            
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
     
-    # @case_decorator(
-    #     story="财务域通用模块初始化表",
-    #     title="测试保存数据",
-    #     description="验证保存财务域通用模块初始化表数据",
-    #     severity="normal",
-    #     file_level_order=8,
-    #     tags=["ap", "init", "save"]
-    # )
-    # def test_save_init_data(self):
-    #     """测试保存数据"""
-    #     try:
-    #         # 准备测试数据（根据curl命令的参数结构）
-    #         com_org_obj = {"id": self.com_org_id}
-    #         start_date = self.mock_util.get_timestamp(timestamp=True)
+    @case_decorator(
+        story="应付初始化管理",
+        title="测试分页查询初始化配置",
+        description="验证分页查询应付初始化管理数据",
+        severity="normal",
+        file_level_order=6,
+        tags=["ap", "init", "paging"]
+    )
+    def test_paging_init_data(self):
+        """测试分页查询初始化配置"""
+        try:
+            # 检查并创建依赖数据
+            if not self.ap_init_id:
+                self.test_initialize_configuration()
             
-    #         set_dict = {
-    #             "id": None,  # 新建时id为null
-    #             "moduleCode": "AP",
-    #             "comOrg": com_org_obj,
-    #             "startDate": start_date,
-    #             "initialBalanceType": "UNRECORDED",  # 根据curl命令，使用UNRECORDED
-    #             "startType": "DISABLED",  # 根据curl命令，使用DISABLED
-    #             "initializationType": "UNINITIALIZED"  # 根据curl命令，使用UNINITIALIZED
-    #         }
+            # 使用标准化API调用（根据模块代码分页查询）
+            # 注意：根据curl命令，pageable中包含systemParams.viewCondition
+            set_dict = {
+                "moduleCode": "AP",
+                "pageable": {
+                    "pageNo": 1,
+                    "pageSize": 20,
+                    "sortOrders": None,
+                    "systemParams": {
+                        "viewCondition": {
+                            "conditionKey": None,
+                            "rightValues": {}
+                        }
+                    }
+                }
+            }
             
-    #         fields_to_filter = ["id", "moduleCode", "comOrg", "startDate", "initialBalanceType", "startType", "initializationType"]
+            response, _ = self.standard_api_call(
+                api_key="财务域通用模块初始化表-分页数据服务_PmHKWs1_copy",
+                set_dict=set_dict,
+                store_id_as=None
+            )
             
-    #         # 保存接口需要 modelKey 查询参数
-    #         response, extracted_id = self.standard_api_call(
-    #             api_key="财务域通用模块初始化表-保存数据服务",
-    #             set_dict=set_dict,
-    #             fields_to_filter=fields_to_filter,
-    #             store_id_as=None,
-    #             query_params="modelKey=ERP_FIN$fin_gen_im_head_tr"
-    #         )
+            # 业务断言
+            self.assert_util.assert_response_data(response)
             
-    #         # 业务断言
-    #         self.assert_util.assert_response_data(response)
+            # 验证返回数据
+            data_list = response.get("data", {}).get("data", {}).get("data", [])
+            self.assert_util.assert_by_operator(data_list, "not_empty", "没有进行应付初始化")
             
-    #         # 如果返回了ID，记录并清理
-    #         if extracted_id:
-    #             a.json(response, "保存响应数据")
-    #             a.text(f"✅ 保存成功，ID: {extracted_id}", "保存结果")
-    #             # 清理测试数据
-    #             self.db.delete(
-    #                 table="fin_gen_im_head_tr",
-    #                 where="id = %s",
-    #                 params=[extracted_id]
-    #             )
+            # 记录关键数据
+            a.json(response, "分页查询响应数据")
+            a.text(f"✅ 查询成功，共返回 {len(data_list)} 条记录", "查询结果")
             
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
     
-    # @case_decorator(
-    #     story="财务域通用模块初始化表",
-    #     title="测试根据ID删除数据",
-    #     description="验证根据ID删除财务域通用模块初始化表数据",
-    #     severity="normal",
-    #     file_level_order=9,
-    #     tags=["ap", "init", "delete"]
-    # )
-    # def test_delete_init_data_by_id(self):
-    #     """测试根据ID删除数据"""
-    #     try:
-    #         # 检查并创建依赖数据
-    #         if not self.ap_init_id:
-    #             self.test_initialize_configuration()
+    @case_decorator(
+        story="应付初始化管理",
+        title="测试根据ID查找数据",
+        description="验证根据ID查找应付初始化管理数据",
+        severity="normal",
+        file_level_order=7,
+        tags=["ap", "init", "find_by_id"]
+    )
+    def test_find_init_data_by_id(self):
+        """测试根据ID查找数据"""
+        try:
+            # 检查并创建依赖数据
+            if not self.ap_init_id:
+                self.test_initialize_configuration()
             
-    #         set_dict = {"id": self.ap_init_id}
-    #         fields_to_filter = ["id"]
+            # 使用标准化API调用
+            # 注意：根据 curl 命令，id 参数是字符串类型
+            set_dict = {"id": self.ap_init_id}
             
-    #         # 单行删除接口需要 modelKey 查询参数
-    #         response, _ = self.standard_api_call(
-    #             api_key="财务域通用模块初始化表-根据ID删除数据服务",
-    #             set_dict=set_dict,
-    #             fields_to_filter=fields_to_filter,
-    #             store_id_as=None,
-    #             query_params="modelKey=ERP_FIN$fin_gen_im_head_tr"
-    #         )
+            response, _ = self.standard_api_call(
+                api_key="财务域通用模块初始化表-根据ID查找数据服务",
+                set_dict=set_dict,
+                store_id_as=None
+            )
             
-    #         # 业务断言
-    #         self.assert_util.assert_response_success(response)
+            # 业务断言
+            self.assert_util.assert_response_data(response)
             
-    #         # 清空ID，避免后续用例使用已删除的数据
-    #         self.ap_init_id = None
+            # 验证返回的数据
+            init_data = response.get("data", {}).get("data", {})
+            if isinstance(init_data, dict):
+                self.assert_util.assert_by_operator(
+                    init_data.get("id"), "=", self.ap_init_id,
+                    "详情查询ID不匹配"
+                )
+                self.assert_util.assert_by_operator(
+                    init_data.get("moduleCode"), "=", "AP",
+                    "模块代码应为AP"
+                )
             
-    #         # 记录关键数据
-    #         a.json(response, "删除响应数据")
-    #         a.text(f"✅ 删除成功", "删除结果")
+            # 记录关键数据
+            a.json(response, "详情查询响应数据")
             
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
     
-    # @case_decorator(
-    #     story="财务域通用模块初始化表",
-    #     title="测试批量删除数据",
-    #     description="验证批量删除财务域通用模块初始化表数据",
-    #     severity="normal",
-    #     file_level_order=10,
-    #     tags=["ap", "init", "batch_delete"]
-    # )
-    # def test_batch_delete_init_data(self):
-    #     """测试批量删除数据"""
-    #     try:
-    #         # 创建多个数据用于批量删除
-    #         init_ids = []
-    #         for i in range(2):
-    #             com_org_obj = {"id": self.com_org_id}
-    #             start_date = self.mock_util.get_timestamp(timestamp=True)
-                
-    #             set_dict = {
-    #                 "id": None,  # 新建时id为null
-    #                 "moduleCode": "AP",
-    #                 "comOrg": com_org_obj,
-    #                 "startDate": start_date,
-    #                 "initialBalanceType": "UNRECORDED",  # 根据curl命令，使用UNRECORDED
-    #                 "startType": "DISABLED",  # 根据curl命令，使用DISABLED
-    #                 "initializationType": "UNINITIALIZED"  # 根据curl命令，使用UNINITIALIZED
-    #             }
-                
-    #             fields_to_filter = ["id", "moduleCode", "comOrg", "startDate", "initialBalanceType", "startType", "initializationType"]
-                
-    #             response, extracted_id = self.standard_api_call(
-    #                 api_key="财务域通用模块初始化表-保存数据服务",
-    #                 set_dict=set_dict,
-    #                 fields_to_filter=fields_to_filter,
-    #                 store_id_as=None,
-    #                 query_params="modelKey=ERP_FIN$fin_gen_im_head_tr"
-    #             )
-    #             self.assert_util.assert_response_data(response)
-    #             if extracted_id:
-    #                 init_ids.append(int(extracted_id))
-            
-    #         if not init_ids:
-    #             raise ValueError("未创建到测试数据，无法进行批量删除测试")
-            
-    #         set_dict = {"ids": init_ids}
-    #         fields_to_filter = ["ids"]
-            
-    #         # 批量删除接口需要 modelKey 查询参数
-    #         response, _ = self.standard_api_call(
-    #             api_key="财务域通用模块初始化表-批量删除数据服务",
-    #             set_dict=set_dict,
-    #             fields_to_filter=fields_to_filter,
-    #             store_id_as=None,
-    #             query_params="modelKey=ERP_FIN$fin_gen_im_head_tr"
-    #         )
-            
-    #         # 业务断言
-    #         self.assert_util.assert_response_success(response)
-            
-    #         # 记录关键数据
-    #         a.json(response, "批量删除响应数据")
-    #         a.text(f"✅ 批量删除成功，共删除 {len(init_ids)} 条记录", "删除结果")
-            
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
     
-    # @case_decorator(
-    #     story="财务域通用模块初始化表",
-    #     title="测试复制数据转换服务",
-    #     description="验证财务域通用模块初始化表复制数据转换功能",
-    #     severity="normal",
-    #     file_level_order=11,
-    #     tags=["ap", "init", "copy"]
-    # )
-    # def test_copy_data_converter(self):
-    #     """测试复制数据转换服务"""
-    #     try:
-    #         if not self.ap_init_id:
-    #             self.test_initialize_configuration()
+    @case_decorator(
+        story="财务域通用模块初始化表",
+        title="测试根据ID删除数据",
+        description="验证根据ID删除财务域通用模块初始化表数据",
+        severity="normal",
+        file_level_order=9,
+        tags=["ap", "init", "delete"]
+    )
+    def test_delete_init_data_by_id(self):
+        """测试根据ID删除数据"""
+        try:
+            # 检查并创建依赖数据
+            if not self.ap_init_id:
+                self.test_initialize_configuration()
             
-    #         # 使用标准化API调用
-    #         set_dict = {"id": self.ap_init_id}
-    #         fields_to_filter = ["id"]
+            set_dict = {"id": self.ap_init_id}
             
-    #         # 复制接口需要 modelKey 查询参数
-    #         response, copied_id = self.standard_api_call(
-    #             api_key="财务域通用模块初始化表-复制数据转换服务",
-    #             set_dict=set_dict,
-    #             fields_to_filter=fields_to_filter,
-    #             store_id_as=None,
-    #             query_params="modelKey=ERP_FIN$fin_gen_im_head_tr"
-    #         )
+            # 单行删除接口需要 modelKey 查询参数
+            response, _ = self.standard_api_call(
+                api_key="财务域通用模块初始化表-根据ID删除数据服务",
+                set_dict=set_dict,
+                store_id_as=None,
+                query_params="modelKey=ERP_FIN$fin_gen_im_head_tr"
+            )
             
-    #         # 业务断言
-    #         self.assert_util.assert_response_data(response)
+            # 业务断言
+            self.assert_util.assert_response_success(response)
             
-    #         # 验证复制结果
-    #         if copied_id:
-    #             # 查询复制的数据
-    #             detail_response, _ = self.standard_api_call(
-    #                 api_key="财务域通用模块初始化表-根据ID查找数据服务",
-    #                 set_dict={"id": copied_id},
-    #                 fields_to_filter=["id"],
-    #                 store_id_as=None
-    #             )
-    #             copied_data = detail_response.get("data", {}).get("data", {})
-    #             if isinstance(copied_data, dict):
-    #                 # 验证复制的数据存在
-    #                 self.assert_util.assert_by_operator(copied_data.get("id"), "=", copied_id, "复制的数据ID应匹配")
-    #                 # 验证复制的数据与原数据不同（ID不同）
-    #                 self.assert_util.assert_by_operator(copied_data.get("id"), "!=", self.ap_init_id, "复制的数据ID应不同于原数据ID")
-                
-    #             # 清理复制的数据
-    #             self.db.delete(
-    #                 table="fin_gen_im_head_tr",
-    #                 where="id = %s",
-    #                 params=[copied_id]
-    #             )
+            # 清空ID，避免后续用例使用已删除的数据
+            self.ap_init_id = None
             
-    #         # 记录关键数据
-    #         a.json(response, "复制响应数据")
-    #         a.text(f"✅ 复制成功，新ID: {copied_id}", "复制结果")
+            # 记录关键数据
+            a.json(response, "删除响应数据")
+            a.text(f"✅ 删除成功", "删除结果")
             
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
     
-    # @case_decorator(
-    #     story="财务域通用模块初始化表",
-    #     title="测试复制数据转换子服务",
-    #     description="验证财务域通用模块初始化表复制数据转换子服务功能",
-    #     severity="normal",
-    #     file_level_order=12,
-    #     tags=["ap", "init", "copy_child"]
-    # )
-    # def test_copy_data_converter_child(self):
-    #     """测试复制数据转换子服务"""
-    #     try:
-    #         if not self.ap_init_id:
-    #             self.test_initialize_configuration()
+    @case_decorator(
+        story="财务域通用模块初始化表",
+        title="测试批量删除数据",
+        description="验证批量删除财务域通用模块初始化表数据",
+        severity="normal",
+        file_level_order=10,
+        tags=["ap", "init", "batch_delete"]
+    )
+    def test_batch_delete_init_data(self):
+        """测试批量删除数据"""
+        try:
+            # 创建多个数据用于批量删除
+            if not self.ap_init_id:
+                self.test_initialize_configuration()
             
-    #         # 复制子服务需要源ID和modelKey参数
-    #         # modelKey 用于后端服务构建URL路径，不能为null
-    #         set_dict = {
-    #             "request": {
-    #                 "id": self.ap_init_id
-    #             },
-    #             "modelKey": "ERP_FIN$fin_gen_im_head_tr"
-    #         }
+            set_dict = {"ids": [self.ap_init_id]}
             
-    #         response, _ = self.standard_api_call(
-    #             api_key="财务域通用模块初始化表-复制数据转换子服务",
-    #             set_dict=set_dict,
-    #             fields_to_filter=None,
-    #             store_id_as=None,
-    #             use_param_util=False,
-    #             param_path=["params"]
-    #         )
+            response, _ = self.standard_api_call(
+                api_key="财务域通用模块初始化表-批量删除数据服务",
+                set_dict=set_dict,
+                store_id_as=None
+            )
             
-    #         self.assert_util.assert_response_data(response)
+            # 业务断言
+            self.assert_util.assert_response_success(response)
             
-    #         # 记录关键数据
-    #         a.json(response, "复制子服务响应数据")
-    #         a.text(f"✅ 复制子服务成功", "复制结果")
+            # 记录关键数据
+            a.json(response, "批量删除响应数据")
+            a.text(f"✅ 批量删除成功", "删除结果")
             
-    #     except Exception as e:
-    #         a.text(str(e), "失败原因")
-    #         raise
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    @case_decorator(
+        story="财务域通用模块初始化表",
+        title="测试复制数据转换服务",
+        description="验证财务域通用模块初始化表复制数据转换功能",
+        severity="normal",
+        file_level_order=11,
+        tags=["ap", "init", "copy"]
+    )
+    def test_copy_data_converter(self):
+        """测试复制数据转换服务"""
+        try:
+            if not self.ap_init_id:
+                self.test_initialize_configuration()
+            
+            # 使用标准化API调用
+            set_dict = {"id": self.ap_init_id}
+            
+            # 复制接口需要 modelKey 查询参数
+            response, copied_id = self.standard_api_call(
+                api_key="财务域通用模块初始化表-复制数据转换服务",
+                set_dict=set_dict,
+                store_id_as=None,
+                query_params="modelKey=ERP_FIN$fin_gen_im_head_tr"
+            )
+            
+            # 业务断言
+            self.assert_util.assert_response_data(response)
+            
+           
+            # 记录关键数据
+            a.json(response, "复制响应数据")
+            a.text(f"✅ 复制成功，新ID: {copied_id}", "复制结果")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    
