@@ -9,7 +9,6 @@ from decimal import Decimal
 
 from testcases.erp_fin.fin_ap import ApBaseTest
 from utils.param_util import ParamUtil
-from utils.mock_util import MockData
 from utils.report_util import a, case_decorator
 
 
@@ -33,12 +32,10 @@ def convert_data_for_json(obj):
 @allure.feature("应付单管理")
 class TestApBatchCreatePartialPrAndPi(ApBaseTest):
     ap_batch_info = {}
-    mock_data = MockData()
     
     @classmethod
     def setup_class(cls):
         super().setup_class()
-        cls.mock_data = MockData()
         cls.ap_batch_info = {}
     
     @case_decorator(
@@ -54,7 +51,7 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
         try:
             with a.step("基于数据工厂创建应付单基础数据"):
                 # 生成唯一编码
-                ap_head_code = self.mock_data.generate_unique_code("AP")
+                ap_head_code = self.mock_util.generate_unique_code("AP")
                 ap_date = int(datetime.now().timestamp() * 1000)
                 
                 # 使用基类方法创建应付单数据
@@ -436,7 +433,7 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
                 # 设置部分开票金额
                 ap_gross_amt = TestApBatchCreatePartialPrAndPi.ap_batch_info.get("gross_doc_amt", 10000)
                 partial_invoice_amt = ap_gross_amt / 2  # 部分开票金额: 50%
-                inv_code = self.mock_data.generate_unique_code("PI")
+                inv_code = self.mock_util.generate_unique_code("PI")
                 
                 # 使用数据工厂创建采购发票请求数据
                 pi_request_data = self.ap_factory.create_pi_request_data(

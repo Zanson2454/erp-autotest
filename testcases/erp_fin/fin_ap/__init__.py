@@ -1,40 +1,55 @@
 # -*- coding: utf-8 -*-
 """
-应付单测试模块
+应付单（AP）测试模块
+提供统一的基类和初始化配置管理
 """
-from pathlib import Path
-import sys
-from typing import Dict, Any, Optional
+import allure
+from typing import Dict, Any
 from datetime import datetime
 import time
 import decimal
 
-project_root = Path(__file__).resolve().parent.parent.parent.parent
-sys.path.append(str(project_root))
-
-from testcases.comm.base_test import BaseTest
+from testcases.erp_fin import FinBaseTest
 from data_factory.fin_ap_factory import FinApFactory
 from utils.param_util import ParamUtil
-from utils.mock_util import MockData
 from utils.report_util import a
 
 
-class ApBaseTest(BaseTest):
-    """应付单测试基类，提供公共方法和配置"""
+@allure.epic("ERP业财集成-应付单")
+@allure.feature("应付单模块")
+class ApBaseTest(FinBaseTest):
+    """
+    应付单测试基类
+    
+    功能说明：
+    1. 继承 FinBaseTest，提供财务模块的基础能力
+    2. 提供应付单相关的公共方法和工具函数
+    3. 所有 fin_ap 模块下的测试类应继承此基类
+    
+    继承的能力：
+    - APIs配置（apis、api_params）
+    - Mock工具（mock_util）
+    - 数据库连接（db）
+    - HTTP客户端（http）
+    - 缓存数据（md_cache_data、fin_cache_data）
+    - 标准化API调用（standard_api_call）
+    
+    使用示例：
+        from testcases.erp_fin.fin_ap import ApBaseTest
+        
+        class TestMyFeature(ApBaseTest):
+            def test_something(self):
+                # 可以直接使用 self.ap_factory、self.mock_util 等
+                pass
+    """
     
     @classmethod
     def setup_class(cls):
-        """初始化测试类配置"""
+        """测试类初始化 - 初始化应付单数据工厂"""
         super().setup_class()
         cls.ap_factory = FinApFactory()
-        cls.mock_data = MockData()
-        
-        # 初始化财务API配置
-        project_root = Path(__file__).resolve().parent.parent.parent.parent
-        apis = cls.yaml_util.read_yaml(project_root / "config/api/erp_fin/fin_api_path.yaml").get("apis", {})
-        api_params = cls.yaml_util.read_yaml(project_root / "config/api/erp_fin/fin_api_params.yaml").get("api_params", {})
-        cls.apis = apis
-        cls.api_params = api_params
+        # mock_util 已在 FinBaseTest.setup_class() 中初始化
+        cls.logger.info("应付单测试基类初始化完成")
     
     @staticmethod
     def convert_decimal_to_float(obj):
@@ -49,7 +64,13 @@ class ApBaseTest(BaseTest):
             return obj
     
     def create_ap_request_body(self, doc_type_id: int = 2002001, account_type: str = "FIN") -> Dict[str, Any]:
-        """创建应付单请求体的通用方法"""
+        """
+        创建应付单请求体的通用方法
+        
+        :param doc_type_id: 单据类型ID，默认2002001
+        :param account_type: 账户类型，默认"FIN"（财务），可选"EST"（暂估）
+        :return: 包含请求体和基础数据的字典
+        """
         now = datetime.now()
         now_ts = int(now.timestamp() * 1000)
         
@@ -93,7 +114,7 @@ class ApBaseTest(BaseTest):
             "comOrgId": com_org,
             "purOrgId": pur_org,
             "payOrgId": pay_org,
-            "apHeadCode": self.mock_data.generate_unique_code("AP"),
+            "apHeadCode": self.mock_util.generate_unique_code("AP"),
             "remark": f"自动化测试创建应付单 - {now.strftime('%Y-%m-%d %H:%M:%S')}",
             "settPartnerType": "SUPPLIER",
             "settPartnerId": {"id": vend["id"]},
@@ -132,7 +153,16 @@ class ApBaseTest(BaseTest):
     
     def send_api_request(self, api_key: str, request_data: Dict[str, Any], 
                         fields: list = None) -> Dict[str, Any]:
-        """发送API请求的通用方法"""
+        """
+        发送API请求的通用方法（向后兼容方法）
+        
+        注意：推荐使用 standard_api_call 方法，此方法保留用于向后兼容
+        
+        :param api_key: API服务名称键
+        :param request_data: 请求数据字典
+        :param fields: 需要过滤的字段列表（可选）
+        :return: 包含响应结果和请求参数的字典
+        """
         api_path = ParamUtil.get_api_path(self.apis, api_key)
         params, url = ParamUtil.get_api_params(self.api_params, api_path)
         
@@ -156,7 +186,15 @@ class ApBaseTest(BaseTest):
     
     def wait_for_ap_status(self, ap_head_code: str, expected_status: str, 
                           max_wait: int = 30, interval: int = 2) -> bool:
-        """等待应付单状态变更的通用方法"""
+        """
+        等待应付单状态变更的通用方法
+        
+        :param ap_head_code: 应付单编码
+        :param expected_status: 期望的状态值
+        :param max_wait: 最大等待时间（秒），默认30秒
+        :param interval: 轮询间隔（秒），默认2秒
+        :return: 如果状态变更成功返回True，否则返回False
+        """
         start_time = time.time()
         
         while time.time() - start_time < max_wait:
@@ -194,7 +232,12 @@ class ApBaseTest(BaseTest):
         return False
     
     def query_ap_detail(self, ap_head_code: str) -> Dict[str, Any]:
-        """查询应付单详情的通用方法（按编码查询）"""
+        """
+        查询应付单详情的通用方法（按编码查询）
+        
+        :param ap_head_code: 应付单编码
+        :return: 应付单详情数据字典，如果查询失败或未找到则返回None
+        """
         try:
             # 使用应付单数据查询服务按编码查询
             api_path = ParamUtil.get_api_path(self.apis, "AP-应付单-数据查询服务")
@@ -218,14 +261,25 @@ class ApBaseTest(BaseTest):
             
         except Exception as e:
             a.text(f"查询应付单详情失败: {str(e)}", "查询异常")
+            self.logger.error(f"查询应付单详情失败: {str(e)}")
             return None
     
+    @staticmethod
     def safe_api_call(func):
-        """安全API调用装饰器"""
+        """
+        安全API调用装饰器
+        
+        使用示例：
+            @ApBaseTest.safe_api_call
+            def my_api_method(self):
+                # API调用逻辑
+                pass
+        """
         def wrapper(self, *args, **kwargs):
             try:
                 return func(self, *args, **kwargs)
             except Exception as e:
                 a.text(str(e), "API调用失败")
+                self.logger.error(f"API调用失败: {str(e)}")
                 raise
         return wrapper 

@@ -251,7 +251,6 @@ class TestBsTypeManagement(ScmInvBaseTest):
             timestamp = self.mock_util.get_timestamp()
             export_params = {
                 "serviceKey": "SCM_INV$INV_BS_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
-                "teamId": self.DEFAULT_TEAM_ID,
                 "params": {
                     "taskName": f"作业类型-{self.nickname}-{timestamp}-导出",
                     "multiSheetConfig": [
@@ -275,8 +274,6 @@ class TestBsTypeManagement(ScmInvBaseTest):
                         }
                     ],
                     "queryData": {
-                        "appId": 0,
-                        "teamId": self.DEFAULT_TEAM_ID,
                         "containerKey": "SCM_INV$INV_BS_TYPE_VIEW-table-container-SCM_INV$inv_bs_type_cf",
                         "viewKey": "SCM_INV$INV_BS_TYPE_VIEW:list",
                         "sceneKey": "SCM_INV$INV_BS_TYPE_VIEW",
@@ -306,8 +303,6 @@ class TestBsTypeManagement(ScmInvBaseTest):
                     },
                     "processConfig": {
                         "processType": "TRANTOR",
-                        "appId": 0,
-                        "teamId": self.DEFAULT_TEAM_ID,
                         "model": "SCM_INV$inv_bs_type_cf",
                         "modelName": "作业类型定义表",
                         "containerKey": "SCM_INV$INV_BS_TYPE_VIEW-table-container-SCM_INV$inv_bs_type_cf",
