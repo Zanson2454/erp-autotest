@@ -71,6 +71,29 @@ def extract_covered_details(case_dir, apis):
                             "testcase_method": method_name
                         })
                         covered_paths_set.add(api_path)
+                
+                # 查找 standard_api_call(api_key="xxx") 或 standard_api_call(api_key='xxx')
+                # 支持单引号和双引号，支持多行调用（带换行）
+                # 匹配模式：standard_api_call(... api_key="xxx" ...) 或 self.standard_api_call(... api_key='xxx' ...)
+                # 使用 DOTALL 模式匹配多行，但限制匹配长度避免过度匹配
+                standard_api_call_pattern = r'(?:self\.)?standard_api_call\s*\(.*?api_key\s*=\s*([\'"])([^\'"]+?)\1[^)]*?\)'
+                for api_key_match in re.finditer(standard_api_call_pattern, method_body, re.DOTALL):
+                    # 跳过过长的匹配（可能是正则表达式错误匹配）
+                    if len(api_key_match.group(0)) > 1000:
+                        continue
+                    api_key = api_key_match.group(2).strip()
+                    if api_key in apis:
+                        api_path = apis[api_key]['path']
+                        api_name = all_paths[api_path]
+                        module_name = extract_module_from_api_name(api_name)
+                        covered_detail.append({
+                            "api_name": api_name,
+                            "api_path": api_path,
+                            "module": module_name,
+                            "testcase_file": str(py_file),
+                            "testcase_method": method_name
+                        })
+                        covered_paths_set.add(api_path)
                         
                 # 查找 url = "xxx"
                 for path in re.findall(r'url\s*=\s*[\'\"](.+?)[\'\"]', method_body):
@@ -185,7 +208,7 @@ def print_module_report(stats, module_stat):
         print(f"{module_name:<20} {total_apis:<10} {covered_apis:<10} {coverage_rate:<10} {uncovered_count:<10}")
     
     print("-" * 80)
-    print(f"{'总计':<20} {stats['total']:<10} {stats['covered']:<10} {stats['coverage']}<10 {len(stats['uncovered']):<10}")
+    print(f"{'总计':<20} {stats['total']:<10} {stats['covered']:<10} {stats['coverage']:<10} {len(stats['uncovered']):<10}")
     print("="*80)
 
 def generate_coverage_stats(api_path_yaml, case_dir, output_json, module_stat=False):
@@ -264,7 +287,7 @@ if __name__ == '__main__':
     # 示例用法：统计 GEN_MD 模块覆盖率
     # 注意：请根据实际项目结构调整 api_path_yaml 路径
     # 常见路径可能是 testdata/gen_md/md_api_path.yaml 或 config/erp/md_api_path.yaml
-    api_yaml_path = 'testdata/gen_md/md_api_path.yaml'  # 请确认实际路径
+    api_yaml_path = 'config/api/gen_md/md_api_path.yaml'  # 请确认实际路径
     case_directory = 'testcases/gen_md'
     output_file = 'reports/gen_md_coverage.json'
     
@@ -278,6 +301,6 @@ if __name__ == '__main__':
     
     # 可以进一步处理 stats，例如只查看 GEN 模块
     if 'module_statistics' in stats:
-        gen_module = next((m for m in stats['module_statistics'] if m['module_name'] == 'GEN'), None)
+        gen_module = next((m for m in stats['module_statistics'] if m['module_name'] == 'GEN_MD'), None)
         if gen_module:
             print(f"\nGEN_MD 模块覆盖率: {gen_module['coverage']} (已覆盖 {gen_module['covered_apis']}/{gen_module['total_apis']})")

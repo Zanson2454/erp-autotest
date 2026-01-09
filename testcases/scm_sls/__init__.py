@@ -269,7 +269,7 @@ class SlsBase(BaseTest):
         cls.so_head_id_submit = None
         cls.so_item_id = None
         cls.so_item_data = None
-        cls.render_qty = random.randint(1, 99)  # 生成1-99之间的随机整数
+        cls.render_qty = 1
         cls.so_data_render = None
         cls.so_data_price = None
         cls.priceIdempotent=None

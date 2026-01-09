@@ -34,9 +34,9 @@
   ],
   "gen_wc_head_info": [
     {
-      "gen_wc_head_id": 2000001,
-      "wc_head_code": "GZRL001",
-      "wc_head_name": "标准工作日历"
+      "gen_wc_head_id": 2000003,
+      "wc_head_code": "ihg",
+      "wc_head_name": "hgv"
     }
   ],
   "uom_info": {
@@ -58,16 +58,16 @@
     ],
     "len_uom_info": [
       {
-        "uom_id": 2019001,
-        "uom_code": "m",
+        "uom_id": 14050001,
+        "uom_code": "CMT",
         "uom_type": "L",
-        "uom_desc": "米"
+        "uom_desc": "厘米"
       }
     ],
     "volume_uom_info": [
       {
-        "uom_id": 2000003,
-        "uom_code": "M3",
+        "uom_id": 14049001,
+        "uom_code": "MTQ",
         "uom_type": "VOL",
         "uom_desc": "立方米"
       }
@@ -75,21 +75,15 @@
   },
   "bank_info": [
     {
-      "bank_id": 2000001,
-      "bank_code": "BOC",
-      "bank_name": "中国银行",
-      "sub_bank_id": 2000001,
-      "sub_bank_code": "80001",
-      "sub_bank_name": "中国银行佛山厚辉支行"
+      "bank_id": 2000018,
+      "bank_code": "BCM",
+      "bank_name": "交通银行",
+      "sub_bank_id": 1069226,
+      "sub_bank_code": "301242000088",
+      "sub_bank_name": "交通银行股份有限公司吉林铁东支行"
     }
   ],
   "tax_info": [
-    {
-      "id": 2001001,
-      "tax_code": "CN_PUR_02",
-      "taxcate": "J",
-      "tax": 13.0
-    },
     {
       "id": 2002001,
       "tax_code": "CN_PUR_01",
@@ -106,25 +100,19 @@
       "id": 2003001,
       "tax_code": "CN_PUR_02",
       "taxcate": "J",
-      "tax": 1.0
+      "tax": 0.6
     },
     {
-      "id": 2004001,
-      "tax_code": "CN_SLS_02",
-      "taxcate": "X",
-      "tax": 6.0
-    },
-    {
-      "id": 2006001,
-      "tax_code": "CN_PUR_00",
+      "id": 14070001,
+      "tax_code": "tax_code",
       "taxcate": "J",
-      "tax": 0.0
+      "tax": 0.13
     },
     {
-      "id": 2007001,
-      "tax_code": "CN_SLS_02",
+      "id": 14083001,
+      "tax_code": "ZERO",
       "taxcate": "X",
-      "tax": 13.0
+      "tax": 0.0
     }
   ]
 }

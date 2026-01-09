@@ -13,6 +13,9 @@
 # 运行测试并指定环境
 pytest --env=test --alluredir=./reports/allure-results
 
+# 运行测试并指定项目（多项目模式）
+pytest --project=project1 --env=test --alluredir=./reports/allure-results
+
 # 运行测试并指定 Trantor 版本
 pytest --trantor_version=2.5.25.0130.0-SNAPSHOT
 
@@ -52,38 +55,65 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         help="执行环境：dev/test/staging/prod"
     )
     parser.addoption(
+        "--project",
+        action="store",
+        default=None,
+        help="项目名称（对应 config/env/{project}/ 目录），不指定时使用默认配置（config/env/{env}.yaml）"
+    )
+    parser.addoption(
         "--trantor_version",
         action="store",
         default=None,
         help="Trantor版本号"
     )
 
-def load_env_config(env: str) -> dict:
+def load_env_config(env: str, project: str = None) -> dict:
     """加载环境配置
     
     Args:
         env: 环境名称
+        project: 项目名称（可选），如果指定则从 config/env/{project}/{env}.yaml 加载，
+                 否则从 config/env/{env}.yaml 加载（向后兼容）
         
     Returns:
         dict: 环境配置
     """
-    config_path = project_root / "config" / "env" / f"{env}.yaml"
+    if project:
+        # 多项目模式：从项目目录加载配置
+        config_path = project_root / "config" / "env" / project / f"{env}.yaml"
+        if not config_path.exists():
+            Loggers.warning(f"项目配置文件不存在: {config_path}，尝试使用默认配置")
+            # 如果项目配置不存在，尝试使用默认配置
+            config_path = project_root / "config" / "env" / f"{env}.yaml"
+    else:
+        # 默认模式：从根目录加载配置（向后兼容）
+        config_path = project_root / "config" / "env" / f"{env}.yaml"
+    
     if not config_path.exists():
         Loggers.warning(f"环境配置文件不存在: {config_path}")
         return {}
         
     yaml_util = YamlUtil()
-    return yaml_util.read_yaml(config_path)
+    if project:
+        # 多项目模式：需要使用相对路径
+        relative_path = f"env/{project}/{env}.yaml"
+    else:
+        relative_path = f"env/{env}.yaml"
+    
+    return yaml_util.read_yaml(relative_path)
 
 def pytest_configure(config: pytest.Config) -> None:
     """配置测试环境"""
     # 设置测试环境
     env = config.getoption("--env")
-    Loggers.info(f"当前测试环境: {env}")
+    project = config.getoption("--project")
+    Loggers.info(f"当前测试环境: {env}" + (f", 项目: {project}" if project else ""))
     os.environ["TEST_ENV"] = env
+    if project:
+        os.environ["TEST_PROJECT"] = project
     
     # 加载环境配置
-    env_config = load_env_config(env)
+    env_config = load_env_config(env, project)
     
     # 设置 Trantor 版本，优先级：命令行参数 > 配置文件 > 硬编码默认值
     trantor_version = (
@@ -114,6 +144,7 @@ def create_allure_environment(config: pytest.Config) -> None:
         
         env_info = {
             "Environment": os.getenv("TEST_ENV", "test"),
+            "Project": os.getenv("TEST_PROJECT", "default"),
             "Trantor_Version": os.getenv("TRANTOR_VERSION", ""),
             "Python_Version": sys.version.split()[0],
             "Platform": sys.platform,

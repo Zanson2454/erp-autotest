@@ -402,7 +402,6 @@ class TestMvmTypeManagement(ScmInvBaseTest):
             timestamp = self.mock_util.get_timestamp()
             export_params = {
                 "serviceKey": "SCM_INV$INV_MVM_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
-                "teamId": self.DEFAULT_TEAM_ID,
                 "params": {
                     "taskName": f"移动类型-{self.nickname}-{timestamp}-导出",
                     "multiSheetConfig": [
@@ -462,8 +461,6 @@ class TestMvmTypeManagement(ScmInvBaseTest):
                         }
                     ],
                     "queryData": {
-                        "appId": 0,
-                        "teamId": self.DEFAULT_TEAM_ID,
                         "containerKey": "SCM_INV$INV_MVM_TYPE_NEW_VIEW-table-container-SCM_INV$inv_mvm_type_cf",
                         "viewKey": "SCM_INV$INV_MVM_TYPE_NEW_VIEW:list",
                         "sceneKey": "SCM_INV$INV_MVM_TYPE_NEW_VIEW",
@@ -489,8 +486,6 @@ class TestMvmTypeManagement(ScmInvBaseTest):
                     },
                     "processConfig": {
                         "processType": "TRANTOR",
-                        "appId": 0,
-                        "teamId": self.DEFAULT_TEAM_ID,
                         "model": "SCM_INV$inv_mvm_type_cf",
                         "modelName": "移动类型定义表",
                         "containerKey": "SCM_INV$INV_MVM_TYPE_NEW_VIEW-table-container-SCM_INV$inv_mvm_type_cf",

@@ -4,7 +4,6 @@
 import allure
 from testcases.erp_fin.fin_ap import ApBaseTest
 from utils.param_util import ParamUtil
-from utils.mock_util import MockData
 from utils.report_util import a, case_decorator
 from datetime import datetime
 from decimal import Decimal
@@ -12,12 +11,10 @@ import time
 
 class TestApCreatePaymentRequest(ApBaseTest):
     ap_pr_info = {}
-    mock_data = MockData()
 
     @classmethod
     def setup_class(cls):
         super().setup_class()
-        cls.mock_data = MockData()
 
     def convert_data_for_json(self, obj):
         """数据转换方法，处理Decimal和datetime类型"""
@@ -46,9 +43,9 @@ class TestApCreatePaymentRequest(ApBaseTest):
     def test_create_standard_ap_doc_full_process(self):
         try:
             with a.step("创建标准应付单并完成全流程"):
-                # 使用MockData生成测试数据
-                ap_head_code = self.mock_data.generate_unique_code("APD")
-                remark = self.mock_data.get_mock_remark()
+                # 使用mock_util生成测试数据
+                ap_head_code = self.mock_util.generate_unique_code("APD")
+                remark = self.mock_util.get_mock_remark()
                 
                 ap_data = self.create_ap_request_body(doc_type_id=2002001, account_type="FIN")
                 request_body = ap_data["request_body"]

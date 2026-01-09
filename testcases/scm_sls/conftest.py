@@ -42,8 +42,10 @@ def pytest_sessionfinish(session, exitstatus):
     # 测试完成后执行清理
     try:
         # 获取环境配置（使用 DataFactory 确保环境变量被正确替换）
+        # 支持多项目：自动从环境变量 TEST_PROJECT 获取项目名称
         env = os.getenv("TEST_ENV", "test")
-        data_factory = DataFactory(env_name=env)
+        project = os.getenv("TEST_PROJECT")
+        data_factory = DataFactory(env_name=env, project=project)
         env_config = data_factory.get_env_config()
         
         if not env_config:

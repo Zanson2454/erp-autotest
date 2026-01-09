@@ -501,7 +501,6 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
             # 根据curl直接构造参数，不使用filter_post_body_fields
             filtered_params = {
                 "serviceKey": "SCM_INV$INV_MVM_DOC_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST",
-                "teamId": 22,
                 "params": {
                     "taskName": f"移动凭证-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
                 "multiSheetConfig": [{
@@ -539,8 +538,6 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
                     ]
                 }],
                 "queryData": {
-                    "appId": 0,
-                    "teamId": 22,
                     "containerKey": "SCM_INV$INV_MVM_VOUCHER_VIEW-table-container-SCM_INV$inv_mvm_doc_head_tr",
                     "viewKey": "SCM_INV$INV_MVM_VOUCHER_VIEW:list",
                     "sceneKey": "SCM_INV$INV_MVM_VOUCHER_VIEW",
@@ -577,8 +574,6 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
                 },
                 "processConfig": {
                     "processType": "TRANTOR",
-                    "appId": 0,
-                    "teamId": 22,
                     "model": "SCM_INV$inv_mvm_doc_head_tr",
                     "modelName": "移动凭证抬头表",
                     "containerKey": "SCM_INV$INV_MVM_VOUCHER_VIEW-table-container-SCM_INV$inv_mvm_doc_head_tr",

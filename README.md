@@ -27,6 +27,7 @@ ERP 自动化测试平台是一个面向企业级 ERP 系统的自动化测试�
 
 - ✅ **标准化测试流程**：统一的测试基类、工具方法和代码规范
 - ✅ **多环境支持**：dev/test/staging/prod 环境配置管理
+- ✅ **多项目支持**：支持多个项目独立配置，配置隔离互不干扰
 - ✅ **数据驱动测试**：数据工厂模式，支持基础数据和主数据初始化
 - ✅ **数据库操作**：安全的数据库连接管理、事务处理和参数化查询
 - ✅ **异步任务测试**：支持异步任务状态轮询和等待机制
@@ -102,7 +103,15 @@ ERP 自动化测试平台是一个面向企业级 ERP 系统的自动化测试�
 ```
 erp-autotest/
 ├── config/                 # 配置文件目录
-│   ├── env/               # 环境配置（dev/test/staging/prod.yaml）
+│   ├── env/               # 环境配置
+│   │   ├── test.yaml      # 默认配置（向后兼容）
+│   │   ├── dev.yaml       # 默认开发环境配置
+│   │   └── project1/      # 项目1配置目录（多项目模式）
+│   │       ├── test.yaml
+│   │       └── dev.yaml
+│   │   └── project2/      # 项目2配置目录（多项目模式）
+│   │       ├── test.yaml
+│   │       └── dev.yaml
 │   └── erp/               # 模块初始化 SQL（md_init_sql.yaml 等）
 ├── data_factory/          # 数据工厂（当前完善中）
 │   ├── base.py           # 数据工厂基类 + 配置管理 + SQL 缓存
@@ -195,6 +204,8 @@ pip install -r requirements.txt
 
 4. **配置环境**
 
+### 默认配置模式（单项目）
+
 在 `config/env/` 目录下创建环境配置文件（如 `test.yaml`），包含门户配置和数据库配置：
 
 ```yaml
@@ -239,6 +250,65 @@ cache:
   auto_refresh: true                       # 是否自动刷新过期缓存
 ```
 
+### 多项目配置模式（推荐）
+
+如果需要支持多个项目，可以按项目目录组织配置文件：
+
+```bash
+# 创建项目配置目录
+mkdir -p config/env/project1
+mkdir -p config/env/project2
+
+# 在项目目录下创建配置文件
+# config/env/project1/test.yaml
+# config/env/project1/.env          # 项目1的环境变量（可选）
+# config/env/project2/test.yaml
+# config/env/project2/.env          # 项目2的环境变量（可选）
+```
+
+**配置文件说明**：
+- **YAML 配置文件**：`config/env/{project}/{env}.yaml` - 项目配置结构
+- **环境变量文件**：`config/env/{project}/.env` - 项目特定的环境变量（可选）
+
+**环境变量加载优先级**：
+1. **项目级 `.env`**：`config/env/{project}/.env` （优先级最高）
+2. **默认 `.env`**：`config/env/.env` （作为共享/默认值）
+3. **根目录 `.env`**：项目根目录的 `.env` （向后兼容）
+
+**配置加载优先级**：
+1. 如果指定 `--project=project1`，框架会从 `config/env/project1/{env}.yaml` 加载配置
+2. 如果项目配置文件不存在，会自动回退到默认配置 `config/env/{env}.yaml`（向后兼容）
+3. 如果不指定 `--project` 参数，直接使用默认配置 `config/env/{env}.yaml`
+
+**环境变量配置示例**：
+
+```bash
+# config/env/demo1/.env
+TEST_TERP_PORTAL_USERNAME='user1@example.com'
+TEST_TERP_PORTAL_PASSWORD='password1'
+TEST_DB_HOST='10.3.0.143'
+TEST_DB_USER='demo1_test'
+TEST_DB_PASSWORD='password1'
+TEST_DB_NAME='demo1_test'
+
+# config/env/demo2/.env
+TEST_TERP_PORTAL_USERNAME='user2@example.com'
+TEST_TERP_PORTAL_PASSWORD='password2'
+TEST_DB_HOST='10.3.0.144'
+TEST_DB_USER='demo2_test'
+TEST_DB_PASSWORD='password2'
+TEST_DB_NAME='demo2_test'
+```
+
+**优势**：
+- ✅ 配置隔离：不同项目使用不同的数据库、门户等配置
+- ✅ 环境变量隔离：每个项目可以拥有独立的 `.env` 文件
+- ✅ 易于维护：项目配置独立管理，结构清晰
+- ✅ 向后兼容：现有项目无需修改，继续使用默认配置
+- ✅ 灵活切换：通过命令行参数快速切换项目
+
+> 💡 **提示**：详细的多项目环境变量配置说明请参考 [docs/multi_project_env_config.md](docs/multi_project_env_config.md)
+
 5. **初始化测试数据（首次运行）**
 
 框架会自动初始化测试数据，包括：
@@ -261,8 +331,14 @@ pytest testcases/scm_pur/
 # 指定环境（dev/test/staging/prod）
 pytest --env=test
 
+# 指定项目（多项目模式）
+pytest --project=project1 --env=test
+
 # 指定 Trantor 版本
 pytest --trantor_version=2.5.25.0330.0-SNAPSHOT
+
+# 组合使用：指定项目和环境
+pytest --project=project1 --env=test --alluredir=./reports/allure-results
 
 # 并行执行（4 个进程，按文件分发）
 pytest -n 4 --dist=loadfile
@@ -608,6 +684,53 @@ pytest --env=staging
 # 生产环境（使用前需谨慎）
 pytest --env=prod
 ```
+
+### Q8.1: 多项目如何配置？
+
+A: 框架支持多项目配置，通过 `--project` 参数指定项目名称：
+
+**1. 创建项目配置目录**
+```bash
+mkdir -p config/env/project1
+mkdir -p config/env/project2
+```
+
+**2. 在每个项目目录下创建环境配置文件**
+```bash
+# config/env/project1/test.yaml
+# config/env/project1/dev.yaml
+# config/env/project1/.env          # 项目1的环境变量（可选）
+# config/env/project2/test.yaml
+# config/env/project2/dev.yaml
+# config/env/project2/.env          # 项目2的环境变量（可选）
+```
+
+**环境变量配置说明**：
+- 每个项目可以拥有独立的 `.env` 文件（`config/env/{project}/.env`）
+- 环境变量加载优先级：项目级 `.env` > 全局 `.env`
+- 项目级 `.env` 不存在时，自动使用全局 `.env` 文件
+
+**3. 运行测试时指定项目**
+```bash
+# 运行 project1 的测试
+pytest --project=project1 --env=test
+
+# 运行 project2 的测试
+pytest --project=project2 --env=test
+
+# 不指定项目时使用默认配置（向后兼容）
+pytest --env=test
+```
+
+**配置加载逻辑**：
+- 如果指定 `--project=project1`，框架会优先从 `config/env/project1/{env}.yaml` 加载配置
+- 如果项目配置文件不存在，会自动回退到默认配置 `config/env/{env}.yaml`
+- 不同项目的配置完全隔离，包括数据库、门户、环境变量等
+
+**适用场景**：
+- ✅ 同一套测试框架需要测试多个不同的 ERP 项目
+- ✅ 不同项目使用不同的数据库和门户地址
+- ✅ 需要为不同项目维护独立的配置
 
 ### Q9: 测试用例执行顺序如何控制？
 

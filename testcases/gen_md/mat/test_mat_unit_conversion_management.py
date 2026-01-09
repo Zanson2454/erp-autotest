@@ -18,14 +18,22 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
 
         # 安全获取计量单位ID，避免IndexError
         cls.uomId = None
-        uom_info = cls.init_data.get("uom_info", {})
-        if uom_info:
-            qty_uom_info = uom_info.get("qty_uom_info", [])
-            if qty_uom_info and len(qty_uom_info) > 0:
-                cls.uomId = qty_uom_info[0].get("uom_id")
+        if cls.init_data:
+            uom_info = cls.init_data.get("uom_info", {})
+            if uom_info:
+                qty_uom_info = uom_info.get("qty_uom_info", [])
+                if qty_uom_info and len(qty_uom_info) > 0:
+                    cls.uomId = qty_uom_info[0].get("uom_id")
 
-        cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
-        cls.user_id = cls.init_data["user_info"]['user_info']["id"]
+        # 安全获取用户信息
+        if cls.init_data and cls.init_data.get("user_info"):
+            user_info = cls.init_data["user_info"].get("user_info", {})
+            cls.nickname = user_info.get("nickname")
+            cls.user_id = user_info.get("id")
+        else:
+            cls.nickname = None
+            cls.user_id = None
+            cls.logger.warning("init_data 中未找到 user_info，nickname 和 user_id 设置为 None")
         cls.logger.info("物料单位转换管理测试类初始化完成")
 
     @classmethod
