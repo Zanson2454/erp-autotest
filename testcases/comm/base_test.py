@@ -47,27 +47,35 @@ class ConfigManager:
     }
     
     @classmethod
-    def get_config(cls, env: str = "test", refresh: bool = False) -> Dict[str, Any]:
+    def get_config(cls, env: str = "test", project: str = None, refresh: bool = False) -> Dict[str, Any]:
         """
-        获取配置，支持缓存
+        获取配置，支持缓存和多项目
         
         :param env: 环境名称
+        :param project: 项目名称（可选），如果指定则从 config/env/{project}/{env}.yaml 加载
         :param refresh: 是否强制刷新缓存
         :return: 配置字典
         """
+        # 从环境变量获取项目名称（如果未通过参数传入）
+        if project is None:
+            project = os.getenv("TEST_PROJECT")
+        
+        # 构建缓存键（包含项目信息以支持多项目）
+        cache_key = f"{env}" if project is None else f"{project}:{env}"
+        
         # 检查缓存
-        if env in cls._config_cache and not refresh:
-            Loggers.info(f"从缓存加载配置 [env={env}]")
-            return cls._config_cache[env]
+        if cache_key in cls._config_cache and not refresh:
+            Loggers.info(f"从缓存加载配置 [env={env}" + (f", project={project}" if project else "") + "]")
+            return cls._config_cache[cache_key]
         
         # 加载新配置
-        Loggers.info(f"加载新配置 [env={env}]")
+        Loggers.info(f"加载新配置 [env={env}" + (f", project={project}" if project else "") + "]")
         try:
-            data_factory = DataFactory(env_name=env)
+            data_factory = DataFactory(env_name=env, project=project)
             config = data_factory.get_env_config()
             
             if config is None:
-                Loggers.warning(f"配置加载失败，使用默认配置 [env={env}]")
+                Loggers.warning(f"配置加载失败，使用默认配置 [env={env}" + (f", project={project}" if project else "") + "]")
                 config = cls.DEFAULT_CONFIG.copy()
             else:
                 # 合并默认配置
@@ -76,14 +84,14 @@ class ConfigManager:
             # 验证配置
             cls.validate_config(config)
             
-            # 缓存配置
-            cls._config_cache[env] = config
+            # 缓存配置（使用包含项目的键）
+            cls._config_cache[cache_key] = config
             
-            Loggers.info(f"配置加载成功 [env={env}]")
+            Loggers.info(f"配置加载成功 [env={env}" + (f", project={project}" if project else "") + "]")
             return config
             
         except Exception as e:
-            Loggers.error(f"配置加载异常 [env={env}]: {str(e)}")
+            Loggers.error(f"配置加载异常 [env={env}" + (f", project={project}" if project else "") + f"]: {str(e)}")
             raise RuntimeError(f"配置加载失败: {str(e)}") from e
     
     @staticmethod
@@ -464,14 +472,22 @@ class LoginService:
 class BaseTestInitializer:
     """测试基类初始化器 - 专门负责初始化逻辑"""
     
-    def __init__(self, env_name: str):
+    def __init__(self, env_name: str, project: str = None):
+        """
+        初始化测试基类初始化器
+        
+        :param env_name: 环境名称
+        :param project: 项目名称（可选），如果未指定则从环境变量 TEST_PROJECT 获取
+        """
         self.env_name = env_name
+        # 从环境变量获取项目名称（如果未通过参数传入）
+        self.project = project or os.getenv("TEST_PROJECT")
     
     def initialize_environment(self) -> Dict[str, Any]:
         """初始化环境配置"""
-        Loggers.info(f"初始化环境: {self.env_name}")
+        Loggers.info(f"初始化环境: {self.env_name}" + (f", 项目: {self.project}" if self.project else ""))
         # 使用 ConfigManager 获取配置
-        config = ConfigManager.get_config(env=self.env_name)
+        config = ConfigManager.get_config(env=self.env_name, project=self.project)
         
         # 打印安全的配置信息
         safe_config = ConfigManager.get_safe_config(config)
@@ -481,8 +497,8 @@ class BaseTestInitializer:
     
     def initialize_base_data(self) -> Dict[str, Any]:
         """初始化基础数据"""
-        # 创建 DataFactory 实例
-        data_factory = DataFactory(env_name=self.env_name)
+        # 创建 DataFactory 实例（传递项目参数）
+        data_factory = DataFactory(env_name=self.env_name, project=self.project)
         raw_data = data_factory.get_base_data(project="erp")
         if not raw_data:
             raise RuntimeError("基础数据获取失败，请检查数据工厂配置和数据库连接！")
@@ -558,12 +574,13 @@ class BaseTest:
     def setup_class(cls) -> None:
         """测试类初始化 - 模板方法模式优化"""
         try:
-            # 获取环境
+            # 获取环境和项目
             env = os.getenv("TEST_ENV", "test")
-            Loggers.info(f"开始初始化测试基类 [env={env}]")
+            project = os.getenv("TEST_PROJECT")
+            Loggers.info(f"开始初始化测试基类 [env={env}" + (f", project={project}" if project else "") + "]")
 
-            # 使用初始化器
-            initializer = BaseTestInitializer(env)
+            # 使用初始化器（传递项目参数）
+            initializer = BaseTestInitializer(env, project)
 
             # 模板方法：按顺序执行初始化步骤
             cls._initialize_config(initializer)      # 1. 配置初始化

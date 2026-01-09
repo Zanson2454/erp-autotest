@@ -174,13 +174,21 @@ class TestCurrencyManagement(GenMdBaseTest):
             rate_code = self.mock_data.generate_unique_code(tag="RATE")
             rate_name = f"测试汇率_{self.mock_data.get_timestamp()}"
             
-            # 获取币种ID（原有逻辑）
-            curr_id = self.init_data.get("currency_info", [{}])[0].get("curr_id")
+            # 获取币种ID（原有逻辑，安全访问）
+            curr_id = None
+            if self.init_data:
+                currency_info = self.init_data.get("currency_info", [])
+                if currency_info:
+                    curr_id = currency_info[0].get("curr_id")
             if not curr_id:
                 curr_id = 2000001  # 默认CNY币种ID
             
-            # 获取汇率类型ID（原有逻辑）
-            rate_type_id = self.init_data.get("exchange_rate_type_info", [{}])[0].get("exchange_rate_type_id")
+            # 获取汇率类型ID（原有逻辑，安全访问）
+            rate_type_id = None
+            if self.init_data:
+                rate_type_info = self.init_data.get("exchange_rate_type_info", [])
+                if rate_type_info:
+                    rate_type_id = rate_type_info[0].get("exchange_rate_type_id")
 
             # 2. 使用标准化API调用
             set_dict = {
@@ -1053,9 +1061,20 @@ class TestCurrencyManagement(GenMdBaseTest):
             save_api_path = self.get_api_path("GEN-汇率-保存服务")
             save_params, save_url = self.get_api_params(save_api_path)
             
-            # 获取币种ID和汇率类型ID（原有逻辑）
-            curr_id = self.init_data.get("currency_info", [{}])[0].get("curr_id", 2000001)
-            rate_type_id = self.init_data.get("exchange_rate_type_info", [{}])[0].get("exchange_rate_type_id")
+            # 获取币种ID和汇率类型ID（原有逻辑，安全访问）
+            curr_id = None
+            if self.init_data:
+                currency_info = self.init_data.get("currency_info", [])
+                if currency_info:
+                    curr_id = currency_info[0].get("curr_id", 2000001)
+            if not curr_id:
+                curr_id = 2000001  # 默认值
+            
+            rate_type_id = None
+            if self.init_data:
+                rate_type_info = self.init_data.get("exchange_rate_type_info", [])
+                if rate_type_info:
+                    rate_type_id = rate_type_info[0].get("exchange_rate_type_id")
             
             save_filtered_params = ParamUtil.filter_post_body_fields(
                 save_params, ["code", "name", "exchRate", "baseCurrId", "tarCurrId", "genCurrExchangeRateTypeCf"], ["params", "request"]
@@ -1278,9 +1297,20 @@ class TestCurrencyManagement(GenMdBaseTest):
             rate_code = self.mock_data.generate_unique_code(tag="WORKFLOW_RATE")
             rate_name = f"流程测试汇率_{self.mock_data.get_timestamp()}"
 
-            # 获取币种ID和汇率类型ID（原有逻辑）
-            curr_id = self.init_data.get("currency_info", [{}])[0].get("curr_id", 2000001)
-            rate_type_id = self.init_data.get("exchange_rate_type_info", [{}])[0].get("exchange_rate_type_id")
+            # 获取币种ID和汇率类型ID（原有逻辑，安全访问）
+            curr_id = None
+            if self.init_data:
+                currency_info = self.init_data.get("currency_info", [])
+                if currency_info:
+                    curr_id = currency_info[0].get("curr_id", 2000001)
+            if not curr_id:
+                curr_id = 2000001  # 默认值
+            
+            rate_type_id = None
+            if self.init_data:
+                rate_type_info = self.init_data.get("exchange_rate_type_info", [])
+                if rate_type_info:
+                    rate_type_id = rate_type_info[0].get("exchange_rate_type_id")
             
             rate_set_dict = {
                 "code": rate_code,

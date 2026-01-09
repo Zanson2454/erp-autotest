@@ -30,8 +30,13 @@ class TestAddrManagement(GenMdBaseTest):
         cls.addr_code = None
         cls.parent_addr_id = None
         cls.logger.info("地址库管理测试类初始化完成")
+        # 安全获取国家ID
         if cls.init_data:
-            cls.coun_id = cls.init_data.get("country_info",[])[0].get("coun_id")
+            country_info = cls.init_data.get("country_info", [])
+            cls.coun_id = country_info[0].get("coun_id") if country_info else None
+        else:
+            cls.coun_id = None
+            cls.logger.warning("init_data 为 None，coun_id 设置为 None")
 
     @classmethod
     def teardown_class(cls):

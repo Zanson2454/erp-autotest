@@ -31,7 +31,7 @@ class GenMdBaseTest(BaseTest):
     _PORTAL_TYPE_KEYS: Dict[str, str] = {
     "admin": "TERP_PORTAL",
     "cust": "TERP_CUST_PC"
-    }   
+    }
     
     # 添加单例实例持有者，作为类变量
     _mock_instance = None
@@ -86,21 +86,32 @@ class GenMdBaseTest(BaseTest):
         cls.api_params = cls.yaml_util.read_yaml(cls.md_api_params).get("api_params", {})
         
         # 初始化DataFactory（必须在init_sql_cache之前调用）
-        DataFactory.__init__(env_name="test")
+        # 从环境变量获取 env 和 project，支持多项目模式
+        import os
+        env_name = os.getenv("TEST_ENV", "test")
+        project = os.getenv("TEST_PROJECT")
+        DataFactory.__init__(env_name=env_name, project=project)
         
         # 加载缓存数据：主数据依赖的初始化SQL
+        # 保持向后兼容，所有项目共享缓存；切换项目时自动清除缓存
         DataFactory.init_sql_cache(
             sql_config_path=str(project_root / "config" / "erp" / "md_init_sql.yaml"),  # 主数据依赖的初始化sql 存放路径
             db_config_name="erp_db",  # 数据库配置名称
-            cache_key="md_init_cache",  # 缓存key
+            cache_key="md_init_cache",  # 缓存key（所有项目共享）
             cache_dir="testdata/cache"  # 缓存目录
         )
         cls.md_cache_data = CacheUtil.get('md_init_cache')
         
-        # 设置路径参数和用户信息
+        # 设置路径参数和用户信息（安全访问）
         cls.path_params = {"tmodule":"GEN_MD"}
-        cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
-        cls.user_id = cls.init_data["user_info"]['user_info']["id"]
+        if cls.init_data and cls.init_data.get("user_info"):
+            user_info = cls.init_data["user_info"].get("user_info", {})
+            cls.nickname = user_info.get("nickname")
+            cls.user_id = user_info.get("id")
+        else:
+            cls.nickname = None
+            cls.user_id = None
+            cls.logger.warning("init_data 中未找到 user_info，nickname 和 user_id 设置为 None")
     
     def get_api_path(self, api_key):
         """
