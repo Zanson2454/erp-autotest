@@ -24,15 +24,11 @@ class TestApInitManagement(ApBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
-        cls.ap_init_id = None
+        # ap_init_id 已在 ApBaseTest.setup_class() 中初始化（如果实现了自动初始化）
+        # 如果未实现自动初始化，则初始化为 None
+        if not hasattr(cls, 'ap_init_id'):
+            cls.ap_init_id = None
         cls.logger.info("应付初始化管理测试类初始化完成")
-        # 初始化MD数据（从md_cache_data获取主数据）
-        # 初始化MD数据（从md_cache_data获取主数据）
-        if cls.md_cache_data:
-            gr_come_org_info = cls.md_cache_data.get("org_info", {}).get("gr_come_org_info", [])
-            com_org_info = cls.md_cache_data.get("org_info", {}).get("com_org_info", [])
-            cls.com_org_id = com_org_info[0].get("id") if com_org_info else None
-            cls.gr_com_org_id = gr_come_org_info[0].get("id") if gr_come_org_info else None
     @classmethod
     def teardown_class(cls):
         """测试类结束后执行清理"""

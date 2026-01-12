@@ -29,9 +29,20 @@ class TestApTypeMdManagement(ApBaseTest):
         cls.logger.info("应付单据类型管理测试类初始化完成")
         
         # 从缓存安全获取汇率类型（从init_data获取）
+        # 使用安全获取方式，先判断列表是否存在且非空，再获取第一个元素
         if cls.init_data:
             exchange_rate_type_info = cls.init_data.get("exchange_rate_type_info", [])
-            cls.exchange_rate_type_id = exchange_rate_type_info[0].get("exchange_rate_type_id") if exchange_rate_type_info else None
+            if exchange_rate_type_info and len(exchange_rate_type_info) > 0:
+                cls.exchange_rate_type_id = exchange_rate_type_info[0].get("exchange_rate_type_id")
+            else:
+                cls.exchange_rate_type_id = None
+                cls.logger.warning(
+                    "⚠️ 未找到汇率类型信息（exchange_rate_type_info），请检查 init_data 中的 exchange_rate_type_info 数据。"
+                    "这可能导致某些测试用例失败。"
+                )
+        else:
+            cls.exchange_rate_type_id = None
+            cls.logger.warning("⚠️ init_data 未初始化，请检查基础数据缓存是否正常加载")
     
     @classmethod
     def teardown_class(cls):

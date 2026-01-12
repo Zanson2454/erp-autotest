@@ -40,12 +40,34 @@ class ApBaseTest(FinBaseTest):
         super().setup_class()
         
         # 初始化MD数据（从md_cache_data获取主数据）
+        # 使用安全获取方式，先判断列表是否存在且非空，再获取第一个元素
         if cls.md_cache_data:
             gr_come_org_info = cls.md_cache_data.get("org_info", {}).get("gr_come_org_info", [])
             com_org_info = cls.md_cache_data.get("org_info", {}).get("com_org_info", [])
-            cls.com_org_id = com_org_info[0].get("id") if com_org_info else None
-            cls.gr_com_org_id = gr_come_org_info[0].get("id") if gr_come_org_info else None
-        
+            
+            # 安全获取公司组织ID
+            if com_org_info and len(com_org_info) > 0:
+                cls.com_org_id = com_org_info[0].get("id")
+            else:
+                cls.com_org_id = None
+                cls.logger.warning(
+                    "⚠️ 未找到公司组织信息（com_org_info），请检查 md_init_cache.json 中的 org_info.com_org_info 数据"
+                )
+            
+            # 安全获取集团公司组织ID
+            if gr_come_org_info and len(gr_come_org_info) > 0:
+                cls.gr_com_org_id = gr_come_org_info[0].get("id")
+            else:
+                cls.gr_com_org_id = None
+                cls.logger.warning(
+                    "⚠️ 未找到集团公司组织信息（gr_come_org_info），请检查 md_init_cache.json 中的 org_info.gr_come_org_info 数据"
+                )
+        else:
+            cls.com_org_id = None
+            cls.gr_com_org_id = None
+            cls.logger.warning(
+                "⚠️ md_cache_data 未初始化，请检查主数据缓存是否正常加载"
+            )
         
         cls.logger.info("应付单测试基类初始化完成")
     
