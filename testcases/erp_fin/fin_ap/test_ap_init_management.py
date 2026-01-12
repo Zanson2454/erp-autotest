@@ -12,13 +12,13 @@ from pathlib import Path
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
 
-from testcases.erp_fin.fin_ap import ApBaseTest
+from testcases.erp_fin import FinBaseTest
 from utils.report_util import a, case_decorator
 
 
 @allure.epic("ERP业财集成-应付单")
 @allure.feature("应付初始化管理")
-class TestApInitManagement(ApBaseTest):
+class TestApInitManagement(FinBaseTest):
     """应付初始化管理测试类"""
     
     @classmethod
@@ -234,27 +234,50 @@ class TestApInitManagement(ApBaseTest):
     
     @case_decorator(
         story="应付初始化管理",
-        title="测试初始化配置",
-        description="验证应付初始化管理初始化功能",
+        title="测试异步执行初始化并等待完成",
+        description="验证应付初始化管理异步执行初始化功能，并等待异步任务完成",
         severity="critical",
         file_level_order=5,
-        tags=["ap", "init", "im_initialization"]
+        tags=["ap", "init", "im_initialization", "async", "wait"]
     )
     def test_im_initialization(self):
-        """测试初始化"""
+        """
+        测试异步执行初始化并等待完成
+        
+        测试流程：
+        1. 发起异步初始化任务
+        2. 验证任务已创建（如果接口返回状态）
+        3. 轮询查询任务状态，等待任务完成
+        4. 验证初始化状态
+        
+        业务说明：
+        - 应付初始化可能是一个异步任务，需要等待后台处理完成
+        - 初始化状态流转：UNINITIALIZED -> INITIALIZED（成功时）
+        """
         try:
-            # 确保已创建初始化配置
+            # ========== 前置条件检查 ==========
+            # 确保初始化配置已创建并启用，否则先执行前置用例
             if not self.ap_init_id:
                 self.test_enable_configuration()
+            
+            # 检查依赖数据
+            if not self.gr_com_org_id:
+                raise ValueError("gr_com_org_id 未初始化，请检查 md_cache_data")
+            
+            # ========== 步骤1：发起异步初始化任务 ==========
+            # 调用初始化服务，触发后台初始化处理
+            # 该接口可能立即返回，也可能返回异步任务状态
+            com_org_obj = {"id": self.gr_com_org_id}
+            start_date = self.mock_util.get_timestamp(timestamp=True)
             
             set_dict = {
                 "id": self.ap_init_id,
                 "moduleCode": "AP", 
-                "initialBalanceType":"UNRECORDED",
-                "initializationType":"UNINITIALIZED",
-                "startDate": self.mock_util.get_timestamp(timestamp=True),
-                "startType":"ENABLED",
-                "comOrg":{"id":self.gr_com_org_id }
+                "initialBalanceType": "UNRECORDED",
+                "initializationType": "UNINITIALIZED",
+                "startDate": start_date,
+                "startType": "ENABLED",
+                "comOrg": com_org_obj
             }
             
             response, _ = self.standard_api_call(
@@ -263,14 +286,102 @@ class TestApInitManagement(ApBaseTest):
                 store_id_as=None
             )
             
-            # 业务断言
+            # 验证接口调用成功（HTTP状态码200，响应success=true）
             self.assert_util.assert_response_success(response)
             
-            # 记录关键数据
-            a.json(response, "初始化响应数据")
-            a.text(f"✅ 初始化成功", "初始化结果")
+            # ========== 步骤2：定义查询函数 ==========
+            # 定义查询函数，用于轮询检查初始化配置的状态
+            # 该函数会被异步等待工具多次调用，直到任务完成或超时
+            def query_init_status():
+                """
+                查询初始化配置状态
+                
+                功能说明：
+                - 调用查询详情接口，获取初始化配置的当前状态
+                - 返回的数据包含初始化业务状态
+                
+                返回数据字段说明：
+                - initializationType: 初始化业务状态
+                  * UNINITIALIZED: 未初始化
+                  * INITIALIZED: 初始化完成
+                
+                返回：
+                    dict: 包含初始化配置的完整数据
+                """
+                response, _ = self.standard_api_call(
+                    api_key="财务域通用模块初始化表-根据ID查找数据服务",
+                    set_dict={"id": self.ap_init_id},
+                    store_id_as=None,
+                    query_params="modelKey=ERP_FIN$fin_gen_im_head_tr"
+                )
+                self.assert_util.assert_response_success(response)
+                return response.get("data", {}).get("data", {})
             
+            # ========== 步骤3：等待初始化完成 ==========
+            # 使用异步等待工具轮询查询任务状态，直到任务完成或超时
+            # 注意：如果初始化服务是同步的，可能需要调整等待逻辑
+            # 这里使用 initializationType 字段来判断初始化是否完成
+            result = self.async_wait_util.wait_for_async_status(
+                query_func=query_init_status,  # 查询函数，每次轮询时调用
+                status_field="initializationType",  # 要检查的状态字段名
+                success_status="INITIALIZED",  # 成功状态值，达到此状态时停止等待
+                failed_status=None,  # 失败状态值（如果初始化服务有失败状态，可以设置）
+                failure_reason_field=None,  # 失败原因字段名（如果初始化服务有失败原因字段，可以设置）
+                max_wait=60,  # 最大等待时间（秒），初始化可能需要较长时间
+                interval=2  # 轮询间隔（秒），每2秒查询一次状态
+            )
+            
+            # ========== 步骤4：断言等待结果 ==========
+            # 根据等待结果进行断言验证
+            if result.status == self.wait_status.SUCCESS:
+                # 等待成功，验证业务状态
+                
+                # 4.1 验证初始化状态
+                # 初始化成功后，initializationType应该从UNINITIALIZED变为INITIALIZED
+                initialization_type = result.last_data.get("initializationType")
+                self.assert_util.assert_by_operator(
+                    initialization_type, "=", "INITIALIZED",
+                    f"初始化任务应成功完成，initializationType应为INITIALIZED，实际状态: {initialization_type}"
+                )
+                
+                # 记录成功信息到Allure报告，便于查看测试执行详情
+                a.text(
+                    f"✅ 初始化任务成功完成\n"
+                    f"总耗时: {result.total_wait_time:.2f}秒\n"
+                    f"检查次数: {result.attempts}次\n"
+                    f"初始化状态: {initialization_type}",
+                    "任务完成"
+                )
+            elif result.status == self.wait_status.FAILED:
+                # 任务失败，抛出异常并记录失败原因
+                failure_reason = result.error_message or "未知原因"
+                raise AssertionError(
+                    f"❌ 异步初始化任务失败: {failure_reason}\n"
+                    f"等待时间: {result.total_wait_time:.2f}秒\n"
+                    f"检查次数: {result.attempts}次\n"
+                    f"最后数据: {result.last_data}"
+                )
+            elif result.status == self.wait_status.TIMEOUT:
+                # 等待超时，抛出异常
+                raise AssertionError(
+                    f"⚠️ 等待异步初始化任务超时\n"
+                    f"最大等待时间: 60秒\n"
+                    f"实际等待时间: {result.total_wait_time:.2f}秒\n"
+                    f"检查次数: {result.attempts}次\n"
+                    f"最后状态: {result.last_data.get('initializationType') if result.last_data else '未知'}\n"
+                    f"建议：检查任务是否正常执行，或增加max_wait时间"
+                )
+            else:
+                # 其他错误（如查询过程出错、网络异常等）
+                raise AssertionError(
+                    f"等待异步初始化任务时发生错误: {result.error_message}\n"
+                    f"等待时间: {result.total_wait_time:.2f}秒\n"
+                    f"检查次数: {result.attempts}次\n"
+                    f"建议：检查网络连接和接口可用性"
+                )
+                
         except Exception as e:
+            # 记录异常信息到Allure报告，便于问题排查
             a.text(str(e), "失败原因")
             raise
         
