@@ -427,6 +427,409 @@ class TestApHeadManagement(ApBaseTest):
     
     @case_decorator(
         story="应付单管理",
+        title="测试应付单过账异步并等待完成",
+        description="验证应付单过账异步功能，等待过账任务完成并验证状态",
+        severity="critical",
+        file_level_order=7,
+        smoke=True,
+        tags=["应付单", "过账", "异步"]
+    )
+    def test_post_ap_head_async_and_wait(self):
+        """
+        测试应付单过账异步并等待完成
+        
+        测试流程：
+        1. 发起异步过账任务
+        2. 验证任务已创建（状态为CREATED）
+        3. 轮询查询任务状态，等待任务完成
+        4. 验证过账状态和异步执行状态
+        
+        业务说明：
+        - 应付单过账是一个异步任务，需要等待后台处理完成
+        - 异步任务状态流转：CREATED -> PROCESSING -> SUCCEEDED/FAILED
+        - 应付单状态流转：CONFIRM -> DONE（成功时）
+        """
+        try:
+            # ========== 前置条件检查 ==========
+            # 确保有已提交的应付单（先创建、查询详情、提交）
+            if not self.ap_head_id:
+                self.test_create_ap_head()
+            # 检查应付单状态，如果不是已提交状态，先提交
+            if not self.ap_head_detail:
+                self.test_query_ap_head_detail()
+            
+            current_status = self.ap_head_detail.get("apStatus")
+            if current_status != "CONFIRM":
+                # 如果状态不是已提交，先执行提交
+                self.test_submit_ap_head()
+                # 提交后重新查询详情
+                self.test_query_ap_head_detail()
+            
+            # ========== 步骤1：发起异步过账任务 ==========
+            # 调用异步过账接口，触发后台过账处理
+            # 该接口会立即返回，不会等待任务完成，任务在后台异步执行
+            post_dict = self.ap_head_detail.copy()
+            response, _ = self.standard_api_call(
+                api_key="应付单-过账-异步服务",
+                set_dict=post_dict
+            )
+            
+            # 验证接口调用成功（HTTP状态码200，响应success=true）
+            self.assert_util.assert_response_success(response)
+            
+            # 验证异步任务已创建（CREATED状态表示任务已成功提交到队列）
+            # 此时任务还未开始执行，只是进入了任务队列等待处理
+            async_execution_status = response.get("data", {}).get("data", {}).get("asyncExecutionStatus")
+            if async_execution_status:
+                self.assert_util.assert_by_operator(
+                    async_execution_status, "=", "CREATED",
+                    "异步任务发起过账状态应为CREATED，表示任务已成功提交到队列"
+                )
+            
+            # ========== 步骤2：定义查询函数 ==========
+            # 定义查询函数，用于轮询检查应付单的状态
+            # 该函数会被异步等待工具多次调用，直到任务完成或超时
+            def query_ap_status():
+                """
+                查询应付单状态
+                
+                功能说明：
+                - 调用查询详情接口，获取应付单的当前状态
+                - 返回的数据包含异步任务执行状态和应付单业务状态
+                
+                返回数据字段说明：
+                - asyncExecutionStatus: 异步执行状态
+                  * CREATED: 任务已创建，等待执行
+                  * PROCESSING: 任务执行中
+                  * SUCCEEDED: 任务执行成功
+                  * FAILED: 任务执行失败
+                - apStatus: 应付单业务状态
+                  * DRAFT: 草稿
+                  * CONFIRM: 已提交
+                  * DONE: 已过账
+                - asyncExecutionFailureReason: 失败原因（仅在失败时存在）
+                
+                返回：
+                    dict: 包含应付单的完整数据
+                """
+                response, _ = self.standard_api_call(
+                    api_key="应付单详情查询服务",
+                    set_dict={"id": self.ap_head_id}
+                )
+                self.assert_util.assert_response_success(response)
+                return response.get("data", {}).get("data", {})
+            
+            # ========== 步骤3：等待异步任务完成 ==========
+            # 使用异步等待工具轮询查询任务状态，直到任务完成或超时
+            # 工具会自动：
+            # - 按interval间隔（2秒）调用query_ap_status函数
+            # - 检查asyncExecutionStatus字段的值
+            # - 如果状态为SUCCEEDED则返回成功，停止轮询
+            # - 如果状态为FAILED则返回失败并记录失败原因，停止轮询
+            # - 如果超过max_wait时间（60秒）仍未完成则返回超时，停止轮询
+            # - 自动记录每次轮询的结果到Allure报告中
+            result = self.async_wait_util.wait_for_async_status(
+                query_func=query_ap_status,  # 查询函数，每次轮询时调用
+                status_field="asyncExecutionStatus",  # 要检查的状态字段名
+                success_status="SUCCEEDED",  # 成功状态值，达到此状态时停止等待
+                failed_status="FAILED",  # 失败状态值，达到此状态时立即返回失败
+                failure_reason_field="asyncExecutionFailureReason",  # 失败原因字段名，用于记录失败详情
+                max_wait=60,  # 最大等待时间（秒），过账可能需要较长时间
+                interval=2  # 轮询间隔（秒），每2秒查询一次状态
+            )
+            
+            # ========== 步骤4：断言等待结果 ==========
+            # 根据等待结果进行断言验证
+            # result.status 的可能值：
+            # - SUCCESS: 等待成功，任务已完成
+            # - FAILED: 任务执行失败
+            # - TIMEOUT: 等待超时，任务未在指定时间内完成
+            # - ERROR: 查询过程出错
+            
+            if result.status == self.wait_status.SUCCESS:
+                # 等待成功，验证业务状态
+                
+                # 4.1 验证应付单状态
+                # 过账成功后，apStatus应该从CONFIRM变为DONE
+                # 这表示过账业务逻辑已成功执行
+                ap_status = result.last_data.get("apStatus")
+                self.assert_util.assert_by_operator(
+                    ap_status, "=", "DONE",
+                    f"过账任务应成功完成，apStatus应为DONE，实际状态: {ap_status}"
+                )
+                
+                # 4.2 验证异步执行状态
+                # 异步任务执行成功后，asyncExecutionStatus应该为SUCCEEDED
+                # 这表示异步任务本身已成功完成
+                async_execution_status = result.last_data.get("asyncExecutionStatus")
+                self.assert_util.assert_by_operator(
+                    async_execution_status, "=", "SUCCEEDED",
+                    f"异步任务状态应为SUCCEEDED，实际状态: {async_execution_status}"
+                )
+                
+                # 记录成功信息到Allure报告，便于查看测试执行详情
+                a.text(
+                    f"✅ 过账任务成功完成\n"
+                    f"总耗时: {result.total_wait_time:.2f}秒\n"
+                    f"检查次数: {result.attempts}次\n"
+                    f"应付单状态: {ap_status}\n"
+                    f"异步执行状态: {async_execution_status}",
+                    "任务完成"
+                )
+                
+                # 更新详情数据
+                self.ap_head_detail = result.last_data
+                
+            elif result.status == self.wait_status.FAILED:
+                # 任务失败，抛出异常并记录失败原因
+                # 失败原因通常包含业务错误信息，有助于定位问题
+                failure_reason = result.error_message or "未知原因"
+                raise AssertionError(
+                    f"❌ 异步过账任务失败: {failure_reason}\n"
+                    f"等待时间: {result.total_wait_time:.2f}秒\n"
+                    f"检查次数: {result.attempts}次\n"
+                    f"最后数据: {result.last_data}"
+                )
+            elif result.status == self.wait_status.TIMEOUT:
+                # 等待超时，抛出异常
+                # 超时可能的原因：
+                # 1. 任务执行时间过长，超过max_wait设置
+                # 2. 系统负载过高，任务处理缓慢
+                # 3. 任务卡住，未正常执行
+                raise AssertionError(
+                    f"⚠️ 等待异步过账任务超时\n"
+                    f"最大等待时间: 60秒\n"
+                    f"实际等待时间: {result.total_wait_time:.2f}秒\n"
+                    f"检查次数: {result.attempts}次\n"
+                    f"最后状态: {result.last_data.get('asyncExecutionStatus') if result.last_data else '未知'}\n"
+                    f"建议：检查任务是否正常执行，或增加max_wait时间"
+                )
+            else:
+                # 其他错误（如查询过程出错、网络异常等）
+                # 这种情况通常是查询接口调用失败，而非业务逻辑问题
+                raise AssertionError(
+                    f"等待异步过账任务时发生错误: {result.error_message}\n"
+                    f"等待时间: {result.total_wait_time:.2f}秒\n"
+                    f"检查次数: {result.attempts}次\n"
+                    f"建议：检查网络连接和接口可用性"
+                )
+            
+            # 记录关键数据
+            a.json(post_dict, "过账请求数据")
+            a.json(response, "过账响应数据")
+            
+        except Exception as e:
+            # 记录异常信息到Allure报告，便于问题排查
+            # 异常信息包含完整的错误堆栈和上下文信息
+            a.text(str(e), "失败原因")
+            raise
+    
+    @case_decorator(
+        story="应付单管理",
+        title="测试应付单反过账异步并等待完成",
+        description="验证应付单反过账异步功能，等待反过账任务完成并验证状态",
+        severity="critical",
+        file_level_order=8,
+        smoke=True,
+        tags=["应付单", "反过账", "异步"]
+    )
+    def test_post_rollback_ap_head_async_and_wait(self):
+        """
+        测试应付单反过账异步并等待完成
+        
+        测试流程：
+        1. 发起异步反过账任务
+        2. 验证任务已创建（状态为CREATED）
+        3. 轮询查询任务状态，等待任务完成
+        4. 验证反过账状态和异步执行状态
+        
+        业务说明：
+        - 应付单反过账是一个异步任务，需要等待后台处理完成
+        - 异步任务状态流转：CREATED -> PROCESSING -> SUCCEEDED/FAILED
+        - 应付单状态流转：DONE -> DRAFT/CONFIRM（成功时）
+        """
+        try:
+            # ========== 前置条件检查 ==========
+            # 确保有已过账的应付单（先创建、查询详情、提交、过账）
+            if not self.ap_head_id:
+                self.test_create_ap_head()
+            
+            if not self.ap_head_detail:
+                self.test_query_ap_head_detail()
+            
+            current_status = self.ap_head_detail.get("apStatus")
+            if current_status != "DONE":
+                # 如果状态不是已过账，先执行提交和过账
+                if current_status != "CONFIRM":
+                    self.test_submit_ap_head()
+                    self.test_query_ap_head_detail()
+                # 执行过账
+                self.test_post_ap_head_async_and_wait()
+                # 过账后重新查询详情
+                self.test_query_ap_head_detail()
+            
+            # ========== 步骤1：发起异步反过账任务 ==========
+            # 调用异步反过账接口，触发后台反过账处理
+            # 该接口会立即返回，不会等待任务完成，任务在后台异步执行
+            rollback_dict = self.ap_head_detail.copy()
+            response, _ = self.standard_api_call(
+                api_key="应付单-反过账-异步服务",
+                set_dict=rollback_dict
+            )
+            
+            # 验证接口调用成功（HTTP状态码200，响应success=true）
+            self.assert_util.assert_response_success(response)
+            
+            # 验证异步任务已创建（CREATED状态表示任务已成功提交到队列）
+            # 此时任务还未开始执行，只是进入了任务队列等待处理
+            async_execution_status = response.get("data", {}).get("data", {}).get("asyncExecutionStatus")
+            if async_execution_status:
+                self.assert_util.assert_by_operator(
+                    async_execution_status, "=", "CREATED",
+                    "异步任务发起反过账状态应为CREATED，表示任务已成功提交到队列"
+                )
+            
+            # ========== 步骤2：定义查询函数 ==========
+            # 定义查询函数，用于轮询检查应付单的状态
+            # 该函数会被异步等待工具多次调用，直到任务完成或超时
+            def query_ap_status():
+                """
+                查询应付单状态
+                
+                功能说明：
+                - 调用查询详情接口，获取应付单的当前状态
+                - 返回的数据包含异步任务执行状态和应付单业务状态
+                
+                返回数据字段说明：
+                - asyncExecutionStatus: 异步执行状态
+                  * CREATED: 任务已创建，等待执行
+                  * PROCESSING: 任务执行中
+                  * SUCCEEDED: 任务执行成功
+                  * FAILED: 任务执行失败
+                - apStatus: 应付单业务状态
+                  * DRAFT: 草稿
+                  * CONFIRM: 已提交
+                  * DONE: 已过账
+                - asyncExecutionFailureReason: 失败原因（仅在失败时存在）
+                
+                返回：
+                    dict: 包含应付单的完整数据
+                """
+                response, _ = self.standard_api_call(
+                    api_key="应付单详情查询服务",
+                    set_dict={"id": self.ap_head_id}
+                )
+                self.assert_util.assert_response_success(response)
+                return response.get("data", {}).get("data", {})
+            
+            # ========== 步骤3：等待异步任务完成 ==========
+            # 使用异步等待工具轮询查询任务状态，直到任务完成或超时
+            # 工具会自动：
+            # - 按interval间隔（2秒）调用query_ap_status函数
+            # - 检查asyncExecutionStatus字段的值
+            # - 如果状态为SUCCEEDED则返回成功，停止轮询
+            # - 如果状态为FAILED则返回失败并记录失败原因，停止轮询
+            # - 如果超过max_wait时间（60秒）仍未完成则返回超时，停止轮询
+            # - 自动记录每次轮询的结果到Allure报告中
+            result = self.async_wait_util.wait_for_async_status(
+                query_func=query_ap_status,  # 查询函数，每次轮询时调用
+                status_field="asyncExecutionStatus",  # 要检查的状态字段名
+                success_status="SUCCEEDED",  # 成功状态值，达到此状态时停止等待
+                failed_status="FAILED",  # 失败状态值，达到此状态时立即返回失败
+                failure_reason_field="asyncExecutionFailureReason",  # 失败原因字段名，用于记录失败详情
+                max_wait=60,  # 最大等待时间（秒），反过账可能需要较长时间
+                interval=2  # 轮询间隔（秒），每2秒查询一次状态
+            )
+            
+            # ========== 步骤4：断言等待结果 ==========
+            # 根据等待结果进行断言验证
+            # result.status 的可能值：
+            # - SUCCESS: 等待成功，任务已完成
+            # - FAILED: 任务执行失败
+            # - TIMEOUT: 等待超时，任务未在指定时间内完成
+            # - ERROR: 查询过程出错
+            
+            if result.status == self.wait_status.SUCCESS:
+                # 等待成功，验证业务状态
+                
+                # 4.1 验证应付单状态
+                # 反过账成功后，apStatus应该从DONE变为DRAFT或CONFIRM
+                # 这表示反过账业务逻辑已成功执行
+                ap_status = result.last_data.get("apStatus")
+                # 反过账后状态可能是DRAFT或CONFIRM，取决于业务规则
+                self.assert_util.assert_by_operator(
+                    ap_status, "in", ["DRAFT", "CONFIRM"],
+                    f"反过账任务应成功完成，apStatus应为DRAFT或CONFIRM，实际状态: {ap_status}"
+                )
+                
+                # 4.2 验证异步执行状态
+                # 异步任务执行成功后，asyncExecutionStatus应该为SUCCEEDED
+                # 这表示异步任务本身已成功完成
+                async_execution_status = result.last_data.get("asyncExecutionStatus")
+                self.assert_util.assert_by_operator(
+                    async_execution_status, "=", "SUCCEEDED",
+                    f"异步任务状态应为SUCCEEDED，实际状态: {async_execution_status}"
+                )
+                
+                # 记录成功信息到Allure报告，便于查看测试执行详情
+                a.text(
+                    f"✅ 反过账任务成功完成\n"
+                    f"总耗时: {result.total_wait_time:.2f}秒\n"
+                    f"检查次数: {result.attempts}次\n"
+                    f"应付单状态: {ap_status}\n"
+                    f"异步执行状态: {async_execution_status}",
+                    "任务完成"
+                )
+                
+                # 更新详情数据
+                self.ap_head_detail = result.last_data
+                
+            elif result.status == self.wait_status.FAILED:
+                # 任务失败，抛出异常并记录失败原因
+                # 失败原因通常包含业务错误信息，有助于定位问题
+                failure_reason = result.error_message or "未知原因"
+                raise AssertionError(
+                    f"❌ 异步反过账任务失败: {failure_reason}\n"
+                    f"等待时间: {result.total_wait_time:.2f}秒\n"
+                    f"检查次数: {result.attempts}次\n"
+                    f"最后数据: {result.last_data}"
+                )
+            elif result.status == self.wait_status.TIMEOUT:
+                # 等待超时，抛出异常
+                # 超时可能的原因：
+                # 1. 任务执行时间过长，超过max_wait设置
+                # 2. 系统负载过高，任务处理缓慢
+                # 3. 任务卡住，未正常执行
+                raise AssertionError(
+                    f"⚠️ 等待异步反过账任务超时\n"
+                    f"最大等待时间: 60秒\n"
+                    f"实际等待时间: {result.total_wait_time:.2f}秒\n"
+                    f"检查次数: {result.attempts}次\n"
+                    f"最后状态: {result.last_data.get('asyncExecutionStatus') if result.last_data else '未知'}\n"
+                    f"建议：检查任务是否正常执行，或增加max_wait时间"
+                )
+            else:
+                # 其他错误（如查询过程出错、网络异常等）
+                # 这种情况通常是查询接口调用失败，而非业务逻辑问题
+                raise AssertionError(
+                    f"等待异步反过账任务时发生错误: {result.error_message}\n"
+                    f"等待时间: {result.total_wait_time:.2f}秒\n"
+                    f"检查次数: {result.attempts}次\n"
+                    f"建议：检查网络连接和接口可用性"
+                )
+            
+            # 记录关键数据
+            a.json(rollback_dict, "反过账请求数据")
+            a.json(response, "反过账响应数据")
+            
+        except Exception as e:
+            # 记录异常信息到Allure报告，便于问题排查
+            # 异常信息包含完整的错误堆栈和上下文信息
+            a.text(str(e), "失败原因")
+            raise
+    
+    @case_decorator(
+        story="应付单管理",
         title="测试应付单删除",
         description="验证应付单删除功能",
         severity="critical",
