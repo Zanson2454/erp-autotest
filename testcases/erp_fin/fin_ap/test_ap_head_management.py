@@ -8,7 +8,6 @@ import allure
 import pytest
 import sys
 from pathlib import Path
-from datetime import datetime
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
@@ -113,7 +112,7 @@ class TestApHeadManagement(ApBaseTest):
         title="测试应付单详情查询",
         description="验证应付单详情查询功能",
         severity="critical",
-        file_level_order=3,
+        file_level_order=4,
         smoke=True,
         tags=["应付单", "详情查询"]
     )
@@ -162,7 +161,7 @@ class TestApHeadManagement(ApBaseTest):
             "payOrgId": {"id":self.gr_com_org_id},
             "apDate": ap_date,
             "settPartnerId": {"id":self.vend_id},
-            "remark": "自动化创建",
+            "remark": f"自动化创建_{self.mock_util.get_timestamp(timestamp=True)}",
             "extPoId": None,
             "extPoSoCode": None,
             "apHeadCode": None,
@@ -172,13 +171,7 @@ class TestApHeadManagement(ApBaseTest):
             "payClearingStatus": "UNCLEARED",
             "invClearingStatus": "UNCLEARED",
             "headOffsetStatus": "UNOFFSET",
-            "updatedAt": None,
-            "createdAt": None,
-            "updatedBy": None,
-            "createdBy": None,
             "purEmployeeId": None,
-            "deleted": 0,
-            "version": 0,
             "apItems": [],
             "apSchls": [],
             "netBaseAmt": None,
@@ -193,17 +186,31 @@ class TestApHeadManagement(ApBaseTest):
     def _build_ap_item(self):
         """
         构建应付单行数据（apItem）
+        注意：金额计算必须使用round()控制精度，避免浮点数精度误差导致系统校验失败
         """
+        apQty = self.mock_util.get_mock_qty()
+        grossDocPrice = self.mock_util.get_mock_price()
+        # 含税金额 = 数量 × 含税单价（保留2位小数）
+        grossDocAmt = round(apQty * grossDocPrice, 2)
+        taxRate = 13
+        # 税额 = 含税金额 × 税率 / (100 + 税率)（保留2位小数）
+        taxAmt = round(grossDocAmt * taxRate / (100 + taxRate), 2)
+        # 不含税金额 = 含税金额 - 税额（保留2位小数）
+        netDocAmt = round(grossDocAmt - taxAmt, 2)
+        # 本位币金额：如果汇率=1，本位币金额等于单据金额；否则需要换算
+        # 由于exchRate=1，本位币金额等于单据金额（保留2位小数）
+        netBaseAmt = round(netDocAmt, 2)
+        grossBaseAmt = round(grossDocAmt, 2)
         return {
             "matId": {"id": self.mat_id},
-            "apQty": 100,
-            "grossDocPrice": 999,
-            "taxRate": 13,
-            "grossDocAmt": 99900,
-            "netDocAmt": 7135.71,
-            "netBaseAmt": 7135.71,
-            "grossBaseAmt": 99900,
-            "taxAmt": 92764.29,
+            "apQty": apQty,
+            "grossDocPrice": grossDocPrice,
+            "taxRate": taxRate,
+            "grossDocAmt": grossDocAmt,
+            "netDocAmt": netDocAmt,
+            "netBaseAmt": netBaseAmt,
+            "grossBaseAmt": grossBaseAmt,
+            "taxAmt": taxAmt,
             "settItemTypeId": {"id": self.sett_item_type_E_PUR_GOODS_id},
             "taxCodeId": {"id": self.tax_code_id}
         }
@@ -229,6 +236,20 @@ class TestApHeadManagement(ApBaseTest):
             "apSchls": [],
         }
         return init_body
+    
+    def _extract_id_from_obj(self, obj):
+        """
+        从嵌套对象中提取id，如果对象不存在则返回None
+        
+        Args:
+            obj: 可能是字典对象，包含id字段
+        
+        Returns:
+            dict: {"id": id} 或 None
+        """
+        if obj and isinstance(obj, dict) and obj.get("id"):
+            return {"id": obj.get("id")}
+        return None
     
     
 
@@ -294,6 +315,111 @@ class TestApHeadManagement(ApBaseTest):
             a.json(self.ap_head_save_body, "保存请求数据")
             a.json(save_response, "保存响应数据")
             a.text(f"✅ 应付单新建成功，应付单ID: {self.ap_head_id}", "创建结果")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    @case_decorator(
+        story="应付单管理",
+        title="测试应付单提交",
+        description="验证应付单提交功能",
+        severity="critical",
+        file_level_order=5,
+        smoke=True,
+        tags=["应付单", "提交"]
+    )
+    def test_submit_ap_head(self):
+        """测试应付单提交"""
+        try:
+            # 1. 确保有数据（先创建，再查询详情）
+            if not self.ap_head_id:
+                self.test_create_ap_head()
+                self.test_query_ap_head_detail()
+            
+            # 2. 准备提交参数
+            # 从详情数据中提取必要字段，移除系统字段，简化嵌套对象
+            submit_dict =self.ap_head_detail
+            
+            # 3. 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="AP-应付单-列表提交服务",
+                set_dict=submit_dict
+            )
+            
+            # 4. 业务断言
+            self.assert_util.assert_response_success(response)
+            
+            
+            
+            # 5. 记录关键数据
+            a.json(submit_dict, "提交请求数据")
+            a.json(response, "提交响应数据")
+            a.text(f"✅ 应付单提交成功，应付单ID: {self.ap_head_id}, 应付单编号: {submit_dict.get('apHeadCode')}", "提交结果")
+            
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+    
+    @case_decorator(
+        story="应付单管理",
+        title="测试应付单提交撤回",
+        description="验证应付单提交撤回功能",
+        severity="critical",
+        file_level_order=6,
+        smoke=True,
+        tags=["应付单", "提交撤回", "撤回"]
+    )
+    def test_submit_rollback_ap_head(self):
+        """测试应付单提交撤回"""
+        try:
+            # 1. 确保有已提交的应付单（先创建、查询详情、提交）
+            if not self.ap_head_id:
+                self.test_create_ap_head()
+                self.test_query_ap_head_detail()
+            
+            current_status = self.ap_head_detail.get("apStatus")
+            if current_status != "CONFIRM":
+                # 如果状态不是已提交，先执行提交
+                self.test_submit_ap_head()
+                # 提交后重新查询详情
+                self.test_query_ap_head_detail()
+            
+            # 2. 准备撤回参数
+            # 从详情数据中提取必要字段，移除系统字段，简化嵌套对象
+            rollback_dict = self.ap_head_detail.copy()
+            
+            # 3. 使用标准化API调用
+            response, _ = self.standard_api_call(
+                api_key="AP-应付撤回服务",
+                set_dict=rollback_dict
+            )
+            
+            # 4. 业务断言
+            self.assert_util.assert_response_success(response)
+            
+            # 5. 验证撤回后状态（可选：重新查询详情验证状态变为DRAFT）
+            # 重新查询详情验证状态
+            detail_response, _ = self.standard_api_call(
+                api_key="应付单详情查询服务",
+                set_dict={"id": self.ap_head_id}
+            )
+            self.assert_util.assert_response_data(detail_response)
+            updated_detail = detail_response.get("data", {}).get("data", {})
+            updated_status = updated_detail.get("apStatus")
+            
+            # 6. 记录关键数据
+            a.json(rollback_dict, "撤回请求数据")
+            a.json(response, "撤回响应数据")
+            a.text(
+                f"✅ 应付单提交撤回成功，应付单ID: {self.ap_head_id}, "
+                f"应付单编号: {rollback_dict.get('apHeadCode')}, "
+                f"撤回前状态: CONFIRM, 撤回后状态: {updated_status}",
+                "撤回结果"
+            )
+            
+            # 更新详情数据
+            self.ap_head_detail = updated_detail
             
         except Exception as e:
             a.text(str(e), "失败原因")

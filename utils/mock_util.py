@@ -242,7 +242,7 @@ class MockData:
             dict: {code, name, symbol, iso_name}
         """
         currency_list = [
-            {"code": "CNY", "name": "人民币", "symbol": "¥", "iso_name": "Chinese Yuan"},
+            {"code": "RMB", "name": "人民币", "symbol": "¥", "iso_name": "Chinese Yuan"},
             {"code": "USD", "name": "美元", "symbol": "$", "iso_name": "US Dollar"},
             {"code": "EUR", "name": "欧元", "symbol": "€", "iso_name": "Euro"},
             {"code": "JPY", "name": "日元", "symbol": "¥", "iso_name": "Japanese Yen"},
@@ -425,6 +425,14 @@ class MockData:
             price = round(random.uniform(1.00, 99999.99), 2)
             
         return price
+    
+    def get_mock_qty(self, min_qty: int = 1, max_qty: int = 100) -> int:
+        """生成数量
+        
+        Returns:
+            int: 生成的数量
+        """
+        return random.randint(min_qty, max_qty)
 if __name__ == '__main__':
     # 测试代码
     mock = MockData()
