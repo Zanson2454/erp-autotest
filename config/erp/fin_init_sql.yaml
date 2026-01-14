@@ -36,3 +36,18 @@ ar_type_info:
      select id,ar_type_code,name,account_type,fin_doc_type_id,rel_pn_type_id,is_acc_doc_relv,schl_sum_by_dn,schl_sum_by_so,is_enable_cost_acq,push_aes,auto_push_aes,biz_type,rel_ap_type,exchange_rate_type
      from fin_arm_ar_type_md where deleted=0;
     description: "查询应收单类型信息"
+
+#应付单类型配置
+ap_type_info:
+  # 标准财务应付单
+  ar_type_STND:
+    sql: |
+     select id,ap_type_code,name,account_type,fin_doc_type_id,rel_pr_type_id,is_adjust_relv,schl_sum_by_po,schl_sum_by_dn,is_clear_before_pay,push_aes,auto_push_aes,biz_type,rel_ar_type,is_acc_doc_relv
+     from fin_apm_ap_type_md where deleted=0 and ap_type_code='STND' and  account_type='FIN' limit 1;
+    description: "查询标准财务应付单类型信息"
+  # 期初财务应付单
+  ar_type_INIT:
+    sql: |
+     select id,ap_type_code,name,account_type,fin_doc_type_id,rel_pr_type_id,is_adjust_relv,schl_sum_by_po,schl_sum_by_dn,is_clear_before_pay,push_aes,auto_push_aes,biz_type,rel_ar_type,is_acc_doc_relv
+     from fin_apm_ap_type_md where deleted=0 and ap_type_code='INIT' and  account_type='FIN' limit 1;
+    description: "查询期初财务应付单类型信息"

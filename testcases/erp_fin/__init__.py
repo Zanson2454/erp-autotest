@@ -140,7 +140,11 @@ class FinBaseTest(BaseTest):
             cls.mat_id = cls.md_cache_data.get("mat_info",{}).get("mat_md",{}).get("FINP",[])[0].get("id")
             cls.mat_type_cf=cls.md_cache_data.get("mat_info",{}).get("mat_type_cf",{}).get("FINP",[])[0].get("id")
             
+        # 初始化业财配置数据
         if cls.fin_cache_data:
+           # 初始化应付单据类型
+            cls.ap_type_info = cls.fin_cache_data.get("ap_type_info", {})
+            # 初始化结算项单据类型
             sett_item_type_info_list = cls.fin_cache_data.get("sett_item_info",{}).get("sett_item_type_info",[])
             # 过滤掉sett_item_type_code为None的项，并构建字典
             cls.sett_item_type_info = {
@@ -408,6 +412,7 @@ class FinBaseTest(BaseTest):
         tax_amt = round(gross_doc_amt * tax_rate / (100 + tax_rate), 2)  # 税额 = 含税金额 × 税率 / (100 + 税率)
         net_doc_amt = round(gross_doc_amt - tax_amt, 2)  # 不含税金额 = 含税金额 - 税额
         sett_item_type_id = self.sett_item_type_info.get("E_SLS_GOODS").get("id")
+       
         # 应收单行项数据
         ar_item = {
             "settItemTypeId": {"id": sett_item_type_id},
@@ -514,4 +519,3 @@ class FinBaseTest(BaseTest):
 if __name__ == "__main__":
     test = FinBaseTest()
     test.setup_class()
-    test.create_ar_doc(ar_type="STND",status="DONE")

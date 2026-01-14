@@ -103,12 +103,6 @@
       "tax": 0.6
     },
     {
-      "id": 14070001,
-      "tax_code": "tax_code",
-      "taxcate": "J",
-      "tax": 0.13
-    },
-    {
       "id": 14083001,
       "tax_code": "ZERO",
       "taxcate": "X",

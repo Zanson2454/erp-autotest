@@ -4,6 +4,12 @@
 提供统一的基类和初始化配置管理
 """
 import allure
+import sys
+from pathlib import Path
+
+project_root = Path(__file__).resolve().parent.parent.parent.parent
+sys.path.append(str(project_root))
+
 from testcases.erp_fin import FinBaseTest
 from utils.report_util import a
 
@@ -72,9 +78,99 @@ class ApBaseTest(FinBaseTest):
                 "⚠️ md_cache_data 未初始化，请检查主数据缓存是否正常加载"
             )
         
+        # 获取应付单类型
+        if cls.ap_type_info:
+          # 检查并获取 STND 应付单类型
+            ar_type_stnd_list = cls.ap_type_info.get("ar_type_STND", [])
+            if not ar_type_stnd_list or len(ar_type_stnd_list) == 0:
+                raise ValueError("请检查STND应付单类型是否配置")
+            cls.ap_type_stnd_id = ar_type_stnd_list[0].get("id")
+            
+            # 检查并获取 INIT 应付单类型
+            ar_type_init_list = cls.ap_type_info.get("ar_type_INIT", [])
+            if not ar_type_init_list or len(ar_type_init_list) == 0:
+                raise ValueError("请检查INIT应付单类型是否配置")
+            cls.ap_type_init_id = ar_type_init_list[0].get("id")
+            
+            cls.logger.info(f"获取到 ap_type_stnd_id: {cls.ap_type_stnd_id}, ap_type_init_id: {cls.ap_type_init_id}")
+        
+        # 获取结算项类型
+        if cls.fin_cache_data:
+            sett_item_type_info_list= cls.fin_cache_data.get("sett_item_info",{}).get("sett_item_type_info",[])
+            cls.logger.info(f"获取到 sett_item_type_info_list: {sett_item_type_info_list}")
+            for i in sett_item_type_info_list:
+                if i.get("sett_item_type_code") == "E_PUR_GOODS":
+                    cls.sett_item_type_E_PUR_GOODS_id = i.get("id")
+                    cls.logger.info(f"获取到 sett_item_type_E_PUR_GOODS_id: {cls.sett_item_type_E_PUR_GOODS_id}")
+                elif i.get("sett_item_type_code") == "E_PUR_GODS_ACCR":
+                    cls.sett_item_type_E_PUR_GODS_ACCR_id = i.get("id")
+                elif i.get("sett_item_type_code") == "E_PUR_FRET_P":
+                    cls.sett_item_type_E_PUR_FRET_P_id = i.get("id")
+                elif i.get("sett_item_type_code") == "E_PUR_INSP":
+                    cls.sett_item_type_E_PUR_INSP_id = i.get("id")
+                elif i.get("sett_item_type_code") == "E_SLS_GOODS":
+                    cls.sett_item_type_E_SLS_GOODS_id = i.get("id")
+                elif i.get("sett_item_type_code") == "E_SLS_FRET_P":
+                    cls.sett_item_type_E_SLS_FRET_P_id = i.get("id")
+                elif i.get("sett_item_type_code") == "E_SLS_INSP":
+                    cls.sett_item_type_E_SLS_INSP_id = i.get("id")
+                elif i.get("sett_item_type_code") == "I_PUR_GOODS":
+                    cls.sett_item_type_I_PUR_GOODS_id = i.get("id")
+                elif i.get("sett_item_type_code") == "I_PUR_FRET_P":
+                    cls.sett_item_type_I_PUR_FRET_P_id = i.get("id")
+                elif i.get("sett_item_type_code") == "I_PUR_INSP":
+                    cls.sett_item_type_I_PUR_INSP_id = i.get("id")
+                elif i.get("sett_item_type_code") == "I_SLS_GOODS":
+                    cls.sett_item_type_I_SLS_GOODS_id = i.get("id")
+                elif i.get("sett_item_type_code") == "I_SLS_FRET_P":
+                    cls.sett_item_type_I_SLS_FRET_P_id = i.get("id")
+                elif i.get("sett_item_type_code") == "I_SLS_INSP":
+                    cls.sett_item_type_I_SLS_INSP_id = i.get("id")
+                elif i.get("sett_item_type_code") == "C_PUR_GOODS":
+                    cls.sett_item_type_C_PUR_GOODS_id = i.get("id")
+                elif i.get("sett_item_type_code") == "C_PUR_FRET_P":    
+                    cls.sett_item_type_C_PUR_FRET_P_id = i.get("id")
+                elif i.get("sett_item_type_code") == "C_PUR_INSP":
+                    cls.sett_item_type_C_PUR_INSP_id = i.get("id")
+                elif i.get("sett_item_type_code") == "C_SLS_GOODS":
+                    cls.sett_item_type_C_SLS_GOODS_id = i.get("id")
+                elif i.get("sett_item_type_code") == "C_SLS_FRET_P":
+                    cls.sett_item_type_C_SLS_FRET_P_id = i.get("id")
+                elif i.get("sett_item_type_code") == "C_SLS_INSP":
+                    cls.sett_item_type_C_SLS_INSP_id = i.get("id")
+                elif i.get("sett_item_type_code") == "E_PUR_FRET_C":
+                    cls.sett_item_type_E_PUR_FRET_C_id = i.get("id")
+                elif i.get("sett_item_type_code") == "E_SLS_FRET_C":
+                    cls.sett_item_type_E_SLS_FRET_C_id = i.get("id")
+                elif i.get("sett_item_type_code") == "E_SLS_REBATE":
+                    cls.sett_item_type_E_SLS_REBATE_id = i.get("id")
+                elif i.get("sett_item_type_code") == "INTERNAL-SLS-TEST001":
+                    cls.sett_item_type_INTERNAL_SLS_TEST001_id = i.get("id")
+                elif i.get("sett_item_type_code") == "I_PUR_GOODS":
+                    cls.sett_item_type_I_PUR_GOODS_id = i.get("id")
+                elif i.get("sett_item_type_code") == "E_SLS_STORAGE_FEE":
+                    cls.sett_item_type_E_SLS_STORAGE_FEE_id = i.get("id")
+                elif i.get("sett_item_type_code") == "E_PUR_STORAGE_FEE":
+                    cls.sett_item_type_E_PUR_STORAGE_FEE_id = i.get("id")
+                elif i.get("sett_item_type_code") == "E_SLS_INTEREST":
+                    cls.sett_item_type_E_SLS_INTEREST_id = i.get("id")
+                elif i.get("sett_item_type_code") == "E_SLS_DEFAULT":
+                    cls.sett_item_type_E_SLS_DEFAULT_id = i.get("id")
+                elif i.get("sett_item_type_code") == "I_PUR_GOODS":
+                    cls.sett_item_type_I_PUR_GOODS_id = i.get("id")
+                elif i.get("sett_item_type_code") == "E_SLS_STORAGE_FEE":
+                    cls.sett_item_type_E_SLS_STORAGE_FEE_id = i.get("id")
+                elif i.get("sett_item_type_code") == "E_PUR_STORAGE_FEE":
+                    cls.sett_item_type_E_PUR_STORAGE_FEE_id = i.get("id")
+                elif i.get("sett_item_type_code") == "E_SLS_INTEREST":
+                    cls.sett_item_type_E_SLS_INTEREST_id = i.get("id")
+                elif i.get("sett_item_type_code") == "E_SLS_DEFAULT":
+                    cls.sett_item_type_E_SLS_DEFAULT_id = i.get("id")
+                elif i.get("sett_item_type_code") == "I_PUR_GOODS":
+                    cls.sett_item_type_I_PUR_GOODS_id = i.get("id") 
         # 初始化应付初始化配置ID
         cls.ap_init_id = None
-        
+
         # 自动初始化应付初始化配置
         # 如果配置已存在且已完成初始化则复用，否则创建并完成初始化流程
         cls._ensure_ap_init_configuration()
@@ -382,3 +478,7 @@ class ApBaseTest(FinBaseTest):
             cls.logger.error(f"异步执行初始化失败: {str(e)}")
             raise
    
+   
+if __name__ == "__main__":
+    cls = ApBaseTest()
+    cls.setup_class()
