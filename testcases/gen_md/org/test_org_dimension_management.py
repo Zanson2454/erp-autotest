@@ -49,7 +49,7 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
             cls.db.delete(
                 table="org_dimension_cf",
                 where="org_dimension_code like %s",
-                params=["AT_Org_Dimension%"]
+                params=["AT_%"]
             )
             cls.logger.info("测试数据清理完成")
         except Exception as e:

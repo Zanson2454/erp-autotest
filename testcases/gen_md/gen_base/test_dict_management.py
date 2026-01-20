@@ -28,6 +28,11 @@ class TestDictManagement(GenMdBaseTest):
         try:
             cls.db.delete(
                 table="gen_dict_head_cf",
+                where="code like %s",
+                params=["AT_%"]
+            )
+            cls.db.delete(
+                table="gen_dict_item_cf",
                 where="dict_head_code like %s",
                 params=["AT_%"]
             )
@@ -51,8 +56,17 @@ class TestDictManagement(GenMdBaseTest):
             dict_name = f"测试字典_{self.mock_util.get_timestamp()}"
 
             set_dict = {
-                "dictHeadCode": dict_code,
-                "dictHeadName": dict_name,
+                "code": dict_code,
+                "name": dict_name,
+                "isSystem": False,
+                "itemList":[
+                    {
+                        "code": self.mock_util.generate_unique_code(tag="DICT_ITEM"),
+                        "name": f"测试字典项_{self.mock_util.get_timestamp()}",
+                        "status": "ENABLED",
+                        "sort": 1
+                    }
+                    ],
                 "remark": f"字典描述_{self.mock_util.get_timestamp()}"
             }
             
