@@ -979,7 +979,7 @@ class TestApHeadManagement(ApBaseTest):
             # 调用异步生成采购发票接口，触发后台处理
             # 该接口会立即返回，不会等待任务完成，任务在后台异步执行
             response, _ = self.standard_api_call(
-                api_key="PI-应付单生成采购发票-异步服务",
+                api_key="应付单-行操作-应付单转化销售发票保存-异步服务",
                 set_dict=convert_dict
             )
             
@@ -1152,7 +1152,7 @@ class TestApHeadManagement(ApBaseTest):
             # 调用异步生成付款申请接口，触发后台处理
             # 该接口会立即返回，不会等待任务完成，任务在后台异步执行
             response, _ = self.standard_api_call(
-                api_key="PR-应付单生成付款申请-异步服务",
+                api_key="应付单转化付款申请单-异步服务",
                 set_dict=convert_dict
             )
             
