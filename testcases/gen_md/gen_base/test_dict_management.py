@@ -27,15 +27,16 @@ class TestDictManagement(GenMdBaseTest):
         """测试类结束后执行清理"""
         try:
             cls.db.delete(
-                table="gen_dict_head_cf",
-                where="code like %s",
-                params=["AT_%"]
-            )
-            cls.db.delete(
                 table="gen_dict_item_cf",
                 where="dict_head_code like %s",
                 params=["AT_%"]
             )
+            cls.db.delete(
+                table="gen_dict_head_cf",
+                where="code like %s",
+                params=["AT_%"]
+            )
+ 
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")

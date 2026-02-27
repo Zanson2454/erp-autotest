@@ -4,6 +4,13 @@ from pathlib import Path
 from typing import Dict, Any
 from loguru import logger
 
+# 优先使用 C 扩展加载器，大文件解析可提速 10-30 倍
+try:
+    from yaml import CSafeLoader as _YamlLoader
+except ImportError:
+    from yaml import SafeLoader as _YamlLoader
+
+
 class YamlUtil:
     """YAML 配置管理工具类（全类属性+类方法风格）
     
@@ -32,7 +39,7 @@ class YamlUtil:
             raise FileNotFoundError(f"YAML文件不存在: {file_path}")
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
-                config = yaml.safe_load(f)
+                config = yaml.load(f, Loader=_YamlLoader)
                 if config is None:
                     logger.warning(f"YAML文件为空: {file_path}")
                     return {}
