@@ -20,6 +20,20 @@ class YamlUtil:
     """
     _config_dir = Path("config")
     _initialized = False
+    _cache: Dict[str, Any] = {}  # 配置缓存
+    _max_cache_size: int = 50   # 最大缓存文件数
+
+    @classmethod
+    def clear_cache(cls) -> None:
+        """清空配置缓存"""
+        cls._cache.clear()
+        logger.info("YAML配置缓存已清空")
+
+    @classmethod
+    def set_max_cache_size(cls, max_size: int) -> None:
+        """设置最大缓存数量"""
+        cls._max_cache_size = max_size
+        logger.info(f"YAML配置缓存最大数量设置为: {max_size}")
 
 
     @classmethod
@@ -29,11 +43,25 @@ class YamlUtil:
             cls._initialized = True
 
     @classmethod
-    def read_yaml(cls, file_path: Any) -> Dict[str, Any]:
+    def read_yaml(cls, file_path: Any, use_cache: bool = True) -> Dict[str, Any]:
         # 支持绝对路径和相对路径
         file_path = Path(file_path)
         if not file_path.is_absolute():
             file_path = cls._config_dir / file_path
+        
+        # 转换为字符串作为缓存键
+        cache_key = str(file_path.resolve())
+        
+        # 使用缓存
+        if use_cache and cache_key in cls._cache:
+            logger.debug(f"从缓存读取YAML文件: {file_path}")
+            return cls._cache[cache_key]
+        
+        # 缓存大小限制：超过上限时清空旧缓存
+        if use_cache and len(cls._cache) >= cls._max_cache_size:
+            logger.warning(f"YAML配置缓存已达到上限({cls._max_cache_size})，清空缓存")
+            cls._cache.clear()
+        
         if not file_path.exists():
             logger.error(f"YAML文件不存在: {file_path}")
             raise FileNotFoundError(f"YAML文件不存在: {file_path}")
@@ -44,6 +72,9 @@ class YamlUtil:
                     logger.warning(f"YAML文件为空: {file_path}")
                     return {}
                 logger.info(f"读取YAML文件: {file_path}")
+                # 存入缓存
+                if use_cache:
+                    cls._cache[cache_key] = config
                 return config
         except yaml.YAMLError as e:
             logger.error(f"YAML解析错误: {str(e)}")

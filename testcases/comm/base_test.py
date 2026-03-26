@@ -636,6 +636,113 @@ class BaseTest:
         """后处理 - 可被子类重写"""
         # 更新初始化数据
         cls.init_data["user_info"] = {"user_info": cls.user_info}
+
+    @classmethod
+    def bind_cache_data(cls, mappings: Dict[str, str] = None) -> None:
+        """
+        简化数据绑定 - 一行代码获取常用数据
+        
+        使用方式:
+            # 方式1: 在子类 setup_class 中调用
+            cls.bind_cache_data({
+                "curr_id": "currency_info.curr_id",
+                "cust_id": "partner_info.cust_info.id",
+                "org_id": "org_info.gr_come_org_info.id",
+            })
+            
+            # 方式2: 自动绑定常用字段 (无需传参)
+            cls.bind_cache_data()  # 绑定所有常用字段
+        
+        路径说明:
+            - "currency_info.curr_id" → init_data["currency_info"][0]["curr_id"]
+            - "partner_info.cust_info.id" → md_cache_data["partner_info"]["cust_info"][0]["id"]
+            - "org_info.org_biz_type_cf" → md_cache_data["org_info"]["org_biz_type_cf"] (列表)
+        """
+        # 默认绑定映射 (常用字段)
+        default_mappings = {
+            # init_data 路径 (格式: "key.subkey" 或 "key.subkey.id")
+            "curr_id": "currency_info.curr_id",
+            "coun_id": "country_info.coun_id",
+            "addr_id": "addr_info.id",
+            "bank_id": "bank_info.bank_id",
+            "gen_wc_head_id": "gen_wc_head_info.gen_wc_head_id",
+            "calender_id": "calender_info.id",
+            # md_cache_data 路径
+            "cust_id": "partner_info.cust_info.id",
+            "sup_id": "partner_info.sup_info.id",
+            "com_org_id": "org_info.gr_come_org_info.id",
+            "sls_org_id": "org_info.sls_org_info.id",
+            "inv_org_id": "org_info.inv_org_info.id",
+            "pur_org_id": "org_info.pur_org_info.id",
+            "sls_dc_id": "org_info.sls_dc_md.id",
+            "wh_id": "org_info.inv_wh_md.id",
+            "mat_id": "mat_info.mat_md.FINP.id",
+        }
+        
+        mappings = mappings or default_mappings
+        
+        for attr_name, path in mappings.items():
+            value = cls._resolve_cache_path(path)
+            setattr(cls, attr_name, value)
+            if value is not None:
+                cls.logger.debug(f"绑定数据: {attr_name} = {value}")
+    
+    @classmethod
+    def _resolve_cache_path(cls, path: str) -> Any:
+        """
+        解析缓存路径，支持 init_data 和 md_cache_data
+        
+        Args:
+            path: 路径字符串，如 "currency_info.curr_id" 或 "partner_info.cust_info.id"
+            
+        Returns:
+            解析后的值，路径无效返回 None
+        """
+        if not path:
+            return None
+            
+        parts = path.split(".")
+        
+        # 判断数据源
+        if parts[0] in ["currency_info", "country_info", "addr_info", "bank_info", 
+                        "gen_wc_head_info", "calender_info"]:
+            # init_data 路径
+            data = cls.init_data
+            source = "init_data"
+        elif parts[0] in ["partner_info", "org_info", "mat_info"]:
+            # md_cache_data 路径
+            data = getattr(cls, 'md_cache_data', None)
+            source = "md_cache_data"
+        else:
+            cls.logger.warning(f"未知数据源: {parts[0]}")
+            return None
+        
+        if data is None:
+            cls.logger.warning(f"{source} 未初始化，跳过绑定: {path}")
+            return None
+        
+        # 逐层解析
+        try:
+            for i, part in enumerate(parts):
+                if isinstance(data, dict):
+                    data = data.get(part, {})
+                elif isinstance(data, list):
+                    # 如果是列表，取第一个元素
+                    if data:
+                        data = data[0].get(part, {}) if isinstance(data[0], dict) else {}
+                    else:
+                        return None
+                else:
+                    return None
+                
+                # 如果最终是列表，取第一个
+                if isinstance(data, list):
+                    data = data[0] if data else None
+                    
+            return data
+        except Exception as e:
+            cls.logger.warning(f"解析缓存路径失败: {path}, 错误: {e}")
+            return None
     
     @classmethod
     def teardown_class(cls) -> None:

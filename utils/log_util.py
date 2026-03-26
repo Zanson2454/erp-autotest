@@ -48,7 +48,7 @@ class Loggers:
                 "rotation": "500 MB",
                 "retention": "10 days",
                 "encoding": "utf-8",
-                "enable_diagnose": is_debug,  # 根据环境变量决定是否启用诊断模式
+                "enable_diagnose": True,  # 默认启用诊断模式，确保日志定位准确
                 "console_format": "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
                 "file_format": "{time:YYYY-MM-DD HH:mm:ss.SSS} | {level: <8} | {name}:{function}:{line} - {message}"
             }

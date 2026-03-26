@@ -107,7 +107,11 @@ def pytest_configure(config: pytest.Config) -> None:
     # 设置测试环境
     env = config.getoption("--env")
     project = config.getoption("--project")
-    Loggers.info(f"当前测试环境: {env}" + (f", 项目: {project}" if project else ""))
+    
+    # 记录 worker 信息（并行执行时区分不同进程）
+    worker_id = os.environ.get("PYTEST_XDIST_WORKER", "master")
+    Loggers.info(f"当前测试环境: {env}" + (f", 项目: {project}" if project else f", worker: {worker_id}"))
+    
     os.environ["TEST_ENV"] = env
     if project:
         os.environ["TEST_PROJECT"] = project

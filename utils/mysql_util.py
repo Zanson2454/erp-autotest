@@ -8,6 +8,7 @@ import json
 from datetime import datetime
 from decimal import Decimal
 from pathlib import Path
+from dbutils.pooled_db import PooledDB
 
 # Add project root to Python path
 current_file = Path(__file__).resolve()
@@ -35,34 +36,46 @@ class DBManager:
     _connection: Optional[Connection] = None
     _initialized = False
     _logger = Loggers
+    _pool: Optional[PooledDB] = None  # 连接池实例
+
+    # 连接池默认配置
+    _default_pool_config = {
+        'mincached': 2,    # 最小空闲连接数
+        'maxcached': 10,   # 最大空闲连接数
+        'maxconnections': 20,  # 最大连接数
+        'blocking': True,   # 连接不足时是否等待
+        'maxusage': 500,   # 单连接最大使用次数
+    }
 
     def __init__(self, **kwargs):
         """新增：支持实例化构造，每个实例独立连接"""
         if kwargs:
+            # 提取连接池配置参数
+            pool_config = kwargs.pop('pool_config', None)
+            
             # 实例模式：独立配置和连接
             self._instance_config = self._validate_config(kwargs)
             self._instance_connection: Optional[Connection] = None
             self._is_instance_mode = True
-            self._connect_instance()
+            self._is_pool_mode = kwargs.get('use_pool', True)  # 默认启用连接池
+            self._instance_pool: Optional[PooledDB] = None
+            
+            # 合并连接池配置（参数传入 > 默认配置）
+            self._pool_config = {**self._default_pool_config, **(pool_config or {})}
+            
+            if self._is_pool_mode:
+                self._connect_pool()
+            else:
+                self._connect_instance()
         else:
             # 兼容模式：使用类级别连接
             self._is_instance_mode = False
+            self._is_pool_mode = False
+            self._pool_config = self._default_pool_config
             
     def execute(self, sql: str, params: Optional[List[Any]] = None) -> int:
         """执行SQL语句（INSERT/UPDATE/DELETE等）"""
-        # 检查是否为实例模式
-        if hasattr(self, '_is_instance_mode') and self._is_instance_mode:
-            # 实例模式
-            self._connect_instance()
-            if self._instance_connection is None:
-                raise RuntimeError("实例数据库连接未建立")
-            connection = self._instance_connection
-        else:
-            # 类模式（向后兼容）
-            self.__class__.connect()
-            if self.__class__._connection is None:
-                raise RuntimeError("数据库连接未建立")
-            connection = self.__class__._connection
+        connection = self._get_connection()
             
         try:
             with connection.cursor() as cursor:
@@ -108,7 +121,22 @@ class DBManager:
                 self._logger.error(f"数据库实例连接失败: {str(e)}")
                 raise
 
-
+    def _connect_pool(self):
+        """连接池连接方法"""
+        if self._instance_pool is None:
+            try:
+                self._instance_pool = PooledDB(
+                    pymysql,
+                    **self._pool_config,
+                    **self._instance_config,
+                    cursorclass=DictCursor
+                )
+                self._logger.info(f"数据库连接池创建成功 [database={self._instance_config['database']}, "
+                               f"mincached={self._pool_config['mincached']}, "
+                               f"maxcached={self._pool_config['maxcached']}]")
+            except Exception as e:
+                self._logger.error(f"数据库连接池创建失败: {str(e)}")
+                raise
 
     @classmethod
     def init(cls, config: Dict[str, Any]):
@@ -147,21 +175,26 @@ class DBManager:
                 cls._logger.error(f"数据库连接失败: {str(e)}")
                 raise
 
-    def query(self, sql: str, params: Optional[List[Any]] = None) -> List[Dict[str, Any]]:
-        """查询方法 - 支持实例和类调用"""
-        # 检查是否为实例模式
+    def _get_connection(self):
+        """获取连接（支持连接池和普通连接）"""
+        # 实例模式
         if hasattr(self, '_is_instance_mode') and self._is_instance_mode:
-            # 实例模式
-            self._connect_instance()
-            if self._instance_connection is None:
+            if self._is_pool_mode and self._instance_pool:
+                return self._instance_pool.connection()
+            elif self._instance_connection:
+                return self._instance_connection
+            else:
                 raise RuntimeError("实例数据库连接未建立")
-            connection = self._instance_connection
+        # 类模式（向后兼容）
         else:
-            # 类模式（向后兼容）
             self.__class__.connect()
             if self.__class__._connection is None:
                 raise RuntimeError("数据库连接未建立")
-            connection = self.__class__._connection
+            return self.__class__._connection
+
+    def query(self, sql: str, params: Optional[List[Any]] = None) -> List[Dict[str, Any]]:
+        """查询方法 - 支持实例和类调用"""
+        connection = self._get_connection()
             
         try:
             with connection.cursor() as cursor:
@@ -184,19 +217,7 @@ class DBManager:
 
     def insert(self, table: str, data: Dict[str, Any]) -> int:
         """插入方法 - 支持实例和类调用"""
-        # 检查是否为实例模式
-        if hasattr(self, '_is_instance_mode') and self._is_instance_mode:
-            # 实例模式
-            self._connect_instance()
-            if self._instance_connection is None:
-                raise RuntimeError("实例数据库连接未建立")
-            connection = self._instance_connection
-        else:
-            # 类模式（向后兼容）
-            self.__class__.connect()
-            if self.__class__._connection is None:
-                raise RuntimeError("数据库连接未建立")
-            connection = self.__class__._connection
+        connection = self._get_connection()
             
         columns = ", ".join(data.keys())
         placeholders = ", ".join(["%s" for _ in data])
@@ -218,19 +239,7 @@ class DBManager:
 
     def update(self, table: str, data: Dict[str, Any], where: str, params: Optional[List[Any]] = None) -> int:
         """更新方法 - 支持实例和类调用"""
-        # 检查是否为实例模式
-        if hasattr(self, '_is_instance_mode') and self._is_instance_mode:
-            # 实例模式
-            self._connect_instance()
-            if self._instance_connection is None:
-                raise RuntimeError("实例数据库连接未建立")
-            connection = self._instance_connection
-        else:
-            # 类模式（向后兼容）
-            self.__class__.connect()
-            if self.__class__._connection is None:
-                raise RuntimeError("数据库连接未建立")
-            connection = self.__class__._connection
+        connection = self._get_connection()
             
         set_clause = ", ".join([f"{k} = %s" for k in data.keys()])
         sql = f"UPDATE {table} SET {set_clause} WHERE {where}"
@@ -250,19 +259,7 @@ class DBManager:
 
     def delete(self, table: str, where: str, params: Optional[List[Any]] = None) -> int:
         """删除方法 - 支持实例和类调用"""
-        # 检查是否为实例模式
-        if hasattr(self, '_is_instance_mode') and self._is_instance_mode:
-            # 实例模式
-            self._connect_instance()
-            if self._instance_connection is None:
-                raise RuntimeError("实例数据库连接未建立")
-            connection = self._instance_connection
-        else:
-            # 类模式（向后兼容）
-            self.__class__.connect()
-            if self.__class__._connection is None:
-                raise RuntimeError("数据库连接未建立")
-            connection = self.__class__._connection
+        connection = self._get_connection()
             
         sql = f"DELETE FROM {table} WHERE {where}"
         try:
