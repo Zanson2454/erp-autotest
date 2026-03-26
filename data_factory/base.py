@@ -176,6 +176,24 @@ class SQLExecutor:
         self.close()
         return False  # 不抑制异常
 
+    @staticmethod
+    def _render_sql(sql: str) -> str:
+        """
+        处理SQL字符串中的环境变量替换，支持 ${VAR_NAME:-default_value} 语法
+        """
+        import re
+        import os
+        # 匹配 ${VAR} 或 ${VAR:-default}
+        pattern = re.compile(r'\$\{([a-zA-Z0-9_]+)(?::-([^}]*))?\}')
+        
+        def replacer(match):
+            var_name = match.group(1)
+            default_val = match.group(2) if match.group(2) is not None else ""
+            # 获取环境变量，如果没有且无默认值，则使用默认值
+            return os.getenv(var_name, default_val)
+            
+        return pattern.sub(replacer, sql)
+
     def execute_sql_config(self, sql_config: Dict[str, Any]) -> Dict[str, Any]:
         """
         执行SQL配置，返回结果字典
@@ -185,7 +203,8 @@ class SQLExecutor:
         result = {}
         for key, value in sql_config.items():
             if isinstance(value, dict) and 'sql' in value:
-                sql = value['sql']
+                raw_sql = value['sql']
+                sql = self._render_sql(raw_sql)
                 try:
                     db_manager = self.get_db_manager()
                     query_result = db_manager.query(sql)

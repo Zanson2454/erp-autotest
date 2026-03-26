@@ -75,6 +75,12 @@ class DBManager:
             
     def execute(self, sql: str, params: Optional[List[Any]] = None) -> int:
         """执行SQL语句（INSERT/UPDATE/DELETE等）"""
+        import os
+        if sql.strip().upper().startswith("DELETE"):
+            if os.getenv("ENABLE_PHYSICAL_DELETE", "true").lower() != "true":
+                self._logger.warning(f"由于 ENABLE_PHYSICAL_DELETE=false，已拦截 DELETE 语句: {sql}")
+                return 0
+
         connection = self._get_connection()
             
         try:
@@ -259,6 +265,11 @@ class DBManager:
 
     def delete(self, table: str, where: str, params: Optional[List[Any]] = None) -> int:
         """删除方法 - 支持实例和类调用"""
+        import os
+        if os.getenv("ENABLE_PHYSICAL_DELETE", "true").lower() != "true":
+            self._logger.warning(f"由于 ENABLE_PHYSICAL_DELETE=false，已拦截对表 {table} 的物理删除操作")
+            return 0
+
         connection = self._get_connection()
             
         sql = f"DELETE FROM {table} WHERE {where}"

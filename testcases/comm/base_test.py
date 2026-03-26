@@ -1037,7 +1037,7 @@ class BaseTest:
                 extracted_id = None
             
             if store_id_as:
-                setattr(self, f"{store_id_as}_id", extracted_id)
+                setattr(self.__class__, f"{store_id_as}Id", extracted_id)
             
             return response, extracted_id
             

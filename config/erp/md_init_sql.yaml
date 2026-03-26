@@ -12,8 +12,8 @@
 #
 # 使用说明:
 #   1. 所有SQL查询必须包含 deleted=0 条件（软删除过滤）
-#   2. 组织相关查询使用 org_code LIKE 'AUTOTEST%' 条件，确保查询测试数据
-#   3. 物料相关查询使用 mat_code LIKE 'AUTOTEST_%' 条件，确保查询测试数据
+#   2. 组织相关查询使用 org_code LIKE '${TEST_ORG_PREFIX:-AUTOTEST}%' 条件，确保查询测试数据
+#   3. 物料相关查询使用 mat_code LIKE '${TEST_MD_PREFIX:-AUTOTEST_}%' 条件，确保查询测试数据
 #   4. 合作伙伴查询使用固定 code='AUTOTEST_*' 条件，确保查询测试数据
 #   5. validation 字段定义数据验证规则，确保数据质量和业务正确性
 #
@@ -143,7 +143,7 @@ org_info:
       FROM org_struct_md
       WHERE org_status = 'ENABLED'           -- 业务条件: 只查询启用状态
         AND org_dimension_code = 'SCM_ORG_GRP' -- 业务条件: SCM组织组
-        AND org_code = 'AUTOTEST_GR_ORG'     -- 业务条件: 自动化测试集团
+        AND org_code = '${TEST_GR_ORG:-AUTOTEST_GR_ORG}'     -- 业务条件: 自动化测试集团
         AND deleted = 0                      -- 技术条件: 软删除过滤
       LIMIT 1;                               -- 性能优化: 只获取一条记录
 
@@ -172,7 +172,7 @@ org_info:
       FROM org_struct_md
       WHERE org_status = 'ENABLED'           -- 业务条件: 只查询启用状态
         AND org_dimension_code = 'SCM_ORG_GRP' -- 业务条件: SCM组织组
-        AND org_code = 'AUTOTEST_COM_ORG'    -- 业务条件: 自动化测试公司
+        AND org_code = '${TEST_COM_ORG:-AUTOTEST_COM_ORG}'    -- 业务条件: 自动化测试公司
         AND org_business_type_codes = '["COM_ORG"]' -- 业务条件: 公司组织类型
         AND deleted = 0                      -- 技术条件: 软删除过滤
       LIMIT 1;                               -- 性能优化: 只获取一条记录
@@ -202,7 +202,7 @@ org_info:
       FROM org_struct_md
       WHERE org_status = 'ENABLED'           -- 业务条件: 只查询启用状态
         AND org_dimension_code = 'SCM_ORG_GRP' -- 业务条件: SCM组织组
-        AND org_code = 'AUTOTEST_PUR_ORG'        -- 业务条件: 自动化测试组织
+        AND org_code = '${TEST_PUR_ORG:-AUTOTEST_PUR_ORG}'        -- 业务条件: 自动化测试组织
         AND org_business_type_codes = '["PUR_ORG"]' -- 业务条件: 采购组织类型
         AND deleted = 0                      -- 技术条件: 软删除过滤
       LIMIT 1;                               -- 性能优化: 获取第一个匹配的组织
@@ -230,7 +230,7 @@ org_info:
       FROM org_struct_md
       WHERE org_status = 'ENABLED'           -- 业务条件: 只查询启用状态
         AND org_dimension_code = 'SCM_ORG_GRP' -- 业务条件: SCM组织组
-        AND org_code = 'AUTOTEST_PUR_ORG2'        -- 业务条件: 自动化测试组织
+        AND org_code = '${TEST_PUR_ORG2:-AUTOTEST_PUR_ORG2}'        -- 业务条件: 自动化测试组织
         AND org_business_type_codes = '["PUR_ORG"]' -- 业务条件: 采购组织类型
         AND deleted = 0                      -- 技术条件: 软删除过滤
       LIMIT 1;                               -- 性能优化: 获取第一个匹配的组织
@@ -261,7 +261,7 @@ org_info:
       FROM org_struct_md
       WHERE org_status = 'ENABLED'           -- 业务条件: 只查询启用状态
         AND org_dimension_code = 'SCM_ORG_GRP' -- 业务条件: SCM组织组
-        AND org_code = 'AUTOTEST_INV_ORG'        -- 业务条件: 自动化测试组织
+        AND org_code = '${TEST_INV_ORG:-AUTOTEST_INV_ORG}'        -- 业务条件: 自动化测试组织
         AND org_business_type_codes = '["INV_ORG"]' -- 业务条件: 库存组织类型
         AND deleted = 0                      -- 技术条件: 软删除过滤
       LIMIT 1;                               -- 性能优化: 获取第一个匹配的组织
@@ -289,7 +289,7 @@ org_info:
       FROM org_struct_md
       WHERE org_status = 'ENABLED'           -- 业务条件: 只查询启用状态
         AND org_dimension_code = 'SCM_ORG_GRP' -- 业务条件: SCM组织组
-        AND org_code = 'AUTOTEST_INV_ORG2'        -- 业务条件: 自动化测试组织
+        AND org_code = '${TEST_INV_ORG2:-AUTOTEST_INV_ORG2}'        -- 业务条件: 自动化测试组织
         AND org_business_type_codes = '["INV_ORG"]' -- 业务条件: 库存组织类型
         AND deleted = 0                      -- 技术条件: 软删除过滤
       LIMIT 1;                               -- 性能优化: 获取第一个匹配的组织
@@ -321,7 +321,7 @@ org_info:
       FROM org_struct_md
       WHERE org_status = 'ENABLED'           -- 业务条件: 只查询启用状态
         AND org_dimension_code = 'SCM_ORG_GRP' -- 业务条件: SCM组织组
-        AND org_code LIKE 'AUTOTEST%'        -- 业务条件: 自动化测试组织
+        AND org_code LIKE '${TEST_ORG_PREFIX:-AUTOTEST}%'        -- 业务条件: 自动化测试组织
         AND org_business_type_codes = '["INV_LOC"]' -- 业务条件: 库存地点类型
         AND deleted = 0                      -- 技术条件: 软删除过滤
       LIMIT 1;                               -- 性能优化: 获取第一个匹配的地点
@@ -352,7 +352,7 @@ org_info:
       FROM org_struct_md
       WHERE org_status = 'ENABLED'           -- 业务条件: 只查询启用状态
         AND org_dimension_code = 'SCM_ORG_GRP' -- 业务条件: SCM组织组
-        AND org_code = 'AUTOTEST_SLS_ORG'        -- 业务条件: 自动化测试组织
+        AND org_code = '${TEST_SLS_ORG:-AUTOTEST_SLS_ORG}'        -- 业务条件: 自动化测试组织
         AND org_business_type_codes = '["SLS_ORG"]' -- 业务条件: 销售组织类型
         AND deleted = 0                      -- 技术条件: 软删除过滤
       LIMIT 1;                               -- 性能优化: 获取第一个匹配的组织
@@ -380,7 +380,7 @@ org_info:
       FROM org_struct_md
       WHERE org_status = 'ENABLED'           -- 业务条件: 只查询启用状态
         AND org_dimension_code = 'SCM_ORG_GRP' -- 业务条件: SCM组织组
-        AND org_code = 'AUTOTEST_SLS_ORG2'        -- 业务条件: 自动化测试组织
+        AND org_code = '${TEST_SLS_ORG2:-AUTOTEST_SLS_ORG2}'        -- 业务条件: 自动化测试组织
         AND org_business_type_codes = '["SLS_ORG"]' -- 业务条件: 销售组织类型
         AND deleted = 0                      -- 技术条件: 软删除过滤
       LIMIT 1;                               -- 性能优化: 获取第一个匹配的组织
@@ -411,7 +411,7 @@ org_info:
       FROM org_struct_md
       WHERE org_status = 'ENABLED'           -- 业务条件: 只查询启用状态
         AND org_dimension_code = 'SCM_ORG_GRP' -- 业务条件: SCM组织组
-        AND org_code LIKE 'AUTOTEST%'        -- 业务条件: 自动化测试组织
+        AND org_code LIKE '${TEST_ORG_PREFIX:-AUTOTEST}%'        -- 业务条件: 自动化测试组织
         AND org_business_type_codes = '["PLN_ORG"]' -- 业务条件: 计划组织类型
         AND deleted = 0                      -- 技术条件: 软删除过滤
       LIMIT 1;                               -- 性能优化: 获取第一个匹配的组织
@@ -443,7 +443,7 @@ org_info:
         is_online,               -- 是否线上渠道
         `status`                 -- 渠道状态
       FROM sls_dc_md
-      WHERE code LIKE 'AUTOTEST_%'  -- 业务条件: 自动化测试渠道
+      WHERE code LIKE '${TEST_MD_PREFIX:-AUTOTEST_}%'  -- 业务条件: 自动化测试渠道
         AND deleted = 0          -- 技术条件: 软删除过滤
         AND status = 'ENABLED'   -- 业务条件: 只查询启用状态
       ORDER BY id;               -- 排序: 确保结果稳定
@@ -498,7 +498,7 @@ org_info:
         `code`,                  -- 仓位代码
         `name`                   -- 仓位名称
       FROM inv_bin_md
-      WHERE code = 'AUTOTEST_REC_BIN'  -- 业务条件: 自动化测试收货仓位
+      WHERE code = '${TEST_REC_BIN:-AUTOTEST_REC_BIN}'  -- 业务条件: 自动化测试收货仓位
       LIMIT 1;                         -- 性能优化: 只获取一条记录
 
     description: "查询自动化测试收货仓位信息，包含仓库、仓储区和仓位三级结构"
@@ -524,7 +524,7 @@ org_info:
         `code`,                  -- 仓位代码
         `name`                   -- 仓位名称
       FROM inv_bin_md
-      WHERE code = 'AUTOTEST_SEND_BIN'  -- 业务条件: 自动化测试发货仓位
+      WHERE code = '${TEST_SEND_BIN:-AUTOTEST_SEND_BIN}'  -- 业务条件: 自动化测试发货仓位
       LIMIT 1;                         -- 性能优化: 只获取一条记录
 
     description: "查询自动化测试发货仓位信息，包含仓库、仓储区和仓位三级结构"
@@ -736,7 +736,7 @@ mat_info:
       FROM gen_mat_cate_md
       WHERE deleted = 0          -- 技术条件: 软删除过滤
         AND status = 'ENABLED'   -- 业务条件: 只查询启用状态
-        AND mat_cate_code LIKE 'AUTOTEST_%'  -- 业务条件: 自动化测试类目
+        AND mat_cate_code LIKE '${TEST_MD_PREFIX:-AUTOTEST_}%'  -- 业务条件: 自动化测试类目
       LIMIT 1;                   -- 性能优化: 只获取一条记录
 
     description: "查询自动化测试的物料类目信息，用于物料的分层分类和管理"
@@ -761,7 +761,7 @@ mat_info:
         `brand_name`             -- 品牌名称
       FROM gen_brand_md
       WHERE deleted = 0          -- 技术条件: 软删除过滤
-        AND brand_code LIKE 'AUTOTEST_%'  -- 业务条件: 自动化测试品牌
+        AND brand_code LIKE '${TEST_MD_PREFIX:-AUTOTEST_}%'  -- 业务条件: 自动化测试品牌
       LIMIT 1;                   -- 性能优化: 只获取一条记录
 
     description: "查询自动化测试的物料品牌信息，用于物料的品牌标识和管理"
@@ -924,7 +924,7 @@ mat_info:
           mat_name               -- 物料名称
         FROM gen_mat_md
         WHERE deleted = 0        -- 技术条件: 软删除过滤
-          AND mat_code LIKE 'AUTOTEST_MAT_FINP%'  -- 业务条件: 自动化测试成品物料
+          AND mat_code LIKE '${TEST_MAT_FINP_PREFIX:-AUTOTEST_MAT_FINP}%'  -- 业务条件: 自动化测试成品物料
           AND status = 'ENABLED' -- 业务条件: 只查询启用状态
         ORDER BY id;             -- 排序: 确保结果稳定
 
@@ -949,7 +949,7 @@ mat_info:
           mat_name               -- 物料名称
         FROM gen_mat_md
         WHERE deleted = 0        -- 技术条件: 软删除过滤
-          AND mat_code LIKE 'AUTOTEST_MAT_SERV%'  -- 业务条件: 自动化测试服务物料
+          AND mat_code LIKE '${TEST_MAT_SERV_PREFIX:-AUTOTEST_MAT_SERV}%'  -- 业务条件: 自动化测试服务物料
           AND status = 'ENABLED' -- 业务条件: 只查询启用状态
         ORDER BY id;             -- 排序: 确保结果稳定
 
@@ -979,7 +979,7 @@ partner_info:
           `name`,                -- 类型名称
           `status`               -- 类型状态
         FROM gen_business_partner_type_cf
-        WHERE code LIKE 'AUTOTEST_OUT_CUST%'  -- 业务条件: 自动化测试外部客户类型
+        WHERE code LIKE '${TEST_OUT_CUST_PREFIX:-AUTOTEST_OUT_CUST}%'  -- 业务条件: 自动化测试外部客户类型
           AND deleted = 0        -- 技术条件: 软删除过滤
         LIMIT 1;                 -- 性能优化: 只获取一条记录
 
@@ -1005,7 +1005,7 @@ partner_info:
           `name`,                -- 类型名称
           `status`               -- 类型状态
         FROM gen_business_partner_type_cf
-        WHERE code LIKE 'AUTOTEST_INTER_CUST%'  -- 业务条件: 自动化测试内部客户类型
+        WHERE code LIKE '${TEST_INTER_CUST_PREFIX:-AUTOTEST_INTER_CUST}%'  -- 业务条件: 自动化测试内部客户类型
           AND deleted = 0        -- 技术条件: 软删除过滤
         LIMIT 1;                 -- 性能优化: 只获取一条记录
 
@@ -1031,7 +1031,7 @@ partner_info:
           `name`,                -- 类型名称
           `status`               -- 类型状态
         FROM gen_business_partner_type_cf
-        WHERE code LIKE 'AUTOTEST_PERSON_CUST%'  -- 业务条件: 自动化测试个人客户类型
+        WHERE code LIKE '${TEST_PERSON_CUST_PREFIX:-AUTOTEST_PERSON_CUST}%'  -- 业务条件: 自动化测试个人客户类型
           AND deleted = 0        -- 技术条件: 软删除过滤
         LIMIT 1;                 -- 性能优化: 只获取一条记录
 
@@ -1057,7 +1057,7 @@ partner_info:
           `name`,                -- 类型名称
           `status`               -- 类型状态
         FROM gen_business_partner_type_cf
-        WHERE code LIKE 'AUTOTEST_OUT_SUPPLIER%'  -- 业务条件: 自动化测试外部供应商类型
+        WHERE code LIKE '${TEST_OUT_SUPPLIER_PREFIX:-AUTOTEST_OUT_SUPPLIER}%'  -- 业务条件: 自动化测试外部供应商类型
           AND deleted = 0        -- 技术条件: 软删除过滤
         LIMIT 1;                 -- 性能优化: 只获取一条记录
 
@@ -1083,7 +1083,7 @@ partner_info:
           `name`,                -- 类型名称
           `status`               -- 类型状态
         FROM gen_business_partner_type_cf
-        WHERE code LIKE 'AUTOTEST_OUTSEA_SUPPLIER%'  -- 业务条件: 自动化测试海外供应商类型
+        WHERE code LIKE '${TEST_OUTSEA_SUPPLIER_PREFIX:-AUTOTEST_OUTSEA_SUPPLIER}%'  -- 业务条件: 自动化测试海外供应商类型
           AND deleted = 0        -- 技术条件: 软删除过滤
         LIMIT 1;                 -- 性能优化: 只获取一条记录
 
@@ -1109,7 +1109,7 @@ partner_info:
           `name`,                -- 类型名称
           `status`               -- 类型状态
         FROM gen_business_partner_type_cf
-        WHERE code LIKE 'AUTOTEST_INTER_SUPPLIER%'  -- 业务条件: 自动化测试内部供应商类型
+        WHERE code LIKE '${TEST_INTER_SUPPLIER_PREFIX:-AUTOTEST_INTER_SUPPLIER}%'  -- 业务条件: 自动化测试内部供应商类型
           AND deleted = 0        -- 技术条件: 软删除过滤
         LIMIT 1;                 -- 性能优化: 只获取一条记录
 
@@ -1135,7 +1135,7 @@ partner_info:
           `name`,                -- 类型名称
           `status`               -- 类型状态
         FROM gen_business_partner_type_cf
-        WHERE code LIKE 'AUTOTEST_SERV_SUPPLIER%'  -- 业务条件: 自动化测试服务供应商类型
+        WHERE code LIKE '${TEST_SERV_SUPPLIER_PREFIX:-AUTOTEST_SERV_SUPPLIER}%'  -- 业务条件: 自动化测试服务供应商类型
           AND deleted = 0        -- 技术条件: 软删除过滤
         LIMIT 1;                 -- 性能优化: 只获取一条记录
 
@@ -1165,7 +1165,7 @@ partner_info:
           partner_code,          -- 相关方代码
           partner_name           -- 相关方名称
         FROM gen_partner_type_cf
-        WHERE partner_code = 'AUTOTEST_SLS_PTN_TYPE'  -- 业务条件: 自动化测试销售相关方类型
+        WHERE partner_code = '${TEST_SLS_PTN_TYPE:-AUTOTEST_SLS_PTN_TYPE}'  -- 业务条件: 自动化测试销售相关方类型
           AND deleted = 0        -- 技术条件: 软删除过滤
         LIMIT 1;                 -- 性能优化: 只获取一条记录
 
@@ -1190,7 +1190,7 @@ partner_info:
           partner_code,          -- 相关方代码
           partner_name           -- 相关方名称
         FROM gen_partner_type_cf
-        WHERE partner_code = 'AUTOTEST_PUR_PTN_TYPE'  -- 业务条件: 自动化测试采购相关方类型
+        WHERE partner_code = '${TEST_PUR_PTN_TYPE:-AUTOTEST_PUR_PTN_TYPE}'  -- 业务条件: 自动化测试采购相关方类型
           AND deleted = 0        -- 技术条件: 软删除过滤
         LIMIT 1;                 -- 性能优化: 只获取一条记录
 
@@ -1220,7 +1220,7 @@ partner_info:
           text_code,             -- 文本代码
           text_name              -- 文本名称
         FROM gen_text_type_cf
-        WHERE text_code = 'AUTOTEST_SLS_TEXT_TYPE'  -- 业务条件: 自动化测试销售文本类型
+        WHERE text_code = '${TEST_SLS_TEXT_TYPE:-AUTOTEST_SLS_TEXT_TYPE}'  -- 业务条件: 自动化测试销售文本类型
           AND deleted = 0        -- 技术条件: 软删除过滤
         LIMIT 1;                 -- 性能优化: 只获取一条记录
 
@@ -1245,7 +1245,7 @@ partner_info:
           text_code,             -- 文本代码
           text_name              -- 文本名称
         FROM gen_text_type_cf
-        WHERE text_code = 'AUTOTEST_PUR_TEXT_TYPE'  -- 业务条件: 自动化测试采购文本类型
+        WHERE text_code = '${TEST_PUR_TEXT_TYPE:-AUTOTEST_PUR_TEXT_TYPE}'  -- 业务条件: 自动化测试采购文本类型
           AND deleted = 0        -- 技术条件: 软删除过滤
         LIMIT 1;                 -- 性能优化: 只获取一条记录
 
@@ -1277,7 +1277,7 @@ partner_info:
       FROM gen_business_partner_md
       WHERE status = 'ENABLED'   -- 业务条件: 只查询启用状态
         AND JSON_CONTAINS(partner_identity, '"SUPPLIER"')  -- 业务条件: 供应商身份
-        AND code = 'AUTOTEST_VEND'  -- 业务条件: 自动化测试供应商
+        AND code = '${TEST_VEND:-AUTOTEST_VEND}'  -- 业务条件: 自动化测试供应商
       LIMIT 1;                   -- 性能优化: 只获取一条记录
 
     description: "查询自动化测试专用的供应商主数据，用于供应商相关的业务测试"
@@ -1305,7 +1305,7 @@ partner_info:
       FROM gen_business_partner_md
       WHERE status = 'ENABLED'   -- 业务条件: 只查询启用状态
         AND JSON_CONTAINS(partner_identity, '"CUSTOMER"')  -- 业务条件: 客户身份
-        AND code = 'AUTOTEST_CUST'  -- 业务条件: 自动化测试客户
+        AND code = '${TEST_CUST:-AUTOTEST_CUST}'  -- 业务条件: 自动化测试客户
       LIMIT 1;                   -- 性能优化: 只获取一条记录
 
     description: "查询自动化测试专用的客户主数据，用于客户相关的业务测试"
@@ -1336,7 +1336,7 @@ index_info:
         gen_index_code,          -- 指标代码
         gen_index_name           -- 指标名称
       FROM gen_index_md
-      WHERE gen_index_code = 'AUTOTEST_INDEX_CODE'  -- 业务条件: 自动化测试指标
+      WHERE gen_index_code = '${TEST_INDEX_CODE:-AUTOTEST_INDEX_CODE}'  -- 业务条件: 自动化测试指标
         AND deleted = 0          -- 技术条件: 软删除过滤
       LIMIT 1;                   -- 性能优化: 只获取一条记录
 

@@ -74,7 +74,7 @@ class TestMatCateManagement(GenMdBaseTest):
             )
 
             # 3. 保存类目信息供后续用例使用（保持原有逻辑）
-            self.cateId = extracted_id
+            self.__class__.cateId = extracted_id
 
             # 4. 日志记录（Allure报告已由standard_api_call处理）
 

@@ -71,7 +71,7 @@ class TestBrandManagement(GenMdBaseTest):
 
             # 3. 保存品牌信息供后续用例使用（保持原有逻辑）
             self.brandId = extracted_id
-            self.brandCode = brand_code
+            self.__class__.brandCode = brand_code
 
             # 4. 日志记录（Allure报告已由standard_api_call处理）
 
