@@ -23,6 +23,12 @@ class TestIvCostPriceManagement(IvBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()  # IvBaseTest 会自动初始化存货核算配置和 com_org_id/gr_com_org_id/inv_org_id/mat_id
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.cost_price_id = None
         cls.logger.info("存货成本价格测试类初始化完成")
         # 注意：com_org_id、inv_org_id、mat_id 已在 FinBaseTest/IvBaseTest 中初始化，无需重复获取
@@ -427,7 +433,13 @@ class TestIvCostPriceManagement(IvBaseTest):
                 }
             }
             
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="存货成本价格-导入导出任务管理接口-提交导出任务",
+                set_dict=params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             a.json(params, "请求数据")

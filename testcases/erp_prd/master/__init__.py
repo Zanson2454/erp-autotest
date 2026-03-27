@@ -36,6 +36,11 @@ class PrdMasterBaseTest(PrdBaseTest):
     def setup_class(cls):
         """测试类初始化"""
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定生产主数据模块上下文。"""
         cls.logger.info("生产主数据管理测试基类初始化完成")
         
         # 初始化配置管理器
@@ -150,8 +155,13 @@ class PrdMasterBaseTest(PrdBaseTest):
             bom_data["params"]["request"]["bomItems"].append(bom_item)
         
         # 调用API创建BOM
-        url = "/api/trantor/service/engine/execute/GEN_MD$GEN_BOM_HEAD_MD_SAVE_ACTION_SERVICE?tmodule=GEN_MD"
-        result = self.http.post(url, json=bom_data)
+        result, _ = self.standard_api_call(
+            api_key="GEN-物料BOM头-保存服务",
+            set_dict=bom_data.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(result)
         
         # 添加创建成功的BOM ID

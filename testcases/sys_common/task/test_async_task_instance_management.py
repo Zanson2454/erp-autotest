@@ -23,6 +23,12 @@ class TestAsyncTaskInstanceManagement(SysCommonBaseTest):
     def setup_class(cls):
         """测试类初始化"""
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.logger.info("异步任务-任务实例管理测试类初始化完成")
     
     @case_decorator(
@@ -114,4 +120,3 @@ class TestAsyncTaskInstanceManagement(SysCommonBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
-

@@ -18,6 +18,12 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         # 测试数据变量
         cls.mobile_voucher_id = None
         cls.mobile_voucher_code = None
@@ -95,7 +101,13 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             # 发起请求
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-批次-查询物料的批次特征服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
 
             # 提取并保存批次特征数据
@@ -140,7 +152,13 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-批次-生成批次编码服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 保存生成的批次编码，供后续移动凭证创建使用
@@ -191,7 +209,13 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             # 发起请求
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-批次-查询建议物料的批次特征服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
 
             # 断言与附件
@@ -262,7 +286,13 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
                 }
             }
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-移动凭证-新版创建服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 保存移动凭证数据
@@ -316,7 +346,13 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-移动凭证-分页查询服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 断言分页数据总数大于0
@@ -381,7 +417,13 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-移动凭证-分页查询服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 断言编码筛选结果 - 修复数据路径
@@ -423,7 +465,13 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict_source)
 
-            response_source = self.http.post(url, json=filtered_params)
+            response_source, _ = self.standard_api_call(
+                api_key="INV-移动凭证-分页查询服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response_source)
             
             # 断言来源类型筛选结果
@@ -465,7 +513,13 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
             set_dict = {"id": self.mobile_voucher_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-移动凭证-详情服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
 
             # 断言详情数据完整性
@@ -583,7 +637,13 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
                 }
             }
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="移动凭证抬头表-导入导出任务管理接口-提交导出任务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
 
             # 断言导出任务提交成功
@@ -627,7 +687,13 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-移动凭证-新版移动凭证冲销服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
 
             # 断言冲销成功
@@ -657,6 +723,12 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
             ["params", "request"]
         )
         ParamUtil.set_request_params(filtered_params, {"id": voucher_id})
-        response = self.http.post(url, json=filtered_params)
+        response, _ = self.standard_api_call(
+            api_key="INV-移动凭证-详情服务",
+            set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_data(response)
         return response.get("data", {}).get("data", {})

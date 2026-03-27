@@ -17,6 +17,13 @@ class TestBatchManagement(ScmInvBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         # 测试数据变量
         cls.batch_id = None
         cls.batch_code = None
@@ -77,7 +84,13 @@ class TestBatchManagement(ScmInvBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-批次-批次分页查询服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 断言分页数据
@@ -173,7 +186,13 @@ class TestBatchManagement(ScmInvBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-批次-批次分页查询服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 断言筛选结果
@@ -257,7 +276,13 @@ class TestBatchManagement(ScmInvBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-批次-批次分页查询服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 断言筛选结果
@@ -322,7 +347,13 @@ class TestBatchManagement(ScmInvBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-批次-批次查询详情(后台)服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 断言详情数据

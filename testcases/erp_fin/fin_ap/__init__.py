@@ -47,7 +47,14 @@ class ApBaseTest(FinBaseTest):
     def setup_class(cls):
         """测试类初始化 - 自动初始化财务初始化配置"""
         super().setup_class()
-        
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定应付模块上下文并初始化应付配置。"""
+        # 显式复用模块上下文绑定骨架（与 FinBaseTest 保持一致，幂等）
+        cls.bind_module_user_context("FIN", strict=True)
+
         # 初始化MD数据（从md_cache_data获取主数据）
         # 使用安全获取方式，先判断列表是否存在且非空，再获取第一个元素
         if cls.md_cache_data:

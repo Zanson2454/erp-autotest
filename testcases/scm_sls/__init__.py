@@ -12,12 +12,12 @@ project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
 
 from typing import Any, Dict
-from testcases.comm.base_test import BaseTest, LoginService
+from testcases.comm.base_test import BaseTest
 from data_factory.base import DataFactory
-from utils.cache_util import CacheUtil
-from utils.request_util import HttpUtil
 from utils.param_util import ParamUtil
 from utils.report_util import a
+from testcases.scm_sls.context_builder import build_sls_context
+from testcases.scm_sls.api_config_builder import merge_module_api_configs
 
 
 
@@ -45,28 +45,19 @@ class SlsBase(BaseTest):
         6. 加载销售缓存数据
         """
         super().setup_class()
+        cls.load_api_configs()
+        cls.load_cache_data()
+        cls.bind_context()
 
-        cls.login_service = LoginService(cls.env_config)  # 初始化一次登录服务，避免重复创建
-        # 登录 admin
-        admin_result = cls.login_service.login(portal_key=cls._PORTAL_TYPE_KEYS["admin"])
-        if admin_result.status != admin_result.status.SUCCESS:
-            raise RuntimeError(f"admin 登录失败: {admin_result.error_message}")
-        
-        # 初始化 cust 的 headers
-        cls.admin_headers = admin_result.portal_headers
-        if cls.admin_headers:
-            cls.cust_portal_headers = cls.admin_headers.copy()  
-        cust_portal_referer = cls.env_config.get("portal_config",{}).get('terp',{}).get("TERP_CUST_PC",{}).get("portal_referer")
-        cls.cust_portal_headers["Referer"] = cust_portal_referer
-        cls.logger.info(f"cust_portal_headers: {cls.cust_portal_headers}")
-  
-        # 初始化 http 实例
-        cls.http = HttpUtil(
-            url=admin_result.portal_url,
-            session=admin_result.session,
-            headers=admin_result.portal_headers
+    @classmethod
+    def load_api_configs(cls):
+        """加载销售模块及关联模块的 API 配置。"""
+        cls.module_login_admin_with_cust_headers(
+            admin_portal_key=cls._PORTAL_TYPE_KEYS["admin"],
+            cust_portal_key=cls._PORTAL_TYPE_KEYS["cust"],
+            tenant_key="terp",
         )
-     
+
         # 初始化配置文件路径
         cls.sls_api_path = Path(project_root) / "config" / "api" / "scm_sls" / "sls_api_path.yaml"
         cls.sls_api_params = Path(project_root) / "config" / "api" / "scm_sls" / "sls_api_params.yaml"
@@ -83,177 +74,55 @@ class SlsBase(BaseTest):
         cls.del_api_path = Path(project_root) / "config" / "api" / "scm_del" / "del_api_path.yaml"
         cls.del_api_params = Path(project_root) / "config" / "api" / "scm_del" / "del_api_params.yaml"
         
-        # 加载API路径配置和参数配置
-        cls.apis = cls.yaml_util.read_yaml(cls.sls_api_path).get("apis", {})
-        cls.api_params = cls.yaml_util.read_yaml(cls.sls_api_params).get("api_params", {})
-        
-        # 加载返利API路径配置和参数配置，合并到apis和api_params中
-        reb_apis = cls.yaml_util.read_yaml(cls.reb_api_path).get("apis", {})
-        reb_api_params = cls.yaml_util.read_yaml(cls.reb_api_params).get("api_params", {})
-        cls.apis.update(reb_apis)
-        cls.api_params.update(reb_api_params)
-        
-        # 加载系统通用API路径配置和参数配置，合并到apis和api_params中（用于待办任务等通用功能）
-        common_apis = cls.yaml_util.read_yaml(cls.common_api_path).get("apis", {})
-        common_api_params = cls.yaml_util.read_yaml(cls.common_api_params).get("api_params", {})
-        cls.apis.update(common_apis)
-        cls.api_params.update(common_api_params)
-        
-        # 加载账户管理API路径配置和参数配置，合并到apis和api_params中（用于返利账户流水查询等）
-        acc_apis = cls.yaml_util.read_yaml(cls.acc_api_path).get("apis", {})
-        acc_api_params = cls.yaml_util.read_yaml(cls.acc_api_params).get("api_params", {})
-        cls.apis.update(acc_apis)
-        cls.api_params.update(acc_api_params)
-        
-        # 加载价格模块API路径配置和参数配置，合并到apis和api_params中（用于价格调整、价格维护等）
-        price_apis = cls.yaml_util.read_yaml(cls.price_api_path).get("apis", {})
-        price_api_params = cls.yaml_util.read_yaml(cls.price_api_params).get("api_params", {})
-        cls.apis.update(price_apis)
-        cls.api_params.update(price_api_params)
-        
-        # 加载条件模块API路径配置和参数配置，合并到apis和api_params中（用于匹配记录查询等）
-        cond_apis = cls.yaml_util.read_yaml(cls.cond_api_path).get("apis", {})
-        cond_api_params = cls.yaml_util.read_yaml(cls.cond_api_params).get("api_params", {})
-        cls.apis.update(cond_apis)
-        cls.api_params.update(cond_api_params)
-        
-        # 加载交货管理API路径配置和参数配置，合并到apis和api_params中（用于交货单操作等）
-        del_apis = cls.yaml_util.read_yaml(cls.del_api_path).get("apis", {})
-        del_api_params = cls.yaml_util.read_yaml(cls.del_api_params).get("api_params", {})
-        cls.apis.update(del_apis)
-        cls.api_params.update(del_api_params)
-        
+        cls.apis, cls.api_params = merge_module_api_configs(
+            load_yaml=cls.yaml_util.read_yaml,
+            base_api_path=cls.sls_api_path,
+            base_api_params=cls.sls_api_params,
+            extension_pairs=[
+                (cls.reb_api_path, cls.reb_api_params),
+                (cls.common_api_path, cls.common_api_params),
+                (cls.acc_api_path, cls.acc_api_params),
+                (cls.price_api_path, cls.price_api_params),
+                (cls.cond_api_path, cls.cond_api_params),
+                (cls.del_api_path, cls.del_api_params),
+            ],
+        )
+
+    @classmethod
+    def load_cache_data(cls):
+        """加载销售模块运行所需缓存数据。"""
         # 初始化DataFactory（必须在init_sql_cache之前调用）
         DataFactory.__init__(env_name="test")
-        
-             # 加载缓存数据
-        DataFactory.init_sql_cache(
-            sql_config_path=str(project_root / "config" / "erp" / "md_init_sql.yaml"), # 主数据依赖的初始化sql 存放路径
-            db_config_name="erp_db", # 数据库配置名称
-            cache_key="md_init_cache", # 缓存key
-            cache_dir="testdata/cache" # 缓存目录
-        )
-        cls.md_cache_data = CacheUtil.get('md_init_cache')
-        
-        
-        DataFactory.init_sql_cache(
-            sql_config_path=str(project_root / "config" / "erp" / "sls_init_sql.yaml"), # 销售管理依赖的初始化sql 存放路径
-            db_config_name="erp_db", # 数据库配置名称
-            cache_key="sls_init_cache", # 缓存key
-            cache_dir="testdata/cache" # 缓存目录
-        )
-        cls.sls_cache_data = CacheUtil.get('sls_init_cache')
 
-        cls.path_params = {"tmodule": "SCM_SLS"}
-        cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
-        cls.user_id = cls.init_data["user_info"]['user_info']["id"]
+        # 加载缓存数据
+        cls.md_cache_data = cls.load_sql_cache(
+            sql_config_path=project_root / "config" / "erp" / "md_init_sql.yaml",
+            cache_key="md_init_cache",
+            db_config_name="erp_db",
+            cache_dir="testdata/cache",
+        )
 
-        
-    # ==================== 销售订单相关方法 ====================
-        
-    # 初始化订单配置数据
-        if cls.init_data:
-            currency_info = cls.init_data.get("currency_info") or []
-            if currency_info:
-                cls.curr_id = currency_info[0].get("curr_id")
-            else:
-                # 默认货币ID（人民币 CNY）
-                cls.curr_id = 2000001
-            
-            country_info = cls.init_data.get("country_info") or []
-            if country_info:
-                cls.coun_id = country_info[0].get("coun_id")
-            else:
-                cls.coun_id = None
-            
-            exchange_rate_type_info = cls.init_data.get("exchange_rate_type_info") or []
-            if exchange_rate_type_info:
-                cls.exchange_rate_type_id = exchange_rate_type_info[0].get("exchange_rate_type_id")
-            else:
-                cls.exchange_rate_type_id = None
-        else:
-            # 当 init_data 为空时，设置默认值
-            cls.curr_id = 2000001  # 默认货币ID（人民币 CNY）
-            cls.coun_id = None
-            cls.exchange_rate_type_id = None
-        # 初始化MD
-        if cls.md_cache_data:
-            partner_info = cls.md_cache_data.get("partner_info") or {}
-            cust_info = partner_info.get("cust_info") or []
-            if cust_info:
-                cls.cust_id = cust_info[0].get("id")
-                cls.logger.info(f"cust_id: {cls.cust_id}")
-            
-            org_info = cls.md_cache_data.get("org_info") or {}
-            gr_come_org_info = org_info.get("gr_come_org_info") or []
-            if gr_come_org_info:
-                cls.com_org_id = gr_come_org_info[0].get("id")
-            
-            sls_dc_md = org_info.get("sls_dc_md") or []
-            if sls_dc_md:
-                cls.sls_dc_id = sls_dc_md[0].get("id")
-            
-            sls_org_info = org_info.get("sls_org_info") or []
-            if sls_org_info:
-                cls.sls_org_id = sls_org_info[0].get("id")
-            
-            inv_org_info = org_info.get("inv_org_info") or []
-            if inv_org_info:
-                cls.inv_org_id = inv_org_info[0].get("id")
-            
-            inv_loc_info = org_info.get("inv_loc_info") or []
-            if inv_loc_info:
-                cls.inv_loc_id = inv_loc_info[0].get("id")
-            
-            partner_type_cf = partner_info.get("partner_type_cf") or {}
-            sls_partner_type = partner_type_cf.get("sls_partner_type") or []
-            if sls_partner_type:
-                cls.partner_type_id = sls_partner_type[0].get("id")
-            
-            mat_info = cls.md_cache_data.get("mat_info") or {}
-            mat_md = mat_info.get("mat_md") or {}
-            finp = mat_md.get("FINP") or []
-            if finp:
-                cls.mat_id = finp[0].get("id")
-                cls.mat_code = finp[0].get("mat_code")
-                cls.mat_name = finp[0].get("mat_name")
-        
-        if cls.sls_cache_data:
-            sls_config = cls.sls_cache_data.get("sls_config") or {}
-            cls.so_type_info = sls_config.get("so_type_info") or []
-            cls.ORDER_TYPES = cls.so_type_info  # 添加缺失的属性
-            for so_type  in  cls.so_type_info:
-                if so_type.get("so_type_code") == "STND":
-                    cls.stnd_so_type_id = so_type.get("id")
-                if so_type.get("so_type_code") == "THRD":
-                    cls.thrd_so_type_id = so_type.get("id")
-                if so_type.get("so_type_code") == "CENT":
-                    cls.cent_so_type_id = so_type.get("id")
-                if so_type.get("so_type_code") == "QUOTE":
-                    cls.quote_so_type_id = so_type.get("id")
-            cls.so_item_type_info = sls_config.get("so_item_type_info") or []
-            cls.ORDER_LINE_TYPES = cls.so_item_type_info  # 添加缺失的属性
-            for so_item_type in cls.so_item_type_info:
-                if so_item_type.get("so_item_type_code") == "NORM":
-                    cls.stnd_so_item_type_id = so_item_type.get("id")
-            
-            # 初始化返利政策相关属性
-            cls.rebate_type_info = sls_config.get("rebate_type_info") or []
-            for rebate_type in cls.rebate_type_info:
-                if rebate_type.get("rebate_type_code") == "STND":
-                    cls.stnd_rebate_type_id = rebate_type.get("id")
-            
-            # 添加订单类型和订单行类型的组合
-            cls.ORDER_TYPE_LINE_COMBINATIONS = []
-            for so_type in cls.so_type_info:
-                for so_item_type in cls.so_item_type_info:
-                    cls.ORDER_TYPE_LINE_COMBINATIONS.append({
-                        "so_type": so_type,
-                        "so_item_type": so_item_type
-                    })
+        cls.sls_cache_data = cls.load_sql_cache(
+            sql_config_path=project_root / "config" / "erp" / "sls_init_sql.yaml",
+            cache_key="sls_init_cache",
+            db_config_name="erp_db",
+            cache_dir="testdata/cache",
+        )
+
+    @classmethod
+    def bind_context(cls):
+        """绑定销售模块运行上下文和初始化默认字段。"""
+        cls.bind_module_user_context("SCM_SLS", strict=True)
+        context_data = build_sls_context(
+            init_data=cls.init_data,
+            md_cache_data=getattr(cls, "md_cache_data", None),
+            sls_cache_data=getattr(cls, "sls_cache_data", None),
+        )
+        for key, value in context_data.items():
+            setattr(cls, key, value)
+        cls.logger.info(f"cust_id: {cls.cust_id}")
 
         # 初始化销售配置数据
-        # cls.so_type_id = cls.ids.get("so_type_id")
         cls.addr_id = None
         cls.addr_detail = None
         cls.cust_person_name = None
@@ -275,18 +144,8 @@ class SlsBase(BaseTest):
         cls.priceIdempotent=None
         cls.so_head_data = None
 
-    def get_api_path(self, api_key):
-        """
-        获取API路径
-        """
-        return super().get_api_path(api_key, self.apis)
-    
-    def get_api_params(self, api_path, with_query_params=None):
-        """
-        获取API请求参数和完整URL
-        """
-        return super().get_api_params(api_path, self.api_params, with_query_params)
-    
+    # ==================== 销售订单相关方法 ====================
+
     def create_sales_order(self, order_type="STND", submit=False, rebate_amount=None):
         """
         创建销售订单的公共方法
@@ -343,11 +202,23 @@ class SlsBase(BaseTest):
         ParamUtil.set_request_params(filtered_params, set_dict)
         
         # 4. 发送请求和断言
-        response = self.http.post(url, json=filtered_params)
+        response, _ = self.standard_api_call(
+            api_key="SLS-销售-订单创建初始化服务",
+            set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_data(response)
     
         
-        response = self.http.post(url, json=filtered_params)
+        response, _ = self.standard_api_call(
+            api_key="SLS-销售-订单创建初始化服务",
+            set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(response)
     
         # 从嵌套结构中获取数据
@@ -369,7 +240,13 @@ class SlsBase(BaseTest):
             "custId": self.cust_id
         }
        
-        response = self.http.post(url, json=params)
+        response, _ = self.standard_api_call(
+            api_key="SLS-销售-客户选择渲染处理",
+            set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(response)
         # 从嵌套结构中获取数据
         response_data = response.get("data", {}).get("data", {})
@@ -412,7 +289,13 @@ class SlsBase(BaseTest):
             }]
         }
         ParamUtil.set_request_params(filtered_params, set_dict)
-        responese = self.http.post(url, json=filtered_params, description="查询相关方")
+        responese, _ = self.standard_api_call(
+            api_key="销售订单获取相关方数据服务",
+            set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_data(responese)
         self.sls_partner_links = responese.get("data", {}).get("data", {}).get("slsPartnerLinks",[])
 
@@ -471,7 +354,13 @@ class SlsBase(BaseTest):
         }
         ParamUtil.set_request_params(filtered_params, set_dict)
 
-        response = self.http.post(url, json=filtered_params, description="订单行渲染")
+        response, _ = self.standard_api_call(
+            api_key="SLS-销售-物料选择后渲染处理服务",
+            set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.so_data_render = response.get("data", {}).get("data", {})
         self.assert_util.assert_response_data(response)
         self.so_code = self.so_data_render.get("soCode")
@@ -520,7 +409,13 @@ class SlsBase(BaseTest):
         set_dict = self.so_data_render
         ParamUtil.set_request_params(filtered_params, set_dict)
 
-        response = self.http.post(url, json=filtered_params, description="自动定价")
+        response, _ = self.standard_api_call(
+            api_key="SLS-销售订单-前端定价服务",
+            set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_data(response)
         self.so_data_price = response.get("data", {}).get("data", {})
     
@@ -567,7 +462,13 @@ class SlsBase(BaseTest):
             set_dict["syncSubmit"] = "false" # 不同步提交
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params, description="保存销售订单")
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售订单-保存服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 保存订单ID供后续使用
@@ -612,7 +513,13 @@ class SlsBase(BaseTest):
             
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params, description="提交销售订单")
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售订单-保存服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             self.so_head_id_submit = response.get("data", {}).get("data", {}).get("id")
             
@@ -709,7 +616,13 @@ class SlsBase(BaseTest):
             
             ParamUtil.set_request_params(filtered_params, self.quote_data)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售订单-前端定价服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 保存定价后的数据
@@ -739,7 +652,13 @@ class SlsBase(BaseTest):
             
             ParamUtil.set_request_params(filtered_params, self.quote_data)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售订单-保存服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 保存草稿报价单ID
@@ -773,7 +692,13 @@ class SlsBase(BaseTest):
             set_dict["syncSubmit"] = "true"
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售订单-保存服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 保存提交后的报价单ID
@@ -830,7 +755,13 @@ class SlsBase(BaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"id": dn_id})
             
-            response = self.http.post(url, json=filtered_params, params={"tmodule": "SCM_DEL"})
+            response, _ = self.standard_api_call(
+                api_key="DEL-交货单作废服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             self.logger.info(f"交货单 {dn_id} 作废成功")
@@ -923,7 +854,13 @@ class SlsBase(BaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 8. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售订单-审批同意服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             # 9. 等待订单状态更新
@@ -1016,7 +953,13 @@ class SlsBase(BaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 5. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="SO-销售订单自动创建交货单服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 6. 保存交货单ID（如果API返回的话）
@@ -1076,7 +1019,13 @@ class SlsBase(BaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 发送创建请求
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="REB-返利政策-保存服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 获取创建的返利政策ID
@@ -1096,7 +1045,13 @@ class SlsBase(BaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 发送提交请求
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="REB-返利政策-提交审批服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             self.logger.info(f"返利政策提交成功，ID: {policy_id}")
@@ -1117,7 +1072,13 @@ class SlsBase(BaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 发送审批请求
-            approve_response = self.http.post(url, json=filtered_params)
+            approve_response, _ = self.standard_api_call(
+                api_key="REB-返利政策-审批通过服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(approve_response)
             
             self.logger.info(f"返利政策审批通过成功，政策ID: {policy_id}")

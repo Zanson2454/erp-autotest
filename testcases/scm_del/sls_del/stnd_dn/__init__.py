@@ -12,7 +12,6 @@ sys.path.append(str(project_root))
 
 from testcases.scm_del import ScmDelBaseTest
 from data_factory.base import DataFactory
-from utils.cache_util import CacheUtil
 from utils.param_util import ParamUtil
 
 
@@ -23,25 +22,36 @@ class SlsDelBaseTest(ScmDelBaseTest):
     def setup_class(cls):
         """测试类初始化 - 加载销售模块配置"""
         super().setup_class()
-        
-        # 加载销售模块配置（用于创建销售订单）
-        DataFactory.init_sql_cache(
-            sql_config_path=str(project_root / "config" / "erp" / "sls_init_sql.yaml"),
-            db_config_name="erp_db",
-            cache_key="sls_init_cache",
-            cache_dir="testdata/cache"
-        )
-        cls.sls_cache_data = CacheUtil.get('sls_init_cache')
-        
+        cls.load_api_configs()
+        cls.load_cache_data()
+        cls.bind_context()
+
+    @classmethod
+    def load_api_configs(cls):
+        """加载销售交货依赖的销售 API 配置。"""
         # 加载销售模块API配置
         sls_api_path = Path(project_root) / "config" / "api" / "scm_sls" / "sls_api_path.yaml"
         sls_api_params_path = Path(project_root) / "config" / "api" / "scm_sls" / "sls_api_params.yaml"
         cls.sls_apis = cls.yaml_util.read_yaml(sls_api_path).get("apis", {})
         cls.sls_api_params = cls.yaml_util.read_yaml(sls_api_params_path).get("api_params", {})
-        
+
+    @classmethod
+    def load_cache_data(cls):
+        """加载销售交货依赖缓存。"""
+        # 加载销售模块配置（用于创建销售订单）
+        cls.sls_cache_data = cls.load_sql_cache(
+            sql_config_path=project_root / "config" / "erp" / "sls_init_sql.yaml",
+            cache_key="sls_init_cache",
+            db_config_name="erp_db",
+            cache_dir="testdata/cache",
+        )
+
+    @classmethod
+    def bind_context(cls):
+        """绑定销售交货上下文。"""
         # 初始化销售订单相关属性
         cls._init_sls_order_attributes()
-        
+
         cls.logger.info(f"✅ sls_cache_data 加载完成: {cls.sls_cache_data is not None}")
     
     @classmethod
@@ -210,10 +220,22 @@ class SlsDelBaseTest(ScmDelBaseTest):
         ParamUtil.set_request_params(filtered_params, set_dict)
         
         # 发送请求和断言
-        response = self.http.post(url, json=filtered_params)
+        response, _ = self.standard_api_call(
+            api_key=self.sls_apis,
+            set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_data(response)
         
-        response = self.http.post(url, json=filtered_params)
+        response, _ = self.standard_api_call(
+            api_key=self.sls_apis,
+            set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(response)
 
         # 从嵌套结构中获取数据
@@ -235,7 +257,13 @@ class SlsDelBaseTest(ScmDelBaseTest):
             "custId": self.cust_id
         }
        
-        response = self.http.post(url, json=params)
+        response, _ = self.standard_api_call(
+            api_key=self.sls_apis,
+            set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(response)
         # 从嵌套结构中获取数据
         response_data = response.get("data", {}).get("data", {})
@@ -277,7 +305,13 @@ class SlsDelBaseTest(ScmDelBaseTest):
             }]
         }
         ParamUtil.set_request_params(filtered_params, set_dict)
-        response = self.http.post(url, json=filtered_params, description="查询相关方")
+        response, _ = self.standard_api_call(
+            api_key=self.sls_apis,
+            set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_data(response)
         self.sls_partner_links = response.get("data", {}).get("data", {}).get("slsPartnerLinks", [])
 
@@ -336,7 +370,13 @@ class SlsDelBaseTest(ScmDelBaseTest):
         }
         ParamUtil.set_request_params(filtered_params, set_dict)
 
-        response = self.http.post(url, json=filtered_params, description="订单行渲染")
+        response, _ = self.standard_api_call(
+            api_key=self.sls_apis,
+            set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.so_data_render = response.get("data", {}).get("data", {})
         self.assert_util.assert_response_data(response)
         self.so_code = self.so_data_render.get("soCode")
@@ -384,7 +424,13 @@ class SlsDelBaseTest(ScmDelBaseTest):
         set_dict = self.so_data_render
         ParamUtil.set_request_params(filtered_params, set_dict)
 
-        response = self.http.post(url, json=filtered_params, description="自动定价")
+        response, _ = self.standard_api_call(
+            api_key=self.sls_apis,
+            set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_data(response)
         self.so_data_price = response.get("data", {}).get("data", {})
     
@@ -431,7 +477,13 @@ class SlsDelBaseTest(ScmDelBaseTest):
             set_dict["syncSubmit"] = "false"  # 不同步提交
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params, description="保存销售订单")
+            response, _ = self.standard_api_call(
+                api_key=self.sls_apis,
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 保存订单ID供后续使用
@@ -476,7 +528,13 @@ class SlsDelBaseTest(ScmDelBaseTest):
             
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params, description="提交销售订单")
+            response, _ = self.standard_api_call(
+                api_key=self.sls_apis,
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             self.so_head_id_submit = response.get("data", {}).get("data", {}).get("id")
             
@@ -578,7 +636,13 @@ class SlsDelBaseTest(ScmDelBaseTest):
         # URL中添加 tmodule=SCM_SLS（与curl命令保持一致）
         url = f"{url}?tmodule=SCM_SLS" if "?" not in url else f"{url}&tmodule=SCM_SLS"
         
-        response = self.http.post(url, json=params, description="销售订单行分组")
+        response, _ = self.standard_api_call(
+            api_key="DEL-根据订单项目行分组查询创建交货单服务",
+            set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(response)
         
         return response
@@ -624,7 +688,13 @@ class SlsDelBaseTest(ScmDelBaseTest):
         # URL中添加 tmodule=SCM_SLS（与curl命令保持一致）
         url = f"{url}?tmodule=SCM_SLS" if "?" not in url else f"{url}&tmodule=SCM_SLS"
         
-        response = self.http.post(url, json=params, description="保存并提交销售交货单")
+        response, _ = self.standard_api_call(
+            api_key="DEL-销售交货单保存并提交服务",
+            set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(response)
         
         return response
@@ -719,7 +789,13 @@ class SlsDelBaseTest(ScmDelBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 发送查询请求
-            query_response = self.http.post(url, json=filtered_params, description=f"根据销售订单号查询交货单: {so_code}")
+            query_response, _ = self.standard_api_call(
+                api_key="DEL-交货单公共-数据分页查询服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(query_response)
             
             # 从响应中获取交货单ID

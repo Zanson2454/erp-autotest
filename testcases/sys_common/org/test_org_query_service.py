@@ -24,6 +24,12 @@ class TestOrgQueryService(SysCommonBaseTest):
     def setup_class(cls):
         """测试类初始化"""
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.logger.info("组织通用查询服务测试类初始化完成")
     
     # ==================== 员工查询相关 ====================
@@ -56,7 +62,13 @@ class TestOrgQueryService(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, {"employeeId": test_employee_id})
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="通过员工 ID 查询员工详情",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -91,7 +103,13 @@ class TestOrgQueryService(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, {"empCode": "TEST_EMP_CODE"})
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="通过员工编码查询员工详情",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -127,7 +145,13 @@ class TestOrgQueryService(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, {"userId": self.user_id})
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="通过用户 ID 查询员工详情",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -162,7 +186,13 @@ class TestOrgQueryService(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, {"employeeIdList": [self.user_id]})
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="通过员工ID列表查询员工列表",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -197,7 +227,13 @@ class TestOrgQueryService(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, {"empCodeList": ["TEST_CODE"]})
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="通过员工编码列表查询员工列表",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -239,7 +275,13 @@ class TestOrgQueryService(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="员工分页查询服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -276,7 +318,13 @@ class TestOrgQueryService(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, {"ouId": "TEST_OU_ID"})
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="通过组织单元 ID 查询组织单元详情",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -311,7 +359,13 @@ class TestOrgQueryService(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, {"identityId": "TEST_IDENTITY_ID"})
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="通过身份 ID 查询身份详情",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -346,7 +400,13 @@ class TestOrgQueryService(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, {"orgCode": "TEST_ORG_CODE"})
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="通过组织编码查询员工信息",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -385,7 +445,13 @@ class TestOrgQueryService(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="通过组织编码及角色编码查询员工信息",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -424,7 +490,13 @@ class TestOrgQueryService(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="通过员工编码与角色编码查询上级组织信息",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -459,7 +531,13 @@ class TestOrgQueryService(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, {"pid": "TEST_PID"})
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="根据pid查询组织单元服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -486,7 +564,13 @@ class TestOrgQueryService(SysCommonBaseTest):
             params, url = self.get_api_params(api_path)
             
             # 2. 发送请求和断言
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="根据条件查询组织数据服务",
+                set_dict=params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(params, "请求数据")
@@ -513,7 +597,13 @@ class TestOrgQueryService(SysCommonBaseTest):
             params, url = self.get_api_params(api_path)
             
             # 2. 发送请求和断言
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="组织身份职级管理列表查询服务",
+                set_dict=params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(params, "请求数据")
@@ -540,7 +630,13 @@ class TestOrgQueryService(SysCommonBaseTest):
             params, url = self.get_api_params(api_path)
             
             # 2. 发送请求和断言
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="组织业务类型列表查询服务",
+                set_dict=params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(params, "请求数据")
@@ -575,7 +671,13 @@ class TestOrgQueryService(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, {"parentId": "ROOT"})
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织架构表-查找树子数据服务(支持条件过滤)",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -589,4 +691,3 @@ class TestOrgQueryService(SysCommonBaseTest):
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])
-

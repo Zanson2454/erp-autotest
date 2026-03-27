@@ -18,6 +18,12 @@ class TestAsyncTaskInstanceManagement(SysCommonBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.task_instance_id = None
         cls.logger.info("异步任务实例管理测试类初始化完成")
     
@@ -80,7 +86,13 @@ class TestAsyncTaskInstanceManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="/api/async-task/task-instance/create",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 5. 保存数据和报告
@@ -136,7 +148,13 @@ class TestAsyncTaskInstanceManagement(SysCommonBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="异步任务-任务实例-分页查询任务列表",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 验证分页结果
@@ -191,7 +209,13 @@ class TestAsyncTaskInstanceManagement(SysCommonBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="异步任务-任务实例-分页查询我的任务列表",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -233,7 +257,13 @@ class TestAsyncTaskInstanceManagement(SysCommonBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="/api/async-task/task-instance/update",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             a.json(filtered_params, "请求数据")

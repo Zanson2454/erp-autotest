@@ -23,6 +23,12 @@ class TestMaterialManagement(PrdMasterBaseTest):
     def setup_class(cls):
         """测试类初始化"""
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.logger.info("物料生产视图管理测试类初始化完成")
         
         # 初始化配置管理器并确保基础配置存在
@@ -107,7 +113,13 @@ class TestMaterialManagement(PrdMasterBaseTest):
                     a.json(filtered_params, "请求数据")
                     
                     with a.step(f"2. 发送创建请求 - 物料 {material['id']}"):
-                        result = self.http.post(url, json=filtered_params)
+                        result, _ = self.standard_api_call(
+                            api_key="物料生产视图创建服务",
+                            set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                            store_id_as=None,
+                            use_param_util=False,
+                            param_path=["params"]
+                        )
                         a.json(result, "响应数据")
                         
                         # 验证创建结果

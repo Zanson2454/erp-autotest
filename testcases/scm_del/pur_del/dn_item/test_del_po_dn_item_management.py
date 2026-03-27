@@ -21,6 +21,12 @@ class TestDelPoDnItemManagement(ScmDelBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.dn_item_id = None
         cls.logger.info("采购交货单行测试类初始化完成")
     
@@ -55,7 +61,13 @@ class TestDelPoDnItemManagement(ScmDelBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="DEL-交货单公共-分页查询交货单行-后端",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             records = response.get("data", {}).get("data", {})
@@ -97,7 +109,13 @@ class TestDelPoDnItemManagement(ScmDelBaseTest):
             set_dict = {"id": self.__class__.dn_item_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="DEL-查询交货单行批次信息服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             result_data = response.get("data", {}).get("data", [])
@@ -221,7 +239,13 @@ class TestDelPoDnItemManagement(ScmDelBaseTest):
             # 直接设置params字段
             params["params"] = set_dict
             
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="交货单项目行表-导入导出任务管理接口-提交导出任务",
+                set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             a.json(params, "请求数据")
@@ -230,4 +254,3 @@ class TestDelPoDnItemManagement(ScmDelBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
-

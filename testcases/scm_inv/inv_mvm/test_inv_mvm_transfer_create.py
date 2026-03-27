@@ -18,6 +18,12 @@ class TestMobileVoucherTransferCreator(MobileVoucherCreator):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.available_batch_id = None
         cls.default_mat_id = cls.inv_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
         

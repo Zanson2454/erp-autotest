@@ -25,6 +25,12 @@ class TestPoItemManagement(ScmPurBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.po_id = None
         cls.po_code = None
         cls.po_item_id = None
@@ -160,10 +166,13 @@ class TestPoItemManagement(ScmPurBaseTest):
                 }
             })
             
-            response = self.http.post(
-                url,
-                json=filtered_params,
-                params={"tmodule": "SCM_PUR"}
+            response, _ = self.standard_api_call(
+                api_key="分页查询订单行",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": "SCM_PUR"}
             )
             self.assert_util.assert_response_data(response)
             
@@ -290,7 +299,14 @@ class TestPoItemManagement(ScmPurBaseTest):
                 }
             }
             
-            response = self.http.post(url, json=request_params, params={"tmodule": "SCM_PUR"})
+            response, _ = self.standard_api_call(
+                api_key="采购订单-ITEM-导入导出任务管理接口-提交导出任务",
+                set_dict=(request_params.get("params", {}) if isinstance(request_params, dict) else request_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": "SCM_PUR"}
+            )
             self.assert_util.assert_response_success(response)
             
             a.json(request_params, "请求数据")
@@ -299,5 +315,4 @@ class TestPoItemManagement(ScmPurBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
-
 

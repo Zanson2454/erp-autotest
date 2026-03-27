@@ -23,6 +23,12 @@ class TestIvAccRefConfigAndLinkManagement(IvBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()  # IvBaseTest 会自动初始化存货核算配置和 com_org_id/gr_com_org_id
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.acc_ref_id = None
         cls.mat_link_id = None
         cls.logger.info("账户参考和物料关联配置测试类初始化完成")

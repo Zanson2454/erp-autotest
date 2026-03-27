@@ -25,6 +25,12 @@ class TestPoManagement(ScmPurBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.po_id = None
         cls.po_code = None
         cls.pur_remark = None
@@ -106,10 +112,13 @@ class TestPoManagement(ScmPurBaseTest):
             }
         }
         
-        response = self.http.post(
-            url,
-            json=params,
-            params={"tmodule": "SCM_PUR", "modelKey": "SCM_PUR$pur_po_head_tr"}
+        response, _ = self.standard_api_call(
+            api_key="(系统)查询数据详情服务",
+            set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"],
+            query_params={"tmodule": "SCM_PUR", "modelKey": "SCM_PUR$pur_po_head_tr"}
         )
         self.assert_util.assert_response_data(response)
         
@@ -228,10 +237,13 @@ class TestPoManagement(ScmPurBaseTest):
                 "systemParams": None
             })
             
-            response = self.http.post(
-                url,
-                json=filtered_params,
-                params={"tmodule": "SCM_PUR"}
+            response, _ = self.standard_api_call(
+                api_key="采购订单分页查询ACTION服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": "SCM_PUR"}
             )
             self.assert_util.assert_response_data(response)
             
@@ -289,10 +301,13 @@ class TestPoManagement(ScmPurBaseTest):
                 }
             }
             
-            response = self.http.post(
-                url,
-                json=request_params,
-                params={"tmodule": "SCM_PUR", "modelKey": "SCM_PUR$pur_po_head_tr"}
+            response, _ = self.standard_api_call(
+                api_key="(系统)查询数据详情服务",
+                set_dict=(request_params.get("params", {}) if isinstance(request_params, dict) else request_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": "SCM_PUR", "modelKey": "SCM_PUR$pur_po_head_tr"}
             )
             
             self.assert_util.assert_response_data(response)
@@ -341,10 +356,13 @@ class TestPoManagement(ScmPurBaseTest):
                     }
                 }
             
-            response = self.http.post(
-                url,
-                json=request_params,
-                params={"tmodule": "SCM_PUR"}
+            response, _ = self.standard_api_call(
+                api_key="PO-订单头-冻结服务",
+                set_dict=(request_params.get("params", {}) if isinstance(request_params, dict) else request_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": "SCM_PUR"}
             )
             
             self.assert_util.assert_response_success(response)
@@ -396,10 +414,13 @@ class TestPoManagement(ScmPurBaseTest):
                     }
                 }
             
-            response = self.http.post(
-                url,
-                json=request_params,
-                params={"tmodule": "SCM_PUR"}
+            response, _ = self.standard_api_call(
+                api_key="PO-订单头-取消冻结服务",
+                set_dict=(request_params.get("params", {}) if isinstance(request_params, dict) else request_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": "SCM_PUR"}
             )
             
             self.assert_util.assert_response_success(response)
@@ -447,10 +468,13 @@ class TestPoManagement(ScmPurBaseTest):
                 }
             }
             
-            response = self.http.post(
-                url,
-                json=request_params,
-                params={"tmodule": "SCM_PUR"}
+            response, _ = self.standard_api_call(
+                api_key="采购订单完成",
+                set_dict=(request_params.get("params", {}) if isinstance(request_params, dict) else request_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": "SCM_PUR"}
             )
             
             success = response.get("success", True)
@@ -496,10 +520,13 @@ class TestPoManagement(ScmPurBaseTest):
                 }
             }
             
-            response = self.http.post(
-                url,
-                json=request_params,
-                params={"tmodule": "SCM_PUR"}
+            response, _ = self.standard_api_call(
+                api_key="PO-订单-作废服务",
+                set_dict=(request_params.get("params", {}) if isinstance(request_params, dict) else request_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": "SCM_PUR"}
             )
             
             self.assert_util.assert_response_success(response)
@@ -542,10 +569,13 @@ class TestPoManagement(ScmPurBaseTest):
                 }
             }
             
-            response = self.http.post(
-                url,
-                json=request_params,
-                params={"tmodule": "SCM_PUR"}
+            response, _ = self.standard_api_call(
+                api_key="PO-取消提交服务",
+                set_dict=(request_params.get("params", {}) if isinstance(request_params, dict) else request_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": "SCM_PUR"}
             )
             
             self.assert_util.assert_response_success(response)
@@ -660,7 +690,14 @@ class TestPoManagement(ScmPurBaseTest):
                 }
             }
             
-            response = self.http.post(url, json=request_params, params={"tmodule": "SCM_PUR"})
+            response, _ = self.standard_api_call(
+                api_key="采购订单-H-导入导出任务管理接口-提交导出任务",
+                set_dict=(request_params.get("params", {}) if isinstance(request_params, dict) else request_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": "SCM_PUR"}
+            )
             self.assert_util.assert_response_success(response)
             
             a.json(request_params, "请求数据")
@@ -695,10 +732,13 @@ class TestPoManagement(ScmPurBaseTest):
                 }
             }
             
-            response = self.http.post(
-                url,
-                json=request_params,
-                params={"tmodule": "SCM_PUR"}
+            response, _ = self.standard_api_call(
+                api_key="PO-删除订单服务",
+                set_dict=(request_params.get("params", {}) if isinstance(request_params, dict) else request_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": "SCM_PUR"}
             )
             
             self.assert_util.assert_response_success(response)

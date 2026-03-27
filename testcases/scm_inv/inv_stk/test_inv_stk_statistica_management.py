@@ -24,6 +24,12 @@ class TestInvStkStatisticaManagement(ScmInvBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         # 测试数据变量
         cls.mobile_voucher_id = None
         cls.mobile_voucher_code = None
@@ -95,7 +101,13 @@ class TestInvStkStatisticaManagement(ScmInvBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 3. 请求与断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-库存余额-库存账统计服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 4. 提取库存数量并验证
@@ -206,7 +218,13 @@ class TestInvStkStatisticaManagement(ScmInvBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 3. 请求与断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-库存余额-库存账统计服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 4. 提取最终库存数量并进行对比验证

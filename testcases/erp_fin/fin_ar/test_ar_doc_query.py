@@ -33,7 +33,13 @@ class TestArDocumentQuery(ArBaseTest):
                 filtered_params = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
                 ParamUtil.set_request_params(filtered_params, {"id": draft_id})
                 
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(result)
                 
                 TestArDocumentQuery.ar_query_info.update({"draft_id": draft_id})
@@ -69,7 +75,13 @@ class TestArDocumentQuery(ArBaseTest):
                 filtered_params = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
                 ParamUtil.set_request_params(filtered_params, {"id": confirmed_id})
                 
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(result)
                 
                 TestArDocumentQuery.ar_query_info.update({"confirmed_id": confirmed_id})
@@ -105,7 +117,13 @@ class TestArDocumentQuery(ArBaseTest):
                 filtered_params = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
                 ParamUtil.set_request_params(filtered_params, {"id": done_id})
                 
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(result)
                 
                 TestArDocumentQuery.ar_query_info.update({"done_id": done_id})

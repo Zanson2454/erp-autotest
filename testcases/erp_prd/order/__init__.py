@@ -2,12 +2,9 @@
 生产模块的测试初始化
 提供配置加载等通用功能
 """
-import yaml
 from pathlib import Path
 from testcases.comm.base_test import BaseTest
-from utils.yaml_util import YamlUtil
 from utils.mysql_util import DBManager
-import allure
 
 # 获取项目根目录
 project_root = Path(__file__).resolve().parent.parent.parent.parent
@@ -29,23 +26,24 @@ class PrdBaseTest(BaseTest):
         """
         # 调用父类初始化方法
         super().setup_class()
-        
+        cls.load_api_configs()
+        cls.bind_context()
+
+    @classmethod
+    def load_api_configs(cls):
+        """加载生产模块 API 配置。"""
         # 初始化配置文件路径
         cls.base_api_path = Path(project_root) / "config" / "api" / "scm_prd" / "prd_api_path.yaml"
         cls.base_api_params = Path(project_root) / "config" / "api" / "scm_prd" / "prd_api_params.yaml"
-        
-        # 初始化YAML工具类
-        cls.yaml_util = YamlUtil()
-        
-        # 加载API路径配置
-        cls.apis = cls.yaml_util.read_yaml(cls.base_api_path).get("apis", {})
-        
-        # 加载API参数配置
-        cls.api_params = cls.yaml_util.read_yaml(cls.base_api_params).get("api_params", {})
-        
+
+        cls.load_module_api_configs(cls.base_api_path, cls.base_api_params)
+
+    @classmethod
+    def bind_context(cls):
+        """绑定生产模块上下文并初始化基础配置数据。"""
         # 初始化基础配置数据
         cls._init_base_info()
-        
+
         cls.logger.info("PrdBaseTest初始化完成")
     
     @classmethod
@@ -96,18 +94,6 @@ class PrdBaseTest(BaseTest):
         except Exception as e:
             cls.logger.error(f"基础配置数据初始化失败: {str(e)}")
             raise
-    
-    def get_api_path(self, api_key):
-        """
-        获取API路径
-        
-        参数:
-            api_key (str): API的名称键值
-            
-        返回:
-            str: 对应的API路径，如果找不到对应的API，则返回None
-        """
-        return super().get_api_path(api_key, self.apis)
     
     def get_cross_module_api_path(self, module_name: str, api_key: str) -> str:
         """
@@ -162,21 +148,6 @@ class PrdBaseTest(BaseTest):
             url = f"{api_path}?{with_query_params}"
             
         return params, url
-    
-    def get_api_params(self, api_path, with_query_params=None):
-        """
-        获取API请求参数和完整URL
-        
-        参数:
-            api_path (str): API路径
-            with_query_params (str, optional): 查询参数字符串
-            
-        返回:
-            tuple: (params, url)
-                params (dict): 对应API的请求参数模板
-                url (str): 完整的API URL
-        """
-        return super().get_api_params(api_path, self.api_params, with_query_params)
     
     def get_latest_prd_order(self, status="DRAFT"):
         """

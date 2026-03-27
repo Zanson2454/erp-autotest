@@ -12,6 +12,12 @@ class TestTextManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.text_type_id = None
         cls.text_group_id = None
         cls.logger.info("文本管理测试类初始化完成")

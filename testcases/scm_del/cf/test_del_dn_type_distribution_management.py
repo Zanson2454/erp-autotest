@@ -20,6 +20,12 @@ class TestDelDnTypeDistributionManagement(ScmDelBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.distribution_id = None
         cls.logger.info("交货单类型分配管理测试类初始化完成")
         
@@ -67,9 +73,13 @@ class TestDelDnTypeDistributionManagement(ScmDelBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 4. 执行请求
-            response = self.http.post(
-                url, json=filtered_params,
-                params={"tmodule": self.MODULE_NAME}
+            response, _ = self.standard_api_call(
+                api_key="DEL-保存清除分配表缓存信息服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": self.MODULE_NAME}
             )
             self.assert_util.assert_response_data(response)
             
@@ -122,10 +132,13 @@ class TestDelDnTypeDistributionManagement(ScmDelBaseTest):
             _, url = self.get_api_params(api_path)
             
             # 3. 执行请求
-            response = self.http.post(
-                url, 
-                json=request_params,
-                params={"tmodule": self.MODULE_NAME, "modelKey": self.MODEL_KEY}
+            response, _ = self.standard_api_call(
+                api_key="(系统)查询分页数据服务",
+                set_dict=(request_params.get("params", {}) if isinstance(request_params, dict) else request_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": self.MODULE_NAME, "modelKey": self.MODEL_KEY}
             )
             self.assert_util.assert_response_success(response)
             
@@ -178,10 +191,13 @@ class TestDelDnTypeDistributionManagement(ScmDelBaseTest):
             _, url = self.get_api_params(api_path)
             
             # 4. 执行请求
-            response = self.http.post(
-                url, 
-                json=request_params,
-                params={"tmodule": self.MODULE_NAME, "modelKey": self.MODEL_KEY}
+            response, _ = self.standard_api_call(
+                api_key="(系统)查询数据详情服务",
+                set_dict=(request_params.get("params", {}) if isinstance(request_params, dict) else request_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": self.MODULE_NAME, "modelKey": self.MODEL_KEY}
             )
             self.assert_util.assert_response_data(response)
             
@@ -227,10 +243,13 @@ class TestDelDnTypeDistributionManagement(ScmDelBaseTest):
             _, url = self.get_api_params(api_path)
             
             # 4. 执行请求
-            response = self.http.post(
-                url, 
-                json=request_params,
-                params={"tmodule": self.MODULE_NAME}
+            response, _ = self.standard_api_call(
+                api_key="DEL-交货单类型分配表删除服务",
+                set_dict=(request_params.get("params", {}) if isinstance(request_params, dict) else request_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": self.MODULE_NAME}
             )
             
             # 5. 验证删除结果
@@ -253,4 +272,3 @@ class TestDelDnTypeDistributionManagement(ScmDelBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
-

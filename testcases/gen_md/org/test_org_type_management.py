@@ -13,9 +13,15 @@ class TestOrg_TypeManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.org_type_id = None
         cls.org_type_code = None
-     
+
         cls.logger.info("组织类型管理测试类初始化完成")
         if cls.md_cache_data:
             org_attr_list = cls.md_cache_data["org_info"]["org_attr_cf"]

@@ -10,10 +10,8 @@ project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
 
 from typing import Any,Dict
-from testcases.comm.base_test import BaseTest,LoginService
+from testcases.comm.base_test import BaseTest
 from data_factory.base import DataFactory
-from utils.cache_util import CacheUtil
-from utils.request_util import HttpUtil
 
 class ScmInvBaseTest(BaseTest):
     """SCM库存模块的基础测试类，负责加载库存相关配置和提供API访问方法"""
@@ -40,101 +38,42 @@ class ScmInvBaseTest(BaseTest):
         5. 初始化 http 工具，自动带上门户请求头
         """
         super().setup_class()
+        cls.load_api_configs()
+        cls.load_cache_data()
+        cls.bind_context()
 
-        cls.login_service = LoginService(cls.env_config)  # 初始化一次登录服务，避免重复创建
-        # 登录 admin
-        admin_result = cls.login_service.login(portal_key=cls._PORTAL_TYPE_KEYS["admin"])
-        if admin_result.status != admin_result.status.SUCCESS:
-            raise RuntimeError(f"admin 登录失败: {admin_result.error_message}")
-        
-        # 初始化 cust 的 headers
-        cls.admin_headers = admin_result.portal_headers
-        if cls.admin_headers:
-            cls.cust_portal_headers = cls.admin_headers.copy()  
-        cust_portal_referer = cls.env_config.get("portal_config",{}).get('terp',{}).get("TERP_CUST_PC",{}).get("portal_referer")
-        cls.cust_portal_headers["Referer"] = cust_portal_referer
-        cls.logger.info(f"cust_portal_headers: {cls.cust_portal_headers}")
-  
-        # 初始化 http 实例
-        cls.http = HttpUtil(
-            url=admin_result.portal_url,
-            session=admin_result.session,
-            headers=admin_result.portal_headers
+    @classmethod
+    def load_api_configs(cls):
+        """加载库存模块 API 配置与门户上下文。"""
+        cls.module_login_admin_with_cust_headers(
+            admin_portal_key=cls._PORTAL_TYPE_KEYS["admin"],
+            cust_portal_key=cls._PORTAL_TYPE_KEYS["cust"],
+            tenant_key="terp",
         )
-     
 
         # 初始化库存模块配置文件路径
         cls.inv_api_path = Path(project_root) / "config" / "api" / "scm_inv" / "inv_api_path.yaml"
         cls.inv_api_params = Path(project_root) / "config" / "api" / "scm_inv" / "inv_api_params.yaml"
-        # 加载库存API路径配置和参数配置
-        cls.apis = cls.yaml_util.read_yaml(cls.inv_api_path).get("apis", {})
-        cls.api_params = cls.yaml_util.read_yaml(cls.inv_api_params).get("api_params", {})
+        cls.load_module_api_configs(cls.inv_api_path, cls.inv_api_params)
+
+    @classmethod
+    def load_cache_data(cls):
+        """加载库存模块依赖缓存。"""
         # 初始化DataFactory（必须在init_sql_cache之前调用）
         DataFactory.__init__(env_name="test")
         # 加载缓存数据（库存模块依赖主数据）
-        DataFactory.init_sql_cache(
-            sql_config_path=str(project_root / "config" / "erp" / "md_init_sql.yaml"), # 主数据依赖的初始化sql存放路径
-            db_config_name="erp_db", # 数据库配置名称
-            cache_key="inv_init_cache", # 缓存key
-            cache_dir="testdata/cache" # 缓存目录
+        cls.inv_cache_data = cls.load_sql_cache(
+            sql_config_path=project_root / "config" / "erp" / "md_init_sql.yaml",
+            cache_key="inv_init_cache",
+            db_config_name="erp_db",
+            cache_dir="testdata/cache",
         )
-        cls.inv_cache_data = CacheUtil.get('inv_init_cache')
-        cls.path_params = {"tmodule":"SCM_INV"}
-        cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
-        cls.user_id = cls.init_data["user_info"]['user_info']["id"]
 
-    
-    def get_api_path(self, api_key):
-        """
-        获取API路径
-        """
-        return super().get_api_path(api_key, self.apis)
-    
-    def get_api_params(self, api_path, with_query_params=None):
-        """
-        获取API请求参数和完整URL
-        """
-        return super().get_api_params(api_path, self.api_params, with_query_params)
-      
-    def set_request_param(self, params, key, value):
-        """
-        设置请求参数中的值，简化嵌套访问
-        
-        参数:
-            params: 请求参数字典
-            key: 参数键名
-            value: 参数值
-        
-        返回:
-            更新后的参数字典
-        """
-        if 'params' not in params:
-            params['params'] = {}
-        if 'request' not in params['params']:
-            params['params']['request'] = {}
-            
-        params['params']['request'][key] = value
-        return params
-    
-    def set_request_params(self, params, param_dict):
-        """
-        批量设置请求参数，简化嵌套访问
-        
-        参数:
-            params: 请求参数字典
-            param_dict: 要设置的参数字典 {key: value, ...}
-        
-        返回:
-            更新后的参数字典
-        """
-        if 'params' not in params:
-            params['params'] = {}
-        if 'request' not in params['params']:
-            params['params']['request'] = {}
-            
-        for key, value in param_dict.items():
-            params['params']['request'][key] = value
-        return params
+    @classmethod
+    def bind_context(cls):
+        """绑定库存模块上下文。"""
+        cls.bind_module_user_context("SCM_INV", strict=True)
+
     
     @classmethod
     def teardown_class(cls):

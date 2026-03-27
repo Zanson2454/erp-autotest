@@ -35,6 +35,12 @@ class TestInvAtpRuleManagement(ScmInvBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.atp_rule_id = None
         cls.atp_group_id = None
         cls.atp_group_code = None
@@ -55,8 +61,14 @@ class TestInvAtpRuleManagement(ScmInvBaseTest):
         })
         filtered_params["params"]["modelKey"] = "SCM_INV$inv_atp_group_md"
 
-        response = self.http.post(url, json=filtered_params,
-            params={"tmodule": "SCM_INV", "modelKey": "SCM_INV$inv_atp_group_md"})
+        response, _ = self.standard_api_call(
+            api_key="(系统)保存数据服务",
+            set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"],
+            query_params={"tmodule": "SCM_INV", "modelKey": "SCM_INV$inv_atp_group_md"}
+        )
         self.assert_util.assert_response_data(response)
         
         result_data = response.get("data", {}).get("data", {})
@@ -122,7 +134,13 @@ class TestInvAtpRuleManagement(ScmInvBaseTest):
             })
             
             filtered_params = self._prepare_request_params(filtered_params)
-            response = self.http.post(url, json=filtered_params, params=self.URL_PARAMS)
+            response, _ = self.standard_api_call(
+                api_key="(系统)保存数据服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             result_data = self._validate_response(response, ["id", "docClass"])
             
             assert result_data.get("docClass") == "PO", "单据类型不匹配"
@@ -248,7 +266,13 @@ class TestInvAtpRuleManagement(ScmInvBaseTest):
             for key in ["taskName", "multiSheetConfig", "queryData", "processConfig"]:
                 filtered_params["params"][key] = export_config[key]
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="ATP检查规则-导入导出任务管理接口-提交导出任务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -278,7 +302,13 @@ class TestInvAtpRuleManagement(ScmInvBaseTest):
             ParamUtil.set_request_params(filtered_params, {"id": self.__class__.atp_rule_id})
             filtered_params = self._prepare_request_params(filtered_params)
             
-            response = self.http.post(url, json=filtered_params, params=self.URL_PARAMS)
+            response, _ = self.standard_api_call(
+                api_key="(系统)查询数据详情服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             result_data = self._validate_response(response, ["id", "docClass"])
             assert result_data.get("id") == self.__class__.atp_rule_id, "ATP检查规则ID不匹配"
             
@@ -322,7 +352,13 @@ class TestInvAtpRuleManagement(ScmInvBaseTest):
             })
             
             filtered_params = self._prepare_request_params(filtered_params)
-            response = self.http.post(url, json=filtered_params, params=self.URL_PARAMS)
+            response, _ = self.standard_api_call(
+                api_key="(系统)查询分页数据服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             result_data = self._validate_response(response, ["data", "total"])
             
             content = result_data.get("data", [])
@@ -360,7 +396,13 @@ class TestInvAtpRuleManagement(ScmInvBaseTest):
             ParamUtil.set_request_params(filtered_params, {"id": self.__class__.atp_rule_id})
             filtered_params["params"]["modelKey"] = self.MODEL_KEY
             
-            response = self.http.post(url, json=filtered_params, params=self.URL_PARAMS)
+            response, _ = self.standard_api_call(
+                api_key="(系统)删除数据服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             assert response.get("success") is True, "删除ATP检查规则失败"
             
             self.__class__.atp_rule_id = None

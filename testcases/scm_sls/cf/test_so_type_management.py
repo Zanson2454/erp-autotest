@@ -20,6 +20,12 @@ class TestSoTypeManagement(SlsBase):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.so_type_id = None
         cls.so_type_code = None
         cls.logger.info("销售订单类型定义表管理测试类初始化完成")
@@ -55,7 +61,13 @@ class TestSoTypeManagement(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="订单类型定义表-根据ID查找数据服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -101,7 +113,13 @@ class TestSoTypeManagement(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="订单类型定义表-分页数据服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -183,7 +201,13 @@ class TestSoTypeManagement(SlsBase):
             }
                         
             # 3. 发送请求和断言
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="订单类型定义表-导入导出任务管理接口-提交导出任务",
+                set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             a.json(params, "请求数据")
@@ -279,7 +303,13 @@ class TestSoTypeManagement(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="订单类型定义表标准导入服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             a.json(filtered_params, "请求数据")
@@ -375,7 +405,13 @@ class TestSoTypeManagement(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="订单类型定义表标准导出服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             a.json(filtered_params, "请求数据")
@@ -471,7 +507,13 @@ class TestSoTypeManagement(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="订单类型定义表-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             a.json(filtered_params, "请求数据")

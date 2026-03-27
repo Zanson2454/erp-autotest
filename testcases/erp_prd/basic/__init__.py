@@ -35,6 +35,11 @@ class PrdBasicBaseTest(BaseTest):
         2. 创建配置管理器实例
         """
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定生产基础模块上下文。"""
         cls.config_manager = PrdConfigInitializer()
         cls.logger.info("生产基础测试类初始化完成")
     

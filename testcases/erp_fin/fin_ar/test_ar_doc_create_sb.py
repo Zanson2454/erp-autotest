@@ -16,14 +16,24 @@ class TestArDocCreateSb(ArBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
-        cls.ar_factory = FinArFactory()
-        cls.mock_data = MockData()
-        
+        cls.load_api_configs()
+        cls.bind_context()
+
+    @classmethod
+    def load_api_configs(cls):
+        """加载财务 API 配置。"""
         project_root = Path(__file__).resolve().parent.parent.parent.parent
         apis = cls.yaml_util.read_yaml(project_root / "config/api/erp_fin/fin_api_path.yaml").get("apis", {})
         api_params = cls.yaml_util.read_yaml(project_root / "config/api/erp_fin/fin_api_params.yaml").get("api_params", {})
         cls.apis = apis
         cls.api_params = api_params
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
+        cls.ar_factory = FinArFactory()
+        cls.mock_data = MockData()
 
     def _create_ar_request_body(self, now_ts, output_dict):
         """创建应收单请求体"""
@@ -92,7 +102,13 @@ class TestArDocCreateSb(ArBaseTest):
         ParamUtil.set_request_params(filtered_params, request_data)
         filtered_params = convert_decimal_to_float(filtered_params)
         
-        result = self.http.post(url, json=filtered_params)
+        result, _ = self.standard_api_call(
+            api_key=self.apis,
+            set_dict=filtered_params.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(result)
         
         a.json(filtered_params, "请求数据")
@@ -120,7 +136,13 @@ class TestArDocCreateSb(ArBaseTest):
         
         waited = 0
         while waited < max_wait:
-            result = self.http.post(url, json=params)
+            result, _ = self.standard_api_call(
+                api_key=self.apis,
+                set_dict=params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             
             data_list = result.get("data", {}).get("data", {}).get("data", [])
@@ -148,7 +170,13 @@ class TestArDocCreateSb(ArBaseTest):
         }
         
         api_path = "/api/trantor/service/engine/execute/ERP_FIN$SB_CONVERT_BY_AR_ASYNC_EVENT_SERVICE"
-        result = self.http.post(api_path, json=sb_request)
+        result, _ = self.standard_api_call(
+            api_key=self.apis,
+            set_dict=sb_request.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(result)
         
         a.json(sb_request, "请求数据")
@@ -242,7 +270,13 @@ class TestArDocCreateSb(ArBaseTest):
         
         waited = 0
         while waited < max_wait:
-            result = self.http.post(url, json=query_params)
+            result, _ = self.standard_api_call(
+                api_key=self.apis,
+                set_dict=query_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             
             data_list = result.get("data", {}).get("data", {}).get("data", [])
@@ -577,7 +611,13 @@ class TestArDocCreateSb(ArBaseTest):
                 ParamUtil.set_request_params(filtered_params, request_data)
                 filtered_params = convert_decimal_to_float(filtered_params)
                 
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(result)
                 
                 success = result.get("success")
@@ -660,7 +700,13 @@ class TestArDocCreateSb(ArBaseTest):
                 val_filtered_params = convert_decimal_to_float(val_filtered_params)
                 
                 # 发送校验请求
-                val_result = self.http.post(val_url, json=val_filtered_params)
+                val_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=val_filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(val_result)
                 
                 # 获取校验结果
@@ -687,7 +733,13 @@ class TestArDocCreateSb(ArBaseTest):
                     match_filtered_params = convert_decimal_to_float(match_filtered_params)
                     
                     # 发送自动钩稽请求
-                    match_result = self.http.post(match_url, json=match_filtered_params)
+                    match_result, _ = self.standard_api_call(
+                        api_key=self.apis,
+                        set_dict=match_filtered_params.get("params", {}),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     self.assert_util.assert_response_success(match_result)
                     
                     # 断言自动钩稽接口success字段

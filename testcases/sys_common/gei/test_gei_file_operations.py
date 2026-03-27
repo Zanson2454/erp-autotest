@@ -18,6 +18,12 @@ class TestGeiFileOperations(SysCommonBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.gei_task_id = None
         cls.logger.info("导入导出文件操作测试类初始化完成")
     
@@ -61,7 +67,13 @@ class TestGeiFileOperations(SysCommonBaseTest):
                 )
                 set_dict_create = {"taskName": task_name}
                 ParamUtil.set_request_params(filtered_params_create, set_dict_create)
-                create_response = self.http.post(url_create, json=filtered_params_create)
+                create_response, _ = self.standard_api_call(
+                    api_key="导入导出任务管理接口-提交导出任务",
+                    set_dict=filtered_params_create.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_data(create_response)
                 task_data = create_response.get("data", {}).get("data", {})
                 self.gei_task_id = task_data.get("taskId")

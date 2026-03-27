@@ -27,6 +27,13 @@ class TestInvTypeManagement(ScmInvBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.inv_type_id = None
         cls._save_executed = False  # 防重复执行标记
         cls.logger.info("库存类型配置管理测试类初始化完成")
@@ -75,7 +82,13 @@ class TestInvTypeManagement(ScmInvBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-库存类型-保存服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 5. 保存数据和报告
@@ -139,7 +152,13 @@ class TestInvTypeManagement(ScmInvBaseTest):
             ParamUtil.set_request_params(filtered_params, query_params)
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-库存类型--查询分页服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 5. 验证返回数据结构
@@ -245,7 +264,13 @@ class TestInvTypeManagement(ScmInvBaseTest):
             }
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=export_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-库存类型--查询分页服务",
+                set_dict=(export_params.get("params", {}) if isinstance(export_params, dict) else export_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             # 4. 报告记录
@@ -284,7 +309,13 @@ class TestInvTypeManagement(ScmInvBaseTest):
             ParamUtil.set_request_params(filtered_params, {"id": self.inv_type_id})
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-库存类型-删除服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             # 4. 报告记录

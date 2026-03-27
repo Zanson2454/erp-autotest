@@ -21,6 +21,12 @@ class TestArDocCreatePn(ArBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.mock_data = MockData()
 
     @case_decorator(
@@ -104,8 +110,13 @@ class TestArDocCreatePn(ArBaseTest):
                     }
                 }
                 
-                api_path = "/api/trantor/service/engine/execute/ERP_FIN$PN_CREATE_BY_AR_ASYNC_EVENT_SERVICE"
-                result = self.http.post(api_path, json=pn_request)
+                result, _ = self.standard_api_call(
+                    api_key="基于应收单生成收款单-异步服务",
+                    set_dict=pn_request.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(result)
                 
                 response_data = result.get("data", {})
@@ -154,7 +165,13 @@ class TestArDocCreatePn(ArBaseTest):
                 
                 waited = 0
                 while waited < 10:
-                    result = self.http.post(url, json=query_params)
+                    result, _ = self.standard_api_call(
+                        api_key=self.apis,
+                        set_dict=query_params.get("params", {}),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     self.assert_util.assert_response_success(result)
                     
                     ar_data = result.get("data", {}).get("data", {})
@@ -245,7 +262,13 @@ class TestArDocCreatePn(ArBaseTest):
                     }
                 })
                 
-                result = self.http.post(url, json=params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(result)
                 
                 data_list = result.get("data", {}).get("data", {}).get("data", [])
@@ -406,7 +429,13 @@ class TestArDocCreatePn(ArBaseTest):
                 pn_data = None
                 
                 while waited < 15:
-                    result = self.http.post(url, json=params)
+                    result, _ = self.standard_api_call(
+                        api_key=self.apis,
+                        set_dict=params.get("params", {}),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     self.assert_util.assert_response_success(result)
                     
                     data_list = result.get("data", {}).get("data", {}).get("data", [])

@@ -28,30 +28,22 @@ class TrantorBaseTest(BaseTest):
         3. 加载API路径和参数配置
         """
         super().setup_class()
+        cls.load_api_configs()
+        cls.bind_context()
 
+    @classmethod
+    def load_api_configs(cls):
+        """加载 trantor 模块 API 配置。"""
         # 初始化配置文件路径
         cls.trantor_api_path = Path(project_root) / "config" / "api" / "trantor" / "api_api_path.yaml"
         cls.trantor_api_params = Path(project_root) / "config" / "api" / "trantor" / "api_api_params.yaml"
         
-        # 加载API路径配置和参数配置
-        cls.apis = cls.yaml_util.read_yaml(cls.trantor_api_path).get("apis", {})
-        cls.api_params = cls.yaml_util.read_yaml(cls.trantor_api_params).get("api_params", {})
-        
+        cls.load_module_api_configs(cls.trantor_api_path, cls.trantor_api_params)
+
+    @classmethod
+    def bind_context(cls):
+        """绑定 trantor 模块上下文。"""
         cls.logger.info("TrantorBaseTest初始化完成")
-
-    def get_api_path(self, api_key):
-        """
-        获取API路径
-        """
-        return super().get_api_path(api_key, self.apis)
-    
-    def get_api_params(self, api_path, with_query_params=None):
-        """
-        获取API请求参数和完整URL
-        """
-        return super().get_api_params(api_path, self.api_params, with_query_params)
-
 
 if __name__ == "__main__":
     TrantorBaseTest.setup_class()
-

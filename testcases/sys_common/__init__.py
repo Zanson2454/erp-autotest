@@ -10,8 +10,7 @@ project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
 
 from typing import Any, Dict
-from testcases.comm.base_test import BaseTest, LoginService
-from utils.request_util import HttpUtil
+from testcases.comm.base_test import BaseTest
 
 
 class SysCommonBaseTest(BaseTest):
@@ -36,34 +35,13 @@ class SysCommonBaseTest(BaseTest):
         5. 初始化 http 工具，自动带上门户请求头
         """
         super().setup_class()
+        cls.load_api_configs()
+        cls.bind_context()
 
-        # 初始化登录服务，避免重复创建
-        cls.login_service = LoginService(cls.env_config)
-        
-        # 登录门户，分别保存 session/user_info/headers/url
-        cls.sessions = {}
-        cls.user_infos = {}
-        cls.http_clients = {}
-        cls.portal_urls = {}
-        cls.portal_headers = {}
-        
-        tenant_key = "terp"
-        for role, portal_key in cls._PORTAL_TYPE_KEYS.items():
-            result = cls.login_service.login(portal_key=portal_key, tenant_key=tenant_key)
-            if result.status != result.status.SUCCESS:
-                raise RuntimeError(f"{role} 登录失败: {result.error_message}")
-            portal_url = result.portal_url or ""
-            if not isinstance(portal_url, str) or not portal_url:
-                raise ValueError(f"{role} portal_url 不能为空且必须为字符串")
-            cls.sessions[role] = result.session
-            cls.user_infos[role] = result.user_info
-            cls.portal_urls[role] = portal_url
-            cls.portal_headers[role] = result.portal_headers
-            cls.http_clients[role] = HttpUtil(
-                url=portal_url,
-                session=result.session,
-                headers=result.portal_headers
-            )
+    @classmethod
+    def load_api_configs(cls):
+        """加载 sys_common 模块 API 配置与门户上下文。"""
+        cls.module_login_multi_portal(cls._PORTAL_TYPE_KEYS, tenant_key="terp")
 
         # 兼容原有写法
         cls.http = cls.http_clients["admin"]
@@ -75,22 +53,15 @@ class SysCommonBaseTest(BaseTest):
         cls.common_api_path = Path(project_root) / "config" / "api" / "sys_common" / "common_api_path.yaml"
         cls.common_api_params = Path(project_root) / "config" / "api" / "sys_common" / "common_api_params.yaml"
         
-        # 加载API路径配置和参数配置
-        cls.apis = cls.yaml_util.read_yaml(cls.common_api_path).get("apis", {})
-        cls.api_params = cls.yaml_util.read_yaml(cls.common_api_params).get("api_params", {})
-        
+        cls.load_module_api_configs(cls.common_api_path, cls.common_api_params)
+
+    @classmethod
+    def bind_context(cls):
+        """绑定 sys_common 模块上下文。"""
         # 初始化路径参数
-        cls.path_params = {"tmodule": "SYS_COMMON"}
-        cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
-        cls.user_id = cls.init_data["user_info"]['user_info']["id"]
+        cls.bind_module_user_context("SYS_COMMON", strict=True)
         cls.logger.debug(f"SysCommonBaseTest初始化完成: nickname: {cls.nickname}, user_id: {cls.user_id}")
 
-    def get_api_path(self, api_key):
-        """
-        获取API路径
-        """
-        return super().get_api_path(api_key, self.apis)
-    
     def get_api_params(self, api_path, with_query_params=None):
         """
         获取API请求参数和完整URL
@@ -109,4 +80,3 @@ class SysCommonBaseTest(BaseTest):
 
 if __name__ == "__main__":
     SysCommonBaseTest.setup_class()
-

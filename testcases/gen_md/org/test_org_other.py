@@ -13,8 +13,14 @@ class TestOrgOther(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.logger.info("组织其他功能测试类初始化完成")
-        
+
         # 获取组织信息
         cls.com_org_id = cls.md_cache_data["org_info"].get("com_org_info", [])[0]["id"]
         cls.user_id = cls.md_cache_data.get("user_info", {}).get("id", None)

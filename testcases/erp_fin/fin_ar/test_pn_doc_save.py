@@ -20,6 +20,12 @@ class TestPnCreateManual(ArBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
 
     def create_manual_pn_request_body(self, now_ts, output_dict):
         """创建手动收款单请求体，结果存储到output_dict中"""
@@ -410,7 +416,13 @@ class TestPnCreateManual(ArBaseTest):
             filtered_params = convert_decimal_to_float(request_data)
             
             # 发送请求
-            result = self.http.post(url, json=filtered_params)
+            result, _ = self.standard_api_call(
+                api_key=self.apis,
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             
             result_dict.update(result)

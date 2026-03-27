@@ -15,6 +15,12 @@ class TestApCreatePaymentRequest(ApBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
 
     def convert_data_for_json(self, obj):
         """数据转换方法，处理Decimal和datetime类型"""
@@ -71,7 +77,13 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 # 转换数据类型以支持JSON序列化
                 filtered_params = self.convert_data_for_json(filtered_params)
                 
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(result)
                 
                 ap_doc_id = ParamUtil.extract_id(result)
@@ -129,7 +141,13 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 # 转换数据类型以支持JSON序列化
                 submit_filtered_params = self.convert_data_for_json(submit_filtered_params)
                 
-                submit_result = self.http.post(submit_url, json=submit_filtered_params)
+                submit_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=submit_filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(submit_result)
                 
                 submit_success = submit_result.get("success")
@@ -147,7 +165,13 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 # 转换数据类型以支持JSON序列化
                 post_filtered_params = self.convert_data_for_json(post_filtered_params)
                 
-                post_result = self.http.post(post_url, json=post_filtered_params)
+                post_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=post_filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(post_result)
                 
                 success = post_result.get("success")
@@ -204,7 +228,13 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 # 转换数据类型以支持JSON序列化
                 filtered_params = self.convert_data_for_json(filtered_params)
                 
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(result)
                 
                 success = result.get("success")
@@ -257,7 +287,13 @@ class TestApCreatePaymentRequest(ApBaseTest):
                     )
                     ParamUtil.set_request_params(filtered_params, query_request)
                     
-                    result = self.http.post(url, json=filtered_params)
+                    result, _ = self.standard_api_call(
+                        api_key=self.apis,
+                        set_dict=filtered_params.get("params", {}),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     self.assert_util.assert_response_success(result)
                     
                     records = result.get("data", {}).get("data", {}).get("data", [])
@@ -355,7 +391,13 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 )
                 ParamUtil.set_request_params(filtered_params, pr_query_request)
                 
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(result)
                 
                 data_list = result.get("data", {}).get("data", {}).get("data", [])
@@ -445,7 +487,13 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 # 转换数据类型以支持JSON序列化
                 filtered_params = self.convert_data_for_json(filtered_params)
                 
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(result)
                 
                 success = result.get("success")
@@ -499,7 +547,13 @@ class TestApCreatePaymentRequest(ApBaseTest):
                     )
                     ParamUtil.set_request_params(filtered_params, pr_query_request)
                     
-                    result = self.http.post(url, json=filtered_params)
+                    result, _ = self.standard_api_call(
+                        api_key=self.apis,
+                        set_dict=filtered_params.get("params", {}),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     self.assert_util.assert_response_success(result)
                     
                     data_list = result.get("data", {}).get("data", {}).get("data", [])
@@ -600,7 +654,13 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 )
                 ParamUtil.set_request_params(filtered_params, convert_request)
                 
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(result)
                 
                 success = result.get("success")
@@ -655,7 +715,13 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 )
                 ParamUtil.set_request_params(filtered_params, pn_query_request)
                 
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(result)
                 
                 data_list = result.get("data", {}).get("data", {}).get("data", [])
@@ -748,7 +814,13 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 )
                 ParamUtil.set_request_params(filtered_params, submit_request)
                 
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(result)
                 
                 success = result.get("success")
@@ -803,7 +875,13 @@ class TestApCreatePaymentRequest(ApBaseTest):
                     )
                     ParamUtil.set_request_params(filtered_params, pr_query_request)
                     
-                    result = self.http.post(url, json=filtered_params)
+                    result, _ = self.standard_api_call(
+                        api_key=self.apis,
+                        set_dict=filtered_params.get("params", {}),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     self.assert_util.assert_response_success(result)
                     
                     data_list = result.get("data", {}).get("data", {}).get("data", [])
@@ -934,7 +1012,13 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 # 转换数据类型以支持JSON序列化
                 filtered_params = self.convert_data_for_json(filtered_params)
                 
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(result)
                 
                 success = result.get("success")
@@ -990,7 +1074,13 @@ class TestApCreatePaymentRequest(ApBaseTest):
                     )
                     ParamUtil.set_request_params(filtered_params, pn_query_request)
                     
-                    result = self.http.post(url, json=filtered_params)
+                    result, _ = self.standard_api_call(
+                        api_key=self.apis,
+                        set_dict=filtered_params.get("params", {}),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     self.assert_util.assert_response_success(result)
                     
                     records = result.get("data", {}).get("data", {}).get("data", [])
@@ -1087,7 +1177,13 @@ class TestApCreatePaymentRequest(ApBaseTest):
                     )
                     ParamUtil.set_request_params(filtered_params, query_request)
                     
-                    result = self.http.post(url, json=filtered_params)
+                    result, _ = self.standard_api_call(
+                        api_key=self.apis,
+                        set_dict=filtered_params.get("params", {}),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     self.assert_util.assert_response_success(result)
                     
                     query_data = result.get("data", {})

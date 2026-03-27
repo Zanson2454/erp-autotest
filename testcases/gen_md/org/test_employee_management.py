@@ -13,8 +13,12 @@ class TestEmployeeManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
-        
-    
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         # 用于存储创建员工时的实际数据，供查询测试用例使用
         cls.mobile = None
         cls.email = None

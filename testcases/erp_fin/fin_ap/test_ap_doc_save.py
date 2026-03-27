@@ -17,6 +17,12 @@ class TestApDocumentSave(ApBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
 
     @case_decorator(
         story="应付单保存",
@@ -300,7 +306,13 @@ class TestApDocumentSave(ApBaseTest):
                         ParamUtil.set_request_params(filtered_params, query_request)
                         
                         # 发送查询请求
-                        result = self.http.post(url, json=filtered_params)
+                        result, _ = self.standard_api_call(
+                            api_key=self.apis,
+                            set_dict=filtered_params.get("params", {}),
+                            store_id_as=None,
+                            use_param_util=False,
+                            param_path=["params"]
+                        )
                         
                         if result.get("success"):
                             data = result.get("data", {}).get("data", {})
@@ -478,7 +490,13 @@ class TestApDocumentSave(ApBaseTest):
                         ParamUtil.set_request_params(filtered_params, query_request)
                         
                         # 发送查询请求
-                        result = self.http.post(url, json=filtered_params)
+                        result, _ = self.standard_api_call(
+                            api_key=self.apis,
+                            set_dict=filtered_params.get("params", {}),
+                            store_id_as=None,
+                            use_param_util=False,
+                            param_path=["params"]
+                        )
                         
                         if result.get("success"):
                             data = result.get("data", {}).get("data", {})

@@ -24,6 +24,12 @@ class TestInvStkBalancePurManagement(ScmInvBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         # 测试数据变量
         cls.mobile_voucher_id = None
         cls.mobile_voucher_code = None
@@ -215,7 +221,13 @@ class TestInvStkBalancePurManagement(ScmInvBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 4. 请求与断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-库存余额-物料库存余额查询分页服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 5. 业务断言
@@ -298,7 +310,13 @@ class TestInvStkBalancePurManagement(ScmInvBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 4. 请求与断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-库存余额-仓库库存余额查询分页服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 5. 业务断言
@@ -398,7 +416,13 @@ class TestInvStkBalancePurManagement(ScmInvBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 3. 请求与断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-库存余额-查询分页服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 4. 业务断言
@@ -529,7 +553,13 @@ class TestInvStkBalancePurManagement(ScmInvBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 3. 请求与断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-移动凭证-新版创建服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 4. 业务断言 - 保存移动凭证数据到类变量
@@ -651,7 +681,13 @@ class TestInvStkBalancePurManagement(ScmInvBaseTest):
             }
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=request_params)
+            response, _ = self.standard_api_call(
+                api_key="库存余额表-导入导出任务管理接口-提交导出任务",
+                set_dict=(request_params.get("params", {}) if isinstance(request_params, dict) else request_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 5. 业务断言

@@ -25,6 +25,12 @@ class TestIvVoucherItemManagement(IvBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()  # IvBaseTest 会自动初始化存货核算配置和 com_org_id/gr_com_org_id/inv_org_id
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.voucher_item_id = None
         cls.logger.info("存货价值凭证行测试类初始化完成")
         # 注意：com_org_id 和 inv_org_id 已在 FinBaseTest/IvBaseTest 中初始化，无需重复获取

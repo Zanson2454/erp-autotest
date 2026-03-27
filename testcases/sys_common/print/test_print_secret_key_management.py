@@ -18,6 +18,12 @@ class TestPrintSecretKeyManagement(SysCommonBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.logger.info("打印密钥管理测试类初始化完成")
     
     @classmethod
@@ -56,7 +62,13 @@ class TestPrintSecretKeyManagement(SysCommonBaseTest):
             # 如果需要设置参数，如密钥用途，可在此添加set_dict
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="打印密钥-获取公钥",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 5. 验证公钥数据

@@ -21,6 +21,12 @@ class TestSlsItemTypeGroupManagement(SlsBase):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.item_type_group_id = None
         cls.logger.info("销售订单行项目类型组管理测试类初始化完成")
     
@@ -63,7 +69,13 @@ class TestSlsItemTypeGroupManagement(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="SLS-订单行项目类型组-保存服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 5. 保存数据和报告
@@ -117,7 +129,13 @@ class TestSlsItemTypeGroupManagement(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="SLS-订单行项目类型组-分页服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -154,7 +172,13 @@ class TestSlsItemTypeGroupManagement(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="SLS-订单行项目类型组-详情服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")

@@ -26,6 +26,12 @@ class TestPrdVersion(PrdBaseTest):
     def setup_class(cls):
         """测试类初始化"""
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.logger.info("生产版本管理测试类初始化完成")
         
         # 初始化配置管理器并确保基础配置存在
@@ -132,7 +138,13 @@ class TestPrdVersion(PrdBaseTest):
             
             with a.step("2. 发送创建请求"):
                 # 发送请求
-                result = self.http.post(url, json=request_data)
+                result, _ = self.standard_api_call(
+                    api_key="生产_生产版本保存服务",
+                    set_dict=(request_data.get("params", {}) if isinstance(request_data, dict) else request_data),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.logger.info("=== 响应结果详情 ===")
                 self.logger.info(f"响应状态: {result.get('success')}")
                 self.logger.info(f"响应消息: {result.get('message')}")

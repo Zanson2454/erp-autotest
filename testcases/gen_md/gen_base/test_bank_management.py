@@ -14,6 +14,12 @@ class TestBankSystemManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+    
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         # MockData 单例自动处理，无需手动创建
         cls.bank_id = None
         cls.bank_code = None

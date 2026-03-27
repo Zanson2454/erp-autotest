@@ -23,6 +23,12 @@ class TestApClosingManagement(ApBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.logger.info("应付结账&反结账管理测试类初始化完成")
         
         # 前置条件检查：确保应付初始化配置已经执行初始化

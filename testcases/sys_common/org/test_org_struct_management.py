@@ -28,6 +28,12 @@ class TestOrgStructManagement(SysCommonBaseTest):
     def setup_class(cls):
         """测试类初始化"""
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.org_struct_id = None
         cls.org_struct_code = None
         cls.org_struct_name = None
@@ -84,7 +90,13 @@ class TestOrgStructManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织架构表-创建数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 5. 保存数据
@@ -134,7 +146,13 @@ class TestOrgStructManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织架构表-保存数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 5. 记录报告
@@ -182,7 +200,13 @@ class TestOrgStructManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, {"dataList": org_list})
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织架构表-批量创建数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 5. 记录报告
@@ -217,7 +241,13 @@ class TestOrgStructManagement(SysCommonBaseTest):
             params, url = self.get_api_params(api_path)
             
             # 2. 发送请求和断言
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="组织架构表-查找树数据服务",
+                set_dict=params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 3. 记录报告
@@ -263,7 +293,13 @@ class TestOrgStructManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织架构表-分页查询服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 4. 记录报告
@@ -291,7 +327,13 @@ class TestOrgStructManagement(SysCommonBaseTest):
             params, url = self.get_api_params(api_path)
             
             # 2. 发送请求和断言
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="组织架构表-查找列表数据服务",
+                set_dict=params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 3. 记录报告
@@ -331,7 +373,13 @@ class TestOrgStructManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, {"orgCode": self.org_struct_code})
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织架构表-查找单条数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 4. 记录报告
@@ -371,7 +419,13 @@ class TestOrgStructManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, {"id": self.org_struct_id})
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织架构表-根据ID查找单表数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 4. 记录报告
@@ -412,7 +466,13 @@ class TestOrgStructManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, {"id": self.org_struct_id})
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织架构表-根据ID查找数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 4. 记录报告
@@ -452,7 +512,13 @@ class TestOrgStructManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, {"ids": [self.org_struct_id]})
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织架构表-根据ID列表查找数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 4. 记录报告
@@ -492,7 +558,13 @@ class TestOrgStructManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, {"parentId": self.org_struct_id})
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织架构表-查找树子数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 4. 记录报告
@@ -532,7 +604,13 @@ class TestOrgStructManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, {"id": self.org_struct_id})
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织架构表-反向构建树服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 4. 记录报告
@@ -582,7 +660,13 @@ class TestOrgStructManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织架构表-根据ID更新数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 5. 记录报告
@@ -624,7 +708,13 @@ class TestOrgStructManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, {"id": self.org_struct_id})
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织架构表-启用主数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 4. 记录报告
@@ -664,7 +754,13 @@ class TestOrgStructManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, {"id": self.org_struct_id})
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织架构表-禁用主数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 4. 记录报告
@@ -704,7 +800,13 @@ class TestOrgStructManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, {"ids": [self.org_struct_id]})
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织架构表-批量启用主数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 4. 记录报告
@@ -744,7 +846,13 @@ class TestOrgStructManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, {"ids": [self.org_struct_id]})
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织架构表-批量禁用主数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 4. 记录报告
@@ -786,7 +894,13 @@ class TestOrgStructManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, {"id": self.org_struct_id})
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织架构表-折叠关联关系服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 4. 记录报告
@@ -820,7 +934,13 @@ class TestOrgStructManagement(SysCommonBaseTest):
             # 此处仅作接口测试
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="组织架构表标准导入服务",
+                set_dict=params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 4. 记录报告
@@ -852,7 +972,13 @@ class TestOrgStructManagement(SysCommonBaseTest):
             # 此处仅作接口测试
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="组织架构表-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 4. 记录报告
@@ -894,7 +1020,13 @@ class TestOrgStructManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, {"id": self.org_struct_id})
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织架构表-根据ID删除数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 4. 记录报告
@@ -939,7 +1071,13 @@ class TestOrgStructManagement(SysCommonBaseTest):
                 "orgType": "DEPARTMENT",
                 "status": "ENABLED"
             })
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织架构表-创建数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             test_id = response.get("data", {}).get("data", {})
             
             # 1. 调用批量删除API
@@ -955,7 +1093,13 @@ class TestOrgStructManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, {"ids": [test_id]})
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织架构表-批量删除数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 4. 记录报告
@@ -970,4 +1114,3 @@ class TestOrgStructManagement(SysCommonBaseTest):
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])
-

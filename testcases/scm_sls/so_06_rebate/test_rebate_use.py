@@ -20,6 +20,12 @@ class TestRebateUse(SlsBase):
     def setup_class(cls):
         """测试类初始化"""
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.logger.info("返利政策使用流程测试类初始化完成")
     
     @case_decorator(
@@ -78,7 +84,13 @@ class TestRebateUse(SlsBase):
             detail_response = None
             response_data = None
             for attempt in range(5):
-                detail_response = self.http.post(detail_url, json=filtered_detail_params)
+                detail_response, _ = self.standard_api_call(
+                    api_key="销售订单页面完整查询",
+                    set_dict=(filtered_detail_params.get("params", {}) if isinstance(filtered_detail_params, dict) else filtered_detail_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(detail_response)
                 
                 # 检查是否返回了数据
@@ -187,7 +199,13 @@ class TestRebateUse(SlsBase):
             ParamUtil.set_request_params(filtered_submit_params, submit_set_dict)
             
             # 发送提交请求
-            submit_response = self.http.post(submit_url, json=filtered_submit_params)
+            submit_response, _ = self.standard_api_call(
+                api_key="SLS-销售订单-提交服务",
+                set_dict=(filtered_submit_params.get("params", {}) if isinstance(filtered_submit_params, dict) else filtered_submit_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(submit_response)
             
             self.logger.info(f"销售订单提交成功，ID: {so_id}")
@@ -287,7 +305,13 @@ class TestRebateUse(SlsBase):
                     set_dict = {"id": policy_id}
                     ParamUtil.set_request_params(filtered_params, set_dict)
                     
-                    response = self.http.post(url, json=filtered_params)
+                    response, _ = self.standard_api_call(
+                        api_key="REB-返利政策-停用服务",
+                        set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     self.assert_util.assert_response_success(response)
                     
                     self.logger.info(f"返利政策停用成功: {policy_code}")

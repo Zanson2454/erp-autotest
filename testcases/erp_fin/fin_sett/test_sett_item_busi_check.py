@@ -22,6 +22,12 @@ class TestSettItemBusiCheck(FinBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.logger.info("结算管理业务检查测试类初始化完成")  
     
     
@@ -63,7 +69,13 @@ class TestSettItemBusiCheck(FinBaseTest):
                 data = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
                 data=ParamUtil.convert_param_type(data, ["params", "request"], "array")
                 data["params"]["request"][0]["id"] = sett_item_id
-                result = self.http.post(url, json=data, description=f"结算项对账确认 - ID: {sett_item_id}")
+                result, _ = self.standard_api_call(
+                    api_key="SETT-ITEM-结算项确认及汇单-关联操作-异步服务",
+                    set_dict=data.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 
                 #等待异步任务执行完成，当状态为PROCESSING时一直等待，最长超时10秒
                 start_time = time.time()
@@ -118,7 +130,13 @@ class TestSettItemBusiCheck(FinBaseTest):
                 data = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
                 data=ParamUtil.convert_param_type(data, ["params", "request"], "array")
                 data["params"]["request"][0]["id"] = sett_item_id
-                result = self.http.post(url, json=data, description=f"结算项手工汇单 - ID: {sett_item_id}")
+                result, _ = self.standard_api_call(
+                    api_key="SETT-ITEM-结算项手工汇单-关联操作-异步服务",
+                    set_dict=data.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 
                 #等待异步任务执行完成，当状态为PROCESSING时一直等待，最长超时10秒
                 start_time = time.time()
@@ -159,7 +177,13 @@ class TestSettItemBusiCheck(FinBaseTest):
             filter_data["params"]["request"]["pageable"]["pageSize"] = "20"
             filter_data["params"]["request"]["pageable"]["conditionItems"] =None
             filter_data["params"]["request"]["pageable"]["sortOrders"] = None
-            result = self.http.post(url, json=filter_data, description=f"批量任务记录")
+            result, _ = self.standard_api_call(
+                api_key="结算汇单记录-分页数据服务_PmHKWs1",
+                set_dict=filter_data.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             assert result.get("data",{}).get("data",{}).get("total",{}) >= 0
             a.json(filter_data, "请求数据")
@@ -235,7 +259,13 @@ class TestSettItemBusiCheck(FinBaseTest):
             self.logger.info(f"测试场景: {test_params['description']}")
             self.logger.info(f"请求参数: {data}")
             
-            result = self.http.post(url, json=data, description=f"批量任务处理获取命中范围 - {test_params['description']}")
+            result, _ = self.standard_api_call(
+                api_key="结算项-结算批量锁定服务",
+                set_dict=data.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             
             # 通用断言逻辑 - 所有参数组合都使用相同的断言
             self.assert_util.assert_response_success(result)
@@ -285,7 +315,13 @@ class TestSettItemBusiCheck(FinBaseTest):
                 "settItemCodes":sett_item_codes
             }
             ParamUtil.set_request_params(data, set_dict)
-            result=self.http.post(url, json=data, description=f"命中范围导入匹配")
+            result, _ = self.standard_api_call(
+                api_key="结算项-结算批量锁定服务",
+                set_dict=data.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("taskCode",{}),"not_empty")
             self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("docType",{}),"=","SETT_ITEM")
@@ -324,7 +360,13 @@ class TestSettItemBusiCheck(FinBaseTest):
                 ["params","request"])
             set_dict={"id":task_id}
             ParamUtil.set_request_params(data, set_dict)
-            result=self.http.post(url, json=data, description=f"根据ID查找数据服务")
+            result, _ = self.standard_api_call(
+                api_key="结算汇单记录-根据ID查找数据服务",
+                set_dict=data.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("taskCode",{}),"=",task_code)
             a.json(data, "请求数据")
@@ -378,7 +420,13 @@ class TestSettItemBusiCheck(FinBaseTest):
                     "taskStatus": task_status
                 }
                 ParamUtil.set_request_params(data, set_dict)
-                result = self.http.post(url, json=data, description=f"取消命中范围 - 第{index+1}条任务记录: {task_code}")
+                result, _ = self.standard_api_call(
+                    api_key="结算项-批量任务取消-异步服务",
+                    set_dict=data.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 
                 # 相同的断言逻辑
                 self.assert_util.assert_response_success(result)

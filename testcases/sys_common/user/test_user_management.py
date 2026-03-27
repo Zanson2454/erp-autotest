@@ -13,6 +13,12 @@ class TestUserManagement(SysCommonBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.mock_data = MockData()
 
 
@@ -49,7 +55,13 @@ class TestUserManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             self.logger.info(f"请求参数: {filtered_params}")
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="用户-根据ID查找数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 保存用户ID供后续用例使用
@@ -100,7 +112,13 @@ class TestUserManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             self.logger.info(f"请求参数: {filtered_params}")
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="用户-根据ID查找单表数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 验证返回的基本用户信息
@@ -153,7 +171,13 @@ class TestUserManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             self.logger.info(f"请求参数: {filtered_params}")
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="用户-折叠关联关系服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 验证折叠后的关联数据结构
@@ -208,7 +232,13 @@ class TestUserManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             self.logger.info(f"请求参数: {filtered_params}")
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="用户-分页数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 验证分页结果
@@ -257,7 +287,13 @@ class TestUserManagement(SysCommonBaseTest):
             }
             ParamUtil.set_request_params(filtered_params_paging, paging_set_dict)
             
-            paging_response = self.http.post(url_paging, json=filtered_params_paging)
+            paging_response, _ = self.standard_api_call(
+                api_key="用户-分页数据服务",
+                set_dict=filtered_params_paging.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(paging_response)
             
             # 2. 从分页结果中获取第一个用户ID
@@ -280,7 +316,13 @@ class TestUserManagement(SysCommonBaseTest):
                 detail_set_dict = {"id": first_user_id}
                 ParamUtil.set_request_params(filtered_params_detail, detail_set_dict)
                 
-                detail_response = self.http.post(url_detail, json=filtered_params_detail)
+                detail_response, _ = self.standard_api_call(
+                    api_key="用户-根据ID查找数据服务",
+                    set_dict=filtered_params_detail.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_data(detail_response)
                 
                 # 4. 验证详情查询结果

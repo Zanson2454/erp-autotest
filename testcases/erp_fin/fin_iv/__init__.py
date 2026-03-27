@@ -40,7 +40,14 @@ class IvBaseTest(FinBaseTest):
     def setup_class(cls):
         """测试类初始化 - 自动初始化存货核算配置"""
         super().setup_class()
-        
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定存货价值模块上下文并初始化存货核算配置。"""
+        # 显式复用模块上下文绑定骨架（与 FinBaseTest 保持一致，幂等）
+        cls.bind_module_user_context("FIN", strict=True)
+
         # 映射父类已初始化的组织ID变量（避免重复获取）
         # FinBaseTest 中已初始化：
         # - cls.com_org_id = 从 gr_come_org_info 获取
@@ -420,4 +427,3 @@ class IvBaseTest(FinBaseTest):
         except Exception as e:
             cls.logger.error(f"异步执行初始化失败: {str(e)}")
             raise
-

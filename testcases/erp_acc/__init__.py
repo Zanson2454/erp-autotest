@@ -4,21 +4,14 @@ ERP账户模块的测试初始化
 """
 import sys
 from pathlib import Path
-import json
-import requests
 
 # 获取项目根目录
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
 
-from typing import Any,Dict
-from testcases.comm.base_test import BaseTest,LoginService
+from typing import Any, Dict
+from testcases.comm.base_test import BaseTest
 from data_factory.base import DataFactory
-from utils.cache_util import CacheUtil
-from utils.request_util import HttpUtil
-from utils.mock_util import MockData
-from utils.param_util import ParamUtil
-from utils.report_util import a  # Allure reporting utility (a.json, a.text)
 
 class ErpAccBaseTest(BaseTest):
     """ERP账户模块的基础测试类，负责加载通用配置和提供API访问方法"""
@@ -46,75 +39,56 @@ class ErpAccBaseTest(BaseTest):
         5. 初始化 http 工具，自动带上门户请求头
         """
         super().setup_class()
-        
-        # 优化单例创建：仅在 super().setup_class() 后执行
-        # 确保环境就绪，不干扰 pytest 测试收集过程
-        if cls._mock_instance is None:
-            cls._mock_instance = MockData()
-        
-        # 设置类级 mock_util 以兼容现有代码 (cls.mock_util)
-        # 现有测试类可继续使用 cls.mock_data 或迁移到 cls.mock_util
-        cls.mock_util = cls._mock_instance
-        
-        # 初始化登录服务，避免重复创建
-        cls.login_service = LoginService(cls.env_config)
-        
-        # 登录 admin 门户
-        admin_result = cls.login_service.login(portal_key=cls._PORTAL_TYPE_KEYS["admin"])
-        if admin_result.status != admin_result.status.SUCCESS:
-            raise RuntimeError(f"admin 登录失败: {admin_result.error_message}")
-        
-        # 初始化 http 实例，绑定 admin 门户的 url、session 和 headers
-        cls.http = HttpUtil(
-            url=admin_result.portal_url,
-            session=admin_result.session,
-            headers=admin_result.portal_headers
+        cls.load_api_configs()
+        cls.load_cache_data()
+        cls.bind_context()
+
+    @classmethod
+    def load_api_configs(cls):
+        """加载 erp_acc 模块 API 配置与门户上下文。"""
+        cls.module_login_single_portal(
+            portal_key=cls._PORTAL_TYPE_KEYS["admin"],
+            tenant_key="terp"
         )
-     
+
         # 初始化配置文件路径 - 针对erp_acc模块
         cls.acc_api_path = Path(project_root) / "config" / "api" / "erp_acc" / "acc_api_path.yaml"
         cls.acc_api_params = Path(project_root) / "config" / "api" / "erp_acc" / "acc_api_params.yaml"
-        
-        # 加载API路径配置和参数配置
-        cls.apis = cls.yaml_util.read_yaml(cls.acc_api_path).get("apis", {})
-        cls.api_params = cls.yaml_util.read_yaml(cls.acc_api_params).get("api_params", {}) if Path(cls.acc_api_params).exists() else {}
-        
+
+        cls.load_module_api_configs(
+            cls.acc_api_path,
+            cls.acc_api_params,
+            api_params_optional=True
+        )
+
+    @classmethod
+    def load_cache_data(cls):
+        """加载 erp_acc 模块依赖缓存。"""
         # 初始化DataFactory（必须在init_sql_cache之前调用）
         DataFactory.__init__(env_name="test")
-        
+
         # 加载缓存数据：账户模块依赖的初始化SQL (如果存在)
         # 注意：如果没有专门的acc_init_sql.yaml，可以复用md_init_sql或创建新的
         sql_config_path = str(project_root / "config" / "erp" / "acc_init_sql.yaml")
         if Path(sql_config_path).exists():
-            DataFactory.init_sql_cache(
+            cls.acc_cache_data = cls.load_sql_cache(
                 sql_config_path=sql_config_path,
-                db_config_name="erp_db",  # 数据库配置名称
-                cache_key="acc_init_cache",  # 缓存key
-                cache_dir="testdata/cache"  # 缓存目录
+                cache_key="acc_init_cache",
+                db_config_name="erp_db",
+                cache_dir="testdata/cache",
             )
-            cls.acc_cache_data = CacheUtil.get('acc_init_cache')
         else:
             # 复用主数据缓存
-            cls.acc_cache_data = cls.md_cache_data if hasattr(cls, 'md_cache_data') else {}
-        
+            cls.acc_cache_data = cls.md_cache_data if hasattr(cls, "md_cache_data") else {}
+
+    @classmethod
+    def bind_context(cls):
+        """绑定 erp_acc 模块上下文。"""
+        cls.bind_mock_util_singleton()
+
         # 设置路径参数和用户信息 - 针对ERP_ACC模块
-        cls.path_params = {"tmodule":"ERP_ACC"}
-        cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
-        cls.user_id = cls.init_data["user_info"]['user_info']["id"]
+        cls.bind_module_user_context("ERP_ACC", strict=True)
     
-    def get_api_path(self, api_key):
-        """
-        获取API路径
-        """
-        return super().get_api_path(api_key, self.apis)
-    
-    def get_api_params(self, api_path, with_query_params=None):
-        """
-        获取API请求参数和完整URL
-        """
-        return super().get_api_params(api_path, self.api_params, with_query_params)
-
-
 if __name__ == "__main__":
     ErpAccBaseTest.setup_class()
     print(ErpAccBaseTest.nickname)

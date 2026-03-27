@@ -40,6 +40,13 @@ class TestMvmTypeManagement(ScmInvBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.mvm_type_id = None
         cls.mvm_type_code = None
         cls.mvm_type_remark = None
@@ -103,7 +110,13 @@ class TestMvmTypeManagement(ScmInvBaseTest):
                 ParamUtil.set_request_params(filtered_params, request_params)
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key=api_key,
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             if assertion_type == "success":
                 self.assert_util.assert_response_success(response)
             elif assertion_type == "data":
@@ -235,7 +248,13 @@ class TestMvmTypeManagement(ScmInvBaseTest):
             ParamUtil.set_request_params(filtered_params, query_params)
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-移动类型-查询分页服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 5. 验证返回数据结构
@@ -307,7 +326,13 @@ class TestMvmTypeManagement(ScmInvBaseTest):
             }
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=detail_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-移动类型-查询分页服务",
+                set_dict=(detail_params.get("params", {}) if isinstance(detail_params, dict) else detail_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 4. 验证返回的详情数据
@@ -496,7 +521,13 @@ class TestMvmTypeManagement(ScmInvBaseTest):
             }
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=export_params)
+            response, _ = self.standard_api_call(
+                api_key="移动类型定义表-导入导出任务管理接口-提交导出任务",
+                set_dict=(export_params.get("params", {}) if isinstance(export_params, dict) else export_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             # 4. 报告记录

@@ -5,7 +5,6 @@
 import allure
 from testcases.comm.base_test import BaseTest
 from utils.param_util import ParamUtil
-from utils.mock_util import MockData
 from utils.report_util import a
 from data_factory.fin_ar_factory import FinArFactory
 from decimal import Decimal
@@ -36,14 +35,23 @@ class ArBaseTest(BaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
-        cls.ar_factory = FinArFactory()
-        cls.mock_data = MockData()
-        
+        cls.load_api_configs()
+        cls.bind_context()
+
+    @classmethod
+    def load_api_configs(cls):
+        """加载应收模块 API 配置。"""
         project_root = Path(__file__).resolve().parent.parent.parent.parent
-        apis = cls.yaml_util.read_yaml(project_root / "config/api/erp_fin/fin_api_path.yaml").get("apis", {})
-        api_params = cls.yaml_util.read_yaml(project_root / "config/api/erp_fin/fin_api_params.yaml").get("api_params", {})
-        cls.apis = apis
-        cls.api_params = api_params
+        api_path = project_root / "config" / "api" / "erp_fin" / "fin_api_path.yaml"
+        api_params = project_root / "config" / "api" / "erp_fin" / "fin_api_params.yaml"
+        cls.load_module_api_configs(api_path, api_params)
+
+    @classmethod
+    def bind_context(cls):
+        """绑定应收模块上下文。"""
+        cls.ar_factory = FinArFactory()
+        cls.bind_mock_util_singleton()
+        cls.mock_data = cls.mock_util
 
     def create_ar_request_body(self, now_ts, output_dict):
         """创建应收单请求体，结果存储到output_dict中"""
@@ -112,7 +120,13 @@ class ArBaseTest(BaseTest):
         ParamUtil.set_request_params(filtered_params, request_data)
         filtered_params = convert_decimal_to_float(filtered_params)
         
-        result = self.http.post(url, json=filtered_params)
+        result, _ = self.standard_api_call(
+            api_key=self.apis,
+            set_dict=filtered_params.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(result)
         
         a.json(filtered_params, "请求数据")
@@ -141,7 +155,13 @@ class ArBaseTest(BaseTest):
         })
         
         # 简化逻辑：只查询一次，获取当前状态
-        result = self.http.post(url, json=params)
+        result, _ = self.standard_api_call(
+            api_key=self.apis,
+            set_dict=params.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(result)
         
         data_list = result.get("data", {}).get("data", {}).get("data", [])
@@ -183,7 +203,13 @@ class ArBaseTest(BaseTest):
             "params": {"request": {"id": str(ar_doc_id)}}
         }
         
-        result = self.http.post(url, json=query_params)
+        result, _ = self.standard_api_call(
+            api_key=self.apis,
+            set_dict=query_params.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(result)
         ar_detail.update(result.get("data", {}).get("data", {}))
 

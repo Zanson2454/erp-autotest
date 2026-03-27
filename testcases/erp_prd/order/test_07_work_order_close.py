@@ -128,7 +128,13 @@ class TestWorkOrderClose(PrdBaseTest):
                 }
                 
                 # 发送请求
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key="生产订单关闭服务",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 
                 # 验证响应成功
                 self.assert_util.assert_response_success(result)
@@ -209,7 +215,13 @@ class TestWorkOrderClose(PrdBaseTest):
                 }
                 
                 # 发送请求
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key="生产订单取消关闭服务",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 
                 # 验证响应成功
                 self.assert_util.assert_response_success(result)

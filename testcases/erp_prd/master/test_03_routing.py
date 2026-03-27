@@ -27,6 +27,12 @@ class TestRouting(PrdBaseTest):
     def setup_class(cls):
         """测试类初始化"""
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.logger.info("工艺路线管理测试类初始化")
         
         # 初始化配置管理器并确保基础配置存在
@@ -247,7 +253,13 @@ class TestRouting(PrdBaseTest):
                 a.json(filtered_params, "请求数据")
             with a.step("2. 发送查询请求"):
                 # 发送请求
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key="查询BOM服务",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.logger.info("=== 响应结果详情 ===")
                 self.logger.info(f"响应状态: {result.get('success')}")
                 self.logger.info(f"响应消息: {result.get('message')}")
@@ -331,7 +343,13 @@ class TestRouting(PrdBaseTest):
             
             with a.step("2. 发送查询请求"):
                 # 发送请求
-                result = self.http.post(url, json=query_data)
+                result, _ = self.standard_api_call(
+                    api_key="渲染工艺路线物料组件服务",
+                    set_dict=(query_data.get("params", {}) if isinstance(query_data, dict) else query_data),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 a.json(result, "响应数据")
 
             with a.step("3. 验证响应结果"):
@@ -437,7 +455,13 @@ class TestRouting(PrdBaseTest):
             
             with a.step("2. 发送创建请求"):
                 # 发送请求
-                result = self.http.post(url, json=query_data)
+                result, _ = self.standard_api_call(
+                    api_key="保存工艺路线服务",
+                    set_dict=(query_data.get("params", {}) if isinstance(query_data, dict) else query_data),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.logger.info("=== 响应结果详情 ===")
                 self.logger.info(f"响应状态: {result.get('success')}")
                 self.logger.info(f"响应消息: {result.get('message')}")
@@ -491,7 +515,13 @@ class TestRouting(PrdBaseTest):
             
             with a.step("3. 发送查询请求"):
                 # 发送请求
-                result = self.http.post(url, json=query_data)
+                result, _ = self.standard_api_call(
+                    api_key="工艺路线-抬头数据表-根据ID查找数据服务",
+                    set_dict=(query_data.get("params", {}) if isinstance(query_data, dict) else query_data),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.logger.info("=== 响应结果详情 ===")
                 self.logger.info(f"响应状态: {result.get('success')}")
                 self.logger.info(f"响应消息: {result.get('message')}")
@@ -598,7 +628,13 @@ class TestRouting(PrdBaseTest):
             
             with a.step("2. 发送保存请求"):
                 # 发送请求
-                result = self.http.post(url, json=query_data)
+                result, _ = self.standard_api_call(
+                    api_key="保存工艺路线服务",
+                    set_dict=(query_data.get("params", {}) if isinstance(query_data, dict) else query_data),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.logger.info("=== 响应结果详情 ===")
                 self.logger.info(f"响应状态: {result.get('success')}")
                 self.logger.info(f"响应消息: {result.get('message')}")

@@ -13,6 +13,12 @@ class TestBomManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.bom_head_id = None
         cls.bom_item_type_id = None
         cls.bom_status_id = None

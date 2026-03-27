@@ -638,6 +638,151 @@ class BaseTest:
         cls.init_data["user_info"] = {"user_info": cls.user_info}
 
     @classmethod
+    def module_login_single_portal(cls, portal_key: str = "TERP_PORTAL", tenant_key: str = "terp"):
+        """
+        模块基类通用：登录单门户并初始化 http（最小封装，保持现有结构）
+        """
+        cls.login_service = LoginService(cls.env_config)
+        result = cls.login_service.login(portal_key=portal_key, tenant_key=tenant_key)
+        if result.status != result.status.SUCCESS:
+            raise RuntimeError(f"{portal_key} 登录失败: {result.error_message}")
+
+        cls.http = HttpUtil(
+            url=result.portal_url,
+            session=result.session,
+            headers=result.portal_headers
+        )
+        cls.admin_session = result.session
+        cls.admin_user_info = result.user_info
+        cls.admin_headers = result.portal_headers
+        return result
+
+    @classmethod
+    def module_login_multi_portal(cls, portal_type_keys: Dict[str, str], tenant_key: str = "terp"):
+        """
+        模块基类通用：多门户登录并初始化 sessions/user_infos/http_clients
+        """
+        cls.login_service = LoginService(cls.env_config)
+        cls.sessions = {}
+        cls.user_infos = {}
+        cls.http_clients = {}
+        cls.portal_urls = {}
+        cls.portal_headers = {}
+
+        for role, portal_key in portal_type_keys.items():
+            result = cls.login_service.login(portal_key=portal_key, tenant_key=tenant_key)
+            if result.status != result.status.SUCCESS:
+                raise RuntimeError(f"{role} 登录失败: {result.error_message}")
+
+            portal_url = result.portal_url or ""
+            if not isinstance(portal_url, str) or not portal_url:
+                raise ValueError(f"{role} portal_url 不能为空且必须为字符串")
+
+            cls.sessions[role] = result.session
+            cls.user_infos[role] = result.user_info
+            cls.portal_urls[role] = portal_url
+            cls.portal_headers[role] = result.portal_headers
+            cls.http_clients[role] = HttpUtil(
+                url=portal_url,
+                session=result.session,
+                headers=result.portal_headers
+            )
+
+        return cls.http_clients
+
+    @classmethod
+    def module_login_admin_with_cust_headers(
+        cls,
+        admin_portal_key: str = "TERP_PORTAL",
+        cust_portal_key: str = "TERP_CUST_PC",
+        tenant_key: str = "terp",
+    ) -> LoginResult:
+        """
+        模块基类通用：登录 admin 门户，并初始化 admin/cust headers。
+        """
+        admin_result = cls.module_login_single_portal(
+            portal_key=admin_portal_key,
+            tenant_key=tenant_key,
+        )
+        cls.admin_headers = admin_result.portal_headers
+        cls.cust_portal_headers = cls.admin_headers.copy() if cls.admin_headers else {}
+        cust_portal_referer = (
+            cls.env_config
+            .get("portal_config", {})
+            .get(tenant_key, {})
+            .get(cust_portal_key, {})
+            .get("portal_referer")
+        )
+        cls.cust_portal_headers["Referer"] = cust_portal_referer
+        cls.logger.info(f"cust_portal_headers: {cls.cust_portal_headers}")
+        return admin_result
+
+    @classmethod
+    def load_module_api_configs(
+        cls,
+        api_path_file: Union[str, Path],
+        api_params_file: Union[str, Path],
+        *,
+        api_params_optional: bool = False
+    ) -> None:
+        """
+        模块基类通用：加载 apis/api_params
+        """
+        path_file = Path(api_path_file)
+        params_file = Path(api_params_file)
+        cls.apis = cls.yaml_util.read_yaml(path_file).get("apis", {})
+        if api_params_optional and not params_file.exists():
+            cls.api_params = {}
+        else:
+            cls.api_params = cls.yaml_util.read_yaml(params_file).get("api_params", {})
+
+    @classmethod
+    def bind_module_user_context(cls, tmodule: str, strict: bool = True) -> None:
+        """
+        模块基类通用：设置 path_params/nickname/user_id
+        """
+        cls.path_params = {"tmodule": tmodule}
+        if strict:
+            user_info = cls.init_data["user_info"]["user_info"]
+            cls.nickname = user_info["nickname"]
+            cls.user_id = user_info["id"]
+            return
+
+        user_info = (cls.init_data or {}).get("user_info", {}).get("user_info", {})
+        cls.nickname = user_info.get("nickname")
+        cls.user_id = user_info.get("id")
+        if cls.nickname is None or cls.user_id is None:
+            cls.logger.warning("init_data 中未找到完整 user_info，nickname 或 user_id 为 None")
+
+    @classmethod
+    def bind_mock_util_singleton(cls) -> None:
+        """
+        模块基类通用：绑定 mock_util 单例。
+        """
+        if getattr(cls, "_mock_instance", None) is None:
+            cls._mock_instance = MockData()
+        cls.mock_util = cls._mock_instance
+
+    @classmethod
+    def load_sql_cache(
+        cls,
+        sql_config_path: Union[str, Path],
+        cache_key: str,
+        db_config_name: str = "erp_db",
+        cache_dir: str = "testdata/cache",
+    ) -> Any:
+        """
+        模块基类通用：执行 SQL 缓存初始化并返回缓存数据。
+        """
+        DataFactory.init_sql_cache(
+            sql_config_path=str(sql_config_path),
+            db_config_name=db_config_name,
+            cache_key=cache_key,
+            cache_dir=cache_dir,
+        )
+        return CacheUtil.get(cache_key)
+
+    @classmethod
     def bind_cache_data(cls, mappings: Dict[str, str] = None) -> None:
         """
         简化数据绑定 - 一行代码获取常用数据
@@ -805,27 +950,35 @@ class BaseTest:
             params['params']['request'][key] = value
         return params
     
-    def get_api_path(self, api_key, apis_dict):
+    def get_api_path(self, api_key, apis_dict=None):
         """
         获取API路径
         Args:
             api_key: API键名
-            apis_dict: API配置字典
+            apis_dict: API配置字典（可选，不传时默认读取 self.apis）
         Returns:
             str: API路径
         """
+        if apis_dict is None:
+            apis_dict = getattr(self, "apis", None)
+        if apis_dict is None:
+            raise ValueError("未找到 apis 配置，请检查模块基类是否已加载 API 路径配置")
         return ParamUtil.get_api_path(apis_dict, api_key)
     
-    def get_api_params(self, api_path, api_params_dict, with_query_params=None):
+    def get_api_params(self, api_path, api_params_dict=None, with_query_params=None):
         """
         获取API请求参数和完整URL
         Args:
             api_path: API路径
-            api_params_dict: API参数配置字典
+            api_params_dict: API参数配置字典（可选，不传时默认读取 self.api_params）
             with_query_params: 查询参数
         Returns:
             tuple: (参数模板, 完整URL)
         """
+        if api_params_dict is None:
+            api_params_dict = getattr(self, "api_params", None)
+        if api_params_dict is None:
+            raise ValueError("未找到 api_params 配置，请检查模块基类是否已加载 API 参数配置")
         return ParamUtil.get_api_params(api_params_dict, api_path, with_query_params)
     
     @staticmethod
@@ -848,7 +1001,7 @@ class BaseTest:
         return wrapper
 
     # 新增统一调用模板，不影响老用例
-    def standard_api_call(self, api_key, set_dict=None, fields_to_filter=None, store_id_as=None, use_param_util=True, param_path=None, method="POST", query_params=None):
+    def standard_api_call(self, api_key, set_dict=None, fields_to_filter=None, store_id_as=None, use_param_util=True, param_path=None, method="POST", query_params=None, cross_module_name=None):
         """
         标准化API调用模板 - 纯执行和报告工具，无断言逻辑
         统一返回响应数据（无论成功还是失败），由业务断言来判断响应是否正确
@@ -866,6 +1019,7 @@ class BaseTest:
             - GET/DELETE: 参数通过 query string 传递（params参数）
             - POST/PUT/PATCH: 参数通过 JSON body 传递（json参数）
         :param query_params: URL查询参数，支持字符串（如"tmodule=SCM_PUR&modelKey=XXX"）或字典（如{"tmodule": "SCM_PUR", "modelKey": "XXX"}）
+        :param cross_module_name: 跨模块名称（可选），如 "scm"/"gen"/"fin"；传入后会优先调用 get_cross_module_api_path/get_cross_module_api_params
         :return: (response, extracted_id) - response包含成功或失败的响应数据，extracted_id在成功时提取，失败时为None
         """
         import json
@@ -879,8 +1033,17 @@ class BaseTest:
             raise ValueError(f"不支持的HTTP方法: {method}，支持的方法: {supported_methods}")
         
         try:
-            # 1. 获取API路径和基础参数 - 使用模块特定的方法签名
-            api_path = self.get_api_path(api_key)
+            # 1. 获取API路径和基础参数
+            if cross_module_name:
+                if not hasattr(self, "get_cross_module_api_path") or not hasattr(self, "get_cross_module_api_params"):
+                    raise ValueError(
+                        f"当前测试类不支持跨模块调用: cross_module_name={cross_module_name}, api_key={api_key}"
+                    )
+                api_path = self.get_cross_module_api_path(cross_module_name, api_key)
+                get_params_fn = lambda path, q: self.get_cross_module_api_params(cross_module_name, path, q)
+            else:
+                api_path = self.get_api_path(api_key)
+                get_params_fn = lambda path, q: self.get_api_params(path, with_query_params=q)
             if api_path is None:
                 raise ValueError(
                     f"未找到API配置: {api_key}\n"
@@ -902,7 +1065,7 @@ class BaseTest:
             # 2. 根据HTTP方法选择参数传递方式
             if method in ["GET", "DELETE"]:
                 # GET/DELETE: 使用 query parameters
-                params, url = self.get_api_params(api_path, with_query_params=query_params_str)
+                params, url = get_params_fn(api_path, query_params_str)
                 if url is None:
                     raise ValueError(
                         f"API路径配置错误: api_path={api_path}\n"
@@ -914,7 +1077,7 @@ class BaseTest:
                 
             else:
                 # POST/PUT/PATCH: 使用 JSON body
-                params, url = self.get_api_params(api_path, with_query_params=query_params_str)
+                params, url = get_params_fn(api_path, query_params_str)
                 if url is None:
                     raise ValueError(
                         f"API路径配置错误: api_path={api_path}\n"

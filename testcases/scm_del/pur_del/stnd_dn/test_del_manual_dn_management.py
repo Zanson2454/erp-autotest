@@ -24,6 +24,12 @@ class TestDelManualDnManagement(ScmDelBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.dn_id = None
         cls.dn_code = None
         
@@ -125,7 +131,13 @@ class TestDelManualDnManagement(ScmDelBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="DEL-交货单公共-创建交货单服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             # 从数据库查询刚创建的交货单
@@ -186,7 +198,13 @@ class TestDelManualDnManagement(ScmDelBaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"id": self.__class__.dn_id})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="DEL-交货单公共-交货单提交业务处理服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             # 从数据库验证状态
@@ -244,7 +262,13 @@ class TestDelManualDnManagement(ScmDelBaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"id": self.__class__.dn_id})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="DEL-交货单作废服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             # 从数据库验证状态

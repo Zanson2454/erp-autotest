@@ -18,6 +18,12 @@ class TestAsyncTaskDefinitionManagement(SysCommonBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.task_definition_id = None
         cls.logger.info("异步任务定义管理测试类初始化完成")
     
@@ -80,7 +86,13 @@ class TestAsyncTaskDefinitionManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="异步任务-任务定义-保存任务定义",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 5. 保存数据和报告
@@ -135,7 +147,13 @@ class TestAsyncTaskDefinitionManagement(SysCommonBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="异步任务-任务定义-分页查询任务定义",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 验证分页结果
@@ -184,7 +202,13 @@ class TestAsyncTaskDefinitionManagement(SysCommonBaseTest):
             set_dict = {"id": self.task_definition_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="异步任务-任务定义-删除任务定义",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             self.task_definition_id = None  # 标记已删除

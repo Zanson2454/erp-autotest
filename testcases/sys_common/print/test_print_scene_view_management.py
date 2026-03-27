@@ -18,6 +18,12 @@ class TestPrintSceneViewManagement(SysCommonBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.print_scene_view_id = None
         cls.logger.info("打印场景视图管理测试类初始化完成")
     
@@ -82,7 +88,13 @@ class TestPrintSceneViewManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="打印场景视图-保存",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 5. 保存数据和报告
@@ -125,7 +137,13 @@ class TestPrintSceneViewManagement(SysCommonBaseTest):
             set_dict = {"id": self.print_scene_view_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="打印场景视图-详情",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 验证返回数据
@@ -168,7 +186,13 @@ class TestPrintSceneViewManagement(SysCommonBaseTest):
             set_dict = {"id": self.print_scene_view_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="打印场景视图-删除",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             self.print_scene_view_id = None  # 标记已删除

@@ -23,7 +23,13 @@ class TestSlsExternal(SlsBase):
             api_path = self.get_api_path("根据外部订单行号批量作废")
             params, url = self.get_api_params(api_path)
             # 这里应构造请求参数
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="根据外部订单行号批量作废",
+                set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             a.json(params, "请求数据")
             a.json(response, "响应数据")
         except Exception as e:
@@ -44,7 +50,13 @@ class TestSlsExternal(SlsBase):
         try:
             api_path = self.get_api_path("OMS渠道创建订单服务")
             params, url = self.get_api_params(api_path)
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="OMS渠道创建订单服务",
+                set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             a.json(params, "请求数据")
             a.json(response, "响应数据")
         except Exception as e:
@@ -65,7 +77,13 @@ class TestSlsExternal(SlsBase):
         try:
             api_path = self.get_api_path("外部销售订单创建")
             params, url = self.get_api_params(api_path)
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="外部销售订单创建",
+                set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             a.json(params, "请求数据")
             a.json(response, "响应数据")
         except Exception as e:
@@ -86,7 +104,13 @@ class TestSlsExternal(SlsBase):
         try:
             api_path = self.get_api_path("外部价格主数据接口")
             params, url = self.get_api_params(api_path)
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="外部价格主数据接口",
+                set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             a.json(params, "请求数据")
             a.json(response, "响应数据")
         except Exception as e:

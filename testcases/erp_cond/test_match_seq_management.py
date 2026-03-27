@@ -22,6 +22,12 @@ class TestMatchSeqManagement(ErpCondBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.match_seq_id = None
         cls.logger.info("存取顺序管理测试类初始化完成")
         
@@ -542,7 +548,12 @@ class TestMatchSeqManagement(ErpCondBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="存取顺序标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["selectFields"],
+                store_id_as=None
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")

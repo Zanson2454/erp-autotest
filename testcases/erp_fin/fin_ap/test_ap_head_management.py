@@ -24,6 +24,12 @@ class TestApHeadManagement(ApBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.ap_head_id = None
         cls.ap_head_detail = None
         cls.ap_head_save_body = None

@@ -14,6 +14,12 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.mat_unit_conversion_id = None
 
         # 安全获取计量单位ID，避免IndexError

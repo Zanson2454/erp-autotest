@@ -22,6 +22,12 @@ class TestStandardSalesOrder(SlsBase):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.order_id = None
         cls.delivery_id = None
         cls.so_item_id = None
@@ -158,7 +164,13 @@ class TestStandardSalesOrder(SlsBase):
             }
             
             # 8. 发送完成订单行请求
-            complete_response = self.http.post(complete_url, json=filtered_complete_params)
+            complete_response, _ = self.standard_api_call(
+                api_key="订单项目行手动完成服务",
+                set_dict=(filtered_complete_params.get("params", {}) if isinstance(filtered_complete_params, dict) else filtered_complete_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(complete_response)
             
             a.json(filtered_complete_params, "完成订单行-请求数据")
@@ -290,7 +302,13 @@ class TestStandardSalesOrder(SlsBase):
             }
             
             # 4. 发送取消完成订单行请求
-            cancel_complete_response = self.http.post(cancel_complete_url, json=filtered_cancel_complete_params)
+            cancel_complete_response, _ = self.standard_api_call(
+                api_key="订单项目行手动取消完成服务",
+                set_dict=(filtered_cancel_complete_params.get("params", {}) if isinstance(filtered_cancel_complete_params, dict) else filtered_cancel_complete_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(cancel_complete_response)
             
             a.json(filtered_cancel_complete_params, "取消完成订单行-请求数据")

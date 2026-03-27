@@ -16,14 +16,12 @@ project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
 
 from typing import Any, Dict
-from testcases.comm.base_test import BaseTest,LoginService
+from testcases.comm.base_test import BaseTest
 # 移除非必要导入，使用父类或utils中的LoginService
 from data_factory.base import DataFactory
-from utils.cache_util import CacheUtil
-from utils.request_util import HttpUtil
-from utils.mock_util import MockData
 from utils.param_util import ParamUtil
 from utils.report_util import a  # Allure reporting utility (a.json, a.text)
+from testcases.erp_fin.context_builder import build_fin_context
 
 class FinBaseTest(BaseTest):
     """ERP财务模块的基础测试类，负责加载财务通用配置和提供API访问方法"""
@@ -52,174 +50,81 @@ class FinBaseTest(BaseTest):
         7. 设置路径参数和用户信息
         """
         super().setup_class()
-        
-        # 优化单例创建：仅在 super().setup_class() 后执行
-        # 确保环境就绪，不干扰 pytest 测试收集过程
-        if cls._mock_instance is None:
-            cls._mock_instance = MockData()
-        
-        # 设置类级 mock_util 以兼容现有代码 (cls.mock_util)
-        # 现有测试类可继续使用 cls.mock_data 或迁移到 cls.mock_util
-        cls.mock_util = cls._mock_instance
-        
-        # 初始化登录服务，避免重复创建
-        cls.login_service = LoginService(cls.env_config)
-        
-        # 登录 admin 门户
-        admin_result = cls.login_service.login(portal_key=cls._PORTAL_TYPE_KEYS["admin"])
-        if admin_result.status != admin_result.status.SUCCESS:
-            raise RuntimeError(f"admin 登录失败: {admin_result.error_message}")
-        
-        cls.admin_headers = admin_result.portal_headers
-        
-        # 初始化 http 实例，绑定 admin 门户的 url、session 和 headers
-        cls.http = HttpUtil(
-            url=admin_result.portal_url,
-            session=admin_result.session,
-            headers=admin_result.portal_headers
+        cls.load_api_configs()
+        cls.load_cache_data()
+        cls.bind_context()
+
+    @classmethod
+    def load_api_configs(cls):
+        """加载 erp_fin 模块 API 配置与门户上下文。"""
+        admin_result = cls.module_login_single_portal(
+            portal_key=cls._PORTAL_TYPE_KEYS["admin"],
+            tenant_key="terp"
         )
-        
+        cls.admin_headers = admin_result.portal_headers
+
         # 初始化配置文件路径
         cls.fin_api_path = Path(project_root) / "config" / "api" / "erp_fin" / "fin_api_path.yaml"
         cls.fin_api_params = Path(project_root) / "config" / "api" / "erp_fin" / "fin_api_params.yaml"
-        
-        # 加载API路径配置和参数配置
-        cls.apis = cls.yaml_util.read_yaml(cls.fin_api_path).get("apis", {})
-        cls.api_params = cls.yaml_util.read_yaml(cls.fin_api_params).get("api_params", {})
-        
+
+        cls.load_module_api_configs(cls.fin_api_path, cls.fin_api_params)
+
+    @classmethod
+    def load_cache_data(cls):
+        """加载 erp_fin 模块依赖缓存。"""
         # DataFactory init (env=test)
         DataFactory.__init__(env_name="test")
-        
-      
+
         # MD cache reuse (for org_info, currency, etc. - shared with gen_md)
         # 需要先初始化 md_init_cache，然后再获取
-        DataFactory.init_sql_cache(
-            sql_config_path=str(project_root / "config" / "erp" / "md_init_sql.yaml"),  # 主数据依赖的初始化sql
+        cls.md_cache_data = cls.load_sql_cache(
+            sql_config_path=project_root / "config" / "erp" / "md_init_sql.yaml",
+            cache_key="md_init_cache",
             db_config_name="erp_db",
-            cache_key="md_init_cache",  # 缓存key
-            cache_dir="testdata/cache"
+            cache_dir="testdata/cache",
         )
-        cls.md_cache_data = CacheUtil.get('md_init_cache')
         cls.logger.info(f"md_cache_data: {cls.md_cache_data is not None}")
-        
+
         # 缓存加载：财务主数据依赖 (use md_init_sql.yaml or fin specific like pur/sls_init_sql.yaml)
         # Fallback to md cache for org/currency, etc.
-        DataFactory.init_sql_cache(
-            sql_config_path=str(project_root / "config" / "erp" / "fin_init_sql.yaml"),  # base or fin specific
+        cls.fin_cache_data = cls.load_sql_cache(
+            sql_config_path=project_root / "config" / "erp" / "fin_init_sql.yaml",
+            cache_key="fin_init_cache",
             db_config_name="erp_db",
-            cache_key="fin_init_cache",  # fin specific cache key
-            cache_dir="testdata/cache"
+            cache_dir="testdata/cache",
         )
-        cls.fin_cache_data = CacheUtil.get('fin_init_cache')
-        
-        
-        # 初始化配置数据 (from init_data, e.g., currency)
-        if cls.init_data:
-            cls.curr_id = cls.init_data.get("currency_info",[])[0].get("curr_id")
-            # 确保tax_rate是float类型（从数据库查询的Decimal类型已在data_factory/base.py中转换）
-            tax_rate_value = cls.init_data.get("tax_info",[])[0].get("tax")
-            cls.tax_rate = float(tax_rate_value) if tax_rate_value is not None else None
-            cls.tax_code_id = cls.init_data.get("tax_info",[])[0].get("id")
-            cls.basic_unit_id = cls.init_data.get("uom_info",{}).get("qty_uom_info",[])[0].get("uom_id")
-        
-        # 初始化MD (org, partner, etc.)
-        if cls.md_cache_data:
-            cls.gr_com_org_id = cls.md_cache_data.get("org_info",{}).get("gr_come_org_info",[])[0].get("id")
-            cls.com_org_id = cls.md_cache_data.get("org_info",{}).get("gr_come_org_info",[])[0].get("id")
-            cls.sls_org_id = cls.md_cache_data.get("org_info",{}).get("sls_org_info",[])[0].get("id")
-            cls.pur_org_id = cls.md_cache_data.get("org_info",{}).get("pur_org_info",[])[0].get("id")
-            cls.inv_org_id = cls.md_cache_data.get("org_info",{}).get("inv_org_info",[])[0].get("id")
-            
-            cls.com_org_id_2 = cls.md_cache_data.get("org_info",{}).get("com_org_info",[])[0].get("id")
-            cls.inv_org_id_2 = cls.md_cache_data.get("org_info",{}).get("inv_org_info2",[])[0].get("id")
-            cls.sls_org_id_2 = cls.md_cache_data.get("org_info",{}).get("sls_org_info2",[])[0].get("id")
-            cls.pur_org_id_2 = cls.md_cache_data.get("org_info",{}).get("pur_org_info2",[])[0].get("id")
-            
-            cls.cust_id = cls.md_cache_data.get("partner_info",{}).get("cust_info",[])[0].get("id")
-            cls.vend_id = cls.md_cache_data.get("partner_info",{}).get("vend_info",[])[0].get("id")
-            cls.mat_id = cls.md_cache_data.get("mat_info",{}).get("mat_md",{}).get("FINP",[])[0].get("id")
-            cls.mat_type_cf=cls.md_cache_data.get("mat_info",{}).get("mat_type_cf",{}).get("FINP",[])[0].get("id")
-            
-        # 初始化业财配置数据
-        if cls.fin_cache_data:
-           # 初始化应付单据类型
-            cls.ap_type_info = cls.fin_cache_data.get("ap_type_info", {})
-            # 初始化结算项单据类型
-            sett_item_type_info_list = cls.fin_cache_data.get("sett_item_info",{}).get("sett_item_type_info",[])
-            # 过滤掉sett_item_type_code为None的项，并构建字典
-            cls.sett_item_type_info = {
-                item.get("sett_item_type_code"): item 
-                for item in sett_item_type_info_list 
-                if item.get("sett_item_type_code")
-            }
-            available_codes = list(cls.sett_item_type_info.keys())
-            cls.logger.info(f"获取到 sett_item_type_info，可用code列表: {available_codes}")
-            
-            ar_type_md_info_list = cls.fin_cache_data.get("ar_type_info",{}).get("ar_type_md_info",[])
-            cls.ar_type_md_info = {
-                item.get("ar_type_code"): item
-                for item in ar_type_md_info_list
-                if item.get("ar_type_code")
-            }
-            available_codes = list(cls.ar_type_md_info.keys())
-            cls.logger.info(f"获取到 ar_type_md_info，可用code列表: {available_codes}")
 
-            
-            sb_type_info_list = cls.fin_cache_data.get("sb_type_info",{}).get("sb_bill_type_info",[])
-            cls.sb_type_info={
-                item.get("sb_type_code"): item
-                for item in sb_type_info_list
-                if item.get("sb_type_code")
-            }
-            
-            available_codes = list(cls.sb_type_info.keys())
-            cls.logger.info(f"获取到 sb_type_info，可用code列表: {available_codes}")
-            
-            sett_doc_type_info_list = cls.fin_cache_data.get("sett_doc_info",{}).get("sett_doc_type_info",[])
-            if sett_doc_type_info_list:
-                cls.sett_doc_type_info = sett_doc_type_info_list[0].get("id")
-                cls.logger.info(f"获取到 sett_doc_type_info: {cls.sett_doc_type_info}")
-            else:
-                cls.sett_doc_type_info = None
-                cls.logger.warning("sett_doc_type_info 为空，无法获取 sett_doc_type_info")
-            
-            calender_head_info = cls.fin_cache_data.get("calender_info",{}).get("calender_head_info",[])
-            
-            calender_item_info = cls.fin_cache_data.get("calender_info",{}).get("calender_item_info",[])
-            if calender_head_info:
-                cls.calendar_head_id = calender_head_info[0].get("id")
-                cls.logger.info(f"获取到 calendar_head_id: {cls.calendar_head_id}")
-            else:
-                cls.calendar_head_id = None
-                cls.logger.warning("calender_head_info 为空，无法获取 calendar_head_id")
-            
-            # 从 calender_item_info 中筛选 period_type='MONTH' 的项
-            month_items = [item for item in calender_item_info if item.get("period_type") == "MONTH"]
-            if month_items:
-                cls.calendar_item_id = month_items[0].get("id")
-                cls.logger.info(f"获取到 calendar_item_id: {cls.calendar_item_id}, period_code: {month_items[0].get('period_code')}")
-            else:
-                cls.calendar_item_id = None
-                cls.logger.warning("calender_item_info 中没有 period_type='MONTH' 的项，无法获取 calendar_item_id")
+    @classmethod
+    def bind_context(cls):
+        """绑定 erp_fin 模块上下文与初始化字段。"""
+        cls.bind_mock_util_singleton()
+        context_data = build_fin_context(
+            init_data=getattr(cls, "init_data", None),
+            md_cache_data=getattr(cls, "md_cache_data", None),
+            fin_cache_data=getattr(cls, "fin_cache_data", None),
+        )
+        for key, value in context_data.items():
+            setattr(cls, key, value)
+
+        cls.logger.info(f"获取到 sett_item_type_info，可用code列表: {list(cls.sett_item_type_info.keys())}")
+        cls.logger.info(f"获取到 ar_type_md_info，可用code列表: {list(cls.ar_type_md_info.keys())}")
+        cls.logger.info(f"获取到 sb_type_info，可用code列表: {list(cls.sb_type_info.keys())}")
+        if cls.sett_doc_type_info is not None:
+            cls.logger.info(f"获取到 sett_doc_type_info: {cls.sett_doc_type_info}")
+        else:
+            cls.logger.warning("sett_doc_type_info 为空，无法获取 sett_doc_type_info")
+        if cls.calendar_head_id is not None:
+            cls.logger.info(f"获取到 calendar_head_id: {cls.calendar_head_id}")
+        else:
+            cls.logger.warning("calender_head_info 为空，无法获取 calendar_head_id")
+        if cls.calendar_item_id is not None:
+            cls.logger.info(f"获取到 calendar_item_id: {cls.calendar_item_id}")
+        else:
+            cls.logger.warning("calender_item_info 中没有 period_type='MONTH' 的项，无法获取 calendar_item_id")
        
        
         # 设置路径参数和用户信息
-        cls.path_params = {"tmodule": "FIN"}
-        cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
-        cls.user_id = cls.init_data["user_info"]['user_info']["id"]
-    
-    
-    def get_api_path(self, api_key):
-        """
-        获取API路径
-        """
-        return super().get_api_path(api_key, self.apis)
-    
-    def get_api_params(self, api_path, with_query_params=None):
-        """
-        获取API请求参数和完整URL
-        """
-        return super().get_api_params(api_path, self.api_params, with_query_params)
+        cls.bind_module_user_context("FIN", strict=True)
     
     
     def create_settlement_item(self,sett_item_type_code="E_SLS_GOODS",org=1):
@@ -297,7 +202,13 @@ class FinBaseTest(BaseTest):
             "purSlsOrgId": {"id": sls_org_id if sett_item_type_info.get("bt_class") == "SALES" else pur_org_id},
         }
         ParamUtil.set_request_params(filtered_params, set_dict)
-        result = self.http.post(url, json=filtered_params, description="创建结算项")
+        result, _ = self.standard_api_call(
+            api_key="SETT-ITEM-手动创建服务",
+            set_dict=filtered_params.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(result)
         # 响应数据是列表格式，取第一个元素的id
         data_list = result.get("data", {}).get("data", [])
@@ -314,7 +225,13 @@ class FinBaseTest(BaseTest):
         data = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
         data=ParamUtil.convert_param_type(data, ["params", "request"], "array")
         data["params"]["request"][0]["id"] = sett_item_id
-        result = self.http.post(url, json=data, description=f"结算项对账确认 - ID: {sett_item_id}")
+        result, _ = self.standard_api_call(
+            api_key="SETT-ITEM-结算项确认及汇单-关联操作-异步服务",
+            set_dict=data.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(result)
         
         def query_sett_item_status():
@@ -350,7 +267,13 @@ class FinBaseTest(BaseTest):
         data = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
         data = ParamUtil.convert_param_type(data, ["params", "request","id"], "array")
         data["params"]["request"]["id"][0] = self.create_settlement_doc(sett_item_type_code,org)
-        result = self.http.post(url, json=data, description=f"结算单确认 - ID: {data['params']['request']['id'][0]}")
+        result, _ = self.standard_api_call(
+            api_key="SETT-DOC-运营端结算单确认下推应收应付-异步服务",
+            set_dict=data.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(result)
         #等待异步任务执行完成，当状态为PROCESSING时一直等待，最长超时10秒
         sett_doc_id = data["params"]["request"]["id"][0]

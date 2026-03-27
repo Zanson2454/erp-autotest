@@ -17,6 +17,12 @@ class TestInvAtpGroupManagement(ScmInvBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         # 测试数据变量（使用类变量）
         cls.atp_group_id = None
         cls.atp_group_code = None
@@ -56,9 +62,13 @@ class TestInvAtpGroupManagement(ScmInvBaseTest):
             filtered_params["params"]["modelKey"] = "SCM_INV$inv_atp_group_md"
 
             # 执行请求
-            response = self.http.post(
-                url, json=filtered_params,
-                params={"tmodule": "SCM_INV", "modelKey": "SCM_INV$inv_atp_group_md"}
+            response, _ = self.standard_api_call(
+                api_key="(系统)保存数据服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": "SCM_INV", "modelKey": "SCM_INV$inv_atp_group_md"}
             )
             self.assert_util.assert_response_data(response)
             
@@ -151,7 +161,13 @@ class TestInvAtpGroupManagement(ScmInvBaseTest):
             for key in ["taskName", "multiSheetConfig", "queryData", "processConfig"]:
                 filtered_params["params"][key] = export_config[key]
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="ATP检查组-导入导出任务管理接口-提交导出任务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -196,9 +212,13 @@ class TestInvAtpGroupManagement(ScmInvBaseTest):
                     {"field": "id"}, {"field": "code"}, {"field": "name"}
                 ]
 
-            response = self.http.post(
-                url, json=filtered_params,
-                params={"tmodule": "SCM_INV", "modelKey": "SCM_INV$inv_atp_group_md"}
+            response, _ = self.standard_api_call(
+                api_key="(系统)查询数据详情服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": "SCM_INV", "modelKey": "SCM_INV$inv_atp_group_md"}
             )
             self.assert_util.assert_response_data(response)
             
@@ -257,9 +277,13 @@ class TestInvAtpGroupManagement(ScmInvBaseTest):
                     {"field": "id"}, {"field": "code"}, {"field": "name"}
                 ]
 
-            response = self.http.post(
-                url, json=filtered_params,
-                params={"tmodule": "SCM_INV", "modelKey": "SCM_INV$inv_atp_group_md"}
+            response, _ = self.standard_api_call(
+                api_key="(系统)查询分页数据服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": "SCM_INV", "modelKey": "SCM_INV$inv_atp_group_md"}
             )
             self.assert_util.assert_response_data(response)
             
@@ -307,9 +331,13 @@ class TestInvAtpGroupManagement(ScmInvBaseTest):
             ParamUtil.set_request_params(filtered_params, {"id": self.__class__.atp_group_id})
             filtered_params["params"]["modelKey"] = "SCM_INV$inv_atp_group_md"
 
-            response = self.http.post(
-                url, json=filtered_params,
-                params={"tmodule": "SCM_INV", "modelKey": "SCM_INV$inv_atp_group_md"}
+            response, _ = self.standard_api_call(
+                api_key="(系统)删除数据服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": "SCM_INV", "modelKey": "SCM_INV$inv_atp_group_md"}
             )
             
             # 验证删除结果
@@ -325,5 +353,3 @@ class TestInvAtpGroupManagement(ScmInvBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
-
-

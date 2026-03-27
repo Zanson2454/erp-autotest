@@ -15,6 +15,12 @@ class TestIdentityManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.identity_id = None
         cls.user_id = cls.md_cache_data.get("user_info",{}).get("id",None)
         cls.created_at = cls.mock_util.get_mock_date(include_time=True)
@@ -138,4 +144,3 @@ class TestIdentityManagement(GenMdBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
-

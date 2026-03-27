@@ -19,6 +19,12 @@ class TestQuotePrimary(SlsBase):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.quote_id = None
         cls.order_id = None
         cls.delivery_id = None
@@ -74,7 +80,13 @@ class TestQuotePrimary(SlsBase):
                 query_params, ["id"], ["params", "request"]
             )
             ParamUtil.set_request_params(query_filtered_params, {"id": self.quote_id})
-            query_response = self.http.post(query_url, json=query_filtered_params)
+            query_response, _ = self.standard_api_call(
+                api_key="销售订单页面完整查询",
+                set_dict=(query_filtered_params.get("params", {}) if isinstance(query_filtered_params, dict) else query_filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(query_response)
             quote_detail = query_response.get("data", {}).get("data", {})
             
@@ -107,7 +119,13 @@ class TestQuotePrimary(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 5. 发送提交请求
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="销售订单页面完整查询",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 6. 保存提交后的报价单ID
@@ -146,7 +164,13 @@ class TestQuotePrimary(SlsBase):
             )
             ParamUtil.set_request_params(copy_filtered_params, {"id": self.quote_id})
             
-            copy_response = self.http.post(copy_url, json=copy_filtered_params)
+            copy_response, _ = self.standard_api_call(
+                api_key="销售订单复制服务",
+                set_dict=(copy_filtered_params.get("params", {}) if isinstance(copy_filtered_params, dict) else copy_filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(copy_response)
             copied_data = copy_response.get("data", {}).get("data", {})
             
@@ -180,7 +204,13 @@ class TestQuotePrimary(SlsBase):
             ParamUtil.set_request_params(save_filtered_params, save_set_dict)
             
             # 4. 发送保存请求和断言
-            save_response = self.http.post(save_url, json=save_filtered_params)
+            save_response, _ = self.standard_api_call(
+                api_key="SLS-销售订单-保存服务",
+                set_dict=(save_filtered_params.get("params", {}) if isinstance(save_filtered_params, dict) else save_filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(save_response)
             
             # 5. 获取保存后的订单数据

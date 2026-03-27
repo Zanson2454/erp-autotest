@@ -30,7 +30,12 @@ class TestDelSoDnManagement(SlsDelBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
-        
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         # 初始化测试数据ID
         cls._init_test_data_ids()
         
@@ -357,7 +362,13 @@ class TestDelSoDnManagement(SlsDelBaseTest):
                 }
             })
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="DEL-交货单公共-数据分页查询服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             records = response.get("data", {}).get("data", {})
@@ -393,7 +404,13 @@ class TestDelSoDnManagement(SlsDelBaseTest):
             
             ParamUtil.set_request_params(filtered_params, {"id": str(self.__class__.dn_id)})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="DEL-交货单详情服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             result_data = response.get("data", {}).get("data", {})
@@ -433,7 +450,13 @@ class TestDelSoDnManagement(SlsDelBaseTest):
             
             ParamUtil.set_request_params(filtered_params, {"id": self.__class__.dn_id})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="DEL-交货单公共-根据订单ID查询交货单行服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             result_data = response.get("data", {}).get("data", [])
@@ -470,7 +493,13 @@ class TestDelSoDnManagement(SlsDelBaseTest):
             
             ParamUtil.set_request_params(filtered_params, {"id": self.__class__.dn_id})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="DEL-APP端仓库执行任务平铺服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             response_data = response.get("data", {}).get("data", {})
@@ -517,7 +546,13 @@ class TestDelSoDnManagement(SlsDelBaseTest):
             
             ParamUtil.set_request_params(filtered_params, {"delWmWarehouseTaskList": self.__class__.task_list})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="仓库执行任务保存事件服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 保存验货任务后，API可能返回更新后的任务列表，使用返回的数据
@@ -570,7 +605,13 @@ class TestDelSoDnManagement(SlsDelBaseTest):
             # 注意：这里传的是交货单行ID，不是交货单头ID
             ParamUtil.set_request_params(filtered_params, {"id": self.__class__.dn_item_id})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="DEL-查看拣配服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             response_data = response.get("data", {}).get("data", {})
@@ -691,7 +732,13 @@ class TestDelSoDnManagement(SlsDelBaseTest):
                 }
             }
             
-            response = self.http.post(url, json=params, description=f"根据交货单编号查询拣配任务: {self.__class__.dn_code}")
+            response, _ = self.standard_api_call(
+                api_key="DEL-查看拣配服务",
+                set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             response_data = response.get("data", {}).get("data", {})
@@ -734,7 +781,13 @@ class TestDelSoDnManagement(SlsDelBaseTest):
             
             ParamUtil.set_request_params(filtered_params, {"id": self.__class__.dn_id})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="DEL-交货单公共-根据交货单头ID查询交货单任务行",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             response_data = response.get("data", {}).get("data", {})
@@ -942,7 +995,13 @@ class TestDelSoDnManagement(SlsDelBaseTest):
             self.logger.info(f"有效任务数量: {len(valid_tasks)}")
             ParamUtil.set_request_params(filtered_params, {"delWmWarehouseTaskList": valid_tasks})
             
-            response = self.http.post(url, json=filtered_params, description="发货完成并过账")
+            response, _ = self.standard_api_call(
+                api_key="DEL-交货单公共-仓库执行完成并过账",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             actual_biz_status = self._verify_dn_biz_status("POSTED")
@@ -984,7 +1043,13 @@ class TestDelSoDnManagement(SlsDelBaseTest):
                 }
             }
             
-            response = self.http.post(url, json=params, description=f"查询批次详情: {batch_id}")
+            response, _ = self.standard_api_call(
+                api_key="DEL-交货单公共-仓库执行完成并过账",
+                set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             response_data = response.get("data", {}).get("data", {})
@@ -1041,7 +1106,13 @@ class TestDelSoDnManagement(SlsDelBaseTest):
                 }
             }
             
-            response = self.http.post(url, json=params, description=f"查询物料 {mat_id} 的批次信息")
+            response, _ = self.standard_api_call(
+                api_key="DEL-交货单公共-仓库执行完成并过账",
+                set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             response_data = response.get("data", {}).get("data", {})
@@ -1056,4 +1127,3 @@ class TestDelSoDnManagement(SlsDelBaseTest):
         except Exception as e:
             self.logger.error(f"查询批次信息失败: {str(e)}")
             return None
-

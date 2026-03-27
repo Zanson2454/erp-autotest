@@ -19,6 +19,12 @@ class TestQuoteCrud(SlsBase):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.quote_id_draft = None
         cls.quote_id_copy = None
         cls.quote_id_submit = None
@@ -84,7 +90,13 @@ class TestQuoteCrud(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 5. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售订单-保存服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 6. 保存编辑后的报价单ID
@@ -128,7 +140,13 @@ class TestQuoteCrud(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 4. 发送复制请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="销售订单复制服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 5. 获取复制的报价单数据
@@ -161,7 +179,13 @@ class TestQuoteCrud(SlsBase):
             ParamUtil.set_request_params(save_filtered_params, set_save_dict)
             
             # 9. 发送保存请求和断言
-            save_response = self.http.post(save_url, json=save_filtered_params)
+            save_response, _ = self.standard_api_call(
+                api_key="SLS-销售订单-保存服务",
+                set_dict=(save_filtered_params.get("params", {}) if isinstance(save_filtered_params, dict) else save_filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(save_response)
             
             # 10. 保存复制的报价单ID
@@ -207,7 +231,13 @@ class TestQuoteCrud(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="SO-删除服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 5. 清空已删除的报价单ID
@@ -314,7 +344,13 @@ class TestQuoteCrud(SlsBase):
             }
             
             # 7. 发送请求和断言
-            response = self.http.post(url, json=request_body)
+            response, _ = self.standard_api_call(
+                api_key="订单作废服务",
+                set_dict=(request_body.get("params", {}) if isinstance(request_body, dict) else request_body),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 8. 保存作废后的报价单ID
@@ -368,7 +404,13 @@ class TestQuoteCrud(SlsBase):
             response = None
             response_data = None
             for attempt in range(5):
-                response = self.http.post(url, json=filtered_params)
+                response, _ = self.standard_api_call(
+                    api_key="销售订单页面完整查询",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_data(response)
                 
                 # 检查是否返回了数据
@@ -497,7 +539,13 @@ class TestQuoteCrud(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="销售订单批量删除服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             # 批量删除API返回的是简单的成功响应，使用assert_response_success
             self.assert_util.assert_response_success(response)
             

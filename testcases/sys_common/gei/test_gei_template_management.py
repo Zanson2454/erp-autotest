@@ -17,6 +17,12 @@ class TestGeiTemplateManagement(SysCommonBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.gei_template_id = None
         cls.logger.info("导入导出模板管理测试类初始化完成")
     

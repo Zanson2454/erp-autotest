@@ -13,6 +13,12 @@ class TestMatCateManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         # No need for cls.mock_data = MockData() due to singleton pattern
         cls.logger.info("物料类目管理测试类初始化完成")
         cls.cateId = None

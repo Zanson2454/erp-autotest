@@ -27,7 +27,12 @@ class TestSoHeadManagement(SlsBase):
     def setup_class(cls):
         """测试类初始化，获取必要的ID和配置信息"""
         super().setup_class()
-             
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
     
         # 初始化销售配置数据
         # cls.so_type_id = cls.ids.get("so_type_id")
@@ -104,7 +109,13 @@ class TestSoHeadManagement(SlsBase):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params, description="销售订单页面完整查询")
+            response, _ = self.standard_api_call(
+                api_key="销售订单页面完整查询",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -139,7 +150,13 @@ class TestSoHeadManagement(SlsBase):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params, description="查看定价记录")
+            response, _ = self.standard_api_call(
+                api_key="SO-查看定价记录服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             so_priceItem_records = response.get("data", {}).get("data", {}).get("soPriceItemRecords", [])
             self.assert_util.assert_by_operator(so_priceItem_records, "not_empty",message="定价记录ID不能为空")
@@ -184,7 +201,13 @@ class TestSoHeadManagement(SlsBase):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params, description="维护发货计划行")
+            response, _ = self.standard_api_call(
+                api_key="SO-维护发货计划行服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
         
             a.json(filtered_params, "请求数据")

@@ -20,6 +20,12 @@ class TestSoPrice(SlsBase):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         # 固定使用 curl 中的物料和价格参数
         cls.fixed_mat_code = "hxymat-20241202744"
         cls.fixed_mat_name = "hxy测试物料4"
@@ -173,7 +179,13 @@ class TestSoPrice(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 5. 发送请求和断言
-            response = self.http.post(url, json=filtered_params, description="查询销售价格列表")
+            response, _ = self.standard_api_call(
+                api_key="GEN-条件主数据-分页查询服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 6. 获取响应数据
@@ -270,7 +282,13 @@ class TestSoPrice(SlsBase):
                     self._create_and_submit_price()
                     
                     # 创建后重新查询价格列表
-                    response = self.http.post(url, json=filtered_params, description="重新查询销售价格列表")
+                    response, _ = self.standard_api_call(
+                        api_key="GEN-条件主数据-分页查询服务",
+                        set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     self.assert_util.assert_response_data(response)
                     
                     response_data = response.get("data", {}).get("data", {})
@@ -336,7 +354,13 @@ class TestSoPrice(SlsBase):
                 self._create_and_submit_price()
                 
                 # 创建后重新查询价格列表
-                response = self.http.post(url, json=filtered_params, description="重新查询销售价格列表")
+                response, _ = self.standard_api_call(
+                    api_key="GEN-条件主数据-分页查询服务",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_data(response)
                 
                 response_data = response.get("data", {}).get("data", {})
@@ -462,7 +486,13 @@ class TestSoPrice(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 2. 发送保存请求
-            response = self.http.post(url, json=filtered_params, description="保存价格调整")
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售价格-价格调整保存服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 3. 获取保存后的价格调整ID
@@ -487,7 +517,13 @@ class TestSoPrice(SlsBase):
             ParamUtil.set_request_params(submit_filtered_params, submit_set_dict)
             
             # 5. 发送提交请求
-            response = self.http.post(submit_url, json=submit_filtered_params, description="提交价格维护单")
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售价格-价格维护单列表提交服务",
+                set_dict=(submit_filtered_params.get("params", {}) if isinstance(submit_filtered_params, dict) else submit_filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 6. 验证提交结果
@@ -748,7 +784,13 @@ class TestSoPrice(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 10. 发送保存请求
-            response = self.http.post(url, json=filtered_params, description="保存价格维护单")
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售价格-价格调整保存服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 11. 获取保存后的价格调整单ID
@@ -773,7 +815,13 @@ class TestSoPrice(SlsBase):
                 }
                 ParamUtil.set_request_params(submit_filtered_params, submit_set_dict)
                 
-                submit_response = self.http.post(submit_url, json=submit_filtered_params, description="提交价格维护单")
+                submit_response, _ = self.standard_api_call(
+                    api_key="SLS-销售价格-价格维护单列表提交服务",
+                    set_dict=(submit_filtered_params.get("params", {}) if isinstance(submit_filtered_params, dict) else submit_filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_data(submit_response)
                 a.text(f"价格维护单提交成功", "价格维护结果")
             

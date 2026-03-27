@@ -26,6 +26,12 @@ class TestSalesOrderOperator(SlsBase):
     def setup_class(cls):
         """测试类初始化，获取必要的ID和配置信息"""
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         SlsBase.setup_class()
         # 初始化测试数据
         cls.order_id = None
@@ -214,7 +220,13 @@ class TestSalesOrderOperator(SlsBase):
         
         # 发送请求
         self.logger.info(f"查询订单详情请求数据: {json.dumps(data, ensure_ascii=False, indent=2)}")
-        result = self.http.post(url, json=data, description="订单详情查询")
+        result, _ = self.standard_api_call(
+            api_key="销售订单页面完整查询",
+            set_dict=(data.get("params", {}) if isinstance(data, dict) else data),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.logger.info(json.dumps(result, ensure_ascii=False, indent=2))
         
         # 保存订单详情数据
@@ -258,7 +270,13 @@ class TestSalesOrderOperator(SlsBase):
         result = None
         response_data = None
         for attempt in range(5):
-            result = self.http.post(url, json=data, description="编辑订单")
+            result, _ = self.standard_api_call(
+                api_key="销售订单页面完整查询",
+                set_dict=(data.get("params", {}) if isinstance(data, dict) else data),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             assert result is not None, "编辑销售订单失败"
             assert result.get('success', False), f"编辑销售订单失败: {result.get('err', {}).get('msg', '未知错误')}"
             
@@ -390,7 +408,13 @@ class TestSalesOrderOperator(SlsBase):
             }
         }
         
-        result = self.http.post(url, json=data, description="保存订单")
+        result, _ = self.standard_api_call(
+            api_key="SLS-销售订单-保存服务",
+            set_dict=(data.get("params", {}) if isinstance(data, dict) else data),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         assert result is not None, "保存销售订单失败"
         assert result.get('success', False), f"保存销售订单失败: {result.get('err', {}).get('msg', '未知错误')}"
         
@@ -428,7 +452,13 @@ class TestSalesOrderOperator(SlsBase):
         detail_result = None
         order_detail = None
         for attempt in range(5):
-            detail_result = self.http.post(detail_url, json=detail_data, description="获取订单详情")
+            detail_result, _ = self.standard_api_call(
+                api_key="销售订单页面完整查询",
+                set_dict=(detail_data.get("params", {}) if isinstance(detail_data, dict) else detail_data),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             if not detail_result.get('success', False):
                 raise ValueError(f"获取订单详情失败: {detail_result.get('err', {}).get('msg', '未知错误')}")
             
@@ -525,7 +555,13 @@ class TestSalesOrderOperator(SlsBase):
         # 使用完整的订单信息，包括订单行
         data["params"]["so_head"] = order_detail
         
-        result = self.http.post(url, json=data, description="销售订单手动提交")
+        result, _ = self.standard_api_call(
+            api_key="SLS-销售订单-提交服务",
+            set_dict=(data.get("params", {}) if isinstance(data, dict) else data),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         assert result is not None, "销售订单列表提交失败"
         assert result.get('success', False), f"销售订单列表提交失败: {result.get('err', {}).get('msg', '未知错误')}"
         
@@ -576,7 +612,13 @@ class TestSalesOrderOperator(SlsBase):
         data = self.api_params[url].copy()
         data["params"]["request"] = {"id": self.order_id}
         
-        result = self.http.post(url, json=data, description="取消提交")
+        result, _ = self.standard_api_call(
+            api_key="SLS-销售-取消提交服务",
+            set_dict=(data.get("params", {}) if isinstance(data, dict) else data),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         assert result is not None, "取消提交销售订单失败"
         
         # 5. 如果取消提交失败，检查是否是下游交货单未作废的错误
@@ -605,7 +647,13 @@ class TestSalesOrderOperator(SlsBase):
                     time.sleep(1)
                     
                     # 重新尝试取消提交订单
-                    result = self.http.post(url, json=data, description="取消提交（作废交货单后重试）")
+                    result, _ = self.standard_api_call(
+                        api_key="SLS-销售-取消提交服务",
+                        set_dict=(data.get("params", {}) if isinstance(data, dict) else data),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     assert result is not None, "取消提交销售订单失败"
                     assert result.get('success', False), f"取消提交销售订单失败（已作废交货单后重试）: {result.get('err', {}).get('msg', '未知错误')}"
                 else:
@@ -723,7 +771,13 @@ class TestSalesOrderOperator(SlsBase):
         }
         
         # 发送请求和断言
-        result = self.http.post(url, json=request_body, description="作废订单")
+        result, _ = self.standard_api_call(
+            api_key="订单作废服务",
+            set_dict=(request_body.get("params", {}) if isinstance(request_body, dict) else request_body),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         assert result is not None, "作废销售订单失败"
         assert result.get('success', False), f"作废销售订单失败: {result.get('err', {}).get('msg', '未知错误')}"
         
@@ -758,7 +812,13 @@ class TestSalesOrderOperator(SlsBase):
         data = self.api_params[url].copy()
         data["params"]["request"]["id"] = int(self.order_id)
         
-        result = self.http.post(url, json=data, description="冻结订单")
+        result, _ = self.standard_api_call(
+            api_key="订单作废服务",
+            set_dict=(data.get("params", {}) if isinstance(data, dict) else data),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         assert result is not None, "冻结销售订单失败"
         assert result.get('success', False), f"冻结销售订单失败: {result.get('err', {}).get('msg', '未知错误')}"
         
@@ -807,7 +867,13 @@ class TestSalesOrderOperator(SlsBase):
         data = self.api_params[url]
         data["params"]["request"] = request_data["params"]["request"]
         
-        result = self.http.post(url, json=data, description="复制订单")
+        result, _ = self.standard_api_call(
+            api_key="订单作废服务",
+            set_dict=(data.get("params", {}) if isinstance(data, dict) else data),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         assert result is not None, "复制销售订单失败"
         assert result.get('success', False), f"复制销售订单失败: {result.get('err', {}).get('msg', '未知错误')}"
         
@@ -836,7 +902,13 @@ class TestSalesOrderOperator(SlsBase):
         data = self.api_params[url].copy()
         data["params"]["request"] = {"id": copied_order_id}
         
-        result = self.http.post(url, json=data, description="提交复制订单")
+        result, _ = self.standard_api_call(
+            api_key="订单作废服务",
+            set_dict=(data.get("params", {}) if isinstance(data, dict) else data),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         assert result is not None, "提交复制的销售订单失败"
         assert result.get('success', False), f"提交复制的销售订单失败: {result.get('err', {}).get('msg', '未知错误')}"
         

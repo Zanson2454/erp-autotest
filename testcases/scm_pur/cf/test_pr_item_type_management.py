@@ -21,6 +21,12 @@ class TestPrItemTypeManagement(ScmPurBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.pr_item_type_id = None
         cls.pr_item_type_code = None
         # 从缓存获取标准采购订单ID
@@ -85,9 +91,13 @@ class TestPrItemTypeManagement(ScmPurBaseTest):
             filtered_params["params"]["modelKey"] = self.MODEL_KEY
             
             # 5. 执行请求
-            response = self.http.post(
-                url, json=filtered_params,
-                params={"tmodule": self.MODULE_NAME, "modelKey": self.MODEL_KEY}
+            response, _ = self.standard_api_call(
+                api_key="(系统)保存数据服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": self.MODULE_NAME, "modelKey": self.MODEL_KEY}
             )
             self.assert_util.assert_response_data(response)
             
@@ -144,7 +154,14 @@ class TestPrItemTypeManagement(ScmPurBaseTest):
             filtered_params["params"]["modelKey"] = self.MODEL_KEY
             
             # 4. 执行请求
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="采购申请行类型定义表-分页数据服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params=None
+            )
             self.assert_util.assert_response_success(response)
             
             # 5. 验证响应数据
@@ -247,7 +264,14 @@ class TestPrItemTypeManagement(ScmPurBaseTest):
             }
             
             # 6. 执行请求
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="采购申请行类型定义表-导入导出任务管理接口-提交导出任务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params=None
+            )
             self.assert_util.assert_response_data(response)
             
             self.logger.info(f"✅ 导出任务创建成功，任务名称: {task_name}")
@@ -291,9 +315,13 @@ class TestPrItemTypeManagement(ScmPurBaseTest):
             filtered_params["params"]["modelKey"] = self.MODEL_KEY
             
             # 5. 执行请求
-            response = self.http.post(
-                url, json=filtered_params,
-                params={"tmodule": self.MODULE_NAME, "modelKey": self.MODEL_KEY}
+            response, _ = self.standard_api_call(
+                api_key="(系统)删除数据服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": self.MODULE_NAME, "modelKey": self.MODEL_KEY}
             )
             
             # 6. 验证删除结果
@@ -312,4 +340,3 @@ class TestPrItemTypeManagement(ScmPurBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
-

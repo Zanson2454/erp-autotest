@@ -23,6 +23,12 @@ class TestSettConfig(FinBaseTest):
     def setup_class(cls):
         """测试类初始化"""
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.logger.info("结算配置测试类初始化完成")
 
     @case_decorator(
@@ -48,7 +54,13 @@ class TestSettConfig(FinBaseTest):
                 "spgName":f"AUTO-TEST-NAME-{now_str}"
             }
             ParamUtil.set_request_params(filtered_params,set_dict)
-            result=self.http.post(url,json=filtered_params,description=f"新增结算价格组")
+            result, _ = self.standard_api_call(
+                api_key="结算价格组-保存主数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("spgCode",{}),"=",set_dict["spgCode"])
             self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("spgName",{}),"=",set_dict["spgName"])
@@ -82,7 +94,13 @@ class TestSettConfig(FinBaseTest):
                 "type":"CASH"
             }
             ParamUtil.set_request_params(filtered_params,set_dict)
-            result=self.http.post(url,json=filtered_params,description=f"新增结算方式")
+            result, _ = self.standard_api_call(
+                api_key="结算类型-保存主数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("code",{}),"=",set_dict["code"])
             self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("name",{}),"=",set_dict["name"])
@@ -118,7 +136,13 @@ class TestSettConfig(FinBaseTest):
                 "id":id
             }
             ParamUtil.set_request_params(filtered_params,set_dict)
-            result=self.http.post(url,json=filtered_params,description=f"启用结算方式")
+            result, _ = self.standard_api_call(
+                api_key="结算类型-启用主数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             a.json(filtered_params, "请求数据")
             a.json(result, "响应数据")
@@ -153,7 +177,13 @@ class TestSettConfig(FinBaseTest):
                 "settDocTypeName":f"AUTO-TEST-NAME-{now_str}"
             }
             ParamUtil.set_request_params(filtered_params,set_dict)
-            result=self.http.post(url,json=filtered_params,description=f"新增结算单据类型")
+            result, _ = self.standard_api_call(
+                api_key="结算单类型定义表-保存数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("settDocTypeCode",{}),"=",set_dict["settDocTypeCode"])
             self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("settDocTypeName",{}),"=",set_dict["settDocTypeName"])
@@ -214,7 +244,13 @@ class TestSettConfig(FinBaseTest):
             }
             ParamUtil.set_request_params(filtered_params,set_dict)
             try:
-                result=self.http.post(url,json=filtered_params,description=f"新增结算行项目类型")
+                result, _ = self.standard_api_call(
+                    api_key="结算行项类型定义表-保存数据服务",
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 # 成功情况下的断言
                 self.assert_util.assert_response_success(result)
                 self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("settItemTypeCode",{}),"=",set_dict["settItemTypeCode"])
@@ -245,7 +281,13 @@ class TestSettConfig(FinBaseTest):
             params,
             [],
             ["params","request"])
-        result=self.http.post(url,json=filtered_params,description=f"获取汇单策略调用取号规则")
+        result, _ = self.standard_api_call(
+            api_key="结算单汇单策略头表-调用取号规则服务",
+            set_dict=filtered_params.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         return result.get("data",{}).get("data",{})
         
     @case_decorator(
@@ -273,7 +315,13 @@ class TestSettConfig(FinBaseTest):
                 "strategyType":'CONFIRM'
             }
             ParamUtil.set_request_params(filtered_params,set_dict)
-            result=self.http.post(url,json=filtered_params,description=f"新增汇单策略")
+            result, _ = self.standard_api_call(
+                api_key="SETT-SDS-汇单策略保存服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("sdsHeadCode",{}),"=",set_dict["sdsHeadCode"])
             self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("sdsHeadName",{}),"=",set_dict["sdsHeadName"])
@@ -293,7 +341,13 @@ class TestSettConfig(FinBaseTest):
             params,
             [],
             ["params","request"])
-        result=self.http.post(url,json=filtered_params,description=f"获取汇单维度配置行表调用取号规则")
+        result, _ = self.standard_api_call(
+            api_key="结算单汇单维度配置行表-调用取号规则服务",
+            set_dict=filtered_params.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         return result.get("data",{}).get("data",{})
     
     def get_sett_rule_scope_item_code(self):
@@ -303,7 +357,13 @@ class TestSettConfig(FinBaseTest):
             params,
             [],
             ["params","request"])
-        result=self.http.post(url,json=filtered_params,description=f"获取汇单范围配置行表调用取号规则")
+        result, _ = self.standard_api_call(
+            api_key="结算单汇单范围配置行表-调用取号规则服务",
+            set_dict=filtered_params.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         return result.get("data",{}).get("data",{})
     
     
@@ -315,7 +375,13 @@ class TestSettConfig(FinBaseTest):
             params,
             [],
             ["params","request"])
-        result=self.http.post(url,json=filtered_params,description=f"获取汇单规则调用取号规则")
+        result, _ = self.standard_api_call(
+            api_key="结算单汇单配置头表-调用取号规则服务",
+            set_dict=filtered_params.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         return result.get("data",{}).get("data",{})
     
     @case_decorator(
@@ -372,7 +438,13 @@ class TestSettConfig(FinBaseTest):
                 }]
             }
             ParamUtil.set_request_params(filtered_params,set_dict)
-            result=self.http.post(url,json=filtered_params,description=f"新增汇单规则")
+            result, _ = self.standard_api_call(
+                api_key="结算单-汇单规则保存服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             a.json(filtered_params, "请求数据")
             a.json(result, "响应数据")
@@ -406,7 +478,13 @@ class TestSettConfig(FinBaseTest):
                 "id":id
             }
             ParamUtil.set_request_params(filtered_params,set_dict)
-            result=self.http.post(url,json=filtered_params,description=f"启用汇单规则")
+            result, _ = self.standard_api_call(
+                api_key="SETT-SDC-结算汇单规则启用服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             a.json(filtered_params, "请求数据")
             a.json(result, "响应数据")
@@ -455,7 +533,13 @@ class TestSettConfig(FinBaseTest):
             }
             ParamUtil.set_request_params(filtered_params,set_dict)
             try:
-                result=self.http.post(url,json=filtered_params,description=f"新增结算行项目类型关联汇单规则")
+                result, _ = self.standard_api_call(
+                    api_key="结算行项目类型关联汇单规则-保存数据服务",
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 # 成功情况下的断言
                 self.assert_util.assert_response_success(result)
             except requests.exceptions.HTTPError as e:

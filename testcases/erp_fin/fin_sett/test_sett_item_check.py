@@ -24,6 +24,12 @@ class TestSettItemCheck(FinBaseTest):
     def setup_class(cls):
         """测试类初始化"""
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.logger.info("结算项测试类初始化完成")  
 
     @case_decorator(
@@ -58,7 +64,13 @@ class TestSettItemCheck(FinBaseTest):
             params["params"]["request"]["id"] = request_id
             self.logger.debug(f"查询结算项详情请求参数: {params}")
 
-            result = self.http.post(url, json=params, description="查询结算项详情")
+            result, _ = self.standard_api_call(
+                api_key="结算项表-根据ID查找数据服务",
+                set_dict=params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             
             assert result.get("data").get("data").get("id") == request_id
             self.assert_util.assert_response_success(result)
@@ -87,7 +99,13 @@ class TestSettItemCheck(FinBaseTest):
             params["params"]["modelKey"] = "ERP_FIN$sett_item_tr"
             self.logger.debug(f"获取结算项编码请求参数: {params}")
             
-            result = self.http.post(url, json=params, description="获取结算项编码")
+            result, _ = self.standard_api_call(
+                api_key="结算项表-调用取号规则服务",
+                set_dict=params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             assert result.get("data").get("data")
             assert "SETTI" in result.get("data").get("data")
@@ -148,7 +166,13 @@ class TestSettItemCheck(FinBaseTest):
             set_dict = {"id": request_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            result = self.http.post(url, json=filtered_params, description="删除结算项")
+            result, _ = self.standard_api_call(
+                api_key="结算项-删除服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             after_sql=f"""
                 select *
@@ -183,7 +207,13 @@ class TestSettItemCheck(FinBaseTest):
             filtered_params["params"]["request"]["pageable"]["pageNo"] = 1
             filtered_params["params"]["request"]["pageable"]["pageSize"] = 200
             
-            result = self.http.post(url, json=filtered_params, description="结算项分页数据")
+            result, _ = self.standard_api_call(
+                api_key="结算项表-分页数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             assert result.get("data").get("data").get("total") >= 0
             a.json(filtered_params, "请求数据")

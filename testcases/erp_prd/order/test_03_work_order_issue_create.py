@@ -34,6 +34,12 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
         2. 初始化日志记录器
         """
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.logger.info("生产订单领料单创建测试类初始化完成")
 
     @pytest.mark.run(order=9)
@@ -69,7 +75,13 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
                 a.json(filtered_params, "请求数据")
 
             with a.step("2. 发送请求获取默认领料分单规则"):
-                result = self.http.post(url, json=filtered_params, description="获取默认领料分单规则")
+                result, _ = self.standard_api_call(
+                    api_key="渲染默认领料分单规则服务",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 a.json(result, "接口响应")
 
             with a.step("3. 校验接口响应结构和关键字段"):
@@ -214,7 +226,13 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
                 }
                 
                 # 发送请求
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key="根据生产订单BOM行创建领料单服务",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 
                 # 验证响应成功
                 self.assert_util.assert_response_success(result)
@@ -285,7 +303,13 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
             
             with a.step("2. 发送请求"):
                 # 发送请求
-                result = self.http.post(url, json=filtered_params, description="提交领料单")
+                result, _ = self.standard_api_call(
+                    api_key="领料批量保存服务",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 # 添加响应数据到报告
                 a.json(result, "响应数据")
             
@@ -451,7 +475,13 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
                 for attempt in range(max_retries):
                     self.logger.info(f"第 {attempt + 1} 次尝试查询领料单状态")
                     
-                    result = self.http.post(url, json=filtered_params, description="查询生产订单领料行项目")
+                    result, _ = self.standard_api_call(
+                        api_key="分页查询生产领料单",
+                        set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     a.json(result, f"第{attempt + 1}次响应数据")
                     
                     # 验证响应成功

@@ -4,21 +4,14 @@
 """
 import sys
 from pathlib import Path
-import json
-import requests
 
 # 获取项目根目录
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
 
-from typing import Any,Dict
-from testcases.comm.base_test import BaseTest,LoginService
+from typing import Any, Dict
+from testcases.comm.base_test import BaseTest
 from data_factory.base import DataFactory
-from utils.cache_util import CacheUtil
-from utils.request_util import HttpUtil
-from utils.mock_util import MockData
-from utils.param_util import ParamUtil
-from utils.report_util import a  # Allure reporting utility (a.json, a.text)
 
 class GenMdBaseTest(BaseTest):
     """通用基础模块的基础测试类，负责加载通用配置和提供API访问方法"""
@@ -47,85 +40,52 @@ class GenMdBaseTest(BaseTest):
         5. 初始化 http 工具，自动带上门户请求头
         """
         super().setup_class()
-        
-        # 优化单例创建：仅在 super().setup_class() 后执行
-        # 确保环境就绪，不干扰 pytest 测试收集过程
-        if cls._mock_instance is None:
-            cls._mock_instance = MockData()
-        
-        # 设置类级 mock_util 以兼容现有代码 (cls.mock_util)
-        # 现有测试类可继续使用 cls.mock_data 或迁移到 cls.mock_util
-        cls.mock_util = cls._mock_instance
-        
-        # 初始化登录服务，避免重复创建
-        cls.login_service = LoginService(cls.env_config)
-        
-        # 登录 admin 门户
-        admin_result = cls.login_service.login(portal_key=cls._PORTAL_TYPE_KEYS["admin"])
-        if admin_result.status != admin_result.status.SUCCESS:
-            raise RuntimeError(f"admin 登录失败: {admin_result.error_message}")
-        
-        cls.admin_headers = admin_result.portal_headers
-        # 初始化 cust 门户的 headers
-       
+        cls.load_api_configs()
+        cls.load_cache_data()
+        cls.bind_context()
 
-  
-        # 初始化 http 实例，绑定 admin 门户的 url、session 和 headers
-        cls.http = HttpUtil(
-            url=admin_result.portal_url,
-            session=admin_result.session,
-            headers=admin_result.portal_headers
+    @classmethod
+    def load_api_configs(cls):
+        """加载 gen_md 模块 API 配置与门户上下文。"""
+        admin_result = cls.module_login_single_portal(
+            portal_key=cls._PORTAL_TYPE_KEYS["admin"],
+            tenant_key="terp"
         )
-     
+        cls.admin_headers = admin_result.portal_headers
+
         # 初始化配置文件路径
         cls.md_api_path = Path(project_root) / "config" / "api" / "gen_md" / "md_api_path.yaml"
         cls.md_api_params = Path(project_root) / "config" / "api" / "gen_md" / "md_api_params.yaml"
-        
-        # 加载API路径配置和参数配置
-        cls.apis = cls.yaml_util.read_yaml(cls.md_api_path).get("apis", {})
-        cls.api_params = cls.yaml_util.read_yaml(cls.md_api_params).get("api_params", {})
-        
+
+        cls.load_module_api_configs(cls.md_api_path, cls.md_api_params)
+
+    @classmethod
+    def load_cache_data(cls):
+        """加载 gen_md 模块依赖缓存。"""
         # 初始化DataFactory（必须在init_sql_cache之前调用）
         # 从环境变量获取 env 和 project，支持多项目模式
         import os
         env_name = os.getenv("TEST_ENV", "test")
         project = os.getenv("TEST_PROJECT")
         DataFactory.__init__(env_name=env_name, project=project)
-        
+
         # 加载缓存数据：主数据依赖的初始化SQL
         # 保持向后兼容，所有项目共享缓存；切换项目时自动清除缓存
-        DataFactory.init_sql_cache(
-            sql_config_path=str(project_root / "config" / "erp" / "md_init_sql.yaml"),  # 主数据依赖的初始化sql 存放路径
-            db_config_name="erp_db",  # 数据库配置名称
-            cache_key="md_init_cache",  # 缓存key（所有项目共享）
-            cache_dir="testdata/cache"  # 缓存目录
+        cls.md_cache_data = cls.load_sql_cache(
+            sql_config_path=project_root / "config" / "erp" / "md_init_sql.yaml",
+            cache_key="md_init_cache",
+            db_config_name="erp_db",
+            cache_dir="testdata/cache",
         )
-        cls.md_cache_data = CacheUtil.get('md_init_cache')
-        
+
+    @classmethod
+    def bind_context(cls):
+        """绑定 gen_md 模块上下文。"""
+        cls.bind_mock_util_singleton()
+
         # 设置路径参数和用户信息（安全访问）
-        cls.path_params = {"tmodule":"GEN_MD"}
-        if cls.init_data and cls.init_data.get("user_info"):
-            user_info = cls.init_data["user_info"].get("user_info", {})
-            cls.nickname = user_info.get("nickname")
-            cls.user_id = user_info.get("id")
-        else:
-            cls.nickname = None
-            cls.user_id = None
-            cls.logger.warning("init_data 中未找到 user_info，nickname 和 user_id 设置为 None")
+        cls.bind_module_user_context("GEN_MD", strict=False)
     
-    def get_api_path(self, api_key):
-        """
-        获取API路径
-        """
-        return super().get_api_path(api_key, self.apis)
-    
-    def get_api_params(self, api_path, with_query_params=None):
-        """
-        获取API请求参数和完整URL
-        """
-        return super().get_api_params(api_path, self.api_params, with_query_params)
-
-
 if __name__ == "__main__":
     GenMdBaseTest.setup_class()
     print(GenMdBaseTest.nickname)

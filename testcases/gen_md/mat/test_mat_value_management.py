@@ -14,6 +14,12 @@ class TestMat_ValueManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.mat_value_id = None
         cls.mat_value_code = None
         if cls.md_cache_data:

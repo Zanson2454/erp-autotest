@@ -9,10 +9,8 @@ from typing import Any
 
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
-from testcases.comm.base_test import BaseTest, LoginService
+from testcases.comm.base_test import BaseTest
 from data_factory.base import DataFactory
-from utils.cache_util import CacheUtil
-from utils.request_util import HttpUtil
 
 class ScmDelBaseTest(BaseTest):
     """交货单模块的基础测试类，负责加载交货单配置和提供API访问方法"""
@@ -37,117 +35,56 @@ class ScmDelBaseTest(BaseTest):
         5. 初始化 http 工具，自动带上门户请求头
         """
         super().setup_class()
+        cls.load_api_configs()
+        cls.load_cache_data()
+        cls.bind_context()
 
-        cls.login_service = LoginService(cls.env_config)
-        # 登录 admin
-        admin_result = cls.login_service.login(portal_key=cls._PORTAL_TYPE_KEYS["admin"])
-        if admin_result.status != admin_result.status.SUCCESS:
-            raise RuntimeError(f"admin 登录失败: {admin_result.error_message}")
-        
-        # 初始化 cust 的 headers
-        cls.admin_headers = admin_result.portal_headers
-        if cls.admin_headers:
-            cls.cust_portal_headers = cls.admin_headers.copy()
-        cust_portal_referer = cls.env_config.get("portal_config", {}).get('terp', {}).get("TERP_CUST_PC", {}).get("portal_referer")
-        cls.cust_portal_headers["Referer"] = cust_portal_referer
-        cls.logger.info(f"cust_portal_headers: {cls.cust_portal_headers}")
-        
-        # 使用 admin_result 初始化 http 实例
-        cls.http = HttpUtil(
-            url=admin_result.portal_url,    # admin 的 URL
-            session=admin_result.session,   # admin 的 session（包含 cookie）
-            headers=admin_result.portal_headers # admin 的 headers
+    @classmethod
+    def load_api_configs(cls):
+        """加载交货模块 API 配置与门户上下文。"""
+        cls.module_login_admin_with_cust_headers(
+            admin_portal_key=cls._PORTAL_TYPE_KEYS["admin"],
+            cust_portal_key=cls._PORTAL_TYPE_KEYS["cust"],
+            tenant_key="terp",
         )
 
         # 初始化交货单模块配置文件路径
         cls.del_api_path = Path(project_root) / "config" / "api" / "scm_del" / "del_api_path.yaml"
         cls.del_api_params_path = Path(project_root) / "config" / "api" / "scm_del" / "del_api_params.yaml"
-        # 加载API路径配置和参数配置
-        cls.apis = cls.yaml_util.read_yaml(cls.del_api_path).get("apis", {})
-        cls.api_params = cls.yaml_util.read_yaml(cls.del_api_params_path).get("api_params", {})
-        
+        cls.load_module_api_configs(cls.del_api_path, cls.del_api_params_path)
+
+    @classmethod
+    def load_cache_data(cls):
+        """加载交货模块依赖缓存。"""
         # 初始化DataFactory（必须在init_sql_cache之前调用）
         DataFactory.__init__(env_name="test")
-        
+
         # 加载主数据缓存（交货单依赖物料、组织等主数据）
-        DataFactory.init_sql_cache(
-            sql_config_path=str(project_root / "config" / "erp" / "md_init_sql.yaml"),
-            db_config_name="erp_db",
+        cls.md_cache_data = cls.load_sql_cache(
+            sql_config_path=project_root / "config" / "erp" / "md_init_sql.yaml",
             cache_key="md_init_cache",
-            cache_dir="testdata/cache"
-        )
-        cls.md_cache_data = CacheUtil.get('md_init_cache')
-        
-        # 加载交货单配置数据
-        DataFactory.init_sql_cache(
-            sql_config_path=str(project_root / "config" / "erp" / "del_init_sql.yaml"),
             db_config_name="erp_db",
-            cache_key="del_init_cache",
-            cache_dir="testdata/cache"
+            cache_dir="testdata/cache",
         )
-        cls.del_cache_data = CacheUtil.get('del_init_cache')
-        cls.path_params = {"tmodule": "SCM_DEL"}
-        cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
-        cls.user_id = cls.init_data["user_info"]['user_info']["id"]
-        
+
+        # 加载交货单配置数据
+        cls.del_cache_data = cls.load_sql_cache(
+            sql_config_path=project_root / "config" / "erp" / "del_init_sql.yaml",
+            cache_key="del_init_cache",
+            db_config_name="erp_db",
+            cache_dir="testdata/cache",
+        )
+
+    @classmethod
+    def bind_context(cls):
+        """绑定交货模块上下文。"""
+        cls.bind_module_user_context("SCM_DEL", strict=True)
+
         cls.logger.info(f"✅ md_cache_data 加载完成: {cls.md_cache_data is not None}")
         cls.logger.info(f"✅ del_cache_data 加载完成: {cls.del_cache_data is not None}")
         cls.logger.info(f"✅ init_data 加载完成: {cls.init_data is not None}")
         
         
-    def get_api_path(self, api_key):
-        """
-        获取API路径
-        """
-        return super().get_api_path(api_key, self.apis)
-    
-    def get_api_params(self, api_path, with_query_params=None):
-        """
-        获取API请求参数和完整URL
-        """
-        return super().get_api_params(api_path, self.api_params, with_query_params)
-    
-    def set_request_param(self, params, key, value):
-        """
-        设置请求参数中的值，简化嵌套访问
-        
-        参数:
-            params: 请求参数字典
-            key: 参数键名
-            value: 参数值
-        
-        返回:
-            更新后的参数字典
-        """
-        if 'params' not in params:
-            params['params'] = {}
-        if 'request' not in params['params']:
-            params['params']['request'] = {}
-            
-        params['params']['request'][key] = value
-        return params
-    
-    def set_request_params(self, params, param_dict):
-        """
-        批量设置请求参数，简化嵌套访问
-        
-        参数:
-            params: 请求参数字典
-            param_dict: 要设置的参数字典 {key: value, ...}
-        
-        返回:
-            更新后的参数字典
-        """
-        if 'params' not in params:
-            params['params'] = {}
-        if 'request' not in params['params']:
-            params['params']['request'] = {}
-            
-        for key, value in param_dict.items():
-            params['params']['request'][key] = value
-        return params
-
-
 if __name__ == "__main__":
     ScmDelBaseTest.setup_class()
     print(ScmDelBaseTest.nickname)

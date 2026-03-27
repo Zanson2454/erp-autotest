@@ -27,6 +27,12 @@ class TestInvAtpLockPur(ScmInvBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.po_doc_i_code = None  # 采购单docICode
         cls.dn_doc_i_code = None  # 交货单docICode
         cls.po_plan_qty = 11  # 采购单数量
@@ -98,10 +104,13 @@ class TestInvAtpLockPur(ScmInvBaseTest):
                 "systemParams": None
             })
             
-            response = self.http.post(
-                url, 
-                json=filtered_params,
-                params={"tmodule": "SCM_INV"}
+            response, _ = self.standard_api_call(
+                api_key="INV-ATP总览-分页查询",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": "SCM_INV"}
             )
             self.assert_util.assert_response_data(response)
             
@@ -168,10 +177,13 @@ class TestInvAtpLockPur(ScmInvBaseTest):
                 "docTime": doc_time
             })
             
-            response = self.http.post(
-                url, 
-                json=filtered_params,
-                params={"tmodule": "SCM_INV"}
+            response, _ = self.standard_api_call(
+                api_key="INV-ATP-手动创建单据",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": "SCM_INV"}
             )
             self.assert_util.assert_response_data(response)
             
@@ -238,10 +250,13 @@ class TestInvAtpLockPur(ScmInvBaseTest):
                 "docTime": doc_time
             })
             
-            response = self.http.post(
-                url,
-                json=filtered_params,
-                params={"tmodule": "SCM_INV"}
+            response, _ = self.standard_api_call(
+                api_key="INV-ATP-手动创建单据",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": "SCM_INV"}
             )
             self.assert_util.assert_response_data(response)
             
@@ -368,4 +383,3 @@ class TestInvAtpLockPur(ScmInvBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
-

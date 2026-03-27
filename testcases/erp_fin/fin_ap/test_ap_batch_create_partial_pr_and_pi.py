@@ -36,6 +36,17 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
+        cls.reset_test_state()
+
+    @classmethod
+    def reset_test_state(cls):
+        """重置类级测试状态。"""
         cls.ap_batch_info = {}
     
     @case_decorator(
@@ -85,7 +96,13 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
                 ParamUtil.set_request_params(save_filtered_params, request_body)
                 save_filtered_params = convert_data_for_json(save_filtered_params)
                 
-                save_result = self.http.post(save_url, json=save_filtered_params)
+                save_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=save_filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(save_result)
                 
                 ap_doc_id = ParamUtil.extract_id(save_result)
@@ -130,7 +147,13 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
                 ParamUtil.set_request_params(submit_filtered_params, submit_data)
                 submit_filtered_params = convert_data_for_json(submit_filtered_params)
                 
-                submit_result = self.http.post(submit_url, json=submit_filtered_params)
+                submit_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=submit_filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(submit_result)
                 
                 submit_success = submit_result.get("success")
@@ -151,7 +174,13 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
                 ParamUtil.set_request_params(post_filtered_params, post_data)
                 post_filtered_params = convert_data_for_json(post_filtered_params)
                 
-                post_result = self.http.post(post_url, json=post_filtered_params)
+                post_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=post_filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(post_result)
                 
                 post_success = post_result.get("success")
@@ -278,7 +307,13 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
                     "params": {"request": {"apmApSchlIds": [ap_doc_id]}}  # 使用应付单头ID
                 }
                 
-                val_result = self.http.post(val_url, json=val_request)
+                val_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=val_request.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(val_result)
                 
                 a.json(val_request, "应付单校验请求数据")
@@ -301,7 +336,13 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
                     "params": {"request": {"apmApSchlIds": ap_schl_ids}}  # 使用应付单计划行ID
                 }
                 
-                schl_val_result = self.http.post(schl_val_url, json=schl_val_request)
+                schl_val_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=schl_val_request.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(schl_val_result)
                 
                 a.json(schl_val_request, "应付计划行校验请求数据")
@@ -329,7 +370,13 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
                     "params": {"request": save_request_data}
                 }
                 
-                save_result = self.http.post(save_url, json=save_request)
+                save_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=save_request.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(save_result)
                 
                 # PR_SAVE_SERVICE接口正常返回success: true, data: null
@@ -397,7 +444,13 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
                     "params": {"request": {"apmApItemIds": [ap_doc_id]}}  # 使用应付单头ID
                 }
                 
-                val_result = self.http.post(val_url, json=val_request)
+                val_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=val_request.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(val_result)
                 
                 a.json(val_request, "应付单校验请求数据")
@@ -420,7 +473,13 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
                     "params": {"request": {"apmApItemIds": ap_item_ids}}  # 使用应付单明细行ID
                 }
                 
-                item_val_result = self.http.post(item_val_url, json=item_val_request)
+                item_val_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=item_val_request.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(item_val_result)
                 
                 a.json(item_val_request, "应付单行校验请求数据")
@@ -446,7 +505,13 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
                 save_filtered_params = {"params": {"request": pi_request_data}}
                 save_filtered_params = convert_data_for_json(save_filtered_params)
                 
-                save_result = self.http.post(save_url, json=save_filtered_params)
+                save_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=save_filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(save_result)
                 
                 pi_head_id = ParamUtil.extract_id(save_result)
@@ -574,7 +639,13 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
                 
                 for attempt in range(max_attempts):
                     # 执行查询
-                    query_result = self.http.post(query_url, json=query_filtered_params)
+                    query_result, _ = self.standard_api_call(
+                        api_key=self.apis,
+                        set_dict=query_filtered_params.get("params", {}),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     self.assert_util.assert_response_success(query_result)
                     
                     query_data = query_result.get("data", {})

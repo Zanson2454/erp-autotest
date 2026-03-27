@@ -18,6 +18,12 @@ class TestGeiConfigManagement(SysCommonBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.logger.info("导入导出配置管理测试类初始化完成")
     
     @classmethod
@@ -47,7 +53,13 @@ class TestGeiConfigManagement(SysCommonBaseTest):
             set_dict = {"headerInfo": ["Column1", "Column2"]}
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="导入导出配置管理接口-表头预测",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             predict_data = response.get("data", {}).get("data", {})
@@ -78,7 +90,13 @@ class TestGeiConfigManagement(SysCommonBaseTest):
             set_dict = {"modelKey": "TEST_MODEL"}
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="导入导出配置管理接口-判断是否自定义导入",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             judge_data = response.get("data", {}).get("data", {})
@@ -109,7 +127,13 @@ class TestGeiConfigManagement(SysCommonBaseTest):
             set_dict = {"selectedHeaders": ["field1", "field2"]}
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="导入导出配置管理接口-保存表头选择记录",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             a.json(filtered_params, "请求数据")
@@ -135,7 +159,13 @@ class TestGeiConfigManagement(SysCommonBaseTest):
             api_path = self.get_api_path("导入导出配置管理接口-查询表头选择记录")
             params, url = self.get_api_params(api_path)
             
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="导入导出配置管理接口-查询表头选择记录",
+                set_dict=params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             query_data = response.get("data", {}).get("data", {})
@@ -166,7 +196,13 @@ class TestGeiConfigManagement(SysCommonBaseTest):
             set_dict = {"modelKey": "TEST_MODEL"}
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="导入导出配置管理接口-自定义导入Demo",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")

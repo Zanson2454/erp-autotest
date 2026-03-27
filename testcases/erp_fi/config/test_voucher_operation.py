@@ -26,6 +26,12 @@ class TestVoucherOperation(FiBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
      
     def get_ve_base_info(self):
         """获取新增凭证的基础信息部分"""
@@ -54,7 +60,13 @@ class TestVoucherOperation(FiBaseTest):
                 }
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
-            response=self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="总账-凭证-获取凭证号服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -165,7 +177,13 @@ class TestVoucherOperation(FiBaseTest):
         }
     
         ParamUtil.set_request_params(filtered_params, set_dict)
-        response = self.http.post(url, json=filtered_params)
+        response, _ = self.standard_api_call(
+            api_key="总账-凭证-凭证暂存服务",
+            set_dict=filtered_params.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         #self.assert_util.assert_response_success(response)
         a.json(filtered_params, f"创建凭证请求数据-{remark}")
         a.json(response, f"创建凭证响应数据-{remark}")   
@@ -261,7 +279,13 @@ class TestVoucherOperation(FiBaseTest):
                 ]
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
-            response=self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="总账-凭证-凭证暂存服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -348,7 +372,13 @@ class TestVoucherOperation(FiBaseTest):
             "id":voucher_id
         }
         ParamUtil.set_request_params(filtered_params, set_dict)
-        response=self.http.post(url, json=filtered_params)
+        response, _ = self.standard_api_call(
+            api_key="总账-凭证-凭证列表提交服务",
+            set_dict=filtered_params.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         
         # 统一断言逻辑
         if test_data["expected_success"]:
@@ -400,7 +430,13 @@ class TestVoucherOperation(FiBaseTest):
             "id":voucher_id
         }
         ParamUtil.set_request_params(filtered_params, set_dict)
-        response=self.http.post(url, json=filtered_params)
+        response, _ = self.standard_api_call(
+            api_key="总账-凭证-凭证审核服务",
+            set_dict=filtered_params.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(response)
         a.json(filtered_params, "请求数据")
         a.json(response, "响应数据")
@@ -428,7 +464,13 @@ class TestVoucherOperation(FiBaseTest):
             "id":voucher_id
         }
         ParamUtil.set_request_params(filtered_params, set_dict)
-        response=self.http.post(url, json=filtered_params)
+        response, _ = self.standard_api_call(
+            api_key="总账-凭证-凭证复核服务",
+            set_dict=filtered_params.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(response)
         a.json(filtered_params, "请求数据")
         a.json(response, "响应数据")
@@ -457,7 +499,13 @@ class TestVoucherOperation(FiBaseTest):
             "id":voucher_id
         }
         ParamUtil.set_request_params(filtered_params, set_dict)
-        response=self.http.post(url, json=filtered_params)
+        response, _ = self.standard_api_call(
+            api_key="总账-凭证-凭证记账服务",
+            set_dict=filtered_params.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         sql=f"""
         select start_time,end_time from fin_common_calendar_item_cf where id=(select period_of_current  from fin_glm_ab_type_cf where id={ab_type})
         """
@@ -493,7 +541,13 @@ class TestVoucherOperation(FiBaseTest):
             "id":voucher_id
         }
         ParamUtil.set_request_params(filtered_params, set_dict)
-        response=self.http.post(url, json=filtered_params)
+        response, _ = self.standard_api_call(
+            api_key="总账-凭证-反过账Event服务",
+            set_dict=filtered_params.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(response)
         a.json(filtered_params, "请求数据")
         a.json(response, "响应数据")
@@ -521,7 +575,13 @@ class TestVoucherOperation(FiBaseTest):
             "id":voucher_id
         }
         ParamUtil.set_request_params(filtered_params, set_dict)
-        response=self.http.post(url, json=filtered_params)
+        response, _ = self.standard_api_call(
+            api_key="总账-凭证-凭证作废服务",
+            set_dict=filtered_params.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(response)
         a.json(filtered_params, "请求数据")
         a.json(response, "响应数据")
@@ -549,7 +609,13 @@ class TestVoucherOperation(FiBaseTest):
             "id":voucher_id
         }
         ParamUtil.set_request_params(filtered_params, set_dict)
-        response=self.http.post(url, json=filtered_params)
+        response, _ = self.standard_api_call(
+            api_key="总账-凭证-凭证取消作废服务",
+            set_dict=filtered_params.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(response)
         a.json(filtered_params, "请求数据")
         a.json(response, "响应数据")
@@ -577,7 +643,13 @@ class TestVoucherOperation(FiBaseTest):
             "id":voucher_id
         }
         ParamUtil.set_request_params(filtered_params, set_dict)
-        response=self.http.post(url, json=filtered_params)
+        response, _ = self.standard_api_call(
+            api_key="总账-凭证-凭证删除服务",
+            set_dict=filtered_params.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(response)
         a.json(filtered_params, "请求数据")
         a.json(response, "响应数据")
@@ -616,7 +688,13 @@ class TestVoucherOperation(FiBaseTest):
         
         # 直接设置request参数为列表
         filtered_params['params']['request'] = voucher_ids
-        response=self.http.post(url, json=filtered_params)
+        response, _ = self.standard_api_call(
+            api_key="总账-凭证-凭证列表批量提交服务",
+            set_dict=filtered_params.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(response)
         a.json(filtered_params, "请求数据")
         a.json(response, "响应数据")
@@ -641,7 +719,13 @@ class TestVoucherOperation(FiBaseTest):
         """
         voucher_ids=self.db.query(sql)
         filtered_params['params']['request']['id'] = [voucher_id["id"] for voucher_id in voucher_ids]
-        response=self.http.post(url, json=filtered_params)
+        response, _ = self.standard_api_call(
+            api_key="总账-凭证-凭证审核服务",
+            set_dict=filtered_params.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(response)
         a.json(filtered_params, "请求数据")
         a.json(response, "响应数据")
@@ -666,7 +750,13 @@ class TestVoucherOperation(FiBaseTest):
         """
         voucher_ids=self.db.query(sql)
         filtered_params['params']['request']['id'] = [voucher_id["id"] for voucher_id in voucher_ids]
-        response=self.http.post(url, json=filtered_params)
+        response, _ = self.standard_api_call(
+            api_key="总账-凭证-凭证复核服务",
+            set_dict=filtered_params.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(response)
         a.json(filtered_params, "请求数据")
         a.json(response, "响应数据")
@@ -695,7 +785,13 @@ class TestVoucherOperation(FiBaseTest):
             raise ValueError("未找到待记账的凭证数据，请检查数据")
         
         filtered_params['params']['request']=voucher_ids
-        response=self.http.post(url, json=filtered_params)
+        response, _ = self.standard_api_call(
+            api_key="总账-凭证-凭证批量记账服务",
+            set_dict=filtered_params.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(response)
         a.json(filtered_params, "请求数据")
         a.json(response, "响应数据")
@@ -720,7 +816,13 @@ class TestVoucherOperation(FiBaseTest):
         """
         voucher_ids=self.db.query(sql)
         filtered_params['params']['request']['ids'] = [voucher_id["id"] for voucher_id in voucher_ids]
-        response=self.http.post(url, json=filtered_params)
+        response, _ = self.standard_api_call(
+            api_key="FIN_GLM_VE_PRINT_STATUS_BY_ID_BATCH_SERVICE",
+            set_dict=filtered_params.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(response)
         sql=f"""
         select print_status from fin_glm_ve_head_tr where id in ({','.join([str(voucher_id["id"]) for voucher_id in voucher_ids])})
@@ -764,7 +866,13 @@ class TestVoucherOperation(FiBaseTest):
             "sourceVeHeadId": voucher_id
         }
         ParamUtil.set_request_params(filtered_params, set_dict)
-        response=self.http.post(url, json=filtered_params)
+        response, _ = self.standard_api_call(
+            api_key="总账-凭证-凭证冲销服务",
+            set_dict=filtered_params.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         
         self.assert_util.assert_response_success(response)
         #凭证头信息断言

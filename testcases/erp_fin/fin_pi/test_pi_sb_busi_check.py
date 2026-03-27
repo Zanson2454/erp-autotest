@@ -22,6 +22,12 @@ class TestPiSbBusiCheck(BaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.base_api_path = Path(project_root) / "config" / "api" / "erp_fin" / "fin_api_path.yaml"
         cls.base_api_params = Path(project_root) / "config" / "api" / "erp_fin" / "fin_api_params.yaml"
         cls.yaml_util = YamlUtil()  
@@ -49,7 +55,13 @@ class TestPiSbBusiCheck(BaseTest):
             "pageSize":"20"
         }
         ParamUtil.set_request_params(data, set_dict)
-        result=self.http.post(url, json=data, description="基于应付单创建发票操作")
+        result, _ = self.standard_api_call(
+            api_key="应付单行-分页数据服务_PmHKWs1",
+            set_dict=data.get("params", {}),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_success(result)
         assert result.get("data",{}).get("data",{}).get("total",{}) >= 0
         

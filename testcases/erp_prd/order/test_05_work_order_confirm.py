@@ -125,7 +125,13 @@ class TestWorkOrderConfirm(PrdBaseTest):
                 }
                 
                 # 发送请求
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key="报工确认页面列表查询",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 print(f"hfhsdhfhdsfhdshfresult: {result}")
                 # 验证响应
                 self.assert_util.assert_response_success(result)
@@ -179,7 +185,13 @@ class TestWorkOrderConfirm(PrdBaseTest):
                 }
                 
                 # 发送请求
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key="报工确认-批量-页面渲染服务",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 # 验证响应
                 self.assert_util.assert_response_success(result)
                 
@@ -258,7 +270,13 @@ class TestWorkOrderConfirm(PrdBaseTest):
                 }
                 
                 # 发送请求
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key="订单确认单-批量过账服务",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 # 验证响应
                 self.assert_util.assert_response_success(result)
                 
@@ -548,7 +566,13 @@ class TestWorkOrderConfirm(PrdBaseTest):
                     }
                     
                     # 发送请求
-                    result = self.http.post(url, json=filtered_params)
+                    result, _ = self.standard_api_call(
+                        api_key="订单确认单-批量过账服务",
+                        set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     # 验证响应
                     self.assert_util.assert_response_success(result)
                     
@@ -675,7 +699,13 @@ class TestWorkOrderConfirm(PrdBaseTest):
                     }
                     
                     # 发送过账请求
-                    result = self.http.post(url, json=filtered_params)
+                    result, _ = self.standard_api_call(
+                        api_key="订单确认单-批量过账服务",
+                        set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     
                     # 断言接口返回success
                     if not result.get("success", False):

@@ -22,6 +22,12 @@ class TestSettDocAssoc(FinBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.logger.info("结算管理业务检查测试类初始化完成")
         cls.db.update("sett_doc_assoc_doc_type_cf", 
                        {"accounting_mode": "INVOICE_BASED","auto_confirm":True,"auto_post":True}, 
@@ -50,7 +56,13 @@ class TestSettDocAssoc(FinBaseTest):
             data = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
             data = ParamUtil.convert_param_type(data, ["params", "request"], "array")
             data["params"]["request"][0]["id"] = sett_item_id
-            result = self.http.post(url, json=data, description=f"结算项对账确认 - 发票立账结算项不能汇单 - ID: {sett_item_id}")
+            result, _ = self.standard_api_call(
+                api_key="SETT-ITEM-结算项确认及汇单-关联操作-异步服务",
+                set_dict=data.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_by_operator(result.get("success", {}), "=", False)
             self.assert_util.assert_by_operator(result.get("err", {}).get("code", {}), "=", "sett.item.tr.batch.account.mode.has.invoice")
             self.assert_util.assert_by_operator(result.get("err", {}).get("msg", {}), "=", "该批量操作不允许有发票立账模式的结算项")
@@ -79,7 +91,13 @@ class TestSettDocAssoc(FinBaseTest):
             data = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
             data = ParamUtil.convert_param_type(data, ["params", "request"], "array")
             data["params"]["request"][0]["id"] = sett_item_id
-            result = self.http.post(url, json=data, description=f"结算项自动确认和自动过账 - ID: {sett_item_id}")
+            result, _ = self.standard_api_call(
+                api_key="SETT-ITEM-结算项确认及汇单-关联操作-异步服务",
+                set_dict=data.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             time.sleep(15)
             #查询生成的结算单是否自动生成了应收应付
@@ -121,14 +139,26 @@ class TestSettDocAssoc(FinBaseTest):
             params, url = self.get_api_params(api_path)
             data = ParamUtil.filter_post_body_fields(params, ["ids"], ["params", "request"])
             data["params"]["request"]["ids"] = [sett_item_id]
-            result = self.http.post(url, json=data, description=f"结算项开票校验 - ID: {sett_item_id}")
+            result, _ = self.standard_api_call(
+                api_key="结算项-批量转换销售发票校验",
+                set_dict=data.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             #执行结算项-批量转换销售发票服务
             api_path = self.get_api_path("结算项批量转化销售发票")
             params, url = self.get_api_params(api_path)
             data = ParamUtil.filter_post_body_fields(params, ["ids"], ["params", "request"])
             data["params"]["request"]["ids"] = [sett_item_id]
-            result = self.http.post(url, json=data, description=f"结算项批量转化销售发票 - ID: {sett_item_id}")
+            result, _ = self.standard_api_call(
+                api_key="结算项批量转化销售发票",
+                set_dict=data.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             #执行销售发票-保存业务单据记录服务
             api_path = self.get_api_path("销售发票-结算创建保存并更新来源")
@@ -143,7 +173,13 @@ class TestSettDocAssoc(FinBaseTest):
             data["params"]["request"]["posNeg"] = "BLUE"
             data["params"]["request"]["bilCode"] = f"SB_{self.mock_util.get_timestamp(timestamp=True)}"
             
-            save_result = self.http.post(url, json=data, description=f"销售发票-结算创建保存并更新来源 - ID: {sett_item_id}")
+            save_result, _ = self.standard_api_call(
+                api_key="销售发票-结算创建保存并更新来源",
+                set_dict=data.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(save_result)
         except Exception as e:
             a.text(str(e), "失败原因")

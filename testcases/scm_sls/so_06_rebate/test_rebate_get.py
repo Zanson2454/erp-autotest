@@ -20,6 +20,12 @@ class TestRebateGet(SlsBase):
     def setup_class(cls):
         """测试类初始化"""
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.so_id = None
         cls.so_code = None
         cls.rebate_conf_id = None
@@ -196,7 +202,13 @@ class TestRebateGet(SlsBase):
                 self.logger.info(f"返利确认订单行查询过滤后参数: {filtered_params}")
                 
                 # 发送查询请求
-                query_response = self.http.post(url, json=filtered_params)
+                query_response, _ = self.standard_api_call(
+                    api_key="(系统)查询分页数据服务",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(query_response)
                 
                 # 解析返利确认订单行数据
@@ -285,7 +297,13 @@ class TestRebateGet(SlsBase):
             
             try:
                 # 发送查询请求
-                query_response = self.http.post(url, json=params)
+                query_response, _ = self.standard_api_call(
+                    api_key="REB-返利确认单-分页服务",
+                    set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(query_response)
                 
                 # 解析返利确认单数据
@@ -378,7 +396,13 @@ class TestRebateGet(SlsBase):
             
             try:
                 # 发送查询请求
-                task_response = self.http.post(url, json=params)
+                task_response, _ = self.standard_api_call(
+                    api_key="(系统)查询分页数据服务",
+                    set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(task_response)
                 
                 # 解析待办任务数据
@@ -471,7 +495,13 @@ class TestRebateGet(SlsBase):
             
             try:
                 # 发送查询请求
-                flow_response = self.http.post(url, json=filtered_params)
+                flow_response, _ = self.standard_api_call(
+                    api_key="(系统)查询分页数据服务",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(flow_response)
                 
                 # 解析返利账户流水数据
@@ -568,7 +598,13 @@ class TestRebateGet(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 5. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售订单-审批同意服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             # 6. 等待订单状态更新
@@ -632,7 +668,13 @@ class TestRebateGet(SlsBase):
                 ParamUtil.set_request_params(filtered_params, set_dict)
                 
                 # 发送查询请求
-                query_response = self.http.post(url, json=filtered_params)
+                query_response, _ = self.standard_api_call(
+                    api_key="REB-返利政策-分页服务",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(query_response)
                 
                 # 从响应中提取周期ID
@@ -664,7 +706,13 @@ class TestRebateGet(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 6. 发送请求
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="REB-返利周期-重算服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             
             # 检查响应，不跳过任何错误，直接断言
             self.assert_util.assert_response_success(response)
@@ -694,7 +742,13 @@ class TestRebateGet(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 发送请求
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="REB-返利确认单-提交审核服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             a.json(filtered_params, "返利确认单提交请求数据")
@@ -749,7 +803,13 @@ class TestRebateGet(SlsBase):
                 filtered_params = params
             
             try:
-                query_response = self.http.post(url, json=filtered_params)
+                query_response, _ = self.standard_api_call(
+                    api_key="(系统)查询分页数据服务",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(query_response)
             except Exception as e:
                 self.logger.warning(f"返利确认订单行查询失败，跳过此步骤: {str(e)}")
@@ -799,7 +859,13 @@ class TestRebateGet(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 发送请求
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="REB-返利确认单-汇总返利明细行确认服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             a.json(filtered_params, "返利确认单行确认请求数据")
@@ -830,7 +896,13 @@ class TestRebateGet(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 发送请求
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="REB-返利确认单-审批通过服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             a.json(filtered_params, "待办任务审批请求数据")
@@ -877,7 +949,13 @@ class TestRebateGet(SlsBase):
                     set_dict = {"id": policy_id}
                     ParamUtil.set_request_params(filtered_params, set_dict)
                     
-                    response = self.http.post(url, json=filtered_params)
+                    response, _ = self.standard_api_call(
+                        api_key="REB-返利政策-停用服务",
+                        set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     self.assert_util.assert_response_success(response)
                     
                     self.logger.info(f"返利政策停用成功: {policy_code}")

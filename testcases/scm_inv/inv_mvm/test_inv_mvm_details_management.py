@@ -17,6 +17,12 @@ class TestMobileVoucherDetailsManagement(ScmInvBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         # 测试数据变量
         cls.mobile_voucher_id = None
         cls.mobile_voucher_code = None
@@ -89,7 +95,13 @@ class TestMobileVoucherDetailsManagement(ScmInvBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-移动凭证明细-分页查询服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 断言分页数据
@@ -196,7 +208,13 @@ class TestMobileVoucherDetailsManagement(ScmInvBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-移动凭证明细-分页查询服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 断言筛选结果
@@ -285,7 +303,13 @@ class TestMobileVoucherDetailsManagement(ScmInvBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-移动凭证明细-分页查询服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 断言筛选结果
@@ -449,7 +473,13 @@ class TestMobileVoucherDetailsManagement(ScmInvBaseTest):
                 }
             }
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="移动凭证行项目表-导入导出任务管理接口-提交导出任务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.logger.info(f"导出任务响应: {response}")
             self.assert_util.assert_response_success(response)
 

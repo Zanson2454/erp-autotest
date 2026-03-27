@@ -23,6 +23,12 @@ class TestIvPeriodAccountManagement(IvBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()  # IvBaseTest 会自动初始化存货核算配置和 com_org_id/gr_com_org_id/inv_org_id
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.period_account_id = None
         cls.logger.info("存货价值期间账测试类初始化完成")
         # 注意：com_org_id 和 inv_org_id 已在 FinBaseTest/IvBaseTest 中初始化，无需重复获取
@@ -259,7 +265,13 @@ class TestIvPeriodAccountManagement(IvBaseTest):
             params, url = self.get_api_params(api_path)
             
             filtered_params = export_params  # 直接使用复杂结构
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="FIN_IV_ACC_PERIOD_TR_API_GEI_TASK_EXPORT_DIRECT_POST",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             task_id = response.get("data", {}).get("taskId")

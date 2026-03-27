@@ -28,6 +28,12 @@ class TestOrgLinkManagement(SysCommonBaseTest):
     def setup_class(cls):
         """测试类初始化"""
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.emp_org_link_id = None
         cls.struct_biz_link_id = None
         cls.dim_biz_link_id = None
@@ -89,7 +95,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="员工组织关联表-创建数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             self.__class__.emp_org_link_id = response.get("data", {}).get("data", {})
@@ -129,7 +141,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
                 }
             })
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="员工组织关联表-分页数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -164,7 +182,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"id": self.emp_org_link_id})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="员工组织关联表-根据ID查找数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -202,7 +226,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
                 "status": "DISABLED"
             })
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="员工组织关联表-根据ID更新数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -239,7 +269,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="员工组织关联表-保存数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -276,7 +312,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"dataList": link_list})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="员工组织关联表-批量创建数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -301,7 +343,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             api_path = self.get_api_path("员工组织关联表-查找单条数据服务")
             params, url = self.get_api_params(api_path)
             
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="员工组织关联表-查找单条数据服务",
+                set_dict=params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(params, "请求数据")
@@ -326,7 +374,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             api_path = self.get_api_path("员工组织关联表-查找列表数据服务")
             params, url = self.get_api_params(api_path)
             
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="员工组织关联表-查找列表数据服务",
+                set_dict=params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(params, "请求数据")
@@ -361,7 +415,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"id": self.emp_org_link_id})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="员工组织关联表-根据ID查找单表数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -396,7 +456,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"ids": [self.emp_org_link_id]})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="员工组织关联表-根据ID列表查找数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -431,7 +497,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"ids": [self.emp_org_link_id]})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="员工组织关联表-批量删除数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -466,7 +538,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"id": self.emp_org_link_id})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="员工组织关联表-根据ID删除数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -509,7 +587,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织业务类型关联表-创建数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             self.__class__.struct_biz_link_id = response.get("data", {}).get("data", {})
@@ -549,7 +633,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
                 }
             })
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织业务类型关联表-分页数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -574,7 +664,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             api_path = self.get_api_path("组织业务类型关联表-查找列表数据服务")
             params, url = self.get_api_params(api_path)
             
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="组织业务类型关联表-查找列表数据服务",
+                set_dict=params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(params, "请求数据")
@@ -609,7 +705,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"id": self.struct_biz_link_id})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织业务类型关联表-根据ID查找数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -647,7 +749,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
                 "status": "DISABLED"
             })
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织业务类型关联表-根据ID更新数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -684,7 +792,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织业务类型关联表-保存数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -721,7 +835,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"dataList": link_list})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织业务类型关联表-批量创建数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -746,7 +866,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             api_path = self.get_api_path("组织业务类型关联表-查找单条数据服务")
             params, url = self.get_api_params(api_path)
             
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="组织业务类型关联表-查找单条数据服务",
+                set_dict=params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(params, "请求数据")
@@ -781,7 +907,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"id": self.struct_biz_link_id})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织业务类型关联表-根据ID查找单表数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -816,7 +948,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"ids": [self.struct_biz_link_id]})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织业务类型关联表-根据ID列表查找数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -851,7 +989,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"ids": [self.struct_biz_link_id]})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织业务类型关联表-批量删除数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -886,7 +1030,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"id": self.struct_biz_link_id})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织业务类型关联表-根据ID删除数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -929,7 +1079,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织维度业务类型关联表-创建数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             self.__class__.dim_biz_link_id = response.get("data", {}).get("data", {})
@@ -969,7 +1125,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
                 }
             })
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织维度业务类型关联表-分页数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -994,7 +1156,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             api_path = self.get_api_path("组织维度业务类型关联表-查找列表数据服务")
             params, url = self.get_api_params(api_path)
             
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="组织维度业务类型关联表-查找列表数据服务",
+                set_dict=params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(params, "请求数据")
@@ -1029,7 +1197,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"id": self.dim_biz_link_id})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织维度业务类型关联表-根据ID查找数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -1064,7 +1238,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"id": self.dim_biz_link_id})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织维度业务类型关联表-启用主数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -1099,7 +1279,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"id": self.dim_biz_link_id})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织维度业务类型关联表-禁用主数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -1134,7 +1320,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"ids": [self.dim_biz_link_id]})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织维度业务类型关联表-批量启用主数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -1169,7 +1361,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"ids": [self.dim_biz_link_id]})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织维度业务类型关联表-批量禁用主数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -1207,7 +1405,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
                 "status": "DISABLED"
             })
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织维度业务类型关联表-根据ID更新数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -1244,7 +1448,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织维度业务类型关联表-保存数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -1281,7 +1491,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"dataList": link_list})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织维度业务类型关联表-批量创建数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -1306,7 +1522,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             api_path = self.get_api_path("组织维度业务类型关联表-查找单条数据服务")
             params, url = self.get_api_params(api_path)
             
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="组织维度业务类型关联表-查找单条数据服务",
+                set_dict=params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(params, "请求数据")
@@ -1341,7 +1563,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"id": self.dim_biz_link_id})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织维度业务类型关联表-根据ID查找单表数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -1376,7 +1604,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"ids": [self.dim_biz_link_id]})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织维度业务类型关联表-根据ID列表查找数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -1411,7 +1645,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"ids": [self.dim_biz_link_id]})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织维度业务类型关联表-批量删除数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -1446,7 +1686,13 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             )
             ParamUtil.set_request_params(filtered_params, {"id": self.dim_biz_link_id})
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织维度业务类型关联表-根据ID删除数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -1462,4 +1708,3 @@ class TestOrgLinkManagement(SysCommonBaseTest):
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])
-

@@ -19,7 +19,12 @@ class TestSoOrgQuery(SlsBase):
     def setup_class(cls):
         """测试类初始化，获取必要的ID和配置信息"""
         super().setup_class()
-             
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         # 初始化订单配置数据
         if cls.init_data:
             currency_info = cls.init_data.get("currency_info") or []
@@ -94,7 +99,13 @@ class TestSoOrgQuery(SlsBase):
                 "id": self.sls_org_id
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售订单-按组织id查询组织详情服务",
+                set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             a.json(params, "请求数据")
             a.json(response, "响应数据")
             self.assert_util.assert_response_success(response)

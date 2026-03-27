@@ -12,6 +12,12 @@ class TestQualificationsManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.qualification_type_id = None
         cls.qualification_group_id = None
         cls.logger.info("资质管理测试类初始化完成")

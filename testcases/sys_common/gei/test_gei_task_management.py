@@ -18,6 +18,12 @@ class TestGeiTaskManagement(SysCommonBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.gei_task_id = None
         cls.logger.info("导入导出任务管理测试类初始化完成")
     
@@ -105,7 +111,13 @@ class TestGeiTaskManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="导入导出任务管理接口-提交导出任务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 5. 保存数据和报告
@@ -139,7 +151,13 @@ class TestGeiTaskManagement(SysCommonBaseTest):
             set_dict = {"taskName": f"AT_DIRECT_EXPORT_{self.mock_util.get_timestamp()}"}
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="导入导出任务管理接口-提交导出任务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -252,7 +270,13 @@ class TestGeiTaskManagement(SysCommonBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="导入导出任务管理接口-分页查询任务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             paging_data = response.get("data", {}).get("data", {})
@@ -339,7 +363,13 @@ class TestGeiTaskManagement(SysCommonBaseTest):
             set_dict = {"taskId": self.gei_task_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="导入导出任务管理接口-查询任务进度",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             progress_data = response.get("data", {}).get("data", {})
@@ -368,7 +398,13 @@ class TestGeiTaskManagement(SysCommonBaseTest):
             
             filtered_params = ParamUtil.filter_post_body_fields(params, [], ["params"])
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="导入导出任务管理接口-任务统计",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")

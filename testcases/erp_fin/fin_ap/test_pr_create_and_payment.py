@@ -20,6 +20,12 @@ class TestPrCreateAndPayment(ApBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.fin_ap_factory = FinApFactory()
 
     def convert_data_for_json(self, obj):
@@ -64,7 +70,13 @@ class TestPrCreateAndPayment(ApBaseTest):
                 filtered_params = self.convert_data_for_json(request_data)
                 
                 # 4. 发送请求
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 
                 # 5. 验证响应
                 self.assert_util.assert_response_success(result)
@@ -135,7 +147,13 @@ class TestPrCreateAndPayment(ApBaseTest):
                 })
                 
                 # 3. 发送请求
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 
                 # 4. 验证响应
                 self.assert_util.assert_response_success(result)
@@ -222,7 +240,13 @@ class TestPrCreateAndPayment(ApBaseTest):
                 filtered_params = self.convert_data_for_json(filtered_params)
                 
                 # 4. 发送请求
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 
                 # 5. 验证响应
                 self.assert_util.assert_response_success(result)
@@ -285,7 +309,13 @@ class TestPrCreateAndPayment(ApBaseTest):
                 filtered_params = self.convert_data_for_json(filtered_params)
                 
                 # 4. 发送请求
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 
                 # 5. 验证响应（只判断success字段）
                 self.assert_util.assert_response_success(result)
@@ -351,7 +381,13 @@ class TestPrCreateAndPayment(ApBaseTest):
                     })
                     
                     # 发送查询请求
-                    result = self.http.post(url, json=filtered_params)
+                    result, _ = self.standard_api_call(
+                        api_key=self.apis,
+                        set_dict=filtered_params.get("params", {}),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     self.assert_util.assert_response_success(result)
                     
                     response_data = result.get("data", {}).get("data", {})
@@ -442,7 +478,13 @@ class TestPrCreateAndPayment(ApBaseTest):
                 filtered_params = self.convert_data_for_json(filtered_params)
                 
                 # 4. 发送请求
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 
                 # 5. 验证响应（只判断success字段）
                 self.assert_util.assert_response_success(result)
@@ -508,7 +550,13 @@ class TestPrCreateAndPayment(ApBaseTest):
                     })
                     
                     # 发送查询请求
-                    result = self.http.post(url, json=filtered_params)
+                    result, _ = self.standard_api_call(
+                        api_key=self.apis,
+                        set_dict=filtered_params.get("params", {}),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     self.assert_util.assert_response_success(result)
                     
                     response_data = result.get("data", {}).get("data", {})
@@ -599,7 +647,13 @@ class TestPrCreateAndPayment(ApBaseTest):
                 filtered_params = self.convert_data_for_json(filtered_params)
                 
                 # 4. 发送请求
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 
                 # 5. 验证响应
                 self.assert_util.assert_response_success(result)
@@ -673,7 +727,13 @@ class TestPrCreateAndPayment(ApBaseTest):
                 filtered_params = self.convert_data_for_json(filtered_params)
                 
                 # 4. 发送请求
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 
                 # 5. 验证响应
                 self.assert_util.assert_response_success(result)
@@ -775,7 +835,13 @@ class TestPrCreateAndPayment(ApBaseTest):
                 filtered_params = self.convert_data_for_json(filtered_params)
                 
                 # 6. 发送请求
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 
                 # 7. 验证响应
                 self.assert_util.assert_response_success(result)
@@ -840,7 +906,13 @@ class TestPrCreateAndPayment(ApBaseTest):
                 filtered_params = self.convert_data_for_json(filtered_params)
                 
                 # 4. 发送请求
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 
                 # 5. 验证响应（只判断success字段）
                 self.assert_util.assert_response_success(result)
@@ -892,7 +964,13 @@ class TestPrCreateAndPayment(ApBaseTest):
                 filtered_params = self.convert_data_for_json(filtered_params)
                 
                 # 4. 发送请求
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 
                 # 5. 验证响应（只判断success字段）
                 self.assert_util.assert_response_success(result)
@@ -958,7 +1036,13 @@ class TestPrCreateAndPayment(ApBaseTest):
                     })
                     
                     # 发送查询请求
-                    result = self.http.post(url, json=filtered_params)
+                    result, _ = self.standard_api_call(
+                        api_key=self.apis,
+                        set_dict=filtered_params.get("params", {}),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     self.assert_util.assert_response_success(result)
                     
                     response_data = result.get("data", {}).get("data", {})
@@ -1038,7 +1122,13 @@ class TestPrCreateAndPayment(ApBaseTest):
                 filtered_params = self.convert_data_for_json(filtered_params)
                 
                 # 4. 发送请求
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 
                 # 5. 验证响应（只判断success字段）
                 self.assert_util.assert_response_success(result)
@@ -1104,7 +1194,13 @@ class TestPrCreateAndPayment(ApBaseTest):
                     })
                     
                     # 发送查询请求
-                    result = self.http.post(url, json=filtered_params)
+                    result, _ = self.standard_api_call(
+                        api_key=self.apis,
+                        set_dict=filtered_params.get("params", {}),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     self.assert_util.assert_response_success(result)
                     
                     response_data = result.get("data", {}).get("data", {})
@@ -1196,7 +1292,13 @@ class TestPrCreateAndPayment(ApBaseTest):
                     "pageable": query_conditions
                 })
                 
-                query_result = self.http.post(query_url, json=query_filtered_params)
+                query_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=query_filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(query_result)
                 
                 query_response_data = query_result.get("data", {}).get("data", {})
@@ -1265,7 +1367,13 @@ class TestPrCreateAndPayment(ApBaseTest):
                 filtered_params = self.convert_data_for_json(filtered_params)
                 
                 # 4. 发送请求
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 
                 # 5. 验证响应（只判断success字段）
                 self.assert_util.assert_response_success(result)

@@ -20,6 +20,12 @@ class TestArDocumentSave(ArBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.mock_data = MockData()
 
     @case_decorator(
@@ -199,7 +205,13 @@ class TestArDocumentSave(ArBaseTest):
                     )
                     ParamUtil.set_request_params(filtered_params, query_request)
                     
-                    result = self.http.post(url, json=filtered_params)
+                    result, _ = self.standard_api_call(
+                        api_key=self.apis,
+                        set_dict=filtered_params.get("params", {}),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     self.assert_util.assert_response_success(result)
                     
                     # 解析响应数据
@@ -373,7 +385,13 @@ class TestArDocumentSave(ArBaseTest):
                     )
                     ParamUtil.set_request_params(filtered_params, query_request)
                     
-                    result = self.http.post(url, json=filtered_params)
+                    result, _ = self.standard_api_call(
+                        api_key=self.apis,
+                        set_dict=filtered_params.get("params", {}),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     self.assert_util.assert_response_success(result)
                     
                     # 解析响应数据

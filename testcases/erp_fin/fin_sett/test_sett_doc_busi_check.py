@@ -24,6 +24,12 @@ class TestSettDocBusiCheck(FinBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.logger.info("结算单业务测试类初始化完成")
     def get_sett_doc_id(self):
         """获取不同状态的结算单ID 已创建，已确认 """
@@ -54,7 +60,13 @@ class TestSettDocBusiCheck(FinBaseTest):
             filtered_data = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
             sett_doc_id = self.get_sett_doc_id()[0]
             filtered_data["params"]["request"]["id"] = sett_doc_id
-            result = self.http.post(url, json=filtered_data, description=f"结算单修改备注操作 - ID: {sett_doc_id}")
+            result, _ = self.standard_api_call(
+                api_key="结算单表-根据ID查找无行信息数据服务",
+                set_dict=filtered_data.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("id",{}),"=",sett_doc_id)
         except Exception as e:
@@ -102,7 +114,13 @@ class TestSettDocBusiCheck(FinBaseTest):
             filtered_data["params"]["request"]["settDocTypeId"] = sql_result[0]["sett_doc_type_id"]
             filtered_data["params"]["request"]["tradingDocCode"] = sql_result[0]["trading_doc_code"]
             filtered_data["params"]["request"]["tradingDocStatus"] = sql_result[0]["trading_doc_status"]
-            result = self.http.post(url, json=filtered_data, description=f"结算单修改备注保存操作 - ID: {sett_doc_id}")
+            result, _ = self.standard_api_call(
+                api_key="结算单表-保存数据服务",
+                set_dict=filtered_data.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("id",{}),"=",sett_doc_id)
             self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("remark",{}),"=","AUTOTEST-remark")
@@ -136,7 +154,13 @@ class TestSettDocBusiCheck(FinBaseTest):
                     continue
                 
                 data["params"]["request"]["id"][0] = sett_doc_id
-                result = self.http.post(url, json=data, description=f"结算单确认 - ID: {sett_doc_id}")
+                result, _ = self.standard_api_call(
+                    api_key="SETT-DOC-运营端结算单确认下推应收应付-异步服务",
+                    set_dict=data.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 
                 if index == 0:
                     #等待结算单确认完成，当trading_doc_id不为空时一直等待，最长超时10秒
@@ -199,7 +223,13 @@ class TestSettDocBusiCheck(FinBaseTest):
                 
                 # 取消汇单接口
                 data["params"]["request"][0] = {"id":sett_doc_id}
-                result = self.http.post(url, json=data, description=f"结算单取消汇单 - ID: {sett_doc_id}")
+                result, _ = self.standard_api_call(
+                    api_key="SETT-DOC-结算单取消服务",
+                    set_dict=data.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 time.sleep(2)
                 
                 # 获取取消汇单后的结算项id
@@ -244,7 +274,13 @@ class TestSettDocBusiCheck(FinBaseTest):
             params, url = self.get_api_params(api_path)
             filtered_data = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
             filtered_data["params"]["request"]["id"] = self.create_settlement_doc("E_SLS_GOODS")
-            result = self.http.post(url, json=filtered_data, description=f"修改结算单")
+            result, _ = self.standard_api_call(
+                api_key="结算单-详情视图查询服务",
+                set_dict=filtered_data.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)   
             self.assert_util.assert_by_operator(result.get("data",{}).get("data",{}).get("id",{}),"=",filtered_data["params"]["request"]["id"])
         except Exception as e:
@@ -357,7 +393,13 @@ class TestSettDocBusiCheck(FinBaseTest):
             # 转换请求数据中的Decimal为字符串
             filtered_data = convert_decimal_to_str(filtered_data)
             
-            result = self.http.post(url, json=filtered_data, description=f"结算单修改保存")
+            result, _ = self.standard_api_call(
+                api_key="结算单-结算单保存调整结算项服务",
+                set_dict=filtered_data.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             
             self.assert_util.assert_response_success(result)
             

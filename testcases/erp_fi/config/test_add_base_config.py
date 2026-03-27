@@ -25,6 +25,12 @@ class TestAddBaseConfig(FiBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
     
     
     @case_decorator(
@@ -75,7 +81,13 @@ class TestAddBaseConfig(FiBaseTest):
                 ]
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
-            response=self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="会计要素表-提交服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -111,7 +123,13 @@ class TestAddBaseConfig(FiBaseTest):
                 "id":id
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
-            response=self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="会计要素头表-启用服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -176,7 +194,13 @@ class TestAddBaseConfig(FiBaseTest):
                 }
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
-            response=self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="会计政策-保存主数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
@@ -213,7 +237,13 @@ class TestAddBaseConfig(FiBaseTest):
                 "id":id
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
-            response=self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="FIN-会计政策-启用服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")

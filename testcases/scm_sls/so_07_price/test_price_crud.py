@@ -20,6 +20,12 @@ class TestPriceCrud(SlsBase):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.price_id_save = None
         cls.price_id_submit = None
         cls.price_adj_id = None  # 价格调整单ID
@@ -213,7 +219,13 @@ class TestPriceCrud(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 5. 发送保存请求
-            response = self.http.post(url, json=filtered_params, description="保存价格调整")
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售价格-价格调整保存服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 6. 获取保存后的价格调整ID和item信息
@@ -323,7 +335,13 @@ class TestPriceCrud(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 6. 发送保存请求
-            response = self.http.post(url, json=filtered_params, description="编辑价格调整")
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售价格-价格调整保存服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 7. 获取更新后的价格调整ID
@@ -381,7 +399,13 @@ class TestPriceCrud(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 5. 发送提交请求
-            response = self.http.post(url, json=filtered_params, description="提交价格维护单")
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售价格-价格维护单列表提交服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 6. 查询数据库验证价格维护单状态为已生效
@@ -509,7 +533,13 @@ class TestPriceCrud(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 7. 发送请求和断言
-            response = self.http.post(url, json=filtered_params, description=f"查询价格维护单详情: code={code_to_query}")
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售价格-查询价格维护单详情服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 8. 获取响应数据
@@ -685,7 +715,13 @@ class TestPriceCrud(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 8. 发送编辑并提交请求
-            response = self.http.post(url, json=filtered_params, description="编辑价格调整并提交")
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售价格-价格维护单编辑并提交服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 9. 获取响应数据
@@ -783,7 +819,13 @@ class TestPriceCrud(SlsBase):
                     set_dict = {"id": self.price_adj_id}
                     ParamUtil.set_request_params(filtered_params, set_dict)
                     
-                    response = self.http.post(url, json=filtered_params, description="查询价格调整单详情以获取item ID")
+                    response, _ = self.standard_api_call(
+                        api_key="SLS-销售价格-价格调整保存服务",
+                        set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     if response.get("success"):
                         response_data = response.get("data", {}).get("data", {})
                         price_adj_item_list = response_data.get("priceAdjItemList", [])
@@ -889,7 +931,13 @@ class TestPriceCrud(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 7. 发送删除并提交请求
-            response = self.http.post(url, json=filtered_params, description="删除价格调整单中的物料定价并提交")
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售价格-价格维护单编辑并提交服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 8. 获取响应数据
@@ -990,7 +1038,13 @@ class TestPriceCrud(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params, description="查询价格维护单列表")
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售价格-查询价格维护单列表服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 5. 获取响应数据
@@ -1049,7 +1103,13 @@ class TestPriceCrud(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params, description="查询销售价格列表")
+            response, _ = self.standard_api_call(
+                api_key="GEN-条件主数据-分页查询服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 5. 获取响应数据

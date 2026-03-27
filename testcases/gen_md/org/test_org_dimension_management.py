@@ -14,13 +14,17 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
-        
-         # 准备组织维度管理数据
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
+        # 准备组织维度管理数据
         cls.org_dimension_id = None
         cls.org_dimension_code = None
         cls.org_dimension_name = None
-        
-         # 获取md_cache_data中的第一个数据
+        # 获取md_cache_data中的第一个数据
         cls.orgBusinessTypeIds = cls.md_cache_data["org_info"]["org_biz_type_cf"] if cls.md_cache_data.get("org_info") else None
    
         # 初始化组织类型数据

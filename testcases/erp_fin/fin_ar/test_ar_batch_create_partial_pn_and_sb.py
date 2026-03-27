@@ -23,7 +23,12 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
-        # 初始化应收单数据工厂
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.ar_factory = FinArFactory()
         cls.mock_data = MockData()
 
@@ -61,7 +66,13 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                 ParamUtil.set_request_params(filtered_params, request_body)
                 filtered_params = convert_decimal_to_float(filtered_params)
                 
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(result)
                 
                 ar_doc_id = ParamUtil.extract_id(result)
@@ -100,7 +111,13 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                 ParamUtil.set_request_params(submit_filtered_params, submit_request)
                 submit_filtered_params = convert_decimal_to_float(submit_filtered_params)
                 
-                submit_result = self.http.post(submit_url, json=submit_filtered_params)
+                submit_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=submit_filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(submit_result)
                 
                 a.json(submit_filtered_params, "提交请求数据")
@@ -117,7 +134,13 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                 ParamUtil.set_request_params(post_filtered_params, post_request)
                 post_filtered_params = convert_decimal_to_float(post_filtered_params)
                 
-                post_result = self.http.post(post_url, json=post_filtered_params)
+                post_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=post_filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(post_result)
 
             with a.step("等待过账完成并验证状态"):
@@ -174,7 +197,13 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                     "params": {"request": {"armArSchlIds": [ar_doc_id]}}
                 }
                 
-                val_result = self.http.post(val_url, json=val_request)
+                val_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=val_request.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(val_result)
                 
                 a.json(val_request, "校验请求数据")
@@ -195,7 +224,13 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                     "params": {"request": {"armArSchlIds": ar_schl_ids}}
                 }
                 
-                schl_val_result = self.http.post(schl_val_url, json=schl_val_request)
+                schl_val_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=schl_val_request.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(schl_val_result)
 
             with a.step("执行收款单保存管理服务(部分冲销)"):
@@ -216,7 +251,13 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                     "params": {"request": save_request_data}
                 }
                 
-                save_result = self.http.post(save_url, json=save_request)
+                save_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=save_request.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(save_result)
                 
                 pn_head_id = ParamUtil.extract_id(save_result)
@@ -273,7 +314,13 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                     "params": {"request": {"armArItemIds": [ar_doc_id]}}
                 }
                 
-                val_result = self.http.post(val_url, json=val_request)
+                val_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=val_request.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(val_result)
 
             with a.step("执行应收单行批量转化销售发票校验服务"):
@@ -292,7 +339,13 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                     "params": {"request": {"armArItemIds": ar_item_ids}}
                 }
                 
-                item_val_result = self.http.post(item_val_url, json=item_val_request)
+                item_val_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=item_val_request.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(item_val_result)
 
             with a.step("执行销售发票保存服务(部分开票)"):
@@ -315,7 +368,13 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                 save_filtered_params = {"params": {"request": sb_request_data}}
                 save_filtered_params = convert_decimal_to_float(save_filtered_params)
                 
-                save_result = self.http.post(save_url, json=save_filtered_params)
+                save_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=save_filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(save_result)
                 
                 sb_head_id = ParamUtil.extract_id(save_result)
@@ -424,7 +483,13 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                 ParamUtil.set_request_params(query_filtered_params, query_request)
                 query_filtered_params = convert_decimal_to_float(query_filtered_params)
                 
-                query_result = self.http.post(query_url, json=query_filtered_params)
+                query_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=query_filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(query_result)
                 
                 query_data = query_result.get("data", {})

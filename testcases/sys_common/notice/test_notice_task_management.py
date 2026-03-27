@@ -26,6 +26,12 @@ class TestNoticeTaskManagement(SysCommonBaseTest):
     def setup_class(cls):
         """测试类初始化"""
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.logger.info("通知任务管理测试类初始化完成")
     
     def _build_base_params(self, condition_items=None):

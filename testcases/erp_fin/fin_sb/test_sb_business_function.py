@@ -28,6 +28,12 @@ class TestSbBusinessFunction(FinBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.logger.info("销售发票业务功能测试类初始化完成")
 
     
@@ -62,7 +68,13 @@ class TestSbBusinessFunction(FinBaseTest):
             data = ParamUtil.filter_post_body_fields(params, ["armArItemIds"], ["params", "request"])
             data["params"]["request"]["armArItemIds"] = ar_item_ids
             
-            result = self.http.post(url, json=data, description=f"应收单行批量转化销售发票-校验 - 行项IDs: {ar_item_ids}")
+            result, _ = self.standard_api_call(
+                api_key="应收单行批量转化销售发票-校验服务",
+                set_dict=data.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             
             # 3. 调用应收单行批量转化销售发票服务
@@ -70,7 +82,13 @@ class TestSbBusinessFunction(FinBaseTest):
             params, url = self.get_api_params(api_path)
             data = ParamUtil.filter_post_body_fields(params, ["armArItemIds"], ["params", "request"])
             data["params"]["request"]["armArItemIds"] = ar_item_ids
-            result = self.http.post(url, json=data, description=f"应收单行批量转化销售发票 - 行项IDs: {ar_item_ids}")
+            result, _ = self.standard_api_call(
+                api_key="SB-应收单行批量转化销售发票服务",
+                set_dict=data.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             self.assert_util.assert_by_operator(result.get("data", {}).get("data", {}).get("bilDocAmt", {}), "=", ar_doc_data.get("grossDocAmt"))
             
@@ -86,7 +104,13 @@ class TestSbBusinessFunction(FinBaseTest):
                 "bilCode": self.mock_util.generate_unique_code("AUTO"),
                 "docTypeId": {"id":doc_type_id}
             }
-            save_result = self.http.post(url, json=data, description=f"销售发票保存并更新来源单 - 发票数据")
+            save_result, _ = self.standard_api_call(
+                api_key="SB-销售发票保存并更新来源单服务",
+                set_dict=data.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(save_result)
             
             
@@ -125,7 +149,13 @@ class TestSbBusinessFunction(FinBaseTest):
                 "docTypeId": {"id": self.sb_type_info.get("STND").get("id")},
                 "id": ar_doc_data.get("id")
             }
-            result = self.http.post(url, json=data, description=f"应收单行批量转化销售发票 - ID: {ar_doc_data.get('id')}")
+            result, _ = self.standard_api_call(
+                api_key="应收单-行操作-应收单转化销售发票保存-异步服务",
+                set_dict=data.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             
             def query_ar_status():

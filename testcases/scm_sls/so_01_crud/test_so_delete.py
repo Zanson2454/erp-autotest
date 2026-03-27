@@ -20,6 +20,12 @@ class TestSoDeleteManagement(SlsBase):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.logger.info("销售订单删除管理测试类初始化完成")
 
     @case_decorator(
@@ -44,7 +50,13 @@ class TestSoDeleteManagement(SlsBase):
             # 设置要删除的订单ID
             data['params']['request']['id'] = order_id
 
-            result = self.http.post(url, json=data, description="删除单个订单")
+            result, _ = self.standard_api_call(
+                api_key="SO-删除服务",
+                set_dict=(data.get("params", {}) if isinstance(data, dict) else data),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             a.json(data, "删除请求参数")
             a.json(result, "删除响应数据")
 
@@ -86,7 +98,13 @@ class TestSoDeleteManagement(SlsBase):
             # 设置要删除的订单ID
             data['params']['request']['ids'] = order_ids
 
-            result = self.http.post(url, json=data, description="批量删除订单")
+            result, _ = self.standard_api_call(
+                api_key="销售订单批量删除服务",
+                set_dict=(data.get("params", {}) if isinstance(data, dict) else data),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             a.json(data, "批量删除请求参数")
             a.json(result, "批量删除响应数据")
 

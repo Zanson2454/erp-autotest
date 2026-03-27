@@ -28,6 +28,12 @@ class TestPoSchlManagement(ScmPurBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.po_schl_id = None
         cls.po_schl_code = None
         cls.po_code = None
@@ -176,10 +182,13 @@ class TestPoSchlManagement(ScmPurBaseTest):
                 filtered_params["params"].pop("selectFields", None)
                 filtered_params["params"]["modelKey"] = "SCM_PUR$pur_po_schl_tr"
             
-            response = self.http.post(
-                url,
-                json=filtered_params,
-                params={"tmodule": "SCM_PUR", "modelKey": "SCM_PUR$pur_po_schl_tr"}
+            response, _ = self.standard_api_call(
+                api_key="(系统)查询分页数据服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": "SCM_PUR", "modelKey": "SCM_PUR$pur_po_schl_tr"}
             )
             self.assert_util.assert_response_data(response)
             
@@ -327,7 +336,14 @@ class TestPoSchlManagement(ScmPurBaseTest):
                 }
             }
             
-            response = self.http.post(url, json=request_params, params={"tmodule": "SCM_PUR"})
+            response, _ = self.standard_api_call(
+                api_key="采购订单-SCHL-导入导出任务管理接口-提交导出任务",
+                set_dict=(request_params.get("params", {}) if isinstance(request_params, dict) else request_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": "SCM_PUR"}
+            )
             self.assert_util.assert_response_success(response)
             
             a.json(request_params, "请求数据")
@@ -374,7 +390,14 @@ class TestPoSchlManagement(ScmPurBaseTest):
                 }
             }
             
-            response = self.http.post(url, json=request_params, params={"tmodule": "SCM_PUR"})
+            response, _ = self.standard_api_call(
+                api_key="采购计划行-合并",
+                set_dict=(request_params.get("params", {}) if isinstance(request_params, dict) else request_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": "SCM_PUR"}
+            )
             self.assert_util.assert_response_data(response)
             
             merged_list = response.get("data", {}).get("data", {}).get("list", [])
@@ -424,7 +447,14 @@ class TestPoSchlManagement(ScmPurBaseTest):
                 }
             }
             
-            response = self.http.post(url, json=request_params, params={"tmodule": "SCM_PUR"})
+            response, _ = self.standard_api_call(
+                api_key="采购计划行-合并后保存",
+                set_dict=(request_params.get("params", {}) if isinstance(request_params, dict) else request_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": "SCM_PUR"}
+            )
             
             # 从合并后的数据中获取订单号和计划行信息
             merged_record = self.__class__.merged_schl_data[0]
@@ -526,7 +556,14 @@ class TestPoSchlManagement(ScmPurBaseTest):
                 "version": schl_record.get("version")
             }
             
-            response = self.http.post(url, json=params, params={"tmodule": "SCM_PUR"})
+            response, _ = self.standard_api_call(
+                api_key="采购计划行-编辑",
+                set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": "SCM_PUR"}
+            )
             self.assert_util.assert_response_success(response)
             
             # 验证拆分结果：应该有2行数据，总和等于原数量
@@ -560,4 +597,3 @@ class TestPoSchlManagement(ScmPurBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
-

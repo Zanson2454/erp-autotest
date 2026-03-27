@@ -15,6 +15,12 @@ class TestPoItemTypeManagement(ScmPurBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.po_item_type_id = None
         cls.po_item_type_code = None
         cls.logger.info("采购订单行类型配置管理测试类初始化完成")
@@ -222,7 +228,14 @@ class TestPoItemTypeManagement(ScmPurBaseTest):
             }
             
             # 6. 执行请求
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="订单项目行类型-导入导出任务管理接口-提交导出任务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params=None
+            )
             self.assert_util.assert_response_data(response)
             
             self.logger.info(f"✅ 导出任务创建成功，任务名称: {task_name}")
@@ -284,4 +297,3 @@ class TestPoItemTypeManagement(ScmPurBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
-

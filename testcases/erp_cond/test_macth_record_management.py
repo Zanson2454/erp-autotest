@@ -22,6 +22,12 @@ class TestMatchRecordManagement(ErpCondBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.match_record_id = None
         cls.logger.info("匹配条件注册表管理测试类初始化完成")
         

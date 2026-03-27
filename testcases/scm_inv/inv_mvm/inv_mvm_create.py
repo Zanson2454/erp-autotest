@@ -18,6 +18,12 @@ class MobileVoucherCreator(ScmInvBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         
         # 初始化必要的ID属性
         if cls.inv_cache_data:
@@ -434,7 +440,13 @@ class MobileVoucherCreator(ScmInvBaseTest):
                 }
             }
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-批次-查询物料的批次特征服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             if response.get("success"):
                 return response.get("data", {}).get("data", {})
             return {}
@@ -522,7 +534,13 @@ class MobileVoucherCreator(ScmInvBaseTest):
                 ["params", "request"]
             )
             ParamUtil.set_request_params(detail_body, {"id": voucher_id})
-            detail_resp = self.http.post(detail_url, json=detail_body)
+            detail_resp, _ = self.standard_api_call(
+                api_key="INV-移动凭证-详情服务",
+                set_dict=(detail_body.get("params", {}) if isinstance(detail_body, dict) else detail_body),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(detail_resp)
             voucher_detail = detail_resp.get("data", {}).get("data")
             if voucher_detail:
@@ -560,7 +578,13 @@ class MobileVoucherCreator(ScmInvBaseTest):
                 ]
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="INV-移动凭证-分页查询服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             vouchers = response.get("data", {}).get("data", {}).get("data", [])
             for voucher in vouchers:
@@ -603,7 +627,13 @@ class MobileVoucherCreator(ScmInvBaseTest):
         filtered_params = {"params": {"request": request_data}}
         
         # 发送请求
-        response = self.http.post(url, json=filtered_params)
+        response, _ = self.standard_api_call(
+            api_key="INV-移动凭证-新版创建服务",
+            set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
         self.assert_util.assert_response_data(response)
         
         # 返回结果

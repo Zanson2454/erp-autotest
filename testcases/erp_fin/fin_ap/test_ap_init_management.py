@@ -24,6 +24,12 @@ class TestApInitManagement(FinBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         # ap_init_id 已在 ApBaseTest.setup_class() 中初始化（如果实现了自动初始化）
         # 如果未实现自动初始化，则初始化为 None
         if not hasattr(cls, 'ap_init_id'):

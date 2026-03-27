@@ -20,6 +20,12 @@ class TestSalesOrderApproval(SlsBase):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.order_id = None
         cls.approval_rule_code = "CODE2025090909583810028"
         cls.logger.info("销售订单审批流程测试类初始化完成")
@@ -71,7 +77,13 @@ class TestSalesOrderApproval(SlsBase):
             }
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=request_body)
+            response, _ = self.standard_api_call(
+                api_key="SLS-审单规则-启用并清理缓存服务",
+                set_dict=(request_body.get("params", {}) if isinstance(request_body, dict) else request_body),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
         except Exception as e:
@@ -224,7 +236,13 @@ class TestSalesOrderApproval(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 5. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售订单-审批同意服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             # 6. 等待订单状态更新
@@ -361,7 +379,13 @@ class TestSalesOrderApproval(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 7. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售订单-审批拒绝服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             # 8. 查询订单状态，验证是否为草稿状态（审批拒绝后回到草稿）
@@ -423,7 +447,13 @@ class TestSalesOrderApproval(SlsBase):
             }
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=request_body)
+            response, _ = self.standard_api_call(
+                api_key="SLS-审单规则-停用并清理缓存服务",
+                set_dict=(request_body.get("params", {}) if isinstance(request_body, dict) else request_body),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
         except Exception as e:

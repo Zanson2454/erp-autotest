@@ -12,6 +12,12 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.partner_id = None
         cls.partner_code = None
         cls.logger.info("合作伙伴主数据管理测试类初始化完成")

@@ -82,7 +82,13 @@ class TestPrdOrderSend(PrdBaseTest):
             
             with a.step("2. 发送请求"):
                 # 发送请求
-                result = self.http.post(url, json=filtered_params, description="生产订单下达")
+                result, _ = self.standard_api_call(
+                    api_key="生产订单下达服务",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 # 添加响应数据到报告
                 a.json(result, "响应数据")
             

@@ -17,6 +17,12 @@ class TestModelSystemManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+    
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         # 数据存储
         cls.model_system_id = None
         cls.model_system_ids = []

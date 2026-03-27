@@ -17,6 +17,12 @@ class TestApEstimateOffset(ApBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
 
     def create_prerequisite_ap_doc(self, ap_doc_info):
         """创建前置应付单，结果存储到ap_doc_info中"""

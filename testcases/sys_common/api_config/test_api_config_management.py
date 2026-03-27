@@ -18,6 +18,12 @@ class TestApiConfigManagement(SysCommonBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.config_id = None
         cls.config_ids = []  # 用于批量删除
         cls.logger.info("配置中心管理测试类初始化完成")
@@ -87,7 +93,13 @@ class TestApiConfigManagement(SysCommonBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="配置中心配置接口-配置保存",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 5. 保存数据和报告
@@ -146,7 +158,13 @@ class TestApiConfigManagement(SysCommonBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="配置中心配置接口-分页查询配置",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 验证分页结果
@@ -197,7 +215,13 @@ class TestApiConfigManagement(SysCommonBaseTest):
             set_dict = {"id": self.config_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="配置中心配置接口-配置详情查询",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 验证返回数据
@@ -242,7 +266,13 @@ class TestApiConfigManagement(SysCommonBaseTest):
             set_dict = {"id": self.config_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="配置中心配置接口-配置删除",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             # 验证删除后无法查询到（可选二次验证）
@@ -288,7 +318,13 @@ class TestApiConfigManagement(SysCommonBaseTest):
                 }
                 ParamUtil.set_request_params(filtered_params, set_dict)
                 
-                response = self.http.post(url, json=filtered_params)
+                response, _ = self.standard_api_call(
+                    api_key="配置中心配置接口-配置保存",
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_data(response)
                 
                 batch_config_data = response.get("data", {}).get("data", {})
@@ -313,7 +349,13 @@ class TestApiConfigManagement(SysCommonBaseTest):
             set_dict = {"ids": test_ids}
             ParamUtil.set_request_params(filtered_params, set_dict)
             
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="配置中心配置接口-配置批量删除",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             # 清理本地记录

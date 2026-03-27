@@ -18,6 +18,12 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
 
     def convert_data_for_json(self, obj):
         """数据转换方法"""
@@ -75,7 +81,13 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
                 # 转换数据类型以支持JSON序列化
                 filtered_params = self.convert_data_for_json(filtered_params)
                 
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(result)
                 
                 ap_doc_id = ParamUtil.extract_id(result)
@@ -133,7 +145,13 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
                 # 转换数据类型以支持JSON序列化
                 submit_filtered_params = self.convert_data_for_json(submit_filtered_params)
                 
-                submit_result = self.http.post(submit_url, json=submit_filtered_params)
+                submit_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=submit_filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(submit_result)
                 
                 submit_success = submit_result.get("success")
@@ -151,7 +169,13 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
                 # 转换数据类型以支持JSON序列化
                 post_filtered_params = self.convert_data_for_json(post_filtered_params)
                 
-                post_result = self.http.post(post_url, json=post_filtered_params)
+                post_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=post_filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(post_result)
                 
                 success = post_result.get("success")
@@ -227,7 +251,13 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
                 # 转换数据类型以支持JSON序列化
                 filtered_params = self.convert_data_for_json(filtered_params)
                 
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(result)
                 
                 # 只断言success为true
@@ -283,7 +313,13 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
                     )
                     ParamUtil.set_request_params(filtered_params, query_request)
                     
-                    result = self.http.post(url, json=filtered_params)
+                    result, _ = self.standard_api_call(
+                        api_key=self.apis,
+                        set_dict=filtered_params.get("params", {}),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     self.assert_util.assert_response_success(result)
                     
                     records = result.get("data", {}).get("data", {}).get("data", [])
@@ -379,7 +415,13 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
                 )
                 ParamUtil.set_request_params(filtered_params, query_request)
                 
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(result)
                 
                 records = result.get("data", {}).get("data", {}).get("data", [])
@@ -486,7 +528,13 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
                 filtered_params = self.convert_data_for_json(filtered_params)
                 
                 # 发送提交请求
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(result)
                 
                 # 验证提交成功
@@ -552,7 +600,13 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
                     )
                     ParamUtil.set_request_params(filtered_params, query_request)
                     
-                    result = self.http.post(url, json=filtered_params)
+                    result, _ = self.standard_api_call(
+                        api_key=self.apis,
+                        set_dict=filtered_params.get("params", {}),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     self.assert_util.assert_response_success(result)
                     
                     records = result.get("data", {}).get("data", {}).get("data", [])
@@ -649,7 +703,13 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
                 val_filtered_params = self.convert_data_for_json(val_filtered_params)
                 
                 # 发送过账校验请求
-                val_result = self.http.post(val_url, json=val_filtered_params)
+                val_result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=val_filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(val_result)
                 
                 # 获取校验结果
@@ -701,7 +761,13 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
                         match_filtered_params = self.convert_data_for_json(match_filtered_params)
                         
                         # 发送自动钩稽请求
-                        match_result = self.http.post(match_url, json=match_filtered_params)
+                        match_result, _ = self.standard_api_call(
+                            api_key=self.apis,
+                            set_dict=match_filtered_params.get("params", {}),
+                            store_id_as=None,
+                            use_param_util=False,
+                            param_path=["params"]
+                        )
                         self.assert_util.assert_response_success(match_result)
                         
                         # 验证自动钩稽成功
@@ -777,7 +843,13 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
                     )
                     ParamUtil.set_request_params(filtered_params, query_request)
                     
-                    result = self.http.post(url, json=filtered_params)
+                    result, _ = self.standard_api_call(
+                        api_key=self.apis,
+                        set_dict=filtered_params.get("params", {}),
+                        store_id_as=None,
+                        use_param_util=False,
+                        param_path=["params"]
+                    )
                     self.assert_util.assert_response_success(result)
                     
                     records = result.get("data", {}).get("data", {}).get("data", [])
@@ -921,7 +993,13 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
                 )
                 ParamUtil.set_request_params(filtered_params, query_request)
                 
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 self.assert_util.assert_response_success(result)
                 
                 records = result.get("data", {}).get("data", {}).get("data", [])

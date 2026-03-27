@@ -21,6 +21,12 @@ class TestSettDocCheck(FinBaseTest):
     def setup_class(cls):
         """测试类初始化"""
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.logger.info("结算单测试类初始化完成")  
         
     @case_decorator(
@@ -39,7 +45,13 @@ class TestSettDocCheck(FinBaseTest):
             params, url = self.get_api_params(api_path)
             filtered_data = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
             filtered_data["params"]["request"]["id"] = self.create_settlement_doc("E_SLS_GOODS")
-            result = self.http.post(url, json=filtered_data, description=f"查询结算单详情")
+            result, _ = self.standard_api_call(
+                api_key="结算单表-根据ID查找数据服务",
+                set_dict=filtered_data.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(result)
             a.json(filtered_data, "请求数据")
             a.json(result, "响应数据")

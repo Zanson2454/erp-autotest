@@ -19,6 +19,12 @@ class TestRebateCrud(SlsBase):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.rebate_id = None
         cls.logger.info("返利政策增删改查测试类初始化完成")
     
@@ -92,7 +98,13 @@ class TestRebateCrud(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 5. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="REB-返利政策-保存服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 6. 保存返利政策ID
@@ -156,7 +168,13 @@ class TestRebateCrud(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 5. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="REB-返利政策-提交审批服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             # 6. 提交成功后，返利政策状态应该变为审核中
@@ -200,7 +218,13 @@ class TestRebateCrud(SlsBase):
                 }
             }
             
-            task_list_response = self.http.post(task_list_url, json=task_list_params)
+            task_list_response, _ = self.standard_api_call(
+                api_key="REB-返利政策-提交审批服务",
+                set_dict=(task_list_params.get("params", {}) if isinstance(task_list_params, dict) else task_list_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(task_list_response)
             
             # 3. 获取第一个审批任务的taskInstanceId
@@ -254,7 +278,13 @@ class TestRebateCrud(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 7. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="REB-返利政策-审批通过服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             a.json(filtered_params, "审核通过请求数据")
@@ -314,7 +344,13 @@ class TestRebateCrud(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 5. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="REB-返利政策-停用服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             a.json(filtered_params, "停用返利政策请求数据")
@@ -444,7 +480,13 @@ class TestRebateCrud(SlsBase):
             
             # 6. 发送停用请求
             self.logger.info("发送停用返利政策请求")
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="REB-返利政策-停用服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             # 7. 验证停用结果 - 从数据库查询验证状态是否已更新为停用

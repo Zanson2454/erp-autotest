@@ -20,6 +20,12 @@ class TestDelDnTypeManagement(ScmDelBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.dn_type_id = None
         cls.dn_type_code = None
         cls.logger.info("交货单类型配置管理测试类初始化完成")
@@ -81,9 +87,13 @@ class TestDelDnTypeManagement(ScmDelBaseTest):
             })
             
             # 5. 执行请求
-            response = self.http.post(
-                url, json=filtered_params,
-                params={"tmodule": self.MODULE_NAME}
+            response, _ = self.standard_api_call(
+                api_key="DEL-交货单公共-交货单类型保存清除缓存服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": self.MODULE_NAME}
             )
             self.assert_util.assert_response_data(response)
             
@@ -145,10 +155,13 @@ class TestDelDnTypeManagement(ScmDelBaseTest):
             }
             
             # 3. 执行请求
-            response = self.http.post(
-                url, 
-                json=request_params,
-                params={"tmodule": self.MODULE_NAME, "modelKey": self.MODEL_KEY}
+            response, _ = self.standard_api_call(
+                api_key="(系统)查询分页数据服务",
+                set_dict=(request_params.get("params", {}) if isinstance(request_params, dict) else request_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": self.MODULE_NAME, "modelKey": self.MODEL_KEY}
             )
             self.assert_util.assert_response_success(response)
             
@@ -202,9 +215,13 @@ class TestDelDnTypeManagement(ScmDelBaseTest):
             filtered_params["params"]["modelKey"] = self.MODEL_KEY
             
             # 5. 执行请求
-            response = self.http.post(
-                url, json=filtered_params,
-                params={"tmodule": self.MODULE_NAME, "modelKey": self.MODEL_KEY}
+            response, _ = self.standard_api_call(
+                api_key="交货单类型配置-根据ID查找数据服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": self.MODULE_NAME, "modelKey": self.MODEL_KEY}
             )
             self.assert_util.assert_response_data(response)
             
@@ -270,9 +287,13 @@ class TestDelDnTypeManagement(ScmDelBaseTest):
             })
             
             # 5. 执行请求
-            response = self.http.post(
-                url, json=filtered_params,
-                params={"tmodule": self.MODULE_NAME}
+            response, _ = self.standard_api_call(
+                api_key="DEL-交货单缓存-头类型停用",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": self.MODULE_NAME}
             )
             
             # 6. 验证停用结果
@@ -338,9 +359,13 @@ class TestDelDnTypeManagement(ScmDelBaseTest):
             })
             
             # 5. 执行请求
-            response = self.http.post(
-                url, json=filtered_params,
-                params={"tmodule": self.MODULE_NAME}
+            response, _ = self.standard_api_call(
+                api_key="DEL-交货单缓存-头类型启用服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": self.MODULE_NAME}
             )
             
             # 6. 验证启用结果
@@ -401,10 +426,13 @@ class TestDelDnTypeManagement(ScmDelBaseTest):
             }
             
             # 5. 执行请求
-            response = self.http.post(
-                url, 
-                json=request_params,
-                params={"tmodule": self.MODULE_NAME, "modelKey": self.MODEL_KEY}
+            response, _ = self.standard_api_call(
+                api_key="(系统)删除数据服务",
+                set_dict=(request_params.get("params", {}) if isinstance(request_params, dict) else request_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"],
+                query_params={"tmodule": self.MODULE_NAME, "modelKey": self.MODEL_KEY}
             )
             
             # 6. 验证删除结果
@@ -428,4 +456,3 @@ class TestDelDnTypeManagement(ScmDelBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
-

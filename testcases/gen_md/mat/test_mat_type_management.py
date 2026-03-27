@@ -12,6 +12,12 @@ class TestMatTypeManagement(GenMdBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.required_mat_types = ["FINP", "SERV"]  # 必需的物料类型编码
         cls.mat_type_id = None
         cls.mat_type_code = None

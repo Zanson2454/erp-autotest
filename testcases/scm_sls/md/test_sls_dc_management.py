@@ -20,6 +20,12 @@ class TestSlsDcManagement(SlsBase):
     @classmethod
     def setup_class(cls):
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.sls_dc_id = None
         cls.sls_dc_code = None
         cls.sls_org_id = None
@@ -65,7 +71,13 @@ class TestSlsDcManagement(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售渠道-保存服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             # 5. 保存数据和报告
@@ -105,7 +117,13 @@ class TestSlsDcManagement(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售渠道-查询详情",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -142,7 +160,13 @@ class TestSlsDcManagement(SlsBase):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             # 2. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售渠道-分页服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             a.json(params, "请求数据")
             a.json(response, "响应数据")
@@ -183,7 +207,13 @@ class TestSlsDcManagement(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 4. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售渠道-根据销售组织查询销售渠道",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
             
             a.json(filtered_params, "请求数据")
@@ -220,7 +250,13 @@ class TestSlsDcManagement(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售渠道-停用",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             sql = f"select `status` from sls_dc_md where id = {self.sls_dc_id}"
             status = self.db.query(sql)[0].get("status")
             self.assert_util.assert_by_operator(status, "=", "DISABLED")
@@ -259,7 +295,13 @@ class TestSlsDcManagement(SlsBase):
             ParamUtil.set_request_params(filtered_params, set_dict)
             
             # 3. 发送请求和断言
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="SLS-销售渠道-启用",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             sql = f"select `status` from sls_dc_md where id = {self.sls_dc_id}"
             status = self.db.query(sql)[0].get("status")
@@ -288,7 +330,13 @@ class TestSlsDcManagement(SlsBase):
             params, url = self.get_api_params(api_path)
             
             # 2. 发送请求和断言
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="销售渠道标准导出服务",
+                set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             a.json(params, "请求数据")
@@ -315,7 +363,13 @@ class TestSlsDcManagement(SlsBase):
             params, url = self.get_api_params(api_path)
             
             # 2. 发送请求和断言
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="销售渠道标准导入服务",
+                set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             a.json(params, "请求数据")
@@ -342,7 +396,13 @@ class TestSlsDcManagement(SlsBase):
             params, url = self.get_api_params(api_path)
             
             # 2. 发送请求和断言
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="销售渠道-导入导出任务管理接口-提交导出任务",
+                set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             a.json(params, "请求数据")
@@ -369,7 +429,13 @@ class TestSlsDcManagement(SlsBase):
             params, url = self.get_api_params(api_path)
             
             # 2. 发送请求和断言
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="销售渠道-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             a.json(params, "请求数据")

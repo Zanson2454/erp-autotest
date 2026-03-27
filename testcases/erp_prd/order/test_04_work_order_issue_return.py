@@ -34,6 +34,12 @@ class TestPrdOrderIssueReturn(PrdBaseTest):
         2. 初始化日志记录器
         """
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.logger.info("生产订单退料测试类初始化完成")
 
     @pytest.mark.run(order=14)
@@ -69,7 +75,13 @@ class TestPrdOrderIssueReturn(PrdBaseTest):
                 a.json(filtered_params, "请求数据")
 
             with a.step("2. 发送请求获取默认领料分单规则"):
-                result = self.http.post(url, json=filtered_params, description="获取默认领料分单规则")
+                result, _ = self.standard_api_call(
+                    api_key="渲染默认领料分单规则服务",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 a.json(result, "接口响应")
 
             with a.step("3. 校验接口响应结构和关键字段"):
@@ -225,7 +237,13 @@ class TestPrdOrderIssueReturn(PrdBaseTest):
             
             with a.step("2. 发送请求"):
                 # 发送请求
-                result = self.http.post(url, json=filtered_params, description="创建待提交退料单")
+                result, _ = self.standard_api_call(
+                    api_key="根据领料单创建退料单服务",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 # 添加响应数据到报告
                 a.json(result, "响应数据")
             
@@ -318,7 +336,13 @@ class TestPrdOrderIssueReturn(PrdBaseTest):
             
             with a.step("2. 发送请求"):
                 # 发送请求
-                result = self.http.post(url, json=filtered_params, description="提交退料单")
+                result, _ = self.standard_api_call(
+                    api_key="领料批量保存服务",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 # 添加响应数据到报告
                 a.json(result, "响应数据")
             

@@ -37,6 +37,12 @@ class TestPrdOrder(PrdBaseTest):
         2. 初始化日志记录器
         """
         super().setup_class()
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.logger.info("生产订单管理测试类初始化完成")
 
     @pytest.mark.run(order=1)
@@ -78,7 +84,13 @@ class TestPrdOrder(PrdBaseTest):
             
             with a.step("2. 发送请求"):
                 # 发送请求
-                result = self.http.post(url, json=filtered_params)
+                result, _ = self.standard_api_call(
+                    api_key=self.apis,
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 # 添加响应数据到报告
                 a.json(result, "响应数据")
             
@@ -175,7 +187,13 @@ class TestPrdOrder(PrdBaseTest):
             
             with a.step("2. 发送请求"):
                 # 发送请求
-                result = self.http.post(url, json=filtered_params, description="初始化计划完工时间")
+                result, _ = self.standard_api_call(
+                    api_key="生产订单维护-计划结束时间初始化服务",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 # 添加响应数据到报告
                 a.json(result, "响应数据")
             
@@ -266,7 +284,13 @@ class TestPrdOrder(PrdBaseTest):
             
             with a.step("2. 发送请求"):
                 # 发送请求
-                result = self.http.post(url, json=filtered_params, description="查询生产版本")
+                result, _ = self.standard_api_call(
+                    api_key="根据物料获取生产版本服务",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 # 添加响应数据到报告
                 a.json(result, "响应数据")
             
@@ -348,7 +372,13 @@ class TestPrdOrder(PrdBaseTest):
             
             with a.step("2. 发送请求"):
                 # 发送请求
-                result = self.http.post(url, json=filtered_params, description="查询移动类型")
+                result, _ = self.standard_api_call(
+                    api_key="生产订单头查移动类型",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 # 添加响应数据到报告
                 a.json(result, "响应数据")
             
@@ -440,7 +470,13 @@ class TestPrdOrder(PrdBaseTest):
             
             with a.step("2. 发送请求"):
                 # 发送请求
-                result = self.http.post(url, json=filtered_params, description="查询工艺路线项目")
+                result, _ = self.standard_api_call(
+                    api_key="根据生产版本获取工艺路线行服务",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 # 添加响应数据到报告
                 a.json(result, "响应数据")
                 # 打印响应结果
@@ -558,7 +594,13 @@ class TestPrdOrder(PrdBaseTest):
             
             with a.step("2. 发送请求"):
                 # 发送请求
-                result = self.http.post(url, json=filtered_params, description="查询BOM清单")
+                result, _ = self.standard_api_call(
+                    api_key="根据生产版本获取物料组件服务",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 # 添加响应数据到报告
                 a.json(result, "响应数据")
             
@@ -675,7 +717,13 @@ class TestPrdOrder(PrdBaseTest):
             
             with a.step("2. 发送请求"):
                 # 发送请求
-                result = self.http.post(url, json=filtered_params, description="创建生产订单")
+                result, _ = self.standard_api_call(
+                    api_key="生产订单维护服务",
+                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
                 # 添加响应数据到报告
                 a.json(result, "响应数据")
             

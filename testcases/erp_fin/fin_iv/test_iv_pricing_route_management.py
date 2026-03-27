@@ -26,6 +26,12 @@ class TestIvPricingRouteManagement(IvBaseTest):
     @classmethod
     def setup_class(cls):
         super().setup_class()  # IvBaseTest 会自动初始化存货核算配置和 com_org_id/gr_com_org_id/inv_org_id
+        cls.bind_context()
+
+    @classmethod
+    def bind_context(cls):
+        """绑定测试上下文对象。"""
+        super().bind_context()
         cls.pricing_route_id = None
         cls.inv_mvn_code = None
         cls.inv_mvn_name = None
@@ -526,7 +532,13 @@ class TestIvPricingRouteManagement(IvBaseTest):
             filtered_params["params"]["modelKey"] = "ERP_FIN$fin_iv_route_cf"
             
             # 发送请求
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="存货计价路由-批量删除数据服务",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             
             # 记录请求和响应
             a.json(filtered_params, "批量删除请求参数")
@@ -641,7 +653,13 @@ class TestIvPricingRouteManagement(IvBaseTest):
             params, url = self.get_api_params(api_path)
             
             filtered_params = export_params
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="FIN_IV_ROUTE_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
+                set_dict=filtered_params.get("params", {}),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
             a.json(export_params, "导出任务请求")
