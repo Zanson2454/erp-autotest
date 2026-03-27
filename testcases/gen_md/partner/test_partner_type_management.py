@@ -1,7 +1,6 @@
 import allure
 import pytest
 from testcases.gen_md import GenMdBaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
@@ -246,14 +245,6 @@ class TestPartnerTypeManagement(GenMdBaseTest):
     def test_partner_type_filter_paging(self):
         """合作伙伴类型分页查询(根据角色过滤)用例"""
         try:
-            api_path = self.get_api_path("GEN-合作伙伴类型-分页查询(根据角色过滤)")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["pageable", "fields", "systemParams"],
-                ["params", "request"]
-            )
             set_dict =  {
                 "pageable": {
                     "pageNo": 1,
@@ -278,12 +269,14 @@ class TestPartnerTypeManagement(GenMdBaseTest):
                 ],
                 "systemParams": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-合作伙伴类型-分页查询(根据角色过滤)",
+                set_dict=set_dict,
+                fields_to_filter=["pageable", "fields", "systemParams"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -301,10 +294,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
     def test_submit_partner_type_export_task(self):
         """提交相关方类型导出任务用例"""
         try:
-            api_path = self.get_api_path("相关方类型-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
-            params["params"] = {
+            export_params = {
                 "taskName": f"相关方类型-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
                 "multiSheetConfig": [
                     {
@@ -368,11 +358,15 @@ class TestPartnerTypeManagement(GenMdBaseTest):
                     "sceneKey": "GEN_MD$GEN_PARTNER_TYPE_VIEW"
                 }
             }
-
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="相关方类型-导入导出任务管理接口-提交导出任务",
+                set_dict=export_params,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(params, "请求数据")
+            a.json(export_params, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -423,26 +417,20 @@ class TestPartnerTypeManagement(GenMdBaseTest):
     def test_export_partner_type(self):
         """相关方类型标准导出用例"""
         try:
-            api_path = self.get_api_path("相关方类型标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["exportConfig"],
-                ["params", "request"]
-            )
             set_dict = {
                 "exportConfig": {
                     "fileName": f"相关方类型导出_{self.mock_util.get_timestamp()}",
                     "sheetName": "相关方类型"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="相关方类型标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["exportConfig"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -461,26 +449,20 @@ class TestPartnerTypeManagement(GenMdBaseTest):
     def test_import_partner_type(self):
         """相关方类型标准导入用例"""
         try:
-            api_path = self.get_api_path("相关方类型标准导入服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["importConfig"],
-                ["params", "request"]
-            )
             set_dict = {
                 "importConfig": {
                     "fileName": f"相关方类型导入_{self.mock_util.get_timestamp()}",
                     "fileType": "EXCEL"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="相关方类型标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["importConfig"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -499,14 +481,6 @@ class TestPartnerTypeManagement(GenMdBaseTest):
     def test_submit_partner_type_import_task_by_oss(self):
         """通过OSS提交相关方类型导入任务用例"""
         try:
-            api_path = self.get_api_path("相关方类型-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["taskName", "ossConfig", "importConfig"],
-                ["params", "request"]
-            )
             set_dict = {
                 "taskName": f"相关方类型OSS导入任务_{self.mock_util.get_timestamp()}",
                 "ossConfig": {
@@ -518,12 +492,14 @@ class TestPartnerTypeManagement(GenMdBaseTest):
                     "sheetName": "相关方类型"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="相关方类型-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["taskName", "ossConfig", "importConfig"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -693,10 +669,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
     def test_submit_partner_group_export_task(self):
         """提交相关方组导出任务用例"""
         try:
-            api_path = self.get_api_path("相关方组-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
-            params["params"] = {
+            export_params = {
                 "taskName": f"相关方组-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
                 "multiSheetConfig": [
                     {
@@ -754,11 +727,15 @@ class TestPartnerTypeManagement(GenMdBaseTest):
                     "sceneKey": "GEN_MD$GEN_PARTNER_GROUP_VIEW"
                 }
             }
-
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="相关方组-导入导出任务管理接口-提交导出任务",
+                set_dict=export_params,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(params, "请求数据")
+            a.json(export_params, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -778,14 +755,6 @@ class TestPartnerTypeManagement(GenMdBaseTest):
     def test_export_partner_group(self):
         """相关方组标准导出用例"""
         try:
-            api_path = self.get_api_path("相关方组标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["exportConfig"],
-                ["params", "request"]
-            )
             set_dict = {
                 "exportConfig": {
                     "fileName": f"相关方组导出_{self.mock_util.get_timestamp()}",
@@ -793,12 +762,14 @@ class TestPartnerTypeManagement(GenMdBaseTest):
                     "format": "EXCEL"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="相关方组标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["exportConfig"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -817,14 +788,6 @@ class TestPartnerTypeManagement(GenMdBaseTest):
     def test_import_partner_group(self):
         """相关方组标准导入用例"""
         try:
-            api_path = self.get_api_path("相关方组标准导入服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["importConfig"],
-                ["params", "request"]
-            )
             set_dict = {
                 "importConfig": {
                     "fileName": f"相关方组导入_{self.mock_util.get_timestamp()}",
@@ -832,12 +795,14 @@ class TestPartnerTypeManagement(GenMdBaseTest):
                     "sheetName": "相关方组"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="相关方组标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["importConfig"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -856,14 +821,6 @@ class TestPartnerTypeManagement(GenMdBaseTest):
     def test_submit_partner_group_import_task_by_oss(self):
         """通过OSS提交相关方组导入任务用例"""
         try:
-            api_path = self.get_api_path("相关方组-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["taskName", "ossConfig", "importConfig"],
-                ["params", "request"]
-            )
             set_dict = {
                 "taskName": f"相关方组OSS导入任务_{self.mock_util.get_timestamp()}",
                 "ossConfig": {
@@ -875,12 +832,14 @@ class TestPartnerTypeManagement(GenMdBaseTest):
                     "sheetName": "相关方组"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="相关方组-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["taskName", "ossConfig", "importConfig"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:

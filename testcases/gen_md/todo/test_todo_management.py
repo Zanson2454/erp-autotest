@@ -3,7 +3,6 @@ import pytest
 from typing import Any
 from datetime import datetime
 from testcases.gen_md import GenMdBaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
@@ -57,16 +56,10 @@ class TestTodoManagement(GenMdBaseTest):
     def test_save_daily_todo(self):
         """日常待办保存用例 - GEN_DAILY_TO_DO_SAVE_SERVICE"""
         try:
-            api_path = self.get_api_path("日常待办保存服务")
-            params, url = self.get_api_params(api_path)
-
             # 生成测试数据
             todo_code = self.mock_util.generate_unique_code(tag="DAILY_TODO")
             todo_title = f"AT_日常待办_{self.mock_util.get_timestamp()}"
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["todoCode", "title", "content", "priority", "dueDate", "status", "todo", "deadline"], ["params", "request"]
-            )
             # 将dueDate转换为时间戳（deadline字段）
             deadline_timestamp = int(datetime.strptime("2024-12-31", "%Y-%m-%d").timestamp() * 1000)
             set_dict = {
@@ -79,20 +72,18 @@ class TestTodoManagement(GenMdBaseTest):
                 "todo": todo_title,  # todo字段不能为空，使用title作为待办内容
                 "deadline": deadline_timestamp  # deadline字段不能为空，使用时间戳格式
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, extracted_id = self.standard_api_call(
+                api_key="日常待办保存服务",
+                set_dict=set_dict,
+                fields_to_filter=["todoCode", "title", "content", "priority", "dueDate", "status", "todo", "deadline"]
+            )
             self.assert_util.assert_response_data(response)
 
             # 保存日常待办ID
-            response_data = response.get("data", {}).get("data", {})
-            if isinstance(response_data, dict):
-                self.daily_todo_id = response_data.get("id")
-            else:
-                self.daily_todo_id = response_data
+            self.daily_todo_id = extracted_id.get("id") if isinstance(extracted_id, dict) else extracted_id
             self.todo_code = todo_code
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -112,12 +103,6 @@ class TestTodoManagement(GenMdBaseTest):
     def test_query_daily_todo_page(self):
         """日常待办分页查询用例 - GEN_DAILY_TO_DO_QUERY_PAGE_SERVICE"""
         try:
-            api_path = self.get_api_path("日常待办分页查询服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields", "systemParams"], ["params", "request"]
-            )
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -136,9 +121,11 @@ class TestTodoManagement(GenMdBaseTest):
                 ],
                 "systemParams": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="日常待办分页查询服务",
+                set_dict=set_dict,
+                fields_to_filter=["pageable", "fields", "systemParams"]
+            )
             self.assert_util.assert_response_data(response)
 
             # 验证返回的数据列表
@@ -146,7 +133,7 @@ class TestTodoManagement(GenMdBaseTest):
             if data_list and not self.daily_todo_id:
                 self.daily_todo_id = data_list[0].get("id")
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -168,22 +155,15 @@ class TestTodoManagement(GenMdBaseTest):
             if not self.daily_todo_id:
                 self.test_save_daily_todo()
 
-            api_path = self.get_api_path("日常待办完成服务")
-            if not api_path:
-                pytest.skip("API路径配置不存在：日常待办完成服务")
-            
-            params, url = self.get_api_params(api_path)
-            
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.daily_todo_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="日常待办完成服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -216,19 +196,15 @@ class TestTodoManagement(GenMdBaseTest):
                 self.logger.warning("未获取到日常待办ID，使用模拟ID进行测试")
                 self.daily_todo_id = 1
 
-            api_path = self.get_api_path("日常待办删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.daily_todo_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="日常待办删除服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -249,16 +225,10 @@ class TestTodoManagement(GenMdBaseTest):
     def test_save_biz_todo(self):
         """业务待办保存用例 - GEN_BIZ_TO_DO_SAVE_SERVICE"""
         try:
-            api_path = self.get_api_path("业务待办保存服务")
-            params, url = self.get_api_params(api_path)
-
             # 生成测试数据
             biz_todo_code = self.mock_util.generate_unique_code(tag="BIZ_TODO")
             biz_todo_title = f"AT_业务待办_{self.mock_util.get_timestamp()}"
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["bizCode", "title", "bizType", "bizId", "assignee", "status", "level"], ["params", "request"]
-            )
             set_dict = {
                 "bizCode": biz_todo_code,
                 "title": biz_todo_title,
@@ -268,19 +238,17 @@ class TestTodoManagement(GenMdBaseTest):
                 "status": "PENDING",
                 "level": "HIGH"  # 等级不能为空，设置为高级
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, extracted_id = self.standard_api_call(
+                api_key="业务待办保存服务",
+                set_dict=set_dict,
+                fields_to_filter=["bizCode", "title", "bizType", "bizId", "assignee", "status", "level"]
+            )
             self.assert_util.assert_response_data(response)
 
             # 保存业务待办ID
-            response_data = response.get("data", {}).get("data", {})
-            if isinstance(response_data, dict):
-                self.biz_todo_id = response_data.get("id")
-            else:
-                self.biz_todo_id = response_data
+            self.biz_todo_id = extracted_id.get("id") if isinstance(extracted_id, dict) else extracted_id
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -300,12 +268,6 @@ class TestTodoManagement(GenMdBaseTest):
     def test_query_biz_todo_page(self):
         """业务待办分页查询用例 - GEN_BIZ_TO_DO_QUERY_PAGE_SERVICE"""
         try:
-            api_path = self.get_api_path("业务代办分页查询服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields", "systemParams"], ["params", "request"]
-            )
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -324,9 +286,11 @@ class TestTodoManagement(GenMdBaseTest):
                 ],
                 "systemParams": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="业务代办分页查询服务",
+                set_dict=set_dict,
+                fields_to_filter=["pageable", "fields", "systemParams"]
+            )
             self.assert_util.assert_response_data(response)
 
             # 验证返回的数据列表
@@ -334,7 +298,7 @@ class TestTodoManagement(GenMdBaseTest):
             if data_list and not self.biz_todo_id:
                 self.biz_todo_id = data_list[0].get("id")
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -367,19 +331,15 @@ class TestTodoManagement(GenMdBaseTest):
                 self.logger.warning("未获取到业务待办ID，使用模拟ID进行测试")
                 self.biz_todo_id = 1
 
-            api_path = self.get_api_path("业务待办删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.biz_todo_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="业务待办删除服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:

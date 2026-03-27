@@ -2,7 +2,6 @@ import allure
 import pytest
 from testcases.gen_md import GenMdBaseTest
 from utils.mock_util import MockData
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
@@ -313,15 +312,13 @@ class TestOrg_RelationManagement(GenMdBaseTest):
         """
         try:
             # 调用标准导出接口
-            api_path = self.get_api_path("组织关联关系表标准导出服务")
-            params, url = self.get_api_params(api_path)
-            
-            # 构建完整的导出参数
-            self.logger.info(f"请求参数: {params}")
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="组织关联关系表标准导出服务",
+                set_dict={},
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
-
-            a.json(params, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -346,11 +343,6 @@ class TestOrg_RelationManagement(GenMdBaseTest):
         提交组织关联导出任务用例
         """
         try:
-            # 调用提交导出任务接口
-            api_path = self.get_api_path("组织关联关系表-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
             params = {
                 "serviceKey": "GEN_MD$ORG_RELATION_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
                 "teamId": 22,
@@ -567,9 +559,12 @@ class TestOrg_RelationManagement(GenMdBaseTest):
                     }
                 }
             }
-            self.logger.info(f"请求参数: {params}")
-            self.logger.info(f"请求头: {self.admin_headers}")
-            response = self.http.post(url, headers=self.admin_headers,json=params)
+            response, _ = self.standard_api_call(
+                api_key="组织关联关系表-导入导出任务管理接口-提交导出任务",
+                set_dict=params.get("params", {}),
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             
 
@@ -598,16 +593,6 @@ class TestOrg_RelationManagement(GenMdBaseTest):
         组织关联标准导入用例
         """
         try:
-            # 调用标准导入接口
-            api_path = self.get_api_path("组织关联关系表标准导入服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["importData", "importType"],
-                ["params", "request"]
-            )
             set_dict = {
                 "importData": [
                     {
@@ -617,13 +602,14 @@ class TestOrg_RelationManagement(GenMdBaseTest):
                 ],
                 "importType": "STANDARD"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织关联关系表标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["importData", "importType"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -648,16 +634,6 @@ class TestOrg_RelationManagement(GenMdBaseTest):
         通过OSS提交组织关联导入任务用例
         """
         try:
-            # 调用通过OSS提交导入任务接口
-            api_path = self.get_api_path("组织关联关系表-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["ossFileUrl", "fileName", "importConfig"],
-                ["params", "request"]
-            )
             set_dict = {
                 "ossFileUrl": "test_oss_file_url",
                 "fileName": f"组织关联导入_{self.nickname}_{self.mock_util.get_timestamp()}.xlsx",
@@ -666,19 +642,19 @@ class TestOrg_RelationManagement(GenMdBaseTest):
                     "skipFirstRow": True
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="组织关联关系表-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["ossFileUrl", "fileName", "importConfig"]
+            )
             self.assert_util.assert_response_success(response)
             
             # 保存导入任务ID供后续使用
             self.import_task_id = response.get("data", {}).get("data", {}).get("taskId")
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
-

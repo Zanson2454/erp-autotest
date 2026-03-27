@@ -2,7 +2,6 @@ import allure
 import pytest
 from testcases.gen_md import GenMdBaseTest
 from utils.mock_util import MockData
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
@@ -48,17 +47,11 @@ class TestMonitoringManagement(GenMdBaseTest):
             monitoring_code = self.mock_data.generate_unique_code(tag="Monitoring")
             monitoring_name = f"监控管理_{self.mock_data.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-监控方案-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, [
-                    "planCode", "planName", "remark", "genIndexMdId", "datasource",
-                    "monitoringDate", "monitoringDetails", "monitoringStatus", "monitoringTime",
-                    "monitoringType", "solutionSettings", "status"
-                    ], 
-                ["params", "request"]
-            )
+            fields_to_filter = [
+                "planCode", "planName", "remark", "genIndexMdId", "datasource",
+                "monitoringDate", "monitoringDetails", "monitoringStatus", "monitoringTime",
+                "monitoringType", "solutionSettings", "status"
+            ]
             set_dict = {
                 "planCode": monitoring_code,
                 "planName": monitoring_name,
@@ -86,15 +79,20 @@ class TestMonitoringManagement(GenMdBaseTest):
                 ],
                 "status": "DRAFT"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, monitoring_id = self.standard_api_call(
+                api_key="GEN-监控方案-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter,
+                store_id_as="monitoring"
+            )
             self.assert_util.assert_response_data(response)
             
-            self.monitoring_id = response.get("data", {}).get("data", {})
+            self.monitoring_id = monitoring_id
             self.monitoring_code = monitoring_code
+            self.assert_util.assert_by_operator(self.monitoring_id, "not_empty")
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -113,12 +111,6 @@ class TestMonitoringManagement(GenMdBaseTest):
     def test_query_monitoring_list(self):
         """查询监控管理列表用例"""
         try:
-            api_path = self.get_api_path("GEN-监控预警结果信息-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields", "systemParams"], ["params", "request"]
-            )
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -144,11 +136,15 @@ class TestMonitoringManagement(GenMdBaseTest):
                     "systemParams": None
             }
 
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-监控预警结果信息-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=["pageable", "fields", "systemParams"]
+            )
             self.assert_util.assert_response_data(response)
-            a.json(filtered_params, "请求数据")
+            total_count = response.get("data", {}).get("data", {}).get("totalCount", 0)
+            self.assert_util.assert_by_operator(total_count, ">=", 0)
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -170,19 +166,17 @@ class TestMonitoringManagement(GenMdBaseTest):
             if not self.monitoring_id:
                 self.test_save_monitoring()
 
-            api_path = self.get_api_path("GEN-监控方案-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.monitoring_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, detail_id = self.standard_api_call(
+                api_key="GEN-监控方案-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"]
+            )
             self.assert_util.assert_response_data(response)
+            if detail_id is not None:
+                self.assert_util.assert_by_operator(detail_id, "=", self.monitoring_id)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -204,19 +198,15 @@ class TestMonitoringManagement(GenMdBaseTest):
             if not self.monitoring_id:
                 self.test_save_monitoring()
 
-            api_path = self.get_api_path("GEN-监控预警结果信息-批量删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ids"], ["params", "request"]
-            )
             set_dict = {"ids": [self.monitoring_id]}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-监控预警结果信息-批量删除服务",
+                set_dict=set_dict,
+                fields_to_filter=["ids"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -235,12 +225,6 @@ class TestMonitoringManagement(GenMdBaseTest):
     def test_query_monitoring_plan_page(self):
         """监控方案查询分页服务用例"""
         try:
-            api_path = self.get_api_path("GEN-监控方案-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields"], ["params", "request"]
-            )
             set_dict = {
                 "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True},
                 "fields": [
@@ -248,12 +232,14 @@ class TestMonitoringManagement(GenMdBaseTest):
                     {"name": "plan_name", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-监控方案-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=["pageable", "fields"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -274,19 +260,15 @@ class TestMonitoringManagement(GenMdBaseTest):
             if not self.monitoring_id:
                 self.test_save_monitoring()
 
-            api_path = self.get_api_path("GEN-监控方案-启用服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.monitoring_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-监控方案-启用服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -307,19 +289,15 @@ class TestMonitoringManagement(GenMdBaseTest):
             if not self.monitoring_id:
                 self.test_save_monitoring()
 
-            api_path = self.get_api_path("GEN-监控方案-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.monitoring_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-监控方案-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -339,12 +317,10 @@ class TestMonitoringManagement(GenMdBaseTest):
         """监控预警结果信息保存服务用例"""  
         try:
             metricName = f"测试指标_{self.mock_data.get_timestamp()}"
-            api_path = self.get_api_path("GEN-监控预警结果信息-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["metricName", "metricValue", "metricUnit", "metricTime", "metricType", "metricStatus", "metricRemark"], ["params", "request"]
-            )
+            fields_to_filter = [
+                "metricName", "metricValue", "metricUnit", "metricTime",
+                "metricType", "metricStatus", "metricRemark"
+            ]
             set_dict = {
                 "metricName": metricName,
                 "achievedValue": 100,
@@ -359,13 +335,15 @@ class TestMonitoringManagement(GenMdBaseTest):
                 "resolutionStatus": "UNRESOLVED",
                 "alertTime": f"{self.mock_data.get_timestamp(timestamp=True)}"
             }
-             
-            ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-监控预警结果信息-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=fields_to_filter
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -387,19 +365,15 @@ class TestMonitoringManagement(GenMdBaseTest):
             if not self.monitoring_id:
                 self.test_save_monitoring()
 
-            api_path = self.get_api_path("GEN-监控预警结果信息-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.monitoring_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-监控预警结果信息-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -420,19 +394,15 @@ class TestMonitoringManagement(GenMdBaseTest):
             if not self.monitoring_id:
                 self.test_save_monitoring()
 
-            api_path = self.get_api_path("GEN-监控预警结果信息-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.monitoring_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-监控预警结果信息-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -452,9 +422,6 @@ class TestMonitoringManagement(GenMdBaseTest):
     def test_monitoring_plan_import(self):
         """监控方案标准导入服务用例"""
         try:
-            api_path = self.get_api_path("监控方案标准导入服务")
-            params, url = self.get_api_params(api_path)
-
             import_data = [
                 {
                     "plan_code": self.mock_data.generate_unique_code(tag="IMPORT_PLAN"),
@@ -462,16 +429,15 @@ class TestMonitoringManagement(GenMdBaseTest):
                 }
             ]
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["data"], ["params", "request"]
-            )
             set_dict = {"data": import_data}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="监控方案标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["data"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -490,24 +456,20 @@ class TestMonitoringManagement(GenMdBaseTest):
     def test_monitoring_plan_export(self):
         """监控方案标准导出服务用例"""
         try:
-            api_path = self.get_api_path("监控方案标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["selectFields"], ["params", "request"]
-            )
             set_dict = {
                 "selectFields": [
                     {"name": "plan_code", "type": "TEXT"},
                     {"name": "plan_name", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="监控方案标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["selectFields"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -527,9 +489,6 @@ class TestMonitoringManagement(GenMdBaseTest):
     def test_monitoring_alert_result_import(self):
         """监控预警结果信息标准导入服务用例"""
         try:
-            api_path = self.get_api_path("监控预警结果信息标准导入服务")
-            params, url = self.get_api_params(api_path)
-
             import_data = [
                 {
                     "alert_code": self.mock_data.generate_unique_code(tag="IMPORT_ALERT"),
@@ -537,16 +496,15 @@ class TestMonitoringManagement(GenMdBaseTest):
                 }
             ]
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["data"], ["params", "request"]
-            )
             set_dict = {"data": import_data}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="监控预警结果信息标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["data"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -565,24 +523,20 @@ class TestMonitoringManagement(GenMdBaseTest):
     def test_monitoring_alert_result_export(self):
         """监控预警结果信息标准导出服务用例"""
         try:
-            api_path = self.get_api_path("监控预警结果信息标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["selectFields"], ["params", "request"]
-            )
             set_dict = {
                 "selectFields": [
                     {"name": "alert_code", "type": "TEXT"},
                     {"name": "alert_name", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="监控预警结果信息标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["selectFields"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -602,22 +556,18 @@ class TestMonitoringManagement(GenMdBaseTest):
     def test_monitoring_plan_oss_import_task(self):
         """监控方案OSS导入任务用例"""
         try:
-            api_path = self.get_api_path("监控方案-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ossPath", "taskName"], ["params", "request"]
-            )
             set_dict = {
                 "ossPath": "/test/monitoring_plan_import.xlsx",
                 "taskName": f"监控方案导入任务_{self.mock_data.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="监控方案-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["ossPath", "taskName"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -636,12 +586,6 @@ class TestMonitoringManagement(GenMdBaseTest):
     def test_monitoring_plan_export_task(self):
         """监控方案导出任务用例"""
         try:
-            api_path = self.get_api_path("监控方案-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["exportConfig", "taskName"], ["params", "request"]
-            )
             set_dict = {
                 "exportConfig": {
                     "fields": [
@@ -652,12 +596,14 @@ class TestMonitoringManagement(GenMdBaseTest):
                 },
                 "taskName": f"监控方案导出任务_{self.mock_data.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="监控方案-导入导出任务管理接口-提交导出任务",
+                set_dict=set_dict,
+                fields_to_filter=["exportConfig", "taskName"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -677,22 +623,18 @@ class TestMonitoringManagement(GenMdBaseTest):
     def test_monitoring_alert_result_oss_import_task(self):
         """监控预警结果信息OSS导入任务用例"""
         try:
-            api_path = self.get_api_path("监控预警结果信息-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ossPath", "taskName"], ["params", "request"]
-            )
             set_dict = {
                 "ossPath": "/test/monitoring_alert_result_import.xlsx",
                 "taskName": f"监控预警结果导入任务_{self.mock_data.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="监控预警结果信息-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["ossPath", "taskName"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -711,12 +653,6 @@ class TestMonitoringManagement(GenMdBaseTest):
     def test_monitoring_alert_result_export_task(self):
         """监控预警结果信息导出任务用例"""
         try:
-            api_path = self.get_api_path("监控预警结果信息-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["exportConfig", "taskName"], ["params", "request"]
-            )
             set_dict = {
                 "exportConfig": {
                     "fields": [
@@ -727,12 +663,14 @@ class TestMonitoringManagement(GenMdBaseTest):
                 },
                 "taskName": f"监控预警结果导出任务_{self.mock_data.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="监控预警结果信息-导入导出任务管理接口-提交导出任务",
+                set_dict=set_dict,
+                fields_to_filter=["exportConfig", "taskName"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:

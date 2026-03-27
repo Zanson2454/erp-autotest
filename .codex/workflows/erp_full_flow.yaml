@@ -3,17 +3,17 @@ description: Analyze pytest API automation project for ERP systems
 
 steps:
   - id: scan_project
-    prompt_file: ../skills/erp-tasks/01_scan_project.md
+    prompt_file: ../skills/erp_tasks/01_scan_project.md
     output_file: ../../outputs/01_project_analysis.md
 
   - id: project_map
-    prompt_file: ../skills/erp-tasks/02_project_map.md
+    prompt_file: ../skills/erp_tasks/02_project_map.md
     output_file: ../../outputs/02_project_map.md
 
   - id: erp_model
-    prompt_file: ../skills/erp-tasks/03_erp_model.md
+    prompt_file: ../skills/erp_tasks/03_erp_model.md
     output_file: ../../outputs/03_erp_test_domain_map.md
 
   - id: framework_review
-    prompt_file: ../skills/erp-tasks/04_framework_review.md
+    prompt_file: ../skills/erp_tasks/04_framework_review.md
     output_file: ../../outputs/04_gap_analysis.md

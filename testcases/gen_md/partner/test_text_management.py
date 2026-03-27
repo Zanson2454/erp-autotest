@@ -1,7 +1,6 @@
 import allure
 import pytest
 from testcases.gen_md import GenMdBaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
@@ -174,10 +173,7 @@ class TestTextManagement(GenMdBaseTest):
     def test_submit_text_type_export_task(self):
         """提交文本类型导出任务用例"""
         try:
-            api_path = self.get_api_path("文本类型-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
-            params = {
+            export_params = {
                 "serviceKey": "GEN_MD$GEN_TEXT_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
                 "params": {
                     "taskName": f"文本类型导出-{self.nickname}-{self.mock_util.get_timestamp()}",
@@ -262,12 +258,17 @@ class TestTextManagement(GenMdBaseTest):
                 }
             }
 
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="文本类型-导入导出任务管理接口-提交导出任务",
+                set_dict=export_params.get("params", {}),
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
             self.export_task_id = response.get("data", {}).get("data", {}).get("mainTaskId")
             self.assert_util.assert_by_operator(self.export_task_id, "!=", None)
 
-            a.json(params, "请求数据")
+            a.json(export_params.get("params", {}), "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -442,10 +443,7 @@ class TestTextManagement(GenMdBaseTest):
     def test_submit_text_group_export_task(self):
         """提交文本组导出任务用例"""
         try:
-            api_path = self.get_api_path("文本组-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
-            params = {
+            export_params = {
                 "serviceKey": "GEN_MD$GEN_TEXT_PROCEDURE_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
                 "params": {
                     "taskName": f"文本组导出-{self.nickname}-{self.mock_util.get_timestamp()}",
@@ -509,10 +507,15 @@ class TestTextManagement(GenMdBaseTest):
                 }
             }
 
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="文本组-导入导出任务管理接口-提交导出任务",
+                set_dict=export_params.get("params", {}),
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(params, "请求数据")
+            a.json(export_params.get("params", {}), "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -563,26 +566,20 @@ class TestTextManagement(GenMdBaseTest):
     def test_export_text_type(self):
         """文本类型标准导出用例"""
         try:
-            api_path = self.get_api_path("文本类型标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["exportConfig"],
-                ["params", "request"]
-            )
             set_dict = {
                 "exportConfig": {
                     "fileName": f"文本类型导出_{self.mock_util.get_timestamp()}",
                     "sheetName": "文本类型"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="文本类型标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["exportConfig"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -601,26 +598,20 @@ class TestTextManagement(GenMdBaseTest):
     def test_import_text_type(self):
         """文本类型标准导入用例"""
         try:
-            api_path = self.get_api_path("文本类型标准导入服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["importConfig"],
-                ["params", "request"]
-            )
             set_dict = {
                 "importConfig": {
                     "fileName": f"文本类型导入_{self.mock_util.get_timestamp()}",
                     "fileType": "EXCEL"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="文本类型标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["importConfig"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -639,14 +630,6 @@ class TestTextManagement(GenMdBaseTest):
     def test_submit_text_type_import_task_by_oss(self):
         """通过OSS提交文本类型导入任务用例"""
         try:
-            api_path = self.get_api_path("文本类型-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["taskName", "ossConfig", "importConfig"],
-                ["params", "request"]
-            )
             set_dict = {
                 "taskName": f"文本类型OSS导入任务_{self.mock_util.get_timestamp()}",
                 "ossConfig": {
@@ -658,12 +641,14 @@ class TestTextManagement(GenMdBaseTest):
                     "sheetName": "文本类型"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="文本类型-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["taskName", "ossConfig", "importConfig"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -682,26 +667,20 @@ class TestTextManagement(GenMdBaseTest):
     def test_export_text_group(self):
         """文本组标准导出用例"""
         try:
-            api_path = self.get_api_path("文本组标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["exportConfig"],
-                ["params", "request"]
-            )
             set_dict = {
                 "exportConfig": {
                     "fileName": f"文本组导出_{self.mock_util.get_timestamp()}",
                     "sheetName": "文本组"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="文本组标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["exportConfig"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -720,26 +699,20 @@ class TestTextManagement(GenMdBaseTest):
     def test_import_text_group(self):
         """文本组标准导入用例"""
         try:
-            api_path = self.get_api_path("文本组标准导入服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["importConfig"],
-                ["params", "request"]
-            )
             set_dict = {
                 "importConfig": {
                     "fileName": f"文本组导入_{self.mock_util.get_timestamp()}",
                     "fileType": "EXCEL"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="文本组标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["importConfig"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -758,14 +731,6 @@ class TestTextManagement(GenMdBaseTest):
     def test_submit_text_group_import_task_by_oss(self):
         """通过OSS提交文本组导入任务用例"""
         try:
-            api_path = self.get_api_path("文本组-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["taskName", "ossConfig", "importConfig"],
-                ["params", "request"]
-            )
             set_dict = {
                 "taskName": f"文本组OSS导入任务_{self.mock_util.get_timestamp()}",
                 "ossConfig": {
@@ -777,12 +742,14 @@ class TestTextManagement(GenMdBaseTest):
                     "sheetName": "文本组"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="文本组-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["taskName", "ossConfig", "importConfig"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:

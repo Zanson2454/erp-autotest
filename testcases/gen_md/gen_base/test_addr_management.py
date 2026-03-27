@@ -10,7 +10,6 @@ sys.path.insert(0, str(project_root))
 
 # 直接导入，无 fallback
 from testcases.gen_md import GenMdBaseTest  # 注意大写 G
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
@@ -86,12 +85,14 @@ class TestAddrManagement(GenMdBaseTest):
             response, extracted_id = self.standard_api_call(
                 api_key="GEN-地址库-保存服务",
                 set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as="addr"  # 自动存储 self.addr_id
+                fields_to_filter=fields_to_filter
                 # 无 assert_success 参数，默认不做断言
             )
+            self.assert_util.assert_response_success(response)
+            assert extracted_id is not None, "新增地址库失败，未返回地址ID"
             
             # 3. 保存业务数据（保持原有逻辑）
+            self.addr_id = extracted_id
             self.addr_code = addr_code
             
             # 4. 日志记录（无断言验证）
@@ -140,6 +141,8 @@ class TestAddrManagement(GenMdBaseTest):
                 fields_to_filter=fields_to_filter
                 # 无 assert_success 参数
             )
+            self.assert_util.assert_response_success(response)
+            assert child_id is not None, "新增下级地址失败，未返回地址ID"
             
             # 4. 保存业务数据
             self.parent_addr_id = self.addr_id  # 保存父级ID用于后续测试
@@ -181,10 +184,12 @@ class TestAddrManagement(GenMdBaseTest):
                 fields_to_filter=["pageable", "fields"]
                 # 无 assert_success 参数
             )
+            self.assert_util.assert_response_success(response)
             
             # 3. 日志记录（无断言验证）
             page_data = response.get("data", {}).get("data", {})
             total_count = page_data.get("totalCount", 0) if isinstance(page_data, dict) else len(page_data)
+            assert total_count >= 0, "分页查询返回的总数异常"
             self.logger.info(f"地址库分页查询完成，总记录数: {total_count}")
             
         except Exception as e:
@@ -203,12 +208,6 @@ class TestAddrManagement(GenMdBaseTest):
     def test_addr_paging_data(self):
         """地址库分页数据服务用例 - GEN_ADDR_TYPE_CF_PAGING_DATA_SERVICE"""
         try:
-            api_path = self.get_api_path("地址库-分页数据服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields", "systemParams"], ["params", "request"]
-            )
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -226,12 +225,16 @@ class TestAddrManagement(GenMdBaseTest):
                 ],
                 "systemParams": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
+            response, _ = self.standard_api_call(
+                api_key="地址库-分页数据服务",
+                set_dict=set_dict,
+                fields_to_filter=["pageable", "fields", "systemParams"]
+            )
+            self.assert_util.assert_response_success(response)
+            page_data = response.get("data", {}).get("data", {})
+            if isinstance(page_data, dict):
+                assert "totalCount" in page_data or "data" in page_data, "分页返回结构缺少关键字段"
 
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -263,9 +266,11 @@ class TestAddrManagement(GenMdBaseTest):
                 fields_to_filter=["parentId"]
                 # 无 assert_success 参数
             )
+            self.assert_util.assert_response_success(response)
             
             # 4. 日志记录（无断言验证）
             child_list = response.get("data", {}).get("data", [])
+            assert isinstance(child_list, list), "下级地址列表返回类型异常"
             self.logger.info(f"根据父级ID查询下级地址完成，数量: {len(child_list)}")
             
         except Exception as e:
@@ -288,16 +293,26 @@ class TestAddrManagement(GenMdBaseTest):
                 self.test_save_addr()
 
             # 2. 准备详情查询参数
-            set_dict = {"id": self.addr_id}
+            set_dict = {
+                "request": {"id": self.addr_id},
+                "modelKey": "GEN_MD$gen_addr_type_cf"
+            }
             
             # 3. 使用标准化API调用（无断言）
             response, detail_id = self.standard_api_call(
-                api_key="GEN-地址库-查询详情服务",
+                api_key="(系统)查询数据详情服务",
                 set_dict=set_dict,
-                fields_to_filter=["id"]
+                use_param_util=False,
+                param_path=["params"],
+                query_params={
+                    "tmodule": "GEN_MD",
+                    "modelKey": "GEN_MD$gen_addr_type_cf"
+                }
                 # 无 assert_success 参数
             )
-            
+            self.assert_util.assert_response_success(response)
+            assert detail_id is not None, "地址详情返回ID为空"
+
             # 4. 日志记录（无断言验证）
             self.logger.info(f"地址库详情查询完成，ID: {detail_id}")
             
@@ -321,15 +336,24 @@ class TestAddrManagement(GenMdBaseTest):
                 self.test_save_addr()
 
             # 2. 准备删除参数
-            set_dict = {"id": self.addr_id}
+            set_dict = {
+                "request": {"id": self.addr_id},
+                "modelKey": "GEN_MD$gen_addr_type_cf"
+            }
             
             # 3. 使用标准化API调用（无断言）
             response, _ = self.standard_api_call(
-                api_key="GEN-地址库-删除服务",
+                api_key="(系统)删除数据服务",
                 set_dict=set_dict,
-                fields_to_filter=["id"]
+                use_param_util=False,
+                param_path=["params"],
+                query_params={
+                    "tmodule": "GEN_MD",
+                    "modelKey": "GEN_MD$gen_addr_type_cf"
+                }
                 # 无 assert_success 参数
             )
+            self.assert_util.assert_response_success(response)
             
             # 4. 重置ID（模拟删除后状态，无断言）
             self.addr_id = None
@@ -352,9 +376,6 @@ class TestAddrManagement(GenMdBaseTest):
     def test_addr_import(self):
         """地址库标准导入用例 - GEN_ADDR_TYPE_CF_GEI_IMPORT_SERVICE"""
         try:
-            api_path = self.get_api_path("地址库标准导入服务")
-            params, url = self.get_api_params(api_path)
-
             # 构建导入数据
             import_data = [
                 {
@@ -367,16 +388,13 @@ class TestAddrManagement(GenMdBaseTest):
                 }
             ]
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["data"], ["params", "request"]
-            )
             set_dict = {"data": import_data}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
+            response, _ = self.standard_api_call(
+                api_key="地址库标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["data"]
+            )
+            self.assert_util.assert_response_success(response)
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -395,12 +413,6 @@ class TestAddrManagement(GenMdBaseTest):
     def test_addr_export(self):
         """地址库标准导出用例 - GEN_ADDR_TYPE_CF_GEI_EXPORT_SERVICE"""
         try:
-            api_path = self.get_api_path("地址库标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["selectFields"], ["params", "request"]
-            )
             set_dict = {
                 "selectFields": [
                     {"name": "code", "type": "TEXT"},
@@ -411,12 +423,12 @@ class TestAddrManagement(GenMdBaseTest):
                     {"name": "parentId", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
+            response, _ = self.standard_api_call(
+                api_key="地址库标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["selectFields"]
+            )
+            self.assert_util.assert_response_success(response)
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -435,23 +447,17 @@ class TestAddrManagement(GenMdBaseTest):
     def test_addr_oss_import_task(self):
         """地址库OSS导入任务用例 - GEN_ADDR_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
         try:
-            api_path = self.get_api_path("地址库-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["fileKey", "taskName", "templateId"], ["params", "request"]
-            )
             set_dict = {
                 "fileKey": "test_addr_import_file.xlsx",
                 "taskName": f"地址库导入任务_{self.mock_util.get_timestamp()}",
                 "templateId": 1
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
+            response, _ = self.standard_api_call(
+                api_key="地址库-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["fileKey", "taskName", "templateId"]
+            )
+            self.assert_util.assert_response_success(response)
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -470,12 +476,6 @@ class TestAddrManagement(GenMdBaseTest):
     def test_addr_export_task(self):
         """地址库导出任务用例 - GEN_ADDR_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST"""
         try:
-            api_path = self.get_api_path("地址库-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["taskName", "queryData"], ["params", "request"]
-            )
             set_dict = {
                 "taskName": f"地址库导出任务_{self.mock_util.get_timestamp()}",
                 "queryData": {
@@ -489,12 +489,12 @@ class TestAddrManagement(GenMdBaseTest):
                     ]
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
+            response, _ = self.standard_api_call(
+                api_key="地址库-导入导出任务管理接口-提交导出任务",
+                set_dict=set_dict,
+                fields_to_filter=["taskName", "queryData"]
+            )
+            self.assert_util.assert_response_success(response)
             a.json(response, "响应数据")
 
         except Exception as e:

@@ -3,7 +3,6 @@ import pytest
 from typing import Any
 from testcases.gen_md import GenMdBaseTest
 from utils.mock_util import MockData
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
@@ -54,12 +53,6 @@ class TestIndexManagement(GenMdBaseTest):
             index_code = self.mock_data.generate_unique_code(tag="INDEX")
             index_name = f"测试指标_{self.mock_data.get_timestamp()}"
 
-            api_path = self.get_api_path("GEN-指标中心-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["genIndexCode", "genIndexName", "genIndexDataResult", "genIndexDataSource", "genIndexDataType", "genIndexRemark", "genIndexSort", "genIndexSql", "genParentId", "status"], ["params", "request"]
-            )
             set_dict = {
                 "genIndexCode": index_code,
                 "genIndexName": index_name,
@@ -72,14 +65,21 @@ class TestIndexManagement(GenMdBaseTest):
                 "genParentId": None,
                 "status": "DRAFT"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, extracted_id = self.standard_api_call(
+                api_key="GEN-指标中心-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=[
+                    "genIndexCode", "genIndexName", "genIndexDataResult", "genIndexDataSource",
+                    "genIndexDataType", "genIndexRemark", "genIndexSort", "genIndexSql",
+                    "genParentId", "status"
+                ],
+                store_id_as="index"
+            )
             self.assert_util.assert_response_data(response)
-            
-            self.index_id = response.get("data", {}).get("data", {})
 
-            a.json(filtered_params, "请求数据")
+            self.index_id = extracted_id
+            self.assert_util.assert_by_operator(self.index_id, "not_empty")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -97,17 +97,21 @@ class TestIndexManagement(GenMdBaseTest):
     def test_invoke_code_rule(self):
         """调用取号规则用例 - GEN_INDEX_MD_INVOKE_CODE_RULE_SERVICE"""
         try:
-            api_path = self.get_api_path("指标中心表-调用取号规则服务")
-            params, url = self.get_api_params(api_path)
-
-            params['modelKey'] = "GEN_MD$gen_index_md_code"
-            params['request'] = {"ruleKey":"GEN_MD$gen_index_md_code"}
-
-            response = self.http.post(url, json=params)
+            set_dict = {
+                "formParams": {
+                    "modelKey": "GEN_MD$gen_index_md_code",
+                    "request": {"ruleKey": "GEN_MD$gen_index_md_code"}
+                }
+            }
+            response, _ = self.standard_api_call(
+                api_key="指标中心表-调用取号规则服务",
+                set_dict=set_dict,
+                fields_to_filter=["formParams"]
+            )
             self.assert_util.assert_response_data(response)
             index_code = response.get("data", {}).get("data", {})
             self.assert_util.assert_by_operator(index_code, "not_empty")
-            a.json(params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -125,12 +129,6 @@ class TestIndexManagement(GenMdBaseTest):
     def test_query_index_page(self):
         """查询指标分页列表用例 - GEN_INDEX_MD_QUERY_PAGE_ACTION_SERVICE"""
         try:
-            api_path = self.get_api_path("GEN-指标中心-查询分页服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable"], ["params", "request"]
-            )
             set_dict =  {
                 "pageable": {
                     "conditionGroup": {
@@ -162,13 +160,17 @@ class TestIndexManagement(GenMdBaseTest):
                     }
                 }
             }
-        
-            ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-指标中心-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=["pageable"]
+            )
             self.assert_util.assert_response_data(response)
+            total_count = response.get("data", {}).get("data", {}).get("totalCount", 0)
+            self.assert_util.assert_by_operator(total_count, ">=", 0)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -189,19 +191,17 @@ class TestIndexManagement(GenMdBaseTest):
             if not self.index_id:
                 self.test_save_index()
 
-            api_path = self.get_api_path("GEN-指标中心-查询详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.index_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, detail_id = self.standard_api_call(
+                api_key="GEN-指标中心-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"]
+            )
             self.assert_util.assert_response_data(response)
+            if detail_id is not None:
+                self.assert_util.assert_by_operator(detail_id, "=", self.index_id)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -222,19 +222,15 @@ class TestIndexManagement(GenMdBaseTest):
             if not self.index_id:
                 self.test_save_index()
 
-            api_path = self.get_api_path("GEN-指标中心-根据父ID查询下级列表服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["parentId"], ["params", "request"]
-            )
             set_dict = {"parentId": self.index_id}  # 查询顶级指标
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-指标中心-根据父ID查询下级列表服务",
+                set_dict=set_dict,
+                fields_to_filter=["parentId"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -252,22 +248,18 @@ class TestIndexManagement(GenMdBaseTest):
     def test_find_tree_children(self):
         """查找树子数据用例 - GEN_INDEX_MD_FIND_TREE_CHILDREN_DATA_SERVICE"""
         try:
-            api_path = self.get_api_path("指标中心表-查找树子数据服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["nodeId", "level"], ["params", "request"]
-            )
             set_dict = {
                 "nodeId": None,  # 根节点
                 "level": 1  # 查询第一级
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="指标中心表-查找树子数据服务",
+                set_dict=set_dict,
+                fields_to_filter=["nodeId", "level"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -288,19 +280,15 @@ class TestIndexManagement(GenMdBaseTest):
             if not self.index_id:
                 self.test_save_index()
 
-            api_path = self.get_api_path("GEN-指标中心-启用服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.index_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-指标中心-启用服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -321,19 +309,15 @@ class TestIndexManagement(GenMdBaseTest):
             if not self.index_id:
                 self.test_save_index()
 
-            api_path = self.get_api_path("GEN-指标中心-禁用服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.index_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-指标中心-禁用服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -354,19 +338,15 @@ class TestIndexManagement(GenMdBaseTest):
             if not self.index_id:
                 self.test_save_index()
 
-            api_path = self.get_api_path("GEN-指标中心-删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.index_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-指标中心-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -386,9 +366,6 @@ class TestIndexManagement(GenMdBaseTest):
     def test_index_import(self):
         """指标中心标准导入用例 - GEN_INDEX_MD_GEI_IMPORT_SERVICE"""
         try:
-            api_path = self.get_api_path("指标中心表标准导入服务")
-            params, url = self.get_api_params(api_path)
-
             # 构建导入数据
             import_data = [
                 {
@@ -400,16 +377,15 @@ class TestIndexManagement(GenMdBaseTest):
                 }
             ]
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["data"], ["params", "request"]
-            )
             set_dict = {"data": import_data}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="指标中心表标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["data"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -428,23 +404,19 @@ class TestIndexManagement(GenMdBaseTest):
     def test_index_oss_import_task(self):
         """指标中心OSS导入任务用例 - GEN_INDEX_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
         try:
-            api_path = self.get_api_path("指标中心表-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["fileKey", "taskName", "templateId"], ["params", "request"]
-            )
             set_dict = {
                 "fileKey": "test_index_import_file.xlsx",
                 "taskName": f"指标中心导入任务_{self.mock_data.get_timestamp()}",
                 "templateId": 1
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="指标中心表-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["fileKey", "taskName", "templateId"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:

@@ -74,7 +74,7 @@ class TestOrg_TypeManagement(GenMdBaseTest):
                     }
                 ]
             }
-            fields_to_filter = ["org_type_code", "org_type_name","attrList"]
+            fields_to_filter = ["code", "name", "attrList"]
 
             # 使用标准化API调用
             response, extracted_id = self.standard_api_call(
@@ -85,7 +85,9 @@ class TestOrg_TypeManagement(GenMdBaseTest):
             )
             
             self.assert_util.assert_response_data(response)
-            # extracted_id 已经是 ID 值（int），store_id_as="org_type" 已自动存储为 self.org_type_id
+            # 保持与现有用例字段一致，避免 store_id_as 的命名差异导致后续 id 为空
+            self.__class__.org_type_id = extracted_id
+            self.__class__.org_type_code = org_type_code
             a.json(response, "响应数据")
             
         except Exception as e:

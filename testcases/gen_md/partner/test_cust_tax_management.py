@@ -1,7 +1,6 @@
 import allure
 import pytest
 from testcases.gen_md import GenMdBaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
@@ -197,14 +196,6 @@ class TestCustomerTaxManagement(GenMdBaseTest):
     def test_export_customer_tax_type(self):
         """客户税分类标准导出用例"""
         try:
-            api_path = self.get_api_path("客户税分类标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["exportConfig"],
-                ["params", "request"]
-            )
             set_dict = {
                 "exportConfig": {
                     "fileName": f"客户税分类导出_{self.mock_util.get_timestamp()}",
@@ -212,12 +203,14 @@ class TestCustomerTaxManagement(GenMdBaseTest):
                     "format": "EXCEL"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="客户税分类标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["exportConfig"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -236,14 +229,6 @@ class TestCustomerTaxManagement(GenMdBaseTest):
     def test_import_customer_tax_type(self):
         """客户税分类标准导入用例"""
         try:
-            api_path = self.get_api_path("客户税分类标准导入服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["importConfig"],
-                ["params", "request"]
-            )
             set_dict = {
                 "importConfig": {
                     "fileName": f"客户税分类导入_{self.mock_util.get_timestamp()}",
@@ -251,12 +236,14 @@ class TestCustomerTaxManagement(GenMdBaseTest):
                     "sheetName": "客户税分类"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="客户税分类标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["importConfig"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -274,10 +261,7 @@ class TestCustomerTaxManagement(GenMdBaseTest):
     def test_submit_customer_tax_type_export_task(self):
         """提交客户税分类导出任务用例"""
         try:
-            api_path = self.get_api_path("客户税分类-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
-            params["params"] =  {
+            export_params = {
                 "taskName": f"客户税分类-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
                 "multiSheetConfig": [
                     {
@@ -342,10 +326,15 @@ class TestCustomerTaxManagement(GenMdBaseTest):
                     "sceneKey": "GEN_MD$GEN_CUST_TAX_TYPE_VIEW"
                 }
             }
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="客户税分类-导入导出任务管理接口-提交导出任务",
+                set_dict=export_params,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(params, "请求数据")
+            a.json(export_params, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -364,14 +353,6 @@ class TestCustomerTaxManagement(GenMdBaseTest):
     def test_submit_customer_tax_type_import_task_by_oss(self):
         """通过OSS提交客户税分类导入任务用例"""
         try:
-            api_path = self.get_api_path("客户税分类-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["taskName", "ossConfig", "importConfig"],
-                ["params", "request"]
-            )
             set_dict = {
                 "taskName": f"客户税分类OSS导入任务_{self.mock_util.get_timestamp()}",
                 "ossConfig": {
@@ -383,12 +364,14 @@ class TestCustomerTaxManagement(GenMdBaseTest):
                     "sheetName": "客户税分类"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="客户税分类-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["taskName", "ossConfig", "importConfig"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:

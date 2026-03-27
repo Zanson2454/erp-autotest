@@ -2,7 +2,6 @@ import allure
 import pytest
 from typing import Any
 from testcases.gen_md import GenMdBaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
@@ -467,9 +466,6 @@ class TestDynamicManagement(GenMdBaseTest):
     def test_template_import(self):
         """动态表单模板标准导入用例 - GEN_DYNAMIC_FORM_TEMPLATE_MD_GEI_IMPORT_SERVICE"""
         try:
-            api_path = self.get_api_path("动态表单模板类标准导入服务")
-            params, url = self.get_api_params(api_path)
-
             # 构建导入数据
             import_data = [
                 {
@@ -489,16 +485,15 @@ class TestDynamicManagement(GenMdBaseTest):
                 }
             ]
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["data"], ["params", "request"]
-            )
             set_dict = {"data": import_data}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="动态表单模板类标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["data"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -517,12 +512,6 @@ class TestDynamicManagement(GenMdBaseTest):
     def test_template_export(self):
         """动态表单模板标准导出用例 - GEN_DYNAMIC_FORM_TEMPLATE_MD_GEI_EXPORT_SERVICE"""
         try:
-            api_path = self.get_api_path("动态表单模板类标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["selectFields"], ["params", "request"]
-            )
             set_dict = {
                 "selectFields": [
                     {"name": "code", "type": "TEXT"},
@@ -532,12 +521,14 @@ class TestDynamicManagement(GenMdBaseTest):
                     {"name": "description", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="动态表单模板类标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["selectFields"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -556,23 +547,19 @@ class TestDynamicManagement(GenMdBaseTest):
     def test_template_oss_import_task(self):
         """动态表单模板OSS导入任务用例 - GEN_DYNAMIC_FORM_TEMPLATE_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
         try:
-            api_path = self.get_api_path("动态表单模板类-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["fileKey", "taskName", "templateId"], ["params", "request"]
-            )
             set_dict = {
                 "fileKey": "test_dynamic_template_import_file.xlsx",
                 "taskName": f"动态表单模板导入任务_{self.mock_util.get_timestamp()}",
                 "templateId": 1
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="动态表单模板类-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["fileKey", "taskName", "templateId"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -591,12 +578,6 @@ class TestDynamicManagement(GenMdBaseTest):
     def test_template_export_task(self):
         """动态表单模板导出任务用例 - GEN_DYNAMIC_FORM_TEMPLATE_MD_API_GEI_TASK_EXPORT_DIRECT_POST"""
         try:
-            api_path = self.get_api_path("动态表单模板类-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["taskName", "queryData"], ["params", "request"]
-            )
             set_dict = {
                 "taskName": f"动态表单模板导出任务_{self.mock_util.get_timestamp()}",
                 "queryData": {
@@ -609,12 +590,14 @@ class TestDynamicManagement(GenMdBaseTest):
                     ]
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="动态表单模板类-导入导出任务管理接口-提交导出任务",
+                set_dict=set_dict,
+                fields_to_filter=["taskName", "queryData"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:

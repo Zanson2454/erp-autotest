@@ -2,7 +2,6 @@ import allure
 import pytest
 from testcases.gen_md import GenMdBaseTest
 from utils.mock_util import MockData
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
@@ -618,9 +617,6 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_exchange_rate_import(self):
         """汇率标准导入用例"""
         try:
-            api_path = self.get_api_path("汇率标准导入服务")
-            params, url = self.get_api_params(api_path)
-
             import_data = [
                 {
                     "code": self.mock_data.generate_unique_code(tag="IMPORT_RATE"),
@@ -631,16 +627,15 @@ class TestCurrencyManagement(GenMdBaseTest):
                 }
             ]
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["data"], ["params", "request"]
-            )
             set_dict = {"data": import_data}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="汇率标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["data"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -659,12 +654,6 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_exchange_rate_export(self):
         """汇率标准导出用例"""
         try:
-            api_path = self.get_api_path("汇率标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["selectFields"], ["params", "request"]
-            )
             set_dict = {
                 "selectFields": [
                     {"name": "code", "type": "TEXT"},
@@ -674,12 +663,14 @@ class TestCurrencyManagement(GenMdBaseTest):
                     {"name": "rate", "type": "NUMERIC"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="汇率标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["selectFields"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -699,9 +690,6 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_exchange_rate_type_import(self):
         """汇率类型标准导入用例"""
         try:
-            api_path = self.get_api_path("汇率类型标准导入服务")
-            params, url = self.get_api_params(api_path)
-
             import_data = [
                 {
                     "code": self.mock_data.generate_unique_code(tag="IMPORT_RATETYPE"),
@@ -710,16 +698,15 @@ class TestCurrencyManagement(GenMdBaseTest):
                 }
             ]
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["data"], ["params", "request"]
-            )
             set_dict = {"data": import_data}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="汇率类型标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["data"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -738,12 +725,6 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_exchange_rate_type_export(self):
         """汇率类型标准导出用例"""
         try:
-            api_path = self.get_api_path("汇率类型标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["selectFields"], ["params", "request"]
-            )
             set_dict = {
                 "selectFields": [
                     {"name": "code", "type": "TEXT"},
@@ -751,12 +732,14 @@ class TestCurrencyManagement(GenMdBaseTest):
                     {"name": "description", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="汇率类型标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["selectFields"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -776,22 +759,18 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_currency_oss_import_task(self):
         """币种配置OSS导入任务用例"""
         try:
-            api_path = self.get_api_path("币种配置-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ossPath", "taskName"], ["params", "request"]
-            )
             set_dict = {
                 "ossPath": "/test/currency_import.xlsx",
                 "taskName": f"币种配置导入任务_{self.mock_data.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="币种配置-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["ossPath", "taskName"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -810,12 +789,6 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_currency_export_task(self):
         """币种配置导出任务用例"""
         try:
-            api_path = self.get_api_path("币种配置-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["exportConfig", "taskName"], ["params", "request"]
-            )
             set_dict = {
                 "exportConfig": {
                     "fields": [
@@ -827,12 +800,14 @@ class TestCurrencyManagement(GenMdBaseTest):
                 },
                 "taskName": f"币种配置导出任务_{self.mock_data.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="币种配置-导入导出任务管理接口-提交导出任务",
+                set_dict=set_dict,
+                fields_to_filter=["exportConfig", "taskName"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -851,22 +826,18 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_exchange_rate_oss_import_task(self):
         """汇率OSS导入任务用例"""
         try:
-            api_path = self.get_api_path("汇率-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ossPath", "taskName"], ["params", "request"]
-            )
             set_dict = {
                 "ossPath": "/test/exchange_rate_import.xlsx",
                 "taskName": f"汇率导入任务_{self.mock_data.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="汇率-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["ossPath", "taskName"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -885,12 +856,6 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_exchange_rate_export_task(self):
         """汇率导出任务用例"""
         try:
-            api_path = self.get_api_path("汇率-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["exportConfig", "taskName"], ["params", "request"]
-            )
             set_dict = {
                 "exportConfig": {
                     "fields": [
@@ -902,12 +867,14 @@ class TestCurrencyManagement(GenMdBaseTest):
                 },
                 "taskName": f"汇率导出任务_{self.mock_data.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="汇率-导入导出任务管理接口-提交导出任务",
+                set_dict=set_dict,
+                fields_to_filter=["exportConfig", "taskName"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -926,22 +893,18 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_exchange_rate_type_oss_import_task(self):
         """汇率类型OSS导入任务用例"""
         try:
-            api_path = self.get_api_path("汇率类型-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ossPath", "taskName"], ["params", "request"]
-            )
             set_dict = {
                 "ossPath": "/test/exchange_rate_type_import.xlsx",
                 "taskName": f"汇率类型导入任务_{self.mock_data.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="汇率类型-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["ossPath", "taskName"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -960,12 +923,6 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_exchange_rate_type_export_task(self):
         """汇率类型导出任务用例"""
         try:
-            api_path = self.get_api_path("汇率类型-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["exportConfig", "taskName"], ["params", "request"]
-            )
             set_dict = {
                 "exportConfig": {
                     "fields": [
@@ -977,12 +934,14 @@ class TestCurrencyManagement(GenMdBaseTest):
                 },
                 "taskName": f"汇率类型导出任务_{self.mock_data.get_timestamp()}"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="汇率类型-导入导出任务管理接口-提交导出任务",
+                set_dict=set_dict,
+                fields_to_filter=["exportConfig", "taskName"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -1005,25 +964,18 @@ class TestCurrencyManagement(GenMdBaseTest):
             currency_code = self.mock_data.generate_unique_code(tag="DEL_CURR")
             currency_name = f"待删除币种_{self.mock_data.get_timestamp()}"
 
-            # 创建币种
-            save_api_path = self.get_api_path("GEN-币种配置-保存服务")
-            save_params, save_url = self.get_api_params(save_api_path)
-            
-            save_filtered_params = ParamUtil.filter_post_body_fields(
-                save_params, ["currCode", "currName", "symbol", "decimalPlace"], ["params", "request"]
-            )
             save_set_dict = {
                 "currCode": currency_code,
                 "currName": currency_name,
                 "symbol": currency_code,
                 "decimalPlace": 2
             }
-            ParamUtil.set_request_params(save_filtered_params, save_set_dict)
-
-            save_response = self.http.post(save_url, json=save_filtered_params)
+            save_response, delete_currency_id = self.standard_api_call(
+                api_key="GEN-币种配置-保存服务",
+                set_dict=save_set_dict,
+                fields_to_filter=["currCode", "currName", "symbol", "decimalPlace"]
+            )
             self.assert_util.assert_response_data(save_response)
-            
-            delete_currency_id = save_response.get("data", {}).get("data", {})
 
             # 2. 使用标准化API调用删除
             set_dict = {"id": delete_currency_id}
@@ -1057,10 +1009,6 @@ class TestCurrencyManagement(GenMdBaseTest):
             rate_code = self.mock_data.generate_unique_code(tag="DEL_RATE")
             rate_name = f"待删除汇率_{self.mock_data.get_timestamp()}"
 
-            # 创建汇率
-            save_api_path = self.get_api_path("GEN-汇率-保存服务")
-            save_params, save_url = self.get_api_params(save_api_path)
-            
             # 获取币种ID和汇率类型ID（原有逻辑，安全访问）
             curr_id = None
             if self.init_data:
@@ -1076,9 +1024,6 @@ class TestCurrencyManagement(GenMdBaseTest):
                 if rate_type_info:
                     rate_type_id = rate_type_info[0].get("exchange_rate_type_id")
             
-            save_filtered_params = ParamUtil.filter_post_body_fields(
-                save_params, ["code", "name", "exchRate", "baseCurrId", "tarCurrId", "genCurrExchangeRateTypeCf"], ["params", "request"]
-            )
             save_set_dict = {
                 "code": rate_code,
                 "name": rate_name,
@@ -1087,12 +1032,12 @@ class TestCurrencyManagement(GenMdBaseTest):
                 "tarCurrId": {"id": curr_id},
                 "genCurrExchangeRateTypeCf": {"id": rate_type_id}
             }
-            ParamUtil.set_request_params(save_filtered_params, save_set_dict)
-
-            save_response = self.http.post(save_url, json=save_filtered_params)
+            save_response, delete_rate_id = self.standard_api_call(
+                api_key="GEN-汇率-保存服务",
+                set_dict=save_set_dict,
+                fields_to_filter=["code", "name", "exchRate", "baseCurrId", "tarCurrId", "genCurrExchangeRateTypeCf"]
+            )
             self.assert_util.assert_response_data(save_response)
-            
-            delete_rate_id = save_response.get("data", {}).get("data", {})
 
             # 2. 使用标准化API调用删除
             set_dict = {"id": delete_rate_id}
@@ -1126,24 +1071,17 @@ class TestCurrencyManagement(GenMdBaseTest):
             rate_type_code = self.mock_data.generate_unique_code(tag="DEL_RATETYPE")
             rate_type_name = f"待删除汇率类型_{self.mock_data.get_timestamp()}"
 
-            # 创建汇率类型
-            save_api_path = self.get_api_path("GEN-汇率类型-保存服务")
-            save_params, save_url = self.get_api_params(save_api_path)
-            
-            save_filtered_params = ParamUtil.filter_post_body_fields(
-                save_params, ["code", "name", "description"], ["params", "request"]
-            )
             save_set_dict = {
                 "code": rate_type_code,
                 "name": rate_type_name,
                 "description": "待删除汇率类型描述"
             }
-            ParamUtil.set_request_params(save_filtered_params, save_set_dict)
-
-            save_response = self.http.post(save_url, json=save_filtered_params)
+            save_response, delete_rate_type_id = self.standard_api_call(
+                api_key="GEN-汇率类型-保存服务",
+                set_dict=save_set_dict,
+                fields_to_filter=["code", "name", "description"]
+            )
             self.assert_util.assert_response_data(save_response)
-            
-            delete_rate_type_id = save_response.get("data", {}).get("data", {})
 
             # 2. 使用标准化API调用删除
             set_dict = {"id": delete_rate_type_id}
@@ -1175,9 +1113,6 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_currency_import(self):
         """币种配置标准导入用例"""
         try:
-            api_path = self.get_api_path("币种配置标准导入服务")
-            params, url = self.get_api_params(api_path)
-
             import_data = [
                 {
                     "currCode": self.mock_data.generate_unique_code(tag="IMPORT_CURR"),
@@ -1187,16 +1122,15 @@ class TestCurrencyManagement(GenMdBaseTest):
                 }
             ]
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["data"], ["params", "request"]
-            )
             set_dict = {"data": import_data}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="币种配置标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["data"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -1215,12 +1149,6 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_currency_export(self):
         """币种配置标准导出用例"""
         try:
-            api_path = self.get_api_path("币种配置标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["selectFields"], ["params", "request"]
-            )
             set_dict = {
                 "selectFields": [
                     {"name": "currCode", "type": "TEXT"},
@@ -1229,12 +1157,14 @@ class TestCurrencyManagement(GenMdBaseTest):
                     {"name": "decimalPlace", "type": "NUMERIC"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="币种配置标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["selectFields"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:

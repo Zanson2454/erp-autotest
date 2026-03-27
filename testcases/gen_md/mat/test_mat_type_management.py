@@ -1,7 +1,6 @@
 import allure
 import pytest
 from testcases.gen_md import GenMdBaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
@@ -191,21 +190,15 @@ class TestMatTypeManagement(GenMdBaseTest):
             if not self.mat_type_id:
                 self.test_save_mat_type()
 
-            api_path = self.get_api_path("物料类型-根据ID查找数据服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
             set_dict = {"id": self.mat_type_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url,  headers=self.admin_headers,json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="物料类型-根据ID查找数据服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -355,26 +348,20 @@ class TestMatTypeManagement(GenMdBaseTest):
         物料类型标准导出用例
         """
         try:
-            api_path = self.get_api_path("物料类型标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["exportConfig"],
-                ["params", "request"]
-            )
             set_dict = {
                 "exportConfig": {
                     "fileName": f"物料类型导出_{self.mock_util.get_timestamp()}",
                     "sheetName": "物料类型"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="物料类型标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["exportConfig"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -395,16 +382,6 @@ class TestMatTypeManagement(GenMdBaseTest):
         物料类型标准导入用例（需要文件上传）
         """
         try:
-            # 调用标准导入接口
-            api_path = self.get_api_path("物料类型标准导入服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["file", "importConfig"],
-                ["params", "request"]
-            )
             set_dict = {
                 "file": f"物料类型导入模板_{self.mock_util.get_timestamp()}.xlsx",
                 "importConfig": {
@@ -413,13 +390,14 @@ class TestMatTypeManagement(GenMdBaseTest):
                     "validateOnly": False
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="物料类型标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["file", "importConfig"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -439,9 +417,7 @@ class TestMatTypeManagement(GenMdBaseTest):
         提交物料类型导出任务用例
         """
         try:
-            api_path = self.get_api_path("物料类型-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-            params = {
+            export_params = {
                 "serviceKey": "GEN_MD$GEN_MAT_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
                 "params": {
                     "taskName": f"物料类型-{self.nickname}-{self.mock_util.get_timestamp()}-导出",
@@ -497,10 +473,15 @@ class TestMatTypeManagement(GenMdBaseTest):
                 }
             }
 
-            response = self.http.post(url, headers=self.admin_headers, json=params)
+            response, _ = self.standard_api_call(
+                api_key="物料类型-导入导出任务管理接口-提交导出任务",
+                set_dict=export_params.get("params", {}),
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(params, "请求数据")
+            a.json(export_params.get("params", {}), "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -521,16 +502,6 @@ class TestMatTypeManagement(GenMdBaseTest):
         通过OSS提交物料类型导入任务用例（需要OSS配置）
         """
         try:
-            # 调用OSS导入任务接口
-            api_path = self.get_api_path("物料类型-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["ossPath", "fileName", "importConfig"],
-                ["params", "request"]
-            )
             set_dict = {
                 "ossPath": f"mat_type_import_{self.mock_util.get_timestamp()}.xlsx",
                 "fileName": f"物料类型导入_{self.mock_util.get_timestamp()}.xlsx",
@@ -544,13 +515,14 @@ class TestMatTypeManagement(GenMdBaseTest):
                     }
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="物料类型-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["ossPath", "fileName", "importConfig"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:

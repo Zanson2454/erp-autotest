@@ -2,7 +2,6 @@ import allure
 import pytest
 from typing import Any
 from testcases.gen_md import GenMdBaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
@@ -126,12 +125,6 @@ class TestRiskManagement(GenMdBaseTest):
     def test_query_risk_rule_page(self):
         """风险规则分页查询用例 - 用于查看系统配置的风险规则"""
         try:
-            api_path = self.get_api_path("风险规则分页查询服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields", "systemParams"], ["params", "request"]
-            )
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -148,9 +141,11 @@ class TestRiskManagement(GenMdBaseTest):
                 ],
                 "systemParams": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="风险规则分页查询服务",
+                set_dict=set_dict,
+                fields_to_filter=["pageable", "fields", "systemParams"]
+            )
             self.assert_util.assert_response_data(response)
 
             # 保存风险规则ID用于后续测试
@@ -159,7 +154,7 @@ class TestRiskManagement(GenMdBaseTest):
                 self.risk_id = data_list[0].get("id")
                 self.risk_code = data_list[0].get("riskitemCode")
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -178,16 +173,10 @@ class TestRiskManagement(GenMdBaseTest):
     def test_save_risk_rule(self):
         """风险规则保存用例 - GEN_RISK_RULE_MD_SAVE_SERVICE"""
         try:
-            api_path = self.get_api_path("风险规则保存服务")
-            params, url = self.get_api_params(api_path)
-
             # 生成测试数据
             risk_rule_code = self.mock_util.generate_unique_code(tag="RISK_RULE")
             risk_rule_name = f"风险规则_{self.mock_util.get_timestamp()}"
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["riskitemCode", "riskitemName", "riskitemLevel", "riskitemText", "dimension", "indicatorClass", "btClass"], ["params", "request"]
-            )
             set_dict = {
                 "riskitemCode": risk_rule_code,
                 "riskitemName": risk_rule_name,
@@ -197,16 +186,18 @@ class TestRiskManagement(GenMdBaseTest):
                 "indicatorClass": "QUANTITY",  # 指标类型不能为空，设置为数量类型
                 "btClass": "ORDER"  # 业务类型不能为空，设置为订单类型
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, extracted_id = self.standard_api_call(
+                api_key="风险规则保存服务",
+                set_dict=set_dict,
+                fields_to_filter=["riskitemCode", "riskitemName", "riskitemLevel", "riskitemText", "dimension", "indicatorClass", "btClass"]
+            )
             self.assert_util.assert_response_data(response)
 
             # 保存风险规则ID
-            self.risk_id = response.get("data", {}).get("data", {})
+            self.risk_id = extracted_id
             self.risk_code = risk_rule_code
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -229,16 +220,10 @@ class TestRiskManagement(GenMdBaseTest):
             if not self.risk_id:
                 self.test_save_risk_rule()
             
-            api_path = self.get_api_path("风险项目保存服务")
-            params, url = self.get_api_params(api_path)
-
             # 生成测试数据
             risk_tr_code = self.mock_util.generate_unique_code(tag="RISK_TR")
             risk_tr_name = f"风险项目_{self.mock_util.get_timestamp()}"
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["riskCode", "riskName", "riskLevel", "riskText", "riskRule", "btClass", "dimension", "indicatorClass"], ["params", "request"]
-            )
             set_dict = {
                 "riskCode": risk_tr_code,
                 "riskName": risk_tr_name,
@@ -249,19 +234,17 @@ class TestRiskManagement(GenMdBaseTest):
                 "dimension": "INVENTORY",  # 维度不能为空，设置为库存维度
                 "indicatorClass": "QUANTITY"  # 指标类型不能为空，设置为数量类型
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, extracted_id = self.standard_api_call(
+                api_key="风险项目保存服务",
+                set_dict=set_dict,
+                fields_to_filter=["riskCode", "riskName", "riskLevel", "riskText", "riskRule", "btClass", "dimension", "indicatorClass"]
+            )
             self.assert_util.assert_response_data(response)
 
             # 保存风险项目ID
-            response_data = response.get("data", {}).get("data", {})
-            if isinstance(response_data, dict):
-                self.risk_tr_id = response_data.get("id")
-            else:
-                self.risk_tr_id = response_data
+            self.risk_tr_id = extracted_id.get("id") if isinstance(extracted_id, dict) else extracted_id
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -280,12 +263,6 @@ class TestRiskManagement(GenMdBaseTest):
     def test_query_risk_tr_page(self):
         """风险项目分页查询用例 - GEN_RISK_TR_QUERY_PAGE_SERVICE"""
         try:
-            api_path = self.get_api_path("风险项目分页查询服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["pageable", "fields", "systemParams"], ["params", "request"]
-            )
             set_dict = {
                 "pageable": {
                     "pageNo": 1,
@@ -302,12 +279,14 @@ class TestRiskManagement(GenMdBaseTest):
                 ],
                 "systemParams": None
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="风险项目分页查询服务",
+                set_dict=set_dict,
+                fields_to_filter=["pageable", "fields", "systemParams"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -333,21 +312,15 @@ class TestRiskManagement(GenMdBaseTest):
             if not hasattr(self, 'risk_tr_id') or not self.risk_tr_id:
                 self.test_save_risk_tr()
 
-            api_path = self.get_api_path("风险项目详情服务")
-            if not api_path:
-                pytest.skip("API路径配置不存在：风险项目详情服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.risk_tr_id if self.risk_tr_id else self.risk_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="风险项目详情服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -366,12 +339,6 @@ class TestRiskManagement(GenMdBaseTest):
     def test_query_risk_level_count(self):
         """风险项目各等级数量查询用例 - GEN_RISK_TR_QUERY_LEVEL_COUNT_SERVICE"""
         try:
-            api_path = self.get_api_path("风险项目各等级数量查询服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["filterConditions"], ["params", "request"]
-            )
             set_dict = {
                 "filterConditions": {
                     "dateRange": {
@@ -382,9 +349,11 @@ class TestRiskManagement(GenMdBaseTest):
                     "riskTypes": []
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="风险项目各等级数量查询服务",
+                set_dict=set_dict,
+                fields_to_filter=["filterConditions"]
+            )
             self.assert_util.assert_response_data(response)
 
             # 验证返回的等级统计数据
@@ -392,7 +361,7 @@ class TestRiskManagement(GenMdBaseTest):
             if level_counts:
                 self.logger.info(f"风险等级统计: {level_counts}")
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -411,18 +380,10 @@ class TestRiskManagement(GenMdBaseTest):
     def test_save_risk_action(self):
         """风险行动保存用例 - GEN_RISK_ACTION_TR_SAVE_SERVICE"""
         try:
-            api_path = self.get_api_path("风险行动保存服务")
-            if not api_path:
-                pytest.skip("API路径配置不存在：风险行动保存服务")
-            params, url = self.get_api_params(api_path)
-
             # 生成测试数据
             action_code = self.mock_util.generate_unique_code(tag="RISK_ACTION")
             action_name = f"风险行动_{self.mock_util.get_timestamp()}"
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["actionCode", "actionName", "actionType", "actionDesc", "riskId"], ["params", "request"]
-            )
             set_dict = {
                 "actionCode": action_code,
                 "actionName": action_name,
@@ -430,12 +391,14 @@ class TestRiskManagement(GenMdBaseTest):
                 "actionDesc": f"风险行动描述_{self.mock_util.get_timestamp()}",
                 "riskId": self.risk_id if self.risk_id else 1
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="风险行动保存服务",
+                set_dict=set_dict,
+                fields_to_filter=["actionCode", "actionName", "actionType", "actionDesc", "riskId"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -454,18 +417,10 @@ class TestRiskManagement(GenMdBaseTest):
     def test_save_action_rule(self):
         """行动规则保存用例 - GEN_RISK_ACTION_RULE_MD_SAVE_SERVICE"""
         try:
-            api_path = self.get_api_path("行动规则保存服务")
-            if not api_path:
-                pytest.skip("API路径配置不存在：行动规则保存服务")
-            params, url = self.get_api_params(api_path)
-
             # 生成测试数据
             rule_code = self.mock_util.generate_unique_code(tag="ACTION_RULE")
             rule_name = f"行动规则_{self.mock_util.get_timestamp()}"
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["ruleCode", "ruleName", "ruleType", "ruleDesc", "triggerConditions"], ["params", "request"]
-            )
             set_dict = {
                 "ruleCode": rule_code,
                 "ruleName": rule_name,
@@ -477,12 +432,14 @@ class TestRiskManagement(GenMdBaseTest):
                     "actionType": "IMMEDIATE"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="行动规则保存服务",
+                set_dict=set_dict,
+                fields_to_filter=["ruleCode", "ruleName", "ruleType", "ruleDesc", "triggerConditions"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -507,23 +464,19 @@ class TestRiskManagement(GenMdBaseTest):
             if not hasattr(self, 'risk_tr_id') or not self.risk_tr_id:
                 self.test_save_risk_tr()
 
-            api_path = self.get_api_path("风险项目本次忽略服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id", "ignoreReason", "ignoreUntil"], ["params", "request"]
-            )
             set_dict = {
                 "id": self.risk_tr_id if self.risk_tr_id else self.risk_id,
                 "ignoreReason": f"测试忽略原因_{self.mock_util.get_timestamp()}",
                 "ignoreUntil": "2024-12-31"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="风险项目本次忽略服务",
+                set_dict=set_dict,
+                fields_to_filter=["id", "ignoreReason", "ignoreUntil"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -559,19 +512,15 @@ class TestRiskManagement(GenMdBaseTest):
                 self.logger.warning("未获取到风险项目ID，使用模拟ID进行测试")
                 self.risk_tr_id = 1
 
-            api_path = self.get_api_path("风险项目删除服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.risk_tr_id if hasattr(self, 'risk_tr_id') and self.risk_tr_id else self.risk_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="风险项目删除服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:

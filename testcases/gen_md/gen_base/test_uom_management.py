@@ -2,7 +2,6 @@ import allure
 import pytest
 from testcases.gen_md import GenMdBaseTest
 
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
@@ -233,19 +232,15 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
             if not self.uom_id:
                 self.test_save_uom_type()
 
-            api_path = self.get_api_path("计量单位-根据ID查找数据服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"], ["params", "request"]
-            )
             set_dict = {"id": self.uom_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="计量单位-根据ID查找数据服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -499,9 +494,6 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
     def test_uom_type_import(self):
         """计量单位标准导入用例 - GEN_UOM_TYPE_CF_GEI_IMPORT_SERVICE"""
         try:
-            api_path = self.get_api_path("计量单位标准导入服务")
-            params, url = self.get_api_params(api_path)
-
             # 构建导入数据
             import_data = [
                 {
@@ -512,16 +504,15 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
                 }
             ]
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["data"], ["params", "request"]
-            )
             set_dict = {"data": import_data}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="计量单位标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["data"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -540,12 +531,6 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
     def test_uom_type_export(self):
         """计量单位标准导出用例 - GEN_UOM_TYPE_CF_GEI_EXPORT_SERVICE"""
         try:
-            api_path = self.get_api_path("计量单位标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["selectFields"], ["params", "request"]
-            )
             set_dict = {
                 "selectFields": [
                     {"name": "code", "type": "TEXT"},
@@ -554,12 +539,14 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
                     {"name": "dimension", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="计量单位标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["selectFields"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -578,23 +565,19 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
     def test_uom_type_oss_import_task(self):    
         """计量单位OSS导入任务用例 - GEN_UOM_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
         try:
-            api_path = self.get_api_path("计量单位-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["fileKey", "taskName", "templateId"], ["params", "request"]
-            )
             set_dict = {
                 "fileKey": "test_uom_import_file.xlsx",
                 "taskName": f"计量单位导入任务_{self.mock_util.get_timestamp()}",
                 "templateId": 1
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="计量单位-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["fileKey", "taskName", "templateId"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -612,10 +595,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
     def test_uom_type_export_task(self):
         """计量单位导出任务用例 - GEN_UOM_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST"""
         try:
-            api_path = self.get_api_path("计量单位-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
-            params['params']={
+            export_task_params = {
                 "taskName": f"计量单位-{self.nickname}{self.mock_util.get_timestamp()}-导出",
                 "multiSheetConfig": [
                     {
@@ -722,10 +702,15 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
                 }
             }
 
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="计量单位-导入导出任务管理接口-提交导出任务",
+                set_dict=export_task_params,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(params, "请求数据")
+            a.json(export_task_params, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:

@@ -2,7 +2,6 @@ import allure
 import pytest
 from typing import Any
 from testcases.gen_md import GenMdBaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
@@ -82,6 +81,8 @@ class TestWcManagement(GenMdBaseTest):
                 fields_to_filter=fields_to_filter,
                 store_id_as="wc"  # 自动存储 self.wc_id
             )
+            self.assert_util.assert_response_success(response)
+            assert extracted_id is not None, "新增工作日日历失败，未返回ID"
 
             # 3. 保存业务数据（保持原有逻辑）
             self.wc_id = extracted_id
@@ -125,9 +126,11 @@ class TestWcManagement(GenMdBaseTest):
                 fields_to_filter=fields_to_filter,
                 store_id_as=None
             )
+            self.assert_util.assert_response_success(response)
 
             # 3. 保存业务数据（保持原有逻辑）
             self.wc_items = response.get("data", {}).get("data", {})
+            assert self.wc_items is not None, "日历生成返回为空"
 
             # 4. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
@@ -169,9 +172,13 @@ class TestWcManagement(GenMdBaseTest):
                 fields_to_filter=fields_to_filter,
                 store_id_as=None
             )
+            self.assert_util.assert_response_success(response)
 
             # 3. 业务验证（保持原有逻辑）
             self.assert_util.assert_response_data(response)
+            page_data = response.get("data", {}).get("data", {})
+            if isinstance(page_data, dict):
+                assert page_data.get("totalCount", 0) >= 0, "分页总数异常"
 
             # 4. 日志记录（Allure报告已由standard_api_call处理）
 
@@ -204,9 +211,12 @@ class TestWcManagement(GenMdBaseTest):
                 fields_to_filter=fields_to_filter,
                 store_id_as=None
             )
+            self.assert_util.assert_response_success(response)
 
             # 3. 业务验证（保持原有逻辑）
-            self.assert_util.assert_response_data(response)
+            detail_data = self.assert_util.assert_response_data(response)
+            if isinstance(detail_data, dict) and detail_data.get("id") is not None:
+                assert detail_data.get("id") == self.wc_id, "详情返回ID与创建ID不一致"
 
             # 4. 日志记录（Allure报告已由standard_api_call处理）
 
@@ -332,9 +342,6 @@ class TestWcManagement(GenMdBaseTest):
     def test_wc_import(self):
         """工作日日历标准导入用例 - GEN_WC_HEAD_CF_GEI_IMPORT_SERVICE"""
         try:
-            api_path = self.get_api_path("工作日日历头表标准导入服务")
-            params, url = self.get_api_params(api_path)
-
             # 构建导入数据
             import_data = [
                 {
@@ -346,16 +353,13 @@ class TestWcManagement(GenMdBaseTest):
                 }
             ]
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["data"], ["params", "request"]
-            )
             set_dict = {"data": import_data}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
+            response, _ = self.standard_api_call(
+                api_key="工作日日历头表标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["data"]
+            )
+            self.assert_util.assert_response_success(response)
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -374,12 +378,6 @@ class TestWcManagement(GenMdBaseTest):
     def test_wc_export(self):
         """工作日日历标准导出用例 - GEN_WC_HEAD_CF_GEI_EXPORT_SERVICE"""
         try:
-            api_path = self.get_api_path("工作日日历头表标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["selectFields"], ["params", "request"]
-            )
             set_dict = {
                 "selectFields": [
                     {"name": "code", "type": "TEXT"},
@@ -389,12 +387,12 @@ class TestWcManagement(GenMdBaseTest):
                     {"name": "description", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
+            response, _ = self.standard_api_call(
+                api_key="工作日日历头表标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["selectFields"]
+            )
+            self.assert_util.assert_response_success(response)
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -413,23 +411,17 @@ class TestWcManagement(GenMdBaseTest):
     def test_wc_oss_import_task(self):
         """工作日日历OSS导入任务用例 - GEN_WC_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
         try:
-            api_path = self.get_api_path("工作日日历头表-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["fileKey", "taskName", "templateId"], ["params", "request"]
-            )
             set_dict = {
                 "fileKey": "test_wc_import_file.xlsx",
                 "taskName": f"工作日日历导入任务_{self.mock_util.get_timestamp()}",
                 "templateId": 1
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
+            response, _ = self.standard_api_call(
+                api_key="工作日日历头表-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["fileKey", "taskName", "templateId"]
+            )
+            self.assert_util.assert_response_success(response)
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -448,12 +440,6 @@ class TestWcManagement(GenMdBaseTest):
     def test_wc_export_task(self):
         """工作日日历导出任务用例 - GEN_WC_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST"""
         try:
-            api_path = self.get_api_path("工作日日历头表-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["taskName", "queryData"], ["params", "request"]
-            )
             set_dict = {
                 "taskName": f"工作日日历导出任务_{self.mock_util.get_timestamp()}",
                 "queryData": {
@@ -466,12 +452,12 @@ class TestWcManagement(GenMdBaseTest):
                     ]
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
+            response, _ = self.standard_api_call(
+                api_key="工作日日历头表-导入导出任务管理接口-提交导出任务",
+                set_dict=set_dict,
+                fields_to_filter=["taskName", "queryData"]
+            )
+            self.assert_util.assert_response_success(response)
             a.json(response, "响应数据")
 
         except Exception as e:

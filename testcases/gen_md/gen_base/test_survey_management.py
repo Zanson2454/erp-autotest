@@ -2,7 +2,6 @@ import allure
 import pytest
 from typing import Any
 from testcases.gen_md import GenMdBaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
@@ -350,9 +349,6 @@ class TestSurveyManagement(GenMdBaseTest):
     def test_import_survey_mission(self):
         """评分任务标准导入用例 - GEN_SURVEY_MISSION_MD_GEI_IMPORT_SERVICE"""
         try:
-            api_path = self.get_api_path("评分任务标准导入服务")
-            params, url = self.get_api_params(api_path)
-
             import_data = [
                 {
                     "code": self.mock_util.generate_unique_code(tag="IMPORT_MISSION"),
@@ -362,16 +358,15 @@ class TestSurveyManagement(GenMdBaseTest):
                 }
             ]
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["sliceData"], ["params", "request"]
-            )
             set_dict = {"sliceData": import_data}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="评分任务标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["sliceData"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -390,12 +385,6 @@ class TestSurveyManagement(GenMdBaseTest):
     def test_export_survey_mission(self):
         """评分任务标准导出用例 - GEN_SURVEY_MISSION_MD_GEI_EXPORT_SERVICE"""
         try:
-            api_path = self.get_api_path("评分任务标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["selectFields"], ["params", "request"]
-            )
             set_dict = {
                 "selectFields": [
                     {"name": "code", "type": "TEXT"},
@@ -404,12 +393,14 @@ class TestSurveyManagement(GenMdBaseTest):
                     {"name": "status", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="评分任务标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["selectFields"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -428,9 +419,6 @@ class TestSurveyManagement(GenMdBaseTest):
     def test_survey_mission_export_task(self):
         """评分任务导出任务用例 - GEN_SURVEY_MISSION_MD_API_GEI_TASK_EXPORT_DIRECT_POST"""
         try:
-            api_path = self.get_api_path("评分任务-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
             # 构造导出任务参数
             params = {
                 "serviceKey": "GEN_SURVEY_MISSION_MD_API_GEI_TASK_EXPORT_DIRECT_POST",
@@ -491,7 +479,12 @@ class TestSurveyManagement(GenMdBaseTest):
                 }
             }
 
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="评分任务-导入导出任务管理接口-提交导出任务",
+                set_dict=params.get("params", {}),
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
 
             a.json(params, "请求数据")
@@ -513,9 +506,6 @@ class TestSurveyManagement(GenMdBaseTest):
     def test_survey_mission_oss_import_task(self):
         """评分任务OSS导入任务用例 - GEN_SURVEY_MISSION_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
         try:
-            api_path = self.get_api_path("评分任务-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
             # 构造OSS导入任务参数
             params = {
                 "serviceKey": "GEN_SURVEY_MISSION_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST",
@@ -539,7 +529,12 @@ class TestSurveyManagement(GenMdBaseTest):
                 }
             }
 
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="评分任务-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=params.get("params", {}),
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
 
             a.json(params, "请求数据")
@@ -562,9 +557,6 @@ class TestSurveyManagement(GenMdBaseTest):
     def test_import_survey_detail(self):
         """评分详情标准导入用例 - GEN_SURVEY_DETAIL_MD_GEI_IMPORT_SERVICE"""
         try:
-            api_path = self.get_api_path("评分详情标准导入服务")
-            params, url = self.get_api_params(api_path)
-
             import_data = [
                 {
                     "code": self.mock_util.generate_unique_code(tag="IMPORT_DETAIL"),
@@ -574,16 +566,15 @@ class TestSurveyManagement(GenMdBaseTest):
                 }
             ]
 
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["sliceData"], ["params", "request"]
-            )
             set_dict = {"sliceData": import_data}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="评分详情标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["sliceData"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -602,12 +593,6 @@ class TestSurveyManagement(GenMdBaseTest):
     def test_export_survey_detail(self):
         """评分详情标准导出用例 - GEN_SURVEY_DETAIL_MD_GEI_EXPORT_SERVICE"""
         try:
-            api_path = self.get_api_path("评分详情标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["selectFields"], ["params", "request"]
-            )
             set_dict = {
                 "selectFields": [
                     {"name": "code", "type": "TEXT"},
@@ -616,12 +601,14 @@ class TestSurveyManagement(GenMdBaseTest):
                     {"name": "missionId", "type": "TEXT"}
                 ]
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="评分详情标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["selectFields"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -640,9 +627,6 @@ class TestSurveyManagement(GenMdBaseTest):
     def test_survey_detail_export_task(self):
         """评分详情导出任务用例 - GEN_SURVEY_DETAIL_MD_API_GEI_TASK_EXPORT_DIRECT_POST"""
         try:
-            api_path = self.get_api_path("评分详情-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
             # 构造导出任务参数
             params = {
                 "serviceKey": "GEN_SURVEY_DETAIL_MD_API_GEI_TASK_EXPORT_DIRECT_POST",
@@ -703,7 +687,12 @@ class TestSurveyManagement(GenMdBaseTest):
                 }
             }
 
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="评分详情-导入导出任务管理接口-提交导出任务",
+                set_dict=params.get("params", {}),
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
 
             a.json(params, "请求数据")
@@ -725,9 +714,6 @@ class TestSurveyManagement(GenMdBaseTest):
     def test_survey_detail_oss_import_task(self):
         """评分详情OSS导入任务用例 - GEN_SURVEY_DETAIL_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
         try:
-            api_path = self.get_api_path("评分详情-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
             # 构造OSS导入任务参数
             params = {
                 "serviceKey": "GEN_SURVEY_DETAIL_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST",
@@ -752,7 +738,12 @@ class TestSurveyManagement(GenMdBaseTest):
                 }
             }
 
-            response = self.http.post(url, json=params)
+            response, _ = self.standard_api_call(
+                api_key="评分详情-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=params.get("params", {}),
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_data(response)
 
             a.json(params, "请求数据")

@@ -398,7 +398,12 @@ class TestMatCateManagement(GenMdBaseTest):
             set_dict = {"id": self.cateId}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="类目配置-根据ID查找数据服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"],
+                store_id_as=None
+            )
             self.assert_util.assert_response_data(response)
 
             a.json(filtered_params, "请求数据")
@@ -446,7 +451,12 @@ class TestMatCateManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="类目配置-分页数据服务",
+                set_dict=set_dict,
+                fields_to_filter=["pageable", "fields", "systemParams"],
+                store_id_as=None
+            )
             self.assert_util.assert_response_data(response)
 
             a.json(filtered_params, "请求数据")
@@ -512,7 +522,12 @@ class TestMatCateManagement(GenMdBaseTest):
             ParamUtil.set_request_params(filtered_params, set_dict)
             self.logger.info(f"请求参数: {filtered_params}")
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="类目配置-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=["ossPath", "fileName", "importConfig"],
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")

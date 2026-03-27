@@ -2,7 +2,6 @@ import allure
 import requests
 from testcases.gen_md import GenMdBaseTest
 from utils.mock_util import MockData
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 import pytest
 import time
@@ -576,26 +575,15 @@ class TestBizOrgManagement(GenMdBaseTest):
         根据维度构建组织树用例
         """
         try:
-            # 获取API配置
-            api_path = self.get_api_path("ORG-组织架构-根据维度构建一个组织树服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["orgDimensionCode", "orgStatus"],
-                ["params", "request"]
-            )
-            
             # 设置查询参数
             set_dict = {
                # todo
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
-
-            # 发送请求
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织架构-根据维度构建一个组织树服务",
+                set_dict=set_dict,
+                fields_to_filter=["orgDimensionCode", "orgStatus"]
+            )
             self.logger.info(f"响应: {response}")
 
             # 断言
@@ -606,7 +594,7 @@ class TestBizOrgManagement(GenMdBaseTest):
             self.assert_util.assert_by_operator(data_result, "is_list")
 
             # Allure 附件
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -628,17 +616,6 @@ class TestBizOrgManagement(GenMdBaseTest):
         组织调整导入用例
         """
         try:
-            # 获取API配置
-            api_path = self.get_api_path("ORG-组织架构-组织调整导入服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["sliceData", "context"],
-                ["params", "request"]
-            )
-            
             # 设置导入参数（模拟数据）
             set_dict = {
                 "sliceData": [
@@ -654,18 +631,18 @@ class TestBizOrgManagement(GenMdBaseTest):
                     "importMode": "UPDATE"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
-
-            # 发送请求
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织架构-组织调整导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["sliceData", "context"]
+            )
             self.logger.info(f"响应: {response}")
 
             # 断言
             self.assert_util.assert_response_data(response)
             
             # Allure 附件
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -687,17 +664,6 @@ class TestBizOrgManagement(GenMdBaseTest):
         组织禁用导入用例
         """
         try:
-            # 获取API配置
-            api_path = self.get_api_path("ORG-组织架构-组织禁用导入服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["sliceData", "context"],
-                ["params", "request"]
-            )
-            
             # 设置导入参数（模拟数据）
             set_dict = {
                 "sliceData": [
@@ -713,18 +679,18 @@ class TestBizOrgManagement(GenMdBaseTest):
                     "importMode": "DISABLE"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
-
-            # 发送请求
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织架构-组织禁用导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["sliceData", "context"]
+            )
             self.logger.info(f"响应: {response}")
 
             # 断言
             self.assert_util.assert_response_data(response)
             
             # Allure 附件
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -797,26 +763,15 @@ class TestBizOrgManagement(GenMdBaseTest):
                 self.test_save_com_org()
                 org_id = TestBizOrgManagement.org_info.get("com_org_info", {}).get("id")
 
-            # 获取API配置
-            api_path = self.get_api_path("ORG-组织架构-组织历史版本查看服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["id"],
-                ["params", "request"]
-            )
-            
             # 设置查询参数
             set_dict = {
                 "id": org_id
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
-
-            # 发送请求
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织架构-组织历史版本查看服务",
+                set_dict=set_dict,
+                fields_to_filter=["id"]
+            )
             self.logger.info(f"响应: {response}")
 
             # 断言
@@ -829,7 +784,7 @@ class TestBizOrgManagement(GenMdBaseTest):
             self.logger.info(f"查询到组织历史版本数量: {len(data_result)}")
             
             # Allure 附件
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -1038,32 +993,22 @@ class TestBizOrgManagement(GenMdBaseTest):
         获取组织导入模版用例
         """
         try:
-            # 获取API配置
-            api_path = self.get_api_path("ORG-组织架构-获取组织导入的模版服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["orgDimensionCode","templateType"],
-                ["params", "request"]
-            )
             set_dict = {
                 "orgDimensionCode": "SCM_ORG_GRP",
                 "templateType": "ORG_CREATE"
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
-
-            # 发送请求
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织架构-获取组织导入的模版服务",
+                set_dict=set_dict,
+                fields_to_filter=["orgDimensionCode", "templateType"]
+            )
             self.assert_util.assert_response_data(response)
             template_data = response.get("data",{}).get("data",{})
             # 验证返回的导入模版数据
             self.assert_util.assert_by_operator(template_data.get("importHeaderContextList"),"not_empty")
             
             # Allure 附件
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -1085,17 +1030,6 @@ class TestBizOrgManagement(GenMdBaseTest):
         组织新增导入用例
         """
         try:
-            # 获取API配置
-            api_path = self.get_api_path("ORG-组织架构-组织新增导入服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["sliceData", "context"],
-                ["params", "request"]
-            )
-            
             # 设置导入参数（模拟数据）
             set_dict = {
                 "sliceData": [
@@ -1111,18 +1045,18 @@ class TestBizOrgManagement(GenMdBaseTest):
                     "importMode": "CREATE"
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
-
-            # 发送请求
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="ORG-组织架构-组织新增导入服务",
+                set_dict=set_dict,
+                fields_to_filter=["sliceData", "context"]
+            )
             self.logger.info(f"响应: {response}")
 
             # 断言
             self.assert_util.assert_response_data(response)
             
             # Allure 附件
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:

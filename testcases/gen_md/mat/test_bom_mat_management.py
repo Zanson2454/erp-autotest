@@ -73,7 +73,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-物料BOM头-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_data(response)
             
             self.bom_head_id = response.get("data", {}).get("data", {})
@@ -119,7 +124,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-物料BOM头-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_data(response)
 
             a.json(filtered_params, "请求数据")
@@ -157,7 +167,12 @@ class TestBomManagement(GenMdBaseTest):
             set_dict = {"id": self.bom_head_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-物料BOM头-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_data(response)
 
             a.json(filtered_params, "请求数据")
@@ -197,7 +212,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="物料BOM头标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -237,7 +257,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="物料BOM头标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -275,7 +300,12 @@ class TestBomManagement(GenMdBaseTest):
             set_dict = {"id": self.bom_head_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-物料BOM头-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -319,7 +349,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-BOM行项目类别配置-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_data(response)
             
             self.bom_item_type_id = response.get("data", {}).get("data", {})
@@ -367,7 +402,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-BOM行项目类别配置-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_data(response)
 
             a.json(filtered_params, "请求数据")
@@ -406,7 +446,12 @@ class TestBomManagement(GenMdBaseTest):
             set_dict = {"id": self.bom_item_type_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-BOM行项目类别配置-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_data(response)
 
             a.json(filtered_params, "请求数据")
@@ -444,7 +489,12 @@ class TestBomManagement(GenMdBaseTest):
             set_dict = {"id": [self.bom_item_type_id]}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-BOM行项目类别配置-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -488,7 +538,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-BOM状态配置表-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_data(response)
             
             self.bom_status_id = response.get("data", {}).get("data", {})
@@ -534,7 +589,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-BOM状态配置表-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_data(response)
 
             a.json(filtered_params, "请求数据")
@@ -572,7 +632,12 @@ class TestBomManagement(GenMdBaseTest):
             set_dict = {"id": self.bom_status_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-BOM状态配置表-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_data(response)
 
             a.json(filtered_params, "请求数据")
@@ -610,7 +675,12 @@ class TestBomManagement(GenMdBaseTest):
             set_dict = {"id": [self.bom_status_id]}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-BOM状态配置表-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -652,7 +722,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-BOM用途配置-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_data(response)
             
             self.bom_use_id = response.get("data", {}).get("data", {})
@@ -698,7 +773,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-BOM用途配置-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_data(response)
 
             a.json(filtered_params, "请求数据")
@@ -735,7 +815,12 @@ class TestBomManagement(GenMdBaseTest):
             set_dict = {"id": self.bom_use_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-BOM用途配置-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_data(response)
 
             a.json(filtered_params, "请求数据")
@@ -775,7 +860,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="BOM用途配置标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -815,7 +905,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="BOM用途配置标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -856,7 +951,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="BOM用途配置-导入导出任务管理接口-提交导出任务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -908,7 +1008,12 @@ class TestBomManagement(GenMdBaseTest):
             set_dict = {"id": self.bom_use_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-BOM用途配置-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -949,7 +1054,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="BOM状态配置表标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -989,7 +1099,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="BOM状态配置表标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -1030,7 +1145,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, headers=self.admin_headers, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="BOM状态配置表-导入导出任务管理接口-提交导出任务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -1086,7 +1206,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="BOM行项目类别配置标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -1126,7 +1251,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="BOM行项目类别配置标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -1167,7 +1297,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="BOM行项目类别配置-导入导出任务管理接口-提交导出任务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -1226,7 +1361,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-BOM 行项目供应标识配置表-保存服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_data(response)
             
             self.bom_supp_ind_id = response.get("data", {}).get("data", {})
@@ -1273,7 +1413,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-BOM 行项目供应标识配置表-查询分页服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_data(response)
 
             a.json(filtered_params, "请求数据")
@@ -1311,7 +1456,12 @@ class TestBomManagement(GenMdBaseTest):
             set_dict = {"id": self.bom_supp_ind_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-BOM 行项目供应标识配置表-查询详情服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_data(response)
 
             a.json(filtered_params, "请求数据")
@@ -1349,7 +1499,12 @@ class TestBomManagement(GenMdBaseTest):
             set_dict = {"id": [self.bom_supp_ind_id]}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="GEN-BOM 行项目供应标识配置表-删除服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -1406,7 +1561,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, headers=self.admin_headers, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="物料BOM头-导入导出任务管理接口-提交导出任务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -1451,7 +1611,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="物料BOM头-导入导出任务管理接口-通过OSS提交导入任务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -1492,7 +1657,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="BOM 行项目供应标识配置表标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -1532,7 +1702,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="BOM 行项目供应标识配置表标准导入服务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -1573,7 +1748,12 @@ class TestBomManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, headers=self.admin_headers, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="BOM 行项目供应标识配置表-导入导出任务管理接口-提交导出任务",
+                set_dict=set_dict,
+                fields_to_filter=list(set_dict.keys()),
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")

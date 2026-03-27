@@ -252,7 +252,12 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
 
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="物料单位转换标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["exportConfig"],
+                store_id_as=None
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(filtered_params, "请求数据")
@@ -387,7 +392,14 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
                 }
             }
 
-            response = self.http.post(url, headers=self.admin_headers, json=params)
+            response, _ = self.standard_api_call(
+                api_key="物料单位转换-导入导出任务管理接口-提交导出任务",
+                set_dict=params["params"],
+                fields_to_filter=list(params["params"].keys()),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(params, "请求数据")

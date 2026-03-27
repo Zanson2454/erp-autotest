@@ -1,7 +1,6 @@
 import allure
 import pytest
 from testcases.gen_md import GenMdBaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
@@ -234,24 +233,15 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         判断模型是否开启了组织切换用例
         """
         try:
-            # 调用判断接口
-            api_path = self.get_api_path("ORG-多组织-模型是否开启了组织切换服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["model_key"],
-                ["params", "request"]
-            )
             set_dict = {"model_key": "GEN_MD$ORG_SWITCH_MODEL_CF"}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="ORG-多组织-模型是否开启了组织切换服务",
+                set_dict=set_dict,
+                fields_to_filter=["model_key"]
+            )
             self.assert_util.assert_response_data(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -545,29 +535,20 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         切换公司列表标准导出用例
         """
         try:
-            # 调用标准导出接口
-            api_path = self.get_api_path("切换公司列表标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["exportConfig"],
-                ["params", "request"]
-            )
             set_dict = {
                 "exportConfig": {
                     "exportType": "EXCEL",
                     "conditions": {}
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="切换公司列表标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["exportConfig"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -591,29 +572,20 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         切换公司模型表标准导出用例
         """
         try:
-            # 调用标准导出接口
-            api_path = self.get_api_path("切换公司模型表标准导出服务")
-            params, url = self.get_api_params(api_path)
-
-            # 过滤和设置参数
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["exportConfig"],
-                ["params", "request"]
-            )
             set_dict = {
                 "exportConfig": {
                     "exportType": "EXCEL",
                     "conditions": {}
                 }
             }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            self.logger.info(f"请求参数: {filtered_params}")
-
-            response = self.http.post(url, json=filtered_params)
+            response, _ = self.standard_api_call(
+                api_key="切换公司模型表标准导出服务",
+                set_dict=set_dict,
+                fields_to_filter=["exportConfig"]
+            )
             self.assert_util.assert_response_success(response)
 
-            a.json(filtered_params, "请求数据")
+            a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
         except Exception as e:
@@ -768,13 +740,6 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         切换公司列表-导入导出任务管理接口-提交导出任务用例
         """
         try:
-            # 调用提交导出任务接口
-            api_path = self.get_api_path("切换公司列表-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
-            # 获取用户信息
-            user_name = self.md_cache_data.get("user_info", {}).get("username", "AutoTest")
-
             # 构建导出任务参数
             export_params = {
                 "serviceKey": "GEN_MD$ORG_SWITCH_LIST_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
@@ -809,8 +774,12 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
                 }
             }
 
-            self.logger.info(f"请求参数: {export_params}")
-            response = self.http.post(url, json=export_params)
+            response, _ = self.standard_api_call(
+                api_key="切换公司列表-导入导出任务管理接口-提交导出任务",
+                set_dict=export_params.get("params", {}),
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(export_params, "请求数据")
@@ -834,10 +803,6 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         切换公司模型表-导入导出任务管理接口-提交导出任务用例
         """
         try:
-            # 调用提交导出任务接口
-            api_path = self.get_api_path("切换公司模型表-导入导出任务管理接口-提交导出任务")
-            params, url = self.get_api_params(api_path)
-
             # 构建导出任务参数
             export_params = {
                 "serviceKey": "GEN_MD$ORG_SWITCH_MODEL_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
@@ -919,8 +884,12 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
                 }
             }
                         
-            self.logger.info(f"请求参数: {export_params}")
-            response = self.http.post(url, headers=self.admin_headers,json=export_params)
+            response, _ = self.standard_api_call(
+                api_key="切换公司模型表-导入导出任务管理接口-提交导出任务",
+                set_dict=export_params.get("params", {}),
+                use_param_util=False,
+                param_path=["params"]
+            )
             self.assert_util.assert_response_success(response)
 
             a.json(export_params, "请求数据")
