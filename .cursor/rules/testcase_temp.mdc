@@ -212,6 +212,39 @@ def test_{action}_{object}(self):
         raise
 ```
 
+**补充约束（必须遵守）**：
+- 禁止在测试方法中调用其他测试方法（如 `self.test_save_xxx()`）；请提取私有 helper（如 `_ensure_xxx()`）。
+- 对创建/关联接口增加幂等分支：若返回“已存在”错误码，回查数据并继续断言。
+- 导出/异步任务接口允许短暂网关抖动；建议在 helper 内实现有限重试，而不是直接放宽断言。
+
+**幂等 helper 示例**：
+```python
+def _ensure_org_relation(self, query_condition: dict) -> int:
+    query_resp, _ = self.standard_api_call(
+        api_key="GEN-组织关联-分页查询服务",
+        set_dict={"queryCondition": query_condition, "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True}},
+    )
+    rows = query_resp.get("data", {}).get("data", {}).get("data", []) or []
+    if rows:
+        return rows[0]["id"]
+
+    save_resp, rel_id = self.standard_api_call(
+        api_key="GEN-组织关联-保存服务",
+        set_dict=query_condition,
+    )
+    err_code = save_resp.get("errorCode")
+    if err_code == "Org.relation.is.exist":
+        query_resp2, _ = self.standard_api_call(
+            api_key="GEN-组织关联-分页查询服务",
+            set_dict={"queryCondition": query_condition, "pageable": {"pageNo": 1, "pageSize": 20, "needTotal": True}},
+        )
+        rows2 = query_resp2.get("data", {}).get("data", {}).get("data", []) or []
+        if rows2:
+            return rows2[0]["id"]
+    self.assert_util.assert_response_data(save_resp)
+    return rel_id
+```
+
 ---
 
 ## 三、工具使用

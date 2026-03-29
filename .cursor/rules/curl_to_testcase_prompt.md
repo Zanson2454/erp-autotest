@@ -27,12 +27,15 @@
 3. **添加 @case_decorator 装饰器**
 4. **添加 setup_class 和 teardown_class**
 5. **使用 bind_cache_data 简化数据获取**
+6. **禁止用例互调**（禁止 `self.test_xxx()`，改用 helper）
+7. **加入幂等处理**（“已存在”错误码时回查并复用）
 
 ### 代码规范
 - 参考文件: testcase_temp.mdc 和 coding_standards.mdc
 - 使用 self.mock_util.generate_unique_code(tag="AT_XXX") 生成编码
 - 使用 self.mock_util.get_timestamp() 生成时间戳
 - 使用 self.bind_cache_data() 绑定常用数据（如 cust_id, org_id 等）
+- 检查 `${ENV_VAR}` 占位符是否已替换，URL 必须带 `https://` 或 `http://`
 ```
 
 ---

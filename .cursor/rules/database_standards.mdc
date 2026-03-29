@@ -13,6 +13,7 @@ alwaysApply: true
 - **参数化查询**: 禁止SQL注入，所有SQL必须使用参数化查询
 - **数据隔离**: 测试数据使用"AT_"前缀，确保与生产数据隔离
 - **资源清理**: 测试结束后必须清理测试数据，避免数据污染
+- **删除开关感知**: 若 `ENABLE_PHYSICAL_DELETE=false`，`DBManager.delete()` 会被拦截，不能依赖物理删除清场
 
 ## 数据库连接管理
 
@@ -124,6 +125,23 @@ affected_rows = self.db.delete(
 # 2. 批量删除使用LIKE条件，如"AT_%"
 # 3. 删除失败会自动回滚
 ```
+
+### 删除开关注意事项（高优先级）
+```python
+# 当 ENABLE_PHYSICAL_DELETE=false 时，delete 返回 0 且只记录 warning
+# 因此不能把“清理成功”作为前置假设，创建前必须做幂等查询
+exists = self.db.query_one(
+    sql="SELECT id FROM table_name WHERE code = %s",
+    params=[code]
+)
+if exists:
+    obj_id = exists["id"]  # 复用已有数据，避免重复插入报错
+```
+
+建议策略：
+1. 先查后创：创建/关联前先查是否存在。
+2. 已存在兼容：对 `...is.exist` 类错误码补充断言与回查逻辑。
+3. 清理弱依赖：`teardown_class` 保留清理代码，但不要让断言依赖“必定删掉”。
 
 ## 数据清理规范
 

@@ -209,7 +209,19 @@ source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-4. **配置环境**
+4. **安装代码质量门禁（推荐）**
+
+```bash
+pip install pre-commit
+pre-commit install
+pre-commit run --all-files
+```
+
+说明：
+- 启用 `ruff`（导入排序/基础静态检查/格式化）
+- 启用 `quality_guard`（敏感信息硬编码、`teardown_class` super 调用、测试互调 `self.test_xxx` 检查）
+
+5. **配置环境**
 
 ### 默认配置模式（单项目）
 
@@ -316,7 +328,7 @@ TEST_DB_NAME='demo2_test'
 
 > 💡 **提示**：详细的多项目环境变量配置说明请参考 [docs/multi_project_env_config.md](docs/multi_project_env_config.md)
 
-5. **初始化测试数据（首次运行）**
+6. **初始化测试数据（首次运行）**
 
 框架会自动初始化测试数据，包括：
 - 执行 `config/erp/base_init_sql.yaml` 中的基础数据初始化脚本
@@ -325,7 +337,7 @@ TEST_DB_NAME='demo2_test'
 
 首次运行较慢，后续运行会复用缓存（支持自动过期刷新）。
 
-6. **运行测试**
+7. **运行测试**
 
 ```bash
 # 运行所有测试（使用 test 环境，默认）
@@ -359,6 +371,21 @@ python -m uvicorn main:app --host 0.0.0.0 --port 8000
 # 访问：http://localhost:8000/docs（API 文档）
 #      http://localhost:8000/allure（Allure 报告）
 ```
+
+### gen_md 模块本地执行建议
+
+```bash
+# 推荐命令（排查时增加实时日志）
+pytest -p no:rerunfailures --log-cli-level=INFO testcases/gen_md
+
+# 仅复现失败用例（串行，便于定位）
+pytest -n 0 -p no:rerunfailures --log-cli-level=INFO <failed_case_path>
+```
+
+说明：
+- `pytest.ini` 默认启用 `-n auto` 并发；若出现偶发失败，先用 `-n 0` 二次复现，区分“用例问题”与“环境抖动”。
+- 若报 `No scheme supplied` 且 URL 包含 `${...}`，说明环境变量未替换成功，请先检查 `.env` 是否被正确加载。
+- 若报 `获取用户信息失败` 且包含 DNS/网关错误（如 `NameResolutionError` / `504 Gateway Time-out`），优先判定为环境或网络问题，而非用例断言问题。
 
 ## 📖 使用指南
 
@@ -776,6 +803,24 @@ pytest --reruns 2 --reruns-error-type TimeoutError
 def test_xxx(self): pass
 ```
 
+### Q11: 为什么会出现“组织关联已存在/数据已存在”类失败？
+
+A: 常见原因是测试环境启用了 `ENABLE_PHYSICAL_DELETE=false`，框架会拦截 `DBManager.delete()` 物理删除，导致历史数据残留。建议：
+
+1. 创建前先查询是否已存在，存在则复用 ID（幂等化）
+2. 对“已存在”业务错误码做兼容断言，再回查确认数据正确
+3. 避免在用例中互相调用 `self.test_xxx()`，减少顺序耦合和级联失败
+
+### Q12: `.env` 配置有哪些高频坑位？
+
+A:
+
+1. 变量名必须与 `config/env/*.yaml` 中 `${VAR}` 完全一致
+2. `KEY=VALUE` 两侧不要保留多余空格
+3. URL 字段建议使用完整 `https://...`，避免协议头缺失
+4. Cookie 值需要完整，截断会触发回退登录或鉴权失败
+5. 当前加载优先级：`config/env/{project}/.env` > `config/env/.env` > 根目录 `.env`
+
 ## 📚 相关文档
 
 项目文档位于 `docs/` 目录，包括：
@@ -801,4 +846,4 @@ ERP 自动化测试平台维护团队
 
 ---
 
-**最后更新**：2025年
+**最后更新**：2026-03-29

@@ -12,6 +12,8 @@ alwaysApply: true
 - **数据复用**：从缓存获取，禁止硬编码
 - **Mock优先**：使用 `self.mock_util` 生成测试数据
 - **规范清理**：`teardown_class` 中逐表删除测试数据
+- **避免互调**：禁止在用例中调用 `self.test_xxx()`，改为抽取 helper 方法复用
+- **幂等优先**：创建/关联接口遇到“已存在”时，允许回查并复用已有数据
 
 ## Payload 构造与清洗规范 (核心逻辑)
 
@@ -32,6 +34,18 @@ ERP 接口通常要求嵌套对象。若 curl 中字段值为对象且含 ID，*
 ### 3. 字段排版与硬编码习惯
 * **置顶字段**：将 `remark`, `note`, `description` 等非核心字段放在 `set_dict` 最前面，并统一写死为 `"自动化测试提交"` 或 `"AutoTest"`，禁止 Mock。
 * **变量映射**：字段名自动映射为 Python 风格 (如 `invLocId` -> `inv_loc_id`)。
+
+## 环境变量与鉴权前置校验（必做）
+
+在生成用例或排障建议时，必须包含以下前置检查：
+
+1. YAML 中 `${ENV_VAR}` 必须可被 `.env` 解析替换，禁止带占位符直接发请求。
+2. `.env` 书写使用 `KEY=VALUE`，不要在 `=` 两侧保留多余空格。
+3. URL 字段必须包含协议头（`http://` 或 `https://`）。
+4. 认证失败优先区分三类根因：
+   - 占位符未替换（`No scheme supplied` / `${VAR}` 原样出现）
+   - 网络/DNS异常（`NameResolutionError`）
+   - 网关超时（`504 Gateway Time-out`）
 
 ## 标准测试用例模板
 
