@@ -4,6 +4,7 @@ import os
 import time
 import pytest
 import requests
+import urllib3
 from functools import wraps
 from dataclasses import dataclass
 from typing import Dict, Any, Optional, Union
@@ -301,7 +302,7 @@ class LoginService:
         headers = {
             'Content-Type': 'application/json',
             'User-Agent': mock_data.get_mock_user_agent(),
-            'Accpt-Language': 'zh-CN,zh;q=0.9',
+            'Accept-Language': 'zh-CN,zh;q=0.9',
             'Referer': referer,
             'Origin': origin
         }
@@ -353,6 +354,55 @@ class LoginService:
 
         return "", ""
 
+    @staticmethod
+    def _to_bool(value: Any, default: bool = True) -> bool:
+        """将环境变量/配置中的布尔值转为 bool。"""
+        if value is None:
+            return default
+        if isinstance(value, bool):
+            return value
+        if isinstance(value, str):
+            normalized = value.strip().lower()
+            if normalized in {"1", "true", "yes", "y", "on"}:
+                return True
+            if normalized in {"0", "false", "no", "n", "off"}:
+                return False
+        return bool(value)
+
+    def _resolve_ssl_verify(self, auth_config: Dict[str, Any]) -> Union[bool, str]:
+        """
+        解析 requests Session 的 verify 配置。
+        优先级：
+        1. portal 配置中的 ca_bundle / verify_ssl
+        2. TEST_CA_BUNDLE / REQUESTS_CA_BUNDLE
+        3. TEST_VERIFY_SSL
+        4. 默认 True
+        """
+        ca_bundle = (
+            auth_config.get("ca_bundle")
+            or os.getenv("TEST_CA_BUNDLE", "").strip()
+            or os.getenv("REQUESTS_CA_BUNDLE", "").strip()
+        )
+        if ca_bundle:
+            return ca_bundle
+
+        return self._to_bool(
+            auth_config.get("verify_ssl", os.getenv("TEST_VERIFY_SSL")),
+            default=True
+        )
+
+    def _configure_session_transport(self, auth_config: Dict[str, Any]) -> None:
+        """根据环境配置初始化 Session 的 TLS 校验策略。"""
+        session = self.session_manager.get_session()
+        verify = self._resolve_ssl_verify(auth_config)
+        session.verify = verify
+
+        if verify is False:
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+            Loggers.warning("当前 Session 已关闭 HTTPS 证书校验，仅建议测试环境使用")
+        else:
+            Loggers.info(f"当前 Session HTTPS 校验配置: {verify}")
+
     def login(self, portal_key, tenant_key="terp") -> LoginResult:
         """
         执行登录 - 支持两种方式：
@@ -369,6 +419,8 @@ class LoginService:
                     status=LoginStatus.FAILED,
                     error_message=f"未找到门户配置: {tenant_key}/{portal_key}"
                 )
+
+            self._configure_session_transport(auth_config)
             
             # 检查是否配置了 cookie（支持直接使用 cookie 登录）
             cookie = auth_config.get("cookie", "")

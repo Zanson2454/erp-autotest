@@ -1,0 +1,468 @@
+{
+  "sceneKey": "GEN_MD$GEN_BUSINESS_PARTNER_VIEW",
+  "viewKey": "GEN_MD$GEN_BUSINESS_PARTNER_VIEW:edit",
+  "viewTitle": "edit",
+  "buttonKey": "GEN_MD$GEN_BUSINESS_PARTNER_VIEW-editView-footer-save",
+  "buttonName": "提交",
+  "appId": 0,
+  "teamId": 22,
+  "serviceKey": "GEN_MD$GEN_BUSINESS_PARTNER_MD_SAVE_ACTION_SERVICE",
+  "params": {
+    "request": {
+      "id": 2250103,
+      "partnerIdentity": [
+        "CUSTOMER"
+      ],
+      "partnerTypeId": {
+        "id": 2017001,
+        "context": {},
+        "version": 4,
+        "deleted": 0,
+        "createdAt": 1750855110000,
+        "updatedAt": 1751860286000,
+        "createdBy": 540175374525637,
+        "updatedBy": 540175374525637,
+        "code": "AUTOTEST_OUT_CUST",
+        "name": "外部客户(自动化)",
+        "desc": "自动化",
+        "classType": "COMPANY",
+        "isInternal": false,
+        "isAddrRequired": false,
+        "isBankRequired": false,
+        "status": "ENABLED",
+        "isOverseasPartner": false,
+        "isNeedMaintainService": false,
+        "role": "CUSTOMER",
+        "channelType": "INTERNAL"
+      },
+      "classType": "COMPANY",
+      "code": "AT_OUT_CUST73795245048251",
+      "name": "艾提科信数据股份有限公司",
+      "isInternal": false,
+      "outerCode": "outcode20260329164315",
+      "labelList": [],
+      "createdBy": 540175374525637,
+      "updatedBy": 540175374525637,
+      "createdAt": 1774773795000,
+      "updatedAt": 1774773796000,
+      "version": 2,
+      "deleted": 0,
+      "requestId": null,
+      "originOrgId": 0,
+      "tenantId": 0,
+      "status": "DISABLED",
+      "finRisk": null,
+      "contactNum": "17747737952",
+      "addrList": [
+        {
+          "id": 2193103,
+          "context": {},
+          "version": 1,
+          "deleted": 0,
+          "createdAt": 1774773796000,
+          "updatedAt": 1774773796000,
+          "createdBy": 540175374525637,
+          "updatedBy": 540175374525637,
+          "contactName": "朱琴",
+          "contactPhone": "17747737952",
+          "addrId": {
+            "id": 70028089,
+            "context": {},
+            "version": 2,
+            "deleted": 0,
+            "createdAt": 1693547294000,
+            "updatedAt": 1755848362000,
+            "createdBy": 1,
+            "addrCode": "70028089",
+            "addrName": "转塘街道",
+            "postCode": "",
+            "counId": {
+              "id": 2000001
+            },
+            "isLeaf": true,
+            "level": 4,
+            "lon": 120.0759,
+            "lat": 30.17641,
+            "path": "-330000-330100-330106-70028089-",
+            "addrParentId": {
+              "id": 330106
+            }
+          },
+          "addrDetail": "自动化测试地址",
+          "addrUsage": "REC_ADDR",
+          "genBusinessPartnerMdId": 2250103,
+          "isDefault": true
+        }
+      ],
+      "bankList": [
+        {
+          "id": 2162090,
+          "context": {},
+          "version": 1,
+          "deleted": 0,
+          "createdAt": 1774773796000,
+          "updatedAt": 1774773796000,
+          "createdBy": 540175374525637,
+          "updatedBy": 540175374525637,
+          "bankAccount": "6853037107444052808",
+          "accountName": "民生银行",
+          "usage": "PAYMENT",
+          "genBusinessPartnerMdId": 2250103,
+          "bankId": {
+            "id": 2000018,
+            "context": {},
+            "version": 1,
+            "deleted": 0,
+            "createdAt": 1697083200000,
+            "updatedAt": 1697083200000,
+            "bankCode": "BCM",
+            "bankName": "交通银行",
+            "bankMneCode": "BCM"
+          },
+          "subBankId": {
+            "id": 1069226,
+            "context": {},
+            "version": 6,
+            "deleted": 0,
+            "createdAt": 1697189964000,
+            "updatedAt": 1773802876000,
+            "createdBy": 453812167598661,
+            "updatedBy": 540175374525637,
+            "subBankCode": "301242000088",
+            "subBankName": "交通银行股份有限公司吉林铁东支行",
+            "genBankId": 2000018
+          },
+          "isDefault": true
+        }
+      ],
+      "attachmentList": null,
+      "textList": [
+        {
+          "id": 2042090,
+          "context": {},
+          "version": 1,
+          "deleted": 0,
+          "createdAt": 1774773796000,
+          "updatedAt": 1774773796000,
+          "createdBy": 540175374525637,
+          "updatedBy": 540175374525637,
+          "textContent": "自动化测试文本_20260329164315",
+          "genBusinessPartnerMdId": 2250103,
+          "textType": {
+            "id": 14009001,
+            "context": {},
+            "version": 0,
+            "deleted": 0,
+            "createdAt": 1751878644000,
+            "updatedAt": 1751878644000,
+            "createdBy": 540175374525637,
+            "updatedBy": 540175374525637,
+            "btClass": "SLS",
+            "textCode": "AUTOTEST_SLS_TEXT_TYPE",
+            "textName": "销售文本类型(自动化)",
+            "desc": "自动测试用(勿动！)"
+          }
+        }
+      ],
+      "comCorporation": "徐波",
+      "bizLicenseNo": "91543438464636897S",
+      "enterpriseType": "EXTERNAL",
+      "registeredCapital": "100",
+      "socialCreditCode": "91543438464636897S",
+      "taxpayersNum": "91543438464636897S",
+      "counId": {
+        "id": 2000001,
+        "context": {},
+        "version": 9,
+        "deleted": 0,
+        "createdAt": 1710903119000,
+        "updatedAt": 1773802958000,
+        "createdBy": 527074850853701,
+        "updatedBy": 540175374525637,
+        "counCode": "CHINA",
+        "counName": "中国",
+        "currId": 2000001,
+        "timezoneId": 2000001,
+        "defaultRelv": true
+      },
+      "addressId": {
+        "id": 70028089,
+        "context": {},
+        "version": 2,
+        "deleted": 0,
+        "createdAt": 1693547294000,
+        "updatedAt": 1755848362000,
+        "createdBy": 1,
+        "addrCode": "70028089",
+        "addrName": "转塘街道",
+        "postCode": "",
+        "counId": {
+          "id": 2000001
+        },
+        "isLeaf": true,
+        "level": 4,
+        "lon": 120.0759,
+        "lat": 30.17641,
+        "path": "-330000-330100-330106-70028089-",
+        "addrParentId": {
+          "id": 330106
+        }
+      },
+      "addressDetail": "自动化测试详细地址",
+      "bizScope": "商务信息咨询；销售办公用品；设备租赁；计算机系统集成；货物进出口；数据处理服务等",
+      "intro": "我公司成立于2019年，是一家专业从事电子商务的现代化企业。公司拥有专业的技术团队和成熟的管理体系。我们致力于为客户提供高效的产品服务。",
+      "custSlsList": null,
+      "custQualificationsList": null,
+      "custContactList": null,
+      "custUserList": [
+        {
+          "isManager": true,
+          "userId": {
+            "id": 476102974181637,
+            "username": "admin",
+            "mobile": "180****0000",
+            "nickname": "admin",
+            "status": true
+          }
+        }
+      ],
+      "custPartiesList": null
+    }
+  },
+  "tmodule": "GEN_MD",
+  "__recorded_query_params__": {
+    "tmodule": "GEN_MD"
+  },
+  "__recorded_body__": {
+    "sceneKey": "GEN_MD$GEN_BUSINESS_PARTNER_VIEW",
+    "viewKey": "GEN_MD$GEN_BUSINESS_PARTNER_VIEW:edit",
+    "viewTitle": "edit",
+    "buttonKey": "GEN_MD$GEN_BUSINESS_PARTNER_VIEW-editView-footer-save",
+    "buttonName": "提交",
+    "appId": 0,
+    "teamId": 22,
+    "serviceKey": "GEN_MD$GEN_BUSINESS_PARTNER_MD_SAVE_ACTION_SERVICE",
+    "params": {
+      "request": {
+        "id": 2250103,
+        "partnerIdentity": [
+          "CUSTOMER"
+        ],
+        "partnerTypeId": {
+          "id": 2017001,
+          "context": {},
+          "version": 4,
+          "deleted": 0,
+          "createdAt": 1750855110000,
+          "updatedAt": 1751860286000,
+          "createdBy": 540175374525637,
+          "updatedBy": 540175374525637,
+          "code": "AUTOTEST_OUT_CUST",
+          "name": "外部客户(自动化)",
+          "desc": "自动化",
+          "classType": "COMPANY",
+          "isInternal": false,
+          "isAddrRequired": false,
+          "isBankRequired": false,
+          "status": "ENABLED",
+          "isOverseasPartner": false,
+          "isNeedMaintainService": false,
+          "role": "CUSTOMER",
+          "channelType": "INTERNAL"
+        },
+        "classType": "COMPANY",
+        "code": "AT_OUT_CUST73795245048251",
+        "name": "艾提科信数据股份有限公司",
+        "isInternal": false,
+        "outerCode": "outcode20260329164315",
+        "labelList": [],
+        "createdBy": 540175374525637,
+        "updatedBy": 540175374525637,
+        "createdAt": 1774773795000,
+        "updatedAt": 1774773796000,
+        "version": 2,
+        "deleted": 0,
+        "requestId": null,
+        "originOrgId": 0,
+        "tenantId": 0,
+        "status": "DISABLED",
+        "finRisk": null,
+        "contactNum": "17747737952",
+        "addrList": [
+          {
+            "id": 2193103,
+            "context": {},
+            "version": 1,
+            "deleted": 0,
+            "createdAt": 1774773796000,
+            "updatedAt": 1774773796000,
+            "createdBy": 540175374525637,
+            "updatedBy": 540175374525637,
+            "contactName": "朱琴",
+            "contactPhone": "17747737952",
+            "addrId": {
+              "id": 70028089,
+              "context": {},
+              "version": 2,
+              "deleted": 0,
+              "createdAt": 1693547294000,
+              "updatedAt": 1755848362000,
+              "createdBy": 1,
+              "addrCode": "70028089",
+              "addrName": "转塘街道",
+              "postCode": "",
+              "counId": {
+                "id": 2000001
+              },
+              "isLeaf": true,
+              "level": 4,
+              "lon": 120.0759,
+              "lat": 30.17641,
+              "path": "-330000-330100-330106-70028089-",
+              "addrParentId": {
+                "id": 330106
+              }
+            },
+            "addrDetail": "自动化测试地址",
+            "addrUsage": "REC_ADDR",
+            "genBusinessPartnerMdId": 2250103,
+            "isDefault": true
+          }
+        ],
+        "bankList": [
+          {
+            "id": 2162090,
+            "context": {},
+            "version": 1,
+            "deleted": 0,
+            "createdAt": 1774773796000,
+            "updatedAt": 1774773796000,
+            "createdBy": 540175374525637,
+            "updatedBy": 540175374525637,
+            "bankAccount": "6853037107444052808",
+            "accountName": "民生银行",
+            "usage": "PAYMENT",
+            "genBusinessPartnerMdId": 2250103,
+            "bankId": {
+              "id": 2000018,
+              "context": {},
+              "version": 1,
+              "deleted": 0,
+              "createdAt": 1697083200000,
+              "updatedAt": 1697083200000,
+              "bankCode": "BCM",
+              "bankName": "交通银行",
+              "bankMneCode": "BCM"
+            },
+            "subBankId": {
+              "id": 1069226,
+              "context": {},
+              "version": 6,
+              "deleted": 0,
+              "createdAt": 1697189964000,
+              "updatedAt": 1773802876000,
+              "createdBy": 453812167598661,
+              "updatedBy": 540175374525637,
+              "subBankCode": "301242000088",
+              "subBankName": "交通银行股份有限公司吉林铁东支行",
+              "genBankId": 2000018
+            },
+            "isDefault": true
+          }
+        ],
+        "attachmentList": null,
+        "textList": [
+          {
+            "id": 2042090,
+            "context": {},
+            "version": 1,
+            "deleted": 0,
+            "createdAt": 1774773796000,
+            "updatedAt": 1774773796000,
+            "createdBy": 540175374525637,
+            "updatedBy": 540175374525637,
+            "textContent": "自动化测试文本_20260329164315",
+            "genBusinessPartnerMdId": 2250103,
+            "textType": {
+              "id": 14009001,
+              "context": {},
+              "version": 0,
+              "deleted": 0,
+              "createdAt": 1751878644000,
+              "updatedAt": 1751878644000,
+              "createdBy": 540175374525637,
+              "updatedBy": 540175374525637,
+              "btClass": "SLS",
+              "textCode": "AUTOTEST_SLS_TEXT_TYPE",
+              "textName": "销售文本类型(自动化)",
+              "desc": "自动测试用(勿动！)"
+            }
+          }
+        ],
+        "comCorporation": "徐波",
+        "bizLicenseNo": "91543438464636897S",
+        "enterpriseType": "EXTERNAL",
+        "registeredCapital": "100",
+        "socialCreditCode": "91543438464636897S",
+        "taxpayersNum": "91543438464636897S",
+        "counId": {
+          "id": 2000001,
+          "context": {},
+          "version": 9,
+          "deleted": 0,
+          "createdAt": 1710903119000,
+          "updatedAt": 1773802958000,
+          "createdBy": 527074850853701,
+          "updatedBy": 540175374525637,
+          "counCode": "CHINA",
+          "counName": "中国",
+          "currId": 2000001,
+          "timezoneId": 2000001,
+          "defaultRelv": true
+        },
+        "addressId": {
+          "id": 70028089,
+          "context": {},
+          "version": 2,
+          "deleted": 0,
+          "createdAt": 1693547294000,
+          "updatedAt": 1755848362000,
+          "createdBy": 1,
+          "addrCode": "70028089",
+          "addrName": "转塘街道",
+          "postCode": "",
+          "counId": {
+            "id": 2000001
+          },
+          "isLeaf": true,
+          "level": 4,
+          "lon": 120.0759,
+          "lat": 30.17641,
+          "path": "-330000-330100-330106-70028089-",
+          "addrParentId": {
+            "id": 330106
+          }
+        },
+        "addressDetail": "自动化测试详细地址",
+        "bizScope": "商务信息咨询；销售办公用品；设备租赁；计算机系统集成；货物进出口；数据处理服务等",
+        "intro": "我公司成立于2019年，是一家专业从事电子商务的现代化企业。公司拥有专业的技术团队和成熟的管理体系。我们致力于为客户提供高效的产品服务。",
+        "custSlsList": null,
+        "custQualificationsList": null,
+        "custContactList": null,
+        "custUserList": [
+          {
+            "isManager": true,
+            "userId": {
+              "id": 476102974181637,
+              "username": "admin",
+              "mobile": "180****0000",
+              "nickname": "admin",
+              "status": true
+            }
+          }
+        ],
+        "custPartiesList": null
+      }
+    }
+  }
+}

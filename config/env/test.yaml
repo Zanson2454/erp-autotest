@@ -20,6 +20,8 @@ portal_config:
       iam_referer: "${TEST_TERP_PORTAL_IAM_REFERER}"
       portal_url: "${TEST_TERP_PORTAL_URL}"
       portal_referer: "${TEST_TERP_PORTAL_REFERER}"
+      verify_ssl: "${TEST_VERIFY_SSL}"
+      ca_bundle: "${TEST_CA_BUNDLE}"
       description: "TERP门户"
       
     
@@ -31,6 +33,8 @@ portal_config:
       iam_referer: "${TEST_TERP_CUST_PC_IAM_REFERER}"
       portal_url: "${TEST_TERP_CUST_PC_URL}"
       portal_referer: "${TEST_TERP_CUST_PC_REFERER}"
+      verify_ssl: "${TEST_VERIFY_SSL}"
+      ca_bundle: "${TEST_CA_BUNDLE}"
       description: "TERP客户端PC门户"
 
 # 数据库配置

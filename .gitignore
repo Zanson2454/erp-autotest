@@ -36,8 +36,10 @@ wheels/
 venv/
 .env
 .venv/
+.venv_mitmproxy/
 env/
 ENV/
+.recorder_index.json
 
 # 忽略日志文件
 *.log

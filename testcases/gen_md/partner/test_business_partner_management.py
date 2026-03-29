@@ -1,3 +1,5 @@
+import copy
+
 import allure
 import pytest
 from testcases.gen_md import GenMdBaseTest
@@ -8,6 +10,13 @@ from utils.report_util import a, case_decorator
 @allure.feature("合作伙伴主数据")
 class TestBusinessPartnerManagement(GenMdBaseTest):
     """合作伙伴主数据管理测试类"""
+
+    SCENE_KEY = "GEN_MD$GEN_BUSINESS_PARTNER_VIEW"
+    SCENE_LIST_VIEW = "GEN_MD$GEN_BUSINESS_PARTNER_VIEW:list"
+    SCENE_DETAIL_VIEW = "GEN_MD$GEN_BUSINESS_PARTNER_VIEW:detail"
+    SCENE_EDIT_VIEW = "GEN_MD$GEN_BUSINESS_PARTNER_VIEW:edit"
+    SCENE_APP_ID = 0
+    SCENE_TEAM_ID = 22
 
     @classmethod
     def setup_class(cls):
@@ -20,6 +29,9 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
         super().bind_context()
         cls.partner_id = None
         cls.partner_code = None
+        cls.scene_partner_id = None
+        cls.scene_partner_code = None
+        cls.scene_partner_detail = None
         cls.logger.info("合作伙伴主数据管理测试类初始化完成")
 
         # 检查 md_cache_data 是否存在
@@ -107,6 +119,298 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
             cls.bank_id = None
             cls.sub_bank_id = None
             cls.logger.warning("init_data 为 None，基础数据 ID 设置为 None")
+
+    @classmethod
+    def _register_direct_api(cls, api_path, method, body_template=None):
+        if getattr(cls, "apis", None) is None:
+            cls.apis = {}
+        if getattr(cls, "api_params", None) is None:
+            cls.api_params = {}
+
+        cls.apis[api_path] = {"path": api_path, "method": method}
+        if method in {"POST", "PUT", "PATCH"}:
+            cls.api_params[api_path] = copy.deepcopy(body_template) if body_template is not None else {}
+        else:
+            cls.api_params.setdefault(api_path, {})
+
+    @staticmethod
+    def _extract_response_data(response):
+        data = response.get("data", {})
+        if isinstance(data, dict) and "data" in data:
+            return data.get("data")
+        return data
+
+    @staticmethod
+    def _extract_records(response):
+        data = TestBusinessPartnerManagement._extract_response_data(response)
+        if isinstance(data, dict):
+            records = data.get("data")
+            if isinstance(records, list):
+                return records
+            records = data.get("records")
+            if isinstance(records, list):
+                return records
+            records = data.get("list")
+            if isinstance(records, list):
+                return records
+            rows = data.get("rows")
+            if isinstance(rows, list):
+                return rows
+        return []
+
+    def _execute_direct_api(self, api_path, method, request_body=None, body_template=None, query_params=None):
+        self._register_direct_api(api_path=api_path, method=method, body_template=body_template)
+
+        if method in {"GET", "DELETE"}:
+            response, extracted_id = self.standard_api_call(
+                api_key=api_path,
+                set_dict=request_body,
+                use_param_util=False,
+                method=method,
+                query_params=query_params,
+            )
+            return response, extracted_id
+
+        response, extracted_id = self.standard_api_call(
+            api_key=api_path,
+            set_dict=request_body or {},
+            use_param_util=False,
+            param_path=["params", "request"],
+            method=method,
+            query_params=query_params,
+        )
+        return response, extracted_id
+
+    def _build_scene_request_envelope(
+        self,
+        service_key,
+        view_key,
+        request_payload,
+        *,
+        model_key=None,
+        button_key=None,
+        button_name=None,
+        view_title=None,
+        container_key=None,
+    ):
+        payload = {
+            "sceneKey": self.SCENE_KEY,
+            "viewKey": view_key,
+            "appId": self.SCENE_APP_ID,
+            "teamId": self.SCENE_TEAM_ID,
+            "serviceKey": service_key,
+            "params": {
+                "request": request_payload,
+            },
+        }
+        if model_key is not None:
+            payload["params"]["modelKey"] = model_key
+        if button_key is not None:
+            payload["buttonKey"] = button_key
+        if button_name is not None:
+            payload["buttonName"] = button_name
+        if view_title is not None:
+            payload["viewTitle"] = view_title
+        if container_key is not None:
+            payload["containerKey"] = container_key
+        return payload
+
+    def _build_business_partner_payload(self, code, *, enterprise_type="EXTERNAL"):
+        biz_license_no = self.mock_util.get_mock_enterprise_credentials()
+        return {
+            "partnerIdentity": ["CUSTOMER"],
+            "partnerTypeId": {"id": self.out_cust_type_id},
+            "classType": "COMPANY",
+            "code": code,
+            "name": self.mock_util.get_mock_company(),
+            "outerCode": f"outcode{self.mock_util.get_timestamp()}",
+            "contactNum": str(self.mock_util.get_mock_phone_number()),
+            "comCorporation": self.mock_util.get_mock_name(),
+            "bizLicenseNo": biz_license_no,
+            "socialCreditCode": biz_license_no,
+            "taxpayersNum": biz_license_no,
+            "enterpriseType": enterprise_type,
+            "registeredCapital": 100,
+            "counId": {"id": self.coun_id},
+            "addressId": {"id": self.addr_id},
+            "addressDetail": "自动化测试详细地址",
+            "bizScope": self.mock_util.get_mock_business_scope(),
+            "intro": self.mock_util.get_mock_company_intro(),
+            "addrList": [
+                {
+                    "addrDetail": "自动化测试地址",
+                    "addrId": {"id": self.addr_id},
+                    "addrUsage": "REC_ADDR",
+                    "contactName": self.mock_util.get_mock_name(),
+                    "contactPhone": self.mock_util.get_mock_phone_number(),
+                    "isDefault": True,
+                }
+            ],
+            "bankList": [
+                {
+                    "accountName": self.mock_util.get_mock_bank_info()["bank_name"],
+                    "bankAccount": self.mock_util.get_mock_bank_info()["account_number"],
+                    "isDefault": True,
+                    "usage": "PAYMENT",
+                    "bankId": {"id": self.bank_id},
+                    "subBankId": {"id": self.sub_bank_id},
+                }
+            ],
+            "attachmentList": [],
+            "textList": [
+                {
+                    "textType": {"id": self.sls_text_type_id},
+                    "textContent": f"自动化测试文本_{self.mock_util.get_timestamp()}",
+                }
+            ],
+            "qualificationsList": [],
+            "contactList": [
+                {
+                    "contactName": self.mock_util.get_mock_name(),
+                    "contactPhone": self.mock_util.get_mock_phone_number(),
+                    "isDefault": True,
+                }
+            ],
+            "userList": [
+                {
+                    "employeeId": {"id": self.employee_id},
+                    "isManager": True,
+                }
+            ],
+            "partiesList": [
+                {
+                    "prtnTypeId": {"id": self.sls_partner_type_id},
+                    "prtnId": {"id": self.sls_org_id},
+                }
+            ],
+            "cateList": [
+                {
+                    "matCateId": {"id": self.mat_cate_id},
+                }
+            ],
+        }
+
+    def _ensure_scene_partner(self):
+        if self.__class__.scene_partner_id:
+            return self.__class__.scene_partner_id
+
+        code = self.mock_util.generate_unique_code(tag="SCENE_CUST")
+        set_dict = self._build_business_partner_payload(code)
+        fields_to_filter = [
+            "code", "name", "addrList", "addressDetail", "addressId", "attachmentList", "bankList", "textList",
+            "userList", "contactList", "contactNum", "counId", "enterpriseType", "cateList", "bizLicenseNo",
+            "socialCreditCode", "taxpayersNum", "bizScope", "classType", "comCorporation", "intro", "outerCode",
+            "partiesList", "partnerIdentity", "partnerTypeId", "qualificationsList", "registeredCapital",
+        ]
+
+        response, extracted_id = self.standard_api_call(
+            api_key="GEN-合作伙伴-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=fields_to_filter,
+        )
+        self.assert_util.assert_response_data(response)
+        self.__class__.scene_partner_id = extracted_id
+        self.__class__.scene_partner_code = code
+        return extracted_id
+
+    def _build_scene_page_request(self):
+        self._ensure_scene_partner()
+        return {
+            "pageable": {
+                "pageNo": 1,
+                "pageSize": 20,
+                "sortOrders": None,
+                "conditionItems": {
+                    "type": "ConditionItems",
+                    "conditions": {
+                        "code": {
+                            "operator": "CONTAINS",
+                            "value": self.scene_partner_code,
+                        }
+                    },
+                    "logicOperator": "AND",
+                },
+            },
+            "fields": [
+                {"name": "name", "type": "TEXT"},
+                {"name": "code", "type": "TEXT"},
+                {"name": "partnerIdentity", "type": "SELECT"},
+                {"name": "partnerTypeId", "type": "OBJECT"},
+            ],
+            "systemParams": None,
+        }
+
+    def _query_scene_partner_detail(self, view_key=None):
+        self._ensure_scene_partner()
+        request_payload = {
+            "id": str(self.scene_partner_id),
+        }
+        body_template = self._build_scene_request_envelope(
+            service_key="GEN_MD$GEN_BUSINESS_PARTNER_MD_QUERY_DETAIL_ACTION_SERVICE",
+            view_key=view_key or self.SCENE_DETAIL_VIEW,
+            request_payload=request_payload,
+        )
+        response, _ = self._execute_direct_api(
+            api_path="/api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_QUERY_DETAIL_ACTION_SERVICE",
+            method="POST",
+            request_body=request_payload,
+            body_template=body_template,
+            query_params={"tmodule": "GEN_MD"},
+        )
+        self.assert_util.assert_response_data(response)
+        detail_data = self._extract_response_data(response)
+        self.__class__.scene_partner_detail = detail_data
+        return response, detail_data
+
+    def _build_reverse_tree_request(self):
+        addr_id = self.addr_id
+        if addr_id is None and self.scene_partner_detail:
+            address_info = self.scene_partner_detail.get("addressId") or {}
+            if isinstance(address_info, dict):
+                addr_id = address_info.get("id")
+
+        return {
+            "conditionGroup": {
+                "type": "ConditionGroup",
+                "logicOperator": "OR",
+                "conditions": [
+                    {
+                        "type": "ConditionGroup",
+                        "logicOperator": "OR",
+                        "conditions": [
+                            {
+                                "type": "ConditionLeaf",
+                                "leftValue": {
+                                    "type": "VarValue",
+                                    "varValue": [{"valueKey": "id", "valueName": "id"}],
+                                    "valueType": "VAR",
+                                    "fieldType": "Number",
+                                },
+                                "operator": "EQ",
+                                "rightValue": {
+                                    "type": "VarValue",
+                                    "valueType": "CONST",
+                                    "fieldType": "Number",
+                                    "constValue": addr_id,
+                                },
+                            }
+                        ],
+                    }
+                ],
+            },
+            "commonConditionGroup": None,
+        }
+
+    def _build_user_paging_request(self):
+        return {
+            "pageable": {
+                "pageNo": 1,
+                "pageSize": 20,
+                "conditionItems": None,
+                "sortOrders": None,
+                "keyword": self.nickname,
+            }
+        }
         
     @classmethod
     def teardown_class(cls):
@@ -781,10 +1085,199 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
 
     @case_decorator(
         story="合作伙伴主数据",
+        title="测试查询当前用户组织上下文",
+        description="验证页面场景相关的用户组织上下文加载能力",
+        severity="normal",
+        file_level_order=9,
+        tags=["合作伙伴", "页面场景", "上下文"]
+    )
+    def test_query_user_company_context(self):
+        try:
+            request_payload = {}
+            body_template = {
+                "serviceKey": "GEN_MD$ORG_SWITCH_QUERY_USER_COM_ACTION_SERVICE",
+                "params": {"request": request_payload},
+            }
+            response, _ = self._execute_direct_api(
+                api_path="/api/trantor/service/engine/execute/GEN_MD$ORG_SWITCH_QUERY_USER_COM_ACTION_SERVICE",
+                method="POST",
+                request_body=request_payload,
+                body_template=body_template,
+            )
+
+            self.assert_util.assert_response_success(response)
+            assert self._extract_response_data(response) is not None
+            a.json(response, "响应数据")
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="合作伙伴主数据",
+        title="测试页面场景查询合作伙伴分页",
+        description="验证手工探索沉淀出的页面分页查询链路",
+        severity="normal",
+        file_level_order=10,
+        tags=["合作伙伴", "页面场景", "分页查询"]
+    )
+    def test_scene_query_business_partner_page_by_code(self):
+        try:
+            request_payload = self._build_scene_page_request()
+            body_template = self._build_scene_request_envelope(
+                service_key="GEN_MD$GEN_BUSINESS_PARTNER_MD_QUERY_PAGE_ACTION_SERVICE",
+                view_key=self.SCENE_LIST_VIEW,
+                request_payload=request_payload,
+            )
+            response, _ = self._execute_direct_api(
+                api_path="/api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_QUERY_PAGE_ACTION_SERVICE",
+                method="POST",
+                request_body=request_payload,
+                body_template=body_template,
+                query_params={"tmodule": "GEN_MD"},
+            )
+
+            self.assert_util.assert_response_data(response)
+            records = self._extract_records(response)
+            total = self._extract_response_data(response).get("total", 0)
+            assert total >= 1
+            assert any(str(item.get("code")) == str(self.scene_partner_code) for item in records)
+            a.json(response, "响应数据")
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="合作伙伴主数据",
+        title="测试页面场景查询合作伙伴详情",
+        description="验证页面场景详情查询可正确回查新建伙伴",
+        severity="normal",
+        file_level_order=11,
+        tags=["合作伙伴", "页面场景", "详情查询"]
+    )
+    def test_scene_query_business_partner_detail(self):
+        try:
+            response, detail_data = self._query_scene_partner_detail()
+            assert str(detail_data.get("id")) == str(self.scene_partner_id)
+            assert str(detail_data.get("code")) == str(self.scene_partner_code)
+            a.json(response, "响应数据")
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="合作伙伴主数据",
+        title="测试页面场景查询地址树",
+        description="验证编辑场景下地址树辅助数据查询能力",
+        severity="normal",
+        file_level_order=12,
+        tags=["合作伙伴", "页面场景", "树查询"]
+    )
+    def test_scene_query_partner_address_tree(self):
+        try:
+            request_payload = self._build_reverse_tree_request()
+            body_template = self._build_scene_request_envelope(
+                service_key="GEN_MD$SYS_ReverseConstructTreeService",
+                view_key=self.SCENE_EDIT_VIEW,
+                request_payload=request_payload,
+                model_key="GEN_MD$gen_addr_type_cf",
+                container_key="",
+            )
+            response, _ = self._execute_direct_api(
+                api_path="/api/trantor/service/engine/execute/GEN_MD$SYS_ReverseConstructTreeService",
+                method="POST",
+                request_body=request_payload,
+                body_template=body_template,
+                query_params={"tmodule": "GEN_MD", "modelKey": "GEN_MD$gen_addr_type_cf"},
+            )
+
+            self.assert_util.assert_response_success(response)
+            assert self._extract_response_data(response) is not None
+            a.json(response, "响应数据")
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="合作伙伴主数据",
+        title="测试页面场景查询用户分页数据",
+        description="验证编辑场景下用户选择器分页能力",
+        severity="normal",
+        file_level_order=13,
+        tags=["合作伙伴", "页面场景", "分页数据"]
+    )
+    def test_scene_query_partner_user_page(self):
+        try:
+            request_payload = self._build_user_paging_request()
+            body_template = self._build_scene_request_envelope(
+                service_key="GEN_MD$SYS_PagingDataService",
+                view_key=self.SCENE_EDIT_VIEW,
+                request_payload=request_payload,
+                model_key="GEN_MD$user",
+                container_key="",
+            )
+            response, _ = self._execute_direct_api(
+                api_path="/api/trantor/service/engine/execute/GEN_MD$SYS_PagingDataService",
+                method="POST",
+                request_body=request_payload,
+                body_template=body_template,
+                query_params={"tmodule": "GEN_MD", "modelKey": "GEN_MD$user"},
+            )
+
+            self.assert_util.assert_response_success(response)
+            total = self._extract_response_data(response).get("total", 0)
+            assert total >= 1
+            a.json(response, "响应数据")
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="合作伙伴主数据",
+        title="测试页面场景保存合作伙伴编辑结果",
+        description="验证手工探索中的编辑保存动作可沉淀为正式回归场景",
+        severity="normal",
+        file_level_order=14,
+        tags=["合作伙伴", "页面场景", "保存"]
+    )
+    def test_scene_save_business_partner_from_detail(self):
+        try:
+            _, detail_data = self._query_scene_partner_detail(view_key=self.SCENE_EDIT_VIEW)
+            request_payload = copy.deepcopy(detail_data)
+            request_payload["intro"] = f"页面场景更新简介_{self.mock_util.get_timestamp()}"
+            request_payload["addressDetail"] = "页面场景更新地址"
+            request_payload["contactNum"] = str(self.mock_util.get_mock_phone_number())
+
+            body_template = self._build_scene_request_envelope(
+                service_key="GEN_MD$GEN_BUSINESS_PARTNER_MD_SAVE_ACTION_SERVICE",
+                view_key=self.SCENE_EDIT_VIEW,
+                request_payload=request_payload,
+                button_key="GEN_MD$GEN_BUSINESS_PARTNER_VIEW-editView-footer-save",
+                button_name="提交",
+                view_title="edit",
+            )
+            response, _ = self._execute_direct_api(
+                api_path="/api/trantor/service/engine/execute/GEN_MD$GEN_BUSINESS_PARTNER_MD_SAVE_ACTION_SERVICE",
+                method="POST",
+                request_body=request_payload,
+                body_template=body_template,
+                query_params={"tmodule": "GEN_MD"},
+            )
+            self.assert_util.assert_response_success(response)
+
+            _, refreshed_detail = self._query_scene_partner_detail(view_key=self.SCENE_EDIT_VIEW)
+            assert refreshed_detail.get("intro") == request_payload["intro"]
+            assert refreshed_detail.get("addressDetail") == request_payload["addressDetail"]
+            a.json(response, "响应数据")
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="合作伙伴主数据",
         title="测试删除合作伙伴",
         description="验证删除合作伙伴功能",
         severity="normal",
-        file_level_order=9,
+        file_level_order=15,
         tags=["合作伙伴", "删除"]
     )
     def test_delete_business_partner(self):
@@ -819,7 +1312,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
         title="测试合作伙伴标准导出",
         description="验证合作伙伴标准导出功能",
         severity="normal",
-        file_level_order=10,
+        file_level_order=16,
         tags=["合作伙伴", "导出"]
     )
     def test_export_business_partner(self):
@@ -851,7 +1344,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
         title="测试合作伙伴标准导入",
         description="验证合作伙伴标准导入功能",
         severity="normal",
-        file_level_order=11,
+        file_level_order=17,
         tags=["合作伙伴", "导入"]
     )
     def test_import_business_partner(self):
@@ -886,7 +1379,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
         title="测试通过OSS提交合作伙伴导入任务",
         description="验证通过OSS提交合作伙伴导入任务功能",
         severity="normal",
-        file_level_order=12,
+        file_level_order=18,
         tags=["合作伙伴", "OSS导入"]
     )
     def test_submit_business_partner_import_task_by_oss(self):
@@ -924,7 +1417,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
         title="测试评分查询模板信息",
         description="验证评分查询模板信息功能",
         severity="normal",
-        file_level_order=13,
+        file_level_order=19,
         tags=["合作伙伴", "评分模板"]
     )
     def test_survey_query_template(self):

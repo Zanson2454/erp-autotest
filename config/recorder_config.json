@@ -1,0 +1,15 @@
+{
+  "allowed_hosts": [
+    "t-erp-huoshan-portal-test.app.duandian.com"
+  ],
+  "blocked_hosts": [],
+  "allowed_path_prefixes": [
+    "/api/trantor/"
+  ],
+  "blocked_path_prefixes": [],
+  "clean_dedupe_mode": "api_path",
+  "body_threshold": 200,
+  "case_file": "testcases/generated_cases/test_manual_flow.py",
+  "data_dir": "testdata/recorded",
+  "dedupe_index_file": "testcases/generated_cases/.recorder_index.json"
+}
