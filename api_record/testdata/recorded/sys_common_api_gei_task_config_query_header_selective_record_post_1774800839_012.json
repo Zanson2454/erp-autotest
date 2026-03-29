@@ -1,0 +1,19 @@
+{
+  "serviceKey": "sys_common$API_GEI_TASK_CONFIG_QUERY_HEADER_SELECTIVE_RECORD_POST",
+  "teamId": 22,
+  "params": {
+    "userId": 540175374525637,
+    "teamCode": "TERP",
+    "pageKey": "GEN_MD$GEN_BUSINESS_PARTNER_VIEW-table-container-GEN_MD$gen_business_partner_md"
+  },
+  "__recorded_query_params__": {},
+  "__recorded_body__": {
+    "serviceKey": "sys_common$API_GEI_TASK_CONFIG_QUERY_HEADER_SELECTIVE_RECORD_POST",
+    "teamId": 22,
+    "params": {
+      "userId": 540175374525637,
+      "teamCode": "TERP",
+      "pageKey": "GEN_MD$GEN_BUSINESS_PARTNER_VIEW-table-container-GEN_MD$gen_business_partner_md"
+    }
+  }
+}

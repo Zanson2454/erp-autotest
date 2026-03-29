@@ -36,7 +36,7 @@ wheels/
 venv/
 .env
 .venv/
-.venv_mitmproxy/
+.venv_mitmproxy/  # 旧版独立 mitm 环境，可删除；录制已并入主 .venv
 env/
 ENV/
 .recorder_index.json
@@ -93,6 +93,9 @@ reports/fin_case_coverage.json
 allure-results/
 allure-report/
 
+
+# 录制运行时开关状态（本地）
+api_record/runtime/
 
 # 忽略测试中的文件
 test_data_factory/

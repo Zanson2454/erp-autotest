@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Scan and optionally delete orphan payload files in testdata/recorded."""
+"""Scan and optionally delete orphan payload files in api_record/testdata/recorded."""
 
 import argparse
 import re
 from pathlib import Path
 
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-CASE_ROOT = PROJECT_ROOT / "testcases"
-PAYLOAD_ROOT = PROJECT_ROOT / "testdata" / "recorded"
+API_RECORD_ROOT = Path(__file__).resolve().parent
+PROJECT_ROOT = API_RECORD_ROOT.parent
+CASE_ROOT = API_RECORD_ROOT
+PAYLOAD_ROOT = API_RECORD_ROOT / "testdata" / "recorded"
 PAYLOAD_REF_PATTERN = re.compile(r"(testdata/recorded/[^'\"\s)]+\.json)")
 
 
@@ -26,7 +27,7 @@ def collect_existing_payloads():
     if not PAYLOAD_ROOT.exists():
         return set()
     return {
-        str(path.relative_to(PROJECT_ROOT))
+        str(path.relative_to(API_RECORD_ROOT))
         for path in PAYLOAD_ROOT.rglob("*.json")
     }
 
@@ -53,7 +54,7 @@ def main():
 
     if args.delete:
         for item in orphaned:
-            (PROJECT_ROOT / item).unlink(missing_ok=True)
+            (API_RECORD_ROOT / item).unlink(missing_ok=True)
         print(f"deleted_payloads={len(orphaned)}")
 
     return 0

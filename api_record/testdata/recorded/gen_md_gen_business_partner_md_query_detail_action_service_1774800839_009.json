@@ -1,12 +1,12 @@
 {
   "sceneKey": "GEN_MD$GEN_BUSINESS_PARTNER_VIEW",
-  "viewKey": "GEN_MD$GEN_BUSINESS_PARTNER_VIEW:detail",
+  "viewKey": "GEN_MD$GEN_BUSINESS_PARTNER_VIEW:edit",
   "appId": 0,
   "teamId": 22,
   "serviceKey": "GEN_MD$GEN_BUSINESS_PARTNER_MD_QUERY_DETAIL_ACTION_SERVICE",
   "params": {
     "request": {
-      "id": "2250103"
+      "id": "2250113"
     }
   },
   "tmodule": "GEN_MD",
@@ -15,13 +15,13 @@
   },
   "__recorded_body__": {
     "sceneKey": "GEN_MD$GEN_BUSINESS_PARTNER_VIEW",
-    "viewKey": "GEN_MD$GEN_BUSINESS_PARTNER_VIEW:detail",
+    "viewKey": "GEN_MD$GEN_BUSINESS_PARTNER_VIEW:edit",
     "appId": 0,
     "teamId": 22,
     "serviceKey": "GEN_MD$GEN_BUSINESS_PARTNER_MD_QUERY_DETAIL_ACTION_SERVICE",
     "params": {
       "request": {
-        "id": "2250103"
+        "id": "2250113"
       }
     }
   }

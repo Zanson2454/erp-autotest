@@ -1,0 +1,30 @@
+{
+  "allowed_hosts": [
+    "t-erp-huoshan-portal-test.app.duandian.com"
+  ],
+  "blocked_hosts": [],
+  "allowed_path_prefixes": [
+    "/api/trantor/service/engine/execute"
+  ],
+  "blocked_path_prefixes": [
+    "/api/trantor/runtime/scene/data-manager",
+    "/api/trantor/runtime/scene/"
+  ],
+  "record_dedupe_mode": "fingerprint",
+  "record_dedupe_persist": false,
+  "record_order_mode": "request",
+  "recording_arm_switch": false,
+  "recording_state_file": "api_record/runtime/recording_armed.json",
+  "body_threshold": 200,
+  "case_file": "api_record/generated_cases/test_manual_flow.py",
+  "data_dir": "api_record/testdata/recorded",
+  "dedupe_index_file": "api_record/generated_cases/.recorder_index.json",
+  "recorded_scene_epic": "场景录制",
+  "recorded_scene_feature": "Mitmproxy 页面链路",
+  "recorded_scene_story": "页面场景录制",
+  "recorded_scene_base_class": "GenMdBaseTest",
+  "resolve_api_config_names": true,
+  "sanitize_recorded_payload": false,
+  "sanitize_remove_keys": [],
+  "auto_wrap_trantor_body": true
+}
