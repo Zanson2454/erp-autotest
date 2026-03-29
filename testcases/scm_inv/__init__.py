@@ -193,6 +193,8 @@ class ScmInvBaseTest(BaseTest):
             
         except Exception as e:
             cls.logger.error(f"❌ 库存模块测试数据清理出现严重错误: {str(e)}")
+        finally:
+            super().teardown_class()
 
 
 if __name__ == "__main__":

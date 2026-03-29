@@ -434,9 +434,11 @@ class FinBaseTest(BaseTest):
     @classmethod
     def teardown_class(cls):
         """测试类清理 (beyond super)"""
-        # BaseTest 没有 teardown_class 方法，直接执行清理逻辑
-        # fin specific cleanup if needed (e.g., clear fin_cache)
-        cls.logger.info("ERP财务模块测试类清理完成")
+        try:
+            # fin specific cleanup if needed (e.g., clear fin_cache)
+            cls.logger.info("ERP财务模块测试类清理完成")
+        finally:
+            super().teardown_class()
 
 
 if __name__ == "__main__":

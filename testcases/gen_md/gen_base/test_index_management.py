@@ -43,6 +43,7 @@ class TestIndexManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     # ================ 指标中心基础管理 ================
     @case_decorator(
         story="指标中心管理",

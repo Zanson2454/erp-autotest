@@ -40,6 +40,7 @@ class TestQualificationsManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     # ============= 资质类型管理 =============
     @case_decorator(
         story="资质管理",

@@ -33,6 +33,67 @@ class TestStandardSalesOrder(SlsBase):
         cls.so_item_id = None
         cls.order_code = None
         cls.logger.info("标准销售订单流程测试类初始化完成")
+
+    def _ensure_completed_order_item(self):
+        """确保存在已完成的订单行（避免测试方法之间直接调用）"""
+        if self.so_item_id:
+            return
+
+        if not self.order_id:
+            self.order_id = self.create_sales_order(order_type="STND", submit=True)
+            time.sleep(1)
+
+        if not self.order_code:
+            order_info = self.db.query("SELECT so_code FROM sls_so_head_tr WHERE id = %s", (self.order_id,))
+            if not order_info:
+                raise ValueError(f"未找到订单，订单ID: {self.order_id}")
+            self.order_code = order_info[0]["so_code"]
+
+        order_item_info = self.db.query(
+            """SELECT id, so_id, so_item_code, so_item_status, so_item_business_status,
+               version, mat_id, so_item_sls_qty, so_item_price, uom_sls_id,
+               inv_org_id, inv_loc_id, so_item_type_id
+               FROM sls_so_item_tr WHERE so_id = %s LIMIT 1""",
+            (self.order_id,)
+        )
+        if not order_item_info:
+            raise ValueError(f"未找到订单对应的订单行，订单ID: {self.order_id}")
+
+        item_data = order_item_info[0]
+        self.so_item_id = item_data["id"]
+        order_item = {
+            "id": item_data["id"],
+            "soId": item_data["so_id"],
+            "soItemCode": item_data["so_item_code"],
+            "soItemStatus": item_data["so_item_status"],
+            "soItemBusinessStatus": item_data["so_item_business_status"],
+            "version": item_data.get("version", 0),
+            "matId": {"id": item_data["mat_id"]} if item_data.get("mat_id") else None,
+            "soItemSlsQty": float(item_data["so_item_sls_qty"]) if item_data.get("so_item_sls_qty") else 0,
+            "soItemPrice": float(item_data["so_item_price"]) if item_data.get("so_item_price") else 0,
+            "uomSlsId": {"id": item_data["uom_sls_id"]} if item_data.get("uom_sls_id") else None,
+            "invOrgId": {"id": item_data["inv_org_id"]} if item_data.get("inv_org_id") else None,
+            "invLocId": {"id": item_data["inv_loc_id"]} if item_data.get("inv_loc_id") else None,
+            "soItemTypeId": {"id": item_data["so_item_type_id"]} if item_data.get("so_item_type_id") else None,
+        }
+
+        complete_payload = {
+            "sceneKey": "SCM_SLS$sls_so_item",
+            "viewKey": "SCM_SLS$sls_so_item:list",
+            "viewTitle": "list",
+            "appId": 0,
+            "teamId": 22,
+            "serviceKey": "SCM_SLS$SO_ITEM_MANUAL_COMPLETED_EVENT_SERVICE",
+            "params": {"request": order_item},
+        }
+        complete_response, _ = self.standard_api_call(
+            api_key="订单项目行手动完成服务",
+            set_dict=(complete_payload.get("params", {}) if isinstance(complete_payload, dict) else complete_payload),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
+        self.assert_util.assert_response_data(complete_response)
     
     
     
@@ -97,7 +158,7 @@ class TestStandardSalesOrder(SlsBase):
         try:
             # 1. 确保有已生效的订单
             if not self.order_id:
-                self.test_01_create_effective_standard_order()
+                self.order_id = self.create_sales_order(order_type="STND", submit=True)
             
             # 获取订单编号
             if not self.order_code:
@@ -233,7 +294,7 @@ class TestStandardSalesOrder(SlsBase):
         try:
             # 1. 确保订单行已完成
             if not self.so_item_id:
-                self.test_02_complete_order_item()
+                self._ensure_completed_order_item()
             
             # 2. 从数据库查询订单行数据，并构造取消完成订单行所需的数据对象
             order_item_info = None
@@ -371,7 +432,7 @@ class TestStandardSalesOrder(SlsBase):
         try:
             # 确保有已生效的订单
             if not self.order_id:
-                self.test_01_create_effective_standard_order()
+                self.order_id = self.create_sales_order(order_type="STND", submit=True)
             
             # 检查订单状态，确保订单已生效
             order_info = self.db.query(f"SELECT so_status FROM sls_so_head_tr WHERE id={self.order_id}")

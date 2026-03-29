@@ -153,6 +153,8 @@ class ScmPurBaseTest(BaseTest):
             
         except Exception as e:
             cls.logger.error(f"❌ 采购模块测试数据清理失败: {str(e)}")
+        finally:
+            super().teardown_class()
 
 
 if __name__ == "__main__":

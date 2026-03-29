@@ -29,6 +29,20 @@ GLOBAL RULES (MANDATORY):
    - impact scope
      <!-- 中文：影响范围（模块、用例、数据与环境）。 -->
 
+P0 GOVERNANCE (IMMEDIATE ENFORCEMENT):
+<!-- 中文：P0 治理项（立刻执行，违规即阻断）。 -->
+
+1. Never hardcode secrets in repository code.
+   <!-- 中文：禁止在仓库代码中硬编码任何敏感信息（token、webhook、密码、密钥、账号等）。 -->
+2. Use environment variables or secret managers for all sensitive values.
+   <!-- 中文：敏感值必须通过环境变量或密钥管理注入，不得写入源码。 -->
+3. If a class overrides teardown_class, it must call super().teardown_class().
+   <!-- 中文：子类重写 teardown_class 时，必须调用 super().teardown_class()，确保父类资源释放不丢失。 -->
+4. Resource cleanup must be deterministic and placed in finally-equivalent paths.
+   <!-- 中文：资源清理必须是确定性的，需放在 finally 等兜底路径，避免异常中断导致泄漏。 -->
+5. Any P0 violation must be fixed before merge; no "follow-up ticket" deferral.
+   <!-- 中文：P0 问题必须在合入前修复，不接受“后续再修”的延期策略。 -->
+
 ERP-SPECIFIC RULES:
 <!-- 中文：与 ERP 业务测试相关的专项规则。 -->
 

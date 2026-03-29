@@ -60,6 +60,7 @@ class TestApTypeMdManagement(ApBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
     
+        super().teardown_class()
     @case_decorator(
         story="应付单据类型查询",
         title="测试分页查询应付单据类型",

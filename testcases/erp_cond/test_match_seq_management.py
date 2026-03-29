@@ -49,6 +49,7 @@ class TestMatchSeqManagement(ErpCondBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     # ================ 存取顺序创建 ================
     @case_decorator(
         story="存取顺序管理",

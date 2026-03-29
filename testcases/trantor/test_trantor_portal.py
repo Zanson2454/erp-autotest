@@ -28,6 +28,8 @@ class TestTrantorPortal(TrantorBaseTest):
             cls.logger.info("Trantor门户管理测试类清理完成")
         except Exception as e:
             cls.logger.error(f"测试类清理失败: {str(e)}")
+        finally:
+            super().teardown_class()
     
     @case_decorator(
         story="门户版本信息",
@@ -328,4 +330,3 @@ class TestTrantorPortal(TrantorBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
-

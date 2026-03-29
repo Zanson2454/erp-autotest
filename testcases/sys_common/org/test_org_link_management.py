@@ -65,6 +65,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
         except Exception as e:
             cls.logger.error(f"组织关联关系测试数据清理失败: {str(e)}")
     
+        super().teardown_class()
     # ==================== 员工组织关联表测试 ====================
     
     @allure.story("员工组织关联")

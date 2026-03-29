@@ -59,6 +59,7 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     @case_decorator(
         story="组织维度管理",
         title="测试新增组织维度管理",

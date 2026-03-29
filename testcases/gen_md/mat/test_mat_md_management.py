@@ -64,6 +64,7 @@ class TestStndMatManagement(GenMdBaseTest):
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
     
+        super().teardown_class()
     @case_decorator(
         story="标准物料管理",
         title="测试新增物料主数据保存",

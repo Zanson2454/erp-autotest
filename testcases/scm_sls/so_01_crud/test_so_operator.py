@@ -378,8 +378,11 @@ class TestSalesOrderOperator(SlsBase):
     @safe_api_call(error_message="销售订单编辑提交失败")
     def test_03_submit_sales_order_edit(self):
         """测试销售订单编辑提交"""
-        # 编辑订单
-        self.test_02_sales_order_edit()
+        # 准备订单数据（避免测试方法之间直接调用）
+        if not self.so_data:
+            self.so_data = self._query_draft_orders_from_db()
+        if not self.so_data:
+            raise ValueError("未找到可提交的草稿订单")
 
        # 构造请求数据
         request_data = {
@@ -890,8 +893,10 @@ class TestSalesOrderOperator(SlsBase):
     @safe_api_call(error_message="提交复制的销售订单失败")
     def test_09_submit_copied_sales_order(self):
         """测试提交复制的销售订单"""
-        # 复制订单
-        self.test_08_copy_sales_order()
+        # 准备复制后的订单数据（避免测试方法之间直接调用）
+        if not self.so_data or not self.so_data.get("id"):
+            draft_order_id = self.create_sales_order(order_type="STND", submit=False)
+            self.so_data = {"id": draft_order_id}
         
         # 获取复制的订单ID
         copied_order_id = self.so_data.get('id') or self.order_id

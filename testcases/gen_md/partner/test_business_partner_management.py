@@ -121,6 +121,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     # ============= 核心功能测试 =============
     @case_decorator(
         story="合作伙伴主数据",

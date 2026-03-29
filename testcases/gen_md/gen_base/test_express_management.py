@@ -41,6 +41,7 @@ class TestExpressManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     @case_decorator(
         story="快递公司管理",
         title="测试新增快递公司",

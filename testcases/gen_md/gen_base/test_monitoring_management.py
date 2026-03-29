@@ -37,6 +37,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     # ================ 监控管理 ================
     @case_decorator(
         story="监控管理",

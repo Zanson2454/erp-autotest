@@ -38,6 +38,7 @@ class TestAccManagement(ErpAccBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
     
+        super().teardown_class()
     # ================ 账户档案启用/停用服务 ================
     @case_decorator(
         story="信用账户档案管理",

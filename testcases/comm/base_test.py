@@ -310,6 +310,49 @@ class LoginService:
         if cookie:
             headers['Cookie'] = cookie
         return headers
+
+    @staticmethod
+    def _is_unresolved_env_placeholder(value: str) -> bool:
+        """判断配置值是否仍是未替换的环境变量占位符，例如 ${TEST_COOKIE}。"""
+        return isinstance(value, str) and value.startswith("${") and value.endswith("}")
+
+    @staticmethod
+    def _resolve_cookie_from_env(portal_key: str, tenant_key: str = "terp") -> tuple:
+        """
+        从环境变量解析 cookie（按优先级）：
+        1. TEST_{PORTAL_KEY}_COOKIE（例如 TEST_TERP_PORTAL_COOKIE）
+        2. 语义别名：admin/cust
+        3. 全局 TEST_COOKIE
+        """
+        normalized_portal = (portal_key or "").upper()
+        normalized_tenant = (tenant_key or "").upper()
+        portal_cookie_key = f"TEST_{normalized_portal}_COOKIE" if normalized_portal else ""
+        tenant_portal_cookie_key = (
+            f"TEST_{normalized_tenant}_{normalized_portal}_COOKIE"
+            if normalized_tenant and normalized_portal
+            else ""
+        )
+
+        alias_map = {
+            "TERP_PORTAL": "TEST_ADMIN_COOKIE",
+            "TERP_CUST_PC": "TEST_CUST_COOKIE",
+        }
+        candidates = [
+            tenant_portal_cookie_key,
+            portal_cookie_key,
+            alias_map.get(normalized_portal, ""),
+            "TEST_COOKIE",
+        ]
+
+        for env_key in candidates:
+            if not env_key:
+                continue
+            env_val = os.getenv(env_key, "").strip()
+            if env_val:
+                return env_val, env_key
+
+        return "", ""
+
     def login(self, portal_key, tenant_key="terp") -> LoginResult:
         """
         执行登录 - 支持两种方式：
@@ -329,6 +372,17 @@ class LoginService:
             
             # 检查是否配置了 cookie（支持直接使用 cookie 登录）
             cookie = auth_config.get("cookie", "")
+
+            # 若配置值仍是占位符（如 ${TEST_TERP_PORTAL_COOKIE}），视为未配置
+            if self._is_unresolved_env_placeholder(cookie):
+                cookie = ""
+
+            # 支持直接从环境变量兜底获取 cookie（含 TEST_COOKIE）
+            if not cookie:
+                env_cookie, env_cookie_key = self._resolve_cookie_from_env(portal_key, tenant_key)
+                if env_cookie:
+                    cookie = env_cookie
+                    Loggers.info(f"从环境变量读取 cookie: {env_cookie_key}")
             
             if cookie:
                 # ============ 方式1：使用 cookie 快捷登录 ============
@@ -569,11 +623,36 @@ class BaseTest:
     mock_util: Any
     cache: Any
     yaml_util: Any
+    _base_teardown_called: bool = False
+
+    def __init_subclass__(cls, **kwargs):
+        """兜底保障：子类即便未显式调用 super().teardown_class()，也会执行基类资源清理。"""
+        super().__init_subclass__(**kwargs)
+
+        raw_teardown = cls.__dict__.get("teardown_class")
+        if raw_teardown is None:
+            return
+
+        original = raw_teardown.__func__ if isinstance(raw_teardown, classmethod) else raw_teardown
+        if getattr(original, "_base_teardown_wrapped", False):
+            return
+
+        @wraps(original)
+        def wrapped(sub_cls, *args, **kwargs):
+            try:
+                return original(sub_cls, *args, **kwargs)
+            finally:
+                if not getattr(sub_cls, "_base_teardown_called", False):
+                    BaseTest.teardown_class.__func__(sub_cls)
+
+        wrapped._base_teardown_wrapped = True
+        cls.teardown_class = classmethod(wrapped)
     
     @classmethod
     def setup_class(cls) -> None:
         """测试类初始化 - 模板方法模式优化"""
         try:
+            cls._base_teardown_called = False
             # 获取环境和项目
             env = os.getenv("TEST_ENV", "test")
             project = os.getenv("TEST_PROJECT")
@@ -901,6 +980,7 @@ class BaseTest:
                 try:
                     cls.db.close()
                     Loggers.info("ERP数据库连接已关闭")
+                    cls.db = None
                 except Exception as e:
                     Loggers.error(f"关闭ERP数据库连接失败: {str(e)}")
             
@@ -908,10 +988,13 @@ class BaseTest:
                 try:
                     cls.iam_db.close()
                     Loggers.info("IAM数据库连接已关闭")
+                    cls.iam_db = None
                 except Exception as e:
                     Loggers.error(f"关闭IAM数据库连接失败: {str(e)}")
         except Exception as e:
             Loggers.error(f"teardown_class执行失败: {str(e)}")
+        finally:
+            cls._base_teardown_called = True
     
     def setup_method(self, method: Optional[pytest.Function] = None) -> None:
         """测试方法前置设置"""

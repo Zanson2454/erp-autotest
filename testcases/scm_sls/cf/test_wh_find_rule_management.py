@@ -43,6 +43,7 @@ class TestWhFindRuleManagement(SlsBase):
         # 见 testcases/scm_sls/conftest.py::scm_sls_module_cleanup
         cls.logger.info("测试类执行完成，数据将在 session 结束时统一清理")
 
+        super().teardown_class()
     @case_decorator(
         story="寻仓规则配置管理",
         title="测试寻仓规则配置表-导入导出任务管理接口-提交导出任务",

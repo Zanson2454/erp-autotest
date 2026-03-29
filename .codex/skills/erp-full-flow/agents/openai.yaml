@@ -1,0 +1,4 @@
+interface:
+  display_name: "ERP Full Flow"
+  short_description: "Analyze ERP API automation project end-to-end"
+  default_prompt: "Run full ERP framework analysis and produce four markdown outputs."

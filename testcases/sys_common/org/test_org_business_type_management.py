@@ -52,6 +52,7 @@ class TestOrgBusinessTypeManagement(SysCommonBaseTest):
         except Exception as e:
             cls.logger.error(f"组织业务类型测试数据清理失败: {str(e)}")
     
+        super().teardown_class()
     # ==================== 创建相关测试 ====================
     
     @case_decorator(

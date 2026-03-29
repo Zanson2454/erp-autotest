@@ -67,6 +67,7 @@ class TestBizOrgManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     @pytest.mark.run(file_level_order=1)
     @case_decorator(
         story="保存组织",

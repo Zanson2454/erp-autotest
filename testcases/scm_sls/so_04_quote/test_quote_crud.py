@@ -29,6 +29,58 @@ class TestQuoteCrud(SlsBase):
         cls.quote_id_copy = None
         cls.quote_id_submit = None
         cls.logger.info("报价单增删改查测试类初始化完成")
+
+    def _ensure_copied_draft_quote(self):
+        """确保存在可删除的复制草稿报价单（避免测试方法之间直接调用）"""
+        if self.quote_id_copy:
+            return
+
+        if not self.quote_id_draft:
+            self.quote_id_draft = self.create_quote(submit=False)
+
+        copy_api_path = self.get_api_path("销售订单复制服务")
+        copy_params, _ = self.get_api_params(copy_api_path)
+        copy_filtered_params = ParamUtil.filter_post_body_fields(
+            copy_params, ["id"], ["params", "request"]
+        )
+        ParamUtil.set_request_params(copy_filtered_params, {"id": self.quote_id_draft})
+        copy_response, _ = self.standard_api_call(
+            api_key="销售订单复制服务",
+            set_dict=(copy_filtered_params.get("params", {}) if isinstance(copy_filtered_params, dict) else copy_filtered_params),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
+        self.assert_util.assert_response_data(copy_response)
+        copied_quote_data = copy_response.get("data", {}).get("data", {})
+
+        save_api_path = self.get_api_path("SLS-销售订单-保存服务")
+        save_params, _ = self.get_api_params(save_api_path)
+        save_filtered_params = ParamUtil.filter_post_body_fields(
+            save_params, ["soCode", "soDesc", "custId", "slsOrgId", "slsComId", "slsDcId", "soTypeId", "baseCurrId", "slsCurrId", "soItems"],
+            ["params", "request"]
+        )
+        ParamUtil.set_request_params(save_filtered_params, {
+            "soCode": copied_quote_data.get("soCode", ""),
+            "soDesc": f"复制的{copied_quote_data.get('soDesc', '')}",
+            "custId": copied_quote_data.get("custId", {}),
+            "slsOrgId": copied_quote_data.get("slsOrgId", {}),
+            "slsComId": copied_quote_data.get("slsComId", {}),
+            "slsDcId": copied_quote_data.get("slsDcId", {}),
+            "soTypeId": copied_quote_data.get("soTypeId", {}),
+            "baseCurrId": copied_quote_data.get("baseCurrId", {}),
+            "slsCurrId": copied_quote_data.get("slsCurrId", {}),
+            "soItems": copied_quote_data.get("soItems", [])
+        })
+        save_response, _ = self.standard_api_call(
+            api_key="SLS-销售订单-保存服务",
+            set_dict=(save_filtered_params.get("params", {}) if isinstance(save_filtered_params, dict) else save_filtered_params),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
+        self.assert_util.assert_response_data(save_response)
+        self.quote_id_copy = save_response.get("data", {}).get("data", {}).get("id")
     
    
     
@@ -124,7 +176,7 @@ class TestQuoteCrud(SlsBase):
         try:
             # 1. 确保有草稿态报价单
             if not self.quote_id_draft:
-                self.test_01_create_and_edit_draft_quote()
+                self.quote_id_draft = self.create_quote(submit=False)
             
             # 2. 调用复制API
             api_path = self.get_api_path("销售订单复制服务")
@@ -215,7 +267,7 @@ class TestQuoteCrud(SlsBase):
         try:
             # 1. 确保有复制的报价单
             if not self.quote_id_copy:
-                self.test_02_copy_and_save_draft_quote()
+                self._ensure_copied_draft_quote()
             
             # 2. 调用删除API
             api_path = self.get_api_path("SO-删除服务")
@@ -285,7 +337,7 @@ class TestQuoteCrud(SlsBase):
         try:
             # 1. 确保有已生效的报价单
             if not self.quote_id_submit:
-                self.test_04_create_submitted_quote()
+                self.quote_id_submit = self.create_quote(submit=True)
             
             # 2. 查询报价单状态
             quote_status = self.db.query(
@@ -384,7 +436,7 @@ class TestQuoteCrud(SlsBase):
                 quote_id = self.quote_id_draft
             else:
                 # 如果没有报价单，先创建一个草稿态的
-                self.test_01_create_and_edit_draft_quote()
+                self.quote_id_draft = self.create_quote(submit=False)
                 quote_id = self.quote_id_draft
             
             # 2. 调用详情查询API

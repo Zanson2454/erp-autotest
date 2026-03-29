@@ -43,6 +43,7 @@ class TestAttrManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     # ================ 属性表基础管理 ================
     @case_decorator(
         story="属性管理",

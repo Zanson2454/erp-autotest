@@ -49,6 +49,7 @@ class TestAllowFieldManagement(ErpCondBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     # ================ 允许字段创建 ================
     @case_decorator(
         story="允许字段管理",

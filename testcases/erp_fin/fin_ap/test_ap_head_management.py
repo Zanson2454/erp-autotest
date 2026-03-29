@@ -45,6 +45,7 @@ class TestApHeadManagement(ApBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
     
+        super().teardown_class()
     @case_decorator(
         story="应付单管理",
         title="测试应付单分页查询",

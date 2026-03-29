@@ -44,6 +44,63 @@ class TestPriceCrud(SlsBase):
         cls.fixed_match_record_id = "2083001"
         
         cls.logger.info("销售价格增删改查测试类初始化完成")
+
+    def _ensure_price_adjustment_exists(self):
+        """确保存在可编辑的价格调整单（避免测试方法之间直接调用）"""
+        if self.price_adj_id:
+            return
+
+        price_adj_name = f"自动化测试价格调整_{self.mock_util.get_timestamp()}"
+        api_path = self.get_api_path("SLS-销售价格-价格调整保存服务")
+        params, _ = self.get_api_params(api_path)
+        filtered_params = ParamUtil.filter_post_body_fields(
+            params,
+            ["id", "matchRecordId", "priceAdjName", "priceTypeName", "matchRecordName", "priceTypeId", "priceAdjItemList"],
+            ["params", "request"]
+        )
+
+        start_time = self.mock_util.get_timestamp(timestamp=True)
+        end_time = 253402271999000
+        set_dict = {
+            "id": None,
+            "matchRecordId": self.fixed_match_record_id,
+            "priceAdjName": price_adj_name,
+            "priceTypeName": "销售价",
+            "matchRecordName": "1",
+            "priceTypeId": self.fixed_price_type_id,
+            "priceAdjItemList": [{
+                "startTimeNew": start_time,
+                "endTimeNew": end_time,
+                "var9": {"matCode": self.fixed_mat_code, "matName": self.fixed_mat_name, "id": self.fixed_mat_id},
+                "outNew5": {"id": self.fixed_uom_id},
+                "outNew6": {"id": self.fixed_curr_id},
+                "outNew1": self.fixed_price,
+                "deleted": 0,
+                "startTime": start_time,
+                "endTime": end_time,
+                "matchRecordMdId": None,
+                "id": None,
+                "matchLadderMdDTOList": [],
+                "matchLadderMdDTONewList": [],
+            }],
+        }
+        ParamUtil.set_request_params(filtered_params, set_dict)
+        response, _ = self.standard_api_call(
+            api_key="SLS-销售价格-价格调整保存服务",
+            set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
+        self.assert_util.assert_response_data(response)
+
+        response_data = response.get("data", {}).get("data", {})
+        self.price_adj_id = response_data.get("id")
+        self.price_adj_code = response_data.get("code")
+        price_adj_item_list = response_data.get("priceAdjItemList", [])
+        if price_adj_item_list:
+            self.price_adj_item_data = price_adj_item_list[0]
+            self.price_adj_item_id = self.price_adj_item_data.get("id")
     
     @classmethod
     def teardown_class(cls):
@@ -150,6 +207,7 @@ class TestPriceCrud(SlsBase):
         except Exception as e:
             cls.logger.error(f"销售价格测试数据清理失败: {str(e)}")
     
+        super().teardown_class()
     @case_decorator(
         story="销售价格管理",
         title="测试销售价格调整保存",
@@ -263,7 +321,7 @@ class TestPriceCrud(SlsBase):
         try:
             # 1. 确保有上一步创建的价格调整单
             if not self.price_adj_id:
-                self.test_01_save_price_adjustment()
+                self._ensure_price_adjustment_exists()
             
             # 2. 先查询价格调整单详情，获取item信息
             # 注意：这里需要查询价格调整单详情，但可能需要不同的API
@@ -378,7 +436,7 @@ class TestPriceCrud(SlsBase):
             # 1. 确保有上一步创建或编辑的价格调整单
             # 注意：如果 test_02 修改了时间导致时间重叠，这里需要重新创建
             if not self.price_adj_id:
-                self.test_01_save_price_adjustment()
+                self._ensure_price_adjustment_exists()
                 # 如果 test_02 已执行并修改了时间，可能会造成时间重叠，所以跳过提交
                 # 直接使用 test_01 创建的草稿态进行提交
             
@@ -493,7 +551,7 @@ class TestPriceCrud(SlsBase):
         try:
             # 1. 确保有价格维护单数据
             if not self.price_adj_id:
-                self.test_01_save_price_adjustment()
+                self._ensure_price_adjustment_exists()
             
             # 2. 如果没有 code，尝试从数据库查询获取
             if not self.price_adj_code:
@@ -584,7 +642,7 @@ class TestPriceCrud(SlsBase):
         try:
             # 1. 确保有价格调整单数据（优先使用草稿态的，如果没有则创建）
             if not self.price_adj_id:
-                self.test_01_save_price_adjustment()
+                self._ensure_price_adjustment_exists()
             
             # 2. 先查询价格调整单详情，获取完整的item信息用于编辑
             # 如果已有item数据，直接使用；否则需要先查询详情
@@ -801,7 +859,7 @@ class TestPriceCrud(SlsBase):
         try:
             # 1. 确保有价格调整单数据（优先使用已存在的，如果没有则创建）
             if not self.price_adj_id:
-                self.test_01_save_price_adjustment()
+                self._ensure_price_adjustment_exists()
             
             # 2. 如果item没有id，需要先查询详情获取完整的item信息（包括id）
             # 因为删除操作需要item的id或matchRecordMdId
@@ -1138,4 +1196,3 @@ class TestPriceCrud(SlsBase):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
-

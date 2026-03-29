@@ -33,6 +33,7 @@ class TestFinAgentManagement(FinBaseTest):
         except Exception as e:
             cls.logger.error(f"测试类清理失败: {str(e)}")
     
+        super().teardown_class()
     @case_decorator(
         story="财务代理",
         title="测试查询财务代理报销树节点单节点",

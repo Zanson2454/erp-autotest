@@ -97,6 +97,17 @@ class Loggers:
         """确保日志系统已初始化"""
         if not cls._initialized:
             cls.init()
+
+    @classmethod
+    def _compute_depth(cls, kwargs: Dict[str, Any]) -> int:
+        """计算日志调用深度，确保日志源定位到业务调用方。"""
+        custom_depth = kwargs.pop('depth', 0)
+        try:
+            custom_depth = int(custom_depth)
+        except (TypeError, ValueError):
+            custom_depth = 0
+        # +1: 跳过当前封装方法，定位到真正的调用方
+        return max(custom_depth, 0) + 1
     
     @classmethod
     def info(cls, msg: str, *args, **kwargs):
@@ -108,9 +119,8 @@ class Loggers:
             **kwargs: 额外参数（支持depth参数，向后兼容）
         """
         cls._ensure_initialized()
-        # 移除depth参数（向后兼容），loguru不需要手动处理
-        kwargs.pop('depth', None)
-        cls._logger.info(msg, *args, **kwargs)
+        depth = cls._compute_depth(kwargs)
+        cls._logger.opt(depth=depth).info(msg, *args, **kwargs)
     
     @classmethod
     def debug(cls, msg: str, *args, **kwargs):
@@ -122,8 +132,8 @@ class Loggers:
             **kwargs: 额外参数（支持depth参数，向后兼容）
         """
         cls._ensure_initialized()
-        kwargs.pop('depth', None)
-        cls._logger.debug(msg, *args, **kwargs)
+        depth = cls._compute_depth(kwargs)
+        cls._logger.opt(depth=depth).debug(msg, *args, **kwargs)
     
     @classmethod
     def warning(cls, msg: str, *args, **kwargs):
@@ -135,8 +145,8 @@ class Loggers:
             **kwargs: 额外参数（支持depth参数，向后兼容）
         """
         cls._ensure_initialized()
-        kwargs.pop('depth', None)
-        cls._logger.warning(msg, *args, **kwargs)
+        depth = cls._compute_depth(kwargs)
+        cls._logger.opt(depth=depth).warning(msg, *args, **kwargs)
     
     @classmethod
     def error(cls, msg: str, *args, **kwargs):
@@ -148,8 +158,13 @@ class Loggers:
             **kwargs: 额外参数（支持depth参数，向后兼容）
         """
         cls._ensure_initialized()
-        kwargs.pop('depth', None)
-        cls._logger.error(msg, *args, **kwargs)
+        depth = cls._compute_depth(kwargs)
+        # 兼容显式控制：error(..., exc_info=True/False)
+        exc_info = kwargs.pop("exc_info", None)
+        if exc_info is None:
+            # 在 except 块中默认附带异常栈，提升排查效率
+            exc_info = sys.exc_info()[0] is not None
+        cls._logger.opt(depth=depth, exception=bool(exc_info)).error(msg, *args, **kwargs)
     
     @classmethod
     def critical(cls, msg: str, *args, **kwargs):
@@ -161,8 +176,8 @@ class Loggers:
             **kwargs: 额外参数（支持depth参数，向后兼容）
         """
         cls._ensure_initialized()
-        kwargs.pop('depth', None)
-        cls._logger.critical(msg, *args, **kwargs)
+        depth = cls._compute_depth(kwargs)
+        cls._logger.opt(depth=depth).critical(msg, *args, **kwargs)
     
     @classmethod
     def exception(cls, msg: str, *args, **kwargs):
@@ -177,8 +192,8 @@ class Loggers:
             此方法会自动记录当前异常的完整堆栈信息
         """
         cls._ensure_initialized()
-        kwargs.pop('depth', None)
-        cls._logger.opt(exception=True).error(msg, *args, **kwargs)
+        depth = cls._compute_depth(kwargs)
+        cls._logger.opt(depth=depth, exception=True).error(msg, *args, **kwargs)
 
 
 if __name__ == '__main__':

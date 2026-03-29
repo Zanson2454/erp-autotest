@@ -67,7 +67,7 @@ class TestQuotePrimary(SlsBase):
         try:
             # 1. 确保有草稿报价单
             if not self.quote_id:
-                self.test_01_create_draft_quote()
+                self.quote_id = self.create_quote(submit=False)
             
             # 2. 使用保存服务并设置syncSubmit为true来同步提交（与手动操作保持一致，不触发审批）
             api_path = self.get_api_path("SLS-销售订单-保存服务")
@@ -152,7 +152,7 @@ class TestQuotePrimary(SlsBase):
         try:
             # 1. 确保有已提交的报价数据
             if not self.quote_id:
-                self.test_02_submit_draft_quote()
+                self.quote_id = self.create_quote(submit=True)
             
             # 2. 使用销售订单复制服务复制报价单
             copy_api_path = self.get_api_path("销售订单复制服务")
@@ -242,7 +242,7 @@ class TestQuotePrimary(SlsBase):
         try:
             # 1. 确保有订单数据
             if not self.order_id:
-                self.test_03_quote_to_order()
+                self.order_id = self.create_sales_order(order_type="STND", submit=True)
             
             # 2. 调用创建交货单的公共方法
             self.delivery_id = self.create_delivery_order(self.order_id)

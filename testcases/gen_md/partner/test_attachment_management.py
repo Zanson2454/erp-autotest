@@ -40,6 +40,7 @@ class TestAttachmentManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     # ============= 附件类型管理 =============
     @case_decorator(
         story="附件管理",

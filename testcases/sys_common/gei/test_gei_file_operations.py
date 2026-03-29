@@ -46,6 +46,7 @@ class TestGeiFileOperations(SysCommonBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
     
+        super().teardown_class()
     @case_decorator(
         story="导入导出文件操作",
         title="测试通过任务ID下载文件",

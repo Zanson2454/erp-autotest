@@ -53,6 +53,7 @@ class TestApClosingManagement(ApBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
     
+        super().teardown_class()
     @case_decorator(
         story="应付结账&反结账管理",
         title="测试分页查询应付结账数据",

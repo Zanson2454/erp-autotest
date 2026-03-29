@@ -36,6 +36,7 @@ class TestAgents(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     @pytest.mark.skip(reason="销售预测服务需要复杂的数据模型和算法配置，暂时跳过")
     @case_decorator(
         story="代理管理",

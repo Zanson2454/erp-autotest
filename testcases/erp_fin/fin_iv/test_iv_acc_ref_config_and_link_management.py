@@ -61,6 +61,7 @@ class TestIvAccRefConfigAndLinkManagement(IvBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
     
+        super().teardown_class()
     # === 账户参考配置表测试 ===
     
     @case_decorator(

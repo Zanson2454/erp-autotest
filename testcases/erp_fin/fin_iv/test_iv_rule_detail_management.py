@@ -48,6 +48,7 @@ class TestIvRuleDetailManagement(IvBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
     
+        super().teardown_class()
     @case_decorator(
         story="存货计价规则明细",
         title="测试标准导出规则明细",

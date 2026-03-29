@@ -48,6 +48,7 @@ class TestIvVoucherItemManagement(IvBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
     
+        super().teardown_class()
     @case_decorator(
         story="存货价值凭证行",
         title="测试分页查询凭证行",

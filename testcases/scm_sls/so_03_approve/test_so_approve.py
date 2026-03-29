@@ -159,7 +159,7 @@ class TestSalesOrderApproval(SlsBase):
         try:
             # 1. 确保有订单数据
             if not self.order_id:
-                self.test_02_create_and_submit_sales_order()
+                self.order_id = self.create_sales_order(order_type="STND", submit=True)
             
             # 2. 查询订单状态，判断是否需要审批
             order_status = self.db.query(

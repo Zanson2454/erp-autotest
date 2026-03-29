@@ -5,7 +5,6 @@ from fastapi.responses import JSONResponse
 import subprocess
 import os
 import uuid
-import requests
 import shutil
 from utils.report_util import fix_report_title
 import threading
@@ -13,8 +12,13 @@ from utils.dingtalk_util import send_dingtalk_msg
 import datetime
 from typing import Optional
 
-# 钉钉机器人Webhook（请替换为你的真实token）
-DINGTALK_WEBHOOK = "https://oapi.dingtalk.com/robot/send?access_token=f239b50eb61afcd187515c7fdf919ff5fdb1e9dae47e184a9515a4dc3335001a"
+def get_dingtalk_webhook() -> str:
+    """获取钉钉机器人 webhook（仅从环境变量读取，禁止硬编码）"""
+    return (
+        os.getenv("DINGTALK_WEBHOOK")
+        or os.getenv("AUTOTEST_DINGTALK_WEBHOOK")
+        or ""
+    ).strip()
 
 class ExecType(str, Enum):
     all = "all"
@@ -116,8 +120,13 @@ async def get_status(task_id: str):
             f"报告入口: https://erp-autotest.app.terminus.io/allure/index.html\n"
             f"开始时间: {task.get('start_time', '-')}, 结束时间: {task.get('end_time', '-')}\n"
         )
+        webhook = get_dingtalk_webhook()
+        if not webhook:
+            task["notified"] = True
+            task["notify_skipped"] = "DINGTALK_WEBHOOK 未配置，已跳过钉钉通知"
+            return task
         try:
-            send_dingtalk_msg(DINGTALK_WEBHOOK, msg)
+            send_dingtalk_msg(webhook, msg)
             task["notified"] = True
         except Exception as e:
             task["notified"] = False

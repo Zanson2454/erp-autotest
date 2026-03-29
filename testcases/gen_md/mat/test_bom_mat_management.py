@@ -43,6 +43,7 @@ class TestBomManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     # ============= BOM头管理 =============
     @case_decorator(
         story="BOM管理",

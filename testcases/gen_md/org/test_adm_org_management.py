@@ -53,6 +53,7 @@ class TestAdmOrgManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     @case_decorator(
         story="保存行政组织",
         title="测试保存行政组织",

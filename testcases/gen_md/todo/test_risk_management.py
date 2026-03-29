@@ -38,6 +38,7 @@ class TestRiskManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试类结束异常: {str(e)}")
 
+        super().teardown_class()
     # ================ 库存风险管理 ================
     @case_decorator(
         story="风险管理",

@@ -34,6 +34,7 @@ class TestCodeRuleManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     @case_decorator(
         story="编码规则管理",
         title="测试分页查询编码规则",

@@ -39,6 +39,7 @@ class TestSlsDcManagement(SlsBase):
         """测试类结束后执行清理"""
         cls.logger.info("测试类执行完成，数据将在 session 结束时统一清理")
 
+        super().teardown_class()
     @case_decorator(
         story="销售渠道管理",
         title="测试创建销售渠道",

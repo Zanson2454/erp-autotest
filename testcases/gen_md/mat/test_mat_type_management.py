@@ -39,6 +39,7 @@ class TestMatTypeManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     @case_decorator(
         story="物料类型管理",
         title="测试物料类型配置是否完整",

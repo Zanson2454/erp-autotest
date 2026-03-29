@@ -60,6 +60,7 @@ class TestSurveyManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     # ================ 评分任务管理 ================
     @case_decorator(
         story="评分任务管理",

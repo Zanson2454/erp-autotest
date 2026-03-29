@@ -46,6 +46,7 @@ class TestIvExecuteRecordManagement(IvBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
     
+        super().teardown_class()
     @case_decorator(
         story="存货核算执行记录",
         title="测试保存执行记录",

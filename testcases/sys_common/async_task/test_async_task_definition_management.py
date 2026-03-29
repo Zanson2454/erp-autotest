@@ -46,6 +46,7 @@ class TestAsyncTaskDefinitionManagement(SysCommonBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
     
+        super().teardown_class()
     @case_decorator(
         story="异步任务定义管理",
         title="测试保存任务定义",

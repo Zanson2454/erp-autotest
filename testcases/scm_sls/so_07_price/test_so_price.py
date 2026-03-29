@@ -147,6 +147,7 @@ class TestSoPrice(SlsBase):
         except Exception as e:
             cls.logger.error(f"销售订单价格校验测试数据清理失败: {str(e)}")
     
+        super().teardown_class()
     @case_decorator(
         story="销售订单价格校验",
         title="测试检查销售价格列表中是否存在指定物料的销售价格",
@@ -426,6 +427,74 @@ class TestSoPrice(SlsBase):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
+
+    def _ensure_price_record_context(self):
+        """确保已加载物料价格上下文（found_price_record/original_price/new_price）。"""
+        if self.found_price_record and self.original_price is not None and self.new_price is not None:
+            return
+
+        def _query_current_price_record():
+            api_path = self.get_api_path("GEN-条件主数据-分页查询服务")
+            params, _ = self.get_api_params(api_path)
+            filtered_params = ParamUtil.filter_post_body_fields(
+                params, ["registerId", "pageable"], ["params", "request"]
+            )
+            ParamUtil.set_request_params(filtered_params, {
+                "registerId": self.fixed_match_record_id,
+                "pageable": {"pageNo": 1, "pageSize": 50},
+            })
+            response, _ = self.standard_api_call(
+                api_key="GEN-条件主数据-分页查询服务",
+                set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                store_id_as=None,
+                use_param_util=False,
+                param_path=["params"]
+            )
+            self.assert_util.assert_response_data(response)
+
+            records = response.get("data", {}).get("data", {}).get("records", []) or response.get("data", {}).get("data", {}).get("data", [])
+            current_time = self.mock_util.get_timestamp(timestamp=True)
+            candidates = []
+            for record in records:
+                var9 = record.get("var9") or record.get("var_9") or {}
+                mat_id = None
+                if isinstance(var9, dict):
+                    mat_id = var9.get("id") or var9.get("matId") or var9.get("mat_id")
+                elif isinstance(var9, (int, str)):
+                    try:
+                        mat_id = int(var9)
+                    except (ValueError, TypeError):
+                        mat_id = None
+                if not mat_id:
+                    mat_id = record.get("matId") or record.get("mat_id")
+                    if isinstance(mat_id, dict):
+                        mat_id = mat_id.get("id")
+                try:
+                    if mat_id and int(mat_id) == self.fixed_mat_id:
+                        candidates.append(record)
+                except (ValueError, TypeError):
+                    continue
+
+            for item in candidates:
+                start_time = item.get("startTime") or item.get("startTimeNew") or 0
+                end_time = item.get("endTime") or item.get("endTimeNew") or 253402271999000
+                if start_time <= current_time <= end_time:
+                    return item
+            return candidates[0] if candidates else None
+
+        record = _query_current_price_record()
+        if not record:
+            self._create_and_submit_price()
+            record = _query_current_price_record()
+        if not record:
+            raise ValueError(f"未找到物料ID为 {self.fixed_mat_id} 的销售价格记录")
+
+        self.found_price_record = record
+        price = record.get("out1") or record.get("outNew1") or record.get("price")
+        if price is None:
+            raise ValueError("已找到价格记录，但缺少价格字段")
+        self.original_price = float(price)
+        self.new_price = self.original_price + 1
     
     def _create_and_submit_price(self):
         """为该物料创建并提交销售价格"""
@@ -581,18 +650,8 @@ class TestSoPrice(SlsBase):
     def test_02_maintain_price(self):
         """测试维护销售价格为其他价格"""
         try:
-            # 1. 确保有价格记录
-            if not self.found_price_record:
-                self.test_01_check_price_exists()
-            
-            if not self.original_price or not self.new_price:
-                original_price = self.found_price_record.get("out1") or self.found_price_record.get("outNew1") or self.found_price_record.get("price")
-                if not original_price:
-                    raise ValueError("无法获取原价格")
-                original_price = float(original_price)
-                new_price = original_price + 1
-                self.original_price = original_price
-                self.new_price = new_price
+            # 1. 确保有价格记录上下文
+            self._ensure_price_record_context()
             
             a.text(f"原价格: {self.original_price}, 新价格: {self.new_price}", "价格维护信息")
             
@@ -615,11 +674,9 @@ class TestSoPrice(SlsBase):
         """测试创建销售订单并验证价格是否为维护后的价格"""
         try:
             # 1. 确保价格已维护
-            if not self.new_price:
-                if not self.found_price_record:
-                    self.test_01_check_price_exists()
-                if not self.price_adj_id:
-                    self.test_02_maintain_price()
+            self._ensure_price_record_context()
+            if not self.price_adj_id:
+                self._maintain_price(self.found_price_record, self.original_price, self.new_price)
             
             # 2. 创建销售订单并验证价格
             self._create_and_verify_order_price(self.new_price)
@@ -945,4 +1002,3 @@ class TestSoPrice(SlsBase):
             self.logger.error(f"创建订单并验证价格失败: {str(e)}")
             a.text(f"创建订单并验证价格失败: {str(e)}", "订单创建失败原因")
             raise
-

@@ -42,6 +42,7 @@ class TestMatTaxManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     @case_decorator(
         story="物料税分类管理",
         title="测试新增物料税分类",

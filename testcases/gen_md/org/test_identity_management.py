@@ -44,6 +44,7 @@ class TestIdentityManagement(GenMdBaseTest):
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
    
+        super().teardown_class()
     @pytest.mark.dependency(name="test_enable_identity")
     @case_decorator(
         story="组织身份管理",

@@ -40,6 +40,7 @@ class TestLabelManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     # ================ 标签表基础管理 ================
     @case_decorator(
         story="标签表管理",

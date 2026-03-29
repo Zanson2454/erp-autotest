@@ -47,6 +47,7 @@ class TestDictManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     @case_decorator(
         story="数据字典管理",
         title="测试新增数据字典类别",

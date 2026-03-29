@@ -34,6 +34,7 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     @case_decorator(
         story="合作伙伴类型管理",
         title="测试新增合作伙伴类型",

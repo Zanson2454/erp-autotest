@@ -37,6 +37,7 @@ class TestCountryManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     @case_decorator(
         story="国家配置管理",
         title="测试新增国家配置",

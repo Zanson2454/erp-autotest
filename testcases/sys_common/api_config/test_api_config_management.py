@@ -57,6 +57,7 @@ class TestApiConfigManagement(SysCommonBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
     
+        super().teardown_class()
     @case_decorator(
         story="配置中心管理",
         title="测试配置保存",

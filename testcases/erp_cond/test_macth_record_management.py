@@ -51,6 +51,7 @@ class TestMatchRecordManagement(ErpCondBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     # ================ 匹配条件注册表分页查询 ================
     @case_decorator(
         story="匹配条件注册表管理",

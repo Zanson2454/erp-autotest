@@ -27,6 +27,97 @@ class TestRebateCrud(SlsBase):
         super().bind_context()
         cls.rebate_id = None
         cls.logger.info("返利政策增删改查测试类初始化完成")
+
+    def _create_rebate_policy_if_needed(self):
+        """确保存在可操作的返利政策（避免测试方法之间直接调用）"""
+        if self.rebate_id:
+            return
+
+        api_path = self.get_api_path("REB-返利政策-保存服务")
+        params, _ = self.get_api_params(api_path)
+        filtered_params = ParamUtil.filter_post_body_fields(
+            params,
+            ["policyCode", "policyName", "status", "id", "rebDocType", "comOrgId", "slsOrgIds", "slsDcIds", "acquireType", "settAccTypeId", "soTypeIds", "soItemTypeIds", "dnTypeIds", "dnItemTypeIds", "periodType", "periodBeginAt", "periodEndAt", "rebRules"],
+            ["params", "request"]
+        )
+        set_dict = {
+            "policyCode": self.mock_util.generate_unique_code(tag="RP"),
+            "policyName": f"自动化测试返利政策_{self.mock_util.get_timestamp()}",
+            "status": None,
+            "id": None,
+            "rebDocType": "SO",
+            "comOrgId": {"id": self.com_org_id},
+            "slsOrgIds": None,
+            "slsDcIds": None,
+            "acquireType": "AMT",
+            "settAccTypeId": {"id": 14007001},
+            "soTypeIds": None,
+            "soItemTypeIds": None,
+            "dnTypeIds": None,
+            "dnItemTypeIds": None,
+            "periodType": "MONTH",
+            "periodBeginAt": self.mock_util.get_timestamp(timestamp=True, day_offset=0),
+            "periodEndAt": self.mock_util.get_timestamp(timestamp=True, day_offset=365),
+            "rebRules": [{
+                "matId": {"id": self.mat_id, "matCode": self.mat_code, "matName": self.mat_name},
+                "matCateId": {"id": 14082001},
+                "custId": {"id": self.cust_id},
+                "ladderType": "FBT",
+                "rbType": "FIX_AMOUNT",
+                "rebateLadder": [{"amt": 1, "minValue": 100, "maxValue": 100000}],
+            }],
+        }
+        ParamUtil.set_request_params(filtered_params, set_dict)
+        response, _ = self.standard_api_call(
+            api_key="REB-返利政策-保存服务",
+            set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
+        self.assert_util.assert_response_data(response)
+        self.rebate_id = response.get("data", {}).get("data", {}).get("id")
+
+    def _ensure_rebate_submitted(self):
+        """确保返利政策已提交审批"""
+        self._create_rebate_policy_if_needed()
+
+        api_path = self.get_api_path("REB-返利政策-提交审批服务")
+        params, _ = self.get_api_params(api_path)
+        filtered_params = ParamUtil.filter_post_body_fields(
+            params,
+            ["id", "context", "version", "deleted", "createdAt", "updatedAt", "createdBy", "updatedBy", "policyCode", "policyName", "rebDocType", "acquireType", "comOrgId", "settAccTypeId", "periodType", "periodBeginAt", "periodEndAt", "status"],
+            ["params", "request"]
+        )
+        set_dict = {
+            "id": self.rebate_id,
+            "context": {},
+            "version": 1,
+            "deleted": 0,
+            "createdAt": self.mock_util.get_timestamp(timestamp=True),
+            "updatedAt": self.mock_util.get_timestamp(timestamp=True),
+            "createdBy": 618373053188357,
+            "updatedBy": 618373053188357,
+            "policyCode": f"AT_RP_{self.mock_util.get_timestamp()}",
+            "policyName": f"自动化测试返利政策_{self.mock_util.get_timestamp()}",
+            "rebDocType": "SO",
+            "acquireType": "AMT",
+            "comOrgId": {"id": self.com_org_id, "context": {}},
+            "settAccTypeId": {"id": 14007001, "context": {}},
+            "periodType": "MONTH",
+            "periodBeginAt": self.mock_util.get_timestamp(timestamp=True, day_offset=0),
+            "periodEndAt": self.mock_util.get_timestamp(timestamp=True, day_offset=365),
+            "status": "DRAFT",
+        }
+        ParamUtil.set_request_params(filtered_params, set_dict)
+        response, _ = self.standard_api_call(
+            api_key="REB-返利政策-提交审批服务",
+            set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"]
+        )
+        self.assert_util.assert_response_success(response)
     
    
     
@@ -132,7 +223,7 @@ class TestRebateCrud(SlsBase):
         try:
             # 1. 确保有返利政策数据
             if not self.rebate_id:
-                self.test_01_create_and_save_rebate_policy()
+                self._create_rebate_policy_if_needed()
             
             # 2. 调用提交返利政策API
             api_path = self.get_api_path("REB-返利政策-提交审批服务")
@@ -202,7 +293,7 @@ class TestRebateCrud(SlsBase):
         try:
             # 1. 确保有已提交的返利政策
             if not self.rebate_id:
-                self.test_02_submit_rebate_policy()
+                self._ensure_rebate_submitted()
             
             # 2. 先查询审批任务列表
             task_list_url = "https://t-erp-huoshan-portal-test.app.duandian.com/api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_TASK_INSTANCE_SEARCH_GET"
@@ -308,7 +399,7 @@ class TestRebateCrud(SlsBase):
         try:
             # 1. 确保有已审核通过的返利政策
             if not self.rebate_id:
-                self.test_03_approve_rebate_policy()
+                self._ensure_rebate_submitted()
             
             # 2. 调用停用返利政策API
             api_path = self.get_api_path("REB-返利政策-停用服务")
@@ -388,10 +479,8 @@ class TestRebateCrud(SlsBase):
                 self.logger.info("未找到启用状态的返利政策，开始创建新的返利政策")
                 a.text("未找到启用状态的返利政策，创建新返利政策", "返利政策准备")
                 
-                # 创建、提交并审核通过返利政策
-                self.test_01_create_and_save_rebate_policy()
-                self.test_02_submit_rebate_policy()
-                self.test_03_approve_rebate_policy()
+                # 创建并提交返利政策（避免测试方法之间直接调用）
+                self._ensure_rebate_submitted()
                 
                 # 验证返利政策已启用
                 rebate_check = self.db.query(

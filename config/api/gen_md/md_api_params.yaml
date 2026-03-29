@@ -1264,6 +1264,12 @@ api_params:
       request: {}
     serviceKey: GEN_MD$GEN_CHARA_MD_QUERY_PAGE_ACTION_SERVICE
   /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_DELETE_ACTION_SERVICE:
+    sceneKey: GEN_MD$GEN_UOM_TYPE_VIEW
+    viewKey: GEN_MD$GEN_UOM_TYPE_VIEW:list
+    viewTitle: list
+    buttonKey: GEN_MD$GEN_UOM_TYPE_VIEW-record-actions-1-button-delete
+    buttonName: 删除
+    appId: 0
     params:
       request: {}
     serviceKey: GEN_MD$GEN_UOM_TYPE_CF_DELETE_ACTION_SERVICE
@@ -2521,6 +2527,9 @@ api_params:
       selfRelationModel: false
     serviceKey: GEN_MD$GEN_BARCODE_FIELD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
   /api/trantor/service/engine/execute/GEN_MD$GEN_UOM_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE:
+    sceneKey: GEN_MD$GEN_UOM_TYPE_VIEW
+    viewKey: GEN_MD$GEN_UOM_TYPE_VIEW:detail
+    appId: 0
     params:
       request:
         id: 0

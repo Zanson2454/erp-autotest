@@ -49,6 +49,7 @@ class TestWcManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     # ================ 工作日日历基础管理 ================
     @case_decorator(
         story="工作日日历管理",

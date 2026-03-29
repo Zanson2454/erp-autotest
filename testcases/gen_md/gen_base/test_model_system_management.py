@@ -37,6 +37,7 @@ class TestModelSystemManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试类结束异常: {str(e)}")
 
+        super().teardown_class()
     # ================ 模型系统管理 ================
     @case_decorator(
         story="模型系统管理",

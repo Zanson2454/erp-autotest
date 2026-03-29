@@ -48,6 +48,7 @@ class TestTodoManagement(GenMdBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
+        super().teardown_class()
     # ================ 日常待办管理 ================
     @case_decorator(
         story="待办管理",

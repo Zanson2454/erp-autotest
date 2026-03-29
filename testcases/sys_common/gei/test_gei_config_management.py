@@ -35,6 +35,7 @@ class TestGeiConfigManagement(SysCommonBaseTest):
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
     
+        super().teardown_class()
     @case_decorator(
         story="导入导出配置管理",
         title="测试表头预测",
