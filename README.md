@@ -227,6 +227,18 @@ pre-commit run --all-files
 
 在 `config/env/` 目录下创建环境配置文件（如 `test.yaml`），包含门户配置和数据库配置：
 
+**推荐先复制环境变量模板**：
+
+```bash
+# 复制默认模板到本地环境变量文件（按需填写真实账号/密码/Cookie）
+cp config/env/.env_template config/env/.env
+```
+
+说明：
+- `config/env/.env_template` 可提交到 Git，用于团队共享最新变量结构
+- `config/env/.env` 用于本地真实配置，不建议提交
+- 多项目模式可再复制到 `config/env/{project}/.env`
+
 ```yaml
 # config/env/test.yaml
 # 门户配置（支持多个门户和多个租户）

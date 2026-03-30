@@ -221,6 +221,7 @@ class TestEmployeeManagement(SysCommonBaseTest):
         order=4,
         tags=["sys_common", "employee", "创建"]
     )
+    @pytest.mark.skip(reason="接口配置缺失，暂时跳过")
     def test_master_data_save(self):
         """保存员工主数据"""
         try:

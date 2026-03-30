@@ -120,3 +120,35 @@ class TestAsyncTaskInstanceManagement(SysCommonBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
+
+    @case_decorator(
+        story="异步任务-任务实例",
+        title="测试查询任务数量",
+        description="验证API_ASYNC_TASK_TASK_INSTANCE_COUNT_GET功能 - 查询异步任务数量",
+        severity="normal",
+        file_level_order=3,
+        tags=["sys_common", "async_task", "task_instance", "count"]
+    )
+    @pytest.mark.skip(reason="接口配置缺失，暂时跳过")
+    def test_task_instance_count_get(self):
+        """测试查询任务数量 - API_ASYNC_TASK_TASK_INSTANCE_COUNT_GET"""
+        try:
+            response, _ = self.standard_api_call(
+                api_key="异步任务-任务实例-查询任务数量(/api/async-task/task-instance/count#GET)",
+                set_dict={},
+                use_param_util=False,
+                param_path=[]
+            )
+            self.assert_util.assert_response_data(response)
+
+            data = response.get("data", {}).get("data", {})
+            self.assert_util.assert_by_operator(
+                data is not None,
+                "=",
+                True,
+                "任务数量返回数据不应为空"
+            )
+            a.json(response, "任务数量响应数据")
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise

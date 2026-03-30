@@ -15,6 +15,7 @@ description: 统一工作流触发器 - 解析用户任务并路由到最合适�
 
 | 关键词 | 路由 Skill | 说明 |
 |---|---|---|
+| 录制转用例、curl 转用例、recorded_flow、raw_curls、mitm 录制、录制回放转 pytest | `curl-to-testcase` | 将录制产物转为项目标准测试用例 |
 | ERP 全流程分析、项目盘点、框架审查、项目地图 | `erp-full-flow` | 端到端框架分析与评估输出 |
 | 设计、方案、架构、功能规划、如何实现 | `brainstorming-trigger` | 需求澄清与方案设计 |
 | 报错、排查、调试、问题定位、为什么不工作 | `debugging-trigger` | 快速分诊与定位路径 |

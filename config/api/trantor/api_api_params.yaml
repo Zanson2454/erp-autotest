@@ -2243,6 +2243,7 @@ api_params:
   /api/trantor/portal/custom-theme: {}
   /api/trantor/portal/current: {}
   /api/trantor/portal/application/list: {}
+  /api/trantor/portal/permission/user-agents: {}
   /api/mw/websocket/getToken: {}
   /api/trantor/portal/access-url:
     sceneKey: null
@@ -2336,6 +2337,9 @@ api_params:
   /api/trantor/ai/platform-key: {}
   /api/trantor/ai/personal-knowledge/{agentKey}: {}
   /api/trantor/ai/notice-connection: {}
+  /api/trantor/ai/agent/available-agents:
+    agentKeys:
+    - AI$erp_main_agent
   /api/trantor/ai/history/message/tool-call/{messageId}: {}
   /api/trantor/ai/agent/search:
     request:

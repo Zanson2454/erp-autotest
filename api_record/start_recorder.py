@@ -15,6 +15,7 @@ RECORDER_SCRIPT = API_RECORD_ROOT / "recorder.py"
 
 
 def _mitmdump_candidates() -> list[Path]:
+    """定位 mitmdump 可执行文件（优先使用当前 Python 环境同目录）。"""
     exe = Path(sys.executable).resolve()
     parent = exe.parent
     if sys.platform == "win32":
@@ -23,6 +24,7 @@ def _mitmdump_candidates() -> list[Path]:
 
 
 def _fallback_venv_mitmdump() -> Path | None:
+    """兜底：尝试从主项目 `.venv/` 找 mitmdump（兼容“未激活 venv 但想直接跑脚本”的场景）。"""
     venv_dir = PROJECT_ROOT / ".venv"
     if sys.platform == "win32":
         p = venv_dir / "Scripts" / "mitmdump.exe"
@@ -32,6 +34,7 @@ def _fallback_venv_mitmdump() -> Path | None:
 
 
 def main() -> int:
+    # 录制器必须依赖 mitmproxy；这里做“可执行文件探测”，让使用者少踩环境坑。
     mitmdump: Path | None = None
     for candidate in _mitmdump_candidates():
         if candidate.exists():
@@ -41,6 +44,7 @@ def main() -> int:
         mitmdump = _fallback_venv_mitmdump()
 
     if mitmdump is None or not mitmdump.exists():
+        # 失败时给出明确修复命令，避免“找不到 mitmdump”导致新手卡住。
         root_req = PROJECT_ROOT / "requirements.txt"
         print(
             "未找到 mitmdump，请先安装主项目依赖（含 mitmproxy）：\n"
@@ -50,6 +54,8 @@ def main() -> int:
         )
         return 1
 
+    # 关键点：使用 execv 直接把当前进程替换成 mitmdump，信号/退出码更贴近原生 mitm 行为。
+    # 同时转发 CLI 参数，便于临时调试（例如加日志级别、改端口等）。
     command = [str(mitmdump), "-s", str(RECORDER_SCRIPT), *sys.argv[1:]]
     os.execv(command[0], command)
     return 0

@@ -40,7 +40,7 @@ class DBManager:
 
     # 连接池默认配置
     _default_pool_config = {
-        'mincached': 2,    # 最小空闲连接数
+        'mincached': 0,    # 最小空闲连接数（并发场景避免启动即建连风暴）
         'maxcached': 10,   # 最大空闲连接数
         'maxconnections': 20,  # 最大连接数
         'blocking': True,   # 连接不足时是否等待
@@ -220,6 +220,11 @@ class DBManager:
             if params:
                 self._logger.error(f"参数: {params}")
             raise
+
+    def query_one(self, sql: str, params: Optional[List[Any]] = None) -> Optional[Dict[str, Any]]:
+        """查询单条记录，兼容历史调用方。"""
+        rows = self.query(sql, params)
+        return rows[0] if rows else None
 
     def insert(self, table: str, data: Dict[str, Any]) -> int:
         """插入方法 - 支持实例和类调用"""

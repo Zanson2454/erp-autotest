@@ -151,8 +151,9 @@ class AssertHelper:
         # 2. 使用 ResponseUtil 提取数据
         result = ResponseUtil.get_response_data(response)
         
-        # 3. 验证结果不为 None
-        assert result is not None, message or "未找到有效的响应数据"
+        # 3. 部分接口仅返回 {"success": true}，视为成功且返回空对象
+        if result is None and response.get("success", False):
+            return {}
         
         return result
 

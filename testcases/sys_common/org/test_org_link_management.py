@@ -37,7 +37,48 @@ class TestOrgLinkManagement(SysCommonBaseTest):
         cls.emp_org_link_id = None
         cls.struct_biz_link_id = None
         cls.dim_biz_link_id = None
+        cls.org_struct_id = None
+        cls.biz_type_id = None
+        cls.dimension_id = None
         cls.logger.info("组织关联关系管理测试类初始化完成")
+
+    def _ensure_seed_ids(self):
+        """优先用缓存，其次回查数据库，避免用字符串占位导致 Long 反序列化失败。"""
+        if self.org_struct_id and self.biz_type_id and self.dimension_id:
+            return
+
+        if self.md_cache_data:
+            org_info = self.md_cache_data.get("org_info", {})
+            for key in ("gr_come_org_info", "sls_org_info", "inv_org_info", "com_org_info"):
+                rows = org_info.get(key, [])
+                if rows and rows[0].get("id") and not self.org_struct_id:
+                    self.__class__.org_struct_id = rows[0].get("id")
+                    break
+
+            biz_type_ids = org_info.get("org_biz_type_cf", [])
+            if biz_type_ids and not self.biz_type_id:
+                first = biz_type_ids[0]
+                self.__class__.biz_type_id = first.get("id") if isinstance(first, dict) else first
+
+            dim_rows = org_info.get("org_dimension_info", []) or org_info.get("dimension_info", [])
+            if dim_rows and dim_rows[0].get("id") and not self.dimension_id:
+                self.__class__.dimension_id = dim_rows[0].get("id")
+
+        if not self.org_struct_id:
+            row = self.db.query_one(sql="SELECT id FROM org_struct_md ORDER BY id DESC LIMIT 1")
+            if row:
+                self.__class__.org_struct_id = row.get("id")
+        if not self.biz_type_id:
+            row = self.db.query_one(sql="SELECT id FROM org_business_type_cf ORDER BY id DESC LIMIT 1")
+            if row:
+                self.__class__.biz_type_id = row.get("id")
+        if not self.dimension_id:
+            row = self.db.query_one(sql="SELECT id FROM org_dimension_cf ORDER BY id DESC LIMIT 1")
+            if row:
+                self.__class__.dimension_id = row.get("id")
+
+        if not self.org_struct_id or not self.biz_type_id or not self.dimension_id:
+            pytest.skip("缺少组织关联所需基础ID(org_struct/biz_type/dimension)，无法执行当前用例")
     
     @classmethod
     def teardown_class(cls):
@@ -81,6 +122,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
     def test_create_emp_org_link(self):
         """创建员工组织关联数据"""
         try:
+            self._ensure_seed_ids()
             api_path = self.get_api_path("员工组织关联表-创建数据服务")
             params, url = self.get_api_params(api_path)
             
@@ -91,7 +133,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
             )
             set_dict = {
                 "empId": self.user_id,
-                "orgId": "TEST_ORG_ID",
+                "orgId": self.org_struct_id,
                 "status": "ENABLED"
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
@@ -573,6 +615,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
     def test_create_struct_biz_link(self):
         """创建组织业务类型关联数据"""
         try:
+            self._ensure_seed_ids()
             api_path = self.get_api_path("组织业务类型关联表-创建数据服务")
             params, url = self.get_api_params(api_path)
             
@@ -582,8 +625,8 @@ class TestOrgLinkManagement(SysCommonBaseTest):
                 ["params", "request"]
             )
             set_dict = {
-                "orgStructId": "TEST_STRUCT_ID",
-                "bizTypeId": "TEST_BIZ_TYPE_ID",
+                "orgStructId": self.org_struct_id,
+                "bizTypeId": self.biz_type_id,
                 "status": "ENABLED"
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
@@ -778,6 +821,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
     def test_save_struct_biz_link(self):
         """保存组织业务类型关联"""
         try:
+            self._ensure_seed_ids()
             api_path = self.get_api_path("组织业务类型关联表-保存数据服务")
             params, url = self.get_api_params(api_path)
             
@@ -787,8 +831,8 @@ class TestOrgLinkManagement(SysCommonBaseTest):
                 ["params", "request"]
             )
             set_dict = {
-                "orgStructId": "TEST_STRUCT_ID_2",
-                "bizTypeId": "TEST_BIZ_TYPE_ID_2",
+                "orgStructId": self.org_struct_id,
+                "bizTypeId": self.biz_type_id,
                 "status": "ENABLED"
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
@@ -821,12 +865,12 @@ class TestOrgLinkManagement(SysCommonBaseTest):
     def test_batch_create_struct_biz_link(self):
         """批量创建组织业务类型关联"""
         try:
+            self._ensure_seed_ids()
             api_path = self.get_api_path("组织业务类型关联表-批量创建数据服务")
             params, url = self.get_api_params(api_path)
             
             link_list = [
-                {"orgStructId": "BATCH_STRUCT_1", "bizTypeId": "BATCH_BIZ_1", "status": "ENABLED"},
-                {"orgStructId": "BATCH_STRUCT_2", "bizTypeId": "BATCH_BIZ_2", "status": "ENABLED"}
+                {"orgStructId": self.org_struct_id, "bizTypeId": self.biz_type_id, "status": "ENABLED"}
             ]
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -1065,6 +1109,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
     def test_create_dim_biz_link(self):
         """创建组织维度业务类型关联数据"""
         try:
+            self._ensure_seed_ids()
             api_path = self.get_api_path("组织维度业务类型关联表-创建数据服务")
             params, url = self.get_api_params(api_path)
             
@@ -1074,8 +1119,8 @@ class TestOrgLinkManagement(SysCommonBaseTest):
                 ["params", "request"]
             )
             set_dict = {
-                "dimensionId": "TEST_DIMENSION_ID",
-                "bizTypeId": "TEST_BIZ_TYPE_ID",
+                "dimensionId": self.dimension_id,
+                "bizTypeId": self.biz_type_id,
                 "status": "ENABLED"
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
@@ -1434,6 +1479,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
     def test_save_dim_biz_link(self):
         """保存组织维度业务类型关联"""
         try:
+            self._ensure_seed_ids()
             api_path = self.get_api_path("组织维度业务类型关联表-保存数据服务")
             params, url = self.get_api_params(api_path)
             
@@ -1443,8 +1489,8 @@ class TestOrgLinkManagement(SysCommonBaseTest):
                 ["params", "request"]
             )
             set_dict = {
-                "dimensionId": "TEST_DIMENSION_ID_2",
-                "bizTypeId": "TEST_BIZ_TYPE_ID_2",
+                "dimensionId": self.dimension_id,
+                "bizTypeId": self.biz_type_id,
                 "status": "ENABLED"
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
@@ -1477,12 +1523,12 @@ class TestOrgLinkManagement(SysCommonBaseTest):
     def test_batch_create_dim_biz_link(self):
         """批量创建组织维度业务类型关联"""
         try:
+            self._ensure_seed_ids()
             api_path = self.get_api_path("组织维度业务类型关联表-批量创建数据服务")
             params, url = self.get_api_params(api_path)
             
             link_list = [
-                {"dimensionId": "BATCH_DIM_1", "bizTypeId": "BATCH_BIZ_1", "status": "ENABLED"},
-                {"dimensionId": "BATCH_DIM_2", "bizTypeId": "BATCH_BIZ_2", "status": "ENABLED"}
+                {"dimensionId": self.dimension_id, "bizTypeId": self.biz_type_id, "status": "ENABLED"}
             ]
             
             filtered_params = ParamUtil.filter_post_body_fields(

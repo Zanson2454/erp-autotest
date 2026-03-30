@@ -11,6 +11,7 @@ from typing import Dict, Any, Optional, Union
 from enum import Enum
 from pathlib import Path
 import json
+import re
 
 
 
@@ -767,6 +768,9 @@ class BaseTest:
         """后处理 - 可被子类重写"""
         # 更新初始化数据
         cls.init_data["user_info"] = {"user_info": cls.user_info}
+        # 兜底初始化，避免部分模块直接访问该属性时报 AttributeError
+        if not hasattr(cls, "md_cache_data") or cls.md_cache_data is None:
+            cls.md_cache_data = {}
 
     @classmethod
     def module_login_single_portal(cls, portal_key: str = "TERP_PORTAL", tenant_key: str = "terp"):
@@ -1098,7 +1102,55 @@ class BaseTest:
             apis_dict = getattr(self, "apis", None)
         if apis_dict is None:
             raise ValueError("未找到 apis 配置，请检查模块基类是否已加载 API 路径配置")
-        return ParamUtil.get_api_path(apis_dict, api_key)
+        api_path = ParamUtil.get_api_path(apis_dict, api_key)
+        if api_path:
+            return api_path
+
+        api_key_str = str(api_key).strip()
+        matched_keys = []
+
+        if api_key_str.startswith("/"):
+            normalized_path = api_key_str.split("#", 1)[0]
+            for key, meta in apis_dict.items():
+                if not isinstance(meta, dict):
+                    continue
+                if key == api_key_str or key.startswith(f"{normalized_path}#"):
+                    matched_keys.append(key)
+        else:
+            for key, meta in apis_dict.items():
+                if not isinstance(meta, dict):
+                    continue
+                if key.startswith(f"{api_key_str}("):
+                    matched_keys.append(key)
+
+            # key 文案发生漂移时，回退到括号内的路径签名匹配，如 "(.../count#GET)"
+            if not matched_keys:
+                signature_match = re.search(r"\(([^()]+)\)", api_key_str)
+                if signature_match:
+                    signature = signature_match.group(1).strip()
+                    for key, meta in apis_dict.items():
+                        if not isinstance(meta, dict):
+                            continue
+                        if f"({signature})" in key:
+                            matched_keys.append(key)
+
+        if not matched_keys:
+            return None
+
+        # 多候选时优先非 direct 路径，避免默认命中 export-direct 这类特化接口
+        matched_keys.sort(key=lambda k: ("direct" in k.lower(), len(k)))
+        best_key = matched_keys[0]
+        best_path = ParamUtil.get_api_path(apis_dict, best_key)
+        if best_path:
+            self.logger.warning(f"API key未精确命中，已使用近似匹配: '{api_key_str}' -> '{best_key}'")
+        return best_path
+
+    def get_api_url(self, api_path, with_query_params=None):
+        """
+        根据API路径返回请求URL（相对路径，交由 HttpUtil 拼接 base_url）。
+        """
+        _, url = self.get_api_params(api_path, with_query_params=with_query_params)
+        return url
     
     def get_api_params(self, api_path, api_params_dict=None, with_query_params=None):
         """
@@ -1264,6 +1316,9 @@ class BaseTest:
                             if p not in current:
                                 current[p] = {}
                             current = current[p]
+
+                # 统一清洗 pageable 结构，避免 sortOrders=[{}]/null 条件残留导致后端参数校验失败
+                ParamUtil.sanitize_payload(filtered_params)
                 
                 # POST/PUT/PATCH 请求：使用 json 参数（body）
                 request_kwargs = {"json": filtered_params} if filtered_params else {}

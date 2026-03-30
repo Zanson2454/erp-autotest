@@ -330,3 +330,56 @@ class TestTrantorPortal(TrantorBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
+
+    @case_decorator(
+        story="门户权限",
+        title="测试查询用户代理信息",
+        description="验证门户查询用户代理信息接口功能 - 获取/api/trantor/portal/permission/user-agents",
+        severity="normal",
+        file_level_order=11,
+        tags=["trantor", "portal", "permission", "user-agents"]
+    )
+    def test_query_user_agents(self):
+        """测试查询用户代理信息"""
+        try:
+            response, _ = self.standard_api_call(
+                api_key="查询用户代理信息",
+                set_dict=None,
+                method="GET"
+            )
+            self.assert_util.assert_response_data(response)
+            a.json(response, "用户代理信息响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="AI能力",
+        title="测试查询可用智能体列表",
+        description="验证查询可用智能体列表接口功能 - POST /api/trantor/ai/agent/available-agents",
+        severity="normal",
+        file_level_order=12,
+        tags=["trantor", "ai", "agent", "available"]
+    )
+    def test_query_available_agents(self):
+        """测试查询可用智能体列表"""
+        try:
+            set_dict = {
+                "agentKeys": [
+                    "AI$erp_main_agent",
+                    "SMART_SLS$sales_master_AI_EMPLOYEE"
+                ]
+            }
+            response, _ = self.standard_api_call(
+                api_key="查询可用智能体列表",
+                set_dict=set_dict,
+                use_param_util=False,
+                param_path=[]
+            )
+            self.assert_util.assert_response_data(response)
+            a.json(response, "可用智能体响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise

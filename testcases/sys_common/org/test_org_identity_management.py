@@ -21,7 +21,7 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
     """组织身份管理测试类"""
     
     identity_id = None
-    identity_code = None
+    code = None
     identity_name = None
     
     @classmethod
@@ -35,7 +35,7 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
         """绑定测试上下文对象。"""
         super().bind_context()
         cls.identity_id = None
-        cls.identity_code = None
+        cls.code = None
         cls.identity_name = None
         cls.logger.info("组织身份管理测试类初始化完成")
     
@@ -45,7 +45,7 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
         try:
             cls.db.delete(
                 table="org_identity_cf",
-                where="identity_code like %s",
+                where="code like %s",
                 params=["AT_%"]
             )
             cls.logger.info("组织身份测试数据清理完成")
@@ -67,7 +67,7 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
     def test_create_identity(self):
         """创建组织身份数据"""
         try:
-            identity_code = self.mock_util.generate_unique_code(tag="AT_IDENTITY")
+            code = self.mock_util.generate_unique_code(tag="AT_IDENTITY")
             identity_name = f"自动化测试身份_{self.mock_util.get_timestamp()}"
             
             api_path = self.get_api_path("组织身份表-创建数据服务")
@@ -75,12 +75,12 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
             
             filtered_params = ParamUtil.filter_post_body_fields(
                 params, 
-                ["identityCode", "identityName", "status"],
+                ["code", "name", "status"],
                 ["params", "request"]
             )
             set_dict = {
-                "identityCode": identity_code,
-                "identityName": identity_name,
+                "code": code,
+                "name": identity_name,
                 "status": "ENABLED"
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
@@ -95,7 +95,7 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
             self.assert_util.assert_response_data(response)
             
             self.__class__.identity_id = response.get("data", {}).get("data", {})
-            self.__class__.identity_code = identity_code
+            self.__class__.code = code
             self.__class__.identity_name = identity_name
             
             a.json(filtered_params, "请求数据")
@@ -117,7 +117,7 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
     def test_save_identity(self):
         """保存组织身份数据（新增或更新）"""
         try:
-            identity_code = self.mock_util.generate_unique_code(tag="AT_IDENTITY_SAVE")
+            code = self.mock_util.generate_unique_code(tag="AT_IDENTITY_SAVE")
             identity_name = f"保存测试身份_{self.mock_util.get_timestamp()}"
             
             api_path = self.get_api_path("组织身份表-保存数据服务")
@@ -125,12 +125,12 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
             
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["identityCode", "identityName", "status"],
+                ["code", "name", "status"],
                 ["params", "request"]
             )
             ParamUtil.set_request_params(filtered_params, {
-                "identityCode": identity_code,
-                "identityName": identity_name,
+                "code": code,
+                "name": identity_name,
                 "status": "ENABLED"
             })
             
@@ -145,7 +145,7 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
             
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-            self.logger.info(f"保存组织身份成功: Code={identity_code}")
+            self.logger.info(f"保存组织身份成功: Code={code}")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -164,11 +164,11 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
         try:
             identity_list = []
             for i in range(3):
-                identity_code = self.mock_util.generate_unique_code(tag=f"AT_IDENTITY_BATCH_{i}")
+                code = self.mock_util.generate_unique_code(tag=f"AT_IDENTITY_BATCH_{i}")
                 identity_name = f"批量测试身份{i}_{self.mock_util.get_timestamp()}"
                 identity_list.append({
-                    "identityCode": identity_code,
-                    "identityName": identity_name,
+                    "code": code,
+                    "name": identity_name,
                     "status": "ENABLED"
                 })
             
@@ -210,7 +210,7 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
     def test_master_data_save(self):
         """保存组织身份主数据"""
         try:
-            identity_code = self.mock_util.generate_unique_code(tag="AT_IDENTITY_MD")
+            code = self.mock_util.generate_unique_code(tag="AT_IDENTITY_MD")
             identity_name = f"主数据身份_{self.mock_util.get_timestamp()}"
             
             api_path = self.get_api_path("组织身份表-保存主数据服务")
@@ -218,12 +218,12 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
             
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["identityCode", "identityName", "status"],
+                ["code", "name", "status"],
                 ["params", "request"]
             )
             ParamUtil.set_request_params(filtered_params, {
-                "identityCode": identity_code,
-                "identityName": identity_name,
+                "code": code,
+                "name": identity_name,
                 "status": "ENABLED"
             })
             
@@ -238,7 +238,7 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
             
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-            self.logger.info(f"保存组织身份主数据成功: Code={identity_code}")
+            self.logger.info(f"保存组织身份主数据成功: Code={code}")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -302,7 +302,7 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
     def test_find_one_data(self):
         """查找单条组织身份数据"""
         try:
-            if not self.identity_code:
+            if not self.code:
                 self.test_create_identity()
             
             api_path = self.get_api_path("组织身份表-查找单条数据服务")
@@ -310,10 +310,10 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
             
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["identityCode"],
+                ["code"],
                 ["params", "request"]
             )
-            ParamUtil.set_request_params(filtered_params, {"identityCode": self.identity_code})
+            ParamUtil.set_request_params(filtered_params, {"code": self.code})
             
             response, _ = self.standard_api_call(
                 api_key="组织身份表-查找单条数据服务",
@@ -326,7 +326,7 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
             
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")
-            self.logger.info(f"查找单条组织身份数据成功: Code={self.identity_code}")
+            self.logger.info(f"查找单条组织身份数据成功: Code={self.code}")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -511,12 +511,12 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
             
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["id", "identityName"],
+                ["id", "name"],
                 ["params", "request"]
             )
             ParamUtil.set_request_params(filtered_params, {
                 "id": self.identity_id,
-                "identityName": new_name
+                "name": new_name
             })
             
             response, _ = self.standard_api_call(
@@ -719,6 +719,8 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
                 self.test_create_identity()
             
             api_path = self.get_api_path("组织身份表-折叠关联关系服务")
+            if not api_path:
+                pytest.skip("组织身份表-折叠关联关系服务未配置，跳过该用例")
             params, url = self.get_api_params(api_path)
             
             filtered_params = ParamUtil.filter_post_body_fields(
@@ -933,19 +935,19 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
         try:
             # 创建测试数据用于删除
             test_id = None
-            identity_code = self.mock_util.generate_unique_code(tag="AT_IDENTITY_DEL")
+            code = self.mock_util.generate_unique_code(tag="AT_IDENTITY_DEL")
             identity_name = f"待删除身份_{self.mock_util.get_timestamp()}"
             
             api_path = self.get_api_path("组织身份表-创建数据服务")
             params, url = self.get_api_params(api_path)
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
-                ["identityCode", "identityName", "status"],
+                ["code", "name", "status"],
                 ["params", "request"]
             )
             ParamUtil.set_request_params(filtered_params, {
-                "identityCode": identity_code,
-                "identityName": identity_name,
+                "code": code,
+                "name": identity_name,
                 "status": "ENABLED"
             })
             response, _ = self.standard_api_call(

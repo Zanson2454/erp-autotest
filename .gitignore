@@ -68,6 +68,8 @@ run_tests.sh
 # 忽略配置数据
 .env
 *.env
+!config/env/.env_template
+!**/.env_template
 *logs/*
 .DS_Store
 **/.DS_Store
@@ -96,6 +98,11 @@ allure-report/
 
 # 录制运行时开关状态（本地）
 api_record/runtime/
+
+# 录制产物（不作为正式回归资产）
+api_record/testdata/recorded/
+api_record/generated_cases/
+api_record/raw_curls/
 
 # 忽略测试中的文件
 test_data_factory/

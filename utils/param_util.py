@@ -14,6 +14,49 @@ import uuid
 
 class ParamUtil:
     @staticmethod
+    def _sanitize_pageable(pageable: Dict[str, Any]) -> Dict[str, Any]:
+        """清洗 pageable 结构，避免无效排序/筛选结构触发后端参数校验错误。"""
+        if not isinstance(pageable, dict):
+            return pageable
+
+        sort_orders = pageable.get("sortOrders")
+        if sort_orders is None:
+            pageable["sortOrders"] = []
+        elif isinstance(sort_orders, list):
+            valid_orders = []
+            field_keys = {"field", "property", "orderBy", "column", "name", "key"}
+            for item in sort_orders:
+                if not isinstance(item, dict):
+                    continue
+                if not any(item.get(k) for k in field_keys):
+                    continue
+                valid_orders.append(item)
+            pageable["sortOrders"] = valid_orders
+
+        if pageable.get("conditionItems") is None:
+            pageable["conditionItems"] = {}
+        if pageable.get("conditionGroup") is None:
+            pageable["conditionGroup"] = {}
+        return pageable
+
+    @staticmethod
+    def sanitize_payload(payload: Any) -> Any:
+        """
+        递归清洗 payload 中的 pageable 结构。
+        主要用于 use_param_util=False 的场景，避免模板残留空排序对象。
+        """
+        if isinstance(payload, dict):
+            for key, value in payload.items():
+                if key == "pageable" and isinstance(value, dict):
+                    ParamUtil._sanitize_pageable(value)
+                else:
+                    ParamUtil.sanitize_payload(value)
+        elif isinstance(payload, list):
+            for item in payload:
+                ParamUtil.sanitize_payload(item)
+        return payload
+
+    @staticmethod
     def filter_post_body_fields(body: Dict[str, Any], fields: List[str], path: Optional[List[str]] = None) -> Dict[str, Any]:
         """
         支持指定嵌套路径的字段过滤，并将过滤结果嵌套回原路径，保留同级其它字段
@@ -22,6 +65,10 @@ class ParamUtil:
         :param path: 需要过滤的嵌套路径（如 ["params", "request"]）
         :return: 只包含指定字段的新 dict，嵌套回 path，保留同级其它字段
         """
+        if not isinstance(body, dict):
+            # 兼容参数模板中 request 为 list 的场景，交由后续 set_request_params 重建目标结构
+            return {}
+
         if path and len(path) > 0:
             p = path[0]
             # 递归过滤目标路径
@@ -211,17 +258,51 @@ class ParamUtil:
         """
         if path is None:
             path = ["params", "request"]
+
+        # 顶层直写：例如 standard_api_call(param_path=[]) 的场景
+        if len(path) == 0:
+            if isinstance(param_dict, dict):
+                params.update(param_dict)
+                return params
+            if isinstance(param_dict, list):
+                raise TypeError("path=[] 时 param_dict 必须为 dict，不能为 list")
+            raise TypeError(f"param_dict 必须是 dict 或 list，当前类型: {type(param_dict).__name__}")
         
         # 确保路径存在
         current = params
-        for p in path:
-            if p not in current:
+        for p in path[:-1]:
+            if p not in current or not isinstance(current[p], dict):
                 current[p] = {}
             current = current[p]
-        
+
+        last_key = path[-1]
+        if last_key not in current or not isinstance(current[last_key], dict):
+            current[last_key] = {}
+
+        # 兼容批量接口参数直接为 list 的模板
+        if isinstance(param_dict, list):
+            current[last_key] = param_dict
+            return params
+
+        if not isinstance(param_dict, dict):
+            raise TypeError(f"param_dict 必须是 dict 或 list，当前类型: {type(param_dict).__name__}")
+
+        # dataList 语义兼容：大量批量接口模板 request 实际为 list
+        if set(param_dict.keys()) == {"dataList"} and isinstance(param_dict.get("dataList"), list):
+            current[last_key] = param_dict["dataList"]
+            return params
+
         # 设置参数值
         for key, value in param_dict.items():
-            current[key] = value
+            # 容错：上游把整对象当作 id 传入时，自动提取 id
+            if isinstance(value, dict) and key.lower().endswith("id") and "id" in value:
+                value = value.get("id")
+            if isinstance(value, dict) and isinstance(value.get("pageable"), dict):
+                ParamUtil._sanitize_pageable(value["pageable"])
+            if isinstance(value, list) and (key.lower() == "ids" or key.lower().endswith("ids")):
+                value = [item.get("id") if isinstance(item, dict) and "id" in item else item for item in value]
+            current[last_key][key] = value
+        ParamUtil.sanitize_payload(params)
         return params
     
     @staticmethod

@@ -746,6 +746,9 @@ apis:
   获取工作台应用:
     path: /api/trantor/portal/application/list
     method: GET
+  查询用户代理信息:
+    path: /api/trantor/portal/permission/user-agents
+    method: GET
   获取WebSocket Token:
     path: /api/mw/websocket/getToken
     method: POST
@@ -879,6 +882,9 @@ apis:
   notice-connection:
     path: /api/trantor/ai/notice-connection
     method: GET
+  查询可用智能体列表:
+    path: /api/trantor/ai/agent/available-agents
+    method: POST
   查询指定历史会话工具调用消息:
     path: /api/trantor/ai/history/message/tool-call/{messageId}
     method: GET

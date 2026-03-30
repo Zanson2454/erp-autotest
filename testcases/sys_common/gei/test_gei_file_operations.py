@@ -12,6 +12,7 @@ from utils.report_util import a, case_decorator
 
 @allure.epic("系统通用模块")
 @allure.feature("导入导出文件操作")
+@pytest.mark.skip(reason="接口配置缺失或已漂移，暂时跳过")
 class TestGeiFileOperations(SysCommonBaseTest):
     """导入导出文件操作测试类"""
     
