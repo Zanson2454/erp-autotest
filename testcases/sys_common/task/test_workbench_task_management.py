@@ -1,5 +1,4 @@
 import allure
-import pytest
 from testcases.sys_common import SysCommonBaseTest
 from utils.report_util import a, case_decorator
 
@@ -44,10 +43,6 @@ class TestWorkbenchTaskManagement(SysCommonBaseTest):
                 use_param_util=False,
                 param_path=["params"]
             )
-            err_code = response.get("err", {}).get("code") if isinstance(response, dict) else None
-            if err_code == "sys_common$errorCommon":
-                pytest.skip("后端接口已知返回 sys_common$errorCommon（HTTP 500），暂不作为自动化失败")
-
             self.assert_util.assert_response_data(response)
 
             data = response.get("data", {}).get("data", {})
