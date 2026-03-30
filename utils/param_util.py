@@ -32,11 +32,6 @@ class ParamUtil:
                     continue
                 valid_orders.append(item)
             pageable["sortOrders"] = valid_orders
-
-        if pageable.get("conditionItems") is None:
-            pageable["conditionItems"] = {}
-        if pageable.get("conditionGroup") is None:
-            pageable["conditionGroup"] = {}
         return pageable
 
     @staticmethod

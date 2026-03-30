@@ -105,8 +105,8 @@ def test_sanitize_payload_cleans_invalid_sort_orders():
 
     pageable = payload["pageable"]
     assert pageable["sortOrders"] == [{"field": "createTime", "direction": "DESC"}]
-    assert pageable["conditionItems"] == {}
-    assert pageable["conditionGroup"] == {}
+    assert pageable["conditionItems"] is None
+    assert pageable["conditionGroup"] is None
 
 
 def test_standard_api_call_sanitizes_pageable_when_use_param_util_false():
@@ -135,5 +135,5 @@ def test_standard_api_call_sanitizes_pageable_when_use_param_util_false():
     assert response["success"] is True
     sent_pageable = tester.http.last_json["params"]["pageable"]
     assert sent_pageable["sortOrders"] == []
-    assert sent_pageable["conditionItems"] == {}
-    assert sent_pageable["conditionGroup"] == {}
+    assert sent_pageable["conditionItems"] is None
+    assert sent_pageable["conditionGroup"] is None
