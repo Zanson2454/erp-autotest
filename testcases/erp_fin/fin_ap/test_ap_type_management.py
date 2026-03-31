@@ -52,14 +52,8 @@ class TestApTypeMdManagement(ApBaseTest):
     
     @classmethod
     def teardown_class(cls):
-        """测试类结束后执行清理"""
-        try:
-            # 禁止用循环遍历表名，必须一个表一个表地单独调用
-            cls.db.delete(table="fin_apm_ap_type_md", where="ap_type_code like %s", params=["AT_%"])
-            cls.logger.info("测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
-    
+        """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
+        cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
     @case_decorator(
         story="应付单据类型查询",

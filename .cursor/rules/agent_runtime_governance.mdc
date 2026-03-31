@@ -1,0 +1,28 @@
+---
+description: Agent runtime guardrails for ERP pytest automation tasks
+alwaysApply: true
+---
+
+# Agent Runtime Governance
+
+## Mandatory Flow
+- Analyze before coding.
+- Follow `analysis -> design -> confirmation -> implementation`.
+- Prefer small incremental edits over large refactors.
+
+## Architecture and Scope
+- Reuse existing project structure and helpers first.
+- Do not add abstraction layers unless there is clear necessity.
+- Keep business logic out of fixtures.
+
+## Quality and Output
+- Avoid shallow assertions (not only success code checks).
+- Reflect ERP semantics: state transition, dependency, permission, idempotency.
+- Separate output into `confirmed facts`, `inferred assumptions`, and `unknowns`.
+
+## P0 Safety
+- Never hardcode secrets in repository code.
+- Use environment variables or secret managers for sensitive values.
+- If `teardown_class` is overridden, call `super().teardown_class()`.
+- Put cleanup in deterministic `finally`-equivalent paths.
+- Fix P0 violations before merge; no deferred tickets.

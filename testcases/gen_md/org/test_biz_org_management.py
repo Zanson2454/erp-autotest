@@ -57,17 +57,10 @@ class TestBizOrgManagement(GenMdBaseTest):
                 
     @classmethod        
     def teardown_class(cls):
-        try:
-            cls.db.delete(
-            table="org_struct_md",
-            where="org_code like %s",
-            params=["AT_%"]
-        )
-            cls.logger.info("测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
-
+        """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
+        cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
+
     @pytest.mark.run(file_level_order=1)
     @case_decorator(
         story="保存组织",

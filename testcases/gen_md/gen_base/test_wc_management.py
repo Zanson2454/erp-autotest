@@ -31,24 +31,8 @@ class TestWcManagement(GenMdBaseTest):
 
     @classmethod
     def teardown_class(cls):
-        """测试类结束后执行清理"""
-        try:
-            # 清理测试数据
-            cls.db.delete(
-                table="gen_wc_item_cf",
-                where = "gen_wc_head_id in (select id from gen_wc_head_cf where wc_head_code like %s )",
-                params=["AT_%"]
-            )
-            cls.db.delete(
-                table="gen_wc_head_cf",
-                where="wc_head_code like %s",
-                params=["AT_%"]
-            )
-           
-            cls.logger.info("测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
-
+        """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
+        cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
     # ================ 工作日日历基础管理 ================
     @case_decorator(

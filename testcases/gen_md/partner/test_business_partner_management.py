@@ -141,6 +141,24 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
         return data
 
     @staticmethod
+    def _get_partner_detail_field(detail_data, field):
+        if not isinstance(detail_data, dict):
+            return None
+        if detail_data.get(field) is not None:
+            return detail_data.get(field)
+
+        nested_candidates = [
+            detail_data.get("baseInfo"),
+            detail_data.get("partner"),
+            detail_data.get("businessPartner"),
+            detail_data.get("formData"),
+        ]
+        for item in nested_candidates:
+            if isinstance(item, dict) and item.get(field) is not None:
+                return item.get(field)
+        return None
+
+    @staticmethod
     def _extract_records(response):
         data = TestBusinessPartnerManagement._extract_response_data(response)
         if isinstance(data, dict):
@@ -414,19 +432,10 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
         
     @classmethod
     def teardown_class(cls):
-        """测试类结束后执行清理"""
-        try:
-            cls.db.delete(
-                table="gen_business_partner_md", 
-                where="code like %s", 
-                params=["AT_%"]
-            )
-            cls.logger.info("测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
-
+        """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
+        cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
-    # ============= 核心功能测试 =============
+
     @case_decorator(
         story="合作伙伴主数据",
         title="测试新增外部客户",
@@ -1157,8 +1166,10 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
     def test_scene_query_business_partner_detail(self):
         try:
             response, detail_data = self._query_scene_partner_detail()
-            assert str(detail_data.get("id")) == str(self.scene_partner_id)
-            assert str(detail_data.get("code")) == str(self.scene_partner_code)
+            partner_id = self._get_partner_detail_field(detail_data, "id")
+            partner_code = self._get_partner_detail_field(detail_data, "code")
+            assert str(partner_id) == str(self.scene_partner_id)
+            assert str(partner_code) == str(self.scene_partner_code)
             a.json(response, "响应数据")
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -1265,8 +1276,10 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
             self.assert_util.assert_response_success(response)
 
             _, refreshed_detail = self._query_scene_partner_detail(view_key=self.SCENE_EDIT_VIEW)
-            assert refreshed_detail.get("intro") == request_payload["intro"]
-            assert refreshed_detail.get("addressDetail") == request_payload["addressDetail"]
+            refreshed_intro = self._get_partner_detail_field(refreshed_detail, "intro")
+            refreshed_address_detail = self._get_partner_detail_field(refreshed_detail, "addressDetail")
+            assert refreshed_intro == request_payload["intro"]
+            assert refreshed_address_detail == request_payload["addressDetail"]
             a.json(response, "响应数据")
         except Exception as e:
             a.text(str(e), "失败原因")

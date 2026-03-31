@@ -4,13 +4,57 @@
 """
 
 import sys
+import os
 from pathlib import Path
 from typing import Any
 
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
 from testcases.comm.base_test import BaseTest
+from testcases.comm.cleanup_registry import register_cleanup
 from data_factory.base import DataFactory
+from utils.mysql_util import DBManager
+
+
+def _cleanup_scm_pur() -> None:
+    """SCM_PUR 统一清理入口：由 cleanup_registry 在 session 末尾执行。"""
+    db = None
+    try:
+        env = os.getenv("TEST_ENV", "test")
+        project = os.getenv("TEST_PROJECT")
+        data_factory = DataFactory(env_name=env, project=project)
+        env_config = data_factory.get_env_config()
+        db_config = (env_config or {}).get("database", {}).get("erp_db")
+        if not db_config:
+            return
+
+        db = DBManager(**db_config)
+
+        # 清理采购订单
+        db.delete(table="pur_po_head_tr", where="pur_remark like %s", params=["%AUTOTEST%"])
+        db.delete(table="pur_po_item_tr", where="note like %s", params=["%AUTOTEST%"])
+
+        # 清理采购申请
+        db.delete(table="pur_pr_head_tr", where="pur_remark like %s", params=["%AUTOTEST%"])
+        db.delete(table="pur_pr_item_tr", where="note like %s", params=["%AUTOTEST%"])
+
+        # 清理采购计划
+        db.delete(table="pur_po_schl_tr", where="pur_remark like %s", params=["%AUTOTEST%"])
+
+        # 清理配置表
+        db.delete(table="pur_po_item_type_cf", where="po_item_type like %s", params=["AUTOTEST_ITEM_%"])
+        db.delete(table="pur_po_type_cf", where="po_type like %s", params=["AUTOTEST_PO_%"])
+        db.delete(table="pur_pr_head_type_cf", where="pr_type_code like %s", params=["AUTOTEST_PR_%"])
+        db.delete(table="pur_pr_item_type_cf", where="pr_item_type_code like %s", params=["AUTOTEST_PRI_%"])
+    finally:
+        if db:
+            try:
+                db.close()
+            except Exception:
+                pass
+
+
+register_cleanup("scm_pur_cleanup", _cleanup_scm_pur, order=230)
 
 class ScmPurBaseTest(BaseTest):
     """采购模块的基础测试类，负责加载采购配置和提供API访问方法"""
@@ -91,66 +135,11 @@ class ScmPurBaseTest(BaseTest):
     @classmethod
     def teardown_class(cls):
         """
-        测试类清理 - 删除采购模块的测试数据
-        在所有 scm_pur 模块的测试完成后执行
+        测试类清理
+        采购模块清理已迁移至 cleanup_registry（session 末尾统一执行）。
         """
         try:
-            # 使用从 BaseTest 继承的 cls.db 进行清理
-            # 清理采购订单
-            cls.db.delete(
-                table="pur_po_head_tr",
-                where="pur_remark like %s",
-                params=["%AUTOTEST%"]
-            )
-            cls.db.delete(
-                table="pur_po_item_tr",
-                where="note like %s",
-                params=["%AUTOTEST%"]
-            )
-            
-            # 清理采购申请
-            cls.db.delete(
-                table="pur_pr_head_tr",
-                where="pur_remark like %s",
-                params=["%AUTOTEST%"]
-            )
-            cls.db.delete(
-                table="pur_pr_item_tr",
-                where="note like %s",
-                params=["%AUTOTEST%"]
-            )
-            
-            # 清理采购计划
-            cls.db.delete(
-                table="pur_po_schl_tr",
-                where="pur_remark like %s",
-                params=["%AUTOTEST%"]
-            )
-            
-            # 清理配置表
-            cls.db.delete(
-                table="pur_po_item_type_cf",
-                where="po_item_type like %s",
-                params=["AUTOTEST_ITEM_%"]
-            )
-            cls.db.delete(
-                table="pur_po_type_cf",
-                where="po_type like %s",
-                params=["AUTOTEST_PO_%"]
-            )
-            cls.db.delete(
-                table="pur_pr_head_type_cf",
-                where="pr_type_code like %s",
-                params=["AUTOTEST_PR_%"]
-            )
-            cls.db.delete(
-                table="pur_pr_item_type_cf",
-                where="pr_item_type_code like %s",
-                params=["AUTOTEST_PRI_%"]
-            )
-            
-            cls.logger.info("✅ 采购模块测试数据清理完成")
-            
+            cls.logger.info("SCM_PUR 清理已交由 cleanup_registry 统一执行")
         except Exception as e:
             cls.logger.error(f"❌ 采购模块测试数据清理失败: {str(e)}")
         finally:

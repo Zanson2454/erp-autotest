@@ -1,78 +1,14 @@
-"""SCM_SLS 模块的 pytest 配置
+"""SCM_SLS 模块清理注册。
 
-提供 session 级别的统一数据清理功能
-汇总所有测试类原有的清理逻辑，在所有 scm_sls 测试用例执行完后统一清理
-只清理原本按 code/name 前缀删除的数据，保持原逻辑不变
-
-注意：在并行执行（pytest-xdist）时，每个 worker 进程都有自己的 session scope，
-清理逻辑会在每个 worker 的所有测试完成后执行。使用 pytest_sessionfinish hook
-确保在所有 worker 都完成测试后才执行最终清理（仅在主进程中执行）。
+由全局 testcases/conftest.py 在 session 末尾统一触发，避免分散钩子并发冲突。
 """
 
-import pytest
 from utils.log_util import Loggers
 from utils.mysql_util import DBManager
 from data_factory.base import DataFactory
 import os
-import time
 from datetime import datetime
-from pathlib import Path
-
-# 获取项目根目录
-project_root = Path(__file__).resolve().parent.parent.parent
-
-# 存储 session 开始时间，用于在所有 worker 完成后统一清理
-_session_start_time = None
-
-
-def pytest_sessionstart(session):
-    """pytest session 开始时记录时间戳（仅在主进程中执行一次）"""
-    global _session_start_time
-    if _session_start_time is None:
-        _session_start_time = int(time.time() * 1000)
-        Loggers.info(f"SCM_SLS 模块测试开始（主进程），记录时间戳: {_session_start_time}")
-
-
-def pytest_sessionfinish(session, exitstatus):
-    """pytest session 结束时执行清理（仅在主进程中执行，确保在所有 worker 完成后执行）"""
-    global _session_start_time
-    if _session_start_time is None:
-        return
-    
-    # 测试完成后执行清理
-    try:
-        # 获取环境配置（使用 DataFactory 确保环境变量被正确替换）
-        # 支持多项目：自动从环境变量 TEST_PROJECT 获取项目名称
-        env = os.getenv("TEST_ENV", "test")
-        project = os.getenv("TEST_PROJECT")
-        data_factory = DataFactory(env_name=env, project=project)
-        env_config = data_factory.get_env_config()
-        
-        if not env_config:
-            Loggers.warning("未找到环境配置，跳过数据清理")
-            return
-        
-        # 获取数据库配置
-        db_config = env_config.get("database", {}).get("erp_db")
-        if not db_config:
-            Loggers.warning("未找到数据库配置，跳过数据清理")
-            return
-        
-        # 创建数据库连接
-        db = DBManager(**db_config)
-        
-        try:
-            Loggers.info("开始清理 SCM_SLS 模块测试数据（所有 worker 测试完成后统一清理）...")
-            
-            # 调用清理逻辑
-            _perform_cleanup(db, _session_start_time)
-            
-        finally:
-            # 关闭数据库连接
-            db.close()
-            
-    except Exception as e:
-        Loggers.error(f"❌ SCM_SLS 模块测试数据清理失败: {str(e)}")
+from testcases.comm.cleanup_registry import register_cleanup
 
 
 def _perform_cleanup(db, session_start_time):
@@ -258,5 +194,32 @@ def _perform_cleanup(db, session_start_time):
         Loggers.error(f"❌ SCM_SLS 模块测试数据清理失败: {str(e)}")
 
 
-# 注意：清理逻辑已移至 pytest_sessionfinish hook 函数中
-# 这样可以确保在并行执行（pytest-xdist）时，清理逻辑在所有 worker 完成后才执行
+def _cleanup_scm_sls() -> None:
+    """统一清理入口：由 cleanup_registry 在 session 末尾调用。"""
+    try:
+        env = os.getenv("TEST_ENV", "test")
+        project = os.getenv("TEST_PROJECT")
+        data_factory = DataFactory(env_name=env, project=project)
+        env_config = data_factory.get_env_config()
+
+        if not env_config:
+            Loggers.warning("未找到环境配置，跳过 SCM_SLS 数据清理")
+            return
+
+        db_config = env_config.get("database", {}).get("erp_db")
+        if not db_config:
+            Loggers.warning("未找到数据库配置，跳过 SCM_SLS 数据清理")
+            return
+
+        session_start_ms = int(os.getenv("TEST_SESSION_START_MS", "0")) or int(datetime.now().timestamp() * 1000)
+        db = DBManager(**db_config)
+        try:
+            Loggers.info("开始执行 SCM_SLS 统一清理")
+            _perform_cleanup(db, session_start_ms)
+        finally:
+            db.close()
+    except Exception as e:
+        Loggers.error(f"❌ SCM_SLS 模块测试数据清理失败: {str(e)}")
+
+
+register_cleanup("scm_sls_cleanup", _cleanup_scm_sls, order=210)

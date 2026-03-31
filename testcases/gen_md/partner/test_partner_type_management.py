@@ -25,24 +25,10 @@ class TestPartnerTypeManagement(GenMdBaseTest):
 
     @classmethod
     def teardown_class(cls):
-        """测试类结束后执行清理"""
-        try:
-            cls.db.delete(
-                table="gen_partner_type_cf", 
-                where="partner_code like %s", 
-                params=["AT_%"]
-            )
-            cls.db.delete(
-                table="gen_partner_procedure_head_cf", 
-                where="code like %s", 
-                params=["AT_%"]
-            )
-            cls.logger.info("测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
-
+        """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
+        cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
-    # ============= 核心功能测试 =============
+
     @case_decorator(
         story="相关方类型配置",
         title="测试新增相关方类型",

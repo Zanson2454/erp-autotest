@@ -11,7 +11,6 @@ from typing import Dict, Any, Optional, Union
 from enum import Enum
 from pathlib import Path
 import json
-import re
 
 
 
@@ -25,10 +24,13 @@ from utils.cache_util import CacheUtil
 from utils.yaml_util import YamlUtil
 from utils.request_util import HttpUtil
 from utils.exception_util import safe_api_call
-from utils.param_util import ParamUtil
 from utils.async_wait_util import AsyncWaitUtil, WaitStatus
 from data_factory.base import DataFactory 
 from utils.mysql_util import DBManager
+from testcases.comm.auth_context import AuthContext
+from testcases.comm.api_client_facade import ApiClientFacade
+from testcases.comm.api_call_service import ApiCallService
+from testcases.comm.test_data_context import TestDataContext
 
 
 class ConfigManager:
@@ -439,7 +441,7 @@ class LoginService:
             
             if cookie:
                 # ============ 方式1：使用 cookie 快捷登录 ============
-                Loggers.info(f"检测到配置了 cookie，使用 cookie 快捷登录")
+                Loggers.info("检测到配置了 cookie，使用 cookie 快捷登录")
                 Loggers.info(f"Cookie 前50个字符: {cookie[:50]}...")
                 
                 # 设置 cookie 到 session，后续所有请求都会自动带上
@@ -447,7 +449,7 @@ class LoginService:
                 
             else:
                 # ============ 方式2：使用账号密码登录（原有逻辑，完整保留） ============
-                Loggers.info(f"未配置 cookie，使用账号密码登录")
+                Loggers.info("未配置 cookie，使用账号密码登录")
                 login_url = f"{auth_config.get('iam_url', '').rstrip('/')}{self.LOGIN_ENDPOINT}"
                 login_data = {
                     "account": auth_config.get("username", ""),
@@ -661,7 +663,29 @@ class BaseTestInitializer:
 
 class BaseTest:
     """重构后的测试基类"""
-    
+
+    # 默认缓存绑定映射：attr_name → 点分路径
+    # 子类可整体替换或调用 bind_cache_data(custom_mappings) 覆盖，无需改此处
+    DEFAULT_CACHE_MAPPINGS: Dict[str, str] = {
+        # init_data
+        "curr_id":        "currency_info.curr_id",
+        "coun_id":        "country_info.coun_id",
+        "addr_id":        "addr_info.id",
+        "bank_id":        "bank_info.bank_id",
+        "gen_wc_head_id": "gen_wc_head_info.gen_wc_head_id",
+        "calender_id":    "calender_info.id",
+        # md_cache_data
+        "cust_id":        "partner_info.cust_info.id",
+        "sup_id":         "partner_info.sup_info.id",
+        "com_org_id":     "org_info.gr_come_org_info.id",
+        "sls_org_id":     "org_info.sls_org_info.id",
+        "inv_org_id":     "org_info.inv_org_info.id",
+        "pur_org_id":     "org_info.pur_org_info.id",
+        "sls_dc_id":      "org_info.sls_dc_md.id",
+        "wh_id":          "org_info.inv_wh_md.id",
+        "mat_id":         "mat_info.mat_md.FINP.id",
+    }
+
     # 类型提示：动态设置的属性
     # type: ignore[attr-defined]
     logger: Any
@@ -676,6 +700,7 @@ class BaseTest:
     mock_util: Any
     cache: Any
     yaml_util: Any
+    auth_context: Any
     _base_teardown_called: bool = False
 
     def __init_subclass__(cls, **kwargs):
@@ -742,12 +767,13 @@ class BaseTest:
     def _initialize_auth(cls, initializer: BaseTestInitializer) -> None:
         """认证初始化 - 可被子类重写"""
         login_result = initializer.initialize_authentication(cls.env_config)
-        cls.user_info = login_result.user_info
-        cls.session = login_result.session
+        cls.auth_context = AuthContext.from_login_result(login_result)
+        cls.user_info = cls.auth_context.user_info
+        cls.session = cls.auth_context.session
         cls.http = HttpUtil(
-            url=login_result.portal_url,
-            session=login_result.session,
-            headers=login_result.portal_headers
+            url=cls.auth_context.portal_url,
+            session=cls.auth_context.session,
+            headers=cls.auth_context.portal_headers
         )
 
     @classmethod
@@ -919,47 +945,18 @@ class BaseTest:
 
     @classmethod
     def bind_cache_data(cls, mappings: Dict[str, str] = None) -> None:
+        """简化数据绑定 - 一行代码获取常用数据。
+
+        不传参时使用 cls.DEFAULT_CACHE_MAPPINGS（子类可整体替换）。
+        传参时使用传入的 mappings（支持增量扩展）。
+
+        路径格式：
+            "currency_info.curr_id"     → init_data["currency_info"][0]["curr_id"]
+            "partner_info.cust_info.id" → md_cache_data["partner_info"]["cust_info"][0]["id"]
+            "pur_cache_data.xxx.id"     → pur_cache_data["xxx"][0]["id"]
+                                          （需先调用 TestDataContext.register_source(...)）
         """
-        简化数据绑定 - 一行代码获取常用数据
-        
-        使用方式:
-            # 方式1: 在子类 setup_class 中调用
-            cls.bind_cache_data({
-                "curr_id": "currency_info.curr_id",
-                "cust_id": "partner_info.cust_info.id",
-                "org_id": "org_info.gr_come_org_info.id",
-            })
-            
-            # 方式2: 自动绑定常用字段 (无需传参)
-            cls.bind_cache_data()  # 绑定所有常用字段
-        
-        路径说明:
-            - "currency_info.curr_id" → init_data["currency_info"][0]["curr_id"]
-            - "partner_info.cust_info.id" → md_cache_data["partner_info"]["cust_info"][0]["id"]
-            - "org_info.org_biz_type_cf" → md_cache_data["org_info"]["org_biz_type_cf"] (列表)
-        """
-        # 默认绑定映射 (常用字段)
-        default_mappings = {
-            # init_data 路径 (格式: "key.subkey" 或 "key.subkey.id")
-            "curr_id": "currency_info.curr_id",
-            "coun_id": "country_info.coun_id",
-            "addr_id": "addr_info.id",
-            "bank_id": "bank_info.bank_id",
-            "gen_wc_head_id": "gen_wc_head_info.gen_wc_head_id",
-            "calender_id": "calender_info.id",
-            # md_cache_data 路径
-            "cust_id": "partner_info.cust_info.id",
-            "sup_id": "partner_info.sup_info.id",
-            "com_org_id": "org_info.gr_come_org_info.id",
-            "sls_org_id": "org_info.sls_org_info.id",
-            "inv_org_id": "org_info.inv_org_info.id",
-            "pur_org_id": "org_info.pur_org_info.id",
-            "sls_dc_id": "org_info.sls_dc_md.id",
-            "wh_id": "org_info.inv_wh_md.id",
-            "mat_id": "mat_info.mat_md.FINP.id",
-        }
-        
-        mappings = mappings or default_mappings
+        mappings = mappings if mappings is not None else cls.DEFAULT_CACHE_MAPPINGS
         
         for attr_name, path in mappings.items():
             value = cls._resolve_cache_path(path)
@@ -978,51 +975,8 @@ class BaseTest:
         Returns:
             解析后的值，路径无效返回 None
         """
-        if not path:
-            return None
-            
-        parts = path.split(".")
-        
-        # 判断数据源
-        if parts[0] in ["currency_info", "country_info", "addr_info", "bank_info", 
-                        "gen_wc_head_info", "calender_info"]:
-            # init_data 路径
-            data = cls.init_data
-            source = "init_data"
-        elif parts[0] in ["partner_info", "org_info", "mat_info"]:
-            # md_cache_data 路径
-            data = getattr(cls, 'md_cache_data', None)
-            source = "md_cache_data"
-        else:
-            cls.logger.warning(f"未知数据源: {parts[0]}")
-            return None
-        
-        if data is None:
-            cls.logger.warning(f"{source} 未初始化，跳过绑定: {path}")
-            return None
-        
-        # 逐层解析
-        try:
-            for i, part in enumerate(parts):
-                if isinstance(data, dict):
-                    data = data.get(part, {})
-                elif isinstance(data, list):
-                    # 如果是列表，取第一个元素
-                    if data:
-                        data = data[0].get(part, {}) if isinstance(data[0], dict) else {}
-                    else:
-                        return None
-                else:
-                    return None
-                
-                # 如果最终是列表，取第一个
-                if isinstance(data, list):
-                    data = data[0] if data else None
-                    
-            return data
-        except Exception as e:
-            cls.logger.warning(f"解析缓存路径失败: {path}, 错误: {e}")
-            return None
+        context = TestDataContext.from_class(cls)
+        return context.resolve_cache_path(path, logger=cls.logger)
     
     @classmethod
     def teardown_class(cls) -> None:
@@ -1070,25 +1024,6 @@ class BaseTest:
         if hasattr(self, 'assert_util') and hasattr(self.assert_util, 'clear_request_context'):
             self.assert_util.clear_request_context()
 
-    def set_request_param(self, params, key, value):
-        """设置请求参数"""
-        if 'params' not in params:
-            params['params'] = {}
-        if 'request' not in params['params']:
-            params['params']['request'] = {}
-        params['params']['request'][key] = value
-        return params
-
-    def set_request_params(self, params, param_dict):
-        """批量设置请求参数"""
-        if 'params' not in params:
-            params['params'] = {}
-        if 'request' not in params['params']:
-            params['params']['request'] = {}
-        for key, value in param_dict.items():
-            params['params']['request'][key] = value
-        return params
-    
     def get_api_path(self, api_key, apis_dict=None):
         """
         获取API路径
@@ -1102,48 +1037,7 @@ class BaseTest:
             apis_dict = getattr(self, "apis", None)
         if apis_dict is None:
             raise ValueError("未找到 apis 配置，请检查模块基类是否已加载 API 路径配置")
-        api_path = ParamUtil.get_api_path(apis_dict, api_key)
-        if api_path:
-            return api_path
-
-        api_key_str = str(api_key).strip()
-        matched_keys = []
-
-        if api_key_str.startswith("/"):
-            normalized_path = api_key_str.split("#", 1)[0]
-            for key, meta in apis_dict.items():
-                if not isinstance(meta, dict):
-                    continue
-                if key == api_key_str or key.startswith(f"{normalized_path}#"):
-                    matched_keys.append(key)
-        else:
-            for key, meta in apis_dict.items():
-                if not isinstance(meta, dict):
-                    continue
-                if key.startswith(f"{api_key_str}("):
-                    matched_keys.append(key)
-
-            # key 文案发生漂移时，回退到括号内的路径签名匹配，如 "(.../count#GET)"
-            if not matched_keys:
-                signature_match = re.search(r"\(([^()]+)\)", api_key_str)
-                if signature_match:
-                    signature = signature_match.group(1).strip()
-                    for key, meta in apis_dict.items():
-                        if not isinstance(meta, dict):
-                            continue
-                        if f"({signature})" in key:
-                            matched_keys.append(key)
-
-        if not matched_keys:
-            return None
-
-        # 多候选时优先非 direct 路径，避免默认命中 export-direct 这类特化接口
-        matched_keys.sort(key=lambda k: ("direct" in k.lower(), len(k)))
-        best_key = matched_keys[0]
-        best_path = ParamUtil.get_api_path(apis_dict, best_key)
-        if best_path:
-            self.logger.warning(f"API key未精确命中，已使用近似匹配: '{api_key_str}' -> '{best_key}'")
-        return best_path
+        return ApiClientFacade.resolve_api_path(apis_dict, api_key, logger=self.logger)
 
     def get_api_url(self, api_path, with_query_params=None):
         """
@@ -1166,7 +1060,7 @@ class BaseTest:
             api_params_dict = getattr(self, "api_params", None)
         if api_params_dict is None:
             raise ValueError("未找到 api_params 配置，请检查模块基类是否已加载 API 参数配置")
-        return ParamUtil.get_api_params(api_params_dict, api_path, with_query_params)
+        return ApiClientFacade.resolve_api_params(api_params_dict, api_path, with_query_params)
     
     @staticmethod
     def timer(func):
@@ -1189,295 +1083,16 @@ class BaseTest:
 
     # 新增统一调用模板，不影响老用例
     def standard_api_call(self, api_key, set_dict=None, fields_to_filter=None, store_id_as=None, use_param_util=True, param_path=None, method="POST", query_params=None, cross_module_name=None):
-        """
-        标准化API调用模板 - 纯执行和报告工具，无断言逻辑
-        统一返回响应数据（无论成功还是失败），由业务断言来判断响应是否正确
-        
-        :param api_key: API服务名称键
-        :param set_dict: 要设置的参数字典
-        :param fields_to_filter: 需要过滤的字段列表
-            - 如果为 None（未指定），会自动从 set_dict.keys() 获取字段列表（兼容原有用例）
-            - 如果已指定（如 ["id"] 或 ["pageable"]），使用指定的值（优先使用指定值）
-            - 这样既支持自动推断，也支持显式指定，完全兼容原有用例
-        :param store_id_as: ID存储属性名（用于自动保存self.xxx_id）
-        :param use_param_util: 是否使用ParamUtil过滤/设置（默认True）；False时可以手动构造完整结构
-        :param param_path: 参数路径，默认为["params", "request"]，支持自定义路径如["params"]（手动构造时）或["params", "reuqest"]（处理拼写错误）
-        :param method: HTTP请求方法，支持 "GET", "POST", "PUT", "DELETE", "PATCH"（默认"POST"）
-            - GET/DELETE: 参数通过 query string 传递（params参数）
-            - POST/PUT/PATCH: 参数通过 JSON body 传递（json参数）
-        :param query_params: URL查询参数，支持字符串（如"tmodule=SCM_PUR&modelKey=XXX"）或字典（如{"tmodule": "SCM_PUR", "modelKey": "XXX"}）
-        :param cross_module_name: 跨模块名称（可选），如 "scm"/"gen"/"fin"；传入后会优先调用 get_cross_module_api_path/get_cross_module_api_params
-        :return: (response, extracted_id) - response包含成功或失败的响应数据，extracted_id在成功时提取，失败时为None
-        """
-        import json
-        
-        # 规范化HTTP方法名（转大写）
-        method = method.upper() if method else "POST"
-        
-        # 验证HTTP方法
-        supported_methods = ["GET", "POST", "PUT", "DELETE", "PATCH"]
-        if method not in supported_methods:
-            raise ValueError(f"不支持的HTTP方法: {method}，支持的方法: {supported_methods}")
-        
-        try:
-            # 1. 获取API路径和基础参数
-            if cross_module_name:
-                if not hasattr(self, "get_cross_module_api_path") or not hasattr(self, "get_cross_module_api_params"):
-                    raise ValueError(
-                        f"当前测试类不支持跨模块调用: cross_module_name={cross_module_name}, api_key={api_key}"
-                    )
-                api_path = self.get_cross_module_api_path(cross_module_name, api_key)
-                get_params_fn = lambda path, q: self.get_cross_module_api_params(cross_module_name, path, q)
-            else:
-                api_path = self.get_api_path(api_key)
-                get_params_fn = lambda path, q: self.get_api_params(path, with_query_params=q)
-            if api_path is None:
-                raise ValueError(
-                    f"未找到API配置: {api_key}\n"
-                    f"请检查:\n"
-                    f"1. API key是否正确: '{api_key}'\n"
-                    f"2. 配置文件是否正确加载 (apis配置是否存在)\n"
-                    f"3. 配置文件路径是否正确"
-                )
-            
-            # 1.5 处理 query_params（可以是字符串或字典）
-            query_params_str = None
-            if query_params:
-                if isinstance(query_params, dict):
-                    from urllib.parse import urlencode
-                    query_params_str = urlencode(query_params)
-                else:
-                    query_params_str = query_params
-            
-            # 2. 根据HTTP方法选择参数传递方式
-            if method in ["GET", "DELETE"]:
-                # GET/DELETE: 使用 query parameters
-                params, url = get_params_fn(api_path, query_params_str)
-                if url is None:
-                    raise ValueError(
-                        f"API路径配置错误: api_path={api_path}\n"
-                        f"请检查API参数配置文件中的路径配置"
-                    )
-                
-                # GET/DELETE 请求：使用 params 参数（query string）
-                request_kwargs = {"params": set_dict} if set_dict else {}
-                
-            else:
-                # POST/PUT/PATCH: 使用 JSON body
-                params, url = get_params_fn(api_path, query_params_str)
-                if url is None:
-                    raise ValueError(
-                        f"API路径配置错误: api_path={api_path}\n"
-                        f"请检查API参数配置文件中的路径配置"
-                    )
-                
-                # 3. 参数处理 - 分支逻辑（仅用于POST/PUT/PATCH）
-                if use_param_util:
-                    # 标准流程：使用ParamUtil过滤和设置
-                    # fields_to_filter 处理逻辑：
-                    # 1. 如果已指定（不是 None），使用指定的值（优先使用指定值，完全兼容原有用例）
-                    # 2. 如果未指定（为 None）且有 set_dict，自动从 set_dict.keys() 获取字段列表（方便新用例）
-                    # 这样既支持自动推断，也支持显式指定，完全兼容原有用例
-                    if fields_to_filter is None:
-                        if set_dict:
-                            fields_to_filter = list(set_dict.keys())
-                        else:
-                            fields_to_filter = []
-                    # 如果 fields_to_filter 已指定，直接使用指定的值，不会覆盖
-                    # 使用自定义路径或默认路径
-                    if param_path is None:
-                        param_path = ["params", "request"]
-                    filtered_params = ParamUtil.filter_post_body_fields(
-                        params, fields_to_filter, param_path
-                    )
-                    if set_dict:
-                        ParamUtil.set_request_params(filtered_params, set_dict, path=param_path)
-                else:
-                    # 特殊流程：直接使用set_dict作为params内容，无过滤/设置
-                    # 注意：保留原始params中的其他字段（如serviceKey等），避免丢失必要的顶层字段
-                    if set_dict is None:
-                        set_dict = {}
-                    # 如果指定了param_path，使用自定义路径；否则使用默认路径
-                    if param_path is None:
-                        param_path = ["params", "request"]
-                    
-                    # 从原始params开始，保留其他字段（兼容原有逻辑）
-                    import copy
-                    filtered_params = copy.deepcopy(params) if params else {}
-                    
-                    # 构造嵌套路径并设置值
-                    current = filtered_params
-                    for i, p in enumerate(param_path):
-                        if i == len(param_path) - 1:
-                            # 到达目标路径，设置值
-                            current[p] = set_dict
-                        else:
-                            # 中间路径，确保存在
-                            if p not in current:
-                                current[p] = {}
-                            current = current[p]
+        return ApiCallService.execute(
+            self,
+            api_key=api_key,
+            set_dict=set_dict,
+            fields_to_filter=fields_to_filter,
+            store_id_as=store_id_as,
+            use_param_util=use_param_util,
+            param_path=param_path,
+            method=method,
+            query_params=query_params,
+            cross_module_name=cross_module_name,
+        )
 
-                # 统一清洗 pageable 结构，避免 sortOrders=[{}]/null 条件残留导致后端参数校验失败
-                ParamUtil.sanitize_payload(filtered_params)
-                
-                # POST/PUT/PATCH 请求：使用 json 参数（body）
-                request_kwargs = {"json": filtered_params} if filtered_params else {}
-            
-            # 4. 设置请求上下文（供断言失败时使用）
-            from urllib.parse import urljoin
-            full_url = urljoin(self.http.url, url.lstrip('/')) if hasattr(self.http, 'url') else url
-            
-            if method in ["GET", "DELETE"]:
-                self.assert_util.set_request_context(
-                    api_key=api_key,
-                    url=full_url,
-                    method=method,
-                    params=request_kwargs.get("params")
-                )
-            else:
-                self.assert_util.set_request_context(
-                    api_key=api_key,
-                    url=full_url,
-                    method=method,
-                    body=request_kwargs.get("json")
-                )
-            
-            # 5. 发送请求（请求信息由 http 方法内部打印完整URL）
-            # 根据方法调用对应的 HTTP 方法
-            if method == "GET":
-                response = self.http.get(url, **request_kwargs)
-            elif method == "POST":
-                response = self.http.post(url, **request_kwargs)
-            elif method == "PUT":
-                response = self.http.put(url, **request_kwargs)
-            elif method == "DELETE":
-                response = self.http.delete(url, **request_kwargs)
-            elif method == "PATCH":
-                # PATCH 方法，如果 HttpUtil 没有 patch 方法，使用 put
-                if hasattr(self.http, "patch"):
-                    response = self.http.patch(url, **request_kwargs)
-                else:
-                    response = self.http.put(url, **request_kwargs)
-            else:
-                raise ValueError(f"不支持的HTTP方法: {method}")
-            
-            # 6. 记录响应
-            Loggers.info(f"接口请求响应，状态码: 200")
-            Loggers.info(f"响应数据: {json.dumps(response, ensure_ascii=False, indent=2)}")
-            
-            # 7. ID提取和存储
-            # 兼容响应为字典或列表的情况，以及嵌套的列表结构
-            extracted_id = None
-            if isinstance(response, dict):
-                # 安全地获取 data 字段
-                data = response.get("data")
-                if isinstance(data, dict):
-                    # 继续获取嵌套的 data 字段
-                    data_obj = data.get("data", {})
-                    # 优先提取 id 字段，如果不存在则使用整个对象（兼容不同响应结构）
-                    extracted_id = data_obj.get("id") if isinstance(data_obj, dict) and "id" in data_obj else data_obj
-                elif isinstance(data, list):
-                    # 如果 data 是列表，不提取 id
-                    extracted_id = None
-                else:
-                    # data 是其他类型，尝试提取 id
-                    extracted_id = data.get("id") if isinstance(data, dict) and "id" in data else data
-            elif isinstance(response, list):
-                # 如果响应是列表，不提取 id，返回 None
-                extracted_id = None
-            else:
-                # 其他类型（如字符串、数字等），不提取 id
-                extracted_id = None
-            
-            if store_id_as:
-                setattr(self.__class__, f"{store_id_as}Id", extracted_id)
-            
-            return response, extracted_id
-            
-        except requests.exceptions.HTTPError as e:
-            # 统一处理HTTP错误：从异常中提取响应数据并返回，由业务断言来判断是否正确
-            if hasattr(e, 'response') and e.response is not None:
-                try:
-                    response = e.response.json()
-                    self.logger.info(f"接口请求响应，状态码: {e.response.status_code}")
-                    self.logger.info(f"响应数据: {json.dumps(response, ensure_ascii=False, indent=2)}")
-                    Loggers.info(f"接口请求响应，状态码: {e.response.status_code}")
-                    Loggers.info(f"响应数据: {json.dumps(response, ensure_ascii=False, indent=2)}")
-                    # 错误响应时，extracted_id 为 None
-                    return response, None
-                except ValueError:
-                    # 如果响应不是JSON格式，记录文本内容并抛出异常
-                    self.logger.error(f"错误响应不是JSON格式: {e.response.text}")
-                    Loggers.error(f"错误响应不是JSON格式: {e.response.text}")
-                    raise
-            else:
-                # 如果没有响应对象，抛出异常
-                self.logger.error(f"standard_api_call HTTP请求失败 [{api_key}]: {str(e)}")
-                Loggers.error(f"HTTP请求失败: {str(e)}")
-                raise
-        except requests.exceptions.RequestException as e:
-            self.logger.error(f"standard_api_call HTTP请求失败 [{api_key}]: {str(e)}")
-            Loggers.error(f"HTTP请求失败: {str(e)}")
-            raise
-        except Exception as e:
-            self.logger.error(f"standard_api_call 执行失败 [{api_key}]: {str(e)}")
-            # Assuming 'a' is an instance of AllureReport or similar, which is not imported.
-            # For now, we'll just log the report.
-            Loggers.error(f"执行失败: {str(e)}")
-            raise
-
-
-class ConfigValidator:
-    """配置验证器（保留向后兼容）"""
-    
-    @classmethod
-    def validate_env_config(cls, config: Dict[str, Any]) -> None:
-        """验证环境配置（向后兼容方法）"""
-        ConfigManager.validate_config(config)
-    
-    @classmethod
-    def validate_database_config(cls, config: Dict[str, Any]) -> None:
-        """验证数据库配置（向后兼容方法）"""
-        ConfigManager.validate_config(config)
-
-
-
-if __name__ == "__main__":
-    try:
-        # 测试配置管理器
-        print("=== 测试配置管理器 ===")
-        config = ConfigManager.get_config()
-        safe_config = ConfigManager.get_safe_config(config)
-        print("配置加载成功！")
-        print(f"配置包含 portal_config: {'portal_config' in config}")
-        print(f"配置包含 database: {'database' in config}")
-        
-        # 测试测试基类
-        print("\n=== 测试测试基类 ===")
-        BaseTest.setup_class()
-        
-        # 打印安全的配置信息
-        safe_env_config = ConfigManager.get_safe_config(BaseTest.env_config)
-        print("环境配置摘要:")
-        print(json.dumps(safe_env_config, ensure_ascii=False, indent=2)[:500] + "...")
-        
-        print("\n基础数据加载状态:", "成功" if BaseTest.init_data else "失败")
-        
-        if BaseTest.user_info:
-            print("\n用户信息:")
-            print(f"昵称: {BaseTest.user_info.get('nickname', '未知')}")
-            print(f"用户名: {BaseTest.user_info.get('username', '未知')}")
-        
-        # 测试缓存功能
-        print("\n=== 测试配置缓存 ===")
-        config_from_cache = ConfigManager.get_config()
-        print(f"缓存命中: {config is config_from_cache}")
-        
-        # 清理缓存
-        ConfigManager.clear_cache()
-        print("配置缓存已清理")
-        
-    except Exception as e:
-        print(f"测试失败: {str(e)}")
-        import traceback
-        traceback.print_exc()

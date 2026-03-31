@@ -16,6 +16,11 @@ repos:
 
   - repo: local
     hooks:
+      - id: validate-project-structure
+        name: validate-project-structure
+        entry: python3 script/validate_project_structure.py
+        language: system
+        pass_filenames: false
       - id: quality-guard
         name: quality-guard
         entry: python script/quality_guard.py

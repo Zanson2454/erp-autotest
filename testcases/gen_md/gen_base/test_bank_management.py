@@ -29,14 +29,8 @@ class TestBankSystemManagement(GenMdBaseTest):
 
     @classmethod
     def teardown_class(cls):
-        """测试类结束后执行清理"""
-        try:
-            cls.db.delete(table="gen_bank_cf", where="bank_code like %s", params=["AT_%"])
-            cls.db.delete(table="gen_sub_bank_cf", where="sub_bank_code like %s", params=["AT_%"])
-            cls.logger.info("测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
-
+        """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
+        cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
     # ================ 银行管理 ================
     @case_decorator(

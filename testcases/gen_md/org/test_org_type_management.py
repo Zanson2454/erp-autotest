@@ -31,22 +31,10 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         
     @classmethod
     def teardown_class(cls):
-        """
-        测试类结束后执行清理
-        清理所有测试过程中创建的组织类型管理数据
-        """
-        try:
-            # 使用SQL删除测试数据
-            cls.db.delete(
-                table="org_business_type_cf",
-                where="code like %s",
-                params=["AT_OrgType%"]
-            )
-            cls.logger.info("测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
-
+        """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
+        cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
+
     @case_decorator(
         story="组织类型管理",
         title="测试新增组织类型管理",

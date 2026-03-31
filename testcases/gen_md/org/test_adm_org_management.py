@@ -43,17 +43,10 @@ class TestAdmOrgManagement(GenMdBaseTest):
                 cls.logger.info("orgBusinessTypeIds为空")
     @classmethod
     def teardown_class(cls):
-        try:
-            cls.db.delete(
-            table="org_struct_md",
-            where="org_code like %s and org_dimension_code = 'ADM_ORG_GRP'",
-            params=["AT_%"]
-        )
-            cls.logger.info("测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
-
+        """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
+        cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
+
     @case_decorator(
         story="保存行政组织",
         title="测试保存行政组织",

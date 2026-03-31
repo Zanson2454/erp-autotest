@@ -28,21 +28,8 @@ class TestBomManagement(GenMdBaseTest):
 
     @classmethod
     def teardown_class(cls):
-        """
-        测试类结束后执行清理
-        清理所有测试过程中创建的BOM数据
-        """
-        try:
-            # 清理BOM相关测试数据
-            cls.db.delete(table="gen_bom_head_md", where="bom_code like %s", params=["AT_%"])
-            cls.db.delete(table="gen_bom_item_type_cf", where="item_type like %s", params=["AT_%"])
-            cls.db.delete(table="gen_bom_status_cf", where="status_code like %s", params=["AT_%"])
-            cls.db.delete(table="gen_bom_use_cf", where="use_code like %s", params=["AT_%"])
-            cls.db.delete(table="gen_bom_item_supp_ind_cf", where="supp_ind_code like %s", params=["AT_%"])
-            cls.logger.info("测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
-
+        """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
+        cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
     # ============= BOM头管理 =============
     @case_decorator(

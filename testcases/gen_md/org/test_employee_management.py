@@ -35,35 +35,10 @@ class TestEmployeeManagement(GenMdBaseTest):
             cls.identityId = cls.md_cache_data.get("org_info",{}).get("org_identity_cf",[])[0].get("id",None)
     @classmethod
     def teardown_class(cls):
-        """
-        测试类结束后执行清理
-        清理所有测试过程中创建的员工管理数据
-        """
-        try:
-            # 使用SQL删除测试数据
-            cls.db.delete(
-                table="pen_adjust_type_md",
-                where="id in (select org_employee_id from org_employee_md where code like %s)",
-                params=["AT_%"]
-            )
-            cls.db.delete(
-                table="pen_adjust_md",
-                where="id in (select org_employee_id from org_employee_md where code like %s)",
-                params=["AT_%"]
-            )
-            cls.db.delete(
-                table="org_employee_md",
-                where="code like %s",
-                params=["AT_%"]
-            )
-            cls.iam_db.delete(
-                table="iam_user",
-                where="username like %s",
-                params=["AT_%"]
-            )
-            cls.logger.info("测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
+        """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
+        cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
+        super().teardown_class()
+
     @case_decorator(
         story="员工管理",
         title="测试新增员工管理",

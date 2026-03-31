@@ -49,6 +49,19 @@ class HttpUtil:
         self.session = session or requests.Session()
         if headers:
             self.session.headers.update(headers)
+        retry_strategy = Retry(
+            total=3,
+            connect=3,
+            read=3,
+            status=3,
+            backoff_factor=0.3,
+            status_forcelist=[429, 500, 502, 503, 504],
+            allowed_methods=frozenset(["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]),
+            raise_on_status=False,
+        )
+        adapter = HTTPAdapter(max_retries=retry_strategy)
+        self.session.mount("http://", adapter)
+        self.session.mount("https://", adapter)
 
     def get(self, url: str, **kwargs) -> Dict[str, Any]:
         """发送GET请求"""
@@ -122,7 +135,14 @@ class HttpUtil:
                 Loggers.info(f"响应内容: {response.text}", depth=4)
             
             response.raise_for_status()  # 抛出HTTP错误
-            return response.json()
+            try:
+                return response.json()
+            except ValueError:
+                return {
+                    "success": response.ok,
+                    "statusCode": response.status_code,
+                    "raw": response.text,
+                }
         except requests.exceptions.RequestException as e:
             Loggers.error(f"请求失败: {str(e)}", depth=4)
             if description:
@@ -160,4 +180,3 @@ class HttpUtil:
             Loggers.info("接口请求的params参数>>>\n{}", json.dumps(params, ensure_ascii=False, indent=2, cls=DecimalEncoder), depth=4)
         if headers is not None:
             Loggers.info("接口请求的headers参数>>>\n{}", json.dumps(headers, ensure_ascii=False, indent=2, cls=DecimalEncoder), depth=4)
-

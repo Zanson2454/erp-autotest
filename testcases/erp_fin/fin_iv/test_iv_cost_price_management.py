@@ -38,18 +38,8 @@ class TestIvCostPriceManagement(IvBaseTest):
     
     @classmethod
     def teardown_class(cls):
-        """测试类结束后执行清理"""
-        try:
-            # cls.db.delete(
-            #     table="fin_iv_price_md",
-            #     where="code like %s",
-            #     params=["AT_%"]
-            # )
-            pass
-            cls.logger.info("测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
-    
+        """测试类结束后执行清理（无额外清理，沿用基类收尾）。"""
+        cls.logger.info("当前用例无 teardown 删除动作，沿用基类资源回收")
         super().teardown_class()
     @case_decorator(
         story="存货成本价格",

@@ -35,6 +35,7 @@ from functools import wraps
 from utils.log_util import Loggers
 from utils.yaml_util import YamlUtil
 from utils.report_util import ReportEnhancer, TestStatus
+from testcases.comm.cleanup_registry import run_cleanups
 
 # 获取项目根目录
 project_root = Path(__file__).resolve().parent.parent
@@ -44,6 +45,11 @@ REQUIRED_DIRS = ["reports/allure-results", "reports/allure-report","logs", "test
 
 for dir_name in REQUIRED_DIRS:
     os.makedirs(project_root / dir_name, exist_ok=True)
+
+
+def _is_main_process() -> bool:
+    worker_id = os.environ.get("PYTEST_XDIST_WORKER")
+    return worker_id in (None, "", "master")
 
 def pytest_addoption(parser: pytest.Parser) -> None:
     """添加命令行参数"""
@@ -65,6 +71,13 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         action="store",
         default=None,
         help="Trantor版本号"
+    )
+    parser.addoption(
+        "--job-group",
+        action="store",
+        default="all",
+        choices=["all", "serial", "parallel"],
+        help="测试分组：all(默认全部)、serial(仅串行组)、parallel(仅并行组)"
     )
 
 def load_env_config(env: str, project: str = None) -> dict:
@@ -133,12 +146,28 @@ def pytest_configure(config: pytest.Config) -> None:
         "critical": "标记为关键测试用例",
         "high": "标记为高优先级测试用例",
         "medium": "标记为中优先级测试用例",
-        "low": "标记为低优先级测试用例"
+        "low": "标记为低优先级测试用例",
+        "serial_flow": "关键业务流串行执行分组（建议独立CI作业 -n 1）"
     }.items():
         config.addinivalue_line("markers", f"{marker}: {desc}")
     
     # 创建 Allure 环境信息
     create_allure_environment(config)
+
+
+def pytest_sessionstart(session) -> None:
+    """记录全局会话开始时间，供统一清理策略复用。"""
+    if not _is_main_process():
+        return
+    if not os.getenv("TEST_SESSION_START_MS"):
+        os.environ["TEST_SESSION_START_MS"] = str(int(datetime.now().timestamp() * 1000))
+
+
+def pytest_sessionfinish(session, exitstatus) -> None:
+    """统一清理入口（仅主进程）。"""
+    if not _is_main_process():
+        return
+    run_cleanups(Loggers)
 
 def create_allure_environment(config: pytest.Config) -> None:
     """创建 Allure 环境配置文件"""
@@ -313,6 +342,34 @@ def pytest_collection_modifyitems(session, config, items):
         # 排序键 = 文件编号*1000 + file_level_order
         file_level_items.sort(key=lambda x: file_index[x.location[0]] * 1000 + get_file_level_order(x))
     
+    # 为关键流转模块自动打 serial_flow 标记（默认不改变执行行为，仅用于分组）
+    serial_flow_roots = (
+        "testcases/scm_sls/",
+        "testcases/scm_del/",
+        "testcases/scm_pur/",
+        "testcases/erp_fin/",
+    )
+    for item in items:
+        node_path = str(getattr(item, "fspath", ""))
+        if any(root in node_path for root in serial_flow_roots):
+            item.add_marker("serial_flow")
+
     # 重新组合：file_level_order 的测试用例排在前面
     # 这样可以优先执行需要文件级串行的测试
     items[:] = file_level_items + other_items
+
+    # 支持 CI 分组执行：serial / parallel
+    job_group = config.getoption("--job-group")
+    if job_group in {"serial", "parallel"}:
+        selected = []
+        deselected = []
+        for item in items:
+            is_serial = item.get_closest_marker("serial_flow") is not None
+            if (job_group == "serial" and is_serial) or (job_group == "parallel" and not is_serial):
+                selected.append(item)
+            else:
+                deselected.append(item)
+
+        if deselected:
+            config.hook.pytest_deselected(items=deselected)
+        items[:] = selected

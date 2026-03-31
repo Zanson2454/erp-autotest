@@ -15,6 +15,7 @@
 - [项目结构](#项目结构)
 - [快速开始](#快速开始)
 - [使用指南](#使用指南)
+- [API 录制与转用例](#api-录制与-curl-转用例)
 - [测试规范](#测试规范)
 - [部署说明](#部署说明)
 - [常见问题](#常见问题)
@@ -125,6 +126,12 @@ erp-autotest/
 │   ├── MD/               # 主数据工厂（partner_fc、org_fc 等）
 │   ├── CF/               # 配置工厂（待完善）
 │   └── BIZ/              # 业务工厂（待完善）
+├── api_record/            # API 录制与 cURL 转化工具
+│   ├── recorder.py       # mitmproxy 插件：捕获请求并导出 cURL Markdown
+│   ├── start_recorder.py # 启动录制器（mitmdump 启动入口）
+│   ├── recorder_config.json # 录制过滤配置（白名单/黑名单/脱敏）
+│   ├── raw_curls/        # 录制产物目录（recorded_flow_*.md）
+│   └── README.md         # 录制功能详细文档
 ├── docs/                  # 项目文档
 │   └── STANDARD_API_CALL_GUIDE.md  # API 调用完整指南
 ├── routers/               # FastAPI 路由（Web 后台）
@@ -138,7 +145,10 @@ erp-autotest/
 ├── testcases/             # 测试用例目录
 │   ├── comm/             # 公共测试基类
 │   │   ├── base_test.py  # BaseTest 基类（核心）
-│   │   └── conftest.py   # pytest 配置（钩子、排序逻辑）
+│   │   ├── api_client_facade.py # API 调用门面
+│   │   ├── auth_context.py # 鉴权上下文
+│   │   └── test_data_context.py # 测试数据上下文
+│   ├── conftest.py       # pytest 配置（钩子、排序逻辑）
 │   ├── gen_md/           # 主数据模块
 │   ├── scm_pur/          # 采购模块
 │   ├── scm_sls/          # 销售模块
@@ -157,13 +167,6 @@ erp-autotest/
 │   └── ...              # 其他工具
 ├── testdata/             # 测试数据
 │   └── cache/           # 缓存文件（md_init_cache.json 等，框架自动生成）
-├── config/               # 配置文件
-│   ├── api/             # API配置文件（YAML格式）
-│   │   ├── gen_md/      # 主数据API配置（md_api_path.yaml 等）
-│   │   ├── scm_pur/     # 采购API配置（pur_api_path.yaml 等）
-│   │   └── ...          # 其他模块配置
-│   ├── env/             # 环境配置（dev/test/staging/prod.yaml）
-│   └── erp/             # 模块初始化 SQL（md_init_sql.yaml 等）
 ├── reports/              # 测试报告目录
 │   ├── allure-results/  # Allure 原始数据
 │   └── allure-report/   # Allure HTML 报告
@@ -171,7 +174,8 @@ erp-autotest/
 ├── static/               # 静态资源（Swagger UI 等）
 ├── main.py               # FastAPI 应用入口
 ├── pytest.ini            # pytest 全局配置
-├── conftest.py           # pytest 全局 fixture
+├── tests/                # 校验与辅助测试目录
+│   └── ...               # 结构/工具脚本测试等
 ├── requirements.txt      # Python 依赖清单
 ├── Dockerfile            # 容器化构建
 ├── .env                  # 环境变量
@@ -220,6 +224,7 @@ pre-commit run --all-files
 说明：
 - 启用 `ruff`（导入排序/基础静态检查/格式化）
 - 启用 `quality_guard`（敏感信息硬编码、`teardown_class` super 调用、测试互调 `self.test_xxx` 检查）
+- 启用 `validate_project_structure`（关键目录结构校验，防止 README 与实现漂移）
 
 5. **配置环境**
 
@@ -401,6 +406,32 @@ pytest -n 0 -p no:rerunfailures --log-cli-level=INFO <failed_case_path>
 
 ## 📖 使用指南
 
+### Cursor 1 分钟上手（skills/workflows）
+
+在 Cursor 对话中可直接使用以下触发方式：
+
+```text
+@workflow workflow-trigger
+```
+
+常用输入模板（复制后替换变量）：
+
+```text
+目标: 将 api_record/raw_curls/recorded_flow_001.md 转为 pytest 用例
+模块: gen_md
+输出文件: testcases/gen_md/test_partner_flow.py
+约束: 使用 standard_api_call + case_decorator + file_level_order + 幂等处理
+```
+
+```text
+目标: 做一次 ERP 自动化框架全流程分析
+范围: 全仓库
+输出: outputs/01_project_analysis.md, outputs/02_project_map.md, outputs/03_erp_test_domain_map.md, outputs/04_gap_analysis.md
+要求: 标注 confirmed facts / inferred assumptions / unknowns，并给 P0/P1/P2 风险
+```
+
+可用 skill 索引见 `/.cursor/skills/README.md`，流程说明见 `/.cursor/workflows/erp_full_flow_playbook.md`。
+
 ### 编写测试用例
 
 #### 1. 创建测试类
@@ -561,6 +592,71 @@ def test_async_init(self):
         a.text(str(e), "失败原因")
         raise
 ```
+
+## 🎬 API 录制与 cURL 转用例
+
+`api_record` 提供“录制请求 -> 输出 cURL Markdown -> AI 转 pytest 用例”的工作流，适合快速沉淀业务流程脚本。
+
+### 1) 目录与核心文件
+
+- `api_record/recorder.py`：mitmproxy 插件，按过滤规则捕获请求并写入 `raw_curls`
+- `api_record/start_recorder.py`：录制器启动脚本（封装 mitmdump 启动参数）
+- `api_record/recorder_config.json`：过滤/脱敏/分片参数（建议优先维护该文件）
+- `api_record/raw_curls/`：录制输出目录，产物一般为 `recorded_flow_*.md`
+
+### 2) 安装与启动
+
+```bash
+# 安装 mitmproxy（若 requirements 未包含）
+pip install mitmproxy
+
+# 启动录制器
+python api_record/start_recorder.py
+```
+
+默认代理通常为 `127.0.0.1:8080`。将浏览器或终端流量代理到该地址后再进行业务操作。
+
+### 3) HTTPS 证书（必做）
+
+若未安装 mitmproxy 根证书，HTTPS 请求无法完整解密，录制结果会缺失。
+
+1. 启动录制器后，在已配置代理的浏览器访问 [http://mitm.it/](http://mitm.it/)
+2. 按设备下载并安装证书
+3. 将证书设置为受信任（系统级）
+4. 刷新页面并确认录制器有请求输出
+
+### 4) 录制配置说明（`recorder_config.json`）
+
+当前配置关键项（建议）：
+
+- `allowed_path_prefixes`：仅录制业务接口前缀（当前为 `/api/trantor/`）
+- `blocked_paths`：精确路径黑名单（如 portal 当前用户、应用列表等噪音接口）
+- `blocked_path_prefixes`：前缀黑名单（如 `/api/trantor/runtime/scene/`）
+- `blocked_path_contains`：关键词黑名单（任务统计/通知等噪音请求）
+- `redact_header_keys`：脱敏 Header（已包含 `cookie`、`authorization`）
+- `max_curls_per_file`、`flush_gap_threshold`：控制分片与落盘节奏
+
+### 5) 从录制产物转测试用例
+
+推荐流程：
+
+1. 录制一条完整业务链路，得到 `api_record/raw_curls/recorded_flow_*.md`
+2. 在 Cursor 中使用项目 skill：`@workflow curl-to-testcase`
+3. 指定模块（如 `gen_md`）和目标文件（如 `testcases/gen_md/test_xxx_flow.py`）
+4. 生成后人工补充业务断言并执行回归
+
+生成用例时请坚持以下规则：
+
+- 统一使用 `standard_api_call`（复杂参数除外）
+- 不透传录制 Header（尤其 Cookie/Authorization）
+- 测试数据使用 `self.mock_util`，编码保持 `AT_` 前缀
+- 对“已存在”错误码做幂等兼容（回查并复用）
+
+### 6) 产物治理
+
+- `api_record/raw_curls/` 为中间产物目录，建议仅在录制阶段保留
+- 录制文件不要包含敏感信息；如需共享，请先脱敏检查
+- 转化后的 pytest 用例应放入 `testcases/` 并纳入正常评审流程
 
 ## 📝 测试规范
 
@@ -833,6 +929,15 @@ A:
 4. Cookie 值需要完整，截断会触发回退登录或鉴权失败
 5. 当前加载优先级：`config/env/{project}/.env` > `config/env/.env` > 根目录 `.env`
 
+### Q13: 录制了很多请求，如何减少噪音并提升转化质量？
+
+A:
+
+1. 优先维护 `api_record/recorder_config.json` 的 `blocked_*` 与 `allowed_path_prefixes`
+2. 只录制一条完整业务主路径，避免夹杂无关页面刷新请求
+3. 录制前先清空旧产物，确保一次录制对应一个业务主题
+4. 通过 `@workflow curl-to-testcase` 生成后，重点补齐业务断言与幂等分支
+
 ## 📚 相关文档
 
 项目文档位于 `docs/` 目录，包括：
@@ -858,4 +963,4 @@ ERP 自动化测试平台维护团队
 
 ---
 
-**最后更新**：2026-03-29
+**最后更新**：2026-03-31

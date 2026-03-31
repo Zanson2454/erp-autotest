@@ -24,24 +24,10 @@ class TestAttachmentManagement(GenMdBaseTest):
 
     @classmethod
     def teardown_class(cls):
-        """测试类结束后执行清理"""
-        try:
-            cls.db.delete(
-                table="gen_attachment_type_cf", 
-                where="attachment_code like %s", 
-                params=["AT_%"]
-            )
-            cls.db.delete(
-                table="gen_attachment_procedure_head_cf", 
-                where="code like %s", 
-                params=["AT_%"]
-            )
-            cls.logger.info("测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
-
+        """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
+        cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
-    # ============= 附件类型管理 =============
+
     @case_decorator(
         story="附件管理",
         title="测试新增附件类型",

@@ -35,31 +35,8 @@ class TestSurveyManagement(GenMdBaseTest):
             cls.cust_id = cls.md_cache_data.get("partner_info", {}).get("cust_info", [])[0].get("id")
     @classmethod
     def teardown_class(cls):
-        """测试类结束后执行清理"""
-        try:
-            # 清理测试数据
-           
-            cls.db.delete(
-                table="gen_survey_detail_md",
-                where="survey_mission in (select id from  gen_survey_mission_md where title like %s or title like %s)",
-                params=["测试评分任务_%", "自动化_%"]
-            )
-            cls.db.delete(
-                table="gen_survey_mission_item_md",
-                where="gen_survey_mission_md_id in  (select id from  gen_survey_mission_md where title like %s or title like %s)",
-                params=["测试评分任务_%", "自动化_%"]
-            )
-            cls.db.delete(
-                table="gen_survey_mission_md",
-                where="title like %s or title like %s",
-                params=["测试评分任务_%", "自动化_%"]
-            )
-           
-
-            cls.logger.info("测试数据清理完成")
-        except Exception as e:
-            cls.logger.error(f"测试数据清理失败: {str(e)}")
-
+        """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
+        cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
     # ================ 评分任务管理 ================
     @case_decorator(

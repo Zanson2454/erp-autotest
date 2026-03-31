@@ -1,120 +1,172 @@
-# Architecture Layers
-1. Case Layer
-- 位置：`testcases/**/test_*.py`
-- 职责：编排业务步骤、发起 `standard_api_call`、执行业务断言与 DB 校验。
+# Architecture Layers（当前实际）
+```
+1. 执行层      pytest.ini + testcases/conftest.py
+               ├── env/project 注入
+               ├── serial_flow 标记 + job-group 过滤
+               └── pytest_sessionfinish → cleanup_registry.run_cleanups()
 
-2. Module Base Layer
-- 位置：`testcases/<domain>/__init__.py`
-- 典型：`GenMdBaseTest`、`SlsBase`
-- 职责：继承 `BaseTest` 后加载域 API 配置、域缓存和上下文（角色、组织、主数据 ID）。
+2. 编排层      模块基类（继承 BaseTest） + 业务用例
+               └── 子类 teardown_class → __init_subclass__ 强制兜底 super()
 
-3. Framework Base Layer
-- 位置：`testcases/comm/base_test.py`
-- 职责：统一生命周期初始化、登录、数据库、请求模板调用和工具注入。
+3. 调用层      BaseTest.standard_api_call
+               └── ApiCallService.execute()
+                   ├── ApiClientFacade（路径解析 + 近似匹配）
+                   ├── ParamUtil（payload 过滤/注入）
+                   └── HttpUtil（GET/POST/PUT/DELETE/PATCH）
 
-4. Data & Config Layer
-- 位置：`data_factory/base.py`、`config/env`、`config/api`、`config/erp`
-- 职责：环境配置加载、SQL 初始化、缓存读写、API path/params 元数据管理。
+4. 上下文层    AuthContext（认证VO）
+               TestDataContext（缓存路径解析）
+               bind_cache_data()（默认14字段快速绑定）
 
-5. Utility Layer
-- 位置：`utils/*`
-- 核心：`HttpUtil`、`ParamUtil`、`AssertHelper`、`DBManager`、`CacheUtil`、`YamlUtil`。
+5. 数据层      DataFactory → init_data / md_cache_data
+               DBManager（erp_db / iam_db 双连接）
+               CacheUtil（JSON持久化缓存）
+
+6. 清理层      cleanup_registry（注册式，session末尾单点执行）
+               + 模块 teardown_class（存量，逐步迁移中）
+```
 
 # Directory Structure
-- `testcases/comm`: 公共基类（`BaseTest`）与公共能力。
-- `testcases/gen_md|scm_*|erp_*|sys_common`: 按业务域划分的测试套件。
-- `config/api/<domain>`: 接口路径与请求模板配置。
-- `config/env[/<project>]`: 环境与多项目配置。
-- `config/erp/*.yaml`: 基础 SQL 初始化配置（主数据、采购、销售、财务等）。
-- `data_factory`: 配置加载、SQL 执行、缓存初始化。
-- `utils`: 请求、参数、断言、日志、缓存、数据库等通用工具。
-- `outputs`: 工作流分析产物。
+```
+testcases/
+├── conftest.py                   # 全局 hook：排序、分组、统一清理触发
+├── comm/
+│   ├── base_test.py              # 核心基类 (1179 行，含 ConfigManager/SessionManager/LoginService/BaseTestInitializer/BaseTest)
+│   ├── api_call_service.py       # standard_api_call 执行层 (182 行)
+│   ├── api_client_facade.py      # API 路径解析门面
+│   ├── auth_context.py           # 认证上下文 VO
+│   ├── test_data_context.py      # 缓存路径解析
+│   └── cleanup_registry.py       # 清理注册中心
+├── gen_md/
+│   ├── conftest.py               # 注册式清理（230 行，30+ 张表，含动态列探测）
+│   └── {gen_base,org,mat,partner,todo}/
+├── erp_fin/
+│   ├── conftest.py               # 已有 conftest（迁移状态待确认）
+│   └── {fin_iv,fin_ap,...}/
+├── scm_sls/
+│   ├── conftest.py               # 注册式清理
+│   └── {cf,md,so_0x,...}/
+├── scm_del/
+│   ├── conftest.py               # 注册式清理
+│   └── ...
+└── {scm_pur,scm_inv,sys_common,...}/  # 25 个模块，清理模式待迁移
+```
 
 # Module Responsibilities
-- `BaseTest`
-  - 提供统一初始化模板方法。
-  - 提供 `get_api_path/get_api_params/standard_api_call`。
-  - 管理 `db/iam_db/http/session/assert_util` 等共享资源。
+| 组件 | 职责 | 说明 |
+|---|---|---|
+| `ConfigManager` | 配置加载/缓存/校验 | 支持多项目隔离，mask 敏感字段 |
+| `SessionManager` | HTTP 会话管理 | 多进程按 PID 隔离 session |
+| `LoginService` | 登录/认证/占位符检测 | 支持多门户 |
+| `BaseTestInitializer` | 初始化编排（5步模板） | 分离 BaseTest 初始化细节 |
+| `BaseTest` | 测试基类：setup 编排 + 公共 API 调用入口 | 仍是主承载点，1179 行 |
+| `ApiCallService` | standard_api_call 执行 | 依赖 test_obj，耦合测试上下文 |
+| `ApiClientFacade` | API 路径解析 + 近似匹配 | 有 warning 日志 |
+| `AuthContext` | 认证输出 VO | 纯数据结构 |
+| `TestDataContext` | 缓存路径解析 | 支持 init_data / md_cache_data 两个数据源 |
+| `cleanup_registry` | 全局清理注册中心 | order 参数控制执行顺序，幂等，支持 reset |
 
-- `GenMdBaseTest`
-  - 单门户登录（`TERP_PORTAL`）。
-  - 加载 `gen_md` API 配置。
-  - 加载 `md_init_cache` 并绑定基础上下文。
-
-- `SlsBase`
-  - admin + cust 门户上下文。
-  - 合并 `scm_sls + reb + sys_common + acc + price + cond + del` 多域 API 配置。
-  - 加载 `md_init_cache` 与 `sls_init_cache` 并绑定销售域运行字段。
-
-- `DataFactory`
-  - 通过 `ConfigLoader` 加载并替换环境变量。
-  - 通过 `SQLExecutor` 执行 YAML 中 SQL。
-  - 通过 `CacheUtil` 缓存数据并根据项目变化做清理。
-
-# Request Lifecycle
-真实调用路径（以标准模板为主）：
-1. `test_xxx()` 调用 `self.standard_api_call(api_key, set_dict, ...)`
-2. `BaseTest.standard_api_call` 根据 `api_key` 调 `get_api_path/get_api_params`
-3. `ParamUtil` 处理模板参数（字段过滤、路径赋值、query 拼接）
-4. `HttpUtil.request` 通过 `requests.Session.request` 发请求并记录请求/响应
-5. 用例层调用 `assert_util` + 业务断言 + `db.query` 完成验证
-
-示例链路：
-- `testcases/scm_sls/so_03_approve/test_so_approve.py`
-- `TestSalesOrderApproval.test_03_approve_sales_order`
-- `standard_api_call("SLS-销售订单-审批同意服务")`
-- `HttpUtil.request()`
-- `AssertHelper.assert_response_success + DB so_status 校验`
+# Request Lifecycle（完整调用链）
+```
+test method
+  └─▶ self.standard_api_call(api_key, set_dict, ...)
+        └─▶ ApiCallService.execute(test_obj, api_key, ...)
+              ├─▶ test_obj.get_api_path(api_key)
+              │     └─▶ ApiClientFacade.resolve_api_path(apis_dict, api_key)
+              │           └─▶ ParamUtil.get_api_path(...)
+              ├─▶ test_obj.get_api_params(api_path)
+              │     └─▶ ApiClientFacade.resolve_api_params(...)
+              │           └─▶ ParamUtil.get_api_params(...)
+              ├─▶ ParamUtil.filter_post_body_fields(...)
+              ├─▶ ParamUtil.set_request_params(...)
+              ├─▶ ParamUtil.sanitize_payload(...)
+              ├─▶ assert_util.set_request_context(...)
+              └─▶ test_obj.http.post/get/put/delete(url, ...)
+                    └─▶ HttpUtil → requests.Session
+```
 
 # Fixture Dependency
-1. 全局层：`testcases/conftest.py`
-- 注入运行参数（环境/项目/版本）、Allure 环境信息、失败处理钩子。
+```
+testcases/conftest.py (session 级)
+  ├── pytest_collection_modifyitems → 排序 + serial_flow + job-group 过滤
+  ├── pytest_sessionfinish → cleanup_registry.run_cleanups() (主进程)
+  └── allure 集成 hook
 
-2. 模块层：`testcases/<module>/conftest.py`
-- `scm_sls`: `pytest_sessionfinish` 统一按时间窗清理。
-- `scm_del`: session autouse fixture 清理指定 remark/code 前缀数据。
+模块 conftest (模块级)
+  ├── gen_md/conftest.py → register_cleanup("gen_md_cleanup", ..., order=250)
+  ├── scm_sls/conftest.py → 注册式（已迁移）
+  └── scm_del/conftest.py → 注册式（已迁移）
 
-3. 类层：`BaseTest.setup_class`
-- 通过模板方法初始化登录、DB、工具与缓存上下文；多数模块 Base 在此基础上二次绑定域数据。
+BaseTest.__init_subclass__
+  └── 装饰子类 teardown_class，finally 兜底调用 BaseTest.teardown_class
+```
 
 # Config Flow
-1. pytest 启动读取 `--env/--project/--trantor_version`
-2. `testcases/conftest.py` 写入环境变量并加载环境配置
-3. `BaseTest` 通过 `ConfigManager.get_config()` 调用 `DataFactory.get_env_config()`
-4. `ConfigLoader` 依次加载 `project/.env -> config/env/.env -> 根目录 .env`
-5. 读取 `config/env/{project}/{env}.yaml`（不存在则回退 `config/env/{env}.yaml`）
-6. 递归替换 `${ENV_VAR}` 后缓存到 `ConfigManager` / `YamlUtil`
+```
+1. CLI: --env=test --project=xxx → os.environ
+2. DataFactory(env_name, project).get_env_config()
+   └── config/env/{project}/{env}.yaml
+3. ConfigManager: merge + validate + cache
+4. BaseTestInitializer.initialize_environment()
+5. LoginService.login(portal_key, tenant_key)
+   └── POST /iam/api/v1/user/login/account
+   └── GET  /api/trantor/portal/user/current
+6. DBManager(erp_db / iam_db)
+7. BaseTest 各属性挂载完毕
+```
 
 # Test Data Lifecycle
+```
 1. 初始化
-- `BaseTestInitializer.initialize_base_data -> DataFactory.get_base_data("erp")`
-- 读取 `config/erp/base_init_sql.yaml` 并缓存 `init_cache`
+   DataFactory.init_sql_cache() → CacheUtil.set("md_init_cache", ...)
+   BaseTest._initialize_data() → init_data
 
-2. 模块补充
-- 模块 Base 调 `load_sql_cache` 加载如 `md_init_cache`、`sls_init_cache`
+2. 绑定
+   cls.bind_cache_data() → TestDataContext.resolve_cache_path()
+   → 支持 "currency_info.curr_id" / "partner_info.cust_info.id" 等点分路径
 
-3. 用例消费
-- 从类上下文读取 `cust_id/org_id/mat_id` 等缓存字段，或动态构造数据
+3. 执行
+   test_method → standard_api_call → AT_ 前缀数据写入 DB
 
-4. 清理
-- 按模块策略在 session 结束清理测试产生数据（时间窗、前缀、remark 条件）
+4. 清理（双轨并存）
+   - 注册式：pytest_sessionfinish → cleanup_registry.run_cleanups()
+   - 分散式：teardown_class → cls.db.delete(...)
+```
 
 # Assertion Layer
-1. 通用断言
-- `AssertHelper.assert_response_success`
-- `AssertHelper.assert_response_data`
-- `AssertHelper.assert_by_operator`
+```
+Level 1: assert_util.assert_response_success(response)   # HTTP + success字段
+Level 2: assert_util.assert_response_data(response)      # data非空
+Level 3: assert_util.assert_by_operator(actual, op, expected)  # 字段级
+Level 4: self.db.query_one(sql, params)                  # DB状态验证
+```
 
-2. 业务断言
-- 由测试用例自行补充，常见方式为数据库状态校验（如 `so_status`、金额、行项目）。
+# How to Add New Module（规范步骤）
+```
+1. 建配置
+   testdata/{module}/{module}_api_path.yaml
+   testdata/{module}/{module}_api_params.yaml
 
-3. 断言上下文
-- `AssertHelper` 支持保存最近请求上下文，失败时输出 API key / URL / body / params。
+2. 建基类
+   testcases/{module}/__init__.py
+   class {Module}BaseTest(BaseTest):
+       @classmethod
+       def setup_class(cls):
+           super().setup_class()
+           cls.load_module_api_configs(path_file, params_file)
+           cls.bind_module_user_context("{module}")
+           cls.bind_cache_data()     # 绑定常用数据
+           cls.bind_mock_util_singleton()
 
-# How to Add New Module
-1. 新建模块目录 `testcases/<new_module>/` 并创建模块 Base 继承 `BaseTest`。
-2. 在 `config/api/<new_module>/` 新增 `*_api_path.yaml` 与 `*_api_params.yaml`。
-3. 在模块 Base `setup_class` 中执行：`super().setup_class()` + `load_api_configs/load_cache_data/bind_context`。
-4. 若有初始化数据依赖，在 `config/erp/` 增加 SQL 配置并通过 `load_sql_cache` 加载缓存。
-5. 在测试文件中优先使用 `standard_api_call`，然后补充业务断言和 DB 校验。
-6. 如存在模块特有脏数据，增加模块 `conftest.py` 的 session 级清理逻辑。
+3. 建清理
+   testcases/{module}/conftest.py
+   register_cleanup("{module}_cleanup", _cleanup_func, order=xxx)
+   # 不要在 teardown_class 写新的分散清理
+
+4. 建用例
+   testcases/{module}/test_{feature}_management.py
+   class Test{Feature}Management({Module}BaseTest):
+       # file_level_order 控制串行顺序
+       # try-except + a.text(str(e), "失败原因")
+       # 3层断言
+```
