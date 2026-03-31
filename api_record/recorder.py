@@ -13,6 +13,7 @@ Usage:
 
 import json
 import time
+from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional
 from urllib.parse import urlsplit
@@ -33,6 +34,8 @@ DEFAULT_CONFIG = {
     "output_file": "api_record/raw_curls/recorded_flow.md",
     "max_curls_per_file": 100,
     "deduplicate_requests": True,
+    "reset_output_on_start": False,
+    "flush_gap_threshold": 20,
     "redact_header_keys": ["cookie", "authorization", "content-length"],
     "skip_path_contains": ["/metrics"],
     "skip_extensions": [".js", ".css", ".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico", ".map"],
@@ -96,8 +99,15 @@ class CurlRecorder:
         self.max_curls_per_file: int = int(DEFAULT_CONFIG["max_curls_per_file"])
         self._file_index: int = 1
         self._curl_count_in_current_file: int = 0
+        self._request_sequence: int = 0
+        self._written_step_count: int = 0
+        self._next_flush_request_seq: int = 1
+        self._pending_records: dict[int, Optional[dict]] = {}
+        self._max_assigned_request_seq: int = 0
         self._recorded_signatures: set[str] = set()
         self._configured = False
+        self._bootstrapped = False
+        self._session_started_at: str = ""
 
     @staticmethod
     def _build_signature(flow: http.HTTPFlow) -> str:
@@ -140,7 +150,23 @@ class CurlRecorder:
             content = path.read_text(encoding="utf-8")
         except OSError:
             return 0
-        return content.count("\n### Step: ") + (1 if content.startswith("### Step: ") else 0)
+        return sum(1 for line in content.splitlines() if line.startswith("### Step"))
+
+    def _init_request_sequence_state(self) -> None:
+        """按当前已写入条数初始化序号，重启后保持 Step 递增。"""
+        total = 0
+        index = 1
+        while True:
+            p = self._resolve_output_file_by_index(index)
+            if not p.exists():
+                break
+            total += self._count_curls_in_file(p)
+            index += 1
+        self._request_sequence = total
+        self._written_step_count = total
+        self._next_flush_request_seq = 1
+        self._pending_records = {}
+        self._max_assigned_request_seq = total
 
     def _resolve_output_file_by_index(self, index: int) -> Path:
         """根据索引生成分片文件名，如 recorded_flow_001.md。"""
@@ -196,14 +222,28 @@ class CurlRecorder:
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.output_base_stem = self.output_file.stem
         self.output_suffix = self.output_file.suffix or ".md"
+        if not self._bootstrapped and bool(self.config.get("reset_output_on_start", False)):
+            pattern = f"{self.output_base_stem}_*{self.output_suffix}"
+            for p in self.output_dir.glob(pattern):
+                try:
+                    p.unlink()
+                except OSError:
+                    pass
+
         max_curls = self.config.get("max_curls_per_file", DEFAULT_CONFIG["max_curls_per_file"])
         try:
             self.max_curls_per_file = int(max_curls)
         except (TypeError, ValueError):
             self.max_curls_per_file = int(DEFAULT_CONFIG["max_curls_per_file"])
         self._init_file_rotation_state()
+        self._init_request_sequence_state()
         if bool(self.config.get("deduplicate_requests", True)):
             self._collect_existing_signatures()
+        if not self._bootstrapped:
+            self._session_started_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            with open(self.output_file, "a", encoding="utf-8") as f:
+                f.write(f"<!-- Recorder Session Start: {self._session_started_at} -->\n\n")
+        self._bootstrapped = True
         self._configured = True
 
     def configure(self, updated) -> None:
@@ -244,6 +284,13 @@ class CurlRecorder:
 
         return True
 
+    def request(self, flow: http.HTTPFlow) -> None:
+        # 中文说明：在 request 阶段打序号，确保 Step 按“前端发起顺序”编号。
+        self._load_config()
+        self._request_sequence += 1
+        self._max_assigned_request_seq = max(self._max_assigned_request_seq, self._request_sequence)
+        flow.metadata["request_seq"] = self._request_sequence
+
     def response(self, flow: http.HTTPFlow) -> None:
         # 中文说明：改为在 response 阶段写入，便于识别状态码（尤其是 4xx/5xx）。
         self._load_config()
@@ -252,25 +299,67 @@ class CurlRecorder:
         capture_error = bool(self.config.get("capture_http_error_requests", True))
         bypass_allowed_prefix = capture_error and status_code >= 400
 
+        request_seq = int(flow.metadata.get("request_seq") or 0)
+        if request_seq <= 0:
+            self._request_sequence += 1
+            request_seq = self._request_sequence
+            self._max_assigned_request_seq = max(self._max_assigned_request_seq, self._request_sequence)
+
         if not self._should_record_flow(flow, bypass_allowed_prefix=bypass_allowed_prefix):
-            return
-        signature = self._build_signature(flow)
-        if bool(self.config.get("deduplicate_requests", True)) and signature in self._recorded_signatures:
+            self._pending_records[request_seq] = None
+            self._flush_pending_records()
             return
 
-        curl = _format_curl(flow, redact_header_keys=[str(x) for x in (self.config.get("redact_header_keys") or [])])
-        path = urlsplit(flow.request.pretty_url).path or ""
+        self._pending_records[request_seq] = {
+            "signature": self._build_signature(flow),
+            "curl": _format_curl(
+                flow, redact_header_keys=[str(x) for x in (self.config.get("redact_header_keys") or [])]
+            ),
+            "path": urlsplit(flow.request.pretty_url).path or "",
+            "status_code": status_code,
+        }
+        self._flush_pending_records()
 
-        self._rotate_if_needed()
-        # 中文说明：用 Markdown 组织每一步，便于 AI 在 Cursor 里“整块复制 + 重构生成用例”。
-        with open(self.output_file, "a", encoding="utf-8") as f:
-            if status_code:
-                f.write(f"### Step: {path} [HTTP {status_code}]\n")
-            else:
-                f.write(f"### Step: {path}\n")
-            f.write(f"```bash\n{curl}\n```\n\n")
-        self._curl_count_in_current_file += 1
-        self._recorded_signatures.add(signature)
+    def _flush_pending_records(self) -> None:
+        """按请求发起顺序刷盘；过滤/去重项不占 Step 编号。"""
+        gap_threshold_raw = self.config.get("flush_gap_threshold", 20)
+        try:
+            gap_threshold = int(gap_threshold_raw)
+        except (TypeError, ValueError):
+            gap_threshold = 20
+        if gap_threshold < 1:
+            gap_threshold = 1
+
+        # 若某些请求长期没有 response，避免阻塞后续全部写入。
+        while (
+            self._next_flush_request_seq not in self._pending_records
+            and (self._max_assigned_request_seq - self._next_flush_request_seq) >= gap_threshold
+        ):
+            self._next_flush_request_seq += 1
+
+        while self._next_flush_request_seq in self._pending_records:
+            item = self._pending_records.pop(self._next_flush_request_seq)
+            self._next_flush_request_seq += 1
+            if not item:
+                continue
+
+            signature = str(item["signature"])
+            if bool(self.config.get("deduplicate_requests", True)) and signature in self._recorded_signatures:
+                continue
+
+            self._rotate_if_needed()
+            self._written_step_count += 1
+            path = str(item["path"])
+            status_code = int(item["status_code"])
+            curl = str(item["curl"])
+            with open(self.output_file, "a", encoding="utf-8") as f:
+                if status_code:
+                    f.write(f"### Step{self._written_step_count}: {path} [HTTP {status_code}]\n")
+                else:
+                    f.write(f"### Step{self._written_step_count}: {path}\n")
+                f.write(f"```bash\n{curl}\n```\n\n")
+            self._curl_count_in_current_file += 1
+            self._recorded_signatures.add(signature)
 
 
 addons = [CurlRecorder()]

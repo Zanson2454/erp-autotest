@@ -24,6 +24,8 @@
   "output_file": "api_record/raw_curls/recorded_flow.md",
   "max_curls_per_file": 100,
   "deduplicate_requests": true,
+  "reset_output_on_start": true,
+  "flush_gap_threshold": 30,
   "redact_header_keys": ["cookie", "authorization", "content-length"],
   "capture_http_error_requests": true,
   "skip_path_contains": ["/metrics"],
