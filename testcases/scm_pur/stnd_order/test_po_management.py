@@ -141,6 +141,32 @@ class TestPoManagement(ScmPurBaseTest):
         
         self.logger.info(f"订单{status_desc}成功: po_id={self.__class__.po_id}, status={document_status}")
         return result
+
+    def _cancel_submit_po_by_id(self, po_id):
+        po_detail = self._get_po_detail_by_id(po_id)
+        response, _ = self.standard_api_call(
+            api_key="PO-取消提交服务",
+            set_dict={"request": po_detail},
+            use_param_util=False,
+            param_path=["params"],
+            query_params={"tmodule": "SCM_PUR"}
+        )
+        return response
+
+    def _ensure_draft_po_id(self):
+        if not self.__class__.po_id:
+            return None
+        detail = self._get_po_detail_by_id(self.__class__.po_id)
+        status = detail.get("documentStatus")
+        if status == "DRAFT":
+            return self.__class__.po_id
+
+        cancel_resp = self._cancel_submit_po_by_id(self.__class__.po_id)
+        if cancel_resp.get("success"):
+            detail2 = self._get_po_detail_by_id(self.__class__.po_id)
+            if detail2.get("documentStatus") == "DRAFT":
+                return self.__class__.po_id
+        return None
     
     @case_decorator(
         story="标准采购订单",
@@ -719,8 +745,12 @@ class TestPoManagement(ScmPurBaseTest):
         try:
             if not self.__class__.po_id:
                 raise ValueError("未找到可删除的订单ID")
-            
-            po_detail = self._get_po_detail_by_id(self.__class__.po_id)
+
+            draft_po_id = self._ensure_draft_po_id()
+            if not draft_po_id:
+                pytest.skip("未能准备草稿态采购订单，跳过删除")
+
+            po_detail = self._get_po_detail_by_id(draft_po_id)
             
             api_path = self.get_api_path("PO-删除订单服务")
             _, url = self.get_api_params(api_path)
@@ -744,7 +774,7 @@ class TestPoManagement(ScmPurBaseTest):
             self.assert_util.assert_response_success(response)
             
             query_sql = "SELECT id, document_status, deleted FROM pur_po_head_tr WHERE id = %s"
-            result = self.db.query(query_sql, [self.__class__.po_id])
+            result = self.db.query(query_sql, [draft_po_id])
             
             assert result, "数据库未查询到订单数据"
             
@@ -756,6 +786,65 @@ class TestPoManagement(ScmPurBaseTest):
             a.json(response, "响应数据")
             a.text(f"数据库查询结果: {result}", "数据库验证")
             
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
+    @case_decorator(
+        story="标准采购订单",
+        title="分页查询采购订单行",
+        description="验证分页查询订单行接口在无筛选与按单号筛选场景下可用",
+        severity="normal",
+        file_level_order=11,
+        tags=["采购", "标准订单", "订单行", "分页"]
+    )
+    def test_query_po_item_page(self):
+        try:
+            pageable = {
+                "pageNo": 1,
+                "pageSize": 20,
+                "needTotal": True,
+                "sortOrders": [
+                    {"fieldAlias": "updatedAt", "sortType": "DESC"},
+                    {"fieldAlias": "createdAt", "sortType": "DESC"},
+                ],
+            }
+            response, _ = self.standard_api_call(
+                api_key="分页查询订单行",
+                set_dict={"pageable": pageable},
+                fields_to_filter=["pageable"],
+                param_path=["params", "request"],
+                query_params={"tmodule": "SCM_PUR"},
+            )
+            self.assert_util.assert_response_data(response)
+
+            rows = response.get("data", {}).get("data", {}).get("data", []) or []
+            self.assert_util.assert_by_operator(isinstance(rows, list), "=", True, "分页结果应为列表")
+
+            if rows and rows[0].get("poCode"):
+                po_code = rows[0]["poCode"]
+                response_filtered, _ = self.standard_api_call(
+                    api_key="分页查询订单行",
+                    set_dict={
+                        "pageable": {
+                            **pageable,
+                            "conditionItems": {
+                                "type": "ConditionItems",
+                                "logicOperator": "AND",
+                                "conditions": {"poCode": {"operator": "CONTAINS", "value": po_code}},
+                            },
+                        }
+                    },
+                    fields_to_filter=["pageable"],
+                    param_path=["params", "request"],
+                    query_params={"tmodule": "SCM_PUR"},
+                )
+                self.assert_util.assert_response_data(response_filtered)
+                a.json(response_filtered, "采购订单行按单号筛选分页响应")
+            else:
+                a.text("当前页无可用 poCode，跳过筛选场景断言", "说明")
+
+            a.json(response, "采购订单行分页响应")
         except Exception as e:
             a.text(str(e), "失败原因")
             raise

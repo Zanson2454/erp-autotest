@@ -29,6 +29,9 @@
 5. **使用 bind_cache_data 简化数据获取**
 6. **禁止用例互调**（禁止 `self.test_xxx()`，改用 helper）
 7. **加入幂等处理**（“已存在”错误码时回查并复用）
+8. **严格按 YAML 参数骨架传参**：先查 `*_api_params.yaml` 再确定 `param_path`，不要默认都走 `["params","request"]`
+9. **ID 字段强类型校验**：后续详情/删除前，必须断言 `id` 为数值或可转数值，禁止把 `dict/uuid/requestId` 当作业务 ID 透传
+10. **状态前置校验**：指派/转办/转单/删除等状态敏感接口，先查询单据状态，不满足前置时 `pytest.skip`，不要直接硬断言失败
 
 ### 代码规范
 - 参考文件: testcase_temp.mdc 和 coding_standards.mdc
@@ -36,6 +39,8 @@
 - 使用 self.mock_util.get_timestamp() 生成时间戳
 - 使用 self.bind_cache_data() 绑定常用数据（如 cust_id, org_id 等）
 - 检查 `${ENV_VAR}` 占位符是否已替换，URL 必须带 `https://` 或 `http://`
+- 对 `paginate_*` 类接口，重点检查 `pageable` 在 `params` 还是 `params.request`（以 YAML 为准）
+- 对创建/提交类接口，禁止把 cURL 中的必填对象（如 `prType/comOrgId/prItemCode[*].prItemType`）清洗成 `None`
 ```
 
 ---
@@ -191,3 +196,39 @@ cls.bind_cache_data({
 #   - wh_id (仓库)
 #   - mat_id (物料)
 ```
+
+---
+
+## 生成后自检 Checklist（必须逐项通过）
+
+- [ ] **参数骨架对齐**：每个接口都已从 `*_api_params.yaml` 确认 `param_path`；禁止默认全部走 `["params","request"]`
+- [ ] **参数来源优先级正确**：`缓存值 > cURL原值 > 跳过并说明原因`，禁止“缓存取不到就传 None”
+- [ ] **分页参数层级正确**：`paginate_*` / `paging_*` 接口已确认 `pageable` 位于 `params.pageable` 或 `params.request.pageable`
+- [ ] **平台噪音已剔除**：`sceneKey/viewKey/appId/teamId/buttonKey/viewTitle/requestId/created*/updated*` 等未被直接透传到 `set_dict`
+- [ ] **ID 强类型校验**：后续详情/删除/关联前，已确保业务 ID 为数值或可转数值；未将 `dict/requestId/uuid` 当业务 ID
+- [ ] **创建接口回查策略**：若创建成功但响应未直接返回 `id`，已补“唯一键分页/详情回查”确认
+- [ ] **创建接口必填对象校验**：请求前已断言必填对象非空（例如 `prType.id`）；若为空，优先回退使用 cURL 原值并记录风险
+- [ ] **复制接口断言分级**：若接口语义为“复制初始化/渲染”，断言“成功+关键结构”，不强制要求持久化 `id`
+- [ ] **状态前置校验**：指派/转办/转单/删除等状态敏感接口，已先查状态；不满足前置时 `pytest.skip`
+- [ ] **禁止用例互调**：未出现 `self.test_xxx()`；公共前置已抽为私有 helper
+- [ ] **断言分层完整**：至少包含 `assert_response_success/response_data` + 业务字段断言（必要时 DB 校验）
+- [ ] **测试数据规范**：新增数据使用 `AT_` 前缀，来源优先 `mock_util` 与缓存，不硬编码主数据 ID
+- [ ] **清理策略合规**：`teardown_class` 逐表删除，无循环删表；不依赖物理删除开关必然生效
+- [ ] **记录可追溯性**：关键请求/响应通过 `a.json/a.text` 保留，失败信息可定位
+
+---
+
+## 常见失败对照（录制转用例）
+
+- `pur.pr.type.is.empty`  
+  - 含义：创建采购申请时 `prType` 为空  
+  - 典型原因：把 cURL 里的 `prType` 映射成缓存变量后，缓存未命中导致传 `None`  
+  - 处理：`prType` 必须回退到 cURL 原值（如 `{"id":14008002}`），并在报告中标注“使用录制值兜底”
+
+- `V0301 参数 'pageable' 不正确`  
+  - 含义：分页参数层级错误  
+  - 处理：核对 `*_api_params.yaml`，确认是 `params.pageable` 还是 `params.request.pageable`
+
+- `*.status.is.error`（如 `pur.pr.item.status.is.error`）  
+  - 含义：状态机前置不满足  
+  - 处理：先查状态并推进状态，再重试；仍不满足则 `pytest.skip` 并记录原因

@@ -1,7 +1,9 @@
 {
   "allowed_hosts": [],
   "allowed_path_prefixes": ["/api/trantor/"],
+  "blocked_paths": [],
   "blocked_path_prefixes": ["/api/trantor/runtime/scene/"],
+  "blocked_path_contains": [],
 
   "output_dir": "api_record/raw_curls",
   "output_file": "api_record/raw_curls/recorded_flow.md",

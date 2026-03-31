@@ -16,7 +16,7 @@
 api_record/
 ├── recorder.py             # mitmproxy 插件：捕获请求并导出为 cURL Markdown
 ├── start_recorder.py       # 启动器：配置代理并运行 mitmdump
-├── recorder_config.json    # 过滤配置：Host 白名单、静态资源黑名单
+├── recorder_config.json    # 过滤配置：Host 白名单、接口黑名单、静态资源黑名单
 └── raw_curls/              # 存放录制产物（原始 cURL 逻辑集）
     └── flow_example.md     # 录制生成的中间文件，用于交给 AI 转化
 ```
@@ -68,6 +68,25 @@ addons = [CurlRecorder()]
 ---
 
 ## 🤖 AI 转化工作流 (Cursor/Gemini)
+
+## ⚙️ 过滤配置说明 (`recorder_config.json`)
+
+接口黑名单建议优先用下面三类键：
+
+- `blocked_paths`: 精确路径匹配（完全相等）
+- `blocked_path_prefixes`: 前缀匹配（你提到的场景，最常用）
+- `blocked_path_contains`: 关键词包含匹配
+
+示例：
+
+```json
+{
+  "allowed_path_prefixes": ["/api/trantor/"],
+  "blocked_paths": ["/api/trantor/service/engine/execute/NOISE_SERVICE"],
+  "blocked_path_prefixes": ["/api/trantor/runtime/scene/"],
+  "blocked_path_contains": ["heartbeat", "/metrics"]
+}
+```
 
 这是解决“手动迁移难”的关键。将 `raw_curls/` 下的文件交给 AI，并配合以下指令：
 

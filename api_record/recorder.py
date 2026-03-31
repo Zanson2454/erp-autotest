@@ -26,7 +26,9 @@ DEFAULT_CONFIG_FILE = PROJECT_ROOT / "api_record" / "recorder_config.json"
 DEFAULT_CONFIG = {
     "allowed_hosts": [],
     "allowed_path_prefixes": ["/api/trantor/"],
+    "blocked_paths": [],
     "blocked_path_prefixes": ["/api/trantor/runtime/scene/"],
+    "blocked_path_contains": [],
     "output_dir": "api_record/raw_curls",
     "output_file": "api_record/raw_curls/recorded_flow.md",
     "max_curls_per_file": 100,
@@ -46,6 +48,10 @@ def _should_skip_by_contains(path: str, tokens: List[str]) -> bool:
         return True
     lowered = path.lower()
     return any(str(t).lower() in lowered for t in tokens)
+
+
+def _normalize_path(path: str) -> str:
+    return (path or "").strip() or "/"
 
 
 def _format_curl(flow: http.HTTPFlow, *, redact_header_keys: List[str]) -> str:
@@ -179,8 +185,16 @@ class CurlRecorder:
         if allowed_prefixes and not any(path.startswith(p) for p in allowed_prefixes):
             return
 
+        blocked_paths = [_normalize_path(str(x)) for x in (self.config.get("blocked_paths") or [])]
+        if blocked_paths and _normalize_path(path) in blocked_paths:
+            return
+
         blocked_prefixes = [str(x) for x in (self.config.get("blocked_path_prefixes") or [])]
         if blocked_prefixes and any(path.startswith(p) for p in blocked_prefixes):
+            return
+
+        blocked_contains = [str(x) for x in (self.config.get("blocked_path_contains") or [])]
+        if blocked_contains and _should_skip_by_contains(path, blocked_contains):
             return
 
         if _should_skip_by_extension(path, [str(x) for x in (self.config.get("skip_extensions") or [])]):
