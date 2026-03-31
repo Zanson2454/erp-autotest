@@ -2,6 +2,15 @@
 
 > 基于 curl 命令一键生成 ERP 自动化测试用例
 
+## 与其他规则的关系（必读）
+
+| 文档 | 作用 |
+|------|------|
+| [`.cursor/rules/testcase_temp.mdc`](testcase_temp.mdc) | 测试类/方法模板、`file_level_order`、`init_data` / `md_cache_data` 安全获取、异步与参数化等 |
+| [`.cursor/rules/coding_standards.mdc`](coding_standards.mdc) | Payload 清洗、复杂对象转 ID、`mock_util` 与环境/URL 前置校验等总则 |
+
+本文档侧重 **curl 录制 → 参数骨架、幂等、自检清单与常见失败**；生成代码时须与上表一并遵守，不重复展开模板全文。
+
 ---
 
 ## 使用方式
@@ -34,7 +43,7 @@
 10. **状态前置校验**：指派/转办/转单/删除等状态敏感接口，先查询单据状态，不满足前置时 `pytest.skip`，不要直接硬断言失败
 
 ### 代码规范
-- 参考文件: testcase_temp.mdc 和 coding_standards.mdc
+- 完整模板与总则：`.cursor/rules/testcase_temp.mdc`、`.cursor/rules/coding_standards.mdc`（见本文「与其他规则的关系」）
 - 使用 self.mock_util.generate_unique_code(tag="AT_XXX") 生成编码
 - 使用 self.mock_util.get_timestamp() 生成时间戳
 - 使用 self.bind_cache_data() 绑定常用数据（如 cust_id, org_id 等）
@@ -63,17 +72,25 @@ curl 'http://test.example.com/api/trantor/portal/data-service' \
 
 ### 生成要求
 
-1. 使用 standard_api_call 方法
-2. 使用 mock_util 生成测试数据（禁止硬编码）
-3. 添加 @case_decorator 装饰器
-4. 添加 setup_class 和 teardown_class
-5. 使用 bind_cache_data 简化数据获取
+1. **使用 standard_api_call 方法**
+2. **使用 mock_util 生成测试数据**（禁止硬编码）
+3. **添加 @case_decorator 装饰器**
+4. **添加 setup_class 和 teardown_class**
+5. **使用 bind_cache_data 简化数据获取**
+6. **禁止用例互调**（禁止 `self.test_xxx()`，改用 helper）
+7. **加入幂等处理**（“已存在”错误码时回查并复用）
+8. **严格按 YAML 参数骨架传参**：先查 `*_api_params.yaml` 再确定 `param_path`，不要默认都走 `["params","request"]`
+9. **ID 字段强类型校验**：后续详情/删除前，必须断言 `id` 为数值或可转数值，禁止把 `dict/uuid/requestId` 当作业务 ID 透传
+10. **状态前置校验**：指派/转办/转单/删除等状态敏感接口，先查询单据状态，不满足前置时 `pytest.skip`，不要直接硬断言失败
 
 ### 代码规范
-- 参考文件: testcase_temp.mdc 和 coding_standards.mdc
+- 完整模板与总则：`.cursor/rules/testcase_temp.mdc`、`.cursor/rules/coding_standards.mdc`（见本文「与其他规则的关系」）
 - 使用 self.mock_util.generate_unique_code(tag="AT_XXX") 生成编码
 - 使用 self.mock_util.get_timestamp() 生成时间戳
 - 使用 self.bind_cache_data() 绑定常用数据（如 cust_id, org_id 等）
+- 检查 `${ENV_VAR}` 占位符是否已替换，URL 必须带 `https://` 或 `http://`
+- 对 `paginate_*` 类接口，重点检查 `pageable` 在 `params` 还是 `params.request`（以 YAML 为准）
+- 对创建/提交类接口，禁止把 cURL 中的必填对象（如 `prType/comOrgId/prItemCode[*].prItemType`）清洗成 `None`
 ```
 
 ### AI 生成的代码

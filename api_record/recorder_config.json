@@ -1,15 +1,31 @@
 {
   "allowed_hosts": [],
   "allowed_path_prefixes": ["/api/trantor/"],
-  "blocked_paths": [],
+  "blocked_paths": [
+    "/api/trantor/portal/current",
+    "/api/trantor/portal/user/current",
+    "/api/trantor/portal/feature-guide",
+    "/api/trantor/portal/icon",
+    "/api/trantor/ai/agent/available-agents",
+    "/api/trantor/portal/application/list",
+    "/api/trantor/portal/permission/user-agents"
+  ],
   "blocked_path_prefixes": ["/api/trantor/runtime/scene/"],
-  "blocked_path_contains": [],
-
+  "blocked_path_contains": [
+    "sys_common$API_ASYNC_TASK_TASK_INSTANCE_COUNT_GET",
+    "sys_common$API_ASYNC_TASK_TASK_INSTANCE_LATEST_GET",
+    "sys_common$API_TRANTOR_WORKFLOW_V2_TASK_INSTANCE_COUNT_GET",
+    "sys_common$API_NOTICE_STATION_PAGING_POST",
+    "sys_common$API_ASYNC_TASK_TASK_INSTANCE_TODAY_LIST_GET",
+    "sys_common$API_ASYNC_TASK_TASK_INSTANCE_USER_MARK_PUT",
+    "sys_common$API_TRANTOR_WORKFLOW_V2_TASK_INSTANCE_SEARCH_GET"
+  ],
   "output_dir": "api_record/raw_curls",
   "output_file": "api_record/raw_curls/recorded_flow.md",
   "max_curls_per_file": 100,
-
+  "deduplicate_requests": true,
   "redact_header_keys": ["cookie", "authorization", "content-length"],
+  "capture_http_error_requests": true,
   "skip_path_contains": ["/metrics"],
   "skip_extensions": [".js", ".css", ".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico", ".map"]
 }

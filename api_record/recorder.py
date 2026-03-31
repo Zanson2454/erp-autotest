@@ -32,9 +32,11 @@ DEFAULT_CONFIG = {
     "output_dir": "api_record/raw_curls",
     "output_file": "api_record/raw_curls/recorded_flow.md",
     "max_curls_per_file": 100,
+    "deduplicate_requests": True,
     "redact_header_keys": ["cookie", "authorization", "content-length"],
     "skip_path_contains": ["/metrics"],
     "skip_extensions": [".js", ".css", ".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico", ".map"],
+    "capture_http_error_requests": True,
 }
 
 
@@ -51,7 +53,10 @@ def _should_skip_by_contains(path: str, tokens: List[str]) -> bool:
 
 
 def _normalize_path(path: str) -> str:
-    return (path or "").strip() or "/"
+    raw = (path or "").strip()
+    if not raw:
+        return "/"
+    return raw if raw.startswith("/") else f"/{raw}"
 
 
 def _format_curl(flow: http.HTTPFlow, *, redact_header_keys: List[str]) -> str:
@@ -91,7 +96,43 @@ class CurlRecorder:
         self.max_curls_per_file: int = int(DEFAULT_CONFIG["max_curls_per_file"])
         self._file_index: int = 1
         self._curl_count_in_current_file: int = 0
+        self._recorded_signatures: set[str] = set()
         self._configured = False
+
+    @staticmethod
+    def _build_signature(flow: http.HTTPFlow) -> str:
+        """接口去重签名：按 method + path 去重（忽略 query/body）。"""
+        req = flow.request
+        method = (req.method or "GET").upper()
+        path = _normalize_path(urlsplit(req.pretty_url).path or "")
+        return f"{method} {path}"
+
+    def _collect_existing_signatures(self) -> None:
+        """重启录制时从历史分片读取已写入接口签名，避免重复追加。"""
+        self._recorded_signatures = set()
+        pattern = f"{self.output_base_stem}_*{self.output_suffix}"
+        for p in sorted(self.output_dir.glob(pattern)):
+            try:
+                content = p.read_text(encoding="utf-8")
+            except OSError:
+                continue
+            # 逐行扫描 curl，避免复杂 Markdown 解析。
+            for line in content.splitlines():
+                line = line.strip()
+                if not line.startswith("curl -X "):
+                    continue
+                # 形如：curl -X POST 'https://host/path?...' ...
+                method = "GET"
+                if line.startswith("curl -X "):
+                    rest = line[len("curl -X "):]
+                    method = rest.split(" ", 1)[0].upper()
+                first_quote = line.find("'")
+                second_quote = line.find("'", first_quote + 1) if first_quote >= 0 else -1
+                if first_quote < 0 or second_quote <= first_quote:
+                    continue
+                url = line[first_quote + 1:second_quote]
+                path = _normalize_path(urlsplit(url).path or "")
+                self._recorded_signatures.add(f"{method} {path}")
 
     def _count_curls_in_file(self, path: Path) -> int:
         """统计文件里已有 curl 条数（按 Step 标题计数）。"""
@@ -161,6 +202,8 @@ class CurlRecorder:
         except (TypeError, ValueError):
             self.max_curls_per_file = int(DEFAULT_CONFIG["max_curls_per_file"])
         self._init_file_rotation_state()
+        if bool(self.config.get("deduplicate_requests", True)):
+            self._collect_existing_signatures()
         self._configured = True
 
     def configure(self, updated) -> None:
@@ -168,49 +211,66 @@ class CurlRecorder:
         self._configured = False
         self._load_config()
 
-    def request(self, flow: http.HTTPFlow) -> None:
-        # 中文说明：部分 mitm 启动路径下 configure 可能不会先于 request 触发；
-        # 为保证可用性，这里做一次懒加载。
-        self._load_config()
-
+    def _should_record_flow(self, flow: http.HTTPFlow, *, bypass_allowed_prefix: bool = False) -> bool:
         req = flow.request
         host = (req.pretty_host or "").lower()
         path = urlsplit(req.pretty_url).path or ""
 
         allowed_hosts = [str(x).lower() for x in (self.config.get("allowed_hosts") or [])]
         if allowed_hosts and host not in allowed_hosts:
-            return
+            return False
 
         allowed_prefixes = [str(x) for x in (self.config.get("allowed_path_prefixes") or [])]
-        if allowed_prefixes and not any(path.startswith(p) for p in allowed_prefixes):
-            return
+        if not bypass_allowed_prefix and allowed_prefixes and not any(path.startswith(p) for p in allowed_prefixes):
+            return False
 
         blocked_paths = [_normalize_path(str(x)) for x in (self.config.get("blocked_paths") or [])]
         if blocked_paths and _normalize_path(path) in blocked_paths:
-            return
+            return False
 
         blocked_prefixes = [str(x) for x in (self.config.get("blocked_path_prefixes") or [])]
         if blocked_prefixes and any(path.startswith(p) for p in blocked_prefixes):
-            return
+            return False
 
         blocked_contains = [str(x) for x in (self.config.get("blocked_path_contains") or [])]
         if blocked_contains and _should_skip_by_contains(path, blocked_contains):
-            return
+            return False
 
         if _should_skip_by_extension(path, [str(x) for x in (self.config.get("skip_extensions") or [])]):
-            return
+            return False
 
         if _should_skip_by_contains(path, [str(x) for x in (self.config.get("skip_path_contains") or [])]):
+            return False
+
+        return True
+
+    def response(self, flow: http.HTTPFlow) -> None:
+        # 中文说明：改为在 response 阶段写入，便于识别状态码（尤其是 4xx/5xx）。
+        self._load_config()
+        response = flow.response
+        status_code = int(response.status_code) if response is not None else 0
+        capture_error = bool(self.config.get("capture_http_error_requests", True))
+        bypass_allowed_prefix = capture_error and status_code >= 400
+
+        if not self._should_record_flow(flow, bypass_allowed_prefix=bypass_allowed_prefix):
+            return
+        signature = self._build_signature(flow)
+        if bool(self.config.get("deduplicate_requests", True)) and signature in self._recorded_signatures:
             return
 
         curl = _format_curl(flow, redact_header_keys=[str(x) for x in (self.config.get("redact_header_keys") or [])])
+        path = urlsplit(flow.request.pretty_url).path or ""
 
         self._rotate_if_needed()
         # 中文说明：用 Markdown 组织每一步，便于 AI 在 Cursor 里“整块复制 + 重构生成用例”。
         with open(self.output_file, "a", encoding="utf-8") as f:
-            f.write(f"### Step: {path}\n")
+            if status_code:
+                f.write(f"### Step: {path} [HTTP {status_code}]\n")
+            else:
+                f.write(f"### Step: {path}\n")
             f.write(f"```bash\n{curl}\n```\n\n")
         self._curl_count_in_current_file += 1
+        self._recorded_signatures.add(signature)
 
 
 addons = [CurlRecorder()]
