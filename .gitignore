@@ -68,8 +68,6 @@ run_tests.sh
 # 忽略配置数据
 .env
 *.env
-!config/env/.env_template
-!**/.env_template
 *logs/*
 .DS_Store
 **/.DS_Store
