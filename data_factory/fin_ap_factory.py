@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 import sys
 from typing import Dict, Any, Optional, List
 from datetime import datetime
@@ -897,9 +898,11 @@ class FinApFactory(FinAparBaseFactory):
         :param status: 状态（CREATED-已创建, CONFIRMED-已确认, APPROVED-已审核）
         :return: 应付单数据
         """
-        # 初始化数据库连接
-        data_factory = DataFactory() 
-        db_config = data_factory.get_env_config()['database']['erp_db']
+        # 初始化数据库连接（与 BaseTest / conftest 一致：用 TEST_ENV 与 TEST_PROJECT）
+        env = os.getenv("TEST_ENV", "test")
+        project = os.getenv("TEST_PROJECT")
+        DataFactory.__init__(env_name=env, project=project)
+        db_config = DataFactory.get_env_config()["database"]["erp_db"]
         DBManager.init(db_config)
         
         # 1. 尝试从数据库查询

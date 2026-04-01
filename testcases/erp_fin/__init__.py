@@ -17,26 +17,26 @@ sys.path.append(str(project_root))
 
 from typing import Any, Dict
 from testcases.comm.base_test import BaseTest
-# 移除非必要导入，使用父类或utils中的LoginService
-from data_factory.base import DataFactory
+from testcases.comm.test_data_context import TestDataContext
 from utils.param_util import ParamUtil
 from utils.report_util import a  # Allure reporting utility (a.json, a.text)
 from testcases.erp_fin.context_builder import build_fin_context
 
+
 class FinBaseTest(BaseTest):
     """ERP财务模块的基础测试类，负责加载财务通用配置和提供API访问方法"""
-    
+
     # 类型提示：继承的动态属性
     yaml_util: Any
-    
+
+    REQUIRED_CACHE_KEYS = ("curr_id", "cust_id")
+
     # 登录两个门户，分别保存 session/user_info 并初始化 http 工具
-    _PORTAL_TYPE_KEYS: Dict[str, str] = {
-        "admin": "TERP_PORTAL"
-    }
-    
+    _PORTAL_TYPE_KEYS: Dict[str, str] = {"admin": "TERP_PORTAL"}
+
     # Mock单例
     _mock_instance = None
-    
+
     @classmethod
     def setup_class(cls):
         """
@@ -57,10 +57,7 @@ class FinBaseTest(BaseTest):
     @classmethod
     def load_api_configs(cls):
         """加载 erp_fin 模块 API 配置与门户上下文。"""
-        admin_result = cls.module_login_single_portal(
-            portal_key=cls._PORTAL_TYPE_KEYS["admin"],
-            tenant_key="terp"
-        )
+        admin_result = cls.module_login_single_portal(portal_key=cls._PORTAL_TYPE_KEYS["admin"], tenant_key="terp")
         cls.admin_headers = admin_result.portal_headers
 
         # 初始化配置文件路径
@@ -72,9 +69,15 @@ class FinBaseTest(BaseTest):
     @classmethod
     def load_cache_data(cls):
         """加载 erp_fin 模块依赖缓存。"""
-        # DataFactory init (env=test)
-        DataFactory.__init__(env_name="test")
-
+        for _key in (
+            "calender_info",
+            "sett_doc_info",
+            "sett_item_info",
+            "sb_type_info",
+            "ar_type_info",
+            "ap_type_info",
+        ):
+            TestDataContext.register_source(_key, "fin_cache_data")
         # MD cache reuse (for org_info, currency, etc. - shared with gen_md)
         # 需要先初始化 md_init_cache，然后再获取
         cls.md_cache_data = cls.load_sql_cache(
@@ -98,6 +101,7 @@ class FinBaseTest(BaseTest):
     def bind_context(cls):
         """绑定 erp_fin 模块上下文与初始化字段。"""
         cls.bind_mock_util_singleton()
+        cls.bind_cache_data()
         context_data = build_fin_context(
             init_data=getattr(cls, "init_data", None),
             md_cache_data=getattr(cls, "md_cache_data", None),
@@ -121,13 +125,11 @@ class FinBaseTest(BaseTest):
             cls.logger.info(f"获取到 calendar_item_id: {cls.calendar_item_id}")
         else:
             cls.logger.warning("calender_item_info 中没有 period_type='MONTH' 的项，无法获取 calendar_item_id")
-       
-       
+
         # 设置路径参数和用户信息
         cls.bind_module_user_context("FIN", strict=True)
-    
-    
-    def create_settlement_item(self,sett_item_type_code="E_SLS_GOODS",org=1):
+
+    def create_settlement_item(self, sett_item_type_code="E_SLS_GOODS", org=1):
         """
         创建结算项公共方法，通过结算行项目类型编码创建不同结算项
         """
@@ -143,7 +145,7 @@ class FinBaseTest(BaseTest):
             pur_org_id = self.pur_org_id_2
         else:
             raise ValueError("org 参数错误，请输入 1 或 2")
-        #获取对应key的sett_item_type_info的值
+        # 获取对应key的sett_item_type_info的值
         if not self.sett_item_type_info:
             raise ValueError("sett_item_type_info 未初始化，请检查 setup_class 是否正确执行")
         sett_item_type_info = self.sett_item_type_info.get(sett_item_type_code)
@@ -157,16 +159,47 @@ class FinBaseTest(BaseTest):
         api_path = self.get_api_path("SETT-ITEM-手动创建服务")
         params, url = self.get_api_params(api_path)
         filtered_params = ParamUtil.filter_post_body_fields(
-            params, ["settItemCode","settItemStatus","settItemTypeId","settDate",
-            "partnerType","ptHeadId","remark","comOrgId","purSlsOrgType",
-            "invOrgId","matId","taxRate","basicUnitId","genMatTypeCfId",
-            "settQty","settDocPrice","settDocAmt","netDocAmt","taxAmt",
-            "docCurrId","baseCurrId","exchRate","grossBaseAmt","netBaseAmt",
-            "settDocTypeId","settDocId","dnCode","dnItemCode","poSoCode",
-            "poSoItemCode","asyncExecutionStatus","partnerId","taxCodeId",
-            "purSlsOrgId"],["params","request"])
+            params,
+            [
+                "settItemCode",
+                "settItemStatus",
+                "settItemTypeId",
+                "settDate",
+                "partnerType",
+                "ptHeadId",
+                "remark",
+                "comOrgId",
+                "purSlsOrgType",
+                "invOrgId",
+                "matId",
+                "taxRate",
+                "basicUnitId",
+                "genMatTypeCfId",
+                "settQty",
+                "settDocPrice",
+                "settDocAmt",
+                "netDocAmt",
+                "taxAmt",
+                "docCurrId",
+                "baseCurrId",
+                "exchRate",
+                "grossBaseAmt",
+                "netBaseAmt",
+                "settDocTypeId",
+                "settDocId",
+                "dnCode",
+                "dnItemCode",
+                "poSoCode",
+                "poSoItemCode",
+                "asyncExecutionStatus",
+                "partnerId",
+                "taxCodeId",
+                "purSlsOrgId",
+            ],
+            ["params", "request"],
+        )
         set_dict = {
-            "settItemCode": "AUTOTEST-SETTI"+str(self.mock_util.get_timestamp(timestamp=True)),
+            "settItemCode": "AUTOTEST-SETTI" + str(self.mock_util.get_timestamp(timestamp=True)),
             "settItemStatus": "CREATED",
             "settItemTypeId": {"id": sett_item_type_info.get("id")},
             "settDate": self.mock_util.get_timestamp(timestamp=True),
@@ -190,7 +223,7 @@ class FinBaseTest(BaseTest):
             "exchRate": 1.00,
             "grossBaseAmt": 300,
             "netBaseAmt": 265.486726,
-            "settDocTypeId":{"id": sett_item_type_info.get("sett_doc_type_code")} ,
+            "settDocTypeId": {"id": sett_item_type_info.get("sett_doc_type_code")},
             "settDocId": None,
             "dnCode": None,
             "dnItemCode": None,
@@ -207,7 +240,7 @@ class FinBaseTest(BaseTest):
             set_dict=filtered_params.get("params", {}),
             store_id_as=None,
             use_param_util=False,
-            param_path=["params"]
+            param_path=["params"],
         )
         self.assert_util.assert_response_success(result)
         # 响应数据是列表格式，取第一个元素的id
@@ -215,39 +248,40 @@ class FinBaseTest(BaseTest):
         if not data_list or len(data_list) == 0:
             raise ValueError("创建结算项失败：响应数据为空")
         return data_list[0].get("id")
-    def create_settlement_doc(self, sett_item_type_code="E_SLS_GOODS",org=1):
+
+    def create_settlement_doc(self, sett_item_type_code="E_SLS_GOODS", org=1):
         """
         创建结算单公共方法,通过结算项类型编码创建不同结算单
         """
-        sett_item_id=self.create_settlement_item(sett_item_type_code,org)
+        sett_item_id = self.create_settlement_item(sett_item_type_code, org)
         api_path = self.get_api_path("SETT-ITEM-结算项确认及汇单-关联操作-异步服务")
         params, url = self.get_api_params(api_path)
         data = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
-        data=ParamUtil.convert_param_type(data, ["params", "request"], "array")
+        data = ParamUtil.convert_param_type(data, ["params", "request"], "array")
         data["params"]["request"][0]["id"] = sett_item_id
         result, _ = self.standard_api_call(
             api_key="SETT-ITEM-结算项确认及汇单-关联操作-异步服务",
             set_dict=data.get("params", {}),
             store_id_as=None,
             use_param_util=False,
-            param_path=["params"]
+            param_path=["params"],
         )
         self.assert_util.assert_response_success(result)
-        
+
         def query_sett_item_status():
             sql = "select id, sett_item_status, async_execution_status, sett_doc_id from sett_item_tr where deleted=0 and id=%s limit 1"
             sql_result = self.db.query(sql, (sett_item_id,))
             if not sql_result:
                 raise ValueError(f"结算项对账确认失败: 未找到结算项ID {sett_item_id}")
             return sql_result[0]
-        
+
         result = self.async_wait_util.wait_for_async_status(
             query_func=query_sett_item_status,
             status_field="async_execution_status",
             success_status="SUCCEEDED",
             failed_status="FAILED",
             max_wait=10,
-            interval=0.5
+            interval=0.5,
         )
         if result.status == self.wait_status.SUCCESS:
             sett_doc_id = result.last_data.get("sett_doc_id")
@@ -256,34 +290,32 @@ class FinBaseTest(BaseTest):
             return sett_doc_id
         else:
             raise ValueError(f"结算项对账确认失败: {result.error_message}")
-        
-        
-    def create_confirmed_settlement_doc(self, sett_item_type_code="E_SLS_GOODS",org=1):
+
+    def create_confirmed_settlement_doc(self, sett_item_type_code="E_SLS_GOODS", org=1):
         """
         创建已确认结算单公共方法,返回结算单id
         """
         api_path = self.get_api_path("SETT-DOC-运营端结算单确认下推应收应付-异步服务")
         params, url = self.get_api_params(api_path)
         data = ParamUtil.filter_post_body_fields(params, ["id"], ["params", "request"])
-        data = ParamUtil.convert_param_type(data, ["params", "request","id"], "array")
-        data["params"]["request"]["id"][0] = self.create_settlement_doc(sett_item_type_code,org)
+        data = ParamUtil.convert_param_type(data, ["params", "request", "id"], "array")
+        data["params"]["request"]["id"][0] = self.create_settlement_doc(sett_item_type_code, org)
         result, _ = self.standard_api_call(
             api_key="SETT-DOC-运营端结算单确认下推应收应付-异步服务",
             set_dict=data.get("params", {}),
             store_id_as=None,
             use_param_util=False,
-            param_path=["params"]
+            param_path=["params"],
         )
         self.assert_util.assert_response_success(result)
-        #等待异步任务执行完成，当状态为PROCESSING时一直等待，最长超时10秒
+        # 等待异步任务执行完成，当状态为PROCESSING时一直等待，最长超时10秒
         sett_doc_id = data["params"]["request"]["id"][0]
         if sett_doc_id is None:
             raise ValueError("结算单确认失败: 结算单ID不能为None")
-        
+
         start_time = time.time()
         timeout = 10
         while True:
-
             sql = "select id, sett_doc_status, trading_doc_id from sett_doc_tr where deleted=0 and id=%s limit 1"
             sql_result = self.db.query(sql, (sett_doc_id,))
             if not sql_result:
@@ -294,9 +326,8 @@ class FinBaseTest(BaseTest):
                 raise TimeoutError(f"等待异步任务执行超时（{timeout}秒）")
             time.sleep(0.5)
         return sett_doc_id
-    
-    
-    def create_ar_doc(self, ar_type="STND", org=1,status="DRAFT"):
+
+    def create_ar_doc(self, ar_type="STND", org=1, status="DRAFT"):
         """
         创建应收单公共方法,返回应收单数据
         :param ar_type: 应收单类型代码，默认"STND"（标准财务应收单）
@@ -315,27 +346,27 @@ class FinBaseTest(BaseTest):
             inv_org_id = self.inv_org_id_2
         else:
             raise ValueError("org 参数错误，请输入 1 或 2")
-        
+
         # 检查必要的基础数据
         if not com_org_id or not sls_org_id or not self.cust_id or not self.curr_id:
             raise ValueError("缺少必要的基础数据，请检查init_data和md_cache_data")
-        
+
         # 获取税率，如果没有则使用默认值13.0
         tax_rate = self.tax_rate if self.tax_rate else 13.0
-        
+
         # 应收日期（当前时间戳，毫秒）
         ar_date = int(time.time() * 1000)
-        
+
         # 应收单行项基础参数（使用随机数）
         ar_qty = random.randint(10, 1000)  # 数量：随机10-1000
         gross_doc_price = round(random.uniform(1.0, 100.0), 2)  # 含税单价：随机1.0-100.0，保留2位小数
-        
+
         # 计算金额（动态计算，不写死）
         gross_doc_amt = round(ar_qty * gross_doc_price, 2)  # 含税金额 = 数量 × 含税单价
         tax_amt = round(gross_doc_amt * tax_rate / (100 + tax_rate), 2)  # 税额 = 含税金额 × 税率 / (100 + 税率)
         net_doc_amt = round(gross_doc_amt - tax_amt, 2)  # 不含税金额 = 含税金额 - 税额
         sett_item_type_id = self.sett_item_type_info.get("E_SLS_GOODS").get("id")
-       
+
         # 应收单行项数据
         ar_item = {
             "settItemTypeId": {"id": sett_item_type_id},
@@ -349,9 +380,9 @@ class FinBaseTest(BaseTest):
             "taxRate": tax_rate,
             "arQty": ar_qty,
             "grossDocPrice": gross_doc_price,
-            "invOrgId": inv_org_id  
+            "invOrgId": inv_org_id,
         }
-        
+
         # 应收单计划行数据
         ar_schl = {
             "dueDate": ar_date,
@@ -362,13 +393,13 @@ class FinBaseTest(BaseTest):
             "unreceivedDocAmt": gross_doc_amt,
             "receivedBaseAmt": 0,
             "unreceivedBaseAmt": gross_doc_amt,
-            "collectionClearingStatus": "UNCLEARED"
+            "collectionClearingStatus": "UNCLEARED",
         }
-        
+
         ar_type_md_info = self.ar_type_md_info.get(ar_type)
         # 构建应收单请求体
         set_dict = {
-            "docTypeId": {"id": ar_type_md_info.get("id"), "arTypeCode": ar_type}, 
+            "docTypeId": {"id": ar_type_md_info.get("id"), "arTypeCode": ar_type},
             "comOrgId": {"id": com_org_id},
             "slsOrgId": {"id": sls_org_id},
             "payOrgId": {"id": com_org_id},
@@ -394,43 +425,61 @@ class FinBaseTest(BaseTest):
             "unbilledDocAmt": gross_doc_amt,
             "unbilledBaseAmt": gross_doc_amt,
             "unoffsetDocAmt": gross_doc_amt,
-            "unoffsetBaseAmt": gross_doc_amt
+            "unoffsetBaseAmt": gross_doc_amt,
         }
-        
+
         # 需要过滤的字段列表
         fields_to_filter = [
-            "docTypeId", "comOrgId", "slsOrgId", "payOrgId", "arDate",
-            "settPartnerId", "settPartnerType", "docCurrId", "baseCurrId",
-            "exchRate", "arStatus", "collectionClearingStatus", "billingClearingStatus",
-            "headOffsetStatus", "arItems", "arSchls", "grossDocAmt", "netDocAmt",
-            "grossBaseAmt", "netBaseAmt", "taxAmt", "uncollectedDocAmt",
-            "uncollectedBaseAmt", "unbilledDocAmt", "unbilledBaseAmt",
-            "unoffsetDocAmt", "unoffsetBaseAmt"
+            "docTypeId",
+            "comOrgId",
+            "slsOrgId",
+            "payOrgId",
+            "arDate",
+            "settPartnerId",
+            "settPartnerType",
+            "docCurrId",
+            "baseCurrId",
+            "exchRate",
+            "arStatus",
+            "collectionClearingStatus",
+            "billingClearingStatus",
+            "headOffsetStatus",
+            "arItems",
+            "arSchls",
+            "grossDocAmt",
+            "netDocAmt",
+            "grossBaseAmt",
+            "netBaseAmt",
+            "taxAmt",
+            "uncollectedDocAmt",
+            "uncollectedBaseAmt",
+            "unbilledDocAmt",
+            "unbilledBaseAmt",
+            "unoffsetDocAmt",
+            "unoffsetBaseAmt",
         ]
-        
+
         # 使用标准化API调用
         response, extracted_id = self.standard_api_call(
-            api_key="AR-应收单保存服务",
-            set_dict=set_dict,
-            fields_to_filter=fields_to_filter
+            api_key="AR-应收单保存服务", set_dict=set_dict, fields_to_filter=fields_to_filter
         )
-        
+
         # 业务断言
         self.assert_util.assert_response_data(response)
-        
+
         data = response.get("data", {}).get("data", {})
         extracted_id = data.get("id")
         if extracted_id is None:
             raise ValueError("应收单保存失败：未返回应收单ID")
-        
+
         if status == "DONE":
-            self.db.update("fin_arm_ar_head_tr", {"ar_status":"DONE"}, f"id='{extracted_id}'")
+            self.db.update("fin_arm_ar_head_tr", {"ar_status": "DONE"}, f"id='{extracted_id}'")
         elif status == "CONFIRM":
-            self.db.update("fin_arm_ar_head_tr", {"ar_status":"CONFIRM"}, f"id='{extracted_id}'")
+            self.db.update("fin_arm_ar_head_tr", {"ar_status": "CONFIRM"}, f"id='{extracted_id}'")
         else:
             raise ValueError("status 参数错误，请输入 DRAFT, CONFIRM, DONE")
         return data
-        
+
     @classmethod
     def teardown_class(cls):
         """测试类清理 (beyond super)"""

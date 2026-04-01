@@ -13,7 +13,7 @@ sys.path.append(str(project_root))
 
 from typing import Any, Dict
 from testcases.comm.base_test import BaseTest
-from data_factory.base import DataFactory
+from testcases.comm.test_data_context import TestDataContext
 from utils.param_util import ParamUtil
 from utils.report_util import a
 from testcases.scm_sls.context_builder import build_sls_context
@@ -26,6 +26,8 @@ class SlsBase(BaseTest):
     
     # 类型提示：继承的动态属性
     yaml_util: Any
+
+    REQUIRED_CACHE_KEYS = ("curr_id", "cust_id", "mat_id")
     
     # 登录两个门户，分别保存 session/user_info 并初始化 http 工具
     _PORTAL_TYPE_KEYS: Dict[str, str] = {
@@ -91,9 +93,7 @@ class SlsBase(BaseTest):
     @classmethod
     def load_cache_data(cls):
         """加载销售模块运行所需缓存数据。"""
-        # 初始化DataFactory（必须在init_sql_cache之前调用）
-        DataFactory.__init__(env_name="test")
-
+        TestDataContext.register_source("sls_config", "sls_cache_data")
         # 加载缓存数据
         cls.md_cache_data = cls.load_sql_cache(
             sql_config_path=project_root / "config" / "erp" / "md_init_sql.yaml",
@@ -112,6 +112,7 @@ class SlsBase(BaseTest):
     @classmethod
     def bind_context(cls):
         """绑定销售模块运行上下文和初始化默认字段。"""
+        cls.bind_cache_data()
         cls.bind_module_user_context("SCM_SLS", strict=True)
         context_data = build_sls_context(
             init_data=cls.init_data,

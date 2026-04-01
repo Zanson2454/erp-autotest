@@ -27,7 +27,7 @@ class TestAdmOrgManagement(GenMdBaseTest):
         cls.currId = cls.init_data["currency_info"][0]["curr_id"] if cls.init_data.get("currency_info") else None
         cls.counId = cls.init_data["country_info"][0]["coun_id"] if cls.init_data.get("country_info") else None
         cls.genWcHeadId = cls.init_data["gen_wc_head_info"][0]["gen_wc_head_id"] if cls.init_data.get("gen_wc_head_info") else None
-        cls.calenderId = cls.init_data["calender_info"][0]["id"] if cls.init_data.get("calender_info") else None
+        # calenderId 由 GenMdBaseTest.bind_context 从 fin_cache_data（fin_init_sql）解析
         cls.addrId = cls.init_data["addr_info"][0]["id"] if cls.init_data.get("addr_info") else None
         
         # 获取md_cache_data中的第一个数据

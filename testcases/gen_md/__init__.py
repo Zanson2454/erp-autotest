@@ -11,13 +11,15 @@ sys.path.append(str(project_root))
 
 from typing import Any, Dict
 from testcases.comm.base_test import BaseTest
-from data_factory.base import DataFactory
+from testcases.comm.test_data_context import TestDataContext
 
 class GenMdBaseTest(BaseTest):
     """通用基础模块的基础测试类，负责加载通用配置和提供API访问方法"""
     
     # 类型提示：继承的动态属性
     yaml_util: Any
+
+    REQUIRED_CACHE_KEYS = ("curr_id", "cust_id", "com_org_id")
     
     
     # 登录两个门户，分别保存 session/user_info 并初始化 http 工具
@@ -62,26 +64,46 @@ class GenMdBaseTest(BaseTest):
     @classmethod
     def load_cache_data(cls):
         """加载 gen_md 模块依赖缓存。"""
-        # 初始化DataFactory（必须在init_sql_cache之前调用）
-        # 从环境变量获取 env 和 project，支持多项目模式
-        import os
-        env_name = os.getenv("TEST_ENV", "test")
-        project = os.getenv("TEST_PROJECT")
-        DataFactory.__init__(env_name=env_name, project=project)
-
-        # 加载缓存数据：主数据依赖的初始化SQL
-        # 保持向后兼容，所有项目共享缓存；切换项目时自动清除缓存
+        TestDataContext.register_source("partner_info", "md_cache_data")
+        TestDataContext.register_source("org_info", "md_cache_data")
+        TestDataContext.register_source("mat_info", "md_cache_data")
+        for _key in (
+            "calender_info",
+            "sett_doc_info",
+            "sett_item_info",
+            "sb_type_info",
+            "ar_type_info",
+            "ap_type_info",
+        ):
+            TestDataContext.register_source(_key, "fin_cache_data")
+        # BaseTest.setup_class 已通过 DataFactory 拉取 init_data；此处加载 md + 财务日历（组织保存等用 def12 日历头）
         cls.md_cache_data = cls.load_sql_cache(
             sql_config_path=project_root / "config" / "erp" / "md_init_sql.yaml",
             cache_key="md_init_cache",
             db_config_name="erp_db",
             cache_dir="testdata/cache",
         )
+        cls.fin_cache_data = cls.load_sql_cache(
+            sql_config_path=project_root / "config" / "erp" / "fin_init_sql.yaml",
+            cache_key="fin_init_cache",
+            db_config_name="erp_db",
+            cache_dir="testdata/cache",
+        )
+
+    @classmethod
+    def _calendar_head_id_from_fin_cache(cls):
+        """财务日历头 ID 来自 fin_init_sql（calender_info），不在 base_init_sql。"""
+        fin = getattr(cls, "fin_cache_data", None) or {}
+        ci = fin.get("calender_info") or {}
+        rows = ci.get("calender_head_info") or []
+        return rows[0]["id"] if rows else None
 
     @classmethod
     def bind_context(cls):
         """绑定 gen_md 模块上下文。"""
+        cls.bind_cache_data()
         cls.bind_mock_util_singleton()
+        cls.calenderId = cls._calendar_head_id_from_fin_cache()
 
         # 设置路径参数和用户信息（安全访问）
         cls.bind_module_user_context("GEN_MD", strict=False)

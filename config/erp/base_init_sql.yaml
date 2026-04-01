@@ -167,16 +167,6 @@ base_info:
       min_records: 0                    # 可为空
       max_records: 1                    # 最多1条记录
       required_fields: ["gen_wc_head_id", "wc_head_code", "wc_head_name"]
-  
-  # 汇率类型
-  exchange_rate_type_info:
-    sql: |
-      SELECT id as 'exchange_rate_type_id', 
-             type_code as 'exchange_rate_type_code', 
-             type_name as 'exchange_rate_type_name' 
-      FROM gen_curr_exchange_rate_type_cf 
-      WHERE type_code='HR' AND deleted=0 LIMIT 1
-    description: "查询汇率类型信息"
 
   # ---------------------------
   # 计量单位配置组 - 兼容现有测试代码的数据结构

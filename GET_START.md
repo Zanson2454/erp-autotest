@@ -185,12 +185,13 @@ pytest --project=project_alpha --env=test
 | `md_init_sql.yaml` | `org_info` / `mat_info` / `partner_info` … | `cls.md_cache_data` | gen_md 及依赖主数据的模块 |
 | `sls_init_sql.yaml` | `sls_config` | `cls.sls_cache_data` | scm_sls |
 | `pur_init_sql.yaml` | `pur_config` | `cls.pur_cache_data` | scm_pur |
-| `fin_init_sql.yaml` | `fin_config` | `cls.fin_cache_data` | erp_fin |
-| `del_init_sql.yaml` | `del_config` | `cls.del_cache_data` | scm_del |
+| `fin_init_sql.yaml` | `calender_info` / `sett_*` 等顶层分段 | `cls.fin_cache_data` | erp_fin |
+| `del_init_sql.yaml` | `scm_del_config` | `cls.del_cache_data` | scm_del |
 | `acc_init_sql.yaml` | *(待填充)* | `cls.acc_cache_data` | erp_acc |
 
 > 缓存文件存放在 `testdata/cache/`（已加入 `.gitignore`）。  
-> 测试环境缓存有效期 **5 分钟**，生产/预发环境 **1440 分钟**，到期自动重新查询。
+> 测试环境缓存有效期 **5 分钟**，生产/预发环境 **1440 分钟**，到期自动重新查询。  
+> 修改 `config/erp/*_init_sql.yaml` 后，框架会按 **SQL 文件内容 hash** 自动丢弃对应 json 缓存，一般无需手删 `testdata/cache/*.json`。
 
 ### 4.2 SQL 配置结构
 
@@ -733,14 +734,23 @@ allure serve reports/allure-results
 ## 11. 扩展数据源（可选）
 
 当你的模块需要使用**框架默认不包含**的缓存数据（如采购缓存 `pur_cache_data`）时，  
-在 `conftest.py` 顶层注册一次即可，无需修改基类。
+在模块基类 `load_cache_data()` 中调用 `TestDataContext.register_source`（与 `load_sql_cache` 同级），  
+或在 `conftest.py` 顶层注册一次。
 
 ```python
-# testcases/my_module/conftest.py 顶部追加：
+# 模块基类 load_cache_data 内（与 scm_pur / scm_del 等一致）：
 from testcases.comm.test_data_context import TestDataContext
 
-# 注册新数据源：路径第一段 "pur_cache_data" → 测试类属性 cls.pur_cache_data
-TestDataContext.register_source("pur_cache_data", "pur_cache_data")
+TestDataContext.register_source("pur_config", "pur_cache_data")
+```
+
+随后在模块基类 `bind_context()` 中**先** `bind_cache_data()`，再 `bind_module_user_context(...)`（与 `scm_sls` / `scm_del` 一致）。
+
+```python
+# testcases/my_module/conftest.py 顶部（可选，与基类二选一）：
+from testcases.comm.test_data_context import TestDataContext
+
+TestDataContext.register_source("pur_config", "pur_cache_data")
 ```
 
 随后在模块基类或用例的 `bind_cache_data` 中直接用路径引用：
@@ -778,7 +788,7 @@ class MyModuleBaseTest(BaseTest):
   [ ] 被测数据库中已创建 AUTOTEST_* 前缀的测试主数据（组织/供应商/客户/物料/仓位等）
   [ ] .env 中已配置 TEST_PUR_ORG / TEST_SLS_ORG / TEST_INV_ORG / TEST_VEND / TEST_CUST 等
   [ ] 首次运行后 cls.init_data / cls.md_cache_data 中无 None 字段（否则说明数据缺失）
-  [ ] 修改了 SQL 后执行 rm testdata/cache/*.json 清除旧缓存
+  [ ] 修改了 SQL 后若仍命中旧缓存，可删除 `testdata/cache/` 下对应 json（正常情况下 hash 会自动失效缓存）
 
 API 配置
   [ ] 已执行 swagger_parser.py 生成 {prefix}_api_path.yaml 和 {prefix}_api_params.yaml

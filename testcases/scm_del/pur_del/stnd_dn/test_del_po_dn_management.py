@@ -123,7 +123,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
         """更新标准收货行项目类型配置，确保库存执行标记为启用状态"""
         try:
             # 从缓存获取标准收货类型ID
-            dn_item_type_list = cls.del_cache_data.get("pur_config", {}).get("dn_item_type_info", [])
+            dn_item_type_list = cls.del_cache_data.get("scm_del_config", {}).get("dn_item_type_info", [])
             item_type_id = next(
                 (item["id"] for item in dn_item_type_list if item.get("dn_item_type_code") == "s_revi"),
                 None

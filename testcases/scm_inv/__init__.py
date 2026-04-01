@@ -11,7 +11,6 @@ sys.path.append(str(project_root))
 
 from typing import Any,Dict
 from testcases.comm.base_test import BaseTest
-from data_factory.base import DataFactory
 
 class ScmInvBaseTest(BaseTest):
     """SCM库存模块的基础测试类，负责加载库存相关配置和提供API访问方法"""
@@ -59,8 +58,6 @@ class ScmInvBaseTest(BaseTest):
     @classmethod
     def load_cache_data(cls):
         """加载库存模块依赖缓存。"""
-        # 初始化DataFactory（必须在init_sql_cache之前调用）
-        DataFactory.__init__(env_name="test")
         # 加载缓存数据（库存模块依赖主数据）
         cls.inv_cache_data = cls.load_sql_cache(
             sql_config_path=project_root / "config" / "erp" / "md_init_sql.yaml",

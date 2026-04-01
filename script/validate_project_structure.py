@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Validate key repository structure used by README and onboarding.
+"""验证仓库关键目录结构（供 README 和入职指引使用）。
 
-This script is intentionally strict on high-value paths to catch
-"doc vs implementation" drift early in pre-commit/CI.
+本脚本对高价值路径进行严格检查，以便在 pre-commit/CI 阶段尽早发现
+“文档与实际实现不一致”的偏差。
 """
 
 from __future__ import annotations
@@ -10,10 +10,10 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-
+# 仓库根目录：当前脚本所在目录的上一级
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
-# Keep this list short and high-signal.
+# 必须存在的关键路径列表（保持精简且高信噪比）
 REQUIRED_PATHS = [
     "README.md",
     "requirements.txt",
@@ -32,10 +32,14 @@ REQUIRED_PATHS = [
     "config/env",
     "config/erp",
     "script/quality_guard.py",
+    "script/scan_yaml_duplicate_keys.py",
+    "script/seed_test_data.py",
+    "docs/cache_data_dependency.md",
 ]
 
 
 def main() -> int:
+    """主入口函数：检查 REQUIRED_PATHS 中的路径是否全部存在。"""
     missing: list[str] = []
     for rel in REQUIRED_PATHS:
         path = REPO_ROOT / rel
@@ -44,7 +48,7 @@ def main() -> int:
 
     if missing:
         print("validate_project_structure: FAILED")
-        print("Missing required paths:")
+        print("缺失的必需路径：")
         for rel in missing:
             print(f"- {rel}")
         return 1
@@ -55,4 +59,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-

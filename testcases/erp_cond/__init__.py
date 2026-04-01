@@ -11,7 +11,6 @@ sys.path.append(str(project_root))
 
 from typing import Any, Dict
 from testcases.comm.base_test import BaseTest
-from data_factory.base import DataFactory
 
 class ErpCondBaseTest(BaseTest):
     """ERP条件模块的基础测试类，负责加载通用配置和提供API访问方法"""
@@ -65,9 +64,6 @@ class ErpCondBaseTest(BaseTest):
     @classmethod
     def load_cache_data(cls):
         """加载 erp_cond 模块依赖缓存。"""
-        # 初始化DataFactory（必须在init_sql_cache之前调用）
-        DataFactory.__init__(env_name="test")
-
         # 加载缓存数据：条件模块依赖的初始化SQL (如果存在)
         # 注意：如果没有专门的cond_init_sql.yaml，可以复用md_init_sql或创建新的
         sql_config_path = str(project_root / "config" / "erp" / "cond_init_sql.yaml")

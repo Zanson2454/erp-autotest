@@ -7,7 +7,7 @@ import requests
 import urllib3
 from functools import wraps
 from dataclasses import dataclass
-from typing import Dict, Any, Optional, Union
+from typing import Dict, Any, List, Optional, Tuple, Union
 from enum import Enum
 from pathlib import Path
 import json
@@ -666,15 +666,15 @@ class BaseTest:
 
     # 默认缓存绑定映射：attr_name → 点分路径
     # 子类可整体替换或调用 bind_cache_data(custom_mappings) 覆盖，无需改此处
+    # 子类可整体替换或扩展（如采购模块合并 pur_config 下的类型 ID）
     DEFAULT_CACHE_MAPPINGS: Dict[str, str] = {
-        # init_data
+        # init_data（base_init_sql → init_data）
         "curr_id":        "currency_info.curr_id",
         "coun_id":        "country_info.coun_id",
         "addr_id":        "addr_info.id",
         "bank_id":        "bank_info.bank_id",
         "gen_wc_head_id": "gen_wc_head_info.gen_wc_head_id",
-        "calender_id":    "calender_info.id",
-        # md_cache_data
+        # md_cache_data（md_init_sql）
         "cust_id":        "partner_info.cust_info.id",
         "sup_id":         "partner_info.sup_info.id",
         "com_org_id":     "org_info.gr_come_org_info.id",
@@ -685,6 +685,9 @@ class BaseTest:
         "wh_id":          "org_info.inv_wh_md.id",
         "mat_id":         "mat_info.mat_md.FINP.id",
     }
+
+    # 绑定后必须为真（非 None）的属性名；子类覆盖。本地无全量主数据时可设环境变量 TEST_RELAX_CACHE_REQUIREMENTS=1 跳过校验
+    REQUIRED_CACHE_KEYS: Tuple[str, ...] = ()
 
     # 类型提示：动态设置的属性
     # type: ignore[attr-defined]
@@ -944,39 +947,61 @@ class BaseTest:
         return CacheUtil.get(cache_key)
 
     @classmethod
-    def bind_cache_data(cls, mappings: Dict[str, str] = None) -> None:
-        """简化数据绑定 - 一行代码获取常用数据。
+    def bind_cache_data(
+        cls,
+        mappings: Dict[str, str] = None,
+        required: Optional[List[str]] = None,
+        *,
+        strict_resolve: bool = True,
+    ) -> None:
+        """将缓存中的常用 ID 绑定到类属性（见 ``DEFAULT_CACHE_MAPPINGS``）。
 
-        不传参时使用 cls.DEFAULT_CACHE_MAPPINGS（子类可整体替换）。
-        传参时使用传入的 mappings（支持增量扩展）。
+        路径首段需在 ``TestDataContext._SOURCE_REGISTRY`` 中注册；模块级根 key（如 ``pur_config``）
+        对应 ``cls.pur_cache_data`` 等，须在调用本方法前已 ``load_sql_cache`` 赋值。
 
-        路径格式：
-            "currency_info.curr_id"     → init_data["currency_info"][0]["curr_id"]
-            "partner_info.cust_info.id" → md_cache_data["partner_info"]["cust_info"][0]["id"]
-            "pur_cache_data.xxx.id"     → pur_cache_data["xxx"][0]["id"]
-                                          （需先调用 TestDataContext.register_source(...)）
+        :param mappings: 不传则使用 ``cls.DEFAULT_CACHE_MAPPINGS``
+        :param required: 绑定后必须为真（非 None）的属性名列表；不传则使用 ``cls.REQUIRED_CACHE_KEYS``。
+            设环境变量 ``TEST_RELAX_CACHE_REQUIREMENTS=1`` 时忽略必填校验（仅本地/缺数据环境）。
+        :param strict_resolve: 为 True 时，未知路径段或未初始化的数据源直接抛错（不静默返回 None）。
+        :raises RuntimeError: 必填项解析结果为 None 时
+        :raises ValueError: ``strict_resolve`` 下路径首段未注册时
         """
         mappings = mappings if mappings is not None else cls.DEFAULT_CACHE_MAPPINGS
-        
+        if required is None:
+            required = list(getattr(cls, "REQUIRED_CACHE_KEYS", ()) or ())
+        if os.getenv("TEST_RELAX_CACHE_REQUIREMENTS", "").strip().lower() in ("1", "true", "yes"):
+            required = []
+
+        missing: list = []
         for attr_name, path in mappings.items():
-            value = cls._resolve_cache_path(path)
+            value = cls._resolve_cache_path(path, strict_resolve=strict_resolve)
             setattr(cls, attr_name, value)
             if value is not None:
                 cls.logger.debug(f"绑定数据: {attr_name} = {value}")
+            elif attr_name in required:
+                missing.append(f"{attr_name} ← {path}")
+
+        if missing:
+            raise RuntimeError(
+                "以下缓存绑定失败（值为 None），请检查 config/erp 中 SQL、库内 AUTOTEST_* 主数据及 .env：\n  - "
+                + "\n  - ".join(missing)
+                + "\n若仅为本地调试缺少数据，可设置 TEST_RELAX_CACHE_REQUIREMENTS=1 跳过必填校验。"
+            )
     
     @classmethod
-    def _resolve_cache_path(cls, path: str) -> Any:
+    def _resolve_cache_path(cls, path: str, *, strict_resolve: bool = True) -> Any:
         """
-        解析缓存路径，支持 init_data 和 md_cache_data
-        
+        解析缓存路径，支持 init_data / md_cache_data / 各模块 *_cache_data。
+
         Args:
             path: 路径字符串，如 "currency_info.curr_id" 或 "partner_info.cust_info.id"
-            
+            strict_resolve: 为 True 时，未注册路径或数据源未初始化则抛错。
+
         Returns:
-            解析后的值，路径无效返回 None
+            解析后的值，路径无效返回 None（非 strict 时）
         """
         context = TestDataContext.from_class(cls)
-        return context.resolve_cache_path(path, logger=cls.logger)
+        return context.resolve_cache_path(path, logger=cls.logger, strict=strict_resolve)
     
     @classmethod
     def teardown_class(cls) -> None:

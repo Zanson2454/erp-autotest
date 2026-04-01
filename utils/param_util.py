@@ -5,6 +5,7 @@
 - 提供 post 请求 body 字段过滤方法，便于用例只传递需要的字段。
 - 提供统一的测试用例装饰器，简化测试用例的装饰器使用
 """
+
 from typing import Dict, List, Any, Optional, Union
 import re
 import inspect
@@ -52,7 +53,9 @@ class ParamUtil:
         return payload
 
     @staticmethod
-    def filter_post_body_fields(body: Dict[str, Any], fields: List[str], path: Optional[List[str]] = None) -> Dict[str, Any]:
+    def filter_post_body_fields(
+        body: Dict[str, Any], fields: List[str], path: Optional[List[str]] = None
+    ) -> Dict[str, Any]:
         """
         支持指定嵌套路径的字段过滤，并将过滤结果嵌套回原路径，保留同级其它字段
         :param body: 原始请求体 dict
@@ -84,7 +87,9 @@ class ParamUtil:
             return result
 
     @staticmethod
-    def convert_param_type(body: Dict[str, Any], path: List[str], target_type: str = "array", **kwargs) -> Dict[str, Any]:
+    def convert_param_type(
+        body: Dict[str, Any], path: List[str], target_type: str = "array", **kwargs
+    ) -> Dict[str, Any]:
         """
         转换参数类型，支持多种类型转换
         :param body: 原始请求体 dict
@@ -104,7 +109,7 @@ class ParamUtil:
         """
         if not path or len(path) == 0:
             return body
-            
+
         result = body.copy()
         current = result
         # 遍历路径直到倒数第二个元素
@@ -112,12 +117,12 @@ class ParamUtil:
             if path[i] not in current:
                 return result
             current = current[path[i]]
-            
+
         # 获取最后一个路径元素
         last_key = path[-1]
         if last_key not in current:
             return result
-            
+
         # 根据目标类型进行转换
         if target_type == "array":
             # 如果当前值不是数组，将其转换为数组
@@ -134,7 +139,7 @@ class ParamUtil:
         elif target_type == "number":
             # 转换为数字
             try:
-                decimal_places = kwargs.get('decimal_places', 2)
+                decimal_places = kwargs.get("decimal_places", 2)
                 if isinstance(current[last_key], str):
                     current[last_key] = round(float(current[last_key]), decimal_places)
                 elif isinstance(current[last_key], (int, float)):
@@ -144,21 +149,23 @@ class ParamUtil:
         elif target_type == "boolean":
             # 转换为布尔值
             if isinstance(current[last_key], str):
-                current[last_key] = current[last_key].lower() in ('true', '1', 'yes', 'y')
+                current[last_key] = current[last_key].lower() in ("true", "1", "yes", "y")
             elif isinstance(current[last_key], (int, float)):
                 current[last_key] = bool(current[last_key])
         elif target_type == "date":
             # 转换为日期字符串
             try:
-                date_format = kwargs.get('format', '%Y-%m-%d')
+                date_format = kwargs.get("format", "%Y-%m-%d")
                 if isinstance(current[last_key], (int, float)):
                     # 假设是时间戳
                     from datetime import datetime
-                    current[last_key] = datetime.fromtimestamp(current[last_key]/1000).strftime(date_format)
+
+                    current[last_key] = datetime.fromtimestamp(current[last_key] / 1000).strftime(date_format)
                 elif isinstance(current[last_key], str):
                     # 尝试解析日期字符串
                     from datetime import datetime
-                    parsed_date = datetime.strptime(current[last_key], '%Y-%m-%d %H:%M:%S')
+
+                    parsed_date = datetime.strptime(current[last_key], "%Y-%m-%d %H:%M:%S")
                     current[last_key] = parsed_date.strftime(date_format)
             except (ValueError, TypeError):
                 pass
@@ -166,42 +173,45 @@ class ParamUtil:
             # 转换为时间戳（毫秒）
             try:
                 from datetime import datetime
+
                 if isinstance(current[last_key], str):
                     # 尝试解析日期字符串
-                    parsed_date = datetime.strptime(current[last_key], '%Y-%m-%d %H:%M:%S')
+                    parsed_date = datetime.strptime(current[last_key], "%Y-%m-%d %H:%M:%S")
                     current[last_key] = int(parsed_date.timestamp() * 1000)
                 elif isinstance(current[last_key], datetime):
                     current[last_key] = int(current[last_key].timestamp() * 1000)
             except (ValueError, TypeError):
                 pass
-                
+
         return result
 
     @staticmethod
     def get_api_path(apis_dict: Dict[str, Any], api_key: str) -> str:
         """
         获取API路径
-        
+
         参数:
             apis_dict (dict): API路径配置字典
             api_key (str): API的名称键值，如"物料主数据定义表-分页数据服务"
-            
+
         返回:
             str: 对应的API路径，如"/api/trantor/service/engine/execute/ERP_GEN$gen_mat_md_PAGING_DATA_SERVICE"
                  如果找不到对应的API，则返回None
         """
         return apis_dict.get(api_key, {}).get("path")
-    
+
     @staticmethod
-    def get_api_params(api_params_dict: Dict[str, Any], api_path: str, with_query_params: Optional[str] = None) -> tuple:
+    def get_api_params(
+        api_params_dict: Dict[str, Any], api_path: str, with_query_params: Optional[str] = None
+    ) -> tuple:
         """
         获取API请求参数和完整URL
-        
+
         参数:
             api_params_dict (dict): API参数配置字典
             api_path (str): API路径，如"/api/trantor/service/engine/execute/ERP_GEN$gen_mat_md_PAGING_DATA_SERVICE"
             with_query_params (str, optional): 查询参数字符串，如"param1=value1&param2=value2"
-        
+
         返回:
             tuple: (params, url)
                 params (dict): 对应API的请求参数模板，如{"params": {"request": {...}}}
@@ -212,42 +222,44 @@ class ParamUtil:
         url = api_path
         if with_query_params:
             url = f"{api_path}?{with_query_params}"
-        
+
         # 获取请求参数 (从api_params字典中获取对应api_path的参数模板)
         params = api_params_dict.get(api_path, {})
         return params, url
-    
+
     @staticmethod
     def set_request_param(params: Dict[str, Any], key: str, value: Any) -> Dict[str, Any]:
         """
         设置请求参数中的值，简化嵌套访问
-        
+
         参数:
             params: 请求参数字典
             key: 参数键名
             value: 参数值
-        
+
         返回:
             更新后的参数字典
         """
-        if 'params' not in params:
-            params['params'] = {}
-        if 'request' not in params['params']:
-            params['params']['request'] = {}
-            
-        params['params']['request'][key] = value
+        if "params" not in params:
+            params["params"] = {}
+        if "request" not in params["params"]:
+            params["params"]["request"] = {}
+
+        params["params"]["request"][key] = value
         return params
-    
+
     @staticmethod
-    def set_request_params(params: Dict[str, Any], param_dict: Dict[str, Any], path: Optional[List[str]] = None) -> Dict[str, Any]:
+    def set_request_params(
+        params: Dict[str, Any], param_dict: Dict[str, Any], path: Optional[List[str]] = None
+    ) -> Dict[str, Any]:
         """
         批量设置请求参数，简化嵌套访问
-        
+
         参数:
             params: 请求参数字典
             param_dict: 要设置的参数字典 {key: value, ...}
             path: 参数路径，默认为 ["params", "request"]，支持自定义路径如 ["params", "reuqest"]
-        
+
         返回:
             更新后的参数字典
         """
@@ -262,7 +274,7 @@ class ParamUtil:
             if isinstance(param_dict, list):
                 raise TypeError("path=[] 时 param_dict 必须为 dict，不能为 list")
             raise TypeError(f"param_dict 必须是 dict 或 list，当前类型: {type(param_dict).__name__}")
-        
+
         # 确保路径存在
         current = params
         for p in path[:-1]:
@@ -289,9 +301,6 @@ class ParamUtil:
 
         # 设置参数值
         for key, value in param_dict.items():
-            # 容错：上游把整对象当作 id 传入时，自动提取 id
-            if isinstance(value, dict) and key.lower().endswith("id") and "id" in value:
-                value = value.get("id")
             if isinstance(value, dict) and isinstance(value.get("pageable"), dict):
                 ParamUtil._sanitize_pageable(value["pageable"])
             if isinstance(value, list) and (key.lower() == "ids" or key.lower().endswith("ids")):
@@ -299,16 +308,16 @@ class ParamUtil:
             current[last_key][key] = value
         ParamUtil.sanitize_payload(params)
         return params
-    
+
     @staticmethod
     def extract_id(result: dict, path: str = "data.data.id"):
         """
         从API响应中提取ID
-        
+
         参数:
             result: API响应结果
             path: ID在响应中的路径，默认为 "data.data.id"
-            
+
         返回:
             提取到的ID值
         """
@@ -316,72 +325,45 @@ class ParamUtil:
         for key in path.split("."):
             data = data.get(key, {})
         return data
-    
-
-
-
-
 
 
 # 示例用例
 def _demo():
     swagger_body = {
         "params": {
-            "request": {
-                "id": 1,
-                "name": "test",
-                "desc": "desc",
-                "object": {
-                    "id": 1,
-                    "name": "test",
-                    "desc": "desc"
-                }
-            }
+            "request": {"id": 1, "name": "test", "desc": "desc", "object": {"id": 1, "name": "test", "desc": "desc"}}
         }
     }
-    
+
     # 测试各种类型转换
     print("原始数据:", swagger_body)
-    
+
     # 转换为数组
     array_data = ParamUtil.convert_param_type(swagger_body, ["params", "request"], "array")
     print("\n转换为数组:", array_data)
-    
+
     # 转换为对象
     object_data = ParamUtil.convert_param_type(array_data, ["params", "request"], "object")
     print("\n转换为对象:", object_data)
-    
+
     # 转换为字符串
     string_data = ParamUtil.convert_param_type(swagger_body, ["params", "request", "id"], "string")
     print("\n转换为字符串:", string_data)
-    
+
     # 转换为数字
     number_data = ParamUtil.convert_param_type(swagger_body, ["params", "request", "id"], "number", decimal_places=2)
     print("\n转换为数字:", number_data)
-    
+
     # 转换为日期
-    date_data = {
-        "params": {
-            "request": {
-                "date": "2024-03-20 10:00:00"
-            }
-        }
-    }
+    date_data = {"params": {"request": {"date": "2024-03-20 10:00:00"}}}
     date_converted = ParamUtil.convert_param_type(date_data, ["params", "request", "date"], "date", format="%Y-%m-%d")
     print("\n转换为日期:", date_converted)
-    
+
     # 转换为时间戳
-    timestamp_data = {
-        "params": {
-            "request": {
-                "date": "2024-03-20 10:00:00"
-            }
-        }
-    }
+    timestamp_data = {"params": {"request": {"date": "2024-03-20 10:00:00"}}}
     timestamp_converted = ParamUtil.convert_param_type(timestamp_data, ["params", "request", "date"], "timestamp")
     print("\n转换为时间戳:", timestamp_converted)
 
 
 if __name__ == "__main__":
-    _demo() 
-    
+    _demo()

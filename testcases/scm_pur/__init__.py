@@ -12,6 +12,7 @@ project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
 from testcases.comm.base_test import BaseTest
 from testcases.comm.cleanup_registry import register_cleanup
+from testcases.comm.test_data_context import TestDataContext
 from data_factory.base import DataFactory
 from utils.mysql_util import DBManager
 
@@ -63,6 +64,19 @@ class ScmPurBaseTest(BaseTest):
     
     # 模块常量
     MODULE_NAME = "SCM_PUR"  # 采购模块名称，用于 query params
+
+    DEFAULT_CACHE_MAPPINGS = {
+        **BaseTest.DEFAULT_CACHE_MAPPINGS,
+        "po_type_id": "pur_config.po_type_info.id",
+        "po_item_type_id": "pur_config.po_item_type_info.id",
+    }
+    REQUIRED_CACHE_KEYS = (
+        "curr_id",
+        "cust_id",
+        "pur_org_id",
+        "po_type_id",
+        "po_item_type_id",
+    )
     
     # 登录两个门户，分别保存 session/user_info 并初始化 http 工具
     _PORTAL_TYPE_KEYS = {
@@ -103,9 +117,7 @@ class ScmPurBaseTest(BaseTest):
     @classmethod
     def load_cache_data(cls):
         """加载采购模块依赖缓存。"""
-        # 初始化DataFactory（必须在init_sql_cache之前调用）
-        DataFactory.__init__(env_name="test")
-
+        TestDataContext.register_source("pur_config", "pur_cache_data")
         # 加载主数据缓存（采购依赖物料、组织等主数据）
         cls.md_cache_data = cls.load_sql_cache(
             sql_config_path=project_root / "config" / "erp" / "md_init_sql.yaml",
@@ -125,6 +137,7 @@ class ScmPurBaseTest(BaseTest):
     @classmethod
     def bind_context(cls):
         """绑定采购模块上下文。"""
+        cls.bind_cache_data()
         cls.bind_module_user_context("SCM_PUR", strict=True)
 
         cls.logger.info(f"✅ md_cache_data 加载完成: {cls.md_cache_data is not None}")

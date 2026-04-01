@@ -82,6 +82,8 @@ reports/allure-report/*
 
 # 忽略正在调试的用例
 testdata/cache/*
+# SQL 源 YAML 内容 hash（改配置后失效 json 缓存用，如 .init_cache.source_hash）
+testdata/cache/*source_hash
 case_coverage_stat.json
 
 # 忽略用户输入

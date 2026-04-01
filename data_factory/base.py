@@ -1,7 +1,8 @@
 from pathlib import Path
 from dotenv import load_dotenv
+import hashlib
 import sys
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Union
 import os
 from decimal import Decimal
 
@@ -362,6 +363,40 @@ class DataFactory:
         cls._last_project = current_project
 
     @classmethod
+    def _invalidate_json_cache_if_sql_yaml_changed(
+        cls,
+        cache_key: str,
+        sql_yaml_path: Path,
+        cache_dir: Union[str, Path],
+    ) -> None:
+        """若 SQL YAML 文件内容变更，则删除对应 json 缓存，避免改配置后仍读旧缓存。"""
+        cache_dir_path = Path(cache_dir)
+        sql_path = Path(sql_yaml_path).resolve()
+        if not sql_path.is_file():
+            return
+        new_hash = hashlib.sha256(sql_path.read_bytes()).hexdigest()
+        hash_file = cache_dir_path / f".{cache_key}.source_hash"
+        json_file = cache_dir_path / f"{cache_key}.json"
+        if hash_file.exists():
+            try:
+                old_hash = hash_file.read_text(encoding="utf-8").strip()
+            except OSError:
+                old_hash = ""
+            if old_hash != new_hash and json_file.exists():
+                try:
+                    json_file.unlink()
+                    Loggers.info(
+                        f"检测到 SQL 配置文件已变更，已丢弃缓存: {cache_key} ({sql_path.name})"
+                    )
+                except OSError as exc:
+                    Loggers.warning(f"删除过期 SQL 缓存失败: {json_file}, {exc}")
+        hash_file.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            hash_file.write_text(new_hash, encoding="utf-8")
+        except OSError as exc:
+            Loggers.warning(f"写入 SQL 源 hash 失败: {hash_file}, {exc}")
+
+    @classmethod
     def get_base_data(cls, project="erp", db_config_name="erp_db", cache_key="init_cache", expire_minutes: int = None):
         """
         获取指定项目的基础数据，优先读缓存，否则自动初始化并写入缓存。
@@ -389,6 +424,9 @@ class DataFactory:
         # 检查项目是否切换，如果切换则清除缓存
         cache_dir = str(project_root / 'testdata' / 'cache')
         cls._clear_cache_if_project_changed(cache_key, cache_dir)
+
+        base_yaml = project_root / "config" / project / "base_init_sql.yaml"
+        cls._invalidate_json_cache_if_sql_yaml_changed(cache_key, base_yaml, cache_dir)
         
         # SQLInitializer内部已处理缓存逻辑（保持向后兼容，不传递项目参数）
         return SQLInitializer.init_sql(sql_config, db_config, cache_key=cache_key, expire_minutes=expire_minutes)
@@ -442,6 +480,9 @@ class DataFactory:
         
         # 检查项目是否切换，如果切换则清除缓存
         cls._clear_cache_if_project_changed(cache_key, cache_dir)
+
+        sql_path = Path(sql_config_path).resolve()
+        cls._invalidate_json_cache_if_sql_yaml_changed(cache_key, sql_path, cache_dir)
         
         # 1. 读取SQL配置
         sql_config = YamlUtil.read_yaml(sql_config_path)
@@ -525,9 +566,10 @@ class DataFactory:
         return CacheUtil.refresh_expired_cache(refresh_callbacks)
 
 if __name__ == "__main__":
-    # 示例：初始化数据工厂并获取基础数据
-    data = DataFactory()
-    data = data.get_base_data()
-    print(data)
+    import os
+    env = os.getenv("TEST_ENV", "test")
+    project = os.getenv("TEST_PROJECT")
+    DataFactory.__init__(env_name=env, project=project)
+    print(DataFactory.get_base_data(project="erp"))
     
     

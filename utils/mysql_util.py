@@ -268,12 +268,32 @@ class DBManager:
             self._logger.error(f"数据: {data}")
             raise
 
+    @staticmethod
+    def _maybe_warn_unsafe_delete_where(where: str, params: Optional[List[Any]] = None) -> None:
+        """测试数据隔离提示：若启用 DB_DELETE_SAFETY_CHECK，对 WHERE 中未见 AT_/AUTOTEST 等测试前缀时打 warning。"""
+        import os
+        if os.getenv("DB_DELETE_SAFETY_CHECK", "").strip().lower() not in ("1", "true", "yes"):
+            return
+        blob = f"{where or ''} {params!r}".upper()
+        if "AT_%" in blob:
+            return
+        if "AUTOTEST" in blob:
+            return
+        if "LIKE" in (where or "").upper() and "%" in blob:
+            return
+        Loggers.warning(
+            f"DB_DELETE_SAFETY_CHECK: DELETE WHERE 未匹配常见测试隔离前缀（AT_/AUTOTEST），"
+            f"请确认不会误删生产数据: where={where!r} params={params!r}"
+        )
+
     def delete(self, table: str, where: str, params: Optional[List[Any]] = None) -> int:
         """删除方法 - 支持实例和类调用"""
         import os
         if os.getenv("ENABLE_PHYSICAL_DELETE", "true").lower() != "true":
             self._logger.warning(f"由于 ENABLE_PHYSICAL_DELETE=false，已拦截对表 {table} 的物理删除操作")
             return 0
+
+        self._maybe_warn_unsafe_delete_where(where, params)
 
         connection = self._get_connection()
             

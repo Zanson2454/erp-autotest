@@ -1,4 +1,6 @@
-from fastapi import APIRouter, HTTPException
+import os
+
+from fastapi import APIRouter
 from data_factory.base import DataFactory
 from loguru import logger
 
@@ -11,8 +13,10 @@ async def get_base_data():
     获取基础数据接口示例：根据类型获取基础数据
     后续可对接具体的组织信息获取逻辑
     """
-    data = DataFactory()
-    data = data.get_base_data()
+    env = os.getenv("TEST_ENV", "test")
+    project = os.getenv("TEST_PROJECT")
+    DataFactory.__init__(env_name=env, project=project)
+    data = DataFactory.get_base_data(project="erp")
     logger.info(f"获取基础数据：{data}")
     return data
 

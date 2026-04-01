@@ -11,7 +11,6 @@ project_root = Path(__file__).resolve().parent.parent.parent.parent.parent
 sys.path.append(str(project_root))
 
 from testcases.scm_del import ScmDelBaseTest
-from data_factory.base import DataFactory
 from utils.param_util import ParamUtil
 
 

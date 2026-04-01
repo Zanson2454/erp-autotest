@@ -8,7 +8,7 @@ import json
 import time
 import sys
 from pathlib import Path
-from typing import Dict, Any, Optional, Callable, List
+from typing import Dict, Any, Optional, Callable, List, Union
 from loguru import logger
 
 project_root = Path(__file__).parent.parent
@@ -195,7 +195,38 @@ class CacheUtil:
         success_count = sum(1 for v in refresh_results.values() if v)
         logger.info(f"缓存刷新完成: 成功 {success_count}/{len(refresh_results)}")
         
-        return refresh_results 
+        return refresh_results
+
+    @classmethod
+    def purge_disk_cache_files(cls, cache_dir: Optional[Union[str, Path]] = None) -> int:
+        """
+        删除缓存目录下的 *.json 及 .*.source_hash（SQL 源 hash 旁路文件），用于 --fresh-cache。
+        不重置类状态；下次 get 会 miss 并触发重新拉数。
+
+        :param cache_dir: 默认使用当前已初始化的 _cache_dir；可显式指定 testdata/cache
+        :return: 删除的文件数量
+        """
+        root = Path(cache_dir) if cache_dir is not None else cls._cache_dir
+        if not root.exists():
+            return 0
+        n = 0
+        for p in root.iterdir():
+            if not p.is_file():
+                continue
+            if p.suffix == ".json":
+                try:
+                    p.unlink()
+                    n += 1
+                except OSError as e:
+                    logger.warning(f"删除缓存文件失败: {p}, {e}")
+            elif p.name.startswith(".") and "source_hash" in p.name:
+                try:
+                    p.unlink()
+                    n += 1
+                except OSError as e:
+                    logger.warning(f"删除 hash 文件失败: {p}, {e}")
+        logger.info(f"已清理磁盘缓存文件 {n} 个，目录: {root.resolve()}")
+        return n
 
    
 

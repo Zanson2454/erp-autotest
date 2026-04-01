@@ -19,6 +19,12 @@ pytest --project=project1 --env=test --alluredir=./reports/allure-results
 # 运行测试并指定 Trantor 版本
 pytest --trantor_version=2.5.25.0130.0-SNAPSHOT
 
+# 清空 SQL 初始化磁盘缓存后执行（强制 setup 重新拉数）
+pytest --fresh-cache testcases/
+
+# 会话开始前检查 init_cache 是否存在（仅日志，不阻断）
+pytest --md-precheck testcases/
+
 # 运行指定优先级的测试
 pytest -m "critical"
 ```
@@ -39,6 +45,9 @@ from testcases.comm.cleanup_registry import run_cleanups
 
 # 获取项目根目录
 project_root = Path(__file__).resolve().parent.parent
+
+# --md-precheck 全会话只打一次日志
+_MD_PRECHECK_RAN = False
 
 # 确保必要的目录存在
 REQUIRED_DIRS = ["reports/allure-results", "reports/allure-report","logs", "testdata", "testcases"]
@@ -78,6 +87,18 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         default="all",
         choices=["all", "serial", "parallel"],
         help="测试分组：all(默认全部)、serial(仅串行组)、parallel(仅并行组)"
+    )
+    parser.addoption(
+        "--fresh-cache",
+        action="store_true",
+        default=False,
+        help="会话开始前清空 testdata/cache 下 SQL 初始化 json/hash，强制下次 setup 重新拉数",
+    )
+    parser.addoption(
+        "--md-precheck",
+        action="store_true",
+        default=False,
+        help="会话开始前检查 init_cache 等文件是否存在并给出提示（不阻断执行）",
     )
 
 def load_env_config(env: str, project: str = None) -> dict:
@@ -162,6 +183,48 @@ def pytest_sessionstart(session) -> None:
     if not os.getenv("TEST_SESSION_START_MS"):
         os.environ["TEST_SESSION_START_MS"] = str(int(datetime.now().timestamp() * 1000))
 
+    if session.config.getoption("--fresh-cache"):
+        try:
+            from utils.cache_util import CacheUtil
+            cache_dir = project_root / "testdata" / "cache"
+            CacheUtil.init(str(cache_dir), expire_minutes=5)
+            n = CacheUtil.purge_disk_cache_files(cache_dir)
+            Loggers.info(f"--fresh-cache: 已清理 SQL 初始化磁盘缓存文件 {n} 个")
+        except Exception as e:
+            Loggers.warning(f"--fresh-cache 清理失败（可继续跑用例）: {e}")
+
+    if session.config.getoption("--md-precheck"):
+        _log_md_init_precheck_once()
+
+
+def _log_md_init_precheck_once() -> None:
+    """主数据缓存预检：仅日志提示，不阻塞；全会话只执行一次。"""
+    global _MD_PRECHECK_RAN
+    if _MD_PRECHECK_RAN:
+        return
+    _MD_PRECHECK_RAN = True
+    _log_md_init_precheck()
+
+
+def _log_md_init_precheck() -> None:
+    """主数据缓存预检：仅日志提示，不阻塞。"""
+    cache_path = project_root / "testdata" / "cache" / "init_cache.json"
+    if not cache_path.exists():
+        Loggers.warning(
+            "[--md-precheck] 未找到 testdata/cache/init_cache.json，"
+            "首次运行用例或 warm-cache 后会生成；若长期缺失请检查 DB 与 config/erp/base_init_sql.yaml"
+        )
+        return
+    try:
+        import json
+        data = json.loads(cache_path.read_text(encoding="utf-8"))
+        if not data.get("currency_info"):
+            Loggers.warning("[--md-precheck] init_cache 中缺少 currency_info，请检查数据库基础数据")
+        else:
+            Loggers.info("[--md-precheck] init_cache 已存在且含 currency_info")
+    except Exception as e:
+        Loggers.warning(f"[--md-precheck] 读取 init_cache 失败: {e}")
+
 
 def pytest_sessionfinish(session, exitstatus) -> None:
     """统一清理入口（仅主进程）。"""
@@ -191,6 +254,13 @@ def create_allure_environment(config: pytest.Config) -> None:
                 
     except Exception as e:
         Loggers.error(f"创建 Allure 环境配置文件失败: {str(e)}")
+
+@pytest.fixture(scope="session")
+def md_init_precheck(request) -> None:
+    """可选：在模块 conftest 或测试类中 request 本 fixture，保证在会话早期执行一次主数据预检（需配合 --md-precheck）。"""
+    if request.config.getoption("--md-precheck"):
+        _log_md_init_precheck_once()
+
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_test_environment() -> Generator[None, None, None]:
