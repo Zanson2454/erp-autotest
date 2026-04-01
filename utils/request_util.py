@@ -1,23 +1,22 @@
+import json
+import sys
+from pathlib import Path
+from typing import Any, Dict, Optional
+from urllib.parse import urljoin
+
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util import Retry
-from typing import Optional, Dict, Any, Union, Callable
-from urllib.parse import urljoin
-import json
-import os
-import sys
-from datetime import datetime
-from pathlib import Path
-
 
 # 添加项目根目录到 Python 路径
 project_root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(project_root))
 
-from utils.exception_util import safe_api_call, APIException
+from decimal import Decimal
+
 from utils.log_util import Loggers
 from utils.response_util import DecimalEncoder
-from decimal import Decimal
+
 
 class HttpUtil:
     """HTTP 工具类，提供增强的 HTTP 请求功能

@@ -134,7 +134,8 @@ class ApiCallService:
             else:
                 raise ValueError(f"不支持的HTTP方法: {method}")
 
-            Loggers.info("接口请求响应，状态码: 200")
+            resp_success = response.get("success", "N/A") if isinstance(response, dict) else "N/A"
+            Loggers.info(f"接口请求完成 [api_key={api_key}, success={resp_success}]")
             Loggers.info(f"响应数据: {json.dumps(response, ensure_ascii=False, indent=2)}")
 
             extracted_id = None
@@ -159,11 +160,19 @@ class ApiCallService:
                 extracted_id = None
 
             if store_id_as:
-                # Write both naming conventions:
-                # - CamelCase  (e.g. cls.matId)     → legacy tests that depend on this form
-                # - snake_case (e.g. cls.mat_id)    → documented convention per testcase templates
-                setattr(test_obj.__class__, f"{store_id_as}Id", extracted_id)
-                setattr(test_obj.__class__, f"{store_id_as}_id", extracted_id)
+                target_cls = test_obj.__class__
+                snake_attr = f"{store_id_as}_id"
+                camel_attr = f"{store_id_as}Id"
+
+                prev = getattr(target_cls, snake_attr, None)
+                if prev is not None and prev != extracted_id:
+                    Loggers.warning(
+                        f"store_id_as 覆盖已有值: {snake_attr} {prev} → {extracted_id} "
+                        f"(类={target_cls.__name__})，请确认是否预期"
+                    )
+
+                setattr(target_cls, camel_attr, extracted_id)
+                setattr(target_cls, snake_attr, extracted_id)
 
             return response, extracted_id
 

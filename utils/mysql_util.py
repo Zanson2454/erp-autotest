@@ -1,14 +1,12 @@
-import sys
-from contextlib import contextmanager
-from typing import Generator, List, Dict, Any, Optional, Union, Tuple
-import pymysql
-from pymysql.cursors import DictCursor
-from pymysql.connections import Connection
 import json
-from datetime import datetime
-from decimal import Decimal
+import sys
 from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+import pymysql
 from dbutils.pooled_db import PooledDB
+from pymysql.connections import Connection
+from pymysql.cursors import DictCursor
 
 # Add project root to Python path
 current_file = Path(__file__).resolve()
@@ -16,19 +14,9 @@ project_root = current_file.parent.parent
 sys.path.insert(0, str(project_root))
 
 from utils.log_util import Loggers
-
-
+from utils.response_util import DecimalEncoder
 
 log = Loggers()
-
-class DecimalEncoder(json.JSONEncoder):
-    """处理 Decimal 类型的 JSON 编码器"""
-    def default(self, obj: Any) -> Any:
-        if isinstance(obj, Decimal):
-            return float(obj)
-        if isinstance(obj, datetime):
-            return obj.isoformat()
-        return super(DecimalEncoder, self).default(obj)
 
 class DBManager:
     """数据库管理器（全类属性+类方法风格）"""

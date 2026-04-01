@@ -3,12 +3,12 @@
 由全局 testcases/conftest.py 在 session 末尾统一触发，避免分散钩子并发冲突。
 """
 
-from utils.log_util import Loggers
-from utils.mysql_util import DBManager
-from data_factory.base import DataFactory
 import os
 from datetime import datetime
-from testcases.comm.cleanup_registry import register_cleanup
+
+from testcases.comm.cleanup_registry import get_module_db_config, register_cleanup
+from utils.log_util import Loggers
+from utils.mysql_util import DBManager
 
 
 def _perform_cleanup(db, session_start_time):
@@ -197,16 +197,7 @@ def _perform_cleanup(db, session_start_time):
 def _cleanup_scm_sls() -> None:
     """统一清理入口：由 cleanup_registry 在 session 末尾调用。"""
     try:
-        env = os.getenv("TEST_ENV", "test")
-        project = os.getenv("TEST_PROJECT")
-        data_factory = DataFactory(env_name=env, project=project)
-        env_config = data_factory.get_env_config()
-
-        if not env_config:
-            Loggers.warning("未找到环境配置，跳过 SCM_SLS 数据清理")
-            return
-
-        db_config = env_config.get("database", {}).get("erp_db")
+        db_config = get_module_db_config()
         if not db_config:
             Loggers.warning("未找到数据库配置，跳过 SCM_SLS 数据清理")
             return

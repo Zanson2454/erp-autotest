@@ -2,19 +2,27 @@
 
 提供缓存数据的读写功能，支持过期机制。
 支持方案2：重新拉取并覆盖过期缓存。
+
+并发安全：写操作使用 fcntl.flock + 原子重命名，
+xdist 多 worker 同时冷启动不会损坏 JSON 文件。
 """
 
+import fcntl
 import json
-import time
+import os
 import sys
+import tempfile
+import time
 from pathlib import Path
-from typing import Dict, Any, Optional, Callable, List, Union
+from typing import Any, Callable, Dict, List, Optional, Union
+
 from loguru import logger
 
 project_root = Path(__file__).parent.parent
 sys.path.append(str(project_root))
 
 from utils.response_util import DecimalEncoder
+
 
 class CacheUtil:
     """缓存工具类（全类属性+类方法风格）
@@ -64,6 +72,10 @@ class CacheUtil:
                 cls._expire_minutes = expire_minutes
 
     @classmethod
+    def _lock_path(cls, key: str) -> Path:
+        return cls._cache_dir / f".{key}.lock"
+
+    @classmethod
     def get(cls, key: str) -> Optional[Dict[str, Any]]:
         cache_file = cls._cache_dir / f"{key}.json"
         logger.info(f"读取缓存文件: {cache_file.absolute()}")
@@ -75,7 +87,11 @@ class CacheUtil:
                 logger.info(f"缓存文件已过期: {cache_file.absolute()}")
                 return None
             with open(cache_file, 'r', encoding='utf-8') as f:
-                data = json.load(f)
+                fcntl.flock(f, fcntl.LOCK_SH)
+                try:
+                    data = json.load(f)
+                finally:
+                    fcntl.flock(f, fcntl.LOCK_UN)
                 logger.info(f"成功读取缓存: {cache_file.name}")
                 return data
         except Exception as e:
@@ -84,12 +100,31 @@ class CacheUtil:
 
     @classmethod
     def set(cls, key: str, data: Dict[str, Any]) -> None:
+        """原子写入：先写临时文件，获取排他锁后原子重命名，避免 xdist 并发损坏。"""
         cache_file = cls._cache_dir / f"{key}.json"
+        lock_file = cls._lock_path(key)
         logger.info(f"写入缓存文件: {cache_file.absolute()}")
         try:
-            with open(cache_file, 'w', encoding='utf-8') as f:
-                json.dump(data, f, ensure_ascii=False, indent=2, cls=DecimalEncoder)
+            lock_fd = open(lock_file, 'w')
+            fcntl.flock(lock_fd, fcntl.LOCK_EX)
+            try:
+                fd, tmp_path = tempfile.mkstemp(
+                    dir=str(cls._cache_dir), suffix=".tmp", prefix=f".{key}_"
+                )
+                try:
+                    with os.fdopen(fd, 'w', encoding='utf-8') as f:
+                        json.dump(data, f, ensure_ascii=False, indent=2, cls=DecimalEncoder)
+                    os.replace(tmp_path, str(cache_file))
+                except BaseException:
+                    try:
+                        os.unlink(tmp_path)
+                    except OSError:
+                        pass
+                    raise
                 logger.info(f"成功写入缓存: {cache_file.name}")
+            finally:
+                fcntl.flock(lock_fd, fcntl.LOCK_UN)
+                lock_fd.close()
         except Exception as e:
             logger.error(f"写入缓存失败: {str(e)}, 文件: {cache_file.absolute()}")
 
@@ -213,13 +248,13 @@ class CacheUtil:
         for p in root.iterdir():
             if not p.is_file():
                 continue
-            if p.suffix == ".json":
+            if p.suffix == ".json" or p.suffix == ".tmp":
                 try:
                     p.unlink()
                     n += 1
                 except OSError as e:
                     logger.warning(f"删除缓存文件失败: {p}, {e}")
-            elif p.name.startswith(".") and "source_hash" in p.name:
+            elif p.name.startswith(".") and ("source_hash" in p.name or p.suffix == ".lock"):
                 try:
                     p.unlink()
                     n += 1

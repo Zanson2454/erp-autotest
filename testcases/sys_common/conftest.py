@@ -5,26 +5,15 @@ org_struct_business_type_link、org_dimension_business_link）需在各测试类
 teardown_class 中保留，无法在无状态 conftest 内执行。
 """
 
-import os
-
-from data_factory.base import DataFactory
-from testcases.comm.cleanup_registry import register_cleanup
+from testcases.comm.cleanup_registry import get_module_db_config, register_cleanup
 from utils.log_util import Loggers
 from utils.mysql_util import DBManager
-
-
-def _get_erp_db_config():
-    env = os.getenv("TEST_ENV", "test")
-    project = os.getenv("TEST_PROJECT")
-    data_factory = DataFactory(env_name=env, project=project)
-    env_config = data_factory.get_env_config() or {}
-    return env_config.get("database", {}).get("erp_db")
 
 
 def _cleanup_sys_common() -> None:
     db = None
     try:
-        db_config = _get_erp_db_config()
+        db_config = get_module_db_config()
         if not db_config:
             Loggers.warning("未找到数据库配置，跳过 SYS_COMMON 数据清理")
             return

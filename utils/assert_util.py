@@ -5,12 +5,10 @@
 主要用于测试用例中的结果验证。
 """
 
-import os
-import sys
 import json
+import sys
 from pathlib import Path
-from typing import Dict, Any, List, Optional, Union
-
+from typing import Any, Dict, List, Optional, Union
 
 # 添加项目根目录到 Python 路径
 current_file = Path(__file__).resolve()
@@ -171,11 +169,9 @@ class AssertHelper:
         """
         if hasattr(response, 'elapsed'):
             elapsed = response.elapsed.total_seconds()
-            # 如果单位是毫秒，进行转换
             if unit.lower() == 'ms':
                 elapsed = elapsed * 1000
-                max_time = max_time * 1000
-                
+
             assert elapsed <= max_time, f"响应时间 {elapsed:.2f}{unit} 超过阈值 {max_time:.2f}{unit}"
             logger.info(f"接口响应时间：{elapsed:.2f}{unit}")
         else:

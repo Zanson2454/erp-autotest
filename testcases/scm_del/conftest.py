@@ -1,21 +1,15 @@
 """SCM_DEL 模块的 pytest 配置"""
 
-import os
+from testcases.comm.cleanup_registry import get_module_db_config, register_cleanup
 from utils.log_util import Loggers
 from utils.mysql_util import DBManager
-from data_factory.base import DataFactory
-from testcases.comm.cleanup_registry import register_cleanup
 
 
 def _cleanup_scm_del() -> None:
     """统一清理入口：由 cleanup_registry 在 session 末尾调用。"""
     db = None
     try:
-        env = os.getenv("TEST_ENV", "test")
-        project = os.getenv("TEST_PROJECT")
-        data_factory = DataFactory(env_name=env, project=project)
-        env_config = data_factory.get_env_config()
-        db_config = (env_config or {}).get("database", {}).get("erp_db")
+        db_config = get_module_db_config()
         if not db_config:
             Loggers.warning("未找到数据库配置，跳过 SCM_DEL 数据清理")
             return

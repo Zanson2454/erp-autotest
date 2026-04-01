@@ -7,6 +7,7 @@
 
 import os
 import time
+import warnings
 from functools import wraps
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -221,9 +222,24 @@ class BaseTest(LoginMixin):
 
     @classmethod
     def _initialize_module(cls) -> None:
-        """自动处理声明式模块配置。仅当声明式类变量已设置时才执行。"""
+        """自动处理声明式模块配置。仅当声明式类变量已设置时才执行。
+
+        若子类未设置任何声明式变量且覆盖了 ``setup_class``，视为命令式用法，
+        发出迁移建议（DeprecationWarning）以引导统一至声明式路径。
+        """
         has_declarative = bool(cls.API_PATH_FILE or cls.SQL_CACHES or cls.MODULE_NAME)
         if not has_declarative:
+            for klass in cls.__mro__:
+                if "setup_class" in klass.__dict__ and klass is not BaseTest:
+                    warnings.warn(
+                        f"{klass.__name__} 使用命令式 setup_class 且未设置声明式配置 "
+                        "(API_PATH_FILE / SQL_CACHES / MODULE_NAME)。"
+                        "建议迁移至声明式模块注册以降低维护成本，"
+                        "详见 BaseTest 类文档字符串。",
+                        DeprecationWarning,
+                        stacklevel=2,
+                    )
+                    break
             return
 
         cls._load_module_apis()
