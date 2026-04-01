@@ -18,7 +18,7 @@ repos:
     hooks:
       - id: validate-project-structure
         name: validate-project-structure
-        entry: python3 script/validate_project_structure.py
+        entry: python3 script/project_bootstrap.py --section skeleton
         language: system
         pass_filenames: false
       - id: quality-guard

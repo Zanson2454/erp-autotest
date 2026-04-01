@@ -1,20 +1,27 @@
 #!/usr/bin/env python3
-"""新项目/新环境初始化检查脚本。
+"""使用本工程的第一步：初始化自检 + 新环境预热 + 仓库骨架校验（单入口）。
 
-用途：确保新接入的业务模块或新环境能快速把测试框架用起来。
+建议新成员 / 新环境按顺序：
+  1) python script/project_bootstrap.py
+  2) 按报告修复 .env / YAML / 库内主数据后，可选：
+     python script/project_bootstrap.py --seed warm-cache --env test
+
 检查项：
-  1. 运行环境（Python 版本、依赖包、目录结构）
-  2. 环境配置（config/env/.env 和 YAML 必填字段）
-  3. 数据库连通性（ERP DB / IAM DB）
-  4. 登录有效性（Cookie 或账密登录）
-  5. SQL 初始化配置（执行后结果是否有值）
-  6. API 配置（YAML 格式、模块完整性、swagger_parser 可用性）
+  1. 运行环境（Python、依赖、目录、必须文件、仓库骨架路径）
+  2. 环境配置（.env 与 YAML）
+  3. 数据库连通性
+  4. 登录有效性
+  5. SQL 初始化配置
+  6. API 配置
 
 用法：
-  python script/test_init_check.py                  # 全量检查
-  python script/test_init_check.py --env test       # 指定环境
-  python script/test_init_check.py --section env    # 仅检查某一项
-  python script/test_init_check.py --project my_prj # 多项目模式
+  python script/project_bootstrap.py                  # 全量检查
+  python script/project_bootstrap.py --env test       # 指定环境
+  python script/project_bootstrap.py --section skeleton  # 仅仓库骨架（适合 pre-commit）
+  python script/project_bootstrap.py --section env    # 仅运行环境相关
+  python script/project_bootstrap.py --project my_prj # 多项目模式
+  python script/project_bootstrap.py --seed print-guide              # 主数据准备摘要
+  python script/project_bootstrap.py --seed warm-cache --env test    # 连库预热 init + md 缓存
 """
 
 from __future__ import annotations
@@ -38,6 +45,9 @@ CONFIG_ENV_DIR = PROJECT_ROOT / "config" / "env"
 CONFIG_API_DIR = PROJECT_ROOT / "config" / "api"
 CONFIG_ERP_DIR = PROJECT_ROOT / "config" / "erp"
 TESTDATA_CACHE_DIR = PROJECT_ROOT / "testdata" / "cache"
+
+# terp 下非「门户」子块（不参与 iam_url/username/password 校验与登录探测）
+TERP_NON_PORTAL_KEYS = frozenset({"auth", "defaults", "metadata", "common", "settings"})
 
 # 环境 YAML 中 portal 配置必须包含的字段
 PORTAL_REQUIRED_FIELDS = ["iam_url", "username", "password"]
@@ -65,6 +75,29 @@ REQUIRED_FILES = [
     "testcases/comm/base_test.py",
     "testcases/comm/api_client_facade.py",
     "script/swagger_parser.py",
+]
+
+# 仓库骨架：关键文件/目录（与 README / pre-commit 对齐）
+REQUIRED_SKELETON_PATHS = [
+    "README.md",
+    "requirements.txt",
+    "pytest.ini",
+    "pipeline.yml",
+    "api_record/recorder.py",
+    "api_record/start_recorder.py",
+    "api_record/recorder_config.json",
+    "testcases/conftest.py",
+    "testcases/comm/base_test.py",
+    "testcases/comm/api_client_facade.py",
+    "testcases/comm/auth_context.py",
+    "testcases/comm/test_data_context.py",
+    "utils/mysql_util.py",
+    "config/api",
+    "config/env",
+    "config/erp",
+    "script/project_bootstrap.py",
+    "script/quality_guard.py",
+    "docs/cache_data_dependency.md",
 ]
 
 # 关键依赖包
@@ -144,6 +177,33 @@ class CheckReport:
 # ─────────────────────────────────────────────────────────────────────────────
 
 
+def ensure_dotenv_loaded(project: Optional[str] = None) -> None:
+    """将 .env 载入进程环境，与 data_factory ConfigLoader 顺序一致，否则 YAML 中 ${VAR} 无法被替换。
+
+    顺序：config/env/{project}/.env → config/env/.env → 仓库根 .env
+    """
+    try:
+        from dotenv import load_dotenv
+    except ImportError:
+        return
+
+    env_loaded = False
+    if project:
+        project_env = CONFIG_ENV_DIR / project / ".env"
+        if project_env.exists():
+            load_dotenv(project_env, override=True)
+            env_loaded = True
+
+    default_env = CONFIG_ENV_DIR / ".env"
+    if default_env.exists():
+        load_dotenv(default_env, override=not env_loaded)
+        env_loaded = True
+
+    root_env = PROJECT_ROOT / ".env"
+    if root_env.exists():
+        load_dotenv(root_env, override=not env_loaded)
+
+
 def _replace_env_vars(obj: Any) -> None:
     """递归将配置中的 ${VAR} 替换为实际环境变量值。"""
     pattern = re.compile(r"^\$\{([^}]+)\}$")
@@ -162,6 +222,8 @@ def _replace_env_vars(obj: Any) -> None:
 
 def load_env_config(env: str, project: Optional[str] = None) -> Dict[str, Any]:
     """加载并解析环境 YAML 配置，自动替换 ${VAR} 占位符。"""
+    ensure_dotenv_loaded(project)
+
     if project:
         yaml_path = CONFIG_ENV_DIR / project / f"{env}.yaml"
         if not yaml_path.exists():
@@ -234,6 +296,21 @@ def check_required_files(report: CheckReport) -> None:
     )
 
 
+def check_skeleton_paths(report: CheckReport) -> None:
+    """检查仓库关键骨架路径（文件或目录）是否存在。"""
+    missing: List[str] = []
+    for rel in REQUIRED_SKELETON_PATHS:
+        path = PROJECT_ROOT / rel
+        if not path.exists():
+            missing.append(rel)
+    report.add(
+        "运行环境",
+        "仓库骨架路径",
+        len(missing) == 0,
+        f"缺失: {', '.join(missing)}" if missing else f"{len(REQUIRED_SKELETON_PATHS)} 项齐全",
+    )
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # 检查项：环境配置
 # ─────────────────────────────────────────────────────────────────────────────
@@ -295,6 +372,8 @@ def check_env_yaml_structure(report: CheckReport, env: str, project: Optional[st
     else:
         for portal_name, portal_cfg in terp_config.items():
             if not isinstance(portal_cfg, dict):
+                continue
+            if portal_name in TERP_NON_PORTAL_KEYS:
                 continue
             for field in PORTAL_REQUIRED_FIELDS:
                 if not portal_cfg.get(field):
@@ -380,6 +459,8 @@ def check_login_effective(report: CheckReport, env: str, project: Optional[str])
     for portal_name, portal_cfg in portal_config.items():
         if not isinstance(portal_cfg, dict):
             continue
+        if portal_name in TERP_NON_PORTAL_KEYS:
+            continue
         cookie = portal_cfg.get("cookie", "")
         if cookie:
             has_cookie = True
@@ -412,6 +493,8 @@ def check_login_effective(report: CheckReport, env: str, project: Optional[str])
     # 检查账密登录配置
     for portal_name, portal_cfg in portal_config.items():
         if not isinstance(portal_cfg, dict):
+            continue
+        if portal_name in TERP_NON_PORTAL_KEYS:
             continue
         username = portal_cfg.get("username", "")
         password = portal_cfg.get("password", "")
@@ -658,6 +741,7 @@ def check_swagger_parser(report: CheckReport) -> None:
 # ─────────────────────────────────────────────────────────────────────────────
 
 SECTIONS = {
+    "skeleton": "仓库骨架",
     "env": "运行环境",
     "config": "环境配置",
     "db": "数据库",
@@ -667,14 +751,85 @@ SECTIONS = {
 }
 
 
+def seed_print_guide() -> int:
+    """打印主数据/环境准备摘要（不连库）。"""
+    print(
+        """
+=== ERP 自动化测试主数据准备（摘要）===
+
+1. 在被测库中创建 AUTOTEST_* 前缀的组织/客户/供应商/物料等（参见 GET_START.md）。
+2. 配置 config/env/.env 与 config/env/{env}.yaml，保证 ${VAR} 可解析。
+3. 预热 SQL 初始化缓存（需可连 ERP DB）：
+     python script/project_bootstrap.py --seed warm-cache --env test
+4. 全量自检（推荐第一步）：
+     python script/project_bootstrap.py
+   仅校验仓库骨架（最快）：
+     python script/project_bootstrap.py --section skeleton
+
+说明：本仓库不内置「一键 INSERT 全量主数据」；--seed warm-cache 仅触发 base + md 的 SQL 缓存写入 testdata/cache/。
+"""
+    )
+    return 0
+
+
+def seed_warm_cache(env: str, project: Optional[str]) -> int:
+    """连库执行 base_init_sql + md_init_sql，写入 init_cache / md_init_cache。"""
+    os.environ.setdefault("TEST_ENV", env)
+    if project:
+        os.environ["TEST_PROJECT"] = project
+    try:
+        from data_factory.base import DataFactory
+    except ImportError as e:
+        print(f"导入失败: {e}", file=sys.stderr)
+        return 2
+
+    DataFactory.__init__(env_name=env, project=project)
+    print(f"环境: TEST_ENV={env}" + (f", TEST_PROJECT={project}" if project else ""))
+
+    try:
+        base = DataFactory.get_base_data(project="erp")
+        print(f"base_init_sql → init_cache: keys={list((base or {}).keys())[:8]}...")
+    except Exception as e:
+        print(f"get_base_data 失败: {e}", file=sys.stderr)
+        return 1
+
+    try:
+        from utils.yaml_util import YamlUtil
+
+        YamlUtil.init("config")
+        sql_path = CONFIG_ERP_DIR / "md_init_sql.yaml"
+        DataFactory.init_sql_cache(
+            sql_config_path=str(sql_path),
+            db_config_name="erp_db",
+            cache_key="md_init_cache",
+            cache_dir=str(TESTDATA_CACHE_DIR),
+        )
+        print("md_init_sql → md_init_cache: OK")
+    except Exception as e:
+        print(f"md_init_cache 失败: {e}", file=sys.stderr)
+        return 1
+
+    print("warm-cache 完成：testdata/cache/ 下已写入/更新缓存（仍受过期时间与源 YAML hash 失效策略影响）。")
+    return 0
+
+
 def run_all_checks(env: str, project: Optional[str], section: Optional[str]) -> int:
     """执行所有或指定检查项。"""
+    if section == "skeleton":
+        report = CheckReport()
+        print("\n[仓库骨架路径检查]")
+        check_skeleton_paths(report)
+        print(report.summary())
+        failed = sum(1 for r in report.results if not r.passed)
+        return 1 if failed else 0
+
     report = CheckReport()
 
     if section is None or section == "env":
         print("\n[运行环境检查]")
         check_python_version(report)
         check_critical_packages(report)
+        check_skeleton_paths(report)
         check_directory_structure(report)
         check_required_files(report)
 
@@ -714,24 +869,32 @@ def main() -> int:
         epilog="""
 示例:
   # 全量检查
-  python script/test_init_check.py
+  python script/project_bootstrap.py
 
   # 指定环境
-  python script/test_init_check.py --env staging
+  python script/project_bootstrap.py --env staging
 
   # 仅检查环境配置
-  python script/test_init_check.py --section config
+  python script/project_bootstrap.py --section config
+
+  # 仅仓库骨架（pre-commit / 快速校验）
+  python script/project_bootstrap.py --section skeleton
 
   # 多项目模式
-  python script/test_init_check.py --project my_project --env test
+  python script/project_bootstrap.py --project my_project --env test
+
+  # 主数据 / 缓存预热
+  python script/project_bootstrap.py --seed print-guide
+  python script/project_bootstrap.py --seed warm-cache --env test
 
 可用检查项:
-  env     运行环境（Python 版本、依赖包、目录结构）
-  config  环境配置（.env 和 YAML 必填字段）
-  db      数据库连通性
-  login   登录有效性
-  sql     SQL 初始化配置
-  api     API 配置
+  skeleton 仓库骨架路径（关键文件/目录）
+  env      运行环境（Python、依赖、骨架、目录、必须文件）
+  config   环境配置（.env 和 YAML 必填字段）
+  db       数据库连通性
+  login    登录有效性
+  sql      SQL 初始化配置
+  api      API 配置
         """,
     )
     parser.add_argument("--env", default="test", help="环境名称（默认: test）")
@@ -742,7 +905,18 @@ def main() -> int:
         default=None,
         help="仅检查指定项",
     )
+    parser.add_argument(
+        "--seed",
+        choices=["warm-cache", "print-guide"],
+        default=None,
+        help="主数据辅助：warm-cache 连库预热 init+md 缓存；print-guide 打印准备清单（与全量检查互斥）",
+    )
     args = parser.parse_args()
+
+    if args.seed == "print-guide":
+        return seed_print_guide()
+    if args.seed == "warm-cache":
+        return seed_warm_cache(args.env, args.project)
 
     return run_all_checks(args.env, args.project, args.section)
 

@@ -224,7 +224,7 @@ pre-commit run --all-files
 说明：
 - 启用 `ruff`（导入排序/基础静态检查/格式化）
 - 启用 `quality_guard`（敏感信息硬编码、`teardown_class` super 调用、测试互调 `self.test_xxx` 检查）
-- 启用 `validate_project_structure`（关键目录结构校验，防止 README 与实现漂移）
+- 启用 `script/project_bootstrap.py --section skeleton`（关键仓库骨架校验，防止 README 与实现漂移）
 
 5. **配置环境**
 
