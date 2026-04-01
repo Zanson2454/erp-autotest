@@ -120,7 +120,7 @@ SQL_INIT_FILES = {
     "pur_init_sql.yaml": "pur_config",
     # fin_init_sql 顶层为 calender_info / sett_* 等分段，无 fin_config 包裹
     "fin_init_sql.yaml": "calender_info",
-    "del_init_sql.yaml": "scm_del_config",
+    "del_init_sql.yaml": "del_config",
     "acc_init_sql.yaml": "acc_config",
 }
 

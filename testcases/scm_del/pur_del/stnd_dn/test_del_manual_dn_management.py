@@ -52,7 +52,7 @@ class TestDelManualDnManagement(ScmDelBaseTest):
         
         # 从交货缓存数据获取交货类型配置
         if cls.del_cache_data:
-            del_sql = cls.del_cache_data.get("scm_del_config", {})
+            del_sql = cls.del_cache_data.get("del_config", {})
             dn_types = del_sql.get("dn_type_info", [])
             cls.dn_type_id = next(
                 (item.get("id") for item in dn_types if item.get("dn_type_code") == "STND_INBN"),

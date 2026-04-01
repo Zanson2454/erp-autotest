@@ -186,12 +186,14 @@ pytest --project=project_alpha --env=test
 | `sls_init_sql.yaml` | `sls_config` | `cls.sls_cache_data` | scm_sls |
 | `pur_init_sql.yaml` | `pur_config` | `cls.pur_cache_data` | scm_pur |
 | `fin_init_sql.yaml` | `calender_info` / `sett_*` 等顶层分段 | `cls.fin_cache_data` | erp_fin |
-| `del_init_sql.yaml` | `scm_del_config` | `cls.del_cache_data` | scm_del |
+| `del_init_sql.yaml` | `del_config` | `cls.del_cache_data` | scm_del |
 | `acc_init_sql.yaml` | *(待填充)* | `cls.acc_cache_data` | erp_acc |
 
 > 缓存文件存放在 `testdata/cache/`（已加入 `.gitignore`）。  
 > 测试环境缓存有效期 **5 分钟**，生产/预发环境 **1440 分钟**，到期自动重新查询。  
 > 修改 `config/erp/*_init_sql.yaml` 后，框架会按 **SQL 文件内容 hash** 自动丢弃对应 json 缓存，一般无需手删 `testdata/cache/*.json`。
+
+环境变量 `TEST_RELAX_CACHE_REQUIREMENTS=1` 可跳过 `bind_cache_data` 对必填缓存字段的绑定校验（仅建议本地或缺数据环境使用）。
 
 ### 4.2 SQL 配置结构
 
@@ -733,34 +735,21 @@ allure serve reports/allure-results
 
 ## 11. 扩展数据源（可选）
 
-当你的模块需要使用**框架默认不包含**的缓存数据（如采购缓存 `pur_cache_data`）时，  
-在模块基类 `load_cache_data()` 中调用 `TestDataContext.register_source`（与 `load_sql_cache` 同级），  
-或在 `conftest.py` 顶层注册一次。
+常见模块级根 key（`pur_config`、`sls_config`、`del_config`、财务各顶层分段等）已在 `testcases/comm/test_data_context.py` 的 `_SOURCE_REGISTRY` 中注册到对应的 `*_cache_data` 属性。  
+若新增 YAML 根 key，再在 `load_cache_data()` 或 `conftest.py` 顶层调用一次 `TestDataContext.register_source(...)` 即可。
 
-```python
-# 模块基类 load_cache_data 内（与 scm_pur / scm_del 等一致）：
-from testcases.comm.test_data_context import TestDataContext
+随后在模块基类 `bind_context()` 中**先** `bind_cache_data()`，再 `bind_module_user_context(...)`（与 `scm_pur` / `scm_sls` / `scm_del` 一致）。
 
-TestDataContext.register_source("pur_config", "pur_cache_data")
-```
-
-随后在模块基类 `bind_context()` 中**先** `bind_cache_data()`，再 `bind_module_user_context(...)`（与 `scm_sls` / `scm_del` 一致）。
-
-```python
-# testcases/my_module/conftest.py 顶部（可选，与基类二选一）：
-from testcases.comm.test_data_context import TestDataContext
-
-TestDataContext.register_source("pur_config", "pur_cache_data")
-```
-
-随后在模块基类或用例的 `bind_cache_data` 中直接用路径引用：
+路径第一段必须是 YAML 根 key（如 `pur_config`），第二段起为嵌套 dict/list 的 key；**不要**写成 `pur_cache_data.pur_config`（首段应为 `pur_config`，数据源由注册表映射到 `cls.pur_cache_data`）。
 
 ```python
 cls.bind_cache_data({
-    **cls.DEFAULT_CACHE_MAPPINGS,   # 保留默认映射
-    "pur_org_id": "pur_cache_data.pur_org_info.id",
+    **cls.DEFAULT_CACHE_MAPPINGS,
+    "po_type_id": "pur_config.po_type_info.id",
 })
 ```
+
+子类可通过 `REQUIRED_CACHE_KEYS` 声明绑定后不允许为 `None` 的字段；若本地库缺主数据导致 `setup_class` 抛错，可临时设置环境变量 `TEST_RELAX_CACHE_REQUIREMENTS=1` 跳过必填校验（勿用于正式 CI）。
 
 同样地，如需扩展 `DEFAULT_CACHE_MAPPINGS`（增加默认绑定字段），在模块基类中整体替换：
 
@@ -830,6 +819,10 @@ API 配置
 1. 环境配置 URL/账号是否正确（登录失败会导致 `init_data` 为空）
 2. 缓存路径第一段（如 `currency_info`）是否已在 `TestDataContext._SOURCE_REGISTRY` 中注册
 3. 自定义数据源是否调用了 `TestDataContext.register_source(key, attr)`
+
+### Q: `setup_class` 报 RuntimeError「以下缓存绑定失败」
+
+说明 `REQUIRED_CACHE_KEYS` 中某字段在库里解析为 `None`。先按上文核对 SQL 与 AUTOTEST 主数据；本地可设 `TEST_RELAX_CACHE_REQUIREMENTS=1` 临时跳过必填校验。
 
 ### Q: 清理数据没有被执行
 

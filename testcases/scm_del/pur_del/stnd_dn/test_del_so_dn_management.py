@@ -59,7 +59,7 @@ class TestDelSoDnManagement(ScmDelBaseTest):
         """更新配置：1.交货单行项目类型库存执行标记；2.SO行项目类型自动交货标记"""
         try:
             # 1. 从缓存获取标准发货类型ID（交货单行项目类型）
-            dn_item_type_list = cls.del_cache_data.get("scm_del_config", {}).get("dn_item_type_info", [])
+            dn_item_type_list = cls.del_cache_data.get("del_config", {}).get("dn_item_type_info", [])
             item_type_id = next(
                 (item["id"] for item in dn_item_type_list if item.get("dn_item_type_code") == "s_send"),
                 None

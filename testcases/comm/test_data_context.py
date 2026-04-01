@@ -37,8 +37,8 @@ class TestDataContext:
         # pur / sls / fin 模块 SQL 根 key（与 config/erp/*_init_sql.yaml 一致）
         "pur_config": "pur_cache_data",
         "sls_config": "sls_cache_data",
-        # scm_del：根 key 为 scm_del_config（避免与 pur_config 混淆）
-        "scm_del_config": "del_cache_data",
+        # scm_del：根 key 为 del_config（del_init_sql.yaml，避免与 pur_config 混淆）
+        "del_config": "del_cache_data",
         # 财务 SQL 根 key（fin_init_sql.yaml 顶层分段，如 calender_info）
         "calender_info": "fin_cache_data",
         "sett_doc_info": "fin_cache_data",

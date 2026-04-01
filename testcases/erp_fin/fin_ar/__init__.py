@@ -50,7 +50,6 @@ class ArBaseTest(BaseTest):
     def bind_context(cls):
         """绑定应收模块上下文。"""
         cls.ar_factory = FinArFactory()
-        cls.bind_mock_util_singleton()
         cls.mock_data = cls.mock_util
 
     def create_ar_request_body(self, now_ts, output_dict):

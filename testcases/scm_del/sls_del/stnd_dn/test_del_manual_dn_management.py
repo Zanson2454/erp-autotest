@@ -51,12 +51,12 @@ class TestDelManualDnManagement(ScmDelBaseTest):
             cls.default_addr_id = cls.init_data.get("address_info", {}).get("default_addr_id", 70035597)
         
         # 从交货缓存数据获取交货类型配置（销售交货单）
-        # 注意：交货单类型配置在 scm_del_config（del_init_sql.yaml）中
+        # 注意：交货单类型配置在 del_config（del_init_sql.yaml）中
         cls.dn_type_id = None
         cls.dn_item_type_id = None
         
         if cls.del_cache_data:
-            del_sql = cls.del_cache_data.get("scm_del_config", {})
+            del_sql = cls.del_cache_data.get("del_config", {})
             dn_types = del_sql.get("dn_type_info", [])
             
             # 销售交货单类型是 STND_OUBN（标准出库），注意是 OUBN 不是 OUTBN

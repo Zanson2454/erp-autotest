@@ -31,7 +31,7 @@ class TestDelDnTypeDistributionManagement(ScmDelBaseTest):
         
         # 从缓存数据中获取ID
         if cls.del_cache_data:
-            del_sql = cls.del_cache_data.get("scm_del_config", {})
+            del_sql = cls.del_cache_data.get("del_config", {})
             cls.dn_type_id = del_sql.get("dn_type_info", [{}])[0].get("id")
             cls.dn_item_type_id = del_sql.get("dn_item_type_info", [{}])[0].get("id")
     @case_decorator(

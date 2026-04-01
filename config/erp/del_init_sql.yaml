@@ -1,5 +1,5 @@
-# DEL配置数据查询定义（根 key 使用 scm_del_config，与 scm_del 模块对应，避免与 pur_config 混淆）
-scm_del_config:
+# DEL配置数据查询定义（根 key 使用 del_config，与 del_init_sql / del_cache_data 对应，避免与 pur_config 混淆）
+del_config:
   # 交货单类型信息
   dn_type_info:
     sql: |

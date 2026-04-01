@@ -1,54 +1,25 @@
 # -*- coding: utf-8 -*-
-"""
-ERP财务模块的测试初始化
-提供配置加载等通用功能，为fin_ap, fin_ar, fin_iv等子模块提供基础支持
-"""
+"""ERP 财务模块的测试初始化 — 命令式（自定义 context_builder）。"""
 
-import sys
-from pathlib import Path
-import json
-import requests
-import time
 import random
+import time
+from pathlib import Path
 
-# 获取项目根目录
-project_root = Path(__file__).resolve().parent.parent.parent
-sys.path.append(str(project_root))
-
-from typing import Any, Dict
 from testcases.comm.base_test import BaseTest
-from testcases.comm.test_data_context import TestDataContext
-from utils.param_util import ParamUtil
-from utils.report_util import a  # Allure reporting utility (a.json, a.text)
 from testcases.erp_fin.context_builder import build_fin_context
+from utils.param_util import ParamUtil
+
+project_root = Path(__file__).resolve().parent.parent.parent
 
 
 class FinBaseTest(BaseTest):
-    """ERP财务模块的基础测试类，负责加载财务通用配置和提供API访问方法"""
+    """ERP 财务模块基础测试类 — 命令式注册，LOGIN_STRATEGY 消除双重登录。"""
 
-    # 类型提示：继承的动态属性
-    yaml_util: Any
-
+    LOGIN_STRATEGY = "single"
     REQUIRED_CACHE_KEYS = ("curr_id", "cust_id")
-
-    # 登录两个门户，分别保存 session/user_info 并初始化 http 工具
-    _PORTAL_TYPE_KEYS: Dict[str, str] = {"admin": "TERP_PORTAL"}
-
-    # Mock单例
-    _mock_instance = None
 
     @classmethod
     def setup_class(cls):
-        """
-        测试类初始化 - 加载财务通用配置
-        1. 调用父类初始化方法 (包括登录、数据库连接等)
-        2. 多门户多用户登录，获取 session
-        3. 初始化财务配置文件路径 (erp_fin specific)
-        4. 加载API路径和参数配置 (from fin_api_path.yaml / fin_api_params.yaml)
-        5. 初始化 http 工具，自动带上门户请求头
-        6. DataFactory和缓存初始化 (fin specific, fallback to md)
-        7. 设置路径参数和用户信息
-        """
         super().setup_class()
         cls.load_api_configs()
         cls.load_cache_data()
@@ -56,28 +27,15 @@ class FinBaseTest(BaseTest):
 
     @classmethod
     def load_api_configs(cls):
-        """加载 erp_fin 模块 API 配置与门户上下文。"""
-        admin_result = cls.module_login_single_portal(portal_key=cls._PORTAL_TYPE_KEYS["admin"], tenant_key="terp")
-        cls.admin_headers = admin_result.portal_headers
-
-        # 初始化配置文件路径
+        """加载 erp_fin 模块 API 配置（登录已由 BaseTest._initialize_auth 完成）。"""
         cls.fin_api_path = Path(project_root) / "config" / "api" / "erp_fin" / "fin_api_path.yaml"
         cls.fin_api_params = Path(project_root) / "config" / "api" / "erp_fin" / "fin_api_params.yaml"
-
         cls.load_module_api_configs(cls.fin_api_path, cls.fin_api_params)
 
     @classmethod
     def load_cache_data(cls):
         """加载 erp_fin 模块依赖缓存。"""
-        for _key in (
-            "calender_info",
-            "sett_doc_info",
-            "sett_item_info",
-            "sb_type_info",
-            "ar_type_info",
-            "ap_type_info",
-        ):
-            TestDataContext.register_source(_key, "fin_cache_data")
+        # 财务 SQL 根 key → fin_cache_data 已在 test_data_context._SOURCE_REGISTRY 注册
         # MD cache reuse (for org_info, currency, etc. - shared with gen_md)
         # 需要先初始化 md_init_cache，然后再获取
         cls.md_cache_data = cls.load_sql_cache(
@@ -100,7 +58,6 @@ class FinBaseTest(BaseTest):
     @classmethod
     def bind_context(cls):
         """绑定 erp_fin 模块上下文与初始化字段。"""
-        cls.bind_mock_util_singleton()
         cls.bind_cache_data()
         context_data = build_fin_context(
             init_data=getattr(cls, "init_data", None),

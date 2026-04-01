@@ -183,7 +183,7 @@ class DelPoDnFactory:
             return dn_type_id
         
         if self.del_cache_data:
-            dn_types = self.del_cache_data.get("scm_del_config", {}).get("dn_type_info", [])
+            dn_types = self.del_cache_data.get("del_config", {}).get("dn_type_info", [])
             return next(
                 (item.get("id") for item in dn_types if item.get("dn_type_code") == "STND_INBN"),
                 dn_types[0].get("id") if dn_types else None
