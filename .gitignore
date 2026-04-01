@@ -103,7 +103,3 @@ api_record/runtime/
 api_record/testdata/recorded/
 api_record/generated_cases/
 api_record/raw_curls/
-
-# 忽略测试中的文件
-test_data_factory/
-docs/test_data_factory_implementation_guide.md
