@@ -37,6 +37,88 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
         cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
+
+    def _create_barcode_md(self):
+        obj_code = self.mock_util.generate_unique_code(tag="BARCODE_MD")
+        set_dict = {
+            "obj_code": obj_code,
+            "type": "MAT",
+            "label": obj_code,
+            "create_label_amount": 1,
+            "print_amt": 1,
+            "print_time": self.mock_util.get_timestamp(),
+            "status": "ENABLED"
+        }
+        response, barcode_md_id = self.standard_api_call(
+            api_key="GEN-条码主数据-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=["code", "name", "description"],
+            store_id_as="barcode_md"
+        )
+        self.assert_util.assert_response_data(response)
+        self.barcode_md_id = barcode_md_id
+        self.barcode_md_code = obj_code
+        return barcode_md_id
+
+    def _ensure_save_barcode_md(self):
+        if self.barcode_md_id:
+            return self.barcode_md_id
+        return self._create_barcode_md()
+
+    def _create_barcode_field(self):
+        biz_field_key = self.mock_util.generate_unique_code(tag="BARCODE_FIELD")
+        biz_field_name = f"条码字段_{self.mock_util.get_timestamp()}"
+        set_dict = {
+            "bizFieldKey": biz_field_key,
+            "bizFieldName": biz_field_name,
+            "bizType": "MAT"
+        }
+        response, barcode_field_id = self.standard_api_call(
+            api_key="GEN-条码字段-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=["bizFieldKey", "bizFieldName", "bizType"],
+            store_id_as="barcode_field"
+        )
+        self.assert_util.assert_response_data(response)
+        self.barcode_field_id = barcode_field_id
+        self.barcode_field_code = biz_field_key
+        return barcode_field_id
+
+    def _ensure_save_barcode_field(self):
+        if self.barcode_field_id:
+            return self.barcode_field_id
+        return self._create_barcode_field()
+
+    def _create_barcode_rule(self):
+        if not self.barcode_field_id:
+            self._ensure_save_barcode_field()
+        prefix = self.mock_util.generate_unique_code(tag="BARCODE_RULE")
+        rule_name = f"条码规则_{self.mock_util.get_timestamp()}"
+        set_dict = {
+            "prefix": prefix,
+            "name": rule_name,
+            "remark": f"条码规则描述_{self.mock_util.get_timestamp()}",
+            "isUseBarcodeLabel": True,
+            "delimiter": "-",
+            "bizType": "MAT",
+            "bizFieldId": {"id": self.barcode_field_id}
+        }
+        response, barcode_rule_id = self.standard_api_call(
+            api_key="GEN-条码规则-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=["prefix", "name", "remark", "isUseBarcodeLabel", "delimiter", "bizType", "bizFieldId"],
+            store_id_as="barcode_rule"
+        )
+        self.assert_util.assert_response_data(response)
+        self.barcode_rule_id = barcode_rule_id
+        self.barcode_rule_code = prefix
+        return barcode_rule_id
+
+    def _ensure_save_barcode_rule(self):
+        if self.barcode_rule_id:
+            return self.barcode_rule_id
+        return self._create_barcode_rule()
+
     # ================ 条码主数据管理 ================
     @case_decorator(
         story="条码主数据管理",
@@ -51,25 +133,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_save_barcode_md(self):
         """新增条码主数据用例 - GEN_BARCODE_MD_SAVE_ACTION_SERVICE"""
         try:
-            obj_code = self.mock_util.generate_unique_code(tag="BARCODE_MD")
-            barcode_name = f"条码主数据_{self.mock_util.get_timestamp()}"
-
-            set_dict = {
-                "obj_code": obj_code,
-                "type": "MAT",
-                "label": obj_code,
-                "create_label_amount": 1,
-                "print_amt":1,
-                "print_time":self.mock_util.get_timestamp(),
-                "status":"ENABLED"
-            }
-            
-            response, barcode_md_id = self.standard_api_call(
-                api_key="GEN-条码主数据-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=["code", "name", "description"],
-                store_id_as="barcode_md"
-            )
+            self._create_barcode_md()
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -120,7 +184,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         """查询条码主数据详情用例 - GEN_BARCODE_MD_QUERY_DETAIL_ACTION_SERVICE"""
         try:
             if not self.barcode_md_id:
-                self.test_save_barcode_md()
+                self._ensure_save_barcode_md()
 
             set_dict = {"id": self.barcode_md_id}
             
@@ -148,7 +212,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         """启用条码主数据用例 - GEN_BARCODE_MD_ENABLED_ACTION_SERVICE"""
         try:
             if not self.barcode_md_id:
-                self.test_save_barcode_md()
+                self._ensure_save_barcode_md()
 
             set_dict = {"id": self.barcode_md_id}
             
@@ -176,7 +240,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         """禁用条码主数据用例 - GEN_BARCODE_MD_DISABLED_ACTION_SERVICE"""
         try:
             if not self.barcode_md_id:
-                self.test_save_barcode_md()
+                self._ensure_save_barcode_md()
 
             set_dict = {"id": self.barcode_md_id}
             
@@ -204,7 +268,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         """删除条码主数据用例 - GEN_BARCODE_MD_DELETE_ACTION_SERVICE"""
         try:
             if not self.barcode_md_id:
-                self.test_save_barcode_md()
+                self._ensure_save_barcode_md()
 
             set_dict = {"id": self.barcode_md_id}
             
@@ -232,28 +296,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_save_barcode_rule(self):
         """新增条码规则用例 - GEN_BARCODE_RULE_CF_SAVE_ACTION_SERVICE"""
         try:
-            if not self.barcode_field_id:
-                self.test_save_barcode_field()
-
-            prefix = self.mock_util.generate_unique_code(tag="BARCODE_RULE")
-            rule_name = f"条码规则_{self.mock_util.get_timestamp()}"
-
-            set_dict = {
-                "prefix": prefix,
-                "name": rule_name,
-                "remark": f"条码规则描述_{self.mock_util.get_timestamp()}",
-                "isUseBarcodeLabel": True,
-                "delimiter": "-",
-                "bizType": "MAT",
-                "bizFieldId": {"id":self.barcode_field_id}
-            }
-            
-            response, barcode_rule_id = self.standard_api_call(
-                api_key="GEN-条码规则-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=["prefix", "name", "remark","isUseBarcodeLabel","delimiter","bizType","bizFieldId"],
-                store_id_as="barcode_rule"
-            )
+            self._create_barcode_rule()
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -302,7 +345,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         """查询条码规则详情用例 - GEN_BARCODE_RULE_CF_QUERY_DETAIL_ACTION_SERVICE"""
         try:
             if not self.barcode_rule_id:
-                self.test_save_barcode_rule()
+                self._ensure_save_barcode_rule()
 
             set_dict = {"id": self.barcode_rule_id}
             
@@ -329,7 +372,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         """删除条码规则用例 - GEN_BARCODE_RULE_CF_DELETE_ACTION_SERVICE"""
         try:
             if not self.barcode_rule_id:
-                self.test_save_barcode_rule()
+                self._ensure_save_barcode_rule()
 
             set_dict = {"id": self.barcode_rule_id}
             
@@ -357,21 +400,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_save_barcode_field(self):
         """新增条码字段用例 - GEN_BARCODE_FILED_CF_SAVE_ACTION_SERVICE"""
         try:
-            bizFieldKey = self.mock_util.generate_unique_code(tag="BARCODE_FIELD")
-            bizFieldName = f"条码字段_{self.mock_util.get_timestamp()}"
-
-            set_dict = {
-                "bizFieldKey": bizFieldKey,
-                "bizFieldName": bizFieldName,
-                "bizType": "MAT"
-            }
-            
-            response, barcode_field_id = self.standard_api_call(
-                api_key="GEN-条码字段-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=["bizFieldKey", "bizFieldName", "bizType"],
-                store_id_as="barcode_field"
-            )
+            self._create_barcode_field()
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -421,7 +450,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         """查询条码字段详情用例 - GEN_BARCODE_FILED_CF_QUERY_DETAIL_ACTION_SERVICE"""
         try:
             if not self.barcode_field_id:
-                self.test_save_barcode_field()
+                self._ensure_save_barcode_field()
 
             set_dict = {"id": self.barcode_field_id}
             
@@ -448,7 +477,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
         """删除条码字段用例 - GEN_BARCODE_FILED_CF_DELETE_ACTION_SERVICE"""
         try:
             if not self.barcode_field_id:
-                self.test_save_barcode_field()
+                self._ensure_save_barcode_field()
 
             set_dict = {"id": self.barcode_field_id}
             

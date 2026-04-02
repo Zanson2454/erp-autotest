@@ -29,6 +29,36 @@ class TestCountryManagement(GenMdBaseTest):
         """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
         cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
+
+    def _create_country(self):
+        country_code = self.mock_util.generate_unique_code(tag="COUN")
+        country_name = f"测试国家_{self.mock_util.get_timestamp()}"
+
+        set_dict = {
+            "counCode": country_code,
+            "counName": country_name,
+            "counNameEn": f"Test Country_{self.mock_util.get_timestamp()}",
+            "counPhoneCode": "+86",
+            "counCurrency": "CNY",
+            "counCurrencyEn": "Chinese Yuan"
+        }
+
+        response, country_id = self.standard_api_call(
+            api_key="GEN-国家配置表-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=["counCode", "counName", "counNameEn", "counPhoneCode", "counCurrency", "counCurrencyEn"],
+            store_id_as="country"
+        )
+        self.assert_util.assert_response_data(response)
+        self.country_id = country_id
+        self.country_code = country_code
+        return country_id
+
+    def _ensure_save_country(self):
+        if self.country_id:
+            return self.country_id
+        return self._create_country()
+
     @case_decorator(
         story="国家配置管理",
         title="测试新增国家配置",
@@ -41,26 +71,7 @@ class TestCountryManagement(GenMdBaseTest):
     def test_save_country(self):
         """新增国家配置用例"""
         try:
-            country_code = self.mock_util.generate_unique_code(tag="COUN")
-            country_name = f"测试国家_{self.mock_util.get_timestamp()}"
-
-            set_dict = {
-                "counCode": country_code,
-                "counName": country_name,
-                "counNameEn": f"Test Country_{self.mock_util.get_timestamp()}",
-                "counPhoneCode": "+86",
-                "counCurrency": "CNY",
-                "counCurrencyEn": "Chinese Yuan"
-            }
-            
-            response, country_id = self.standard_api_call(
-                api_key="GEN-国家配置表-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=["counCode", "counName", "counNameEn", "counPhoneCode", "counCurrency", "counCurrencyEn"],
-                store_id_as="country"
-            )
-            
-            self.country_code = country_code
+            self._create_country()
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -111,7 +122,7 @@ class TestCountryManagement(GenMdBaseTest):
         """查询国家配置详情用例"""
         try:
             if not self.country_id:
-                self.test_save_country()
+                self._ensure_save_country()
 
             set_dict = {"id": self.country_id}
             
@@ -138,7 +149,7 @@ class TestCountryManagement(GenMdBaseTest):
         """删除国家配置用例"""
         try:
             if not self.country_id:
-                self.test_save_country()
+                self._ensure_save_country()
 
             set_dict = {"id": self.country_id}
             

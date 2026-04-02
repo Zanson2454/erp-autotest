@@ -162,7 +162,7 @@ class TestDelManualDnManagement(ScmDelBaseTest):
                 ORDER BY created_at DESC 
                 LIMIT 1
             """
-            db_result = self.db.query(query_sql, [self.TEST_REMARK])
+            db_result = self.query_service.query(query_sql, [self.TEST_REMARK])
             
             if not db_result:
                 raise ValueError("未在数据库中找到刚创建的交货单")
@@ -202,7 +202,7 @@ class TestDelManualDnManagement(ScmDelBaseTest):
         """提交销售交货单"""
         try:
             if not self.__class__.dn_id:
-                self.test_create_manual_dn()
+                self._ensure_create_manual_dn()
             
             api_path = self.get_api_path("DEL-交货单公共-交货单提交业务处理服务")
             params, url = self.get_api_params(api_path)
@@ -227,7 +227,7 @@ class TestDelManualDnManagement(ScmDelBaseTest):
                 FROM del_dn_head_tr 
                 WHERE id = %s
             """
-            db_result = self.db.query(query_sql, [self.__class__.dn_id])
+            db_result = self.query_service.query(query_sql, [self.__class__.dn_id])
             
             if not db_result:
                 raise ValueError(f"未在数据库中找到交货单: id={self.__class__.dn_id}")
@@ -265,8 +265,8 @@ class TestDelManualDnManagement(ScmDelBaseTest):
         """作废销售交货单"""
         try:
             if not self.__class__.dn_id:
-                self.test_create_manual_dn()
-                self.test_submit_manual_dn()
+                self._ensure_create_manual_dn()
+                self._ensure_submit_manual_dn()
             
             api_path = self.get_api_path("DEL-交货单作废服务")
             params, url = self.get_api_params(api_path)
@@ -291,7 +291,7 @@ class TestDelManualDnManagement(ScmDelBaseTest):
                 FROM del_dn_head_tr 
                 WHERE id = %s
             """
-            db_result = self.db.query(query_sql, [self.__class__.dn_id])
+            db_result = self.query_service.query(query_sql, [self.__class__.dn_id])
             
             if not db_result:
                 raise ValueError(f"未在数据库中找到交货单: id={self.__class__.dn_id}")

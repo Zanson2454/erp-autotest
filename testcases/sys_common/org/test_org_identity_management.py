@@ -303,7 +303,7 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
         """查找单条组织身份数据"""
         try:
             if not self.code:
-                self.test_create_identity()
+                self._ensure_create_identity()
             
             api_path = self.get_api_path("组织身份表-查找单条数据服务")
             params, url = self.get_api_params(api_path)
@@ -376,7 +376,7 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
         """根据ID查找组织身份数据"""
         try:
             if not self.identity_id:
-                self.test_create_identity()
+                self._ensure_create_identity()
             
             api_path = self.get_api_path("组织身份表-根据ID查找数据服务")
             params, url = self.get_api_params(api_path)
@@ -417,7 +417,7 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
         """根据ID查找单表组织身份数据"""
         try:
             if not self.identity_id:
-                self.test_create_identity()
+                self._ensure_create_identity()
             
             api_path = self.get_api_path("组织身份表-根据ID查找单表数据服务")
             params, url = self.get_api_params(api_path)
@@ -458,7 +458,7 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
         """根据ID列表查找组织身份数据"""
         try:
             if not self.identity_id:
-                self.test_create_identity()
+                self._ensure_create_identity()
             
             api_path = self.get_api_path("组织身份表-根据ID列表查找数据服务")
             params, url = self.get_api_params(api_path)
@@ -502,7 +502,7 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
         """根据ID更新组织身份数据"""
         try:
             if not self.identity_id:
-                self.test_create_identity()
+                self._ensure_create_identity()
             
             new_name = f"更新后身份_{self.mock_util.get_timestamp()}"
             
@@ -550,7 +550,7 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
         """启用组织身份主数据"""
         try:
             if not self.identity_id:
-                self.test_create_identity()
+                self._ensure_create_identity()
             
             api_path = self.get_api_path("组织身份表-启用主数据服务")
             params, url = self.get_api_params(api_path)
@@ -591,7 +591,7 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
         """禁用组织身份主数据"""
         try:
             if not self.identity_id:
-                self.test_create_identity()
+                self._ensure_create_identity()
             
             api_path = self.get_api_path("组织身份表-禁用主数据服务")
             params, url = self.get_api_params(api_path)
@@ -632,7 +632,7 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
         """批量启用组织身份主数据"""
         try:
             if not self.identity_id:
-                self.test_create_identity()
+                self._ensure_create_identity()
             
             api_path = self.get_api_path("组织身份表-批量启用主数据服务")
             params, url = self.get_api_params(api_path)
@@ -673,7 +673,7 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
         """批量禁用组织身份主数据"""
         try:
             if not self.identity_id:
-                self.test_create_identity()
+                self._ensure_create_identity()
             
             api_path = self.get_api_path("组织身份表-批量禁用主数据服务")
             params, url = self.get_api_params(api_path)
@@ -716,7 +716,7 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
         """折叠组织身份关联关系"""
         try:
             if not self.identity_id:
-                self.test_create_identity()
+                self._ensure_create_identity()
             
             api_path = self.get_api_path("组织身份表-折叠关联关系服务")
             if not api_path:
@@ -891,7 +891,7 @@ class TestOrgIdentityManagement(SysCommonBaseTest):
         """根据ID删除组织身份数据"""
         try:
             if not self.identity_id:
-                self.test_create_identity()
+                self._ensure_create_identity()
             
             api_path = self.get_api_path("组织身份表-根据ID删除数据服务")
             params, url = self.get_api_params(api_path)

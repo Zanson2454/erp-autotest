@@ -65,7 +65,7 @@ class TestRebateGet(SlsBase):
             self.so_id = self.create_sales_order(order_type="STND", submit=True, rebate_amount=rebate_amount)
             
             # 获取销售订单信息
-            so_info = self.db.query(f"SELECT id, so_code FROM sls_so_head_tr WHERE id={self.so_id}")
+            so_info = self.query_service.query(f"SELECT id, so_code FROM sls_so_head_tr WHERE id={self.so_id}")
             if so_info:
                 self.so_code = so_info[0]['so_code']
                 self.logger.info(f"销售订单创建成功，ID: {self.so_id}, 订单号: {self.so_code}")
@@ -105,7 +105,7 @@ class TestRebateGet(SlsBase):
                 self.so_id = self.create_sales_order(order_type="STND", submit=True, rebate_amount=rebate_amount)
                 
                 # 获取销售订单信息
-                so_info = self.db.query(f"SELECT id, so_code FROM sls_so_head_tr WHERE id={self.so_id}")
+                so_info = self.query_service.query(f"SELECT id, so_code FROM sls_so_head_tr WHERE id={self.so_id}")
                 if so_info:
                     self.so_code = so_info[0]['so_code']
                     self.logger.info(f"销售订单创建成功，ID: {self.so_id}, 订单号: {self.so_code}")
@@ -146,7 +146,7 @@ class TestRebateGet(SlsBase):
                 self.so_id = self.create_sales_order(order_type="STND", submit=True, rebate_amount=rebate_amount)
                 
                 # 获取销售订单信息
-                so_info = self.db.query(f"SELECT id, so_code FROM sls_so_head_tr WHERE id={self.so_id}")
+                so_info = self.query_service.query(f"SELECT id, so_code FROM sls_so_head_tr WHERE id={self.so_id}")
                 if so_info:
                     self.so_code = so_info[0]['so_code']
                     self.logger.info(f"销售订单创建成功，ID: {self.so_id}, 订单号: {self.so_code}")
@@ -266,7 +266,7 @@ class TestRebateGet(SlsBase):
                 self.so_id = self.create_sales_order(order_type="STND", submit=True, rebate_amount=rebate_amount)
                 
                 # 获取销售订单信息
-                so_info = self.db.query(f"SELECT id, so_code FROM sls_so_head_tr WHERE id={self.so_id}")
+                so_info = self.query_service.query(f"SELECT id, so_code FROM sls_so_head_tr WHERE id={self.so_id}")
                 if so_info:
                     self.so_code = so_info[0]['so_code']
                     self.logger.info(f"销售订单创建成功，ID: {self.so_id}, 订单号: {self.so_code}")
@@ -369,7 +369,7 @@ class TestRebateGet(SlsBase):
                 self.so_id = self.create_sales_order(order_type="STND", submit=True, rebate_amount=rebate_amount)
                 
                 # 获取销售订单信息
-                so_info = self.db.query(f"SELECT id, so_code FROM sls_so_head_tr WHERE id={self.so_id}")
+                so_info = self.query_service.query(f"SELECT id, so_code FROM sls_so_head_tr WHERE id={self.so_id}")
                 if so_info:
                     self.so_code = so_info[0]['so_code']
                     self.logger.info(f"销售订单创建成功，ID: {self.so_id}, 订单号: {self.so_code}")
@@ -452,7 +452,7 @@ class TestRebateGet(SlsBase):
                 self.so_id = self.create_sales_order(order_type="STND", submit=True, rebate_amount=rebate_amount)
                 
                 # 获取销售订单信息
-                so_info = self.db.query(f"SELECT id, so_code FROM sls_so_head_tr WHERE id={self.so_id}")
+                so_info = self.query_service.query(f"SELECT id, so_code FROM sls_so_head_tr WHERE id={self.so_id}")
                 if so_info:
                     self.so_code = so_info[0]['so_code']
                     self.logger.info(f"销售订单创建成功，ID: {self.so_id}, 订单号: {self.so_code}")
@@ -542,7 +542,7 @@ class TestRebateGet(SlsBase):
         """审批销售订单通过"""
         try:
             # 1. 查询完整的订单数据
-            order_data = self.db.query(f"""
+            order_data = self.query_service.query(f"""
                 SELECT h.*, i.* 
                 FROM sls_so_head_tr h 
                 LEFT JOIN sls_so_item_tr i ON h.id = i.so_id 
@@ -613,7 +613,7 @@ class TestRebateGet(SlsBase):
             # 7. 查询订单状态，验证是否为已生效（添加重试机制）
             actual_status = None
             for attempt in range(5):
-                order_status = self.db.query(
+                order_status = self.query_service.query(
                     "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
                     params=[order_id]
                 )
@@ -922,7 +922,7 @@ class TestRebateGet(SlsBase):
             self.logger.info("开始清理旧的返利政策")
             
             # 查询所有非停用状态的返利政策进行停用
-            active_policies = self.db.query(
+            active_policies = self.query_service.query(
                 "SELECT id, policy_code, status FROM rebate_policy_head_tr WHERE deleted = 0 AND status IN ('ENABLED', 'DRAFT', 'APPROVING')"
             )
             

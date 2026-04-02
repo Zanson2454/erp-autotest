@@ -146,7 +146,7 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
                 """
                 
                 # 执行查询
-                records = self.db.query(sql)
+                records = self.query_service.query(sql)
                 self.logger.info(f"查询到{len(records)}条领料分单规则明细")
                 
                 # 保存查询结果
@@ -409,7 +409,7 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
                     WHERE id = {prd_order_head_id}
                     AND deleted = 0
                 """
-                result = self.db.query(sql)
+                result = self.query_service.query(sql)
                 if not result:
                     raise ValueError(f"未找到生产订单信息: {prd_order_head_id}")
                 
@@ -577,7 +577,7 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
                             AND bt_class = 'PRD_ISSUE'
                             AND deleted = 0
                         """
-                        delivery_head_result = self.db.query(sql)
+                        delivery_head_result = self.query_service.query(sql)
                         
                         if len(delivery_head_result) > 0:
                             delivery_head = delivery_head_result[0]
@@ -612,7 +612,7 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
                         AND bt_class = 'PRD_ISSUE'
                         AND deleted = 0
                     """
-                    delivery_item_results = self.db.query(sql)
+                    delivery_item_results = self.query_service.query(sql)
                     assert len(delivery_item_results) > 0, f"交货入库单 {item['dnCode']} 没有行项目数据"
 
                     # 验证每个交货入库单行项目
@@ -650,7 +650,7 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
                             WHERE mat_code = '{delivery_item["mat_code"]}'
                             AND deleted = 0
                         """
-                        mat_result = self.db.query(sql)
+                        mat_result = self.query_service.query(sql)
                         assert len(mat_result) > 0, \
                             f"未找到物料编码 {delivery_item['mat_code']} 对应的物料ID"
                         mat_id = mat_result[0]["id"]
@@ -667,7 +667,7 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
                         AND mat_id = {mat_id}
                         AND deleted = 0
                     """
-                    mvm_item_results = self.db.query(sql)
+                    mvm_item_results = self.query_service.query(sql)
                     
                     # 如果移动凭证还未生成，记录警告但不强制失败
                     if len(mvm_item_results) == 0:

@@ -186,7 +186,7 @@ class TestWhFindRuleManagement(SlsBase):
         try:
             # 检查依赖数据
             if not self.wh_find_rule_id:
-                self.test_wh_find_rule_save()
+                self._ensure_wh_find_rule_save()
             
             # 1. 调用API
             api_path = self.get_api_path("寻仓规则详情")
@@ -240,7 +240,7 @@ class TestWhFindRuleManagement(SlsBase):
         try:
             # 检查依赖数据
             if not self.wh_find_rule_id:
-                self.test_wh_find_rule_save()
+                self._ensure_wh_find_rule_save()
             
             # 1. 调用API
             api_path = self.get_api_path("寻仓规则启用")
@@ -290,7 +290,7 @@ class TestWhFindRuleManagement(SlsBase):
         try:
             # 检查依赖数据
             if not self.wh_find_rule_id:
-                self.test_wh_find_rule_save()
+                self._ensure_wh_find_rule_save()
             
             # 1. 调用API
             api_path = self.get_api_path("寻仓规则停用")
@@ -340,7 +340,7 @@ class TestWhFindRuleManagement(SlsBase):
         try:
             # 检查依赖数据
             if not self.wh_find_rule_id:
-                self.test_wh_find_rule_save()
+                self._ensure_wh_find_rule_save()
             
             # 1. 调用API
             api_path = self.get_api_path("寻仓规则删除")

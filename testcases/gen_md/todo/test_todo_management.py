@@ -145,7 +145,7 @@ class TestTodoManagement(GenMdBaseTest):
         """日常待办完成用例 - GEN_DAILY_TO_DO_COMPLETED_SERVICE"""
         try:
             if not self.daily_todo_id:
-                self.test_save_daily_todo()
+                self._ensure_save_daily_todo()
 
             set_dict = {"id": self.daily_todo_id}
             response, _ = self.standard_api_call(
@@ -177,11 +177,11 @@ class TestTodoManagement(GenMdBaseTest):
             # 检查是否存在待办ID，如果不存在先创建
             if not self.daily_todo_id:
                 try:
-                    self.test_save_daily_todo()
+                    self._ensure_save_daily_todo()
                 except Exception as e:
                     self.logger.warning(f"创建日常待办失败: {str(e)}")
                     # 如果创建失败，尝试从分页查询获取现有数据
-                    self.test_query_daily_todo_page()
+                    self._ensure_query_daily_todo_page()
                 
             # 如果还是没有数据，使用模拟ID
             if not self.daily_todo_id:
@@ -312,11 +312,11 @@ class TestTodoManagement(GenMdBaseTest):
             # 检查是否存在业务待办ID，如果不存在先创建
             if not self.biz_todo_id:
                 try:
-                    self.test_save_biz_todo()
+                    self._ensure_save_biz_todo()
                 except Exception as e:
                     self.logger.warning(f"创建业务待办失败: {str(e)}")
                     # 如果创建失败，尝试从分页查询获取现有数据
-                    self.test_query_biz_todo_page()
+                    self._ensure_query_biz_todo_page()
                 
             # 如果还是没有数据，使用模拟ID
             if not self.biz_todo_id:

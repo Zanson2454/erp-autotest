@@ -1,14 +1,7 @@
 import pytest
-import sys
 import allure
-from pathlib import Path
 from datetime import datetime, timedelta
 import random
-
-# 设置项目根目录到Python路径
-project_root = Path(__file__).resolve().parent.parent.parent.parent
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
 
 from testcases.erp_fin import FinBaseTest
 from utils.param_util import ParamUtil
@@ -44,20 +37,10 @@ class TestSettItemCheck(FinBaseTest):
     def test_search_detail(self):
         """测试查询结算项详情"""
         try:
-            #查询最新一条结算项
-            sql="""
-                SELECT id
-                FROM sett_item_tr
-                WHERE deleted = 0
-                ORDER BY created_at DESC
-                LIMIT 1
-            """
-
-            result = self.db.query(sql)
-            if not result:
+            request_id = self.query_service.get_latest_sett_item_id()
+            if not request_id:
                 self.create_settlement_item("E_SLS_GOODS")
-                result = self.db.query(sql)
-            request_id = result[0]["id"]
+                request_id = self.query_service.get_latest_sett_item_id()
             
             api_path = self.get_api_path("结算项表-根据ID查找数据服务")
             params, url = self.get_api_params(api_path)
@@ -149,17 +132,10 @@ class TestSettItemCheck(FinBaseTest):
             api_path = self.get_api_path("结算项-删除服务")
             params, url = self.get_api_params(api_path)
             
-            #查询最新一条结算项
-            sql="""
-                select *
-                from sett_item_tr where deleted=0
-                and sett_item_status='CREATED'
-                order by created_at desc;
-            """
-            request_id=self.db.query(sql)[0]["id"]
+            request_id = self.query_service.get_latest_sett_item_id_by_status("CREATED")
             if not request_id:
                 self.create_settlement_item("E_SLS_GOODS")
-                request_id = self.db.query(sql)[0]["id"]
+                request_id = self.query_service.get_latest_sett_item_id_by_status("CREATED")
             
             filtered_params = ParamUtil.filter_post_body_fields(
                 params, ["id"], ["params","request"])
@@ -174,14 +150,8 @@ class TestSettItemCheck(FinBaseTest):
                 param_path=["params"]
             )
             self.assert_util.assert_response_success(result)
-            after_sql=f"""
-                select *
-                from sett_item_tr where deleted=0
-                and sett_item_status='CREATED'
-                and id={request_id};
-            """
-            after_result=self.db.query(after_sql)
-            assert not after_result
+            after_item = self.query_service.get_sett_item_by_id(request_id)
+            assert (not after_item) or after_item.get("deleted") != 0
             a.json(filtered_params, "请求数据")
             a.json(result, "响应数据")
         except Exception as e:

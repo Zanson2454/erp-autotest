@@ -152,7 +152,7 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         try:
             # 获取组织类型管理ID
             if not self.org_type_id:
-                self.test_save_org_type()
+                self._ensure_save_org_type()
 
             # 调用详情查询接口
             set_dict = {"id": self.org_type_id}
@@ -188,7 +188,7 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         try:
             # 获取组织类型管理信息
             if not self.org_type_id:
-                self.test_save_org_type()
+                self._ensure_save_org_type()
 
             # 调用启用接口
             set_dict = {"id": self.org_type_id}
@@ -203,9 +203,8 @@ class TestOrg_TypeManagement(GenMdBaseTest):
             
             self.assert_util.assert_response_success(response)
 
-            sql = f"select status from org_business_type_cf where id = {self.org_type_id}"
-            if self.db.query(sql):
-                status = self.db.query(sql)[0]["status"]
+            status = self.query_service.get_org_business_type_status(self.org_type_id)
+            if status is not None:
                 self.assert_util.assert_by_operator(status, "=", "ENABLED")
             else:
                 self.logger.info("组织类型管理信息不存在")
@@ -232,7 +231,7 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         try:
             # 获取组织类型管理信息
             if not self.org_type_id:
-                self.test_enabled_org_type()
+                self._ensure_enabled_org_type()
 
             # 调用禁用接口
             set_dict = {"id": self.org_type_id}
@@ -247,10 +246,9 @@ class TestOrg_TypeManagement(GenMdBaseTest):
             
             self.assert_util.assert_response_success(response)
 
-            sql = f"select status from org_business_type_cf where id = {self.org_type_id}"
-            self.logger.info(f"data: {self.db.query(sql)}")
-            if self.db.query(sql):
-                status = self.db.query(sql)[0]["status"]
+            status = self.query_service.get_org_business_type_status(self.org_type_id)
+            self.logger.info(f"data: {status}")
+            if status is not None:
                 self.assert_util.assert_by_operator(status, "=", "DISABLED")
             else:
                 self.logger.info("组织类型管理信息不存在")
@@ -359,7 +357,7 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         try:
             # 获取组织类型管理信息
             if not self.org_type_id:
-                self.test_save_org_type()
+                self._ensure_save_org_type()
 
             # 调用删除接口
             set_dict = {"id": self.org_type_id}
@@ -374,10 +372,8 @@ class TestOrg_TypeManagement(GenMdBaseTest):
             
             self.assert_util.assert_response_success(response)
 
-            sql = f"select deleted from org_business_type_cf where id = {self.org_type_id}"
-            result = self.db.query(sql)
-            if result:
-                deleted = result[0]["deleted"]
+            deleted = self.query_service.get_org_business_type_deleted(self.org_type_id)
+            if deleted is not None:
                 self.assert_util.assert_by_operator(deleted, "!=", 0)
             else:
                 self.logger.warning(f"组织类型ID {self.org_type_id} 在数据库中不存在")

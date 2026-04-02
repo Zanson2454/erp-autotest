@@ -156,7 +156,7 @@ class TestBsTypeManagement(ScmInvBaseTest):
         """测试查询作业类型详情"""
         # 确保前置数据存在
         if self.bs_type_id is None:
-            self.test_save_bs_type()
+            self._ensure_save_bs_type()
         
         # 执行详情查询
         response = self._execute_api_call_with_report(
@@ -260,7 +260,7 @@ class TestBsTypeManagement(ScmInvBaseTest):
         try:
             # 依赖保存方法创建的数据
             if not self.bs_type_id:
-                self.test_save_bs_type()
+                self._ensure_save_bs_type()
             
             # 1. 调用API
             api_path = self.get_api_path("作业类型定义表-导入导出任务管理接口-提交导出任务")
@@ -363,7 +363,7 @@ class TestBsTypeManagement(ScmInvBaseTest):
         """测试删除作业类型"""
         # 确保前置数据存在
         if self.bs_type_id is None:
-            self.test_save_bs_type()
+            self._ensure_save_bs_type()
         
         # 执行删除操作
         self._execute_api_call_with_report(

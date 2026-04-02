@@ -369,7 +369,7 @@ class TestWorkOrderConfirm(PrdBaseTest):
                     """
                     
                     self.logger.info(f"查询送货单头表SQL: {head_sql}")
-                    head_results = self.db.query(head_sql)
+                    head_results = self.query_service.query(head_sql)
                     
                     if not head_results:
                         raise AssertionError(f"未找到送货单{dn_code}的头表记录")
@@ -400,7 +400,7 @@ class TestWorkOrderConfirm(PrdBaseTest):
                     """
                     
                     self.logger.info(f"查询送货单行表SQL: {item_sql}")
-                    item_results = self.db.query(item_sql)
+                    item_results = self.query_service.query(item_sql)
                     
                     dn_status_info = {
                         "dnCode": dn_code,
@@ -544,7 +544,7 @@ class TestWorkOrderConfirm(PrdBaseTest):
                     AND del_class = 'RECV'
                     AND deleted = 0
                 """
-                head_results = self.db.query(head_sql)
+                head_results = self.query_service.query(head_sql)
                 assert head_results, "没有找到符合条件的入库工序送货单"
                 
                 # 获取SCM模块的API配置
@@ -719,7 +719,7 @@ class TestWorkOrderConfirm(PrdBaseTest):
                         FROM del_dn_head_tr
                         WHERE dn_code = '{dn_code}' AND deleted = 0
                     """
-                    head_results = self.db.query(head_sql)
+                    head_results = self.query_service.query(head_sql)
                     assert head_results, f"过账后未查到送货单{dn_code}头表"
                     head_record = head_results[0]
                     assert head_record["biz_status"] == "POSTED", f"送货单{dn_code}过账后业务状态应为POSTED，实际为{head_record['biz_status']}"
@@ -731,7 +731,7 @@ class TestWorkOrderConfirm(PrdBaseTest):
                         FROM del_dn_item_tr
                         WHERE dn_id = {head_record['id']} AND deleted = 0
                     """
-                    item_results = self.db.query(item_sql)
+                    item_results = self.query_service.query(item_sql)
                     for item in item_results:
                         assert item["biz_status"] == "POSTED", f"送货单{dn_code}行项目业务状态应为POSTED，实际为{item['biz_status']}"
                         assert item["real_del_qty"] == item["plan_del_qty"], f"送货单{dn_code}行项目实际交货数量应等于计划数量，实际为{item['real_del_qty']}，计划为{item['plan_del_qty']}"
@@ -744,7 +744,7 @@ class TestWorkOrderConfirm(PrdBaseTest):
                         WHERE doc_id_pre = '{dn_code}'
                         AND deleted = 0
                     """
-                    mvm_results = self.db.query(mvm_sql)
+                    mvm_results = self.query_service.query(mvm_sql)
                     assert len(mvm_results) > 0, f"送货单{dn_code}未找到对应的移动凭证行"
                     
                     # 查询入库单明细
@@ -753,7 +753,7 @@ class TestWorkOrderConfirm(PrdBaseTest):
                         FROM del_dn_item_tr
                         WHERE dn_id = {head_record['id']} AND deleted = 0
                     """
-                    item_results = self.db.query(item_sql)
+                    item_results = self.query_service.query(item_sql)
                     item_map = {item["mat_id"]: item for item in item_results}
 
                     # 验证移动凭证行数据

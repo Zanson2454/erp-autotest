@@ -148,7 +148,7 @@ class TestBomManagement(GenMdBaseTest):
         """
         try:
             if not self.bom_head_id:
-                self.test_save_bom_head()
+                self._ensure_save_bom_head()
 
             api_path = self.get_api_path("GEN-物料BOM头-查询详情服务")
             params, url = self.get_api_params(api_path)
@@ -281,7 +281,7 @@ class TestBomManagement(GenMdBaseTest):
         """
         try:
             if not self.bom_head_id:
-                self.test_save_bom_head()
+                self._ensure_save_bom_head()
 
             api_path = self.get_api_path("GEN-物料BOM头-删除服务")
             params, url = self.get_api_params(api_path)
@@ -427,7 +427,7 @@ class TestBomManagement(GenMdBaseTest):
         """
         try:
             if not self.bom_item_type_id:
-                self.test_save_bom_item_type()
+                self._ensure_save_bom_item_type()
 
             api_path = self.get_api_path("GEN-BOM行项目类别配置-查询详情服务")
             params, url = self.get_api_params(api_path)
@@ -470,7 +470,7 @@ class TestBomManagement(GenMdBaseTest):
         """
         try:
             if not self.bom_item_type_id:
-                self.test_save_bom_item_type()
+                self._ensure_save_bom_item_type()
 
             api_path = self.get_api_path("GEN-BOM行项目类别配置-删除服务")
             params, url = self.get_api_params(api_path)
@@ -613,7 +613,7 @@ class TestBomManagement(GenMdBaseTest):
         """
         try:
             if not self.bom_status_id:
-                self.test_save_bom_status()
+                self._ensure_save_bom_status()
 
             api_path = self.get_api_path("GEN-BOM状态配置表-查询详情服务")
             params, url = self.get_api_params(api_path)
@@ -656,7 +656,7 @@ class TestBomManagement(GenMdBaseTest):
         """
         try:
             if not self.bom_status_id:
-                self.test_save_bom_status()
+                self._ensure_save_bom_status()
 
             api_path = self.get_api_path("GEN-BOM状态配置表-删除服务")
             params, url = self.get_api_params(api_path)
@@ -796,7 +796,7 @@ class TestBomManagement(GenMdBaseTest):
         """
         try:
             if not self.bom_use_id:
-                self.test_save_bom_use()
+                self._ensure_save_bom_use()
 
             api_path = self.get_api_path("GEN-BOM用途配置-查询详情服务")
             params, url = self.get_api_params(api_path)
@@ -989,7 +989,7 @@ class TestBomManagement(GenMdBaseTest):
         """
         try:
             if not self.bom_use_id:
-                self.test_save_bom_use()
+                self._ensure_save_bom_use()
 
             api_path = self.get_api_path("GEN-BOM用途配置-删除服务")
             params, url = self.get_api_params(api_path)
@@ -1437,7 +1437,7 @@ class TestBomManagement(GenMdBaseTest):
         """
         try:
             if not self.bom_supp_ind_id:
-                self.test_save_bom_supp_ind()
+                self._ensure_save_bom_supp_ind()
 
             api_path = self.get_api_path("GEN-BOM 行项目供应标识配置表-查询详情服务")
             params, url = self.get_api_params(api_path)
@@ -1480,7 +1480,7 @@ class TestBomManagement(GenMdBaseTest):
         """
         try:
             if not self.bom_supp_ind_id:
-                self.test_save_bom_supp_ind()
+                self._ensure_save_bom_supp_ind()
 
             api_path = self.get_api_path("GEN-BOM 行项目供应标识配置表-删除服务")
             params, url = self.get_api_params(api_path)

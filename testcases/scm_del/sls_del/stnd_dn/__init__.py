@@ -574,7 +574,7 @@ class SlsDelBaseTest(ScmDelBaseTest):
         """
         try:
             # 1. 查询销售订单的完整数据
-            order_data = self.db.query("""
+            order_data = self.query_service.query("""
                 SELECT h.*, i.* 
                 FROM sls_so_head_tr h 
                 LEFT JOIN sls_so_item_tr i ON h.id = i.so_id 
@@ -616,7 +616,7 @@ class SlsDelBaseTest(ScmDelBaseTest):
                     time.sleep(wait_time)
                 
                 # 通过订单号查询交货单
-                query_result = self.db.query("""
+                query_result = self.query_service.query("""
                     SELECT DISTINCT h.id as dn_id
                     FROM del_dn_head_tr h
                     INNER JOIN del_dn_item_tr i ON h.id = i.dn_id

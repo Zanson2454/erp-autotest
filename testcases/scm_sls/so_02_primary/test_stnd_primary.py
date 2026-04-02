@@ -44,12 +44,12 @@ class TestStandardSalesOrder(SlsBase):
             time.sleep(1)
 
         if not self.order_code:
-            order_info = self.db.query("SELECT so_code FROM sls_so_head_tr WHERE id = %s", (self.order_id,))
+            order_info = self.query_service.query("SELECT so_code FROM sls_so_head_tr WHERE id = %s", (self.order_id,))
             if not order_info:
                 raise ValueError(f"未找到订单，订单ID: {self.order_id}")
             self.order_code = order_info[0]["so_code"]
 
-        order_item_info = self.db.query(
+        order_item_info = self.query_service.query(
             """SELECT id, so_id, so_item_code, so_item_status, so_item_business_status,
                version, mat_id, so_item_sls_qty, so_item_price, uom_sls_id,
                inv_org_id, inv_loc_id, so_item_type_id
@@ -121,7 +121,7 @@ class TestStandardSalesOrder(SlsBase):
             # 验证订单状态为已生效（添加重试机制）
             order_info = None
             for attempt in range(5):
-                order_info = self.db.query(f"SELECT id, so_code, so_status FROM sls_so_head_tr WHERE id={self.order_id}")
+                order_info = self.query_service.query(f"SELECT id, so_code, so_status FROM sls_so_head_tr WHERE id={self.order_id}")
                 if order_info and order_info[0]['so_status'] in ['EFFECT', 'APPROVING']:
                     break
                 
@@ -162,7 +162,7 @@ class TestStandardSalesOrder(SlsBase):
             
             # 获取订单编号
             if not self.order_code:
-                order_info = self.db.query(f"SELECT so_code FROM sls_so_head_tr WHERE id={self.order_id}")
+                order_info = self.query_service.query(f"SELECT so_code FROM sls_so_head_tr WHERE id={self.order_id}")
                 if not order_info:
                     raise ValueError(f"未找到订单，订单ID: {self.order_id}")
                 self.order_code = order_info[0]['so_code']
@@ -170,7 +170,7 @@ class TestStandardSalesOrder(SlsBase):
             # 2. 从数据库查询订单行数据，并构造完成订单行所需的数据对象
             order_item_info = None
             for _ in range(5):
-                order_item_info = self.db.query(
+                order_item_info = self.query_service.query(
                     """SELECT id, so_id, so_item_code, so_item_status, so_item_business_status, 
                        version, mat_id, so_item_sls_qty, so_item_price, uom_sls_id, 
                        inv_org_id, inv_loc_id, so_item_type_id
@@ -241,7 +241,7 @@ class TestStandardSalesOrder(SlsBase):
             # 等待一下，确保状态更新完成
             time.sleep(1)
             
-            order_item_info = self.db.query(f"""
+            order_item_info = self.query_service.query(f"""
                 SELECT so_item_business_status, so_item_status 
                 FROM sls_so_item_tr 
                 WHERE id={self.so_item_id}
@@ -258,7 +258,7 @@ class TestStandardSalesOrder(SlsBase):
             )
             
             # 10. 验证订单业务状态为已完成
-            order_info = self.db.query(f"""
+            order_info = self.query_service.query(f"""
                 SELECT so_business_status 
                 FROM sls_so_head_tr 
                 WHERE id={self.order_id}
@@ -299,7 +299,7 @@ class TestStandardSalesOrder(SlsBase):
             # 2. 从数据库查询订单行数据，并构造取消完成订单行所需的数据对象
             order_item_info = None
             for _ in range(5):
-                order_item_info = self.db.query(
+                order_item_info = self.query_service.query(
                     """SELECT id, so_id, so_item_code, so_item_status, so_item_business_status, 
                        version, mat_id, so_item_sls_qty, so_item_price, uom_sls_id, 
                        inv_org_id, inv_loc_id, so_item_type_id
@@ -321,7 +321,7 @@ class TestStandardSalesOrder(SlsBase):
             
             # 获取订单编码
             if not self.order_code:
-                order_info = self.db.query("SELECT so_code FROM sls_so_head_tr WHERE id = %s LIMIT 1", (self.order_id,))
+                order_info = self.query_service.query("SELECT so_code FROM sls_so_head_tr WHERE id = %s LIMIT 1", (self.order_id,))
                 if order_info:
                     self.order_code = order_info[0]['so_code']
             
@@ -379,7 +379,7 @@ class TestStandardSalesOrder(SlsBase):
             # 等待一下，确保状态更新完成
             time.sleep(1)
             
-            order_item_info = self.db.query(f"""
+            order_item_info = self.query_service.query(f"""
                 SELECT so_item_business_status, so_item_status 
                 FROM sls_so_item_tr 
                 WHERE id={self.so_item_id}
@@ -396,7 +396,7 @@ class TestStandardSalesOrder(SlsBase):
             )
             
             # 6. 验证订单业务状态已恢复（不再是COMPLETED）
-            order_info = self.db.query(f"""
+            order_info = self.query_service.query(f"""
                 SELECT so_business_status 
                 FROM sls_so_head_tr 
                 WHERE id={self.order_id}
@@ -435,7 +435,7 @@ class TestStandardSalesOrder(SlsBase):
                 self.order_id = self.create_sales_order(order_type="STND", submit=True)
             
             # 检查订单状态，确保订单已生效
-            order_info = self.db.query(f"SELECT so_status FROM sls_so_head_tr WHERE id={self.order_id}")
+            order_info = self.query_service.query(f"SELECT so_status FROM sls_so_head_tr WHERE id={self.order_id}")
             if not order_info:
                 raise ValueError(f"未找到订单，订单ID: {self.order_id}")
             

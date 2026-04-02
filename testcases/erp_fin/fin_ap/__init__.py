@@ -251,16 +251,8 @@ class ApBaseTest(FinBaseTest):
         :return: 配置数据字典，如果不存在则返回None
         """
         try:
-            sql = """
-                SELECT id, com_org, module_code, initialization_type, start_type
-                FROM fin_gen_im_head_tr
-                WHERE com_org = %s AND module_code = %s
-                LIMIT 1
-            """
-            result = cls.db.query(sql, params=[gr_com_org_id, module_code])
-            
-            if result and len(result) > 0:
-                config = result[0]
+            config = cls.query_service.get_ap_existing_init_config(gr_com_org_id, module_code)
+            if config:
                 # 转换为API返回格式（字段名驼峰转换）
                 return {
                     "id": config.get("id"),

@@ -7,7 +7,6 @@ project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
 
 from testcases.sys_common import SysCommonBaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 @allure.epic("系统通用模块")
@@ -61,28 +60,16 @@ class TestWebsocketManagement(SysCommonBaseTest):
             scope = "DEFAULT"  # Token作用域
             
             # 2. 调用API
-            api_path = self.get_api_path("Websocket前端http(s)接口-获取ws连接token")
-            params, url = self.get_api_params(api_path)
-            
-            # 3. 参数处理
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["userId", "expireTime", "scope"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "userId": user_id,
-                "expireTime": expire_time,
-                "scope": scope
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            
-            # 4. 发送请求和断言
+            # 3. 发送请求和断言
             response, _ = self.standard_api_call(
                 api_key="Websocket前端http(s)接口-获取ws连接token",
-                set_dict=filtered_params.get("params", {}),
-                store_id_as=None,
-                use_param_util=False,
-                param_path=["params"]
+                set_dict={
+                    "userId": user_id,
+                    "expireTime": expire_time,
+                    "scope": scope,
+                },
+                fields_to_filter=["userId", "expireTime", "scope"],
+                param_path=["params", "request"],
             )
             self.assert_util.assert_response_data(response)
             
@@ -95,7 +82,7 @@ class TestWebsocketManagement(SysCommonBaseTest):
                 "=", True, "Token应为有效字符串（长度>20）"
             )
             
-            a.json(filtered_params, "请求数据")
+            a.json({"userId": user_id, "expireTime": expire_time, "scope": scope}, "请求数据")
             a.json({"token": self.ws_token[:50] + "..." if self.ws_token else None}, "Token摘要（前50字符）")
             a.json(response, "完整响应数据")
             self.logger.info(f"获取WebSocket Token成功，用户ID: {user_id}")
@@ -117,11 +104,7 @@ class TestWebsocketManagement(SysCommonBaseTest):
         try:
             # 可选：先获取Token确保认证，但此接口可能独立
             # if not self.ws_token:
-            #     self.test_websocket_get_token_post()
-            
-            # 调用会话列表API（GET请求）
-            api_path = self.get_api_path("Websocket前端http(s)接口-获取全部session")
-            url = self.get_api_url(api_path)
+            #     self._ensure_websocket_get_token_post()
             
             # GET参数（如果需要过滤条件，如状态、用户ID）
             get_params = {
@@ -130,8 +113,12 @@ class TestWebsocketManagement(SysCommonBaseTest):
             }
             # 清理空值
             get_params = {k: v for k, v in get_params.items() if v}
-            
-            response = self.http.get(url, params=get_params)
+
+            response, _ = self.standard_api_call(
+                api_key="Websocket前端http(s)接口-获取全部session",
+                method="GET",
+                set_dict=get_params,
+            )
             self.assert_util.assert_response_data(response)
             
             # 验证会话列表
@@ -169,7 +156,7 @@ class TestWebsocketManagement(SysCommonBaseTest):
         try:
             # 确保有会话ID（从会话列表获取）
             if not self.session_id:
-                self.test_websocket_get_session_list_get()
+                self._ensure_websocket_get_session_list_get()
                 if not self.session_id:
                     # 如果无会话，模拟一个或跳过推送测试
                     self.logger.warning("无可用会话ID，模拟推送测试")
@@ -187,24 +174,24 @@ class TestWebsocketManagement(SysCommonBaseTest):
             target_session = self.session_id
             broadcast = False  # 针对特定会话推送
             
-            # 调用推送消息API（GET请求，参数在query string）
-            api_path = self.get_api_path("Websocket前端http(s)接口-推送任务消息(调试用)")
-            url = self.get_api_url(api_path)
-            
             get_params = {
                 "sessionId": target_session,
                 "messageType": message_type,
                 "content": str(content),  # 序列化为字符串，或根据API要求调整
                 "broadcast": str(broadcast).lower()
             }
-            
-            response = self.http.get(url, params=get_params)
+
+            response, _ = self.standard_api_call(
+                api_key="Websocket前端http(s)接口-推送任务消息(调试用)",
+                method="GET",
+                set_dict=get_params,
+            )
             self.assert_util.assert_response_success(response)  # 假设推送成功返回200或确认状态
             
             # 验证推送响应
             push_data = response.get("data", {})
             self.assert_util.assert_by_operator(
-                push_data.get("success") or response.status_code == 200, 
+                bool(push_data.get("success") or response.get("success")),
                 "=", True, "消息推送应成功"
             )
             if "messageId" in push_data:

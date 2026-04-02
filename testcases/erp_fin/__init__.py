@@ -226,11 +226,10 @@ class FinBaseTest(BaseTest):
         self.assert_util.assert_response_success(result)
 
         def query_sett_item_status():
-            sql = "select id, sett_item_status, async_execution_status, sett_doc_id from sett_item_tr where deleted=0 and id=%s limit 1"
-            sql_result = self.db.query(sql, (sett_item_id,))
-            if not sql_result:
+            row = self.query_service.get_sett_item_status_row(sett_item_id)
+            if not row:
                 raise ValueError(f"结算项对账确认失败: 未找到结算项ID {sett_item_id}")
-            return sql_result[0]
+            return row
 
         result = self.async_wait_util.wait_for_async_status(
             query_func=query_sett_item_status,
@@ -273,11 +272,10 @@ class FinBaseTest(BaseTest):
         start_time = time.time()
         timeout = 10
         while True:
-            sql = "select id, sett_doc_status, trading_doc_id from sett_doc_tr where deleted=0 and id=%s limit 1"
-            sql_result = self.db.query(sql, (sett_doc_id,))
-            if not sql_result:
+            row = self.query_service.get_sett_doc_status_row(sett_doc_id)
+            if not row:
                 raise ValueError(f"结算单确认失败: 未找到结算单ID {sett_doc_id}")
-            if sql_result[0].get("trading_doc_id") is not None:
+            if row.get("trading_doc_id") is not None:
                 break
             if time.time() - start_time >= timeout:
                 raise TimeoutError(f"等待异步任务执行超时（{timeout}秒）")

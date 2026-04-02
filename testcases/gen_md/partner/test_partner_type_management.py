@@ -140,7 +140,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         """查询相关方类型详情用例"""
         try:
             if not self.partner_type_id:
-                self.test_save_partner_type(btClass="SLS_ORG", partnerClass="CUSTOMER")
+                self._ensure_save_partner_type(btClass="SLS_ORG", partnerClass="CUSTOMER")
 
             set_dict = {"id": self.partner_type_id}
             fields_to_filter = ["id"]
@@ -171,7 +171,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         """根据ID查找相关方类型数据用例"""
         try:
             if not self.partner_type_id:
-                self.test_save_partner_type(btClass="SLS_ORG", partnerClass="CUSTOMER")
+                self._ensure_save_partner_type(btClass="SLS_ORG", partnerClass="CUSTOMER")
 
             set_dict = {"id": self.partner_type_id}
             fields_to_filter = ["id"]
@@ -378,7 +378,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         """删除相关方类型用例"""
         try:
             if not self.partner_type_id:
-                self.test_save_partner_type(btClass="SLS_ORG", partnerClass="CUSTOMER")
+                self._ensure_save_partner_type(btClass="SLS_ORG", partnerClass="CUSTOMER")
 
             set_dict = {"id": self.partner_type_id}
             fields_to_filter = ["id"]
@@ -512,7 +512,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         """新增相关方组用例"""
         try:
             if not self.partner_type_id:
-                self.test_save_partner_type(btClass="SLS_ORG", partnerClass="CUSTOMER")
+                self._ensure_save_partner_type(btClass="SLS_ORG", partnerClass="CUSTOMER")
 
             code = self.mock_util.generate_unique_code(tag="PG")
             name = f"相关方组_{self.mock_util.get_timestamp()}"
@@ -601,7 +601,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         """查询相关方组详情用例"""
         try:
             if not self.partner_group_id:
-                self.test_save_partner_group()
+                self._ensure_save_partner_group()
 
             set_dict = {"id": self.partner_group_id}
             fields_to_filter = ["id"]
@@ -632,7 +632,7 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         """删除相关方组用例"""
         try:
             if not self.partner_group_id:
-                self.test_save_partner_group()
+                self._ensure_save_partner_group()
 
             set_dict = {"id": self.partner_group_id}
             fields_to_filter = ["id"]

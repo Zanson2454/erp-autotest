@@ -4,15 +4,8 @@
 包含：销售发票的查询、删除、反过账等核心功能测试
 """
 
-from re import S
-import re
 import allure
 import pytest
-import sys
-from pathlib import Path
-
-project_root = Path(__file__).resolve().parent.parent.parent.parent
-sys.path.append(str(project_root))
 
 from testcases.erp_fin import FinBaseTest
 from utils.param_util import ParamUtil
@@ -302,23 +295,7 @@ class TestSbDocManagement(FinBaseTest):
             - ar_heads_before: {ar_head_id: ar_head_data}
             - ar_items_before_map: {ar_head_id: [ar_item_data, ...]}
         """
-        # 查询关联的应收单头ID
-        sb_item_ar_sql = """
-        SELECT DISTINCT rel_doc_head_id as ar_head_id
-        FROM fin_tm_sb_item_tr 
-        WHERE tm_sb_head_tr_id = %s 
-        AND deleted = 0 
-        AND rel_doc_head_id IS NOT NULL
-        ORDER BY created_at DESC
-        """
-        ar_head_result = self.db.query(sb_item_ar_sql, (sb_id,))
-        
-        ar_head_ids = set()
-        if ar_head_result:
-            for row in ar_head_result:
-                ar_head_id = row.get("ar_head_id")
-                if ar_head_id:
-                    ar_head_ids.add(ar_head_id)
+        ar_head_ids = set(self.query_service.get_ar_head_ids_by_sb_head_id(sb_id))
         
         # 存储所有应收单头的数据
         ar_heads_before = {}  # {ar_head_id: ar_head_data}
@@ -330,32 +307,18 @@ class TestSbDocManagement(FinBaseTest):
             # 查询所有关联的应收单头信息
             for ar_head_id in ar_head_ids:
                 # 查询应收单头的开票金额
-                ar_head_query_sql = """
-                SELECT id, billing_doc_amt, unbilled_doc_amt, billed_doc_amt
-                FROM fin_arm_ar_head_tr 
-                WHERE id = %s 
-                AND deleted = 0
-                LIMIT 1
-                """
-                ar_head_before_result = self.db.query(ar_head_query_sql, (ar_head_id,))
-                if ar_head_before_result:
-                    ar_heads_before[ar_head_id] = ar_head_before_result[0]
+                ar_head_before = self.query_service.get_ar_head_amount_row(ar_head_id)
+                if ar_head_before:
+                    ar_heads_before[ar_head_id] = ar_head_before
                     self.logger.info(
                         f"应收单头金额 - ID: {ar_head_id}, "
-                        f"开票中金额: {ar_head_before_result[0].get('billing_doc_amt')}, "
-                        f"未开票金额: {ar_head_before_result[0].get('unbilled_doc_amt')}, "
-                        f"已开票金额: {ar_head_before_result[0].get('billed_doc_amt')}"
+                        f"开票中金额: {ar_head_before.get('billing_doc_amt')}, "
+                        f"未开票金额: {ar_head_before.get('unbilled_doc_amt')}, "
+                        f"已开票金额: {ar_head_before.get('billed_doc_amt')}"
                     )
                 
                 # 查询应收单行的开票金额
-                ar_item_query_sql = """
-                SELECT id, clearing_doc_amt, uncleared_doc_amt, cleared_doc_amt
-                FROM fin_arm_ar_item_tr 
-                WHERE arm_ar_head_tr_id = %s 
-                AND deleted = 0
-                ORDER BY id
-                """
-                ar_items_before_result = self.db.query(ar_item_query_sql, (ar_head_id,))
+                ar_items_before_result = self.query_service.get_ar_item_amount_rows(ar_head_id)
                 if ar_items_before_result:
                     ar_items_before_map[ar_head_id] = ar_items_before_result
                     self.logger.info(
@@ -375,46 +338,17 @@ class TestSbDocManagement(FinBaseTest):
         clearing_item_ids = set()
         
         # 查询与销售发票相关的钩稽记录头
-        clearing_head_sql = """
-        SELECT DISTINCT brm_ibc_head_tr_id as clearing_head_id
-        FROM fin_brm_ibc_item_tr 
-        WHERE rel_doc_head_id = %s 
-        AND deleted = 0
-        """
-        clearing_head_result = self.db.query(clearing_head_sql, (sb_id,))
-        if clearing_head_result:
-            for row in clearing_head_result:
-                clearing_head_id = row.get("clearing_head_id")
-                if clearing_head_id:
-                    clearing_head_ids.add(clearing_head_id)
+        clearing_head_ids.update(self.query_service.get_clearing_head_ids_by_rel_doc_head_id(sb_id))
         
         # 查询与应收单相关的钩稽记录头（如果有关联的应收单）
         if ar_head_ids:
             for ar_head_id in ar_head_ids:
-                clearing_head_ar_sql = """
-                SELECT DISTINCT brm_ibc_head_tr_id as clearing_head_id
-                FROM fin_brm_ibc_item_tr 
-                WHERE rel_doc_head_id = %s 
-                AND deleted = 0
-                """
-                clearing_head_ar_result = self.db.query(clearing_head_ar_sql, (ar_head_id,))
-                if clearing_head_ar_result:
-                    for row in clearing_head_ar_result:
-                        clearing_head_id = row.get("clearing_head_id")
-                        if clearing_head_id:
-                            clearing_head_ids.add(clearing_head_id)
+                clearing_head_ids.update(self.query_service.get_clearing_head_ids_by_rel_doc_head_id(ar_head_id))
         
         # 查询钩稽记录行ID
         if clearing_head_ids:
             clearing_head_ids_list = list(clearing_head_ids)
-            placeholders = ','.join(['%s'] * len(clearing_head_ids_list))
-            clearing_item_sql = f"""
-            SELECT id, brm_ibc_head_tr_id, rel_doc_head_id
-            FROM fin_brm_ibc_item_tr 
-            WHERE brm_ibc_head_tr_id IN ({placeholders})
-            AND deleted = 0
-            """
-            clearing_item_result = self.db.query(clearing_item_sql, tuple(clearing_head_ids_list))
+            clearing_item_result = self.query_service.get_clearing_items_by_head_ids(clearing_head_ids_list)
             if clearing_item_result:
                 for row in clearing_item_result:
                     clearing_item_id = row.get("id")
@@ -645,13 +579,7 @@ class TestSbDocManagement(FinBaseTest):
         # 验证钩稽记录头是否被逻辑删除
         if clearing_head_ids:
             clearing_head_ids_list = list(clearing_head_ids)
-            placeholders = ','.join(['%s'] * len(clearing_head_ids_list))
-            clearing_head_verify_sql = f"""
-            SELECT id, deleted
-            FROM fin_brm_ibc_head_tr 
-            WHERE id IN ({placeholders})
-            """
-            clearing_head_verify_result = self.db.query(clearing_head_verify_sql, tuple(clearing_head_ids_list))
+            clearing_head_verify_result = self.query_service.get_clearing_heads_deleted_rows(clearing_head_ids_list)
             
             if clearing_head_verify_result:
                 for head_record in clearing_head_verify_result:
@@ -672,13 +600,7 @@ class TestSbDocManagement(FinBaseTest):
         # 验证钩稽记录行是否被逻辑删除
         if clearing_item_ids:
             clearing_item_ids_list = list(clearing_item_ids)
-            placeholders = ','.join(['%s'] * len(clearing_item_ids_list))
-            clearing_item_verify_sql = f"""
-            SELECT id, deleted
-            FROM fin_brm_ibc_item_tr 
-            WHERE id IN ({placeholders})
-            """
-            clearing_item_verify_result = self.db.query(clearing_item_verify_sql, tuple(clearing_item_ids_list))
+            clearing_item_verify_result = self.query_service.get_clearing_items_deleted_rows(clearing_item_ids_list)
             
             if clearing_item_verify_result:
                 for item_record in clearing_item_verify_result:
@@ -1041,22 +963,9 @@ class TestSbDocManagement(FinBaseTest):
         try:
             # 1. 获取测试数据（从数据库查询一个已存在的销售发票ID）
             # 优先查询测试数据（使用SB前缀），如果没有则查询任意一条
-            sql = """
-            SELECT id, sb_head_code, sb_status 
-            FROM fin_tm_sb_head_tr 
-            WHERE deleted = 0 
-            AND sb_head_code IS NOT NULL
-            ORDER BY 
-                CASE WHEN sb_head_code LIKE 'SB%' THEN 0 ELSE 1 END,
-                id DESC 
-            LIMIT 1
-            """
-            result = self.db.query(sql)
-            
-            if not result:
+            sb_record = self.query_service.get_latest_sb_head_by_statuses(["DRAFT", "CONFIRM", "DONE", "DELETE"])
+            if not sb_record:
                 raise ValueError("未找到可用的销售发票数据，请先创建销售发票")
-            
-            sb_record = result[0]
             sb_id = sb_record.get("id")
             sb_head_code = sb_record.get("sb_head_code")
             sb_status = sb_record.get("sb_status")
@@ -1160,25 +1069,10 @@ class TestSbDocManagement(FinBaseTest):
         try:
             # 1. 获取测试数据（从数据库查询一个草稿或已提交状态的销售发票ID）
             # 优先查询草稿状态的测试数据（使用SB前缀），如果没有则查询已提交状态
-            sql = """
-            SELECT id, sb_head_code, sb_status 
-            FROM fin_tm_sb_head_tr 
-            WHERE deleted = 0 
-            AND sb_status IN ('DRAFT', 'CONFIRM')
-            AND sb_head_code IS NOT NULL
-            ORDER BY 
-                CASE WHEN sb_status = 'DRAFT' THEN 0 ELSE 1 END,
-                CASE WHEN sb_head_code LIKE 'SB%' THEN 0 ELSE 1 END,
-                created_at DESC 
-            LIMIT 1
-            """
-            result = self.db.query(sql)
-            
-            if not result:
+            sb_record = self.query_service.get_latest_sb_head_by_statuses(["DRAFT", "CONFIRM"])
+            if not sb_record:
                 self.logger.warning("未找到草稿或已提交状态的销售发票数据，跳过删除测试")
                 pytest.skip("未找到草稿或已提交状态的销售发票数据，无法执行删除测试")
-            
-            sb_record = result[0]
             sb_id = sb_record.get("id")
             sb_head_code = sb_record.get("sb_head_code")
             sb_status = sb_record.get("sb_status")
@@ -1212,16 +1106,9 @@ class TestSbDocManagement(FinBaseTest):
             
             # 5. 额外的业务验证
             # 查询数据库验证删除状态（软删除）
-            sql = """
-            SELECT deleted, sb_status 
-            FROM fin_tm_sb_head_tr 
-            WHERE id = %s 
-            LIMIT 1
-            """
-            delete_result = self.db.query(sql, (sb_id,))
-            
+            delete_result = self.query_service.get_sb_deleted_status_row(sb_id)
             if delete_result:
-                deleted = delete_result[0].get("deleted")
+                deleted = delete_result.get("deleted")
                 self.assert_util.assert_by_operator(
                     deleted,
                     "!=",
@@ -1233,22 +1120,14 @@ class TestSbDocManagement(FinBaseTest):
                 raise ValueError(f"删除后未找到销售发票记录，ID: {sb_id}")
             
             # 验证发票行也被删除（软删除）
-            item_sql = """
-            SELECT COUNT(*) as item_count 
-            FROM fin_tm_sb_item_tr 
-            WHERE tm_sb_head_tr_id = %s 
-            AND deleted = 0
-            """
-            item_result = self.db.query(item_sql, (sb_id,))
-            if item_result:
-                item_count = item_result[0].get("item_count", 0)
-                self.assert_util.assert_by_operator(
-                    item_count,
-                    "=",
-                    0,
-                    f"销售发票行删除失败，仍有 {item_count} 条未删除的行数据"
-                )
-                self.logger.info(f"销售发票行删除成功，ID: {sb_id}, 未删除行数: {item_count}")
+            item_count = self.query_service.get_active_sb_item_count(sb_id)
+            self.assert_util.assert_by_operator(
+                item_count,
+                "=",
+                0,
+                f"销售发票行删除失败，仍有 {item_count} 条未删除的行数据"
+            )
+            self.logger.info(f"销售发票行删除成功，ID: {sb_id}, 未删除行数: {item_count}")
             
             # 6. 验证应收单金额回退（如果有关联的应收单，支持多个应收单头）
             if ar_heads_before:
@@ -1257,17 +1136,8 @@ class TestSbDocManagement(FinBaseTest):
                     self.logger.info(f"开始验证应收单头ID: {ar_head_id} 的金额回退")
                     
                     # 查询删除后应收单头的开票中金额和未开票金额
-                    ar_head_after_sql = """
-                    SELECT id, billing_doc_amt, unbilled_doc_amt, billed_doc_amt
-                    FROM fin_arm_ar_head_tr 
-                    WHERE id = %s 
-                    AND deleted = 0
-                    LIMIT 1
-                    """
-                    ar_head_after_result = self.db.query(ar_head_after_sql, (ar_head_id,))
-                    
-                    if ar_head_after_result:
-                        ar_head_after = ar_head_after_result[0]
+                    ar_head_after = self.query_service.get_ar_head_amount_row(ar_head_id)
+                    if ar_head_after:
                         self.logger.info(
                             f"删除后应收单头金额 - ID: {ar_head_id}, "
                             f"开票中金额: {ar_head_after.get('billing_doc_amt')}, "
@@ -1283,14 +1153,7 @@ class TestSbDocManagement(FinBaseTest):
                     # 验证应收单行的金额回退（处理多行情况）
                     ar_items_before = ar_items_before_map.get(ar_head_id, [])
                     if ar_items_before:
-                        ar_item_after_sql = """
-                        SELECT id, clearing_doc_amt, uncleared_doc_amt, cleared_doc_amt
-                        FROM fin_arm_ar_item_tr 
-                        WHERE arm_ar_head_tr_id = %s 
-                        AND deleted = 0
-                        ORDER BY id
-                        """
-                        ar_items_after_result = self.db.query(ar_item_after_sql, (ar_head_id,))
+                        ar_items_after_result = self.query_service.get_ar_item_amount_rows(ar_head_id)
                         
                         if ar_items_after_result:
                             # 将删除后的数据转换为字典，以ID为key，便于查找
@@ -1349,24 +1212,10 @@ class TestSbDocManagement(FinBaseTest):
         """
         try:
             # 1. 获取测试数据（从数据库查询一个已过账状态的销售发票ID）
-            sql = """
-            SELECT id, sb_head_code, sb_status 
-            FROM fin_tm_sb_head_tr 
-            WHERE deleted = 0 
-            AND sb_status = 'DONE'
-            AND sb_head_code IS NOT NULL
-            ORDER BY 
-                CASE WHEN sb_head_code LIKE 'SB%' THEN 0 ELSE 1 END,
-                id DESC 
-            LIMIT 1
-            """
-            result = self.db.query(sql)
-            
-            if not result:
+            sb_record = self.query_service.get_latest_sb_head_by_status("DONE")
+            if not sb_record:
                 self.logger.warning("未找到已过账状态的销售发票数据，跳过删除权限验证测试")
                 pytest.skip("未找到已过账状态的销售发票数据，无法执行删除权限验证测试")
-            
-            sb_record = result[0]
             sb_id = sb_record.get("id")
             sb_head_code = sb_record.get("sb_head_code")
             sb_status = sb_record.get("sb_status")
@@ -1396,15 +1245,8 @@ class TestSbDocManagement(FinBaseTest):
             success = response.get("success", False)
             if success:
                 # 如果删除成功，验证数据库状态未改变（deleted仍为0）
-                sql = """
-                SELECT deleted 
-                FROM fin_tm_sb_head_tr 
-                WHERE id = %s 
-                LIMIT 1
-                """
-                delete_result = self.db.query(sql, (sb_id,))
-                if delete_result:
-                    deleted = delete_result[0].get("deleted")
+                deleted = self.query_service.get_sb_deleted_flag(sb_id)
+                if deleted is not None:
                     # 如果删除成功但deleted仍为0，说明可能是软删除但状态不允许
                     # 如果deleted为1，说明删除成功了，这与预期不符
                     if deleted == 1:
@@ -1415,16 +1257,9 @@ class TestSbDocManagement(FinBaseTest):
                 self.logger.info(f"已过账发票删除失败（符合预期），ID: {sb_id}, 错误信息: {error_message}")
             
             # 5. 验证数据库状态未改变（deleted仍为0）
-            sql = """
-            SELECT deleted, sb_status 
-            FROM fin_tm_sb_head_tr 
-            WHERE id = %s 
-            LIMIT 1
-            """
-            verify_result = self.db.query(sql, (sb_id,))
-            
+            verify_result = self.query_service.get_sb_deleted_status_row(sb_id)
             if verify_result:
-                deleted = verify_result[0].get("deleted")
+                deleted = verify_result.get("deleted")
                 # 已过账发票应该不能被删除，deleted应该仍为0
                 self.assert_util.assert_by_operator(
                     deleted,
@@ -1460,25 +1295,10 @@ class TestSbDocManagement(FinBaseTest):
         """
         try:
             # 1. 获取测试数据（从数据库查询一个已过账状态的销售发票ID）
-            sql = """
-            SELECT id, sb_head_code, sb_status, pst_date, 
-                   cleared_doc_amt, clearing_doc_amt, uncleared_doc_amt
-            FROM fin_tm_sb_head_tr 
-            WHERE deleted = 0 
-            AND sb_status = 'DONE'
-            AND sb_head_code IS NOT NULL
-            ORDER BY 
-                CASE WHEN sb_head_code LIKE 'SB%' THEN 0 ELSE 1 END,
-                created_at DESC 
-            LIMIT 1
-            """
-            result = self.db.query(sql)
-            
-            if not result:
+            sb_record = self.query_service.get_latest_sb_head_by_status("DONE")
+            if not sb_record:
                 self.logger.warning("未找到已过账状态的销售发票数据，跳过反过账测试")
                 pytest.skip("未找到已过账状态的销售发票数据，无法执行反过账测试")
-            
-            sb_record = result[0]
             sb_id = sb_record.get("id")
             sb_head_code = sb_record.get("sb_head_code")
             sb_status = sb_record.get("sb_status")
@@ -1510,14 +1330,7 @@ class TestSbDocManagement(FinBaseTest):
             )
             
             # 2.2 查询反过账前发票行的钩稽金额（处理多行情况）
-            sb_item_before_sql = """
-            SELECT id, cleared_doc_amt, clearing_doc_amt, uncleared_doc_amt
-            FROM fin_tm_sb_item_tr 
-            WHERE tm_sb_head_tr_id = %s 
-            AND deleted = 0
-            ORDER BY id
-            """
-            sb_items_before_result = self.db.query(sb_item_before_sql, (sb_id,))
+            sb_items_before_result = self.query_service.get_sb_item_amount_rows(sb_id)
             sb_items_before = []
             if sb_items_before_result:
                 sb_items_before = sb_items_before_result
@@ -1556,18 +1369,8 @@ class TestSbDocManagement(FinBaseTest):
             
             # 5. 额外的业务验证
             # 查询数据库验证状态变更
-            sql = """
-            SELECT sb_status, pst_date, async_execution_status,
-                   cleared_doc_amt, clearing_doc_amt, uncleared_doc_amt
-            FROM fin_tm_sb_head_tr 
-            WHERE id = %s 
-            AND deleted = 0
-            LIMIT 1
-            """
-            verify_result = self.db.query(sql, (sb_id,))
-            
-            if verify_result:
-                verify_data = verify_result[0]
+            verify_data = self.query_service.get_sb_reversal_verify_row(sb_id)
+            if verify_data:
                 new_sb_status = verify_data.get("sb_status")
                 new_pst_date = verify_data.get("pst_date")
                 
@@ -1618,14 +1421,7 @@ class TestSbDocManagement(FinBaseTest):
                 
                 # 5.2 验证发票行钩稽金额转移（处理多行情况）
                 if sb_items_before:
-                    sb_item_after_sql = """
-                    SELECT id, cleared_doc_amt, clearing_doc_amt, uncleared_doc_amt
-                    FROM fin_tm_sb_item_tr 
-                    WHERE tm_sb_head_tr_id = %s 
-                    AND deleted = 0
-                    ORDER BY id
-                    """
-                    sb_items_after_result = self.db.query(sb_item_after_sql, (sb_id,))
+                    sb_items_after_result = self.query_service.get_sb_item_amount_rows(sb_id)
                     
                     if sb_items_after_result:
                         # 将反过账后的数据转换为字典，以ID为key，便于查找
@@ -1663,17 +1459,8 @@ class TestSbDocManagement(FinBaseTest):
                         self.logger.info(f"开始验证应收单头ID: {ar_head_id} 的金额回退")
                         
                         # 查询反过账后应收单头的开票金额
-                        ar_head_after_sql = """
-                        SELECT id, billing_doc_amt, unbilled_doc_amt, billed_doc_amt
-                        FROM fin_arm_ar_head_tr 
-                        WHERE id = %s 
-                        AND deleted = 0
-                        LIMIT 1
-                        """
-                        ar_head_after_result = self.db.query(ar_head_after_sql, (ar_head_id,))
-                        
-                        if ar_head_after_result:
-                            ar_head_after = ar_head_after_result[0]
+                        ar_head_after = self.query_service.get_ar_head_amount_row(ar_head_id)
+                        if ar_head_after:
                             self.logger.info(
                                 f"反过账后应收单头金额 - ID: {ar_head_id}, "
                                 f"开票中金额: {ar_head_after.get('billing_doc_amt')}, "
@@ -1689,14 +1476,7 @@ class TestSbDocManagement(FinBaseTest):
                         # 验证应收单行的金额回退（处理多行情况）
                         ar_items_before = ar_items_before_map.get(ar_head_id, [])
                         if ar_items_before:
-                            ar_item_after_sql = """
-                            SELECT id, clearing_doc_amt, uncleared_doc_amt, cleared_doc_amt
-                            FROM fin_arm_ar_item_tr 
-                            WHERE arm_ar_head_tr_id = %s 
-                            AND deleted = 0
-                            ORDER BY id
-                            """
-                            ar_items_after_result = self.db.query(ar_item_after_sql, (ar_head_id,))
+                            ar_items_after_result = self.query_service.get_ar_item_amount_rows(ar_head_id)
                             
                             if ar_items_after_result:
                                 # 将反过账后的数据转换为字典，以ID为key，便于查找

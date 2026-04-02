@@ -133,7 +133,7 @@ class TestIvPeriodAccountManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.period_account_id:
-                self.test_save_period_account()
+                self._ensure_save_period_account()
             
             # 使用标准化API调用
             set_dict = {"id": self.period_account_id}
@@ -170,7 +170,7 @@ class TestIvPeriodAccountManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.period_account_id:
-                self.test_save_period_account()
+                self._ensure_save_period_account()
             
             # 使用标准化API调用
             set_dict = {"sourceId": self.period_account_id}
@@ -287,7 +287,7 @@ class TestIvPeriodAccountManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.period_account_id:
-                self.test_save_period_account()
+                self._ensure_save_period_account()
             
             # 使用标准化API调用
             set_dict = {

@@ -251,7 +251,7 @@ class TestDelDnTypeManagement(ScmDelBaseTest):
         try:
             # 1. 检查是否有可用的ID
             if not self.__class__.dn_type_id:
-                self.test_create_dn_type()
+                self._ensure_create_dn_type()
             
             # 2. 获取API配置
             api_path = self.get_api_path("DEL-交货单缓存-头类型停用")
@@ -322,8 +322,8 @@ class TestDelDnTypeManagement(ScmDelBaseTest):
         try:
             # 1. 检查是否有可用的ID（需要先停用才能启用）
             if not self.__class__.dn_type_id:
-                self.test_create_dn_type()
-                self.test_disable_dn_type()
+                self._ensure_create_dn_type()
+                self._ensure_disable_dn_type()
             
             # 2. 获取API配置
             api_path = self.get_api_path("DEL-交货单缓存-头类型启用服务")
@@ -399,7 +399,7 @@ class TestDelDnTypeManagement(ScmDelBaseTest):
             # 2. 删除前先禁用（确保数据处于可删除状态）
             self.logger.info("删除前先禁用交货单类型配置...")
             try:
-                self.test_disable_dn_type()
+                self._ensure_disable_dn_type()
             except Exception as e:
                 self.logger.warning(f"禁用操作失败（可能已经是禁用状态）: {str(e)}")
             

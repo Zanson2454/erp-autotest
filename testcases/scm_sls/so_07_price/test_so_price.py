@@ -609,7 +609,7 @@ class TestSoPrice(SlsBase):
                             WHERE id = %s AND deleted = 0
                             LIMIT 1
                         """
-                        db_result = self.db.query(query_sql, [price_adj_id])
+                        db_result = self.query_service.query(query_sql, [price_adj_id])
                         if db_result:
                             price_adj_info = db_result[0]
                             break
@@ -896,7 +896,7 @@ class TestSoPrice(SlsBase):
                             WHERE price_adj_name = %s
                             LIMIT 1
                         """
-                        db_result = self.db.query(query_sql, [price_adj_name])
+                        db_result = self.query_service.query(query_sql, [price_adj_name])
                         if db_result:
                             price_adj_info = db_result[0]
                             if price_adj_id:

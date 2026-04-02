@@ -123,7 +123,7 @@ class TestPrintSceneManagement(SysCommonBaseTest):
         try:
             # 确保场景存在
             if not self.print_scene_id:
-                self.test_print_scene_save_post()
+                self._ensure_print_scene_save_post()
             
             # 调用详情查询API
             api_path = self.get_api_path("打印场景-详情")
@@ -174,7 +174,7 @@ class TestPrintSceneManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据，使用保存时的modelKey
             if not self.print_scene_id:
-                self.test_print_scene_save_post()
+                self._ensure_print_scene_save_post()
             model_key = "TEST_MODEL_KEY"  # 从保存方法中使用相同的modelKey
             
             api_path = self.get_api_path("打印场景-根据模型key查询列表")
@@ -226,7 +226,7 @@ class TestPrintSceneManagement(SysCommonBaseTest):
         try:
             # 确保场景存在
             if not self.print_scene_id:
-                self.test_print_scene_save_post()
+                self._ensure_print_scene_save_post()
             
             api_path = self.get_api_path("打印场景-删除")
             params, url = self.get_api_params(api_path)

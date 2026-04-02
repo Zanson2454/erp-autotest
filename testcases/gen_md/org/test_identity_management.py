@@ -108,7 +108,7 @@ class TestIdentityManagement(GenMdBaseTest):
         try:
             # 确保先执行启用测试
             if not TestIdentityManagement.identity_id:
-                self.test_enable_identity()
+                self._ensure_enable_identity()
             
             # 准备测试数据（业务逻辑保持不变）
             set_dict = {

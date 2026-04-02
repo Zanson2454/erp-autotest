@@ -123,7 +123,7 @@ class TestEmployeeManagement(GenMdBaseTest):
         try:
             # 确保已经创建了员工
             if not TestEmployeeManagement.employee_id:
-                self.test_save_employee()
+                self._ensure_save_employee()
 
             # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": TestEmployeeManagement.employee_id}
@@ -203,7 +203,7 @@ class TestEmployeeManagement(GenMdBaseTest):
         try:
             # 确保已经创建了员工，并使用相同的手机号进行查询
             if not TestEmployeeManagement.employee_id:
-                self.test_save_employee()
+                self._ensure_save_employee()
             
              # 准备测试数据（业务逻辑保持不变）
             set_dict = {
@@ -262,7 +262,7 @@ class TestEmployeeManagement(GenMdBaseTest):
         try:
             # 确保已经创建了员工，并使用相同的姓名进行查询
             if not TestEmployeeManagement.employee_id:
-                self.test_save_employee()
+                self._ensure_save_employee()
             
             # 准备测试数据（业务逻辑保持不变）
             set_dict = {
@@ -321,7 +321,7 @@ class TestEmployeeManagement(GenMdBaseTest):
         try:
             # 确保已经创建了员工
             if not TestEmployeeManagement.employee_id:
-                self.test_save_employee()
+                self._ensure_save_employee()
             
             # 准备测试数据（业务逻辑保持不变）
             set_dict = {
@@ -333,11 +333,14 @@ class TestEmployeeManagement(GenMdBaseTest):
             fields_to_filter = ["employeeId", "identityId","orgUnitId","isMainOrg"]
 
             # 判断是否已存在员工关联数据（保持原有SQL逻辑）
-            sql = f"select id from org_employee_org_link_cf where employee_id={TestEmployeeManagement.employee_id} and identity_id={self.identityId} and org_unit_id={self.pur_org_id}"
-            result = self.db.query(sql)
-            if result:
+            relation_id = self.query_service.get_employee_org_link_id(
+                TestEmployeeManagement.employee_id,
+                self.identityId,
+                self.pur_org_id,
+            )
+            if relation_id:
                 # 幂等处理：若关系已存在，直接复用，避免因禁用物理删除导致重复创建失败
-                self.logger.info(f"员工组织关联已存在，复用关系ID: {result[0].get('id')}")
+                self.logger.info(f"员工组织关联已存在，复用关系ID: {relation_id}")
                 return
 
             # 使用标准化API调用（无任何断言）
@@ -355,10 +358,14 @@ class TestEmployeeManagement(GenMdBaseTest):
                 # 并发/脏数据场景兜底：接口返回“已存在”时视为幂等成功
                 err_code = response.get("err", {}).get("code")
                 if err_code == "Org.struct.member.is.exist":
-                    existed = self.db.query(sql)
+                    existed = self.query_service.get_employee_org_link_id(
+                        TestEmployeeManagement.employee_id,
+                        self.identityId,
+                        self.pur_org_id,
+                    )
                     if existed:
                         self.logger.warning(
-                            f"员工组织关联返回已存在，按幂等成功处理，关系ID: {existed[0].get('id')}"
+                            f"员工组织关联返回已存在，按幂等成功处理，关系ID: {existed}"
                         )
                         return
                 self.assert_util.assert_response_success(response)
@@ -385,7 +392,7 @@ class TestEmployeeManagement(GenMdBaseTest):
         查询指定组织和下级组织的员工信息用例
         """
         try:
-            self.test_save_employee_org_relation()
+            self._ensure_save_employee_org_relation()
             # 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "orgId": self.pur_org_id,
@@ -436,16 +443,21 @@ class TestEmployeeManagement(GenMdBaseTest):
         try:
             # 获取员工管理信息
             if not TestEmployeeManagement.employee_id:
-                self.test_save_employee()
+                self._ensure_save_employee()
 
             # SQL query to get relation ID (keep original)
-            sql = f"select id  from org_employee_org_link_cf where employee_id={TestEmployeeManagement.employee_id}  and  identity_id={self.identityId} and org_unit_id={self.pur_org_id}"
-            result = self.db.query(sql)
-            if not result:
-                self.test_save_employee_org_relation()
-                result = self.db.query(sql)
-            
-            employee_org_relationId = result[0].get("id")
+            employee_org_relationId = self.query_service.get_employee_org_link_id(
+                TestEmployeeManagement.employee_id,
+                self.identityId,
+                self.pur_org_id,
+            )
+            if not employee_org_relationId:
+                self._ensure_save_employee_org_relation()
+                employee_org_relationId = self.query_service.get_employee_org_link_id(
+                    TestEmployeeManagement.employee_id,
+                    self.identityId,
+                    self.pur_org_id,
+                )
             
             # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": employee_org_relationId}

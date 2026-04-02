@@ -225,7 +225,7 @@ class TestRiskManagement(GenMdBaseTest):
         try:
             # 检查依赖：如果风险规则不存在，先创建风险规则
             if not self.risk_id:
-                self.test_save_risk_rule()
+                self._ensure_save_risk_rule()
             
             # 生成测试数据
             risk_tr_code = self.mock_util.generate_unique_code(tag="RISK_TR")
@@ -314,10 +314,10 @@ class TestRiskManagement(GenMdBaseTest):
         try:
             # 检查依赖：如果风险规则和风险项目不存在，先创建
             if not self.risk_id:
-                self.test_save_risk_rule()
+                self._ensure_save_risk_rule()
             # 创建风险项目
             if not hasattr(self, 'risk_tr_id') or not self.risk_tr_id:
-                self.test_save_risk_tr()
+                self._ensure_save_risk_tr()
 
             set_dict = {"id": self.risk_tr_id if self.risk_tr_id else self.risk_id}
             response, _ = self.standard_api_call(
@@ -467,9 +467,9 @@ class TestRiskManagement(GenMdBaseTest):
         try:
             # 检查依赖：如果风险规则和风险项目不存在，先创建
             if not self.risk_id:
-                self.test_save_risk_rule()
+                self._ensure_save_risk_rule()
             if not hasattr(self, 'risk_tr_id') or not self.risk_tr_id:
-                self.test_save_risk_tr()
+                self._ensure_save_risk_tr()
 
             set_dict = {
                 "id": self.risk_tr_id if self.risk_tr_id else self.risk_id,
@@ -505,12 +505,12 @@ class TestRiskManagement(GenMdBaseTest):
             # 检查是否存在风险项目ID，如果不存在先创建风险规则和风险项目
             if not self.risk_id:
                 try:
-                    self.test_save_risk_rule()
+                    self._ensure_save_risk_rule()
                 except Exception as e:
                     self.logger.warning(f"创建风险规则失败: {str(e)}")
             if not hasattr(self, 'risk_tr_id') or not self.risk_tr_id:
                 try:
-                    self.test_save_risk_tr()
+                    self._ensure_save_risk_tr()
                 except Exception as e:
                     self.logger.warning(f"创建风险项目失败: {str(e)}")
                 

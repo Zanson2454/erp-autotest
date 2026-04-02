@@ -119,7 +119,7 @@ class TestAdmOrgManagement(GenMdBaseTest):
             adm_org_info = TestAdmOrgManagement.org_info.get("adm_org_info", {})
             org_id = adm_org_info.get("id")
             if not org_id:
-                self.test_save_adm_org()
+                self._ensure_save_adm_org()
                 org_id = TestAdmOrgManagement.org_info.get("adm_org_info", {}).get("id")
 
             # 准备测试数据（业务逻辑保持不变）
@@ -163,7 +163,7 @@ class TestAdmOrgManagement(GenMdBaseTest):
             adm_org_info = TestAdmOrgManagement.org_info.get("adm_org_info", {})
             org_id = adm_org_info.get("id")
             if not org_id:
-                self.test_save_adm_org()
+                self._ensure_save_adm_org()
                 org_id = TestAdmOrgManagement.org_info.get("adm_org_info", {}).get("id")
 
             # 准备测试数据（业务逻辑保持不变）
@@ -204,15 +204,10 @@ class TestAdmOrgManagement(GenMdBaseTest):
         """
         try:
             # 获取行政组织信息（保持原有SQL逻辑）
-            sql ="""
-                select id  from org_struct_md where org_status="DRAFT" and org_dimension_code="ADM_ORG_GRP" and org_code like "AT_%" and deleted=0 limit 1;
-            """
-            result = self.db.query(sql)
-            if not result:
-                self.test_save_adm_org()
+            org_id = self.query_service.get_first_adm_org_draft_id()
+            if not org_id:
+                self._ensure_save_adm_org()
                 org_id = self.org_info.get("adm_org_info", {}).get("id")
-            else:
-                org_id = result[0]["id"]
 
             # 准备测试数据（业务逻辑保持不变）
             set_dict = {

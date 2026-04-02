@@ -138,14 +138,10 @@ class TestIvExecuteRecordManagement(IvBaseTest):
     def test_find_execute_record_by_id(self):
         """测试根据ID查找执行记录"""
         try:
-            # 注意：fin_iv_execute_record_tr 表没有 inv_org_id 字段，只有 com_org_id
-            sql = "SELECT id FROM fin_iv_execute_record_tr WHERE deleted=0 AND com_org_id=%s ORDER BY created_at DESC LIMIT 1"
-            result = self.db.query(sql, [self.com_org_id])
-            if result and len(result) > 0:
-                self.execute_record_id = result[0].get("id")
-            else:
+            self.execute_record_id = self.query_service.get_latest_iv_execute_record_id(self.com_org_id)
+            if not self.execute_record_id:
                 # 如果没有现有记录，先创建一个
-                self.test_save_execute_record()
+                self._ensure_save_execute_record()
                 # test_save_execute_record 已通过 store_id_as="execute_record" 设置了 self.execute_record_id
             
             # 使用标准化API调用
@@ -183,7 +179,7 @@ class TestIvExecuteRecordManagement(IvBaseTest):
     #     try:
     #         # 检查并创建依赖数据
     #         if not self.execute_record_id:
-    #             self.test_save_execute_record()
+    #             self._ensure_save_execute_record()
             
     #         # 使用标准化API调用（使用保存接口进行更新）
     #         updated_name = f"更新执行记录_{self.mock_util.get_timestamp()}"
@@ -207,7 +203,7 @@ class TestIvExecuteRecordManagement(IvBaseTest):
     #         self.assert_util.assert_response_data(response)
             
     #         # 验证更新（重新查找验证）
-    #         self.test_find_execute_record_by_id()
+    #         self._ensure_find_execute_record_by_id()
             
     #     except Exception as e:
     #         a.text(str(e), "失败原因")
@@ -226,7 +222,7 @@ class TestIvExecuteRecordManagement(IvBaseTest):
     #     try:
     #         # 检查并创建依赖数据
     #         if not self.execute_record_id:
-    #             self.test_save_execute_record()
+    #             self._ensure_save_execute_record()
             
     #         # 使用标准化API调用
     #         set_dict = {"id": self.execute_record_id}
@@ -325,7 +321,7 @@ class TestIvExecuteRecordManagement(IvBaseTest):
     #     try:
     #         # 检查并创建依赖数据
     #         if not self.execute_record_id:
-    #             self.test_save_execute_record()
+    #             self._ensure_save_execute_record()
             
     #         # 使用标准化API调用
     #         set_dict = {

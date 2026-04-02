@@ -33,6 +33,34 @@ class TestTimezoneManagement(GenMdBaseTest):
         """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
         cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
+
+    def _create_timezone(self):
+        timezone_code = self.mock_util.generate_unique_code(tag="TIMEZONE")
+        timezone_name = f"测试时区_{self.mock_util.get_timestamp()}"
+
+        set_dict = {
+            "timezoneCode": timezone_code,
+            "timezoneName": timezone_name,
+            "offset": "+08:00",
+            "remark": f"时区描述_{self.mock_util.get_timestamp()}"
+        }
+
+        response, timezone_id = self.standard_api_call(
+            api_key="GEN-时区配置-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=["timezoneCode", "timezoneName", "offset", "remark"],
+            store_id_as="timezone"
+        )
+        self.assert_util.assert_response_data(response)
+        self.timezone_id = timezone_id
+        self.timezone_code = timezone_code
+        return timezone_id
+
+    def _ensure_save_timezone(self):
+        if self.timezone_id:
+            return self.timezone_id
+        return self._create_timezone()
+
     @case_decorator(
         story="时区配置管理",
         title="测试新增时区配置",
@@ -45,24 +73,7 @@ class TestTimezoneManagement(GenMdBaseTest):
     def test_save_timezone(self):
         """新增时区配置用例"""
         try:
-            timezone_code = self.mock_util.generate_unique_code(tag="TIMEZONE")
-            timezone_name = f"测试时区_{self.mock_util.get_timestamp()}"
-
-            set_dict = {
-                "timezoneCode": timezone_code,
-                "timezoneName": timezone_name,
-                "offset": "+08:00",
-                "remark": f"时区描述_{self.mock_util.get_timestamp()}"
-            }
-            
-            response, timezone_id = self.standard_api_call(
-                api_key="GEN-时区配置-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=["timezoneCode", "timezoneName", "offset", "remark"],
-                store_id_as="timezone"
-            )
-            
-            self.timezone_code = timezone_code
+            self._create_timezone()
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -111,7 +122,7 @@ class TestTimezoneManagement(GenMdBaseTest):
         """查询时区配置详情用例"""
         try:
             if not self.timezone_id:
-                self.test_save_timezone()
+                self._ensure_save_timezone()
 
             set_dict = {"id": self.timezone_id}
             
@@ -138,7 +149,7 @@ class TestTimezoneManagement(GenMdBaseTest):
         """删除时区配置用例"""
         try:
             if not self.timezone_id:
-                self.test_save_timezone()
+                self._ensure_save_timezone()
 
             set_dict = {"id": self.timezone_id}
             

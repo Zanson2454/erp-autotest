@@ -340,7 +340,7 @@ class TestQuoteCrud(SlsBase):
                 self.quote_id_submit = self.create_quote(submit=True)
             
             # 2. 查询报价单状态
-            quote_status = self.db.query(
+            quote_status = self.query_service.query(
                 "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
                 params=[self.quote_id_submit]
             )
@@ -361,7 +361,7 @@ class TestQuoteCrud(SlsBase):
                 time.sleep(2)
                 
                 # 再次查询状态确认
-                quote_status = self.db.query(
+                quote_status = self.query_service.query(
                     "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
                     params=[self.quote_id_submit]
                 )
@@ -481,7 +481,7 @@ class TestQuoteCrud(SlsBase):
             if not response_data or not response_data.get("id"):
                 self.logger.warning(f"API查询报价单详情失败，改用数据库查询。报价单ID: {quote_id}")
                 # 从数据库查询报价单数据
-                quote_info = self.db.query("""
+                quote_info = self.query_service.query("""
                     SELECT h.*, i.id as item_id, i.so_item_code, i.mat_id, i.mat_code, i.mat_name,
                            i.so_item_sls_qty, i.so_item_del_qty, i.so_item_transfer_qty, i.so_item_price,
                            i.uom_sls_id, i.uom_base_id, i.so_item_type_id, i.inv_org_id, i.inv_loc_id

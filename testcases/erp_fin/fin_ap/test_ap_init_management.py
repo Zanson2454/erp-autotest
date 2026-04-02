@@ -115,7 +115,7 @@ class TestApInitManagement(FinBaseTest):
         try:
             # 确保已创建初始化配置
             if not self.ap_init_id:
-                self.test_initialize_configuration()
+                self._ensure_initialize_configuration()
             
             # 检查依赖数据
             if not self.gr_com_org_id:
@@ -179,7 +179,7 @@ class TestApInitManagement(FinBaseTest):
         try:
             # 确保已创建初始化配置
             if not self.ap_init_id:
-                self.test_initialize_configuration()
+                self._ensure_initialize_configuration()
             
             set_dict = {
                 "id": self.ap_init_id
@@ -215,7 +215,7 @@ class TestApInitManagement(FinBaseTest):
         try:
             # 确保已创建并启用初始化配置
             if not self.ap_init_id:
-                self.test_enable_configuration()
+                self._ensure_enable_configuration()
             
             
             set_dict = {
@@ -265,7 +265,7 @@ class TestApInitManagement(FinBaseTest):
             # ========== 前置条件检查 ==========
             # 确保初始化配置已创建并启用，否则先执行前置用例
             if not self.ap_init_id:
-                self.test_enable_configuration()
+                self._ensure_enable_configuration()
             
             # 检查依赖数据
             if not self.gr_com_org_id:
@@ -408,7 +408,7 @@ class TestApInitManagement(FinBaseTest):
         try:
             # 确保已创建初始化配置
             if not self.ap_init_id:
-                self.test_im_initialization()
+                self._ensure_im_initialization()
             
             set_dict = {
                 "id": self.ap_init_id,
@@ -450,7 +450,7 @@ class TestApInitManagement(FinBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.ap_init_id:
-                self.test_initialize_configuration()
+                self._ensure_initialize_configuration()
             
             # 使用标准化API调用（根据模块代码分页查询）
             # 注意：根据curl命令，pageable中包含systemParams.viewCondition
@@ -503,7 +503,7 @@ class TestApInitManagement(FinBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.ap_init_id:
-                self.test_initialize_configuration()
+                self._ensure_initialize_configuration()
             
             # 使用标准化API调用
             # 注意：根据 curl 命令，id 参数是字符串类型
@@ -551,7 +551,7 @@ class TestApInitManagement(FinBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.ap_init_id:
-                self.test_initialize_configuration()
+                self._ensure_initialize_configuration()
             
             set_dict = {"id": self.ap_init_id}
             
@@ -590,7 +590,7 @@ class TestApInitManagement(FinBaseTest):
         try:
             # 创建多个数据用于批量删除
             if not self.ap_init_id:
-                self.test_initialize_configuration()
+                self._ensure_initialize_configuration()
             
             set_dict = {"ids": [self.ap_init_id]}
             
@@ -623,7 +623,7 @@ class TestApInitManagement(FinBaseTest):
         """测试复制数据转换服务"""
         try:
             if not self.ap_init_id:
-                self.test_initialize_configuration()
+                self._ensure_initialize_configuration()
             
             # 使用标准化API调用
             set_dict = {"id": self.ap_init_id}

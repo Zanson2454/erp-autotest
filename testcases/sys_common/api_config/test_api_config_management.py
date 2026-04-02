@@ -132,7 +132,7 @@ class TestApiConfigManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.config_id:
-                self.test_config_save_post()
+                self._ensure_config_save_post()
             
             # 调用分页查询API
             api_path = self.get_api_path("配置中心配置接口-分页查询配置")
@@ -203,7 +203,7 @@ class TestApiConfigManagement(SysCommonBaseTest):
         try:
             # 确保配置存在
             if not self.config_id:
-                self.test_config_save_post()
+                self._ensure_config_save_post()
             
             # 调用详情查询API
             api_path = self.get_api_path("配置中心配置接口-配置详情查询")
@@ -254,7 +254,7 @@ class TestApiConfigManagement(SysCommonBaseTest):
         try:
             # 确保配置存在
             if not self.config_id:
-                self.test_config_save_post()
+                self._ensure_config_save_post()
             
             # 调用删除API
             api_path = self.get_api_path("配置中心配置接口-配置删除")

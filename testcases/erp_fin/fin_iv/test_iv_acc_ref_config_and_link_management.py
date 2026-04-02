@@ -135,7 +135,7 @@ class TestIvAccRefConfigAndLinkManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.acc_ref_id:
-                self.test_acc_ref_save()
+                self._ensure_acc_ref_save()
             
             # 使用标准化API调用
             set_dict = {"id": self.acc_ref_id}
@@ -172,7 +172,7 @@ class TestIvAccRefConfigAndLinkManagement(IvBaseTest):
         try:
             # 创建测试数据用于批量删除
             if not self.acc_ref_id:
-                self.test_acc_ref_save()
+                self._ensure_acc_ref_save()
             
             # 创建额外的测试数据
             ref_code2 = self.mock_util.generate_unique_code(tag="IV_ACC_REF")
@@ -222,7 +222,7 @@ class TestIvAccRefConfigAndLinkManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.acc_ref_id:
-                self.test_acc_ref_save()
+                self._ensure_acc_ref_save()
             
             # 使用标准化API调用
             set_dict = {"sourceId": self.acc_ref_id}
@@ -362,7 +362,7 @@ class TestIvAccRefConfigAndLinkManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.acc_ref_id:
-                self.test_acc_ref_save()
+                self._ensure_acc_ref_save()
             
             # 使用标准化API调用
             set_dict = {"id": self.acc_ref_id}
@@ -435,10 +435,10 @@ class TestIvAccRefConfigAndLinkManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据（账户参考）
             if not self.acc_ref_id:
-                self.test_acc_ref_save()
+                self._ensure_acc_ref_save()
             
             # 注意：物料关联表可能没有 code 字段，需要通过 acc_cate_id 关联清理
-            self.db.execute(
+            self.query_service.execute(
                 "DELETE FROM fin_iv_mat_acc_cate_link_cf WHERE mat_type_id = %s and acc_cate_id = %s",
                 [self.mat_type_id, self.acc_ref_id]
             )
@@ -491,7 +491,7 @@ class TestIvAccRefConfigAndLinkManagement(IvBaseTest):
     #     try:
     #         # 检查并创建依赖数据
     #         if not self.mat_link_id:
-    #             self.test_mat_link_save()
+    #             self._ensure_mat_link_save()
             
     #         # 使用标准化API调用
     #         set_dict = {"id": self.mat_link_id}
@@ -528,7 +528,7 @@ class TestIvAccRefConfigAndLinkManagement(IvBaseTest):
     #     try:
     #         # 创建测试数据用于批量删除
     #         if not self.mat_link_id:
-    #             self.test_mat_link_save()
+    #             self._ensure_mat_link_save()
             
     #         # 创建额外的测试数据
     #         set_dict2 = {
@@ -576,7 +576,7 @@ class TestIvAccRefConfigAndLinkManagement(IvBaseTest):
     #     try:
     #         # 检查并创建依赖数据
     #         if not self.mat_link_id:
-    #             self.test_mat_link_save()
+    #             self._ensure_mat_link_save()
             
     #         # 使用标准化API调用
     #         set_dict = {"sourceId": self.mat_link_id}
@@ -718,7 +718,7 @@ class TestIvAccRefConfigAndLinkManagement(IvBaseTest):
     #     try:
     #         # 检查并创建依赖数据
     #         if not self.mat_link_id:
-    #             self.test_mat_link_save()
+    #             self._ensure_mat_link_save()
             
     #         # 使用标准化API调用
     #         set_dict = {"id": self.mat_link_id}
@@ -751,7 +751,7 @@ class TestIvAccRefConfigAndLinkManagement(IvBaseTest):
     #     try:
     #         # 检查并创建依赖数据
     #         if not self.acc_ref_id:
-    #             self.test_acc_ref_save()
+    #             self._ensure_acc_ref_save()
             
     #         # 使用标准化API调用
     #         set_dict = {
@@ -787,7 +787,7 @@ class TestIvAccRefConfigAndLinkManagement(IvBaseTest):
     #     try:
     #         # 检查并创建依赖数据
     #         if not self.mat_link_id:
-    #             self.test_mat_link_save()
+    #             self._ensure_mat_link_save()
             
     #         # 使用标准化API调用
     #         set_dict = {

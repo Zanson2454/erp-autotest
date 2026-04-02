@@ -96,7 +96,7 @@ class TestUserManagement(SysCommonBaseTest):
         try:
             # 获取用户ID
             if not self.user_id:
-                self.test_query_user_by_id()
+                self._ensure_query_user_by_id()
             
             # 调用单表查询接口
             api_path = self.get_api_path("用户-根据ID查找单表数据服务")
@@ -148,7 +148,7 @@ class TestUserManagement(SysCommonBaseTest):
         try:
             # 获取用户ID
             if not self.user_id:
-                self.test_query_user_by_id()
+                self._ensure_query_user_by_id()
             
             # 调用关联关系折叠接口
             api_path = self.get_api_path("用户-折叠关联关系服务")

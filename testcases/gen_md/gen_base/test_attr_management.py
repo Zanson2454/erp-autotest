@@ -34,6 +34,59 @@ class TestAttrManagement(GenMdBaseTest):
         """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
         cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
+
+    def _query_available_bind_fields(self):
+        set_dict = {"id": 0}
+        response, _ = self.standard_api_call(
+            api_key="查询属性可以绑定的字段服务",
+            set_dict=set_dict,
+            fields_to_filter=["id"],
+            store_id_as=None
+        )
+
+        fields_data = response.get("data", {}).get("data", []).get("availableFiledMap", [])
+        self.attr_field_list = list(fields_data)
+        self.assert_util.assert_by_operator(len(fields_data), ">", 0)
+        return self.attr_field_list
+
+    def _ensure_query_available_bind_fields(self):
+        if self.attr_field_list:
+            return self.attr_field_list
+        return self._query_available_bind_fields()
+
+    def _create_attr(self):
+        attr_code = self.mock_util.generate_unique_code(tag="ATTR")
+        attr_name = f"测试属性_{self.mock_util.get_timestamp()}"
+        attr_field_list = self._ensure_query_available_bind_fields()
+        attr_field = attr_field_list[0]
+
+        set_dict = {
+            "attrCode": attr_code,
+            "attrName": attr_name,
+            "attrDataType": "CHAR",
+            "attrClassCode": "ORG",
+            "attrField": attr_field,
+            "attrLength": 40,
+            "attrIsMulti": False,
+            "attrIsRequired": False,
+            "objectMeta": {}
+        }
+
+        response, attr_id = self.standard_api_call(
+            api_key="GEN-属性表-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=["code", "name", "attrType", "dataType", "description"],
+            store_id_as="attr"
+        )
+        self.assert_util.assert_response_data(response)
+        self.attr_id = attr_id
+        self.attr_code = attr_code
+        return attr_id
+
+    def _ensure_save_attr(self):
+        if self.attr_id:
+            return self.attr_id
+        return self._create_attr()
     # ================ 属性表基础管理 ================
     @case_decorator(
         story="属性管理",
@@ -47,34 +100,7 @@ class TestAttrManagement(GenMdBaseTest):
     def test_save_attr(self):
         """新增属性用例 - GEN_ATTR_CF_SAVE_ACTION_SERVICE"""
         try:
-            attr_code = self.mock_util.generate_unique_code(tag="ATTR")
-            attr_name = f"测试属性_{self.mock_util.get_timestamp()}"
-            if self.attr_field_list:
-                attr_field = self.attr_field_list[0]
-            else:
-                self.test_query_available_bind_fields()
-                attr_field = self.attr_field_list[0]
-
-            set_dict = {
-                "attrCode": attr_code,
-                "attrName": attr_name,
-                "attrDataType": "CHAR",
-                "attrClassCode": "ORG", 
-                "attrField": attr_field,
-                "attrLength": 40,
-                "attrIsMulti": False, 
-                "attrIsRequired": False,
-                "objectMeta": {}
-            }
-            
-            response, attr_id = self.standard_api_call(
-                api_key="GEN-属性表-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=["code", "name", "attrType", "dataType", "description"],
-                store_id_as="attr"
-            )
-            
-            self.attr_code = attr_code
+            self._create_attr()
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -125,7 +151,7 @@ class TestAttrManagement(GenMdBaseTest):
         """查询属性详情用例 - GEN_ATTR_CF_QUERY_DETAIL_ACTION_SERVICE"""
         try:
             if not self.attr_id:
-                self.test_save_attr()
+                self._ensure_save_attr()
 
             set_dict = {"id": self.attr_id}
             
@@ -151,20 +177,7 @@ class TestAttrManagement(GenMdBaseTest):
     def test_query_available_bind_fields(self):
         """查询属性可绑定字段用例 - GEN_ATTR_QUERY_AVAILABLE_BIND_FILED_ACTION_SERVICE"""
         try:
-            set_dict = {"id": 0}
-            
-            response, _ = self.standard_api_call(
-                api_key="查询属性可以绑定的字段服务",
-                set_dict=set_dict,
-                fields_to_filter=["id"],
-                store_id_as=None
-            )
-
-            # 验证返回的字段列表
-            fields_data = response.get("data", {}).get("data", []).get("availableFiledMap",[])
-            for field in fields_data:
-                self.attr_field_list.append(field)
-            self.assert_util.assert_by_operator(len(fields_data), ">", 0)
+            self._query_available_bind_fields()
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -182,7 +195,7 @@ class TestAttrManagement(GenMdBaseTest):
         """启用属性用例 - GEN_ATTR_CF_ENABLED_ACTION_SERVICE"""
         try:
             if not self.attr_id:
-                self.test_save_attr()
+                self._ensure_save_attr()
 
             set_dict = {"id": self.attr_id}
             
@@ -209,7 +222,7 @@ class TestAttrManagement(GenMdBaseTest):
         """禁用属性用例 - GEN_ATTR_CF_DISABLED_ACTION_SERVICE"""
         try:
             if not self.attr_id:
-                self.test_save_attr()
+                self._ensure_save_attr()
 
             set_dict = {"id": self.attr_id}
             
@@ -236,7 +249,7 @@ class TestAttrManagement(GenMdBaseTest):
         """删除属性用例 - GEN_ATTR_CF_DELETE_ACTION_SERVICE"""
         try:
             if not self.attr_id:
-                self.test_save_attr()
+                self._ensure_save_attr()
 
             set_dict = {"id": self.attr_id}
             

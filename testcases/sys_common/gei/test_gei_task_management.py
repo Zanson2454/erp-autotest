@@ -144,7 +144,7 @@ class TestGeiTaskManagement(SysCommonBaseTest):
         """测试提交直接导出任务 - API_GEI_TASK_EXPORT_DIRECT_POST"""
         try:
             if not self.gei_task_id:
-                self.test_export_task_post()
+                self._ensure_export_task_post()
             
             api_path = self.get_api_path("导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
@@ -356,7 +356,7 @@ class TestGeiTaskManagement(SysCommonBaseTest):
         """测试查询任务进度 - API_GEI_TASK_PROGRESS_POST"""
         try:
             if not self.gei_task_id:
-                self.test_export_task_post()
+                self._ensure_export_task_post()
             
             api_path = self.get_api_path("导入导出任务管理接口-查询任务进度")
             params, url = self.get_api_params(api_path)

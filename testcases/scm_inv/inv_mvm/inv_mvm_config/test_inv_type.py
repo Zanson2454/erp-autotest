@@ -193,7 +193,7 @@ class TestInvTypeManagement(ScmInvBaseTest):
         try:
             # 确保前置数据存在
             if self.inv_type_id is None:
-                self.test_save_inv_type()
+                self._ensure_save_inv_type()
             
             # 1. 构建导出URL
             url = "https://t-erp-huoshan-portal-test.app.duandian.com/api/trantor/service/engine/execute/SCM_INV$INV_INV_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST"
@@ -296,7 +296,7 @@ class TestInvTypeManagement(ScmInvBaseTest):
         try:
             # 确保前置数据存在
             if self.inv_type_id is None:
-                self.test_save_inv_type()
+                self._ensure_save_inv_type()
             
             # 1. 调用API
             api_path = self.get_api_path("INV-库存类型-删除服务")

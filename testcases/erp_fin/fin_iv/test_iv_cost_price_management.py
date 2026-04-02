@@ -122,7 +122,7 @@ class TestIvCostPriceManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.cost_price_id:
-                self.test_save_cost_price()
+                self._ensure_save_cost_price()
             
             # 使用标准化API调用
             set_dict = {"id": self.cost_price_id}
@@ -196,7 +196,7 @@ class TestIvCostPriceManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.cost_price_id:
-                self.test_save_cost_price()
+                self._ensure_save_cost_price()
             
             # 使用标准化API调用
             set_dict = {"sourceId": self.cost_price_id}
@@ -230,7 +230,7 @@ class TestIvCostPriceManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.cost_price_id:
-                self.test_save_cost_price()
+                self._ensure_save_cost_price()
             
             # 使用标准化API调用
             set_dict = {
@@ -267,7 +267,7 @@ class TestIvCostPriceManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.cost_price_id:
-                self.test_save_cost_price()
+                self._ensure_save_cost_price()
             
             # 获取API路径和URL
             api_path = self.get_api_path("存货成本价格-导入导出任务管理接口-提交导出任务")
@@ -453,7 +453,7 @@ class TestIvCostPriceManagement(IvBaseTest):
         try:
             # 创建测试数据用于批量删除
             if not self.cost_price_id:
-                self.test_save_cost_price()
+                self._ensure_save_cost_price()
           
             # 批量删除
             price_ids = [self.cost_price_id]
@@ -486,7 +486,7 @@ class TestIvCostPriceManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.cost_price_id:
-                self.test_save_cost_price()
+                self._ensure_save_cost_price()
             
             # 使用标准化API调用
             set_dict = {"id": self.cost_price_id}

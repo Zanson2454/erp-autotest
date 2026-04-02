@@ -167,7 +167,7 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
         try:
             # 获取物料单位转换管理ID
             if not self.mat_unit_conversion_id:
-                self.test_save_mat_unit_conversion()
+                self._ensure_save_mat_unit_conversion()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.mat_unit_conversion_id}
@@ -206,7 +206,7 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
         try:
             # 获取物料单位转换管理信息
             if not self.mat_unit_conversion_id:
-                self.test_save_mat_unit_conversion()
+                self._ensure_save_mat_unit_conversion()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.mat_unit_conversion_id}

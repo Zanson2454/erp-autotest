@@ -40,6 +40,62 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
         cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
+
+    def _create_uom_type(self):
+        uom_code = self.mock_util.generate_unique_code(tag="UOM")
+        uom_name = f"测试计量单位_{self.mock_util.get_timestamp()}"
+
+        set_dict = {
+            "uomCode": uom_code,
+            "uomDigit": 2,
+            "uomDesc": uom_name,
+            "uomType": "L"
+        }
+        fields_to_filter = ["uomCode", "uomDigit", "uomDesc", "uomType"]
+
+        response, extracted_id = self.standard_api_call(
+            api_key="GEN-计量单位-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=fields_to_filter,
+            store_id_as="uom"
+        )
+        self.assert_util.assert_response_data(response)
+        self.uom_id = extracted_id
+        self.uom_code = uom_code
+        return extracted_id
+
+    def _ensure_save_uom_type(self):
+        if self.uom_id:
+            return self.uom_id
+        return self._create_uom_type()
+
+    def _create_uom_formula(self):
+        if not self.uom_id:
+            self._ensure_save_uom_type()
+
+        set_dict = {
+            "baseUnitFactor": 1,
+            "targetUnitFactor": 1,
+            "targetUnitId": {"id": self.uom_id},
+            "unitId": {"id": self.uom_id},
+            "genMatMdId": None
+        }
+        fields_to_filter = ["baseUnitFactor", "targetUnitFactor", "targetUnitId", "unitId", "genMatMdId"]
+
+        response, extracted_id = self.standard_api_call(
+            api_key="GEN-计量单位转换-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=fields_to_filter,
+            store_id_as="uom_formula"
+        )
+        self.assert_util.assert_response_data(response)
+        self.uom_formula_id = extracted_id
+        return extracted_id
+
+    def _ensure_save_uom_formula(self):
+        if self.uom_formula_id:
+            return self.uom_formula_id
+        return self._create_uom_formula()
     # ================ 计量单位基础管理 ================
     @case_decorator(
         story="计量单位基础管理",
@@ -53,30 +109,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
     def test_save_uom_type(self):
         """新增计量单位用例 - GEN_UOM_TYPE_CF_SAVE_ACTION_SERVICE"""
         try:
-            uom_code = self.mock_util.generate_unique_code(tag="UOM")
-            uom_name = f"测试计量单位_{self.mock_util.get_timestamp()}"
-
-            # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {
-                "uomCode": uom_code,
-                "uomDigit": 2,
-                "uomDesc": uom_name,
-                "uomType": "L"  # 长度维度
-            }
-            fields_to_filter = ["uomCode", "uomDigit", "uomDesc", "uomType"]
-
-            # 2. 使用标准化API调用（无任何断言）
-            response, extracted_id = self.standard_api_call(
-                api_key="GEN-计量单位-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as="uom"  # 自动存储 self.uom_id
-            )
-
-            # 3. 保存业务数据（保持原有逻辑）
-            self.uom_id = extracted_id
-
-            # 4. 日志记录（Allure报告已由standard_api_call处理）
+            self._create_uom_type()
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -185,7 +218,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         """查询计量单位详情用例 - GEN_UOM_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE"""
         try:
             if not self.uom_id:
-                self.test_save_uom_type()
+                self._ensure_save_uom_type()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.uom_id}
@@ -221,7 +254,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         """根据ID查找计量单位数据用例 - GEN_UOM_TYPE_CF_FIND_DATA_BY_ID_SERVICE"""
         try:
             if not self.uom_id:
-                self.test_save_uom_type()
+                self._ensure_save_uom_type()
 
             set_dict = {"id": self.uom_id}
             response, _ = self.standard_api_call(
@@ -250,7 +283,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         """计量单位转换功能用例 - GEN_UOM_TYPE_CONVERSION_ACTION_SERVICE"""
         try:
             if not self.uom_id:
-                self.test_save_uom_type()
+                self._ensure_save_uom_type()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
@@ -290,7 +323,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         """删除计量单位用例 - GEN_UOM_TYPE_CF_DELETE_ACTION_SERVICE"""
         try:
             if not self.uom_id:
-                self.test_save_uom_type()
+                self._ensure_save_uom_type()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.uom_id}
@@ -326,35 +359,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
     def test_save_uom_formula(self):
         """新增计量单位转换用例 - GEN_UOM_FORMULA_TYPE_CF_SAVE_ACTION_SERVICE"""
         try:
-            if not self.uom_id:
-                self.test_save_uom_type()
-
-            # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {
-                "baseUnitFactor": 1,
-                "targetUnitFactor": 1,
-                "targetUnitId": {
-                    "id": self.uom_id
-                },
-                "unitId": {
-                    "id": self.uom_id
-                },
-                "genMatMdId": None
-            }
-            fields_to_filter = ["baseUnitFactor", "targetUnitFactor", "targetUnitId", "unitId", "genMatMdId"]
-
-            # 2. 使用标准化API调用（无任何断言）
-            response, extracted_id = self.standard_api_call(
-                api_key="GEN-计量单位转换-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as="uom_formula"  # 自动存储 self.uom_formula_id
-            )
-
-            # 3. 保存业务数据（保持原有逻辑）
-            self.uom_formula_id = extracted_id
-
-            # 4. 日志记录（Allure报告已由standard_api_call处理）
+            self._create_uom_formula()
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -414,7 +419,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         """查询计量单位转换详情用例 - GEN_UOM_FORMULA_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE"""
         try:
             if not self.uom_formula_id:
-                self.test_save_uom_formula()
+                self._ensure_save_uom_formula()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.uom_formula_id}
@@ -449,7 +454,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         """删除计量单位转换用例 - GEN_UOM_FORMULA_TYPE_CF_DELETE_ACTION_SERVICE"""
         try:
             if not self.uom_formula_id:
-                self.test_save_uom_formula()
+                self._ensure_save_uom_formula()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.uom_formula_id}
@@ -721,7 +726,7 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         """获取基本单位转换系数用例 - GAIN_WEIGHT_COEFFICIENT_EVENT_SERVICE"""
         try:
             if not self.uom_id:
-                self.test_save_uom_type()
+                self._ensure_save_uom_type()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {

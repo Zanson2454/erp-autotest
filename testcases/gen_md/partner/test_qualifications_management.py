@@ -126,7 +126,7 @@ class TestQualificationsManagement(GenMdBaseTest):
         """查询资质类型详情用例"""
         try:
             if not self.qualification_type_id:
-                self.test_save_qualification_type()
+                self._ensure_save_qualification_type()
 
             set_dict = {"id": self.qualification_type_id}
             fields_to_filter = ["id"]
@@ -245,7 +245,7 @@ class TestQualificationsManagement(GenMdBaseTest):
         """删除资质类型用例"""
         try:
             if not self.qualification_type_id:
-                self.test_save_qualification_type()
+                self._ensure_save_qualification_type()
 
             set_dict = {"id": self.qualification_type_id}
             fields_to_filter = ["id"]
@@ -277,7 +277,7 @@ class TestQualificationsManagement(GenMdBaseTest):
         """新增资质组用例"""
         try:
             if not self.qualification_type_id:
-                self.test_save_qualification_type()
+                self._ensure_save_qualification_type()
 
             # 使用优化后的generate_unique_code方法，确保编码唯一性
             group_code = self.mock_util.generate_unique_code(tag="QG")
@@ -365,7 +365,7 @@ class TestQualificationsManagement(GenMdBaseTest):
         """查询资质组详情用例"""
         try:
             if not self.qualification_group_id:
-                self.test_save_qualification_group()
+                self._ensure_save_qualification_group()
 
             set_dict = {"id": self.qualification_group_id}
             fields_to_filter = ["id"]
@@ -491,7 +491,7 @@ class TestQualificationsManagement(GenMdBaseTest):
         """删除资质组用例"""
         try:
             if not self.qualification_group_id:
-                self.test_save_qualification_group()
+                self._ensure_save_qualification_group()
 
             set_dict = {"id": self.qualification_group_id}
             fields_to_filter = ["id"]

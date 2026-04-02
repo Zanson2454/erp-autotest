@@ -38,11 +38,16 @@ class TestInvAtpLockPur(ScmInvBaseTest):
         cls.po_plan_qty = 11  # 采购单数量
         cls.dn_plan_qty = 2  # 交货单数量
         
-        if cls.md_cache_data:
-            cls.mat_id = cls.md_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP", [])[0].get("id")
-            cls.mat_code = cls.md_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP", [])[0].get("matCode")
-            cls.inv_org_id = cls.md_cache_data.get("org_info", {}).get("inv_org_info", [])[0].get("id")
-            cls.inv_loc_id = cls.md_cache_data.get("org_info", {}).get("inv_loc_info", [])[0].get("id")
+        md_data = cls.md_cache_data if isinstance(cls.md_cache_data, dict) else {}
+        mat_finp = md_data.get("mat_info", {}).get("mat_md", {}).get("FINP", [])
+        org_info = md_data.get("org_info", {})
+        inv_org_info = org_info.get("inv_org_info", [])
+        inv_loc_info = org_info.get("inv_loc_info", [])
+
+        cls.mat_id = mat_finp[0].get("id") if mat_finp else None
+        cls.mat_code = mat_finp[0].get("matCode") if mat_finp else None
+        cls.inv_org_id = inv_org_info[0].get("id") if inv_org_info else None
+        cls.inv_loc_id = inv_loc_info[0].get("id") if inv_loc_info else None
         
         cls.logger.info("ATP采购单测试类初始化完成")
 
@@ -115,7 +120,12 @@ class TestInvAtpLockPur(ScmInvBaseTest):
             self.assert_util.assert_response_data(response)
             
             result_data = response.get("data", {}).get("data", {})
-            content = result_data.get("data", [])
+            if isinstance(result_data, list):
+                content = result_data
+            elif isinstance(result_data, dict):
+                content = result_data.get("data", []) or []
+            else:
+                content = []
             
             if content and len(content) > 0:
                 self.logger.info(f"✅ ATP库存占量查询成功 (共{len(content)}条数据)")
@@ -212,7 +222,7 @@ class TestInvAtpLockPur(ScmInvBaseTest):
         try:
             # 确保已创建采购单
             if not self.__class__.po_doc_i_code:
-                self.test_create_atp_supply_order()
+                self._ensure_create_atp_supply_order()
             
             api_path = self.get_api_path("INV-ATP-手动创建单据")
             params, url = self.get_api_params(api_path)
@@ -296,7 +306,7 @@ class TestInvAtpLockPur(ScmInvBaseTest):
         try:
             # 确保已创建交货单（因为需要验证confirm_qty=9，即11-2）
             if not self.__class__.dn_doc_i_code:
-                self.test_create_delivery_note()
+                self._ensure_create_delivery_note()
             
             query_sql = f"""
                 SELECT doc_i_code, confirm_qty, unclose_qty, plan_qty
@@ -305,7 +315,7 @@ class TestInvAtpLockPur(ScmInvBaseTest):
                   AND deleted = 0
             """
             
-            db_result = self.db.query(query_sql)
+            db_result = self.query_service.query(query_sql)
             assert db_result and len(db_result) > 0, f"未查询到采购单数据: {self.__class__.po_doc_i_code}"
             
             record = db_result[0]
@@ -347,7 +357,7 @@ class TestInvAtpLockPur(ScmInvBaseTest):
         try:
             # 确保已创建交货单
             if not self.__class__.dn_doc_i_code:
-                self.test_create_delivery_note()
+                self._ensure_create_delivery_note()
             
             query_sql = f"""
                 SELECT doc_s_code, confirm_qty, unclose_qty, plan_qty
@@ -355,7 +365,7 @@ class TestInvAtpLockPur(ScmInvBaseTest):
                 WHERE doc_s_code = '{self.__class__.dn_doc_i_code}'
             """
             
-            db_result = self.db.query(query_sql)
+            db_result = self.query_service.query(query_sql)
             assert db_result and len(db_result) > 0, f"未查询到交货单数据: {self.__class__.dn_doc_i_code}"
             
             record = db_result[0]

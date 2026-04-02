@@ -112,7 +112,7 @@ class TestSalesOrderApproval(SlsBase):
             # 3. 查询订单状态，验证是否为审批中或已生效（添加重试机制）
             actual_status = None
             for attempt in range(5):
-                order_status = self.db.query(
+                order_status = self.query_service.query(
                     "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
                     params=[self.order_id]
                 )
@@ -162,7 +162,7 @@ class TestSalesOrderApproval(SlsBase):
                 self.order_id = self.create_sales_order(order_type="STND", submit=True)
             
             # 2. 查询订单状态，判断是否需要审批
-            order_status = self.db.query(
+            order_status = self.query_service.query(
                 "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
                 params=[self.order_id]
             )
@@ -180,7 +180,7 @@ class TestSalesOrderApproval(SlsBase):
                 a.text(f"订单状态不是审批中，当前状态: {current_status}。订单ID: {self.order_id}", "状态警告")
             
             # 5. 查询完整的订单数据
-            order_data = self.db.query(f"""
+            order_data = self.query_service.query(f"""
                 SELECT h.*, i.* 
                 FROM sls_so_head_tr h 
                 LEFT JOIN sls_so_item_tr i ON h.id = i.so_id 
@@ -252,7 +252,7 @@ class TestSalesOrderApproval(SlsBase):
             # 7. 查询订单状态，验证是否为已生效（添加重试机制）
             actual_status = None
             for attempt in range(5):
-                order_status = self.db.query(
+                order_status = self.query_service.query(
                     "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
                     params=[self.order_id]
                 )
@@ -294,7 +294,7 @@ class TestSalesOrderApproval(SlsBase):
             # 3. 查询订单状态，验证是否为审批中或已生效（添加重试机制）
             actual_status = None
             for attempt in range(5):
-                order_status = self.db.query(
+                order_status = self.query_service.query(
                     "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
                     params=[self.reject_order_id]
                 )
@@ -323,7 +323,7 @@ class TestSalesOrderApproval(SlsBase):
                 a.text(f"订单状态不是审批中，当前状态: {actual_status}。订单ID: {self.reject_order_id}", "状态警告")
             
             # 3. 查询完整的订单数据
-            order_data = self.db.query(f"""
+            order_data = self.query_service.query(f"""
                 SELECT h.*, i.* 
                 FROM sls_so_head_tr h 
                 LEFT JOIN sls_so_item_tr i ON h.id = i.so_id 
@@ -389,7 +389,7 @@ class TestSalesOrderApproval(SlsBase):
             self.assert_util.assert_response_success(response)
             
             # 8. 查询订单状态，验证是否为草稿状态（审批拒绝后回到草稿）
-            order_status = self.db.query(
+            order_status = self.query_service.query(
                 "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
                 params=[self.reject_order_id]
             )

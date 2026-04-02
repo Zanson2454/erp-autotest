@@ -65,7 +65,7 @@ class TestWorkOrderClose(PrdBaseTest):
                 """
                 
                 # 执行查询
-                records = self.db.query(sql)
+                records = self.query_service.query(sql)
                 self.logger.info(f"查询到{len(records)}条可关闭的生产订单记录")
                 
                 # 保存查询结果
@@ -115,7 +115,7 @@ class TestWorkOrderClose(PrdBaseTest):
                     FROM prd_order_header_tr
                     WHERE id = {order_id}
                 """
-                pre_close_data = self.db.query(pre_close_sql)
+                pre_close_data = self.query_service.query(pre_close_sql)
                 assert pre_close_data, f"未找到订单记录，ID: {order_id}"
                 
                 # 设置请求参数
@@ -146,7 +146,7 @@ class TestWorkOrderClose(PrdBaseTest):
                     FROM prd_order_header_tr
                     WHERE id = {order_id}
                 """
-                post_close_data = self.db.query(post_close_sql)
+                post_close_data = self.query_service.query(post_close_sql)
                 assert post_close_data, f"未找到订单记录，ID: {order_id}"
                 
                 # 验证状态变更
@@ -202,7 +202,7 @@ class TestWorkOrderClose(PrdBaseTest):
                     FROM prd_order_header_tr
                     WHERE id = {order_id}
                 """
-                pre_cancel_data = self.db.query(pre_cancel_sql)
+                pre_cancel_data = self.query_service.query(pre_cancel_sql)
                 assert pre_cancel_data, f"未找到订单记录，ID: {order_id}"
                 
                 # 设置请求参数
@@ -233,7 +233,7 @@ class TestWorkOrderClose(PrdBaseTest):
                     FROM prd_order_header_tr
                     WHERE id = {order_id}
                 """
-                post_cancel_data = self.db.query(post_cancel_sql)
+                post_cancel_data = self.query_service.query(post_cancel_sql)
                 assert post_cancel_data, f"未找到订单记录，ID: {order_id}"
                 
                 # 验证状态恢复

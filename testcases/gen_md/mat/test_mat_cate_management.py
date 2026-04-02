@@ -92,7 +92,7 @@ class TestMatCateManagement(GenMdBaseTest):
         """
         try:
             if not self.cateId:
-                self.test_save_root_cate()
+                self._ensure_save_root_cate()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.cateId}
@@ -133,7 +133,7 @@ class TestMatCateManagement(GenMdBaseTest):
         try:
             # 获取父类目ID
             if not self.cateId:
-                self.test_save_root_cate()
+                self._ensure_save_root_cate()
 
             # 准备子类目数据
             sub_cate_code = self.mock_util.generate_unique_code(tag="CateSub")
@@ -182,7 +182,7 @@ class TestMatCateManagement(GenMdBaseTest):
         try:
             # 获取类目ID
             if not self.cateId:
-                self.test_save_root_cate()
+                self._ensure_save_root_cate()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.cateId}
@@ -222,7 +222,7 @@ class TestMatCateManagement(GenMdBaseTest):
         try:
             # 获取类目ID
             if not self.cateId:
-                self.test_save_root_cate()
+                self._ensure_save_root_cate()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.cateId}
@@ -303,7 +303,7 @@ class TestMatCateManagement(GenMdBaseTest):
         """
         try:
             if not self.cateId:
-                self.test_save_root_cate()
+                self._ensure_save_root_cate()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"parentId": self.cateId}
@@ -340,7 +340,7 @@ class TestMatCateManagement(GenMdBaseTest):
         """
         try:
             if not self.cateId:
-                self.test_save_root_cate()
+                self._ensure_save_root_cate()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"parentId": self.cateId}
@@ -379,7 +379,7 @@ class TestMatCateManagement(GenMdBaseTest):
         """
         try:
             if not self.cateId:
-                self.test_save_root_cate()
+                self._ensure_save_root_cate()
 
             api_path = self.get_api_path("类目配置-根据ID查找数据服务")
             params, url = self.get_api_params(api_path)
@@ -545,7 +545,7 @@ class TestMatCateManagement(GenMdBaseTest):
         """
         try:
             if not self.cateId:
-                self.test_save_root_cate()
+                self._ensure_save_root_cate()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.cateId}

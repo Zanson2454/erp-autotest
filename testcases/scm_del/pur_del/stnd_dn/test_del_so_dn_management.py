@@ -310,7 +310,7 @@ class TestDelSoDnManagement(ScmDelBaseTest):
             ORDER BY created_at DESC 
             LIMIT 1
         """
-        db_result = self.db.query(query_sql, [self.__class__.dn_id])
+        db_result = self.query_service.query(query_sql, [self.__class__.dn_id])
         
         if not db_result:
             raise ValueError(f"未在数据库中找到交货单: id={self.__class__.dn_id}")
@@ -337,7 +337,7 @@ class TestDelSoDnManagement(ScmDelBaseTest):
                 ORDER BY created_at DESC 
                 LIMIT 1
             """
-            so_items = self.db.query(query_sql, [self.__class__.so_id])
+            so_items = self.query_service.query(query_sql, [self.__class__.so_id])
             
             if so_items:
                 so_item = so_items[0]
@@ -381,7 +381,7 @@ class TestDelSoDnManagement(ScmDelBaseTest):
                     ORDER BY created_at DESC 
                     LIMIT 1
                 """
-                dn_result = self.db.query(query_sql, [so_code])
+                dn_result = self.query_service.query(query_sql, [so_code])
                 if dn_result:
                     self.__class__.dn_id = dn_result[0].get("id")
                 else:
@@ -395,7 +395,7 @@ class TestDelSoDnManagement(ScmDelBaseTest):
                 FROM del_dn_head_tr 
                 WHERE id = %s
             """
-            dn_result = self.db.query(query_sql, [self.__class__.dn_id])
+            dn_result = self.query_service.query(query_sql, [self.__class__.dn_id])
             if dn_result:
                 self.__class__.dn_code = dn_result[0].get("dn_code")
                 del_status = dn_result[0].get("del_status")
@@ -409,7 +409,7 @@ class TestDelSoDnManagement(ScmDelBaseTest):
                 ORDER BY created_at DESC 
                 LIMIT 1
             """
-            dn_item_result = self.db.query(query_sql, [self.__class__.dn_id])
+            dn_item_result = self.query_service.query(query_sql, [self.__class__.dn_id])
             if dn_item_result:
                 self.__class__.dn_item_id = dn_item_result[0].get("id")
                 self.logger.info(f"获取交货单行ID: {self.__class__.dn_item_id}")
@@ -442,7 +442,7 @@ class TestDelSoDnManagement(ScmDelBaseTest):
         """提交销售交货单"""
         try:
             if not self.__class__.dn_id:
-                self.test_create_standard_so_dn()
+                self._ensure_create_standard_so_dn()
             
             result = self.dn_factory.submit_delivery_note(dn_id=self.__class__.dn_id)
             
@@ -453,7 +453,7 @@ class TestDelSoDnManagement(ScmDelBaseTest):
                 FROM del_dn_head_tr 
                 WHERE id = %s
             """
-            db_result = self.db.query(query_sql, [self.__class__.dn_id])
+            db_result = self.query_service.query(query_sql, [self.__class__.dn_id])
             
             if db_result:
                 actual_status = db_result[0].get("del_status")
@@ -489,7 +489,7 @@ class TestDelSoDnManagement(ScmDelBaseTest):
         """查询销售交货单列表"""
         try:
             if not self.__class__.dn_id:
-                self.test_submit_so_dn()
+                self._ensure_submit_so_dn()
             
             api_path = self.get_api_path("DEL-交货单公共-数据分页查询服务")
             params, url = self.get_api_params(api_path)
@@ -540,7 +540,7 @@ class TestDelSoDnManagement(ScmDelBaseTest):
         """查询销售交货单详情"""
         try:
             if not self.__class__.dn_id:
-                self.test_submit_so_dn()
+                self._ensure_submit_so_dn()
             
             api_path = self.get_api_path("DEL-交货单详情服务")
             params, url = self.get_api_params(api_path)
@@ -586,7 +586,7 @@ class TestDelSoDnManagement(ScmDelBaseTest):
         """查询销售交货单行列表"""
         try:
             if not self.__class__.dn_id:
-                self.test_submit_so_dn()
+                self._ensure_submit_so_dn()
             
             api_path = self.get_api_path("DEL-交货单公共-根据订单ID查询交货单行服务")
             params, url = self.get_api_params(api_path)
@@ -628,7 +628,7 @@ class TestDelSoDnManagement(ScmDelBaseTest):
         """生成拣配任务"""
         try:
             if not self.__class__.dn_id:
-                self.test_submit_so_dn()
+                self._ensure_submit_so_dn()
             
             api_path = self.get_api_path("DEL-APP端仓库执行任务平铺服务")
             params, url = self.get_api_params(api_path)
@@ -677,7 +677,7 @@ class TestDelSoDnManagement(ScmDelBaseTest):
         """保存拣配任务"""
         try:
             if not self.__class__.task_list:
-                self.test_generate_inv_executed_task()
+                self._ensure_generate_inv_executed_task()
             
             if not self.__class__.task_list:
                 raise ValueError("拣配任务列表为空，无法保存")
@@ -726,7 +726,7 @@ class TestDelSoDnManagement(ScmDelBaseTest):
         """交货单列表下拉查看拣配"""
         try:
             if not self.__class__.dn_item_id:
-                self.test_save_inv_executed_task()
+                self._ensure_save_inv_executed_task()
             
             api_path = self.get_api_path("DEL-查看拣配服务")
             params, url = self.get_api_params(api_path)
@@ -774,7 +774,7 @@ class TestDelSoDnManagement(ScmDelBaseTest):
         """查询交货单拣配任务"""
         try:
             if not self.__class__.dn_id:
-                self.test_save_inv_executed_task()
+                self._ensure_save_inv_executed_task()
             
             api_path = self.get_api_path("DEL-交货单公共-根据交货单头ID查询交货单任务行")
             params, url = self.get_api_params(api_path)
@@ -823,7 +823,7 @@ class TestDelSoDnManagement(ScmDelBaseTest):
         """拣配完成并过账"""
         try:
             if not self.__class__.warehouse_task_list:
-                self.test_query_dn_task_by_head_id()
+                self._ensure_query_dn_task_by_head_id()
             
             if not self.__class__.warehouse_task_list:
                 raise ValueError("拣配任务列表为空，无法完成拣配")
@@ -854,7 +854,7 @@ class TestDelSoDnManagement(ScmDelBaseTest):
                       AND deleted = 0
                     LIMIT 1
                 """
-                batch_result = self.db.query(batch_sql, [mat_id, inv_org_id, inv_loc_id, source_wh_bin])
+                batch_result = self.query_service.query(batch_sql, [mat_id, inv_org_id, inv_loc_id, source_wh_bin])
                 
                 if batch_result and batch_result[0].get("batch_id"):
                     batch_id = batch_result[0].get("batch_id")

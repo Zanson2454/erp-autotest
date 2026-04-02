@@ -144,7 +144,7 @@ class TestMatTypeManagement(GenMdBaseTest):
         """
         try:
             if not self.mat_type_id:
-                self.test_save_mat_type()
+                self._ensure_save_mat_type()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.mat_type_id}
@@ -182,7 +182,7 @@ class TestMatTypeManagement(GenMdBaseTest):
         """
         try:
             if not self.mat_type_id:
-                self.test_save_mat_type()
+                self._ensure_save_mat_type()
 
             set_dict = {"id": self.mat_type_id}
             response, _ = self.standard_api_call(
@@ -537,7 +537,7 @@ class TestMatTypeManagement(GenMdBaseTest):
         """
         try:
             if not self.mat_type_id:
-                self.test_save_mat_type()
+                self._ensure_save_mat_type()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.mat_type_id}

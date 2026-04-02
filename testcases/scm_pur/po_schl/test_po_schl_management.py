@@ -252,7 +252,7 @@ class TestPoSchlManagement(ScmPurBaseTest):
         try:
             if not self.__class__.po_schl_id:
                 try:
-                    self.test_query_po_schl_list()
+                    self._ensure_query_po_schl_list()
                 except Exception as e:
                     pytest.skip(f"依赖测试失败，跳过导出测试: {str(e)}")
             
@@ -365,12 +365,12 @@ class TestPoSchlManagement(ScmPurBaseTest):
         try:
             if not hasattr(self.__class__, 'po_schl_id') or not self.__class__.po_schl_id:
                 try:
-                    self.test_query_po_schl_list()
+                    self._ensure_query_po_schl_list()
                 except Exception as e:
                     pytest.skip(f"依赖测试失败，跳过合并测试: {str(e)}")
             if not hasattr(self.__class__, 'po_schl_id2') or not self.__class__.po_schl_id2:
                 try:
-                    self.test_query_po_schl_list()
+                    self._ensure_query_po_schl_list()
                 except Exception as e:
                     pytest.skip(f"依赖测试失败，跳过合并测试: {str(e)}")
             
@@ -433,7 +433,7 @@ class TestPoSchlManagement(ScmPurBaseTest):
         try:
             if not hasattr(self.__class__, 'merged_schl_data') or not self.__class__.merged_schl_data:
                 try:
-                    self.test_merge_po_schl()
+                    self._ensure_merge_po_schl()
                 except Exception as e:
                     pytest.skip(f"依赖测试失败，跳过保存测试: {str(e)}")
             
@@ -461,7 +461,7 @@ class TestPoSchlManagement(ScmPurBaseTest):
             merged_po_code = merged_record.get('poCode')
             
             # 数据库验证并保存ID供后续拆分使用
-            db_result = self.db.query(
+            db_result = self.query_service.query(
                 sql="SELECT id, po_schl_code, un_close_qty FROM pur_po_schl_tr WHERE po_code=%s AND deleted=0",
                 params=[merged_po_code]
             )
@@ -506,10 +506,10 @@ class TestPoSchlManagement(ScmPurBaseTest):
         try:
             # 检查并获取合并后保存的ID
             if not hasattr(self.__class__, 'merged_po_schl_id') or not self.__class__.merged_po_schl_id:
-                self.test_merge_save_po_schl()
+                self._ensure_merge_save_po_schl()
             
             # 从数据库查询完整的计划行数据
-            db_result = self.db.query(
+            db_result = self.query_service.query(
                 sql="SELECT id, po_schl_code, po_code, mat_id, mat_name, po_schl_qty_del, "
                     "po_schl_qty_ful, po_schl_date_del, inv_loc_id, po_item_code, uom_pur_id, "
                     "vend_id, vend_contact_person, vend_contact_info, pur_employee_contact_info, "
@@ -567,7 +567,7 @@ class TestPoSchlManagement(ScmPurBaseTest):
             self.assert_util.assert_response_success(response)
             
             # 验证拆分结果：应该有2行数据，总和等于原数量
-            verify_result = self.db.query(
+            verify_result = self.query_service.query(
                 sql="SELECT id, po_schl_qty_del, un_close_qty FROM pur_po_schl_tr WHERE po_code=%s AND deleted=0",
                 params=[self.__class__.merged_po_code]
             )

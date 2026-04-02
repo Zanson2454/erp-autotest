@@ -113,7 +113,7 @@ class TestInvMvmConfigManagement(ScmInvBaseTest):
         try:
             # 确保前置数据存在
             if self.mvm_ext_type_id is None:
-                self.test_save_mvm_ext_type()
+                self._ensure_save_mvm_ext_type()
             
             # 1. 调用API
             api_path = self.get_api_path("INV-移动扩展类型-详情服务")
@@ -239,7 +239,7 @@ class TestInvMvmConfigManagement(ScmInvBaseTest):
         try:
             # 依赖保存方法创建的数据
             if not self.mvm_ext_type_id:
-                self.test_save_mvm_ext_type()
+                self._ensure_save_mvm_ext_type()
             
             # 1. 调用API
             api_path = self.get_api_path("移动类型扩展类型定义表-导入导出任务管理接口-提交导出任务")
@@ -349,7 +349,7 @@ class TestInvMvmConfigManagement(ScmInvBaseTest):
         try:
             # 确保前置数据存在
             if self.mvm_ext_type_id is None:
-                self.test_save_mvm_ext_type()
+                self._ensure_save_mvm_ext_type()
             
             # 1. 调用API
             api_path = self.get_api_path("INV-移动扩展类型-删除服务")

@@ -307,8 +307,8 @@ class TestMvmTypeManagement(ScmInvBaseTest):
         try:
             # 确保前置数据存在
             if self.mvm_type_id is None:
-                self.test_save_mvm_type()
-                self.test_query_mvm_type_page()
+                self._ensure_save_mvm_type()
+                self._ensure_query_mvm_type_page()
             
             # 1. 构建URL和参数（直接写死，因为yaml中查询不到）
             api_path = "/api/trantor/service/engine/execute/SCM_INV$SYS_FindDataByIdService"
@@ -367,8 +367,8 @@ class TestMvmTypeManagement(ScmInvBaseTest):
         """测试启用移动类型"""
         # 确保前置数据存在
         if self.mvm_type_id is None:
-            self.test_save_mvm_type()
-            self.test_query_mvm_type_page()
+            self._ensure_save_mvm_type()
+            self._ensure_query_mvm_type_page()
         
         # 执行启用操作
         self._execute_api_call_with_report(
@@ -391,8 +391,8 @@ class TestMvmTypeManagement(ScmInvBaseTest):
         """测试禁用移动类型"""
         # 确保前置数据存在
         if self.mvm_type_id is None:
-            self.test_save_mvm_type()
-            self.test_query_mvm_type_page()
+            self._ensure_save_mvm_type()
+            self._ensure_query_mvm_type_page()
         
         # 执行禁用操作
         self._execute_api_call_with_report(
@@ -417,7 +417,7 @@ class TestMvmTypeManagement(ScmInvBaseTest):
         try:
             # 依赖保存方法创建的数据
             if not self.mvm_type_id:
-                self.test_save_mvm_type()
+                self._ensure_save_mvm_type()
             
             # 1. 调用API
             api_path = self.get_api_path("移动类型定义表-导入导出任务管理接口-提交导出任务")
@@ -552,8 +552,8 @@ class TestMvmTypeManagement(ScmInvBaseTest):
         """测试删除移动类型"""
         # 确保前置数据存在
         if self.mvm_type_id is None:
-            self.test_save_mvm_type()
-            self.test_query_mvm_type_page()
+            self._ensure_save_mvm_type()
+            self._ensure_query_mvm_type_page()
         
         # 执行删除操作
         self._execute_api_call_with_report(

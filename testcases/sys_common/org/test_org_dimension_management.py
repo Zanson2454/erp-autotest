@@ -308,7 +308,7 @@ class TestOrgDimensionManagement(SysCommonBaseTest):
         """查找单条组织维度数据"""
         try:
             if not self.dimension_code:
-                self.test_create_dimension()
+                self._ensure_create_dimension()
             
             api_path = self.get_api_path("组织维度表-查找单条数据服务")
             params, url = self.get_api_params(api_path)
@@ -381,7 +381,7 @@ class TestOrgDimensionManagement(SysCommonBaseTest):
         """根据ID查找组织维度数据"""
         try:
             if not self.dimension_id:
-                self.test_create_dimension()
+                self._ensure_create_dimension()
             
             api_path = self.get_api_path("组织维度表-根据ID查找数据服务")
             params, url = self.get_api_params(api_path)
@@ -422,7 +422,7 @@ class TestOrgDimensionManagement(SysCommonBaseTest):
         """根据ID查找单表组织维度数据"""
         try:
             if not self.dimension_id:
-                self.test_create_dimension()
+                self._ensure_create_dimension()
             
             api_path = self.get_api_path("组织维度表-根据ID查找单表数据服务")
             params, url = self.get_api_params(api_path)
@@ -463,7 +463,7 @@ class TestOrgDimensionManagement(SysCommonBaseTest):
         """根据ID列表查找组织维度数据"""
         try:
             if not self.dimension_id:
-                self.test_create_dimension()
+                self._ensure_create_dimension()
             
             api_path = self.get_api_path("组织维度表-根据ID列表查找数据服务")
             params, url = self.get_api_params(api_path)
@@ -507,7 +507,7 @@ class TestOrgDimensionManagement(SysCommonBaseTest):
         """根据ID更新组织维度数据"""
         try:
             if not self.dimension_id:
-                self.test_create_dimension()
+                self._ensure_create_dimension()
             
             new_name = f"更新后维度_{self.mock_util.get_timestamp()}"
             
@@ -555,7 +555,7 @@ class TestOrgDimensionManagement(SysCommonBaseTest):
         """启用组织维度主数据"""
         try:
             if not self.dimension_id:
-                self.test_create_dimension()
+                self._ensure_create_dimension()
             
             api_path = self.get_api_path("组织维度表-启用主数据服务")
             params, url = self.get_api_params(api_path)
@@ -596,7 +596,7 @@ class TestOrgDimensionManagement(SysCommonBaseTest):
         """禁用组织维度主数据"""
         try:
             if not self.dimension_id:
-                self.test_create_dimension()
+                self._ensure_create_dimension()
             
             api_path = self.get_api_path("组织维度表-禁用主数据服务")
             params, url = self.get_api_params(api_path)
@@ -637,7 +637,7 @@ class TestOrgDimensionManagement(SysCommonBaseTest):
         """批量启用组织维度主数据"""
         try:
             if not self.dimension_id:
-                self.test_create_dimension()
+                self._ensure_create_dimension()
             
             api_path = self.get_api_path("组织维度表-批量启用主数据服务")
             params, url = self.get_api_params(api_path)
@@ -678,7 +678,7 @@ class TestOrgDimensionManagement(SysCommonBaseTest):
         """批量禁用组织维度主数据"""
         try:
             if not self.dimension_id:
-                self.test_create_dimension()
+                self._ensure_create_dimension()
             
             api_path = self.get_api_path("组织维度表-批量禁用主数据服务")
             params, url = self.get_api_params(api_path)
@@ -851,7 +851,7 @@ class TestOrgDimensionManagement(SysCommonBaseTest):
         """根据ID删除组织维度数据"""
         try:
             if not self.dimension_id:
-                self.test_create_dimension()
+                self._ensure_create_dimension()
             
             api_path = self.get_api_path("组织维度表-根据ID删除数据服务")
             params, url = self.get_api_params(api_path)

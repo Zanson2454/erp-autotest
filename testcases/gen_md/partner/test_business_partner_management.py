@@ -785,7 +785,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
         """查询合作伙伴详情用例"""
         try:
             if not self.partner_id:
-                self.test_save_business_partner()
+                self._ensure_save_business_partner()
 
             # 调用详情查询接口
             set_dict = {"id": self.partner_id}
@@ -818,7 +818,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
         """根据ID查找合作伙伴数据用例"""
         try:
             if not self.partner_id:
-                self.test_save_business_partner()
+                self._ensure_save_business_partner()
 
             # 调用接口
             set_dict = {"id": self.partner_id}
@@ -888,7 +888,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
         """启用合作伙伴用例"""
         try:
             if not self.partner_id:
-                self.test_save_business_partner()
+                self._ensure_save_business_partner()
 
             # 调用接口
             set_dict = {"id": self.partner_id}
@@ -921,7 +921,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
         """禁用合作伙伴用例"""
         try:
             if not self.partner_id:
-                self.test_save_business_partner()
+                self._ensure_save_business_partner()
 
             # 调用接口
             set_dict = {"id": self.partner_id}
@@ -1297,7 +1297,7 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
         """删除合作伙伴用例"""
         try:
             if not self.partner_id:
-                self.test_save_business_partner()
+                self._ensure_save_business_partner()
 
             # 调用删除接口
             set_dict = {"id": self.partner_id}

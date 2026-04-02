@@ -105,7 +105,7 @@ class TestSoApprovalRuleManagement(SlsBase):
         try:
             # 1. 确保有测试数据
             if not self.approval_rule_id:
-                self.test_save_approval_rule()
+                self._ensure_save_approval_rule()
             self.logger.info(f"self.approval_rule_id: {self.approval_rule_id}")
             # 2. 调用API
             api_path = self.get_api_path("SLS-审单规则-启用并清理缓存服务")
@@ -152,7 +152,7 @@ class TestSoApprovalRuleManagement(SlsBase):
         try:
             # 1. 确保有测试数据
             if not self.approval_rule_id:
-                self.test_save_approval_rule()
+                self._ensure_save_approval_rule()
             
             # 2. 调用API
             api_path = self.get_api_path("SLS-审单规则-停用并清理缓存服务")

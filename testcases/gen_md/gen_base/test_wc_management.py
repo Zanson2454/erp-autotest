@@ -34,6 +34,68 @@ class TestWcManagement(GenMdBaseTest):
         """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
         cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
+
+    def _generate_wc(self):
+        set_dict = {
+            "startDate": self.mock_util.get_timestamp(timestamp=True),
+            "finishDate": None,
+            "itemList": [
+                {
+                    "date": self.mock_util.get_timestamp(timestamp=True),
+                }
+            ]
+        }
+        fields_to_filter = ["id", "generateType", "year"]
+        response, _ = self.standard_api_call(
+            api_key="GEN-工作日日历头表-日历生成服务",
+            set_dict=set_dict,
+            fields_to_filter=fields_to_filter,
+            store_id_as=None
+        )
+        self.assert_util.assert_response_success(response)
+        self.wc_items = response.get("data", {}).get("data", {})
+        assert self.wc_items is not None, "日历生成返回为空"
+        self.assert_util.assert_response_data(response)
+        return self.wc_items
+
+    def _ensure_generate_wc(self):
+        if self.wc_items:
+            return self.wc_items
+        return self._generate_wc()
+
+    def _create_wc(self):
+        if not self.wc_items:
+            self._ensure_generate_wc()
+        self.logger.info(f"wc_items: {self.wc_items}")
+        wc_code = self.mock_util.generate_unique_code(tag="WC")
+        wc_name = f"测试工作日日历_{self.mock_util.get_timestamp()}"
+        set_dict = {
+            "wcHeadCode": wc_code,
+            "wcHeadName": wc_name,
+            "defaultRestDate": ["SUNDAY", "SATURDAY"],
+            "itemList": self.wc_items,
+            "startDate": self.mock_util.get_timestamp(timestamp=True),
+            "finishDate": None,
+            "description": f"测试工作日日历描述_{self.mock_util.get_timestamp()}"
+        }
+        fields_to_filter = ["code", "name", "startDate", "endDate", "description"]
+        response, extracted_id = self.standard_api_call(
+            api_key="GEN-工作日日历头表-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=fields_to_filter,
+            store_id_as="wc"
+        )
+        self.assert_util.assert_response_success(response)
+        assert extracted_id is not None, "新增工作日日历失败，未返回ID"
+        self.wc_id = extracted_id
+        self.wc_code = wc_code
+        return extracted_id
+
+    def _ensure_save_wc(self):
+        if self.wc_id:
+            return self.wc_id
+        return self._create_wc()
+
     # ================ 工作日日历基础管理 ================
     @case_decorator(
         story="工作日日历管理",
@@ -47,39 +109,7 @@ class TestWcManagement(GenMdBaseTest):
     def test_save_wc(self):
         """新增工作日日历用例 - GEN_WC_HEAD_CF_SAVE_ACTION_SERVICE"""
         try:
-            if not self.wc_items:
-                self.test_generate_wc()
-            self.logger.info(f"wc_items: {self.wc_items}")
-            wc_code = self.mock_util.generate_unique_code(tag="WC")
-            wc_name = f"测试工作日日历_{self.mock_util.get_timestamp()}"
-
-            # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {
-                "wcHeadCode": wc_code,
-                "wcHeadName": wc_name,
-                "defaultRestDate": ["SUNDAY", "SATURDAY"],
-                "itemList": self.wc_items,
-                "startDate": self.mock_util.get_timestamp(timestamp=True),  # 日历开始日期
-                "finishDate": None,
-                "description": f"测试工作日日历描述_{self.mock_util.get_timestamp()}"
-            }
-            fields_to_filter = ["code", "name", "startDate", "endDate", "description"]
-
-            # 2. 使用标准化API调用（无任何断言）
-            response, extracted_id = self.standard_api_call(
-                api_key="GEN-工作日日历头表-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as="wc"  # 自动存储 self.wc_id
-            )
-            self.assert_util.assert_response_success(response)
-            assert extracted_id is not None, "新增工作日日历失败，未返回ID"
-
-            # 3. 保存业务数据（保持原有逻辑）
-            self.wc_id = extracted_id
-            self.wc_code = wc_code
-
-            # 4. 日志记录（Allure报告已由standard_api_call处理）
+            self._create_wc()
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -96,37 +126,7 @@ class TestWcManagement(GenMdBaseTest):
     def test_generate_wc(self):
         """工作日日历生成用例 - GEN_WC_GENERATE_ACTION_SERVICE"""
         try:
-            # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {
-                "startDate": self.mock_util.get_timestamp(timestamp=True),
-                "finishDate": None,
-                "itemList": [
-                    {
-                        # "isWorkDay": False,
-                        "date": self.mock_util.get_timestamp(timestamp=True),
-                        # "week": "WEDNESDAY" 
-                    }
-                ]
-            }
-            fields_to_filter = ["id", "generateType", "year"]
-
-            # 2. 使用标准化API调用（无任何断言）
-            response, extracted_id = self.standard_api_call(
-                api_key="GEN-工作日日历头表-日历生成服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as=None
-            )
-            self.assert_util.assert_response_success(response)
-
-            # 3. 保存业务数据（保持原有逻辑）
-            self.wc_items = response.get("data", {}).get("data", {})
-            assert self.wc_items is not None, "日历生成返回为空"
-
-            # 4. 业务验证（保持原有逻辑）
-            self.assert_util.assert_response_data(response)
-
-            # 5. 日志记录（Allure报告已由standard_api_call处理）
+            self._generate_wc()
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -189,7 +189,7 @@ class TestWcManagement(GenMdBaseTest):
         """查询工作日日历详情用例 - GEN_WC_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE"""
         try:
             if not self.wc_id:
-                self.test_save_wc()
+                self._ensure_save_wc()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.wc_id}
@@ -227,7 +227,7 @@ class TestWcManagement(GenMdBaseTest):
         """启用工作日日历用例 - GEN_WC_HEAD_CF_ENABLED_ACTION_SERVICE"""
         try:
             if not self.wc_id:
-                self.test_save_wc()
+                self._ensure_save_wc()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.wc_id}
@@ -262,7 +262,7 @@ class TestWcManagement(GenMdBaseTest):
         """停用工作日日历用例 - GEN_WC_HEAD_CF_DISABLED_ACTION_SERVICE"""
         try:
             if not self.wc_id:
-                self.test_save_wc()
+                self._ensure_save_wc()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.wc_id}
@@ -297,7 +297,7 @@ class TestWcManagement(GenMdBaseTest):
         """删除工作日日历用例 - GEN_WC_HEAD_CF_DELETE_ACTION_SERVICE"""
         try:
             if not self.wc_id:
-                self.test_save_wc()
+                self._ensure_save_wc()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.wc_id}

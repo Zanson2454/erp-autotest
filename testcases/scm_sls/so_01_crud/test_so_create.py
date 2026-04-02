@@ -97,7 +97,7 @@ class TestSoHeadManagement(SlsBase):
         try:
             # 确保有可查询的订单ID
             if not self.so_head_id_save:
-                self.test_so_save()
+                self._ensure_so_save()
 
             api_path = self.get_api_path("销售订单页面完整查询")
             params, url = self.get_api_params(api_path)
@@ -136,7 +136,7 @@ class TestSoHeadManagement(SlsBase):
         try:
             # 确保有可查询定价记录的订单ID和幂等码
             if not self.so_head_id_save or not self.priceIdempotent:
-                self.test_so_save()
+                self._ensure_so_save()
 
             api_path = self.get_api_path("SO-查看定价记录服务")
             params, url = self.get_api_params(api_path)
@@ -184,7 +184,7 @@ class TestSoHeadManagement(SlsBase):
         try:
             # 确保有可维护发货计划的订单行ID
             if not self.so_item_id:
-                self.test_so_save()
+                self._ensure_so_save()
 
             api_path = self.get_api_path("SO-维护发货计划行服务")
             params, url = self.get_api_params(api_path)

@@ -38,6 +38,192 @@ class TestSurveyManagement(GenMdBaseTest):
         """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
         cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
+
+    def _create_survey_mission(self):
+        mission_code = self.mock_util.generate_unique_code(tag="MISSION")
+        mission_name = f"测试评分任务_{self.mock_util.get_timestamp()}"
+        set_dict = {
+            "missionCode": mission_code,
+            "title": mission_name,
+            "surveyType": "CUST",
+            "surveyObj": self.cust_id,
+            "startDate": self.mock_util.get_timestamp(timestamp=True),
+            "endDate": self.mock_util.get_timestamp(timestamp=True, day_offset=7),
+            "surveyMissionItem": [
+                {
+                    "weight": 10,
+                    "template": {"id": self.cust_template_id},
+                    "user": {"id": self.user_id}
+                }
+            ],
+            "surveyObj": {"id": self.cust_id}
+        }
+        fields_to_filter = ["title", "surveyType", "surveyObj", "startDate", "endDate", "surveyMissionItem"]
+        response, extracted_data = self.standard_api_call(
+            api_key="GEN-评分任务-创建评分任务服务",
+            set_dict=set_dict,
+            fields_to_filter=fields_to_filter,
+            store_id_as="survey_mission_head"
+        )
+        self.survey_mission_head_id = extracted_data.get("id") if isinstance(extracted_data, dict) else extracted_data
+        self.assert_util.assert_by_operator(self.survey_mission_head_id, "not_empty")
+        mission_item_id = self.query_service.get_survey_mission_item_id(self.survey_mission_head_id)
+        if not mission_item_id:
+            raise ValueError(f"未找到任务项记录，任务ID: {self.survey_mission_head_id}")
+        self.survey_mission_item_id = mission_item_id
+        self.assert_util.assert_by_operator(self.survey_mission_item_id, "not_empty")
+        return self.survey_mission_head_id
+
+    def _ensure_create_survey_mission(self):
+        if self.survey_mission_head_id:
+            return self.survey_mission_head_id
+        return self._create_survey_mission()
+
+    def _release_survey_mission(self):
+        if not self.survey_mission_head_id:
+            self._ensure_create_survey_mission()
+        set_dict = {"id": self.survey_mission_head_id}
+        response, _ = self.standard_api_call(
+            api_key="GEN-评分任务-发布评分任务服务",
+            set_dict=set_dict,
+            fields_to_filter=["id"],
+            store_id_as=None
+        )
+        state = self.query_service.get_survey_mission_state(self.survey_mission_head_id)
+        if state is None:
+            raise ValueError(f"未找到任务记录，任务ID: {self.survey_mission_head_id}")
+        self.assert_util.assert_by_operator(state, "=", "RELEASED")
+        return response
+
+    def _ensure_release_survey_mission(self):
+        return self._release_survey_mission()
+
+    def _load_survey_detail_id(self):
+        if self.survey_detail_id:
+            return self.survey_detail_id
+        if not self.survey_mission_head_id:
+            self._ensure_release_survey_mission()
+        detail_id = self.query_service.get_survey_detail_id(self.survey_mission_head_id)
+        if detail_id:
+            self.survey_detail_id = detail_id
+        return self.survey_detail_id
+
+    def _query_survey_detail(self):
+        detail_id = self._load_survey_detail_id()
+        if not detail_id:
+            self._ensure_release_survey_mission()
+            detail_id = self._load_survey_detail_id()
+            if not detail_id:
+                raise ValueError(f"未找到评分详情记录，任务ID: {self.survey_mission_head_id}")
+        self.assert_util.assert_by_operator(self.survey_detail_id, "not_empty")
+        a.text(f"评分详情ID验证通过: {self.survey_detail_id}", "ID验证")
+        set_dict = {"id": self.survey_detail_id}
+        response, _ = self.standard_api_call(
+            api_key="GEN-评分详情-查询评分详情服务",
+            set_dict=set_dict,
+            fields_to_filter=["id"],
+            store_id_as=None
+        )
+        self.assert_util.assert_response_data(response)
+        return response
+
+    def _ensure_query_survey_detail(self):
+        if self.survey_detail_id:
+            return self.survey_detail_id
+        self._query_survey_detail()
+        return self.survey_detail_id
+
+    def _survey_score(self):
+        if not self.survey_detail_id:
+            self._ensure_query_survey_detail()
+        set_dict = {
+            "id": self.survey_detail_id,
+            "missionId": self.survey_mission_head_id,
+            "score": 20,
+            "state": "WAIT",
+            "surveyRecord": None,
+            "surveyDate": self.mock_util.get_timestamp(timestamp=True),
+            "type": "CUST",
+            "user": {
+                "id": self.user_id
+            },
+            "template": {
+                "id": self.cust_template_id,
+                "templateInfo": {
+                    "header": [
+                        {
+                            "defaultValue": None,
+                            "length": 40,
+                            "name": "序号",
+                            "required": True,
+                            "showWay": "ONLY_VIEW",
+                            "type": "TextArea",
+                            "value": None
+                        },
+                        {
+                            "defaultValue": "-",
+                            "length": 40,
+                            "name": "客户名称",
+                            "required": True,
+                            "showWay": "EDITABLE",
+                            "type": "TextArea",
+                            "value": f"测试客户_{self.mock_util.get_timestamp()}"
+                        }
+                    ],
+                    "body": [
+                        {
+                            "contentText": "基础信息评估及合作稳定性",
+                            "contentType": "TEXT",
+                            "formValue": 10,
+                            "maxScore": 10,
+                            "type": "score",
+                            "u_id": self.mock_util.get_mock_uuid()
+                        },
+                        {
+                            "contentText": "客户满意度如何",
+                            "formValue": 10,
+                            "selectItems": [
+                                {"label": "不满", "score": 0},
+                                {"label": "一般", "score": 2},
+                                {"label": "良好", "score": 6},
+                                {"label": "满意", "score": 10}
+                            ],
+                            "type": "select",
+                            "u_id": self.mock_util.get_mock_uuid()
+                        },
+                        {
+                            "contentText": "客户是否有重大违约记录",
+                            "formValue": 0,
+                            "type": "boolean",
+                            "u_id": self.mock_util.get_mock_uuid()
+                        },
+                        {
+                            "contentText": "客户的 30 天销量",
+                            "formValue": 0,
+                            "type": "section",
+                            "u_id": self.mock_util.get_mock_uuid(),
+                            "service": {}
+                        }
+                    ]
+                }
+            },
+            "surveyObj": {"id": self.cust_id},
+            "surveyMission": {"id": self.survey_mission_head_id},
+            "surveyMissionItem": {"id": self.survey_mission_item_id}
+        }
+        fields_to_filter = ["missionId", "score", "comment", "surveyRecord", "surveyDate", "type", "user", "template", "surveyObj", "surveyMission", "surveyMissionItem"]
+        response, extracted_data = self.standard_api_call(
+            api_key="GEN-评分任务-业务人员进行评分服务",
+            set_dict=set_dict,
+            fields_to_filter=fields_to_filter,
+            store_id_as="survey_detail"
+        )
+        a.text("评分API调用成功，无新ID返回，使用现有详情ID", "ID处理")
+        return response, extracted_data
+
+    def _ensure_survey_score(self):
+        return self._survey_score()
+
     # ================ 评分任务管理 ================
     @case_decorator(
         story="评分任务管理",
@@ -51,53 +237,7 @@ class TestSurveyManagement(GenMdBaseTest):
     def test_create_survey_mission(self):
         """创建评分任务用例 - GEN_SURVEY_MISSION_SAVE_UPDATE_ACTION_SERVICE"""
         try:
-            mission_code = self.mock_util.generate_unique_code(tag="MISSION")
-            mission_name = f"测试评分任务_{self.mock_util.get_timestamp()}"
-
-            # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {
-                "missionCode": mission_code,
-                "title": mission_name,
-                "surveyType": "CUST",
-                "surveyObj": self.cust_id,
-                "startDate": self.mock_util.get_timestamp(timestamp=True),
-                "endDate": self.mock_util.get_timestamp(timestamp=True, day_offset=7),
-                "surveyMissionItem": [
-                    {
-                        "weight": 10,
-                        "template": {
-                            "id": self.cust_template_id
-                        },
-                        "user": {
-                            "id": self.user_id
-                        }   
-                    }
-                ],
-                "surveyObj": {
-                    "id": self.cust_id
-                }
-            }
-            fields_to_filter = ["title", "surveyType", "surveyObj", "startDate", "endDate", "surveyMissionItem"]
-
-            # 2. 使用标准化API调用（无任何断言）
-            response, extracted_data = self.standard_api_call(
-                api_key="GEN-评分任务-创建评分任务服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as="survey_mission_head"  # 自动存储 self.survey_mission_head_id
-            )
-            
-            # 3. 保存业务数据（保持原有逻辑）
-            self.survey_mission_head_id = extracted_data.get("id") if isinstance(extracted_data, dict) else extracted_data
-            self.assert_util.assert_by_operator(self.survey_mission_head_id, "not_empty")
-            sql = "SELECT id FROM gen_survey_mission_item_md WHERE gen_survey_mission_md_id = %s LIMIT 1"
-            result = self.db.query(sql, (self.survey_mission_head_id,))
-            if not result:
-                raise ValueError(f"未找到任务项记录，任务ID: {self.survey_mission_head_id}")
-            self.survey_mission_item_id = result[0].get("id")
-            self.assert_util.assert_by_operator(self.survey_mission_item_id, "not_empty")
-
-            # 4. 日志记录（Allure报告已由standard_api_call处理）
+            self._create_survey_mission()
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -114,30 +254,7 @@ class TestSurveyManagement(GenMdBaseTest):
     def test_release_survey_mission(self):
         """发布评分任务用例 - GEN_SURVEY_MISSION_RELEASE_ACTION_SERVICE"""
         try:
-            if not self.survey_mission_head_id:
-                self.test_create_survey_mission()
-
-            # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.survey_mission_head_id}
-            fields_to_filter = ["id"]
-
-            # 2. 使用标准化API调用（无任何断言）
-            response, _ = self.standard_api_call(
-                api_key="GEN-评分任务-发布评分任务服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as=None
-            )
-
-            # 3. 业务验证（保持原有逻辑）
-            sql = "SELECT state FROM gen_survey_mission_md WHERE id = %s LIMIT 1"
-            result = self.db.query(sql, (self.survey_mission_head_id,))
-            if not result:
-                raise ValueError(f"未找到任务记录，任务ID: {self.survey_mission_head_id}")
-            state = result[0].get("state")
-            self.assert_util.assert_by_operator(state, "=", "RELEASED")
-
-            # 4. 日志记录（Allure报告已由standard_api_call处理）
+            self._release_survey_mission()
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -154,118 +271,7 @@ class TestSurveyManagement(GenMdBaseTest):
     def test_survey_score(self):
         """业务人员进行评分用例 - GEN_SURVEY_SCORE_ACTION_SERVICE"""
         try:
-            if not self.survey_detail_id:
-                self.test_query_survey_detail()
-
-            # 1. 准备测试数据（业务逻辑保持不变，包括复杂嵌套结构）
-            set_dict = {
-                "id": self.survey_detail_id,
-                "missionId": self.survey_mission_head_id,
-                "score": 20,
-                "state": "WAIT",
-                "surveyRecord": None,
-                "surveyDate": self.mock_util.get_timestamp(timestamp=True),
-                "type": "CUST",
-                "user": {
-                    "id": self.user_id
-                },
-                "template": {
-                    "id": self.cust_template_id,
-                    "templateInfo": {
-                        "header": [
-                            {
-                                "defaultValue": None,
-                                "length": 40,
-                                "name": "序号",
-                                "required": True,
-                                "showWay": "ONLY_VIEW",
-                                "type": "TextArea",
-                                "value": None
-                            },
-                            {
-                                "defaultValue": "-",
-                                "length": 40,
-                                "name": "客户名称",
-                                "required": True,
-                                "showWay": "EDITABLE",
-                                "type": "TextArea",
-                                "value": f"测试客户_{self.mock_util.get_timestamp()}"
-                            }
-                        ],
-                        "body": [
-                            {
-                                "contentText": "基础信息评估及合作稳定性",
-                                "contentType": "TEXT",
-                                "formValue": 10,
-                                "maxScore": 10,
-                                "type": "score",
-                                "u_id": self.mock_util.get_mock_uuid()
-                            },
-                            {
-                                "contentText": "客户满意度如何",
-                                "formValue": 10,
-                                "selectItems": [
-                                    {
-                                        "label": "不满",
-                                        "score": 0
-                                    },
-                                    {
-                                        "label": "一般",
-                                        "score": 2
-                                    },
-                                    {
-                                        "label": "良好",
-                                        "score": 6
-                                    },
-                                    {
-                                        "label": "满意",
-                                        "score": 10
-                                    }
-                                ],
-                                "type": "select",
-                                "u_id": self.mock_util.get_mock_uuid()
-                            },
-                            {
-                                "contentText": "客户是否有重大违约记录",
-                                "formValue": 0,
-                                "type": "boolean",
-                                "u_id": self.mock_util.get_mock_uuid()
-                            },
-                            {
-                                "contentText": "客户的 30 天销量",
-                                "formValue": 0,
-                                "type": "section",
-                                "u_id": self.mock_util.get_mock_uuid(),
-                                "service": {}
-                            }
-                        ]
-                    }
-                },
-                "surveyObj": {
-                    "id": self.cust_id
-                },
-                "surveyMission": {
-                    "id": self.survey_mission_head_id
-                },
-                "surveyMissionItem": {
-                    "id": self.survey_mission_item_id
-                }
-            }
-            fields_to_filter = ["missionId", "score", "comment", "surveyRecord", "surveyDate", "type", "user", "template", "surveyObj", "surveyMission", "surveyMissionItem"]
-
-            # 2. 使用标准化API调用（无任何断言）
-            response, extracted_data = self.standard_api_call(
-                api_key="GEN-评分任务-业务人员进行评分服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as="survey_detail"  # 自动存储 self.survey_detail_id
-            )
-            
-            # 3. 保存业务数据（保持原有逻辑）
-            # API不返回新ID，使用现有self.survey_detail_id
-            a.text("评分API调用成功，无新ID返回，使用现有详情ID", "ID处理")
-            
-            # 4. 日志记录（Allure报告已由standard_api_call处理）
+            self._survey_score()
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -282,39 +288,7 @@ class TestSurveyManagement(GenMdBaseTest):
     def test_query_survey_detail(self):
         """查询评分详情用例 - GEN_SURVEY_DETAIL_ACTION_SERVICE"""
         try:
-            if not self.survey_detail_id:
-                if not self.survey_mission_head_id:
-                    self.test_release_survey_mission()
-                # 参数化查询评分详情ID（保持SQL修复）
-                sql = "SELECT id FROM gen_survey_detail_md WHERE survey_mission = %s LIMIT 1"
-                result = self.db.query(sql, (self.survey_mission_head_id,))
-                if not result:
-                    # 如果没有详情记录，创建评分来生成
-                    self.test_survey_score()
-                    # 重新查询
-                    result = self.db.query(sql, (self.survey_mission_head_id,))
-                    if not result:
-                        raise ValueError(f"未找到评分详情记录，任务ID: {self.survey_mission_head_id}")
-                self.survey_detail_id = result[0].get("id")
-                self.assert_util.assert_by_operator(self.survey_detail_id, "not_empty")
-                a.text(f"评分详情ID验证通过: {self.survey_detail_id}", "ID验证")
-            
-            # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.survey_detail_id}
-            fields_to_filter = ["id"]
-            
-            # 2. 使用标准化API调用（无任何断言）
-            response, _ = self.standard_api_call(
-                api_key="GEN-评分详情-查询评分详情服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as=None
-            )
-            
-            # 3. 业务验证（保持原有逻辑）
-            self.assert_util.assert_response_data(response)
-            
-            # 4. 日志记录（Allure报告已由standard_api_call处理）
+            self._query_survey_detail()
             
         except Exception as e:
             a.text(str(e), "失败原因")

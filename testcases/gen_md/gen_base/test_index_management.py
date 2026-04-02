@@ -34,6 +34,44 @@ class TestIndexManagement(GenMdBaseTest):
         """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
         cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
+
+    def _create_index(self):
+        index_code = self.mock_data.generate_unique_code(tag="INDEX")
+        index_name = f"测试指标_{self.mock_data.get_timestamp()}"
+
+        set_dict = {
+            "genIndexCode": index_code,
+            "genIndexName": index_name,
+            "genIndexDataResult": f"DataResult_{self.mock_data.get_timestamp()}",
+            "genIndexDataSource": f"DataSource_{self.mock_data.get_timestamp()}",
+            "genIndexDataType": "MODEL",
+            "genIndexRemark": None,
+            "genIndexSort": 1,
+            "genIndexSql": None,
+            "genParentId": None,
+            "status": "DRAFT"
+        }
+        response, extracted_id = self.standard_api_call(
+            api_key="GEN-指标中心-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=[
+                "genIndexCode", "genIndexName", "genIndexDataResult", "genIndexDataSource",
+                "genIndexDataType", "genIndexRemark", "genIndexSort", "genIndexSql",
+                "genParentId", "status"
+            ],
+            store_id_as="index"
+        )
+        self.assert_util.assert_response_data(response)
+        self.index_id = extracted_id
+        self.assert_util.assert_by_operator(self.index_id, "not_empty")
+        return extracted_id, set_dict, response
+
+    def _ensure_save_index(self):
+        if self.index_id:
+            return self.index_id
+        extracted_id, _, _ = self._create_index()
+        return extracted_id
+
     # ================ 指标中心基础管理 ================
     @case_decorator(
         story="指标中心管理",
@@ -47,35 +85,7 @@ class TestIndexManagement(GenMdBaseTest):
     def test_save_index(self):
         """新增指标用例 - GEN_INDEX_MD_SAVE_ACTION_SERVICE"""
         try:
-            index_code = self.mock_data.generate_unique_code(tag="INDEX")
-            index_name = f"测试指标_{self.mock_data.get_timestamp()}"
-
-            set_dict = {
-                "genIndexCode": index_code,
-                "genIndexName": index_name,
-                "genIndexDataResult": f"DataResult_{self.mock_data.get_timestamp()}",  
-                "genIndexDataSource": f"DataSource_{self.mock_data.get_timestamp()}",  
-                "genIndexDataType": "MODEL",
-                "genIndexRemark": None,  
-                "genIndexSort": 1,
-                "genIndexSql": None,
-                "genParentId": None,
-                "status": "DRAFT"
-            }
-            response, extracted_id = self.standard_api_call(
-                api_key="GEN-指标中心-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=[
-                    "genIndexCode", "genIndexName", "genIndexDataResult", "genIndexDataSource",
-                    "genIndexDataType", "genIndexRemark", "genIndexSort", "genIndexSql",
-                    "genParentId", "status"
-                ],
-                store_id_as="index"
-            )
-            self.assert_util.assert_response_data(response)
-
-            self.index_id = extracted_id
-            self.assert_util.assert_by_operator(self.index_id, "not_empty")
+            _, set_dict, response = self._create_index()
             a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
 
@@ -186,7 +196,7 @@ class TestIndexManagement(GenMdBaseTest):
         """查询指标详情用例 - GEN_INDEX_MD_DETAIL_ACTION_SERVICE"""
         try:
             if not self.index_id:
-                self.test_save_index()
+                self._ensure_save_index()
 
             set_dict = {"id": self.index_id}
             response, detail_id = self.standard_api_call(
@@ -217,7 +227,7 @@ class TestIndexManagement(GenMdBaseTest):
         """根据父ID查询下级列表用例 - GEN_INDEX_MD_QUERY_BY_PARENT_ACTION_SERVICE"""
         try:
             if not self.index_id:
-                self.test_save_index()
+                self._ensure_save_index()
 
             set_dict = {"parentId": self.index_id}  # 查询顶级指标
             response, _ = self.standard_api_call(
@@ -275,7 +285,7 @@ class TestIndexManagement(GenMdBaseTest):
         """启用指标用例 - GEN_INDEX_MD_ENABLED_ACTION_SERVICE"""
         try:
             if not self.index_id:
-                self.test_save_index()
+                self._ensure_save_index()
 
             set_dict = {"id": self.index_id}
             response, _ = self.standard_api_call(
@@ -304,7 +314,7 @@ class TestIndexManagement(GenMdBaseTest):
         """禁用指标用例 - GEN_INDEX_MD_DISABLED_ACTION_SERVICE"""
         try:
             if not self.index_id:
-                self.test_save_index()
+                self._ensure_save_index()
 
             set_dict = {"id": self.index_id}
             response, _ = self.standard_api_call(
@@ -333,7 +343,7 @@ class TestIndexManagement(GenMdBaseTest):
         """删除指标用例 - GEN_INDEX_MD_DELETE_ACTION_SERVICE"""
         try:
             if not self.index_id:
-                self.test_save_index()
+                self._ensure_save_index()
 
             set_dict = {"id": self.index_id}
             response, _ = self.standard_api_call(

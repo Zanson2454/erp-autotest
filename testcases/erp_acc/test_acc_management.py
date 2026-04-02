@@ -55,7 +55,7 @@ class TestAccManagement(ErpAccBaseTest):
             if not self.acc_id:
                 a.text("需要先创建账户档案", "前置条件")
                 # 这里可以调用创建方法，或使用已有数据
-                # self.test_save_acc_md()
+                # self._ensure_save_acc_md()
             
             set_dict = {
                 "id": self.acc_id if self.acc_id else 0
@@ -88,7 +88,7 @@ class TestAccManagement(ErpAccBaseTest):
             if not self.acc_id:
                 a.text("需要先创建账户档案", "前置条件")
                 # 这里可以调用创建方法，或使用已有数据
-                # self.test_save_acc_md()
+                # self._ensure_save_acc_md()
             
             set_dict = {
                 "id": self.acc_id if self.acc_id else 0

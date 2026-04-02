@@ -120,7 +120,7 @@ class TestPoManagement(ScmPurBaseTest):
     def _verify_po_status(self, expected_status, status_desc):
         """验证订单状态"""
         query_sql = "SELECT id, document_status, deleted FROM pur_po_head_tr WHERE id = %s"
-        result = self.db.query(query_sql, [self.__class__.po_id])
+        result = self.query_service.query(query_sql, [self.__class__.po_id])
         
         assert result, "数据库未查询到订单数据"
         
@@ -318,7 +318,7 @@ class TestPoManagement(ScmPurBaseTest):
     def test_query_po_detail(self):
         try:
             if not self.__class__.po_id:
-                self.test_query_po_list()
+                self._ensure_query_po_list()
 
             set_dict = {"id": self.__class__.po_id}
             response, _ = self.standard_api_call(
@@ -358,7 +358,7 @@ class TestPoManagement(ScmPurBaseTest):
     def test_freeze_po_delivery(self):
         try:
             if not self.__class__.po_id:
-                self.test_query_po_list()
+                self._ensure_query_po_list()
             
             po_detail = self._get_po_detail_by_id(self.__class__.po_id)
             
@@ -390,7 +390,7 @@ class TestPoManagement(ScmPurBaseTest):
             self.assert_util.assert_response_success(response)
             
             query_sql = "SELECT id, delivery_frozen FROM pur_po_head_tr WHERE id = %s"
-            result = self.db.query(query_sql, [self.__class__.po_id])
+            result = self.query_service.query(query_sql, [self.__class__.po_id])
             
             assert result, "数据库未查询到订单数据"
             
@@ -416,7 +416,7 @@ class TestPoManagement(ScmPurBaseTest):
     def test_unfreeze_po_delivery(self):
         try:
             if not self.__class__.po_id:
-                self.test_query_po_list()
+                self._ensure_query_po_list()
             
             po_detail = self._get_po_detail_by_id(self.__class__.po_id)
             
@@ -448,7 +448,7 @@ class TestPoManagement(ScmPurBaseTest):
             self.assert_util.assert_response_success(response)
             
             query_sql = "SELECT id, delivery_frozen FROM pur_po_head_tr WHERE id = %s"
-            result = self.db.query(query_sql, [self.__class__.po_id])
+            result = self.query_service.query(query_sql, [self.__class__.po_id])
             
             assert result, "数据库未查询到订单数据"
             
@@ -476,7 +476,7 @@ class TestPoManagement(ScmPurBaseTest):
     def test_finish_po_without_delivery(self):
         try:
             if not self.__class__.po_id:
-                self.test_query_po_list()
+                self._ensure_query_po_list()
             
             po_detail = self._get_po_detail_by_id(self.__class__.po_id)
             
@@ -530,7 +530,7 @@ class TestPoManagement(ScmPurBaseTest):
     def test_abolish_po(self):
         try:
             if not self.__class__.po_id:
-                self.test_query_po_list()
+                self._ensure_query_po_list()
             
             api_path = self.get_api_path("PO-订单-作废服务")
             _, url = self.get_api_params(api_path)
@@ -573,8 +573,8 @@ class TestPoManagement(ScmPurBaseTest):
     )
     def test_cancel_submit_po(self):
         try:
-            self.test_create_standard_po()
-            self.test_query_po_list()
+            self._ensure_create_standard_po()
+            self._ensure_query_po_list()
             
             if not self.__class__.po_id:
                 raise ValueError("创建订单后未获取到po_id")
@@ -623,7 +623,7 @@ class TestPoManagement(ScmPurBaseTest):
     def test_export_po(self):
         try:
             if not self.__class__.po_id:
-                self.test_query_po_list()
+                self._ensure_query_po_list()
             
             api_path = self.get_api_path("采购订单-H-导入导出任务管理接口-提交导出任务")
             _, url = self.get_api_params(api_path)
@@ -770,7 +770,7 @@ class TestPoManagement(ScmPurBaseTest):
             self.assert_util.assert_response_success(response)
             
             query_sql = "SELECT id, document_status, deleted FROM pur_po_head_tr WHERE id = %s"
-            result = self.db.query(query_sql, [draft_po_id])
+            result = self.query_service.query(query_sql, [draft_po_id])
             
             assert result, "数据库未查询到订单数据"
             

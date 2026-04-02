@@ -49,7 +49,7 @@ class TestInvStkBalanceSalesManagement(MobileVoucherCreator):
                   AND stk_qty > 5
                 LIMIT 1
             """
-            result = cls.db.query(sql, params=[
+            result = cls.query_service.query(sql, params=[
                 cls.default_mat_id, cls.comOrgId, cls.invOrgId, cls.invLocId
             ])
             if result:
@@ -60,7 +60,7 @@ class TestInvStkBalanceSalesManagement(MobileVoucherCreator):
     def get_current_inventory_balance(self):
         """查询当前库存余额（精确匹配库存组织和库存地点）"""
         try:
-            result = self.db.query(
+            result = self.query_service.query(
                 sql="""SELECT SUM(stk_qty) as total_qty 
                        FROM inv_stk_ba 
                        WHERE com_org_id = %s 
@@ -168,7 +168,7 @@ class TestInvStkBalanceSalesManagement(MobileVoucherCreator):
             # 智能前置条件检查 - 支持单独运行
             if not hasattr(self.__class__, 'sale_voucher_id') or self.__class__.sale_voucher_id is None:
                 self.logger.warning("缺少销售凭证，执行前置测试")
-                self.test_create_sale_voucher_decrease_inventory()
+                self._ensure_create_sale_voucher_decrease_inventory()
             
             # 使用在创建销售凭证前记录的库存余额
             if hasattr(self.__class__, 'pre_sale_balance'):
@@ -181,7 +181,7 @@ class TestInvStkBalanceSalesManagement(MobileVoucherCreator):
                     self.logger.info(f"使用初始库存余额作为基准: {pre_sale_balance}")
                 else:
                     self.logger.warning("缺少销售前库存基准，执行前置测试")
-                    self.test_query_initial_balance_before_sale()
+                    self._ensure_query_initial_balance_before_sale()
                     pre_sale_balance = self.__class__.initial_balance
             
             # 等待数据同步

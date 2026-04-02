@@ -90,7 +90,7 @@ class TestIvVoucherHeadManagement(IvBaseTest):
     #     try:
     #         # 检查并创建依赖数据
     #         if not self.voucher_head_id:
-    #             self.test_save_voucher_head()
+    #             self._ensure_save_voucher_head()
             
     #         # 使用标准化API调用
     #         set_dict = {"id": self.voucher_head_id}
@@ -170,7 +170,7 @@ class TestIvVoucherHeadManagement(IvBaseTest):
     #     try:
     #         # 检查并创建依赖数据
     #         if not self.voucher_head_id:
-    #             self.test_save_voucher_head()
+    #             self._ensure_save_voucher_head()
             
     #         # 使用标准化API调用
     #         set_dict = {"sourceId": self.voucher_head_id}
@@ -203,7 +203,7 @@ class TestIvVoucherHeadManagement(IvBaseTest):
     #     try:
     #         # 检查并创建依赖数据
     #         if not self.voucher_head_id:
-    #             self.test_save_voucher_head()
+    #             self._ensure_save_voucher_head()
             
     #         # 使用标准化API调用
     #         set_dict = {"headId": self.voucher_head_id}
@@ -313,7 +313,7 @@ class TestIvVoucherHeadManagement(IvBaseTest):
     #     try:
     #         # 检查并创建依赖数据
     #         if not self.voucher_head_id:
-    #             self.test_save_voucher_head()
+    #             self._ensure_save_voucher_head()
             
     #         # 使用标准化API调用
     #         set_dict = {

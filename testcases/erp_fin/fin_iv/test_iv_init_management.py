@@ -150,7 +150,7 @@ class TestIvInitManagement(FinBaseTest):
         try:
             
             if not self.continuous_method_init_cf_id:
-                self.test_initialize_configuration(iv_type="CONTINUOUS_METHOD")
+                self._ensure_initialize_configuration(iv_type="CONTINUOUS_METHOD")
             com_org_obj = {"id": self.com_org_id}
             
             # 构造期间对象
@@ -212,7 +212,7 @@ class TestIvInitManagement(FinBaseTest):
         try:
             # 确保已创建初始化配置
             if not self.continuous_method_init_cf_id:
-                self.test_initialize_configuration(iv_type="CONTINUOUS_METHOD")
+                self._ensure_initialize_configuration(iv_type="CONTINUOUS_METHOD")
             config_id = self.continuous_method_init_cf_id
             com_org_obj = {"id": self.com_org_id}
             
@@ -266,7 +266,7 @@ class TestIvInitManagement(FinBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.continuous_method_init_cf_id:
-                self.test_initialize_configuration(iv_type="CONTINUOUS_METHOD")
+                self._ensure_initialize_configuration(iv_type="CONTINUOUS_METHOD")
             
             set_dict = {"id": self.continuous_method_init_cf_id}
             fields_to_filter = ["id"]
@@ -297,7 +297,7 @@ class TestIvInitManagement(FinBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.continuous_method_init_cf_id:
-                self.test_initialize_configuration(iv_type="CONTINUOUS_METHOD")
+                self._ensure_initialize_configuration(iv_type="CONTINUOUS_METHOD")
             
             # 使用标准化API调用
             set_dict = {
@@ -342,7 +342,7 @@ class TestIvInitManagement(FinBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.continuous_method_init_cf_id:
-                self.test_initialize_configuration(iv_type="CONTINUOUS_METHOD")
+                self._ensure_initialize_configuration(iv_type="CONTINUOUS_METHOD")
             
             # 使用标准化API调用
             set_dict = {"id": self.continuous_method_init_cf_id}
@@ -419,7 +419,7 @@ class TestIvInitManagement(FinBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.continuous_method_init_cf_id:
-                self.test_initialize_configuration(iv_type="CONTINUOUS_METHOD")
+                self._ensure_initialize_configuration(iv_type="CONTINUOUS_METHOD")
             
 
             set_dict = {"id": self.continuous_method_init_cf_id}
@@ -454,8 +454,8 @@ class TestIvInitManagement(FinBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.continuous_method_init_cf_id:
-                self.test_initialize_configuration(iv_type="CONTINUOUS_METHOD"  )
-                self.test_execute_post_initialization()
+                self._ensure_initialize_configuration(iv_type="CONTINUOUS_METHOD"  )
+                self._ensure_execute_post_initialization()
             
             set_dict = {"id": self.continuous_method_init_cf_id}
             fields_to_filter = ["id"]
@@ -487,7 +487,7 @@ class TestIvInitManagement(FinBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.continuous_method_init_cf_id:
-                self.test_execute_post_initialization()
+                self._ensure_execute_post_initialization()
             
             set_dict = {"id": self.continuous_method_init_cf_id}
             fields_to_filter = ["id"]
@@ -521,7 +521,7 @@ class TestIvInitManagement(FinBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.continuous_method_init_cf_id:
-                self.test_confirm_begin()
+                self._ensure_confirm_begin()
             
             # 使用use_param_util=False手动构造参数（因为需要reuqest路径）
             set_dict = {"id": self.continuous_method_init_cf_id}
@@ -568,7 +568,7 @@ class TestIvInitManagement(FinBaseTest):
             # 确保初始化配置已创建并确认开始，否则先执行前置用例
             # init_cf_id 是初始化配置的ID，由前置用例 test_confirm_begin() 创建
             if not self.continuous_method_init_cf_id:
-                self.test_confirm_begin()
+                self._ensure_confirm_begin()
             
             # ========== 步骤1：发起异步初始化任务 ==========
             # 调用异步任务发起接口，触发后台初始化处理
@@ -746,7 +746,7 @@ class TestIvInitManagement(FinBaseTest):
         try:
             # 确保初始化配置已创建并启用
             if not self.continuous_method_init_cf_id:
-                self.test_execute_initialization_async_and_wait()
+                self._ensure_execute_initialization_async_and_wait()
             
             # 使用标准化API调用
             set_dict = {"comOrgId": {"id": self.com_org_id}}
@@ -782,7 +782,7 @@ class TestIvInitManagement(FinBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.continuous_method_init_cf_id:
-                self.test_execute_initialization_async_and_wait()
+                self._ensure_execute_initialization_async_and_wait()
             
             # 使用标准化API调用
             set_dict = {"id": self.continuous_method_init_cf_id}
@@ -826,7 +826,7 @@ class TestIvInitManagement(FinBaseTest):
         try:
             # 创建多个数据用于批量删除
             if not self.period_method_init_cf_id:
-                    self.test_initialize_configuration(iv_type="PERIOD_METHOD") 
+                    self._ensure_initialize_configuration(iv_type="PERIOD_METHOD") 
             
             set_dict = {
                     "ids": [self.period_method_init_cf_id]
@@ -860,7 +860,7 @@ class TestIvInitManagement(FinBaseTest):
         """测试复制数据转换服务"""
         try:
             if not self.continuous_method_init_cf_id:
-                self.test_initialize_configuration(iv_type="CONTINUOUS_METHOD")
+                self._ensure_initialize_configuration(iv_type="CONTINUOUS_METHOD")
             
             # 使用标准化API调用
             set_dict = {"id": self.continuous_method_init_cf_id}
@@ -891,7 +891,7 @@ class TestIvInitManagement(FinBaseTest):
         """测试复制数据转换子服务"""
         try:
             if not self.continuous_method_init_cf_id:
-                self.test_initialize_configuration(iv_type="CONTINUOUS_METHOD")
+                self._ensure_initialize_configuration(iv_type="CONTINUOUS_METHOD")
             
             # 复制子服务需要源ID和modelKey参数
             # modelKey 用于后端服务构建URL路径，不能为null
@@ -932,7 +932,7 @@ class TestIvInitManagement(FinBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.init_config_id:
-                self.test_confirm_begin()
+                self._ensure_confirm_begin()
             
             # 使用标准化API调用
             set_dict = {"configId": self.init_config_id}
@@ -969,8 +969,8 @@ class TestIvInitManagement(FinBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.init_config_id:
-                self.test_initialize_configuration()
-                self.test_execute_post_initialization()
+                self._ensure_initialize_configuration()
+                self._ensure_execute_post_initialization()
             
             # 使用标准化API调用
             set_dict = {"id": self.init_config_id}
@@ -1004,7 +1004,7 @@ class TestIvInitManagement(FinBaseTest):
         """测试结账"""
         try:
             if not self.continuous_method_init_cf_id:
-                self.test_initialize_configuration(iv_type="CONTINUOUS_METHOD")
+                self._ensure_initialize_configuration(iv_type="CONTINUOUS_METHOD")
             set_dict = {"id": self.continuous_method_init_cf_id}
             fields_to_filter = ["id"]
             response, _ = self.standard_api_call(
@@ -1032,8 +1032,8 @@ class TestIvInitManagement(FinBaseTest):
     #     """测试反结账"""
     #     try:
     #         if not self.init_config_id:
-    #             self.test_confirm_begin()
-    #             self.test_close_account()  # 先结账再反结账
+    #             self._ensure_confirm_begin()
+    #             self._ensure_close_account()  # 先结账再反结账
             
     #         api_path = self.get_api_path("存货核算初始化配置-反结账")
     #         params, url = self.get_api_params(api_path)
@@ -1111,7 +1111,7 @@ class TestIvInitManagement(FinBaseTest):
     #     """测试异步执行核算（跳过）"""
     #     try:
     #         if not self.init_config_id:
-    #             self.test_confirm_begin()
+    #             self._ensure_confirm_begin()
             
     #         api_path = self.get_api_path("存货核算初始化配置-执行核算-异步任务发起")
     #         params, url = self.get_api_params(api_path)

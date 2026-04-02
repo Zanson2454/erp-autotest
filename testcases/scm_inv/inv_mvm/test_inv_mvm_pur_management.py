@@ -240,9 +240,9 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
         try:
             # 确保前置条件已满足
             if not self.charaClassId or not self.batchCharaValueList:
-                self.test_query_material_batch_feature()
+                self._ensure_query_material_batch_feature()
             if not self.batch_code:
-                self.test_generate_batch_code()
+                self._ensure_generate_batch_code()
 
             # 生成请求数据
             current_time = datetime.datetime.now()
@@ -380,7 +380,7 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
         try:
             # 确保有移动凭证编码
             if not self.mobile_voucher_code:
-                self.test_save_mobile_voucher()
+                self._ensure_save_mobile_voucher()
                 
             api_path = self.get_api_path("INV-移动凭证-分页查询服务")
             params, url = self.get_api_params(api_path)
@@ -500,7 +500,7 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
         try:
             # 确保有移动凭证ID
             if not self.mobile_voucher_id:
-                self.test_save_mobile_voucher()
+                self._ensure_save_mobile_voucher()
                 
             api_path = self.get_api_path("INV-移动凭证-详情服务")
             params, url = self.get_api_params(api_path)
@@ -547,7 +547,7 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
         try:
             # 确保有移动凭证数据
             if not self.mobile_voucher_id:
-                self.test_save_mobile_voucher()
+                self._ensure_save_mobile_voucher()
                 
             api_path = self.get_api_path("移动凭证抬头表-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)
@@ -672,7 +672,7 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
         try:
             # 确保有移动凭证数据
             if not self.mobile_voucher_id:
-                self.test_save_mobile_voucher()
+                self._ensure_save_mobile_voucher()
                 
             api_path = self.get_api_path("INV-移动凭证-新版移动凭证冲销服务")
             params, url = self.get_api_params(api_path)

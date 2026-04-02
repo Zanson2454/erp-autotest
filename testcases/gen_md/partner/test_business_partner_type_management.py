@@ -123,7 +123,7 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
         """查询合作伙伴类型详情用例"""
         try:
             if not self.partner_type_id:
-                self.test_save_business_partner_type()
+                self._ensure_save_business_partner_type()
 
             # 调用详情查询接口
             set_dict = {"id": self.partner_type_id}
@@ -193,7 +193,7 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
         """启用合作伙伴类型用例"""
         try:
             if not self.partner_type_id:
-                self.test_save_business_partner_type()
+                self._ensure_save_business_partner_type()
 
             # 调用启用接口
             set_dict = {"id": self.partner_type_id }
@@ -226,7 +226,7 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
         """禁用合作伙伴类型用例"""
         try:
             if not self.partner_type_id:
-                self.test_save_business_partner_type()
+                self._ensure_save_business_partner_type()
 
             # 调用禁用接口
             set_dict = {"id": self.partner_type_id}
@@ -259,7 +259,7 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
         """删除合作伙伴类型用例"""
         try:
             if not self.partner_type_id:
-                self.test_save_business_partner_type()
+                self._ensure_save_business_partner_type()
 
             # 调用删除接口
             set_dict = {"id": self.partner_type_id}

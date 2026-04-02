@@ -91,7 +91,7 @@ class TestDelSoDnManagement(SlsDelBaseTest):
             ORDER BY created_at DESC 
             LIMIT 1
         """
-        db_result = self.db.query(query_sql, [self.__class__.dn_id])
+        db_result = self.query_service.query(query_sql, [self.__class__.dn_id])
         
         if not db_result:
             raise ValueError(f"未在数据库中找到交货单: id={self.__class__.dn_id}")
@@ -118,7 +118,7 @@ class TestDelSoDnManagement(SlsDelBaseTest):
                 ORDER BY created_at DESC 
                 LIMIT 1
             """
-            so_items = self.db.query(query_sql, [self.__class__.so_id])
+            so_items = self.query_service.query(query_sql, [self.__class__.so_id])
             
             if so_items:
                 so_item = so_items[0]
@@ -149,7 +149,7 @@ class TestDelSoDnManagement(SlsDelBaseTest):
                 self._create_so_for_dn()
             
             # 检查订单状态，确保订单已生效（与原始实现保持一致）
-            order_info = self.db.query("SELECT so_status FROM sls_so_head_tr WHERE id = %s", (self.__class__.so_id,))
+            order_info = self.query_service.query("SELECT so_status FROM sls_so_head_tr WHERE id = %s", (self.__class__.so_id,))
             if not order_info:
                 raise ValueError(f"未找到订单，订单ID: {self.__class__.so_id}")
             
@@ -170,7 +170,7 @@ class TestDelSoDnManagement(SlsDelBaseTest):
                     import time
                     time.sleep(2)  # 等待交货单创建完成
                     so_code = self.__class__.so_code
-                    query_result = self.db.query("""
+                    query_result = self.query_service.query("""
                         SELECT DISTINCT h.id as dn_id
                         FROM del_dn_head_tr h
                         INNER JOIN del_dn_item_tr i ON h.id = i.dn_id
@@ -197,7 +197,7 @@ class TestDelSoDnManagement(SlsDelBaseTest):
                 FROM del_dn_head_tr 
                 WHERE id = %s
             """
-            dn_result = self.db.query(query_sql, [self.__class__.dn_id])
+            dn_result = self.query_service.query(query_sql, [self.__class__.dn_id])
             if not dn_result:
                 raise ValueError(f"❌ 未在数据库中找到交货单，交货单ID: {self.__class__.dn_id}")
             
@@ -240,7 +240,7 @@ class TestDelSoDnManagement(SlsDelBaseTest):
                 ORDER BY created_at DESC 
                 LIMIT 1
             """
-            dn_item_result = self.db.query(query_sql, [self.__class__.dn_id])
+            dn_item_result = self.query_service.query(query_sql, [self.__class__.dn_id])
             if dn_item_result:
                 self.__class__.dn_item_id = dn_item_result[0].get("id")
                 self.logger.info(f"获取交货单行ID: {self.__class__.dn_item_id}")
@@ -273,7 +273,7 @@ class TestDelSoDnManagement(SlsDelBaseTest):
         """提交销售交货单"""
         try:
             if not self.__class__.dn_id:
-                self.test_create_standard_so_dn()
+                self._ensure_create_standard_so_dn()
             
             # 检查交货单状态，如果已经是生效态则跳过提交
             query_sql = """
@@ -281,7 +281,7 @@ class TestDelSoDnManagement(SlsDelBaseTest):
                 FROM del_dn_head_tr 
                 WHERE id = %s
             """
-            db_result = self.db.query(query_sql, [self.__class__.dn_id])
+            db_result = self.query_service.query(query_sql, [self.__class__.dn_id])
             
             if not db_result:
                 raise ValueError(f"未在数据库中找到交货单: id={self.__class__.dn_id}")
@@ -307,7 +307,7 @@ class TestDelSoDnManagement(SlsDelBaseTest):
             assert result.get("success"), "交货单提交失败"
             
             # 再次查询验证状态
-            db_result = self.db.query(query_sql, [self.__class__.dn_id])
+            db_result = self.query_service.query(query_sql, [self.__class__.dn_id])
             if db_result:
                 actual_status = db_result[0].get("del_status")
                 actual_dn_code = db_result[0].get("dn_code")
@@ -342,7 +342,7 @@ class TestDelSoDnManagement(SlsDelBaseTest):
         """查询销售交货单列表"""
         try:
             if not self.__class__.dn_id:
-                self.test_submit_so_dn()
+                self._ensure_submit_so_dn()
             
             api_path = self.get_api_path("DEL-交货单公共-数据分页查询服务")
             params, url = self.get_api_params(api_path)
@@ -393,7 +393,7 @@ class TestDelSoDnManagement(SlsDelBaseTest):
         """查询销售交货单详情"""
         try:
             if not self.__class__.dn_id:
-                self.test_submit_so_dn()
+                self._ensure_submit_so_dn()
             
             api_path = self.get_api_path("DEL-交货单详情服务")
             params, url = self.get_api_params(api_path)
@@ -439,7 +439,7 @@ class TestDelSoDnManagement(SlsDelBaseTest):
         """查询销售交货单行列表"""
         try:
             if not self.__class__.dn_id:
-                self.test_submit_so_dn()
+                self._ensure_submit_so_dn()
             
             api_path = self.get_api_path("DEL-交货单公共-根据订单ID查询交货单行服务")
             params, url = self.get_api_params(api_path)
@@ -481,7 +481,7 @@ class TestDelSoDnManagement(SlsDelBaseTest):
         """生成验货任务"""
         try:
             if not self.__class__.dn_id:
-                self.test_submit_so_dn()
+                self._ensure_submit_so_dn()
             
             # 销售交货单使用生成验货任务的API（DEL_APP_INV_EXECUTED_TASK_TILE_EVENT_SERVICE）
             api_path = self.get_api_path("DEL-APP端仓库执行任务平铺服务")
@@ -531,7 +531,7 @@ class TestDelSoDnManagement(SlsDelBaseTest):
         """确定验货任务"""
         try:
             if not self.__class__.task_list:
-                self.test_generate_inv_executed_task()
+                self._ensure_generate_inv_executed_task()
             
             if not self.__class__.task_list:
                 raise ValueError("验货任务列表为空，无法确定")
@@ -593,7 +593,7 @@ class TestDelSoDnManagement(SlsDelBaseTest):
         """交货单列表下拉查看验货"""
         try:
             if not self.__class__.dn_item_id:
-                self.test_save_inv_executed_task()
+                self._ensure_save_inv_executed_task()
             
             api_path = self.get_api_path("DEL-查看拣配服务")
             params, url = self.get_api_params(api_path)
@@ -641,7 +641,7 @@ class TestDelSoDnManagement(SlsDelBaseTest):
         """根据交货单编号查询拣配任务"""
         try:
             if not self.__class__.dn_code:
-                self.test_save_inv_executed_task()
+                self._ensure_save_inv_executed_task()
             
             # 调用ERP_WM模块的查询拣配任务API
             api_path = "/api/trantor/service/engine/execute/ERP_WM$WM_QUERY_TASK_INFO_PAGE_EVENT_SERVICE"
@@ -770,7 +770,7 @@ class TestDelSoDnManagement(SlsDelBaseTest):
         """查询交货单任务"""
         try:
             if not self.__class__.dn_id:
-                self.test_save_inv_executed_task()
+                self._ensure_save_inv_executed_task()
             
             api_path = self.get_api_path("DEL-交货单公共-根据交货单头ID查询交货单任务行")
             params, url = self.get_api_params(api_path)
@@ -821,26 +821,26 @@ class TestDelSoDnManagement(SlsDelBaseTest):
             # 确保有验货任务数据（如果还没有，先生成并保存）
             if not hasattr(self.__class__, 'task_list') or not self.__class__.task_list:
                 if not self.__class__.dn_code:
-                    self.test_save_inv_executed_task()
+                    self._ensure_save_inv_executed_task()
                 else:
                     # 如果交货单已存在，直接生成验货任务
-                    self.test_generate_inv_executed_task()
-                    self.test_save_inv_executed_task()
+                    self._ensure_generate_inv_executed_task()
+                    self._ensure_save_inv_executed_task()
             
             # 保存验货任务后，需要重新查询任务（因为保存时返回的任务 id=0，不是真实的任务ID）
             # 优先使用查询拣配任务API获取的任务数据（包含真实的任务ID）
             if not self.__class__.dn_code:
-                self.test_save_inv_executed_task()
+                self._ensure_save_inv_executed_task()
             
             # 查询拣配任务（获取保存后的真实任务数据，包含真实的任务ID和批次信息）
             try:
-                self.test_query_picking_task_by_dn_code()
+                self._ensure_query_picking_task_by_dn_code()
                 self.__class__.warehouse_task_list = self.__class__.picking_task_list
                 self.logger.info(f"使用查询到的拣配任务列表，任务数量: {len(self.__class__.warehouse_task_list)}")
             except Exception:
                 # 如果查询拣配任务失败，尝试使用根据交货单头ID查询任务
                 try:
-                    self.test_query_dn_task_by_head_id()
+                    self._ensure_query_dn_task_by_head_id()
                     self.logger.info(f"使用根据交货单头ID查询的任务列表，任务数量: {len(self.__class__.warehouse_task_list)}")
                 except Exception:
                     # 最后尝试使用验货任务列表（但需要确保任务有真实ID）

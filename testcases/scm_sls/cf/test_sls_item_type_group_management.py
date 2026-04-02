@@ -102,7 +102,7 @@ class TestSlsItemTypeGroupManagement(SlsBase):
         try:
             # 1. 确保有测试数据
             if not self.item_type_group_id:
-                self.test_save_item_type_group()
+                self._ensure_save_item_type_group()
             
             # 2. 调用API
             api_path = self.get_api_path("SLS-订单行项目类型组-分页服务")
@@ -159,7 +159,7 @@ class TestSlsItemTypeGroupManagement(SlsBase):
         try:
             # 1. 确保有测试数据
             if not self.item_type_group_id:
-                self.test_save_item_type_group()
+                self._ensure_save_item_type_group()
             
             # 2. 调用API
             api_path = self.get_api_path("SLS-订单行项目类型组-详情服务")

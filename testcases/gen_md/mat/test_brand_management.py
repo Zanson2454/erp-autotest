@@ -135,7 +135,7 @@ class TestBrandManagement(GenMdBaseTest):
         try:
             # 获取品牌ID
             if not self.brandId:
-                self.test_save_brand()
+                self._ensure_save_brand()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.brandId}
@@ -174,7 +174,7 @@ class TestBrandManagement(GenMdBaseTest):
         try:
             # 获取品牌信息
             if not self.brandId:
-                self.test_save_brand()
+                self._ensure_save_brand()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
@@ -218,7 +218,7 @@ class TestBrandManagement(GenMdBaseTest):
         try:
             # 获取品牌ID
             if not self.brandId:
-                self.test_save_brand()
+                self._ensure_save_brand()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.brandId}

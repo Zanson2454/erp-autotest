@@ -61,7 +61,7 @@ class PrdConfigInitializer:
             ]
             
             for table, desc in tables:
-                count = self.db.query(f"SELECT COUNT(1) as cnt FROM {table} WHERE deleted = 0")
+                count = self.query_service.query(f"SELECT COUNT(1) as cnt FROM {table} WHERE deleted = 0")
                 if not count or not count[0]["cnt"]:
                     self.logger.warning(f"未找到{desc}数据")
                     return False
@@ -92,7 +92,7 @@ class PrdConfigInitializer:
                 sql = sql.strip()
                 if sql and not sql.startswith('--'):  # 跳过空语句和注释
                     try:
-                        self.db.execute(sql)
+                        self.query_service.execute(sql)
                         self.logger.info(f"SQL执行成功: {sql[:100]}...")  # 只记录前100个字符
                     except Exception as e:
                         self.logger.error(f"SQL执行失败: {str(e)}")
@@ -112,7 +112,7 @@ class PrdConfigInitializer:
         """验证配置是否存在"""
         try:
             # 检查生产领料单类型配置
-            issue_types = self.db.query("""
+            issue_types = self.query_service.query("""
                 SELECT type_code, is_issue 
                 FROM prd_issue_type_cf 
                 WHERE type_code IN ('ISSUE_FORWARD', 'ISSUE_REVERSE')
@@ -124,7 +124,7 @@ class PrdConfigInitializer:
                 return False
             
             # 检查生产领料规则配置
-            issue_rules = self.db.query("""
+            issue_rules = self.query_service.query("""
                 SELECT id, name, is_default
                 FROM prd_issue_rule_cf 
                 WHERE name = 'DEFAULT_RULE'
@@ -136,7 +136,7 @@ class PrdConfigInitializer:
                 return False
             
             # 检查生产领料规则项配置
-            issue_rule_items = self.db.query("""
+            issue_rule_items = self.query_service.query("""
                 SELECT pcsi.item, pcsi.default_value, pcsi.is_modified
                 FROM prd_issue_rule_item_cf pcsi
                 JOIN prd_issue_rule_cf pcsh ON pcsi.prd_issue_rule_cf_id = pcsh.id
@@ -149,7 +149,7 @@ class PrdConfigInitializer:
                 return False
             
             # 检查生产工单类型配置
-            wo_types = self.db.query("""
+            wo_types = self.query_service.query("""
                 SELECT id, type_code, type_name
                 FROM prd_wo_type_cf 
                 WHERE deleted = 0
@@ -160,7 +160,7 @@ class PrdConfigInitializer:
                 return False
             
             # 检查工艺路线类型配置
-            routing_types = self.db.query("""
+            routing_types = self.query_service.query("""
                 SELECT id, type_code, type_name
                 FROM gen_routings_type_cf 
                 WHERE deleted = 0

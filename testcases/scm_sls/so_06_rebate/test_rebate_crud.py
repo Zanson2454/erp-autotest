@@ -464,7 +464,7 @@ class TestRebateCrud(SlsBase):
         """测试从返利政策详情中停用返利政策"""
         try:
             # 1. 首先检查数据库中是否有启用状态的返利政策
-            enabled_rebates = self.db.query(
+            enabled_rebates = self.query_service.query(
                 "SELECT * FROM rebate_policy_head_tr WHERE status = 'ENABLED' AND deleted = 0 LIMIT 1"
             )
             
@@ -483,7 +483,7 @@ class TestRebateCrud(SlsBase):
                 self._ensure_rebate_submitted()
                 
                 # 验证返利政策已启用
-                rebate_check = self.db.query(
+                rebate_check = self.query_service.query(
                     f"SELECT * FROM rebate_policy_head_tr WHERE id = {self.rebate_id}"
                 )
                 
@@ -494,11 +494,11 @@ class TestRebateCrud(SlsBase):
                     if current_status != "ENABLED":
                         # 如果审核后不是启用状态，手动更新为启用状态
                         self.logger.warning(f"返利政策审核后状态为 {current_status}，手动更新为启用状态")
-                        self.db.execute(
+                        self.query_service.execute(
                             f"UPDATE rebate_policy_head_tr SET status = 'ENABLED' WHERE id = {self.rebate_id}"
                         )
                         # 重新查询
-                        rebate_check = self.db.query(
+                        rebate_check = self.query_service.query(
                             f"SELECT * FROM rebate_policy_head_tr WHERE id = {self.rebate_id}"
                         )
                         rebate_data = rebate_check[0]
@@ -580,7 +580,7 @@ class TestRebateCrud(SlsBase):
             
             # 7. 验证停用结果 - 从数据库查询验证状态是否已更新为停用
             time.sleep(1)  # 等待数据库更新
-            updated_rebate = self.db.query(
+            updated_rebate = self.query_service.query(
                 f"SELECT status FROM rebate_policy_head_tr WHERE id = {self.rebate_id}"
             )
             

@@ -163,7 +163,7 @@ class TestApTypeMdManagement(ApBaseTest):
         try:
             # 1. 确保有数据
             if not self.ap_type_id:
-                self.test_save_ap_type()
+                self._ensure_save_ap_type()
             
             # 2. 查询详情（需要传递modelKey查询参数）
             set_dict = {"id": self.ap_type_id}
@@ -204,8 +204,8 @@ class TestApTypeMdManagement(ApBaseTest):
         try:
             # 1. 确保有数据
             if not self.ap_type_id:
-                self.test_save_ap_type()
-                self.test_query_ap_type_detail()
+                self._ensure_save_ap_type()
+                self._ensure_query_ap_type_detail()
             
             self.ap_type_detail["name"] = f"自动化测试应付单据类型_更新_{self.mock_util.get_timestamp()}"
             self.ap_type_detail["remark"] = "自动化测试更新"
@@ -242,7 +242,7 @@ class TestApTypeMdManagement(ApBaseTest):
         try:
             # 1. 确保有数据
             if not self.ap_type_id:
-                self.test_save_ap_type()
+                self._ensure_save_ap_type()
             
             # 2. 批量启用数据（确保ID是整数类型）
             set_dict = {"ids": [int(self.ap_type_id)] if self.ap_type_id else []}
@@ -275,7 +275,7 @@ class TestApTypeMdManagement(ApBaseTest):
         try:
             # 1. 确保有数据
             if not self.ap_type_id:
-                self.test_save_ap_type()
+                self._ensure_save_ap_type()
             
             # 2. 批量禁用数据（确保ID是整数类型）
             set_dict = {"ids": [int(self.ap_type_id)] if self.ap_type_id else []}
@@ -308,7 +308,7 @@ class TestApTypeMdManagement(ApBaseTest):
         try:
             # 1. 确保有数据
             if not self.ap_type_id:
-                self.test_save_ap_type()
+                self._ensure_save_ap_type()
             
             # 2. 禁用数据（确保ID是整数类型）
             set_dict = {"ids": [int(self.ap_type_id)] if self.ap_type_id else []}
@@ -363,7 +363,7 @@ class TestApTypeMdManagement(ApBaseTest):
         try:
             # 1. 确保有数据
             if not self.ap_type_id:
-                self.test_save_ap_type()
+                self._ensure_save_ap_type()
             
             # 2. 删除数据（使用单行删除接口，需要modelKey查询参数）
             set_dict = {"id": int(self.ap_type_id) if self.ap_type_id else None}
@@ -435,7 +435,7 @@ class TestApTypeMdManagement(ApBaseTest):
         try:
             # 1. 确保有数据
             if not self.ap_type_id:
-                self.test_save_ap_type()
+                self._ensure_save_ap_type()
             
             # 2. 复制数据（需要modelKey查询参数）
             set_dict = {"id": int(self.ap_type_id) if self.ap_type_id else None}

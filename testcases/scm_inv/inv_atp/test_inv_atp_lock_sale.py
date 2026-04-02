@@ -38,12 +38,18 @@ class TestInvAtpLockSale(ScmInvBaseTest):
         cls.so_plan_qty = 5  # 销售单数量
         cls.dn_plan_qty = 3  # 交货单数量
         
-        if cls.md_cache_data:
-            cls.mat_id = cls.md_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP", [])[0].get("id")
-            cls.mat_code = cls.md_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP", [])[0].get("matCode")
-            cls.inv_org_id = cls.md_cache_data.get("org_info", {}).get("inv_org_info", [])[0].get("id")
-            cls.inv_loc_id = cls.md_cache_data.get("org_info", {}).get("inv_loc_info", [])[0].get("id")
-            cls.atp_rule_id = cls.md_cache_data.get("org_info", {}).get("inv_atp_rule_cf", [])[0].get("id")
+        md_data = cls.md_cache_data if isinstance(cls.md_cache_data, dict) else {}
+        mat_finp = md_data.get("mat_info", {}).get("mat_md", {}).get("FINP", [])
+        org_info = md_data.get("org_info", {})
+        inv_org_info = org_info.get("inv_org_info", [])
+        inv_loc_info = org_info.get("inv_loc_info", [])
+        atp_rule_info = org_info.get("inv_atp_rule_cf", [])
+
+        cls.mat_id = mat_finp[0].get("id") if mat_finp else None
+        cls.mat_code = mat_finp[0].get("matCode") if mat_finp else None
+        cls.inv_org_id = inv_org_info[0].get("id") if inv_org_info else None
+        cls.inv_loc_id = inv_loc_info[0].get("id") if inv_loc_info else None
+        cls.atp_rule_id = atp_rule_info[0].get("id") if atp_rule_info else None
         
         cls.logger.info("ATP销售单测试类初始化完成")
     
@@ -126,7 +132,7 @@ class TestInvAtpLockSale(ScmInvBaseTest):
                   AND deleted = 0
             """
             
-            id_result = self.db.query(query_id_sql)
+            id_result = self.query_service.query(query_id_sql)
             assert id_result and len(id_result) > 0, "未查询到ATP记录"
             
             self.__class__.atp_record_id = id_result[0].get("id")
@@ -153,7 +159,7 @@ class TestInvAtpLockSale(ScmInvBaseTest):
         try:
             # 确保已创建销售单
             if not self.__class__.so_doc_i_code:
-                self.test_create_sale_order()
+                self._ensure_create_sale_order()
             
             api_path = self.get_api_path("INV-ATP-手动创建单据")
             params, url = self.get_api_params(api_path)
@@ -237,7 +243,7 @@ class TestInvAtpLockSale(ScmInvBaseTest):
         try:
             # 确保已创建交货单
             if not self.__class__.dn_doc_i_code:
-                self.test_create_delivery_note()
+                self._ensure_create_delivery_note()
             
             query_sql = f"""
                 SELECT doc_i_code, confirm_qty, unclose_qty, plan_qty
@@ -255,7 +261,7 @@ class TestInvAtpLockSale(ScmInvBaseTest):
             unclose_qty = None
             plan_qty = None
             for i in range(20):
-                db_result = self.db.query(query_sql)
+                db_result = self.query_service.query(query_sql)
                 if not db_result or len(db_result) == 0:
                     if i < 19:  # 不是最后一次才等待
                         time.sleep(1)
@@ -286,7 +292,7 @@ class TestInvAtpLockSale(ScmInvBaseTest):
             
             # 确保已获取到数据
             if confirm_qty is None or unclose_qty is None or plan_qty is None:
-                db_result = self.db.query(query_sql)
+                db_result = self.query_service.query(query_sql)
                 if db_result and len(db_result) > 0:
                     record = db_result[0]
                     confirm_qty = float(record.get("confirm_qty", 0))
@@ -343,7 +349,7 @@ class TestInvAtpLockSale(ScmInvBaseTest):
         try:
             # 确保已创建交货单
             if not self.__class__.dn_doc_i_code:
-                self.test_create_delivery_note()
+                self._ensure_create_delivery_note()
             
             query_sql = f"""
                 SELECT doc_s_code, confirm_qty, unclose_qty, plan_qty
@@ -351,7 +357,7 @@ class TestInvAtpLockSale(ScmInvBaseTest):
                 WHERE doc_s_code = '{self.__class__.dn_doc_i_code}'
             """
             
-            db_result = self.db.query(query_sql)
+            db_result = self.query_service.query(query_sql)
             assert db_result and len(db_result) > 0, f"未查询到交货单数据: {self.__class__.dn_doc_i_code}"
             
             record = db_result[0]
@@ -399,7 +405,7 @@ class TestInvAtpLockSale(ScmInvBaseTest):
                 WHERE id = {self.__class__.atp_rule_id}
                   AND deleted = 0
             """
-            self.db.execute(update_sql)
+            self.query_service.execute(update_sql)
             self.logger.info(f"✅ ATP规则已修改为强控制，rule_id={self.__class__.atp_rule_id}")
             
             # 2. 尝试创建大数量销售单（库存不足）

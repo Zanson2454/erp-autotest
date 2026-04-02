@@ -39,9 +39,11 @@ class TestMat_ValueManagement(GenMdBaseTest):
         """
         try:
             # 检查是否存在数据
-            sql = f"select id from gen_inv_org_mat_type_link_cf where mat_type_id = {cls.mat_type_id} and inv_org_id = {cls.inv_org_id} and deleted=0 limit 1"
-            result = cls.db.query(sql)
-            mat_value_id = result[0].get("id") if result else None
+            mat_value_id = cls.query_service.get_inv_org_mat_type_link_id(
+                cls.mat_type_id,
+                cls.inv_org_id,
+                deleted=0,
+            )
             if not mat_value_id:
                 cls.db.insert(
                     table="gen_inv_org_mat_type_link_cf",
@@ -76,10 +78,10 @@ class TestMat_ValueManagement(GenMdBaseTest):
         """
         try:
             # 1. 判断是否存在数据（保持原有逻辑）
-            sql = f"select id from gen_inv_org_mat_type_link_cf where mat_type_id = {self.mat_type_id} and inv_org_id = {self.inv_org_id} limit 1"
-            result = self.db.query(sql)
-            if result:
-                self.mat_value_id = result[0].get("id")
+            self.mat_value_id = self.query_service.get_inv_org_mat_type_link_id(
+                self.mat_type_id,
+                self.inv_org_id,
+            )
             if not self.mat_value_id:
                 # 2. 准备测试数据（业务逻辑保持不变）
                 set_dict = {
@@ -177,7 +179,7 @@ class TestMat_ValueManagement(GenMdBaseTest):
         try:
             # 获取物料价值管理ID
             if not self.mat_value_id:
-                self.test_save_mat_value()
+                self._ensure_save_mat_value()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.mat_value_id}
@@ -489,7 +491,7 @@ class TestMat_ValueManagement(GenMdBaseTest):
         try:
             # 获取物料价值管理信息
             if not self.mat_value_id:
-                self.test_save_mat_value()
+                self._ensure_save_mat_value()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.mat_value_id}

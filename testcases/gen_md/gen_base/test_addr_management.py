@@ -1,12 +1,6 @@
 import allure
 import pytest
-from pathlib import Path
 from typing import Any
-import sys
-
-# 添加项目根目录到 Python 路径
-project_root = Path(__file__).resolve().parent.parent.parent
-sys.path.insert(0, str(project_root))
 
 # 直接导入，无 fallback
 from testcases.gen_md import GenMdBaseTest  # 注意大写 G
@@ -48,6 +42,72 @@ class TestAddrManagement(GenMdBaseTest):
         """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
         cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
+
+    def _create_addr(self):
+        addr_code = self.mock_util.generate_unique_code(tag="ADDR")
+        addr_name = f"测试地址_{self.mock_util.get_timestamp()}"
+        set_dict = {
+            "addrCode": addr_code,
+            "addrName": addr_name,
+            "addrNameEn": "",
+            "addrType": "PROVINCE",
+            "addrParentId": None,
+            "postCode": self.mock_util.get_mock_postcode(),
+            "lat": self.mock_util.get_mock_coordinates()["latitude"],
+            "lng": self.mock_util.get_mock_coordinates()["longitude"],
+            "counId": {"id": self.coun_id}
+        }
+        fields_to_filter = ["addrCode", "addrName", "addrNameEn", "addrType", "addrParentId", "postCode", "lat", "lng", "counId"]
+        response, extracted_id = self.standard_api_call(
+            api_key="GEN-地址库-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=fields_to_filter
+        )
+        self.assert_util.assert_response_success(response)
+        assert extracted_id is not None, "新增地址库失败，未返回地址ID"
+        self.addr_id = extracted_id
+        self.addr_code = addr_code
+        self.logger.info(f"新增地址库完成，ID: {extracted_id}")
+        return extracted_id
+
+    def _ensure_save_addr(self):
+        if self.addr_id:
+            return self.addr_id
+        return self._create_addr()
+
+    def _create_child_addr(self):
+        if not self.addr_id:
+            self._ensure_save_addr()
+        child_addr_code = self.mock_util.generate_unique_code(tag="CITY")
+        child_addr_name = f"测试城市_{self.mock_util.get_timestamp()}"
+        set_dict = {
+            "addrCode": child_addr_code,
+            "addrName": child_addr_name,
+            "addrNameEn": "",
+            "addrType": "CITY",
+            "addrParentId": self.addr_id,
+            "postCode": self.mock_util.get_mock_postcode(),
+            "lat": self.mock_util.get_mock_coordinates()["latitude"],
+            "lng": self.mock_util.get_mock_coordinates()["longitude"],
+            "counId": {"id": self.coun_id}
+        }
+        fields_to_filter = ["addrCode", "addrName", "addrNameEn", "addrType", "addrParentId", "postCode", "lat", "lng", "counId"]
+        response, child_id = self.standard_api_call(
+            api_key="GEN-地址库-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=fields_to_filter
+        )
+        self.assert_util.assert_response_success(response)
+        assert child_id is not None, "新增下级地址失败，未返回地址ID"
+        self.parent_addr_id = self.addr_id
+        self.logger.info(f"新增下级地址库完成，父级ID: {self.parent_addr_id}")
+        return child_id
+
+    def _ensure_save_child_addr(self):
+        if self.parent_addr_id:
+            return self.parent_addr_id
+        return self._create_child_addr()
+
     # ================ 地址库基础管理 ================
     @case_decorator(
         story="地址库管理",
@@ -61,39 +121,7 @@ class TestAddrManagement(GenMdBaseTest):
     def test_save_addr(self):
         """新增地址库用例 - GEN_ADDR_TYPE_CF_SAVE_ACTION_SERVICE"""
         try:
-            # 1. 准备测试数据（业务逻辑保持不变）
-            addr_code = self.mock_util.generate_unique_code(tag="ADDR")
-            addr_name = f"测试地址_{self.mock_util.get_timestamp()}"
-
-            # 2. 使用标准化API调用（无断言）
-            set_dict = {
-                "addrCode": addr_code,
-                "addrName": addr_name,
-                "addrNameEn": "",  # 可选字段
-                "addrType": "PROVINCE",  # 默认顶级地址类型
-                "addrParentId": None,
-                "postCode": self.mock_util.get_mock_postcode(),
-                "lat": self.mock_util.get_mock_coordinates()["latitude"],
-                "lng": self.mock_util.get_mock_coordinates()["longitude"],
-                "counId": {"id": self.coun_id}
-            }
-            fields_to_filter = ["addrCode", "addrName", "addrNameEn", "addrType", "addrParentId", "postCode", "lat", "lng", "counId"]
-            
-            response, extracted_id = self.standard_api_call(
-                api_key="GEN-地址库-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter
-                # 无 assert_success 参数，默认不做断言
-            )
-            self.assert_util.assert_response_success(response)
-            assert extracted_id is not None, "新增地址库失败，未返回地址ID"
-            
-            # 3. 保存业务数据（保持原有逻辑）
-            self.addr_id = extracted_id
-            self.addr_code = addr_code
-            
-            # 4. 日志记录（无断言验证）
-            self.logger.info(f"新增地址库完成，ID: {extracted_id}")
+            self._create_addr()
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -110,42 +138,7 @@ class TestAddrManagement(GenMdBaseTest):
     def test_save_child_addr(self):
         """新增下级地址库用例 - GEN_ADDR_TYPE_CF_SAVE_ACTION_SERVICE"""
         try:
-            # 1. 确保父级地址存在（原有依赖逻辑）
-            if not self.addr_id:
-                self.test_save_addr()
-
-            # 2. 准备测试数据
-            child_addr_code = self.mock_util.generate_unique_code(tag="CITY")
-            child_addr_name = f"测试城市_{self.mock_util.get_timestamp()}"
-
-            # 3. 使用标准化API调用（无断言）
-            set_dict = {
-                "addrCode": child_addr_code,
-                "addrName": child_addr_name,
-                "addrNameEn": "",
-                "addrType": "CITY",  # 城市类型
-                "addrParentId": self.addr_id,
-                "postCode": self.mock_util.get_mock_postcode(),
-                "lat": self.mock_util.get_mock_coordinates()["latitude"],
-                "lng": self.mock_util.get_mock_coordinates()["longitude"],
-                "counId": {"id": self.coun_id}
-            }
-            fields_to_filter = ["addrCode", "addrName", "addrNameEn", "addrType", "addrParentId", "postCode", "lat", "lng", "counId"]
-            
-            response, child_id = self.standard_api_call(
-                api_key="GEN-地址库-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter
-                # 无 assert_success 参数
-            )
-            self.assert_util.assert_response_success(response)
-            assert child_id is not None, "新增下级地址失败，未返回地址ID"
-            
-            # 4. 保存业务数据
-            self.parent_addr_id = self.addr_id  # 保存父级ID用于后续测试
-            
-            # 5. 日志记录（无断言）
-            self.logger.info(f"新增下级地址库完成，父级ID: {self.parent_addr_id}")
+            self._create_child_addr()
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -251,7 +244,7 @@ class TestAddrManagement(GenMdBaseTest):
         try:
             # 1. 确保父级地址存在
             if not self.parent_addr_id:
-                self.test_save_child_addr()
+                self._ensure_save_child_addr()
 
             # 2. 准备查询参数
             set_dict = {"parentId": self.parent_addr_id}
@@ -287,7 +280,7 @@ class TestAddrManagement(GenMdBaseTest):
         try:
             # 1. 确保地址存在
             if not self.addr_id:
-                self.test_save_addr()
+                self._ensure_save_addr()
 
             # 2. 准备详情查询参数
             set_dict = {
@@ -330,7 +323,7 @@ class TestAddrManagement(GenMdBaseTest):
         try:
             # 1. 确保地址存在
             if not self.addr_id:
-                self.test_save_addr()
+                self._ensure_save_addr()
 
             # 2. 准备删除参数
             set_dict = {

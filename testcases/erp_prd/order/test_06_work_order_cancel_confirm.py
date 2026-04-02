@@ -95,7 +95,7 @@ class TestWorkOrderCancelConfirm(PrdBaseTest):
                 """
                 
                 # 执行查询
-                records = self.db.query(sql)
+                records = self.query_service.query(sql)
                 self.logger.info(f"查询到{len(records)}条待取消确认的工单记录")
                 
                 # 保存查询结果
@@ -145,7 +145,7 @@ class TestWorkOrderCancelConfirm(PrdBaseTest):
                     AND biz_status = 'POSTED'
                     AND deleted = 0
                 """
-                head_results = self.db.query(head_sql)
+                head_results = self.query_service.query(head_sql)
                 assert head_results, "没有找到符合条件的送货单头表记录"
                 
                 post_detail_results = []
@@ -289,7 +289,7 @@ class TestWorkOrderCancelConfirm(PrdBaseTest):
                         FROM del_dn_head_tr
                         WHERE dn_code = '{dn_code}' AND deleted = 0
                     """
-                    head_results = self.db.query(head_sql)
+                    head_results = self.query_service.query(head_sql)
                     assert head_results, f"冲销后未查到送货单{dn_code}头表"
                     head_record = head_results[0]
                     assert head_record["biz_status"] == "WAIT_POST", f"送货单{dn_code}冲销后业务状态应为WAIT_POST，实际为{head_record['biz_status']}"
@@ -301,7 +301,7 @@ class TestWorkOrderCancelConfirm(PrdBaseTest):
                         FROM del_dn_item_tr
                         WHERE dn_id = {head_record['id']} AND deleted = 0
                     """
-                    item_results = self.db.query(item_sql)
+                    item_results = self.query_service.query(item_sql)
                     for item in item_results:
                         assert item["biz_status"] == "WAIT_POST", f"送货单{dn_code}行项目业务状态应为WAIT_POST，实际为{item['biz_status']}"
                     
@@ -314,7 +314,7 @@ class TestWorkOrderCancelConfirm(PrdBaseTest):
                         AND rev_mvm_doc_id is not null
                         AND deleted = 0
                     """
-                    mvm_head_results = self.db.query(mvm_head_sql)
+                    mvm_head_results = self.query_service.query(mvm_head_sql)
                     assert len(mvm_head_results) > 0, f"送货单{dn_code}未找到对应的移动凭证头"
                     mvm_head = mvm_head_results[0]
                     self.logger.info(f"送货单{dn_code}移动凭证头验证通过: code={mvm_head['code']}")
@@ -329,7 +329,7 @@ class TestWorkOrderCancelConfirm(PrdBaseTest):
                         AND mvm_pos_neg = 'INCREASE'
                         AND deleted = 0
                     """
-                    original_mvm_results = self.db.query(original_mvm_sql)
+                    original_mvm_results = self.query_service.query(original_mvm_sql)
                     assert len(original_mvm_results) > 0, f"送货单{dn_code}未找到对应的原移动凭证行"
                     
                     # 2.2 查询冲销移动凭证行
@@ -341,7 +341,7 @@ class TestWorkOrderCancelConfirm(PrdBaseTest):
                         AND mvm_pos_neg = 'DECREASE'
                         AND deleted = 0
                     """
-                    mvm_results = self.db.query(mvm_sql)
+                    mvm_results = self.query_service.query(mvm_sql)
                     assert len(mvm_results) > 0, f"送货单{dn_code}未找到对应的已冲销移动凭证行"
                     
                     # 2.3 验证冲销行数量与原行数量一致
@@ -466,7 +466,7 @@ class TestWorkOrderCancelConfirm(PrdBaseTest):
                         WHERE id = {operation_id}
                         AND deleted = 0
                     """
-                    pre_routing_results = self.db.query(pre_routing_sql)
+                    pre_routing_results = self.query_service.query(pre_routing_sql)
                     assert pre_routing_results, f"未找到工艺路线记录，ID: {operation_id}"
                     pre_routing = pre_routing_results[0]
                     
@@ -477,7 +477,7 @@ class TestWorkOrderCancelConfirm(PrdBaseTest):
                         WHERE id = {wo_id}
                         AND deleted = 0
                     """
-                    pre_order_results = self.db.query(pre_order_sql)
+                    pre_order_results = self.query_service.query(pre_order_sql)
                     assert pre_order_results, f"未找到生产订单记录，ID: {wo_id}"
                     pre_order = pre_order_results[0]
                     
@@ -488,7 +488,7 @@ class TestWorkOrderCancelConfirm(PrdBaseTest):
                         WHERE id = {confirm_id}
                         AND deleted = 0
                     """
-                    pre_confirm_results = self.db.query(pre_confirm_sql)
+                    pre_confirm_results = self.query_service.query(pre_confirm_sql)
                     assert pre_confirm_results, f"未找到确认单记录，ID: {confirm_id}"
                     pre_confirm = pre_confirm_results[0]
                     
@@ -498,7 +498,7 @@ class TestWorkOrderCancelConfirm(PrdBaseTest):
                         FROM del_dn_head_tr 
                         WHERE dn_code = '{dn_code}'
                     """
-                    pre_dn_results = self.db.query(pre_dn_sql)
+                    pre_dn_results = self.query_service.query(pre_dn_sql)
                     assert pre_dn_results, f"未找到入库单记录，单号: {dn_code}"
                     pre_dn = pre_dn_results[0]
                     
@@ -552,7 +552,7 @@ class TestWorkOrderCancelConfirm(PrdBaseTest):
                         WHERE id = {operation_id}
                         AND deleted = 0
                     """
-                    post_routing_results = self.db.query(post_routing_sql)
+                    post_routing_results = self.query_service.query(post_routing_sql)
                     assert post_routing_results, f"未找到工艺路线记录，ID: {operation_id}"
                     post_routing = post_routing_results[0]
                     
@@ -563,7 +563,7 @@ class TestWorkOrderCancelConfirm(PrdBaseTest):
                         WHERE id = {wo_id}
                         AND deleted = 0
                     """
-                    post_order_results = self.db.query(post_order_sql)
+                    post_order_results = self.query_service.query(post_order_sql)
                     assert post_order_results, f"未找到生产订单记录，ID: {wo_id}"
                     post_order = post_order_results[0]
                     
@@ -574,7 +574,7 @@ class TestWorkOrderCancelConfirm(PrdBaseTest):
                         WHERE id = {confirm_id}
                         AND deleted = 0
                     """
-                    post_confirm_results = self.db.query(post_confirm_sql)
+                    post_confirm_results = self.query_service.query(post_confirm_sql)
                     assert post_confirm_results, f"未找到确认单记录，ID: {confirm_id}"
                     post_confirm = post_confirm_results[0]
                     
@@ -584,7 +584,7 @@ class TestWorkOrderCancelConfirm(PrdBaseTest):
                         FROM del_dn_head_tr 
                         WHERE dn_code = '{dn_code}'
                     """
-                    post_dn_results = self.db.query(post_dn_sql)
+                    post_dn_results = self.query_service.query(post_dn_sql)
                     assert post_dn_results, f"未找到入库单记录，单号: {dn_code}"
                     post_dn = post_dn_results[0]
                     
@@ -635,7 +635,7 @@ class TestWorkOrderCancelConfirm(PrdBaseTest):
                             WHERE prd_order_header_tr_id = {wo_id}
                             AND deleted = 0
                         """
-                        routing_items = self.db.query(routing_items_sql)
+                        routing_items = self.query_service.query(routing_items_sql)
                         routing_statuses = [item["confirm_status"] for item in routing_items]
                         
                         expected_order_status = (

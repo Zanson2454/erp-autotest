@@ -125,7 +125,7 @@ class TestAttachmentManagement(GenMdBaseTest):
         """查询附件类型详情用例"""
         try:
             if not self.attachment_type_id:
-                self.test_save_attachment_type()
+                self._ensure_save_attachment_type()
 
             # 调用详情查询接口
             set_dict = {"id": self.attachment_type_id}
@@ -158,7 +158,7 @@ class TestAttachmentManagement(GenMdBaseTest):
         """删除附件类型用例"""
         try:
             if not self.attachment_type_id:
-                self.test_save_attachment_type()
+                self._ensure_save_attachment_type()
 
             # 调用删除接口
             set_dict = {"id": self.attachment_type_id}
@@ -387,7 +387,7 @@ class TestAttachmentManagement(GenMdBaseTest):
         """查询附件组详情用例"""
         try:
             if not self.attachment_group_id:
-                self.test_save_attachment_group()
+                self._ensure_save_attachment_group()
 
             # 调用详情查询接口
             set_dict = {"id": self.attachment_group_id}
@@ -420,7 +420,7 @@ class TestAttachmentManagement(GenMdBaseTest):
         """删除附件组用例"""
         try:
             if not self.attachment_group_id:
-                self.test_save_attachment_group()
+                self._ensure_save_attachment_group()
 
             # 调用删除接口
             set_dict = {"id": self.attachment_group_id}

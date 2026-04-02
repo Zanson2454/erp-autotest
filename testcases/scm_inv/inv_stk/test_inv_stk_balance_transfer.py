@@ -46,7 +46,7 @@ class TestInvStkBalanceTransferManagement(MobileVoucherCreator):
                 AND inv_bin_id = %s AND stk_qty > 100
                 LIMIT 1
             """
-            result = cls.db.query(sql, params=[
+            result = cls.query_service.query(sql, params=[
                 cls.default_mat_id, cls.comOrgId, cls.invOrgId, cls.invLocId,
                 cls.invWhId, cls.invAreaId, cls.invBinId
             ])
@@ -58,7 +58,7 @@ class TestInvStkBalanceTransferManagement(MobileVoucherCreator):
     def get_current_inventory_balance(self):
         """查询当前库存余额总量"""
         try:
-            result = self.db.query(
+            result = self.query_service.query(
                 sql="SELECT SUM(stk_qty) as total_qty FROM inv_stk_ba WHERE com_org_id = %s AND mat_id = %s",
                 params=[self.comOrgId, self.default_mat_id]
             )
@@ -179,7 +179,7 @@ class TestInvStkBalanceTransferManagement(MobileVoucherCreator):
             # 智能前置条件检查 - 支持单独运行
             if not hasattr(self.__class__, 'voucher_id') or self.__class__.voucher_id is None:
                 self.logger.warning("缺少调拨凭证，执行前置测试")
-                self.test_create_transfer_voucher()
+                self._ensure_create_transfer_voucher()
             
             # 重新获取调拨前库存余额（避免测试间数据污染）
             pre_transfer_balance = self.get_current_inventory_balance()

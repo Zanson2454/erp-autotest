@@ -206,7 +206,7 @@ class TestStndMatManagement(GenMdBaseTest):
         """
         try:
             if not self.matId:
-                self.test_save_mat()
+                self._ensure_save_mat()
             # 获取接口路径和参数模板
             api_path = self.get_api_path("GEN-物料主数据-查询详情服务")
             params, url = self.get_api_params(api_path)
@@ -256,7 +256,7 @@ class TestStndMatManagement(GenMdBaseTest):
         """
         try:
             if not self.matId:
-                self.test_save_mat()
+                self._ensure_save_mat()
 
             api_path = self.get_api_path("GEN-物料主数据-启用服务")
             params, url = self.get_api_params(api_path)
@@ -298,7 +298,7 @@ class TestStndMatManagement(GenMdBaseTest):
         """
         try:
             if not self.matId:
-                self.test_save_mat()
+                self._ensure_save_mat()
 
             api_path = self.get_api_path("GEN-物料主数据-禁用服务")
             params, url = self.get_api_params(api_path)
@@ -340,7 +340,7 @@ class TestStndMatManagement(GenMdBaseTest):
         """
         try:
             if not self.matId:
-                self.test_save_mat()
+                self._ensure_save_mat()
 
             api_path = self.get_api_path("GEN-物料主数据-批量生成条码服务")
             params, url = self.get_api_params(api_path)
@@ -379,7 +379,7 @@ class TestStndMatManagement(GenMdBaseTest):
         """
         try:
             if not self.matId:
-                self.test_save_mat()
+                self._ensure_save_mat()
 
             api_path = self.get_api_path("GEN-物料主数据-批量打标服务")
             params, url = self.get_api_params(api_path)
@@ -424,7 +424,7 @@ class TestStndMatManagement(GenMdBaseTest):
         """
         try:
             if not self.matId:
-                self.test_save_mat()
+                self._ensure_save_mat()
 
             api_path = self.get_api_path("GEN-物料主数据-批量取消打标服务")
             params, url = self.get_api_params(api_path)
@@ -815,7 +815,7 @@ class TestStndMatManagement(GenMdBaseTest):
         """
         try:
             if not self.matId:
-                self.test_save_mat()
+                self._ensure_save_mat()
 
             api_path = self.get_api_path("GEN-物料主数据-删除服务")
             params, url = self.get_api_params(api_path)

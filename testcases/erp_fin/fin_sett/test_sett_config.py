@@ -1,14 +1,7 @@
 import pytest
-import sys
 import allure
 import requests
-from pathlib import Path
 from datetime import datetime
-
-# 设置项目根目录到Python路径
-project_root = Path(__file__).resolve().parent.parent.parent.parent
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
 
 from testcases.erp_fin import FinBaseTest
 from utils.param_util import ParamUtil
@@ -128,10 +121,7 @@ class TestSettConfig(FinBaseTest):
                 params,
                 ["id"],
                 ["params","request"])
-            sql="""
-            select id,code,name,status from fin_sett_type_cf where deleted=0 order by created_at desc  limit 1;
-            """
-            id=self.db.query(sql)[0]["id"]
+            id = self.query_service.get_latest_sett_type_id()
             set_dict={
                 "id":id
             }
@@ -214,18 +204,9 @@ class TestSettConfig(FinBaseTest):
                 ["priceGroupId","settClass","settDocTypeCode","settItemTypeCode","settItemTypeName","btClass","exchangeRateType","priceGroupClass"],
                 ["params","request"])
             now_str = datetime.now().strftime("%Y%m%d%H%M%S")
-            sql="""
-            select id,spg_code,spg_name from fin_sett_spg_type_cf where spg_code ='GOODS' order by created_at desc limit 1;
-            """
-            spg_id=self.db.query(sql)[0]["id"]
-            sql="""
-            select id,sett_doc_type_code,sett_doc_type_name from fin_sett_doc_type_cf where sett_doc_type_code like '%AUTO-TEST%' order by created_at desc limit 1;
-            """
-            sett_doc_type_id=self.db.query(sql)[0]["id"]
-            sql="""
-            select * from gen_curr_formula_type_cf where deleted=0 order by created_at desc limit 1
-            """
-            sett_item_type_id=self.db.query(sql)[0]["id"]
+            spg_id = self.query_service.get_spg_id_by_code("GOODS")
+            sett_doc_type_id = self.query_service.get_latest_sett_doc_type_id_like("%AUTO-TEST%")
+            sett_item_type_id = self.query_service.get_latest_curr_formula_type_id()
             set_dict={
                 "priceGroupId":{
                     "id":spg_id
@@ -397,14 +378,8 @@ class TestSettConfig(FinBaseTest):
         try:
             api_path = self.get_api_path("结算单-汇单规则保存服务")
             params, url = self.get_api_params(api_path)
-            sql="""
-            select id from fin_sett_doc_type_cf where sett_doc_type_code like '%AUTO-TEST%' order by created_at desc limit 1;
-            """
-            sett_doc_type_id=self.db.query(sql)[0]["id"]
-            sql="""
-            select * from sett_sds_head_cf where deleted=0 order by created_at desc limit 1;
-            """
-            sett_sds_head_id=self.db.query(sql)[0]["id"]
+            sett_doc_type_id = self.query_service.get_latest_sett_doc_type_id_like("%AUTO-TEST%")
+            sett_sds_head_id = self.query_service.get_latest_sett_sds_head_id()
             filtered_params = ParamUtil.filter_post_body_fields(
                 params,
                 ["enabledStatus","sdcDescription","sdcHeadCode","settHeadType","settSdcLinkCfId","settSdcTypeCfId","settSdsHeadCfId"],
@@ -470,10 +445,7 @@ class TestSettConfig(FinBaseTest):
                 params,
                 ["id"],
                 ["params","request"])
-            sql="""
-            select id,sdc_head_code from sett_sdc_head_cf where deleted=0  order by created_at desc limit 1;
-            """
-            id=self.db.query(sql)[0]["id"]
+            id = self.query_service.get_latest_sdc_head_id()
             set_dict={
                 "id":id
             }
@@ -512,11 +484,7 @@ class TestSettConfig(FinBaseTest):
             com_org_id=self.com_org_id
             sett_item_type_id=self.sett_item_type_info["E_SLS_GOODS"]["id"]
             sett_doc_type_id=self.sett_doc_type_info
-            sql=f"""
-            select id,sdc_head_code,sdc_description
-            from sett_sdc_head_cf where deleted=0 and sett_head_type={sett_doc_type_id} order by created_at desc limit 1;
-            """
-            sdc_head_id=self.db.query(sql)[0]["id"]
+            sdc_head_id = self.query_service.get_latest_sdc_head_id_by_sett_head_type(sett_doc_type_id)
             set_dict={
                 "comOrgId":{
                     "id":com_org_id

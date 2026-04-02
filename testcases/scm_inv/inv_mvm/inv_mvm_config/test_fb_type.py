@@ -122,7 +122,7 @@ class TestFbTypeManagement(ScmInvBaseTest):
         try:
             # 确保前置数据存在
             if self.fb_type_id is None:
-                self.test_save_fb_type()
+                self._ensure_save_fb_type()
             
             # 1. 调用API
             api_path = self.get_api_path("INV-作业正逆向-详情服务")
@@ -247,7 +247,7 @@ class TestFbTypeManagement(ScmInvBaseTest):
         try:
             # 依赖保存方法创建的数据
             if not self.fb_type_id:
-                self.test_save_fb_type()
+                self._ensure_save_fb_type()
             
             # 1. 调用API
             api_path = self.get_api_path("正逆向标识定义表-导入导出任务管理接口-提交导出任务")
@@ -363,7 +363,7 @@ class TestFbTypeManagement(ScmInvBaseTest):
         try:
             # 确保前置数据存在
             if self.fb_type_id is None:
-                self.test_save_fb_type()
+                self._ensure_save_fb_type()
             
             # 1. 调用API
             api_path = self.get_api_path("INV-作业正逆向-删除服务")

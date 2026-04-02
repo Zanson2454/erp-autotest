@@ -40,7 +40,7 @@ class TestVoucherOperation(FiBaseTest):
             sql="""
                 select id,as_org,vt_type,coa_type from fin_glm_ab_type_cf where deleted=0 and ab_type_code like '%AUTO-TEST%' order by created_at desc limit 1;
             """
-            ab_type_id,as_org_id,vt_type,coa_type=self.db.query(sql)[0]["id"],self.db.query(sql)[0]["as_org"],self.db.query(sql)[0]["vt_type"],self.db.query(sql)[0]["coa_type"]
+            ab_type_id,as_org_id,vt_type,coa_type=self.query_service.query(sql)[0]["id"],self.query_service.query(sql)[0]["as_org"],self.query_service.query(sql)[0]["vt_type"],self.query_service.query(sql)[0]["coa_type"]
             ve_date=self.mock_util.get_timestamp(timestamp=True)
             #获取新增凭证的凭证号、会计期间id
             url=self.get_api_path("总账-凭证-获取凭证号服务")
@@ -124,13 +124,13 @@ class TestVoucherOperation(FiBaseTest):
             # 获取普通科目
             sql = f"select id,aa_head_code,aa_head_name from fin_glm_aa_head_cf where coa_type={coa_type} and leaf=1;"
         
-        aa_head_ids = self.db.query(sql)
+        aa_head_ids = self.query_service.query(sql)
         aa_head_ids = [aa_head_id["id"] for aa_head_id in aa_head_ids]
         
         # 如果现金类科目不足2个，则补充普通科目
         if len(aa_head_ids) < 2:
             sql = f"select id,aa_head_code,aa_head_name from fin_glm_aa_head_cf where coa_type={coa_type} and leaf=1;"
-            additional_accounts = self.db.query(sql)
+            additional_accounts = self.query_service.query(sql)
             for account in additional_accounts:
                 if account["id"] not in aa_head_ids:
                     aa_head_ids.append(account["id"])
@@ -220,7 +220,7 @@ class TestVoucherOperation(FiBaseTest):
             sql=f"""
             select id,aa_head_code,aa_head_name from fin_glm_aa_head_cf where coa_type={coa_type} and leaf=1;
             """
-            aa_head_ids=self.db.query(sql)
+            aa_head_ids=self.query_service.query(sql)
             aa_head_ids=[aa_head_id["id"] for aa_head_id in aa_head_ids]
             
             filtered_params=ParamUtil.filter_post_body_fields(
@@ -367,7 +367,7 @@ class TestVoucherOperation(FiBaseTest):
         sql=f"""
         select id from fin_glm_ve_head_tr where remark='{test_data["remark"]}' and ve_status='DRAFT' order by created_at desc limit 1;
         """
-        voucher_id=self.db.query(sql)[0]["id"]
+        voucher_id=self.query_service.query(sql)[0]["id"]
         set_dict={
             "id":voucher_id
         }
@@ -425,7 +425,7 @@ class TestVoucherOperation(FiBaseTest):
         sql="""
         select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='APPROVING' order by created_at desc limit 1;
         """
-        voucher_id=self.db.query(sql)[0]["id"]
+        voucher_id=self.query_service.query(sql)[0]["id"]
         set_dict={
             "id":voucher_id
         }
@@ -459,7 +459,7 @@ class TestVoucherOperation(FiBaseTest):
         sql="""
         select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='CHECKING' order by created_at desc limit 1;
         """
-        voucher_id=self.db.query(sql)[0]["id"]
+        voucher_id=self.query_service.query(sql)[0]["id"]
         set_dict={
             "id":voucher_id
         }
@@ -494,7 +494,7 @@ class TestVoucherOperation(FiBaseTest):
         sql="""
         select id ,biz_date ,ab_type from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='WAIT_ACCOUNT' and deleted=0 order by created_at desc limit 1;
         """
-        voucher_id,biz_date,ab_type=self.db.query(sql)[0]["id"],self.db.query(sql)[0]["biz_date"],self.db.query(sql)[0]["ab_type"]
+        voucher_id,biz_date,ab_type=self.query_service.query(sql)[0]["id"],self.query_service.query(sql)[0]["biz_date"],self.query_service.query(sql)[0]["ab_type"]
         set_dict={
             "id":voucher_id
         }
@@ -509,7 +509,7 @@ class TestVoucherOperation(FiBaseTest):
         sql=f"""
         select start_time,end_time from fin_common_calendar_item_cf where id=(select period_of_current  from fin_glm_ab_type_cf where id={ab_type})
         """
-        start_time,end_time=self.db.query(sql)[0]["start_time"],self.db.query(sql)[0]["end_time"]
+        start_time,end_time=self.query_service.query(sql)[0]["start_time"],self.query_service.query(sql)[0]["end_time"]
         if biz_date < start_time or biz_date > end_time:
             self.assert_util.assert_by_operator(response["err"]["code"], "=", "glm.ve.account.datetime.error")
             self.assert_util.assert_by_operator(response["err"]["msg"], "=", "凭证日期不在账簿当前期间")
@@ -536,7 +536,7 @@ class TestVoucherOperation(FiBaseTest):
         sql="""
         select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='ACCOUNTED' order by created_at desc limit 1;
         """
-        voucher_id=self.db.query(sql)[0]["id"]
+        voucher_id=self.query_service.query(sql)[0]["id"]
         set_dict={
             "id":voucher_id
         }
@@ -570,7 +570,7 @@ class TestVoucherOperation(FiBaseTest):
         sql="""
         select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='WAIT_ACCOUNT' order by created_at desc limit 1;
         """
-        voucher_id=self.db.query(sql)[0]["id"]
+        voucher_id=self.query_service.query(sql)[0]["id"]
         set_dict={
             "id":voucher_id
         }
@@ -604,7 +604,7 @@ class TestVoucherOperation(FiBaseTest):
         sql="""
         select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='CANCELED' order by created_at desc limit 1;
         """
-        voucher_id=self.db.query(sql)[0]["id"]
+        voucher_id=self.query_service.query(sql)[0]["id"]
         set_dict={
             "id":voucher_id
         }
@@ -638,7 +638,7 @@ class TestVoucherOperation(FiBaseTest):
         sql="""
         select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='DRAFT' order by created_at desc limit 1;
         """
-        voucher_id=self.db.query(sql)[0]["id"]
+        voucher_id=self.query_service.query(sql)[0]["id"]
         set_dict={
             "id":voucher_id
         }
@@ -684,7 +684,7 @@ class TestVoucherOperation(FiBaseTest):
         sql="""
         select id from fin_glm_ve_head_tr where remark='测试正常批量业务流程' and ve_status='DRAFT' order by created_at desc limit 3;
         """
-        voucher_ids=self.db.query(sql)
+        voucher_ids=self.query_service.query(sql)
         
         # 直接设置request参数为列表
         filtered_params['params']['request'] = voucher_ids
@@ -717,7 +717,7 @@ class TestVoucherOperation(FiBaseTest):
         sql="""
         select id from fin_glm_ve_head_tr where remark='测试正常批量业务流程' and ve_status='APPROVING' and deleted=0 order by created_at desc limit 3;
         """
-        voucher_ids=self.db.query(sql)
+        voucher_ids=self.query_service.query(sql)
         filtered_params['params']['request']['id'] = [voucher_id["id"] for voucher_id in voucher_ids]
         response, _ = self.standard_api_call(
             api_key="总账-凭证-凭证审核服务",
@@ -748,7 +748,7 @@ class TestVoucherOperation(FiBaseTest):
         sql="""
         select id from fin_glm_ve_head_tr where remark='测试正常批量业务流程' and ve_status='CHECKING' and deleted=0 order by created_at desc limit 3;
         """
-        voucher_ids=self.db.query(sql)
+        voucher_ids=self.query_service.query(sql)
         filtered_params['params']['request']['id'] = [voucher_id["id"] for voucher_id in voucher_ids]
         response, _ = self.standard_api_call(
             api_key="总账-凭证-凭证复核服务",
@@ -779,7 +779,7 @@ class TestVoucherOperation(FiBaseTest):
         sql="""
         select id from fin_glm_ve_head_tr where remark='测试正常批量业务流程' and ve_status='WAIT_ACCOUNT' and deleted=0 order by created_at desc limit 3;
         """
-        voucher_ids=self.db.query(sql)
+        voucher_ids=self.query_service.query(sql)
          # 验证是否有数据
         if not voucher_ids:
             raise ValueError("未找到待记账的凭证数据，请检查数据")
@@ -814,7 +814,7 @@ class TestVoucherOperation(FiBaseTest):
         sql="""
         select id from fin_glm_ve_head_tr order by created_at desc  limit 3;
         """
-        voucher_ids=self.db.query(sql)
+        voucher_ids=self.query_service.query(sql)
         filtered_params['params']['request']['ids'] = [voucher_id["id"] for voucher_id in voucher_ids]
         response, _ = self.standard_api_call(
             api_key="FIN_GLM_VE_PRINT_STATUS_BY_ID_BATCH_SERVICE",
@@ -827,7 +827,7 @@ class TestVoucherOperation(FiBaseTest):
         sql=f"""
         select print_status from fin_glm_ve_head_tr where id in ({','.join([str(voucher_id["id"]) for voucher_id in voucher_ids])})
         """
-        print_status=self.db.query(sql)
+        print_status=self.query_service.query(sql)
         if print_status:
             for print_statue in print_status:
                 self.assert_util.assert_by_operator(print_statue["print_status"], "=", "PRINTED")
@@ -855,12 +855,12 @@ class TestVoucherOperation(FiBaseTest):
         sql="""
         select id,vouch_number,vo_entry_date,biz_date,debit_total_amt,credit_total_amt from fin_glm_ve_head_tr where remark in ('测试正常业务流程','测试正常批量业务流程')and ve_status='ACCOUNTED' and deleted=0  and offset_status='UNOFFSET' order by created_at limit 1;
         """
-        voucher_id,vouch_number,vo_entry_date,biz_date,debit_total_amt,credit_total_amt=self.db.query(sql)[0]["id"],self.db.query(sql)[0]["vouch_number"],self.db.query(sql)[0]["vo_entry_date"],self.db.query(sql)[0]["biz_date"],self.db.query(sql)[0]["debit_total_amt"],self.db.query(sql)[0]["credit_total_amt"]
+        voucher_id,vouch_number,vo_entry_date,biz_date,debit_total_amt,credit_total_amt=self.query_service.query(sql)[0]["id"],self.query_service.query(sql)[0]["vouch_number"],self.query_service.query(sql)[0]["vo_entry_date"],self.query_service.query(sql)[0]["biz_date"],self.query_service.query(sql)[0]["debit_total_amt"],self.query_service.query(sql)[0]["credit_total_amt"]
         #获取凭证行
         sql=f"""
         select ve_item_descr,debit_amt,credit_amt from fin_glm_ve_item_tr where ve_head_id={voucher_id}
         """
-        voucher_items=self.db.query(sql)
+        voucher_items=self.query_service.query(sql)
         set_dict={
             "offsetType": "BLUE",
             "sourceVeHeadId": voucher_id

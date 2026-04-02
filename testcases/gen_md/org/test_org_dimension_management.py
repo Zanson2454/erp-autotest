@@ -116,7 +116,7 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
         try:
             # 获取组织维度管理信息
             if not self.org_dimension_id:
-                self.test_save_org_dimension()
+                self._ensure_save_org_dimension()
 
             # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_dimension_id}
@@ -159,7 +159,7 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
         """
         try:
             if not self.org_dimension_code:
-                self.test_save_org_dimension()
+                self._ensure_save_org_dimension()
                 
             # 准备测试数据（业务逻辑保持不变）
             set_dict =  {
@@ -231,7 +231,7 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
         try:
             # 获取组织维度管理信息
             if not self.org_dimension_id:
-                self.test_save_org_dimension()
+                self._ensure_save_org_dimension()
 
             # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_dimension_id}
@@ -248,8 +248,7 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
             # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
             
-            sql = f"select status from org_dimension_cf where id ={self.org_dimension_id}"
-            status = self.db.query(sql)[0]["status"]
+            status = self.query_service.get_org_dimension_status(self.org_dimension_id)
             self.assert_util.assert_by_operator(status, "=", "ENABLED")
 
             # 日志记录（Allure报告已由standard_api_call处理）
@@ -274,7 +273,7 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
         try:
             # 获取组织维度管理信息
             if not self.org_dimension_id:
-                self.test_enabled_org_dimension()
+                self._ensure_enabled_org_dimension()
 
             # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_dimension_id}
@@ -290,8 +289,7 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
 
             # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
-            sql = f"select status from org_dimension_cf where id ={self.org_dimension_id}"
-            status = self.db.query(sql)[0]["status"]
+            status = self.query_service.get_org_dimension_status(self.org_dimension_id)
             self.assert_util.assert_by_operator(status, "=", "DISABLED")
 
             # 日志记录（Allure报告已由standard_api_call处理）
@@ -316,8 +314,8 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
         try:
             # 确保有启用的组织维度数据
             if not self.org_dimension_id:
-                self.test_save_org_dimension()
-                self.test_enabled_org_dimension()
+                self._ensure_save_org_dimension()
+                self._ensure_enabled_org_dimension()
 
             # 准备测试数据（业务逻辑保持不变）
             set_dict = {}
@@ -360,7 +358,7 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
         try:
             # 获取组织维度管理信息
             if not self.org_dimension_id:
-                self.test_save_org_dimension()
+                self._ensure_save_org_dimension()
 
             # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_dimension_id}
@@ -376,8 +374,7 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
 
             # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
-            sql = f"select deleted from org_dimension_cf where id ={self.org_dimension_id}"
-            deleted = self.db.query(sql)[0]["deleted"]
+            deleted = self.query_service.get_org_dimension_deleted(self.org_dimension_id)
             self.assert_util.assert_by_operator(deleted, "!=", 0)
 
             # 日志记录（Allure报告已由standard_api_call处理）

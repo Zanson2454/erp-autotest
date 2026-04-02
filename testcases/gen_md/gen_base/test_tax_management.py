@@ -33,6 +33,34 @@ class TestTaxManagement(GenMdBaseTest):
         """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
         cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
+
+    def _create_tax(self):
+        tax_code = self.mock_util.generate_unique_code(tag="TAX")
+        tax_name = f"测试税种_{self.mock_util.get_timestamp()}"
+
+        set_dict = {
+            "taxCode": tax_code,
+            "taxName": tax_name,
+            "taxRate": 0.13,
+            "remark": f"税种描述_{self.mock_util.get_timestamp()}"
+        }
+
+        response, tax_id = self.standard_api_call(
+            api_key="GEN-税配置-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=["taxCode", "taxName", "taxRate", "remark"],
+            store_id_as="tax"
+        )
+        self.assert_util.assert_response_data(response)
+        self.tax_id = tax_id
+        self.tax_code = tax_code
+        return tax_id
+
+    def _ensure_save_tax(self):
+        if self.tax_id:
+            return self.tax_id
+        return self._create_tax()
+
     @case_decorator(
         story="税配置管理",
         title="测试新增税配置",
@@ -45,24 +73,7 @@ class TestTaxManagement(GenMdBaseTest):
     def test_save_tax(self):
         """新增税配置用例"""
         try:
-            tax_code = self.mock_util.generate_unique_code(tag="TAX")
-            tax_name = f"测试税种_{self.mock_util.get_timestamp()}"
-
-            set_dict = {
-                "taxCode": tax_code,
-                "taxName": tax_name,
-                "taxRate": 0.13,
-                "remark": f"税种描述_{self.mock_util.get_timestamp()}"
-            }
-            
-            response, tax_id = self.standard_api_call(
-                api_key="GEN-税配置-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=["taxCode", "taxName", "taxRate", "remark"],
-                store_id_as="tax"
-            )
-            
-            self.tax_code = tax_code
+            self._create_tax()
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -111,7 +122,7 @@ class TestTaxManagement(GenMdBaseTest):
         """查询税配置详情用例"""
         try:
             if not self.tax_id:
-                self.test_save_tax()
+                self._ensure_save_tax()
 
             set_dict = {"id": self.tax_id}
             
@@ -172,7 +183,7 @@ class TestTaxManagement(GenMdBaseTest):
         """根据ID查找税配置数据用例"""
         try:
             if not self.tax_id:
-                self.test_save_tax()
+                self._ensure_save_tax()
 
             set_dict = {"id": self.tax_id}
             
@@ -199,7 +210,7 @@ class TestTaxManagement(GenMdBaseTest):
         """删除税配置用例"""
         try:
             if not self.tax_id:
-                self.test_save_tax()
+                self._ensure_save_tax()
 
             set_dict = {"id": self.tax_id}
             

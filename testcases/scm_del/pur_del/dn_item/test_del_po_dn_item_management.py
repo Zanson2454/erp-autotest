@@ -97,7 +97,7 @@ class TestDelPoDnItemManagement(ScmDelBaseTest):
         """查询交货单行子行下拉"""
         try:
             if not self.__class__.dn_item_id:
-                self.test_query_dn_item_list()
+                self._ensure_query_dn_item_list()
             
             api_path = self.get_api_path("DEL-查询交货单行批次信息服务")
             params, url = self.get_api_params(api_path)
@@ -140,7 +140,7 @@ class TestDelPoDnItemManagement(ScmDelBaseTest):
         """导出采购交货单行"""
         try:
             if not self.__class__.dn_item_id:
-                self.test_query_dn_item_list()
+                self._ensure_query_dn_item_list()
             
             api_path = self.get_api_path("交货单项目行表-导入导出任务管理接口-提交导出任务")
             params, url = self.get_api_params(api_path)

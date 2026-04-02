@@ -158,7 +158,7 @@ class TestSoTypeDetmManagement(SlsBase):
         try:
             # 检查依赖数据
             if not self.so_detm_id:
-                self.test_so_detm_save()
+                self._ensure_so_detm_save()
             
             # 1. 调用API
             api_path = self.get_api_path("SLS-订单项目行分配-详情服务")

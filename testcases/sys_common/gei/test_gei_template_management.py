@@ -107,7 +107,7 @@ class TestGeiTemplateManagement(SysCommonBaseTest):
         try:
             # 1. 前置条件：确保模板已存在
             if not self.gei_template_id:
-                self.test_template_save_post()
+                self._ensure_template_save_post()
             
             # 2. 准备测试数据
             set_dict = {
@@ -163,7 +163,7 @@ class TestGeiTemplateManagement(SysCommonBaseTest):
         try:
             # 1. 前置条件：确保模板已存在
             if not self.gei_template_id:
-                self.test_template_save_post()
+                self._ensure_template_save_post()
             
             # 2. 准备测试数据
             set_dict = {"templateId": self.gei_template_id}
@@ -356,7 +356,7 @@ class TestGeiTemplateManagement(SysCommonBaseTest):
         try:
             # 1. 前置条件：确保模板已存在
             if not self.gei_template_id:
-                self.test_template_save_post()
+                self._ensure_template_save_post()
             
             # 2. 准备测试数据
             set_dict = {"id": self.gei_template_id}
@@ -396,7 +396,7 @@ class TestGeiTemplateManagement(SysCommonBaseTest):
         try:
             # 1. 前置条件：确保模板已存在
             if not self.gei_template_id:
-                self.test_template_save_post()
+                self._ensure_template_save_post()
             
             # 2. 准备测试数据
             set_dict = {"id": self.gei_template_id}
@@ -432,7 +432,7 @@ class TestGeiTemplateManagement(SysCommonBaseTest):
         try:
             # 1. 前置条件：确保模板已存在
             if not self.gei_template_id:
-                self.test_template_save_post()
+                self._ensure_template_save_post()
             
             # 2. 准备测试数据
             set_dict = {"id": self.gei_template_id}
@@ -468,7 +468,7 @@ class TestGeiTemplateManagement(SysCommonBaseTest):
         try:
             # 1. 前置条件：确保模板已存在
             if not self.gei_template_id:
-                self.test_template_save_post()
+                self._ensure_template_save_post()
             
             # 2. 准备测试数据
             set_dict = {"id": self.gei_template_id}
@@ -507,7 +507,7 @@ class TestGeiTemplateManagement(SysCommonBaseTest):
         try:
             # 1. 前置条件：确保模板已存在
             if not self.gei_template_id:
-                self.test_template_save_post()
+                self._ensure_template_save_post()
             
             # 2. 准备测试数据（GET请求参数通过query string传递）
             set_dict = {"templateId": self.gei_template_id}
@@ -542,7 +542,7 @@ class TestGeiTemplateManagement(SysCommonBaseTest):
         try:
             # 1. 前置条件：确保模板已存在
             if not self.gei_template_id:
-                self.test_template_save_post()
+                self._ensure_template_save_post()
             
             # 2. 准备测试数据（GET请求参数通过query string传递）
             set_dict = {"templateId": self.gei_template_id}

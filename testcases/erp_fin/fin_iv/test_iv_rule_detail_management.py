@@ -208,7 +208,7 @@ class TestIvRuleDetailManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.rule_detail_id:
-                self.test_save_rule_detail()
+                self._ensure_save_rule_detail()
             
             # 使用标准化API调用
             set_dict = {

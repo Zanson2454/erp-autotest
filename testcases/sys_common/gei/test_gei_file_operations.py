@@ -7,7 +7,6 @@ project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
 
 from testcases.sys_common import SysCommonBaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 @allure.epic("系统通用模块")
@@ -62,31 +61,24 @@ class TestGeiFileOperations(SysCommonBaseTest):
             if not self.gei_task_id:
                 # 依赖任务创建，这里模拟调用或直接创建
                 task_name = f"AT_DOWNLOAD_TASK_{self.mock_util.get_timestamp()}"
-                api_path_create = self.get_api_path("导入导出任务管理接口-提交导出任务")
-                params_create, url_create = self.get_api_params(api_path_create)
-                filtered_params_create = ParamUtil.filter_post_body_fields(
-                    params_create, ["taskName"], ["params"]
-                )
-                set_dict_create = {"taskName": task_name}
-                ParamUtil.set_request_params(filtered_params_create, set_dict_create)
                 create_response, _ = self.standard_api_call(
                     api_key="导入导出任务管理接口-提交导出任务",
-                    set_dict=filtered_params_create.get("params", {}),
-                    store_id_as=None,
-                    use_param_util=False,
-                    param_path=["params"]
+                    set_dict={"taskName": task_name},
+                    fields_to_filter=["taskName"],
+                    param_path=["params"],
                 )
                 self.assert_util.assert_response_data(create_response)
                 task_data = create_response.get("data", {}).get("data", {})
                 self.gei_task_id = task_data.get("taskId")
             
-            api_path = self.get_api_path("导入导出任务管理接口-通过任务ID下载文件")
-            url = self.get_api_url(api_path)  # 获取完整URL
             params = {"taskId": self.gei_task_id}
-            response = self.http.get(url, params=params)
+            response, _ = self.standard_api_call(
+                api_key="导入导出任务管理接口-通过任务ID下载文件",
+                method="GET",
+                set_dict=params,
+            )
             self.assert_util.assert_response_success(response)
             
-            a.text(f"下载URL: {url}", "下载链接")
             a.json({"taskId": self.gei_task_id}, "下载参数")
             
         except Exception as e:
@@ -106,16 +98,17 @@ class TestGeiFileOperations(SysCommonBaseTest):
         try:
             # 假设有文件Key，从任务中获取或模拟
             if not self.gei_task_id:
-                self.test_download_by_task_id_get()
+                self._ensure_download_by_task_id_get()
             file_key = f"AT_FILE_KEY_{self.mock_util.get_timestamp()}"
             
-            api_path = self.get_api_path("导入导出任务管理接口-下载文件")
-            url = self.get_api_url(api_path)
             params = {"key": file_key}
-            response = self.http.get(url, params=params)
+            response, _ = self.standard_api_call(
+                api_key="导入导出任务管理接口-下载文件",
+                method="GET",
+                set_dict=params,
+            )
             self.assert_util.assert_response_success(response)
             
-            a.text(f"下载URL: {url}", "下载链接")
             a.json(params, "下载参数")
             
         except Exception as e:
@@ -133,9 +126,10 @@ class TestGeiFileOperations(SysCommonBaseTest):
     def test_download_export_get(self):
         """测试下载导出文件 - API_GEI_TASK_DOWNLOAD_GET"""
         try:
-            api_path = self.get_api_path("导入导出任务管理接口-下载导出文件")
-            url = self.get_api_url(api_path)
-            response = self.http.get(url)
+            response, _ = self.standard_api_call(
+                api_key="导入导出任务管理接口-下载导出文件",
+                method="GET",
+            )
             self.assert_util.assert_response_success(response)
             
             a.json(response, "响应数据")

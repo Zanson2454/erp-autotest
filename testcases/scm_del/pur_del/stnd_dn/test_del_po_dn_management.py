@@ -167,7 +167,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
             ORDER BY created_at DESC 
             LIMIT 1
         """
-        db_result = self.db.query(query_sql, [self.__class__.dn_id])
+        db_result = self.query_service.query(query_sql, [self.__class__.dn_id])
         
         if not db_result:
             raise ValueError(f"未在数据库中找到交货单: id={self.__class__.dn_id}")
@@ -232,7 +232,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
                 ORDER BY created_at DESC 
                 LIMIT 1
             """
-            po_items = self.db.query(query_sql, [f"%{self.TEST_REMARK}%"])
+            po_items = self.query_service.query(query_sql, [f"%{self.TEST_REMARK}%"])
             
             if po_items:
                 po_item = po_items[0]
@@ -295,7 +295,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
                 ORDER BY created_at DESC 
                 LIMIT 1
             """
-            dn_item_result = self.db.query(query_sql, [self.__class__.dn_id])
+            dn_item_result = self.query_service.query(query_sql, [self.__class__.dn_id])
             if dn_item_result:
                 self.__class__.dn_item_id = dn_item_result[0].get("id")
                 self.logger.info(f"获取交货单行ID: {self.__class__.dn_item_id}")
@@ -330,7 +330,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
         """提交采购交货单"""
         try:
             if not self.__class__.dn_id:
-                self.test_create_standard_po_dn()
+                self._ensure_create_standard_po_dn()
             
             result = self.dn_factory.submit_delivery_note(dn_id=self.__class__.dn_id)
             
@@ -341,7 +341,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
                 FROM del_dn_head_tr 
                 WHERE id = %s
             """
-            db_result = self.db.query(query_sql, [self.__class__.dn_id])
+            db_result = self.query_service.query(query_sql, [self.__class__.dn_id])
             
             if db_result:
                 actual_status = db_result[0].get("del_status")
@@ -377,7 +377,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
         """查询采购交货单列表"""
         try:
             if not self.__class__.dn_id:
-                self.test_submit_po_dn()
+                self._ensure_submit_po_dn()
             
             api_path = self.get_api_path("DEL-交货单公共-数据分页查询服务")
             params, url = self.get_api_params(api_path)
@@ -428,7 +428,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
         """查询采购交货单详情"""
         try:
             if not self.__class__.dn_id:
-                self.test_submit_po_dn()
+                self._ensure_submit_po_dn()
             
             api_path = self.get_api_path("DEL-交货单详情服务")
             params, url = self.get_api_params(api_path)
@@ -474,7 +474,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
         """查询采购交货单行列表"""
         try:
             if not self.__class__.dn_id:
-                self.test_submit_po_dn()
+                self._ensure_submit_po_dn()
             
             api_path = self.get_api_path("DEL-交货单公共-根据订单ID查询交货单行服务")
             params, url = self.get_api_params(api_path)
@@ -516,7 +516,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
         """生成清点任务"""
         try:
             if not self.__class__.dn_id:
-                self.test_submit_po_dn()
+                self._ensure_submit_po_dn()
             
             api_path = self.get_api_path("DEL-APP端仓库执行任务平铺服务")
             params, url = self.get_api_params(api_path)
@@ -565,7 +565,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
         """保存清点任务"""
         try:
             if not self.__class__.task_list:
-                self.test_generate_inv_executed_task()
+                self._ensure_generate_inv_executed_task()
             
             if not self.__class__.task_list:
                 raise ValueError("清点任务列表为空，无法保存")
@@ -614,7 +614,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
         """交货单列表下拉查看清点"""
         try:
             if not self.__class__.dn_item_id:
-                self.test_save_inv_executed_task()
+                self._ensure_save_inv_executed_task()
             
             api_path = self.get_api_path("DEL-查看拣配服务")
             params, url = self.get_api_params(api_path)
@@ -662,7 +662,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
         """查询交货单任务"""
         try:
             if not self.__class__.dn_id:
-                self.test_save_inv_executed_task()
+                self._ensure_save_inv_executed_task()
             
             api_path = self.get_api_path("DEL-交货单公共-根据交货单头ID查询交货单任务行")
             params, url = self.get_api_params(api_path)
@@ -711,7 +711,7 @@ class TestDelPoDnManagement(ScmDelBaseTest):
         """收货完成并过账"""
         try:
             if not self.__class__.warehouse_task_list:
-                self.test_query_dn_task_by_head_id()
+                self._ensure_query_dn_task_by_head_id()
             
             if not self.__class__.warehouse_task_list:
                 raise ValueError("仓库任务列表为空，无法完成收货")

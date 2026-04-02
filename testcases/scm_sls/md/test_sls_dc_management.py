@@ -104,7 +104,7 @@ class TestSlsDcManagement(SlsBase):
         try:
             # 检查依赖数据
             if not self.sls_dc_id:
-                self.test_save_sls_dc()
+                self._ensure_save_sls_dc()
             
             # 1. 调用API
             api_path = self.get_api_path("SLS-销售渠道-查询详情")
@@ -237,7 +237,7 @@ class TestSlsDcManagement(SlsBase):
         try:
             # 检查依赖数据
             if not self.sls_dc_id:
-                self.test_save_sls_dc()
+                self._ensure_save_sls_dc()
             
             # 1. 调用API
             api_path = self.get_api_path("SLS-销售渠道-停用")
@@ -259,7 +259,7 @@ class TestSlsDcManagement(SlsBase):
                 param_path=["params"]
             )
             sql = f"select `status` from sls_dc_md where id = {self.sls_dc_id}"
-            status = self.db.query(sql)[0].get("status")
+            status = self.query_service.query(sql)[0].get("status")
             self.assert_util.assert_by_operator(status, "=", "DISABLED")
             
             a.json(filtered_params, "请求数据")
@@ -282,7 +282,7 @@ class TestSlsDcManagement(SlsBase):
         try:
             # 检查依赖数据
             if not self.sls_dc_id:
-                self.test_save_sls_dc()
+                self._ensure_save_sls_dc()
             
             # 1. 调用API
             api_path = self.get_api_path("SLS-销售渠道-启用")
@@ -305,7 +305,7 @@ class TestSlsDcManagement(SlsBase):
             )
             self.assert_util.assert_response_success(response)
             sql = f"select `status` from sls_dc_md where id = {self.sls_dc_id}"
-            status = self.db.query(sql)[0].get("status")
+            status = self.query_service.query(sql)[0].get("status")
             self.assert_util.assert_by_operator(status, "=", "ENABLED")
             a.json(filtered_params, "请求数据")
             a.json(response, "响应数据")

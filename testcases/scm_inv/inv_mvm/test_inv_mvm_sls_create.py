@@ -39,7 +39,7 @@ class TestMobileVoucherSaleCreator(MobileVoucherCreator):
                   AND stk_qty > 100
                 LIMIT 1
             """
-            result = cls.db.query(sql, params=[
+            result = cls.query_service.query(sql, params=[
                 default_mat_id, cls.comOrgId, cls.invOrgId, cls.invLocId
             ])
             if result:
@@ -110,7 +110,7 @@ class TestMobileVoucherSaleCreator(MobileVoucherCreator):
                 AND inv_loc_id = %s AND inv_wh_id = %s AND inv_area_id = %s 
                 AND inv_bin_id = %s AND stk_qty > 100
             """
-            result = self.db.query(sql, params=[
+            result = self.query_service.query(sql, params=[
                 default_mat_id, self.comOrgId, self.invOrgId, self.invLocId,
                 self.invWhId, self.invAreaId, self.invBinId
             ])
@@ -174,7 +174,7 @@ class TestMobileVoucherSaleCreator(MobileVoucherCreator):
                 AND inv_bin_id = %s AND stk_qty > 100
                 LIMIT 2
             """
-            batch_result = self.db.query(sql, params=[
+            batch_result = self.query_service.query(sql, params=[
                 default_mat_id, self.comOrgId, self.invOrgId, self.invLocId,
                 self.invWhId, self.invAreaId, self.invBinId
             ])

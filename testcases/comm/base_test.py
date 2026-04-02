@@ -6,6 +6,7 @@
 """
 
 import os
+import re
 import time
 import warnings
 from functools import wraps
@@ -28,6 +29,7 @@ from testcases.comm.login_service import (
     LoginStatus,
     SessionManager,
 )
+from testcases.comm.query_service import QueryService
 from testcases.comm.test_data_context import TestDataContext
 from utils.assert_util import AssertHelper
 from utils.async_wait_util import AsyncWaitUtil, WaitStatus
@@ -122,8 +124,11 @@ class BaseTest(LoginMixin):
     mock_util: MockData
     cache: CacheUtil
     yaml_util: YamlUtil
+    query_service: QueryService
     auth_context: Optional[AuthContext]
     _base_teardown_called: bool = False
+
+    _CAMEL_TO_SNAKE_PATTERN = re.compile(r"(?<!^)(?=[A-Z])")
 
     def __init_subclass__(cls, **kwargs):
         """兜底保障：子类即便未显式调用 super().teardown_class()，也会执行基类资源清理。"""
@@ -147,6 +152,59 @@ class BaseTest(LoginMixin):
 
         wrapped._base_teardown_wrapped = True
         cls.teardown_class = classmethod(wrapped)
+
+    def __getattr__(self, name: str):
+        """兼容路由：将 ``_ensure_xxx`` 映射到已有 ``test_xxx`` 实现。"""
+        if name.startswith("_ensure_"):
+            test_name = f"test_{name[len('_ensure_'):]}"
+            try:
+                target = object.__getattribute__(self, test_name)
+            except AttributeError as exc:
+                raise AttributeError(name) from exc
+            if callable(target):
+                def _ensure_wrapper(*args, **kwargs):
+                    # 同一测试方法上下文内，重复 ensure 调用只执行一次，降低重复造数副作用。
+                    sentinel = object()
+                    cache_key = f"ensure::{name}::{repr(args)}::{repr(sorted(kwargs.items()))}"
+                    cached = TestDataContext.get_runtime_value(cache_key, sentinel)
+                    if cached is not sentinel:
+                        return cached
+                    result = target(*args, **kwargs)
+                    TestDataContext.set_runtime_value(cache_key, result)
+                    return result
+
+                return _ensure_wrapper
+        raise AttributeError(name)
+
+    def __getattribute__(self, name: str):
+        """优先读取当前测试运行时上下文中的动态 ID，降低类属性状态污染风险。"""
+        if (
+            isinstance(name, str)
+            and not name.startswith("__")
+            and (name.endswith("_id") or name.endswith("Id"))
+        ):
+            sentinel = object()
+            runtime_value = TestDataContext.get_runtime_value(name, sentinel)
+            if runtime_value is not sentinel:
+                return runtime_value
+
+            if name.endswith("_id"):
+                base_key = name[:-3]
+                runtime_value = TestDataContext.get_runtime_value(base_key, sentinel)
+                if runtime_value is not sentinel:
+                    return runtime_value
+            elif name.endswith("Id"):
+                snake_name = self._CAMEL_TO_SNAKE_PATTERN.sub("_", name).lower()
+                runtime_value = TestDataContext.get_runtime_value(snake_name, sentinel)
+                if runtime_value is not sentinel:
+                    return runtime_value
+                if snake_name.endswith("_id"):
+                    base_key = snake_name[:-3]
+                    runtime_value = TestDataContext.get_runtime_value(base_key, sentinel)
+                    if runtime_value is not sentinel:
+                        return runtime_value
+
+        return object.__getattribute__(self, name)
 
     # ─────────────────────────────────────────────
     #  setup_class  —  模板方法模式
@@ -212,6 +270,7 @@ class BaseTest(LoginMixin):
         cls.async_wait_util = AsyncWaitUtil
         cls.wait_status = WaitStatus
         cls.safe_api_call = safe_api_call
+        cls.query_service = QueryService(cls.db)
 
     @classmethod
     def _initialize_auth(cls) -> None:
@@ -449,6 +508,7 @@ class BaseTest(LoginMixin):
     def setup_method(self, method: Optional[pytest.Function] = None) -> None:
         method_name = getattr(method, "__name__", "unknown_method")
         self.logger.info(f"开始测试方法: {method_name}")
+        TestDataContext.clear_runtime_values()
         self.test_data = {}
         self.test_start_time = time.time()
 

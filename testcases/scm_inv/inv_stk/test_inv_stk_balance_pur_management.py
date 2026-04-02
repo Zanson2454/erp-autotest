@@ -72,7 +72,7 @@ class TestInvStkBalancePurManagement(ScmInvBaseTest):
     def get_current_inventory_balance(self):
         """获取当前库存余额"""
         try:
-            result = self.db.query(
+            result = self.query_service.query(
                 sql="SELECT stk_qty FROM inv_stk_wh_ba WHERE com_org_id = %s AND mat_id = %s",
                 params=[self.comOrgId, self.matId]
             )
@@ -150,7 +150,7 @@ class TestInvStkBalancePurManagement(ScmInvBaseTest):
         try:
             # 确保前置条件：移动凭证已创建
             if not self.mobile_voucher_id:
-                self.test_create_mobile_voucher_increase_inventory()
+                self._ensure_create_mobile_voucher_increase_inventory()
             
             # 获取当前库存余额（移动凭证已创建）
             current_balance = self.get_current_inventory_balance()
@@ -474,9 +474,9 @@ class TestInvStkBalancePurManagement(ScmInvBaseTest):
             
             # 确保前置条件已满足
             if not self.mobile_voucher_id:
-                self.test_create_mobile_voucher_increase_inventory()
+                self._ensure_create_mobile_voucher_increase_inventory()
             if not self.balance_detail_id:
-                self.test_query_stock_balance_detail()
+                self._ensure_query_stock_balance_detail()
                 
             # 若依然无明细，容错跳过，避免误报
             if not self.balance_detail_id or not self.batch_detail_id:
@@ -596,7 +596,7 @@ class TestInvStkBalancePurManagement(ScmInvBaseTest):
         try:
             # 0. 确保前置数据存在
             if not self.balance_detail_id:
-                self.test_query_stock_balance_detail()
+                self._ensure_query_stock_balance_detail()
             
             # 1. 准备测试数据
             timestamp = self.mock_util.get_timestamp()

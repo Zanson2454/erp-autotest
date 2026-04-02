@@ -128,7 +128,7 @@ class TestCustomerTaxManagement(GenMdBaseTest):
         try:
             # 如果没有ID，先创建一个
             if not hasattr(self, 'cust_tax_id') or not self.cust_tax_id:
-                self.test_save_customer_tax_type()
+                self._ensure_save_customer_tax_type()
 
             set_dict = {"id": self.cust_tax_id}
             fields_to_filter = ["id"]
@@ -164,7 +164,7 @@ class TestCustomerTaxManagement(GenMdBaseTest):
         try:
             # 如果没有ID，先创建一个
             if not hasattr(self, 'cust_tax_id') or not self.cust_tax_id:
-                self.test_save_customer_tax_type()
+                self._ensure_save_customer_tax_type()
 
             set_dict = {"id": self.cust_tax_id}
             fields_to_filter = ["id"]

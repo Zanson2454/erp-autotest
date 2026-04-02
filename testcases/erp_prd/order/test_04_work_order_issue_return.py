@@ -146,7 +146,7 @@ class TestPrdOrderIssueReturn(PrdBaseTest):
                 """
                 
                 # 执行查询
-                records = self.db.query(sql)
+                records = self.query_service.query(sql)
                 self.logger.info(f"查询到{len(records)}条领料分单规则明细")
                 
                 # 保存查询结果
@@ -206,7 +206,7 @@ class TestPrdOrderIssueReturn(PrdBaseTest):
                         AND i.status = 'POSTED'
                         AND (i.returned_qty = 0 OR i.returned_qty IS NULL) ORDER by  prd_order_head_id desc  LIMIT 1)
                 """
-                issue_items = self.db.query(sql)
+                issue_items = self.query_service.query(sql)
                 issue_item_ids = [{"id": item["id"]} for item in issue_items]
                 
                 # 从规则明细中获取配置项
@@ -432,7 +432,7 @@ class TestPrdOrderIssueReturn(PrdBaseTest):
                         AND deleted = 0
                     """
                     self.logger.debug(f"执行SQL: {sql}")
-                    head_results = self.db.query(sql)
+                    head_results = self.query_service.query(sql)
                     
                     # 检查所有数据是否都已更新为POSTED状态
                     all_posted = True
@@ -486,7 +486,7 @@ class TestPrdOrderIssueReturn(PrdBaseTest):
                     AND deleted = 0
                 """
                 self.logger.debug(f"执行SQL: {sql}")
-                item_results = self.db.query(sql)
+                item_results = self.query_service.query(sql)
                 
                 # 验证是否有行项目数据
                 assert len(item_results) > 0, "未找到退料单行项目数据"
@@ -540,7 +540,7 @@ class TestPrdOrderIssueReturn(PrdBaseTest):
                         AND deleted = 0
                     """
                     self.logger.debug(f"执行SQL: {sql}")
-                    dn_head_results = self.db.query(sql)
+                    dn_head_results = self.query_service.query(sql)
                     
                     # 检查所有数据是否都已更新为POSTED状态
                     all_posted = True
@@ -593,7 +593,7 @@ class TestPrdOrderIssueReturn(PrdBaseTest):
                         AND deleted = 0
                     """
                     self.logger.debug(f"执行SQL: {sql}")
-                    mvm_item_results = self.db.query(sql)
+                    mvm_item_results = self.query_service.query(sql)
                     
                     # 验证是否生成移动凭证
                     assert len(mvm_item_results) > 0, \

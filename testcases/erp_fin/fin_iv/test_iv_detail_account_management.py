@@ -143,7 +143,7 @@ class TestIvDetailAccountManagement(IvBaseTest):
             # 检查并创建依赖数据
         
             sql = "select id  from fin_iv_acc_detail_tr where deleted=0 and com_org_id=%s and inv_org_id=%s order by created_at desc limit 1"
-            self.detail_account_id = self.db.execute(sql, [self.com_org_id, self.inv_org_id])
+            self.detail_account_id = self.query_service.execute(sql, [self.com_org_id, self.inv_org_id])
 
             # 使用标准化API调用
             set_dict = {"id": self.detail_account_id}
@@ -180,7 +180,7 @@ class TestIvDetailAccountManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             sql = "select id  from fin_iv_acc_detail_tr where deleted=0 and com_org_id=%s and inv_org_id=%s order by created_at desc limit 1"
-            self.detail_account_id = self.db.execute(sql, [self.com_org_id, self.inv_org_id])
+            self.detail_account_id = self.query_service.execute(sql, [self.com_org_id, self.inv_org_id])
 
             
             # 使用标准化API调用
@@ -292,7 +292,7 @@ class TestIvDetailAccountManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.detail_account_id:
-                self.test_save_detail_account()
+                self._ensure_save_detail_account()
             
             # 使用标准化API调用
             set_dict = {

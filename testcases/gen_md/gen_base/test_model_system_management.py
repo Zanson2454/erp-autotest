@@ -38,6 +38,35 @@ class TestModelSystemManagement(GenMdBaseTest):
             cls.logger.error(f"测试类结束异常: {str(e)}")
 
         super().teardown_class()
+
+    def _query_model_system_page(self):
+        set_dict = {
+            "modelKey": "GEN_MD$gen_coun_type_cf",
+            "pageable": {
+                "pageNo": 1,
+                "pageSize": 10
+            }
+        }
+        fields_to_filter = ["modelKey", "pageable"]
+
+        response, _ = self.standard_api_call(
+            api_key="模型系统分页查询服务",
+            set_dict=set_dict,
+            fields_to_filter=fields_to_filter
+        )
+        self.assert_util.assert_response_data(response)
+
+        data_list = response.get("data", {}).get("data", {}).get("data", []).get("data", [])
+        if data_list:
+            self.model_system_id = data_list[0].get("id")
+            self.model_system_ids = [item.get("id") for item in data_list[:3] if item.get("id")]
+        return self.model_system_id
+
+    def _ensure_query_model_system_page(self):
+        if self.model_system_id:
+            return self.model_system_id
+        return self._query_model_system_page()
+
     # ================ 模型系统管理 ================
     @case_decorator(
         story="模型系统管理",
@@ -51,32 +80,7 @@ class TestModelSystemManagement(GenMdBaseTest):
     def test_query_model_system_page(self):
         """模型系统分页查询用例 - GEN_MODEL_SYSTEM_PAGING_ACTION_SERVICE"""
         try:
-            # 1. 准备分页查询参数（原有业务逻辑完全保留）
-            set_dict = {
-                "modelKey": "GEN_MD$gen_coun_type_cf",
-                "pageable": {
-                    "pageNo": 1,
-                    "pageSize": 10
-                }
-            }
-            fields_to_filter = ["modelKey", "pageable"]
-            
-            # 2. 使用标准化API调用
-            response, _ = self.standard_api_call(
-                api_key="模型系统分页查询服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter
-            )
-            
-            # 3. 原有断言和数据保存逻辑（完全保留）
-            self.assert_util.assert_response_data(response)
-            
-            # 保存模型系统ID用于后续测试
-            data_list = response.get("data", {}).get("data", {}).get("data", []).get("data", [])
-            if data_list:
-                self.model_system_id = data_list[0].get("id")
-                # 收集多个ID用于根据ID集合查询测试
-                self.model_system_ids = [item.get("id") for item in data_list[:3] if item.get("id")]
+            self._query_model_system_page()
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -95,7 +99,7 @@ class TestModelSystemManagement(GenMdBaseTest):
         try:
             # 1. 确保有ID数据（原有依赖逻辑完全保留）
             if not self.model_system_id:
-                self.test_query_model_system_page()
+                self._ensure_query_model_system_page()
 
             # 2. 使用标准化API调用
             set_dict = {

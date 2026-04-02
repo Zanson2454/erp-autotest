@@ -32,6 +32,104 @@ class TestCurrencyManagement(GenMdBaseTest):
         """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
         cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
+
+    def _create_currency(self):
+        currency_code = self.mock_data.generate_unique_code(tag="CURR")
+        currency_name = f"测试币种_{self.mock_data.get_timestamp()}"
+
+        set_dict = {
+            "currCode": currency_code,
+            "currName": currency_name,
+            "symbol": currency_code,
+            "decimalPlace": 2
+        }
+        fields_to_filter = ["currCode", "currName", "symbol", "decimalPlace"]
+
+        response, currency_id = self.standard_api_call(
+            api_key="GEN-币种配置-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=fields_to_filter,
+            store_id_as="currency"
+        )
+        self.assert_util.assert_response_data(response)
+        self.currency_id = currency_id
+        self.currency_code = currency_code
+        return currency_id
+
+    def _ensure_save_currency(self):
+        if self.currency_id:
+            return self.currency_id
+        return self._create_currency()
+
+    def _create_exchange_rate(self):
+        rate_code = self.mock_data.generate_unique_code(tag="RATE")
+        rate_name = f"测试汇率_{self.mock_data.get_timestamp()}"
+
+        curr_id = None
+        if self.init_data:
+            currency_info = self.init_data.get("currency_info", [])
+            if currency_info:
+                curr_id = currency_info[0].get("curr_id")
+        if not curr_id:
+            curr_id = 2000001
+
+        rate_type_id = None
+        if self.init_data:
+            rate_type_info = self.init_data.get("exchange_rate_type_info", [])
+            if rate_type_info:
+                rate_type_id = rate_type_info[0].get("exchange_rate_type_id")
+
+        set_dict = {
+            "code": rate_code,
+            "name": rate_name,
+            "exchRate": 7.2,
+            "baseCurrId": {"id": curr_id},
+            "tarCurrId": {"id": curr_id},
+            "genCurrExchangeRateTypeCf": {"id": rate_type_id}
+        }
+        fields_to_filter = ["code", "name", "exchRate", "baseCurrId", "tarCurrId", "genCurrExchangeRateTypeCf"]
+
+        response, exchange_rate_id = self.standard_api_call(
+            api_key="GEN-汇率-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=fields_to_filter,
+            store_id_as="exchange_rate"
+        )
+        self.assert_util.assert_response_data(response)
+        self.exchange_rate_id = exchange_rate_id
+        return exchange_rate_id
+
+    def _ensure_save_exchange_rate(self):
+        if self.exchange_rate_id:
+            return self.exchange_rate_id
+        return self._create_exchange_rate()
+
+    def _create_exchange_rate_type(self):
+        rate_type_code = self.mock_data.generate_unique_code(tag="RATETYPE")
+        rate_type_name = f"测试汇率类型_{self.mock_data.get_timestamp()}"
+
+        set_dict = {
+            "typeCode": rate_type_code,
+            "typeName": rate_type_name,
+            "typeDefault":False,
+        }
+        fields_to_filter = ["code", "name", "description"]
+
+        response, exchange_rate_type_id = self.standard_api_call(
+            api_key="GEN-汇率类型-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=fields_to_filter,
+            store_id_as="exchange_rate_type"
+        )
+        self.assert_util.assert_response_data(response)
+        self.exchange_rate_type_id = exchange_rate_type_id
+        return exchange_rate_type_id
+
+    def _ensure_save_exchange_rate_type(self):
+        if self.exchange_rate_type_id:
+            return self.exchange_rate_type_id
+        return self._create_exchange_rate_type()
+
     # ================ 币种配置基础管理 ================
     @case_decorator(
         story="币种配置管理",
@@ -45,32 +143,7 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_save_currency(self):
         """新增币种配置用例 - GEN_CURR_TYPE_CF_SAVE_ACTION_SERVICE"""
         try:
-            # 1. 准备测试数据（原有业务逻辑完全保留）
-            currency_code = self.mock_data.generate_unique_code(tag="CURR")
-            currency_name = f"测试币种_{self.mock_data.get_timestamp()}"
-
-            # 2. 使用标准化API调用（替换重复逻辑）
-            set_dict = {
-                "currCode": currency_code,
-                "currName": currency_name,
-                "symbol": currency_code,
-                "decimalPlace": 2
-            }
-            fields_to_filter = ["currCode", "currName", "symbol", "decimalPlace"]
-            
-            response, currency_id = self.standard_api_call(
-                api_key="GEN-币种配置-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as="currency"
-            )
-            
-            # 3. 原有断言（完全保留）
-            self.assert_util.assert_response_data(response)
-            
-            # 4. 原有数据保存逻辑（完全保留）
-            self.currency_id = currency_id
-            self.currency_code = currency_code
+            self._create_currency()
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -124,7 +197,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         try:
             # 1. 确保币种存在（原有依赖逻辑完全保留）
             if not self.currency_id:
-                self.test_save_currency()
+                self._ensure_save_currency()
 
             # 2. 使用标准化API调用
             set_dict = {"id": self.currency_id}
@@ -156,49 +229,7 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_save_exchange_rate(self):
         """新增汇率用例"""
         try:
-            # 1. 准备测试数据（原有业务逻辑完全保留）
-            rate_code = self.mock_data.generate_unique_code(tag="RATE")
-            rate_name = f"测试汇率_{self.mock_data.get_timestamp()}"
-            
-            # 获取币种ID（原有逻辑，安全访问）
-            curr_id = None
-            if self.init_data:
-                currency_info = self.init_data.get("currency_info", [])
-                if currency_info:
-                    curr_id = currency_info[0].get("curr_id")
-            if not curr_id:
-                curr_id = 2000001  # 默认CNY币种ID
-            
-            # 获取汇率类型ID（原有逻辑，安全访问）
-            rate_type_id = None
-            if self.init_data:
-                rate_type_info = self.init_data.get("exchange_rate_type_info", [])
-                if rate_type_info:
-                    rate_type_id = rate_type_info[0].get("exchange_rate_type_id")
-
-            # 2. 使用标准化API调用
-            set_dict = {
-                "code": rate_code,
-                "name": rate_name,
-                "exchRate": 7.2,
-                "baseCurrId": {"id": curr_id},
-                "tarCurrId": {"id": curr_id},
-                "genCurrExchangeRateTypeCf": {"id": rate_type_id}
-            }
-            fields_to_filter = ["code", "name", "exchRate", "baseCurrId", "tarCurrId", "genCurrExchangeRateTypeCf"]
-            
-            response, exchange_rate_id = self.standard_api_call(
-                api_key="GEN-汇率-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as="exchange_rate"
-            )
-            
-            # 3. 原有断言（完全保留）
-            self.assert_util.assert_response_data(response)
-            
-            # 4. 原有数据保存逻辑（完全保留）
-            self.exchange_rate_id = exchange_rate_id
+            self._create_exchange_rate()
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -283,30 +314,7 @@ class TestCurrencyManagement(GenMdBaseTest):
     def test_save_exchange_rate_type(self):
         """新增汇率类型用例"""
         try:
-            # 1. 准备测试数据（原有业务逻辑完全保留）
-            rate_type_code = self.mock_data.generate_unique_code(tag="RATETYPE")
-            rate_type_name = f"测试汇率类型_{self.mock_data.get_timestamp()}"
-
-            # 2. 使用标准化API调用
-            set_dict = {
-                "typeCode": rate_type_code,
-                "typeName": rate_type_name,
-                "typeDefault":False,
-            }
-            fields_to_filter = ["code", "name", "description"]
-            
-            response, exchange_rate_type_id = self.standard_api_call(
-                api_key="GEN-汇率类型-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as="exchange_rate_type"
-            )
-            
-            # 3. 原有断言（完全保留）
-            self.assert_util.assert_response_data(response)
-            
-            # 4. 原有数据保存逻辑（完全保留）
-            self.exchange_rate_type_id = exchange_rate_type_id
+            self._create_exchange_rate_type()
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -360,7 +368,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         try:
             # 1. 确保汇率类型存在（原有依赖逻辑完全保留）
             if not self.exchange_rate_type_id:
-                self.test_save_exchange_rate_type()
+                self._ensure_save_exchange_rate_type()
 
             # 2. 使用标准化API调用
             set_dict = {"id": self.exchange_rate_type_id}
@@ -392,7 +400,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         try:
             # 1. 确保汇率存在（原有依赖逻辑完全保留）
             if not self.exchange_rate_id:
-                self.test_save_exchange_rate()
+                self._ensure_save_exchange_rate()
 
             # 2. 使用标准化API调用
             set_dict = {"id": self.exchange_rate_id}
@@ -456,7 +464,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         try:
             # 1. 确保币种存在（原有依赖逻辑完全保留）
             if not self.currency_id:
-                self.test_save_currency()
+                self._ensure_save_currency()
 
             # 2. 使用标准化API调用
             set_dict = {"id": self.currency_id}
@@ -488,7 +496,7 @@ class TestCurrencyManagement(GenMdBaseTest):
         try:
             # 1. 确保汇率类型存在（原有依赖逻辑完全保留）
             if not self.exchange_rate_type_id:
-                self.test_save_exchange_rate_type()
+                self._ensure_save_exchange_rate_type()
 
             # 2. 使用标准化API调用
             set_dict = {"id": self.exchange_rate_type_id}

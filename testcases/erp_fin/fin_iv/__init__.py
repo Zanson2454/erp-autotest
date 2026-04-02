@@ -146,16 +146,8 @@ class IvBaseTest(FinBaseTest):
         :return: 配置数据字典，如果不存在则返回None
         """
         try:
-            sql = """
-                SELECT id, com_org_id, iv_type, init_status, async_execution_status, enable_status, begin_status
-                FROM fin_iv_init_cf
-                WHERE com_org_id = %s AND iv_type = %s
-                LIMIT 1
-            """
-            result = cls.db.query(sql, params=[com_org_id, iv_type])
-            
-            if result and len(result) > 0:
-                config = result[0]
+            config = cls.query_service.get_iv_existing_init_config(com_org_id, iv_type)
+            if config:
                 # 转换为API返回格式（字段名驼峰转换）
                 return {
                     "id": config.get("id"),

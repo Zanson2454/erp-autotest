@@ -170,7 +170,7 @@ class PrdBaseTest(BaseTest):
                 ORDER BY id DESC
                 LIMIT 1
             """
-            result = self.db.query(sql)
+            result = self.query_service.query(sql)
             assert result, f"未找到状态为{status}的生产订单"
             
             # 返回生产订单信息
@@ -209,6 +209,6 @@ class PrdBaseTest(BaseTest):
             AND prd_order_header_tr_id = {order_id}  #需确保前面用例执行成功否则可能取到没有领料的BOM行
             ORDER BY id DESC
         """
-        result = self.db.query(sql)
+        result = self.query_service.query(sql)
         self.logger.info(f"获取到已下达生产订单待领料BOM行信息: {result}")
         return result 

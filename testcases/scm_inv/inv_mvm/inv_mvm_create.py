@@ -383,7 +383,7 @@ class MobileVoucherCreator(ScmInvBaseTest):
                 AND sb.stk_qty > 0
                 ORDER BY b.created_at DESC
             """
-            result = self.db.query(sql, params=[mat_id, inv_org_id, inv_loc_id])
+            result = self.query_service.query(sql, params=[mat_id, inv_org_id, inv_loc_id])
             
             batches = []
             for row in result:
@@ -403,7 +403,7 @@ class MobileVoucherCreator(ScmInvBaseTest):
         """检查物料是否需要批次管理"""
         try:
             # 简化判断：如果物料编码包含"FINP"则需要批次（根据你的测试数据）
-            mat_info = self.db.query(
+            mat_info = self.query_service.query(
                 "SELECT mat_code FROM gen_mat_md WHERE id = %s", 
                 params=[mat_id]
             )

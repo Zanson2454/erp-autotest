@@ -3,6 +3,7 @@ from urllib.parse import urlencode, urljoin
 
 import requests
 
+from testcases.comm.test_data_context import TestDataContext
 from utils.log_util import Loggers
 from utils.param_util import ParamUtil
 
@@ -160,19 +161,22 @@ class ApiCallService:
                 extracted_id = None
 
             if store_id_as:
-                target_cls = test_obj.__class__
                 snake_attr = f"{store_id_as}_id"
                 camel_attr = f"{store_id_as}Id"
 
-                prev = getattr(target_cls, snake_attr, None)
-                if prev is not None and prev != extracted_id:
-                    Loggers.warning(
-                        f"store_id_as 覆盖已有值: {snake_attr} {prev} → {extracted_id} "
-                        f"(类={target_cls.__name__})，请确认是否预期"
-                    )
+                # 运行时上下文：当前用例内可读，避免写类属性导致并发污染。
+                TestDataContext.set_runtime_value(store_id_as, extracted_id)
+                TestDataContext.set_runtime_value(snake_attr, extracted_id)
+                TestDataContext.set_runtime_value(camel_attr, extracted_id)
 
-                setattr(target_cls, camel_attr, extracted_id)
-                setattr(target_cls, snake_attr, extracted_id)
+                # 实例属性：同一测试方法内/辅助函数内直接使用 self.xxx_id。
+                setattr(test_obj, snake_attr, extracted_id)
+                setattr(test_obj, camel_attr, extracted_id)
+
+                # 结构化测试上下文（如果存在）
+                if hasattr(test_obj, "test_data") and isinstance(test_obj.test_data, dict):
+                    test_obj.test_data[snake_attr] = extracted_id
+                    test_obj.test_data[camel_attr] = extracted_id
 
             return response, extracted_id
 

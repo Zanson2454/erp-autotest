@@ -51,6 +51,7 @@ project_root = Path(__file__).resolve().parent.parent
 
 # --md-precheck 全会话只打一次日志
 _MD_PRECHECK_RAN = False
+_TITLE_CACHE: dict[str, str] = {}
 
 # 确保必要的目录存在
 REQUIRED_DIRS = ["reports/allure-results", "reports/allure-report", "logs", "testdata", "testcases"]
@@ -340,6 +341,11 @@ def get_custom_title(item):
     2. @allure.title装饰器
     3. case_decorator中的title参数
     """
+    # 优先使用收集阶段缓存，避免运行阶段重复反射解析源码
+    nodeid = getattr(item, "nodeid", None)
+    if nodeid and nodeid in _TITLE_CACHE:
+        return _TITLE_CACHE[nodeid]
+
     if not hasattr(item.function, "__code__"):
         return None
 
@@ -370,6 +376,31 @@ def get_custom_title(item):
     except Exception as e:
         Loggers.warning(f"无法解析测试函数标题: {e}")
 
+    return None
+
+
+def _extract_custom_title_from_function(func: Callable) -> "Optional[str]":
+    """在收集阶段提取标题，避免运行时重复 inspect.getsource。"""
+    if not hasattr(func, "__code__"):
+        return None
+    try:
+        import inspect
+        import re
+
+        func_source = inspect.getsource(func)
+        dynamic_match = re.search(r'allure\.dynamic\.title\([\'"](.+?)[\'"]\)', func_source)
+        if dynamic_match:
+            return dynamic_match.group(1)
+
+        decorator_match = re.search(r'@allure\.title\([\'"](.+?)[\'"]\)', func_source)
+        if decorator_match:
+            return decorator_match.group(1)
+
+        case_decorator_match = re.search(r'@case_decorator\(.*?title=[\'"](.+?)[\'"]', func_source, re.DOTALL)
+        if case_decorator_match:
+            return case_decorator_match.group(1)
+    except Exception as e:
+        Loggers.warning(f"收集阶段解析标题失败: {e}")
     return None
 
 
@@ -428,6 +459,15 @@ def pytest_collection_modifyitems(session, config, items):
     file_level_items = [item for item in items if get_file_level_order(item) is not None]
     other_items = [item for item in items if get_file_level_order(item) is None]
 
+    # 收集阶段一次性缓存标题，运行阶段直接读取
+    for item in items:
+        try:
+            custom_title = _extract_custom_title_from_function(item.function)
+            if custom_title:
+                _TITLE_CACHE[item.nodeid] = custom_title
+        except Exception:
+            continue
+
     # 对使用 file_level_order 的测试用例进行文件级排序
     if file_level_items:
         # 为每个文件分配唯一编号（按字母顺序）
@@ -448,6 +488,8 @@ def pytest_collection_modifyitems(session, config, items):
         node_path = str(getattr(item, "fspath", ""))
         if any(root in node_path for root in serial_flow_roots):
             item.add_marker("serial_flow")
+        if "tests/unit/" in node_path.replace("\\", "/"):
+            item.add_marker("unit")
 
     # 重新组合：file_level_order 的测试用例排在前面
     # 这样可以优先执行需要文件级串行的测试

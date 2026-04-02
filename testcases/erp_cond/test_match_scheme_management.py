@@ -105,7 +105,7 @@ class TestMatchSchemeManagement(ErpCondBaseTest):
         """根据ID查找用例 - GEN_MATCH_SCHEME_CF_FIND_DATA_BY_ID_SERVICE"""
         try:
             if not self.match_scheme_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             set_dict = {"id": self.match_scheme_id}
             fields_to_filter = ["id"]
@@ -135,7 +135,7 @@ class TestMatchSchemeManagement(ErpCondBaseTest):
         """单表ID查询用例 - GEN_MATCH_SCHEME_CF_FIND_SINGLE_DATA_BY_ID_SERVICE"""
         try:
             if not self.match_scheme_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             set_dict = {"id": self.match_scheme_id}
             fields_to_filter = ["id"]
@@ -165,7 +165,7 @@ class TestMatchSchemeManagement(ErpCondBaseTest):
         """标准分页查询用例 - GEN_MATCH_SCHEME_CF_PAGING_DATA_SERVICE"""
         try:
             if not self.match_scheme_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             set_dict = {
                 "pageable": {
@@ -273,7 +273,7 @@ class TestMatchSchemeManagement(ErpCondBaseTest):
         """批量删除用例 - GEN_MATCH_SCHEME_CF_BATCH_DELETE_DATA_SERVICE"""
         try:
             if not self.match_scheme_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             # 创建第二个测试数据用于批量删除
             code2 = self.mock_util.generate_unique_code(tag="MS")
@@ -328,7 +328,7 @@ class TestMatchSchemeManagement(ErpCondBaseTest):
         """单个删除用例 - GEN_MATCH_SCHEME_CF_DELETE_DATA_BY_ID_SERVICE"""
         try:
             if not self.match_scheme_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             set_dict = {"id": self.match_scheme_id}
             fields_to_filter = ["id"]
@@ -363,7 +363,7 @@ class TestMatchSchemeManagement(ErpCondBaseTest):
         """复制数据转换用例 - GEN_MATCH_SCHEME_CF_COPY_DATA_CONVERTER_SERVICE"""
         try:
             if not self.match_scheme_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             set_dict = {"sourceId": self.match_scheme_id}
             fields_to_filter = ["sourceId"]

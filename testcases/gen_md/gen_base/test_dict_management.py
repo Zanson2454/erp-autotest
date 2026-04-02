@@ -33,6 +33,42 @@ class TestDictManagement(GenMdBaseTest):
         """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
         cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
+
+    def _create_dict(self):
+        dict_code = self.mock_util.generate_unique_code(tag="DICT")
+        dict_name = f"测试字典_{self.mock_util.get_timestamp()}"
+
+        set_dict = {
+            "code": dict_code,
+            "name": dict_name,
+            "isSystem": False,
+            "itemList":[
+                {
+                    "code": self.mock_util.generate_unique_code(tag="DICT_ITEM"),
+                    "name": f"测试字典项_{self.mock_util.get_timestamp()}",
+                    "status": "ENABLED",
+                    "sort": 1
+                }
+                ],
+            "remark": f"字典描述_{self.mock_util.get_timestamp()}"
+        }
+
+        response, dict_id = self.standard_api_call(
+            api_key="GEN-数据字典类别-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=["code", "name", "remark"],
+            store_id_as="dict"
+        )
+        self.assert_util.assert_response_data(response)
+        self.dict_id = dict_id
+        self.dict_code = dict_code
+        return dict_id
+
+    def _ensure_save_dict(self):
+        if self.dict_id:
+            return self.dict_id
+        return self._create_dict()
+
     @case_decorator(
         story="数据字典管理",
         title="测试新增数据字典类别",
@@ -45,32 +81,7 @@ class TestDictManagement(GenMdBaseTest):
     def test_save_dict(self):
         """新增数据字典类别用例"""
         try:
-            dict_code = self.mock_util.generate_unique_code(tag="DICT")
-            dict_name = f"测试字典_{self.mock_util.get_timestamp()}"
-
-            set_dict = {
-                "code": dict_code,
-                "name": dict_name,
-                "isSystem": False,
-                "itemList":[
-                    {
-                        "code": self.mock_util.generate_unique_code(tag="DICT_ITEM"),
-                        "name": f"测试字典项_{self.mock_util.get_timestamp()}",
-                        "status": "ENABLED",
-                        "sort": 1
-                    }
-                    ],
-                "remark": f"字典描述_{self.mock_util.get_timestamp()}"
-            }
-            
-            response, dict_id = self.standard_api_call(
-                api_key="GEN-数据字典类别-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=["code", "name", "remark"],
-                store_id_as="dict"
-            )
-            
-            self.dict_code = dict_code
+            self._create_dict()
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -119,7 +130,7 @@ class TestDictManagement(GenMdBaseTest):
         """查询数据字典类别详情用例"""
         try:
             if not self.dict_id:
-                self.test_save_dict()
+                self._ensure_save_dict()
 
             set_dict = {"id": self.dict_id}
             
@@ -146,7 +157,7 @@ class TestDictManagement(GenMdBaseTest):
         """启用数据字典类别用例"""
         try:
             if not self.dict_id:
-                self.test_save_dict()
+                self._ensure_save_dict()
 
             set_dict = {"id": self.dict_id}
             
@@ -173,7 +184,7 @@ class TestDictManagement(GenMdBaseTest):
         """禁用数据字典类别用例"""
         try:
             if not self.dict_id:
-                self.test_save_dict()
+                self._ensure_save_dict()
 
             set_dict = {"id": self.dict_id}
             
@@ -200,7 +211,7 @@ class TestDictManagement(GenMdBaseTest):
         """删除数据字典类别用例"""
         try:
             if not self.dict_id:
-                self.test_save_dict()
+                self._ensure_save_dict()
 
             set_dict = {"id": self.dict_id}
             

@@ -32,6 +32,33 @@ class TestLabelManagement(GenMdBaseTest):
         """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
         cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
+
+    def _create_label(self, usageType="MAT"):
+        timestamp = self.mock_util.get_timestamp()
+        random_num = self.mock_util.generate_unique_code(tag="LABEL")[-4:]
+        label_name = f"测试标签_{timestamp}_{random_num}"
+
+        set_dict = {
+            "name": label_name,
+            "color": "#FF5722",
+            "usageType": usageType
+        }
+        fields_to_filter = ["name", "color", "usageType"]
+
+        response, label_id = self.standard_api_call(
+            api_key="GEN-标签表-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=fields_to_filter,
+            store_id_as="label"
+        )
+        self.assert_util.assert_response_data(response)
+        self.label_id = label_id
+        return label_id
+
+    def _ensure_save_label(self, usageType="MAT"):
+        if self.label_id:
+            return self.label_id
+        return self._create_label(usageType=usageType)
     # ================ 标签表基础管理 ================
     @case_decorator(
         story="标签表管理",
@@ -46,31 +73,7 @@ class TestLabelManagement(GenMdBaseTest):
     def test_save_label(self, usageType):
         """新增标签用例 - GEN_LABEL_MD_SAVE_ACTION_SERVICE"""
         try:
-            # 1. 准备测试数据（原有业务逻辑完全保留，包括唯一命名避免主键冲突）
-            timestamp = self.mock_util.get_timestamp()
-            random_num = self.mock_util.generate_unique_code(tag="LABEL")[-4:]  # 取后4位随机数
-            label_name = f"测试标签_{timestamp}_{random_num}"
-
-            # 2. 使用标准化API调用（替换重复逻辑）
-            set_dict = {
-                "name": label_name,
-                "color": "#FF5722",  # 标签颜色
-                "usageType": usageType
-            }
-            fields_to_filter = ["name", "color", "usageType"]
-            
-            response, label_id = self.standard_api_call(
-                api_key="GEN-标签表-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as="label"
-            )
-            
-            # 3. 原有断言（完全保留）
-            self.assert_util.assert_response_data(response)
-            
-            # 4. 原有数据保存逻辑（完全保留）
-            self.label_id = label_id
+            self._create_label(usageType=usageType)
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -127,7 +130,7 @@ class TestLabelManagement(GenMdBaseTest):
         try:
             # 1. 确保标签存在（原有依赖逻辑完全保留，包含参数化调用）
             if not self.label_id:
-                self.test_save_label(usageType="MAT")
+                self._ensure_save_label(usageType="MAT")
 
             # 2. 使用标准化API调用
             set_dict = {"id": self.label_id}
@@ -159,7 +162,7 @@ class TestLabelManagement(GenMdBaseTest):
         try:
             # 1. 确保标签存在（原有依赖逻辑完全保留）
             if not self.label_id:
-                self.test_save_label(usageType="MAT")
+                self._ensure_save_label(usageType="MAT")
 
             # 2. 使用标准化API调用
             set_dict = {"id": self.label_id}
@@ -191,7 +194,7 @@ class TestLabelManagement(GenMdBaseTest):
         try:
             # 1. 确保标签存在（原有依赖逻辑完全保留）
             if not self.label_id:
-                self.test_save_label(usageType="MAT")
+                self._ensure_save_label(usageType="MAT")
 
             # 2. 使用标准化API调用
             set_dict = {"id": self.label_id}
@@ -223,7 +226,7 @@ class TestLabelManagement(GenMdBaseTest):
         try:
             # 1. 确保标签存在（原有依赖逻辑完全保留）
             if not self.label_id:
-                self.test_save_label(usageType="MAT")
+                self._ensure_save_label(usageType="MAT")
 
             # 2. 使用标准化API调用
             set_dict = {"id": self.label_id}

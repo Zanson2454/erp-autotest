@@ -40,17 +40,10 @@ class TestIvPricingRouteManagement(IvBaseTest):
         
         # 从数据库查询移动类型数据（用于计价路由创建）
         try:
-            sql = """
-                SELECT code, name 
-                FROM inv_mvn_type_cf 
-                WHERE deleted = 0 
-                AND enable_status = 'ENABLE'
-                LIMIT 1
-            """
-            result = cls.db.query(sql)
-            if result and len(result) > 0:
-                cls.inv_mvn_code = result[0].get("code")
-                cls.inv_mvn_name = result[0].get("name")
+            mvn_type = cls.query_service.get_enabled_inv_mvn_type()
+            if mvn_type:
+                cls.inv_mvn_code = mvn_type.get("code")
+                cls.inv_mvn_name = mvn_type.get("name")
                 cls.logger.info(f"获取到移动类型: code={cls.inv_mvn_code}, name={cls.inv_mvn_name}")
             else:
                 # 如果查询不到，使用默认值（从 curl 请求中提取）
@@ -211,7 +204,7 @@ class TestIvPricingRouteManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.pricing_route_id:
-                self.test_submit_pricing_route()
+                self._ensure_submit_pricing_route()
             
             # 使用标准化API调用
             set_dict = {"id": self.pricing_route_id}
@@ -248,7 +241,7 @@ class TestIvPricingRouteManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.pricing_route_id:
-                self.test_submit_pricing_route()
+                self._ensure_submit_pricing_route()
             
             # 先查询计价路由详情，获取完整数据（包括 ivRouteCode 等字段）
             response, _ = self.standard_api_call(
@@ -363,7 +356,7 @@ class TestIvPricingRouteManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.pricing_route_id:
-                self.test_submit_pricing_route()
+                self._ensure_submit_pricing_route()
             
             # 先查询计价路由详情，获取完整数据
             response, _ = self.standard_api_call(
@@ -376,7 +369,7 @@ class TestIvPricingRouteManagement(IvBaseTest):
             
             # 如果当前状态是 DISABLE，先启用（确保可以测试停用功能）
             if route_data.get("enableStatus") == "DISABLE":
-                self.test_enable_pricing_route()
+                self._ensure_enable_pricing_route()
                 # 重新查询获取最新数据
                 response, _ = self.standard_api_call(
                     api_key="存货计价路由-根据ID查找数据服务",
@@ -559,7 +552,7 @@ class TestIvPricingRouteManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.pricing_route_id:
-                self.test_submit_pricing_route()
+                self._ensure_submit_pricing_route()
             
             # 使用标准化API调用
             set_dict = {"sourceId": self.pricing_route_id}
@@ -674,7 +667,7 @@ class TestIvPricingRouteManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.pricing_route_id:
-                self.test_submit_pricing_route()
+                self._ensure_submit_pricing_route()
             
             # 使用标准化API调用
             set_dict = {

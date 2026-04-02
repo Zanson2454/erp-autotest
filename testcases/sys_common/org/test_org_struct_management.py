@@ -235,7 +235,7 @@ class TestOrgStructManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.org_struct_id:
-                self.test_create_org_struct()
+                self._ensure_create_org_struct()
             
             # 1. 调用API
             api_path = self.get_api_path("组织架构表-查找树数据服务")
@@ -359,7 +359,7 @@ class TestOrgStructManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.org_struct_code:
-                self.test_create_org_struct()
+                self._ensure_create_org_struct()
             
             # 1. 调用API
             api_path = self.get_api_path("组织架构表-查找单条数据服务")
@@ -405,7 +405,7 @@ class TestOrgStructManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.org_struct_id:
-                self.test_create_org_struct()
+                self._ensure_create_org_struct()
             
             # 1. 调用API
             api_path = self.get_api_path("组织架构表-根据ID查找单表数据服务")
@@ -452,7 +452,7 @@ class TestOrgStructManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.org_struct_id:
-                self.test_create_org_struct()
+                self._ensure_create_org_struct()
             
             # 1. 调用API
             api_path = self.get_api_path("组织架构表-根据ID查找数据服务")
@@ -498,7 +498,7 @@ class TestOrgStructManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.org_struct_id:
-                self.test_create_org_struct()
+                self._ensure_create_org_struct()
             
             # 1. 调用API
             api_path = self.get_api_path("组织架构表-根据ID列表查找数据服务")
@@ -544,7 +544,7 @@ class TestOrgStructManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.org_struct_id:
-                self.test_create_org_struct()
+                self._ensure_create_org_struct()
             
             # 1. 调用API
             api_path = self.get_api_path("组织架构表-查找树子数据服务")
@@ -590,7 +590,7 @@ class TestOrgStructManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.org_struct_id:
-                self.test_create_org_struct()
+                self._ensure_create_org_struct()
             
             # 1. 调用API
             api_path = self.get_api_path("组织架构表-反向构建树服务")
@@ -639,7 +639,7 @@ class TestOrgStructManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.org_struct_id:
-                self.test_create_org_struct()
+                self._ensure_create_org_struct()
             
             # 1. 准备更新数据
             new_name = f"更新后组织_{self.mock_util.get_timestamp()}"
@@ -694,7 +694,7 @@ class TestOrgStructManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.org_struct_id:
-                self.test_create_org_struct()
+                self._ensure_create_org_struct()
             
             # 1. 调用API
             api_path = self.get_api_path("组织架构表-启用主数据服务")
@@ -740,7 +740,7 @@ class TestOrgStructManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.org_struct_id:
-                self.test_create_org_struct()
+                self._ensure_create_org_struct()
             
             # 1. 调用API
             api_path = self.get_api_path("组织架构表-禁用主数据服务")
@@ -786,7 +786,7 @@ class TestOrgStructManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.org_struct_id:
-                self.test_create_org_struct()
+                self._ensure_create_org_struct()
             
             # 1. 调用API
             api_path = self.get_api_path("组织架构表-批量启用主数据服务")
@@ -832,7 +832,7 @@ class TestOrgStructManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.org_struct_id:
-                self.test_create_org_struct()
+                self._ensure_create_org_struct()
             
             # 1. 调用API
             api_path = self.get_api_path("组织架构表-批量禁用主数据服务")
@@ -880,7 +880,7 @@ class TestOrgStructManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.org_struct_id:
-                self.test_create_org_struct()
+                self._ensure_create_org_struct()
             
             # 1. 调用API
             api_path = self.get_api_path("组织架构表-折叠关联关系服务")
@@ -1006,7 +1006,7 @@ class TestOrgStructManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.org_struct_id:
-                self.test_create_org_struct()
+                self._ensure_create_org_struct()
             
             # 1. 调用API
             api_path = self.get_api_path("组织架构表-根据ID删除数据服务")

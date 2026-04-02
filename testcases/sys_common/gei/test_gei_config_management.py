@@ -156,7 +156,7 @@ class TestGeiConfigManagement(SysCommonBaseTest):
     def test_config_query_header_post(self):
         """测试查询表头选择记录 - API_GEI_TASK_CONFIG_QUERY_HEADER_SELECTIVE_RECORD_POST"""
         try:
-            self.test_config_save_header_post()
+            self._ensure_config_save_header_post()
             
             api_path = self.get_api_path("导入导出配置管理接口-查询表头选择记录")
             params, url = self.get_api_params(api_path)

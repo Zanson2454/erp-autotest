@@ -135,7 +135,7 @@ class TestTextManagement(GenMdBaseTest):
         """查询文本类型详情用例"""
         try:
             if not self.text_type_id:
-                self.test_save_text_type()
+                self._ensure_save_text_type()
 
             set_dict = {"id": self.text_type_id}
             fields_to_filter = ["id"]
@@ -279,7 +279,7 @@ class TestTextManagement(GenMdBaseTest):
         """删除文本类型用例"""
         try:
             if not self.text_type_id:
-                self.test_save_text_type()
+                self._ensure_save_text_type()
 
             set_dict = {"id": self.text_type_id}
             fields_to_filter = ["id"]
@@ -311,7 +311,7 @@ class TestTextManagement(GenMdBaseTest):
         """新增文本组用例"""
         try:
             if not self.text_type_id:
-                self.test_save_text_type()
+                self._ensure_save_text_type()
 
             code = self.mock_util.generate_unique_code(tag="TXTGROUP")
             name = f"文本组_{self.mock_util.get_timestamp()}"
@@ -405,7 +405,7 @@ class TestTextManagement(GenMdBaseTest):
         try:
             
             if not self.text_group_id:
-                self.test_save_text_group()
+                self._ensure_save_text_group()
 
             set_dict = {"id": self.text_group_id}
             fields_to_filter = ["id"]
@@ -526,7 +526,7 @@ class TestTextManagement(GenMdBaseTest):
         """删除文本组用例"""
         try:
             if not self.text_group_id:
-                self.test_save_text_group()
+                self._ensure_save_text_group()
 
             set_dict = {"id": self.text_group_id}
             fields_to_filter = ["id"]

@@ -122,7 +122,7 @@ class TestAsyncTaskInstanceManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.task_instance_id:
-                self.test_task_instance_create_post()
+                self._ensure_task_instance_create_post()
             
             # 调用分页查询API
             api_path = self.get_api_path("异步任务-任务实例-分页查询任务列表")
@@ -193,7 +193,7 @@ class TestAsyncTaskInstanceManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.task_instance_id:
-                self.test_task_instance_create_post()
+                self._ensure_task_instance_create_post()
             
             api_path = self.get_api_path("异步任务-任务实例-分页查询我的任务列表")
             params, url = self.get_api_params(api_path)
@@ -239,7 +239,7 @@ class TestAsyncTaskInstanceManagement(SysCommonBaseTest):
         """测试更新任务实例 - API_ASYNC_TASK_TASK_INSTANCE_UPDATE_POST"""
         try:
             if not self.task_instance_id:
-                self.test_task_instance_create_post()
+                self._ensure_task_instance_create_post()
             
             # 更新数据
             new_status = "RUNNING"
@@ -287,22 +287,18 @@ class TestAsyncTaskInstanceManagement(SysCommonBaseTest):
         """测试标记任务已读 - API_ASYNC_TASK_TASK_INSTANCE_USER_MARK_PUT"""
         try:
             if not self.task_instance_id:
-                self.test_task_instance_create_post()
-            
-            api_path = self.get_api_path("异步任务-任务实例-标记任务已读时间")
-            params, url = self.get_api_params(api_path)
-            
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["id"],
-                ["params", "request"]
+                self._ensure_task_instance_create_post()
+
+            response, _ = self.standard_api_call(
+                api_key="异步任务-任务实例-标记任务已读时间",
+                method="PUT",
+                set_dict={"id": self.task_instance_id},
+                fields_to_filter=["id"],
+                param_path=["params", "request"],
             )
-            set_dict = {"id": self.task_instance_id}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            
-            response = self.http.put(url, json=filtered_params)  # PUT请求
             self.assert_util.assert_response_success(response)
-            
-            a.json(filtered_params, "请求数据")
+
+            a.json({"id": self.task_instance_id}, "请求数据")
             a.json(response, "响应数据")
             
         except Exception as e:
@@ -320,12 +316,13 @@ class TestAsyncTaskInstanceManagement(SysCommonBaseTest):
     def test_task_instance_today_list_get(self):
         """测试查询今日任务列表 - API_ASYNC_TASK_TASK_INSTANCE_TODAY_LIST_GET"""
         try:
-            api_path = self.get_api_path("异步任务-任务实例-查询今日任务列表")
-            url = self.get_api_url(api_path)
-            
             # GET请求，可能有query参数
             params = {}  # 假设无特定参数，或添加日期范围
-            response = self.http.get(url, params=params)
+            response, _ = self.standard_api_call(
+                api_key="异步任务-任务实例-查询今日任务列表",
+                method="GET",
+                set_dict=params,
+            )
             self.assert_util.assert_response_data(response)
             
             today_list = response.get("data", {}).get("data", [])
@@ -349,10 +346,10 @@ class TestAsyncTaskInstanceManagement(SysCommonBaseTest):
     def test_task_instance_latest_get(self):
         """测试查询最新任务状态 - API_ASYNC_TASK_TASK_INSTANCE_LATEST_GET"""
         try:
-            api_path = self.get_api_path("异步任务-任务实例-查询今日任务状态")
-            url = self.get_api_url(api_path)
-            
-            response = self.http.get(url)
+            response, _ = self.standard_api_call(
+                api_key="异步任务-任务实例-查询今日任务状态",
+                method="GET",
+            )
             self.assert_util.assert_response_data(response)
             
             latest_data = response.get("data", {}).get("data", {})

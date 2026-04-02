@@ -27,11 +27,6 @@ class TestInvAtpRuleManagement(ScmInvBaseTest):
     
     MODEL_KEY = "SCM_INV$inv_atp_rule_cf"
     URL_PARAMS = {"tmodule": "SCM_INV", "modelKey": MODEL_KEY}
-    DEFAULT_SELECT_FIELDS = [
-        {"field": "id"}, {"field": "atpGroupId"}, {"field": "docClass"}, 
-        {"field": "ctrlType"}, {"field": "planStrategy"}, {"field": "invRule"}
-    ]
-
     @classmethod
     def setup_class(cls):
         super().setup_class()
@@ -78,16 +73,12 @@ class TestInvAtpRuleManagement(ScmInvBaseTest):
         self.logger.info(f"✅ 创建ATP检查组: ID={self.__class__.atp_group_id}")
         assert self.__class__.atp_group_id, "ATP检查组创建失败"
 
-    def _prepare_request_params(self, filtered_params, fields=None):
-        """准备请求参数：设置modelKey和selectFields"""
+    def _prepare_request_params(self, filtered_params):
+        """准备请求参数：设置 modelKey。"""
+        # 系统服务模板里的 selectFields 结构在部分环境下会被渲染为非法占位对象，
+        # 导致后端 NPE（relationAlias is null），这里统一移除。
+        filtered_params.get("params", {}).pop("selectFields", None)
         filtered_params["params"]["modelKey"] = self.MODEL_KEY
-        
-        # 处理selectFields
-        if "selectFields" in filtered_params["params"]:
-            filtered_params["selectFields"] = filtered_params["params"].pop("selectFields")
-        if "selectFields" not in filtered_params or not filtered_params["selectFields"]:
-            filtered_params["selectFields"] = fields or self.DEFAULT_SELECT_FIELDS
-        
         return filtered_params
     
     def _validate_response(self, response, required_fields=None):
@@ -139,7 +130,8 @@ class TestInvAtpRuleManagement(ScmInvBaseTest):
                 set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
                 store_id_as=None,
                 use_param_util=False,
-                param_path=["params"]
+                param_path=["params"],
+                query_params=self.URL_PARAMS,
             )
             result_data = self._validate_response(response, ["id", "docClass"])
             
@@ -307,7 +299,8 @@ class TestInvAtpRuleManagement(ScmInvBaseTest):
                 set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
                 store_id_as=None,
                 use_param_util=False,
-                param_path=["params"]
+                param_path=["params"],
+                query_params=self.URL_PARAMS,
             )
             result_data = self._validate_response(response, ["id", "docClass"])
             assert result_data.get("id") == self.__class__.atp_rule_id, "ATP检查规则ID不匹配"
@@ -357,7 +350,8 @@ class TestInvAtpRuleManagement(ScmInvBaseTest):
                 set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
                 store_id_as=None,
                 use_param_util=False,
-                param_path=["params"]
+                param_path=["params"],
+                query_params=self.URL_PARAMS,
             )
             result_data = self._validate_response(response, ["data", "total"])
             
@@ -401,7 +395,8 @@ class TestInvAtpRuleManagement(ScmInvBaseTest):
                 set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
                 store_id_as=None,
                 use_param_util=False,
-                param_path=["params"]
+                param_path=["params"],
+                query_params=self.URL_PARAMS,
             )
             assert response.get("success") is True, "删除ATP检查规则失败"
             

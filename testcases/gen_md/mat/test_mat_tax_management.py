@@ -132,7 +132,7 @@ class TestMatTaxManagement(GenMdBaseTest):
         """
         try:
             if not self.mat_tax_id:
-                self.test_save_mat_tax()
+                self._ensure_save_mat_tax()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.mat_tax_id}
@@ -414,7 +414,7 @@ class TestMatTaxManagement(GenMdBaseTest):
         """
         try:
             if not self.mat_tax_id:
-                self.test_save_mat_tax()
+                self._ensure_save_mat_tax()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.mat_tax_id}

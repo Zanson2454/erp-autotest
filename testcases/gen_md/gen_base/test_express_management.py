@@ -33,6 +33,33 @@ class TestExpressManagement(GenMdBaseTest):
         """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
         cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
+
+    def _create_express_company(self):
+        express_code = self.mock_util.generate_unique_code(tag="EXPRESS")
+        express_name = f"测试快递_{self.mock_util.get_timestamp()}"
+
+        set_dict = {
+            "expressCode": express_code,
+            "expressName": express_name,
+            "remark": f"快递描述_{self.mock_util.get_timestamp()}"
+        }
+
+        response, express_id = self.standard_api_call(
+            api_key="GEN-快递公司-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=["code", "name", "remark"],
+            store_id_as="express"
+        )
+        self.assert_util.assert_response_data(response)
+        self.express_id = express_id
+        self.express_code = express_code
+        return express_id
+
+    def _ensure_save_express_company(self):
+        if self.express_id:
+            return self.express_id
+        return self._create_express_company()
+
     @case_decorator(
         story="快递公司管理",
         title="测试新增快递公司",
@@ -45,23 +72,7 @@ class TestExpressManagement(GenMdBaseTest):
     def test_save_express_company(self):
         """新增快递公司用例"""
         try:
-            express_code = self.mock_util.generate_unique_code(tag="EXPRESS")
-            express_name = f"测试快递_{self.mock_util.get_timestamp()}"
-
-            set_dict = {
-                "expressCode": express_code,
-                "expressName": express_name,
-                "remark": f"快递描述_{self.mock_util.get_timestamp()}"
-            }
-            
-            response, express_id = self.standard_api_call(
-                api_key="GEN-快递公司-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=["code", "name", "remark"],
-                store_id_as="express"
-            )
-            
-            self.express_code = express_code
+            self._create_express_company()
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -79,7 +90,7 @@ class TestExpressManagement(GenMdBaseTest):
         """查询快递公司详情用例"""
         try:
             if not self.express_id:
-                self.test_save_express_company()
+                self._ensure_save_express_company()
 
             set_dict = {"id": self.express_id}
             
@@ -137,7 +148,7 @@ class TestExpressManagement(GenMdBaseTest):
         """启用快递公司用例"""
         try:
             if not self.express_id:
-                self.test_save_express_company()
+                self._ensure_save_express_company()
 
             set_dict = {"id": self.express_id}
             
@@ -164,7 +175,7 @@ class TestExpressManagement(GenMdBaseTest):
         """禁用快递公司用例"""
         try:
             if not self.express_id:
-                self.test_save_express_company()
+                self._ensure_save_express_company()
 
             set_dict = {"id": self.express_id}
             
@@ -318,7 +329,7 @@ class TestExpressManagement(GenMdBaseTest):
         """删除快递公司用例"""
         try:
             if not self.express_id:
-                self.test_save_express_company()
+                self._ensure_save_express_company()
 
             set_dict = {"id": self.express_id}
             

@@ -1,16 +1,8 @@
 import pytest
-import sys
 import allure
-from pathlib import Path
 import time
 
-# 设置项目根目录到Python路径
-project_root = Path(__file__).resolve().parent.parent.parent.parent
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
-
 from testcases.erp_fin import FinBaseTest
-from utils.log_util import Loggers
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
@@ -40,10 +32,7 @@ class TestSettItemBusiCheck(FinBaseTest):
         self.db.update("sett_item_tr", {"sett_item_status":"RECONCILED"}, f"id={reconciled_sett_item_id}")
         #已汇单结算项
         self.create_settlement_doc("E_SLS_GOODS")
-        sql="""
-        select id from sett_item_tr where deleted=0 and sett_item_status='SETT_DOC_CREATED' order by created_at desc limit 1;
-        """
-        sett_doc_created_sett_item_id=self.db.query(sql)[0]["id"]
+        sett_doc_created_sett_item_id = self.query_service.get_latest_sett_item_id_by_status("SETT_DOC_CREATED")
         
         return [created_sett_item_id, sett_doc_created_sett_item_id,reconciled_sett_item_id]
     
@@ -81,13 +70,8 @@ class TestSettItemBusiCheck(FinBaseTest):
                 start_time = time.time()
                 timeout = 10
                 while True:
-                    sql = f"""
-                        select id, sett_item_status, async_execution_status, sett_doc_id
-                        from sett_item_tr where deleted=0
-                        and id={sett_item_id} limit 1;
-                    """
-                    sql_result = self.db.query(sql)
-                    if sql_result and sql_result[0].get("async_execution_status") != "PROCESSING":
+                    row = self.query_service.get_sett_item_status_row(sett_item_id)
+                    if row and row.get("async_execution_status") != "PROCESSING":
                         break
                     if time.time() - start_time >= timeout:
                         raise TimeoutError(f"等待异步任务执行超时（{timeout}秒）")
@@ -96,14 +80,14 @@ class TestSettItemBusiCheck(FinBaseTest):
                 #已创建、已对账结算项可以汇单
                 if index == 0 or index == 2:  # 第一个ID的断言
                     self.assert_util.assert_response_success(result)
-                    self.assert_util.assert_by_operator(sql_result[0]["sett_item_status"], "=", "SETT_DOC_CREATED")
-                    self.assert_util.assert_by_operator(sql_result[0]["async_execution_status"], "=", "SUCCEEDED")
-                    self.assert_util.assert_by_operator(sql_result[0]["sett_doc_id"], "not_empty")
+                    self.assert_util.assert_by_operator(row["sett_item_status"], "=", "SETT_DOC_CREATED")
+                    self.assert_util.assert_by_operator(row["async_execution_status"], "=", "SUCCEEDED")
+                    self.assert_util.assert_by_operator(row["sett_doc_id"], "not_empty")
                 elif index == 1:  # 第二个ID的断言
                     assert result.get("success",{}) == False
                     #assert result.get("err",{}).get("msg",{}) == "结算单异步任务提交失败，请确认结算单异步执行状态！"
-                    self.assert_util.assert_by_operator(sql_result[0]["sett_item_status"], "=", "SETT_DOC_CREATED")
-                    self.assert_util.assert_by_operator(sql_result[0]["sett_doc_id"], "not_empty")
+                    self.assert_util.assert_by_operator(row["sett_item_status"], "=", "SETT_DOC_CREATED")
+                    self.assert_util.assert_by_operator(row["sett_doc_id"], "not_empty")
                 a.json(data, f"请求数据 - ID: {sett_item_id}")
                 a.json(result, f"响应数据 - ID: {sett_item_id}")
         except Exception as e:
@@ -142,13 +126,8 @@ class TestSettItemBusiCheck(FinBaseTest):
                 start_time = time.time()
                 timeout = 10
                 while True:
-                    sql = f"""
-                        select id, sett_item_status, async_execution_status, sett_doc_id
-                        from sett_item_tr where deleted=0
-                        and id={sett_item_id} limit 1;
-                    """
-                    sql_result = self.db.query(sql)
-                    if sql_result and sql_result[0].get("async_execution_status") != "PROCESSING":
+                    row = self.query_service.get_sett_item_status_row(sett_item_id)
+                    if row and row.get("async_execution_status") != "PROCESSING":
                         break
                     if time.time() - start_time >= timeout:
                         raise TimeoutError(f"等待异步任务执行超时（{timeout}秒）")
@@ -158,9 +137,9 @@ class TestSettItemBusiCheck(FinBaseTest):
                     #assert result.get("err",{}).get("msg",{}) == "结算单异步任务提交失败，请确认结算单异步执行状态！"
                 elif index == 2:  # 第2个ID的断言 已对账结算项可以手工汇单
                     self.assert_util.assert_response_success(result)
-                    self.assert_util.assert_by_operator(sql_result[0]["sett_item_status"], "=", "SETT_DOC_CREATED")
-                    self.assert_util.assert_by_operator(sql_result[0]["async_execution_status"], "=", "SUCCEEDED")
-                    self.assert_util.assert_by_operator(sql_result[0]["sett_doc_id"], "not_empty")
+                    self.assert_util.assert_by_operator(row["sett_item_status"], "=", "SETT_DOC_CREATED")
+                    self.assert_util.assert_by_operator(row["async_execution_status"], "=", "SUCCEEDED")
+                    self.assert_util.assert_by_operator(row["sett_doc_id"], "not_empty")
                 a.json(data, f"请求数据 - ID: {sett_item_id}")
                 a.json(result, f"响应数据 - ID: {sett_item_id}")
         except Exception as e:
@@ -295,12 +274,7 @@ class TestSettItemBusiCheck(FinBaseTest):
     def test_import_batch_get_scope(self):
         """测试命中范围导入匹配"""
         try:
-            sql="""
-                select id,sett_item_code,sett_item_status from sett_item_tr
-                where deleted=0
-                and sett_item_status in ('RECONCILED','CREATED') order by created_at desc limit 3;
-            """
-            result=self.db.query(sql)
+            result = self.query_service.get_sett_item_codes_by_statuses(["RECONCILED", "CREATED"], 3)
             sett_item_codes=[sett_item_code["sett_item_code"] for sett_item_code in result]
                      
             api_path = self.get_api_path("结算项-结算批量锁定服务")
@@ -347,11 +321,9 @@ class TestSettItemBusiCheck(FinBaseTest):
     def test_find_sett_doc_by_id(self):
         """测试结算汇单记录-根据ID查找数据服务"""
         try:
-            sql="""
-                select id,task_code from sett_aggregate_record_tr where deleted=0 order by created_at desc limit 1;
-            """
-            task_id=self.db.query(sql)[0]["id"]
-            task_code=self.db.query(sql)[0]["task_code"]
+            latest_task = self.query_service.get_latest_aggregate_record()
+            task_id = latest_task["id"]
+            task_code = latest_task["task_code"]
             api_path = self.get_api_path("结算汇单记录-根据ID查找数据服务")
             params, url = self.get_api_params(api_path)
             data=ParamUtil.filter_post_body_fields(
@@ -392,11 +364,7 @@ class TestSettItemBusiCheck(FinBaseTest):
             params_base, url = self.get_api_params(api_path)
             
             #获取最新的批量任务记录（2条）
-            sql="""
-                select id,task_code,task_status,doc_type,oper_type
-                from sett_aggregate_record_tr where deleted=0 order by created_at desc limit 2;
-            """
-            task_list = self.db.query(sql)
+            task_list = self.query_service.get_latest_aggregate_records(2)
             
             # 遍历每条数据执行测试
             for index, task_info in enumerate(task_list):

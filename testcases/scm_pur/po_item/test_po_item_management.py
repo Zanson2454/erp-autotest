@@ -212,7 +212,7 @@ class TestPoItemManagement(ScmPurBaseTest):
     def test_export_po_item(self):
         try:
             if not self.__class__.po_item_id:
-                self.test_query_po_item_list()
+                self._ensure_query_po_item_list()
             
             api_path = self.get_api_path("采购订单-ITEM-导入导出任务管理接口-提交导出任务")
             _, url = self.get_api_params(api_path)

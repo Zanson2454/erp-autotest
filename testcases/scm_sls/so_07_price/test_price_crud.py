@@ -495,7 +495,7 @@ class TestPriceCrud(SlsBase):
             db_result = None
             for query_sql in possible_queries:
                 try:
-                    db_result = self.db.query(query_sql, [self.price_adj_id])
+                    db_result = self.query_service.query(query_sql, [self.price_adj_id])
                     if db_result:
                         self.logger.info(f"成功查询价格维护单状态，表名: {query_sql.split('FROM')[1].split('WHERE')[0].strip()}")
                         break
@@ -563,7 +563,7 @@ class TestPriceCrud(SlsBase):
                         WHERE id = %s
                         LIMIT 1
                     """
-                    db_result = self.db.query(query_sql, [self.price_adj_id])
+                    db_result = self.query_service.query(query_sql, [self.price_adj_id])
                     if db_result:
                         self.price_adj_code = db_result[0].get("code") or db_result[0].get("price_adj_code")
                 except Exception as e:
@@ -809,7 +809,7 @@ class TestPriceCrud(SlsBase):
                             WHERE id = %s
                             LIMIT 1
                         """
-                        db_result = self.db.query(query_sql, [self.price_adj_id])
+                        db_result = self.query_service.query(query_sql, [self.price_adj_id])
                         if db_result:
                             price_adj_info = db_result[0]
                             break
@@ -1026,7 +1026,7 @@ class TestPriceCrud(SlsBase):
                             WHERE id = %s
                             LIMIT 1
                         """
-                        db_result = self.db.query(query_sql, [self.price_adj_id])
+                        db_result = self.query_service.query(query_sql, [self.price_adj_id])
                         if db_result:
                             price_adj_info = db_result[0]
                             break

@@ -125,7 +125,7 @@ class TestPrintSceneViewManagement(SysCommonBaseTest):
         try:
             # 确保视图存在
             if not self.print_scene_view_id:
-                self.test_print_scene_view_save_post()
+                self._ensure_print_scene_view_save_post()
             
             # 调用详情查询API
             api_path = self.get_api_path("打印场景视图-详情")
@@ -176,7 +176,7 @@ class TestPrintSceneViewManagement(SysCommonBaseTest):
         try:
             # 确保视图存在
             if not self.print_scene_view_id:
-                self.test_print_scene_view_save_post()
+                self._ensure_print_scene_view_save_post()
             
             api_path = self.get_api_path("打印场景视图-删除")
             params, url = self.get_api_params(api_path)

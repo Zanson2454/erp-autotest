@@ -52,7 +52,7 @@ class TestInvStkStatisticaManagement(ScmInvBaseTest):
     def get_current_inventory_statistics(self):
         """获取当前库存汇总统计数据"""
         try:
-            result = self.db.query(
+            result = self.query_service.query(
                 sql="SELECT SUM(stk_qty) as total_qty FROM inv_stk_ba WHERE mat_id = %s AND com_org_id = %s AND inv_org_id = %s AND inv_loc_id = %s",
                 params=[self.matId, self.comOrgId, self.invOrgId, self.invLocId]
             )
@@ -192,7 +192,7 @@ class TestInvStkStatisticaManagement(ScmInvBaseTest):
         try:
             # 确保前置条件：移动凭证已创建
             if not self.mobile_voucher_id:
-                self.test_create_mobile_voucher_for_statistics()
+                self._ensure_create_mobile_voucher_for_statistics()
             
             # 等待一段时间确保数据同步
             time.sleep(2)

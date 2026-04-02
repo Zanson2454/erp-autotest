@@ -1,16 +1,8 @@
 import pytest
-import sys
 import allure
-from pathlib import Path
 import time
 
-# 设置项目根目录到Python路径
-project_root = Path(__file__).resolve().parent.parent.parent.parent
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
-
 from testcases.erp_fin import FinBaseTest
-from utils.log_util import Loggers
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
@@ -101,23 +93,17 @@ class TestSettDocAssoc(FinBaseTest):
             self.assert_util.assert_response_success(result)
             time.sleep(15)
             #查询生成的结算单是否自动生成了应收应付
-            sql=f"""
-            select sett_doc_status,sett_doc_code,trading_doc_id from sett_doc_tr where id in (select sett_doc_id from sett_item_tr where id={sett_item_id})
-            """
-            sql_result = self.db.query(sql)
-            if not sql_result:
+            sett_doc_row = self.query_service.get_sett_doc_status_by_sett_item_id(sett_item_id)
+            if not sett_doc_row:
                 raise ValueError(f"结算单自动确认和自动过账失败: 未找到结算单ID {sett_item_id}")
-            self.assert_util.assert_by_operator(sql_result[0]["sett_doc_status"], "=", "CONFIRMED")
-            self.assert_util.assert_by_operator(sql_result[0]["trading_doc_id"], "!=", None)
-            trading_doc_id=sql_result[0]["trading_doc_id"]
+            self.assert_util.assert_by_operator(sett_doc_row["sett_doc_status"], "=", "CONFIRMED")
+            self.assert_util.assert_by_operator(sett_doc_row["trading_doc_id"], "!=", None)
+            trading_doc_id = sett_doc_row["trading_doc_id"]
             #查询应收单是否自动过账完成
-            sql=f"""
-            select ar_head_code,ar_status from fin_arm_ar_head_tr where id={trading_doc_id} and deleted=0
-            """
-            sql_result = self.db.query(sql)
-            if not sql_result:
+            ar_row = self.query_service.get_ar_head_by_id(trading_doc_id)
+            if not ar_row:
                 raise ValueError(f"结算单自动确认和自动过账失败: 未找到应收单ID {trading_doc_id}")
-            self.assert_util.assert_by_operator(sql_result[0]["ar_status"], "=", "DONE")
+            self.assert_util.assert_by_operator(ar_row["ar_status"], "=", "DONE")
         except Exception as e:
             a.text(str(e), "失败原因")
             raise

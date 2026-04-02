@@ -118,7 +118,7 @@ class TestAddBaseConfig(FiBaseTest):
             sql="""
             select id from fin_glm_ae_head_cf where deleted=0 order by created_at desc limit 1;
             """
-            id=self.db.query(sql)[0]["id"]
+            id=self.query_service.query(sql)[0]["id"]
             set_dict={
                 "id":id
             }
@@ -160,22 +160,22 @@ class TestAddBaseConfig(FiBaseTest):
             sql="""
             select id from gen_curr_type_cf where curr_code='CNY' and deleted=0;
             """
-            curr_id=self.db.query(sql)[0]["id"]
+            curr_id=self.query_service.query(sql)[0]["id"]
             
             sql="""
             select id from fin_common_calendar_head_cf where calendar_name='勿删勿改-标准会计期间';
             """
-            gen_calendar_head_id=self.db.query(sql)[0]["id"]
+            gen_calendar_head_id=self.query_service.query(sql)[0]["id"]
             
             sql="""
             select id from gen_curr_exchange_rate_type_cf where type_code='HR';
             """
-            gen_curr_rate_type_id=self.db.query(sql)[0]["id"]
+            gen_curr_rate_type_id=self.query_service.query(sql)[0]["id"]
             
             sql="""
             select id from fin_glm_ae_head_cf where deleted=0 order by created_at desc limit 1;
             """
-            ae_head_id=self.db.query(sql)[0]["id"]
+            ae_head_id=self.query_service.query(sql)[0]["id"]
             
             set_dict={
                 "apTypeCode":f"AUTO-AP-CODE-{self.mock_util.get_timestamp(timestamp=True)}",
@@ -232,7 +232,7 @@ class TestAddBaseConfig(FiBaseTest):
             sql="""
             select id from fin_glm_ap_type_cf where deleted=0 order by created_at desc limit 1;
             """
-            id=self.db.query(sql)[0]["id"]
+            id=self.query_service.query(sql)[0]["id"]
             set_dict={
                 "id":id
             }

@@ -100,7 +100,7 @@ class TestIvVoucherSaveManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.voucher_id:
-                self.test_save_doc_event()
+                self._ensure_save_doc_event()
             
             # 使用标准化API调用
             set_dict = {"id": self.voucher_id}

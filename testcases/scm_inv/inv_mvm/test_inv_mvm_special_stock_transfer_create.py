@@ -36,7 +36,7 @@ class TestMobileVoucherSpecialStockTransferCreator(MobileVoucherCreator):
                 AND inv_bin_id = %s AND stk_qty > 100
                 LIMIT 1
             """
-            result = cls.db.query(sql, params=[
+            result = cls.query_service.query(sql, params=[
                 cls.default_mat_id, cls.comOrgId, cls.invOrgId, cls.invLocId,
                 cls.invWhId, cls.invAreaId, cls.invBinId
             ])

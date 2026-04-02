@@ -713,7 +713,7 @@ class SlsBase(BaseTest):
                   AND h.del_status != 'DISCARDED'
                 ORDER BY h.created_at DESC
             """
-            result = self.db.query(query_sql, (so_code, so_code))
+            result = self.query_service.query(query_sql, (so_code, so_code))
             if result:
                 dn_ids = [item['dn_id'] for item in result]
                 self.logger.info(f"查询到订单 {so_code} 关联的交货单: {dn_ids}")
@@ -761,7 +761,7 @@ class SlsBase(BaseTest):
         """
         try:
             # 1. 查询订单状态
-            order_status = self.db.query(
+            order_status = self.query_service.query(
                 "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
                 params=[order_id]
             )
@@ -781,7 +781,7 @@ class SlsBase(BaseTest):
                 self.logger.warning(f"订单状态不是审批中，当前状态: {current_status}。订单ID: {order_id}")
             
             # 4. 查询完整的订单数据
-            order_data = self.db.query(f"""
+            order_data = self.query_service.query(f"""
                 SELECT h.*, i.* 
                 FROM sls_so_head_tr h 
                 LEFT JOIN sls_so_item_tr i ON h.id = i.so_id 
@@ -852,7 +852,7 @@ class SlsBase(BaseTest):
             # 10. 查询订单状态，验证是否为已生效（添加重试机制）
             actual_status = None
             for attempt in range(5):
-                order_status = self.db.query(
+                order_status = self.query_service.query(
                     "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
                     params=[order_id]
                 )
@@ -880,7 +880,7 @@ class SlsBase(BaseTest):
         """
         try:
             # 1. 查询销售订单的完整数据
-            order_data = self.db.query("""
+            order_data = self.query_service.query("""
                 SELECT h.*, i.* 
                 FROM sls_so_head_tr h 
                 LEFT JOIN sls_so_item_tr i ON h.id = i.so_id 
@@ -1068,7 +1068,7 @@ class SlsBase(BaseTest):
             
             # 5. 验证返利政策状态
             time.sleep(2)  # 等待状态更新
-            policy_info = self.db.query(
+            policy_info = self.query_service.query(
                 "SELECT id, policy_code, status FROM rebate_policy_head_tr WHERE id = %s",
                 [policy_id]
             )

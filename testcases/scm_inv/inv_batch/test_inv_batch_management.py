@@ -144,7 +144,7 @@ class TestBatchManagement(ScmInvBaseTest):
         try:
             # 确保先执行基础查询获取测试数据
             if not self.test_batch_code:
-                self.test_query_batch_page()
+                self._ensure_query_batch_page()
                 
             # 如果仍然没有测试数据，跳过测试
             if not self.test_batch_code:
@@ -234,7 +234,7 @@ class TestBatchManagement(ScmInvBaseTest):
         try:
             # 确保先执行基础查询获取测试数据
             if not self.test_mat_id:
-                self.test_query_batch_page()
+                self._ensure_query_batch_page()
                 
             # 如果仍然没有测试数据，跳过测试
             if not self.test_mat_id:
@@ -326,7 +326,7 @@ class TestBatchManagement(ScmInvBaseTest):
         try:
             # 确保先执行基础查询获取测试数据
             if not self.test_batch_id:
-                self.test_query_batch_page()
+                self._ensure_query_batch_page()
                 
             # 如果仍然没有测试数据，跳过测试
             if not self.test_batch_id:

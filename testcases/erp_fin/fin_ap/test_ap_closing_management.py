@@ -134,7 +134,7 @@ class TestApClosingManagement(ApBaseTest):
         try:
             # 确保已查询到结账数据（获取gfc_type_id）
             if not self.gfc_type_id:
-                self.test_paging_closing_data()
+                self._ensure_paging_closing_data()
             
             # 使用标准化API调用
             # 根据curl命令，提取params.request内部的字段作为set_dict的根
@@ -182,7 +182,7 @@ class TestApClosingManagement(ApBaseTest):
             # 前置条件：需要先执行结账操作，结账后的数据才会进入反结账列表
             # 检查是否已执行结账，如果没有则先执行结账
             if not self.gfc_type_id:
-                self.test_execute_closing()
+                self._ensure_execute_closing()
             
             # 使用标准化API调用
             # 根据curl命令，提取params.request内部的字段作为set_dict的根
@@ -267,7 +267,7 @@ class TestApClosingManagement(ApBaseTest):
         try:
             # 前置条件：需要先查询反结账列表（获取reverse_closing_id）
             if not self.reverse_closing_id:
-                self.test_paging_reverse_closing_data()
+                self._ensure_paging_reverse_closing_data()
             
             # 检查依赖数据
             if not self.gr_com_org_id:

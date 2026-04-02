@@ -105,7 +105,7 @@ class TestMatchSeqManagement(ErpCondBaseTest):
         """根据ID查找用例 - GEN_MATCH_SEQ_HEAD_CF_FIND_DATA_BY_ID_SERVICE"""
         try:
             if not self.match_seq_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             set_dict = {"id": self.match_seq_id}
             fields_to_filter = ["id"]
@@ -135,7 +135,7 @@ class TestMatchSeqManagement(ErpCondBaseTest):
         """单表ID查询用例 - GEN_MATCH_SEQ_HEAD_CF_FIND_SINGLE_DATA_BY_ID_SERVICE"""
         try:
             if not self.match_seq_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             set_dict = {"id": self.match_seq_id}
             fields_to_filter = ["id"]
@@ -165,7 +165,7 @@ class TestMatchSeqManagement(ErpCondBaseTest):
         """标准分页查询用例 - GEN_MATCH_SEQ_HEAD_CF_PAGING_DATA_SERVICE"""
         try:
             if not self.match_seq_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             set_dict = {
                 "pageable": {
@@ -273,7 +273,7 @@ class TestMatchSeqManagement(ErpCondBaseTest):
         """单个启用主数据用例 - GEN_MATCH_SEQ_HEAD_CF_MASTER_DATA_ENABLE_DATA_SERVICE"""
         try:
             if not self.match_seq_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             set_dict = {"id": self.match_seq_id}
             fields_to_filter = ["id"]
@@ -289,7 +289,7 @@ class TestMatchSeqManagement(ErpCondBaseTest):
             
             # 数据库验证（可选）
             # sql = "SELECT enabled FROM match_seq_head_md WHERE id = %s"
-            # result = self.db.query(sql, (self.match_seq_id,))
+            # result = self.query_service.query(sql, (self.match_seq_id,))
             # self.assert_util.assert_by_operator(result[0]["enabled"], "=", True)
             
         except Exception as e:
@@ -308,7 +308,7 @@ class TestMatchSeqManagement(ErpCondBaseTest):
         """批量启用主数据用例 - GEN_MATCH_SEQ_HEAD_CF_MASTER_DATA_MULTI_ENABLE_DATA_SERVICE"""
         try:
             if not self.match_seq_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             # 创建第二个测试数据用于批量启用
             code2 = self.mock_util.generate_unique_code(tag="MSQ")
@@ -361,7 +361,7 @@ class TestMatchSeqManagement(ErpCondBaseTest):
         """单个禁用主数据用例 - GEN_MATCH_SEQ_HEAD_CF_MASTER_DATA_DISABLE_DATA_SERVICE"""
         try:
             if not self.match_seq_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             set_dict = {"id": self.match_seq_id}
             fields_to_filter = ["id"]
@@ -391,7 +391,7 @@ class TestMatchSeqManagement(ErpCondBaseTest):
         """批量禁用主数据用例 - GEN_MATCH_SEQ_HEAD_CF_MASTER_DATA_MULTI_DISABLE_DATA_SERVICE"""
         try:
             if not self.match_seq_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             # 创建第二个测试数据用于批量禁用
             code2 = self.mock_util.generate_unique_code(tag="MSQ")
@@ -445,7 +445,7 @@ class TestMatchSeqManagement(ErpCondBaseTest):
         """批量删除用例 - GEN_MATCH_SEQ_HEAD_CF_BATCH_DELETE_DATA_SERVICE"""
         try:
             if not self.match_seq_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             # 创建第二个测试数据用于批量删除
             code2 = self.mock_util.generate_unique_code(tag="MSQ")
@@ -500,7 +500,7 @@ class TestMatchSeqManagement(ErpCondBaseTest):
         """单个删除用例 - GEN_MATCH_SEQ_HEAD_CF_DELETE_DATA_BY_ID_SERVICE"""
         try:
             if not self.match_seq_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             set_dict = {"id": self.match_seq_id}
             fields_to_filter = ["id"]
@@ -635,7 +635,7 @@ class TestMatchSeqManagement(ErpCondBaseTest):
         """复制数据转换用例 - GEN_MATCH_SEQ_HEAD_CF_COPY_DATA_CONVERTER_SERVICE"""
         try:
             if not self.match_seq_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             set_dict = {"sourceId": self.match_seq_id}
             fields_to_filter = ["sourceId"]

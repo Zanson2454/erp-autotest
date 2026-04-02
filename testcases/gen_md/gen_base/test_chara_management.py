@@ -32,6 +32,70 @@ class TestCharacteristicManagement(GenMdBaseTest):
         """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
         cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
+
+    def _create_chara_class(self):
+        chara_class_code = self.mock_util.generate_unique_code(tag="CHARA_CLASS")
+        chara_class_name = f"测试特征类_{self.mock_util.get_timestamp()}"
+        set_dict = {
+            "code": chara_class_code,
+            "name": chara_class_name,
+            "charaClassType": "MAT",
+            "charaList": [
+                {
+                    "charaId": {"id": self.chara_id},
+                    "isKeyChara": False,
+                    "isRequired": False
+                }
+            ],
+            "remark": f"特征类描述_{self.mock_util.get_timestamp()}"
+        }
+        response, chara_class_id = self.standard_api_call(
+            api_key="GEN-特征类定义表-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=["code", "name", "remark"],
+            store_id_as="chara_class"
+        )
+        self.assert_util.assert_response_data(response)
+        self.chara_class_id = chara_class_id
+        self.chara_class_code = chara_class_code
+        return chara_class_id
+
+    def _ensure_save_chara_class(self):
+        if self.chara_class_id:
+            return self.chara_class_id
+        return self._create_chara_class()
+
+    def _create_chara(self):
+        if not self.chara_class_id:
+            self._ensure_save_chara_class()
+        chara_code = self.mock_util.generate_unique_code(tag="CHARA")
+        chara_name = f"测试特征_{self.mock_util.get_timestamp()}"
+        set_dict = {
+            "code": chara_code,
+            "name": chara_name,
+            "charNo": 20,
+            "dataType": "STRING",
+            "isCustom": True,
+            "isRequired": False,
+            "isSingleValue": True,
+            "remark": f"特征定义_{self.mock_util.get_timestamp()}"
+        }
+        response, chara_id = self.standard_api_call(
+            api_key="GEN-特征定义表-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=["code", "name", "charaClassId", "remark"],
+            store_id_as="chara"
+        )
+        self.assert_util.assert_response_data(response)
+        self.chara_id = chara_id
+        self.chara_code = chara_code
+        return chara_id
+
+    def _ensure_save_chara(self):
+        if self.chara_id:
+            return self.chara_id
+        return self._create_chara()
+
     # ================ 特征类定义表管理 ================
     @case_decorator(
         story="特征类定义表管理",
@@ -45,31 +109,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
     def test_save_chara_class(self):
         """新增特征类定义用例"""
         try:
-            chara_class_code = self.mock_util.generate_unique_code(tag="CHARA_CLASS")
-            chara_class_name = f"测试特征类_{self.mock_util.get_timestamp()}"
-
-            set_dict = {
-                "code": chara_class_code,
-                "name": chara_class_name,
-                "charaClassType":"MAT",
-                "charaList":[
-                    {
-                        "charaId":{"id":self.chara_id},
-                        "isKeyChara":False,
-                        "isRequired":False
-                        }
-                    ],
-                "remark": f"特征类描述_{self.mock_util.get_timestamp()}"
-            }
-            
-            response, chara_class_id = self.standard_api_call(
-                api_key="GEN-特征类定义表-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=["code", "name", "remark"],
-                store_id_as="chara_class"
-            )
-            
-            self.chara_class_code = chara_class_code
+            self._create_chara_class()
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -118,7 +158,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         """查询特征类定义详情用例"""
         try:
             if not self.chara_class_id:
-                self.test_save_chara_class()
+                self._ensure_save_chara_class()
 
             set_dict = {"id": self.chara_class_id}
             
@@ -146,11 +186,11 @@ class TestCharacteristicManagement(GenMdBaseTest):
         try:
             # 先确保特征定义存在（特征类定义依赖特征定义）
             if not self.chara_id:
-                self.test_save_chara()
+                self._ensure_save_chara()
             
             # 再确保特征类定义存在
             if not self.chara_class_id:
-                self.test_save_chara_class()
+                self._ensure_save_chara_class()
 
             chara_class_name = f"测试特征类_编辑_{self.mock_util.get_timestamp()}"
 
@@ -208,7 +248,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         """启用特征类定义用例"""
         try:
             if not self.chara_class_id:
-                self.test_save_chara_class()
+                self._ensure_save_chara_class()
 
             set_dict = {"id": self.chara_class_id}
             
@@ -235,7 +275,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         """禁用特征类定义用例"""
         try:
             if not self.chara_class_id:
-                self.test_save_chara_class()
+                self._ensure_save_chara_class()
 
             set_dict = {"id": self.chara_class_id}
             
@@ -262,7 +302,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         """删除特征类定义用例"""
         try:
             if not self.chara_class_id:
-                self.test_save_chara_class()
+                self._ensure_save_chara_class()
 
             set_dict = {"id": self.chara_class_id}
             
@@ -290,31 +330,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
     def test_save_chara(self):
         """新增特征定义用例"""
         try:
-            if not self.chara_class_id:
-                self.test_save_chara_class()
-                
-            chara_code = self.mock_util.generate_unique_code(tag="CHARA")
-            chara_name = f"测试特征_{self.mock_util.get_timestamp()}"
-
-            set_dict = {
-                "code": chara_code,
-                "name": chara_name,
-                "charNo": 20,
-                "dataType": "STRING",
-                "isCustom": True,
-                "isRequired": False,
-                "isSingleValue": True,
-                "remark": f"特征定义_{self.mock_util.get_timestamp()}"
-            }
-            
-            response, chara_id = self.standard_api_call(
-                api_key="GEN-特征定义表-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=["code", "name", "charaClassId", "remark"],
-                store_id_as="chara"
-            )
-            
-            self.chara_code = chara_code
+            self._create_chara()
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -363,7 +379,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         """查询特征定义详情用例"""
         try:
             if not self.chara_id:
-                self.test_save_chara()
+                self._ensure_save_chara()
 
             set_dict = {"id": self.chara_id}
             
@@ -390,7 +406,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         """启用特征定义用例"""
         try:
             if not self.chara_id:
-                self.test_save_chara()
+                self._ensure_save_chara()
 
             set_dict = {"id": self.chara_id}
             
@@ -417,7 +433,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         """禁用特征定义用例"""
         try:
             if not self.chara_id:
-                self.test_save_chara()
+                self._ensure_save_chara()
 
             set_dict = {"id": self.chara_id}
             
@@ -444,7 +460,7 @@ class TestCharacteristicManagement(GenMdBaseTest):
         """删除特征定义用例"""
         try:
             if not self.chara_id:
-                self.test_save_chara()
+                self._ensure_save_chara()
 
             set_dict = {"id": self.chara_id}
             

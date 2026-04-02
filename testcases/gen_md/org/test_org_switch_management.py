@@ -50,6 +50,8 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
+        finally:
+            super().teardown_class()
     @case_decorator(
         story="组织切换管理",
         title="测试新增组织切换模型",
@@ -88,10 +90,9 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
             )
 
             # 保存组织切换模型信息供后续用例使用（保持原有SQL逻辑）
-            sql = f"select id from org_switch_model_cf where model_key = '{self.modelKey}'"
-            result = self.db.query(sql)
-            if result:
-                self.org_switch_model_id = result[0]["id"]
+            model_id = self.query_service.get_org_switch_model_id_by_model_key(self.modelKey)
+            if model_id:
+                self.org_switch_model_id = model_id
             else:
                 self.logger.warning(f"组织切换模型 {self.modelKey} 在数据库中不存在")
                 # 如果数据不存在，说明保存操作失败，需要重新尝试或抛出异常
@@ -118,7 +119,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         """
         try:
             if not self.modelKey:
-                self.test_save_org_switch_model()
+                self._ensure_save_org_switch_model()
                 
             # 准备测试数据（业务逻辑保持不变）
             set_dict = {
@@ -194,7 +195,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         try:
             # 获取组织切换模型信息
             if not self.org_switch_model_id:
-                self.test_save_org_switch_model()
+                self._ensure_save_org_switch_model()
 
             # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_switch_model_id}
@@ -268,14 +269,13 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         try:
             # 获取组织切换模型信息
             if not self.org_switch_model_id:
-                self.test_save_org_switch_model()
+                self._ensure_save_org_switch_model()
 
             # 幂等处理：组织维度 + 公司已存在切换关系时直接复用
-            exist_sql = f"select id, switch_name from org_switch_list_cf where switch_org_id={self.com_org_id} order by id desc limit 1"
-            exist_result = self.db.query(exist_sql)
+            exist_result = self.query_service.get_latest_org_switch_by_org_id(self.com_org_id)
             if exist_result:
-                self.org_switch_id = exist_result[0].get("id")
-                self.org_switch_name = exist_result[0].get("switch_name")
+                self.org_switch_id = exist_result.get("id")
+                self.org_switch_name = exist_result.get("switch_name")
                 self.logger.info(f"组织切换已存在，复用记录: id={self.org_switch_id}, name={self.org_switch_name}")
                 return
 
@@ -312,22 +312,19 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
                 err_code = response.get("err", {}).get("code")
                 inner_msg = response.get("info", {}).get("innerMsg", "")
                 if err_code == "V0311" and "Duplicate entry" in inner_msg:
-                    existed = self.db.query(exist_sql)
+                    existed = self.query_service.get_latest_org_switch_by_org_id(self.com_org_id)
                     if existed:
-                        self.org_switch_id = existed[0].get("id")
-                        self.org_switch_name = existed[0].get("switch_name")
+                        self.org_switch_id = existed.get("id")
+                        self.org_switch_name = existed.get("switch_name")
                         self.logger.warning(
                             f"组织切换返回重复键，按幂等成功处理: id={self.org_switch_id}, name={self.org_switch_name}"
                         )
                         return
 
             # 保存组织切换信息供后续用例使用（保持原有SQL逻辑）
-            sql = f"select id from org_switch_list_cf where switch_name = '{self.org_switch_name}'"
-            result = self.db.query(sql)
-            self.logger.info(f"查询结果: {result}")
-            if result:
-                self.org_switch_id = result[0]["id"]
-            else:
+            self.org_switch_id = self.query_service.get_org_switch_id_by_name(self.org_switch_name)
+            self.logger.info(f"查询结果: {self.org_switch_id}")
+            if not self.org_switch_id:
                 self.logger.warning(f"组织切换 {self.org_switch_name} 在数据库中不存在")
                 # 如果数据不存在，说明保存操作失败，需要重新尝试或抛出异常
                 raise Exception(f"组织切换保存失败，switch_name: {self.org_switch_name}")
@@ -354,7 +351,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         try:
             # 获取组织切换信息
             if not self.org_switch_id:
-                self.test_save_org_switch()
+                self._ensure_save_org_switch()
 
             # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_switch_id}
@@ -393,7 +390,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         try:
             # 获取组织切换信息
             if not self.org_switch_id:
-                self.test_enable_org_switch()
+                self._ensure_enable_org_switch()
 
             # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_switch_id}
@@ -486,7 +483,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         try:
             # 获取组织切换信息
             if not self.org_switch_id:
-                self.test_save_org_switch()
+                self._ensure_save_org_switch()
 
             # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_switch_id}
@@ -686,7 +683,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         try:
             # 获取组织切换信息
             if not self.org_switch_id:
-                self.test_save_org_switch()
+                self._ensure_save_org_switch()
 
             # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_switch_id}
@@ -725,7 +722,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         try:
             # 获取组织切换模型信息
             if not self.org_switch_model_id:
-                self.test_save_org_switch_model()
+                self._ensure_save_org_switch_model()
 
             # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_switch_model_id}

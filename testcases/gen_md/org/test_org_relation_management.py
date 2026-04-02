@@ -47,6 +47,8 @@ class TestOrg_RelationManagement(GenMdBaseTest):
             cls.logger.info("测试数据清理完成")
         except Exception as e:
             cls.logger.error(f"测试数据清理失败: {str(e)}")
+        finally:
+            super().teardown_class()
     @case_decorator(
         story="组织关联管理",
         title="测试新增组织关联管理",
@@ -62,10 +64,14 @@ class TestOrg_RelationManagement(GenMdBaseTest):
         """
         try:
             # 幂等处理：存在即复用，避免脏数据导致创建失败
-            exist_sql = f"select id from org_relation_cf where {self.query_condition}"
-            exist_result = self.db.query(exist_sql)
+            exist_result = self.query_service.get_org_relation_by_dimensions(
+                self.org_head_dimension_id,
+                self.org_head_unit_id,
+                self.org_head_dimension_id,
+                self.org_head_unit_id,
+            )
             if exist_result:
-                self.org_relation_id = exist_result[0].get("id")
+                self.org_relation_id = exist_result.get("id")
                 self.logger.info(f"组织关联已存在，复用关系ID: {self.org_relation_id}")
                 return
 
@@ -101,9 +107,14 @@ class TestOrg_RelationManagement(GenMdBaseTest):
                 # 历史数据冲突：已存在时按幂等成功处理
                 err_code = response.get("err", {}).get("code")
                 if err_code == "Org.relation.is.exist":
-                    exist_result = self.db.query(exist_sql)
+                    exist_result = self.query_service.get_org_relation_by_dimensions(
+                        self.org_head_dimension_id,
+                        self.org_head_unit_id,
+                        self.org_head_dimension_id,
+                        self.org_head_unit_id,
+                    )
                     if exist_result:
-                        self.org_relation_id = exist_result[0].get("id")
+                        self.org_relation_id = exist_result.get("id")
                         self.logger.warning(f"组织关联返回已存在，按幂等成功处理，关系ID: {self.org_relation_id}")
                         return
                 self.assert_util.assert_response_success(response)
@@ -195,12 +206,21 @@ class TestOrg_RelationManagement(GenMdBaseTest):
         """
         try:
             # 获取组织关联管理信息（保持原有SQL逻辑）
-            sql = f"select id from org_relation_cf where {self.query_condition}"
-            result = self.db.query(sql)
-            if not result or not result[0].get("id",None):
-                self.test_save_org_relation()
-                result = self.db.query(sql)
-            self.org_relation_id = result[0].get("id",None)
+            result = self.query_service.get_org_relation_by_dimensions(
+                self.org_head_dimension_id,
+                self.org_head_unit_id,
+                self.org_head_dimension_id,
+                self.org_head_unit_id,
+            )
+            if not result or not result.get("id", None):
+                self._ensure_save_org_relation()
+                result = self.query_service.get_org_relation_by_dimensions(
+                    self.org_head_dimension_id,
+                    self.org_head_unit_id,
+                    self.org_head_dimension_id,
+                    self.org_head_unit_id,
+                )
+            self.org_relation_id = result.get("id", None)
 
             # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_relation_id}
@@ -238,12 +258,21 @@ class TestOrg_RelationManagement(GenMdBaseTest):
         """
         try:
             # 获取组织关联管理ID（保持原有SQL逻辑）
-            sql = f"select id,org_relation_status from org_relation_cf where {self.query_condition}"
-            result = self.db.query(sql)
-            if not result or not result[0].get("id",None):
-                self.test_save_org_relation()
-                result = self.db.query(sql)
-            self.org_relation_id = result[0].get("id",None)
+            result = self.query_service.get_org_relation_by_dimensions(
+                self.org_head_dimension_id,
+                self.org_head_unit_id,
+                self.org_head_dimension_id,
+                self.org_head_unit_id,
+            )
+            if not result or not result.get("id", None):
+                self._ensure_save_org_relation()
+                result = self.query_service.get_org_relation_by_dimensions(
+                    self.org_head_dimension_id,
+                    self.org_head_unit_id,
+                    self.org_head_dimension_id,
+                    self.org_head_unit_id,
+                )
+            self.org_relation_id = result.get("id", None)
             # 调用启用接口前准备数据
 
             # 准备测试数据（业务逻辑保持不变）
@@ -261,8 +290,7 @@ class TestOrg_RelationManagement(GenMdBaseTest):
             # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
             
-            sql = f"select org_relation_status from org_relation_cf where id = {self.org_relation_id}"
-            org_relation_status = self.db.query(sql)[0].get("org_relation_status",None)
+            org_relation_status = self.query_service.get_org_relation_status_by_id(self.org_relation_id)
             self.assert_util.assert_by_operator(org_relation_status, "=", "ENABLED")
 
             # 日志记录（Allure报告已由standard_api_call处理）
@@ -286,12 +314,21 @@ class TestOrg_RelationManagement(GenMdBaseTest):
         """
         try:
             # 获取组织关联管理ID（保持原有SQL逻辑）
-            sql = f"select id,org_relation_status from org_relation_cf where {self.query_condition}"
-            result = self.db.query(sql)
-            if not result or not result[0].get("id",None):
-                self.test_enable_org_relation()
-                result = self.db.query(sql)
-            self.org_relation_id = result[0].get("id",None)
+            result = self.query_service.get_org_relation_by_dimensions(
+                self.org_head_dimension_id,
+                self.org_head_unit_id,
+                self.org_head_dimension_id,
+                self.org_head_unit_id,
+            )
+            if not result or not result.get("id", None):
+                self._ensure_enable_org_relation()
+                result = self.query_service.get_org_relation_by_dimensions(
+                    self.org_head_dimension_id,
+                    self.org_head_unit_id,
+                    self.org_head_dimension_id,
+                    self.org_head_unit_id,
+                )
+            self.org_relation_id = result.get("id", None)
 
             # 准备测试数据（业务逻辑保持不变）
             set_dict = {"id": self.org_relation_id}
@@ -308,8 +345,7 @@ class TestOrg_RelationManagement(GenMdBaseTest):
             # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
             
-            sql = f"select org_relation_status from org_relation_cf where id = {self.org_relation_id}"
-            org_relation_status = self.db.query(sql)[0].get("org_relation_status",None)
+            org_relation_status = self.query_service.get_org_relation_status_by_id(self.org_relation_id)
             self.assert_util.assert_by_operator(org_relation_status, "=", "DISABLED")
 
             # 日志记录（Allure报告已由standard_api_call处理）

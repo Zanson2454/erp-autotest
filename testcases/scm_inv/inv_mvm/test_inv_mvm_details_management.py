@@ -154,7 +154,7 @@ class TestMobileVoucherDetailsManagement(ScmInvBaseTest):
         try:
             # 确保先执行基础查询获取测试数据
             if not self.test_voucher_code:
-                self.test_query_mobile_voucher_details_page()
+                self._ensure_query_mobile_voucher_details_page()
                 
             # 如果仍然没有测试数据，跳过测试
             if not self.test_voucher_code:
@@ -258,7 +258,7 @@ class TestMobileVoucherDetailsManagement(ScmInvBaseTest):
         try:
             # 确保先执行基础查询获取测试数据
             if not self.test_mat_id:
-                self.test_query_mobile_voucher_details_page()
+                self._ensure_query_mobile_voucher_details_page()
                 
             # 如果仍然没有测试数据，跳过测试
             if not self.test_mat_id:
@@ -352,7 +352,7 @@ class TestMobileVoucherDetailsManagement(ScmInvBaseTest):
         """提交移动凭证明细导出任务用例"""
         try:
             # 查询最新的移动凭证明细ID
-            result = self.db.query(
+            result = self.query_service.query(
                 sql="SELECT id FROM inv_mvm_doc_item_tr ORDER BY created_at DESC LIMIT 1"
             )
             if not result:

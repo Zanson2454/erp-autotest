@@ -303,7 +303,7 @@ class TestOrgBusinessTypeManagement(SysCommonBaseTest):
         """查找单条组织业务类型数据"""
         try:
             if not self.biz_type_code:
-                self.test_create_biz_type()
+                self._ensure_create_biz_type()
             
             api_path = self.get_api_path("组织业务类型表-查找单条数据服务")
             params, url = self.get_api_params(api_path)
@@ -376,7 +376,7 @@ class TestOrgBusinessTypeManagement(SysCommonBaseTest):
         """根据ID查找组织业务类型数据"""
         try:
             if not self.biz_type_id:
-                self.test_create_biz_type()
+                self._ensure_create_biz_type()
             
             api_path = self.get_api_path("组织业务类型表-根据ID查找数据服务")
             params, url = self.get_api_params(api_path)
@@ -417,7 +417,7 @@ class TestOrgBusinessTypeManagement(SysCommonBaseTest):
         """根据ID查找单表组织业务类型数据"""
         try:
             if not self.biz_type_id:
-                self.test_create_biz_type()
+                self._ensure_create_biz_type()
             
             api_path = self.get_api_path("组织业务类型表-根据ID查找单表数据服务")
             params, url = self.get_api_params(api_path)
@@ -458,7 +458,7 @@ class TestOrgBusinessTypeManagement(SysCommonBaseTest):
         """根据ID列表查找组织业务类型数据"""
         try:
             if not self.biz_type_id:
-                self.test_create_biz_type()
+                self._ensure_create_biz_type()
             
             api_path = self.get_api_path("组织业务类型表-根据ID列表查找数据服务")
             params, url = self.get_api_params(api_path)
@@ -502,7 +502,7 @@ class TestOrgBusinessTypeManagement(SysCommonBaseTest):
         """根据ID更新组织业务类型数据"""
         try:
             if not self.biz_type_id:
-                self.test_create_biz_type()
+                self._ensure_create_biz_type()
             
             new_name = f"更新后业务类型_{self.mock_util.get_timestamp()}"
             
@@ -550,7 +550,7 @@ class TestOrgBusinessTypeManagement(SysCommonBaseTest):
         """启用组织业务类型主数据"""
         try:
             if not self.biz_type_id:
-                self.test_create_biz_type()
+                self._ensure_create_biz_type()
             
             api_path = self.get_api_path("组织业务类型表-启用主数据服务")
             params, url = self.get_api_params(api_path)
@@ -591,7 +591,7 @@ class TestOrgBusinessTypeManagement(SysCommonBaseTest):
         """禁用组织业务类型主数据"""
         try:
             if not self.biz_type_id:
-                self.test_create_biz_type()
+                self._ensure_create_biz_type()
             
             api_path = self.get_api_path("组织业务类型表-禁用主数据服务")
             params, url = self.get_api_params(api_path)
@@ -632,7 +632,7 @@ class TestOrgBusinessTypeManagement(SysCommonBaseTest):
         """批量启用组织业务类型主数据"""
         try:
             if not self.biz_type_id:
-                self.test_create_biz_type()
+                self._ensure_create_biz_type()
             
             api_path = self.get_api_path("组织业务类型表-批量启用主数据服务")
             params, url = self.get_api_params(api_path)
@@ -673,7 +673,7 @@ class TestOrgBusinessTypeManagement(SysCommonBaseTest):
         """批量禁用组织业务类型主数据"""
         try:
             if not self.biz_type_id:
-                self.test_create_biz_type()
+                self._ensure_create_biz_type()
             
             api_path = self.get_api_path("组织业务类型表-批量禁用主数据服务")
             params, url = self.get_api_params(api_path)
@@ -846,7 +846,7 @@ class TestOrgBusinessTypeManagement(SysCommonBaseTest):
         """根据ID删除组织业务类型数据"""
         try:
             if not self.biz_type_id:
-                self.test_create_biz_type()
+                self._ensure_create_biz_type()
             
             api_path = self.get_api_path("组织业务类型表-根据ID删除数据服务")
             params, url = self.get_api_params(api_path)

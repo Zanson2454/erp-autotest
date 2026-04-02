@@ -104,7 +104,7 @@ class TestAllowFieldManagement(ErpCondBaseTest):
         """查询允许模型下的字段用例 - GEN_ALLOW_FIELD_ITEM_LIST__SERVICE"""
         try:
             if not self.allow_field_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             set_dict = {
                 "modelId": 1  # 假设模型ID
@@ -136,7 +136,7 @@ class TestAllowFieldManagement(ErpCondBaseTest):
         """分页查询用例 - GEN_ALLOW_FIELD_ITEM_CF_PAGING_DATA_SERVICE"""
         try:
             if not self.allow_field_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             set_dict = {
                 "pageable": {
@@ -172,7 +172,7 @@ class TestAllowFieldManagement(ErpCondBaseTest):
         """根据ID查找用例 - GEN_ALLOW_FIELD_ITEM_VO_FIND_DATA_BY_ID_SERVICE"""
         try:
             if not self.allow_field_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             set_dict = {"id": self.allow_field_id}
             fields_to_filter = ["id"]
@@ -203,7 +203,7 @@ class TestAllowFieldManagement(ErpCondBaseTest):
         """保存数据用例 - GEN_ALLOW_FIELD_ITEM_CF_SAVE_DATA_SERVICE"""
         try:
             if not self.allow_field_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             set_dict = {
                 "id": self.allow_field_id,
@@ -404,7 +404,7 @@ class TestAllowFieldManagement(ErpCondBaseTest):
         """根据ID删除用例 - GEN_ALLOW_FIELD_ITEM_CF_DELETE_DATA_BY_ID_SERVICE"""
         try:
             if not self.allow_field_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             set_dict = {"id": self.allow_field_id}
             fields_to_filter = ["id"]
@@ -439,7 +439,7 @@ class TestAllowFieldManagement(ErpCondBaseTest):
         """复制数据转换用例 - GEN_ALLOW_FIELD_ITEM_CF_COPY_DATA_CONVERTER_SERVICE"""
         try:
             if not self.allow_field_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             set_dict = {"sourceId": self.allow_field_id}
             fields_to_filter = ["sourceId"]
@@ -513,7 +513,7 @@ class TestAllowFieldManagement(ErpCondBaseTest):
         """CF根据ID查找用例 - GEN_ALLOW_FIELD_ITEM_CF_FIND_DATA_BY_ID_SERVICE"""
         try:
             if not self.allow_field_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             set_dict = {"id": self.allow_field_id}
             fields_to_filter = ["id"]
@@ -543,7 +543,7 @@ class TestAllowFieldManagement(ErpCondBaseTest):
         """允许字段删除用例 - allow_field_delete"""
         try:
             if not self.allow_field_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             set_dict = {"id": self.allow_field_id}
             fields_to_filter = ["id"]
@@ -576,7 +576,7 @@ class TestAllowFieldManagement(ErpCondBaseTest):
         """允许字段模型删除用例 - allow_field_model_delete"""
         try:
             if not self.allow_field_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             set_dict = {"id": self.allow_field_id}
             fields_to_filter = ["id"]
@@ -645,7 +645,7 @@ class TestAllowFieldManagement(ErpCondBaseTest):
         """允许字段查看详情用例 - allow_field_view_detail_service"""
         try:
             if not self.allow_field_id:
-                self.test_save_master_data()
+                self._ensure_save_master_data()
             
             set_dict = {"id": self.allow_field_id}
             fields_to_filter = ["id"]

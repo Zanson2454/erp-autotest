@@ -62,7 +62,7 @@ class TestRebateUse(SlsBase):
             so_id = self.create_sales_order(order_type="STND", submit=False, rebate_amount=rebate_amount)
             
             # 获取销售订单信息
-            so_info = self.db.query(f"SELECT id, so_code FROM sls_so_head_tr WHERE id={so_id}")
+            so_info = self.query_service.query(f"SELECT id, so_code FROM sls_so_head_tr WHERE id={so_id}")
             so_code = so_info[0]['so_code'] if so_info else f"AT_SO_REBATE_{int(time.time() * 1000)}"
             
             self.logger.info(f"创建销售订单成功，ID: {so_id}, 订单号: {so_code}")
@@ -108,7 +108,7 @@ class TestRebateUse(SlsBase):
             if not response_data or not response_data.get("id"):
                 self.logger.warning(f"API查询订单详情失败，改用数据库查询。订单ID: {so_id}")
                 # 从数据库查询订单数据
-                order_info = self.db.query("""
+                order_info = self.query_service.query("""
                     SELECT h.*, i.id as item_id, i.so_item_code, i.mat_id, i.mat_code, i.mat_name,
                            i.so_item_sls_qty, i.so_item_del_qty, i.so_item_transfer_qty, i.so_item_price,
                            i.uom_sls_id, i.uom_base_id, i.so_item_type_id, i.so_schl_del_date, i.inv_org_id, i.inv_loc_id
@@ -278,7 +278,7 @@ class TestRebateUse(SlsBase):
             self.logger.info("开始清理旧的返利政策")
             
             # 查询所有非停用状态的返利政策进行停用
-            active_policies = self.db.query(
+            active_policies = self.query_service.query(
                 "SELECT id, policy_code, status FROM rebate_policy_head_tr WHERE deleted = 0 AND status IN ('ENABLED', 'DRAFT', 'APPROVING')"
             )
             

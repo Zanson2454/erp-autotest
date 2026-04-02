@@ -90,7 +90,7 @@ class TestIvVoucherItemManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.voucher_item_id:
-                self.test_save_voucher_item()
+                self._ensure_save_voucher_item()
             
             # 使用标准化API调用
             set_dict = {"id": self.voucher_item_id}
@@ -171,7 +171,7 @@ class TestIvVoucherItemManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.voucher_item_id:
-                self.test_save_voucher_item()
+                self._ensure_save_voucher_item()
             
             # 使用标准化API调用
             updated_name = f"更新凭证行_{self.mock_util.get_timestamp()}"
@@ -209,7 +209,7 @@ class TestIvVoucherItemManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.voucher_item_id:
-                self.test_save_voucher_item()
+                self._ensure_save_voucher_item()
             
             # 使用标准化API调用
             set_dict = {"id": self.voucher_item_id}

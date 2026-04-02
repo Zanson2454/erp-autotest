@@ -4,14 +4,7 @@ from datetime import datetime
 import random
 from decimal import Decimal
 import pytest
-import sys
 import allure
-from pathlib import Path
-
-# 设置项目根目录到Python路径
-project_root = Path(__file__).resolve().parent.parent.parent.parent
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
 
 from testcases.erp_fin import FinBaseTest
 from utils.param_util import ParamUtil
@@ -94,26 +87,23 @@ class TestSettDocBusiCheck(FinBaseTest):
                                                                      "settDocStatus","settDocTypeId","tradingDocCode","tradingDocStatus"], ["params", "request"])
             
             sett_doc_id = self.get_sett_doc_id()[0]
-            sql = f"""
-            select * from sett_doc_tr where id={sett_doc_id}
-            """
-            sql_result = self.db.query(sql)
-            filtered_data["params"]["request"]["id"] = sql_result[0]["id"]
-            filtered_data["params"]["request"]["baseCurrId"] = sql_result[0]["base_curr_id"]
-            filtered_data["params"]["request"]["comOrgId"] = sql_result[0]["com_org_id"]
-            filtered_data["params"]["request"]["docCurrId"] = sql_result[0]["doc_curr_id"]
-            filtered_data["params"]["request"]["partnerName"] = sql_result[0]["partner_name"]
-            filtered_data["params"]["request"]["partnerType"] = sql_result[0]["partner_type"]
-            filtered_data["params"]["request"]["purSlsOrgName"] = sql_result[0]["pur_sls_org_name"]
+            sett_doc_row = self.query_service.get_sett_doc_by_id(sett_doc_id)
+            filtered_data["params"]["request"]["id"] = sett_doc_row["id"]
+            filtered_data["params"]["request"]["baseCurrId"] = sett_doc_row["base_curr_id"]
+            filtered_data["params"]["request"]["comOrgId"] = sett_doc_row["com_org_id"]
+            filtered_data["params"]["request"]["docCurrId"] = sett_doc_row["doc_curr_id"]
+            filtered_data["params"]["request"]["partnerName"] = sett_doc_row["partner_name"]
+            filtered_data["params"]["request"]["partnerType"] = sett_doc_row["partner_type"]
+            filtered_data["params"]["request"]["purSlsOrgName"] = sett_doc_row["pur_sls_org_name"]
             filtered_data["params"]["request"]["remark"] = "AUTOTEST-remark"
-            filtered_data["params"]["request"]["settBaseAmt"] = float(sql_result[0]["sett_base_amt"])
-            filtered_data["params"]["request"]["settDate"] = int(datetime.strptime(str(sql_result[0]["sett_date"]), "%Y-%m-%d %H:%M:%S").timestamp() * 1000)
-            filtered_data["params"]["request"]["settDocAmt"] = float(sql_result[0]["sett_doc_amt"])
-            filtered_data["params"]["request"]["settDocCode"] = sql_result[0]["sett_doc_code"]
-            filtered_data["params"]["request"]["settDocStatus"] = sql_result[0]["sett_doc_status"]
-            filtered_data["params"]["request"]["settDocTypeId"] = sql_result[0]["sett_doc_type_id"]
-            filtered_data["params"]["request"]["tradingDocCode"] = sql_result[0]["trading_doc_code"]
-            filtered_data["params"]["request"]["tradingDocStatus"] = sql_result[0]["trading_doc_status"]
+            filtered_data["params"]["request"]["settBaseAmt"] = float(sett_doc_row["sett_base_amt"])
+            filtered_data["params"]["request"]["settDate"] = int(datetime.strptime(str(sett_doc_row["sett_date"]), "%Y-%m-%d %H:%M:%S").timestamp() * 1000)
+            filtered_data["params"]["request"]["settDocAmt"] = float(sett_doc_row["sett_doc_amt"])
+            filtered_data["params"]["request"]["settDocCode"] = sett_doc_row["sett_doc_code"]
+            filtered_data["params"]["request"]["settDocStatus"] = sett_doc_row["sett_doc_status"]
+            filtered_data["params"]["request"]["settDocTypeId"] = sett_doc_row["sett_doc_type_id"]
+            filtered_data["params"]["request"]["tradingDocCode"] = sett_doc_row["trading_doc_code"]
+            filtered_data["params"]["request"]["tradingDocStatus"] = sett_doc_row["trading_doc_status"]
             result, _ = self.standard_api_call(
                 api_key="结算单表-保存数据服务",
                 set_dict=filtered_data.get("params", {}),
@@ -167,26 +157,22 @@ class TestSettDocBusiCheck(FinBaseTest):
                     start_time = time.time()
                     timeout = 30
                     while True:
-                        sql = """
-                        select sett_doc_status,async_execution_status,trading_doc_id,trading_doc_status,trading_doc_code,client_side_confirm_status
-                        from sett_doc_tr where deleted=0 and id=%s
-                        """
-                        sql_result = self.db.query(sql, (sett_doc_id,))
+                        sql_result = self.query_service.get_sett_doc_confirm_status(sett_doc_id)
                         if not sql_result:
                             raise ValueError(f"结算单确认失败: 未找到结算单ID {sett_doc_id}")
-                        if sql_result[0].get("trading_doc_id") is not None:
+                        if sql_result.get("trading_doc_id") is not None:
                             break
                         if time.time() - start_time >= timeout:
                             raise TimeoutError(f"等待异步任务执行超时（{timeout}秒）")
                         time.sleep(0.5)
                     
                     self.assert_util.assert_response_success(result)
-                    self.assert_util.assert_by_operator(sql_result[0]["sett_doc_status"], "=", "CONFIRMED")
-                    self.assert_util.assert_by_operator(sql_result[0]["async_execution_status"], "=", "SUCCEEDED")
-                    self.assert_util.assert_by_operator(sql_result[0]["trading_doc_id"], "not_empty")
-                    self.assert_util.assert_by_operator(sql_result[0]["trading_doc_status"], "=", "CREATED")
-                    self.assert_util.assert_by_operator(sql_result[0]["trading_doc_code"], "not_empty")
-                    self.assert_util.assert_by_operator(sql_result[0]["client_side_confirm_status"], "=", "CONFIRMED")
+                    self.assert_util.assert_by_operator(sql_result["sett_doc_status"], "=", "CONFIRMED")
+                    self.assert_util.assert_by_operator(sql_result["async_execution_status"], "=", "SUCCEEDED")
+                    self.assert_util.assert_by_operator(sql_result["trading_doc_id"], "not_empty")
+                    self.assert_util.assert_by_operator(sql_result["trading_doc_status"], "=", "CREATED")
+                    self.assert_util.assert_by_operator(sql_result["trading_doc_code"], "not_empty")
+                    self.assert_util.assert_by_operator(sql_result["client_side_confirm_status"], "=", "CONFIRMED")
                 elif index == 1:
                     assert result.get("success",{}) == False
                     assert result.get("err",{}).get("msg",{}) == "结算单异步任务提交失败，请确认结算单异步执行状态！"
@@ -216,10 +202,7 @@ class TestSettDocBusiCheck(FinBaseTest):
             for index, sett_doc_id in enumerate(sett_doc_ids):
                 
                 # 获取已经汇单的结算单对应的结算项的id
-                sett_item_sql = f"""
-                    select * from sett_item_tr where sett_doc_id={sett_doc_id}
-                    """
-                sett_item_sql_result = self.db.query(sett_item_sql)
+                sett_item_sql_result = self.query_service.get_sett_items_by_sett_doc_id(sett_doc_id)
                 
                 # 取消汇单接口
                 data["params"]["request"][0] = {"id":sett_doc_id}
@@ -233,24 +216,17 @@ class TestSettDocBusiCheck(FinBaseTest):
                 time.sleep(2)
                 
                 # 获取取消汇单后的结算项id
-                sett_sql = f"""
-                select * from sett_item_tr where id={sett_item_sql_result[0]["id"]}
-                """
-                sett_sql_result = self.db.query(sett_sql)
+                sett_sql_result = self.query_service.get_sett_item_by_id(sett_item_sql_result[0]["id"])
 
                 #获取已经删除的结算单的逻辑删除字段
-                sql = f"""
-                select deleted
-                from sett_doc_tr where  id={sett_doc_id}
-                """
-                sql_result = self.db.query(sql)
+                deleted_flag = self.query_service.get_sett_doc_deleted_flag(sett_doc_id)
                 
                 if index == 0:
                     self.assert_util.assert_response_success(result)
-                    self.assert_util.assert_by_operator(sql_result[0]["deleted"], "!=", 0)  
-                    self.assert_util.assert_by_operator(sett_sql_result[0]["sett_item_status"], "=", "RECONCILED")
-                    self.assert_util.assert_by_operator(sett_sql_result[0]["sett_doc_id"], "empty")
-                    self.assert_util.assert_by_operator(sett_sql_result[0]["is_sdc_cancel_relv"], "=", 1)
+                    self.assert_util.assert_by_operator(deleted_flag, "!=", 0)  
+                    self.assert_util.assert_by_operator(sett_sql_result["sett_item_status"], "=", "RECONCILED")
+                    self.assert_util.assert_by_operator(sett_sql_result["sett_doc_id"], "empty")
+                    self.assert_util.assert_by_operator(sett_sql_result["is_sdc_cancel_relv"], "=", 1)
                 elif index == 1:
                     assert result.get("success",{}) == False
                     assert result.get("err",{}).get("msg",{}) == "存在已确认的结算单，请重新选择后再进行操作"
@@ -308,46 +284,21 @@ class TestSettDocBusiCheck(FinBaseTest):
             filtered_data["params"]["request"]["id"] = self.create_settlement_doc("E_SLS_GOODS")
             
             #获取符合条件的结算行项目类型
-            sql = f"""
-            select bt_class,sett_class from fin_sett_doc_type_cf where deleted=0 and  id=(select sett_doc_type_id
-            from sett_doc_tr where id={filtered_data["params"]["request"]["id"]});
-            """
-            sql_result = self.db.query(sql)
-            sett_class = sql_result[0]["sett_class"]
-            bt_class = sql_result[0]["bt_class"]
-            sql_sett_item_type = f"""
-            select *
-            from fin_sett_item_type_cf where deleted=0 and bt_class='{bt_class}'and sett_class='{sett_class}'
-            """
-            sql_sett_item_type_result = self.db.query(sql_sett_item_type)
+            sql_result = self.query_service.get_sett_doc_type_by_doc_id(filtered_data["params"]["request"]["id"])
+            sett_class = sql_result["sett_class"]
+            bt_class = sql_result["bt_class"]
+            sql_sett_item_type_result = self.query_service.get_sett_item_types(bt_class, sett_class)
             
             #获取物料
-            sql_mat = f"""
-                select *
-                from gen_mat_md 
-                where deleted=0 
-                and mat_code like '%AUTOTEST%' limit 1
-            """
-            sql_mat_result = self.db.query(sql_mat)
+            sql_mat_result = self.query_service.get_first_autotest_mat()
             
             #获取税码
             taxcate = 'X' if sett_class=='EXTERNAL' and bt_class=='PURCHASE' else 'J'
             
-            sql_tax_code = f"""
-                select id, tax_code,tax
-                from gen_tax_type_cf
-                where deleted=0 and taxcate='{taxcate}'
-            """
-            sql_tax_code_result = self.db.query(sql_tax_code)
+            sql_tax_code_result = self.query_service.get_tax_codes_by_taxcate(taxcate)
             
             #获取库存组织
-            sql = """
-                select *
-                from org_struct_md 
-                where deleted=0 
-                and org_code like 'AUTOTEST_INV_ORG' limit 1
-            """
-            invOrgId = self.db.query(sql)[0]["id"]
+            invOrgId = self.query_service.get_inv_org_id_autotest()
             
             # 初始化总金额和结算项代码列表
             total_sett_doc_amt = Decimal('0')
@@ -404,20 +355,14 @@ class TestSettDocBusiCheck(FinBaseTest):
             self.assert_util.assert_response_success(result)
             
             # 获取原始结算单金额
-            sql_original = f"""
-            select sett_doc_amt from sett_doc_tr where id={filtered_data["params"]["request"]["id"]}
-            """
-            original_result = self.db.query(sql_original)
-            original_sett_doc_amt = Decimal(str(original_result[0]["sett_doc_amt"])) if original_result else Decimal('0')
+            original_sett_doc_amt_raw = self.query_service.get_sett_doc_amt(filtered_data["params"]["request"]["id"])
+            original_sett_doc_amt = Decimal(str(original_sett_doc_amt_raw)) if original_sett_doc_amt_raw else Decimal('0')
             
             expected_amount = (total_sett_doc_amt.quantize(Decimal('0.01')) + original_sett_doc_amt.quantize(Decimal('0.01'))).quantize(Decimal('0.01'))
             actual_amount = Decimal(str(result.get("data",{}).get("data",{}).get("settDocAmt",{}))).quantize(Decimal('0.01'))
             #self.assert_util.assert_by_operator(actual_amount,"=",expected_amount)
             
-            sql_sett_item_code = f"""
-                select * from sett_item_tr where deleted=0 and sett_item_code in ('{"','".join(all_sett_item_code)}')
-            """
-            sql_sett_item_code_result = self.db.query(sql_sett_item_code)
+            sql_sett_item_code_result = self.query_service.get_sett_items_by_codes(all_sett_item_code)
             # 断言所有结算项的状态都是SETT_DOC_CREATED
             for item in sql_sett_item_code_result:
                 self.assert_util.assert_by_operator(item["sett_item_status"], "=", "SETT_DOC_CREATED")

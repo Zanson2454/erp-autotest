@@ -122,7 +122,7 @@ class TestAsyncTaskDefinitionManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.task_definition_id:
-                self.test_task_definition_save_post()
+                self._ensure_task_definition_save_post()
             
             api_path = self.get_api_path("异步任务-任务定义-分页查询任务定义")
             params, url = self.get_api_params(api_path)
@@ -192,7 +192,7 @@ class TestAsyncTaskDefinitionManagement(SysCommonBaseTest):
         try:
             # 确保定义存在
             if not self.task_definition_id:
-                self.test_task_definition_save_post()
+                self._ensure_task_definition_save_post()
             
             api_path = self.get_api_path("异步任务-任务定义-删除任务定义")
             params, url = self.get_api_params(api_path)

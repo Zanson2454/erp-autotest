@@ -71,7 +71,7 @@ class TestSalesOrderOperator(SlsBase):
         """
         
         self.logger.info(f"执行查询草稿态订单: {sql}")
-        result = self.db.query(sql, (self.user_info['id'],))
+        result = self.query_service.query(sql, (self.user_info['id'],))
         
         if not result or len(result) == 0:
             self.logger.error("未找到草稿态订单")
@@ -127,7 +127,7 @@ class TestSalesOrderOperator(SlsBase):
         
         self.logger.info(f"执行查询生效态订单: {sql}")
         try:
-            result = self.db.query(sql, (self.user_info['id'],))
+            result = self.query_service.query(sql, (self.user_info['id'],))
         except Exception as e:
             # 如果查询失败（可能是表结构问题），降级为查询任意订单
             if require_schedule:
@@ -141,7 +141,7 @@ class TestSalesOrderOperator(SlsBase):
                     ORDER BY created_at DESC
                     LIMIT 1
                 """
-                result = self.db.query(sql, (self.user_info['id'],))
+                result = self.query_service.query(sql, (self.user_info['id'],))
             else:
                 raise
         
@@ -172,7 +172,7 @@ class TestSalesOrderOperator(SlsBase):
         """
         
         self.logger.info(f"执行查询审批中订单: {sql}")
-        result = self.db.query(sql, (self.user_info['id'],))
+        result = self.query_service.query(sql, (self.user_info['id'],))
         
         if not result or len(result) == 0:
             self.logger.info("未找到审批中订单")
@@ -296,7 +296,7 @@ class TestSalesOrderOperator(SlsBase):
         if not response_data or not response_data.get('soCode'):
             self.logger.warning(f"API查询订单详情失败，改用数据库查询。订单ID: {self.order_id}")
             # 从数据库查询订单数据（尝试从订单行表获取交货日期，如果不存在则使用默认值）
-            order_info = self.db.query("""
+            order_info = self.query_service.query("""
                 SELECT h.*, i.id as item_id, i.so_item_code, i.mat_id, i.mat_code, i.mat_name,
                        i.so_item_sls_qty, i.so_item_del_qty, i.so_item_transfer_qty, i.so_item_price,
                        i.uom_sls_id, i.uom_base_id, i.so_item_type_id, i.so_schl_del_date,
@@ -425,7 +425,7 @@ class TestSalesOrderOperator(SlsBase):
         new_so_code = result['data']['data']['soCode']
         assert new_so_code == self.so_data['soCode'], f"订单号不匹配: 期望={self.so_data['soCode']}, 实际={new_so_code}"
         
-        so_status = self.db.query(f"select id,so_code,so_status from sls_so_head_tr where so_code='{new_so_code}'")
+        so_status = self.query_service.query(f"select id,so_code,so_status from sls_so_head_tr where so_code='{new_so_code}'")
         # 订单保存后进入审批状态是正常的业务流程
         assert so_status[0]['so_status'] in ['APPROVING', 'EFFECT'], f"订单状态异常: {so_status[0]['so_status']}"
 
@@ -482,7 +482,7 @@ class TestSalesOrderOperator(SlsBase):
                 self.logger.warning(f"API查询订单详情失败，改用数据库查询。订单ID: {self.order_id}")
                 # 从数据库查询订单数据（包含订单行计划表的交货日期）
                 # 注意：发货计划行可能直接存储在订单行表的 so_schl_del_date 字段中
-                order_info = self.db.query("""
+                order_info = self.query_service.query("""
                     SELECT h.*, i.id as item_id, i.so_item_code, i.mat_id, i.mat_code, i.mat_name,
                            i.so_item_sls_qty, i.so_item_del_qty, i.so_item_transfer_qty, i.so_item_price,
                            i.uom_sls_id, i.uom_base_id, i.so_item_type_id, 
@@ -569,7 +569,7 @@ class TestSalesOrderOperator(SlsBase):
         assert result.get('success', False), f"销售订单列表提交失败: {result.get('err', {}).get('msg', '未知错误')}"
         
         # 验证订单状态
-        so_status = self.db.query(f"select id,so_code,so_status from sls_so_head_tr where id={self.order_id}")
+        so_status = self.query_service.query(f"select id,so_code,so_status from sls_so_head_tr where id={self.order_id}")
         assert so_status[0]['so_status'] in ['APPROVING', 'EFFECT'], f"销售订单提交失败，订单状态: {so_status[0]['so_status']}"
 
     @allure.title("取消提交销售订单")
@@ -583,7 +583,7 @@ class TestSalesOrderOperator(SlsBase):
         self.order_id = self.create_sales_order(order_type="STND", submit=True)
         
         # 获取订单号和状态
-        order_info = self.db.query("SELECT so_code, so_status FROM sls_so_head_tr WHERE id = %s", (self.order_id,))
+        order_info = self.query_service.query("SELECT so_code, so_status FROM sls_so_head_tr WHERE id = %s", (self.order_id,))
         if not order_info:
             raise ValueError(f"未找到订单，订单ID: {self.order_id}")
         so_code = order_info[0]['so_code']
@@ -600,7 +600,7 @@ class TestSalesOrderOperator(SlsBase):
             time.sleep(2)
             
             # 再次查询状态确认
-            order_info = self.db.query("SELECT so_code, so_status FROM sls_so_head_tr WHERE id = %s", (self.order_id,))
+            order_info = self.query_service.query("SELECT so_code, so_status FROM sls_so_head_tr WHERE id = %s", (self.order_id,))
             if order_info:
                 current_status = order_info[0]['so_status']
                 self.logger.info(f"审批后订单状态: {current_status}")
@@ -667,7 +667,7 @@ class TestSalesOrderOperator(SlsBase):
                 raise AssertionError(f"取消提交销售订单失败: {error_msg}")
         
         # 验证订单状态
-        so_status = self.db.query("SELECT id,so_code,so_status FROM sls_so_head_tr WHERE id = %s", (self.order_id,))
+        so_status = self.query_service.query("SELECT id,so_code,so_status FROM sls_so_head_tr WHERE id = %s", (self.order_id,))
         assert so_status and len(so_status) > 0, "未找到订单状态"
         assert so_status[0]['so_status'] == 'DRAFT', f"取消提交失败，订单状态: {so_status[0]['so_status']}"
 
@@ -688,7 +688,7 @@ class TestSalesOrderOperator(SlsBase):
                 # 如果查询到订单但没有发货计划行，检查是否需要创建
                 order_id = int(effective_order["so_id"])
                 try:
-                    schedule_count = self.db.query(
+                    schedule_count = self.query_service.query(
                         """
                         SELECT COUNT(*) as cnt 
                         FROM sls_so_item_tr i
@@ -724,7 +724,7 @@ class TestSalesOrderOperator(SlsBase):
         # 检查订单是否有发货计划行（作废订单需要发货计划行）
         # 发货计划行可能存储在订单行表的 so_schl_del_date 字段中
         try:
-            schedule_count = self.db.query(
+            schedule_count = self.query_service.query(
                 """
                 SELECT COUNT(*) as cnt 
                 FROM sls_so_item_tr i
@@ -785,7 +785,7 @@ class TestSalesOrderOperator(SlsBase):
         assert result.get('success', False), f"作废销售订单失败: {result.get('err', {}).get('msg', '未知错误')}"
         
         # 验证订单状态（作废后状态应该是 CANCELLED）
-        so_status = self.db.query(f"select id,so_code,so_status from sls_so_head_tr where id={self.order_id}")
+        so_status = self.query_service.query(f"select id,so_code,so_status from sls_so_head_tr where id={self.order_id}")
         assert so_status[0]['so_status'] == 'CANCELLED', f"销售订单作废失败，当前状态: {so_status[0]['so_status']}"
 
     @allure.title("冻结销售订单")
@@ -826,7 +826,7 @@ class TestSalesOrderOperator(SlsBase):
         assert result.get('success', False), f"冻结销售订单失败: {result.get('err', {}).get('msg', '未知错误')}"
         
         # 验证订单状态
-        so_status = self.db.query(f"select id,so_code,so_status,freeze_type from sls_so_head_tr where id={self.order_id}")
+        so_status = self.query_service.query(f"select id,so_code,so_status,freeze_type from sls_so_head_tr where id={self.order_id}")
         assert so_status[0]['so_status'] == 'EFFECT', "销售订单状态不正确"
         assert so_status[0]['freeze_type'] == 'ALL_FREEZE', "销售订单冻结失败"
 
@@ -849,7 +849,7 @@ class TestSalesOrderOperator(SlsBase):
                 self.logger.info(f"订单 {self.order_id} 处于审批中，先审批通过")
                 self.approve_sales_order_or_quote(self.order_id, doc_type="SO")
             # 查询订单号
-            order_info = self.db.query("SELECT so_code FROM sls_so_head_tr WHERE id = %s", (self.order_id,))
+            order_info = self.query_service.query("SELECT so_code FROM sls_so_head_tr WHERE id = %s", (self.order_id,))
             original_so_code = order_info[0]['so_code'] if order_info else None
         else:
             self.order_id = effective_order["so_id"]
@@ -918,7 +918,7 @@ class TestSalesOrderOperator(SlsBase):
         assert result.get('success', False), f"提交复制的销售订单失败: {result.get('err', {}).get('msg', '未知错误')}"
         
         # 验证订单状态
-        so_status = self.db.query(f"select id,so_code,so_status from sls_so_head_tr where id={copied_order_id}")
+        so_status = self.query_service.query(f"select id,so_code,so_status from sls_so_head_tr where id={copied_order_id}")
         assert so_status[0]['so_status'] in ['APPROVING', 'EFFECT'], f"复制订单提交失败，订单状态: {so_status[0]['so_status']}"
 
 if __name__ == "__main__":

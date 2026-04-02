@@ -38,6 +38,62 @@ class TestMonitoringManagement(GenMdBaseTest):
             cls.logger.error(f"测试数据清理失败: {str(e)}")
 
         super().teardown_class()
+
+    def _create_monitoring(self):
+        monitoring_code = self.mock_data.generate_unique_code(tag="Monitoring")
+        monitoring_name = f"监控管理_{self.mock_data.get_timestamp()}"
+
+        fields_to_filter = [
+            "planCode", "planName", "remark", "genIndexMdId", "datasource",
+            "monitoringDate", "monitoringDetails", "monitoringStatus", "monitoringTime",
+            "monitoringType", "solutionSettings", "status"
+        ]
+        set_dict = {
+            "planCode": monitoring_code,
+            "planName": monitoring_name,
+            "remark": f"测试备注_{self.mock_data.get_timestamp()}",
+            "genIndexMdId": {"id": self.index_id},
+            "datasource": "测试数据源",
+            "monitoringDate": f"{self.mock_data.get_timestamp(timestamp=True)}",
+            "monitoringStatus": None,
+            "monitoringTime": "00:00:00",
+            "monitoringType": "TIMING",
+            "solutionSettings": [
+                {
+                "auxiliaryMessageDetails": "附属消息详情",
+                "recipient": "张三",
+                "triggerCondition": "测试条件"
+                }
+            ],
+            "monitoringDetails": [
+                {"nonCompliantData": "未达标数据",
+                "nonCompliantDataAddress": "未达标数据地址",
+                "priority": 1,
+                "recommendedAssignee": "Anson",
+                "recommendedSolution": "推荐解决方案"
+                }
+            ],
+            "status": "DRAFT"
+        }
+
+        response, monitoring_id = self.standard_api_call(
+            api_key="GEN-监控方案-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=fields_to_filter,
+            store_id_as="monitoring"
+        )
+        self.assert_util.assert_response_data(response)
+        self.monitoring_id = monitoring_id
+        self.monitoring_code = monitoring_code
+        self.assert_util.assert_by_operator(self.monitoring_id, "not_empty")
+        return monitoring_id, set_dict, response
+
+    def _ensure_save_monitoring(self):
+        if self.monitoring_id:
+            return self.monitoring_id
+        monitoring_id, _, _ = self._create_monitoring()
+        return monitoring_id
+
     # ================ 监控管理 ================
     @case_decorator(
         story="监控管理",
@@ -51,53 +107,7 @@ class TestMonitoringManagement(GenMdBaseTest):
     def test_save_monitoring(self):
         """新增监控管理用例"""
         try:
-            monitoring_code = self.mock_data.generate_unique_code(tag="Monitoring")
-            monitoring_name = f"监控管理_{self.mock_data.get_timestamp()}"
-
-            fields_to_filter = [
-                "planCode", "planName", "remark", "genIndexMdId", "datasource",
-                "monitoringDate", "monitoringDetails", "monitoringStatus", "monitoringTime",
-                "monitoringType", "solutionSettings", "status"
-            ]
-            set_dict = {
-                "planCode": monitoring_code,
-                "planName": monitoring_name,
-                "remark": f"测试备注_{self.mock_data.get_timestamp()}",
-                "genIndexMdId": {"id": self.index_id},
-                "datasource": "测试数据源",
-                "monitoringDate": f"{self.mock_data.get_timestamp(timestamp=True)}",
-                "monitoringStatus": None,
-                "monitoringTime": "00:00:00",
-                "monitoringType": "TIMING",
-                "solutionSettings": [
-                    {
-                    "auxiliaryMessageDetails": "附属消息详情",
-                    "recipient": "张三",
-                    "triggerCondition": "测试条件"
-                    }
-                ],
-                "monitoringDetails": [
-                    {"nonCompliantData": "未达标数据",
-                    "nonCompliantDataAddress": "未达标数据地址",
-                    "priority": 1,
-                    "recommendedAssignee": "Anson",
-                    "recommendedSolution": "推荐解决方案"
-                    }
-                ],
-                "status": "DRAFT"
-            }
-
-            response, monitoring_id = self.standard_api_call(
-                api_key="GEN-监控方案-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as="monitoring"
-            )
-            self.assert_util.assert_response_data(response)
-            
-            self.monitoring_id = monitoring_id
-            self.monitoring_code = monitoring_code
-            self.assert_util.assert_by_operator(self.monitoring_id, "not_empty")
+            _, set_dict, response = self._create_monitoring()
 
             a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
@@ -171,7 +181,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         """查询监控管理详情用例"""
         try:
             if not self.monitoring_id:
-                self.test_save_monitoring()
+                self._ensure_save_monitoring()
 
             set_dict = {"id": self.monitoring_id}
             response, detail_id = self.standard_api_call(
@@ -203,7 +213,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         """删除监控管理用例"""
         try:
             if not self.monitoring_id:
-                self.test_save_monitoring()
+                self._ensure_save_monitoring()
 
             set_dict = {"ids": [self.monitoring_id]}
             response, _ = self.standard_api_call(
@@ -265,7 +275,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         """监控方案启用服务用例"""
         try:
             if not self.monitoring_id:
-                self.test_save_monitoring()
+                self._ensure_save_monitoring()
 
             set_dict = {"id": self.monitoring_id}
             response, _ = self.standard_api_call(
@@ -294,7 +304,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         """监控方案删除服务用例"""
         try:
             if not self.monitoring_id:
-                self.test_save_monitoring()
+                self._ensure_save_monitoring()
 
             set_dict = {"id": self.monitoring_id}
             response, _ = self.standard_api_call(
@@ -370,7 +380,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         try:
             # 使用已有的监控ID作为测试数据
             if not self.monitoring_id:
-                self.test_save_monitoring()
+                self._ensure_save_monitoring()
 
             set_dict = {"id": self.monitoring_id}
             response, _ = self.standard_api_call(
@@ -399,7 +409,7 @@ class TestMonitoringManagement(GenMdBaseTest):
         """监控预警结果信息删除服务用例"""
         try:
             if not self.monitoring_id:
-                self.test_save_monitoring()
+                self._ensure_save_monitoring()
 
             set_dict = {"id": self.monitoring_id}
             response, _ = self.standard_api_call(

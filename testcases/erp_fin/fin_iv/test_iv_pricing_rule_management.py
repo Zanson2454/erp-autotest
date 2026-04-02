@@ -135,7 +135,7 @@ class TestIvPricingRuleManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.pricing_rule_id:
-                self.test_save_pricing_rule()
+                self._ensure_save_pricing_rule()
             
             # 使用标准化API调用
             set_dict = {"id": self.pricing_rule_id}
@@ -229,7 +229,7 @@ class TestIvPricingRuleManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.pricing_rule_id:
-                self.test_save_pricing_rule()
+                self._ensure_save_pricing_rule()
             
             # 使用标准化API调用
             set_dict = {"sourceId": self.pricing_rule_id}
@@ -344,7 +344,7 @@ class TestIvPricingRuleManagement(IvBaseTest):
         try:
             # 检查并创建依赖数据
             if not self.pricing_rule_id:
-                self.test_save_pricing_rule()
+                self._ensure_save_pricing_rule()
             
             # 使用标准化API调用
             set_dict = {

@@ -378,7 +378,7 @@ class TestEmployeeManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.employee_code:
-                self.test_create_employee()
+                self._ensure_create_employee()
             
             # 1. 调用API
             api_path = self.get_api_path("员工信息表-查找单条数据服务")
@@ -457,7 +457,7 @@ class TestEmployeeManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.employee_id:
-                self.test_create_employee()
+                self._ensure_create_employee()
             
             # 1. 调用API
             api_path = self.get_api_path("员工信息表-根据ID查找数据服务")
@@ -502,7 +502,7 @@ class TestEmployeeManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.employee_id:
-                self.test_create_employee()
+                self._ensure_create_employee()
             
             # 1. 调用API
             api_path = self.get_api_path("员工信息表-根据ID查找单表数据服务")
@@ -547,7 +547,7 @@ class TestEmployeeManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.employee_id:
-                self.test_create_employee()
+                self._ensure_create_employee()
             
             # 1. 调用API
             api_path = self.get_api_path("员工信息表-根据ID列表查找数据服务")
@@ -595,7 +595,7 @@ class TestEmployeeManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.employee_id:
-                self.test_create_employee()
+                self._ensure_create_employee()
             
             # 1. 准备更新数据
             new_name = f"更新后员工_{self.mock_util.get_timestamp()}"
@@ -649,7 +649,7 @@ class TestEmployeeManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.employee_id:
-                self.test_create_employee()
+                self._ensure_create_employee()
             
             # 1. 调用API
             api_path = self.get_api_path("员工信息表-启用主数据服务")
@@ -694,7 +694,7 @@ class TestEmployeeManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.employee_id:
-                self.test_create_employee()
+                self._ensure_create_employee()
             
             # 1. 调用API
             api_path = self.get_api_path("员工信息表-禁用主数据服务")
@@ -739,7 +739,7 @@ class TestEmployeeManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.employee_id:
-                self.test_create_employee()
+                self._ensure_create_employee()
             
             # 1. 调用API
             api_path = self.get_api_path("员工信息表-批量启用主数据服务")
@@ -784,7 +784,7 @@ class TestEmployeeManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.employee_id:
-                self.test_create_employee()
+                self._ensure_create_employee()
             
             # 1. 调用API
             api_path = self.get_api_path("员工信息表-批量禁用主数据服务")
@@ -831,7 +831,7 @@ class TestEmployeeManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.employee_id:
-                self.test_create_employee()
+                self._ensure_create_employee()
             
             # 1. 调用API
             api_path = self.get_api_path("员工信息表-折叠关联关系服务")
@@ -1008,7 +1008,7 @@ class TestEmployeeManagement(SysCommonBaseTest):
         try:
             # 确保有测试数据
             if not self.employee_id:
-                self.test_create_employee()
+                self._ensure_create_employee()
             
             # 1. 调用API
             api_path = self.get_api_path("员工信息表-根据ID删除数据服务")

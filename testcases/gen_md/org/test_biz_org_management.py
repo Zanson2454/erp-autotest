@@ -141,7 +141,7 @@ class TestBizOrgManagement(GenMdBaseTest):
             org_parent_code = com_org_info.get("org_code")
             com_org_id = com_org_info.get("id")
             if not org_parent_code and not com_org_id:
-                self.test_save_com_org()
+                self._ensure_save_com_org()
                 org_parent_code = TestBizOrgManagement.org_info.get("com_org_info", {}).get("org_code")
                 com_org_id = TestBizOrgManagement.org_info.get("com_org_info", {}).get("id")
 
@@ -206,7 +206,7 @@ class TestBizOrgManagement(GenMdBaseTest):
             com_org_id = com_org_info.get("id")
             
             if not org_parent_code and not com_org_id:
-                self.test_save_com_org()
+                self._ensure_save_com_org()
                 org_parent_code = TestBizOrgManagement.org_info.get("com_org_info", {}).get("org_code")
                 com_org_id = TestBizOrgManagement.org_info.get("com_org_info", {}).get("id")
 
@@ -271,7 +271,7 @@ class TestBizOrgManagement(GenMdBaseTest):
             org_parent_code = com_org_info.get("org_code")
             com_org_id = com_org_info.get("id")
             if not org_parent_code and not com_org_id:
-                self.test_save_com_org()
+                self._ensure_save_com_org()
                 org_parent_code = TestBizOrgManagement.org_info.get("com_org_info", {}).get("org_code")
                 com_org_id = TestBizOrgManagement.org_info.get("com_org_info", {}).get("id")
 
@@ -336,7 +336,7 @@ class TestBizOrgManagement(GenMdBaseTest):
             org_parent_code = inv_org_info.get("org_code")
             inv_org_id = inv_org_info.get("id")
             if not org_parent_code and not inv_org_id:
-                self.test_save_inv_org()
+                self._ensure_save_inv_org()
                 org_parent_code = TestBizOrgManagement.org_info.get("inv_org_info", {}).get("org_code")
                 inv_org_id = TestBizOrgManagement.org_info.get("inv_org_info", {}).get("id")
 
@@ -401,7 +401,7 @@ class TestBizOrgManagement(GenMdBaseTest):
             # 1. 获取公司ID（原有逻辑完全保留）
             com_org_id = TestBizOrgManagement.org_info.get("com_org_info", {}).get("id")
             if not com_org_id:
-                self.test_save_com_org()
+                self._ensure_save_com_org()
                 com_org_id = TestBizOrgManagement.org_info.get("com_org_info", {}).get("id")
 
             # 2. 使用标准化API调用（查询操作）
@@ -441,18 +441,13 @@ class TestBizOrgManagement(GenMdBaseTest):
             
             # 1. 如果需要查询数据库获取组织ID（原有复杂逻辑完全保留）
             if org_parent_id == "db_query":
-                sql = """
-                    SELECT id, org_code, org_name 
-                    FROM org_struct_md 
-                    WHERE org_status = 'ENABLED' 
-                        AND org_dimension_code = 'SCM_ORG_GRP'
-                        AND deleted = 0 
-                    ORDER BY org_sort DESC
-                    LIMIT 1
-                """
-                result = self.db.query(sql)
-                self.assert_util.assert_by_operator(result,"not_empty")
-                org_parent_id = result[0]["id"]
+                org_parent_id = self.query_service.get_first_org_struct_id(
+                    org_dimension_code="SCM_ORG_GRP",
+                    org_code_like="AT_%",
+                    deleted=0,
+                    org_status="ENABLED",
+                )
+                self.assert_util.assert_by_operator(org_parent_id, "not_empty")
                 self.logger.info(f"查询到的组织ID: {org_parent_id}")
 
             # 2. 使用标准化API调用
@@ -712,13 +707,15 @@ class TestBizOrgManagement(GenMdBaseTest):
         """
         try:
             # 1. 获取已创建的组织ID（原有数据库查询逻辑完全保留）
-            sql = "select id from org_struct_md where deleted=0 and  org_dimension_code = 'SCM_ORG_GRP' and org_status = 'ENABLED' and org_code like 'AT_%' limit 1"
-            org_id = self.db.query(sql)
+            org_id = self.query_service.get_first_org_struct_id(
+                org_dimension_code="SCM_ORG_GRP",
+                org_code_like="AT_%",
+                deleted=0,
+                org_status="ENABLED",
+            )
             if not org_id:
-                self.test_save_com_org()
+                self._ensure_save_com_org()
                 org_id = self.org_info.get("com_org_info", {}).get("id")
-            else:
-                org_id = org_id[0].get("id")
             
             # 2. 使用标准化API调用
             set_dict = {
@@ -760,7 +757,7 @@ class TestBizOrgManagement(GenMdBaseTest):
             com_org_info = TestBizOrgManagement.org_info.get("com_org_info", {})
             org_id = com_org_info.get("id")
             if not org_id:
-                self.test_save_com_org()
+                self._ensure_save_com_org()
                 org_id = TestBizOrgManagement.org_info.get("com_org_info", {}).get("id")
 
             # 设置查询参数
@@ -808,7 +805,7 @@ class TestBizOrgManagement(GenMdBaseTest):
             # 1. 获取组织ID（原有依赖逻辑完全保留）
             org_id_obj = self.org_info.get("com_org_info",{}).get("id")
             if not org_id_obj:
-                self.test_save_com_org()
+                self._ensure_save_com_org()
                 org_id_obj = self.org_info.get("com_org_info",{}).get("id")
 
             # 提取数字ID
@@ -827,12 +824,9 @@ class TestBizOrgManagement(GenMdBaseTest):
             )
 
             # 3. 数据库验证 - 使用参数化查询
-            sql = "SELECT org_status FROM org_struct_md WHERE id = %s LIMIT 1"
-            result = self.db.query(sql, (org_id_value,))
-            if not result:
+            org_status = self.query_service.get_org_struct_status(org_id_value)
+            if org_status is None:
                 raise ValueError(f"未找到组织记录，ID: {org_id_value}")
-
-            org_status = result[0].get("org_status")
             self.assert_util.assert_by_operator(org_status,"=","ENABLED")
             self.enabled_org_id = org_id_value  # 存储数字ID
             self.logger.info(f"成功启用组织: {org_id_value}")
@@ -858,7 +852,7 @@ class TestBizOrgManagement(GenMdBaseTest):
             # 1. 获取组织ID（原有重复检查逻辑完全保留）
             org_id_obj = self.org_info.get("com_org_info",{}).get("id")
             if not org_id_obj:
-                self.test_save_com_org()
+                self._ensure_save_com_org()
                 org_id_obj = self.org_info.get("com_org_info",{}).get("id")
 
             # 提取数字ID
@@ -877,12 +871,9 @@ class TestBizOrgManagement(GenMdBaseTest):
             )
 
             # 3. 数据库验证 - 使用参数化查询
-            sql = "SELECT org_status FROM org_struct_md WHERE id = %s LIMIT 1"
-            result = self.db.query(sql, (org_id_value,))
-            if not result:
+            org_status = self.query_service.get_org_struct_status(org_id_value)
+            if org_status is None:
                 raise ValueError(f"未找到组织记录，ID: {org_id_value}")
-
-            org_status = result[0].get("org_status")
             self.assert_util.assert_by_operator(org_status,"=","DISABLED")
             self.logger.info(f"成功停用组织: {org_id_value}")
             
@@ -905,13 +896,14 @@ class TestBizOrgManagement(GenMdBaseTest):
         """
         try:
             # 1. 获取已停用的组织ID（原有数据库查询逻辑完全保留）
-            sql = "select id from org_struct_md where deleted=0 and  org_dimension_code = 'SCM_ORG_GRP' and org_code like 'AT_%' limit 1"
-            org_id = self.db.query(sql)
+            org_id = self.query_service.get_first_org_struct_id(
+                org_dimension_code="SCM_ORG_GRP",
+                org_code_like="AT_%",
+                deleted=0,
+            )
             if not org_id:
-                self.test_save_com_org()
+                self._ensure_save_com_org()
                 org_id = TestBizOrgManagement.org_info.get("com_org_info", {}).get("id")
-            else:
-                org_id = org_id[0].get("id")
                 
             # 2. 使用标准化API调用
             set_dict = {"id": org_id}
@@ -925,11 +917,8 @@ class TestBizOrgManagement(GenMdBaseTest):
             
             # 3. 原有断言和数据库验证（完全保留）
             self.assert_util.assert_response_success(response)
-            sql = f"select deleted from org_struct_md where id = {org_id}"
-            result = self.db.query(sql)
-            if result:
-                deleted = result[0].get("deleted")
-            else:
+            deleted = self.query_service.get_org_struct_deleted(org_id)
+            if deleted is None:
                 deleted = 0
             self.assert_util.assert_by_operator(deleted,"!=",0)
             self.logger.info(f"成功删除组织: {org_id}")

@@ -213,7 +213,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
         """根据ID查找员工组织关联"""
         try:
             if not self.emp_org_link_id:
-                self.test_create_emp_org_link()
+                self._ensure_create_emp_org_link()
             
             api_path = self.get_api_path("员工组织关联表-根据ID查找数据服务")
             params, url = self.get_api_params(api_path)
@@ -254,7 +254,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
         """更新员工组织关联"""
         try:
             if not self.emp_org_link_id:
-                self.test_create_emp_org_link()
+                self._ensure_create_emp_org_link()
             
             api_path = self.get_api_path("员工组织关联表-根据ID更新数据服务")
             params, url = self.get_api_params(api_path)
@@ -446,7 +446,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
         """根据ID查找单表员工组织关联"""
         try:
             if not self.emp_org_link_id:
-                self.test_create_emp_org_link()
+                self._ensure_create_emp_org_link()
             
             api_path = self.get_api_path("员工组织关联表-根据ID查找单表数据服务")
             params, url = self.get_api_params(api_path)
@@ -487,7 +487,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
         """根据ID列表查找员工组织关联"""
         try:
             if not self.emp_org_link_id:
-                self.test_create_emp_org_link()
+                self._ensure_create_emp_org_link()
             
             api_path = self.get_api_path("员工组织关联表-根据ID列表查找数据服务")
             params, url = self.get_api_params(api_path)
@@ -528,7 +528,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
         """批量删除员工组织关联"""
         try:
             if not self.emp_org_link_id:
-                self.test_create_emp_org_link()
+                self._ensure_create_emp_org_link()
             
             api_path = self.get_api_path("员工组织关联表-批量删除数据服务")
             params, url = self.get_api_params(api_path)
@@ -569,7 +569,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
         """删除员工组织关联"""
         try:
             if not self.emp_org_link_id:
-                self.test_create_emp_org_link()
+                self._ensure_create_emp_org_link()
             
             api_path = self.get_api_path("员工组织关联表-根据ID删除数据服务")
             params, url = self.get_api_params(api_path)
@@ -737,7 +737,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
         """根据ID查找组织业务类型关联"""
         try:
             if not self.struct_biz_link_id:
-                self.test_create_struct_biz_link()
+                self._ensure_create_struct_biz_link()
             
             api_path = self.get_api_path("组织业务类型关联表-根据ID查找数据服务")
             params, url = self.get_api_params(api_path)
@@ -778,7 +778,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
         """更新组织业务类型关联"""
         try:
             if not self.struct_biz_link_id:
-                self.test_create_struct_biz_link()
+                self._ensure_create_struct_biz_link()
             
             api_path = self.get_api_path("组织业务类型关联表-根据ID更新数据服务")
             params, url = self.get_api_params(api_path)
@@ -940,7 +940,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
         """根据ID查找单表组织业务类型关联"""
         try:
             if not self.struct_biz_link_id:
-                self.test_create_struct_biz_link()
+                self._ensure_create_struct_biz_link()
             
             api_path = self.get_api_path("组织业务类型关联表-根据ID查找单表数据服务")
             params, url = self.get_api_params(api_path)
@@ -981,7 +981,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
         """根据ID列表查找组织业务类型关联"""
         try:
             if not self.struct_biz_link_id:
-                self.test_create_struct_biz_link()
+                self._ensure_create_struct_biz_link()
             
             api_path = self.get_api_path("组织业务类型关联表-根据ID列表查找数据服务")
             params, url = self.get_api_params(api_path)
@@ -1022,7 +1022,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
         """批量删除组织业务类型关联"""
         try:
             if not self.struct_biz_link_id:
-                self.test_create_struct_biz_link()
+                self._ensure_create_struct_biz_link()
             
             api_path = self.get_api_path("组织业务类型关联表-批量删除数据服务")
             params, url = self.get_api_params(api_path)
@@ -1063,7 +1063,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
         """删除组织业务类型关联"""
         try:
             if not self.struct_biz_link_id:
-                self.test_create_struct_biz_link()
+                self._ensure_create_struct_biz_link()
             
             api_path = self.get_api_path("组织业务类型关联表-根据ID删除数据服务")
             params, url = self.get_api_params(api_path)
@@ -1231,7 +1231,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
         """根据ID查找组织维度业务类型关联"""
         try:
             if not self.dim_biz_link_id:
-                self.test_create_dim_biz_link()
+                self._ensure_create_dim_biz_link()
             
             api_path = self.get_api_path("组织维度业务类型关联表-根据ID查找数据服务")
             params, url = self.get_api_params(api_path)
@@ -1272,7 +1272,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
         """启用组织维度业务类型关联"""
         try:
             if not self.dim_biz_link_id:
-                self.test_create_dim_biz_link()
+                self._ensure_create_dim_biz_link()
             
             api_path = self.get_api_path("组织维度业务类型关联表-启用主数据服务")
             params, url = self.get_api_params(api_path)
@@ -1313,7 +1313,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
         """禁用组织维度业务类型关联"""
         try:
             if not self.dim_biz_link_id:
-                self.test_create_dim_biz_link()
+                self._ensure_create_dim_biz_link()
             
             api_path = self.get_api_path("组织维度业务类型关联表-禁用主数据服务")
             params, url = self.get_api_params(api_path)
@@ -1354,7 +1354,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
         """批量启用组织维度业务类型关联"""
         try:
             if not self.dim_biz_link_id:
-                self.test_create_dim_biz_link()
+                self._ensure_create_dim_biz_link()
             
             api_path = self.get_api_path("组织维度业务类型关联表-批量启用主数据服务")
             params, url = self.get_api_params(api_path)
@@ -1395,7 +1395,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
         """批量禁用组织维度业务类型关联"""
         try:
             if not self.dim_biz_link_id:
-                self.test_create_dim_biz_link()
+                self._ensure_create_dim_biz_link()
             
             api_path = self.get_api_path("组织维度业务类型关联表-批量禁用主数据服务")
             params, url = self.get_api_params(api_path)
@@ -1436,7 +1436,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
         """更新组织维度业务类型关联"""
         try:
             if not self.dim_biz_link_id:
-                self.test_create_dim_biz_link()
+                self._ensure_create_dim_biz_link()
             
             api_path = self.get_api_path("组织维度业务类型关联表-根据ID更新数据服务")
             params, url = self.get_api_params(api_path)
@@ -1598,7 +1598,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
         """根据ID查找单表组织维度业务类型关联"""
         try:
             if not self.dim_biz_link_id:
-                self.test_create_dim_biz_link()
+                self._ensure_create_dim_biz_link()
             
             api_path = self.get_api_path("组织维度业务类型关联表-根据ID查找单表数据服务")
             params, url = self.get_api_params(api_path)
@@ -1639,7 +1639,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
         """根据ID列表查找组织维度业务类型关联"""
         try:
             if not self.dim_biz_link_id:
-                self.test_create_dim_biz_link()
+                self._ensure_create_dim_biz_link()
             
             api_path = self.get_api_path("组织维度业务类型关联表-根据ID列表查找数据服务")
             params, url = self.get_api_params(api_path)
@@ -1680,7 +1680,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
         """批量删除组织维度业务类型关联"""
         try:
             if not self.dim_biz_link_id:
-                self.test_create_dim_biz_link()
+                self._ensure_create_dim_biz_link()
             
             api_path = self.get_api_path("组织维度业务类型关联表-批量删除数据服务")
             params, url = self.get_api_params(api_path)
@@ -1721,7 +1721,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
         """删除组织维度业务类型关联"""
         try:
             if not self.dim_biz_link_id:
-                self.test_create_dim_biz_link()
+                self._ensure_create_dim_biz_link()
             
             api_path = self.get_api_path("组织维度业务类型关联表-根据ID删除数据服务")
             params, url = self.get_api_params(api_path)

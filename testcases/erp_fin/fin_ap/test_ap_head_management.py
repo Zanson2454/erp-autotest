@@ -128,7 +128,7 @@ class TestApHeadManagement(ApBaseTest):
         try:
             # 1. 确保有数据ID（从分页查询获取）
             if not self.ap_head_id:
-                self.test_create_ap_head()
+                self._ensure_create_ap_head()
             
             # 2. 准备详情查询参数
             set_dict = {"id": self.ap_head_id}
@@ -303,7 +303,7 @@ class TestApHeadManagement(ApBaseTest):
         """测试应付单新建"""
         try:
             if not self.ap_head_save_body:
-                self.test_ap_schls_init()
+                self._ensure_ap_schls_init()
             
             # 调用保存接口
             save_response, saved_id = self.standard_api_call(
@@ -341,8 +341,8 @@ class TestApHeadManagement(ApBaseTest):
         try:
             # 1. 确保有数据（先创建，再查询详情）
             if not self.ap_head_id:
-                self.test_create_ap_head()
-                self.test_query_ap_head_detail()
+                self._ensure_create_ap_head()
+                self._ensure_query_ap_head_detail()
             
             # 2. 准备提交参数
             # 从详情数据中提取必要字段，移除系统字段，简化嵌套对象
@@ -382,15 +382,15 @@ class TestApHeadManagement(ApBaseTest):
         try:
             # 1. 确保有已提交的应付单（先创建、查询详情、提交）
             if not self.ap_head_id:
-                self.test_create_ap_head()
-                self.test_query_ap_head_detail()
+                self._ensure_create_ap_head()
+                self._ensure_query_ap_head_detail()
             
             current_status = self.ap_head_detail.get("apStatus")
             if current_status != "CONFIRM":
                 # 如果状态不是已提交，先执行提交
-                self.test_submit_ap_head()
+                self._ensure_submit_ap_head()
                 # 提交后重新查询详情
-                self.test_query_ap_head_detail()
+                self._ensure_query_ap_head_detail()
             
             # 2. 准备撤回参数
             # 从详情数据中提取必要字段，移除系统字段，简化嵌套对象
@@ -460,17 +460,17 @@ class TestApHeadManagement(ApBaseTest):
             # ========== 前置条件检查 ==========
             # 确保有已提交的应付单（先创建、查询详情、提交）
             if not self.ap_head_id:
-                self.test_create_ap_head()
+                self._ensure_create_ap_head()
             # 检查应付单状态，如果不是已提交状态，先提交
             if not self.ap_head_detail:
-                self.test_query_ap_head_detail()
+                self._ensure_query_ap_head_detail()
             
             current_status = self.ap_head_detail.get("apStatus")
             if current_status != "CONFIRM":
                 # 如果状态不是已提交，先执行提交
-                self.test_submit_ap_head()
+                self._ensure_submit_ap_head()
                 # 提交后重新查询详情
-                self.test_query_ap_head_detail()
+                self._ensure_query_ap_head_detail()
             
             # ========== 步骤1：发起异步过账任务 ==========
             # 调用异步过账接口，触发后台过账处理
@@ -659,21 +659,21 @@ class TestApHeadManagement(ApBaseTest):
             # ========== 前置条件检查 ==========
             # 确保有已过账的应付单（先创建、查询详情、提交、过账）
             if not self.ap_head_id:
-                self.test_create_ap_head()
+                self._ensure_create_ap_head()
             
             if not self.ap_head_detail:
-                self.test_query_ap_head_detail()
+                self._ensure_query_ap_head_detail()
             
             current_status = self.ap_head_detail.get("apStatus")
             if current_status != "DONE":
                 # 如果状态不是已过账，先执行提交和过账
                 if current_status != "CONFIRM":
-                    self.test_submit_ap_head()
-                    self.test_query_ap_head_detail()
+                    self._ensure_submit_ap_head()
+                    self._ensure_query_ap_head_detail()
                 # 执行过账
-                self.test_post_ap_head_async_and_wait()
+                self._ensure_post_ap_head_async_and_wait()
                 # 过账后重新查询详情
-                self.test_query_ap_head_detail()
+                self._ensure_query_ap_head_detail()
             
             # ========== 步骤1：发起异步反过账任务 ==========
             # 调用异步反过账接口，触发后台反过账处理
@@ -863,21 +863,21 @@ class TestApHeadManagement(ApBaseTest):
             # ========== 前置条件检查 ==========
             # 确保有已过账的应付单（先创建、查询详情、提交、过账）
             if not self.ap_head_id:
-                self.test_create_ap_head()
+                self._ensure_create_ap_head()
             
             if not self.ap_head_detail:
-                self.test_query_ap_head_detail()
+                self._ensure_query_ap_head_detail()
             
             current_status = self.ap_head_detail.get("apStatus")
             if current_status != "DONE":
                 # 如果状态不是已过账，先执行提交和过账
                 if current_status != "CONFIRM":
-                    self.test_submit_ap_head()
-                    self.test_query_ap_head_detail()
+                    self._ensure_submit_ap_head()
+                    self._ensure_query_ap_head_detail()
                 # 执行过账
-                self.test_post_ap_head_async_and_wait()
+                self._ensure_post_ap_head_async_and_wait()
                 # 过账后重新查询详情
-                self.test_query_ap_head_detail()
+                self._ensure_query_ap_head_detail()
             
             # ========== 步骤1：准备冲销参数 ==========
             # 从curl请求分析，冲销接口需要的参数：
@@ -954,21 +954,21 @@ class TestApHeadManagement(ApBaseTest):
             # ========== 前置条件检查 ==========
             # 确保有已过账的应付单（先创建、查询详情、提交、过账）
             if not self.ap_head_id:
-                self.test_create_ap_head()
+                self._ensure_create_ap_head()
             
             if not self.ap_head_detail:
-                self.test_query_ap_head_detail()
+                self._ensure_query_ap_head_detail()
             
             current_status = self.ap_head_detail.get("apStatus")
             if current_status != "DONE":
                 # 如果状态不是已过账，先执行提交和过账
                 if current_status != "CONFIRM":
-                    self.test_submit_ap_head()
-                    self.test_query_ap_head_detail()
+                    self._ensure_submit_ap_head()
+                    self._ensure_query_ap_head_detail()
                 # 执行过账
-                self.test_post_ap_head_async_and_wait()
+                self._ensure_post_ap_head_async_and_wait()
                 # 过账后重新查询详情
-                self.test_query_ap_head_detail()
+                self._ensure_query_ap_head_detail()
             
             # ========== 步骤1：准备生成采购发票参数 ==========
             # 从curl请求分析，生成采购发票接口需要的参数：
@@ -1133,21 +1133,21 @@ class TestApHeadManagement(ApBaseTest):
             # ========== 前置条件检查 ==========
             # 确保有已过账的应付单（先创建、查询详情、提交、过账）
             if not self.ap_head_id:
-                self.test_create_ap_head()
+                self._ensure_create_ap_head()
             
             if not self.ap_head_detail:
-                self.test_query_ap_head_detail()
+                self._ensure_query_ap_head_detail()
             
             current_status = self.ap_head_detail.get("apStatus")
             if current_status != "DONE":
                 # 如果状态不是已过账，先执行提交和过账
                 if current_status != "CONFIRM":
-                    self.test_submit_ap_head()
-                    self.test_query_ap_head_detail()
+                    self._ensure_submit_ap_head()
+                    self._ensure_query_ap_head_detail()
                 # 执行过账
-                self.test_post_ap_head_async_and_wait()
+                self._ensure_post_ap_head_async_and_wait()
                 # 过账后重新查询详情
-                self.test_query_ap_head_detail()
+                self._ensure_query_ap_head_detail()
             
             # ========== 步骤1：准备生成付款申请参数 ==========
             # 从curl请求分析，生成付款申请接口需要的参数：
@@ -1291,8 +1291,8 @@ class TestApHeadManagement(ApBaseTest):
         try:
             # 1. 确保有数据ID（如果没有则先创建）
             if not self.ap_head_id:
-                self.test_create_ap_head()
-                self.test_query_ap_head_detail()
+                self._ensure_create_ap_head()
+                self._ensure_query_ap_head_detail()
             
             # 2. 准备删除参数
             set_dict = self.ap_head_detail
@@ -1330,8 +1330,8 @@ class TestApHeadManagement(ApBaseTest):
         """测试应付单批量删除"""
         try:
             if not self.ap_head_id:
-                self.test_create_ap_head()
-                self.test_query_ap_head_detail()
+                self._ensure_create_ap_head()
+                self._ensure_query_ap_head_detail()
             
             set_dict = {"request": [self.ap_head_detail]}
           
