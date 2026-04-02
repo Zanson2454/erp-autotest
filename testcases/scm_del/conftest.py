@@ -23,7 +23,7 @@ def _cleanup_scm_del() -> None:
         db.delete(table="del_dn_item_type_cf", where="dn_item_type_code like %s", params=["AT_%"])
         Loggers.info("✅ SCM_DEL 模块测试数据清理完成")
     except Exception as e:
-        Loggers.error(f"❌ SCM_DEL 模块测试数据清理失败: {str(e)}")
+        Loggers.warning(f"SCM_DEL 模块测试数据清理失败: {e}")
     finally:
         if db:
             try:

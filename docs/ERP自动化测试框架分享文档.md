@@ -115,11 +115,14 @@ erp-autotest/
 │   ├── response_util.py       # 响应处理
 │   ├── exception_util.py      # 异常处理
 │   └── dingtalk_util.py       # 钉钉通知
-├── data_factory/               # 数据工厂（当前完善中）
-│   ├── base.py                # ⭐ 数据工厂基类 + 配置管理 + SQL缓存
-│   ├── MD/                    # 主数据工厂（partner_fc、org_fc、mat_fc等）
-│   ├── CF/                    # 配置工厂
-│   └── BIZ/                   # 业务工厂
+├── erp_data_factory/           # 数据工厂产品包（当前主路径）
+│   ├── client.py              # ⭐ SDK入口（ERPDataFactoryClient）
+│   ├── cli.py                 # CLI入口（edf）
+│   ├── interfaces/            # FastAPI接口
+│   ├── application/           # 场景注册/执行/任务管理
+│   ├── domain/                # 场景实现
+│   ├── compat/                # 兼容层
+│   └── legacy/                # 迁移承接层
 ├── routers/                    # FastAPI路由（Web后台）
 │   ├── allure_api.py          # 报告查看API
 │   ├── api_manage.py          # 测试执行API
@@ -684,15 +687,16 @@ rm -rf testdata/cache/*.json
 
 缓存默认有效期24小时，超时自动重新加载。
 
-### 5.6 data_factory 框架状态说明 ⚠️
+### 5.6 erp_data_factory 框架状态说明 ✅
 
-**当前状态**：data_factory 框架处于完善阶段
+**当前状态**：`erp_data_factory` 已作为主路径；旧 `data_factory/` 目录已下线
 
 **已实现**：
-- ✅ DataFactory 基类
-- ✅ ConfigLoader（配置加载）
-- ✅ SQL 缓存管理（init_sql_cache）
-- ✅ 部分 MD 工厂（PartnerFactory、OrgFactory、MatFactory 等）
+- ✅ SDK / CLI / FastAPI 三端统一入口
+- ✅ Org / Material / Partner 三场景
+- ✅ 执行审计上下文（request_id/scenario_key/profile/env）
+- ✅ 能力清单与可选异步任务模式（进程内任务管理）
+- ✅ 兼容层 `erp_data_factory.compat.*`
 
 **当前推荐做法**：
 ```python
@@ -704,9 +708,9 @@ response, partner_id = self.standard_api_call(
 ```
 
 **注意事项**：
-- 暂不依赖 data_factory 创建业务数据
+- 旧 `data_factory/` 目录已删除
 - 优先使用 `standard_api_call` 方法
-- data_factory 主要用于基础数据和主数据的缓存加载
+- `erp_data_factory` 的 `legacy` 仍承接部分历史逻辑，后续会持续收敛
 
 ---
 
@@ -2106,4 +2110,3 @@ class TestInventoryBalance(ScmInvBaseTest):
 ---
 
 **文档维护**：ERP自动化测试团队
-

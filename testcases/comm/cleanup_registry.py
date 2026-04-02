@@ -18,7 +18,7 @@ def get_module_db_config(db_name: str = "erp_db") -> Optional[Dict[str, Any]]:
 
     避免每个模块重复 DataFactory 初始化逻辑。
     """
-    from data_factory.base import DataFactory
+    from erp_data_factory.compat.base import DataFactory
 
     env = os.getenv("TEST_ENV", "test")
     project = os.getenv("TEST_PROJECT")
@@ -47,7 +47,7 @@ def run_cleanups(logger) -> None:
             func()
             logger.info(f"cleanup_registry: 清理任务完成 -> {name}")
         except Exception as exc:
-            logger.error(f"cleanup_registry: 清理任务失败 -> {name}, 错误: {exc}")
+            logger.warning(f"cleanup_registry: 清理任务失败 -> {name}, 错误: {exc}")
     _has_run = True
 
 

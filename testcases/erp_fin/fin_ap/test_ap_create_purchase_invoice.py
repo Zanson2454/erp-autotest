@@ -5,7 +5,7 @@ import allure
 from testcases.erp_fin.fin_ap import ApBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
-from data_factory.fin_ap_factory import FinApFactory
+from erp_data_factory.compat.fin_ap_factory import FinApFactory
 from datetime import datetime
 from decimal import Decimal
 import time

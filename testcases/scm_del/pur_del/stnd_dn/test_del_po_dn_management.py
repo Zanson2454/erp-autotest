@@ -11,11 +11,11 @@ project_root = Path(__file__).resolve().parent.parent.parent.parent.parent
 sys.path.append(str(project_root))
 from testcases.scm_del import ScmDelBaseTest
 from utils.report_util import a, case_decorator
-from data_factory.del_po_dn_factory import DelPoDnFactory
-from data_factory.pur_po_factory import PurPoFactory
+from erp_data_factory.compat.del_po_dn_factory import DelPoDnFactory
+from erp_data_factory.compat.pur_po_factory import PurPoFactory
 from utils.param_util import ParamUtil
 from utils.cache_util import CacheUtil
-from data_factory.base import DataFactory
+from erp_data_factory.compat.base import DataFactory
 
 
 @allure.epic("交货管理")

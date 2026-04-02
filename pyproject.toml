@@ -9,6 +9,7 @@ exclude = [
   "logs",
   "outputs",
   "static",
+  "erp_data_factory/legacy",
 ]
 
 [tool.ruff.lint]
@@ -25,3 +26,6 @@ ignore = [
 quote-style = "double"
 indent-style = "space"
 line-ending = "lf"
+
+[tool.pytest.ini_options]
+addopts = "--tb=short"

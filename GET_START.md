@@ -431,7 +431,7 @@ class MyModuleBaseTest(BaseTest):
 """my_module 模块统一清理注册。"""
 
 import os
-from data_factory.base import DataFactory
+from erp_data_factory.compat.base import DataFactory
 from testcases.comm.cleanup_registry import register_cleanup
 from utils.log_util import Loggers
 from utils.mysql_util import DBManager

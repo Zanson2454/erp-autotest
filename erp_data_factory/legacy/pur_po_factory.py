@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 from datetime import datetime
 
-project_root = Path(__file__).resolve().parent.parent
+project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
 
 from utils.param_util import ParamUtil
@@ -127,9 +127,8 @@ class PurPoFactory:
             失败: 抛出异常
         """
         try:
-            # 智能获取默认值（传值优先，不传从缓存获取）
             po_type_id = self._get_default_value(
-                po_type_id, 
+                po_type_id,
                 ["pur_cache_data", "pur_config", "po_type_info", 0, "id"]
             )
             vend_id = self._get_default_value(
@@ -151,37 +150,24 @@ class PurPoFactory:
             pur_curr_id = self._get_default_value(
                 pur_curr_id,
                 ["init_data", "currency_info", 0, "curr_id"],
-                default="2000001"  # 默认人民币
+                default="2000001"
             )
-            
-            # 获取采购相关方类型ID（用于partner参数）
+
             pur_partner_type_id = self._get_default_value(
                 None,
                 ["md_cache_data", "partner_info", "partner_type_cf", "pur_partner_type", "id"]
             )
-            
-            api_path = ParamUtil.get_api_path(self.apis, "PO-创建订单-提交服务")
-            params, url = ParamUtil.get_api_params(self.api_params, api_path)
-            
+
             po_items = self._build_po_items(mat_items, vend_id, pur_employee_id)
-            
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["poCode", "poType", "vendId", "purEmployee", "purOrgId", "comOrgId", 
-                 "purRemark", "poItem", "businessDate", "purCurrId", "currTypeCode",
-                 "partner", "attachment"],
-                ["params", "request"]
-            )
-            
-            # 构建partner参数（智能获取相关方类型ID）
+
             partner_list = []
             if pur_partner_type_id:
                 partner_list.append({
                     "partnerTypeRef": {"id": pur_partner_type_id},
                     "partnerRef": {"id": vend_id}
                 })
-            
-            ParamUtil.set_request_params(filtered_params, {
+
+            request_body = {
                 "poCode": None,
                 "poType": {"id": po_type_id},
                 "vendId": {"id": vend_id},
@@ -195,44 +181,127 @@ class PurPoFactory:
                 "currTypeCode": {"id": pur_curr_id},
                 "partner": partner_list,
                 "attachment": []
-            })
-            
-            try:
-                response = self.http.post(url, json=filtered_params, params={"tmodule": "SCM_PUR"})
-            except Exception as http_error:
-                # 捕获HTTP错误（如500、504等）
-                error_detail = str(http_error)
-                self.logger.error(f"HTTP请求失败: {error_detail}")
-                self.logger.error(f"请求URL: {url}")
-                self.logger.error(f"请求参数: {filtered_params}")
-                # 尝试获取响应内容
-                if hasattr(http_error, 'response') and http_error.response is not None:
-                    try:
-                        error_response = http_error.response.json()
-                        self.logger.error(f"错误响应内容: {error_response}")
-                    except:
-                        self.logger.error(f"错误响应文本: {http_error.response.text}")
-                raise Exception(f"采购订单创建失败（HTTP错误）: {error_detail}") from http_error
-            
-            if response.get("success"):
-                self.logger.info("采购订单创建成功")
-                return {
-                    "success": True,
-                    "response": response
-                }
-            else:
-                error_msg = response.get("message") or response.get("errorMessage") or response.get("error") or "未知错误"
-                self.logger.error(f"采购订单创建失败: {error_msg}")
-                self.logger.error(f"完整响应内容: {response}")
-                raise Exception(f"采购订单创建失败: {error_msg}")
-                
+            }
+
+            # Step 1: SAVE — 创建 PO 头 + 订单行（DRAFT 状态）
+            save_response = self._call_po_service("PO-创建订单-保存服务", request_body)
+            po_id = self._extract_po_id(save_response)
+            if not po_id:
+                raise Exception(f"保存后未获取到采购订单ID，响应: {save_response}")
+
+            # SAVE 响应已包含完整对象（含 poItem / partner / poSchl），直接复用
+            save_data = save_response.get("data", {}).get("data", {})
+            save_items = save_data.get("poItem") or []
+            self.logger.info(
+                f"采购订单保存成功: po_id={po_id}, poItem行数={len(save_items)}"
+            )
+            if not save_items:
+                raise Exception(
+                    f"SAVE 响应中未包含 poItem，无法提交。po_id={po_id}, "
+                    f"response keys={list(save_data.keys())}"
+                )
+
+            # Step 2: SUBMIT — 提交订单（DRAFT → EFFECT）
+            submit_response = self._call_po_service(
+                "PO-创建订单-提交服务", save_data, use_filter=False
+            )
+            self.logger.info(f"采购订单提交成功: po_id={po_id}")
+
+            return {
+                "success": True,
+                "po_id": po_id,
+                "po_code": save_data.get("poCode"),
+                "po_detail": save_data,
+                "response": submit_response
+            }
+
         except Exception as e:
             self.logger.error(f"创建采购订单异常: {str(e)}")
-            # 如果不是我们自定义的异常，记录完整的异常信息
-            if not isinstance(e, Exception) or "采购订单创建失败" not in str(e):
-                import traceback
-                self.logger.error(f"异常堆栈: {traceback.format_exc()}")
+            import traceback
+            self.logger.error(f"异常堆栈: {traceback.format_exc()}")
             raise
+
+    def _call_po_service(
+        self, api_key: str, request_body: dict, use_filter: bool = True
+    ) -> dict:
+        """调用采购订单服务。
+
+        Args:
+            api_key: API 服务名称
+            request_body: 请求体内容
+            use_filter: True=通过模板过滤构建参数（新建保存）；
+                        False=直接包装完整对象（提交/冻结等需要完整详情的场景）
+        """
+        api_path = ParamUtil.get_api_path(self.apis, api_key)
+        params_template, url = ParamUtil.get_api_params(self.api_params, api_path)
+
+        if use_filter:
+            kept_fields = list(request_body.keys())
+            payload = ParamUtil.filter_post_body_fields(
+                params_template, kept_fields, ["params", "request"]
+            )
+            ParamUtil.set_request_params(payload, request_body)
+        else:
+            service_key = params_template.get("serviceKey")
+            payload = {"params": {"request": request_body}}
+            if service_key:
+                payload["serviceKey"] = service_key
+
+        try:
+            response = self.http.post(url, json=payload, params={"tmodule": "SCM_PUR"})
+        except Exception as http_error:
+            self.logger.error(f"HTTP请求失败 [{api_key}]: {http_error}")
+            raise Exception(f"采购订单服务调用失败 [{api_key}]: {http_error}") from http_error
+
+        if not response.get("success"):
+            err = response.get("err", {})
+            error_msg = err.get("msg") or response.get("message") or "未知错误"
+            self.logger.error(f"服务返回失败 [{api_key}]: {error_msg}")
+            self.logger.error(f"完整响应: {response}")
+            raise Exception(f"采购订单服务失败 [{api_key}]: {error_msg}")
+
+        return response
+
+    def _extract_po_id(self, response: dict):
+        """从保存/提交响应中提取 PO ID"""
+        data = response.get("data", {}).get("data")
+        if isinstance(data, dict):
+            return data.get("id")
+        if isinstance(data, (int, str)) and data:
+            return data
+        return None
+
+    def _query_po_detail(self, po_id) -> dict:
+        """通过系统详情服务查询完整 PO 对象（含子实体 poItem）"""
+        detail_api_path = ParamUtil.get_api_path(self.apis, "(系统)查询数据详情服务")
+        params_template, detail_url = ParamUtil.get_api_params(self.api_params, detail_api_path)
+
+        detail_params = {
+            "params": {
+                "request": {"id": po_id},
+                "modelKey": "SCM_PUR$pur_po_head_tr"
+            }
+        }
+        service_key = params_template.get("serviceKey")
+        if service_key:
+            detail_params["serviceKey"] = service_key
+
+        try:
+            detail_resp = self.http.post(
+                detail_url,
+                json=detail_params,
+                params={"tmodule": "SCM_PUR", "modelKey": "SCM_PUR$pur_po_head_tr"}
+            )
+        except Exception as e:
+            raise Exception(f"查询采购订单详情失败: {e}") from e
+
+        if not detail_resp.get("success"):
+            raise Exception(f"查询采购订单详情返回失败: {detail_resp}")
+
+        po_detail = detail_resp.get("data", {}).get("data", {})
+        if not po_detail:
+            raise Exception(f"采购订单详情为空: po_id={po_id}")
+        return po_detail
     
     def _build_po_items(self, mat_items: List[Dict], vend_id: str, pur_employee_id: str) -> List[Dict]:
         """构建采购订单明细（支持智能默认值 + 计划行拆分）"""

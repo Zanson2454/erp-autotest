@@ -13,38 +13,39 @@ from starlette.staticfiles import StaticFiles
 project_root = Path(__file__).resolve().parent
 sys.path.insert(0, str(project_root))
 
+from erp_data_factory.interfaces import fastapi_router as edf_router  # noqa: E402
 from routers import allure_api, api_manage, data_factory_api  # noqa: E402
 
 # 初始化FastAPI应用程序
 app = FastAPI(
     docs_url=None,  # 禁用默认 docs
-    redoc_url=None, # 如需禁用 redoc
+    redoc_url=None,  # 如需禁用 redoc
     swagger_ui_parameters=None,
     openapi_url="/openapi.json",
     title="ERP-AUTOTEST",
     description="ERP自动化测试平台",
     version="1.0.0",
-    openapi_version="3.1.0")
-
+    openapi_version="3.1.0",
+)
 
 
 # 挂载 Allure 报告静态目录
-ALLURE_REPORT_DIR = 'reports/allure-report'
+ALLURE_REPORT_DIR = "reports/allure-report"
 app.mount("/allure", StaticFiles(directory=ALLURE_REPORT_DIR), name="allure")
 
 # 挂载 static 静态资源目录（必须有！）
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
-
 # 注册API路由
 # app.include_router(autotest_api.router)
 app.include_router(data_factory_api.router)
+app.include_router(edf_router.router)
 app.include_router(allure_api.router)
 app.include_router(api_manage.router)
 
 
-@app.get("/",tags=["首页"])
+@app.get("/", tags=["首页"])
 async def root():
     return "ok"
 

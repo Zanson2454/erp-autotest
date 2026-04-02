@@ -35,14 +35,27 @@ def _cleanup_scm_inv() -> None:
         db.delete(table="inv_fb_type_cf", where="code like %s", params=["AT_%"])
         db.delete(table="inv_mvm_ext_type_cf", where="code like %s", params=["AT_%"])
         db.delete(table="inv_bs_type_cf", where="name like %s", params=["%AT%"])
-        db.delete(table="inv_atp_rule_cf", where="code like %s", params=["AUTOTEST_%"])
+        try:
+            db.execute(
+                "DELETE FROM inv_atp_rule_cf WHERE atp_group_id IN "
+                "(SELECT id FROM inv_atp_group_md WHERE code LIKE %s)",
+                ["AUTOTEST_%"],
+            )
+        except Exception as exc:
+            Loggers.warning(f"跳过清理 inv_atp_rule_cf: {exc}")
         db.delete(table="inv_atp_group_md", where="code like %s", params=["AUTOTEST_ATP_%"])
-        db.delete(table="inv_move_doc_head", where="doc_code like %s", params=["AUTOTEST_%"])
-        db.delete(table="inv_move_doc_item", where="note like %s", params=["%AUTOTEST%"])
+        try:
+            db.delete(table="inv_move_doc_head", where="doc_code like %s", params=["AUTOTEST_%"])
+        except Exception as exc:
+            Loggers.warning(f"跳过清理 inv_move_doc_head: {exc}")
+        try:
+            db.delete(table="inv_move_doc_item", where="note like %s", params=["%AUTOTEST%"])
+        except Exception as exc:
+            Loggers.warning(f"跳过清理 inv_move_doc_item: {exc}")
 
         Loggers.info("✅ SCM_INV 模块测试数据统一清理完成")
     except Exception as e:
-        Loggers.error(f"❌ SCM_INV 模块测试数据清理失败: {e}")
+        Loggers.warning(f"SCM_INV 模块测试数据清理失败: {e}")
     finally:
         if db:
             try:

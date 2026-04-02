@@ -180,7 +180,7 @@ def _cleanup_gen_md() -> None:
 
         Loggers.info("✅ GEN_MD 模块测试数据统一清理完成")
     except Exception as e:
-        Loggers.error(f"❌ GEN_MD 模块测试数据清理失败: {e}")
+        Loggers.warning(f"GEN_MD 模块测试数据清理失败: {e}")
     finally:
         if db:
             try:

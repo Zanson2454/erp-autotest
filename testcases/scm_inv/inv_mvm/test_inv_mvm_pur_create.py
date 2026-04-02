@@ -131,7 +131,7 @@ class TestMobileVoucherCreator(MobileVoucherCreator):
         """采购入库-多物料行测试"""
         try:
             # 1. 准备多物料行数据
-            mat_list = self.inv_cache_data["mat_info"]["mat_md"]["FINP"]
+            mat_list = self.md_cache_data["mat_info"]["mat_md"]["FINP"]
             if len(mat_list) < 2:
                 # 如果只有一个物料，就用同一个物料创建两行
                 mat_items = [

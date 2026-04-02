@@ -6,7 +6,7 @@ import allure
 from testcases.comm.base_test import BaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a
-from data_factory.fin_ar_factory import FinArFactory
+from erp_data_factory.compat.fin_ar_factory import FinArFactory
 from decimal import Decimal
 from datetime import datetime
 from pathlib import Path

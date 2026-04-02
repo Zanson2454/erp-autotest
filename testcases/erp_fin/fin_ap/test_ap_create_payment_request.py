@@ -361,7 +361,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
                 self.assert_util.assert_by_operator(info.get("ap_doc_id"), "not_empty", "请先执行前置用例")
                 self.assert_util.assert_by_operator(info.get("pr_create_success"), "not_empty", "请先执行付款申请单创建用例")
                 
-                from data_factory.fin_ap_factory import FinApFactory
+                from erp_data_factory.compat.fin_ap_factory import FinApFactory
                 
                 ap_factory = FinApFactory()
                 pr_info = ap_factory.query_payment_request_by_ap_id(info["ap_doc_id"])

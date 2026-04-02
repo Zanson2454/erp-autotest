@@ -14,7 +14,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 
 import pytest
 
-from data_factory.base import DataFactory
+from erp_data_factory.compat.base import DataFactory
 from testcases.comm.api_call_service import ApiCallService
 from testcases.comm.api_client_facade import ApiClientFacade
 from testcases.comm.auth_context import AuthContext
@@ -217,6 +217,7 @@ class BaseTest(LoginMixin):
     def _initialize_auth(cls) -> None:
         """策略驱动的单次登录 — 由 LoginMixin._do_login 执行。"""
         cls._do_login()
+        cls.init_data["user_info"] = {"user_info": cls.user_info}
 
     # ─── 声明式模块初始化（子类可覆盖各 hook） ───
 
@@ -283,7 +284,6 @@ class BaseTest(LoginMixin):
 
     @classmethod
     def _post_initialize(cls) -> None:
-        cls.init_data["user_info"] = {"user_info": cls.user_info}
         if not hasattr(cls, "md_cache_data") or cls.md_cache_data is None:
             cls.md_cache_data = {}
 

@@ -38,12 +38,12 @@ class TestInvAtpLockSale(ScmInvBaseTest):
         cls.so_plan_qty = 5  # 销售单数量
         cls.dn_plan_qty = 3  # 交货单数量
         
-        if cls.inv_cache_data:
-            cls.mat_id = cls.inv_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP", [])[0].get("id")
-            cls.mat_code = cls.inv_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP", [])[0].get("matCode")
-            cls.inv_org_id = cls.inv_cache_data.get("org_info", {}).get("inv_org_info", [])[0].get("id")
-            cls.inv_loc_id = cls.inv_cache_data.get("org_info", {}).get("inv_loc_info", [])[0].get("id")
-            cls.atp_rule_id = cls.inv_cache_data.get("org_info", {}).get("inv_atp_rule_cf", [])[0].get("id")
+        if cls.md_cache_data:
+            cls.mat_id = cls.md_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP", [])[0].get("id")
+            cls.mat_code = cls.md_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP", [])[0].get("matCode")
+            cls.inv_org_id = cls.md_cache_data.get("org_info", {}).get("inv_org_info", [])[0].get("id")
+            cls.inv_loc_id = cls.md_cache_data.get("org_info", {}).get("inv_loc_info", [])[0].get("id")
+            cls.atp_rule_id = cls.md_cache_data.get("org_info", {}).get("inv_atp_rule_cf", [])[0].get("id")
         
         cls.logger.info("ATP销售单测试类初始化完成")
     

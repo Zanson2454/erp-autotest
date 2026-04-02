@@ -11,7 +11,7 @@ project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
 from testcases.scm_pur import ScmPurBaseTest
 from utils.report_util import a, case_decorator
-from data_factory.pur_po_factory import PurPoFactory
+from erp_data_factory.compat.pur_po_factory import PurPoFactory
 from utils.param_util import ParamUtil
 
 
@@ -100,32 +100,21 @@ class TestPoManagement(ScmPurBaseTest):
     
     
     def _get_po_detail_by_id(self, po_id):
-        """获取订单详情"""
-        api_path = self.get_api_path("(系统)查询数据详情服务")
-        _, url = self.get_api_params(api_path)
-        
-        params = {
-            "serviceKey": "SCM_PUR$SYS_FindDataByIdService",
-            "params": {
-                "request": {"id": po_id},
-                "modelKey": "SCM_PUR$pur_po_head_tr"
-            }
-        }
-        
+        """获取订单完整详情（含 poItem / partner / poSchl）"""
+        set_dict = {"id": po_id}
         response, _ = self.standard_api_call(
-            api_key="(系统)查询数据详情服务",
-            set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
+            api_key="查询采购订单详情",
+            set_dict=set_dict,
             store_id_as=None,
-            use_param_util=False,
             param_path=["params"],
-            query_params={"tmodule": "SCM_PUR", "modelKey": "SCM_PUR$pur_po_head_tr"}
+            query_params={"tmodule": "SCM_PUR"}
         )
         self.assert_util.assert_response_data(response)
-        
+
         po_detail = response.get("data", {}).get("data", {})
         if not po_detail:
             raise ValueError(f"未获取到订单详情数据: po_id={po_id}")
-        
+
         return po_detail
     
     def _verify_po_status(self, expected_status, status_desc):
@@ -211,7 +200,22 @@ class TestPoManagement(ScmPurBaseTest):
                 pur_remark=self.TEST_REMARK
             )
             
+            self.__class__.po_id = result.get("po_id")
+            self.__class__.po_code = result.get("po_code")
             self.__class__.pur_remark = self.TEST_REMARK
+
+            assert self.__class__.po_id, "创建采购订单后未获取到 po_id"
+
+            po_detail = result.get("po_detail", {})
+            po_items = po_detail.get("poItem") or []
+            assert len(po_items) > 0, f"采购订单行为空，po_id={self.__class__.po_id}"
+
+            a.text(
+                f"订单ID: {self.__class__.po_id}\n"
+                f"订单编码: {self.__class__.po_code}\n"
+                f"订单行数: {len(po_items)}",
+                "创建结果"
+            )
             a.json(result.get("response", {}), "响应数据")
             
         except Exception as e:
@@ -315,38 +319,30 @@ class TestPoManagement(ScmPurBaseTest):
         try:
             if not self.__class__.po_id:
                 self.test_query_po_list()
-            
-            api_path = self.get_api_path("(系统)查询数据详情服务")
-            _, url = self.get_api_params(api_path)
-            
-            request_params = {
-                "serviceKey": "SCM_PUR$SYS_FindDataByIdService",
-                "params": {
-                    "request": {"id": self.__class__.po_id},
-                    "modelKey": "SCM_PUR$pur_po_head_tr"
-                }
-            }
-            
+
+            set_dict = {"id": self.__class__.po_id}
             response, _ = self.standard_api_call(
-                api_key="(系统)查询数据详情服务",
-                set_dict=(request_params.get("params", {}) if isinstance(request_params, dict) else request_params),
+                api_key="查询采购订单详情",
+                set_dict=set_dict,
                 store_id_as=None,
-                use_param_util=False,
                 param_path=["params"],
-                query_params={"tmodule": "SCM_PUR", "modelKey": "SCM_PUR$pur_po_head_tr"}
+                query_params={"tmodule": "SCM_PUR"}
             )
-            
+
             self.assert_util.assert_response_data(response)
-            
+
             result_data = response.get("data", {}).get("data", {})
             assert result_data, "详情数据为空"
-            
+
             document_status = result_data.get("documentStatus")
             assert document_status == "EFFECT", \
                 f"单据状态不符合预期: 期望=EFFECT, 实际={document_status}"
-            
+
+            assert result_data.get("poCode"), "详情中 poCode 为空"
+            assert result_data.get("vendId"), "详情中 vendId 为空"
+
             a.json(response, "响应数据")
-            
+
         except Exception as e:
             a.text(str(e), "失败原因")
             raise

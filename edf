@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+python -m erp_data_factory.cli "$@"

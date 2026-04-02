@@ -26,9 +26,9 @@ class MobileVoucherCreator(ScmInvBaseTest):
         super().bind_context()
         
         # 初始化必要的ID属性
-        if cls.inv_cache_data:
+        if cls.md_cache_data:
             # 组织信息
-            org_info = cls.inv_cache_data.get("org_info", {})
+            org_info = cls.md_cache_data.get("org_info", {})
             cls.comOrgId = org_info.get("gr_come_org_info", [{}])[0].get("id")
             cls.invOrgId = org_info.get("inv_org_info", [{}])[0].get("id")
             cls.invLocId = org_info.get("inv_loc_info", [{}])[0].get("id")
@@ -44,7 +44,7 @@ class MobileVoucherCreator(ScmInvBaseTest):
             
             cls.logger.info(f"移动凭证创建器初始化完成 - 组织ID: {cls.comOrgId}, 库存组织: {cls.invOrgId}")
         else:
-            cls.logger.error("inv_cache_data 未找到，无法初始化必要属性")
+            cls.logger.error("md_cache_data 未找到，无法初始化必要属性")
             raise RuntimeError("缓存数据未找到，请检查数据初始化")
     
     def create_purchase_voucher(
@@ -65,7 +65,7 @@ class MobileVoucherCreator(ScmInvBaseTest):
         """创建采购入库移动凭证"""
         try:
             # 参数默认值处理
-            mvmTypeId = mvmTypeId or self.inv_cache_data["org_info"]["inv_mvm_type_cf_pur"][0]["id"]
+            mvmTypeId = mvmTypeId or self.md_cache_data["org_info"]["inv_mvm_type_cf_pur"][0]["id"]
             comOrgId, invOrgId, invLocId = self._get_default_org_params(comOrgId, invOrgId, invLocId)
             
             # 处理物料行数据
@@ -113,7 +113,7 @@ class MobileVoucherCreator(ScmInvBaseTest):
         """创建销售出库移动凭证"""
         try:
             # 参数默认值处理
-            mvmTypeId = mvmTypeId or self.inv_cache_data["org_info"]["inv_mvm_type_cf_sls"][0]["id"]
+            mvmTypeId = mvmTypeId or self.md_cache_data["org_info"]["inv_mvm_type_cf_sls"][0]["id"]
             comOrgId, invOrgId, invLocId = self._get_default_org_params(comOrgId, invOrgId, invLocId)
             
             # 处理物料行数据
@@ -161,8 +161,8 @@ class MobileVoucherCreator(ScmInvBaseTest):
         """创建调拨移动凭证（一出一入）"""
         try:
             # 参数默认值处理
-            mat_id = mat_id or self.inv_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
-            mvmTypeId = mvmTypeId or self.inv_cache_data["org_info"]["inv_mvm_type_cf_all"][0]["id"]
+            mat_id = mat_id or self.md_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
+            mvmTypeId = mvmTypeId or self.md_cache_data["org_info"]["inv_mvm_type_cf_all"][0]["id"]
             comOrgId, invOrgId, invLocId = self._get_default_org_params(comOrgId, invOrgId, invLocId)
             
             # 处理出库批次：如果需要批次且未指定，自动查找可用批次
@@ -231,13 +231,13 @@ class MobileVoucherCreator(ScmInvBaseTest):
         """创建特殊库存转移移动凭证（一出一入，入库带特殊库存标识）"""
         try:
             # 参数默认值处理
-            mat_id = mat_id or self.inv_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
-            mvmTypeId = mvmTypeId or self.inv_cache_data["org_info"]["inv_mvm_type_cf_spc_stk_transfer"][0]["id"]
+            mat_id = mat_id or self.md_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
+            mvmTypeId = mvmTypeId or self.md_cache_data["org_info"]["inv_mvm_type_cf_spc_stk_transfer"][0]["id"]
             comOrgId, invOrgId, invLocId = self._get_default_org_params(comOrgId, invOrgId, invLocId)
             
             # 从缓存获取特殊库存参数
-            spc_stk_type_info = self.inv_cache_data["org_info"]["inv_spc_stk_type_cf_spc_stk_transfer"][0]
-            vend_info = self.inv_cache_data["partner_info"]["vend_info"][0]
+            spc_stk_type_info = self.md_cache_data["org_info"]["inv_spc_stk_type_cf_spc_stk_transfer"][0]
+            vend_info = self.md_cache_data["partner_info"]["vend_info"][0]
             
             # 处理出库批次：如果需要批次且未指定，自动查找可用批次
             if not from_batch_id and self._check_need_batch(mat_id):
@@ -341,7 +341,7 @@ class MobileVoucherCreator(ScmInvBaseTest):
                 items.append(voucher_item)
         else:
             # 单物料行模式
-            mat_id = mat_id or self.inv_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
+            mat_id = mat_id or self.md_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
             total_qty = qty
             
             if voucher_type == "purchase":

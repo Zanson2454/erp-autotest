@@ -140,7 +140,6 @@ class CheckResult:
         self.message = message
 
     def __str__(self) -> str:
-        status = "PASS" if self.passed else "FAIL"
         icon = "PASS" if self.passed else "FAIL"
         msg = f" -- {self.message}" if self.message else ""
         return f"  [{icon}] [{self.section}] {self.name}:{msg}"
@@ -778,7 +777,7 @@ def seed_warm_cache(env: str, project: Optional[str]) -> int:
     if project:
         os.environ["TEST_PROJECT"] = project
     try:
-        from data_factory.base import DataFactory
+        from erp_data_factory.compat.base import DataFactory
     except ImportError as e:
         print(f"导入失败: {e}", file=sys.stderr)
         return 2

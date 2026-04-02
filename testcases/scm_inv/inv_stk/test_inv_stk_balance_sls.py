@@ -35,7 +35,7 @@ class TestInvStkBalanceSalesManagement(MobileVoucherCreator):
         """绑定测试上下文对象。"""
         super().bind_context()
         cls.available_batch_id = None
-        cls.default_mat_id = cls.inv_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
+        cls.default_mat_id = cls.md_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
         
         # 查询可用批次用于销售出库
         try:

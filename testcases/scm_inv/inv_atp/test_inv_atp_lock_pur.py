@@ -38,11 +38,11 @@ class TestInvAtpLockPur(ScmInvBaseTest):
         cls.po_plan_qty = 11  # 采购单数量
         cls.dn_plan_qty = 2  # 交货单数量
         
-        if cls.inv_cache_data:
-            cls.mat_id = cls.inv_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP", [])[0].get("id")
-            cls.mat_code = cls.inv_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP", [])[0].get("matCode")
-            cls.inv_org_id = cls.inv_cache_data.get("org_info", {}).get("inv_org_info", [])[0].get("id")
-            cls.inv_loc_id = cls.inv_cache_data.get("org_info", {}).get("inv_loc_info", [])[0].get("id")
+        if cls.md_cache_data:
+            cls.mat_id = cls.md_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP", [])[0].get("id")
+            cls.mat_code = cls.md_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP", [])[0].get("matCode")
+            cls.inv_org_id = cls.md_cache_data.get("org_info", {}).get("inv_org_info", [])[0].get("id")
+            cls.inv_loc_id = cls.md_cache_data.get("org_info", {}).get("inv_loc_info", [])[0].get("id")
         
         cls.logger.info("ATP采购单测试类初始化完成")
 

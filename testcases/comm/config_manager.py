@@ -7,7 +7,7 @@ import json
 import os
 from typing import Any, Dict
 
-from data_factory.base import DataFactory
+from erp_data_factory.compat.base import DataFactory
 from utils.log_util import Loggers
 
 

@@ -4,10 +4,10 @@ from typing import Dict, Any, Optional, List
 from datetime import datetime
 from decimal import Decimal
 
-project_root = Path(__file__).resolve().parent.parent
+project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
 
-from data_factory.base import DataFactory
+from erp_data_factory.legacy.base import DataFactory
 from utils.mysql_util import DBManager
 from utils.log_util import Loggers
 

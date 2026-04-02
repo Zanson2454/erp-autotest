@@ -28,7 +28,7 @@ class TestMobileVoucherSaleCreator(MobileVoucherCreator):
         
         # 查询可用批次用于销售出库
         try:
-            default_mat_id = cls.inv_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
+            default_mat_id = cls.md_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
             sql = """
                 SELECT batch_id 
                 FROM inv_stk_ba 
@@ -63,7 +63,7 @@ class TestMobileVoucherSaleCreator(MobileVoucherCreator):
                 pytest.skip("没有可用批次，跳过销售出库测试")
             
             # 创建销售出库移动凭证
-            default_mat_id = self.inv_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
+            default_mat_id = self.md_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
             voucher_info = self.create_sale_voucher(
                 mat_id=default_mat_id,
                 qty=1,
@@ -103,7 +103,7 @@ class TestMobileVoucherSaleCreator(MobileVoucherCreator):
         """销售出库-指定完整仓位测试"""
         try:
             # 查询指定仓位的库存
-            default_mat_id = self.inv_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
+            default_mat_id = self.md_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
             sql = """
                 SELECT stk_qty, batch_id FROM inv_stk_ba 
                 WHERE mat_id = %s AND com_org_id = %s AND inv_org_id = %s 
@@ -166,7 +166,7 @@ class TestMobileVoucherSaleCreator(MobileVoucherCreator):
         """销售出库-多物料行测试"""
         try:
             # 查询指定仓位的多个批次库存
-            default_mat_id = self.inv_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
+            default_mat_id = self.md_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
             sql = """
                 SELECT stk_qty, batch_id FROM inv_stk_ba 
                 WHERE mat_id = %s AND com_org_id = %s AND inv_org_id = %s 

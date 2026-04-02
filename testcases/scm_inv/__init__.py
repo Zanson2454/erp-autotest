@@ -18,7 +18,7 @@ class ScmInvBaseTest(BaseTest):
     API_PARAMS_FILE = "config/api/scm_inv/inv_api_params.yaml"
 
     SQL_CACHES = [
-        {"path": "config/erp/md_init_sql.yaml", "key": "inv_init_cache", "attr": "inv_cache_data"},
+        {"path": "config/erp/md_init_sql.yaml", "key": "md_init_cache", "attr": "md_cache_data"},
     ]
 
     @classmethod

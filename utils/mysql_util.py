@@ -79,10 +79,7 @@ class DBManager:
                 return affected_rows
         except Exception as e:
             connection.rollback()
-            self._logger.error(f"SQL执行失败: {str(e)}")
-            self._logger.error(f"SQL: {sql}")
-            if params:
-                self._logger.error(f"参数: {params}")
+            self._logger.warning(f"SQL执行失败: {e} | SQL: {sql} | 参数: {params}")
             raise
 
     def _validate_config(self, config: Dict[str, Any]) -> Dict[str, Any]:
@@ -203,10 +200,7 @@ class DBManager:
                 self._logger.debug(f"查询结果: {json.dumps(list(result), ensure_ascii=False, cls=DecimalEncoder)}")
                 return list(result)
         except Exception as e:
-            self._logger.error(f"查询执行失败: {str(e)}")
-            self._logger.error(f"SQL: {sql}")
-            if params:
-                self._logger.error(f"参数: {params}")
+            self._logger.warning(f"查询执行失败: {e} | SQL: {sql} | 参数: {params}")
             raise
 
     def query_one(self, sql: str, params: Optional[List[Any]] = None) -> Optional[Dict[str, Any]]:
@@ -231,9 +225,7 @@ class DBManager:
                 return inserted_id
         except Exception as e:
             connection.rollback()
-            self._logger.error(f"插入数据失败: {str(e)}")
-            self._logger.error(f"SQL: {sql}")
-            self._logger.error(f"数据: {data}")
+            self._logger.warning(f"插入数据失败: {e} | SQL: {sql} | 数据: {data}")
             raise
 
     def update(self, table: str, data: Dict[str, Any], where: str, params: Optional[List[Any]] = None) -> int:
@@ -251,9 +243,7 @@ class DBManager:
                 return affected_rows
         except Exception as e:
             connection.rollback()
-            self._logger.error(f"更新数据失败: {str(e)}")
-            self._logger.error(f"SQL: {sql}")
-            self._logger.error(f"数据: {data}")
+            self._logger.warning(f"更新数据失败: {e} | SQL: {sql} | 数据: {data}")
             raise
 
     @staticmethod
@@ -294,10 +284,7 @@ class DBManager:
                 return affected_rows
         except Exception as e:
             connection.rollback()
-            self._logger.error(f"删除数据失败: {str(e)}")
-            self._logger.error(f"SQL: {sql}")
-            if params:
-                self._logger.error(f"参数: {params}")
+            self._logger.warning(f"删除数据失败 [表={table}]: {e} | SQL: {sql} | 参数: {params}")
             raise
         
 

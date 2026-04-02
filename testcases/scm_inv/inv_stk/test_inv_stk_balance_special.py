@@ -34,7 +34,7 @@ class TestInvStkBalanceSpecialManagement(MobileVoucherCreator):
         """绑定测试上下文对象。"""
         super().bind_context()
         cls.available_batch_id = None
-        cls.default_mat_id = cls.inv_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
+        cls.default_mat_id = cls.md_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
         
         # 查询可用批次用于特殊库存转移出库
         try:
@@ -80,7 +80,7 @@ class TestInvStkBalanceSpecialManagement(MobileVoucherCreator):
 
     def _create_special_transfer_voucher_with_params(self, custom_to_batch, remark):
         """创建特殊库存转移凭证的私有方法"""
-        send_wh_info = self.inv_cache_data["org_info"]["inv_bin_send_md"][0]
+        send_wh_info = self.md_cache_data["org_info"]["inv_bin_send_md"][0]
         return self.create_special_stock_transfer_voucher(
             mat_id=self.default_mat_id,
             qty=1,

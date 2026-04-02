@@ -1,8 +1,9 @@
 import os
 
 from fastapi import APIRouter
-from data_factory.base import DataFactory
 from loguru import logger
+
+from erp_data_factory.compat.base import DataFactory
 
 router = APIRouter(prefix="/data-factory", tags=["数据工厂"])
 
@@ -19,5 +20,6 @@ async def get_base_data():
     data = DataFactory.get_base_data(project="erp")
     logger.info(f"获取基础数据：{data}")
     return data
+
 
 # 可根据需要扩展更多造数相关接口

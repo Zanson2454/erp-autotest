@@ -53,7 +53,7 @@ def _cleanup_erp_fin() -> None:
 
         Loggers.info("✅ ERP_FIN 模块测试数据统一清理完成")
     except Exception as e:
-        Loggers.error(f"❌ ERP_FIN 模块测试数据清理失败: {e}")
+        Loggers.warning(f"ERP_FIN 模块测试数据清理失败: {e}")
     finally:
         if db:
             try:

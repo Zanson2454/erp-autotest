@@ -11,7 +11,7 @@ project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
 from testcases.scm_pur import ScmPurBaseTest
 from utils.report_util import a, case_decorator
-from data_factory.pur_po_factory import PurPoFactory
+from erp_data_factory.compat.pur_po_factory import PurPoFactory
 from utils.param_util import ParamUtil
 
 

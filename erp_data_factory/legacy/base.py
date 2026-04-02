@@ -6,7 +6,7 @@ from typing import Dict, Any, List, Optional, Union
 import os
 from decimal import Decimal
 
-project_root = Path(__file__).parent.parent
+project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
 
 from utils.yaml_util import YamlUtil

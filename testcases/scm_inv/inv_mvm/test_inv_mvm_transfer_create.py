@@ -25,7 +25,7 @@ class TestMobileVoucherTransferCreator(MobileVoucherCreator):
         """绑定测试上下文对象。"""
         super().bind_context()
         cls.available_batch_id = None
-        cls.default_mat_id = cls.inv_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
+        cls.default_mat_id = cls.md_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
         
         # 查询可用批次用于调拨出库
         try:
@@ -62,7 +62,7 @@ class TestMobileVoucherTransferCreator(MobileVoucherCreator):
             
             # 准备调拨参数
             custom_to_batch = f"TRANSFER_{self.mock_util.get_timestamp()}"
-            send_wh_info = self.inv_cache_data["org_info"]["inv_bin_send_md"][0]
+            send_wh_info = self.md_cache_data["org_info"]["inv_bin_send_md"][0]
             
             # 创建调拨移动凭证
             voucher_info = self.create_transfer_voucher(

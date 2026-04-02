@@ -2,7 +2,7 @@
 
 import os
 
-from data_factory.base import DataFactory
+from erp_data_factory.compat.base import DataFactory
 from testcases.comm.base_test import BaseTest
 from testcases.comm.cleanup_registry import register_cleanup
 from utils.mysql_util import DBManager
@@ -24,13 +24,20 @@ def _cleanup_scm_pur() -> None:
 
         db.delete(table="pur_po_head_tr", where="pur_remark like %s", params=["%AUTOTEST%"])
         db.delete(table="pur_po_item_tr", where="note like %s", params=["%AUTOTEST%"])
-        db.delete(table="pur_pr_head_tr", where="pur_remark like %s", params=["%AUTOTEST%"])
         db.delete(table="pur_pr_item_tr", where="note like %s", params=["%AUTOTEST%"])
-        db.delete(table="pur_po_schl_tr", where="pur_remark like %s", params=["%AUTOTEST%"])
         db.delete(table="pur_po_item_type_cf", where="po_item_type like %s", params=["AUTOTEST_ITEM_%"])
         db.delete(table="pur_po_type_cf", where="po_type like %s", params=["AUTOTEST_PO_%"])
         db.delete(table="pur_pr_head_type_cf", where="pr_type_code like %s", params=["AUTOTEST_PR_%"])
         db.delete(table="pur_pr_item_type_cf", where="pr_item_type_code like %s", params=["AUTOTEST_PRI_%"])
+        try:
+            db.delete(table="pur_po_schl_tr", where="po_head_id IN "
+                      "(SELECT id FROM pur_po_head_tr WHERE pur_remark LIKE %s)", params=["%AUTOTEST%"])
+        except Exception:
+            pass
+        try:
+            db.delete(table="pur_pr_head_tr", where="remark like %s", params=["%AUTOTEST%"])
+        except Exception:
+            pass
     finally:
         if db:
             try:

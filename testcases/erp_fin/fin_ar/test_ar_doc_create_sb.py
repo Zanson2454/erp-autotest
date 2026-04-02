@@ -3,7 +3,7 @@ from testcases.erp_fin.fin_ar import ArBaseTest, convert_decimal_to_float
 from utils.param_util import ParamUtil
 from utils.mock_util import MockData
 from utils.report_util import a, case_decorator
-from data_factory.fin_ar_factory import FinArFactory
+from erp_data_factory.compat.fin_ar_factory import FinArFactory
 from decimal import Decimal
 from datetime import datetime
 from pathlib import Path

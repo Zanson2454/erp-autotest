@@ -191,7 +191,7 @@ def _perform_cleanup(db, session_start_time):
         Loggers.info("    这些数据需要在各自的测试类中保持原清理逻辑")
         
     except Exception as e:
-        Loggers.error(f"❌ SCM_SLS 模块测试数据清理失败: {str(e)}")
+        Loggers.warning(f"SCM_SLS 模块测试数据清理失败: {e}")
 
 
 def _cleanup_scm_sls() -> None:
@@ -210,7 +210,7 @@ def _cleanup_scm_sls() -> None:
         finally:
             db.close()
     except Exception as e:
-        Loggers.error(f"❌ SCM_SLS 模块测试数据清理失败: {str(e)}")
+        Loggers.warning(f"SCM_SLS 模块测试数据清理失败: {e}")
 
 
 register_cleanup("scm_sls_cleanup", _cleanup_scm_sls, order=210)

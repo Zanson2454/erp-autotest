@@ -36,24 +36,24 @@ class TestMobileVoucherManagement(ScmInvBaseTest):
         # 从初始化数据中获取ID
         cls.unitId = cls.init_data["uom_info"]["qty_uom_info"][0]["uom_id"] if cls.init_data.get("uom_info", {}).get("qty_uom_info") else None
         
-        # 从inv_cache_data中获取ID
-        if cls.inv_cache_data:
+        # 从md_cache_data中获取ID
+        if cls.md_cache_data:
             # 公司组织ID
-            cls.comOrgId = cls.inv_cache_data["org_info"]["gr_come_org_info"][0]["id"] if cls.inv_cache_data.get("org_info", {}).get("gr_come_org_info") else None
+            cls.comOrgId = cls.md_cache_data["org_info"]["gr_come_org_info"][0]["id"] if cls.md_cache_data.get("org_info", {}).get("gr_come_org_info") else None
             # 库存组织ID
-            cls.invOrgId = cls.inv_cache_data["org_info"]["inv_org_info"][0]["id"] if cls.inv_cache_data.get("org_info", {}).get("inv_org_info") else None
+            cls.invOrgId = cls.md_cache_data["org_info"]["inv_org_info"][0]["id"] if cls.md_cache_data.get("org_info", {}).get("inv_org_info") else None
             # 库存地点ID
-            cls.invLocId = cls.inv_cache_data["org_info"]["inv_loc_info"][0]["id"] if cls.inv_cache_data.get("org_info", {}).get("inv_loc_info") else None
+            cls.invLocId = cls.md_cache_data["org_info"]["inv_loc_info"][0]["id"] if cls.md_cache_data.get("org_info", {}).get("inv_loc_info") else None
             # 物料ID (使用成品物料)
-            cls.matId = cls.inv_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"] if cls.inv_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP") else None
+            cls.matId = cls.md_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"] if cls.md_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP") else None
             # 仓库ID
-            cls.invWhId = cls.inv_cache_data["org_info"]["inv_bin_rec_md"][0]["inv_wh_id"] if cls.inv_cache_data.get("org_info", {}).get("inv_bin_rec_md") else None
+            cls.invWhId = cls.md_cache_data["org_info"]["inv_bin_rec_md"][0]["inv_wh_id"] if cls.md_cache_data.get("org_info", {}).get("inv_bin_rec_md") else None
             # 仓储区ID
-            cls.invAreaId = cls.inv_cache_data["org_info"]["inv_bin_rec_md"][0]["inv_area_id"] if cls.inv_cache_data.get("org_info", {}).get("inv_bin_rec_md") else None
+            cls.invAreaId = cls.md_cache_data["org_info"]["inv_bin_rec_md"][0]["inv_area_id"] if cls.md_cache_data.get("org_info", {}).get("inv_bin_rec_md") else None
             # 仓位ID
-            cls.invBinId = cls.inv_cache_data["org_info"]["inv_bin_rec_md"][0]["id"] if cls.inv_cache_data.get("org_info", {}).get("inv_bin_rec_md") else None
+            cls.invBinId = cls.md_cache_data["org_info"]["inv_bin_rec_md"][0]["id"] if cls.md_cache_data.get("org_info", {}).get("inv_bin_rec_md") else None
             # 移动类型ID
-            cls.mvmTypeId = cls.inv_cache_data["org_info"]["inv_mvm_type_cf_pur"][0]["id"] if cls.inv_cache_data.get("org_info", {}).get("inv_mvm_type_cf_pur") else None
+            cls.mvmTypeId = cls.md_cache_data["org_info"]["inv_mvm_type_cf_pur"][0]["id"] if cls.md_cache_data.get("org_info", {}).get("inv_mvm_type_cf_pur") else None
             cls.moveTypeId = cls.mvmTypeId  # 移动类型和移动凭证类型使用相同ID
         
         cls.logger.info("移动凭证管理测试类初始化完成")

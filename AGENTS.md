@@ -156,7 +156,7 @@ config/erp/              → SQL 初始化配置
 testcases/comm/          → 基类和服务（BaseTest, ApiCallService 等）
 testcases/{module}/      → 按 ERP 模块组织的测试
 utils/                   → 16 个工具模块（mysql, request, assert, mock 等）
-data_factory/            → 数据工厂（SQL 驱动初始化）
+erp_data_factory/        → 数据工厂产品包（SDK/CLI/FastAPI + compat/legacy）
 routers/                 → FastAPI 路由（测试执行 + 报告服务）
 api_record/              → mitmproxy API 录制工具
 reports/                 → Allure 结果 + HTML 报告

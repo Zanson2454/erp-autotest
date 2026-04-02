@@ -36,16 +36,16 @@ class TestInvStkStatisticaManagement(ScmInvBaseTest):
         cls.batch_code = None
         cls.initial_qty = 0.0  # 初始库存数量
         
-        # 从inv_cache_data中获取必要ID
-        if cls.inv_cache_data:
+        # 从md_cache_data中获取必要ID
+        if cls.md_cache_data:
             # 公司组织ID
-            cls.comOrgId = cls.inv_cache_data["org_info"]["gr_come_org_info"][0]["id"] if cls.inv_cache_data.get("org_info", {}).get("gr_come_org_info") else None
+            cls.comOrgId = cls.md_cache_data["org_info"]["gr_come_org_info"][0]["id"] if cls.md_cache_data.get("org_info", {}).get("gr_come_org_info") else None
             # 库存组织ID
-            cls.invOrgId = cls.inv_cache_data["org_info"]["inv_org_info"][0]["id"] if cls.inv_cache_data.get("org_info", {}).get("inv_org_info") else None
+            cls.invOrgId = cls.md_cache_data["org_info"]["inv_org_info"][0]["id"] if cls.md_cache_data.get("org_info", {}).get("inv_org_info") else None
             # 库存地点ID
-            cls.invLocId = cls.inv_cache_data["org_info"]["inv_loc_info"][0]["id"] if cls.inv_cache_data.get("org_info", {}).get("inv_loc_info") else None
+            cls.invLocId = cls.md_cache_data["org_info"]["inv_loc_info"][0]["id"] if cls.md_cache_data.get("org_info", {}).get("inv_loc_info") else None
             # 物料ID (使用成品物料)
-            cls.matId = cls.inv_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"] if cls.inv_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP") else None
+            cls.matId = cls.md_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"] if cls.md_cache_data.get("mat_info", {}).get("mat_md", {}).get("FINP") else None
         
         cls.logger.info("库存汇总综合测试类初始化完成")
 

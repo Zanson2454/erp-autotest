@@ -44,7 +44,7 @@ def _cleanup_sys_common() -> None:
 
         Loggers.info("✅ SYS_COMMON 模块测试数据统一清理完成")
     except Exception as e:
-        Loggers.error(f"❌ SYS_COMMON 模块测试数据清理失败: {e}")
+        Loggers.warning(f"SYS_COMMON 模块测试数据清理失败: {e}")
     finally:
         if db:
             try:

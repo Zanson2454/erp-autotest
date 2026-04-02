@@ -121,11 +121,15 @@ erp-autotest/
 │   │       ├── test.yaml
 │   │       └── dev.yaml
 │   └── erp/               # 模块初始化 SQL（md_init_sql.yaml 等）
-├── data_factory/          # 数据工厂（当前完善中）
-│   ├── base.py           # 数据工厂基类 + 配置管理 + SQL 缓存
-│   ├── MD/               # 主数据工厂（partner_fc、org_fc 等）
-│   ├── CF/               # 配置工厂（待完善）
-│   └── BIZ/              # 业务工厂（待完善）
+├── erp_data_factory/      # 数据工厂产品包
+│   ├── client.py         # SDK 入口（ERPDataFactoryClient）
+│   ├── cli.py            # CLI 入口（edf）
+│   ├── interfaces/       # FastAPI 路由与接口模型
+│   ├── application/      # 场景注册、执行器、任务管理
+│   ├── domain/           # 场景实现（org/material/partner）
+│   ├── core/             # 上下文、结果模型、错误码
+│   ├── compat/           # 兼容入口（迁移期薄转发）
+│   └── legacy/           # 迁移承接的旧实现（已并入新包）
 ├── api_record/            # API 录制与 cURL 转化工具
 │   ├── recorder.py       # mitmproxy 插件：捕获请求并导出 cURL Markdown
 │   ├── start_recorder.py # 启动录制器（mitmdump 启动入口）
@@ -793,13 +797,14 @@ CacheUtil.init(cache_dir="testdata/cache", expire_minutes=60)  # 1 小时过期
 CacheUtil.refresh_expired_cache()
 ```
 
-### Q7: data_factory 如何使用？
+### Q7: 旧 data_factory 是否仍可用？
 
-A: data_factory 框架当前处于完善阶段：
-- **已实现**：DataFactory 基类、ConfigLoader（配置加载）、SQL 缓存管理
-- **部分实现**：MD 工厂（PartnerFactory、OrgFactory、MatFactory 等）
+A: 旧 `data_factory/` 目录已下线，能力迁移到 `erp_data_factory`：
+- 主路径：`erp_data_factory`（SDK/CLI/FastAPI）
+- 兼容层：`erp_data_factory.compat.*`（迁移期薄转发）
+- 旧调用建议逐步切换到 `ERPDataFactoryClient`
 
-当前推荐直接使用 `standard_api_call` 创建测试数据，暂不依赖 data_factory：
+若仅在用例中快速造数，仍可继续使用 `standard_api_call`：
 
 ```python
 # 推荐做法：直接用 API 创建
@@ -807,6 +812,53 @@ response, partner_id = self.standard_api_call(
     api_key="GEN-合作伙伴-保存服务",
     set_dict={"code": "AT_PARTNER001", "name": "测试合作伙伴"}
 )
+```
+
+### Q7.1: ERP Data Factory V1（M1）如何使用？
+
+A: 已提供 `erp_data_factory` 的 M1 场景执行入口（Org/Material/Partner）。
+
+**SDK（pytest / Python 代码中）**
+```python
+from erp_data_factory import ERPDataFactoryClient
+
+client = ERPDataFactoryClient(env="test")
+result = client.master.org.run({"org_type": "pur"})
+assert result.success is True
+print(result.to_dict())
+```
+
+**CLI**
+```bash
+./edf scenario run master.org.run --payload-json '{"org_type":"pur"}' --no-api-login
+./edf scenario run master.material.run --payload-json '{"mat_code":"AT_MAT_001"}' --no-api-login
+./edf scenario run master.partner.run --payload-json '{"partner_type":"cust"}' --no-api-login
+./edf scenario list
+./edf scenario run master.org.run --payload-json '{"org_type":"pur"}' --no-api-login --async-run
+./edf task status <task_id>
+```
+
+**FastAPI**
+```bash
+curl -X POST http://127.0.0.1:8000/erp-data-factory/v1/scenarios/master.org.run:run \
+  -H "Content-Type: application/json" \
+  -d '{"profile":"default","payload":{"org_type":"pur"}}'
+
+curl http://127.0.0.1:8000/erp-data-factory/v1/capabilities
+curl -X POST http://127.0.0.1:8000/erp-data-factory/v1/tasks/scenarios/master.org.run:run \
+  -H "Content-Type: application/json" \
+  -d '{"profile":"default","payload":{"org_type":"pur"},"no_api_login":true}'
+curl http://127.0.0.1:8000/erp-data-factory/v1/tasks/<task_id>
+```
+
+返回结构统一为：`success`、`scenario_key`、`data`、`trace_id`、`error`。
+并包含执行审计上下文：`audit.request_id`、`audit.scenario_key`、`audit.profile`。
+
+**pytest fixture**
+```python
+def test_prepare_data(edf_client):
+    r = edf_client.master.partner.run({"partner_type": "cust"})
+    assert r.success
 ```
 
 ### Q8: 多环境如何配置？
