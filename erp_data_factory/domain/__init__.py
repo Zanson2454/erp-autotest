@@ -1,1 +1,4 @@
-# Domain package marker
+"""domain 层包。
+
+封装业务场景逻辑，定义具体造数策略与数据提取规则。
+"""

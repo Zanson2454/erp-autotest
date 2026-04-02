@@ -1,1 +1,4 @@
-# Application package marker
+"""application 层包。
+
+负责场景注册、执行编排、任务调度等应用层能力。
+"""

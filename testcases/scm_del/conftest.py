@@ -18,7 +18,10 @@ def _cleanup_scm_del() -> None:
         # 清理交货单数据
         db.delete(table="del_dn_head_tr", where="remark like %s", params=["%执行自动化测试备注SQW%"])
         db.delete(table="del_dn_item_tr", where="remark like %s", params=["%执行自动化测试备注SQW%"])
-        db.delete(table="sls_so_head_tr", where="remark like %s", params=["%执行自动化测试备注SQW%"])
+        try:
+            db.delete(table="sls_so_head_tr", where="so_desc like %s", params=["%自动化测试%"])
+        except Exception:
+            pass
         db.delete(table="del_dn_type_cf", where="dn_type_code like %s", params=["AT_%"])
         db.delete(table="del_dn_item_type_cf", where="dn_item_type_code like %s", params=["AT_%"])
         Loggers.info("✅ SCM_DEL 模块测试数据清理完成")

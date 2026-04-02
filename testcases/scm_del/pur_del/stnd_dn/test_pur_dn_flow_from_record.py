@@ -83,6 +83,7 @@ class TestPurDnFlowFromRecord(ScmDelBaseTest):
                 set_dict=[{"id": dn_head_id}],
                 param_path=["params", "request"],
                 query_params={"tmodule": "SCM_DEL"},
+                use_param_util=False,
             )
             self.assert_util.assert_response_data(response)
             a.json(response, "采购交货单项目行分组响应")
