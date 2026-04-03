@@ -24,10 +24,6 @@ class TestAddrManagement(GenMdBaseTest):
     def bind_context(cls):
         """绑定测试上下文对象。"""
         super().bind_context()
-        # 数据存储
-        cls.addr_id = None
-        cls.addr_code = None
-        cls.parent_addr_id = None
         cls.logger.info("地址库管理测试类初始化完成")
         # 安全获取国家ID
         if cls.init_data:
@@ -65,19 +61,19 @@ class TestAddrManagement(GenMdBaseTest):
         )
         self.assert_util.assert_response_success(response)
         assert extracted_id is not None, "新增地址库失败，未返回地址ID"
-        self.addr_id = extracted_id
-        self.addr_code = addr_code
+        self.set_runtime_id("addr", extracted_id)
+        self.test_data["addr_code"] = addr_code
         self.logger.info(f"新增地址库完成，ID: {extracted_id}")
         return extracted_id
 
     def _ensure_save_addr(self):
-        if self.addr_id:
-            return self.addr_id
+        addr_id = self.get_runtime_id("addr")
+        if addr_id:
+            return addr_id
         return self._create_addr()
 
     def _create_child_addr(self):
-        if not self.addr_id:
-            self._ensure_save_addr()
+        addr_id = self._ensure_save_addr()
         child_addr_code = self.mock_util.generate_unique_code(tag="CITY")
         child_addr_name = f"测试城市_{self.mock_util.get_timestamp()}"
         set_dict = {
@@ -85,7 +81,7 @@ class TestAddrManagement(GenMdBaseTest):
             "addrName": child_addr_name,
             "addrNameEn": "",
             "addrType": "CITY",
-            "addrParentId": self.addr_id,
+            "addrParentId": addr_id,
             "postCode": self.mock_util.get_mock_postcode(),
             "lat": self.mock_util.get_mock_coordinates()["latitude"],
             "lng": self.mock_util.get_mock_coordinates()["longitude"],
@@ -99,14 +95,17 @@ class TestAddrManagement(GenMdBaseTest):
         )
         self.assert_util.assert_response_success(response)
         assert child_id is not None, "新增下级地址失败，未返回地址ID"
-        self.parent_addr_id = self.addr_id
-        self.logger.info(f"新增下级地址库完成，父级ID: {self.parent_addr_id}")
+        self.set_runtime_id("parent_addr", addr_id)
+        self.set_runtime_id("child_addr", child_id)
+        self.logger.info(f"新增下级地址库完成，父级ID: {addr_id}")
         return child_id
 
     def _ensure_save_child_addr(self):
-        if self.parent_addr_id:
-            return self.parent_addr_id
-        return self._create_child_addr()
+        parent_addr_id = self.get_runtime_id("parent_addr")
+        if parent_addr_id:
+            return parent_addr_id
+        self._create_child_addr()
+        return self.get_runtime_id("parent_addr")
 
     # ================ 地址库基础管理 ================
     @case_decorator(
@@ -243,11 +242,10 @@ class TestAddrManagement(GenMdBaseTest):
         """根据父级ID查询下级地址列表用例 - GEN_ADDR_TYPE_CF_QUERY_BY_PARENT_ACTION_SERVICE"""
         try:
             # 1. 确保父级地址存在
-            if not self.parent_addr_id:
-                self._ensure_save_child_addr()
+            parent_addr_id = self._ensure_save_child_addr()
 
             # 2. 准备查询参数
-            set_dict = {"parentId": self.parent_addr_id}
+            set_dict = {"parentId": parent_addr_id}
             
             # 3. 使用标准化API调用（无断言）
             response, _ = self.standard_api_call(
@@ -279,12 +277,11 @@ class TestAddrManagement(GenMdBaseTest):
         """查询地址库详情用例 - GEN_ADDR_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE"""
         try:
             # 1. 确保地址存在
-            if not self.addr_id:
-                self._ensure_save_addr()
+            addr_id = self._ensure_save_addr()
 
             # 2. 准备详情查询参数
             set_dict = {
-                "request": {"id": self.addr_id},
+                "request": {"id": addr_id},
                 "modelKey": "GEN_MD$gen_addr_type_cf"
             }
             
@@ -322,12 +319,11 @@ class TestAddrManagement(GenMdBaseTest):
         """删除地址库用例 - GEN_ADDR_TYPE_CF_DELETE_ACTION_SERVICE"""
         try:
             # 1. 确保地址存在
-            if not self.addr_id:
-                self._ensure_save_addr()
+            addr_id = self._ensure_save_addr()
 
             # 2. 准备删除参数
             set_dict = {
-                "request": {"id": self.addr_id},
+                    "request": {"id": addr_id},
                 "modelKey": "GEN_MD$gen_addr_type_cf"
             }
             
@@ -346,8 +342,8 @@ class TestAddrManagement(GenMdBaseTest):
             self.assert_util.assert_response_success(response)
             
             # 4. 重置ID（模拟删除后状态，无断言）
-            self.addr_id = None
-            self.logger.info(f"地址库删除完成，原始ID: {self.addr_id}")
+            self.set_runtime_id("addr", None)
+            self.logger.info(f"地址库删除完成，原始ID: {addr_id}")
             
         except Exception as e:
             a.text(str(e), "失败原因")

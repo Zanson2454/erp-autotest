@@ -448,7 +448,7 @@ class TestPrdOrderIssueReturn(PrdBaseTest):
                     else:
                         if attempt < max_retries - 1:
                             self.logger.info(f"等待 {retry_interval} 秒后重试...")
-                            time.sleep(retry_interval)
+                            self._async_delay(retry_interval, reason="等待退料单状态更新")
                         else:
                             self.logger.warning(f"达到最大重试次数，使用当前状态数据进行验证")
                 
@@ -556,7 +556,7 @@ class TestPrdOrderIssueReturn(PrdBaseTest):
                     else:
                         if attempt < max_retries - 1:
                             self.logger.info(f"等待 {retry_interval} 秒后重试...")
-                            time.sleep(retry_interval)
+                            self._async_delay(retry_interval, reason="等待入库单状态更新")
                         else:
                             self.logger.warning(f"达到最大重试次数，使用当前状态数据进行验证")
                 

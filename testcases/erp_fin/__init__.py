@@ -279,7 +279,7 @@ class FinBaseTest(BaseTest):
                 break
             if time.time() - start_time >= timeout:
                 raise TimeoutError(f"等待异步任务执行超时（{timeout}秒）")
-            time.sleep(0.5)
+            self._async_delay(0.5, reason="等待结算单确认异步任务完成")
         return sett_doc_id
 
     def create_ar_doc(self, ar_type="STND", org=1, status="DRAFT"):

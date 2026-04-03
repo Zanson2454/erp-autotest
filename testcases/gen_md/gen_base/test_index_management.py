@@ -24,9 +24,6 @@ class TestIndexManagement(GenMdBaseTest):
         """绑定测试上下文对象。"""
         super().bind_context()
         cls.mock_data = MockData()
-        # 数据存储
-        cls.index_id = None
-        cls.parent_index_id = None
         cls.logger.info("指标中心管理测试类初始化完成")
 
     @classmethod
@@ -62,13 +59,14 @@ class TestIndexManagement(GenMdBaseTest):
             store_id_as="index"
         )
         self.assert_util.assert_response_data(response)
-        self.index_id = extracted_id
-        self.assert_util.assert_by_operator(self.index_id, "not_empty")
+        self.set_runtime_id("index", extracted_id)
+        self.assert_util.assert_by_operator(extracted_id, "not_empty")
         return extracted_id, set_dict, response
 
     def _ensure_save_index(self):
-        if self.index_id:
-            return self.index_id
+        index_id = self.get_runtime_id("index")
+        if index_id:
+            return index_id
         extracted_id, _, _ = self._create_index()
         return extracted_id
 
@@ -195,10 +193,8 @@ class TestIndexManagement(GenMdBaseTest):
     def test_query_index_detail(self):
         """查询指标详情用例 - GEN_INDEX_MD_DETAIL_ACTION_SERVICE"""
         try:
-            if not self.index_id:
-                self._ensure_save_index()
-
-            set_dict = {"id": self.index_id}
+            index_id = self._ensure_save_index()
+            set_dict = {"id": index_id}
             response, detail_id = self.standard_api_call(
                 api_key="GEN-指标中心-查询详情服务",
                 set_dict=set_dict,
@@ -206,7 +202,7 @@ class TestIndexManagement(GenMdBaseTest):
             )
             self.assert_util.assert_response_data(response)
             if detail_id is not None:
-                self.assert_util.assert_by_operator(detail_id, "=", self.index_id)
+                self.assert_util.assert_by_operator(detail_id, "=", index_id)
 
             a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
@@ -226,10 +222,8 @@ class TestIndexManagement(GenMdBaseTest):
     def test_query_by_parent(self):
         """根据父ID查询下级列表用例 - GEN_INDEX_MD_QUERY_BY_PARENT_ACTION_SERVICE"""
         try:
-            if not self.index_id:
-                self._ensure_save_index()
-
-            set_dict = {"parentId": self.index_id}  # 查询顶级指标
+            index_id = self._ensure_save_index()
+            set_dict = {"parentId": index_id}  # 查询顶级指标
             response, _ = self.standard_api_call(
                 api_key="GEN-指标中心-根据父ID查询下级列表服务",
                 set_dict=set_dict,
@@ -284,10 +278,8 @@ class TestIndexManagement(GenMdBaseTest):
     def test_enable_index(self):
         """启用指标用例 - GEN_INDEX_MD_ENABLED_ACTION_SERVICE"""
         try:
-            if not self.index_id:
-                self._ensure_save_index()
-
-            set_dict = {"id": self.index_id}
+            index_id = self._ensure_save_index()
+            set_dict = {"id": index_id}
             response, _ = self.standard_api_call(
                 api_key="GEN-指标中心-启用服务",
                 set_dict=set_dict,
@@ -313,10 +305,8 @@ class TestIndexManagement(GenMdBaseTest):
     def test_disable_index(self):
         """禁用指标用例 - GEN_INDEX_MD_DISABLED_ACTION_SERVICE"""
         try:
-            if not self.index_id:
-                self._ensure_save_index()
-
-            set_dict = {"id": self.index_id}
+            index_id = self._ensure_save_index()
+            set_dict = {"id": index_id}
             response, _ = self.standard_api_call(
                 api_key="GEN-指标中心-禁用服务",
                 set_dict=set_dict,
@@ -342,10 +332,8 @@ class TestIndexManagement(GenMdBaseTest):
     def test_delete_index(self):
         """删除指标用例 - GEN_INDEX_MD_DELETE_ACTION_SERVICE"""
         try:
-            if not self.index_id:
-                self._ensure_save_index()
-
-            set_dict = {"id": self.index_id}
+            index_id = self._ensure_save_index()
+            set_dict = {"id": index_id}
             response, _ = self.standard_api_call(
                 api_key="GEN-指标中心-删除服务",
                 set_dict=set_dict,

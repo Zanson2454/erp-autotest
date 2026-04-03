@@ -20,8 +20,6 @@ class TestMonitoringManagement(GenMdBaseTest):
         """绑定测试上下文对象。"""
         super().bind_context()
         cls.mock_data = MockData()
-        cls.monitoring_id = None
-        cls.monitoring_code = None
         cls.logger.info("监控管理测试类初始化完成")
         
         if cls.md_cache_data:
@@ -83,14 +81,15 @@ class TestMonitoringManagement(GenMdBaseTest):
             store_id_as="monitoring"
         )
         self.assert_util.assert_response_data(response)
-        self.monitoring_id = monitoring_id
-        self.monitoring_code = monitoring_code
-        self.assert_util.assert_by_operator(self.monitoring_id, "not_empty")
+        self.set_runtime_id("monitoring", monitoring_id)
+        self.test_data["monitoring_code"] = monitoring_code
+        self.assert_util.assert_by_operator(monitoring_id, "not_empty")
         return monitoring_id, set_dict, response
 
     def _ensure_save_monitoring(self):
-        if self.monitoring_id:
-            return self.monitoring_id
+        monitoring_id = self.get_runtime_id("monitoring")
+        if monitoring_id:
+            return monitoring_id
         monitoring_id, _, _ = self._create_monitoring()
         return monitoring_id
 
@@ -180,10 +179,8 @@ class TestMonitoringManagement(GenMdBaseTest):
     def test_query_monitoring_detail(self):
         """查询监控管理详情用例"""
         try:
-            if not self.monitoring_id:
-                self._ensure_save_monitoring()
-
-            set_dict = {"id": self.monitoring_id}
+            monitoring_id = self._ensure_save_monitoring()
+            set_dict = {"id": monitoring_id}
             response, detail_id = self.standard_api_call(
                 api_key="GEN-监控方案-查询详情服务",
                 set_dict=set_dict,
@@ -191,7 +188,7 @@ class TestMonitoringManagement(GenMdBaseTest):
             )
             self.assert_util.assert_response_data(response)
             if detail_id is not None:
-                self.assert_util.assert_by_operator(detail_id, "=", self.monitoring_id)
+                self.assert_util.assert_by_operator(detail_id, "=", monitoring_id)
 
             a.json(set_dict, "请求数据")
             a.json(response, "响应数据")
@@ -212,10 +209,8 @@ class TestMonitoringManagement(GenMdBaseTest):
     def test_delete_monitoring(self):
         """删除监控管理用例"""
         try:
-            if not self.monitoring_id:
-                self._ensure_save_monitoring()
-
-            set_dict = {"ids": [self.monitoring_id]}
+            monitoring_id = self._ensure_save_monitoring()
+            set_dict = {"ids": [monitoring_id]}
             response, _ = self.standard_api_call(
                 api_key="GEN-监控预警结果信息-批量删除服务",
                 set_dict=set_dict,
@@ -274,10 +269,8 @@ class TestMonitoringManagement(GenMdBaseTest):
     def test_enable_monitoring_plan(self):
         """监控方案启用服务用例"""
         try:
-            if not self.monitoring_id:
-                self._ensure_save_monitoring()
-
-            set_dict = {"id": self.monitoring_id}
+            monitoring_id = self._ensure_save_monitoring()
+            set_dict = {"id": monitoring_id}
             response, _ = self.standard_api_call(
                 api_key="GEN-监控方案-启用服务",
                 set_dict=set_dict,
@@ -303,10 +296,8 @@ class TestMonitoringManagement(GenMdBaseTest):
     def test_delete_monitoring_plan(self):
         """监控方案删除服务用例"""
         try:
-            if not self.monitoring_id:
-                self._ensure_save_monitoring()
-
-            set_dict = {"id": self.monitoring_id}
+            monitoring_id = self._ensure_save_monitoring()
+            set_dict = {"id": monitoring_id}
             response, _ = self.standard_api_call(
                 api_key="GEN-监控方案-删除服务",
                 set_dict=set_dict,
@@ -379,10 +370,8 @@ class TestMonitoringManagement(GenMdBaseTest):
         """监控预警结果信息查询详情服务用例"""
         try:
             # 使用已有的监控ID作为测试数据
-            if not self.monitoring_id:
-                self._ensure_save_monitoring()
-
-            set_dict = {"id": self.monitoring_id}
+            monitoring_id = self._ensure_save_monitoring()
+            set_dict = {"id": monitoring_id}
             response, _ = self.standard_api_call(
                 api_key="GEN-监控预警结果信息-查询详情服务",
                 set_dict=set_dict,
@@ -408,10 +397,8 @@ class TestMonitoringManagement(GenMdBaseTest):
     def test_delete_monitoring_alert_result(self):
         """监控预警结果信息删除服务用例"""
         try:
-            if not self.monitoring_id:
-                self._ensure_save_monitoring()
-
-            set_dict = {"id": self.monitoring_id}
+            monitoring_id = self._ensure_save_monitoring()
+            set_dict = {"id": monitoring_id}
             response, _ = self.standard_api_call(
                 api_key="GEN-监控预警结果信息-删除服务",
                 set_dict=set_dict,

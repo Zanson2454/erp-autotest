@@ -22,9 +22,6 @@ class TestAgents(GenMdBaseTest):
     def bind_context(cls):
         """绑定测试上下文对象。"""
         super().bind_context()
-        # 数据存储
-        cls.forecast_id = None
-        cls.notification_id = None
         cls.logger.info("代理管理测试类初始化完成")
 
     @classmethod
@@ -102,14 +99,16 @@ class TestAgents(GenMdBaseTest):
                         "generatedAt": self.mock_util.get_timestamp()
                     }
                 }
-                self.forecast_id = mock_response["data"]["forecastId"]
+                forecast_id = mock_response["data"]["forecastId"]
+                self.set_runtime_id("forecast", forecast_id)
                 a.json(set_dict, "请求数据")
                 a.json(mock_response, "模拟响应数据")
                 a.text("销售预测服务需要复杂的数据模型和算法配置，使用模拟数据验证功能", "说明")
             else:
                 self.assert_util.assert_response_data(response)
-                self.forecast_id = response.get("data", {}).get("forecastId")
-                self.assert_util.assert_by_operator(self.forecast_id, "not_empty")
+                forecast_id = response.get("data", {}).get("forecastId")
+                self.set_runtime_id("forecast", forecast_id)
+                self.assert_util.assert_by_operator(forecast_id, "not_empty")
                 a.json(set_dict, "请求数据")
                 a.json(response, "响应数据")
 
@@ -201,14 +200,15 @@ class TestAgents(GenMdBaseTest):
                         "createdAt": timestamp
                     }
                 }
-                self.notification_id = notification_id
+                self.set_runtime_id("notification", notification_id)
                 a.json(set_dict, "请求数据")
                 a.json(mock_response, "模拟响应数据")
                 a.text("通用通知服务需要消息队列和通知渠道配置，使用模拟数据验证功能", "说明")
             else:
                 self.assert_util.assert_response_data(response)
-                self.notification_id = response.get("data", {}).get("notificationId")
-                self.assert_util.assert_by_operator(self.notification_id, "not_empty")
+                notification_id = response.get("data", {}).get("notificationId")
+                self.set_runtime_id("notification", notification_id)
+                self.assert_util.assert_by_operator(notification_id, "not_empty")
                 a.json(set_dict, "请求数据")
                 a.json(response, "响应数据")
 

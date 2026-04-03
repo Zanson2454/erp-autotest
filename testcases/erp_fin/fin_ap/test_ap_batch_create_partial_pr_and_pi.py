@@ -270,7 +270,7 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
     def test_02_batch_create_partial_pr_from_ap(self):
         try:
             # 等待应付单过账完成
-            time.sleep(5)
+            self._async_delay(5, reason="等待应付单过账完成")
             
             # 获取前置数据
             ap_info = TestApBatchCreatePartialPrAndPi.ap_batch_info
@@ -596,7 +596,7 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
             
             with a.step("等待异步任务完成"):
                 # 等待付款申请单和采购发票的创建及过账完成，并等待ES索引同步
-                time.sleep(15)  # 增加等待时间以确保ES索引同步
+                self._async_delay(15, reason="等待异步任务处理及ES索引同步")
                 a.text("已等待15秒，确保异步任务和ES索引同步完成", "等待说明")
 
             with a.step("执行应付单分页查询"):
@@ -660,7 +660,7 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
                     else:
                         if attempt < max_attempts - 1:
                             a.text(f"⚠️ 第{attempt+1}次查询为空，等待3秒后重试", "查询重试")
-                            time.sleep(3)
+                            self._async_delay(3, reason="等待应付单分页数据可查询")
                         else:
                             a.text(f"❌ 已尝试{max_attempts}次查询，均未找到数据", "查询失败")
                 

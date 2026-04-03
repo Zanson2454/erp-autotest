@@ -18,7 +18,6 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
     def bind_context(cls):
         """绑定测试上下文对象。"""
         super().bind_context()
-        cls.partner_type_id = None
         cls.logger.info("合作伙伴类型管理测试类初始化完成")
 
     @classmethod
@@ -26,6 +25,32 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
         """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
         cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
+
+    def _create_business_partner_type(self):
+        code = self.mock_util.generate_unique_code(tag="BPT")
+        name = f"合作伙伴类型_{self.mock_util.get_timestamp()}"
+        set_dict = {
+            "code": code,
+            "name": name,
+            "category": "BUSINESS",
+            "status": "ENABLED",
+            "remark": f"自动化测试合作伙伴类型-{self.mock_util.get_timestamp()}",
+        }
+        response, extracted_id = self.standard_api_call(
+            api_key="GEN-合作伙伴类型-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=["typeCode", "typeName", "category", "status", "remark"],
+            store_id_as="partner_type",
+        )
+        self.assert_util.assert_response_data(response)
+        self.set_runtime_id("partner_type", extracted_id)
+        return extracted_id
+
+    def _ensure_save_business_partner_type(self):
+        partner_type_id = self.get_runtime_id("partner_type")
+        if partner_type_id:
+            return partner_type_id
+        return self._create_business_partner_type()
 
     @case_decorator(
         story="合作伙伴类型管理",
@@ -39,33 +64,8 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
     def test_save_business_partner_type(self):
         """新增合作伙伴类型用例"""
         try:
-            # 使用优化后的唯一编码生成方法
-            code = self.mock_util.generate_unique_code(tag="BPT")
-            name = f"合作伙伴类型_{self.mock_util.get_timestamp()}"
-
-            # 调用保存接口
-            set_dict = {
-                "code": code,
-                "name": name,
-                "category": "BUSINESS",
-                "status": "ENABLED",
-                "remark": f"自动化测试合作伙伴类型-{self.mock_util.get_timestamp()}"
-            }
-            fields_to_filter = ["typeCode", "typeName", "category", "status", "remark"]
-
-            # 使用标准化API调用
-            response, extracted_id = self.standard_api_call(
-                api_key="GEN-合作伙伴类型-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as="partner_type"
-            )
-            
-            self.assert_util.assert_response_data(response)
-            
-            self.partner_type_id = extracted_id
-
-            a.json(response, "响应数据")
+            partner_type_id = self._create_business_partner_type()
+            a.json({"partner_type_id": partner_type_id}, "新增合作伙伴类型结果")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -122,11 +122,10 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
     def test_query_business_partner_type_detail(self):
         """查询合作伙伴类型详情用例"""
         try:
-            if not self.partner_type_id:
-                self._ensure_save_business_partner_type()
+            partner_type_id = self._ensure_save_business_partner_type()
 
             # 调用详情查询接口
-            set_dict = {"id": self.partner_type_id}
+            set_dict = {"id": partner_type_id}
             fields_to_filter = ["id"]
 
             # 使用标准化API调用
@@ -192,11 +191,10 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
     def test_enable_business_partner_type(self):
         """启用合作伙伴类型用例"""
         try:
-            if not self.partner_type_id:
-                self._ensure_save_business_partner_type()
+            partner_type_id = self._ensure_save_business_partner_type()
 
             # 调用启用接口
-            set_dict = {"id": self.partner_type_id }
+            set_dict = {"id": partner_type_id}
             fields_to_filter = ["id"]
 
             # 使用标准化API调用
@@ -225,11 +223,10 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
     def test_disable_business_partner_type(self):
         """禁用合作伙伴类型用例"""
         try:
-            if not self.partner_type_id:
-                self._ensure_save_business_partner_type()
+            partner_type_id = self._ensure_save_business_partner_type()
 
             # 调用禁用接口
-            set_dict = {"id": self.partner_type_id}
+            set_dict = {"id": partner_type_id}
             fields_to_filter = ["id"]
 
             # 使用标准化API调用
@@ -258,11 +255,10 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
     def test_delete_business_partner_type(self):
         """删除合作伙伴类型用例"""
         try:
-            if not self.partner_type_id:
-                self._ensure_save_business_partner_type()
+            partner_type_id = self._ensure_save_business_partner_type()
 
             # 调用删除接口
-            set_dict = {"id": self.partner_type_id}
+            set_dict = {"id": partner_type_id}
             fields_to_filter = ["id"]
 
             # 使用标准化API调用

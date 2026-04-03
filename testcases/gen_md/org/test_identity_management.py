@@ -21,7 +21,6 @@ class TestIdentityManagement(GenMdBaseTest):
     def bind_context(cls):
         """绑定测试上下文对象。"""
         super().bind_context()
-        cls.identity_id = None
         cls.user_id = cls.md_cache_data.get("user_info",{}).get("id",None)
         cls.created_at = cls.mock_util.get_mock_date(include_time=True)
         
@@ -31,6 +30,39 @@ class TestIdentityManagement(GenMdBaseTest):
         """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
         cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
+
+    def _create_identity(self):
+        identity_code = self.mock_util.generate_unique_code(tag="Org_Identity")
+        identity_name = f"测试组织身份(自动化)_{self.mock_util.get_timestamp()}"
+        data = {
+            "code": identity_code,
+            "name": identity_name,
+            "status": None,
+            "created_by": None,
+            "updated_by": self.user_id,
+            "created_at": self.created_at,
+            "updated_at": self.created_at,
+            "version": 0,
+            "deleted": 0,
+            "origin_org_id": 0,
+        }
+        org_identity_id = self.db.insert("org_identity_cf", data)
+        self.set_runtime_id("identity", org_identity_id)
+        return org_identity_id
+
+    def _ensure_enable_identity(self):
+        identity_id = self.get_runtime_id("identity")
+        if not identity_id:
+            identity_id = self._create_identity()
+        response, _ = self.standard_api_call(
+            api_key="ORG-组织身份-启用服务",
+            set_dict={"id": identity_id},
+            fields_to_filter=["id"],
+            store_id_as=None,
+        )
+        self.assert_util.assert_response_success(response)
+        self.set_runtime_id("identity", identity_id)
+        return identity_id
 
     @pytest.mark.dependency(name="test_enable_identity")
     @case_decorator(
@@ -47,45 +79,8 @@ class TestIdentityManagement(GenMdBaseTest):
         启用组织身份用例
         """
         try:
-            # 创建组织身份数据（保持原有DB insert逻辑）
-            identity_code = self.mock_util.generate_unique_code(tag="Org_Identity")
-            identity_name = f"测试组织身份(自动化)_{self.mock_util.get_timestamp()}"
-            
-            # 使用正确的insert方法
-            data = {
-                "code": identity_code,
-                "name": identity_name,
-                "status": None,
-                "created_by": None,
-                "updated_by": self.user_id,
-                "created_at": self.created_at,
-                "updated_at": self.created_at,
-                "version": 0,
-                "deleted": 0,
-                "origin_org_id": 0
-            }
-            org_identity_id = self.db.insert("org_identity_cf", data)
-            self.logger.info(f"创建组织身份成功，ID: {org_identity_id}")
-
-            # 准备测试数据（业务逻辑保持不变）
-            set_dict = {
-                "id": org_identity_id
-            }
-            fields_to_filter = ["id"]
-
-            # 使用标准化API调用（无任何断言）
-            response, _ = self.standard_api_call(
-                api_key="ORG-组织身份-启用服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as=None
-            )
-
-            # 业务验证（保持原有逻辑）
-            self.assert_util.assert_response_success(response)
-            TestIdentityManagement.identity_id = org_identity_id
-
-            # 日志记录（Allure报告已由standard_api_call处理）
+            identity_id = self._ensure_enable_identity()
+            a.json({"identity_id": identity_id}, "组织身份启用结果")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -106,14 +101,10 @@ class TestIdentityManagement(GenMdBaseTest):
         禁用组织身份用例
         """
         try:
-            # 确保先执行启用测试
-            if not TestIdentityManagement.identity_id:
-                self._ensure_enable_identity()
-            
+            identity_id = self._ensure_enable_identity()
+
             # 准备测试数据（业务逻辑保持不变）
-            set_dict = {
-                "id": TestIdentityManagement.identity_id
-            }
+            set_dict = {"id": identity_id}
             fields_to_filter = ["id"]
 
             # 使用标准化API调用（无任何断言）

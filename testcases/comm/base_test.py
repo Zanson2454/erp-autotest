@@ -521,6 +521,27 @@ class BaseTest(LoginMixin):
         if hasattr(self, "assert_util") and hasattr(self.assert_util, "clear_request_context"):
             self.assert_util.clear_request_context()
 
+    def _async_delay(self, seconds: float, reason: str = "") -> None:
+        """统一异步等待封装，替代测试代码中的固定 sleep。"""
+        start = time.time()
+
+        def check_func():
+            elapsed = time.time() - start
+            return elapsed >= seconds, {"elapsed": round(elapsed, 3)}, None
+
+        result = self.async_wait_util.wait_for_condition(
+            check_func=check_func,
+            max_wait=max(seconds + 1.0, 1.0),
+            interval=min(max(seconds / 5, 0.2), 1.0),
+            timeout_message=f"异步等待超时: {reason or seconds}",
+            enable_polling_log=False,
+        )
+        if result.status != self.wait_status.SUCCESS:
+            self.logger.warning(
+                f"异步等待未成功: reason={reason or 'delay'}, "
+                f"status={result.status.value}, detail={result.error_message}"
+            )
+
     # ─────────────────────────────────────────────
     #  API 解析 / 调用
     # ─────────────────────────────────────────────
@@ -531,6 +552,35 @@ class BaseTest(LoginMixin):
         if apis_dict is None:
             raise ValueError("未找到 apis 配置，请检查模块基类是否已加载 API 路径配置")
         return ApiClientFacade.resolve_api_path(apis_dict, api_key, logger=self.logger)
+
+    def set_runtime_id(self, key: str, value: Any) -> Any:
+        """写入当前测试方法上下文中的业务 ID，并同步实例属性。"""
+        if not key:
+            return value
+        snake_attr = f"{key}_id"
+        camel_attr = f"{key}Id"
+        TestDataContext.set_runtime_value(key, value)
+        TestDataContext.set_runtime_value(snake_attr, value)
+        TestDataContext.set_runtime_value(camel_attr, value)
+        setattr(self, snake_attr, value)
+        setattr(self, camel_attr, value)
+        if hasattr(self, "test_data") and isinstance(self.test_data, dict):
+            self.test_data[snake_attr] = value
+            self.test_data[camel_attr] = value
+        return value
+
+    def get_runtime_id(self, key: str, default: Any = None) -> Any:
+        """读取当前测试方法上下文中的业务 ID。"""
+        if not key:
+            return default
+        sentinel = object()
+        snake_attr = f"{key}_id"
+        camel_attr = f"{key}Id"
+        for candidate in (key, snake_attr, camel_attr):
+            value = TestDataContext.get_runtime_value(candidate, sentinel)
+            if value is not sentinel:
+                return value
+        return default
 
     def get_api_url(self, api_path, with_query_params=None):
         _, url = self.get_api_params(api_path, with_query_params=with_query_params)

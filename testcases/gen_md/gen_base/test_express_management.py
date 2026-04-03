@@ -23,9 +23,6 @@ class TestExpressManagement(GenMdBaseTest):
     def bind_context(cls):
         """绑定测试上下文对象。"""
         super().bind_context()
-        # 数据存储
-        cls.express_id = None
-        cls.express_code = None
         cls.logger.info("快递公司管理测试类初始化完成")
 
     @classmethod
@@ -51,13 +48,14 @@ class TestExpressManagement(GenMdBaseTest):
             store_id_as="express"
         )
         self.assert_util.assert_response_data(response)
-        self.express_id = express_id
-        self.express_code = express_code
+        self.set_runtime_id("express", express_id)
+        self.test_data["express_code"] = express_code
         return express_id
 
     def _ensure_save_express_company(self):
-        if self.express_id:
-            return self.express_id
+        express_id = self.get_runtime_id("express")
+        if express_id:
+            return express_id
         return self._create_express_company()
 
     @case_decorator(
@@ -89,10 +87,8 @@ class TestExpressManagement(GenMdBaseTest):
     def test_query_express_detail(self):
         """查询快递公司详情用例"""
         try:
-            if not self.express_id:
-                self._ensure_save_express_company()
-
-            set_dict = {"id": self.express_id}
+            express_id = self._ensure_save_express_company()
+            set_dict = {"id": express_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-快递公司-查询详情服务",
@@ -147,10 +143,8 @@ class TestExpressManagement(GenMdBaseTest):
     def test_enable_express_company(self):
         """启用快递公司用例"""
         try:
-            if not self.express_id:
-                self._ensure_save_express_company()
-
-            set_dict = {"id": self.express_id}
+            express_id = self._ensure_save_express_company()
+            set_dict = {"id": express_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-快递公司-启用服务",
@@ -174,10 +168,8 @@ class TestExpressManagement(GenMdBaseTest):
     def test_disable_express_company(self):
         """禁用快递公司用例"""
         try:
-            if not self.express_id:
-                self._ensure_save_express_company()
-
-            set_dict = {"id": self.express_id}
+            express_id = self._ensure_save_express_company()
+            set_dict = {"id": express_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-快递公司-禁用服务",
@@ -328,10 +320,8 @@ class TestExpressManagement(GenMdBaseTest):
     def test_delete_express_company(self):
         """删除快递公司用例"""
         try:
-            if not self.express_id:
-                self._ensure_save_express_company()
-
-            set_dict = {"id": self.express_id}
+            express_id = self._ensure_save_express_company()
+            set_dict = {"id": express_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-快递公司-删除服务",

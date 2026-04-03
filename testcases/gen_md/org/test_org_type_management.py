@@ -19,8 +19,6 @@ class TestOrg_TypeManagement(GenMdBaseTest):
     def bind_context(cls):
         """绑定测试上下文对象。"""
         super().bind_context()
-        cls.org_type_id = None
-        cls.org_type_code = None
 
         cls.logger.info("组织类型管理测试类初始化完成")
         if cls.md_cache_data:
@@ -28,12 +26,55 @@ class TestOrg_TypeManagement(GenMdBaseTest):
             cls.org_attr_id = cls.mock_util.get_mock_choice(org_attr_list)["id"]
             cls.logger.info(f"org_attr_id: {cls.org_attr_id}")
 
-        
     @classmethod
     def teardown_class(cls):
         """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
         cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
+
+    def _create_org_type(self):
+        org_type_code = self.mock_util.generate_unique_code(tag="OrgType")
+        org_type_name = f"组织类型管理_{self.mock_util.get_timestamp()}"
+
+        set_dict = {
+            "code": org_type_code,
+            "name": org_type_name,
+            "attrList": [
+                {
+                    "attrId": {"id": self.org_attr_id},
+                    "attrIsMulti": True,
+                    "attrIsRequired": False,
+                    "attrSort": 1,
+                    "attrValue": "测试组织类型",
+                }
+            ],
+        }
+        response, extracted_id = self.standard_api_call(
+            api_key="ORG-组织类型-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=["code", "name", "attrList"],
+            store_id_as="org_type",
+        )
+        self.assert_util.assert_response_data(response)
+        self.set_runtime_id("org_type", extracted_id)
+        self.set_runtime_id("org_type_code", org_type_code)
+        return extracted_id
+
+    def _ensure_save_org_type(self):
+        org_type_id = self.get_runtime_id("org_type")
+        if org_type_id:
+            return org_type_id
+        return self._create_org_type()
+
+    def _ensure_enabled_org_type(self):
+        org_type_id = self._ensure_save_org_type()
+        response, _ = self.standard_api_call(
+            api_key="ORG-组织类型-启用服务",
+            set_dict={"id": org_type_id},
+            fields_to_filter=["id"],
+        )
+        self.assert_util.assert_response_success(response)
+        return org_type_id
 
     @case_decorator(
         story="组织类型管理",
@@ -49,41 +90,8 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         新增组织类型管理用例
         """
         try:
-            # 准备组织类型管理数据
-            org_type_code = self.mock_util.generate_unique_code(tag="OrgType")
-            org_type_name = f"组织类型管理_{self.mock_util.get_timestamp()}"
-            
-            # 调用保存接口
-            set_dict = {
-                "code": org_type_code,
-                "name": org_type_name,
-                "attrList": [
-                    {
-                        "attrId": {
-                            "id": self.org_attr_id
-                        },
-                        "attrIsMulti": True,
-                        "attrIsRequired": False,
-                        "attrSort": 1,
-                        "attrValue": "测试组织类型"
-                    }
-                ]
-            }
-            fields_to_filter = ["code", "name", "attrList"]
-
-            # 使用标准化API调用
-            response, extracted_id = self.standard_api_call(
-                api_key="ORG-组织类型-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as="org_type"
-            )
-            
-            self.assert_util.assert_response_data(response)
-            # 保持与现有用例字段一致，避免 store_id_as 的命名差异导致后续 id 为空
-            self.__class__.org_type_id = extracted_id
-            self.__class__.org_type_code = org_type_code
-            a.json(response, "响应数据")
+            org_type_id = self._create_org_type()
+            a.json({"org_type_id": org_type_id}, "新增组织类型结果")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -150,12 +158,10 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         查询组织类型管理详情用例
         """
         try:
-            # 获取组织类型管理ID
-            if not self.org_type_id:
-                self._ensure_save_org_type()
+            org_type_id = self._ensure_save_org_type()
 
             # 调用详情查询接口
-            set_dict = {"id": self.org_type_id}
+            set_dict = {"id": org_type_id}
             fields_to_filter = ["id"]
 
             # 使用标准化API调用
@@ -186,12 +192,10 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         启用组织类型管理用例
         """
         try:
-            # 获取组织类型管理信息
-            if not self.org_type_id:
-                self._ensure_save_org_type()
+            org_type_id = self._ensure_save_org_type()
 
             # 调用启用接口
-            set_dict = {"id": self.org_type_id}
+            set_dict = {"id": org_type_id}
             fields_to_filter = ["id"]
 
             # 使用标准化API调用
@@ -203,7 +207,7 @@ class TestOrg_TypeManagement(GenMdBaseTest):
             
             self.assert_util.assert_response_success(response)
 
-            status = self.query_service.get_org_business_type_status(self.org_type_id)
+            status = self.query_service.get_org_business_type_status(org_type_id)
             if status is not None:
                 self.assert_util.assert_by_operator(status, "=", "ENABLED")
             else:
@@ -229,12 +233,10 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         禁用组织类型管理用例
         """
         try:
-            # 获取组织类型管理信息
-            if not self.org_type_id:
-                self._ensure_enabled_org_type()
+            org_type_id = self._ensure_enabled_org_type()
 
             # 调用禁用接口
-            set_dict = {"id": self.org_type_id}
+            set_dict = {"id": org_type_id}
             fields_to_filter = ["id"]
 
             # 使用标准化API调用
@@ -246,7 +248,7 @@ class TestOrg_TypeManagement(GenMdBaseTest):
             
             self.assert_util.assert_response_success(response)
 
-            status = self.query_service.get_org_business_type_status(self.org_type_id)
+            status = self.query_service.get_org_business_type_status(org_type_id)
             self.logger.info(f"data: {status}")
             if status is not None:
                 self.assert_util.assert_by_operator(status, "=", "DISABLED")
@@ -355,12 +357,10 @@ class TestOrg_TypeManagement(GenMdBaseTest):
         删除组织类型管理用例
         """
         try:
-            # 获取组织类型管理信息
-            if not self.org_type_id:
-                self._ensure_save_org_type()
+            org_type_id = self._ensure_save_org_type()
 
             # 调用删除接口
-            set_dict = {"id": self.org_type_id}
+            set_dict = {"id": org_type_id}
             fields_to_filter = ["id"]
 
             # 使用标准化API调用
@@ -372,11 +372,11 @@ class TestOrg_TypeManagement(GenMdBaseTest):
             
             self.assert_util.assert_response_success(response)
 
-            deleted = self.query_service.get_org_business_type_deleted(self.org_type_id)
+            deleted = self.query_service.get_org_business_type_deleted(org_type_id)
             if deleted is not None:
                 self.assert_util.assert_by_operator(deleted, "!=", 0)
             else:
-                self.logger.warning(f"组织类型ID {self.org_type_id} 在数据库中不存在")
+                self.logger.warning(f"组织类型ID {org_type_id} 在数据库中不存在")
                 # 如果数据不存在，说明删除操作已经成功，可以跳过断言
             
             a.json(response, "响应数据")

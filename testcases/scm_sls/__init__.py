@@ -846,21 +846,14 @@ class SlsBase(BaseTest):
             )
             self.assert_util.assert_response_success(response)
             
-            # 9. 等待订单状态更新
-            time.sleep(2)
-            
-            # 10. 查询订单状态，验证是否为已生效（添加重试机制）
-            actual_status = None
-            for attempt in range(5):
-                order_status = self.query_service.query(
-                    "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
-                    params=[order_id]
-                )
-                if order_status:
-                    actual_status = order_status[0]['so_status']
-                    if actual_status == "EFFECT":
-                        break
-                time.sleep(1)
+            # 9. 轮询等待订单状态更新为已生效
+            actual_status = self._wait_order_status(
+                order_id=order_id,
+                expected_statuses={"EFFECT"},
+                max_wait=20,
+                interval=1.0,
+                timeout_message=f"订单审批同意后未在预期时间内生效，order_id={order_id}",
+            )
             
             if actual_status != "EFFECT":
                 self.logger.warning(f"审批后订单状态不是已生效，当前状态: {actual_status}。订单ID: {order_id}")
@@ -1039,9 +1032,8 @@ class SlsBase(BaseTest):
             
             self.logger.info(f"返利政策提交成功，ID: {policy_id}")
             
-            # 4. 审批通过返利政策
-            # 等待一下，确保审批任务已创建
-            time.sleep(2)
+            # 4. 审批通过返利政策（先确认记录可查询，避免提交后瞬时读不到）
+            self._wait_rebate_policy_record(policy_id, max_wait=20, interval=1.0)
             
             # 直接使用返利政策审批通过服务
             api_path = self.get_api_path("REB-返利政策-审批通过服务")
@@ -1067,10 +1059,11 @@ class SlsBase(BaseTest):
             self.logger.info(f"返利政策审批通过成功，政策ID: {policy_id}")
             
             # 5. 验证返利政策状态
-            time.sleep(2)  # 等待状态更新
-            policy_info = self.query_service.query(
-                "SELECT id, policy_code, status FROM rebate_policy_head_tr WHERE id = %s",
-                [policy_id]
+            policy_info = self._wait_rebate_policy_status(
+                policy_id=policy_id,
+                expected_statuses={"ENABLED"},
+                max_wait=30,
+                interval=2.0,
             )
             
             if policy_info:
@@ -1097,6 +1090,118 @@ class SlsBase(BaseTest):
             self.logger.error(f"创建和审批返利政策失败: {str(e)}")
             a.text(str(e), "失败原因")
             raise
+
+    def _wait_order_status(
+        self,
+        order_id,
+        expected_statuses,
+        max_wait: int = 20,
+        interval: float = 1.0,
+        timeout_message: str = "",
+    ):
+        """轮询等待订单状态达到目标集合。"""
+        expected = set(expected_statuses or [])
+
+        def check_func():
+            rows = self.query_service.query(
+                "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
+                params=[order_id],
+            )
+            status = rows[0].get("so_status") if rows else None
+            return status in expected, {"so_status": status}, None
+
+        result = self.async_wait_util.wait_for_condition(
+            check_func=check_func,
+            max_wait=max_wait,
+            interval=interval,
+            timeout_message=timeout_message or f"订单状态等待超时，order_id={order_id}",
+            enable_polling_log=False,
+        )
+        if result.status != self.wait_status.SUCCESS:
+            raise AssertionError(
+                f"订单状态等待失败 [order_id={order_id}] "
+                f"status={result.status.value}, detail={result.error_message}, last={result.last_data}"
+            )
+        return (result.last_data or {}).get("so_status")
+
+    def _wait_rebate_policy_record(self, policy_id, max_wait: int = 20, interval: float = 1.0):
+        """轮询等待返利政策记录可查询。"""
+
+        def check_func():
+            rows = self.query_service.query(
+                "SELECT id, policy_code, status FROM rebate_policy_head_tr WHERE id = %s",
+                [policy_id],
+            )
+            return bool(rows), {"rows": rows}, None
+
+        result = self.async_wait_util.wait_for_condition(
+            check_func=check_func,
+            max_wait=max_wait,
+            interval=interval,
+            timeout_message=f"返利政策记录未在预期时间内可查询，policy_id={policy_id}",
+            enable_polling_log=False,
+        )
+        if result.status != self.wait_status.SUCCESS:
+            raise AssertionError(
+                f"返利政策记录等待失败 [policy_id={policy_id}] "
+                f"status={result.status.value}, detail={result.error_message}, last={result.last_data}"
+            )
+        return result.last_data.get("rows", [])
+
+    def _wait_rebate_policy_status(
+        self,
+        policy_id,
+        expected_statuses,
+        max_wait: int = 30,
+        interval: float = 2.0,
+    ):
+        """轮询等待返利政策状态达到目标集合。"""
+        expected = set(expected_statuses or [])
+
+        def check_func():
+            rows = self.query_service.query(
+                "SELECT id, policy_code, status FROM rebate_policy_head_tr WHERE id = %s",
+                [policy_id],
+            )
+            row = rows[0] if rows else {}
+            status = row.get("status")
+            return status in expected, {"rows": rows, "status": status}, None
+
+        result = self.async_wait_util.wait_for_condition(
+            check_func=check_func,
+            max_wait=max_wait,
+            interval=interval,
+            timeout_message=f"返利政策状态未在预期时间内更新，policy_id={policy_id}",
+            enable_polling_log=False,
+        )
+        if result.status != self.wait_status.SUCCESS:
+            self.logger.warning(
+                f"返利政策状态等待未成功 [policy_id={policy_id}] "
+                f"status={result.status.value}, detail={result.error_message}, last={result.last_data}"
+            )
+            return []
+        return result.last_data.get("rows", [])
+
+    def _async_delay(self, seconds: float, reason: str = "") -> None:
+        """统一异步等待封装：避免在测试代码中直接使用 time.sleep。"""
+        start = time.time()
+
+        def check_func():
+            elapsed = time.time() - start
+            return elapsed >= seconds, {"elapsed": round(elapsed, 3)}, None
+
+        result = self.async_wait_util.wait_for_condition(
+            check_func=check_func,
+            max_wait=max(seconds + 1.0, 1.0),
+            interval=min(max(seconds / 5, 0.2), 1.0),
+            timeout_message=f"异步等待超时: {reason or seconds}",
+            enable_polling_log=False,
+        )
+        if result.status != self.wait_status.SUCCESS:
+            self.logger.warning(
+                f"异步等待未成功: reason={reason or 'delay'}, "
+                f"status={result.status.value}, detail={result.error_message}"
+            )
 
 
 if __name__ == "__main__":

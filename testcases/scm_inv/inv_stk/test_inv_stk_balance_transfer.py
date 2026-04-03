@@ -186,7 +186,7 @@ class TestInvStkBalanceTransferManagement(MobileVoucherCreator):
             self.logger.info(f"调拨前实时库存余额: {pre_transfer_balance}")
             
             # 等待数据同步
-            time.sleep(2)
+            self._async_delay(2, "等待调拨库存同步")
             
             # 查询调拨后库存余额
             final_balance = self.get_current_inventory_balance()

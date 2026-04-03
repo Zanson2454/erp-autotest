@@ -101,7 +101,7 @@ class TestRebateUse(SlsBase):
                 # 如果数据为空，等待后重试（逐渐增加等待时间）
                 if attempt < 4:
                     wait_time = (attempt + 1) * 3  # 3秒、6秒、9秒、12秒
-                    time.sleep(wait_time)
+                    self._async_delay(wait_time, "订单详情查询重试等待")
                     self.logger.info(f"订单详情查询返回空数据，等待{wait_time}秒后重试 (第{attempt + 1}次)")
             
             # 如果API查询仍然失败，从数据库查询订单数据并构造数据结构
@@ -215,7 +215,7 @@ class TestRebateUse(SlsBase):
             
             # 等待一段时间让返利账户流水记录生成
             self.logger.info("等待返利账户流水记录生成...")
-            time.sleep(15)
+            self._async_delay(15, "返利账户流水生成等待")
             
             # 使用standard_api_call调用账户流水分页查询API
             # 注意：该API的参数直接在params层级，不在params.request层级

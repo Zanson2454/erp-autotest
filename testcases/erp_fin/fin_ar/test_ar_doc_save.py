@@ -237,7 +237,7 @@ class TestArDocumentSave(ArBaseTest):
                         else:
                             if attempt < max_attempts - 1:
                                 a.text(f"异步任务尚未完成，等待{interval}秒后重试...", "等待中")
-                                time.sleep(interval)
+                                self._async_delay(interval, reason="等待应收单过账异步任务完成")
                     else:
                         raise Exception(f"未找到应收单编码为[{ar_head_code}]的数据")
                 
@@ -417,7 +417,7 @@ class TestArDocumentSave(ArBaseTest):
                         else:
                             if attempt < max_attempts - 1:
                                 a.text(f"异步任务尚未完成，等待{interval}秒后重试...", "等待中")
-                                time.sleep(interval)
+                                self._async_delay(interval, reason="等待应收单反过账异步任务完成")
                     else:
                         raise Exception(f"未找到应收单编码为[{ar_head_code}]的数据")
                 
@@ -451,7 +451,7 @@ class TestArDocumentSave(ArBaseTest):
             with a.step("等待反过账异步任务完成"):
                 # 等待8秒让反过账异步任务完成
                 a.text("等待8秒让反过账异步任务完成...", "等待反过账")
-                time.sleep(8)
+                self._async_delay(8, reason="等待应收单反过账异步任务完成")
                 
             with a.step("执行应收单删除操作"):
                 # 获取前置数据

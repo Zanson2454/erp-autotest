@@ -7,7 +7,6 @@ from erp_data_factory.compat.fin_ar_factory import FinArFactory
 from decimal import Decimal
 from datetime import datetime
 from pathlib import Path
-import time
 
 class TestArDocCreateSb(ArBaseTest):
     ar_info = {}
@@ -151,7 +150,7 @@ class TestArDocCreateSb(ArBaseTest):
                 status_result["success"] = True
                 break
             
-            time.sleep(interval)
+            self._async_delay(interval, reason="等待应收单状态更新")
             waited += interval
         else:
             status_result["status"] = None
@@ -194,7 +193,7 @@ class TestArDocCreateSb(ArBaseTest):
             self.query_ar_detail(ar_doc_id, ar_detail)
             
             if not ar_detail:
-                time.sleep(interval)
+                self._async_delay(interval, reason="等待应收单明细可查询")
                 waited += interval
                 continue
                 
@@ -215,7 +214,7 @@ class TestArDocCreateSb(ArBaseTest):
                 })
                 break
             
-            time.sleep(interval)
+            self._async_delay(interval, reason="等待销售发票创建异步任务完成")
             waited += interval
         else:
             final_ar_detail = {}
@@ -292,7 +291,7 @@ class TestArDocCreateSb(ArBaseTest):
                     })
                     return
             
-            time.sleep(interval)
+            self._async_delay(interval, reason="等待销售发票记录生成")
             waited += interval
             a.text(f"等待销售发票生成中...已等待{waited}秒", "轮询状态")
         
@@ -627,7 +626,7 @@ class TestArDocCreateSb(ArBaseTest):
                 a.json(result, "响应结果数据")
 
             with a.step("验证销售发票状态更新"):
-                time.sleep(2)
+                self._async_delay(2, reason="等待销售发票提交后状态刷新")
                 
                 query_result = {}
                 self._query_sb_by_paging(bil_code, query_result, max_wait=15, interval=2)
@@ -883,7 +882,7 @@ class TestArDocCreateSb(ArBaseTest):
                 assert bil_code, "未找到bil_code，请先执行创建销售发票用例"
 
             with a.step("等待销售发票过账异步任务完成"):
-                time.sleep(10)
+                self._async_delay(10, reason="等待销售发票过账异步任务完成")
                 a.text("等待销售发票过账异步任务处理完成...", "等待状态")
 
             with a.step("查询应收单最新状态"):

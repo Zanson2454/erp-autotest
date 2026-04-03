@@ -427,7 +427,7 @@ class TestPrCreateAndPayment(ApBaseTest):
                     
                     # 等待下次轮询
                     if attempt < max_attempts - 1:
-                        time.sleep(interval)
+                        self._async_delay(interval, reason="等待付款申请单状态更新")
                 
                 # 轮询超时
                 raise Exception(f"轮询超时：付款申请单状态未变更为DONE且异步执行状态未变更为SUCCEEDED，最大等待{max_attempts * interval}秒")
@@ -596,7 +596,7 @@ class TestPrCreateAndPayment(ApBaseTest):
                     
                     # 等待下次轮询
                     if attempt < max_attempts - 1:
-                        time.sleep(interval)
+                        self._async_delay(interval, reason="等待付款申请单状态更新")
                 
                 # 轮询超时
                 raise Exception(f"轮询超时：付款申请单状态未变更为CONFIRM且异步执行状态未变更为SUCCEEDED，最大等待{max_attempts * interval}秒")
@@ -1082,7 +1082,7 @@ class TestPrCreateAndPayment(ApBaseTest):
                     
                     # 等待下次轮询
                     if attempt < max_attempts - 1:
-                        time.sleep(interval)
+                        self._async_delay(interval, reason="等待付款单状态更新")
                 
                 # 轮询超时
                 raise Exception(f"轮询超时：付款单状态未变更为DONE且异步执行状态未变更为SUCCEEDED，最大等待{max_attempts * interval}秒")
@@ -1240,7 +1240,7 @@ class TestPrCreateAndPayment(ApBaseTest):
                     
                     # 等待下次轮询
                     if attempt < max_attempts - 1:
-                        time.sleep(interval)
+                        self._async_delay(interval, reason="等待付款单状态更新")
                 
                 # 轮询超时
                 raise Exception(f"轮询超时：付款单状态未变更为DRAFT且异步执行状态未变更为SUCCEEDED，最大等待{max_attempts * interval}秒")

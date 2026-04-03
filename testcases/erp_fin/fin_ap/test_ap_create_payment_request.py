@@ -7,7 +7,6 @@ from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 from datetime import datetime
 from decimal import Decimal
-import time
 
 class TestApCreatePaymentRequest(ApBaseTest):
     ap_pr_info = {}
@@ -331,11 +330,11 @@ class TestApCreatePaymentRequest(ApBaseTest):
                             failure_reason = ap_record.get("asyncExecutionFailureReason", "")
                             assert False, f"应付单异步执行失败，失败原因: {failure_reason}"
                         elif current_status in ["PROCESSING", "CREATED"] and attempt < max_attempts - 1:
-                            time.sleep(interval)
+                            self._async_delay(interval, reason="等待应付单异步执行状态更新")
                         else:
                             assert False, f"应付单异步执行状态异常: {current_status}"
                     elif attempt < max_attempts - 1:
-                        time.sleep(interval)
+                        self._async_delay(interval, reason="等待应付单记录可查询")
                 
                 if not validation_success:
                     current_status = ap_record.get("asyncExecutionStatus") if ap_record else "未找到记录"
@@ -594,11 +593,11 @@ class TestApCreatePaymentRequest(ApBaseTest):
                             failure_reason = pr_record.get("asyncExecutionFailureReason", "")
                             assert False, f"付款申请单异步执行失败，失败原因: {failure_reason}"
                         elif current_async_status in ["PROCESSING", "CREATED"] and attempt < max_attempts - 1:
-                            time.sleep(interval)
+                            self._async_delay(interval, reason="等待付款申请单异步执行状态更新")
                         else:
                             assert False, f"付款申请单异步执行状态异常: {current_async_status}"
                     elif attempt < max_attempts - 1:
-                        time.sleep(interval)
+                        self._async_delay(interval, reason="等待付款申请单记录可查询")
                 
                 if not verification_success:
                     current_pr_status = pr_record.get("prStatus") if pr_record else "未找到记录"
@@ -939,7 +938,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
                             amount_verification_success = True
                             break
                         elif attempt < max_attempts - 1:
-                            time.sleep(interval)
+                            self._async_delay(interval, reason="等待付款申请单金额状态更新")
                         else:
                             # 最后一次尝试，输出详细的金额信息用于调试
                             amount_details = {
@@ -956,7 +955,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
                             a.json(amount_details, "付款申请单金额状态详情")
                             assert False, f"付款申请单已付款金额状态未达到预期，详情见附件"
                     elif attempt < max_attempts - 1:
-                        time.sleep(interval)
+                        self._async_delay(interval, reason="等待付款申请单记录可查询")
                 
                 if not amount_verification_success:
                     assert False, f"轮询{max_attempts}次后，付款申请单已付款金额状态仍未达到预期，付款申请单编号: {pr_head_code}"
@@ -1113,11 +1112,11 @@ class TestApCreatePaymentRequest(ApBaseTest):
                             verification_success = True
                             break
                         elif current_pn_status in ["CONFIRM", "DRAFT"] and attempt < max_attempts - 1:
-                            time.sleep(interval)
+                            self._async_delay(interval, reason="等待付款单状态更新")
                         else:
                             assert False, f"付款单状态异常: {current_pn_status}"
                     elif attempt < max_attempts - 1:
-                        time.sleep(interval)
+                        self._async_delay(interval, reason="等待付款单记录可查询")
                 
                 if not verification_success:
                     current_pn_status = pn_record.get("pnStatus") if pn_record else "未找到记录"
@@ -1241,7 +1240,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
                             final_verification_success = True
                             break
                         elif attempt < max_attempts - 1:
-                            time.sleep(interval)
+                            self._async_delay(interval, reason="等待应付单金额状态更新")
                         else:
                             amount_details = {
                                 "current_paid_doc_amt": paid_doc_amt,
@@ -1256,7 +1255,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
                             a.json(amount_details, "金额状态详情")
                             assert False, f"应付单金额状态未达到预期，详情见附件"
                     elif attempt < max_attempts - 1:
-                        time.sleep(interval)
+                        self._async_delay(interval, reason="等待应付单记录可查询")
                 
                 if not final_verification_success:
                     assert False, f"轮询{max_attempts}次后，应付单金额状态仍未达到预期，应付单编号: {ap_head_code}"

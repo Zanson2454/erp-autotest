@@ -22,9 +22,6 @@ class TestLabelManagement(GenMdBaseTest):
     def bind_context(cls):
         """绑定测试上下文对象。"""
         super().bind_context()
-        # 数据存储
-        cls.label_id = None
-        cls.label_code = None
         cls.logger.info("标签管理测试类初始化完成")
 
     @classmethod
@@ -52,12 +49,13 @@ class TestLabelManagement(GenMdBaseTest):
             store_id_as="label"
         )
         self.assert_util.assert_response_data(response)
-        self.label_id = label_id
+        self.set_runtime_id("label", label_id)
         return label_id
 
     def _ensure_save_label(self, usageType="MAT"):
-        if self.label_id:
-            return self.label_id
+        label_id = self.get_runtime_id("label")
+        if label_id:
+            return label_id
         return self._create_label(usageType=usageType)
     # ================ 标签表基础管理 ================
     @case_decorator(
@@ -129,11 +127,10 @@ class TestLabelManagement(GenMdBaseTest):
         """查询标签详情用例 - GEN_LABEL_MD_QUERY_DETAIL_ACTION_SERVICE"""
         try:
             # 1. 确保标签存在（原有依赖逻辑完全保留，包含参数化调用）
-            if not self.label_id:
-                self._ensure_save_label(usageType="MAT")
+            label_id = self._ensure_save_label(usageType="MAT")
 
             # 2. 使用标准化API调用
-            set_dict = {"id": self.label_id}
+            set_dict = {"id": label_id}
             fields_to_filter = ["id"]
             
             response, _ = self.standard_api_call(
@@ -161,11 +158,10 @@ class TestLabelManagement(GenMdBaseTest):
         """启用标签用例 - GEN_LABEL_MD_ENABLED_ACTION_SERVICE"""
         try:
             # 1. 确保标签存在（原有依赖逻辑完全保留）
-            if not self.label_id:
-                self._ensure_save_label(usageType="MAT")
+            label_id = self._ensure_save_label(usageType="MAT")
 
             # 2. 使用标准化API调用
-            set_dict = {"id": self.label_id}
+            set_dict = {"id": label_id}
             fields_to_filter = ["id"]
             
             response, _ = self.standard_api_call(
@@ -193,11 +189,10 @@ class TestLabelManagement(GenMdBaseTest):
         """禁用标签用例 - GEN_LABEL_MD_DISABLED_ACTION_SERVICE"""
         try:
             # 1. 确保标签存在（原有依赖逻辑完全保留）
-            if not self.label_id:
-                self._ensure_save_label(usageType="MAT")
+            label_id = self._ensure_save_label(usageType="MAT")
 
             # 2. 使用标准化API调用
-            set_dict = {"id": self.label_id}
+            set_dict = {"id": label_id}
             fields_to_filter = ["id"]
             
             response, _ = self.standard_api_call(
@@ -225,11 +220,10 @@ class TestLabelManagement(GenMdBaseTest):
         """删除标签用例 - GEN_LABEL_MD_DELETE_ACTION_SERVICE"""
         try:
             # 1. 确保标签存在（原有依赖逻辑完全保留）
-            if not self.label_id:
-                self._ensure_save_label(usageType="MAT")
+            label_id = self._ensure_save_label(usageType="MAT")
 
             # 2. 使用标准化API调用
-            set_dict = {"id": self.label_id}
+            set_dict = {"id": label_id}
             fields_to_filter = ["id"]
             
             response, _ = self.standard_api_call(

@@ -19,8 +19,6 @@ class TestMatTaxManagement(GenMdBaseTest):
     def bind_context(cls):
         """绑定测试上下文对象。"""
         super().bind_context()
-        cls.mat_tax_id = None
-        cls.mat_tax_code = None
         cls.logger.info("物料税分类管理测试类初始化完成")
         country_info = cls.init_data.get("country_info")
         cls.counId = country_info[0].get("coun_id") if country_info else None
@@ -44,34 +42,36 @@ class TestMatTaxManagement(GenMdBaseTest):
         新增物料税分类用例
         """
         try:
-            # 准备物料税分类数据
-            mat_tax_code = self.mock_util.generate_unique_code(tag="MatTax")
-
-            # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {
-                "taxClassCode": mat_tax_code,
-                "taxClassDesc": f"自动化测试物料税分类-{self.mock_util.get_timestamp()}",
-                "counId": {"id": self.counId}
-            }
-            fields_to_filter = ["taxClassCode", "taxClassDesc", "counId"]
-
-            # 2. 使用标准化API调用（无任何断言）
-            response, extracted_id = self.standard_api_call(
-                api_key="GEN-物料税分类-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as="mat_tax"  # 自动存储 self.mat_tax_id
-            )
-
-            # 3. 保存业务数据（保持原有逻辑）
-            self.mat_tax_id = extracted_id
-            self.mat_tax_code = mat_tax_code
-
-            # 4. 日志记录（Allure报告已由standard_api_call处理）
+            self._create_mat_tax()
 
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
+
+    def _create_mat_tax(self):
+        mat_tax_code = self.mock_util.generate_unique_code(tag="MatTax")
+        set_dict = {
+            "taxClassCode": mat_tax_code,
+            "taxClassDesc": f"自动化测试物料税分类-{self.mock_util.get_timestamp()}",
+            "counId": {"id": self.counId}
+        }
+        fields_to_filter = ["taxClassCode", "taxClassDesc", "counId"]
+        response, extracted_id = self.standard_api_call(
+            api_key="GEN-物料税分类-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=fields_to_filter,
+            store_id_as="mat_tax"
+        )
+        self.set_runtime_id("mat_tax", extracted_id)
+        self.test_data["mat_tax_code"] = mat_tax_code
+        self.assert_util.assert_response_data(response)
+        return extracted_id
+
+    def _ensure_save_mat_tax(self):
+        mat_tax_id = self.get_runtime_id("mat_tax")
+        if mat_tax_id:
+            return mat_tax_id
+        return self._create_mat_tax()
 
     @case_decorator(
         story="物料税分类管理",
@@ -131,11 +131,10 @@ class TestMatTaxManagement(GenMdBaseTest):
         查询物料税分类详情用例
         """
         try:
-            if not self.mat_tax_id:
-                self._ensure_save_mat_tax()
+            mat_tax_id = self._ensure_save_mat_tax()
 
             # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.mat_tax_id}
+            set_dict = {"id": mat_tax_id}
             fields_to_filter = ["id"]
 
             # 2. 使用标准化API调用（无任何断言）
@@ -413,11 +412,10 @@ class TestMatTaxManagement(GenMdBaseTest):
         删除物料税分类用例
         """
         try:
-            if not self.mat_tax_id:
-                self._ensure_save_mat_tax()
+            mat_tax_id = self._ensure_save_mat_tax()
 
             # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.mat_tax_id}
+            set_dict = {"id": mat_tax_id}
             fields_to_filter = ["id"]
 
             # 2. 使用标准化API调用（无任何断言）

@@ -383,6 +383,18 @@ pytest --project=project1 --env=test --alluredir=./reports/allure-results
 # 并行执行（4 个进程，按文件分发）
 pytest -n 4 --dist=loadfile
 
+# 并行执行（按本机 CPU 核数）
+# 当前本机示例：逻辑核数 = 8
+pytest -n 8 --dist=loadfile
+
+# 自动探测本机逻辑核数并并行执行（macOS / Linux 通用）
+CPU_CORES=$(python -c "import os; print(os.cpu_count() or 1)")
+pytest -n "$CPU_CORES" --dist=loadfile
+
+# 预留 1 核给系统（推荐本地调试）
+CPU_WORKERS=$(python -c "import os; c=os.cpu_count() or 1; print(max(1, c-1))")
+pytest -n "$CPU_WORKERS" --dist=loadfile
+
 # 生成 Allure 报告
 pytest --alluredir=./reports/allure-results
 allure serve ./reports/allure-results
@@ -766,8 +778,18 @@ A: 检查以下几点：
 A: 使用 pytest-xdist 插件：
 
 ```bash
-pytest -n auto  # 自动检测 CPU 核心数
-pytest -n 4     # 使用 4 个进程
+# 自动检测 CPU 核数
+pytest -n auto
+
+# 指定并行进程数（例如 4）
+pytest -n 4
+
+# 按本机 CPU 核数动态计算（macOS / Linux）
+CPU_CORES=$(python -c "import os; print(os.cpu_count() or 1)")
+pytest -n "$CPU_CORES" --dist=loadfile
+
+# 当前本机示例（逻辑核数 8）
+pytest -n 8 --dist=loadfile
 ```
 
 ### Q5: 如何跳过某些测试？

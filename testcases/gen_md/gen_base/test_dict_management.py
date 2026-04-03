@@ -23,9 +23,6 @@ class TestDictManagement(GenMdBaseTest):
     def bind_context(cls):
         """绑定测试上下文对象。"""
         super().bind_context()
-        # 数据存储
-        cls.dict_id = None
-        cls.dict_code = None
         cls.logger.info("数据字典管理测试类初始化完成")
 
     @classmethod
@@ -60,13 +57,14 @@ class TestDictManagement(GenMdBaseTest):
             store_id_as="dict"
         )
         self.assert_util.assert_response_data(response)
-        self.dict_id = dict_id
-        self.dict_code = dict_code
+        self.set_runtime_id("dict", dict_id)
+        self.test_data["dict_code"] = dict_code
         return dict_id
 
     def _ensure_save_dict(self):
-        if self.dict_id:
-            return self.dict_id
+        dict_id = self.get_runtime_id("dict")
+        if dict_id:
+            return dict_id
         return self._create_dict()
 
     @case_decorator(
@@ -129,10 +127,8 @@ class TestDictManagement(GenMdBaseTest):
     def test_query_dict_detail(self):
         """查询数据字典类别详情用例"""
         try:
-            if not self.dict_id:
-                self._ensure_save_dict()
-
-            set_dict = {"id": self.dict_id}
+            dict_id = self._ensure_save_dict()
+            set_dict = {"id": dict_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-数据字典类别-查询详情服务",
@@ -156,10 +152,8 @@ class TestDictManagement(GenMdBaseTest):
     def test_enable_dict(self):
         """启用数据字典类别用例"""
         try:
-            if not self.dict_id:
-                self._ensure_save_dict()
-
-            set_dict = {"id": self.dict_id}
+            dict_id = self._ensure_save_dict()
+            set_dict = {"id": dict_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-数据字典类别-启用服务",
@@ -183,10 +177,8 @@ class TestDictManagement(GenMdBaseTest):
     def test_disable_dict(self):
         """禁用数据字典类别用例"""
         try:
-            if not self.dict_id:
-                self._ensure_save_dict()
-
-            set_dict = {"id": self.dict_id}
+            dict_id = self._ensure_save_dict()
+            set_dict = {"id": dict_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-数据字典类别-禁用服务",
@@ -210,10 +202,8 @@ class TestDictManagement(GenMdBaseTest):
     def test_delete_dict(self):
         """删除数据字典类别用例"""
         try:
-            if not self.dict_id:
-                self._ensure_save_dict()
-
-            set_dict = {"id": self.dict_id}
+            dict_id = self._ensure_save_dict()
+            set_dict = {"id": dict_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-数据字典类别-删除服务",

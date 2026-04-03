@@ -20,7 +20,6 @@ class TestMat_ValueManagement(GenMdBaseTest):
     def bind_context(cls):
         """绑定测试上下文对象。"""
         super().bind_context()
-        cls.mat_value_id = None
         cls.mat_value_code = None
         if cls.md_cache_data:
             inv_org_info = cls.md_cache_data.get("org_info",{}).get("inv_org_info",[])
@@ -29,7 +28,36 @@ class TestMat_ValueManagement(GenMdBaseTest):
             cls.mat_type_id = mat_type_info[0].get("id") if mat_type_info else None
         cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
         cls.logger.info("物料价值管理测试类初始化完成")
-        
+
+    def _create_mat_value(self):
+        set_dict = {
+            "invOrgId": {"id": self.inv_org_id},
+            "matTypeId": {"id": self.mat_type_id},
+            "matQtyUpdate": True,
+            "matValUpdate": False,
+        }
+        response, extracted_id = self.standard_api_call(
+            api_key="GEN-物料价值数量配置-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=["invOrgId", "matTypeId", "matQtyUpdate", "matValUpdate"],
+            store_id_as="mat_value",
+        )
+        self.assert_util.assert_response_success(response)
+        self.set_runtime_id("mat_value", extracted_id)
+        return extracted_id
+
+    def _ensure_save_mat_value(self):
+        mat_value_id = self.get_runtime_id("mat_value")
+        if mat_value_id:
+            return mat_value_id
+        mat_value_id = self.query_service.get_inv_org_mat_type_link_id(
+            self.mat_type_id,
+            self.inv_org_id,
+        )
+        if mat_value_id:
+            self.set_runtime_id("mat_value", mat_value_id)
+            return mat_value_id
+        return self._create_mat_value()
 
     @classmethod
     def teardown_class(cls):
@@ -77,33 +105,8 @@ class TestMat_ValueManagement(GenMdBaseTest):
         新增物料价值管理用例
         """
         try:
-            # 1. 判断是否存在数据（保持原有逻辑）
-            self.mat_value_id = self.query_service.get_inv_org_mat_type_link_id(
-                self.mat_type_id,
-                self.inv_org_id,
-            )
-            if not self.mat_value_id:
-                # 2. 准备测试数据（业务逻辑保持不变）
-                set_dict = {
-                    "invOrgId": {"id": self.inv_org_id},
-                    "matTypeId": {"id": self.mat_type_id},
-                    "matQtyUpdate": True,
-                    "matValUpdate": False
-                }
-                fields_to_filter = ["invOrgId", "matTypeId","matQtyUpdate","matValUpdate"]
-
-                # 3. 使用标准化API调用（无任何断言）
-                response, extracted_id = self.standard_api_call(
-                    api_key="GEN-物料价值数量配置-保存服务",
-                    set_dict=set_dict,
-                    fields_to_filter=fields_to_filter,
-                    store_id_as="mat_value"  # 自动存储 self.mat_value_id
-                )
-
-                # 4. 保存业务数据（保持原有逻辑）
-                self.mat_value_id = extracted_id
-
-                # 5. 日志记录（Allure报告已由standard_api_call处理）
+            mat_value_id = self._ensure_save_mat_value()
+            a.json({"mat_value_id": mat_value_id}, "物料价值ID")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -177,12 +180,10 @@ class TestMat_ValueManagement(GenMdBaseTest):
         查询物料价值管理详情用例
         """
         try:
-            # 获取物料价值管理ID
-            if not self.mat_value_id:
-                self._ensure_save_mat_value()
+            mat_value_id = self._ensure_save_mat_value()
 
             # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.mat_value_id}
+            set_dict = {"id": mat_value_id}
             fields_to_filter = ["id"]
 
             # 2. 使用标准化API调用（无任何断言）
@@ -489,12 +490,10 @@ class TestMat_ValueManagement(GenMdBaseTest):
         删除物料价值管理用例
         """
         try:
-            # 获取物料价值管理信息
-            if not self.mat_value_id:
-                self._ensure_save_mat_value()
+            mat_value_id = self._ensure_save_mat_value()
 
             # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.mat_value_id}
+            set_dict = {"id": mat_value_id}
             fields_to_filter = ["id"]
 
             # 2. 使用标准化API调用（无任何断言）

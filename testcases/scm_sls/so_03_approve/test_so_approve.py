@@ -105,26 +105,14 @@ class TestSalesOrderApproval(SlsBase):
             # 1. 创建销售订单并提交（确保金额满足审单规则条件 > 1000）
             self.order_id = self.create_sales_order(order_type="STND", submit=True)
             
-            # 2. 等待订单状态更新
-            import time
-            time.sleep(2)
-            
-            # 3. 查询订单状态，验证是否为审批中或已生效（添加重试机制）
-            actual_status = None
-            for attempt in range(5):
-                order_status = self.query_service.query(
-                    "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
-                    params=[self.order_id]
-                )
-                if order_status:
-                    actual_status = order_status[0]['so_status']
-                    if actual_status in ["APPROVING", "EFFECT"]:
-                        break
-                
-                # 如果状态不是预期状态，等待后重试
-                if attempt < 4:
-                    time.sleep(2)
-                    self.logger.info(f"订单状态查询，等待2秒后重试 (第{attempt + 1}次)，当前状态: {actual_status}")
+            # 2. 轮询等待订单状态更新
+            actual_status = self._wait_order_status(
+                order_id=self.order_id,
+                expected_statuses={"APPROVING", "EFFECT"},
+                max_wait=20,
+                interval=2.0,
+                timeout_message=f"订单状态未在预期时间内进入审批中/已生效，order_id={self.order_id}",
+            )
             
             if not actual_status:
                 raise ValueError(f"未找到订单状态，订单ID: {self.order_id}")
@@ -245,26 +233,14 @@ class TestSalesOrderApproval(SlsBase):
             )
             self.assert_util.assert_response_success(response)
             
-            # 6. 等待订单状态更新
-            import time
-            time.sleep(2)
-            
-            # 7. 查询订单状态，验证是否为已生效（添加重试机制）
-            actual_status = None
-            for attempt in range(5):
-                order_status = self.query_service.query(
-                    "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
-                    params=[self.order_id]
-                )
-                if order_status:
-                    actual_status = order_status[0]['so_status']
-                    if actual_status == "EFFECT":
-                        break
-                
-                # 如果状态不是已生效，等待后重试
-                if attempt < 4:
-                    time.sleep(2)
-                    self.logger.info(f"订单状态不是已生效，等待2秒后重试 (第{attempt + 1}次)，当前状态: {actual_status}")
+            # 6. 轮询等待订单状态为已生效
+            actual_status = self._wait_order_status(
+                order_id=self.order_id,
+                expected_statuses={"EFFECT"},
+                max_wait=20,
+                interval=2.0,
+                timeout_message=f"订单审批同意后未在预期时间内生效，order_id={self.order_id}",
+            )
             
             self.assert_util.assert_by_operator(actual_status, "=", "EFFECT", "订单状态应为已生效")
                 
@@ -287,26 +263,14 @@ class TestSalesOrderApproval(SlsBase):
             # 1. 创建销售订单并提交（确保金额满足审单规则条件 > 1000）
             self.reject_order_id = self.create_sales_order(order_type="STND", submit=True)
             
-            # 2. 等待订单状态更新
-            import time
-            time.sleep(2)
-            
-            # 3. 查询订单状态，验证是否为审批中或已生效（添加重试机制）
-            actual_status = None
-            for attempt in range(5):
-                order_status = self.query_service.query(
-                    "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
-                    params=[self.reject_order_id]
-                )
-                if order_status:
-                    actual_status = order_status[0]['so_status']
-                    if actual_status in ["APPROVING", "EFFECT"]:
-                        break
-                
-                # 如果状态不是预期状态，等待后重试
-                if attempt < 4:
-                    time.sleep(2)
-                    self.logger.info(f"订单状态查询，等待2秒后重试 (第{attempt + 1}次)，当前状态: {actual_status}")
+            # 2. 轮询等待订单状态更新
+            actual_status = self._wait_order_status(
+                order_id=self.reject_order_id,
+                expected_statuses={"APPROVING", "EFFECT"},
+                max_wait=20,
+                interval=2.0,
+                timeout_message=f"订单状态未在预期时间内进入审批中/已生效，order_id={self.reject_order_id}",
+            )
             
             if not actual_status:
                 raise ValueError(f"未找到订单状态，订单ID: {self.reject_order_id}")
@@ -400,6 +364,39 @@ class TestSalesOrderApproval(SlsBase):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
+
+    def _wait_order_status(
+        self,
+        order_id,
+        expected_statuses,
+        max_wait: int = 20,
+        interval: float = 2.0,
+        timeout_message: str = "",
+    ):
+        """轮询等待订单状态达到目标集合。"""
+        expected = set(expected_statuses or [])
+
+        def check_func():
+            rows = self.query_service.query(
+                "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
+                params=[order_id],
+            )
+            status = rows[0].get("so_status") if rows else None
+            return status in expected, {"so_status": status}, None
+
+        result = self.async_wait_util.wait_for_condition(
+            check_func=check_func,
+            max_wait=max_wait,
+            interval=interval,
+            timeout_message=timeout_message or f"订单状态等待超时，order_id={order_id}",
+            enable_polling_log=False,
+        )
+        if result.status != self.wait_status.SUCCESS:
+            raise AssertionError(
+                f"订单状态等待失败 [order_id={order_id}] "
+                f"status={result.status.value}, detail={result.error_message}, last={result.last_data}"
+            )
+        return (result.last_data or {}).get("so_status")
     
     @case_decorator(
         story="销售订单审批流程",

@@ -23,9 +23,6 @@ class TestAttrManagement(GenMdBaseTest):
     def bind_context(cls):
         """绑定测试上下文对象。"""
         super().bind_context()
-        # 数据存储
-        cls.attr_id = None
-        cls.attr_code = None
         cls.logger.info("属性管理测试类初始化完成")
         cls.attr_field_list = []
 
@@ -79,13 +76,14 @@ class TestAttrManagement(GenMdBaseTest):
             store_id_as="attr"
         )
         self.assert_util.assert_response_data(response)
-        self.attr_id = attr_id
-        self.attr_code = attr_code
+        self.set_runtime_id("attr", attr_id)
+        self.test_data["attr_code"] = attr_code
         return attr_id
 
     def _ensure_save_attr(self):
-        if self.attr_id:
-            return self.attr_id
+        attr_id = self.get_runtime_id("attr")
+        if attr_id:
+            return attr_id
         return self._create_attr()
     # ================ 属性表基础管理 ================
     @case_decorator(
@@ -150,10 +148,8 @@ class TestAttrManagement(GenMdBaseTest):
     def test_query_attr_detail(self):
         """查询属性详情用例 - GEN_ATTR_CF_QUERY_DETAIL_ACTION_SERVICE"""
         try:
-            if not self.attr_id:
-                self._ensure_save_attr()
-
-            set_dict = {"id": self.attr_id}
+            attr_id = self._ensure_save_attr()
+            set_dict = {"id": attr_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-属性表-查询详情服务",
@@ -194,10 +190,8 @@ class TestAttrManagement(GenMdBaseTest):
     def test_enable_attr(self):
         """启用属性用例 - GEN_ATTR_CF_ENABLED_ACTION_SERVICE"""
         try:
-            if not self.attr_id:
-                self._ensure_save_attr()
-
-            set_dict = {"id": self.attr_id}
+            attr_id = self._ensure_save_attr()
+            set_dict = {"id": attr_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-属性表-启用服务",
@@ -221,10 +215,8 @@ class TestAttrManagement(GenMdBaseTest):
     def test_disable_attr(self):
         """禁用属性用例 - GEN_ATTR_CF_DISABLED_ACTION_SERVICE"""
         try:
-            if not self.attr_id:
-                self._ensure_save_attr()
-
-            set_dict = {"id": self.attr_id}
+            attr_id = self._ensure_save_attr()
+            set_dict = {"id": attr_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-属性表-禁用服务",
@@ -248,10 +240,8 @@ class TestAttrManagement(GenMdBaseTest):
     def test_delete_attr(self):
         """删除属性用例 - GEN_ATTR_CF_DELETE_ACTION_SERVICE"""
         try:
-            if not self.attr_id:
-                self._ensure_save_attr()
-
-            set_dict = {"id": self.attr_id}
+            attr_id = self._ensure_save_attr()
+            set_dict = {"id": attr_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-属性表-删除服务",

@@ -26,6 +26,32 @@ class TestCustomerTaxManagement(GenMdBaseTest):
         cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
 
+    def _create_customer_tax_type(self):
+        cust_tax_code = self.mock_util.generate_unique_code(tag="CustTax")
+        country_info = self.init_data.get("country_info")
+        coun_id = country_info[0].get("coun_id") if country_info else None
+        set_dict = {
+            "taxClassCode": cust_tax_code,
+            "taxClassDesc": f"自动化测试客户税分类-{self.mock_util.get_timestamp()}",
+            "counId": {"id": coun_id},
+        }
+        response, extracted_id = self.standard_api_call(
+            api_key="GEN-客户税分类-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=["taxClassCode", "taxClassDesc", "counId"],
+            store_id_as=None,
+        )
+        self.assert_util.assert_response_data(response)
+        self.set_runtime_id("cust_tax", extracted_id)
+        self.set_runtime_id("cust_tax_code", cust_tax_code)
+        return extracted_id
+
+    def _ensure_save_customer_tax_type(self):
+        cust_tax_id = self.get_runtime_id("cust_tax")
+        if cust_tax_id:
+            return cust_tax_id
+        return self._create_customer_tax_type()
+
     @case_decorator(
         story="客户税分类管理",
         title="测试新增客户税分类",
@@ -38,34 +64,8 @@ class TestCustomerTaxManagement(GenMdBaseTest):
     def test_save_customer_tax_type(self):
         """新增客户税分类用例"""
         try:
-            # 准备客户税分类数据  
-            cust_tax_code = self.mock_util.generate_unique_code(tag="CustTax")
-            
-            # 获取初始化数据中的国家信息
-            country_info = self.init_data.get("country_info")
-            coun_id = country_info[0].get("coun_id") if country_info else None
-            
-            set_dict = {
-                "taxClassCode": cust_tax_code,
-                "taxClassDesc": f"自动化测试客户税分类-{self.mock_util.get_timestamp()}",
-                "counId": {"id": coun_id}
-            }
-            fields_to_filter = ["taxClassCode", "taxClassDesc", "counId"]
-
-            response, extracted_id = self.standard_api_call(
-                api_key="GEN-客户税分类-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as=None
-            )
-            
-            self.assert_util.assert_response_data(response)
-            
-            # 保存返回的ID用于后续测试
-            self.cust_tax_id = response.get("data", {}).get("data", {})
-            self.cust_tax_code = cust_tax_code
-            
-            a.json(response, "响应数据")
+            cust_tax_id = self._create_customer_tax_type()
+            a.json({"cust_tax_id": cust_tax_id}, "客户税分类新增结果")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -126,11 +126,9 @@ class TestCustomerTaxManagement(GenMdBaseTest):
     def test_query_customer_tax_type_detail(self):
         """查询客户税分类详情用例"""
         try:
-            # 如果没有ID，先创建一个
-            if not hasattr(self, 'cust_tax_id') or not self.cust_tax_id:
-                self._ensure_save_customer_tax_type()
+            cust_tax_id = self._ensure_save_customer_tax_type()
 
-            set_dict = {"id": self.cust_tax_id}
+            set_dict = {"id": cust_tax_id}
             fields_to_filter = ["id"]
 
             response, _ = self.standard_api_call(
@@ -162,11 +160,9 @@ class TestCustomerTaxManagement(GenMdBaseTest):
     def test_delete_customer_tax_type(self):
         """删除客户税分类用例"""
         try:
-            # 如果没有ID，先创建一个
-            if not hasattr(self, 'cust_tax_id') or not self.cust_tax_id:
-                self._ensure_save_customer_tax_type()
+            cust_tax_id = self._ensure_save_customer_tax_type()
 
-            set_dict = {"id": self.cust_tax_id}
+            set_dict = {"id": cust_tax_id}
             fields_to_filter = ["id"]
 
             response, _ = self.standard_api_call(

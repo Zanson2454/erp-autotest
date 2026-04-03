@@ -264,7 +264,7 @@ class TestInvAtpLockSale(ScmInvBaseTest):
                 db_result = self.query_service.query(query_sql)
                 if not db_result or len(db_result) == 0:
                     if i < 19:  # 不是最后一次才等待
-                        time.sleep(1)
+                        self._async_delay(1, "等待ATP锁库记录生成")
                     continue
                 
                 record = db_result[0]
@@ -282,7 +282,7 @@ class TestInvAtpLockSale(ScmInvBaseTest):
                 if i < 19:
                     if i % 5 == 0:  # 每5次打印一次日志
                         self.logger.info(f"⏳ 等待confirm_qty更新... 当前值={confirm_qty}, 期望值={expected_confirm_qty}")
-                    time.sleep(1)
+                    self._async_delay(1, "等待confirm_qty异步更新")
                 else:
                     # 最后一次，记录最终结果
                     self.logger.warning(

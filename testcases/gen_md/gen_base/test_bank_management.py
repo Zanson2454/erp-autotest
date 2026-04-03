@@ -21,10 +21,6 @@ class TestBankSystemManagement(GenMdBaseTest):
         """绑定测试上下文对象。"""
         super().bind_context()
         # MockData 单例自动处理，无需手动创建
-        cls.bank_id = None
-        cls.bank_code = None
-        cls.sub_bank_id = None
-        cls.sub_bank_code = None
         cls.logger.info("银行系统管理测试类初始化完成")
 
     @classmethod
@@ -53,19 +49,19 @@ class TestBankSystemManagement(GenMdBaseTest):
             store_id_as="bank"
         )
         self.assert_util.assert_response_data(response)
-        self.bank_id = bank_id
-        self.bank_code = bank_code
-        self.logger.info(f"保存银行成功，bank_id: {self.bank_id}, bank_code: {self.bank_code}")
+        self.set_runtime_id("bank", bank_id)
+        self.test_data["bank_code"] = bank_code
+        self.logger.info(f"保存银行成功，bank_id: {bank_id}, bank_code: {bank_code}")
         return bank_id
 
     def _ensure_save_bank(self):
-        if self.bank_id:
-            return self.bank_id
+        bank_id = self.get_runtime_id("bank")
+        if bank_id:
+            return bank_id
         return self._create_bank()
 
     def _create_sub_bank(self):
-        if not self.bank_id:
-            self._ensure_save_bank()
+        bank_id = self._ensure_save_bank()
 
         sub_bank_code = self.mock_util.generate_unique_code(tag="SubBank")
         sub_bank_name = f"银行支行_{self.mock_util.get_timestamp()}"
@@ -73,7 +69,7 @@ class TestBankSystemManagement(GenMdBaseTest):
         set_dict = {
             "subBankCode": sub_bank_code,
             "subBankName": sub_bank_name,
-            "genBankId": {"id": self.bank_id}
+            "genBankId": {"id": bank_id}
         }
 
         response, sub_bank_id = self.standard_api_call(
@@ -83,13 +79,14 @@ class TestBankSystemManagement(GenMdBaseTest):
             store_id_as="sub_bank"
         )
         self.assert_util.assert_response_data(response)
-        self.sub_bank_id = sub_bank_id
-        self.sub_bank_code = sub_bank_code
+        self.set_runtime_id("sub_bank", sub_bank_id)
+        self.test_data["sub_bank_code"] = sub_bank_code
         return sub_bank_id
 
     def _ensure_save_sub_bank(self):
-        if self.sub_bank_id:
-            return self.sub_bank_id
+        sub_bank_id = self.get_runtime_id("sub_bank")
+        if sub_bank_id:
+            return sub_bank_id
         return self._create_sub_bank()
     # ================ 银行管理 ================
     @case_decorator(
@@ -155,10 +152,8 @@ class TestBankSystemManagement(GenMdBaseTest):
     def test_query_bank_detail(self):
         """查询银行详情用例"""
         try:
-            if not self.bank_id:
-                self._ensure_save_bank()
-
-            set_dict = {"id": self.bank_id}
+            bank_id = self._ensure_save_bank()
+            set_dict = {"id": bank_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-银行配置-查询详情服务",
@@ -182,10 +177,8 @@ class TestBankSystemManagement(GenMdBaseTest):
     def test_delete_bank(self):
         """删除银行用例"""
         try:
-            if not self.bank_id:
-                self._ensure_save_bank()
-
-            set_dict = {"id": self.bank_id}
+            bank_id = self._ensure_save_bank()
+            set_dict = {"id": bank_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-银行配置-删除服务",
@@ -262,10 +255,8 @@ class TestBankSystemManagement(GenMdBaseTest):
     def test_query_sub_bank_detail(self):
         """查询银行支行详情用例"""
         try:
-            if not self.sub_bank_id:
-                self._ensure_save_sub_bank()
-
-            set_dict = {"id": self.sub_bank_id}
+            sub_bank_id = self._ensure_save_sub_bank()
+            set_dict = {"id": sub_bank_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-银行支行-查询详情服务",
@@ -289,10 +280,8 @@ class TestBankSystemManagement(GenMdBaseTest):
     def test_delete_sub_bank(self):
         """删除银行支行用例"""
         try:
-            if not self.sub_bank_id:
-                self._ensure_save_sub_bank()
-
-            set_dict = {"id": self.sub_bank_id}
+            sub_bank_id = self._ensure_save_sub_bank()
+            set_dict = {"id": sub_bank_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-银行支行-删除服务",
@@ -318,10 +307,8 @@ class TestBankSystemManagement(GenMdBaseTest):
     def test_find_bank_data_by_id(self):
         """银行配置根据ID查找数据用例"""
         try:
-            if not self.bank_id:
-                self._ensure_save_bank()
-
-            set_dict = {"id": self.bank_id}
+            bank_id = self._ensure_save_bank()
+            set_dict = {"id": bank_id}
             
             response, _ = self.standard_api_call(
                 api_key="银行配置-根据ID查找数据服务",
@@ -346,10 +333,8 @@ class TestBankSystemManagement(GenMdBaseTest):
     def test_find_sub_bank_data_by_id(self):
         """银行支行根据ID查找数据用例"""
         try:
-            if not self.sub_bank_id:
-                self._ensure_save_sub_bank()
-
-            set_dict = {"id": self.sub_bank_id}
+            sub_bank_id = self._ensure_save_sub_bank()
+            set_dict = {"id": sub_bank_id}
             
             response, _ = self.standard_api_call(
                 api_key="银行支行-根据ID查找数据服务",

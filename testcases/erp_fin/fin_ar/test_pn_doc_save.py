@@ -281,9 +281,8 @@ class TestPnCreateManual(ArBaseTest):
                 assert pn_head_code and pn_doc_id, "请先执行前置用例，确保pnHeadCode和pn_doc_id已生成"
                 
                 # 等待异步过账完成
-                import time
                 a.text("等待异步过账完成，延迟15秒...", "延迟等待")
-                time.sleep(15)
+                self._async_delay(15, reason="等待收款单异步过账完成")
                 
                 a.text("✓ 异步过账等待时间已完成", "状态检查")
                 
@@ -348,9 +347,8 @@ class TestPnCreateManual(ArBaseTest):
     def test_delete_pn_doc(self):
         try:
             with a.step("等待反过账操作完成"):
-                import time
                 a.text("等待反过账操作完成，延迟10秒后执行删除操作...", "延迟等待")
-                time.sleep(10)
+                self._async_delay(10, reason="等待收款单反过账操作完成")
                 
             with a.step("创建用于删除的草稿收款单"):
                 # 生成当前时间戳

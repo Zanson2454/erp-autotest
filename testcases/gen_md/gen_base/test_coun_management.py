@@ -20,8 +20,6 @@ class TestCountryManagement(GenMdBaseTest):
     def bind_context(cls):
         """绑定测试上下文对象。"""
         super().bind_context()
-        cls.country_id = None
-        cls.country_code = None
         cls.logger.info("国家管理测试类初始化完成")
 
     @classmethod
@@ -50,13 +48,14 @@ class TestCountryManagement(GenMdBaseTest):
             store_id_as="country"
         )
         self.assert_util.assert_response_data(response)
-        self.country_id = country_id
-        self.country_code = country_code
+        self.set_runtime_id("country", country_id)
+        self.test_data["country_code"] = country_code
         return country_id
 
     def _ensure_save_country(self):
-        if self.country_id:
-            return self.country_id
+        country_id = self.get_runtime_id("country")
+        if country_id:
+            return country_id
         return self._create_country()
 
     @case_decorator(
@@ -121,10 +120,8 @@ class TestCountryManagement(GenMdBaseTest):
     def test_query_country_detail(self):
         """查询国家配置详情用例"""
         try:
-            if not self.country_id:
-                self._ensure_save_country()
-
-            set_dict = {"id": self.country_id}
+            country_id = self._ensure_save_country()
+            set_dict = {"id": country_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-国家配置表-查询详情服务",
@@ -148,10 +145,8 @@ class TestCountryManagement(GenMdBaseTest):
     def test_delete_country(self):
         """删除国家配置用例"""
         try:
-            if not self.country_id:
-                self._ensure_save_country()
-
-            set_dict = {"id": self.country_id}
+            country_id = self._ensure_save_country()
+            set_dict = {"id": country_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-国家配置表-删除服务",

@@ -195,7 +195,7 @@ class TestInvStkStatisticaManagement(ScmInvBaseTest):
                 self._ensure_create_mobile_voucher_for_statistics()
             
             # 等待一段时间确保数据同步
-            time.sleep(2)
+            self._async_delay(2, "等待库存统计同步")
             
             # 1. API调用获取最新统计数据
             api_path = self.get_api_path("INV-库存余额-库存账统计服务")
@@ -251,4 +251,3 @@ class TestInvStkStatisticaManagement(ScmInvBaseTest):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
-

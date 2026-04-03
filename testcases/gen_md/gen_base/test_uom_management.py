@@ -20,11 +20,6 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
         """绑定测试上下文对象。"""
         super().bind_context()
 
-        # 数据存储
-        cls.uom_id = None
-        cls.uom_code = None
-        cls.uom_formula_id = None
-        cls.uom_formula_code = None
         cls.logger.info("计量单位综合管理测试类初始化完成")
         
         
@@ -60,24 +55,24 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
             store_id_as="uom"
         )
         self.assert_util.assert_response_data(response)
-        self.uom_id = extracted_id
-        self.uom_code = uom_code
+        self.set_runtime_id("uom", extracted_id)
+        self.test_data["uom_code"] = uom_code
         return extracted_id
 
     def _ensure_save_uom_type(self):
-        if self.uom_id:
-            return self.uom_id
+        uom_id = self.get_runtime_id("uom")
+        if uom_id:
+            return uom_id
         return self._create_uom_type()
 
     def _create_uom_formula(self):
-        if not self.uom_id:
-            self._ensure_save_uom_type()
+        uom_id = self._ensure_save_uom_type()
 
         set_dict = {
             "baseUnitFactor": 1,
             "targetUnitFactor": 1,
-            "targetUnitId": {"id": self.uom_id},
-            "unitId": {"id": self.uom_id},
+            "targetUnitId": {"id": uom_id},
+            "unitId": {"id": uom_id},
             "genMatMdId": None
         }
         fields_to_filter = ["baseUnitFactor", "targetUnitFactor", "targetUnitId", "unitId", "genMatMdId"]
@@ -89,12 +84,13 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
             store_id_as="uom_formula"
         )
         self.assert_util.assert_response_data(response)
-        self.uom_formula_id = extracted_id
+        self.set_runtime_id("uom_formula", extracted_id)
         return extracted_id
 
     def _ensure_save_uom_formula(self):
-        if self.uom_formula_id:
-            return self.uom_formula_id
+        uom_formula_id = self.get_runtime_id("uom_formula")
+        if uom_formula_id:
+            return uom_formula_id
         return self._create_uom_formula()
     # ================ 计量单位基础管理 ================
     @case_decorator(
@@ -217,11 +213,10 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
     def test_query_uom_type_detail(self):
         """查询计量单位详情用例 - GEN_UOM_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE"""
         try:
-            if not self.uom_id:
-                self._ensure_save_uom_type()
+            uom_id = self._ensure_save_uom_type()
 
             # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.uom_id}
+            set_dict = {"id": uom_id}
             fields_to_filter = ["id"]
 
             # 2. 使用标准化API调用（无任何断言）
@@ -253,10 +248,9 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
     def test_find_uom_type_by_id(self):
         """根据ID查找计量单位数据用例 - GEN_UOM_TYPE_CF_FIND_DATA_BY_ID_SERVICE"""
         try:
-            if not self.uom_id:
-                self._ensure_save_uom_type()
+            uom_id = self._ensure_save_uom_type()
 
-            set_dict = {"id": self.uom_id}
+            set_dict = {"id": uom_id}
             response, _ = self.standard_api_call(
                 api_key="计量单位-根据ID查找数据服务",
                 set_dict=set_dict,
@@ -282,14 +276,13 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
     def test_uom_type_conversion(self):
         """计量单位转换功能用例 - GEN_UOM_TYPE_CONVERSION_ACTION_SERVICE"""
         try:
-            if not self.uom_id:
-                self._ensure_save_uom_type()
+            uom_id = self._ensure_save_uom_type()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "matId": self.mat_id,
-                "unitId": self.uom_id,
-                "targetUnitId": self.uom_id,
+                "unitId": uom_id,
+                "targetUnitId": uom_id,
                 "orgAmount": 1
             }
             fields_to_filter = ["matId", "unitId", "targetUnitId", "orgAmount"]
@@ -322,11 +315,10 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
     def test_delete_uom_type(self):
         """删除计量单位用例 - GEN_UOM_TYPE_CF_DELETE_ACTION_SERVICE"""
         try:
-            if not self.uom_id:
-                self._ensure_save_uom_type()
+            uom_id = self._ensure_save_uom_type()
 
             # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.uom_id}
+            set_dict = {"id": uom_id}
             fields_to_filter = ["id"]
 
             # 2. 使用标准化API调用（无任何断言）
@@ -418,11 +410,10 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
     def test_query_uom_formula_detail(self):
         """查询计量单位转换详情用例 - GEN_UOM_FORMULA_TYPE_CF_QUERY_DETAIL_ACTION_SERVICE"""
         try:
-            if not self.uom_formula_id:
-                self._ensure_save_uom_formula()
+            uom_formula_id = self._ensure_save_uom_formula()
 
             # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.uom_formula_id}
+            set_dict = {"id": uom_formula_id}
             fields_to_filter = ["id"]
 
             # 2. 使用标准化API调用（无任何断言）
@@ -453,11 +444,10 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
     def test_delete_uom_formula(self):
         """删除计量单位转换用例 - GEN_UOM_FORMULA_TYPE_CF_DELETE_ACTION_SERVICE"""
         try:
-            if not self.uom_formula_id:
-                self._ensure_save_uom_formula()
+            uom_formula_id = self._ensure_save_uom_formula()
 
             # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.uom_formula_id}
+            set_dict = {"id": uom_formula_id}
             fields_to_filter = ["id"]
 
             # 2. 使用标准化API调用（无任何断言）
@@ -725,17 +715,16 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
     def test_gain_weight_coefficient(self):
         """获取基本单位转换系数用例 - GAIN_WEIGHT_COEFFICIENT_EVENT_SERVICE"""
         try:
-            if not self.uom_id:
-                self._ensure_save_uom_type()
+            uom_id = self._ensure_save_uom_type()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "unitId": {
-                    "id": self.uom_id
+                    "id": uom_id
                 },
                 "orgAmount": 2,
                 "targetUnitId": {
-                    "id": self.uom_id
+                    "id": uom_id
                 },
                 "matId": {
                     "id": self.mat_id

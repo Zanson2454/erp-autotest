@@ -91,7 +91,7 @@ class TestSettDocAssoc(FinBaseTest):
                 param_path=["params"]
             )
             self.assert_util.assert_response_success(result)
-            time.sleep(15)
+            self._async_delay(15, reason="等待结算单自动确认与自动过账完成")
             #查询生成的结算单是否自动生成了应收应付
             sett_doc_row = self.query_service.get_sett_doc_status_by_sett_item_id(sett_item_id)
             if not sett_doc_row:

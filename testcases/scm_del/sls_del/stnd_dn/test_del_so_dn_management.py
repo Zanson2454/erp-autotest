@@ -167,8 +167,7 @@ class TestDelSoDnManagement(SlsDelBaseTest):
                     self.__class__.dn_id = dn_result.get("id")
                 else:
                     # 如果返回空字典，尝试通过订单号查询交货单
-                    import time
-                    time.sleep(2)  # 等待交货单创建完成
+                    self._async_delay(2, "等待交货单创建完成")
                     so_code = self.__class__.so_code
                     query_result = self.query_service.query("""
                         SELECT DISTINCT h.id as dn_id

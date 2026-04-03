@@ -28,6 +28,51 @@ class TestBrandManagement(GenMdBaseTest):
         """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
         cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
+
+    def _unique_brand_display_name(self, suffix: str = "") -> str:
+        """生成唯一品牌名称，满足服务端 gen.brand.name.conflict（名称全局唯一）。"""
+        return f"品牌_{self.mock_util.generate_unique_code(tag='BnNm')}{suffix}"
+
+    def _ensure_save_brand(self):
+        """无品牌数据时创建一条，供查询/修改等用例复用。"""
+        if getattr(self, "brandId", None):
+            return self.brandId
+        brand_code = self.mock_util.generate_unique_code(tag="Brand")
+        brand_name = self._unique_brand_display_name()
+        set_dict = {
+            "brandCode": brand_code,
+            "brandName": brand_name,
+            "brandImage": None,
+        }
+        response, extracted_id = self.standard_api_call(
+            api_key="GEN-品牌-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=["brandCode", "brandName", "brandImage"],
+            store_id_as=None,
+        )
+        self.assert_util.assert_response_data(response)
+        self.brandId = extracted_id
+        self.__class__.brandCode = brand_code
+        return extracted_id
+
+    def _create_brand_for_delete(self):
+        """删除专用：单独创建品牌，避免与其他用例共用 brandId 时存在物料引用导致删除接口异常。"""
+        brand_code = self.mock_util.generate_unique_code(tag="BrandDel")
+        brand_name = f"品牌删除_{self.mock_util.generate_unique_code(tag='BnDel')}"
+        set_dict = {
+            "brandCode": brand_code,
+            "brandName": brand_name,
+            "brandImage": None,
+        }
+        response, extracted_id = self.standard_api_call(
+            api_key="GEN-品牌-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=["brandCode", "brandName", "brandImage"],
+            store_id_as=None,
+        )
+        self.assert_util.assert_response_data(response)
+        return extracted_id
+
     @case_decorator(
         story="品牌管理",
         title="测试新增品牌",
@@ -44,7 +89,7 @@ class TestBrandManagement(GenMdBaseTest):
         try:
             # 准备品牌数据
             brand_code = self.mock_util.generate_unique_code(tag="Brand")
-            brand_name = f"品牌_{self.mock_util.get_timestamp()}"
+            brand_name = self._unique_brand_display_name()
 
             # 1. 准备测试数据（业务逻辑保持不变）
             set_dict = {
@@ -180,7 +225,7 @@ class TestBrandManagement(GenMdBaseTest):
             set_dict = {
                 "id": self.brandId,
                 "brandCode": self.brandCode,
-                "brandName": f"品牌_{self.mock_util.get_timestamp()}_修改",
+                "brandName": self._unique_brand_display_name("_修改"),
                 "brandImage": None
             }
             fields_to_filter = ["id", "brandCode", "brandName", "brandImage"]
@@ -216,12 +261,11 @@ class TestBrandManagement(GenMdBaseTest):
         删除品牌用例
         """
         try:
-            # 获取品牌ID
-            if not self.brandId:
-                self._ensure_save_brand()
+            # 使用独立创建的品牌 ID，避免与新增/列表等用例共享 brandId 时被业务引用导致删除失败
+            brand_id = self._create_brand_for_delete()
 
             # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.brandId}
+            set_dict = {"id": brand_id}
             fields_to_filter = ["id"]
 
             # 2. 使用标准化API调用（无任何断言）
@@ -261,7 +305,7 @@ class TestBrandManagement(GenMdBaseTest):
             import_data = [
                 {
                     "brandCode": self.mock_util.generate_unique_code(tag="IMPORT_BRAND"),
-                    "brandName": f"导入测试品牌_{self.mock_util.get_timestamp()}",
+                    "brandName": self._unique_brand_display_name("_导入"),
                     "brandImage": None
                 }
             ]
@@ -449,7 +493,7 @@ class TestBrandManagement(GenMdBaseTest):
             
             set_dict = {
                 "brandCode": brand_code,
-                "brandName": f"唯一性测试品牌1_{self.mock_util.get_timestamp()}"
+                "brandName": self._unique_brand_display_name("_唯一1"),
             }
             response1, _ = self.standard_api_call(
                 api_key="GEN-品牌-保存服务",
@@ -459,7 +503,7 @@ class TestBrandManagement(GenMdBaseTest):
             self.assert_util.assert_response_data(response1)
 
             # 尝试创建相同编码的品牌（应该失败或更新）
-            set_dict["brandName"] = f"唯一性测试品牌2_{self.mock_util.get_timestamp()}"
+            set_dict["brandName"] = self._unique_brand_display_name("_唯一2")
             response2, _ = self.standard_api_call(
                 api_key="GEN-品牌-保存服务",
                 set_dict=set_dict,
@@ -490,7 +534,7 @@ class TestBrandManagement(GenMdBaseTest):
         try:
             # 1. 创建品牌
             brand_code = self.mock_util.generate_unique_code(tag="WORKFLOW_BRAND")
-            brand_name = f"流程测试品牌_{self.mock_util.get_timestamp()}"
+            brand_name = self._unique_brand_display_name("_流程")
 
             # 创建
             set_dict_create = {"brandCode": brand_code, "brandName": brand_name}
@@ -519,7 +563,7 @@ class TestBrandManagement(GenMdBaseTest):
             self.assert_util.assert_by_operator(detail_data.get("brandName"), "=", brand_name, "品牌名称不匹配")
 
             # 3. 更新品牌
-            update_name = f"更新后的品牌名称_{self.mock_util.get_timestamp()}"
+            update_name = self._unique_brand_display_name("_流程更新")
             set_dict_update = {
                 "id": workflow_brand_id,
                 "brandCode": brand_code,

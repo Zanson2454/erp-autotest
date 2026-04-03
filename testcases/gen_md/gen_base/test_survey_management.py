@@ -22,11 +22,6 @@ class TestSurveyManagement(GenMdBaseTest):
     def bind_context(cls):
         """绑定测试上下文对象。"""
         super().bind_context()
-        # 数据存储
-        cls.survey_mission_head_id = None
-        cls.survey_mission_item_id = None
-        cls.survey_detail_id = None
-
         cls.logger.info("评分管理测试类初始化完成")
         
         if cls.md_cache_data:
@@ -65,33 +60,34 @@ class TestSurveyManagement(GenMdBaseTest):
             fields_to_filter=fields_to_filter,
             store_id_as="survey_mission_head"
         )
-        self.survey_mission_head_id = extracted_data.get("id") if isinstance(extracted_data, dict) else extracted_data
-        self.assert_util.assert_by_operator(self.survey_mission_head_id, "not_empty")
-        mission_item_id = self.query_service.get_survey_mission_item_id(self.survey_mission_head_id)
+        mission_head_id = extracted_data.get("id") if isinstance(extracted_data, dict) else extracted_data
+        self.set_runtime_id("survey_mission_head", mission_head_id)
+        self.assert_util.assert_by_operator(mission_head_id, "not_empty")
+        mission_item_id = self.query_service.get_survey_mission_item_id(mission_head_id)
         if not mission_item_id:
-            raise ValueError(f"未找到任务项记录，任务ID: {self.survey_mission_head_id}")
-        self.survey_mission_item_id = mission_item_id
-        self.assert_util.assert_by_operator(self.survey_mission_item_id, "not_empty")
-        return self.survey_mission_head_id
+            raise ValueError(f"未找到任务项记录，任务ID: {mission_head_id}")
+        self.set_runtime_id("survey_mission_item", mission_item_id)
+        self.assert_util.assert_by_operator(mission_item_id, "not_empty")
+        return mission_head_id
 
     def _ensure_create_survey_mission(self):
-        if self.survey_mission_head_id:
-            return self.survey_mission_head_id
+        mission_head_id = self.get_runtime_id("survey_mission_head")
+        if mission_head_id:
+            return mission_head_id
         return self._create_survey_mission()
 
     def _release_survey_mission(self):
-        if not self.survey_mission_head_id:
-            self._ensure_create_survey_mission()
-        set_dict = {"id": self.survey_mission_head_id}
+        mission_head_id = self._ensure_create_survey_mission()
+        set_dict = {"id": mission_head_id}
         response, _ = self.standard_api_call(
             api_key="GEN-评分任务-发布评分任务服务",
             set_dict=set_dict,
             fields_to_filter=["id"],
             store_id_as=None
         )
-        state = self.query_service.get_survey_mission_state(self.survey_mission_head_id)
+        state = self.query_service.get_survey_mission_state(mission_head_id)
         if state is None:
-            raise ValueError(f"未找到任务记录，任务ID: {self.survey_mission_head_id}")
+            raise ValueError(f"未找到任务记录，任务ID: {mission_head_id}")
         self.assert_util.assert_by_operator(state, "=", "RELEASED")
         return response
 
@@ -99,14 +95,14 @@ class TestSurveyManagement(GenMdBaseTest):
         return self._release_survey_mission()
 
     def _load_survey_detail_id(self):
-        if self.survey_detail_id:
-            return self.survey_detail_id
-        if not self.survey_mission_head_id:
-            self._ensure_release_survey_mission()
-        detail_id = self.query_service.get_survey_detail_id(self.survey_mission_head_id)
+        detail_id = self.get_runtime_id("survey_detail")
         if detail_id:
-            self.survey_detail_id = detail_id
-        return self.survey_detail_id
+            return detail_id
+        mission_head_id = self._ensure_create_survey_mission()
+        detail_id = self.query_service.get_survey_detail_id(mission_head_id)
+        if detail_id:
+            self.set_runtime_id("survey_detail", detail_id)
+        return detail_id
 
     def _query_survey_detail(self):
         detail_id = self._load_survey_detail_id()
@@ -114,10 +110,11 @@ class TestSurveyManagement(GenMdBaseTest):
             self._ensure_release_survey_mission()
             detail_id = self._load_survey_detail_id()
             if not detail_id:
-                raise ValueError(f"未找到评分详情记录，任务ID: {self.survey_mission_head_id}")
-        self.assert_util.assert_by_operator(self.survey_detail_id, "not_empty")
-        a.text(f"评分详情ID验证通过: {self.survey_detail_id}", "ID验证")
-        set_dict = {"id": self.survey_detail_id}
+                mission_head_id = self.get_runtime_id("survey_mission_head")
+                raise ValueError(f"未找到评分详情记录，任务ID: {mission_head_id}")
+        self.assert_util.assert_by_operator(detail_id, "not_empty")
+        a.text(f"评分详情ID验证通过: {detail_id}", "ID验证")
+        set_dict = {"id": detail_id}
         response, _ = self.standard_api_call(
             api_key="GEN-评分详情-查询评分详情服务",
             set_dict=set_dict,
@@ -128,17 +125,22 @@ class TestSurveyManagement(GenMdBaseTest):
         return response
 
     def _ensure_query_survey_detail(self):
-        if self.survey_detail_id:
-            return self.survey_detail_id
+        survey_detail_id = self.get_runtime_id("survey_detail")
+        if survey_detail_id:
+            return survey_detail_id
         self._query_survey_detail()
-        return self.survey_detail_id
+        return self.get_runtime_id("survey_detail")
 
     def _survey_score(self):
-        if not self.survey_detail_id:
-            self._ensure_query_survey_detail()
+        survey_detail_id = self._ensure_query_survey_detail()
+        mission_head_id = self._ensure_create_survey_mission()
+        mission_item_id = self.get_runtime_id("survey_mission_item")
+        if not mission_item_id:
+            mission_item_id = self.query_service.get_survey_mission_item_id(mission_head_id)
+            self.set_runtime_id("survey_mission_item", mission_item_id)
         set_dict = {
-            "id": self.survey_detail_id,
-            "missionId": self.survey_mission_head_id,
+            "id": survey_detail_id,
+            "missionId": mission_head_id,
             "score": 20,
             "state": "WAIT",
             "surveyRecord": None,
@@ -208,15 +210,15 @@ class TestSurveyManagement(GenMdBaseTest):
                 }
             },
             "surveyObj": {"id": self.cust_id},
-            "surveyMission": {"id": self.survey_mission_head_id},
-            "surveyMissionItem": {"id": self.survey_mission_item_id}
+            "surveyMission": {"id": mission_head_id},
+            "surveyMissionItem": {"id": mission_item_id}
         }
         fields_to_filter = ["missionId", "score", "comment", "surveyRecord", "surveyDate", "type", "user", "template", "surveyObj", "surveyMission", "surveyMissionItem"]
         response, extracted_data = self.standard_api_call(
             api_key="GEN-评分任务-业务人员进行评分服务",
             set_dict=set_dict,
             fields_to_filter=fields_to_filter,
-            store_id_as="survey_detail"
+            store_id_as=None
         )
         a.text("评分API调用成功，无新ID返回，使用现有详情ID", "ID处理")
         return response, extracted_data
@@ -515,10 +517,11 @@ class TestSurveyManagement(GenMdBaseTest):
     def test_import_survey_detail(self):
         """评分详情标准导入用例 - GEN_SURVEY_DETAIL_MD_GEI_IMPORT_SERVICE"""
         try:
+            mission_head_id = self._ensure_create_survey_mission()
             import_data = [
                 {
                     "code": self.mock_util.generate_unique_code(tag="IMPORT_DETAIL"),
-                    "missionId": self.survey_mission_head_id,
+                    "missionId": mission_head_id,
                     "score": 90,
                     "comment": f"导入测试评分详情_{self.mock_util.get_timestamp()}"
                 }

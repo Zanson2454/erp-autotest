@@ -1,3 +1,5 @@
+import time
+
 import allure
 import pytest
 from testcases.gen_md import GenMdBaseTest
@@ -18,12 +20,6 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
     def bind_context(cls):
         """绑定测试上下文对象。"""
         super().bind_context()
-        cls.org_switch_id = None
-        cls.org_switch_name = None
-        cls.org_switch_des = None
-        cls.org_switch_model_id = None
-        cls.modelKey = None
-        cls.modelName = None
         cls.logger.info("组织切换管理测试类初始化完成")
         cls.nickname = cls.init_data["user_info"]['user_info']["nickname"]
         if cls.md_cache_data:
@@ -35,12 +31,12 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         测试类结束后执行清理
         清理所有测试过程中创建的组织切换管理数据
         """
-        condition = f"switch_org_id = {cls.com_org_id}"
         try:
             # 使用SQL删除测试数据
             cls.db.delete(
                 table="org_switch_list_cf",
-                where=condition,
+                where="switch_org_id = %s",
+                params=[cls.com_org_id],
             )
             cls.db.delete(
                 table="org_switch_model_cf",
@@ -52,6 +48,158 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
             cls.logger.error(f"测试数据清理失败: {str(e)}")
         finally:
             super().teardown_class()
+
+    def _parse_org_switch_model_id_from_response(self, response):
+        """从保存响应中解析主键（部分环境 data 结构与 extracted_id 不一致）。"""
+        if not isinstance(response, dict):
+            return None
+        data = response.get("data")
+        if not isinstance(data, dict):
+            return None
+        inner = data.get("data")
+        if isinstance(inner, dict) and inner.get("id") is not None:
+            return inner.get("id")
+        if data.get("id") is not None:
+            return data.get("id")
+        return None
+
+    def _lookup_org_switch_model_id_by_model_key(self, model_key, attempts=6, delay_sec=0.15):
+        """保存后主从或事务提交延迟时，短轮询按 model_key 回查。"""
+        for _ in range(attempts):
+            mid = self.query_service.get_org_switch_model_id_by_model_key(model_key)
+            if mid:
+                return mid
+            time.sleep(delay_sec)
+        return None
+
+    def _create_org_switch_model(self):
+        ts = self.mock_util.get_timestamp(timestamp=True)
+        menu = f"菜单名称_{ts}"
+        # 仅用毫秒时间戳易并发/轮询撞车；叠加 generate_unique_code 保证 model_key 唯一
+        model_key = f"org_switch_model_{self.mock_util.generate_unique_code(tag='osm')}"
+        model_name = f"组织切换模型表名_{ts}"
+        set_dict = {
+            "menu": menu,
+            "modelKey": model_key,
+            "modelName": model_name,
+            "isOpen": True,
+            "describe": f"自动化测试组织切换模型-{self.mock_util.get_timestamp()}",
+        }
+        response, extracted_id = self.standard_api_call(
+            api_key="ORG-多组织-保存组织切换模型服务",
+            set_dict=set_dict,
+            fields_to_filter=["menu", "modelKey", "modelName", "isOpen", "describe"],
+            store_id_as=None,
+        )
+
+        model_id = None
+        if response.get("success") is True:
+            model_id = extracted_id or self._parse_org_switch_model_id_from_response(response)
+            model_id = model_id or self._lookup_org_switch_model_id_by_model_key(model_key)
+        else:
+            err_code = response.get("err", {}).get("code")
+            if err_code == "Org.switch.model.is.exist":
+                self.logger.warning(
+                    "保存组织切换模型返回 Org.switch.model.is.exist，按幂等回查: model_key=%s",
+                    model_key,
+                )
+                model_id = self._lookup_org_switch_model_id_by_model_key(model_key)
+            else:
+                self.assert_util.assert_response_success(response)
+
+        if not model_id:
+            raise Exception(f"组织切换模型保存失败，model_key: {model_key}")
+        self.set_runtime_id("org_switch_model", model_id)
+        self.set_runtime_id("org_switch_model_key", model_key)
+        self.set_runtime_id("org_switch_model_name", model_name)
+        return model_id
+
+    def _ensure_save_org_switch_model(self):
+        model_id = self.get_runtime_id("org_switch_model")
+        if model_id:
+            return model_id
+        return self._create_org_switch_model()
+
+    def _create_org_switch(self):
+        self._ensure_save_org_switch_model()
+        exist_result = self.query_service.get_latest_org_switch_by_org_id(self.com_org_id)
+        if exist_result:
+            org_switch_id = exist_result.get("id")
+            org_switch_name = exist_result.get("switch_name")
+            self.set_runtime_id("org_switch", org_switch_id)
+            self.set_runtime_id("org_switch_name", org_switch_name)
+            return org_switch_id
+
+        self.db.delete(
+            table="org_switch_list_cf",
+            where="switch_org_id = %s",
+            params=[self.com_org_id],
+        )
+        org_switch_des = self.mock_util.generate_unique_code(tag="OrgSwitch")
+        org_switch_name = f"组织切换_{self.mock_util.get_timestamp(timestamp=True)}"
+        set_dict = {
+            "switchName": org_switch_name,
+            "switchDescribe": org_switch_des,
+            "switchOrgId": {"id": self.com_org_id},
+            "switchStatus": "ENABLED",
+            "orgDimensionId": {"id": self.orgDimensionId},
+        }
+        response, _ = self.standard_api_call(
+            api_key="ORG-多组织-保存组织切换服务",
+            set_dict=set_dict,
+            fields_to_filter=["switchName", "switchOrgId", "orgDimensionId", "switchStatus", "switchName", "switchDesc"],
+            store_id_as=None,
+        )
+        if response.get("success") is not True:
+            err_code = response.get("err", {}).get("code")
+            inner_msg = response.get("info", {}).get("innerMsg", "")
+            if err_code == "V0311" and "Duplicate entry" in inner_msg:
+                existed = self.query_service.get_latest_org_switch_by_org_id(self.com_org_id)
+                if existed:
+                    org_switch_id = existed.get("id")
+                    org_switch_name = existed.get("switch_name")
+                    self.set_runtime_id("org_switch", org_switch_id)
+                    self.set_runtime_id("org_switch_name", org_switch_name)
+                    self.logger.warning(f"组织切换返回重复键，按幂等成功处理: id={org_switch_id}, name={org_switch_name}")
+                    return org_switch_id
+        org_switch_id = self.query_service.get_org_switch_id_by_name(org_switch_name)
+        if not org_switch_id:
+            raise Exception(f"组织切换保存失败，switch_name: {org_switch_name}")
+        self.set_runtime_id("org_switch", org_switch_id)
+        self.set_runtime_id("org_switch_name", org_switch_name)
+        self.set_runtime_id("org_switch_des", org_switch_des)
+        return org_switch_id
+
+    def _ensure_save_org_switch(self):
+        org_switch_id = self.get_runtime_id("org_switch")
+        if org_switch_id:
+            return org_switch_id
+        return self._create_org_switch()
+
+    def _assert_enable_org_switch_response_ok(self, response, org_switch_id=None):
+        """启用接口：成功或 Org.switch.model.is.exist（切换模型已存在，视为幂等前置已满足）。"""
+        if response.get("success") is True:
+            return
+        err_code = response.get("err", {}).get("code")
+        if err_code == "Org.switch.model.is.exist":
+            self.logger.warning(
+                "启用组织切换返回 Org.switch.model.is.exist，按幂等接受: org_switch_id=%s",
+                org_switch_id,
+            )
+            return
+        self.assert_util.assert_response_success(response)
+
+    def _ensure_enable_org_switch(self):
+        org_switch_id = self._ensure_save_org_switch()
+        response, _ = self.standard_api_call(
+            api_key="ORG-多组织-启用组织切换服务",
+            set_dict={"id": org_switch_id},
+            fields_to_filter=["id"],
+            store_id_as=None,
+        )
+        self._assert_enable_org_switch_response_ok(response, org_switch_id=org_switch_id)
+        return org_switch_id
+
     @case_decorator(
         story="组织切换管理",
         title="测试新增组织切换模型",
@@ -66,39 +214,8 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         新增组织切换模型用例
         """
         try:
-            # 调用保存接口前准备数据
-            menu = f"菜单名称_{self.mock_util.get_timestamp(timestamp=True)}"
-            self.modelKey =f"org_switch_model_{self.mock_util.get_timestamp(timestamp=True)}"
-            self.modelName = f"组织切换模型表名_{self.mock_util.get_timestamp(timestamp=True)}"     
-
-            # 准备测试数据（业务逻辑保持不变）
-            set_dict = {
-                "menu": menu,
-                "modelKey": self.modelKey,
-                "modelName": self.modelName,
-                "isOpen": True,
-                "describe": f"自动化测试组织切换模型-{self.mock_util.get_timestamp()}"
-            }
-            fields_to_filter = ["menu", "modelKey", "modelName", "isOpen", "describe"]
-
-            # 使用标准化API调用（无任何断言）
-            response, _ = self.standard_api_call(
-                api_key="ORG-多组织-保存组织切换模型服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as=None
-            )
-
-            # 保存组织切换模型信息供后续用例使用（保持原有SQL逻辑）
-            model_id = self.query_service.get_org_switch_model_id_by_model_key(self.modelKey)
-            if model_id:
-                self.org_switch_model_id = model_id
-            else:
-                self.logger.warning(f"组织切换模型 {self.modelKey} 在数据库中不存在")
-                # 如果数据不存在，说明保存操作失败，需要重新尝试或抛出异常
-                raise Exception(f"组织切换模型保存失败，model_key: {self.modelKey}")
-
-            # 日志记录（Allure报告已由standard_api_call处理）
+            model_id = self._create_org_switch_model()
+            a.json({"org_switch_model_id": model_id}, "组织切换模型新增结果")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -118,8 +235,8 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         分页查询组织切换模型用例
         """
         try:
-            if not self.modelKey:
-                self._ensure_save_org_switch_model()
+            self._ensure_save_org_switch_model()
+            model_key = self.get_runtime_id("org_switch_model_key")
                 
             # 准备测试数据（业务逻辑保持不变）
             set_dict = {
@@ -133,7 +250,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
                         "conditions": {
                             "modelKey": {
                                 "operator": "CONTAINS",
-                                "value": self.modelKey
+                                "value": model_key
                             }
                         }
                     }
@@ -193,12 +310,10 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         查询组织切换模型详情用例
         """
         try:
-            # 获取组织切换模型信息
-            if not self.org_switch_model_id:
-                self._ensure_save_org_switch_model()
+            org_switch_model_id = self._ensure_save_org_switch_model()
 
             # 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.org_switch_model_id}
+            set_dict = {"id": org_switch_model_id}
             fields_to_filter = ["id"]
 
             # 使用标准化API调用（无任何断言）
@@ -267,69 +382,8 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         新增组织切换用例
         """
         try:
-            # 获取组织切换模型信息
-            if not self.org_switch_model_id:
-                self._ensure_save_org_switch_model()
-
-            # 幂等处理：组织维度 + 公司已存在切换关系时直接复用
-            exist_result = self.query_service.get_latest_org_switch_by_org_id(self.com_org_id)
-            if exist_result:
-                self.org_switch_id = exist_result.get("id")
-                self.org_switch_name = exist_result.get("switch_name")
-                self.logger.info(f"组织切换已存在，复用记录: id={self.org_switch_id}, name={self.org_switch_name}")
-                return
-
-            condition = f"switch_org_id = {self.com_org_id}"
-            self.db.delete(
-                table="org_switch_list_cf",
-                where=condition
-            )
-    
-            # 准备组织切换数据
-            self.org_switch_des = self.mock_util.generate_unique_code(tag="OrgSwitch")
-            self.org_switch_name = f"组织切换_{self.mock_util.get_timestamp(timestamp=True)}"
-
-            # 准备测试数据（业务逻辑保持不变）
-            set_dict = {
-                "switchName": self.org_switch_name,
-                "switchDescribe": self.org_switch_des,
-                "switchOrgId": {"id": self.com_org_id},
-                "switchStatus": "ENABLED", 
-                "orgDimensionId": {"id": self.orgDimensionId}
-            }
-            fields_to_filter = ["switchName","switchOrgId","orgDimensionId","switchStatus","switchName","switchDesc"]
-
-            # 使用标准化API调用（无任何断言）
-            response, _ = self.standard_api_call(
-                api_key="ORG-多组织-保存组织切换服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as=None
-            )
-
-            if response.get("success") is not True:
-                # 唯一键冲突兜底：复用已有组织切换记录
-                err_code = response.get("err", {}).get("code")
-                inner_msg = response.get("info", {}).get("innerMsg", "")
-                if err_code == "V0311" and "Duplicate entry" in inner_msg:
-                    existed = self.query_service.get_latest_org_switch_by_org_id(self.com_org_id)
-                    if existed:
-                        self.org_switch_id = existed.get("id")
-                        self.org_switch_name = existed.get("switch_name")
-                        self.logger.warning(
-                            f"组织切换返回重复键，按幂等成功处理: id={self.org_switch_id}, name={self.org_switch_name}"
-                        )
-                        return
-
-            # 保存组织切换信息供后续用例使用（保持原有SQL逻辑）
-            self.org_switch_id = self.query_service.get_org_switch_id_by_name(self.org_switch_name)
-            self.logger.info(f"查询结果: {self.org_switch_id}")
-            if not self.org_switch_id:
-                self.logger.warning(f"组织切换 {self.org_switch_name} 在数据库中不存在")
-                # 如果数据不存在，说明保存操作失败，需要重新尝试或抛出异常
-                raise Exception(f"组织切换保存失败，switch_name: {self.org_switch_name}")
-
-            # 日志记录（Allure报告已由standard_api_call处理）
+            org_switch_id = self._create_org_switch()
+            a.json({"org_switch_id": org_switch_id}, "组织切换新增结果")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -349,12 +403,10 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         启用组织切换用例
         """
         try:
-            # 获取组织切换信息
-            if not self.org_switch_id:
-                self._ensure_save_org_switch()
+            org_switch_id = self._ensure_save_org_switch()
 
             # 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.org_switch_id}
+            set_dict = {"id": org_switch_id}
             fields_to_filter = ["id"]
 
             # 使用标准化API调用（无任何断言）
@@ -365,8 +417,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
                 store_id_as=None
             )
 
-            # 业务验证（保持原有逻辑）
-            self.assert_util.assert_response_success(response)
+            self._assert_enable_org_switch_response_ok(response, org_switch_id=org_switch_id)
 
             # 日志记录（Allure报告已由standard_api_call处理）
 
@@ -388,12 +439,10 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         停用组织切换用例
         """
         try:
-            # 获取组织切换信息
-            if not self.org_switch_id:
-                self._ensure_enable_org_switch()
+            org_switch_id = self._ensure_enable_org_switch()
 
             # 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.org_switch_id}
+            set_dict = {"id": org_switch_id}
             fields_to_filter = ["id"]
 
             # 使用标准化API调用（无任何断言）
@@ -427,6 +476,8 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         分页查询组织切换用例
         """
         try:
+            self._ensure_save_org_switch()
+            org_switch_name = self.get_runtime_id("org_switch_name", "")
             # 准备测试数据（业务逻辑保持不变）
             set_dict = {
                 "pageable": {
@@ -437,7 +488,8 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
                     "conditionItems": {
                         "type": "ConditionItems",
                         "conditions": {
-                            "orgSwitchName": {"operator": "CONTAINS", "value": self.org_switch_name}
+                            # 后端将 orgSwitchName 映射为 org_switch_name 列（不存在）；实体字段为 switchName -> switch_name
+                            "switchName": {"operator": "CONTAINS", "value": org_switch_name}
                         }
                     }
                 },
@@ -481,12 +533,10 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         查询组织切换详情用例
         """
         try:
-            # 获取组织切换信息
-            if not self.org_switch_id:
-                self._ensure_save_org_switch()
+            org_switch_id = self._ensure_save_org_switch()
 
             # 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.org_switch_id}
+            set_dict = {"id": org_switch_id}
             fields_to_filter = ["id"]
 
             # 使用标准化API调用（无任何断言）
@@ -681,12 +731,10 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         删除组织切换用例
         """
         try:
-            # 获取组织切换信息
-            if not self.org_switch_id:
-                self._ensure_save_org_switch()
+            org_switch_id = self._ensure_save_org_switch()
 
             # 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.org_switch_id}
+            set_dict = {"id": org_switch_id}
             fields_to_filter = ["id"]
 
             # 使用标准化API调用（无任何断言）
@@ -720,12 +768,10 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
         删除组织切换模型用例
         """
         try:
-            # 获取组织切换模型信息
-            if not self.org_switch_model_id:
-                self._ensure_save_org_switch_model()
+            org_switch_model_id = self._ensure_save_org_switch_model()
 
             # 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.org_switch_model_id}
+            set_dict = {"id": org_switch_model_id}
             fields_to_filter = ["id"]
 
             # 使用标准化API调用（无任何断言）

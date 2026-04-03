@@ -468,7 +468,7 @@ class TestPriceCrud(SlsBase):
             
             # 6. 查询数据库验证价格维护单状态为已生效
             # 价格维护单表名可能是 gen_price_adj_head_tr 或 price_adj_head_tr
-            time.sleep(0.5)  # 等待数据持久化
+            self._async_delay(0.5, "价格维护单提交后数据持久化")
             
             # 尝试多个可能的表名和字段名
             possible_queries = [
@@ -795,7 +795,7 @@ class TestPriceCrud(SlsBase):
                 self.assert_util.assert_by_operator(new_price, "=", 3000, message="价格应该更新为3000")
             
             # 11. 查询数据库验证价格维护单状态为已生效
-            time.sleep(0.5)  # 等待数据持久化
+            self._async_delay(0.5, "价格维护单编辑提交后数据持久化")
             try:
                 # 尝试多个可能的表名
                 table_names = ["gen_price_adj_head_tr", "price_adj_head_tr", "erp_price_adj_head_tr"]
@@ -1012,7 +1012,7 @@ class TestPriceCrud(SlsBase):
                     a.text(f"成功删除 {len(deleted_items)} 个物料定价", "删除结果")
             
             # 10. 查询数据库验证价格维护单状态为已生效
-            time.sleep(0.5)  # 等待数据持久化
+            self._async_delay(0.5, "价格维护单删除提交后数据持久化")
             try:
                 # 尝试多个可能的表名
                 table_names = ["gen_price_adj_head_tr", "price_adj_head_tr", "erp_price_adj_head_tr"]

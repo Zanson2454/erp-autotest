@@ -605,15 +605,14 @@ class SlsDelBaseTest(ScmDelBaseTest):
             submit_response = self._save_submit_delivery_note(dn_draft, so_code)
             
             # 5. 查询交货单ID
-            import time
-            time.sleep(1)  # 等待交货单创建完成
+            self._async_delay(1, "等待交货单创建完成")
             
             dn_id = None
             max_retries = 3
             for attempt in range(max_retries):
                 wait_time = 0.5 + attempt * 0.5  # 0.5秒、1秒、1.5秒
                 if attempt > 0:
-                    time.sleep(wait_time)
+                    self._async_delay(wait_time, "重试查询交货单ID")
                 
                 # 通过订单号查询交货单
                 query_result = self.query_service.query("""

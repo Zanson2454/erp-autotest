@@ -517,7 +517,7 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
                     else:
                         if attempt < max_retries - 1:
                             self.logger.info(f"等待 {retry_interval} 秒后重试...")
-                            time.sleep(retry_interval)
+                            self._async_delay(retry_interval, reason="等待领料单状态更新")
                         else:
                             # 最后一次尝试，使用当前数据继续验证
                             data_list = current_data_list
@@ -586,11 +586,11 @@ class TestPrdOrderIssueCreate(PrdBaseTest):
                             else:
                                 self.logger.info(f"交货入库单 {item['dnCode']} 状态为 {delivery_head['biz_status']}，等待更新...")
                                 if attempt < max_retries - 1:
-                                    time.sleep(retry_interval)
+                                    self._async_delay(retry_interval, reason="等待交货入库单状态更新")
                         else:
                             if attempt < max_retries - 1:
                                 self.logger.info(f"未找到交货入库单 {item['dnCode']}，等待生成...")
-                                time.sleep(retry_interval)
+                                self._async_delay(retry_interval, reason="等待交货入库单生成")
                     
                     assert delivery_head is not None, f"未找到交货入库单: {item['dnCode']}"
                     

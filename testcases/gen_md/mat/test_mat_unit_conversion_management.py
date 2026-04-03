@@ -20,7 +20,6 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
     def bind_context(cls):
         """绑定测试上下文对象。"""
         super().bind_context()
-        cls.mat_unit_conversion_id = None
 
         # 安全获取计量单位ID，避免IndexError
         cls.uomId = None
@@ -41,6 +40,30 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
             cls.user_id = None
             cls.logger.warning("init_data 中未找到 user_info，nickname 和 user_id 设置为 None")
         cls.logger.info("物料单位转换管理测试类初始化完成")
+
+    def _create_mat_unit_conversion(self):
+        set_dict = {
+            "targetUnitFactor": 1,
+            "baseUnitFactor": 1,
+            "targetUnitId": {"id": self.uomId},
+            "unitId": {"id": self.uomId},
+            "genMatMdId": None,
+        }
+        response, extracted_id = self.standard_api_call(
+            api_key="GEN-计量单位转换-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=["targetUnitFactor", "targetUnitId", "baseUnitFactor", "unitId", "genMatMdId"],
+            store_id_as="mat_unit_conversion",
+        )
+        self.assert_util.assert_response_success(response)
+        self.set_runtime_id("mat_unit_conversion", extracted_id)
+        return extracted_id
+
+    def _ensure_save_mat_unit_conversion(self):
+        mat_unit_conversion_id = self.get_runtime_id("mat_unit_conversion")
+        if mat_unit_conversion_id:
+            return mat_unit_conversion_id
+        return self._create_mat_unit_conversion()
 
     @classmethod
     def teardown_class(cls):
@@ -74,32 +97,8 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
         新增物料单位转换管理用例
         """
         try:
-            # 准备物料单位转换管理数据
-            mat_unit_conversion_code = self.mock_util.generate_unique_code(tag="Mat_Unit_Conversion")
-            mat_unit_conversion_name = f"物料单位转换管理_{self.mock_util.get_timestamp()}"
-
-            # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {
-                "targetUnitFactor": 1,
-                "baseUnitFactor": 1,
-                "targetUnitId": {"id": self.uomId},
-                "unitId": {"id": self.uomId},
-                "genMatMdId": None
-            }
-            fields_to_filter = ["targetUnitFactor", "targetUnitId","baseUnitFactor","unitId","genMatMdId"]
-
-            # 2. 使用标准化API调用（无任何断言）
-            response, extracted_id = self.standard_api_call(
-                api_key="GEN-计量单位转换-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as="mat_unit_conversion"  # 自动存储 self.mat_unit_conversion_id
-            )
-
-            # 3. 保存业务数据（保持原有逻辑）
-            self.mat_unit_conversion_id = extracted_id
-
-            # 4. 日志记录（Allure报告已由standard_api_call处理）
+            mat_unit_conversion_id = self._create_mat_unit_conversion()
+            a.json({"mat_unit_conversion_id": mat_unit_conversion_id}, "单位转换新增结果")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -165,12 +164,10 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
         查询物料单位转换管理详情用例
         """
         try:
-            # 获取物料单位转换管理ID
-            if not self.mat_unit_conversion_id:
-                self._ensure_save_mat_unit_conversion()
+            mat_unit_conversion_id = self._ensure_save_mat_unit_conversion()
 
             # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.mat_unit_conversion_id}
+            set_dict = {"id": mat_unit_conversion_id}
             fields_to_filter = ["id"]
 
             # 2. 使用标准化API调用（无任何断言）
@@ -204,12 +201,10 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
         删除物料单位转换管理用例
         """
         try:
-            # 获取物料单位转换管理信息
-            if not self.mat_unit_conversion_id:
-                self._ensure_save_mat_unit_conversion()
+            mat_unit_conversion_id = self._ensure_save_mat_unit_conversion()
 
             # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.mat_unit_conversion_id}
+            set_dict = {"id": mat_unit_conversion_id}
             fields_to_filter = ["id"]
 
             # 2. 使用标准化API调用（无任何断言）

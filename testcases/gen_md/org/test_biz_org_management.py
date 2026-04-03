@@ -447,6 +447,17 @@ class TestBizOrgManagement(GenMdBaseTest):
                     deleted=0,
                     org_status="ENABLED",
                 )
+                if not org_parent_id:
+                    org_parent_id = self.query_service.get_first_org_struct_id(
+                        org_dimension_code="SCM_ORG_GRP",
+                        org_code_like="%",
+                        deleted=0,
+                        org_status="ENABLED",
+                    )
+                if not org_parent_id and self.md_cache_data:
+                    inv_org_info = self.md_cache_data.get("org_info", {}).get("inv_org_info", [])
+                    if inv_org_info:
+                        org_parent_id = inv_org_info[0].get("id")
                 self.assert_util.assert_by_operator(org_parent_id, "not_empty")
                 self.logger.info(f"查询到的组织ID: {org_parent_id}")
 

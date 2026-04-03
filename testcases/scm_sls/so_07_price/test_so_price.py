@@ -596,7 +596,7 @@ class TestSoPrice(SlsBase):
             self.assert_util.assert_response_data(response)
             
             # 6. 验证提交结果
-            time.sleep(0.5)  # 等待数据持久化
+            self._async_delay(0.5, "价格调整单提交后数据持久化")
             try:
                 table_names = ["gen_price_adj_head_tr", "price_adj_head_tr", "erp_price_adj_head_tr"]
                 price_adj_info = None
@@ -883,7 +883,7 @@ class TestSoPrice(SlsBase):
                 a.text(f"价格维护单提交成功", "价格维护结果")
             
             # 13. 验证提交结果
-            time.sleep(1.0)  # 等待数据持久化和价格生效
+            self._async_delay(1.0, "价格维护单提交后生效等待")
             try:
                 table_names = ["gen_price_adj_head_tr", "price_adj_head_tr", "erp_price_adj_head_tr"]
                 price_adj_info = None

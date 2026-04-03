@@ -344,7 +344,7 @@ class TestApDocumentSave(ApBaseTest):
                                     elif current_status in ["DRAFT", "CONFIRM"]:
                                         # 状态还未完成，继续轮询
                                         if attempt < max_attempts - 1:
-                                            time.sleep(interval)
+                                            self._async_delay(interval, reason="等待应付单状态更新")
                                             continue
                                     else:
                                         # 状态异常
@@ -358,12 +358,12 @@ class TestApDocumentSave(ApBaseTest):
                         
                         # 如果不是最后一次尝试，等待后继续
                         if attempt < max_attempts - 1:
-                            time.sleep(interval)
+                            self._async_delay(interval, reason="等待应付单分页结果刷新")
                             
                     except Exception as e:
                         a.text(f"第{attempt + 1}次查询异常: {str(e)}", "轮询异常")
                         if attempt < max_attempts - 1:
-                            time.sleep(interval)
+                            self._async_delay(interval, reason="等待应付单状态查询重试")
                             continue
                         else:
                             raise
@@ -533,7 +533,7 @@ class TestApDocumentSave(ApBaseTest):
                                         # 状态还未回退，继续轮询
                                         if attempt < max_attempts - 1:
                                             a.text(f"状态还未回退到草稿态，继续轮询...", "等待状态更新")
-                                            time.sleep(interval)
+                                            self._async_delay(interval, reason="等待应付单状态回退")
                                             continue
                                         else:
                                             # 轮询结束仍未回退到草稿态
@@ -550,12 +550,12 @@ class TestApDocumentSave(ApBaseTest):
                         
                         # 如果不是最后一次尝试，等待后继续
                         if attempt < max_attempts - 1:
-                            time.sleep(interval)
+                            self._async_delay(interval, reason="等待应付单分页结果刷新")
                             
                     except Exception as e:
                         a.text(f"第{attempt + 1}次查询异常: {str(e)}", "查询异常")
                         if attempt < max_attempts - 1:
-                            time.sleep(interval)
+                            self._async_delay(interval, reason="等待应付单状态查询重试")
                             continue
                         else:
                             raise

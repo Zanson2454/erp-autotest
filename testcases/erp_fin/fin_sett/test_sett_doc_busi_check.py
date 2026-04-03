@@ -164,7 +164,7 @@ class TestSettDocBusiCheck(FinBaseTest):
                             break
                         if time.time() - start_time >= timeout:
                             raise TimeoutError(f"等待异步任务执行超时（{timeout}秒）")
-                        time.sleep(0.5)
+                        self._async_delay(0.5, reason="等待结算单确认异步任务完成")
                     
                     self.assert_util.assert_response_success(result)
                     self.assert_util.assert_by_operator(sql_result["sett_doc_status"], "=", "CONFIRMED")
@@ -213,7 +213,7 @@ class TestSettDocBusiCheck(FinBaseTest):
                     use_param_util=False,
                     param_path=["params"]
                 )
-                time.sleep(2)
+                self._async_delay(2, reason="等待结算单取消结果落库")
                 
                 # 获取取消汇单后的结算项id
                 sett_sql_result = self.query_service.get_sett_item_by_id(sett_item_sql_result[0]["id"])

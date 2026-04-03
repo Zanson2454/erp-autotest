@@ -20,11 +20,6 @@ class TestCurrencyManagement(GenMdBaseTest):
         """绑定测试上下文对象。"""
         super().bind_context()
         cls.mock_data = MockData()
-        # 数据存储
-        cls.currency_id = None
-        cls.currency_code = None
-        cls.exchange_rate_id = None
-        cls.exchange_rate_type_id = None
         cls.logger.info("币种管理测试类初始化完成")
 
     @classmethod
@@ -52,13 +47,14 @@ class TestCurrencyManagement(GenMdBaseTest):
             store_id_as="currency"
         )
         self.assert_util.assert_response_data(response)
-        self.currency_id = currency_id
-        self.currency_code = currency_code
+        self.set_runtime_id("currency", currency_id)
+        self.test_data["currency_code"] = currency_code
         return currency_id
 
     def _ensure_save_currency(self):
-        if self.currency_id:
-            return self.currency_id
+        currency_id = self.get_runtime_id("currency")
+        if currency_id:
+            return currency_id
         return self._create_currency()
 
     def _create_exchange_rate(self):
@@ -96,12 +92,13 @@ class TestCurrencyManagement(GenMdBaseTest):
             store_id_as="exchange_rate"
         )
         self.assert_util.assert_response_data(response)
-        self.exchange_rate_id = exchange_rate_id
+        self.set_runtime_id("exchange_rate", exchange_rate_id)
         return exchange_rate_id
 
     def _ensure_save_exchange_rate(self):
-        if self.exchange_rate_id:
-            return self.exchange_rate_id
+        exchange_rate_id = self.get_runtime_id("exchange_rate")
+        if exchange_rate_id:
+            return exchange_rate_id
         return self._create_exchange_rate()
 
     def _create_exchange_rate_type(self):
@@ -122,12 +119,13 @@ class TestCurrencyManagement(GenMdBaseTest):
             store_id_as="exchange_rate_type"
         )
         self.assert_util.assert_response_data(response)
-        self.exchange_rate_type_id = exchange_rate_type_id
+        self.set_runtime_id("exchange_rate_type", exchange_rate_type_id)
         return exchange_rate_type_id
 
     def _ensure_save_exchange_rate_type(self):
-        if self.exchange_rate_type_id:
-            return self.exchange_rate_type_id
+        exchange_rate_type_id = self.get_runtime_id("exchange_rate_type")
+        if exchange_rate_type_id:
+            return exchange_rate_type_id
         return self._create_exchange_rate_type()
 
     # ================ 币种配置基础管理 ================
@@ -196,11 +194,10 @@ class TestCurrencyManagement(GenMdBaseTest):
         """查询币种配置详情用例"""
         try:
             # 1. 确保币种存在（原有依赖逻辑完全保留）
-            if not self.currency_id:
-                self._ensure_save_currency()
+            currency_id = self._ensure_save_currency()
 
             # 2. 使用标准化API调用
-            set_dict = {"id": self.currency_id}
+            set_dict = {"id": currency_id}
             fields_to_filter = ["id"]
             
             response, _ = self.standard_api_call(
@@ -367,11 +364,10 @@ class TestCurrencyManagement(GenMdBaseTest):
         """查询汇率类型详情用例"""
         try:
             # 1. 确保汇率类型存在（原有依赖逻辑完全保留）
-            if not self.exchange_rate_type_id:
-                self._ensure_save_exchange_rate_type()
+            exchange_rate_type_id = self._ensure_save_exchange_rate_type()
 
             # 2. 使用标准化API调用
-            set_dict = {"id": self.exchange_rate_type_id}
+            set_dict = {"id": exchange_rate_type_id}
             fields_to_filter = ["id"]
             
             response, _ = self.standard_api_call(
@@ -399,11 +395,10 @@ class TestCurrencyManagement(GenMdBaseTest):
         """查询汇率详情用例"""
         try:
             # 1. 确保汇率存在（原有依赖逻辑完全保留）
-            if not self.exchange_rate_id:
-                self._ensure_save_exchange_rate()
+            exchange_rate_id = self._ensure_save_exchange_rate()
 
             # 2. 使用标准化API调用
-            set_dict = {"id": self.exchange_rate_id}
+            set_dict = {"id": exchange_rate_id}
             fields_to_filter = ["id"]
             
             response, _ = self.standard_api_call(
@@ -463,11 +458,10 @@ class TestCurrencyManagement(GenMdBaseTest):
         """币种配置根据ID查找数据用例"""
         try:
             # 1. 确保币种存在（原有依赖逻辑完全保留）
-            if not self.currency_id:
-                self._ensure_save_currency()
+            currency_id = self._ensure_save_currency()
 
             # 2. 使用标准化API调用
-            set_dict = {"id": self.currency_id}
+            set_dict = {"id": currency_id}
             fields_to_filter = ["id"]
             
             response, _ = self.standard_api_call(
@@ -495,11 +489,10 @@ class TestCurrencyManagement(GenMdBaseTest):
         """汇率类型根据ID查找数据用例"""
         try:
             # 1. 确保汇率类型存在（原有依赖逻辑完全保留）
-            if not self.exchange_rate_type_id:
-                self._ensure_save_exchange_rate_type()
+            exchange_rate_type_id = self._ensure_save_exchange_rate_type()
 
             # 2. 使用标准化API调用
-            set_dict = {"id": self.exchange_rate_type_id}
+            set_dict = {"id": exchange_rate_type_id}
             fields_to_filter = ["id"]
             
             response, _ = self.standard_api_call(

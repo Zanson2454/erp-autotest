@@ -19,8 +19,6 @@ class TestMatTypeManagement(GenMdBaseTest):
         """绑定测试上下文对象。"""
         super().bind_context()
         cls.required_mat_types = ["FINP", "SERV"]  # 必需的物料类型编码
-        cls.mat_type_id = None
-        cls.mat_type_code = None
 
     @classmethod
     def teardown_class(cls):
@@ -100,35 +98,37 @@ class TestMatTypeManagement(GenMdBaseTest):
         新增物料类型用例
         """
         try:
-            # 准备物料类型数据
-            mat_type_code = self.mock_util.generate_unique_code(tag="MatType")
-            mat_type_name = f"物料类型_{self.mock_util.get_timestamp()}"
-
-            # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {
-                "matTypeCode": mat_type_code,
-                "matTypeName": mat_type_name,
-                "remark": f"自动化测试物料类型-{self.mock_util.get_timestamp()}"
-            }
-            fields_to_filter = ["matTypeCode", "matTypeName", "remark"]
-
-            # 2. 使用标准化API调用（无任何断言）
-            response, extracted_id = self.standard_api_call(
-                api_key="GEN-物料类型-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as="mat_type"  # 自动存储 self.mat_type_id
-            )
-
-            # 3. 保存业务数据（保持原有逻辑）
-            self.mat_type_id = extracted_id
-            self.mat_type_code = mat_type_code
-
-            # 4. 日志记录（Allure报告已由standard_api_call处理）
+            self._create_mat_type()
 
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
+
+    def _create_mat_type(self):
+        mat_type_code = self.mock_util.generate_unique_code(tag="MatType")
+        mat_type_name = f"物料类型_{self.mock_util.get_timestamp()}"
+        set_dict = {
+            "matTypeCode": mat_type_code,
+            "matTypeName": mat_type_name,
+            "remark": f"自动化测试物料类型-{self.mock_util.get_timestamp()}"
+        }
+        fields_to_filter = ["matTypeCode", "matTypeName", "remark"]
+        response, extracted_id = self.standard_api_call(
+            api_key="GEN-物料类型-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=fields_to_filter,
+            store_id_as="mat_type"
+        )
+        self.set_runtime_id("mat_type", extracted_id)
+        self.test_data["mat_type_code"] = mat_type_code
+        self.assert_util.assert_response_data(response)
+        return extracted_id
+
+    def _ensure_save_mat_type(self):
+        mat_type_id = self.get_runtime_id("mat_type")
+        if mat_type_id:
+            return mat_type_id
+        return self._create_mat_type()
 
     @case_decorator(
         story="物料类型管理",
@@ -143,11 +143,10 @@ class TestMatTypeManagement(GenMdBaseTest):
         查询物料类型详情用例
         """
         try:
-            if not self.mat_type_id:
-                self._ensure_save_mat_type()
+            mat_type_id = self._ensure_save_mat_type()
 
             # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.mat_type_id}
+            set_dict = {"id": mat_type_id}
             fields_to_filter = ["id"]
 
             # 2. 使用标准化API调用（无任何断言）
@@ -181,10 +180,9 @@ class TestMatTypeManagement(GenMdBaseTest):
         根据ID查找物料类型数据用例
         """
         try:
-            if not self.mat_type_id:
-                self._ensure_save_mat_type()
+            mat_type_id = self._ensure_save_mat_type()
 
-            set_dict = {"id": self.mat_type_id}
+            set_dict = {"id": mat_type_id}
             response, _ = self.standard_api_call(
                 api_key="物料类型-根据ID查找数据服务",
                 set_dict=set_dict,
@@ -536,11 +534,10 @@ class TestMatTypeManagement(GenMdBaseTest):
         删除物料类型用例
         """
         try:
-            if not self.mat_type_id:
-                self._ensure_save_mat_type()
+            mat_type_id = self._ensure_save_mat_type()
 
             # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.mat_type_id}
+            set_dict = {"id": mat_type_id}
             fields_to_filter = ["id"]
 
             # 2. 使用标准化API调用（无任何断言）

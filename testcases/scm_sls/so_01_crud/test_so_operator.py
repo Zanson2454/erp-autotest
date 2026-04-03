@@ -287,9 +287,8 @@ class TestSalesOrderOperator(SlsBase):
             
             # 如果数据为空，等待后重试（逐渐增加等待时间）
             if attempt < 4:
-                import time
                 wait_time = (attempt + 1) * 3  # 3秒、6秒、9秒、12秒
-                time.sleep(wait_time)
+                self._async_delay(wait_time, "订单详情查询重试等待")
                 self.logger.info(f"订单详情查询返回空数据，等待{wait_time}秒后重试 (第{attempt + 1}次)")
         
         # 如果API查询仍然失败，从数据库查询订单数据并构造数据结构
@@ -472,9 +471,8 @@ class TestSalesOrderOperator(SlsBase):
             
             # 如果数据为空，等待后重试（逐渐增加等待时间）
             if attempt < 4:
-                import time
                 wait_time = (attempt + 1) * 3  # 3秒、6秒、9秒、12秒
-                time.sleep(wait_time)
+                self._async_delay(wait_time, "订单详情查询重试等待")
                 self.logger.info(f"订单详情查询返回空数据，等待{wait_time}秒后重试 (第{attempt + 1}次)")
         
             # 如果API查询仍然失败，从数据库查询订单数据并构造数据结构
@@ -597,7 +595,7 @@ class TestSalesOrderOperator(SlsBase):
             self.approve_sales_order_or_quote(self.order_id)
             
             # 等待状态更新
-            time.sleep(2)
+            self._async_delay(2, "审批通过后状态刷新")
             
             # 再次查询状态确认
             order_info = self.query_service.query("SELECT so_code, so_status FROM sls_so_head_tr WHERE id = %s", (self.order_id,))
@@ -647,7 +645,7 @@ class TestSalesOrderOperator(SlsBase):
                             raise
                     
                     # 等待一下确保作废操作完成
-                    time.sleep(1)
+                    self._async_delay(1, "交货单作废后等待")
                     
                     # 重新尝试取消提交订单
                     result, _ = self.standard_api_call(

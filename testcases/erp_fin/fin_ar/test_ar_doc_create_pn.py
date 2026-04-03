@@ -185,7 +185,7 @@ class TestArDocCreatePn(ArBaseTest):
                             failure_reason = ar_data.get("asyncExecutionFailureReason", "未知原因")
                             raise AssertionError(f"异步任务执行失败：{failure_reason}")
                     
-                    time.sleep(2)
+                    self._async_delay(2, reason="等待应收单转收款单异步状态更新")
                     waited += 2
 
                 assert ar_data, "未查询到应收单数据"
@@ -446,7 +446,7 @@ class TestArDocCreatePn(ArBaseTest):
                         if async_execution_status in ["SUCCEEDED", "FAILED"]:
                             break
                     
-                    time.sleep(3)
+                    self._async_delay(3, reason="等待收款单分页状态更新")
                     waited += 3
 
                 assert pn_data, f"未查询到收款单编码为{pn_head_code}的数据"

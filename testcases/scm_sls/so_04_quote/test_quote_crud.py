@@ -358,7 +358,7 @@ class TestQuoteCrud(SlsBase):
                 self.approve_sales_order_or_quote(self.quote_id_submit)
                 
                 # 等待状态更新
-                time.sleep(2)
+                self._async_delay(2, "报价单审批后状态刷新")
                 
                 # 再次查询状态确认
                 quote_status = self.query_service.query(
@@ -472,9 +472,8 @@ class TestQuoteCrud(SlsBase):
                 
                 # 如果数据为空，等待后重试（逐渐增加等待时间）
                 if attempt < 4:
-                    import time
                     wait_time = (attempt + 1) * 3  # 3秒、6秒、9秒、12秒
-                    time.sleep(wait_time)
+                    self._async_delay(wait_time, "报价单详情查询重试等待")
                     self.logger.info(f"报价单详情查询返回空数据，等待{wait_time}秒后重试 (第{attempt + 1}次)")
             
             # 如果API查询仍然失败，从数据库查询报价单数据并构造数据结构

@@ -21,9 +21,6 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
         """绑定测试上下文对象。"""
         super().bind_context()
         # 准备组织维度管理数据
-        cls.org_dimension_id = None
-        cls.org_dimension_code = None
-        cls.org_dimension_name = None
         # 获取md_cache_data中的第一个数据
         cls.orgBusinessTypeIds = cls.md_cache_data["org_info"]["org_biz_type_cf"] if cls.md_cache_data.get("org_info") else None
    
@@ -48,6 +45,50 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
         cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
 
+    def _create_org_dimension(self):
+        org_dimension_code = self.mock_util.generate_unique_code(tag="Org_Dimension")
+        org_dimension_name = f"组织维度(自动化)_{self.mock_util.get_timestamp()}"
+        set_dict = {
+            "orgDimensionCode": org_dimension_code,
+            "orgDimensionName": org_dimension_name,
+            "orgDimensionDescribe": f"测试组织维度-{self.mock_util.get_timestamp()}",
+            "isSupMultiRoot": True,
+            "orgBusinessTypeList": [
+                {"orgBusinessTypeId": {"id": self.slsOrgTypeId}},
+                {"orgBusinessTypeId": {"id": self.purOrgTypeId}},
+                {"orgBusinessTypeId": {"id": self.invOrgTypeId}},
+                {"orgBusinessTypeId": {"id": self.invLocTypeId}},
+            ],
+        }
+        response, extracted_id = self.standard_api_call(
+            api_key="ORG-组织维度-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=["orgDimensionCode", "orgDimensionName", "orgDimensionDescribe", "isSupMultiRoot", "orgBusinessTypeList"],
+            store_id_as="org_dimension",
+        )
+        self.assert_util.assert_response_data(response)
+        self.set_runtime_id("org_dimension", extracted_id)
+        self.set_runtime_id("org_dimension_code", org_dimension_code)
+        self.set_runtime_id("org_dimension_name", org_dimension_name)
+        return extracted_id
+
+    def _ensure_save_org_dimension(self):
+        org_dimension_id = self.get_runtime_id("org_dimension")
+        if org_dimension_id:
+            return org_dimension_id
+        return self._create_org_dimension()
+
+    def _ensure_enabled_org_dimension(self):
+        org_dimension_id = self._ensure_save_org_dimension()
+        response, _ = self.standard_api_call(
+            api_key="ORG-组织维度-启用服务",
+            set_dict={"id": org_dimension_id},
+            fields_to_filter=["id"],
+            store_id_as=None,
+        )
+        self.assert_util.assert_response_success(response)
+        return org_dimension_id
+
     @case_decorator(
         story="组织维度管理",
         title="测试新增组织维度管理",
@@ -62,39 +103,8 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
         新增组织维度管理用例
         """
         try:
-
-            # 调用保存接口前准备数据
-            self.org_dimension_code = self.mock_util.generate_unique_code(tag="Org_Dimension")
-            self.org_dimension_name = f"组织维度(自动化)_{self.mock_util.get_timestamp()}"
-
-            # 准备测试数据（业务逻辑保持不变）
-            set_dict = {
-                "orgDimensionCode": self.org_dimension_code,
-                "orgDimensionName": self.org_dimension_name,
-                "orgDimensionDescribe": f"测试组织维度-{self.mock_util.get_timestamp()}",
-                "isSupMultiRoot": True,
-                "orgBusinessTypeList": [
-                    {"orgBusinessTypeId": {"id": self.slsOrgTypeId}},
-                    {"orgBusinessTypeId": {"id": self.purOrgTypeId}},
-                    {"orgBusinessTypeId": {"id": self.invOrgTypeId}},
-                    {"orgBusinessTypeId": {"id": self.invLocTypeId}}
-                ]
-            }
-            fields_to_filter = ["orgDimensionCode","orgDimensionName","orgDimensionDescribe","isSupMultiRoot","orgBusinessTypeList"]
-
-            # 使用标准化API调用（无任何断言）
-            response, extracted_id = self.standard_api_call(
-                api_key="ORG-组织维度-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as="org_dimension"
-            )
-
-            # 业务验证（保持原有逻辑）
-            self.assert_util.assert_response_data(response)
-            self.org_dimension_id = extracted_id
-
-            # 日志记录（Allure报告已由standard_api_call处理）
+            org_dimension_id = self._create_org_dimension()
+            a.json({"org_dimension_id": org_dimension_id}, "组织维度新增结果")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -114,12 +124,10 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
         查询组织维度管理详情用例
         """
         try:
-            # 获取组织维度管理信息
-            if not self.org_dimension_id:
-                self._ensure_save_org_dimension()
+            org_dimension_id = self._ensure_save_org_dimension()
 
             # 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.org_dimension_id}
+            set_dict = {"id": org_dimension_id}
             fields_to_filter = ["id"]
 
             # 使用标准化API调用（无任何断言）
@@ -158,8 +166,8 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
         查询组织维度管理列表用例
         """
         try:
-            if not self.org_dimension_code:
-                self._ensure_save_org_dimension()
+            self._ensure_save_org_dimension()
+            org_dimension_code = self.get_runtime_id("org_dimension_code")
                 
             # 准备测试数据（业务逻辑保持不变）
             set_dict =  {
@@ -173,7 +181,7 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
                         "conditions": {
                             "orgDimensionCode": {
                                 "operator": "CONTAINS",
-                                "value": self.org_dimension_code
+                                "value": org_dimension_code
                             }
                         },
                         "logicOperator": "AND"
@@ -229,12 +237,10 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
         启用组织维度管理用例
         """
         try:
-            # 获取组织维度管理信息
-            if not self.org_dimension_id:
-                self._ensure_save_org_dimension()
+            org_dimension_id = self._ensure_save_org_dimension()
 
             # 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.org_dimension_id}
+            set_dict = {"id": org_dimension_id}
             fields_to_filter = ["id"]
 
             # 使用标准化API调用（无任何断言）
@@ -248,7 +254,7 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
             # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
             
-            status = self.query_service.get_org_dimension_status(self.org_dimension_id)
+            status = self.query_service.get_org_dimension_status(org_dimension_id)
             self.assert_util.assert_by_operator(status, "=", "ENABLED")
 
             # 日志记录（Allure报告已由standard_api_call处理）
@@ -271,12 +277,10 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
         禁用组织维度管理用例
         """
         try:
-            # 获取组织维度管理信息
-            if not self.org_dimension_id:
-                self._ensure_enabled_org_dimension()
+            org_dimension_id = self._ensure_enabled_org_dimension()
 
             # 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.org_dimension_id}
+            set_dict = {"id": org_dimension_id}
             fields_to_filter = ["id"]
 
             # 使用标准化API调用（无任何断言）
@@ -289,7 +293,7 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
 
             # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
-            status = self.query_service.get_org_dimension_status(self.org_dimension_id)
+            status = self.query_service.get_org_dimension_status(org_dimension_id)
             self.assert_util.assert_by_operator(status, "=", "DISABLED")
 
             # 日志记录（Allure报告已由standard_api_call处理）
@@ -312,10 +316,7 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
         查询启用的组织维度列表用例
         """
         try:
-            # 确保有启用的组织维度数据
-            if not self.org_dimension_id:
-                self._ensure_save_org_dimension()
-                self._ensure_enabled_org_dimension()
+            self._ensure_enabled_org_dimension()
 
             # 准备测试数据（业务逻辑保持不变）
             set_dict = {}
@@ -356,12 +357,10 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
         删除组织维度管理用例
         """
         try:
-            # 获取组织维度管理信息
-            if not self.org_dimension_id:
-                self._ensure_save_org_dimension()
+            org_dimension_id = self._ensure_save_org_dimension()
 
             # 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.org_dimension_id}
+            set_dict = {"id": org_dimension_id}
             fields_to_filter = ["id"]
 
             # 使用标准化API调用（无任何断言）
@@ -374,7 +373,7 @@ class TestOrg_DimensionManagement(GenMdBaseTest):
 
             # 业务验证（保持原有逻辑）
             self.assert_util.assert_response_success(response)
-            deleted = self.query_service.get_org_dimension_deleted(self.org_dimension_id)
+            deleted = self.query_service.get_org_dimension_deleted(org_dimension_id)
             self.assert_util.assert_by_operator(deleted, "!=", 0)
 
             # 日志记录（Allure报告已由standard_api_call处理）

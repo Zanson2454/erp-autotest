@@ -22,8 +22,6 @@ class TestDynamicManagement(GenMdBaseTest):
     def bind_context(cls):
         """绑定测试上下文对象。"""
         super().bind_context()
-        # 数据存储
-        cls.template_id = None
         cls.logger.info("动态表单管理测试类初始化完成")
 
     @classmethod
@@ -114,25 +112,25 @@ class TestDynamicManagement(GenMdBaseTest):
             store_id_as="template"
         )
         self.assert_util.assert_response_data(response)
-        self.template_id = template_id
+        self.set_runtime_id("template", template_id)
         return template_id
 
     def _ensure_create_template(self):
-        if self.template_id:
-            return self.template_id
+        template_id = self.get_runtime_id("template")
+        if template_id:
+            return template_id
         return self._create_template()
 
     def _enable_template(self):
-        if not self.template_id:
-            self._ensure_create_template()
-        set_dict = {"id": self.template_id}
+        template_id = self._ensure_create_template()
+        set_dict = {"id": template_id}
         response, _ = self.standard_api_call(
             api_key="GEN-动态表单-启用动态表单模板服务",
             set_dict=set_dict,
             fields_to_filter=["id"]
         )
         self.assert_util.assert_response_success(response)
-        return self.template_id
+        return template_id
 
     def _ensure_enable_template(self):
         return self._enable_template()
@@ -314,11 +312,10 @@ class TestDynamicManagement(GenMdBaseTest):
         """根据ID查询动态表单模板用例 - GEN_DYNAMIC_FIND_BY_ID_TEMPLATE_SERVICE"""
         try:
             # 1. 确保模板存在（原有依赖逻辑完全保留）
-            if not self.template_id:
-                self._ensure_create_template()
+            template_id = self._ensure_create_template()
 
             # 2. 使用标准化API调用
-            set_dict = {"id": self.template_id}
+            set_dict = {"id": template_id}
             fields_to_filter = ["id"]
             
             response, _ = self.standard_api_call(
@@ -347,11 +344,10 @@ class TestDynamicManagement(GenMdBaseTest):
         """根据IDs查询动态表单模板集合用例 - GEN_DYNAMIC_FIND_BY_IDS_TEMPLATE_SERVICE"""
         try:
             # 1. 确保模板存在（原有依赖逻辑完全保留）
-            if not self.template_id:
-                self._ensure_create_template()
+            template_id = self._ensure_create_template()
 
             # 2. 使用标准化API调用
-            set_dict = {"ids": [self.template_id]}  # 最多查询5个
+            set_dict = {"ids": [template_id]}  # 最多查询5个
             fields_to_filter = ["ids"]
             
             response, _ = self.standard_api_call(
@@ -379,8 +375,7 @@ class TestDynamicManagement(GenMdBaseTest):
         """启用动态表单模板用例 - GEN_DYNAMIC_ENABLE_TEMPLATE_SERVICE"""
         try:
             # 1. 确保模板存在（原有依赖逻辑完全保留）
-            if not self.template_id:
-                self._ensure_create_template()
+            self._ensure_create_template()
             self._enable_template()
             
         except Exception as e:
@@ -399,11 +394,10 @@ class TestDynamicManagement(GenMdBaseTest):
         """禁用动态表单模板用例 - GEN_DYNAMIC_DISABLE_TEMPLATE_SERVICE"""
         try:
             # 1. 确保模板存在（原有依赖逻辑完全保留）
-            if not self.template_id:
-                self._ensure_enable_template()
+            template_id = self._ensure_enable_template()
 
             # 2. 使用标准化API调用
-            set_dict = {"id": self.template_id}
+            set_dict = {"id": template_id}
             fields_to_filter = ["id"]
             
             response, _ = self.standard_api_call(
@@ -431,11 +425,10 @@ class TestDynamicManagement(GenMdBaseTest):
         """删除动态表单模板用例 - GEN_DYNAMIC_DELETE_TEMPLATE_SERVICE"""
         try:
             # 1. 确保模板存在（原有依赖逻辑完全保留）
-            if not self.template_id:
-                self._ensure_create_template()
+            template_id = self._ensure_create_template()
 
             # 2. 使用标准化API调用
-            set_dict = {"id": self.template_id}
+            set_dict = {"id": template_id}
             fields_to_filter = ["id"]
             
             response, _ = self.standard_api_call(

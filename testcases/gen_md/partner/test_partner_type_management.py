@@ -18,9 +18,6 @@ class TestPartnerTypeManagement(GenMdBaseTest):
     def bind_context(cls):
         """绑定测试上下文对象。"""
         super().bind_context()
-        cls.partner_type_id = None
-        cls.partner_type_code = None
-        cls.partner_group_id = None
         cls.logger.info("相关方类型配置管理测试类初始化完成")
 
     @classmethod
@@ -28,6 +25,58 @@ class TestPartnerTypeManagement(GenMdBaseTest):
         """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
         cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
+
+    def _create_partner_type(self, bt_class="SLS_ORG", partner_class="CUSTOMER"):
+        partner_code = self.mock_util.generate_unique_code(tag="PT")
+        partner_name = f"相关方类型_{self.mock_util.get_timestamp()}"
+        set_dict = {
+            "btClass": bt_class,
+            "partnerClass": partner_class,
+            "partnerCode": partner_code,
+            "partnerName": partner_name,
+            "desc": f"自动化测试相关方类型-{self.mock_util.get_timestamp()}",
+        }
+        response, extracted_id = self.standard_api_call(
+            api_key="GEN-相关方类型-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=["btClass", "partnerClass", "partnerCode", "partnerName", "desc"],
+            store_id_as=None,
+        )
+        self.assert_util.assert_response_data(response)
+        self.set_runtime_id("partner_type", extracted_id)
+        self.set_runtime_id("partner_type_code", partner_code)
+        return extracted_id
+
+    def _ensure_save_partner_type(self, btClass="SLS_ORG", partnerClass="CUSTOMER"):
+        partner_type_id = self.get_runtime_id("partner_type")
+        if partner_type_id:
+            return partner_type_id
+        return self._create_partner_type(bt_class=btClass, partner_class=partnerClass)
+
+    def _create_partner_group(self):
+        partner_type_id = self._ensure_save_partner_type()
+        code = self.mock_util.generate_unique_code(tag="PG")
+        name = f"相关方组_{self.mock_util.get_timestamp()}"
+        set_dict = {
+            "code": code,
+            "name": name,
+            "itemList": [{"partnerType": {"id": partner_type_id}, "isRequired": True}],
+        }
+        response, extracted_id = self.standard_api_call(
+            api_key="GEN-相关方组-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=["code", "name", "itemList"],
+            store_id_as=None,
+        )
+        self.assert_util.assert_response_data(response)
+        self.set_runtime_id("partner_group", extracted_id)
+        return extracted_id
+
+    def _ensure_save_partner_group(self):
+        partner_group_id = self.get_runtime_id("partner_group")
+        if partner_group_id:
+            return partner_group_id
+        return self._create_partner_group()
 
     @case_decorator(
         story="相关方类型配置",
@@ -45,33 +94,8 @@ class TestPartnerTypeManagement(GenMdBaseTest):
     def test_save_partner_type(self, btClass, partnerClass):
         """新增相关方类型用例"""
         try:
-            # 使用优化后的generate_unique_code方法，确保编码唯一性
-            partnerCode = self.mock_util.generate_unique_code(tag="PT")
-            partnerName = f"相关方类型_{self.mock_util.get_timestamp()}"
-
-            set_dict = {
-                "btClass": btClass,
-                "partnerClass": partnerClass,
-                "partnerCode": partnerCode,
-                "partnerName": partnerName,
-                "desc": f"自动化测试相关方类型-{self.mock_util.get_timestamp()}"
-            }
-            fields_to_filter = ["btClass", "partnerClass", "partnerCode", "partnerName", "desc"]
-
-            response, extracted_id = self.standard_api_call(
-                api_key="GEN-相关方类型-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as=None
-            )
-            
-            self.assert_util.assert_response_data(response)
-            
-            # 保存返回的ID供后续测试方法使用
-            self.partner_type_id = response.get("data", {}).get("data", {})
-            self.partner_type_code = partnerCode
-
-            a.json(response, "响应数据")
+            partner_type_id = self._create_partner_type(bt_class=btClass, partner_class=partnerClass)
+            a.json({"partner_type_id": partner_type_id}, "新增相关方类型结果")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -139,10 +163,9 @@ class TestPartnerTypeManagement(GenMdBaseTest):
     def test_query_partner_type_detail(self):
         """查询相关方类型详情用例"""
         try:
-            if not self.partner_type_id:
-                self._ensure_save_partner_type(btClass="SLS_ORG", partnerClass="CUSTOMER")
+            partner_type_id = self._ensure_save_partner_type(btClass="SLS_ORG", partnerClass="CUSTOMER")
 
-            set_dict = {"id": self.partner_type_id}
+            set_dict = {"id": partner_type_id}
             fields_to_filter = ["id"]
 
             response, _ = self.standard_api_call(
@@ -170,10 +193,9 @@ class TestPartnerTypeManagement(GenMdBaseTest):
     def test_find_partner_type_by_id(self):
         """根据ID查找相关方类型数据用例"""
         try:
-            if not self.partner_type_id:
-                self._ensure_save_partner_type(btClass="SLS_ORG", partnerClass="CUSTOMER")
+            partner_type_id = self._ensure_save_partner_type(btClass="SLS_ORG", partnerClass="CUSTOMER")
 
-            set_dict = {"id": self.partner_type_id}
+            set_dict = {"id": partner_type_id}
             fields_to_filter = ["id"]
 
             response, _ = self.standard_api_call(
@@ -377,10 +399,9 @@ class TestPartnerTypeManagement(GenMdBaseTest):
     def test_delete_partner_type(self):
         """删除相关方类型用例"""
         try:
-            if not self.partner_type_id:
-                self._ensure_save_partner_type(btClass="SLS_ORG", partnerClass="CUSTOMER")
+            partner_type_id = self._ensure_save_partner_type(btClass="SLS_ORG", partnerClass="CUSTOMER")
 
-            set_dict = {"id": self.partner_type_id}
+            set_dict = {"id": partner_type_id}
             fields_to_filter = ["id"]
 
             response, _ = self.standard_api_call(
@@ -511,38 +532,8 @@ class TestPartnerTypeManagement(GenMdBaseTest):
     def test_save_partner_group(self):
         """新增相关方组用例"""
         try:
-            if not self.partner_type_id:
-                self._ensure_save_partner_type(btClass="SLS_ORG", partnerClass="CUSTOMER")
-
-            code = self.mock_util.generate_unique_code(tag="PG")
-            name = f"相关方组_{self.mock_util.get_timestamp()}"
-
-            set_dict = {
-                "code": code,
-                "name": name,
-                "itemList": [
-                    {
-                        "partnerType": {
-                            "id": self.partner_type_id
-                        },
-                        "isRequired": True
-                    }
-                ]
-            }
-            fields_to_filter = ["code", "name", "itemList"]
-
-            response, extracted_id = self.standard_api_call(
-                api_key="GEN-相关方组-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as=None
-            )
-            
-            self.assert_util.assert_response_data(response)
-            
-            self.partner_group_id = response.get("data", {}).get("data", {})
-            
-            a.json(response, "响应数据")
+            partner_group_id = self._create_partner_group()
+            a.json({"partner_group_id": partner_group_id}, "新增相关方组结果")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -600,10 +591,9 @@ class TestPartnerTypeManagement(GenMdBaseTest):
     def test_query_partner_group_detail(self):
         """查询相关方组详情用例"""
         try:
-            if not self.partner_group_id:
-                self._ensure_save_partner_group()
+            partner_group_id = self._ensure_save_partner_group()
 
-            set_dict = {"id": self.partner_group_id}
+            set_dict = {"id": partner_group_id}
             fields_to_filter = ["id"]
 
             response, _ = self.standard_api_call(
@@ -631,10 +621,9 @@ class TestPartnerTypeManagement(GenMdBaseTest):
     def test_delete_partner_group(self):
         """删除相关方组用例"""
         try:
-            if not self.partner_group_id:
-                self._ensure_save_partner_group()
+            partner_group_id = self._ensure_save_partner_group()
 
-            set_dict = {"id": self.partner_group_id}
+            set_dict = {"id": partner_group_id}
             fields_to_filter = ["id"]
 
             response, _ = self.standard_api_call(

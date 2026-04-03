@@ -23,9 +23,6 @@ class TestModelSystemManagement(GenMdBaseTest):
     def bind_context(cls):
         """绑定测试上下文对象。"""
         super().bind_context()
-        # 数据存储
-        cls.model_system_id = None
-        cls.model_system_ids = []
         cls.logger.info("模型系统管理测试类初始化完成")
 
     @classmethod
@@ -58,13 +55,16 @@ class TestModelSystemManagement(GenMdBaseTest):
 
         data_list = response.get("data", {}).get("data", {}).get("data", []).get("data", [])
         if data_list:
-            self.model_system_id = data_list[0].get("id")
-            self.model_system_ids = [item.get("id") for item in data_list[:3] if item.get("id")]
-        return self.model_system_id
+            model_system_id = data_list[0].get("id")
+            self.set_runtime_id("model_system", model_system_id)
+            self.test_data["model_system_ids"] = [item.get("id") for item in data_list[:3] if item.get("id")]
+            return model_system_id
+        return self.get_runtime_id("model_system")
 
     def _ensure_query_model_system_page(self):
-        if self.model_system_id:
-            return self.model_system_id
+        model_system_id = self.get_runtime_id("model_system")
+        if model_system_id:
+            return model_system_id
         return self._query_model_system_page()
 
     # ================ 模型系统管理 ================
@@ -98,12 +98,11 @@ class TestModelSystemManagement(GenMdBaseTest):
         """模型根据ID集合查询详情用例 - GEN_MODEL_SYSTEM_QUERY_BY_IDS_ACTION_SERVICE"""
         try:
             # 1. 确保有ID数据（原有依赖逻辑完全保留）
-            if not self.model_system_id:
-                self._ensure_query_model_system_page()
+            model_system_id = self._ensure_query_model_system_page()
 
             # 2. 使用标准化API调用
             set_dict = {
-                "ids": [self.model_system_id],
+                "ids": [model_system_id],
                 "modelKey":"GEN_MD$gen_coun_type_cf"
             }
             fields_to_filter = ["ids", "modelKey"]

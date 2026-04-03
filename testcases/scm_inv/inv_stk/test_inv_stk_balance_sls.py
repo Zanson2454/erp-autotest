@@ -185,7 +185,7 @@ class TestInvStkBalanceSalesManagement(MobileVoucherCreator):
                     pre_sale_balance = self.__class__.initial_balance
             
             # 等待数据同步
-            time.sleep(3)
+            self._async_delay(3, "等待销售出库库存同步")
             
             # 轮询查询库存余额，最多等待5秒
             final_balance = self.get_current_inventory_balance()
@@ -195,7 +195,7 @@ class TestInvStkBalanceSalesManagement(MobileVoucherCreator):
                     if i > 0:
                         self.logger.info(f"第{i+1}次查询库存余额: {final_balance}")
                     break
-                time.sleep(1)
+                self._async_delay(1, "轮询库存余额变化")
                 final_balance = self.get_current_inventory_balance()
             
             balance_change = pre_sale_balance - final_balance
@@ -235,5 +235,4 @@ class TestInvStkBalanceSalesManagement(MobileVoucherCreator):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
-
 

@@ -1,8 +1,7 @@
 import copy
-import pytest
 import allure
+import pytest
 import sys
-import time
 from pathlib import Path
 
 # 添加项目根目录到 Python 路径
@@ -41,7 +40,7 @@ class TestStandardSalesOrder(SlsBase):
 
         if not self.order_id:
             self.order_id = self.create_sales_order(order_type="STND", submit=True)
-            time.sleep(1)
+            self._wait_order_item_exists(self.order_id, max_wait=15, interval=1.0)
 
         if not self.order_code:
             order_info = self.query_service.query("SELECT so_code FROM sls_so_head_tr WHERE id = %s", (self.order_id,))
@@ -116,19 +115,13 @@ class TestStandardSalesOrder(SlsBase):
             assert self.order_id is not None, "创建订单失败，未返回订单ID"
             
             # 等待订单状态更新
-            time.sleep(2)
-            
-            # 验证订单状态为已生效（添加重试机制）
-            order_info = None
-            for attempt in range(5):
-                order_info = self.query_service.query(f"SELECT id, so_code, so_status FROM sls_so_head_tr WHERE id={self.order_id}")
-                if order_info and order_info[0]['so_status'] in ['EFFECT', 'APPROVING']:
-                    break
-                
-                # 如果状态不是预期状态，等待后重试
-                if attempt < 4:
-                    time.sleep(2)
-                    self.logger.info(f"订单状态查询，等待2秒后重试 (第{attempt + 1}次)")
+            order_info = self._wait_order_row(
+                order_id=self.order_id,
+                expected_statuses={"EFFECT", "APPROVING"},
+                max_wait=20,
+                interval=2.0,
+                timeout_message=f"订单状态未在预期时间内进入 EFFECT/APPROVING，order_id={self.order_id}",
+            )
             
             assert order_info, "未找到创建的订单"
             assert order_info[0]['so_status'] in ['EFFECT', 'APPROVING'], f"订单状态不正确，期望：EFFECT或APPROVING，实际：{order_info[0]['so_status']}"
@@ -169,17 +162,11 @@ class TestStandardSalesOrder(SlsBase):
             
             # 2. 从数据库查询订单行数据，并构造完成订单行所需的数据对象
             order_item_info = None
-            for _ in range(5):
-                order_item_info = self.query_service.query(
-                    """SELECT id, so_id, so_item_code, so_item_status, so_item_business_status, 
-                       version, mat_id, so_item_sls_qty, so_item_price, uom_sls_id, 
-                       inv_org_id, inv_loc_id, so_item_type_id
-                       FROM sls_so_item_tr WHERE so_id = %s LIMIT 1""",
-                    (self.order_id,)
-                )
-                if order_item_info:
-                    break
-                time.sleep(1)
+            order_item_info = self._wait_order_item_exists(
+                self.order_id,
+                max_wait=15,
+                interval=1.0,
+            )
             
             if not order_item_info:
                 raise ValueError(f"未找到订单对应的订单行，订单ID: {self.order_id}, 订单编号: {self.order_code}")
@@ -238,14 +225,12 @@ class TestStandardSalesOrder(SlsBase):
             a.json(complete_response, "完成订单行-响应数据")
             
             # 9. 验证订单行业务状态为已完成
-            # 等待一下，确保状态更新完成
-            time.sleep(1)
-            
-            order_item_info = self.query_service.query(f"""
-                SELECT so_item_business_status, so_item_status 
-                FROM sls_so_item_tr 
-                WHERE id={self.so_item_id}
-            """)
+            order_item_info = self._wait_item_business_status(
+                item_id=self.so_item_id,
+                expected_status="COMPLETED",
+                max_wait=15,
+                interval=1.0,
+            )
             
             if not order_item_info:
                 raise ValueError(f"未找到订单行数据，订单行ID: {self.so_item_id}")
@@ -258,11 +243,12 @@ class TestStandardSalesOrder(SlsBase):
             )
             
             # 10. 验证订单业务状态为已完成
-            order_info = self.query_service.query(f"""
-                SELECT so_business_status 
-                FROM sls_so_head_tr 
-                WHERE id={self.order_id}
-            """)
+            order_info = self._wait_order_business_status(
+                order_id=self.order_id,
+                expected_status="COMPLETED",
+                max_wait=15,
+                interval=1.0,
+            )
             
             if not order_info:
                 raise ValueError(f"未找到订单数据，订单ID: {self.order_id}")
@@ -298,17 +284,11 @@ class TestStandardSalesOrder(SlsBase):
             
             # 2. 从数据库查询订单行数据，并构造取消完成订单行所需的数据对象
             order_item_info = None
-            for _ in range(5):
-                order_item_info = self.query_service.query(
-                    """SELECT id, so_id, so_item_code, so_item_status, so_item_business_status, 
-                       version, mat_id, so_item_sls_qty, so_item_price, uom_sls_id, 
-                       inv_org_id, inv_loc_id, so_item_type_id
-                       FROM sls_so_item_tr WHERE id = %s LIMIT 1""",
-                    (self.so_item_id,)
-                )
-                if order_item_info:
-                    break
-                time.sleep(1)
+            order_item_info = self._wait_item_row(
+                item_id=self.so_item_id,
+                max_wait=10,
+                interval=1.0,
+            )
             
             if not order_item_info:
                 raise ValueError(f"未找到订单行，订单行ID: {self.so_item_id}")
@@ -376,14 +356,12 @@ class TestStandardSalesOrder(SlsBase):
             a.json(cancel_complete_response, "取消完成订单行-响应数据")
             
             # 5. 验证订单行业务状态已恢复（不再是COMPLETED）
-            # 等待一下，确保状态更新完成
-            time.sleep(1)
-            
-            order_item_info = self.query_service.query(f"""
-                SELECT so_item_business_status, so_item_status 
-                FROM sls_so_item_tr 
-                WHERE id={self.so_item_id}
-            """)
+            order_item_info = self._wait_item_business_status_not(
+                item_id=self.so_item_id,
+                not_status="COMPLETED",
+                max_wait=15,
+                interval=1.0,
+            )
             
             if not order_item_info:
                 raise ValueError(f"未找到订单行数据，订单行ID: {self.so_item_id}")
@@ -396,11 +374,12 @@ class TestStandardSalesOrder(SlsBase):
             )
             
             # 6. 验证订单业务状态已恢复（不再是COMPLETED）
-            order_info = self.query_service.query(f"""
-                SELECT so_business_status 
-                FROM sls_so_head_tr 
-                WHERE id={self.order_id}
-            """)
+            order_info = self._wait_order_business_status_not(
+                order_id=self.order_id,
+                not_status="COMPLETED",
+                max_wait=15,
+                interval=1.0,
+            )
             
             if not order_info:
                 raise ValueError(f"未找到订单数据，订单ID: {self.order_id}")
@@ -417,6 +396,220 @@ class TestStandardSalesOrder(SlsBase):
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
+
+    def _wait_order_row(
+        self,
+        order_id,
+        expected_statuses,
+        max_wait: int = 20,
+        interval: float = 2.0,
+        timeout_message: str = "",
+    ):
+        """轮询订单主表状态并返回订单行。"""
+        expected = set(expected_statuses or [])
+
+        def check_func():
+            rows = self.query_service.query(
+                "SELECT id, so_code, so_status FROM sls_so_head_tr WHERE id = %s",
+                (order_id,),
+            )
+            row = rows[0] if rows else None
+            status = row.get("so_status") if row else None
+            return status in expected, row or {}, None
+
+        result = self.async_wait_util.wait_for_condition(
+            check_func=check_func,
+            max_wait=max_wait,
+            interval=interval,
+            timeout_message=timeout_message or f"订单状态等待超时，order_id={order_id}",
+            enable_polling_log=False,
+        )
+        if result.status != self.wait_status.SUCCESS:
+            raise AssertionError(
+                f"订单状态等待失败 [order_id={order_id}] "
+                f"status={result.status.value}, detail={result.error_message}, last={result.last_data}"
+            )
+        return [result.last_data]
+
+    def _wait_order_item_exists(self, order_id, max_wait: int = 15, interval: float = 1.0):
+        """轮询等待订单存在至少一条订单行。"""
+
+        def check_func():
+            rows = self.query_service.query(
+                """SELECT id, so_id, so_item_code, so_item_status, so_item_business_status,
+                   version, mat_id, so_item_sls_qty, so_item_price, uom_sls_id,
+                   inv_org_id, inv_loc_id, so_item_type_id
+                   FROM sls_so_item_tr WHERE so_id = %s LIMIT 1""",
+                (order_id,),
+            )
+            return bool(rows), {"rows": rows}, None
+
+        result = self.async_wait_util.wait_for_condition(
+            check_func=check_func,
+            max_wait=max_wait,
+            interval=interval,
+            timeout_message=f"订单行未在预期时间内生成，order_id={order_id}",
+            enable_polling_log=False,
+        )
+        if result.status != self.wait_status.SUCCESS:
+            raise AssertionError(
+                f"订单行等待失败 [order_id={order_id}] "
+                f"status={result.status.value}, detail={result.error_message}, last={result.last_data}"
+            )
+        return result.last_data.get("rows", [])
+
+    def _wait_item_row(self, item_id, max_wait: int = 10, interval: float = 1.0):
+        """轮询等待订单行可查询。"""
+
+        def check_func():
+            rows = self.query_service.query(
+                """SELECT id, so_id, so_item_code, so_item_status, so_item_business_status,
+                   version, mat_id, so_item_sls_qty, so_item_price, uom_sls_id,
+                   inv_org_id, inv_loc_id, so_item_type_id
+                   FROM sls_so_item_tr WHERE id = %s LIMIT 1""",
+                (item_id,),
+            )
+            return bool(rows), {"rows": rows}, None
+
+        result = self.async_wait_util.wait_for_condition(
+            check_func=check_func,
+            max_wait=max_wait,
+            interval=interval,
+            timeout_message=f"订单行查询超时，item_id={item_id}",
+            enable_polling_log=False,
+        )
+        if result.status != self.wait_status.SUCCESS:
+            raise AssertionError(
+                f"订单行查询失败 [item_id={item_id}] "
+                f"status={result.status.value}, detail={result.error_message}, last={result.last_data}"
+            )
+        return result.last_data.get("rows", [])
+
+    def _wait_item_business_status(
+        self,
+        item_id,
+        expected_status: str,
+        max_wait: int = 15,
+        interval: float = 1.0,
+    ):
+        """轮询订单行业务状态。"""
+
+        def check_func():
+            rows = self.query_service.query(
+                "SELECT so_item_business_status, so_item_status FROM sls_so_item_tr WHERE id = %s",
+                (item_id,),
+            )
+            row = rows[0] if rows else {}
+            return row.get("so_item_business_status") == expected_status, row, None
+
+        result = self.async_wait_util.wait_for_condition(
+            check_func=check_func,
+            max_wait=max_wait,
+            interval=interval,
+            timeout_message=f"订单行业务状态未变更为 {expected_status}，item_id={item_id}",
+            enable_polling_log=False,
+        )
+        if result.status != self.wait_status.SUCCESS:
+            raise AssertionError(
+                f"订单行业务状态等待失败 [item_id={item_id}] "
+                f"status={result.status.value}, detail={result.error_message}, last={result.last_data}"
+            )
+        return [result.last_data]
+
+    def _wait_order_business_status(
+        self,
+        order_id,
+        expected_status: str,
+        max_wait: int = 15,
+        interval: float = 1.0,
+    ):
+        """轮询订单业务状态。"""
+
+        def check_func():
+            rows = self.query_service.query(
+                "SELECT so_business_status FROM sls_so_head_tr WHERE id = %s",
+                (order_id,),
+            )
+            row = rows[0] if rows else {}
+            return row.get("so_business_status") == expected_status, row, None
+
+        result = self.async_wait_util.wait_for_condition(
+            check_func=check_func,
+            max_wait=max_wait,
+            interval=interval,
+            timeout_message=f"订单业务状态未变更为 {expected_status}，order_id={order_id}",
+            enable_polling_log=False,
+        )
+        if result.status != self.wait_status.SUCCESS:
+            raise AssertionError(
+                f"订单业务状态等待失败 [order_id={order_id}] "
+                f"status={result.status.value}, detail={result.error_message}, last={result.last_data}"
+            )
+        return [result.last_data]
+
+    def _wait_item_business_status_not(
+        self,
+        item_id,
+        not_status: str,
+        max_wait: int = 15,
+        interval: float = 1.0,
+    ):
+        """轮询订单行业务状态变更为指定状态之外。"""
+
+        def check_func():
+            rows = self.query_service.query(
+                "SELECT so_item_business_status, so_item_status FROM sls_so_item_tr WHERE id = %s",
+                (item_id,),
+            )
+            row = rows[0] if rows else {}
+            current = row.get("so_item_business_status")
+            return bool(row) and current != not_status, row, None
+
+        result = self.async_wait_util.wait_for_condition(
+            check_func=check_func,
+            max_wait=max_wait,
+            interval=interval,
+            timeout_message=f"订单行业务状态未离开 {not_status}，item_id={item_id}",
+            enable_polling_log=False,
+        )
+        if result.status != self.wait_status.SUCCESS:
+            raise AssertionError(
+                f"订单行业务状态等待失败 [item_id={item_id}] "
+                f"status={result.status.value}, detail={result.error_message}, last={result.last_data}"
+            )
+        return [result.last_data]
+
+    def _wait_order_business_status_not(
+        self,
+        order_id,
+        not_status: str,
+        max_wait: int = 15,
+        interval: float = 1.0,
+    ):
+        """轮询订单业务状态变更为指定状态之外。"""
+
+        def check_func():
+            rows = self.query_service.query(
+                "SELECT so_business_status FROM sls_so_head_tr WHERE id = %s",
+                (order_id,),
+            )
+            row = rows[0] if rows else {}
+            current = row.get("so_business_status")
+            return bool(row) and current != not_status, row, None
+
+        result = self.async_wait_util.wait_for_condition(
+            check_func=check_func,
+            max_wait=max_wait,
+            interval=interval,
+            timeout_message=f"订单业务状态未离开 {not_status}，order_id={order_id}",
+            enable_polling_log=False,
+        )
+        if result.status != self.wait_status.SUCCESS:
+            raise AssertionError(
+                f"订单业务状态等待失败 [order_id={order_id}] "
+                f"status={result.status.value}, detail={result.error_message}, last={result.last_data}"
+            )
+        return [result.last_data]
     
     @case_decorator(
         story="标准销售订单流程",

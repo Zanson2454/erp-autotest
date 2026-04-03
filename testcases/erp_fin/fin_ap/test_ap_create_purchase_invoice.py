@@ -357,11 +357,11 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
                             failure_reason = ap_record.get("asyncExecutionFailureReason", "")
                             assert False, f"应付单异步执行失败，失败原因: {failure_reason}"
                         elif current_status in ["PROCESSING", "CREATED"] and attempt < max_attempts - 1:
-                            time.sleep(interval)
+                            self._async_delay(interval, reason="等待应付单异步执行状态更新")
                         else:
                             assert False, f"应付单异步执行状态异常: {current_status}"
                     elif attempt < max_attempts - 1:
-                        time.sleep(interval)
+                        self._async_delay(interval, reason="等待应付单记录可查询")
                 
                 if not validation_success:
                     current_status = ap_record.get("asyncExecutionStatus") if ap_record else "未找到记录"
@@ -643,13 +643,13 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
                             failure_reason = pi_record.get("asyncExecutionFailureReason", "")
                             assert False, f"采购发票异步执行失败，失败原因: {failure_reason}"
                         elif current_status in ["DRAFT"] and attempt < max_attempts - 1:
-                            time.sleep(interval)
+                            self._async_delay(interval, reason="等待采购发票状态更新")
                         else:
                             # 记录当前状态继续等待
                             if attempt < max_attempts - 1:
-                                time.sleep(interval)
+                                self._async_delay(interval, reason="等待采购发票异步执行完成")
                     elif attempt < max_attempts - 1:
-                        time.sleep(interval)
+                        self._async_delay(interval, reason="等待采购发票记录可查询")
                 
                 if not validation_success:
                     current_status = pi_record.get("piStatus") if pi_record else "未找到记录"
@@ -918,9 +918,9 @@ class TestApCreatePurchaseInvoice(ApBaseTest):
                             failure_reason = pi_record.get("asyncExecutionFailureReason", "")
                             assert False, f"采购发票异步执行失败，失败原因: {failure_reason}"
                         elif attempt < max_attempts - 1:
-                            time.sleep(interval)
+                            self._async_delay(interval, reason="等待采购发票钩稽状态更新")
                     elif attempt < max_attempts - 1:
-                        time.sleep(interval)
+                        self._async_delay(interval, reason="等待采购发票记录可查询")
                 
                 if not validation_success:
                     # 提供详细的失败信息

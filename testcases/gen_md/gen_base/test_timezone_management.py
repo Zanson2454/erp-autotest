@@ -23,9 +23,6 @@ class TestTimezoneManagement(GenMdBaseTest):
     def bind_context(cls):
         """绑定测试上下文对象。"""
         super().bind_context()
-        # 数据存储
-        cls.timezone_id = None
-        cls.timezone_code = None
         cls.logger.info("时区管理测试类初始化完成")
 
     @classmethod
@@ -52,13 +49,14 @@ class TestTimezoneManagement(GenMdBaseTest):
             store_id_as="timezone"
         )
         self.assert_util.assert_response_data(response)
-        self.timezone_id = timezone_id
-        self.timezone_code = timezone_code
+        self.set_runtime_id("timezone", timezone_id)
+        self.test_data["timezone_code"] = timezone_code
         return timezone_id
 
     def _ensure_save_timezone(self):
-        if self.timezone_id:
-            return self.timezone_id
+        timezone_id = self.get_runtime_id("timezone")
+        if timezone_id:
+            return timezone_id
         return self._create_timezone()
 
     @case_decorator(
@@ -121,10 +119,8 @@ class TestTimezoneManagement(GenMdBaseTest):
     def test_query_timezone_detail(self):
         """查询时区配置详情用例"""
         try:
-            if not self.timezone_id:
-                self._ensure_save_timezone()
-
-            set_dict = {"id": self.timezone_id}
+            timezone_id = self._ensure_save_timezone()
+            set_dict = {"id": timezone_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-时区配置-查询详情服务",
@@ -148,10 +144,8 @@ class TestTimezoneManagement(GenMdBaseTest):
     def test_delete_timezone(self):
         """删除时区配置用例"""
         try:
-            if not self.timezone_id:
-                self._ensure_save_timezone()
-
-            set_dict = {"id": self.timezone_id}
+            timezone_id = self._ensure_save_timezone()
+            set_dict = {"id": timezone_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-时区配置-删除服务",

@@ -22,9 +22,6 @@ class TestWcManagement(GenMdBaseTest):
     def bind_context(cls):
         """绑定测试上下文对象。"""
         super().bind_context()
-        # 数据存储
-        cls.wc_id = None
-        cls.wc_code = None
         cls.logger.info("工作日日历管理测试类初始化完成")
         
         cls.wc_items = []
@@ -87,13 +84,14 @@ class TestWcManagement(GenMdBaseTest):
         )
         self.assert_util.assert_response_success(response)
         assert extracted_id is not None, "新增工作日日历失败，未返回ID"
-        self.wc_id = extracted_id
-        self.wc_code = wc_code
+        self.set_runtime_id("wc", extracted_id)
+        self.test_data["wc_code"] = wc_code
         return extracted_id
 
     def _ensure_save_wc(self):
-        if self.wc_id:
-            return self.wc_id
+        wc_id = self.get_runtime_id("wc")
+        if wc_id:
+            return wc_id
         return self._create_wc()
 
     # ================ 工作日日历基础管理 ================
@@ -188,11 +186,10 @@ class TestWcManagement(GenMdBaseTest):
     def test_query_wc_detail(self):
         """查询工作日日历详情用例 - GEN_WC_HEAD_CF_QUERY_DETAIL_ACTION_SERVICE"""
         try:
-            if not self.wc_id:
-                self._ensure_save_wc()
+            wc_id = self._ensure_save_wc()
 
             # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.wc_id}
+            set_dict = {"id": wc_id}
             fields_to_filter = ["id"]
 
             # 2. 使用标准化API调用（无任何断言）
@@ -207,7 +204,7 @@ class TestWcManagement(GenMdBaseTest):
             # 3. 业务验证（保持原有逻辑）
             detail_data = self.assert_util.assert_response_data(response)
             if isinstance(detail_data, dict) and detail_data.get("id") is not None:
-                assert detail_data.get("id") == self.wc_id, "详情返回ID与创建ID不一致"
+                assert detail_data.get("id") == wc_id, "详情返回ID与创建ID不一致"
 
             # 4. 日志记录（Allure报告已由standard_api_call处理）
 
@@ -226,11 +223,10 @@ class TestWcManagement(GenMdBaseTest):
     def test_enable_wc(self):
         """启用工作日日历用例 - GEN_WC_HEAD_CF_ENABLED_ACTION_SERVICE"""
         try:
-            if not self.wc_id:
-                self._ensure_save_wc()
+            wc_id = self._ensure_save_wc()
 
             # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.wc_id}
+            set_dict = {"id": wc_id}
             fields_to_filter = ["id"]
 
             # 2. 使用标准化API调用（无任何断言）
@@ -261,11 +257,10 @@ class TestWcManagement(GenMdBaseTest):
     def test_disable_wc(self):
         """停用工作日日历用例 - GEN_WC_HEAD_CF_DISABLED_ACTION_SERVICE"""
         try:
-            if not self.wc_id:
-                self._ensure_save_wc()
+            wc_id = self._ensure_save_wc()
 
             # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.wc_id}
+            set_dict = {"id": wc_id}
             fields_to_filter = ["id"]
 
             # 2. 使用标准化API调用（无任何断言）
@@ -296,11 +291,10 @@ class TestWcManagement(GenMdBaseTest):
     def test_delete_wc(self):
         """删除工作日日历用例 - GEN_WC_HEAD_CF_DELETE_ACTION_SERVICE"""
         try:
-            if not self.wc_id:
-                self._ensure_save_wc()
+            wc_id = self._ensure_save_wc()
 
             # 1. 准备测试数据（业务逻辑保持不变）
-            set_dict = {"id": self.wc_id}
+            set_dict = {"id": wc_id}
             fields_to_filter = ["id"]
 
             # 2. 使用标准化API调用（无任何断言）

@@ -23,13 +23,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def bind_context(cls):
         """绑定测试上下文对象。"""
         super().bind_context()
-        # 数据存储
-        cls.barcode_md_id = None
-        cls.barcode_md_code = None
-        cls.barcode_rule_id = None
-        cls.barcode_rule_code = None
-        cls.barcode_field_id = None
-        cls.barcode_field_code = None
         cls.logger.info("条码系统管理测试类初始化完成")
 
     @classmethod
@@ -56,13 +49,14 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             store_id_as="barcode_md"
         )
         self.assert_util.assert_response_data(response)
-        self.barcode_md_id = barcode_md_id
-        self.barcode_md_code = obj_code
+        self.set_runtime_id("barcode_md", barcode_md_id)
+        self.test_data["barcode_md_code"] = obj_code
         return barcode_md_id
 
     def _ensure_save_barcode_md(self):
-        if self.barcode_md_id:
-            return self.barcode_md_id
+        barcode_md_id = self.get_runtime_id("barcode_md")
+        if barcode_md_id:
+            return barcode_md_id
         return self._create_barcode_md()
 
     def _create_barcode_field(self):
@@ -80,18 +74,18 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             store_id_as="barcode_field"
         )
         self.assert_util.assert_response_data(response)
-        self.barcode_field_id = barcode_field_id
-        self.barcode_field_code = biz_field_key
+        self.set_runtime_id("barcode_field", barcode_field_id)
+        self.test_data["barcode_field_code"] = biz_field_key
         return barcode_field_id
 
     def _ensure_save_barcode_field(self):
-        if self.barcode_field_id:
-            return self.barcode_field_id
+        barcode_field_id = self.get_runtime_id("barcode_field")
+        if barcode_field_id:
+            return barcode_field_id
         return self._create_barcode_field()
 
     def _create_barcode_rule(self):
-        if not self.barcode_field_id:
-            self._ensure_save_barcode_field()
+        barcode_field_id = self._ensure_save_barcode_field()
         prefix = self.mock_util.generate_unique_code(tag="BARCODE_RULE")
         rule_name = f"条码规则_{self.mock_util.get_timestamp()}"
         set_dict = {
@@ -101,7 +95,7 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             "isUseBarcodeLabel": True,
             "delimiter": "-",
             "bizType": "MAT",
-            "bizFieldId": {"id": self.barcode_field_id}
+            "bizFieldId": {"id": barcode_field_id}
         }
         response, barcode_rule_id = self.standard_api_call(
             api_key="GEN-条码规则-保存服务",
@@ -110,13 +104,14 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             store_id_as="barcode_rule"
         )
         self.assert_util.assert_response_data(response)
-        self.barcode_rule_id = barcode_rule_id
-        self.barcode_rule_code = prefix
+        self.set_runtime_id("barcode_rule", barcode_rule_id)
+        self.test_data["barcode_rule_code"] = prefix
         return barcode_rule_id
 
     def _ensure_save_barcode_rule(self):
-        if self.barcode_rule_id:
-            return self.barcode_rule_id
+        barcode_rule_id = self.get_runtime_id("barcode_rule")
+        if barcode_rule_id:
+            return barcode_rule_id
         return self._create_barcode_rule()
 
     # ================ 条码主数据管理 ================
@@ -183,10 +178,8 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_query_barcode_md_detail(self):
         """查询条码主数据详情用例 - GEN_BARCODE_MD_QUERY_DETAIL_ACTION_SERVICE"""
         try:
-            if not self.barcode_md_id:
-                self._ensure_save_barcode_md()
-
-            set_dict = {"id": self.barcode_md_id}
+            barcode_md_id = self._ensure_save_barcode_md()
+            set_dict = {"id": barcode_md_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-条码主数据-查询详情服务",
@@ -211,10 +204,8 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_enable_barcode_md(self):
         """启用条码主数据用例 - GEN_BARCODE_MD_ENABLED_ACTION_SERVICE"""
         try:
-            if not self.barcode_md_id:
-                self._ensure_save_barcode_md()
-
-            set_dict = {"id": self.barcode_md_id}
+            barcode_md_id = self._ensure_save_barcode_md()
+            set_dict = {"id": barcode_md_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-条码主数据-启用服务",
@@ -239,10 +230,8 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_disable_barcode_md(self):
         """禁用条码主数据用例 - GEN_BARCODE_MD_DISABLED_ACTION_SERVICE"""
         try:
-            if not self.barcode_md_id:
-                self._ensure_save_barcode_md()
-
-            set_dict = {"id": self.barcode_md_id}
+            barcode_md_id = self._ensure_save_barcode_md()
+            set_dict = {"id": barcode_md_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-条码主数据-禁用服务",
@@ -267,10 +256,8 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_delete_barcode_md(self):
         """删除条码主数据用例 - GEN_BARCODE_MD_DELETE_ACTION_SERVICE"""
         try:
-            if not self.barcode_md_id:
-                self._ensure_save_barcode_md()
-
-            set_dict = {"id": self.barcode_md_id}
+            barcode_md_id = self._ensure_save_barcode_md()
+            set_dict = {"id": barcode_md_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-条码主数据-删除服务",
@@ -344,10 +331,8 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_query_barcode_rule_detail(self):
         """查询条码规则详情用例 - GEN_BARCODE_RULE_CF_QUERY_DETAIL_ACTION_SERVICE"""
         try:
-            if not self.barcode_rule_id:
-                self._ensure_save_barcode_rule()
-
-            set_dict = {"id": self.barcode_rule_id}
+            barcode_rule_id = self._ensure_save_barcode_rule()
+            set_dict = {"id": barcode_rule_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-条码规则-查询详情服务",
@@ -371,10 +356,8 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_delete_barcode_rule(self):
         """删除条码规则用例 - GEN_BARCODE_RULE_CF_DELETE_ACTION_SERVICE"""
         try:
-            if not self.barcode_rule_id:
-                self._ensure_save_barcode_rule()
-
-            set_dict = {"id": self.barcode_rule_id}
+            barcode_rule_id = self._ensure_save_barcode_rule()
+            set_dict = {"id": barcode_rule_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-条码规则-删除服务",
@@ -449,10 +432,8 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_query_barcode_field_detail(self):
         """查询条码字段详情用例 - GEN_BARCODE_FILED_CF_QUERY_DETAIL_ACTION_SERVICE"""
         try:
-            if not self.barcode_field_id:
-                self._ensure_save_barcode_field()
-
-            set_dict = {"id": self.barcode_field_id}
+            barcode_field_id = self._ensure_save_barcode_field()
+            set_dict = {"id": barcode_field_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-条码字段-查询详情服务",
@@ -476,10 +457,8 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
     def test_delete_barcode_field(self):
         """删除条码字段用例 - GEN_BARCODE_FILED_CF_DELETE_ACTION_SERVICE"""
         try:
-            if not self.barcode_field_id:
-                self._ensure_save_barcode_field()
-
-            set_dict = {"id": self.barcode_field_id}
+            barcode_field_id = self._ensure_save_barcode_field()
+            set_dict = {"id": barcode_field_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-条码字段-删除服务",

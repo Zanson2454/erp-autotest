@@ -19,11 +19,6 @@ class TestBomManagement(GenMdBaseTest):
     def bind_context(cls):
         """绑定测试上下文对象。"""
         super().bind_context()
-        cls.bom_head_id = None
-        cls.bom_item_type_id = None
-        cls.bom_status_id = None
-        cls.bom_use_id = None
-        cls.bom_supp_ind_id = None
         cls.logger.info("BOM管理测试类初始化完成")
 
     @classmethod
@@ -31,6 +26,128 @@ class TestBomManagement(GenMdBaseTest):
         """测试类结束后执行清理（已迁移到 cleanup_registry）。"""
         cls.logger.info("测试数据清理已迁移至 session 末尾统一执行")
         super().teardown_class()
+
+    def _create_bom_head(self):
+        bom_code = self.mock_util.generate_unique_code(tag="BOM")
+        bom_name = f"BOM_{self.mock_util.get_timestamp()}"
+        set_dict = {
+            "bomCode": bom_code,
+            "bomName": bom_name,
+            "matId": None,
+            "version": "1.0",
+            "remark": f"自动化测试BOM-{self.mock_util.get_timestamp()}",
+        }
+        response, extracted_id = self.standard_api_call(
+            api_key="GEN-物料BOM头-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=list(set_dict.keys()),
+            store_id_as=None,
+        )
+        self.assert_util.assert_response_data(response)
+        self.set_runtime_id("bom_head", extracted_id)
+        return extracted_id
+
+    def _ensure_save_bom_head(self):
+        bom_head_id = self.get_runtime_id("bom_head")
+        if bom_head_id:
+            return bom_head_id
+        return self._create_bom_head()
+
+    def _create_bom_item_type(self):
+        item_type_code = self.mock_util.generate_unique_code(tag="ItemType")
+        item_type_name = f"行项目类别_{self.mock_util.get_timestamp()}"
+        set_dict = {
+            "itemTypeCode": item_type_code,
+            "itemTypeName": item_type_name,
+            "remark": f"自动化测试行项目类别-{self.mock_util.get_timestamp()}",
+        }
+        response, extracted_id = self.standard_api_call(
+            api_key="GEN-BOM行项目类别配置-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=list(set_dict.keys()),
+            store_id_as=None,
+        )
+        self.assert_util.assert_response_data(response)
+        self.set_runtime_id("bom_item_type", extracted_id)
+        return extracted_id
+
+    def _ensure_save_bom_item_type(self):
+        bom_item_type_id = self.get_runtime_id("bom_item_type")
+        if bom_item_type_id:
+            return bom_item_type_id
+        return self._create_bom_item_type()
+
+    def _create_bom_status(self):
+        status_code = self.mock_util.generate_unique_code(tag="BomStatus")
+        status_name = f"BOM状态_{self.mock_util.get_timestamp()}"
+        set_dict = {
+            "statusCode": status_code,
+            "statusName": status_name,
+            "remark": f"自动化测试BOM状态-{self.mock_util.get_timestamp()}",
+        }
+        response, extracted_id = self.standard_api_call(
+            api_key="GEN-BOM状态配置表-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=list(set_dict.keys()),
+            store_id_as=None,
+        )
+        self.assert_util.assert_response_data(response)
+        self.set_runtime_id("bom_status", extracted_id)
+        return extracted_id
+
+    def _ensure_save_bom_status(self):
+        bom_status_id = self.get_runtime_id("bom_status")
+        if bom_status_id:
+            return bom_status_id
+        return self._create_bom_status()
+
+    def _create_bom_use(self):
+        use_code = self.mock_util.generate_unique_code(tag="BomUse")
+        use_name = f"BOM用途_{self.mock_util.get_timestamp()}"
+        set_dict = {
+            "useCode": use_code,
+            "useName": use_name,
+            "remark": f"自动化测试BOM用途-{self.mock_util.get_timestamp()}",
+        }
+        response, extracted_id = self.standard_api_call(
+            api_key="GEN-BOM用途配置-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=list(set_dict.keys()),
+            store_id_as=None,
+        )
+        self.assert_util.assert_response_data(response)
+        self.set_runtime_id("bom_use", extracted_id)
+        return extracted_id
+
+    def _ensure_save_bom_use(self):
+        bom_use_id = self.get_runtime_id("bom_use")
+        if bom_use_id:
+            return bom_use_id
+        return self._create_bom_use()
+
+    def _create_bom_supp_ind(self):
+        supp_ind_code = self.mock_util.generate_unique_code(tag="SuppInd")
+        supp_ind_name = f"供应标识_{self.mock_util.get_timestamp()}"
+        set_dict = {
+            "suppIndCode": supp_ind_code,
+            "suppIndName": supp_ind_name,
+            "remark": f"自动化测试供应标识-{self.mock_util.get_timestamp()}",
+        }
+        response, extracted_id = self.standard_api_call(
+            api_key="GEN-BOM 行项目供应标识配置表-保存服务",
+            set_dict=set_dict,
+            fields_to_filter=list(set_dict.keys()),
+            store_id_as=None,
+        )
+        self.assert_util.assert_response_data(response)
+        self.set_runtime_id("bom_supp_ind", extracted_id)
+        return extracted_id
+
+    def _ensure_save_bom_supp_ind(self):
+        bom_supp_ind_id = self.get_runtime_id("bom_supp_ind")
+        if bom_supp_ind_id:
+            return bom_supp_ind_id
+        return self._create_bom_supp_ind()
     # ============= BOM头管理 =============
     @case_decorator(
         story="BOM管理",
@@ -47,38 +164,8 @@ class TestBomManagement(GenMdBaseTest):
         新增BOM头用例
         """
         try:
-            bom_code = self.mock_util.generate_unique_code(tag="BOM")
-            bom_name = f"BOM_{self.mock_util.get_timestamp()}"
-
-            api_path = self.get_api_path("GEN-物料BOM头-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["bomCode", "bomName", "matId", "version", "remark"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "bomCode": bom_code,
-                "bomName": bom_name,
-                "matId": None,  # 需要关联物料ID
-                "version": "1.0",
-                "remark": f"自动化测试BOM-{self.mock_util.get_timestamp()}"
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response, _ = self.standard_api_call(
-                api_key="GEN-物料BOM头-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=list(set_dict.keys()),
-                store_id_as=None
-            )
-            self.assert_util.assert_response_data(response)
-            
-            self.bom_head_id = response.get("data", {}).get("data", {})
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            bom_head_id = self._create_bom_head()
+            a.json({"bom_head_id": bom_head_id}, "BOM头新增结果")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -147,8 +234,7 @@ class TestBomManagement(GenMdBaseTest):
         查询BOM头详情用例
         """
         try:
-            if not self.bom_head_id:
-                self._ensure_save_bom_head()
+            bom_head_id = self._ensure_save_bom_head()
 
             api_path = self.get_api_path("GEN-物料BOM头-查询详情服务")
             params, url = self.get_api_params(api_path)
@@ -158,7 +244,7 @@ class TestBomManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": self.bom_head_id}
+            set_dict = {"id": bom_head_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response, _ = self.standard_api_call(
@@ -280,8 +366,7 @@ class TestBomManagement(GenMdBaseTest):
         删除BOM头用例
         """
         try:
-            if not self.bom_head_id:
-                self._ensure_save_bom_head()
+            bom_head_id = self._ensure_save_bom_head()
 
             api_path = self.get_api_path("GEN-物料BOM头-删除服务")
             params, url = self.get_api_params(api_path)
@@ -291,7 +376,7 @@ class TestBomManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": self.bom_head_id}
+            set_dict = {"id": bom_head_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response, _ = self.standard_api_call(
@@ -325,36 +410,8 @@ class TestBomManagement(GenMdBaseTest):
         新增BOM行项目类别用例
         """
         try:
-            item_type_code = self.mock_util.generate_unique_code(tag="ItemType")
-            item_type_name = f"行项目类别_{self.mock_util.get_timestamp()}"
-
-            api_path = self.get_api_path("GEN-BOM行项目类别配置-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["itemTypeCode", "itemTypeName", "remark"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "itemTypeCode": item_type_code,
-                "itemTypeName": item_type_name,
-                "remark": f"自动化测试行项目类别-{self.mock_util.get_timestamp()}"
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response, _ = self.standard_api_call(
-                api_key="GEN-BOM行项目类别配置-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=list(set_dict.keys()),
-                store_id_as=None
-            )
-            self.assert_util.assert_response_data(response)
-            
-            self.bom_item_type_id = response.get("data", {}).get("data", {})
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            bom_item_type_id = self._create_bom_item_type()
+            a.json({"bom_item_type_id": bom_item_type_id}, "BOM行项目类别新增结果")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -426,8 +483,7 @@ class TestBomManagement(GenMdBaseTest):
         查询BOM行项目类别详情用例
         """
         try:
-            if not self.bom_item_type_id:
-                self._ensure_save_bom_item_type()
+            bom_item_type_id = self._ensure_save_bom_item_type()
 
             api_path = self.get_api_path("GEN-BOM行项目类别配置-查询详情服务")
             params, url = self.get_api_params(api_path)
@@ -437,7 +493,7 @@ class TestBomManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": self.bom_item_type_id}
+            set_dict = {"id": bom_item_type_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response, _ = self.standard_api_call(
@@ -469,8 +525,7 @@ class TestBomManagement(GenMdBaseTest):
         删除BOM行项目类别用例
         """
         try:
-            if not self.bom_item_type_id:
-                self._ensure_save_bom_item_type()
+            bom_item_type_id = self._ensure_save_bom_item_type()
 
             api_path = self.get_api_path("GEN-BOM行项目类别配置-删除服务")
             params, url = self.get_api_params(api_path)
@@ -480,7 +535,7 @@ class TestBomManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": [self.bom_item_type_id]}
+            set_dict = {"id": [bom_item_type_id]}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response, _ = self.standard_api_call(
@@ -514,36 +569,8 @@ class TestBomManagement(GenMdBaseTest):
         新增BOM状态用例
         """
         try:
-            status_code = self.mock_util.generate_unique_code(tag="BomStatus")
-            status_name = f"BOM状态_{self.mock_util.get_timestamp()}"
-
-            api_path = self.get_api_path("GEN-BOM状态配置表-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["statusCode", "statusName", "remark"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "statusCode": status_code,
-                "statusName": status_name,
-                "remark": f"自动化测试BOM状态-{self.mock_util.get_timestamp()}"
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response, _ = self.standard_api_call(
-                api_key="GEN-BOM状态配置表-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=list(set_dict.keys()),
-                store_id_as=None
-            )
-            self.assert_util.assert_response_data(response)
-            
-            self.bom_status_id = response.get("data", {}).get("data", {})
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            bom_status_id = self._create_bom_status()
+            a.json({"bom_status_id": bom_status_id}, "BOM状态新增结果")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -612,8 +639,7 @@ class TestBomManagement(GenMdBaseTest):
         查询BOM状态详情用例
         """
         try:
-            if not self.bom_status_id:
-                self._ensure_save_bom_status()
+            bom_status_id = self._ensure_save_bom_status()
 
             api_path = self.get_api_path("GEN-BOM状态配置表-查询详情服务")
             params, url = self.get_api_params(api_path)
@@ -623,7 +649,7 @@ class TestBomManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": self.bom_status_id}
+            set_dict = {"id": bom_status_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response, _ = self.standard_api_call(
@@ -655,8 +681,7 @@ class TestBomManagement(GenMdBaseTest):
         删除BOM状态用例
         """
         try:
-            if not self.bom_status_id:
-                self._ensure_save_bom_status()
+            bom_status_id = self._ensure_save_bom_status()
 
             api_path = self.get_api_path("GEN-BOM状态配置表-删除服务")
             params, url = self.get_api_params(api_path)
@@ -666,7 +691,7 @@ class TestBomManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": [self.bom_status_id]}
+            set_dict = {"id": [bom_status_id]}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response, _ = self.standard_api_call(
@@ -698,36 +723,8 @@ class TestBomManagement(GenMdBaseTest):
         新增BOM用途用例
         """
         try:
-            use_code = self.mock_util.generate_unique_code(tag="BomUse")
-            use_name = f"BOM用途_{self.mock_util.get_timestamp()}"
-
-            api_path = self.get_api_path("GEN-BOM用途配置-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["useCode", "useName", "remark"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "useCode": use_code,
-                "useName": use_name,
-                "remark": f"自动化测试BOM用途-{self.mock_util.get_timestamp()}"
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response, _ = self.standard_api_call(
-                api_key="GEN-BOM用途配置-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=list(set_dict.keys()),
-                store_id_as=None
-            )
-            self.assert_util.assert_response_data(response)
-            
-            self.bom_use_id = response.get("data", {}).get("data", {})
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            bom_use_id = self._create_bom_use()
+            a.json({"bom_use_id": bom_use_id}, "BOM用途新增结果")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -795,8 +792,7 @@ class TestBomManagement(GenMdBaseTest):
         查询BOM用途详情用例
         """
         try:
-            if not self.bom_use_id:
-                self._ensure_save_bom_use()
+            bom_use_id = self._ensure_save_bom_use()
 
             api_path = self.get_api_path("GEN-BOM用途配置-查询详情服务")
             params, url = self.get_api_params(api_path)
@@ -806,7 +802,7 @@ class TestBomManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": self.bom_use_id}
+            set_dict = {"id": bom_use_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response, _ = self.standard_api_call(
@@ -988,8 +984,7 @@ class TestBomManagement(GenMdBaseTest):
         删除BOM用途用例
         """
         try:
-            if not self.bom_use_id:
-                self._ensure_save_bom_use()
+            bom_use_id = self._ensure_save_bom_use()
 
             api_path = self.get_api_path("GEN-BOM用途配置-删除服务")
             params, url = self.get_api_params(api_path)
@@ -999,7 +994,7 @@ class TestBomManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": self.bom_use_id}
+            set_dict = {"id": bom_use_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response, _ = self.standard_api_call(
@@ -1337,36 +1332,8 @@ class TestBomManagement(GenMdBaseTest):
         新增BOM供应标识用例
         """
         try:
-            supp_ind_code = self.mock_util.generate_unique_code(tag="SuppInd")
-            supp_ind_name = f"供应标识_{self.mock_util.get_timestamp()}"
-
-            api_path = self.get_api_path("GEN-BOM 行项目供应标识配置表-保存服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["suppIndCode", "suppIndName", "remark"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "suppIndCode": supp_ind_code,
-                "suppIndName": supp_ind_name,
-                "remark": f"自动化测试供应标识-{self.mock_util.get_timestamp()}"
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response, _ = self.standard_api_call(
-                api_key="GEN-BOM 行项目供应标识配置表-保存服务",
-                set_dict=set_dict,
-                fields_to_filter=list(set_dict.keys()),
-                store_id_as=None
-            )
-            self.assert_util.assert_response_data(response)
-            
-            self.bom_supp_ind_id = response.get("data", {}).get("data", {})
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
+            bom_supp_ind_id = self._create_bom_supp_ind()
+            a.json({"bom_supp_ind_id": bom_supp_ind_id}, "BOM供应标识新增结果")
 
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -1436,8 +1403,7 @@ class TestBomManagement(GenMdBaseTest):
         查询BOM供应标识详情用例
         """
         try:
-            if not self.bom_supp_ind_id:
-                self._ensure_save_bom_supp_ind()
+            bom_supp_ind_id = self._ensure_save_bom_supp_ind()
 
             api_path = self.get_api_path("GEN-BOM 行项目供应标识配置表-查询详情服务")
             params, url = self.get_api_params(api_path)
@@ -1447,7 +1413,7 @@ class TestBomManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": self.bom_supp_ind_id}
+            set_dict = {"id": bom_supp_ind_id}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response, _ = self.standard_api_call(
@@ -1479,8 +1445,7 @@ class TestBomManagement(GenMdBaseTest):
         删除BOM供应标识用例
         """
         try:
-            if not self.bom_supp_ind_id:
-                self._ensure_save_bom_supp_ind()
+            bom_supp_ind_id = self._ensure_save_bom_supp_ind()
 
             api_path = self.get_api_path("GEN-BOM 行项目供应标识配置表-删除服务")
             params, url = self.get_api_params(api_path)
@@ -1490,7 +1455,7 @@ class TestBomManagement(GenMdBaseTest):
                 ["id"],
                 ["params", "request"]
             )
-            set_dict = {"id": [self.bom_supp_ind_id]}
+            set_dict = {"id": [bom_supp_ind_id]}
             ParamUtil.set_request_params(filtered_params, set_dict)
 
             response, _ = self.standard_api_call(

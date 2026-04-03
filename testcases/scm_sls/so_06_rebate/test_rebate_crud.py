@@ -579,7 +579,7 @@ class TestRebateCrud(SlsBase):
             self.assert_util.assert_response_success(response)
             
             # 7. 验证停用结果 - 从数据库查询验证状态是否已更新为停用
-            time.sleep(1)  # 等待数据库更新
+            self._async_delay(1, "返利政策停用后状态刷新")
             updated_rebate = self.query_service.query(
                 f"SELECT status FROM rebate_policy_head_tr WHERE id = {self.rebate_id}"
             )

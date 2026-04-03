@@ -75,7 +75,7 @@ class TestSettItemBusiCheck(FinBaseTest):
                         break
                     if time.time() - start_time >= timeout:
                         raise TimeoutError(f"等待异步任务执行超时（{timeout}秒）")
-                    time.sleep(0.5)
+                    self._async_delay(0.5, reason="等待结算项异步任务执行完成")
                 
                 #已创建、已对账结算项可以汇单
                 if index == 0 or index == 2:  # 第一个ID的断言
@@ -131,7 +131,7 @@ class TestSettItemBusiCheck(FinBaseTest):
                         break
                     if time.time() - start_time >= timeout:
                         raise TimeoutError(f"等待异步任务执行超时（{timeout}秒）")
-                    time.sleep(0.5)
+                    self._async_delay(0.5, reason="等待结算项异步任务执行完成")
                 if index == 0 or index == 1:  # 第1.3个ID的断言 已创建、已汇单结算项不可以手工汇单
                     assert result.get("success",{}) == False
                     #assert result.get("err",{}).get("msg",{}) == "结算单异步任务提交失败，请确认结算单异步执行状态！"

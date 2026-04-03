@@ -23,9 +23,6 @@ class TestTaxManagement(GenMdBaseTest):
     def bind_context(cls):
         """绑定测试上下文对象。"""
         super().bind_context()
-        # 数据存储
-        cls.tax_id = None
-        cls.tax_code = None
         cls.logger.info("税配置管理测试类初始化完成")
 
     @classmethod
@@ -52,13 +49,14 @@ class TestTaxManagement(GenMdBaseTest):
             store_id_as="tax"
         )
         self.assert_util.assert_response_data(response)
-        self.tax_id = tax_id
-        self.tax_code = tax_code
+        self.set_runtime_id("tax", tax_id)
+        self.test_data["tax_code"] = tax_code
         return tax_id
 
     def _ensure_save_tax(self):
-        if self.tax_id:
-            return self.tax_id
+        tax_id = self.get_runtime_id("tax")
+        if tax_id:
+            return tax_id
         return self._create_tax()
 
     @case_decorator(
@@ -121,10 +119,8 @@ class TestTaxManagement(GenMdBaseTest):
     def test_query_tax_detail(self):
         """查询税配置详情用例"""
         try:
-            if not self.tax_id:
-                self._ensure_save_tax()
-
-            set_dict = {"id": self.tax_id}
+            tax_id = self._ensure_save_tax()
+            set_dict = {"id": tax_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-税配置-查询详情服务",
@@ -182,10 +178,8 @@ class TestTaxManagement(GenMdBaseTest):
     def test_find_tax_by_id(self):
         """根据ID查找税配置数据用例"""
         try:
-            if not self.tax_id:
-                self._ensure_save_tax()
-
-            set_dict = {"id": self.tax_id}
+            tax_id = self._ensure_save_tax()
+            set_dict = {"id": tax_id}
             
             response, _ = self.standard_api_call(
                 api_key="税配置-根据ID查找数据服务",
@@ -209,10 +203,8 @@ class TestTaxManagement(GenMdBaseTest):
     def test_delete_tax(self):
         """删除税配置用例"""
         try:
-            if not self.tax_id:
-                self._ensure_save_tax()
-
-            set_dict = {"id": self.tax_id}
+            tax_id = self._ensure_save_tax()
+            set_dict = {"id": tax_id}
             
             response, _ = self.standard_api_call(
                 api_key="GEN-税配置-删除服务",

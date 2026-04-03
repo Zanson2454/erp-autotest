@@ -4,8 +4,8 @@
 测试返利政策的完整获得流程：销售订单→返利确认→审批→返利到账
 """
 
-import time
 import allure
+
 from testcases.scm_sls import SlsBase
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
@@ -73,8 +73,12 @@ class TestRebateGet(SlsBase):
             else:
                 raise Exception("未找到创建的销售订单")
             
-            # 5. 等待订单数据同步后再审批
-            time.sleep(3)
+            # 5. 等待订单状态可审批后再审批
+            self._wait_order_status(
+                order_id=self.so_id,
+                expected_statuses={"APPROVING", "EFFECT"},
+                timeout_message=f"销售订单在预期时间内未进入可审批状态，order_id={self.so_id}",
+            )
             
             # 6. 审批销售订单通过（只有审批通过的订单才会生成返利确认单行）
             self.logger.info("审批销售订单通过")
@@ -110,8 +114,12 @@ class TestRebateGet(SlsBase):
                     self.so_code = so_info[0]['so_code']
                     self.logger.info(f"销售订单创建成功，ID: {self.so_id}, 订单号: {self.so_code}")
                 
-                # 等待订单数据同步后再审批
-                time.sleep(3)
+                # 等待订单状态可审批后再审批
+                self._wait_order_status(
+                    order_id=self.so_id,
+                    expected_statuses={"APPROVING", "EFFECT"},
+                    timeout_message=f"销售订单在预期时间内未进入可审批状态，order_id={self.so_id}",
+                )
                 
                 # 审批销售订单通过
                 self.logger.info("审批销售订单通过")
@@ -151,8 +159,12 @@ class TestRebateGet(SlsBase):
                     self.so_code = so_info[0]['so_code']
                     self.logger.info(f"销售订单创建成功，ID: {self.so_id}, 订单号: {self.so_code}")
                 
-                # 等待订单数据同步后再审批
-                time.sleep(3)
+                # 等待订单状态可审批后再审批
+                self._wait_order_status(
+                    order_id=self.so_id,
+                    expected_statuses={"APPROVING", "EFFECT"},
+                    timeout_message=f"销售订单在预期时间内未进入可审批状态，order_id={self.so_id}",
+                )
                 
                 # 审批销售订单通过
                 self.logger.info("审批销售订单通过")
@@ -162,8 +174,8 @@ class TestRebateGet(SlsBase):
                 self.logger.info("触发返利政策重新计算")
                 self._trigger_rebate_recalc()
             
-            # 等待返利确认单生成
-            time.sleep(10)
+            # 等待返利确认订单行生成
+            self._wait_rebate_confirmation_items_ready()
             
             # 查询返利确认订单行列表
             self.logger.info("查询返利确认订单行列表")
@@ -271,8 +283,12 @@ class TestRebateGet(SlsBase):
                     self.so_code = so_info[0]['so_code']
                     self.logger.info(f"销售订单创建成功，ID: {self.so_id}, 订单号: {self.so_code}")
                 
-                # 等待订单数据同步后再审批
-                time.sleep(3)
+                # 等待订单状态可审批后再审批
+                self._wait_order_status(
+                    order_id=self.so_id,
+                    expected_statuses={"APPROVING", "EFFECT"},
+                    timeout_message=f"销售订单在预期时间内未进入可审批状态，order_id={self.so_id}",
+                )
                 
                 # 审批销售订单通过
                 self.logger.info("审批销售订单通过")
@@ -282,8 +298,8 @@ class TestRebateGet(SlsBase):
                 self.logger.info("触发返利政策重新计算")
                 self._trigger_rebate_recalc()
                 
-                # 等待返利确认单生成
-                time.sleep(10)
+                # 等待返利确认订单行生成
+                self._wait_rebate_confirmation_items_ready()
                 
                 # 查询并确认返利确认订单行
                 self.logger.info("查询并确认返利确认订单行")
@@ -374,8 +390,12 @@ class TestRebateGet(SlsBase):
                     self.so_code = so_info[0]['so_code']
                     self.logger.info(f"销售订单创建成功，ID: {self.so_id}, 订单号: {self.so_code}")
                 
-                # 等待订单数据同步后再审批
-                time.sleep(3)
+                # 等待订单状态可审批后再审批
+                self._wait_order_status(
+                    order_id=self.so_id,
+                    expected_statuses={"APPROVING", "EFFECT"},
+                    timeout_message=f"销售订单在预期时间内未进入可审批状态，order_id={self.so_id}",
+                )
                 
                 # 审批销售订单通过
                 self.logger.info("审批销售订单通过")
@@ -385,8 +405,8 @@ class TestRebateGet(SlsBase):
                 self.logger.info("触发返利政策重新计算")
                 self._trigger_rebate_recalc()
                 
-                # 等待返利确认单生成
-                time.sleep(10)
+                # 等待返利确认订单行生成
+                self._wait_rebate_confirmation_items_ready()
             
             # 查询我的待办任务列表
             self.logger.info("查询我的待办任务列表")
@@ -457,8 +477,12 @@ class TestRebateGet(SlsBase):
                     self.so_code = so_info[0]['so_code']
                     self.logger.info(f"销售订单创建成功，ID: {self.so_id}, 订单号: {self.so_code}")
                 
-                # 等待订单数据同步后再审批
-                time.sleep(3)
+                # 等待订单状态可审批后再审批
+                self._wait_order_status(
+                    order_id=self.so_id,
+                    expected_statuses={"APPROVING", "EFFECT"},
+                    timeout_message=f"销售订单在预期时间内未进入可审批状态，order_id={self.so_id}",
+                )
                 
                 # 审批销售订单通过
                 self.logger.info("审批销售订单通过")
@@ -468,8 +492,8 @@ class TestRebateGet(SlsBase):
                 self.logger.info("触发返利政策重新计算")
                 self._trigger_rebate_recalc()
                 
-                # 等待返利确认单生成
-                time.sleep(10)
+                # 等待返利确认订单行生成
+                self._wait_rebate_confirmation_items_ready()
             
             # 查询返利账户流水记录
             self.logger.info("查询返利账户流水记录")
@@ -607,26 +631,15 @@ class TestRebateGet(SlsBase):
             )
             self.assert_util.assert_response_success(response)
             
-            # 6. 等待订单状态更新
-            time.sleep(2)
-            
-            # 7. 查询订单状态，验证是否为已生效（添加重试机制）
-            actual_status = None
-            for attempt in range(5):
-                order_status = self.query_service.query(
-                    "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
-                    params=[order_id]
-                )
-                if order_status:
-                    actual_status = order_status[0]['so_status']
-                    if actual_status == "EFFECT":
-                        break
-                
-                # 如果状态不是已生效，等待后重试
-                if attempt < 4:
-                    time.sleep(2)
-                    self.logger.info(f"订单状态不是已生效，等待2秒后重试 (第{attempt + 1}次)，当前状态: {actual_status}")
-            
+            # 6. 轮询等待订单状态更新为已生效
+            actual_status = self._wait_order_status(
+                order_id=order_id,
+                expected_statuses={"EFFECT"},
+                max_wait=20,
+                interval=2.0,
+                timeout_message=f"销售订单审批后未在预期时间内生效，order_id={order_id}",
+            )
+
             self.assert_util.assert_by_operator(actual_status, "=", "EFFECT", "订单状态应为已生效")
             
             self.logger.info(f"销售订单审批通过，ID: {order_id}")
@@ -842,6 +855,103 @@ class TestRebateGet(SlsBase):
             self.logger.error(f"查询并确认返利确认订单行失败: {str(e)}")
             a.text(str(e), "查询确认失败原因")
             raise
+
+    def _wait_order_status(
+        self,
+        order_id,
+        expected_statuses,
+        max_wait: int = 30,
+        interval: float = 2.0,
+        timeout_message: str = "",
+    ):
+        """轮询销售订单状态，替代固定 sleep。"""
+        expected = set(expected_statuses or [])
+
+        def check_func():
+            rows = self.query_service.query(
+                "SELECT so_status FROM sls_so_head_tr WHERE id = %s",
+                params=[order_id],
+            )
+            status = rows[0].get("so_status") if rows else None
+            is_ready = status in expected
+            return is_ready, {"so_status": status}, None
+
+        result = self.async_wait_util.wait_for_condition(
+            check_func=check_func,
+            max_wait=max_wait,
+            interval=interval,
+            timeout_message=timeout_message or f"订单状态等待超时，order_id={order_id}",
+            enable_polling_log=False,
+        )
+        if result.status != self.wait_status.SUCCESS:
+            raise AssertionError(
+                f"订单状态等待失败 [order_id={order_id}] "
+                f"status={result.status.value}, detail={result.error_message}, last={result.last_data}"
+            )
+        return (result.last_data or {}).get("so_status")
+
+    def _wait_rebate_confirmation_items_ready(self, max_wait: int = 60, interval: float = 3.0):
+        """轮询等待返利确认订单行生成，超时仅告警，不中断用例。"""
+
+        def check_func():
+            try:
+                items = self._fetch_rebate_confirmation_items()
+                has_items = bool(items)
+                return has_items, {"count": len(items), "items": items[:1]}, None
+            except Exception as e:
+                return False, {"count": 0}, str(e)
+
+        result = self.async_wait_util.wait_for_condition(
+            check_func=check_func,
+            max_wait=max_wait,
+            interval=interval,
+            timeout_message="等待返利确认订单行生成超时",
+            enable_polling_log=False,
+        )
+        if result.status != self.wait_status.SUCCESS:
+            self.logger.warning(f"返利确认订单行等待未成功: {result.status.value}, {result.error_message}")
+            a.text(
+                f"返利确认订单行等待未成功: {result.status.value}, {result.error_message}",
+                "等待结果",
+            )
+
+    def _fetch_rebate_confirmation_items(self):
+        """查询返利确认订单行数据。"""
+        api_path = self.get_api_path("(系统)查询分页数据服务")
+        params, _ = self.get_api_params(api_path)
+        if not params:
+            query_params = {
+                "sceneKey": "SCM_REB$REBATE_ORDER_ITEM",
+                "viewKey": "SCM_REB$REBATE_ORDER_ITEM:list",
+                "containerKey": "SCM_REB$REBATE_ITEM-VFSwLoBGM715kBVcVKwVy",
+                "appId": 0,
+                "teamId": 22,
+                "serviceKey": "SCM_REB$SYS_PagingDataService",
+                "params": {
+                    "request": {
+                        "pageable": {
+                            "pageNo": 1,
+                            "pageSize": 20,
+                            "needTotal": True,
+                            "sortOrders": None,
+                            "conditionGroup": None,
+                        }
+                    },
+                    "modelKey": "SCM_REB$rebate_cb_item_tr",
+                },
+            }
+        else:
+            query_params = params
+
+        query_response, _ = self.standard_api_call(
+            api_key="(系统)查询分页数据服务",
+            set_dict=(query_params.get("params", {}) if isinstance(query_params, dict) else query_params),
+            store_id_as=None,
+            use_param_util=False,
+            param_path=["params"],
+        )
+        self.assert_util.assert_response_success(query_response)
+        return query_response.get("data", {}).get("data", {}).get("data", [])
     
     def _confirm_rebate_confirmation_item(self, item_id):
         """确认返利确认单行"""
