@@ -10,10 +10,13 @@
 4. 集成 Allure 报告
 """
 import allure
+
 from testcases.comm.base_test import BaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a
+
 from .init_config import PrdConfigInitializer
+
 
 @allure.epic("生产管理")
 @allure.feature("基础数据配置")

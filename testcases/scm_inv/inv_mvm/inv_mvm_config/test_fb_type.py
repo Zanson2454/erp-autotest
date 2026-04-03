@@ -2,10 +2,10 @@
 作业正逆向标识配置管理测试模块
 覆盖正逆向标识的CRUD操作、分页查询、导出功能
 """
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent.parent
 sys.path.append(str(project_root))

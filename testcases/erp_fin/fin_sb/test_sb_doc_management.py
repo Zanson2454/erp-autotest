@@ -8,7 +8,6 @@ import allure
 import pytest
 
 from testcases.erp_fin import FinBaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
@@ -374,11 +373,11 @@ class TestSbDocManagement(FinBaseTest):
         """
         cleared_before = float(before_data.get("cleared_doc_amt") or 0)
         clearing_before = float(before_data.get("clearing_doc_amt") or 0)
-        uncleared_before = float(before_data.get("uncleared_doc_amt") or 0)
+        float(before_data.get("uncleared_doc_amt") or 0)
         
         cleared_after = float(after_data.get("cleared_doc_amt") or 0)
         clearing_after = float(after_data.get("clearing_doc_amt") or 0)
-        uncleared_after = float(after_data.get("uncleared_doc_amt") or 0)
+        float(after_data.get("uncleared_doc_amt") or 0)
         
         # 只有当操作前有已钩稽金额时，才验证金额转移
         if cleared_before > 0:
@@ -428,11 +427,11 @@ class TestSbDocManagement(FinBaseTest):
         :param item_idx: 行索引（用于日志，None表示头）
         """
         billing_before = float(before_data.get("billing_doc_amt") or 0)
-        unbilled_before = float(before_data.get("unbilled_doc_amt") or 0)
+        float(before_data.get("unbilled_doc_amt") or 0)
         billed_before = float(before_data.get("billed_doc_amt") or 0)
         
         billing_after = float(after_data.get("billing_doc_amt") or 0)
-        unbilled_after = float(after_data.get("unbilled_doc_amt") or 0)
+        float(after_data.get("unbilled_doc_amt") or 0)
         billed_after = float(after_data.get("billed_doc_amt") or 0)
         
         # 只有当操作前有已开票金额时，才验证金额转移
@@ -1072,7 +1071,7 @@ class TestSbDocManagement(FinBaseTest):
             sb_record = self.query_service.get_latest_sb_head_by_statuses(["DRAFT", "CONFIRM"])
             if not sb_record:
                 self.logger.warning("未找到草稿或已提交状态的销售发票数据，跳过删除测试")
-                pytest.skip("未找到草稿或已提交状态的销售发票数据，无法执行删除测试")
+                pytest.fail("未找到草稿或已提交状态的销售发票数据，无法执行删除测试")
             sb_id = sb_record.get("id")
             sb_head_code = sb_record.get("sb_head_code")
             sb_status = sb_record.get("sb_status")
@@ -1215,7 +1214,7 @@ class TestSbDocManagement(FinBaseTest):
             sb_record = self.query_service.get_latest_sb_head_by_status("DONE")
             if not sb_record:
                 self.logger.warning("未找到已过账状态的销售发票数据，跳过删除权限验证测试")
-                pytest.skip("未找到已过账状态的销售发票数据，无法执行删除权限验证测试")
+                pytest.fail("未找到已过账状态的销售发票数据，无法执行删除权限验证测试")
             sb_id = sb_record.get("id")
             sb_head_code = sb_record.get("sb_head_code")
             sb_status = sb_record.get("sb_status")
@@ -1298,7 +1297,7 @@ class TestSbDocManagement(FinBaseTest):
             sb_record = self.query_service.get_latest_sb_head_by_status("DONE")
             if not sb_record:
                 self.logger.warning("未找到已过账状态的销售发票数据，跳过反过账测试")
-                pytest.skip("未找到已过账状态的销售发票数据，无法执行反过账测试")
+                pytest.fail("未找到已过账状态的销售发票数据，无法执行反过账测试")
             sb_id = sb_record.get("id")
             sb_head_code = sb_record.get("sb_head_code")
             sb_status = sb_record.get("sb_status")

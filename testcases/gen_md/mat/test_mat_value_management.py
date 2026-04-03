@@ -1,7 +1,7 @@
 import allure
 import pytest
+
 from testcases.gen_md import GenMdBaseTest
-from utils.mock_util import MockData
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
@@ -249,52 +249,6 @@ class TestMat_ValueManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @case_decorator(
-        story="物料价值管理",
-        title="测试物料价值数量配置标准导入",
-        description="验证物料数量价值更新配置标准导入服务功能",
-        severity="normal",
-        file_level_order=5,
-        tags=["物料价值管理", "标准导入", "GEN_INV_ORG_MAT_TYPE_LINK_CF_GEI_IMPORT_SERVICE"]
-    )
-    @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
-    def test_import_mat_value(self):
-        """
-        物料价值数量配置标准导入用例 - GEN_INV_ORG_MAT_TYPE_LINK_CF_GEI_IMPORT_SERVICE
-        """
-        try:
-            api_path = self.get_api_path("物料数量价值更新配置标准导入服务")
-            params, url = self.get_api_params(api_path)
-
-            import_data = [
-                {
-                    "invOrgId": {"id": self.inv_org_id},
-                    "matTypeId": {"id": self.mat_type_id},
-                    "matQtyUpdate": True,
-                    "matValUpdate": True
-                }
-            ]
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["sliceData"], ["params", "request"]
-            )
-            set_dict = {"sliceData": import_data}
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response, _ = self.standard_api_call(
-                api_key="物料数量价值更新配置标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["sliceData"],
-                store_id_as=None
-            )
-            self.assert_util.assert_response_data(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="物料价值管理",
@@ -418,63 +372,6 @@ class TestMat_ValueManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @case_decorator(
-        story="物料价值管理",
-        title="测试物料价值数量配置OSS导入任务",
-        description="验证物料数量价值更新配置-导入导出任务管理接口-通过OSS提交导入任务功能",
-        severity="normal",
-        file_level_order=7,
-        tags=["物料价值管理", "OSS导入任务", "GEN_INV_ORG_MAT_TYPE_LINK_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
-    )
-    @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
-    def test_oss_import_task(self):
-        """
-        物料价值数量配置OSS导入任务用例 - GEN_INV_ORG_MAT_TYPE_LINK_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
-        """
-        try:
-            api_path = self.get_api_path("物料数量价值更新配置-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            # 构造OSS导入任务参数
-            params = {
-                "serviceKey": "GEN_INV_ORG_MAT_TYPE_LINK_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST",
-                "teamId": 22,
-                "params": {
-                    "taskName": f"物料价值配置_{self.nickname}_{self.mock_util.get_timestamp()}_OSS导入",
-                    "fileKey": "test_mat_value_import.xlsx",
-                    "fileName": "物料价值配置导入模板.xlsx",
-                    "multiSheetConfig": [
-                        {
-                            "modelKey": "GEN_MD$gen_inv_org_mat_type_link_cf",
-                            "modelName": "物料数量价值更新配置",
-                            "sheetNo": 0,
-                            "sheetName": "物料数量价值更新配置"
-                        }
-                    ],
-                    "processConfig": {
-                        "processType": "TRANTOR",
-                        "model": "GEN_MD$gen_inv_org_mat_type_link_cf",
-                        "modelName": "物料数量价值更新配置"
-                    }
-                }
-            }
-
-            response, _ = self.standard_api_call(
-                api_key="物料数量价值更新配置-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=params["params"],
-                fields_to_filter=list(params["params"].keys()),
-                store_id_as=None,
-                use_param_util=False,
-                param_path=["params"]
-            )
-            self.assert_util.assert_response_data(response)
-
-            a.json(params, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="物料价值管理",

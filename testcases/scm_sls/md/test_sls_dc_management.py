@@ -1,8 +1,8 @@
-import allure
-import pytest
 import sys
 from pathlib import Path
-from typing import Any
+
+import allure
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
@@ -347,38 +347,6 @@ class TestSlsDcManagement(SlsBase):
             a.text(str(e), "失败原因")
             raise
 
-    @case_decorator(
-        story="销售渠道管理",
-        title="测试导入销售渠道",
-        description="验证导入销售渠道功能",
-        severity="normal",
-        order=8,
-        tags=["销售管理", "销售渠道"]
-    )
-    @pytest.mark.skip(reason="标准导入服务暂时跳过")
-    def test_import_sls_dc(self):
-        """测试导入销售渠道"""
-        try:
-            # 1. 调用API
-            api_path = self.get_api_path("销售渠道标准导入服务")
-            params, url = self.get_api_params(api_path)
-            
-            # 2. 发送请求和断言
-            response, _ = self.standard_api_call(
-                api_key="销售渠道标准导入服务",
-                set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
-                store_id_as=None,
-                use_param_util=False,
-                param_path=["params"]
-            )
-            self.assert_util.assert_response_success(response)
-            
-            a.json(params, "请求数据")
-            a.json(response, "响应数据")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="销售渠道管理",
@@ -413,35 +381,3 @@ class TestSlsDcManagement(SlsBase):
             a.text(str(e), "失败原因")
             raise
 
-    @case_decorator(
-        story="销售渠道管理",
-        title="测试销售渠道导入任务管理",
-        description="验证销售渠道导入任务管理接口功能",
-        severity="normal",
-        order=10,
-        tags=["销售管理", "销售渠道"]
-    )
-    @pytest.mark.skip(reason="OSS导入任务管理接口暂时跳过")
-    def test_import_task_sls_dc(self):
-        """测试销售渠道导入任务管理"""
-        try:
-            # 1. 调用API
-            api_path = self.get_api_path("销售渠道-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-            
-            # 2. 发送请求和断言
-            response, _ = self.standard_api_call(
-                api_key="销售渠道-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=(params.get("params", {}) if isinstance(params, dict) else params),
-                store_id_as=None,
-                use_param_util=False,
-                param_path=["params"]
-            )
-            self.assert_util.assert_response_success(response)
-            
-            a.json(params, "请求数据")
-            a.json(response, "响应数据")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise

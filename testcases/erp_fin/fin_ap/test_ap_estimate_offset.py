@@ -2,12 +2,14 @@
 应付单暂估冲回自动化用例
 完全独立的测试用例，不依赖其他测试文件
 """
+from datetime import datetime
+
 import allure
+
 from testcases.erp_fin.fin_ap import ApBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
-import time
-from datetime import datetime
+
 
 @allure.epic("ERP通业财模块")
 @allure.feature("应付管理")

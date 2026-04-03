@@ -4,10 +4,11 @@
 包含：存货价值初始化配置表管理、存货核算初始化配置管理
 """
 
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))

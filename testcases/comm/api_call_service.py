@@ -3,7 +3,7 @@ from urllib.parse import urlencode, urljoin
 
 import requests
 
-from testcases.comm.test_data_context import TestDataContext
+from testcases.comm.data_context import TestDataContext
 from utils.log_util import Loggers
 from utils.param_util import ParamUtil
 
@@ -30,8 +30,21 @@ class ApiCallService:
             raise ValueError(f"不支持的HTTP方法: {method}，支持的方法: {supported_methods}")
 
         try:
+            # 兼容旧代码误传：api_key=self.apis(dict)
+            if isinstance(api_key, dict):
+                compat_key = getattr(ParamUtil, "_last_api_key", None)
+                if not compat_key:
+                    raise TypeError(
+                        "standard_api_call 收到 dict 类型 api_key 但无可用兼容键。"
+                        "请传入字符串 API key（如 'AR-应收单保存服务'）。"
+                    )
+                Loggers.warning(f"检测到 dict 类型 api_key，已回退使用最近一次 API key: {compat_key}")
+                api_key = compat_key
+
             if cross_module_name:
-                if not hasattr(test_obj, "get_cross_module_api_path") or not hasattr(test_obj, "get_cross_module_api_params"):
+                if not hasattr(test_obj, "get_cross_module_api_path") or not hasattr(
+                    test_obj, "get_cross_module_api_params"
+                ):
                     raise ValueError(
                         f"当前测试类不支持跨模块调用: cross_module_name={cross_module_name}, api_key={api_key}"
                     )
@@ -64,18 +77,12 @@ class ApiCallService:
             if method in ["GET", "DELETE"]:
                 params, url = get_params_fn(api_path, query_params_str)
                 if url is None:
-                    raise ValueError(
-                        f"API路径配置错误: api_path={api_path}\n"
-                        "请检查API参数配置文件中的路径配置"
-                    )
+                    raise ValueError(f"API路径配置错误: api_path={api_path}\n" "请检查API参数配置文件中的路径配置")
                 request_kwargs = {"params": set_dict} if set_dict else {}
             else:
                 params, url = get_params_fn(api_path, query_params_str)
                 if url is None:
-                    raise ValueError(
-                        f"API路径配置错误: api_path={api_path}\n"
-                        "请检查API参数配置文件中的路径配置"
-                    )
+                    raise ValueError(f"API路径配置错误: api_path={api_path}\n" "请检查API参数配置文件中的路径配置")
 
                 if use_param_util:
                     if fields_to_filter is None:

@@ -1,7 +1,7 @@
 import allure
 import pytest
-from testcases.gen_md import GenMdBaseTest
 
+from testcases.gen_md import GenMdBaseTest
 from utils.report_util import a, case_decorator
 
 
@@ -468,42 +468,6 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
             raise
 
     # ================ 导入导出管理 ================
-    @case_decorator(
-        story="计量单位导入导出管理",
-        title="测试计量单位标准导入",
-        description="验证计量单位标准导入服务功能",
-        severity="normal",
-        file_level_order=12,
-        tags=["计量单位管理", "导入", "GEN_UOM_TYPE_CF_GEI_IMPORT_SERVICE"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_uom_type_import(self):
-        """计量单位标准导入用例 - GEN_UOM_TYPE_CF_GEI_IMPORT_SERVICE"""
-        try:
-            # 构建导入数据
-            import_data = [
-                {
-                    "code": self.mock_util.generate_unique_code(tag="IMPORT_UOM"),
-                    "name": f"导入计量单位_{self.mock_util.get_timestamp()}",
-                    "symbol": "IMPORT_UOM",
-                    "dimension": "MASS"
-                }
-            ]
-
-            set_dict = {"data": import_data}
-            response, _ = self.standard_api_call(
-                api_key="计量单位标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["data"]
-            )
-            self.assert_util.assert_response_data(response)
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="计量单位导入导出管理",
@@ -539,36 +503,6 @@ class TestUomComprehensiveManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @case_decorator(
-        story="计量单位导入导出管理",
-        title="测试计量单位OSS导入任务",
-        description="验证计量单位-导入导出任务管理接口-通过OSS提交导入任务功能",
-        severity="normal",
-        file_level_order=14,
-        tags=["计量单位管理", "导入", "GEN_UOM_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_uom_type_oss_import_task(self):    
-        """计量单位OSS导入任务用例 - GEN_UOM_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
-        try:
-            set_dict = {
-                "fileKey": "test_uom_import_file.xlsx",
-                "taskName": f"计量单位导入任务_{self.mock_util.get_timestamp()}",
-                "templateId": 1
-            }
-            response, _ = self.standard_api_call(
-                api_key="计量单位-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=["fileKey", "taskName", "templateId"]
-            )
-            self.assert_util.assert_response_data(response)
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="计量单位导入导出管理",

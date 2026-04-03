@@ -1,8 +1,7 @@
 import allure
 import pytest
+
 from testcases.gen_md import GenMdBaseTest
-from utils.mock_util import MockData  # 保持导入以兼容，但实际使用 self.mock_util
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
@@ -418,37 +417,6 @@ class TestBankSystemManagement(GenMdBaseTest):
             raise
 
     # ================ 银行配置导入导出管理 ================
-    @case_decorator(
-        story="银行配置导入导出管理",
-        title="测试银行配置标准导入",
-        description="验证银行配置标准导入服务功能",
-        severity="normal",
-        file_level_order=13,
-        tags=["银行管理", "导入", "GEN_BANK_CF_GEI_IMPORT_SERVICE"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_bank_import(self):
-        """银行配置标准导入用例"""
-        try:
-            import_data = [
-                {
-                    "bank_code": self.mock_util.generate_unique_code(tag="IMPORT_BANK"),
-                    "bank_name": f"导入测试银行_{self.mock_util.get_timestamp()}"
-                }
-            ]
-
-            set_dict = {"data": import_data}
-            
-            response, _ = self.standard_api_call(
-                api_key="银行配置标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["data"],
-                store_id_as=None
-            )
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="银行配置导入导出管理",
@@ -481,37 +449,6 @@ class TestBankSystemManagement(GenMdBaseTest):
             raise
 
     # ================ 银行支行导入导出管理 ================
-    @case_decorator(
-        story="银行支行导入导出管理",
-        title="测试银行支行标准导入",
-        description="验证银行支行标准导入服务功能",
-        severity="normal",
-        file_level_order=15,
-        tags=["银行支行管理", "导入", "GEN_SUB_BANK_CF_GEI_IMPORT_SERVICE"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_sub_bank_import(self):
-        """银行支行标准导入用例"""
-        try:
-            import_data = [
-                {
-                    "sub_bank_code": self.mock_util.generate_unique_code(tag="IMPORT_SUBBANK"),
-                    "sub_bank_name": f"导入测试银行支行_{self.mock_util.get_timestamp()}"
-                }
-            ]
-
-            set_dict = {"data": import_data}
-            
-            response, _ = self.standard_api_call(
-                api_key="银行支行标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["data"],
-                store_id_as=None
-            )
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="银行支行导入导出管理",
@@ -544,33 +481,6 @@ class TestBankSystemManagement(GenMdBaseTest):
             raise
 
     # ================ 银行配置任务管理接口 ================
-    @case_decorator(
-        story="银行配置任务管理",
-        title="测试银行配置OSS导入任务",
-        description="验证银行配置-导入导出任务管理接口-通过OSS提交导入任务功能",
-        severity="normal",
-        file_level_order=17,
-        tags=["银行管理", "任务管理", "GEN_BANK_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_bank_oss_import_task(self):
-        """银行配置OSS导入任务用例"""
-        try:
-            set_dict = {
-                "ossPath": "/test/bank_import.xlsx",
-                "taskName": f"银行配置导入任务_{self.mock_util.get_timestamp()}"
-            }
-            
-            response, _ = self.standard_api_call(
-                api_key="银行配置-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=["ossPath", "taskName"],
-                store_id_as=None
-            )
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="银行配置任务管理",
@@ -607,33 +517,6 @@ class TestBankSystemManagement(GenMdBaseTest):
             raise
 
     # ================ 银行支行任务管理接口 ================
-    @case_decorator(
-        story="银行支行任务管理",
-        title="测试银行支行OSS导入任务",
-        description="验证银行支行-导入导出任务管理接口-通过OSS提交导入任务功能",
-        severity="normal",
-        file_level_order=19,
-        tags=["银行支行管理", "任务管理", "GEN_SUB_BANK_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_sub_bank_oss_import_task(self):
-        """银行支行OSS导入任务用例"""
-        try:
-            set_dict = {
-                "ossPath": "/test/sub_bank_import.xlsx",
-                "taskName": f"银行支行导入任务_{self.mock_util.get_timestamp()}"
-            }
-            
-            response, _ = self.standard_api_call(
-                api_key="银行支行-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=["ossPath", "taskName"],
-                store_id_as=None
-            )
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="银行支行任务管理",

@@ -1,8 +1,9 @@
+from typing import Any
+
 import allure
 import pytest
-from typing import Any
+
 from testcases.gen_md import GenMdBaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
@@ -472,38 +473,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             raise
 
     # ================ 条码主数据导入导出管理 ================
-    @case_decorator(
-        story="条码主数据导入导出管理",
-        title="测试条码主数据标准导入",
-        description="验证条码主数据标准导入服务功能",
-        severity="normal",
-        file_level_order=15,
-        tags=["条码主数据", "导入", "GEN_BARCODE_MD_GEI_IMPORT_SERVICE"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_barcode_md_import(self):
-        """条码主数据标准导入用例 - GEN_BARCODE_MD_GEI_IMPORT_SERVICE"""
-        try:
-            import_data = [
-                {
-                    "code": self.mock_util.generate_unique_code(tag="IMPORT_BARCODE_MD"),
-                    "name": f"导入测试条码主数据_{self.mock_util.get_timestamp()}",
-                    "description": "导入测试条码主数据描述"
-                }
-            ]
-
-            set_dict = {"data": import_data}
-            
-            response, _ = self.standard_api_call(
-                api_key="条码主数据标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["data"],
-                store_id_as=None
-            )
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="条码主数据导入导出管理",
@@ -536,33 +505,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @case_decorator(
-        story="条码主数据任务管理",
-        title="测试条码主数据OSS导入任务",
-        description="验证条码主数据-导入导出任务管理接口-通过OSS提交导入任务功能",
-        severity="normal",
-        file_level_order=17,
-        tags=["条码主数据", "任务管理", "GEN_BARCODE_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_barcode_md_oss_import_task(self):
-        """条码主数据OSS导入任务用例 - GEN_BARCODE_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
-        try:
-            set_dict = {
-                "fileKey": "test_barcode_md_import_file.xlsx",
-                "taskName": f"条码主数据导入任务_{self.mock_util.get_timestamp()}"
-            }
-            
-            response, _ = self.standard_api_call(
-                api_key="条码主数据-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=["fileKey", "taskName"],
-                store_id_as=None
-            )
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="条码主数据任务管理",
@@ -599,38 +541,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             raise
 
     # ================ 条码规则导入导出管理 ================
-    @case_decorator(
-        story="条码规则导入导出管理",
-        title="测试条码规则标准导入",
-        description="验证条码规则标准导入服务功能",
-        severity="normal",
-        file_level_order=19,
-        tags=["条码规则", "导入", "GEN_BARCODE_RULE_CF_GEI_IMPORT_SERVICE"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_barcode_rule_import(self):
-        """条码规则标准导入用例 - GEN_BARCODE_RULE_CF_GEI_IMPORT_SERVICE"""
-        try:
-            import_data = [
-                {
-                    "code": self.mock_util.generate_unique_code(tag="IMPORT_BARCODE_RULE"),
-                    "name": f"导入测试条码规则_{self.mock_util.get_timestamp()}",
-                    "description": "导入测试条码规则描述"
-                }
-            ]
-
-            set_dict = {"data": import_data}
-            
-            response, _ = self.standard_api_call(
-                api_key="条码规则标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["data"],
-                store_id_as=None
-            )
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="条码规则导入导出管理",
@@ -663,33 +573,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @case_decorator(
-        story="条码规则任务管理",
-        title="测试条码规则OSS导入任务",
-        description="验证条码规则-导入导出任务管理接口-通过OSS提交导入任务功能",
-        severity="normal",
-        file_level_order=21,
-        tags=["条码规则", "任务管理", "GEN_BARCODE_RULE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_barcode_rule_oss_import_task(self):
-        """条码规则OSS导入任务用例 - GEN_BARCODE_RULE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
-        try:
-            set_dict = {
-                "fileKey": "test_barcode_rule_import_file.xlsx",
-                "taskName": f"条码规则导入任务_{self.mock_util.get_timestamp()}"
-            }
-            
-            response, _ = self.standard_api_call(
-                api_key="条码规则-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=["fileKey", "taskName"],
-                store_id_as=None
-            )
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="条码规则任务管理",
@@ -726,38 +609,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             raise
 
     # ================ 条码规则允许业务字段管理 ================
-    @case_decorator(
-        story="条码规则允许业务字段管理",
-        title="测试条码规则允许业务字段标准导入",
-        description="验证条码规则允许业务字段标准导入服务功能",
-        severity="normal",
-        file_level_order=23,
-        tags=["条码字段", "导入", "GEN_BARCODE_FIELD_CF_GEI_IMPORT_SERVICE"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_barcode_field_import(self):
-        """条码规则允许业务字段标准导入用例 - GEN_BARCODE_FIELD_CF_GEI_IMPORT_SERVICE"""
-        try:
-            import_data = [
-                {
-                    "code": self.mock_util.generate_unique_code(tag="IMPORT_BARCODE_FIELD"),
-                    "name": f"导入测试条码规则允许业务字段_{self.mock_util.get_timestamp()}",
-                    "description": "导入测试条码规则允许业务字段描述"
-                }
-            ]
-
-            set_dict = {"data": import_data}
-            
-            response, _ = self.standard_api_call(
-                api_key="条码规则允许业务字段标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["data"],
-                store_id_as=None
-            )
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="条码规则允许业务字段管理",
@@ -790,33 +641,6 @@ class TestBarcodeSystemManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @case_decorator(
-        story="条码规则允许业务字段任务管理",
-        title="测试条码规则允许业务字段OSS导入任务",
-        description="验证条码规则允许业务字段-导入导出任务管理接口-通过OSS提交导入任务功能",
-        severity="normal",
-        file_level_order=25,
-        tags=["条码字段", "任务管理", "GEN_BARCODE_FIELD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_barcode_field_oss_import_task(self):
-        """条码规则允许业务字段OSS导入任务用例 - GEN_BARCODE_FIELD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
-        try:
-            set_dict = {
-                "fileKey": "test_barcode_field_import_file.xlsx",
-                "taskName": f"条码规则允许业务字段导入任务_{self.mock_util.get_timestamp()}"
-            }
-            
-            response, _ = self.standard_api_call(
-                api_key="条码规则允许业务字段-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=["fileKey", "taskName"],
-                store_id_as=None
-            )
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="条码规则允许业务字段任务管理",

@@ -1,8 +1,9 @@
+from typing import Any
+
 import allure
 import pytest
-from typing import Any
+
 from testcases.gen_md import GenMdBaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 

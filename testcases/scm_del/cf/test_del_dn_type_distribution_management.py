@@ -1,13 +1,15 @@
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
 from testcases.scm_del import ScmDelBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
+
 
 @allure.epic("交货单管理")
 @allure.feature("交货单类型分配管理")
@@ -174,7 +176,7 @@ class TestDelDnTypeDistributionManagement(ScmDelBaseTest):
         try:
             # 1. 检查是否有可用的ID
             if not self.__class__.distribution_id:
-                pytest.skip("没有可用的交货单类型分配ID，跳过详情查询测试")
+                pytest.fail("没有可用的交货单类型分配ID，跳过详情查询测试")
             
             # 2. 构建完整请求参数
             request_params = {
@@ -227,7 +229,7 @@ class TestDelDnTypeDistributionManagement(ScmDelBaseTest):
         try:
             # 1. 检查是否有可用的ID
             if not self.__class__.distribution_id:
-                pytest.skip("没有可用的交货单类型分配ID，跳过删除测试")
+                pytest.fail("没有可用的交货单类型分配ID，跳过删除测试")
             
             # 2. 构建完整请求参数
             request_params = {

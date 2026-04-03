@@ -8,11 +8,11 @@
     2. 创建销售出库移动凭证
     3. 验证销售后库存余额减少
 """
-import time
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
@@ -122,7 +122,7 @@ class TestInvStkBalanceSalesManagement(MobileVoucherCreator):
         """创建销售出库凭证"""
         try:
             if not self.available_batch_id:
-                pytest.skip("没有找到可用批次，跳过销售出库测试")
+                pytest.fail("没有找到可用批次，跳过销售出库测试")
             
             # 在创建销售凭证之前记录库存余额
             pre_sale_balance = self.get_current_inventory_balance()

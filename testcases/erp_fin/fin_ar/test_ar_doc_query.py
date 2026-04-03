@@ -2,10 +2,10 @@
 应收单详情查询自动化用例
 覆盖草稿、已确认、已完成三种状态，动态获取ID，符合testcaserole规范
 """
-import allure
 from testcases.erp_fin.fin_ar import ArBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
+
 
 class TestArDocumentQuery(ArBaseTest):
     ar_query_info = {}

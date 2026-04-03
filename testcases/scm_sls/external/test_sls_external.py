@@ -1,7 +1,9 @@
-import pytest
 import allure
+import pytest
+
 from testcases.scm_sls import SlsBase
 from utils.report_util import a, case_decorator
+
 
 @allure.epic("销售管理")
 @allure.feature("外部订单相关接口")

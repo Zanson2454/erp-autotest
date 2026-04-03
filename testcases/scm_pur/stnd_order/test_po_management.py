@@ -1,18 +1,19 @@
 """
 标准采购订单无审批流程测试
 """
+import sys
+from datetime import datetime
+from pathlib import Path
+
 import allure
 import pytest
-import sys
-from pathlib import Path
-from datetime import datetime
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
-from testcases.scm_pur import ScmPurBaseTest
-from utils.report_util import a, case_decorator
 from erp_data_factory.compat.pur_po_factory import PurPoFactory
+from testcases.scm_pur import ScmPurBaseTest
 from utils.param_util import ParamUtil
+from utils.report_util import a, case_decorator
 
 
 @allure.epic("采购管理")
@@ -744,7 +745,7 @@ class TestPoManagement(ScmPurBaseTest):
 
             draft_po_id = self._ensure_draft_po_id()
             if not draft_po_id:
-                pytest.skip("未能准备草稿态采购订单，跳过删除")
+                pytest.fail("未能准备草稿态采购订单，跳过删除")
 
             po_detail = self._get_po_detail_by_id(draft_po_id)
             

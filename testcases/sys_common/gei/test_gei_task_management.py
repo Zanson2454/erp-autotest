@@ -1,7 +1,8 @@
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
@@ -9,6 +10,7 @@ sys.path.append(str(project_root))
 from testcases.sys_common import SysCommonBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
+
 
 @allure.epic("系统通用模块")
 @allure.feature("导入导出任务管理")
@@ -169,73 +171,9 @@ class TestGeiTaskManagement(SysCommonBaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @pytest.mark.skip(reason="导入任务需要OSS配置，复杂度较高")
-    @case_decorator(
-        story="导入导出任务管理",
-        title="测试通过OSS提交导入任务",
-        description="验证API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST功能 - OSS导入（跳过）",
-        severity="normal",
-        order=13,
-        tags=["sys_common", "gei", "task", "import_oss"]
-    )
-    def test_import_oss_task_post(self):
-        """测试通过OSS提交导入任务 - API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST (跳过)"""
-        try:
-            pass
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
     
-    @pytest.mark.skip(reason="标准导入导出业务未引用，暂时跳过")
-    @case_decorator(
-        story="导入导出任务管理",
-        title="测试通过文件提交导入任务",
-        description="验证API_GEI_TASK_IMPORT_BY_FILE_POST功能 - 文件导入（跳过）",
-        severity="normal",
-        order=14,
-        tags=["sys_common", "gei", "task", "import_file"]
-    )
-    def test_import_file_task_post(self):
-        """测试通过文件提交导入任务 - API_GEI_TASK_IMPORT_BY_FILE_POST (跳过)"""
-        try:
-            pass
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
     
-    @pytest.mark.skip(reason="导入子模型需要额外配置，暂时跳过")
-    @case_decorator(
-        story="导入导出任务管理",
-        title="测试导入子模型",
-        description="验证API_GEI_TASK_IMPORT_SUB_MODEL_POST功能 - 子模型导入（跳过）",
-        severity="normal",
-        order=15,
-        tags=["sys_common", "gei", "task", "import_sub"]
-    )
-    def test_import_sub_model_post(self):
-        """测试导入子模型 - API_GEI_TASK_IMPORT_SUB_MODEL_POST (跳过)"""
-        try:
-            pass
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
     
-    @pytest.mark.skip(reason="同步自定义导入需要文件处理，暂时跳过")
-    @case_decorator(
-        story="导入导出任务管理",
-        title="测试同步自定义导入",
-        description="验证API_GEI_TASK_CUSTOM_IMPORT_SYNC_POST功能 - 自定义导入同步（跳过）",
-        severity="normal",
-        order=13,
-        tags=["sys_common", "gei", "task", "custom_import"]
-    )
-    def test_custom_import_sync_post(self):
-        """测试同步自定义导入 - API_GEI_TASK_CUSTOM_IMPORT_SYNC_POST (跳过)"""
-        try:
-            pass
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
     
     @case_decorator(
         story="导入导出任务管理",

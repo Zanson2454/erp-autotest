@@ -1,15 +1,16 @@
 """作业类型配置的新增、查询、详情、删除测试"""
-import allure
-import pytest
-import sys
 import random
+import sys
 from pathlib import Path
+
+import allure
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent.parent
 sys.path.append(str(project_root))
 from testcases.scm_inv import ScmInvBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
+
 
 @allure.epic("库存管理")
 @allure.feature("作业类型配置")
@@ -121,28 +122,33 @@ class TestBsTypeManagement(ScmInvBaseTest):
     )
     def test_save_bs_type(self):
         """测试保存作业类型"""
-        # 防重复执行检查
-        if self.__class__._save_executed and self.bs_type_id is not None:
-            self.logger.info(f"保存方法已执行过，跳过重复执行，ID: {self.bs_type_id}")
-            return
-        
-        # 1. 生成测试数据
-        bs_type_code, bs_type_name = self._generate_test_data()
-        
-        # 2. 获取创建参数并执行API调用
-        create_params = self._get_bs_type_create_params(bs_type_code, bs_type_name)
-        response = self._execute_api_call_with_report(
-            api_key="INV-作业类型-保存服务",
-            request_params=create_params,
-            assertion_type="data"
-        )
-        
-        # 3. 保存返回的ID
-        response_data = response.get("data", {}).get("data", {})
-        self.__class__.bs_type_id = response_data.get("id")
-        self.__class__._save_executed = True  # 标记已执行
-        
-        self.logger.info(f"作业类型保存成功，ID: {self.bs_type_id}")
+        try:
+                # 防重复执行检查
+                if self.__class__._save_executed and self.bs_type_id is not None:
+                    self.logger.info(f"保存方法已执行过，跳过重复执行，ID: {self.bs_type_id}")
+                    return
+
+                # 1. 生成测试数据
+                bs_type_code, bs_type_name = self._generate_test_data()
+
+                # 2. 获取创建参数并执行API调用
+                create_params = self._get_bs_type_create_params(bs_type_code, bs_type_name)
+                response = self._execute_api_call_with_report(
+                    api_key="INV-作业类型-保存服务",
+                    request_params=create_params,
+                    assertion_type="data"
+                )
+
+                # 3. 保存返回的ID
+                response_data = response.get("data", {}).get("data", {})
+                self.__class__.bs_type_id = response_data.get("id")
+                self.__class__._save_executed = True  # 标记已执行
+
+                self.logger.info(f"作业类型保存成功，ID: {self.bs_type_id}")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
 
     @case_decorator(
         story="作业类型配置",
@@ -154,22 +160,27 @@ class TestBsTypeManagement(ScmInvBaseTest):
     )
     def test_query_bs_type_detail(self):
         """测试查询作业类型详情"""
-        # 确保前置数据存在
-        if self.bs_type_id is None:
-            self._ensure_save_bs_type()
-        
-        # 执行详情查询
-        response = self._execute_api_call_with_report(
-            api_key="INV-作业类型-详情服务",
-            request_params={"id": self.bs_type_id},
-            assertion_type="data"
-        )
-        
-        # 验证返回数据
-        detail_data = response.get("data", {}).get("data", {})
-        self.assert_util.assert_by_operator(detail_data.get("id"), "=", self.bs_type_id)
-        
-        self.logger.info(f"作业类型详情查询成功，ID: {self.bs_type_id}")
+        try:
+                # 确保前置数据存在
+                if self.bs_type_id is None:
+                    self._ensure_save_bs_type()
+
+                # 执行详情查询
+                response = self._execute_api_call_with_report(
+                    api_key="INV-作业类型-详情服务",
+                    request_params={"id": self.bs_type_id},
+                    assertion_type="data"
+                )
+
+                # 验证返回数据
+                detail_data = response.get("data", {}).get("data", {})
+                self.assert_util.assert_by_operator(detail_data.get("id"), "=", self.bs_type_id)
+
+                self.logger.info(f"作业类型详情查询成功，ID: {self.bs_type_id}")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
 
     @case_decorator(
         story="作业类型配置",
@@ -361,15 +372,20 @@ class TestBsTypeManagement(ScmInvBaseTest):
     )
     def test_delete_bs_type(self):
         """测试删除作业类型"""
-        # 确保前置数据存在
-        if self.bs_type_id is None:
-            self._ensure_save_bs_type()
-        
-        # 执行删除操作
-        self._execute_api_call_with_report(
-            api_key="INV-作业类型-删除服务",
-            request_params={"id": self.bs_type_id},
-            assertion_type="success"
-        )
-        
-        self.logger.info(f"作业类型删除成功，ID: {self.bs_type_id}")
+        try:
+                # 确保前置数据存在
+                if self.bs_type_id is None:
+                    self._ensure_save_bs_type()
+
+                # 执行删除操作
+                self._execute_api_call_with_report(
+                    api_key="INV-作业类型-删除服务",
+                    request_params={"id": self.bs_type_id},
+                    assertion_type="success"
+                )
+
+                self.logger.info(f"作业类型删除成功，ID: {self.bs_type_id}")
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+

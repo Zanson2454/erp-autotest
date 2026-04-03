@@ -1,18 +1,15 @@
-import pytest
-import json
-from datetime import datetime
-from pathlib import Path
-import allure
 import sys
+from pathlib import Path
 
+import allure
 
 # 添加项目根目录到 Python 路径
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from utils.report_util import a, case_decorator
 from testcases.scm_sls import SlsBase
 from utils.param_util import ParamUtil
+from utils.report_util import a, case_decorator
 
 
 @allure.epic("销售管理")

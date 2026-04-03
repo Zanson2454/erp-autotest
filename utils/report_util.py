@@ -1,14 +1,15 @@
-import allure
-from typing import Dict, Any, List, Optional
-from loguru import logger
-from datetime import datetime
-from enum import Enum
+import functools
 import json
 import re
-from pathlib import Path
 from contextlib import contextmanager
+from datetime import datetime
+from enum import Enum
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+import allure
 import pytest
-import functools
+from loguru import logger
 
 
 class TestStatus(Enum):

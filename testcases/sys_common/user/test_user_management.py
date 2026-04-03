@@ -1,9 +1,10 @@
 import allure
-import pytest
+
 from testcases.sys_common import SysCommonBaseTest
 from utils.mock_util import MockData
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
+
 
 @allure.epic("系统通用模块")
 @allure.feature("用户管理")

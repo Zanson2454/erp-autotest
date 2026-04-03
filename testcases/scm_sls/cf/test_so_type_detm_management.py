@@ -1,8 +1,7 @@
-import allure
-import pytest
 import sys
 from pathlib import Path
-from typing import Any
+
+import allure
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
@@ -102,7 +101,7 @@ class TestSoTypeDetmManagement(SlsBase):
         """订单项目行分配保存用例"""
         try:
             # 1. 准备测试数据
-            so_item_type_code = self.mock_util.generate_unique_code(tag="SIT")
+            self.mock_util.generate_unique_code(tag="SIT")
             
             
             # 2. 调用API

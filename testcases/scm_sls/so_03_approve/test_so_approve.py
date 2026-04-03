@@ -1,15 +1,15 @@
-import pytest
-import allure
 import sys
 from pathlib import Path
+
+import allure
 
 # 添加项目根目录到 Python 路径
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from utils.report_util import a, case_decorator
 from testcases.scm_sls import SlsBase
 from utils.param_util import ParamUtil
+from utils.report_util import a, case_decorator
 
 
 @allure.epic("销售管理")
@@ -41,7 +41,7 @@ class TestSalesOrderApproval(SlsBase):
         smoke=True,
         tags=["销售订单", "审批", "审单规则"]
     )
-    def test_01_enable_approval_rule(self):
+    def test_enable_approval_rule(self):
         """测试开启审单规则"""
         try:
             # 1. 调用开启审单规则API
@@ -50,16 +50,7 @@ class TestSalesOrderApproval(SlsBase):
             url += "?tmodule=SCM_SLS"
             
             # 2. 构造审单规则启用请求体
-            request_body = {
-                "sceneKey": "SCM_SLS$SLS_APPROVAL_RULE_MANAGE",
-                "viewKey": "SCM_SLS$SLS_APPROVAL_RULE_MANAGE:list",
-                "viewTitle": "list",
-                "buttonKey": "ERP_SCM$SLS_APPROVAL_RULE_MANAGE-detailView-actions-enable",
-                "buttonName": "启用",
-                "appId": 0,
-                "teamId": 22,
-                "serviceKey": "SCM_SLS$SO_APPROVAL_CF_ENABLE_AND_CLEAR_CACHE_ACTION_SERVICE",
-                "params": {
+            request_body = {                "params": {
                     "request": {
                         "name": "hxytest11",
                         "code": self.approval_rule_code,
@@ -99,7 +90,7 @@ class TestSalesOrderApproval(SlsBase):
         smoke=True,
         tags=["销售订单", "审批", "订单创建"]
     )
-    def test_02_create_and_submit_sales_order(self):
+    def test_create_and_submit_sales_order(self):
         """测试创建销售订单并提交，校验订单状态为审批中"""
         try:
             # 1. 创建销售订单并提交（确保金额满足审单规则条件 > 1000）
@@ -142,7 +133,7 @@ class TestSalesOrderApproval(SlsBase):
         smoke=True,
         tags=["销售订单", "审批", "审批通过"]
     )
-    def test_03_approve_sales_order(self):
+    def test_approve_sales_order(self):
         """测试审批订单通过，校验订单状态为已生效"""
         try:
             # 1. 确保有订单数据
@@ -257,7 +248,7 @@ class TestSalesOrderApproval(SlsBase):
         smoke=True,
         tags=["销售订单", "审批", "拒绝"]
     )
-    def test_04_create_and_reject_sales_order(self):
+    def test_create_and_reject_sales_order(self):
         """测试创建销售订单并提交，然后审批拒绝"""
         try:
             # 1. 创建销售订单并提交（确保金额满足审单规则条件 > 1000）
@@ -406,7 +397,7 @@ class TestSalesOrderApproval(SlsBase):
         order=5,
         tags=["销售订单", "审批", "审单规则"]
     )
-    def test_05_disable_approval_rule(self):
+    def test_disable_approval_rule(self):
         """测试停用审单规则"""
         try:
             # 1. 调用停用审单规则API
@@ -417,16 +408,7 @@ class TestSalesOrderApproval(SlsBase):
             url += "?tmodule=SCM_SLS"
             
             # 3. 构造完整的审单规则停用请求体
-            request_body = {
-                "sceneKey": "SCM_SLS$SLS_APPROVAL_RULE_MANAGE",
-                "viewKey": "SCM_SLS$SLS_APPROVAL_RULE_MANAGE:list",
-                "viewTitle": "list",
-                "buttonKey": "ERP_SCM$SLS_APPROVAL_RULE_MANAGE-detailView-actions-disable",
-                "buttonName": "停用",
-                "appId": 0,
-                "teamId": 22,
-                "serviceKey": "SCM_SLS$SO_APPROVAL_CF_DISABLE_AND_CLEAR_CACHE_ACTION_SERVICE",
-                "params": {
+            request_body = {                "params": {
                     "request": {
                         "name": "hxytest11",
                         "code": self.approval_rule_code,

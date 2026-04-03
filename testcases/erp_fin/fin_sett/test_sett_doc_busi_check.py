@@ -1,14 +1,14 @@
-import allure
+import random
 import time
 from datetime import datetime
-import random
 from decimal import Decimal
-import pytest
+
 import allure
 
 from testcases.erp_fin import FinBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
+
 
 @allure.epic("ERP通业财模块")
 @allure.feature("结算管理")
@@ -174,7 +174,7 @@ class TestSettDocBusiCheck(FinBaseTest):
                     self.assert_util.assert_by_operator(sql_result["trading_doc_code"], "not_empty")
                     self.assert_util.assert_by_operator(sql_result["client_side_confirm_status"], "=", "CONFIRMED")
                 elif index == 1:
-                    assert result.get("success",{}) == False
+                    assert not result.get("success", {})
                     assert result.get("err",{}).get("msg",{}) == "结算单异步任务提交失败，请确认结算单异步执行状态！"
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -228,7 +228,7 @@ class TestSettDocBusiCheck(FinBaseTest):
                     self.assert_util.assert_by_operator(sett_sql_result["sett_doc_id"], "empty")
                     self.assert_util.assert_by_operator(sett_sql_result["is_sdc_cancel_relv"], "=", 1)
                 elif index == 1:
-                    assert result.get("success",{}) == False
+                    assert not result.get("success", {})
                     assert result.get("err",{}).get("msg",{}) == "存在已确认的结算单，请重新选择后再进行操作"
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -358,8 +358,8 @@ class TestSettDocBusiCheck(FinBaseTest):
             original_sett_doc_amt_raw = self.query_service.get_sett_doc_amt(filtered_data["params"]["request"]["id"])
             original_sett_doc_amt = Decimal(str(original_sett_doc_amt_raw)) if original_sett_doc_amt_raw else Decimal('0')
             
-            expected_amount = (total_sett_doc_amt.quantize(Decimal('0.01')) + original_sett_doc_amt.quantize(Decimal('0.01'))).quantize(Decimal('0.01'))
-            actual_amount = Decimal(str(result.get("data",{}).get("data",{}).get("settDocAmt",{}))).quantize(Decimal('0.01'))
+            (total_sett_doc_amt.quantize(Decimal('0.01')) + original_sett_doc_amt.quantize(Decimal('0.01'))).quantize(Decimal('0.01'))
+            Decimal(str(result.get("data",{}).get("data",{}).get("settDocAmt",{}))).quantize(Decimal('0.01'))
             #self.assert_util.assert_by_operator(actual_amount,"=",expected_amount)
             
             sql_sett_item_code_result = self.query_service.get_sett_items_by_codes(all_sett_item_code)

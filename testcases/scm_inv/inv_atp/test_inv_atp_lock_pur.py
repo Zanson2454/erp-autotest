@@ -1,14 +1,16 @@
-import allure
-import pytest
+import datetime
 import sys
 from pathlib import Path
-import datetime
+
+import allure
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
 from testcases.scm_inv import ScmInvBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
+
 
 @allure.epic("库存管理")
 @allure.feature("ATP库存占量-采购")
@@ -330,7 +332,7 @@ class TestInvAtpLockPur(ScmInvBaseTest):
             assert unclose_qty == 9, f"unclose_qty应该为9，实际为{unclose_qty}"
             assert plan_qty == self.__class__.po_plan_qty, f"plan_qty应该为{self.__class__.po_plan_qty}，实际为{plan_qty}"
             
-            self.logger.info(f"✅ 采购单数据库验证通过")
+            self.logger.info("✅ 采购单数据库验证通过")
             
             a.text(
                 f"doc_i_code: {self.__class__.po_doc_i_code}\n"
@@ -380,7 +382,7 @@ class TestInvAtpLockPur(ScmInvBaseTest):
             assert unclose_qty == 0, f"unclose_qty应该为0，实际为{unclose_qty}"
             assert plan_qty == self.__class__.dn_plan_qty, f"plan_qty应该为{self.__class__.dn_plan_qty}，实际为{plan_qty}"
             
-            self.logger.info(f"✅ 交货单数据库验证通过")
+            self.logger.info("✅ 交货单数据库验证通过")
             
             a.text(
                 f"doc_s_code: {self.__class__.dn_doc_i_code}\n"

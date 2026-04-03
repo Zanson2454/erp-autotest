@@ -41,7 +41,7 @@ class TestRebateGet(SlsBase):
         order=1,
         tags=["返利政策", "销售订单", "创建"]
     )
-    def test_01_create_sales_order_with_rebate(self):
+    def test_create_sales_order_with_rebate(self):
         """测试创建符合返利政策的销售订单"""
         try:
             # 1. 清理旧的返利政策
@@ -99,7 +99,7 @@ class TestRebateGet(SlsBase):
         order=2,
         tags=["返利政策", "重新计算", "返利确认"]
     )
-    def test_02_trigger_rebate_recalc(self):
+    def test_trigger_rebate_recalc(self):
         """测试触发返利政策重新计算"""
         try:
             # 如果没有销售订单，先创建一个
@@ -144,7 +144,7 @@ class TestRebateGet(SlsBase):
         order=3,
         tags=["返利政策", "返利确认", "查询"]
     )
-    def test_03_query_rebate_confirmation_items(self):
+    def test_query_rebate_confirmation_items(self):
         """测试查询返利确认订单行"""
         try:
             # 如果没有销售订单，先创建一个
@@ -185,14 +185,7 @@ class TestRebateGet(SlsBase):
             
             # 如果参数为空，使用默认参数
             if not params:
-                filtered_params = {
-                    "sceneKey": "SCM_REB$REBATE_ORDER_ITEM",
-                    "viewKey": "SCM_REB$REBATE_ORDER_ITEM:list",
-                    "containerKey": "SCM_REB$REBATE_ITEM-VFSwLoBGM715kBVcVKwVy",
-                    "appId": 0,
-                    "teamId": 22,
-                    "serviceKey": "SCM_REB$SYS_PagingDataService",
-                    "params": {
+                filtered_params = {                    "params": {
                         "request": {
                             "pageable": {
                                 "pageNo": 1,
@@ -268,7 +261,7 @@ class TestRebateGet(SlsBase):
         order=4,
         tags=["返利政策", "返利确认", "提交"]
     )
-    def test_04_query_and_submit_rebate_confirmation(self):
+    def test_query_and_submit_rebate_confirmation(self):
         """测试查询返利确认单"""
         try:
             # 如果没有销售订单，先创建一个
@@ -375,7 +368,7 @@ class TestRebateGet(SlsBase):
         order=5,
         tags=["返利政策", "待办任务", "审批"]
     )
-    def test_05_query_and_approve_todo_tasks(self):
+    def test_query_and_approve_todo_tasks(self):
         """测试查询待办任务并审批"""
         try:
             # 如果没有销售订单，先创建一个
@@ -462,7 +455,7 @@ class TestRebateGet(SlsBase):
         order=6,
         tags=["返利政策", "返利账户", "验证"]
     )
-    def test_06_verify_rebate_account_flow(self):
+    def test_verify_rebate_account_flow(self):
         """测试验证返利账户到账"""
         try:
             # 如果没有销售订单，先创建一个
@@ -792,14 +785,7 @@ class TestRebateGet(SlsBase):
             # 设置查询参数 - 如果参数为空，使用硬编码的参数
             if not params:
                 self.logger.warning("未找到返利确认订单行查询参数，使用硬编码参数")
-                filtered_params = {
-                    "sceneKey": "SCM_REB$REBATE_ORDER_ITEM",
-                    "viewKey": "SCM_REB$REBATE_ORDER_ITEM:list",
-                    "containerKey": "SCM_REB$REBATE_ITEM-VFSwLoBGM715kBVcVKwVy",
-                    "appId": 0,
-                    "teamId": 22,
-                    "serviceKey": "SCM_REB$SYS_PagingDataService",
-                    "params": {
+                filtered_params = {                    "params": {
                         "request": {
                             "pageable": {
                                 "pageNo": 1,
@@ -920,14 +906,7 @@ class TestRebateGet(SlsBase):
         api_path = self.get_api_path("(系统)查询分页数据服务")
         params, _ = self.get_api_params(api_path)
         if not params:
-            query_params = {
-                "sceneKey": "SCM_REB$REBATE_ORDER_ITEM",
-                "viewKey": "SCM_REB$REBATE_ORDER_ITEM:list",
-                "containerKey": "SCM_REB$REBATE_ITEM-VFSwLoBGM715kBVcVKwVy",
-                "appId": 0,
-                "teamId": 22,
-                "serviceKey": "SCM_REB$SYS_PagingDataService",
-                "params": {
+            query_params = {                "params": {
                     "request": {
                         "pageable": {
                             "pageNo": 1,

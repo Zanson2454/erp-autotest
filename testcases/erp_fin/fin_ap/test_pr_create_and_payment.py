@@ -1,14 +1,16 @@
 """
 付款申请单和付款单创建测试用例
 """
+from datetime import datetime
+from decimal import Decimal
+
 import allure
-import time
+
+from erp_data_factory.compat.fin_ap_factory import FinApFactory
 from testcases.erp_fin.fin_ap import ApBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
-from erp_data_factory.compat.fin_ap_factory import FinApFactory
-from datetime import datetime
-from decimal import Decimal
+
 
 @allure.epic("财务管理")
 @allure.feature("付款申请单管理")

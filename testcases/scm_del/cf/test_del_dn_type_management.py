@@ -1,13 +1,15 @@
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
 from testcases.scm_del import ScmDelBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
+
 
 @allure.epic("交货单管理")
 @allure.feature("交货单类型配置管理")
@@ -197,7 +199,7 @@ class TestDelDnTypeManagement(ScmDelBaseTest):
         try:
             # 1. 检查是否有可用的ID
             if not self.__class__.dn_type_id:
-                pytest.skip("没有可用的交货单类型配置ID，跳过详情查询测试")
+                pytest.fail("没有可用的交货单类型配置ID，跳过详情查询测试")
             
             # 2. 获取API配置
             api_path = self.get_api_path("交货单类型配置-根据ID查找数据服务")
@@ -394,7 +396,7 @@ class TestDelDnTypeManagement(ScmDelBaseTest):
         try:
             # 1. 检查是否有可用的ID
             if not self.__class__.dn_type_id:
-                pytest.skip("没有可用的交货单类型配置ID，跳过删除测试")
+                pytest.fail("没有可用的交货单类型配置ID，跳过删除测试")
             
             # 2. 删除前先禁用（确保数据处于可删除状态）
             self.logger.info("删除前先禁用交货单类型配置...")
@@ -408,16 +410,7 @@ class TestDelDnTypeManagement(ScmDelBaseTest):
             params, url = self.get_api_params(api_path)
             
             # 4. 构建请求参数 - 完全按照curl的结构
-            request_params = {
-                "sceneKey": "SCM_DEL$DEL_DN_TYPE_NEW_VIEW",
-                "viewKey": "SCM_DEL$DEL_DN_TYPE_NEW_VIEW:list",
-                "viewTitle": "list",
-                "buttonKey": "SCM_DEL$DEL_DN_TYPE_NEW_VIEW-record-actions-1-button-delete",
-                "buttonName": "删除",
-                "appId": 0,
-                "teamId": 22,
-                "serviceKey": "SCM_DEL$SYS_DeleteDataByIdService",
-                "params": {
+            request_params = {                "params": {
                     "request": {
                         "id": self.__class__.dn_type_id
                     },

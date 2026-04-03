@@ -1,7 +1,7 @@
 import allure
 import pytest
+
 from testcases.gen_md import GenMdBaseTest
-from utils.mock_util import MockData
 from utils.report_util import a, case_decorator
 
 
@@ -611,85 +611,5 @@ class TestOrg_RelationManagement(GenMdBaseTest):
             raise
 
 
-    @pytest.mark.skip(
-        reason="导入任务接口暂未开发"
-    )
-    @case_decorator(
-        story="组织关联管理",
-        title="测试标准导入",
-        description="验证组织关联标准导入功能",
-        severity="normal",
-        file_level_order=8,
-        smoke=True,
-        tags=["组织关联管理", "标准导入"]
-    )
-    def test_standard_import_org_relation(self):
-        """
-        组织关联标准导入用例
-        """
-        try:
-            set_dict = {
-                "importData": [
-                    {
-                        "org_relation_code": self.mock_util.generate_unique_code(tag="Import_Org_Relation"),
-                        "org_relation_name": f"导入组织关联_{self.mock_util.get_timestamp()}"
-                    }
-                ],
-                "importType": "STANDARD"
-            }
-            response, _ = self.standard_api_call(
-                api_key="组织关联关系表标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["importData", "importType"]
-            )
-            self.assert_util.assert_response_success(response)
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
 
-    @pytest.mark.skip(
-        reason="导入任务接口暂未开发"
-    )
-    @case_decorator(
-        story="组织关联管理",
-        title="测试通过OSS提交导入任务",
-        description="验证通过OSS提交组织关联导入任务功能",
-        severity="normal",
-        file_level_order=9,
-        smoke=True,
-        tags=["组织关联管理", "OSS导入任务"]
-    )
-    def test_submit_import_task_by_oss(self):
-        """
-        通过OSS提交组织关联导入任务用例
-        """
-        try:
-            set_dict = {
-                "ossFileUrl": "test_oss_file_url",
-                "fileName": f"组织关联导入_{self.nickname}_{self.mock_util.get_timestamp()}.xlsx",
-                "importConfig": {
-                    "importType": "EXCEL",
-                    "skipFirstRow": True
-                }
-            }
-            response, _ = self.standard_api_call(
-                api_key="组织关联关系表-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=["ossFileUrl", "fileName", "importConfig"]
-            )
-            self.assert_util.assert_response_success(response)
-            
-            # 保存导入任务ID供后续使用
-            self.set_runtime_id("import_task", response.get("data", {}).get("data", {}).get("taskId"))
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise

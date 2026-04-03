@@ -1,8 +1,8 @@
 """移动类型配置的新增、查询、详情、删除、导出测试"""
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent.parent
 sys.path.append(str(project_root))
@@ -184,26 +184,31 @@ class TestMvmTypeManagement(ScmInvBaseTest):
     )
     def test_save_mvm_type(self):
         """测试保存移动类型"""
-        # 防重复执行检查
-        if self.__class__._save_executed and self.mvm_type_id is not None:
-            self.logger.info(f"保存方法已执行过，跳过重复执行，ID: {self.mvm_type_id}")
-            return
-        
-        # 1. 准备测试数据
-        mvm_type_code = self.mock_util.generate_unique_code(tag="AT")
-        mvm_type_name = f"移动类型_{self.mock_util.get_timestamp()}"
-        
-        # 2. 获取创建参数并执行API调用
-        create_params = self._get_mvm_type_create_params(mvm_type_code, mvm_type_name)
-        response = self._execute_api_call_with_report(
-            api_key="INV-移动类型-保存服务",
-            request_params=create_params,
-            assertion_type="success"
-        )
-        
-        # 3. 记录成功日志
-        self.logger.info("移动类型保存成功")
+        try:
+                # 防重复执行检查
+                if self.__class__._save_executed and self.mvm_type_id is not None:
+                    self.logger.info(f"保存方法已执行过，跳过重复执行，ID: {self.mvm_type_id}")
+                    return
 
+                # 1. 准备测试数据
+                mvm_type_code = self.mock_util.generate_unique_code(tag="AT")
+                mvm_type_name = f"移动类型_{self.mock_util.get_timestamp()}"
+
+                # 2. 获取创建参数并执行API调用
+                create_params = self._get_mvm_type_create_params(mvm_type_code, mvm_type_name)
+                self._execute_api_call_with_report(
+                    api_key="INV-移动类型-保存服务",
+                    request_params=create_params,
+                    assertion_type="success"
+                )
+
+                # 3. 记录成功日志
+                self.logger.info("移动类型保存成功")
+
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
 
     @case_decorator(
         story="移动类型配置",
@@ -311,9 +316,6 @@ class TestMvmTypeManagement(ScmInvBaseTest):
                 self._ensure_query_mvm_type_page()
             
             # 1. 构建URL和参数（直接写死，因为yaml中查询不到）
-            api_path = "/api/trantor/service/engine/execute/SCM_INV$SYS_FindDataByIdService"
-            query_params = "tmodule=SCM_INV&modelKey=SCM_INV%24inv_mvm_type_cf"
-            url = f"{api_path}?{query_params}"
             
             # 2. 设置详情查询参数
             detail_params = {
@@ -365,19 +367,24 @@ class TestMvmTypeManagement(ScmInvBaseTest):
     )
     def test_enable_mvm_type(self):
         """测试启用移动类型"""
-        # 确保前置数据存在
-        if self.mvm_type_id is None:
-            self._ensure_save_mvm_type()
-            self._ensure_query_mvm_type_page()
-        
-        # 执行启用操作
-        self._execute_api_call_with_report(
-            api_key="INV-移动类型-启用服务",
-            request_params={"id": self.mvm_type_id},
-            assertion_type="success"
-        )
-        
-        self.logger.info(f"移动类型启用成功，ID: {self.mvm_type_id}")
+        try:
+                # 确保前置数据存在
+                if self.mvm_type_id is None:
+                    self._ensure_save_mvm_type()
+                    self._ensure_query_mvm_type_page()
+
+                # 执行启用操作
+                self._execute_api_call_with_report(
+                    api_key="INV-移动类型-启用服务",
+                    request_params={"id": self.mvm_type_id},
+                    assertion_type="success"
+                )
+
+                self.logger.info(f"移动类型启用成功，ID: {self.mvm_type_id}")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
 
     @case_decorator(
         story="移动类型配置",
@@ -389,21 +396,26 @@ class TestMvmTypeManagement(ScmInvBaseTest):
     )
     def test_disable_mvm_type(self):
         """测试禁用移动类型"""
-        # 确保前置数据存在
-        if self.mvm_type_id is None:
-            self._ensure_save_mvm_type()
-            self._ensure_query_mvm_type_page()
-        
-        # 执行禁用操作
-        self._execute_api_call_with_report(
-            api_key="INV-移动类型-禁用服务",
-            request_params={"id": self.mvm_type_id},
-            assertion_type="success"
-        )
-        
-        self.logger.info(f"移动类型禁用成功，ID: {self.mvm_type_id}")
+        try:
+                # 确保前置数据存在
+                if self.mvm_type_id is None:
+                    self._ensure_save_mvm_type()
+                    self._ensure_query_mvm_type_page()
 
-    #@pytest.mark.skip(reason="导出功能需要完整的业务流程支持，暂时跳过")
+                # 执行禁用操作
+                self._execute_api_call_with_report(
+                    api_key="INV-移动类型-禁用服务",
+                    request_params={"id": self.mvm_type_id},
+                    assertion_type="success"
+                )
+
+                self.logger.info(f"移动类型禁用成功，ID: {self.mvm_type_id}")
+
+            #@pytest.mark.skip(reason="导出功能需要完整的业务流程支持，暂时跳过")
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
     @case_decorator(
         story="移动类型配置",
         title="测试导出移动类型",
@@ -550,16 +562,21 @@ class TestMvmTypeManagement(ScmInvBaseTest):
     )
     def test_delete_mvm_type(self):
         """测试删除移动类型"""
-        # 确保前置数据存在
-        if self.mvm_type_id is None:
-            self._ensure_save_mvm_type()
-            self._ensure_query_mvm_type_page()
-        
-        # 执行删除操作
-        self._execute_api_call_with_report(
-            api_key="INV-移动类型-删除服务",
-            request_params={"id": self.mvm_type_id},
-            assertion_type="success"
-        )
-        
-        self.logger.info(f"移动类型删除成功，ID: {self.mvm_type_id}")
+        try:
+                # 确保前置数据存在
+                if self.mvm_type_id is None:
+                    self._ensure_save_mvm_type()
+                    self._ensure_query_mvm_type_page()
+
+                # 执行删除操作
+                self._execute_api_call_with_report(
+                    api_key="INV-移动类型-删除服务",
+                    request_params={"id": self.mvm_type_id},
+                    assertion_type="success"
+                )
+
+                self.logger.info(f"移动类型删除成功，ID: {self.mvm_type_id}")
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+

@@ -161,7 +161,7 @@ class TestPlnProcessManagement(ErpPlnBaseTest):
         smoke=True,
         tags=["ERP_PLN", "工序", "新增"],
     )
-    def test_01_create_front_process(self):
+    def test_create_front_process(self):
         try:
             code = self.mock_util.generate_unique_code(tag="PLN_F")
             name = f"前置工序_{self.mock_util.get_timestamp()}"
@@ -187,7 +187,7 @@ class TestPlnProcessManagement(ErpPlnBaseTest):
         smoke=True,
         tags=["ERP_PLN", "工序", "关联"],
     )
-    def test_02_create_middle_process_with_pre(self):
+    def test_create_middle_process_with_pre(self):
         try:
             if not self.front_process_id:
                 raise AssertionError("前置工序 id 为空，请先执行步骤1")
@@ -224,7 +224,7 @@ class TestPlnProcessManagement(ErpPlnBaseTest):
         smoke=True,
         tags=["ERP_PLN", "工序", "关联"],
     )
-    def test_03_create_last_process_with_middle(self):
+    def test_create_last_process_with_middle(self):
         try:
             if not self.middle_process_id:
                 raise AssertionError("后置工序 id 为空，请先执行步骤2")
@@ -261,7 +261,7 @@ class TestPlnProcessManagement(ErpPlnBaseTest):
         smoke=True,
         tags=["ERP_PLN", "工序", "编辑"],
     )
-    def test_04_update_front_process_post(self):
+    def test_update_front_process_post(self):
         try:
             if not self.front_process_id or not self.middle_process_id:
                 raise AssertionError("关联工序 id 不完整，请先执行步骤1-2")
@@ -298,7 +298,7 @@ class TestPlnProcessManagement(ErpPlnBaseTest):
         smoke=True,
         tags=["ERP_PLN", "工序", "列表"],
     )
-    def test_05_view_process_list(self):
+    def test_view_process_list(self):
         try:
             response = self._query_process_list()
             rows = (
@@ -321,7 +321,7 @@ class TestPlnProcessManagement(ErpPlnBaseTest):
         smoke=True,
         tags=["ERP_PLN", "工序", "详情"],
     )
-    def test_06_view_process_detail(self):
+    def test_view_process_detail(self):
         try:
             if not self.last_process_id:
                 raise AssertionError("最后工序 id 为空，请先执行步骤3")

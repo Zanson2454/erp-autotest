@@ -10,7 +10,7 @@
 """
 
 import allure
-import pytest
+
 from testcases.erp_fin.fin_ap import ApBaseTest
 from utils.report_util import a, case_decorator
 

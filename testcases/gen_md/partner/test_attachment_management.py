@@ -1,5 +1,6 @@
 import allure
 import pytest
+
 from testcases.gen_md import GenMdBaseTest
 from utils.report_util import a, case_decorator
 
@@ -556,75 +557,7 @@ class TestAttachmentManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
-    @case_decorator(
-        story="附件管理",
-        title="测试附件类型标准导入",
-        description="验证附件类型标准导入功能",
-        severity="normal",
-        file_level_order=12,
-        tags=["附件类型", "导入"]
-    )
-    def test_import_attachment_type(self):
-        """附件类型标准导入用例"""
-        try:
-            set_dict = {
-                "importConfig": {
-                    "fileName": f"附件类型导入_{self.mock_util.get_timestamp()}",
-                    "fileType": "EXCEL",
-                    "sheetName": "附件类型"
-                }
-            }
-            response, _ = self.standard_api_call(
-                api_key="附件类型标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["importConfig"]
-            )
-            self.assert_util.assert_response_success(response)
 
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
-
-    @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
-    @case_decorator(
-        story="附件管理",
-        title="测试通过OSS提交附件类型导入任务",
-        description="验证通过OSS提交附件类型导入任务功能",
-        severity="normal",
-        file_level_order=13,
-        tags=["附件类型", "OSS导入"]
-    )
-    def test_submit_attachment_type_import_task_by_oss(self):
-        """通过OSS提交附件类型导入任务用例"""
-        try:
-            set_dict = {
-                "taskName": f"附件类型OSS导入任务_{self.mock_util.get_timestamp()}",
-                "ossConfig": {
-                    "bucketName": "test-bucket",
-                    "objectKey": f"attachment_type_import_{self.mock_util.get_timestamp()}.xlsx"
-                },
-                "importConfig": {
-                    "fileType": "EXCEL",
-                    "sheetName": "附件类型"
-                }
-            }
-            response, _ = self.standard_api_call(
-                api_key="附件类型-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=["taskName", "ossConfig", "importConfig"]
-            )
-            self.assert_util.assert_response_success(response)
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
@@ -659,72 +592,4 @@ class TestAttachmentManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
-    @case_decorator(
-        story="附件管理",
-        title="测试附件组标准导入",
-        description="验证附件组标准导入功能",
-        severity="normal",
-        file_level_order=15,
-        tags=["附件组", "导入"]
-    )
-    def test_import_attachment_group(self):
-        """附件组标准导入用例"""
-        try:
-            set_dict = {
-                "importConfig": {
-                    "fileName": f"附件组导入_{self.mock_util.get_timestamp()}",
-                    "fileType": "EXCEL",
-                    "sheetName": "附件组"
-                }
-            }
-            response, _ = self.standard_api_call(
-                api_key="附件组标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["importConfig"]
-            )
-            self.assert_util.assert_response_success(response)
 
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
-
-    @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
-    @case_decorator(
-        story="附件管理",
-        title="测试通过OSS提交附件组导入任务",
-        description="验证通过OSS提交附件组导入任务功能",
-        severity="normal",
-        file_level_order=16,
-        tags=["附件组", "OSS导入"]
-    )
-    def test_submit_attachment_group_import_task_by_oss(self):
-        """通过OSS提交附件组导入任务用例"""
-        try:
-            set_dict = {
-                "taskName": f"附件组OSS导入任务_{self.mock_util.get_timestamp()}",
-                "ossConfig": {
-                    "bucketName": "test-bucket",
-                    "objectKey": f"attachment_group_import_{self.mock_util.get_timestamp()}.xlsx"
-                },
-                "importConfig": {
-                    "fileType": "EXCEL",
-                    "sheetName": "附件组"
-                }
-            }
-            response, _ = self.standard_api_call(
-                api_key="附件组-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=["taskName", "ossConfig", "importConfig"]
-            )
-            self.assert_util.assert_response_success(response)
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise 

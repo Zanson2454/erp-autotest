@@ -1,23 +1,19 @@
 
-import allure
-import pytest
-from typing import Any
-import pytest
-import os
 import sys
-import allure
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
+import allure
+import pytest
 
 # 设置项目根目录到Python路径
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
-from utils.param_util import ParamUtil
-from utils.report_util import a, case_decorator
 from testcases.erp_fi import FiBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
+
 
 @allure.epic("基础财务")
 @allure.feature("总账凭证操作")
@@ -351,61 +347,66 @@ class TestVoucherOperation(FiBaseTest):
     ])
     def test_submit_voucher(self, test_data):
         """测试总账凭证提交操作"""
-        # 首先创建凭证
-        self.create_voucher_with_amounts(
-            test_data["debit_amt"], 
-            test_data["credit_amt"], 
-            test_data["remark"],
-            test_data.get("use_cash_account", False),
-            test_data.get("use_ad_account", False)
-        )
-        url=self.get_api_path("总账-凭证-凭证列表提交服务")
-        params,url=self.get_api_params(url)
-        filtered_params=ParamUtil.filter_post_body_fields(
-            params, ["id"], ["params", "request"])
-        
-        sql=f"""
-        select id from fin_glm_ve_head_tr where remark='{test_data["remark"]}' and ve_status='DRAFT' order by created_at desc limit 1;
-        """
-        voucher_id=self.query_service.query(sql)[0]["id"]
-        set_dict={
-            "id":voucher_id
-        }
-        ParamUtil.set_request_params(filtered_params, set_dict)
-        response, _ = self.standard_api_call(
-            api_key="总账-凭证-凭证列表提交服务",
-            set_dict=filtered_params.get("params", {}),
-            store_id_as=None,
-            use_param_util=False,
-            param_path=["params"]
-        )
-        
-        # 统一断言逻辑
-        if test_data["expected_success"]:
-            # 成功情况断言
-            self.assert_util.assert_response_success(response)
-            self.assert_util.assert_by_operator(
-                response["data"]["data"]["veStatus"], 
-                "=", 
-                test_data["expected_status"], 
-                f"凭证状态不是{test_data['expected_status']}"
-            )
-        else:
-            # 失败情况断言
-            assert response["success"] is False
-            self.assert_util.assert_by_operator(
-                response["err"]["code"], 
-                "=", 
-                test_data["expected_error_code"], 
-                f"错误代码不是{test_data['expected_error_code']}"
-            )
-            self.assert_util.assert_by_operator(
-                response["err"]["msg"], 
-                "=", 
-                test_data["expected_error_msg"], 
-                f"错误信息不是{test_data['expected_error_msg']}"
-            )
+        try:
+                # 首先创建凭证
+                self.create_voucher_with_amounts(
+                    test_data["debit_amt"], 
+                    test_data["credit_amt"], 
+                    test_data["remark"],
+                    test_data.get("use_cash_account", False),
+                    test_data.get("use_ad_account", False)
+                )
+                url=self.get_api_path("总账-凭证-凭证列表提交服务")
+                params,url=self.get_api_params(url)
+                filtered_params=ParamUtil.filter_post_body_fields(
+                    params, ["id"], ["params", "request"])
 
+                sql=f"""
+                select id from fin_glm_ve_head_tr where remark='{test_data["remark"]}' and ve_status='DRAFT' order by created_at desc limit 1;
+                """
+                voucher_id=self.query_service.query(sql)[0]["id"]
+                set_dict={
+                    "id":voucher_id
+                }
+                ParamUtil.set_request_params(filtered_params, set_dict)
+                response, _ = self.standard_api_call(
+                    api_key="总账-凭证-凭证列表提交服务",
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
+
+                # 统一断言逻辑
+                if test_data["expected_success"]:
+                    # 成功情况断言
+                    self.assert_util.assert_response_success(response)
+                    self.assert_util.assert_by_operator(
+                        response["data"]["data"]["veStatus"], 
+                        "=", 
+                        test_data["expected_status"], 
+                        f"凭证状态不是{test_data['expected_status']}"
+                    )
+                else:
+                    # 失败情况断言
+                    assert response["success"] is False
+                    self.assert_util.assert_by_operator(
+                        response["err"]["code"], 
+                        "=", 
+                        test_data["expected_error_code"], 
+                        f"错误代码不是{test_data['expected_error_code']}"
+                    )
+                    self.assert_util.assert_by_operator(
+                        response["err"]["msg"], 
+                        "=", 
+                        test_data["expected_error_msg"], 
+                        f"错误信息不是{test_data['expected_error_msg']}"
+                    )
+
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
 
     @case_decorator(
         story="总账凭证操作",
@@ -418,29 +419,34 @@ class TestVoucherOperation(FiBaseTest):
     )
     def test_approve_voucher(self):
         """测试总账凭证审批同意操作"""
-        url=self.get_api_path("总账-凭证-凭证审核服务")
-        params,url=self.get_api_params(url)
-        filtered_params=ParamUtil.filter_post_body_fields(
-            params, ["id"], ["params", "request"])
-        sql="""
-        select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='APPROVING' order by created_at desc limit 1;
-        """
-        voucher_id=self.query_service.query(sql)[0]["id"]
-        set_dict={
-            "id":voucher_id
-        }
-        ParamUtil.set_request_params(filtered_params, set_dict)
-        response, _ = self.standard_api_call(
-            api_key="总账-凭证-凭证审核服务",
-            set_dict=filtered_params.get("params", {}),
-            store_id_as=None,
-            use_param_util=False,
-            param_path=["params"]
-        )
-        self.assert_util.assert_response_success(response)
-        a.json(filtered_params, "请求数据")
-        a.json(response, "响应数据")
-        
+        try:
+                url=self.get_api_path("总账-凭证-凭证审核服务")
+                params,url=self.get_api_params(url)
+                filtered_params=ParamUtil.filter_post_body_fields(
+                    params, ["id"], ["params", "request"])
+                sql="""
+                select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='APPROVING' order by created_at desc limit 1;
+                """
+                voucher_id=self.query_service.query(sql)[0]["id"]
+                set_dict={
+                    "id":voucher_id
+                }
+                ParamUtil.set_request_params(filtered_params, set_dict)
+                response, _ = self.standard_api_call(
+                    api_key="总账-凭证-凭证审核服务",
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
+                self.assert_util.assert_response_success(response)
+                a.json(filtered_params, "请求数据")
+                a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
     @case_decorator(
         story="总账凭证操作",
         title="凭证复核同意操作",
@@ -452,30 +458,35 @@ class TestVoucherOperation(FiBaseTest):
     )
     def test_check_voucher(self):
         """测试总账凭证复核同意操作"""
-        url=self.get_api_path("总账-凭证-凭证复核服务")
-        params,url=self.get_api_params(url)
-        filtered_params=ParamUtil.filter_post_body_fields(
-            params, ["id"], ["params", "request"])
-        sql="""
-        select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='CHECKING' order by created_at desc limit 1;
-        """
-        voucher_id=self.query_service.query(sql)[0]["id"]
-        set_dict={
-            "id":voucher_id
-        }
-        ParamUtil.set_request_params(filtered_params, set_dict)
-        response, _ = self.standard_api_call(
-            api_key="总账-凭证-凭证复核服务",
-            set_dict=filtered_params.get("params", {}),
-            store_id_as=None,
-            use_param_util=False,
-            param_path=["params"]
-        )
-        self.assert_util.assert_response_success(response)
-        a.json(filtered_params, "请求数据")
-        a.json(response, "响应数据")
-        
-    
+        try:
+                url=self.get_api_path("总账-凭证-凭证复核服务")
+                params,url=self.get_api_params(url)
+                filtered_params=ParamUtil.filter_post_body_fields(
+                    params, ["id"], ["params", "request"])
+                sql="""
+                select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='CHECKING' order by created_at desc limit 1;
+                """
+                voucher_id=self.query_service.query(sql)[0]["id"]
+                set_dict={
+                    "id":voucher_id
+                }
+                ParamUtil.set_request_params(filtered_params, set_dict)
+                response, _ = self.standard_api_call(
+                    api_key="总账-凭证-凭证复核服务",
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
+                self.assert_util.assert_response_success(response)
+                a.json(filtered_params, "请求数据")
+                a.json(response, "响应数据")
+
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
     @case_decorator(
         story="总账凭证操作",
         title="凭证记账操作",
@@ -487,37 +498,42 @@ class TestVoucherOperation(FiBaseTest):
     )
     def test_account_voucher(self):
         """测试总账凭证记账操作"""
-        url=self.get_api_path("总账-凭证-凭证记账服务")
-        params,url=self.get_api_params(url)
-        filtered_params=ParamUtil.filter_post_body_fields(
-            params, ["id"], ["params", "request"])
-        sql="""
-        select id ,biz_date ,ab_type from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='WAIT_ACCOUNT' and deleted=0 order by created_at desc limit 1;
-        """
-        voucher_id,biz_date,ab_type=self.query_service.query(sql)[0]["id"],self.query_service.query(sql)[0]["biz_date"],self.query_service.query(sql)[0]["ab_type"]
-        set_dict={
-            "id":voucher_id
-        }
-        ParamUtil.set_request_params(filtered_params, set_dict)
-        response, _ = self.standard_api_call(
-            api_key="总账-凭证-凭证记账服务",
-            set_dict=filtered_params.get("params", {}),
-            store_id_as=None,
-            use_param_util=False,
-            param_path=["params"]
-        )
-        sql=f"""
-        select start_time,end_time from fin_common_calendar_item_cf where id=(select period_of_current  from fin_glm_ab_type_cf where id={ab_type})
-        """
-        start_time,end_time=self.query_service.query(sql)[0]["start_time"],self.query_service.query(sql)[0]["end_time"]
-        if biz_date < start_time or biz_date > end_time:
-            self.assert_util.assert_by_operator(response["err"]["code"], "=", "glm.ve.account.datetime.error")
-            self.assert_util.assert_by_operator(response["err"]["msg"], "=", "凭证日期不在账簿当前期间")
-        else:
-            self.assert_util.assert_response_success(response)
-        a.json(filtered_params, "请求数据")
-        a.json(response, "响应数据")
-        
+        try:
+                url=self.get_api_path("总账-凭证-凭证记账服务")
+                params,url=self.get_api_params(url)
+                filtered_params=ParamUtil.filter_post_body_fields(
+                    params, ["id"], ["params", "request"])
+                sql="""
+                select id ,biz_date ,ab_type from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='WAIT_ACCOUNT' and deleted=0 order by created_at desc limit 1;
+                """
+                voucher_id,biz_date,ab_type=self.query_service.query(sql)[0]["id"],self.query_service.query(sql)[0]["biz_date"],self.query_service.query(sql)[0]["ab_type"]
+                set_dict={
+                    "id":voucher_id
+                }
+                ParamUtil.set_request_params(filtered_params, set_dict)
+                response, _ = self.standard_api_call(
+                    api_key="总账-凭证-凭证记账服务",
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
+                sql=f"""
+                select start_time,end_time from fin_common_calendar_item_cf where id=(select period_of_current  from fin_glm_ab_type_cf where id={ab_type})
+                """
+                start_time,end_time=self.query_service.query(sql)[0]["start_time"],self.query_service.query(sql)[0]["end_time"]
+                if biz_date < start_time or biz_date > end_time:
+                    self.assert_util.assert_by_operator(response["err"]["code"], "=", "glm.ve.account.datetime.error")
+                    self.assert_util.assert_by_operator(response["err"]["msg"], "=", "凭证日期不在账簿当前期间")
+                else:
+                    self.assert_util.assert_response_success(response)
+                a.json(filtered_params, "请求数据")
+                a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
     @case_decorator(
         story="总账凭证操作",
         title="凭证反记账操作",
@@ -529,29 +545,34 @@ class TestVoucherOperation(FiBaseTest):
     )
     def test_account_reverse_voucher(self):
         """测试总账凭证反记账操作"""
-        url=self.get_api_path("总账-凭证-反过账Event服务")
-        params,url=self.get_api_params(url)
-        filtered_params=ParamUtil.filter_post_body_fields(
-            params, ["id"], ["params", "request"])
-        sql="""
-        select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='ACCOUNTED' order by created_at desc limit 1;
-        """
-        voucher_id=self.query_service.query(sql)[0]["id"]
-        set_dict={
-            "id":voucher_id
-        }
-        ParamUtil.set_request_params(filtered_params, set_dict)
-        response, _ = self.standard_api_call(
-            api_key="总账-凭证-反过账Event服务",
-            set_dict=filtered_params.get("params", {}),
-            store_id_as=None,
-            use_param_util=False,
-            param_path=["params"]
-        )
-        self.assert_util.assert_response_success(response)
-        a.json(filtered_params, "请求数据")
-        a.json(response, "响应数据")
-        
+        try:
+                url=self.get_api_path("总账-凭证-反过账Event服务")
+                params,url=self.get_api_params(url)
+                filtered_params=ParamUtil.filter_post_body_fields(
+                    params, ["id"], ["params", "request"])
+                sql="""
+                select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='ACCOUNTED' order by created_at desc limit 1;
+                """
+                voucher_id=self.query_service.query(sql)[0]["id"]
+                set_dict={
+                    "id":voucher_id
+                }
+                ParamUtil.set_request_params(filtered_params, set_dict)
+                response, _ = self.standard_api_call(
+                    api_key="总账-凭证-反过账Event服务",
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
+                self.assert_util.assert_response_success(response)
+                a.json(filtered_params, "请求数据")
+                a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
     @case_decorator(
         story="总账凭证操作",
         title="凭证作废操作",
@@ -563,29 +584,34 @@ class TestVoucherOperation(FiBaseTest):
     )
     def test_invalid_voucher(self):
         """测试总账凭证作废操作"""
-        url=self.get_api_path("总账-凭证-凭证作废服务")
-        params,url=self.get_api_params(url)
-        filtered_params=ParamUtil.filter_post_body_fields(
-            params, ["id"], ["params", "request"])
-        sql="""
-        select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='WAIT_ACCOUNT' order by created_at desc limit 1;
-        """
-        voucher_id=self.query_service.query(sql)[0]["id"]
-        set_dict={
-            "id":voucher_id
-        }
-        ParamUtil.set_request_params(filtered_params, set_dict)
-        response, _ = self.standard_api_call(
-            api_key="总账-凭证-凭证作废服务",
-            set_dict=filtered_params.get("params", {}),
-            store_id_as=None,
-            use_param_util=False,
-            param_path=["params"]
-        )
-        self.assert_util.assert_response_success(response)
-        a.json(filtered_params, "请求数据")
-        a.json(response, "响应数据")
-        
+        try:
+                url=self.get_api_path("总账-凭证-凭证作废服务")
+                params,url=self.get_api_params(url)
+                filtered_params=ParamUtil.filter_post_body_fields(
+                    params, ["id"], ["params", "request"])
+                sql="""
+                select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='WAIT_ACCOUNT' order by created_at desc limit 1;
+                """
+                voucher_id=self.query_service.query(sql)[0]["id"]
+                set_dict={
+                    "id":voucher_id
+                }
+                ParamUtil.set_request_params(filtered_params, set_dict)
+                response, _ = self.standard_api_call(
+                    api_key="总账-凭证-凭证作废服务",
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
+                self.assert_util.assert_response_success(response)
+                a.json(filtered_params, "请求数据")
+                a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
     @case_decorator(
         story="总账凭证操作",
         title="凭证取消作废操作",
@@ -597,29 +623,34 @@ class TestVoucherOperation(FiBaseTest):
     ) 
     def test_cancel_invalid_voucher(self):
         """测试总账凭证取消作废操作"""
-        url=self.get_api_path("总账-凭证-凭证取消作废服务")
-        params,url=self.get_api_params(url)
-        filtered_params=ParamUtil.filter_post_body_fields(
-            params, ["id"], ["params", "request"])
-        sql="""
-        select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='CANCELED' order by created_at desc limit 1;
-        """
-        voucher_id=self.query_service.query(sql)[0]["id"]
-        set_dict={
-            "id":voucher_id
-        }
-        ParamUtil.set_request_params(filtered_params, set_dict)
-        response, _ = self.standard_api_call(
-            api_key="总账-凭证-凭证取消作废服务",
-            set_dict=filtered_params.get("params", {}),
-            store_id_as=None,
-            use_param_util=False,
-            param_path=["params"]
-        )
-        self.assert_util.assert_response_success(response)
-        a.json(filtered_params, "请求数据")
-        a.json(response, "响应数据")
-        
+        try:
+                url=self.get_api_path("总账-凭证-凭证取消作废服务")
+                params,url=self.get_api_params(url)
+                filtered_params=ParamUtil.filter_post_body_fields(
+                    params, ["id"], ["params", "request"])
+                sql="""
+                select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='CANCELED' order by created_at desc limit 1;
+                """
+                voucher_id=self.query_service.query(sql)[0]["id"]
+                set_dict={
+                    "id":voucher_id
+                }
+                ParamUtil.set_request_params(filtered_params, set_dict)
+                response, _ = self.standard_api_call(
+                    api_key="总账-凭证-凭证取消作废服务",
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
+                self.assert_util.assert_response_success(response)
+                a.json(filtered_params, "请求数据")
+                a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
     @case_decorator(
         story="总账凭证操作",
         title="凭证删除操作",
@@ -631,28 +662,33 @@ class TestVoucherOperation(FiBaseTest):
     )
     def test_delete_voucher(self):
         """测试总账凭证删除操作"""
-        url=self.get_api_path("总账-凭证-凭证删除服务")
-        params,url=self.get_api_params(url)
-        filtered_params=ParamUtil.filter_post_body_fields(
-            params, ["id"], ["params", "request"])
-        sql="""
-        select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='DRAFT' order by created_at desc limit 1;
-        """
-        voucher_id=self.query_service.query(sql)[0]["id"]
-        set_dict={
-            "id":voucher_id
-        }
-        ParamUtil.set_request_params(filtered_params, set_dict)
-        response, _ = self.standard_api_call(
-            api_key="总账-凭证-凭证删除服务",
-            set_dict=filtered_params.get("params", {}),
-            store_id_as=None,
-            use_param_util=False,
-            param_path=["params"]
-        )
-        self.assert_util.assert_response_success(response)
-        a.json(filtered_params, "请求数据")
-        a.json(response, "响应数据")
+        try:
+                url=self.get_api_path("总账-凭证-凭证删除服务")
+                params,url=self.get_api_params(url)
+                filtered_params=ParamUtil.filter_post_body_fields(
+                    params, ["id"], ["params", "request"])
+                sql="""
+                select id from fin_glm_ve_head_tr where remark='测试正常业务流程' and ve_status='DRAFT' order by created_at desc limit 1;
+                """
+                voucher_id=self.query_service.query(sql)[0]["id"]
+                set_dict={
+                    "id":voucher_id
+                }
+                ParamUtil.set_request_params(filtered_params, set_dict)
+                response, _ = self.standard_api_call(
+                    api_key="总账-凭证-凭证删除服务",
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
+                self.assert_util.assert_response_success(response)
+                a.json(filtered_params, "请求数据")
+                a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
 
     @case_decorator(
         story="总账凭证批量操作",
@@ -665,40 +701,45 @@ class TestVoucherOperation(FiBaseTest):
     )
     def test_batch_submit_voucher(self):
         """测试总账凭证批量提交操作"""
-        url=self.get_api_path("总账-凭证-凭证列表批量提交服务")
-        params,url=self.get_api_params(url)
-        filtered_params=ParamUtil.filter_post_body_fields(
-            params, ["request"], ["params"])
-        
-        # 执行3次创建凭证
-        for _ in range(3):
-            self.create_voucher_with_amounts(
-                1.23,
-                1.23,
-                "测试正常批量业务流程",
-                False,
-                False
-            )
-        
-        # 获取凭证ID列表
-        sql="""
-        select id from fin_glm_ve_head_tr where remark='测试正常批量业务流程' and ve_status='DRAFT' order by created_at desc limit 3;
-        """
-        voucher_ids=self.query_service.query(sql)
-        
-        # 直接设置request参数为列表
-        filtered_params['params']['request'] = voucher_ids
-        response, _ = self.standard_api_call(
-            api_key="总账-凭证-凭证列表批量提交服务",
-            set_dict=filtered_params.get("params", {}),
-            store_id_as=None,
-            use_param_util=False,
-            param_path=["params"]
-        )
-        self.assert_util.assert_response_success(response)
-        a.json(filtered_params, "请求数据")
-        a.json(response, "响应数据")
-        
+        try:
+                url=self.get_api_path("总账-凭证-凭证列表批量提交服务")
+                params,url=self.get_api_params(url)
+                filtered_params=ParamUtil.filter_post_body_fields(
+                    params, ["request"], ["params"])
+
+                # 执行3次创建凭证
+                for _ in range(3):
+                    self.create_voucher_with_amounts(
+                        1.23,
+                        1.23,
+                        "测试正常批量业务流程",
+                        False,
+                        False
+                    )
+
+                # 获取凭证ID列表
+                sql="""
+                select id from fin_glm_ve_head_tr where remark='测试正常批量业务流程' and ve_status='DRAFT' order by created_at desc limit 3;
+                """
+                voucher_ids=self.query_service.query(sql)
+
+                # 直接设置request参数为列表
+                filtered_params['params']['request'] = voucher_ids
+                response, _ = self.standard_api_call(
+                    api_key="总账-凭证-凭证列表批量提交服务",
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
+                self.assert_util.assert_response_success(response)
+                a.json(filtered_params, "请求数据")
+                a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
     @case_decorator(
         story="总账凭证批量操作",
         title="批量审批",
@@ -710,26 +751,31 @@ class TestVoucherOperation(FiBaseTest):
     )
     def test_batch_approve_voucher(self):
         """测试总账凭证批量审批"""
-        url=self.get_api_path("总账-凭证-凭证审核服务")
-        params,url=self.get_api_params(url)
-        filtered_params=ParamUtil.filter_post_body_fields(
-            params, ["id"], ["params", "request"])
-        sql="""
-        select id from fin_glm_ve_head_tr where remark='测试正常批量业务流程' and ve_status='APPROVING' and deleted=0 order by created_at desc limit 3;
-        """
-        voucher_ids=self.query_service.query(sql)
-        filtered_params['params']['request']['id'] = [voucher_id["id"] for voucher_id in voucher_ids]
-        response, _ = self.standard_api_call(
-            api_key="总账-凭证-凭证审核服务",
-            set_dict=filtered_params.get("params", {}),
-            store_id_as=None,
-            use_param_util=False,
-            param_path=["params"]
-        )
-        self.assert_util.assert_response_success(response)
-        a.json(filtered_params, "请求数据")
-        a.json(response, "响应数据")
-    
+        try:
+                url=self.get_api_path("总账-凭证-凭证审核服务")
+                params,url=self.get_api_params(url)
+                filtered_params=ParamUtil.filter_post_body_fields(
+                    params, ["id"], ["params", "request"])
+                sql="""
+                select id from fin_glm_ve_head_tr where remark='测试正常批量业务流程' and ve_status='APPROVING' and deleted=0 order by created_at desc limit 3;
+                """
+                voucher_ids=self.query_service.query(sql)
+                filtered_params['params']['request']['id'] = [voucher_id["id"] for voucher_id in voucher_ids]
+                response, _ = self.standard_api_call(
+                    api_key="总账-凭证-凭证审核服务",
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
+                self.assert_util.assert_response_success(response)
+                a.json(filtered_params, "请求数据")
+                a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
     @case_decorator(
         story="总账凭证批量操作",
         title="批量复核",
@@ -741,26 +787,31 @@ class TestVoucherOperation(FiBaseTest):
     )
     def test_batch_check_voucher(self):
         """测试总账凭证批量复核"""
-        url=self.get_api_path("总账-凭证-凭证复核服务")
-        params,url=self.get_api_params(url)
-        filtered_params=ParamUtil.filter_post_body_fields(
-            params, ["id"], ["params", "request"])
-        sql="""
-        select id from fin_glm_ve_head_tr where remark='测试正常批量业务流程' and ve_status='CHECKING' and deleted=0 order by created_at desc limit 3;
-        """
-        voucher_ids=self.query_service.query(sql)
-        filtered_params['params']['request']['id'] = [voucher_id["id"] for voucher_id in voucher_ids]
-        response, _ = self.standard_api_call(
-            api_key="总账-凭证-凭证复核服务",
-            set_dict=filtered_params.get("params", {}),
-            store_id_as=None,
-            use_param_util=False,
-            param_path=["params"]
-        )
-        self.assert_util.assert_response_success(response)
-        a.json(filtered_params, "请求数据")
-        a.json(response, "响应数据")
-        
+        try:
+                url=self.get_api_path("总账-凭证-凭证复核服务")
+                params,url=self.get_api_params(url)
+                filtered_params=ParamUtil.filter_post_body_fields(
+                    params, ["id"], ["params", "request"])
+                sql="""
+                select id from fin_glm_ve_head_tr where remark='测试正常批量业务流程' and ve_status='CHECKING' and deleted=0 order by created_at desc limit 3;
+                """
+                voucher_ids=self.query_service.query(sql)
+                filtered_params['params']['request']['id'] = [voucher_id["id"] for voucher_id in voucher_ids]
+                response, _ = self.standard_api_call(
+                    api_key="总账-凭证-凭证复核服务",
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
+                self.assert_util.assert_response_success(response)
+                a.json(filtered_params, "请求数据")
+                a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
     @case_decorator(
         story="总账凭证批量操作",
         title="批量记账",
@@ -772,30 +823,35 @@ class TestVoucherOperation(FiBaseTest):
     )
     def test_batch_account_voucher(self):
         """测试总账凭证批量记账"""
-        url=self.get_api_path("总账-凭证-凭证批量记账服务")
-        params,url=self.get_api_params(url)
-        filtered_params=ParamUtil.filter_post_body_fields(
-            params, ["request"], ["params"])
-        sql="""
-        select id from fin_glm_ve_head_tr where remark='测试正常批量业务流程' and ve_status='WAIT_ACCOUNT' and deleted=0 order by created_at desc limit 3;
-        """
-        voucher_ids=self.query_service.query(sql)
-         # 验证是否有数据
-        if not voucher_ids:
-            raise ValueError("未找到待记账的凭证数据，请检查数据")
-        
-        filtered_params['params']['request']=voucher_ids
-        response, _ = self.standard_api_call(
-            api_key="总账-凭证-凭证批量记账服务",
-            set_dict=filtered_params.get("params", {}),
-            store_id_as=None,
-            use_param_util=False,
-            param_path=["params"]
-        )
-        self.assert_util.assert_response_success(response)
-        a.json(filtered_params, "请求数据")
-        a.json(response, "响应数据")
-    
+        try:
+                url=self.get_api_path("总账-凭证-凭证批量记账服务")
+                params,url=self.get_api_params(url)
+                filtered_params=ParamUtil.filter_post_body_fields(
+                    params, ["request"], ["params"])
+                sql="""
+                select id from fin_glm_ve_head_tr where remark='测试正常批量业务流程' and ve_status='WAIT_ACCOUNT' and deleted=0 order by created_at desc limit 3;
+                """
+                voucher_ids=self.query_service.query(sql)
+                 # 验证是否有数据
+                if not voucher_ids:
+                    raise ValueError("未找到待记账的凭证数据，请检查数据")
+
+                filtered_params['params']['request']=voucher_ids
+                response, _ = self.standard_api_call(
+                    api_key="总账-凭证-凭证批量记账服务",
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
+                self.assert_util.assert_response_success(response)
+                a.json(filtered_params, "请求数据")
+                a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
     @case_decorator(
         story="总账凭证批量操作",
         title="批量打印",
@@ -807,35 +863,40 @@ class TestVoucherOperation(FiBaseTest):
     )
     def test_batch_print_voucher(self):
         """测试总账凭证批量打印"""
-        url=self.get_api_path("FIN_GLM_VE_PRINT_STATUS_BY_ID_BATCH_SERVICE")
-        params,url=self.get_api_params(url)
-        filtered_params=ParamUtil.filter_post_body_fields(
-            params, ["ids"], ["params", "request"])
-        sql="""
-        select id from fin_glm_ve_head_tr order by created_at desc  limit 3;
-        """
-        voucher_ids=self.query_service.query(sql)
-        filtered_params['params']['request']['ids'] = [voucher_id["id"] for voucher_id in voucher_ids]
-        response, _ = self.standard_api_call(
-            api_key="FIN_GLM_VE_PRINT_STATUS_BY_ID_BATCH_SERVICE",
-            set_dict=filtered_params.get("params", {}),
-            store_id_as=None,
-            use_param_util=False,
-            param_path=["params"]
-        )
-        self.assert_util.assert_response_success(response)
-        sql=f"""
-        select print_status from fin_glm_ve_head_tr where id in ({','.join([str(voucher_id["id"]) for voucher_id in voucher_ids])})
-        """
-        print_status=self.query_service.query(sql)
-        if print_status:
-            for print_statue in print_status:
-                self.assert_util.assert_by_operator(print_statue["print_status"], "=", "PRINTED")
-        else:
-            raise ValueError("未找到打印状态数据，请检查数据")
-        a.json(filtered_params, "请求数据")
-        a.json(response, "响应数据")
-    
+        try:
+                url=self.get_api_path("FIN_GLM_VE_PRINT_STATUS_BY_ID_BATCH_SERVICE")
+                params,url=self.get_api_params(url)
+                filtered_params=ParamUtil.filter_post_body_fields(
+                    params, ["ids"], ["params", "request"])
+                sql="""
+                select id from fin_glm_ve_head_tr order by created_at desc  limit 3;
+                """
+                voucher_ids=self.query_service.query(sql)
+                filtered_params['params']['request']['ids'] = [voucher_id["id"] for voucher_id in voucher_ids]
+                response, _ = self.standard_api_call(
+                    api_key="FIN_GLM_VE_PRINT_STATUS_BY_ID_BATCH_SERVICE",
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
+                self.assert_util.assert_response_success(response)
+                sql=f"""
+                select print_status from fin_glm_ve_head_tr where id in ({','.join([str(voucher_id["id"]) for voucher_id in voucher_ids])})
+                """
+                print_status=self.query_service.query(sql)
+                if print_status:
+                    for print_statue in print_status:
+                        self.assert_util.assert_by_operator(print_statue["print_status"], "=", "PRINTED")
+                else:
+                    raise ValueError("未找到打印状态数据，请检查数据")
+                a.json(filtered_params, "请求数据")
+                a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
+
     @case_decorator(
         story="总账凭证操作",
         title="凭证冲销-蓝冲",
@@ -847,62 +908,67 @@ class TestVoucherOperation(FiBaseTest):
     )
     def test_offset_voucher(self):
         """测试总账凭证冲销-蓝冲"""
-        url=self.get_api_path("总账-凭证-凭证冲销服务")
-        params,url=self.get_api_params(url)
-        filtered_params=ParamUtil.filter_post_body_fields(
-            params, ["offsetType","sourceVeHeadId"], ["params", "request"])
-        #获取凭证头
-        sql="""
-        select id,vouch_number,vo_entry_date,biz_date,debit_total_amt,credit_total_amt from fin_glm_ve_head_tr where remark in ('测试正常业务流程','测试正常批量业务流程')and ve_status='ACCOUNTED' and deleted=0  and offset_status='UNOFFSET' order by created_at limit 1;
-        """
-        voucher_id,vouch_number,vo_entry_date,biz_date,debit_total_amt,credit_total_amt=self.query_service.query(sql)[0]["id"],self.query_service.query(sql)[0]["vouch_number"],self.query_service.query(sql)[0]["vo_entry_date"],self.query_service.query(sql)[0]["biz_date"],self.query_service.query(sql)[0]["debit_total_amt"],self.query_service.query(sql)[0]["credit_total_amt"]
-        #获取凭证行
-        sql=f"""
-        select ve_item_descr,debit_amt,credit_amt from fin_glm_ve_item_tr where ve_head_id={voucher_id}
-        """
-        voucher_items=self.query_service.query(sql)
-        set_dict={
-            "offsetType": "BLUE",
-            "sourceVeHeadId": voucher_id
-        }
-        ParamUtil.set_request_params(filtered_params, set_dict)
-        response, _ = self.standard_api_call(
-            api_key="总账-凭证-凭证冲销服务",
-            set_dict=filtered_params.get("params", {}),
-            store_id_as=None,
-            use_param_util=False,
-            param_path=["params"]
-        )
-        
-        self.assert_util.assert_response_success(response)
-        #凭证头信息断言
-        self.assert_util.assert_by_operator(response["data"]["data"]['voEntryDate'], "=",int(datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp() * 1000) )
-        self.assert_util.assert_by_operator(response["data"]["data"]['debitTotalAmt'], "=", float(debit_total_amt))
-        self.assert_util.assert_by_operator(response["data"]["data"]['creditTotalAmt'], "=", float(credit_total_amt))
-        self.assert_util.assert_by_operator(response["data"]["data"]['veStatus'], "=", "WAIT_ACCOUNT")
-        self.assert_util.assert_by_operator(response["data"]["data"]['offsetStatus'], "=", "UNOFFSET")
-        self.assert_util.assert_by_operator(response["data"]["data"]['whetherOffset'], "=", True)
-        #凭证行信息断言
-        ve_items=response["data"]["data"].get("veItems",[])
-        assert len(ve_items) == len(voucher_items), "凭证行数量不一致"
-        for voucher_item, ve_item in zip(voucher_items, ve_items):
-            self.assert_util.assert_by_operator(ve_item["veItemDescr"], 
-                                                "=", 
-                                                f'冲-{vo_entry_date.strftime("%Y%m%d")}-{vouch_number}-{voucher_item["ve_item_descr"]}')
-            if ve_item.get("debitAmt"):
-                self.assert_util.assert_by_operator(voucher_item["debit_amt"], "=",None)
-            if ve_item.get("creditAmt"):
-                self.assert_util.assert_by_operator(voucher_item["credit_amt"], "=",None)
-            if not ve_item.get("debitAmt"):
-                self.assert_util.assert_by_operator(float(voucher_item["debit_amt"]), "=",ve_item["creditAmt"])
-            if not ve_item.get("creditAmt"):
-                self.assert_util.assert_by_operator(float(voucher_item["credit_amt"]), "=",ve_item["debitAmt"])
-        
-        
-        
-        
-        a.json(filtered_params, "请求数据")
-        a.json(response, "响应数据")
+        try:
+                url=self.get_api_path("总账-凭证-凭证冲销服务")
+                params,url=self.get_api_params(url)
+                filtered_params=ParamUtil.filter_post_body_fields(
+                    params, ["offsetType","sourceVeHeadId"], ["params", "request"])
+                #获取凭证头
+                sql="""
+                select id,vouch_number,vo_entry_date,biz_date,debit_total_amt,credit_total_amt from fin_glm_ve_head_tr where remark in ('测试正常业务流程','测试正常批量业务流程')and ve_status='ACCOUNTED' and deleted=0  and offset_status='UNOFFSET' order by created_at limit 1;
+                """
+                voucher_id,vouch_number,vo_entry_date,_biz_date,debit_total_amt,credit_total_amt=self.query_service.query(sql)[0]["id"],self.query_service.query(sql)[0]["vouch_number"],self.query_service.query(sql)[0]["vo_entry_date"],self.query_service.query(sql)[0]["biz_date"],self.query_service.query(sql)[0]["debit_total_amt"],self.query_service.query(sql)[0]["credit_total_amt"]
+                #获取凭证行
+                sql=f"""
+                select ve_item_descr,debit_amt,credit_amt from fin_glm_ve_item_tr where ve_head_id={voucher_id}
+                """
+                voucher_items=self.query_service.query(sql)
+                set_dict={
+                    "offsetType": "BLUE",
+                    "sourceVeHeadId": voucher_id
+                }
+                ParamUtil.set_request_params(filtered_params, set_dict)
+                response, _ = self.standard_api_call(
+                    api_key="总账-凭证-凭证冲销服务",
+                    set_dict=filtered_params.get("params", {}),
+                    store_id_as=None,
+                    use_param_util=False,
+                    param_path=["params"]
+                )
+
+                self.assert_util.assert_response_success(response)
+                #凭证头信息断言
+                self.assert_util.assert_by_operator(response["data"]["data"]['voEntryDate'], "=",int(datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp() * 1000) )
+                self.assert_util.assert_by_operator(response["data"]["data"]['debitTotalAmt'], "=", float(debit_total_amt))
+                self.assert_util.assert_by_operator(response["data"]["data"]['creditTotalAmt'], "=", float(credit_total_amt))
+                self.assert_util.assert_by_operator(response["data"]["data"]['veStatus'], "=", "WAIT_ACCOUNT")
+                self.assert_util.assert_by_operator(response["data"]["data"]['offsetStatus'], "=", "UNOFFSET")
+                self.assert_util.assert_by_operator(response["data"]["data"]['whetherOffset'], "=", True)
+                #凭证行信息断言
+                ve_items=response["data"]["data"].get("veItems",[])
+                assert len(ve_items) == len(voucher_items), "凭证行数量不一致"
+                for voucher_item, ve_item in zip(voucher_items, ve_items):
+                    self.assert_util.assert_by_operator(ve_item["veItemDescr"], 
+                                                        "=", 
+                                                        f'冲-{vo_entry_date.strftime("%Y%m%d")}-{vouch_number}-{voucher_item["ve_item_descr"]}')
+                    if ve_item.get("debitAmt"):
+                        self.assert_util.assert_by_operator(voucher_item["debit_amt"], "=",None)
+                    if ve_item.get("creditAmt"):
+                        self.assert_util.assert_by_operator(voucher_item["credit_amt"], "=",None)
+                    if not ve_item.get("debitAmt"):
+                        self.assert_util.assert_by_operator(float(voucher_item["debit_amt"]), "=",ve_item["creditAmt"])
+                    if not ve_item.get("creditAmt"):
+                        self.assert_util.assert_by_operator(float(voucher_item["credit_amt"]), "=",ve_item["debitAmt"])
+
+
+
+
+                a.json(filtered_params, "请求数据")
+                a.json(response, "响应数据")
+
+        except Exception as e:
+            a.text(str(e), "失败原因")
+            raise
 if __name__ == "__main__":
     test=TestVoucherOperation()
     test.setup_class()

@@ -4,10 +4,10 @@
 包含：应付单分页查询、应付单详情查询、应付单新建等
 """
 
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))

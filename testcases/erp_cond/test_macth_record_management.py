@@ -1,14 +1,14 @@
-import allure
-import pytest
-from pathlib import Path
 import sys
+from pathlib import Path
 from typing import Any
+
+import allure
 
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
-from . import ErpCondBaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
+
+from . import ErpCondBaseTest
 
 
 @allure.epic("ERP条件模块")

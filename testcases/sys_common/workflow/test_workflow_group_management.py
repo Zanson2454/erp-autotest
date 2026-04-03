@@ -2,10 +2,10 @@
 审批流-审批流组管理测试用例
 覆盖审批流组查询等功能
 """
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))

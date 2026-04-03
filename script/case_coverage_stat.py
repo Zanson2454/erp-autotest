@@ -1,8 +1,10 @@
-import re
 import json
-from pathlib import Path
-import yaml
+import re
 from collections import defaultdict
+from pathlib import Path
+
+import yaml
+
 
 def load_yaml(path):
     path = Path(path).expanduser().resolve()

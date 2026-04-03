@@ -76,7 +76,7 @@ class TestPurDnFlowFromRecord(ScmDelBaseTest):
         try:
             dn_head_id = self._ensure_dn_head_id()
             if not dn_head_id:
-                pytest.skip("未查询到可用采购交货单，跳过项目行分组查询")
+                pytest.fail("未查询到可用采购交货单，跳过项目行分组查询")
 
             response, _ = self.standard_api_call(
                 api_key="DN-采购-项目行分组服务",

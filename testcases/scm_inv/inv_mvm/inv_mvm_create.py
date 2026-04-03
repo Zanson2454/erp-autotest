@@ -417,8 +417,8 @@ class MobileVoucherCreator(ScmInvBaseTest):
     
     def _generate_batch_code(self):
         """生成批次编码（确保唯一性）"""
-        import time
         import random
+        import time
         # 使用时间戳 + 随机数确保唯一性
         timestamp = int(time.time() * 1000)  # 毫秒时间戳
         random_suffix = random.randint(100, 999)

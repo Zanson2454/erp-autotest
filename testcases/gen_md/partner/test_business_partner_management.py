@@ -2,6 +2,7 @@ import copy
 
 import allure
 import pytest
+
 from testcases.gen_md import GenMdBaseTest
 from utils.report_util import a, case_decorator
 
@@ -1351,105 +1352,6 @@ class TestBusinessPartnerManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
-    @case_decorator(
-        story="合作伙伴主数据",
-        title="测试合作伙伴标准导入",
-        description="验证合作伙伴标准导入功能",
-        severity="normal",
-        file_level_order=17,
-        tags=["合作伙伴", "导入"]
-    )
-    def test_import_business_partner(self):
-        """合作伙伴标准导入用例"""
-        try:
-            api_path = self.get_api_path("合作伙伴标准导入服务")
-            params,  url = self.get_api_params(api_path)
 
-            set_dict = {
-                "importConfig": {
-                    "fileName": f"合作伙伴导入_{self.mock_util.get_timestamp()}",
-                    "fileType": "EXCEL"
-                }
-            }
-            response, _ = self.standard_api_call(
-                api_key="合作伙伴标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["importConfig"]
-            )
-            self.assert_util.assert_response_success(response)
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
-
-    @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
-    @case_decorator(
-        story="合作伙伴主数据",
-        title="测试通过OSS提交合作伙伴导入任务",
-        description="验证通过OSS提交合作伙伴导入任务功能",
-        severity="normal",
-        file_level_order=18,
-        tags=["合作伙伴", "OSS导入"]
-    )
-    def test_submit_business_partner_import_task_by_oss(self):
-        """通过OSS提交合作伙伴导入任务用例"""
-        try:
-            set_dict = {
-                "taskName": f"合作伙伴OSS导入任务_{self.mock_util.get_timestamp()}",
-                "ossConfig": {
-                    "bucketName": "test-bucket",
-                    "objectKey": f"partner_import_{self.mock_util.get_timestamp()}.xlsx"
-                },
-                "importConfig": {
-                    "fileType": "EXCEL",
-                    "sheetName": "合作伙伴"
-                }
-            }
-            response, _ = self.standard_api_call(
-                api_key="合作伙伴-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=["taskName", "ossConfig", "importConfig"]
-            )
-            self.assert_util.assert_response_success(response)
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise 
 
     # ============= 跳过的特殊功能测试用例 =============
-    @pytest.mark.skip(reason="评分查询模板信息接口业务功能暂未明确，跳过测试")
-    @case_decorator(
-        story="合作伙伴主数据",
-        title="测试评分查询模板信息",
-        description="验证评分查询模板信息功能",
-        severity="normal",
-        file_level_order=19,
-        tags=["合作伙伴", "评分模板"]
-    )
-    def test_survey_query_template(self):
-        """评分查询模板信息用例"""
-        try:
-            set_dict = {
-                "templateId": 1,
-                "templateType": "SURVEY_TEMPLATE"
-            }
-            response, _ = self.standard_api_call(
-                api_key="GEN-评分查询模板信息",
-                set_dict=set_dict,
-                fields_to_filter=["templateId", "templateType"]
-            )
-            self.assert_util.assert_response_success(response)
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise

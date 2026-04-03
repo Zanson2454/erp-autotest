@@ -244,6 +244,11 @@ class AssertHelper:
             logger.error(f"断言失败: {log}，{message}")
             raise AssertionError(f"断言失败: {log}，{message}")
 
+    @staticmethod
+    def assert_not_empty(actual: Any, message: str = '') -> None:
+        """兼容历史断言接口：非空断言。"""
+        AssertHelper.assert_by_operator(actual, "not_empty", message=message)
+
 if __name__ == "__main__":
     assert_helper = AssertHelper()
     assert_helper.assert_response_success({"success": True}) # 断言响应成功

@@ -1,6 +1,8 @@
+from typing import Any
+
 import allure
 import pytest
-from typing import Any
+
 from testcases.gen_md import GenMdBaseTest
 from utils.report_util import a, case_decorator
 
@@ -452,51 +454,6 @@ class TestDynamicManagement(GenMdBaseTest):
             raise
 
     # ================ 动态表单导入导出管理 ================
-    @case_decorator(
-        story="动态表单导入导出管理",
-        title="测试动态表单模板标准导入",
-        description="验证动态表单模板类标准导入服务功能",
-        severity="normal",
-        file_level_order=9,
-        tags=["动态表单", "导入", "GEN_DYNAMIC_FORM_TEMPLATE_MD_GEI_IMPORT_SERVICE"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_template_import(self):
-        """动态表单模板标准导入用例 - GEN_DYNAMIC_FORM_TEMPLATE_MD_GEI_IMPORT_SERVICE"""
-        try:
-            # 构建导入数据
-            import_data = [
-                {
-                    "code": self.mock_util.generate_unique_code(tag="IMPORT_DYN"),
-                    "name": f"导入测试动态表单模板_{self.mock_util.get_timestamp()}",
-                    "templateType": "FORM",
-                    "formConfig": {
-                        "fields": [
-                            {
-                                "fieldName": "importField",
-                                "fieldType": "INPUT",
-                                "fieldLabel": "导入字段"
-                            }
-                        ]
-                    },
-                    "description": "导入的动态表单模板描述"
-                }
-            ]
-
-            set_dict = {"data": import_data}
-            response, _ = self.standard_api_call(
-                api_key="动态表单模板类标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["data"]
-            )
-            self.assert_util.assert_response_data(response)
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="动态表单导入导出管理",
@@ -533,36 +490,6 @@ class TestDynamicManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @case_decorator(
-        story="动态表单任务管理",
-        title="测试动态表单模板OSS导入任务",
-        description="验证动态表单模板类-导入导出任务管理接口-通过OSS提交导入任务功能",
-        severity="normal",
-        file_level_order=11,
-        tags=["动态表单", "任务管理", "GEN_DYNAMIC_FORM_TEMPLATE_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_template_oss_import_task(self):
-        """动态表单模板OSS导入任务用例 - GEN_DYNAMIC_FORM_TEMPLATE_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
-        try:
-            set_dict = {
-                "fileKey": "test_dynamic_template_import_file.xlsx",
-                "taskName": f"动态表单模板导入任务_{self.mock_util.get_timestamp()}",
-                "templateId": 1
-            }
-            response, _ = self.standard_api_call(
-                api_key="动态表单模板类-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=["fileKey", "taskName", "templateId"]
-            )
-            self.assert_util.assert_response_data(response)
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="动态表单任务管理",

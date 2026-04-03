@@ -2,10 +2,11 @@
 通知任务管理测试用例
 覆盖通知任务查询等功能
 """
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))

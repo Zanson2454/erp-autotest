@@ -2,10 +2,10 @@
 库存类型配置管理测试模块
 覆盖库存类型的CRUD操作、分页查询、导出功能
 """
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent.parent
 sys.path.append(str(project_root))
@@ -196,7 +196,6 @@ class TestInvTypeManagement(ScmInvBaseTest):
                 self._ensure_save_inv_type()
             
             # 1. 构建导出URL
-            url = "https://t-erp-huoshan-portal-test.app.duandian.com/api/trantor/service/engine/execute/SCM_INV$INV_INV_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST"
             
             # 2. 构造导出参数（基于curl命令的完整参数结构）
             timestamp = self.mock_util.get_timestamp()

@@ -1,8 +1,7 @@
-import allure
-import pytest
 import sys
-import time
 from pathlib import Path
+
+import allure
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
@@ -41,7 +40,7 @@ class TestQuotePrimary(SlsBase):
         smoke=True,
         tags=["销售订单", "报价", "创建"]
     )
-    def test_01_create_draft_quote(self):
+    def test_create_draft_quote(self):
         """测试创建草稿态报价单"""
         try:
             # 使用公共方法创建草稿态报价单
@@ -62,7 +61,7 @@ class TestQuotePrimary(SlsBase):
         smoke=True,
         tags=["销售订单", "报价", "提交"]
     )
-    def test_02_submit_draft_quote(self):
+    def test_submit_draft_quote(self):
         """测试提交草稿态报价单（使用syncSubmit同步提交，不触发审批）"""
         try:
             # 1. 确保有草稿报价单
@@ -147,7 +146,7 @@ class TestQuotePrimary(SlsBase):
         smoke=True,
         tags=["销售订单", "报价", "生成订单"]
     )
-    def test_03_quote_to_order(self):
+    def test_quote_to_order(self):
         """测试报价单生成订单"""
         try:
             # 1. 确保有已提交的报价数据
@@ -237,7 +236,7 @@ class TestQuotePrimary(SlsBase):
         smoke=True,
         tags=["销售订单", "报价", "交货单"]
     )
-    def test_04_create_delivery_from_order(self):
+    def test_create_delivery_from_order(self):
         """测试订单发货创建交货单"""
         try:
             # 1. 确保有订单数据

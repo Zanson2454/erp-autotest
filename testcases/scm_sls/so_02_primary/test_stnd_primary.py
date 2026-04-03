@@ -1,16 +1,14 @@
-import copy
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
 
 # 添加项目根目录到 Python 路径
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from utils.report_util import a, case_decorator
 from testcases.scm_sls import SlsBase
-from utils.param_util import ParamUtil
+from utils.report_util import a, case_decorator
 
 
 @allure.epic("销售管理")
@@ -76,14 +74,7 @@ class TestStandardSalesOrder(SlsBase):
             "soItemTypeId": {"id": item_data["so_item_type_id"]} if item_data.get("so_item_type_id") else None,
         }
 
-        complete_payload = {
-            "sceneKey": "SCM_SLS$sls_so_item",
-            "viewKey": "SCM_SLS$sls_so_item:list",
-            "viewTitle": "list",
-            "appId": 0,
-            "teamId": 22,
-            "serviceKey": "SCM_SLS$SO_ITEM_MANUAL_COMPLETED_EVENT_SERVICE",
-            "params": {"request": order_item},
+        complete_payload = {            "params": {"request": order_item},
         }
         complete_response, _ = self.standard_api_call(
             api_key="订单项目行手动完成服务",
@@ -105,7 +96,7 @@ class TestStandardSalesOrder(SlsBase):
         smoke=True,
         tags=["销售订单", "标准流程"]
     )
-    def test_01_create_effective_standard_order(self):
+    def test_create_effective_standard_order(self):
         """测试创建已生效标准销售订单"""
         try:
             # 使用继承的create_sales_order方法创建已生效订单
@@ -146,7 +137,7 @@ class TestStandardSalesOrder(SlsBase):
         smoke=True,
         tags=["销售订单", "订单行", "完成", "标准流程"]
     )
-    def test_02_complete_order_item(self):
+    def test_complete_order_item(self):
         """测试完成销售订单行"""
         try:
             # 1. 确保有已生效的订单
@@ -199,14 +190,7 @@ class TestStandardSalesOrder(SlsBase):
             
             # 7. 参数处理：使用查询到的订单行完整数据
             # 直接构造完成订单行的参数，使用查询到的完整订单行数据
-            filtered_complete_params = {
-                "sceneKey": "SCM_SLS$sls_so_item",
-                "viewKey": "SCM_SLS$sls_so_item:list",
-                "viewTitle": "list",
-                "appId": 0,
-                "teamId": 22,
-                "serviceKey": "SCM_SLS$SO_ITEM_MANUAL_COMPLETED_EVENT_SERVICE",
-                "params": {
+            filtered_complete_params = {                "params": {
                     "request": order_item  # 使用查询到的完整订单行数据
                 }
             }
@@ -275,7 +259,7 @@ class TestStandardSalesOrder(SlsBase):
         smoke=True,
         tags=["销售订单", "订单行", "取消完成", "标准流程"]
     )
-    def test_03_cancel_complete_order_item(self):
+    def test_cancel_complete_order_item(self):
         """测试取消完成销售订单行"""
         try:
             # 1. 确保订单行已完成
@@ -330,14 +314,7 @@ class TestStandardSalesOrder(SlsBase):
             cancel_complete_params, cancel_complete_url = self.get_api_params(cancel_complete_api_path)
             
             # 构造取消完成订单行的参数，使用查询到的完整订单行数据
-            filtered_cancel_complete_params = {
-                "sceneKey": "SCM_SLS$sls_so_item",
-                "viewKey": "SCM_SLS$sls_so_item:list",
-                "viewTitle": "list",
-                "appId": 0,
-                "teamId": 22,
-                "serviceKey": "SCM_SLS$SO_ITEM_MANUAL_CANCEL_COMPLETED_EVENT_SERVICE",
-                "params": {
+            filtered_cancel_complete_params = {                "params": {
                     "request": order_item  # 使用查询到的完整订单行数据
                 }
             }
@@ -620,7 +597,7 @@ class TestStandardSalesOrder(SlsBase):
         smoke=True,
         tags=["销售订单", "交货单", "标准流程"]
     )
-    def test_04_create_delivery_from_order(self):
+    def test_create_delivery_from_order(self):
         """测试基于已生效销售订单创建交货单"""
         try:
             # 确保有已生效的订单

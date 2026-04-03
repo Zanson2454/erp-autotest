@@ -1,8 +1,7 @@
-import allure
-import pytest
 import sys
-import time
 from pathlib import Path
+
+import allure
 
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
@@ -93,7 +92,7 @@ class TestQuoteCrud(SlsBase):
         smoke=True,
         tags=["报价单", "创建", "编辑"]
     )
-    def test_01_create_and_edit_draft_quote(self):
+    def test_create_and_edit_draft_quote(self):
         """测试创建草稿态报价单并编辑保存"""
         try:
             # 1. 调用公共方法创建草稿态报价单
@@ -171,7 +170,7 @@ class TestQuoteCrud(SlsBase):
         order=2,
         tags=["报价单", "复制", "保存"]
     )
-    def test_02_copy_and_save_draft_quote(self):
+    def test_copy_and_save_draft_quote(self):
         """测试复制草稿态报价单并保存"""
         try:
             # 1. 确保有草稿态报价单
@@ -262,7 +261,7 @@ class TestQuoteCrud(SlsBase):
         order=3,
         tags=["报价单", "删除"]
     )
-    def test_03_delete_copied_quote(self):
+    def test_delete_copied_quote(self):
         """测试删除复制的草稿态报价单"""
         try:
             # 1. 确保有复制的报价单
@@ -313,7 +312,7 @@ class TestQuoteCrud(SlsBase):
         smoke=True,
         tags=["报价单", "创建", "提交"]
     )
-    def test_04_create_submitted_quote(self):
+    def test_create_submitted_quote(self):
         """测试创建已生效报价单"""
         try:
             # 1. 调用公共方法创建已生效报价单
@@ -332,7 +331,7 @@ class TestQuoteCrud(SlsBase):
         order=5,
         tags=["报价单", "作废"]
     )
-    def test_05_cancel_submitted_quote(self):
+    def test_cancel_submitted_quote(self):
         """测试作废已生效报价单"""
         try:
             # 1. 确保有已生效的报价单
@@ -379,16 +378,7 @@ class TestQuoteCrud(SlsBase):
             _, url = self.get_api_params(api_path)
             
             # 6. 构造请求体（按照用户提供的curl命令格式，只传递id参数）
-            request_body = {
-                "sceneKey": "SCM_SLS$sls_so_price",
-                "viewKey": "SCM_SLS$sls_so_price:list",
-                "viewTitle": "list",
-                "buttonKey": "SCM_SLS$sls_so_price-9s2Pxoo8-Zbl9Ll367f8G",
-                "buttonName": "作废",
-                "appId": 0,
-                "teamId": 22,
-                "serviceKey": "SCM_SLS$SLS_REPEAL_EVENT_SERVICE",
-                "params": {
+            request_body = {                "params": {
                     "request": {
                         "id": self.quote_id_submit
                     }
@@ -425,7 +415,7 @@ class TestQuoteCrud(SlsBase):
         order=6,
         tags=["报价单", "详情查询"]
     )
-    def test_06_query_quote_detail(self):
+    def test_query_quote_detail(self):
         """测试查看报价单详情"""
         try:
             # 1. 确保有报价单数据（优先使用已生效的，其次使用草稿的）
@@ -566,7 +556,7 @@ class TestQuoteCrud(SlsBase):
         order=7,
         tags=["报价单", "批量删除"]
     )
-    def test_07_batch_delete_draft_quotes(self):
+    def test_batch_delete_draft_quotes(self):
         """测试批量删除草稿态报价单"""
         try:
             # 1. 创建多个草稿态报价单

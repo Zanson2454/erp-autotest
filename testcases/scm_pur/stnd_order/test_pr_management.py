@@ -1,6 +1,7 @@
+import time
+
 import allure
 import pytest
-import time
 
 from testcases.scm_pur import ScmPurBaseTest
 from utils.report_util import a, case_decorator
@@ -325,7 +326,7 @@ class TestPrManagement(ScmPurBaseTest):
             if not pr_head_id:
                 pr_head_id, _ = self._ensure_pr_head_and_item_id()
             if not pr_head_id:
-                pytest.skip("未查询到可用采购申请，跳过详情查询")
+                pytest.fail("未查询到可用采购申请，跳过详情查询")
 
             response = self._query_pr_detail(pr_head_id)
             detail = response.get("data", {}).get("data", {})
@@ -352,13 +353,13 @@ class TestPrManagement(ScmPurBaseTest):
                 create_resp, pr_head_id = self._create_pr_draft()
                 self.assert_util.assert_response_data(create_resp)
             if not pr_head_id:
-                pytest.skip("无法准备草稿采购申请，跳过删除")
+                pytest.fail("无法准备草稿采购申请，跳过删除")
 
             detail_resp = self._query_pr_detail(pr_head_id)
             detail = detail_resp.get("data", {}).get("data", {}) or {}
             doc_status = detail.get("documentStatus")
             if doc_status and doc_status != "DRAFT":
-                pytest.skip(f"仅草稿态可删除，当前状态: {doc_status}")
+                pytest.fail(f"仅草稿态可删除，当前状态: {doc_status}")
 
             response, _ = self.standard_api_call(
                 api_key="(系统)删除数据服务",
@@ -386,7 +387,7 @@ class TestPrManagement(ScmPurBaseTest):
             if not pr_head_id:
                 pr_head_id, _ = self._ensure_pr_head_and_item_id()
             if not pr_head_id:
-                pytest.skip("未查询到可复制采购申请")
+                pytest.fail("未查询到可复制采购申请")
 
             response, copied_id = self.standard_api_call(
                 api_key="PR-申请复制服务",
@@ -416,9 +417,9 @@ class TestPrManagement(ScmPurBaseTest):
         try:
             pr_head_id, _ = self._ensure_pr_head_and_item_id()
             if not pr_head_id:
-                pytest.skip("未查询到可指派采购申请")
+                pytest.fail("未查询到可指派采购申请")
             if not self.pur_employee_id:
-                pytest.skip("未获取到采购员ID，跳过指派")
+                pytest.fail("未获取到采购员ID，跳过指派")
 
             response, _ = self.standard_api_call(
                 api_key="PR-整单指派服务",
@@ -441,7 +442,7 @@ class TestPrManagement(ScmPurBaseTest):
                             query_params={"tmodule": "SCM_PUR"},
                         )
                     if not response.get("success"):
-                        pytest.skip("当前申请行状态不满足指派前置条件，且自动推进后仍不可指派")
+                        pytest.fail("当前申请行状态不满足指派前置条件，且自动推进后仍不可指派")
             self.assert_util.assert_response_data(response)
             a.json(response, "采购申请任务指派响应")
         except Exception as e:
@@ -459,7 +460,7 @@ class TestPrManagement(ScmPurBaseTest):
         try:
             _, pr_item_id = self._ensure_pr_head_and_item_id()
             if not pr_item_id:
-                pytest.skip("未查询到可匹配价格协议的申请行")
+                pytest.fail("未查询到可匹配价格协议的申请行")
 
             response, _ = self.standard_api_call(
                 api_key="PR-采购申请行已指派-批量自动匹配价格协议服务",
@@ -484,9 +485,9 @@ class TestPrManagement(ScmPurBaseTest):
         try:
             _, pr_item_id = self._ensure_pr_head_and_item_id()
             if not pr_item_id:
-                pytest.skip("未查询到可匹配配额协议的申请行")
+                pytest.fail("未查询到可匹配配额协议的申请行")
             if not self.quota_id:
-                pytest.skip("未获取到配额协议ID，跳过匹配")
+                pytest.fail("未获取到配额协议ID，跳过匹配")
 
             response, _ = self.standard_api_call(
                 api_key="PR-ITEM-匹配配额协议-保存服务",
@@ -512,9 +513,9 @@ class TestPrManagement(ScmPurBaseTest):
         try:
             _, pr_item_id = self._ensure_pr_head_and_item_id()
             if not pr_item_id:
-                pytest.skip("未查询到可更新供应商的申请行")
+                pytest.fail("未查询到可更新供应商的申请行")
             if not self.vend_id:
-                pytest.skip("未获取到供应商ID，跳过更新")
+                pytest.fail("未获取到供应商ID，跳过更新")
 
             response, _ = self.standard_api_call(
                 api_key="根据id更新采购申请行",
@@ -577,9 +578,9 @@ class TestPrManagement(ScmPurBaseTest):
         try:
             _, pr_item_id = self._ensure_pr_head_and_item_id()
             if not pr_item_id:
-                pytest.skip("未查询到可转办采购任务")
+                pytest.fail("未查询到可转办采购任务")
             if not self.pur_employee_id:
-                pytest.skip("未获取到采购员ID，跳过转办")
+                pytest.fail("未获取到采购员ID，跳过转办")
 
             response, _ = self.standard_api_call(
                 api_key="PR-采购任务-转办服务",
@@ -605,7 +606,7 @@ class TestPrManagement(ScmPurBaseTest):
         try:
             _, pr_item_id = self._ensure_pr_head_and_item_id()
             if not pr_item_id:
-                pytest.skip("未查询到可转采购订单的采购任务")
+                pytest.fail("未查询到可转采购订单的采购任务")
 
             response, _ = self.standard_api_call(
                 api_key="PR-ITEM-创建采购订单服务",

@@ -1,22 +1,17 @@
 
-import allure
-import pytest
-from typing import Any
-import pytest
-import os
 import sys
-import allure
 from pathlib import Path
+
+import allure
 
 # 设置项目根目录到Python路径
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
-from utils.param_util import ParamUtil
-from utils.report_util import a, case_decorator
 from testcases.erp_fi import FiBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
+
 
 @allure.epic("基础财务")
 @allure.feature("添加基础财务配置")

@@ -35,7 +35,7 @@ import sys
 from datetime import datetime
 from functools import wraps
 from pathlib import Path
-from typing import Any, Callable, Generator
+from typing import Any, Callable, Generator, Optional
 
 import allure
 import pytest

@@ -183,24 +183,46 @@ class DBManager:
                 raise RuntimeError("数据库连接未建立")
             return self.__class__._connection
 
-    def query(self, sql: str, params: Optional[List[Any]] = None) -> List[Dict[str, Any]]:
-        """查询方法 - 支持实例和类调用"""
-        connection = self._get_connection()
+    def query(self, sql: Optional[str] = None, params: Optional[List[Any]] = None) -> List[Dict[str, Any]]:
+        """查询方法 - 兼容实例调用与历史类调用。
+
+        兼容历史调用方式:
+            DBManager.query("select ...", params)
+        """
+        manager: Optional["DBManager"] = None
+        actual_sql = sql
+        actual_params = params
+
+        # 历史兼容：DBManager.query("select ...")
+        if isinstance(self, str):
+            actual_sql = self
+            actual_params = sql if params is None and isinstance(sql, (list, tuple, dict)) else params
+            manager = DBManager()
+        elif isinstance(self, DBManager):
+            manager = self
+        else:
+            # 理论兜底：保持行为可预期
+            manager = DBManager()
+
+        if not isinstance(actual_sql, str) or not actual_sql.strip():
+            raise ValueError(f"SQL不能为空，当前入参: sql={actual_sql!r}, params={actual_params!r}")
+
+        connection = manager._get_connection()
             
         try:
             with connection.cursor() as cursor:
-                if params:
-                    cursor.execute(sql, params)
+                if actual_params:
+                    cursor.execute(actual_sql, actual_params)
                 else:
-                    cursor.execute(sql)
+                    cursor.execute(actual_sql)
                 result = cursor.fetchall()
-                self._logger.debug(f"执行查询: {sql}")
-                if params:
-                    self._logger.debug(f"查询参数: {params}")
-                self._logger.debug(f"查询结果: {json.dumps(list(result), ensure_ascii=False, cls=DecimalEncoder)}")
+                manager._logger.debug(f"执行查询: {actual_sql}")
+                if actual_params:
+                    manager._logger.debug(f"查询参数: {actual_params}")
+                manager._logger.debug(f"查询结果: {json.dumps(list(result), ensure_ascii=False, cls=DecimalEncoder)}")
                 return list(result)
         except Exception as e:
-            self._logger.warning(f"查询执行失败: {e} | SQL: {sql} | 参数: {params}")
+            manager._logger.warning(f"查询执行失败: {e} | SQL: {actual_sql} | 参数: {actual_params}")
             raise
 
     def query_one(self, sql: str, params: Optional[List[Any]] = None) -> Optional[Dict[str, Any]]:

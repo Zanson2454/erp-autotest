@@ -1,10 +1,9 @@
-import pytest
 import allure
-import time
 
 from testcases.erp_fin import FinBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
+
 
 @allure.epic("ERP通业财模块")
 @allure.feature("结算管理")

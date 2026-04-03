@@ -2,10 +2,11 @@
 特殊库存类型配置管理测试模块
 覆盖特殊库存类型的CRUD操作、分页查询、导出功能
 """
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent.parent
 sys.path.append(str(project_root))

@@ -6,14 +6,15 @@
 - 提供统一的测试用例装饰器，简化测试用例的装饰器使用
 """
 
-from typing import Dict, List, Any, Optional, Union
-import re
-import inspect
-import sys
-import uuid
+from typing import Any, Dict, List, Optional
 
 
 class ParamUtil:
+    # 兼容旧用例：部分代码先手动 get_api_path/get_api_params，再错误地把 self.apis(dict) 传给 standard_api_call。
+    # 记录最近一次解析的 key/path，供调用层兜底恢复。
+    _last_api_key: Optional[str] = None
+    _last_api_path: Optional[str] = None
+
     @staticmethod
     def _sanitize_pageable(pageable: Dict[str, Any]) -> Dict[str, Any]:
         """清洗 pageable 结构，避免无效排序/筛选结构触发后端参数校验错误。"""
@@ -198,7 +199,10 @@ class ParamUtil:
             str: 对应的API路径，如"/api/trantor/service/engine/execute/ERP_GEN$gen_mat_md_PAGING_DATA_SERVICE"
                  如果找不到对应的API，则返回None
         """
-        return apis_dict.get(api_key, {}).get("path")
+        api_path = apis_dict.get(api_key, {}).get("path")
+        ParamUtil._last_api_key = api_key
+        ParamUtil._last_api_path = api_path
+        return api_path
 
     @staticmethod
     def get_api_params(
@@ -225,6 +229,7 @@ class ParamUtil:
 
         # 获取请求参数 (从api_params字典中获取对应api_path的参数模板)
         params = api_params_dict.get(api_path, {})
+        ParamUtil._last_api_path = api_path
         return params, url
 
     @staticmethod

@@ -1,13 +1,15 @@
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
 
 from testcases.sys_common import SysCommonBaseTest
 from utils.report_util import a, case_decorator
+
 
 @allure.epic("系统通用模块")
 @allure.feature("WebSocket管理")

@@ -5,7 +5,6 @@
 """
 
 import allure
-import pytest
 
 from testcases.erp_fin import FinBaseTest
 from utils.param_util import ParamUtil

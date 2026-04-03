@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
-import allure
-from testcases.erp_fin.fin_ar import ArBaseTest, convert_decimal_to_float
-from utils.param_util import ParamUtil
-from utils.mock_util import MockData
-from utils.report_util import a, case_decorator
-from erp_data_factory.compat.fin_ar_factory import FinArFactory
-from decimal import Decimal
 from datetime import datetime
-from pathlib import Path
-import time
-import requests
+
+import allure
+
+from erp_data_factory.compat.fin_ar_factory import FinArFactory
+from testcases.erp_fin.fin_ar import ArBaseTest, convert_decimal_to_float
+from utils.mock_util import MockData
+from utils.param_util import ParamUtil
+from utils.report_util import a, case_decorator
+
 
 @allure.epic("ERP通业财模块")
 @allure.feature("应收管理")
@@ -41,12 +40,12 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
         smoke=True,
         tags=["ar", "batch", "create", "post"]
     )
-    def test_01_create_and_post_ar_doc(self):
+    def test_create_and_post_ar_doc(self):
         """创建并过账标准应收单"""
         try:
             with a.step("创建标准应收单"):
                 ar_code = self.mock_data.generate_unique_code("AR")
-                ar_name = f"BATCH_AR_{self.mock_data.get_timestamp()}"
+                f"BATCH_AR_{self.mock_data.get_timestamp()}"
                 remark = self.mock_data.get_mock_remark()
                 
                 api_path = ParamUtil.get_api_path(self.apis, "AR-应收单保存服务")
@@ -169,12 +168,12 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
         smoke=True,
         tags=["ar", "batch", "pn", "create", "partial"]
     )
-    def test_02_batch_create_pn_from_ar(self):
+    def test_batch_create_pn_from_ar(self):
         try:
             # 获取前置数据
             ar_info = TestArBatchCreatePartialPnAndSb.ar_batch_info
             ar_doc_id = ar_info.get("ar_doc_id")
-            ar_head_code = ar_info.get("ar_head_code")
+            ar_info.get("ar_head_code")
             ar_schl_ids = ar_info.get("ar_schl_ids", [])
             
             # 前置条件验证
@@ -188,13 +187,8 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                 # 获取基础数据（包含teamId等）
                 base_data = self.ar_factory.get_base_data_for_fin_doc("AR")
                 
-                val_request = {
-                    "sceneKey": "ERP_FIN$FIN_ARM_FROM_DS",
-                    "viewKey": "ERP_FIN$FIN_ARM_FROM_DS:list",
-                    "appId": None,
-                    "teamId": base_data.get("team_id", 22),
-                    "serviceKey": "ERP_FIN$BATCH_AR_CONVERT_TO_CM_PN_VAL_SERVICE",
-                    "params": {"request": {"armArSchlIds": [ar_doc_id]}}
+                val_request = {                    "appId": None,
+                    "teamId": base_data.get("team_id", 22),                    "params": {"request": {"armArSchlIds": [ar_doc_id]}}
                 }
                 
                 val_result, _ = self.standard_api_call(
@@ -212,16 +206,7 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                 schl_val_api_path = ParamUtil.get_api_path(self.apis, "应收计划行批量生成收款单-校验服务")
                 schl_val_params, schl_val_url = ParamUtil.get_api_params(self.api_params, schl_val_api_path)
                 
-                schl_val_request = {
-                    "sceneKey": "ERP_FIN$FIN_ARM_FROM_DS",
-                    "viewKey": "ERP_FIN$FIN_ARM_FROM_DS:2iRU-pHS6DLHBHZp-JC4S",
-                    "viewTitle": "选择应收单计划行",
-                    "buttonKey": "ERP_FIN$FIN_ARM_FROM_DS-84z52frNCSGsTQu6-h_sR",
-                    "buttonName": "生成收款单",
-                    "appId": 0,
-                    "teamId": base_data.get("team_id", 22),
-                    "serviceKey": "ERP_FIN$BATCH_AR_SCHL_CONVERT_TO_CM_PN_VAL_SERVICE",
-                    "params": {"request": {"armArSchlIds": ar_schl_ids}}
+                schl_val_request = {                    "teamId": base_data.get("team_id", 22),                    "params": {"request": {"armArSchlIds": ar_schl_ids}}
                 }
                 
                 schl_val_result, _ = self.standard_api_call(
@@ -241,14 +226,7 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                 partial_amount = 20000
                 save_request_data = self.ar_factory.create_pn_request_data(ar_info, partial_amount)
                 
-                save_request = {
-                    "sceneKey": "ERP_FIN$FIN_ARM_FROM_DS",
-                    "viewKey": "ERP_FIN$FIN_ARM_FROM_DS:VlcGerdmHJyPcfGDcb-dt",
-                    "viewTitle": "创建收款单",
-                    "buttonKey": "ERP_FIN$FIN_ARM_FROM_DS-TERP_MIGRATE$FIN_CM_PN_REC-editView-footer-save",
-                    "buttonName": "保存",
-                    "serviceKey": "ERP_FIN$PN_SAVE_ADMIN_SERVICE",
-                    "params": {"request": save_request_data}
+                save_request = {                    "params": {"request": save_request_data}
                 }
                 
                 save_result, _ = self.standard_api_call(
@@ -285,7 +263,7 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
         smoke=True,
         tags=["ar", "batch", "sb", "create", "invoice", "partial"]
     )
-    def test_03_batch_create_sb_from_ar(self):
+    def test_batch_create_sb_from_ar(self):
         try:
             # 获取前置数据
             ar_info = TestArBatchCreatePartialPnAndSb.ar_batch_info
@@ -305,13 +283,8 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                 if 'base_data' not in locals():
                     base_data = self.ar_factory.get_base_data_for_fin_doc("AR")
                 
-                val_request = {
-                    "sceneKey": "ERP_FIN$FIN_ARM_FROM_DS",
-                    "viewKey": "ERP_FIN$FIN_ARM_FROM_DS:list",
-                    "appId": None,
-                    "teamId": base_data.get("team_id", 22),
-                    "serviceKey": "ERP_FIN$BATCH_AR_CONVERT_TO_SB_VAL_SERVICE",
-                    "params": {"request": {"armArItemIds": [ar_doc_id]}}
+                val_request = {                    "appId": None,
+                    "teamId": base_data.get("team_id", 22),                    "params": {"request": {"armArItemIds": [ar_doc_id]}}
                 }
                 
                 val_result, _ = self.standard_api_call(
@@ -327,16 +300,7 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                 item_val_api_path = ParamUtil.get_api_path(self.apis, "应收单行批量转化销售发票-校验服务")
                 item_val_params, item_val_url = ParamUtil.get_api_params(self.api_params, item_val_api_path)
                 
-                item_val_request = {
-                    "sceneKey": "ERP_FIN$FIN_ARM_FROM_DS",
-                    "viewKey": "ERP_FIN$FIN_ARM_FROM_DS:pkQqXyEVhkP0HpqdAMQC5",
-                    "viewTitle": "选择应收单行",
-                    "buttonKey": "ERP_FIN$FIN_ARM_FROM_DS-KWlwdlZ4J_QWUjN_W147O",
-                    "buttonName": "生成销售发票",
-                    "appId": 0,
-                    "teamId": base_data.get("team_id", 22),
-                    "serviceKey": "ERP_FIN$BATCH_AR_ITEM_CONVERT_TO_SB_VAL_SERVICE",
-                    "params": {"request": {"armArItemIds": ar_item_ids}}
+                item_val_request = {                    "teamId": base_data.get("team_id", 22),                    "params": {"request": {"armArItemIds": ar_item_ids}}
                 }
                 
                 item_val_result, _ = self.standard_api_call(
@@ -420,7 +384,7 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
                     },
                     "验证结果": {
                         "部分开票金额正确": f"✓ {partial_invoice_amt} = {ar_gross_amt} × 50%",
-                        "数量比例一致": f"✓ 开票数量50 = 总数量100 × 50%",
+                        "数量比例一致": "✓ 开票数量50 = 总数量100 × 50%",
                         "金额计算正确": f"✓ 含税金额 = 不含税金额 + 税额 ({partial_net_doc_amt} + {partial_tax_doc_amt} = {partial_invoice_amt})"
                     },
                     "验证结论": "部分销售发票创建成功，开票金额、数量和税额计算均正确"
@@ -447,7 +411,7 @@ class TestArBatchCreatePartialPnAndSb(ArBaseTest):
         smoke=True,
         tags=["ar", "amount", "validation", "query", "comprehensive"]
     )
-    def test_04_validate_ar_amount_after_pn_creation(self):
+    def test_validate_ar_amount_after_pn_creation(self):
         """验证收款单和销售发票创建后应收单金额更新"""
         try:
             # 获取前置数据

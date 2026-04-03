@@ -1,8 +1,7 @@
-import allure
-import pytest
 import sys
-import time
 from pathlib import Path
+
+import allure
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
@@ -217,7 +216,7 @@ class TestPriceCrud(SlsBase):
         smoke=True,
         tags=["销售价格", "价格调整", "保存"]
     )
-    def test_01_save_price_adjustment(self):
+    def test_save_price_adjustment(self):
         """测试销售价格调整保存"""
         try:
             # 1. 准备价格调整数据
@@ -316,7 +315,7 @@ class TestPriceCrud(SlsBase):
         order=2,
         tags=["销售价格", "价格调整", "编辑"]
     )
-    def test_02_update_price_adjustment(self):
+    def test_update_price_adjustment(self):
         """测试编辑价格维护单"""
         try:
             # 1. 确保有上一步创建的价格调整单
@@ -416,7 +415,7 @@ class TestPriceCrud(SlsBase):
             a.json(filtered_params, "编辑请求数据")
             a.json(response, "编辑响应数据")
             a.text(f"价格调整编辑成功，价格调整ID: {updated_price_adj_id}", "编辑结果")
-            a.text(f"价格已更新为: 3000", "价格更新确认")
+            a.text("价格已更新为: 3000", "价格更新确认")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -430,7 +429,7 @@ class TestPriceCrud(SlsBase):
         order=3,
         tags=["销售价格", "价格调整", "提交"]
     )
-    def test_03_submit_price_adjustment(self):
+    def test_submit_price_adjustment(self):
         """测试价格维护单列表提交"""
         try:
             # 1. 确保有上一步创建或编辑的价格调整单
@@ -525,11 +524,11 @@ class TestPriceCrud(SlsBase):
                         a.text(f"价格维护单编码: {code}", "价格维护单编码")
                 else:
                     self.logger.warning(f"价格维护单状态字段为空，ID: {self.price_adj_id}")
-                    a.text(f"价格维护单提交成功，但状态字段为空", "提交结果")
+                    a.text("价格维护单提交成功，但状态字段为空", "提交结果")
             else:
                 # 如果查询不到，记录警告但不失败（可能表名不对）
                 self.logger.warning(f"无法查询价格维护单状态，ID: {self.price_adj_id}，表名可能不正确")
-                a.text(f"价格维护单提交成功，但无法查询状态（表名可能不正确）", "提交结果")
+                a.text("价格维护单提交成功，但无法查询状态（表名可能不正确）", "提交结果")
             
             a.json(filtered_params, "提交请求数据")
             a.json(response, "提交响应数据")
@@ -546,7 +545,7 @@ class TestPriceCrud(SlsBase):
         order=4,
         tags=["销售价格", "详情查询", "价格维护单详情"]
     )
-    def test_04_query_price_adjustment_detail(self):
+    def test_query_price_adjustment_detail(self):
         """测试查询价格维护单详情"""
         try:
             # 1. 确保有价格维护单数据
@@ -637,7 +636,7 @@ class TestPriceCrud(SlsBase):
         order=5,
         tags=["销售价格", "维护", "编辑", "提交"]
     )
-    def test_05_update_price(self):
+    def test_update_price(self):
         """测试销售价格维护并提交"""
         try:
             # 1. 确保有价格调整单数据（优先使用草稿态的，如果没有则创建）
@@ -831,16 +830,16 @@ class TestPriceCrud(SlsBase):
                         self.price_adj_code = code  # 保存编码供后续使用
                 else:
                     self.logger.warning(f"价格维护单状态字段为空，ID: {self.price_adj_id}")
-                    a.text(f"价格维护单提交成功，但状态字段为空", "提交结果")
+                    a.text("价格维护单提交成功，但状态字段为空", "提交结果")
             except Exception as e:
                 # 如果查询不到，记录警告但不失败（可能表名不对）
                 self.logger.warning(f"无法查询价格维护单状态，ID: {self.price_adj_id}，表名可能不正确: {str(e)}")
-                a.text(f"价格维护单提交成功，但无法查询状态（表名可能不正确）", "提交结果")
+                a.text("价格维护单提交成功，但无法查询状态（表名可能不正确）", "提交结果")
             
             a.json(filtered_params, "编辑并提交请求数据")
             a.json(response, "编辑并提交响应数据")
             a.text(f"价格调整编辑并提交成功，价格调整ID: {updated_price_adj_id}", "编辑并提交结果")
-            a.text(f"价格已更新为: 3000", "价格更新确认")
+            a.text("价格已更新为: 3000", "价格更新确认")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -854,7 +853,7 @@ class TestPriceCrud(SlsBase):
         order=6,
         tags=["销售价格", "删除", "价格维护单"]
     )
-    def test_06_delete_price(self):
+    def test_delete_price(self):
         """测试删除价格维护单中的物料定价并提交"""
         try:
             # 1. 确保有价格调整单数据（优先使用已存在的，如果没有则创建）
@@ -1048,11 +1047,11 @@ class TestPriceCrud(SlsBase):
                         self.price_adj_code = code  # 保存编码供后续使用
                 else:
                     self.logger.warning(f"价格维护单状态字段为空，ID: {self.price_adj_id}")
-                    a.text(f"价格维护单删除并提交成功，但状态字段为空", "提交结果")
+                    a.text("价格维护单删除并提交成功，但状态字段为空", "提交结果")
             except Exception as e:
                 # 如果查询不到，记录警告但不失败（可能表名不对）
                 self.logger.warning(f"无法查询价格维护单状态，ID: {self.price_adj_id}，表名可能不正确: {str(e)}")
-                a.text(f"价格维护单删除并提交成功，但无法查询状态（表名可能不正确）", "提交结果")
+                a.text("价格维护单删除并提交成功，但无法查询状态（表名可能不正确）", "提交结果")
             
             a.json(filtered_params, "删除并提交请求数据")
             a.json(response, "删除并提交响应数据")
@@ -1070,7 +1069,7 @@ class TestPriceCrud(SlsBase):
         order=5,
         tags=["销售价格", "列表查询", "价格维护单"]
     )
-    def test_07_query_price_adjustment_list(self):
+    def test_query_price_adjustment_list(self):
         """测试查询价格维护单列表"""
         try:
             # 1. 调用API
@@ -1137,7 +1136,7 @@ class TestPriceCrud(SlsBase):
         order=6,
         tags=["销售价格", "列表查询", "销售价格列表"]
     )
-    def test_08_query_price_list(self):
+    def test_query_price_list(self):
         """测试查询销售价格列表"""
         try:
             # 1. 调用API - 使用条件主数据分页查询服务（根据curl，这是正确的API）

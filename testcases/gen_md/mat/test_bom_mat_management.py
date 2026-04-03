@@ -1,5 +1,6 @@
 import allure
 import pytest
+
 from testcases.gen_md import GenMdBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
@@ -307,50 +308,6 @@ class TestBomManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
-    @case_decorator(
-        story="BOM管理",
-        title="测试BOM头标准导入",
-        description="验证BOM头标准导入功能",
-        severity="normal",
-        file_level_order=5,
-        tags=["BOM管理", "BOM头", "导入"]
-    )
-    def test_import_bom_head(self):
-        """
-        BOM头标准导入用例（需要文件上传）
-        """
-        try:
-            api_path = self.get_api_path("物料BOM头标准导入服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["importConfig"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "importConfig": {
-                    "fileName": f"BOM头导入_{self.mock_util.get_timestamp()}",
-                    "fileType": "EXCEL"
-                }
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response, _ = self.standard_api_call(
-                api_key="物料BOM头标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=list(set_dict.keys()),
-                store_id_as=None
-            )
-            self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
@@ -865,50 +822,6 @@ class TestBomManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
-    @case_decorator(
-        story="BOM管理",
-        title="测试BOM用途标准导入",
-        description="验证BOM用途标准导入功能",
-        severity="normal",
-        file_level_order=19,
-        tags=["BOM管理", "BOM用途", "导入"]
-    )
-    def test_import_bom_use(self):
-        """
-        BOM用途标准导入用例（需要文件上传）
-        """
-        try:
-            api_path = self.get_api_path("BOM用途配置标准导入服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["importConfig"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "importConfig": {
-                    "fileName": f"BOM用途导入_{self.mock_util.get_timestamp()}",
-                    "fileType": "EXCEL"
-                }
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response, _ = self.standard_api_call(
-                api_key="BOM用途配置标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=list(set_dict.keys()),
-                store_id_as=None
-            )
-            self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @pytest.mark.skip(reason="导出任务需要配置queryData复杂参数，暂时跳过")
     @case_decorator(
@@ -956,20 +869,6 @@ class TestBomManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
-    @case_decorator(
-        story="BOM管理",
-        title="测试通过OSS提交BOM用途导入任务",
-        description="验证通过OSS提交BOM用途导入任务功能",
-        severity="normal",
-        file_level_order=21,
-        tags=["BOM管理", "BOM用途", "OSS导入"]
-    )
-    def test_submit_bom_use_import_task_by_oss(self):
-        """
-        通过OSS提交BOM用途导入任务用例（需要OSS配置）
-        """
-        pass
 
     @case_decorator(
         story="BOM管理",
@@ -1058,50 +957,6 @@ class TestBomManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
-    @case_decorator(
-        story="BOM管理",
-        title="测试BOM状态标准导入",
-        description="验证BOM状态标准导入功能",
-        severity="normal",
-        file_level_order=24,
-        tags=["BOM管理", "BOM状态", "导入"]
-    )
-    def test_import_bom_status(self):
-        """
-        BOM状态标准导入用例（需要文件上传）
-        """
-        try:
-            api_path = self.get_api_path("BOM状态配置表标准导入服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["importConfig"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "importConfig": {
-                    "fileName": f"BOM状态导入_{self.mock_util.get_timestamp()}",
-                    "fileType": "EXCEL"
-                }
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response, _ = self.standard_api_call(
-                api_key="BOM状态配置表标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=list(set_dict.keys()),
-                store_id_as=None
-            )
-            self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @pytest.mark.skip(reason="导出任务需要配置queryData复杂参数，暂时跳过")
     @case_decorator(
@@ -1149,22 +1004,7 @@ class TestBomManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
-    @case_decorator(
-        story="BOM管理",
-        title="测试通过OSS提交BOM状态导入任务",
-        description="验证通过OSS提交BOM状态导入任务功能",
-        severity="normal",
-        file_level_order=26,
-        tags=["BOM管理", "BOM状态", "OSS导入"]
-    )
-    def test_submit_bom_status_import_task_by_oss(self):
-        """
-        通过OSS提交BOM状态导入任务用例（需要OSS配置）
-        """
-        pass
 
-    # ============= BOM行项目类别导入导出 =============
     @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="BOM管理",
@@ -1210,50 +1050,6 @@ class TestBomManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
-    @case_decorator(
-        story="BOM管理",
-        title="测试BOM行项目类别标准导入",
-        description="验证BOM行项目类别标准导入功能",
-        severity="normal",
-        file_level_order=28,
-        tags=["BOM管理", "行项目类别", "导入"]
-    )
-    def test_import_bom_item_type(self):
-        """
-        BOM行项目类别标准导入用例（需要文件上传）
-        """
-        try:
-            api_path = self.get_api_path("BOM行项目类别配置标准导入服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["importConfig"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "importConfig": {
-                    "fileName": f"BOM行项目类别导入_{self.mock_util.get_timestamp()}",
-                    "fileType": "EXCEL"
-                }
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response, _ = self.standard_api_call(
-                api_key="BOM行项目类别配置标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=list(set_dict.keys()),
-                store_id_as=None
-            )
-            self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @pytest.mark.skip(reason="导出任务需要配置queryData复杂参数，暂时跳过")
     @case_decorator(
@@ -1301,23 +1097,7 @@ class TestBomManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
-    @case_decorator(
-        story="BOM管理",
-        title="测试通过OSS提交BOM行项目类别导入任务",
-        description="验证通过OSS提交BOM行项目类别导入任务功能",
-        severity="normal",
-        file_level_order=30,
-        tags=["BOM管理", "行项目类别", "OSS导入"]
-    )
-    def test_submit_bom_item_type_import_task_by_oss(self):
-        """
-        通过OSS提交BOM行项目类别导入任务用例（需要OSS配置）
-        """
-        pass
 
-    # ============= BOM供应标识管理 =============
-    
     @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
         story="BOM管理",
@@ -1474,20 +1254,6 @@ class TestBomManagement(GenMdBaseTest):
             raise
 
     # ============= BOM头导入导出任务 =============
-    @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
-    @case_decorator(
-        story="BOM管理",
-        title="测试BOM头标准导入",
-        description="验证BOM头标准导入功能",
-        severity="normal",
-        file_level_order=35,
-        tags=["BOM管理", "BOM头", "导入"]
-    )
-    def test_import_bom_head_standard(self):
-        """
-        BOM头标准导入用例（需要文件上传）
-        """
-        pass
 
     @pytest.mark.skip(reason="导出任务需要配置queryData复杂参数，暂时跳过")
     @case_decorator(
@@ -1535,55 +1301,6 @@ class TestBomManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
-    @case_decorator(
-        story="BOM管理",
-        title="测试通过OSS提交BOM头导入任务",
-        description="验证通过OSS提交BOM头导入任务功能",
-        severity="normal",
-        file_level_order=37,
-        tags=["BOM管理", "BOM头", "OSS导入"]
-    )
-    def test_submit_bom_head_import_task_by_oss(self):
-        """
-        通过OSS提交BOM头导入任务用例（需要OSS配置）
-        """
-        try:
-            api_path = self.get_api_path("物料BOM头-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["taskName", "ossConfig", "importConfig"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "taskName": f"BOM头OSS导入任务_{self.mock_util.get_timestamp()}",
-                "ossConfig": {
-                    "bucketName": "test-bucket",
-                    "objectKey": f"bom_head_import_{self.mock_util.get_timestamp()}.xlsx"
-                },
-                "importConfig": {
-                    "fileType": "EXCEL",
-                    "sheetName": "BOM头"
-                }
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response, _ = self.standard_api_call(
-                api_key="物料BOM头-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=list(set_dict.keys()),
-                store_id_as=None
-            )
-            self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     # ============= BOM供应标识管理导入导出 =============
     @pytest.mark.skip(reason="业务未引用，暂时跳过")
@@ -1631,50 +1348,6 @@ class TestBomManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
-    @case_decorator(
-        story="BOM管理",
-        title="测试BOM供应标识标准导入",
-        description="验证BOM供应标识标准导入功能",
-        severity="normal",
-        file_level_order=32,
-        tags=["BOM管理", "供应标识", "导入"]
-    )
-    def test_import_bom_supp_ind(self):
-        """
-        BOM供应标识标准导入用例（需要文件上传）
-        """
-        try:
-            api_path = self.get_api_path("BOM 行项目供应标识配置表标准导入服务")
-            params, url = self.get_api_params(api_path)
-
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params,
-                ["importConfig"],
-                ["params", "request"]
-            )
-            set_dict = {
-                "importConfig": {
-                    "fileName": f"BOM供应标识导入_{self.mock_util.get_timestamp()}",
-                    "fileType": "EXCEL"
-                }
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-
-            response, _ = self.standard_api_call(
-                api_key="BOM 行项目供应标识配置表标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=list(set_dict.keys()),
-                store_id_as=None
-            )
-            self.assert_util.assert_response_success(response)
-
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @pytest.mark.skip(reason="导出任务需要配置queryData复杂参数，暂时跳过")
     @case_decorator(
@@ -1722,17 +1395,4 @@ class TestBomManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
-    @case_decorator(
-        story="BOM管理",
-        title="测试通过OSS提交BOM供应标识导入任务",
-        description="验证通过OSS提交BOM供应标识导入任务功能",
-        severity="normal",
-        file_level_order=34,
-        tags=["BOM管理", "供应标识", "OSS导入"]
-    )
-    def test_submit_bom_supp_ind_import_task_by_oss(self):
-        """
-        通过OSS提交BOM供应标识导入任务用例（需要OSS配置）
-        """
-        pass
+

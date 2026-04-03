@@ -2,12 +2,14 @@
 应付单保存服务测试用例
 包含创建、编辑、提交、过账、状态校验等场景
 """
+from datetime import datetime
+
 import allure
+
 from testcases.erp_fin.fin_ap import ApBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
-from datetime import datetime
-import time
+
 
 @allure.epic("ERP通业财模块")
 @allure.feature("应付管理")
@@ -532,7 +534,7 @@ class TestApDocumentSave(ApBaseTest):
                                     elif current_status in ["CONFIRM", "DONE"]:
                                         # 状态还未回退，继续轮询
                                         if attempt < max_attempts - 1:
-                                            a.text(f"状态还未回退到草稿态，继续轮询...", "等待状态更新")
+                                            a.text("状态还未回退到草稿态，继续轮询...", "等待状态更新")
                                             self._async_delay(interval, reason="等待应付单状态回退")
                                             continue
                                         else:

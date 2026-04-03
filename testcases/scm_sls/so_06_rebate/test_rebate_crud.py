@@ -1,8 +1,8 @@
-import allure
-import pytest
 import sys
 import time
 from pathlib import Path
+
+import allure
 
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
@@ -129,7 +129,7 @@ class TestRebateCrud(SlsBase):
         order=1,
         tags=["返利政策", "创建", "保存"]
     )
-    def test_01_create_and_save_rebate_policy(self):
+    def test_create_and_save_rebate_policy(self):
         """测试创建返利政策并保存"""
         try:
             # 1. 调用创建返利政策API
@@ -218,7 +218,7 @@ class TestRebateCrud(SlsBase):
         order=2,
         tags=["返利政策", "提交"]
     )
-    def test_02_submit_rebate_policy(self):
+    def test_submit_rebate_policy(self):
         """测试提交返利政策"""
         try:
             # 1. 确保有返利政策数据
@@ -288,7 +288,7 @@ class TestRebateCrud(SlsBase):
         order=3,
         tags=["返利政策", "审核"]
     )
-    def test_03_approve_rebate_policy(self):
+    def test_approve_rebate_policy(self):
         """测试返利审核通过"""
         try:
             # 1. 确保有已提交的返利政策
@@ -296,10 +296,7 @@ class TestRebateCrud(SlsBase):
                 self._ensure_rebate_submitted()
             
             # 2. 先查询审批任务列表
-            task_list_url = "https://t-erp-huoshan-portal-test.app.duandian.com/api/trantor/service/engine/execute/sys_common$API_TRANTOR_WORKFLOW_V2_TASK_INSTANCE_SEARCH_GET"
-            task_list_params = {
-                "serviceKey": "ERP_GEN$API_TRANTOR_WORKFLOW_V2_TASK_INSTANCE_SEARCH_GET",
-                "params": {
+            task_list_params = {                "params": {
                     "logType": 2,
                     "_tab_id": "yHBrJwh__Olz",
                     "pageNo": "1",
@@ -346,14 +343,9 @@ class TestRebateCrud(SlsBase):
             )
             
             # 6. 设置工作流审批参数
-            set_dict = {
-                "serviceKey": "ERP_GEN$API_TRANTOR_WORKFLOW_V2_TASK_SUBMIT_POST",
-                "params": {
+            set_dict = {                "params": {
                     "_rootParams": {
-                        "pageKey": "sys_common$approval_task_center",
-                        "sceneKey": "sys_common$approval_task_center",
-                        "buttonName": "同意",
-                        "buttonKey": "AGREE"
+                        "pageKey": "sys_common$approval_task_center",                        "buttonKey": "AGREE"
                     },
                     "taskInstanceId": task_instance_id,
                     "auditResult": {
@@ -361,10 +353,7 @@ class TestRebateCrud(SlsBase):
                         "decisionType": "AGREE"
                     }
                 },
-                "pageKey": "sys_common$approval_task_center",
-                "sceneKey": "sys_common$approval_task_center",
-                "buttonName": "同意",
-                "buttonKey": "AGREE"
+                "pageKey": "sys_common$approval_task_center",                "buttonKey": "AGREE"
             }
             ParamUtil.set_request_params(filtered_params, set_dict)
             
@@ -394,7 +383,7 @@ class TestRebateCrud(SlsBase):
         order=4,
         tags=["返利政策", "停用"]
     )
-    def test_04_disable_rebate_policy(self):
+    def test_disable_rebate_policy(self):
         """测试返利政策停用"""
         try:
             # 1. 确保有已审核通过的返利政策
@@ -460,7 +449,7 @@ class TestRebateCrud(SlsBase):
         order=5,
         tags=["返利政策", "停用", "详情"]
     )
-    def test_05_disable_rebate_from_detail(self):
+    def test_disable_rebate_from_detail(self):
         """测试从返利政策详情中停用返利政策"""
         try:
             # 1. 首先检查数据库中是否有启用状态的返利政策

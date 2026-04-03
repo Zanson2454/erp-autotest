@@ -1,15 +1,15 @@
-import allure
-import pytest
+import datetime
 import sys
 from pathlib import Path
-import datetime
-import time
+
+import allure
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
 from testcases.scm_inv import ScmInvBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
+
 
 @allure.epic("库存管理")
 @allure.feature("ATP库存占量-销售")
@@ -322,7 +322,7 @@ class TestInvAtpLockSale(ScmInvBaseTest):
                     # 非0但与期望不符，可能是业务逻辑问题，应该失败
                     assert confirm_qty == expected_confirm_qty, f"confirm_qty应该为{expected_confirm_qty}，实际为{confirm_qty}"
             
-            self.logger.info(f"✅ 销售单数据库验证通过")
+            self.logger.info("✅ 销售单数据库验证通过")
             
             a.text(
                 f"doc_i_code: {self.__class__.so_doc_i_code}\n"
@@ -372,7 +372,7 @@ class TestInvAtpLockSale(ScmInvBaseTest):
             assert unclose_qty == 0, f"unclose_qty应该为0，实际为{unclose_qty}"
             assert plan_qty == self.__class__.dn_plan_qty, f"plan_qty应该为{self.__class__.dn_plan_qty}，实际为{plan_qty}"
             
-            self.logger.info(f"✅ 交货单数据库验证通过")
+            self.logger.info("✅ 交货单数据库验证通过")
             
             a.text(
                 f"doc_s_code: {self.__class__.dn_doc_i_code}\n"
@@ -466,7 +466,7 @@ class TestInvAtpLockSale(ScmInvBaseTest):
                 
                 # 强控制下，库存不足应该返回错误
                 if not success or error_msg:
-                    self.logger.info(f"✅ 验证通过: 强控制生效，库存不足已拦截")
+                    self.logger.info("✅ 验证通过: 强控制生效，库存不足已拦截")
                     self.logger.info(f"📝 错误信息: {error_msg}")
                 else:
                     # 如果创建成功，检查confirmQty是否受限
@@ -498,7 +498,7 @@ class TestInvAtpLockSale(ScmInvBaseTest):
                     if status_code == 500:
                         error_info = error_response.get("err", {}) if error_response else {}
                         error_msg = error_info.get("msg", "") if error_info else str(http_error)
-                        self.logger.info(f"✅ 验证通过: 强控制生效，库存不足已拦截（HTTP 500）")
+                        self.logger.info("✅ 验证通过: 强控制生效，库存不足已拦截（HTTP 500）")
                         self.logger.info(f"📝 错误信息: {error_msg}")
                         
                         a.json(filtered_params, "请求数据")

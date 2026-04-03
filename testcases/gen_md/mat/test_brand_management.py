@@ -1,5 +1,5 @@
 import allure
-import pytest
+
 from testcases.gen_md import GenMdBaseTest
 from utils.report_util import a, case_decorator
 
@@ -289,105 +289,8 @@ class TestBrandManagement(GenMdBaseTest):
             raise
 
     # ================ 品牌导入导出管理 ================
-    @pytest.mark.skip(reason="品牌标准导入服务功能未实现")
-    @case_decorator(
-        story="品牌导入导出管理",
-        title="测试品牌标准导入",
-        description="验证品牌标准导入服务功能",
-        severity="normal",
-        file_level_order=6,
-        tags=["品牌管理", "导入", "GEN_BRAND_MD_GEI_IMPORT_SERVICE"]
-    )
-    def test_brand_import(self):
-        """品牌标准导入用例 - GEN_BRAND_MD_GEI_IMPORT_SERVICE"""
-        try:
-            # 构建导入数据
-            import_data = [
-                {
-                    "brandCode": self.mock_util.generate_unique_code(tag="IMPORT_BRAND"),
-                    "brandName": self._unique_brand_display_name("_导入"),
-                    "brandImage": None
-                }
-            ]
-
-            set_dict = {"data": import_data}
-            response, _ = self.standard_api_call(
-                api_key="品牌标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["data"]
-            )
-            self.assert_util.assert_response_data(response)
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
     
-    @pytest.mark.skip(reason="品牌标准导出服务功能未实现")
-    @case_decorator(
-        story="品牌导入导出管理",
-        title="测试品牌标准导出",
-        description="验证品牌标准导出服务功能",
-        severity="normal",
-        file_level_order=7,
-        tags=["品牌管理", "导出", "GEN_BRAND_MD_GEI_EXPORT_SERVICE"]
-    )
-    def test_brand_export(self):
-        """品牌标准导出用例 - GEN_BRAND_MD_GEI_EXPORT_SERVICE"""
-        try:
-            set_dict = {
-                "selectFields": [
-                    {"name": "brandCode", "type": "TEXT"},
-                    {"name": "brandName", "type": "TEXT"},
-                    {"name": "brandImage", "type": "TEXT"}
-                ]
-            }
-            response, _ = self.standard_api_call(
-                api_key="品牌标准导出服务",
-                set_dict=set_dict,
-                fields_to_filter=["selectFields"]
-            )
-            self.assert_util.assert_response_data(response)
 
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
-
-    @pytest.mark.skip(reason="品牌OSS导入服务功能未实现")
-    @case_decorator(
-        story="品牌导入导出管理",
-        title="测试品牌OSS导入任务",
-        description="验证品牌-导入导出任务管理接口-通过OSS提交导入任务功能",
-        severity="normal",
-        file_level_order=8,
-        tags=["品牌管理", "导入", "GEN_BRAND_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
-    )
-    def test_brand_oss_import_task(self):
-        """品牌OSS导入任务用例 - GEN_BRAND_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
-        try:
-            set_dict = {
-                "fileKey": "test_brand_import_file.xlsx",
-                "taskName": f"品牌导入任务_{self.mock_util.get_timestamp()}",
-                "templateId": 1
-            }
-            response, _ = self.standard_api_call(
-                api_key="品牌-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=["fileKey", "taskName", "templateId"]
-            )
-            self.assert_util.assert_response_data(response)
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="品牌导入导出管理",

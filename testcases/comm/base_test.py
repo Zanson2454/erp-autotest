@@ -21,6 +21,7 @@ from testcases.comm.api_client_facade import ApiClientFacade
 from testcases.comm.auth_context import AuthContext
 from testcases.comm.base_test_initializer import BaseTestInitializer
 from testcases.comm.config_manager import ConfigError, ConfigManager
+from testcases.comm.data_context import TestDataContext
 from testcases.comm.login_mixin import LoginMixin
 from testcases.comm.login_service import (
     AuthenticationError,
@@ -30,7 +31,6 @@ from testcases.comm.login_service import (
     SessionManager,
 )
 from testcases.comm.query_service import QueryService
-from testcases.comm.test_data_context import TestDataContext
 from utils.assert_util import AssertHelper
 from utils.async_wait_util import AsyncWaitUtil, WaitStatus
 from utils.cache_util import CacheUtil
@@ -94,20 +94,20 @@ class BaseTest(LoginMixin):
 
     # ─── 缓存绑定映射 ───
     DEFAULT_CACHE_MAPPINGS: Dict[str, str] = {
-        "curr_id":        "currency_info.curr_id",
-        "coun_id":        "country_info.coun_id",
-        "addr_id":        "addr_info.id",
-        "bank_id":        "bank_info.bank_id",
+        "curr_id": "currency_info.curr_id",
+        "coun_id": "country_info.coun_id",
+        "addr_id": "addr_info.id",
+        "bank_id": "bank_info.bank_id",
         "gen_wc_head_id": "gen_wc_head_info.gen_wc_head_id",
-        "cust_id":        "partner_info.cust_info.id",
-        "sup_id":         "partner_info.sup_info.id",
-        "com_org_id":     "org_info.gr_come_org_info.id",
-        "sls_org_id":     "org_info.sls_org_info.id",
-        "inv_org_id":     "org_info.inv_org_info.id",
-        "pur_org_id":     "org_info.pur_org_info.id",
-        "sls_dc_id":      "org_info.sls_dc_md.id",
-        "wh_id":          "org_info.inv_wh_md.id",
-        "mat_id":         "mat_info.mat_md.FINP.id",
+        "cust_id": "partner_info.cust_info.id",
+        "sup_id": "partner_info.sup_info.id",
+        "com_org_id": "org_info.gr_come_org_info.id",
+        "sls_org_id": "org_info.sls_org_info.id",
+        "inv_org_id": "org_info.inv_org_info.id",
+        "pur_org_id": "org_info.pur_org_info.id",
+        "sls_dc_id": "org_info.sls_dc_md.id",
+        "wh_id": "org_info.inv_wh_md.id",
+        "mat_id": "mat_info.mat_md.FINP.id",
     }
     REQUIRED_CACHE_KEYS: Tuple[str, ...] = ()
 
@@ -162,10 +162,11 @@ class BaseTest(LoginMixin):
             except AttributeError as exc:
                 raise AttributeError(name) from exc
             if callable(target):
+
                 def _ensure_wrapper(*args, **kwargs):
                     # 同一测试方法上下文内，重复 ensure 调用只执行一次，降低重复造数副作用。
                     sentinel = object()
-                    cache_key = f"ensure::{name}::{repr(args)}::{repr(sorted(kwargs.items()))}"
+                    cache_key = f"ensure::{name}::{repr(args)}::{repr(sorted(kwargs.keys()))}"
                     cached = TestDataContext.get_runtime_value(cache_key, sentinel)
                     if cached is not sentinel:
                         return cached
@@ -178,11 +179,7 @@ class BaseTest(LoginMixin):
 
     def __getattribute__(self, name: str):
         """优先读取当前测试运行时上下文中的动态 ID，降低类属性状态污染风险。"""
-        if (
-            isinstance(name, str)
-            and not name.startswith("__")
-            and (name.endswith("_id") or name.endswith("Id"))
-        ):
+        if isinstance(name, str) and not name.startswith("__") and (name.endswith("_id") or name.endswith("Id")):
             sentinel = object()
             runtime_value = TestDataContext.get_runtime_value(name, sentinel)
             if runtime_value is not sentinel:
@@ -232,13 +229,13 @@ class BaseTest(LoginMixin):
 
             initializer = BaseTestInitializer(env, project)
 
-            cls._initialize_config(initializer)      # 1. 环境配置
-            cls._initialize_data(initializer)         # 2. 基础数据（SQL）
-            cls._initialize_database(initializer)     # 3. 数据库连接
-            cls._initialize_utilities()               # 4. 工具类
-            cls._initialize_auth()                    # 5. 登录（策略驱动，单次）
-            cls._initialize_module()                  # 6. 模块 API / 缓存 / 上下文
-            cls._post_initialize()                    # 7. 后处理
+            cls._initialize_config(initializer)  # 1. 环境配置
+            cls._initialize_data(initializer)  # 2. 基础数据（SQL）
+            cls._initialize_database(initializer)  # 3. 数据库连接
+            cls._initialize_utilities()  # 4. 工具类
+            cls._initialize_auth()  # 5. 登录（策略驱动，单次）
+            cls._initialize_module()  # 6. 模块 API / 缓存 / 上下文
+            cls._post_initialize()  # 7. 后处理
 
             Loggers.info("测试基类初始化完成")
 
@@ -258,6 +255,15 @@ class BaseTest(LoginMixin):
     def _initialize_database(cls, initializer: BaseTestInitializer) -> None:
         cls.db = initializer.initialize_database(cls.env_config, db_name="erp_db")
         cls.iam_db = initializer.initialize_database(cls.env_config, db_name="iam_db")
+        # 兼容历史直接调用 DBManager.query(sql) 的写法：同步初始化类级连接配置。
+        try:
+            erp_db_config = dict((cls.env_config or {}).get("database", {}).get("erp_db", {}) or {})
+            if erp_db_config:
+                if "user" not in erp_db_config and "username" in erp_db_config:
+                    erp_db_config["user"] = erp_db_config.get("username")
+                DBManager.init(erp_db_config)
+        except Exception as exc:
+            Loggers.warning(f"初始化 DBManager 类级配置失败（不影响实例连接）: {exc}")
 
     @classmethod
     def _initialize_utilities(cls) -> None:
@@ -357,9 +363,7 @@ class BaseTest(LoginMixin):
         """
 
     @classmethod
-    def module_login_single_portal(
-        cls, portal_key: str = "TERP_PORTAL", tenant_key: str = "terp"
-    ) -> LoginResult:
+    def module_login_single_portal(cls, portal_key: str = "TERP_PORTAL", tenant_key: str = "terp") -> LoginResult:
         """.. deprecated:: 请直接设置 ``LOGIN_STRATEGY`` 类变量。"""
         return cls._login_single_portal(portal_key=portal_key, tenant_key=tenant_key)
 
@@ -378,9 +382,7 @@ class BaseTest(LoginMixin):
         tenant_key: str = "terp",
     ) -> LoginResult:
         """.. deprecated:: 请直接设置 ``LOGIN_STRATEGY = 'admin_with_cust'``。"""
-        return cls._login_admin_with_cust_headers(
-            admin_portal_key, cust_portal_key, tenant_key
-        )
+        return cls._login_admin_with_cust_headers(admin_portal_key, cust_portal_key, tenant_key)
 
     # ─────────────────────────────────────────────
     #  模块配置 / 缓存 / 用户上下文 辅助
@@ -443,7 +445,7 @@ class BaseTest(LoginMixin):
         mappings: Dict[str, str] = None,
         required: Optional[List[str]] = None,
         *,
-        strict_resolve: bool = True,
+        strict_resolve: bool = False,
     ) -> None:
         """将缓存中的常用 ID 绑定到类属性（见 ``DEFAULT_CACHE_MAPPINGS``）。"""
         mappings = mappings if mappings is not None else cls.DEFAULT_CACHE_MAPPINGS

@@ -1,10 +1,12 @@
-import allure
-from testcases.erp_fin.fin_ar import ArBaseTest, convert_decimal_to_float
-from utils.param_util import ParamUtil
-from utils.mock_util import MockData
-from utils.report_util import a, case_decorator
 from datetime import datetime
-import time
+
+import allure
+
+from testcases.erp_fin.fin_ar import ArBaseTest, convert_decimal_to_float
+from utils.mock_util import MockData
+from utils.param_util import ParamUtil
+from utils.report_util import a, case_decorator
+
 
 @allure.epic("ERP通业财模块")
 @allure.feature("应收管理")
@@ -66,16 +68,7 @@ class TestPnCreateManual(ArBaseTest):
             pn_head_code = self.mock_data.generate_unique_code("PN")
             
             # 构建收款单请求体
-            request_body = {
-                "sceneKey": "ERP_FIN$FIN_CM_PN_REC",
-                "viewKey": "ERP_FIN$FIN_CM_PN_REC:edit",
-                "viewTitle": "edit",
-                "buttonKey": "TERP_MIGRATE$FIN_CM_PN_REC-editView-footer-save",
-                "buttonName": "提交",
-                "appId": 0,
-                "teamId": 22,
-                "serviceKey": "ERP_FIN$PN_SAVE_EVENT_SERVICE",
-                "params": {
+            request_body = {                "params": {
                     "request": {
                         "pnClass": "REC",
                         "pnHeadCode": pn_head_code,

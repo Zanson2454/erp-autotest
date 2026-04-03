@@ -1,8 +1,10 @@
 import allure
 import pytest
+
 from testcases.scm_pur import ScmPurBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
+
 
 @allure.epic("采购管理")
 @allure.feature("采购订单行类型配置管理")
@@ -261,7 +263,7 @@ class TestPoItemTypeManagement(ScmPurBaseTest):
         try:
             # 1. 检查是否有可用的ID
             if not self.__class__.po_item_type_id:
-                pytest.skip("没有可用的采购订单行类型配置ID，跳过删除测试")
+                pytest.fail("没有可用的采购订单行类型配置ID，跳过删除测试")
             
             # 2. 准备完整的 params 结构（包含 request 和 modelKey）
             set_dict = {
@@ -291,7 +293,7 @@ class TestPoItemTypeManagement(ScmPurBaseTest):
             self.__class__.po_item_type_code = None
             
             # 6. 记录报告
-            self.logger.info(f"✅ 采购订单行类型配置删除成功")
+            self.logger.info("✅ 采购订单行类型配置删除成功")
             a.json(response, "响应数据")
             
         except Exception as e:

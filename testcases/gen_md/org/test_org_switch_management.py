@@ -2,6 +2,7 @@ import time
 
 import allure
 import pytest
+
 from testcases.gen_md import GenMdBaseTest
 from utils.report_util import a, case_decorator
 
@@ -665,57 +666,7 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="标准导入需要上传文件，暂时跳过")
-    @case_decorator(
-        story="组织切换管理",
-        title="测试切换公司列表标准导入",
-        description="验证切换公司列表标准导入功能",
-        severity="normal",
-        file_level_order=13,
-        smoke=True,
-        tags=["组织切换管理", "列表导入"]
-    )
-    def test_import_org_switch_list(self):
-        """
-        切换公司列表标准导入用例
-        """
-        try:
-            # 调用标准导入接口
-            api_path = self.get_api_path("切换公司列表标准导入服务")
-            params, url = self.get_api_params(api_path)
 
-            # 标准导入需要文件上传，这里暂时跳过实现
-            self.logger.info("标准导入需要文件上传，暂时跳过")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
-
-    @pytest.mark.skip(reason="标准导入需要上传文件，暂时跳过")
-    @case_decorator(
-        story="组织切换管理",
-        title="测试切换公司模型表标准导入",
-        description="验证切换公司模型表标准导入功能",
-        severity="normal",
-        file_level_order=14,
-        smoke=True,
-        tags=["组织切换管理", "模型导入"]
-    )
-    def test_import_org_switch_model(self):
-        """
-        切换公司模型表标准导入用例
-        """
-        try:
-            # 调用标准导入接口
-            api_path = self.get_api_path("切换公司模型表标准导入服务")
-            params, url = self.get_api_params(api_path)
-
-            # 标准导入需要文件上传，这里暂时跳过实现
-            self.logger.info("切换公司模型表标准导入需要文件上传，暂时跳过")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="组织切换管理",
@@ -968,54 +919,4 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="OSS导入任务需要复杂的文件上传和OSS配置，暂时跳过")
-    @case_decorator(
-        story="组织切换管理",
-        title="测试切换公司列表OSS导入任务提交",
-        description="验证切换公司列表导入导出任务管理接口-通过OSS提交导入任务功能",
-        severity="normal",
-        file_level_order=19,
-        smoke=True,
-        tags=["组织切换管理", "列表OSS导入任务"]
-    )
-    def test_submit_org_switch_list_import_task_by_oss(self):
-        """
-        切换公司列表-导入导出任务管理接口-通过OSS提交导入任务用例
-        """
-        try:
-            # 调用通过OSS提交导入任务接口
-            api_path = self.get_api_path("切换公司列表-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
 
-            # OSS导入任务需要复杂的文件上传和OSS配置，这里暂时跳过实现
-            self.logger.info("OSS导入任务需要复杂的文件上传和OSS配置，暂时跳过")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
-
-    @pytest.mark.skip(reason="OSS导入任务需要复杂的文件上传和OSS配置，暂时跳过")
-    @case_decorator(
-        story="组织切换管理",
-        title="测试切换公司模型表OSS导入任务提交",
-        description="验证切换公司模型表导入导出任务管理接口-通过OSS提交导入任务功能",
-        severity="normal",
-        file_level_order=20,
-        smoke=True,
-        tags=["组织切换管理", "模型OSS导入任务"]
-    )
-    def test_submit_org_switch_model_import_task_by_oss(self):
-        """
-        切换公司模型表-导入导出任务管理接口-通过OSS提交导入任务用例
-        """
-        try:
-            # 调用通过OSS提交导入任务接口
-            api_path = self.get_api_path("切换公司模型表-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-
-            # OSS导入任务需要复杂的文件上传和OSS配置，这里暂时跳过实现
-            self.logger.info("OSS导入任务需要复杂的文件上传和OSS配置，暂时跳过")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise

@@ -1,5 +1,6 @@
 import requests
 
+
 def send_dingtalk_msg(webhook: str, content: str):
     """
     发送钉钉文本消息

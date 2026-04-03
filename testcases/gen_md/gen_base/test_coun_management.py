@@ -1,8 +1,8 @@
+
 import allure
 import pytest
-from typing import Any
+
 from testcases.gen_md import GenMdBaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
@@ -160,40 +160,6 @@ class TestCountryManagement(GenMdBaseTest):
             raise
 
     # ================ 国家配置导入导出管理 ================
-    @case_decorator(
-        story="国家配置导入导出管理",
-        title="测试国家配置标准导入",
-        description="验证国家配置标准导入服务功能",
-        severity="normal",
-        file_level_order=5,
-        tags=["国家管理", "导入", "GEN_COUN_TYPE_CF_GEI_IMPORT_SERVICE"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_country_import(self):
-        """国家配置标准导入用例"""
-        try:
-            import_data = [
-                {
-                    "counCode": self.mock_util.generate_unique_code(tag="IMPORT_COUN"),
-                    "counName": f"导入测试国家_{self.mock_util.get_timestamp()}",
-                    "counNameEn": "Import Test Country",
-                    "counPhoneCode": "+1",
-                    "counCurrency": "USD"
-                }
-            ]
-
-            set_dict = {"data": import_data}
-            
-            response, _ = self.standard_api_call(
-                api_key="国家配置标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["data"],
-                store_id_as=None
-            )
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="国家配置导入导出管理",
@@ -228,33 +194,6 @@ class TestCountryManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @case_decorator(
-        story="国家配置导入导出管理",
-        title="测试国家配置OSS导入任务",
-        description="验证国家配置-导入导出任务管理接口-通过OSS提交导入任务功能",
-        severity="normal",
-        file_level_order=7,
-        tags=["国家管理", "导入", "GEN_COUN_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_country_oss_import_task(self):
-        """国家配置OSS导入任务用例"""
-        try:
-            set_dict = {
-                "fileKey": "test_country_import.xlsx",
-                "taskName": f"国家配置导入任务_{self.mock_util.get_timestamp()}"
-            }
-            
-            response, _ = self.standard_api_call(
-                api_key="国家配置-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=["fileKey", "taskName"],
-                store_id_as=None
-            )
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="国家配置导入导出管理",

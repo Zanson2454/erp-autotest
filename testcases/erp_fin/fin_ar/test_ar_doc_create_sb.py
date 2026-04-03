@@ -1,12 +1,12 @@
-import allure
-from testcases.erp_fin.fin_ar import ArBaseTest, convert_decimal_to_float
-from utils.param_util import ParamUtil
-from utils.mock_util import MockData
-from utils.report_util import a, case_decorator
-from erp_data_factory.compat.fin_ar_factory import FinArFactory
-from decimal import Decimal
 from datetime import datetime
 from pathlib import Path
+
+from erp_data_factory.compat.fin_ar_factory import FinArFactory
+from testcases.erp_fin.fin_ar import ArBaseTest, convert_decimal_to_float
+from utils.mock_util import MockData
+from utils.param_util import ParamUtil
+from utils.report_util import a, case_decorator
+
 
 class TestArDocCreateSb(ArBaseTest):
     ar_info = {}
@@ -168,7 +168,6 @@ class TestArDocCreateSb(ArBaseTest):
             }
         }
         
-        api_path = "/api/trantor/service/engine/execute/ERP_FIN$SB_CONVERT_BY_AR_ASYNC_EVENT_SERVICE"
         result, _ = self.standard_api_call(
             api_key=self.apis,
             set_dict=sb_request.get("params", {}),

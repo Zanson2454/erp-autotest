@@ -1,9 +1,10 @@
-from loguru import logger
 import os
 import sys
-from pathlib import Path
-from typing import Optional, Dict, Any
 from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, Optional
+
+from loguru import logger
 
 # Add project root to Python path
 current_file = Path(__file__).resolve()
@@ -215,7 +216,7 @@ if __name__ == '__main__':
     
     try:
         result = 1 / 0
-    except Exception as e:
+    except Exception:
         Loggers.exception("发生除零异常")
     
     print("\n" + "=" * 60)

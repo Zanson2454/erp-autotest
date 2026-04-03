@@ -8,11 +8,11 @@
     2. 创建调拨移动凭证
     3. 验证调拨后库存余额总量不变
 """
-import time
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
@@ -139,7 +139,7 @@ class TestInvStkBalanceTransferManagement(MobileVoucherCreator):
         """创建调拨移动凭证"""
         try:
             if not self.available_batch_id:
-                pytest.skip("没有可用批次，跳过调拨测试")
+                pytest.fail("没有可用批次，跳过调拨测试")
             
             # 创建调拨凭证
             custom_to_batch = self.mock_util.generate_unique_code(prefix="TRANSFER_", tag="STK")

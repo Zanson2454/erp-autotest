@@ -3,10 +3,10 @@
 存货核算执行记录测试用例
 """
 
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
@@ -55,7 +55,7 @@ class TestIvExecuteRecordManagement(IvBaseTest):
                 raise ValueError("com_org_id 未初始化，请检查 md_cache_data")
             
             # 准备测试数据
-            record_code = self.mock_util.generate_unique_code(tag="IV_EXEC")
+            self.mock_util.generate_unique_code(tag="IV_EXEC")
             task_code = f"TASK_{self.mock_util.get_timestamp()}"
             
             # 使用标准化API调用

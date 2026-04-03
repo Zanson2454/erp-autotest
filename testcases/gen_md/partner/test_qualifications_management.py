@@ -1,5 +1,6 @@
 import allure
 import pytest
+
 from testcases.gen_md import GenMdBaseTest
 from utils.report_util import a, case_decorator
 
@@ -543,74 +544,7 @@ class TestQualificationsManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
-    @case_decorator(
-        story="资质管理",
-        title="测试资质类型标准导入",
-        description="验证资质类型标准导入功能",
-        severity="normal",
-        file_level_order=12,
-        tags=["资质类型", "导入"]
-    )
-    def test_import_qualification_type(self):
-        """资质类型标准导入用例"""
-        try:
-            set_dict = {
-                "importConfig": {
-                    "fileName": f"资质类型导入_{self.mock_util.get_timestamp()}",
-                    "fileType": "EXCEL"
-                }
-            }
-            response, _ = self.standard_api_call(
-                api_key="资质类型标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["importConfig"]
-            )
-            self.assert_util.assert_response_success(response)
 
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
-
-    @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
-    @case_decorator(
-        story="资质管理",
-        title="测试通过OSS提交资质类型导入任务",
-        description="验证通过OSS提交资质类型导入任务功能",
-        severity="normal",
-        file_level_order=13,
-        tags=["资质类型", "OSS导入"]
-    )
-    def test_submit_qualification_type_import_task_by_oss(self):
-        """通过OSS提交资质类型导入任务用例"""
-        try:
-            set_dict = {
-                "taskName": f"资质类型OSS导入任务_{self.mock_util.get_timestamp()}",
-                "ossConfig": {
-                    "bucketName": "test-bucket",
-                    "objectKey": f"qualification_type_import_{self.mock_util.get_timestamp()}.xlsx"
-                },
-                "importConfig": {
-                    "fileType": "EXCEL",
-                    "sheetName": "资质类型"
-                }
-            }
-            response, _ = self.standard_api_call(
-                api_key="资质类型-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=["taskName", "ossConfig", "importConfig"]
-            )
-            self.assert_util.assert_response_success(response)
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @pytest.mark.skip(reason="业务未引用，暂时跳过")
     @case_decorator(
@@ -644,71 +578,4 @@ class TestQualificationsManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
-    @case_decorator(
-        story="资质管理",
-        title="测试资质组标准导入",
-        description="验证资质组标准导入功能",
-        severity="normal",
-        file_level_order=15,
-        tags=["资质组", "导入"]
-    )
-    def test_import_qualification_group(self):
-        """资质组标准导入用例"""
-        try:
-            set_dict = {
-                "importConfig": {
-                    "fileName": f"资质组导入_{self.mock_util.get_timestamp()}",
-                    "fileType": "EXCEL"
-                }
-            }
-            response, _ = self.standard_api_call(
-                api_key="资质组标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["importConfig"]
-            )
-            self.assert_util.assert_response_success(response)
 
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
-
-    @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
-    @case_decorator(
-        story="资质管理",
-        title="测试通过OSS提交资质组导入任务",
-        description="验证通过OSS提交资质组导入任务功能",
-        severity="normal",
-        file_level_order=16,
-        tags=["资质组", "OSS导入"]
-    )
-    def test_submit_qualification_group_import_task_by_oss(self):
-        """通过OSS提交资质组导入任务用例"""
-        try:
-            set_dict = {
-                "taskName": f"资质组OSS导入任务_{self.mock_util.get_timestamp()}",
-                "ossConfig": {
-                    "bucketName": "test-bucket",
-                    "objectKey": f"qualification_group_import_{self.mock_util.get_timestamp()}.xlsx"
-                },
-                "importConfig": {
-                    "fileType": "EXCEL",
-                    "sheetName": "资质组"
-                }
-            }
-            response, _ = self.standard_api_call(
-                api_key="资质组-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=["taskName", "ossConfig", "importConfig"]
-            )
-            self.assert_util.assert_response_success(response)
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise 

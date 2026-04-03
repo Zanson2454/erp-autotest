@@ -1,13 +1,15 @@
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
 from testcases.scm_pur import ScmPurBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
+
 
 @allure.epic("采购管理")
 @allure.feature("采购订单类型配置管理")
@@ -283,7 +285,7 @@ class TestPoTypeManagement(ScmPurBaseTest):
         try:
             # 1. 检查是否有可用的ID
             if not self.__class__.po_type_id:
-                pytest.skip("没有可用的采购订单类型配置ID，跳过删除测试")
+                pytest.fail("没有可用的采购订单类型配置ID，跳过删除测试")
             
             # 2. 获取API配置
             api_path = self.get_api_path("(系统)删除数据服务")

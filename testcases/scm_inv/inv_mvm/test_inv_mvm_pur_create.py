@@ -2,10 +2,10 @@
 移动凭证创建器测试用例 - 采购入库专项测试
 专注验证采购入库移动凭证自身创建功能，不涉及库存余额变化
 """
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
@@ -59,7 +59,7 @@ class TestMobileVoucherCreator(MobileVoucherCreator):
             self.assert_util.assert_by_operator(voucher_info["item_count"], "=", 1, "物料行数应该是1")
             
             # 4. 验证凭证在列表中存在
-            voucher_detail = self.verify_voucher_in_list(voucher_id)
+            self.verify_voucher_in_list(voucher_id)
             
             self.logger.info(f"基础参数采购入库移动凭证创建成功 - ID: {voucher_info['mobile_voucher_id']}")
             
@@ -106,7 +106,7 @@ class TestMobileVoucherCreator(MobileVoucherCreator):
             self.assert_util.assert_by_operator(voucher_info["item_count"], "=", 1, "物料行数应该是1")
             
             # 4. 验证凭证在列表中存在
-            voucher_detail = self.verify_voucher_in_list(voucher_id)
+            self.verify_voucher_in_list(voucher_id)
             
             self.logger.info(f"完整仓库参数采购入库移动凭证创建成功 - ID: {voucher_info['mobile_voucher_id']}")
             
@@ -165,7 +165,7 @@ class TestMobileVoucherCreator(MobileVoucherCreator):
             self.assert_util.assert_by_operator(voucher_info["item_count"], "=", 2, "物料行数应该是2")
             
             # 5. 验证凭证在列表中存在
-            voucher_detail = self.verify_voucher_in_list(voucher_id)
+            self.verify_voucher_in_list(voucher_id)
             
             self.logger.info(f"多物料行采购入库移动凭证创建成功 - ID: {voucher_info['mobile_voucher_id']}, 物料行数: 2")
             

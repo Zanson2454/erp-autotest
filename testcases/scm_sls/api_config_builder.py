@@ -1,6 +1,5 @@
 from typing import Any, Callable, Dict, Iterable, Tuple
 
-
 YamlLoader = Callable[[Any], Dict[str, Any]]
 PathPair = Tuple[Any, Any]
 

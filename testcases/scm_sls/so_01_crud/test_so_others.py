@@ -1,15 +1,16 @@
-import pytest
-import allure
-from pathlib import Path
 import sys
+from pathlib import Path
+
+import allure
 
 # 添加项目根目录到 Python 路径
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 from testcases.scm_sls import SlsBase
-from utils.report_util import a, case_decorator
 from utils.param_util import ParamUtil
+from utils.report_util import a, case_decorator
+
 
 @allure.epic("销售管理")
 @allure.feature("销售订单-组织详情")

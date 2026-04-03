@@ -3,10 +3,10 @@
 存货价值凭证测试用例
 """
 
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))

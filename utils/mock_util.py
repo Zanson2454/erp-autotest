@@ -1,24 +1,23 @@
-from sqlite3.dbapi2 import Timestamp
+import random
+import sys
+import threading
+import time
+import uuid
+from datetime import date, datetime, timedelta
+from pathlib import Path
+from typing import Any, Dict, List, Union
+
 from faker import Faker
 from faker.providers import BaseProvider
-from typing import Optional, List, Dict, Any, Union
-from datetime import datetime, timedelta, date
-import random
-import re
-from pathlib import Path
-import sys
-import time
-import threading
-import uuid
-import os
 
 # Add project root to Python path
 current_file = Path(__file__).resolve()
 project_root = current_file.parent.parent
 sys.path.insert(0, str(project_root))
 
-from utils.log_util import Loggers
 from utils.exception_util import ValidationException
+from utils.log_util import Loggers
+
 
 class ChineseProvider(BaseProvider):
     """自定义中文数据提供器"""

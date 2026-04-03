@@ -1,13 +1,12 @@
-import allure
-from testcases.erp_fin.fin_ar import ArBaseTest, convert_decimal_to_float
-from utils.param_util import ParamUtil
-from utils.mock_util import MockData
-from utils.report_util import a, case_decorator
-from erp_data_factory.compat.fin_ar_factory import FinArFactory
-from decimal import Decimal
 from datetime import datetime
-from pathlib import Path
-import time
+
+import allure
+
+from testcases.erp_fin.fin_ar import ArBaseTest, convert_decimal_to_float
+from utils.mock_util import MockData
+from utils.param_util import ParamUtil
+from utils.report_util import a, case_decorator
+
 
 @allure.epic("ERP通业财模块")
 @allure.feature("应收管理")
@@ -38,7 +37,7 @@ class TestArDocCreatePn(ArBaseTest):
         smoke=True,
         tags=["ar", "save", "post"]
     )
-    def test_01_create_and_post_ar_doc(self):
+    def test_create_and_post_ar_doc(self):
         """创建并过账标准应收单"""
         try:
             with a.step("创建标准应收单"):
@@ -94,7 +93,7 @@ class TestArDocCreatePn(ArBaseTest):
         smoke=True,
         tags=["ar", "pn", "create"]
     )
-    def test_02_create_pn_by_ar(self):
+    def test_create_pn_by_ar(self):
         """基于应收单创建收款单"""
         try:
             with a.step("基于应收单创建收款单"):
@@ -143,7 +142,7 @@ class TestArDocCreatePn(ArBaseTest):
         smoke=True,
         tags=["ar", "pn", "query"]
     )
-    def test_03_check_ar_collecting_amt(self):
+    def test_check_ar_collecting_amt(self):
         """查询应收单收款中金额并校验"""
         try:
             with a.step("查询应收单收款中金额"):
@@ -153,14 +152,7 @@ class TestArDocCreatePn(ArBaseTest):
                 api_path = ParamUtil.get_api_path(self.apis, "应收单头表-根据ID查找数据服务")
                 params, url = ParamUtil.get_api_params(self.api_params, api_path)
                 
-                query_params = {
-                    "sceneKey": "ERP_FIN$FIN_ARM_FROM_DS",
-                    "viewKey": "ERP_FIN$FIN_ARM_FROM_DS:detail",
-                    "containerKey": "ERP_FIN$FIN_ARM_FROM_DS-TERP_MIGRATE$FIN_ARM_230706-detailView-detail",
-                    "appId": 0,
-                    "teamId": 22,
-                    "serviceKey": "ERP_FIN$FIN_ARM_AR_HEAD_TR_FIND_DATA_BY_ID_SERVICE",
-                    "params": {"request": {"id": str(ar_doc_id)}}
+                query_params = {                    "containerKey": "ERP_FIN$FIN_ARM_FROM_DS-TERP_MIGRATE$FIN_ARM_230706-detailView-detail",                    "params": {"request": {"id": str(ar_doc_id)}}
                 }
                 
                 waited = 0
@@ -229,7 +221,7 @@ class TestArDocCreatePn(ArBaseTest):
         smoke=True,
         tags=["ar", "pn", "verify"]
     )
-    def test_04_verify_pn_status(self):
+    def test_verify_pn_status(self):
         try:
             with a.step("查询收款单信息并验证状态"):
                 ar_doc_id = TestArDocCreatePn.ar_info.get("ar_doc_id")
@@ -312,7 +304,7 @@ class TestArDocCreatePn(ArBaseTest):
         smoke=True,
         tags=["ar", "pn", "submit"]
     )
-    def test_05_submit_pn(self):
+    def test_submit_pn(self):
         try:
             with a.step("提交收款单"):
                 pn_head_id = TestArDocCreatePn.ar_info.get("pn_head_id")
@@ -355,7 +347,7 @@ class TestArDocCreatePn(ArBaseTest):
         smoke=True,
         tags=["ar", "pn", "post"]
     )
-    def test_06_post_pn(self):
+    def test_post_pn(self):
         try:
             with a.step("过账收款单"):
                 pn_head_id = TestArDocCreatePn.ar_info.get("pn_head_id")
@@ -398,7 +390,7 @@ class TestArDocCreatePn(ArBaseTest):
         smoke=True,
         tags=["ar", "pn", "verify", "post"]
     )
-    def test_07_verify_pn_post_status(self):
+    def test_verify_pn_post_status(self):
         try:
             with a.step("查询收款单过账后状态"):
                 pn_head_code = TestArDocCreatePn.ar_info.get("pn_head_code")
@@ -496,7 +488,7 @@ class TestArDocCreatePn(ArBaseTest):
         smoke=True,
         tags=["ar", "pn", "verify", "post", "clearing"]
     )
-    def test_08_verify_ar_after_pn_post(self):
+    def test_verify_ar_after_pn_post(self):
         try:
             with a.step("查询收款单过账后应收单更新状态"):
                 ar_doc_id = TestArDocCreatePn.ar_info.get("ar_doc_id")
@@ -579,11 +571,11 @@ class TestArDocCreatePn(ArBaseTest):
 if __name__ == "__main__":
     test = TestArDocCreatePn()
     test.setup_class()
-    test.test_01_create_and_post_ar_doc()
-    test.test_02_create_pn_by_ar()
-    test.test_03_check_ar_collecting_amt()
-    test.test_04_verify_pn_status()
-    test.test_05_submit_pn()
-    test.test_06_post_pn()
-    test.test_07_verify_pn_post_status()
-    test.test_08_verify_ar_after_pn_post() 
+    test.test_create_and_post_ar_doc()
+    test.test_create_pn_by_ar()
+    test.test_check_ar_collecting_amt()
+    test.test_verify_pn_status()
+    test.test_submit_pn()
+    test.test_post_pn()
+    test.test_verify_pn_post_status()
+    test.test_verify_ar_after_pn_post() 

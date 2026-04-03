@@ -1,8 +1,9 @@
 """移动凭证创建器测试用例 - 调拨专项测试"""
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
@@ -58,7 +59,7 @@ class TestMobileVoucherTransferCreator(MobileVoucherCreator):
         """调拨-指定完整仓位和批次测试"""
         try:
             if not self.available_batch_id:
-                pytest.skip("没有可用批次，跳过调拨测试")
+                pytest.fail("没有可用批次，跳过调拨测试")
             
             # 准备调拨参数
             custom_to_batch = f"TRANSFER_{self.mock_util.get_timestamp()}"

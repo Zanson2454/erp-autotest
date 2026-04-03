@@ -3,18 +3,19 @@
     本模块测试库存余额管理的完整业务流程，包括移动凭证创建、库存余额查询、
     批次调整、导出等核心功能，确保库存数据的准确性和一致性。
 """
-import allure
 import datetime
-import pytest
 import sys
-import time
 from pathlib import Path
+
+import allure
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
 from testcases.scm_inv import ScmInvBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
+
 
 @allure.epic("库存管理")
 @allure.feature("库存余额管理")

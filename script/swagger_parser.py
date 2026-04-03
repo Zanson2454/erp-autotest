@@ -29,7 +29,6 @@ import yaml
 from dotenv import load_dotenv
 from loguru import logger
 
-
 # ─────────────────────────────────────────────────────────────────────────────
 # SwaggerParser — 核心解析器（保持不变）
 # ─────────────────────────────────────────────────────────────────────────────
@@ -117,7 +116,7 @@ class SwaggerParser:
                         logger.info(f"检测到数组格式，包含 {len(api_docs_data)} 个文档项")
                         config_data = {'urls': api_docs_data}
                     else:
-                        logger.warning(f"/v3/api-docs 返回的数据格式不符合预期")
+                        logger.warning("/v3/api-docs 返回的数据格式不符合预期")
                         if isinstance(api_docs_data, dict):
                             logger.warning(f"返回数据的键: {list(api_docs_data.keys())}")
                         raise ValueError("不是预期的文档格式，尝试swagger-config")

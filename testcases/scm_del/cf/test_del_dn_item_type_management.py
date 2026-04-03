@@ -1,13 +1,15 @@
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
 from testcases.scm_del import ScmDelBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
+
 
 @allure.epic("交货单管理")
 @allure.feature("交货单行类型配置管理")
@@ -191,7 +193,7 @@ class TestDelDnItemTypeManagement(ScmDelBaseTest):
         try:
             # 1. 检查是否有可用的ID
             if not self.__class__.dn_item_type_id:
-                pytest.skip("没有可用的交货单行类型配置ID，跳过详情查询测试")
+                pytest.fail("没有可用的交货单行类型配置ID，跳过详情查询测试")
             
             # 2. 获取API配置
             api_path = self.get_api_path("(系统)查询数据详情服务")
@@ -367,7 +369,7 @@ class TestDelDnItemTypeManagement(ScmDelBaseTest):
         try:
             # 1. 检查是否有可用的ID
             if not self.__class__.dn_item_type_id:
-                pytest.skip("没有可用的交货单行类型配置ID，跳过删除测试")
+                pytest.fail("没有可用的交货单行类型配置ID，跳过删除测试")
             
             # 2. 删除前先禁用（确保数据处于可删除状态）
             self.logger.info("删除前先禁用交货单行类型配置...")

@@ -2,13 +2,15 @@
 应收单保存服务测试用例
 覆盖创建、编辑、提交、过账、状态校验等场景
 """
-import allure
-from testcases.erp_fin.fin_ar import ArBaseTest, convert_decimal_to_float
-from utils.param_util import ParamUtil
-from utils.mock_util import MockData
-from utils.report_util import a, case_decorator
 from datetime import datetime
-import time
+
+import allure
+
+from testcases.erp_fin.fin_ar import ArBaseTest, convert_decimal_to_float
+from utils.mock_util import MockData
+from utils.param_util import ParamUtil
+from utils.report_util import a, case_decorator
+
 
 @allure.epic("ERP通业财模块")
 @allure.feature("应收管理")

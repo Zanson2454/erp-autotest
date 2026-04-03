@@ -8,7 +8,6 @@ import os
 import sys
 from pathlib import Path
 
-
 API_RECORD_ROOT = Path(__file__).resolve().parent
 PROJECT_ROOT = API_RECORD_ROOT.parent
 RECORDER_SCRIPT = API_RECORD_ROOT / "recorder.py"

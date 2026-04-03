@@ -1,6 +1,7 @@
-import allure
-import pytest
 from typing import Any
+
+import allure
+
 from testcases.gen_md import GenMdBaseTest
 from utils.mock_util import MockData
 from utils.report_util import a, case_decorator
@@ -349,71 +350,4 @@ class TestIndexManagement(GenMdBaseTest):
             raise
 
     # ================ 指标中心导入管理 ================
-    @case_decorator(
-        story="指标中心导入管理",
-        title="测试指标中心标准导入",
-        description="验证指标中心表标准导入服务功能",
-        severity="normal",
-        file_level_order=10,
-        tags=["指标中心", "导入", "GEN_INDEX_MD_GEI_IMPORT_SERVICE"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_index_import(self):
-        """指标中心标准导入用例 - GEN_INDEX_MD_GEI_IMPORT_SERVICE"""
-        try:
-            # 构建导入数据
-            import_data = [
-                {
-                    "code": self.mock_data.generate_unique_code(tag="IMPORT_INDEX"),
-                    "name": f"导入测试指标_{self.mock_data.get_timestamp()}",
-                    "type": "COUNT",
-                    "unit": "个",
-                    "description": "导入的指标描述"
-                }
-            ]
 
-            set_dict = {"data": import_data}
-            response, _ = self.standard_api_call(
-                api_key="指标中心表标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["data"]
-            )
-            self.assert_util.assert_response_data(response)
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
-
-    @case_decorator(
-        story="指标中心任务管理",
-        title="测试指标中心OSS导入任务",
-        description="验证指标中心表-导入导出任务管理接口-通过OSS提交导入任务功能",
-        severity="normal",
-        file_level_order=11,
-        tags=["指标中心", "任务管理", "GEN_INDEX_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_index_oss_import_task(self):
-        """指标中心OSS导入任务用例 - GEN_INDEX_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
-        try:
-            set_dict = {
-                "fileKey": "test_index_import_file.xlsx",
-                "taskName": f"指标中心导入任务_{self.mock_data.get_timestamp()}",
-                "templateId": 1
-            }
-            response, _ = self.standard_api_call(
-                api_key="指标中心表-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=["fileKey", "taskName", "templateId"]
-            )
-            self.assert_util.assert_response_data(response)
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise

@@ -1,21 +1,20 @@
 """
 标准销售交货单测试
 """
-import allure
-import pytest
 import sys
 from pathlib import Path
-from datetime import datetime
+
+import allure
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent.parent
 sys.path.append(str(project_root))
+from erp_data_factory.compat.base import DataFactory
+from erp_data_factory.compat.del_po_dn_factory import DelPoDnFactory
 from testcases.scm_del import ScmDelBaseTest
 from testcases.scm_sls import SlsBase
-from utils.report_util import a, case_decorator
-from erp_data_factory.compat.del_po_dn_factory import DelPoDnFactory
-from utils.param_util import ParamUtil
 from utils.cache_util import CacheUtil
-from erp_data_factory.compat.base import DataFactory
+from utils.param_util import ParamUtil
+from utils.report_util import a, case_decorator
 
 
 @allure.epic("交货管理")
@@ -206,6 +205,7 @@ class TestDelSoDnManagement(ScmDelBaseTest):
         cls.sls_base.md_cache_data = cls.md_cache_data
         cls.sls_base.sls_cache_data = cls.sls_cache_data
         cls.sls_base.db = cls.db
+        cls.sls_base.query_service = cls.query_service
         cls.sls_base.assert_util = cls.assert_util
         cls.sls_base.yaml_util = cls.yaml_util
         cls.sls_base.path_params = {"tmodule": "SCM_SLS"}

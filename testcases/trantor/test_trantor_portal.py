@@ -1,5 +1,6 @@
 import allure
 import pytest
+
 from testcases.trantor import TrantorBaseTest
 from utils.report_util import a, case_decorator
 

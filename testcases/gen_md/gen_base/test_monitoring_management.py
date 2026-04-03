@@ -1,5 +1,6 @@
 import allure
 import pytest
+
 from testcases.gen_md import GenMdBaseTest
 from utils.mock_util import MockData
 from utils.report_util import a, case_decorator
@@ -414,39 +415,6 @@ class TestMonitoringManagement(GenMdBaseTest):
             raise
 
     # ================ 监控方案导入导出管理 ================
-    @case_decorator(
-        story="监控方案导入导出管理",
-        title="测试监控方案标准导入服务",
-        description="验证监控方案标准导入服务功能",
-        severity="normal",
-        file_level_order=11,
-        tags=["监控方案管理", "导入", "GEN_MONITORING_PLAN_INFO_MD_GEI_IMPORT_SERVICE"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_monitoring_plan_import(self):
-        """监控方案标准导入服务用例"""
-        try:
-            import_data = [
-                {
-                    "plan_code": self.mock_data.generate_unique_code(tag="IMPORT_PLAN"),
-                    "plan_name": f"导入测试监控方案_{self.mock_data.get_timestamp()}"
-                }
-            ]
-
-            set_dict = {"data": import_data}
-            response, _ = self.standard_api_call(
-                api_key="监控方案标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["data"]
-            )
-            self.assert_util.assert_response_data(response)
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="监控方案导入导出管理",
@@ -481,39 +449,6 @@ class TestMonitoringManagement(GenMdBaseTest):
             raise
 
     # ================ 监控预警结果信息导入导出管理 ================
-    @case_decorator(
-        story="监控预警结果导入导出管理",
-        title="测试监控预警结果信息标准导入服务",
-        description="验证监控预警结果信息标准导入服务功能",
-        severity="normal",
-        file_level_order=13,
-        tags=["监控预警结果管理", "导入", "GEN_MONITORING_ALERT_RESULT_MD_GEI_IMPORT_SERVICE"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_monitoring_alert_result_import(self):
-        """监控预警结果信息标准导入服务用例"""
-        try:
-            import_data = [
-                {
-                    "alert_code": self.mock_data.generate_unique_code(tag="IMPORT_ALERT"),
-                    "alert_name": f"导入测试监控预警结果_{self.mock_data.get_timestamp()}"
-                }
-            ]
-
-            set_dict = {"data": import_data}
-            response, _ = self.standard_api_call(
-                api_key="监控预警结果信息标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["data"]
-            )
-            self.assert_util.assert_response_data(response)
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="监控预警结果导入导出管理",
@@ -548,35 +483,6 @@ class TestMonitoringManagement(GenMdBaseTest):
             raise
 
     # ================ 监控方案任务管理接口 ================
-    @case_decorator(
-        story="监控方案任务管理",
-        title="测试监控方案OSS导入任务",
-        description="验证监控方案-导入导出任务管理接口-通过OSS提交导入任务功能",
-        severity="normal",
-        file_level_order=15,
-        tags=["监控方案管理", "任务管理", "GEN_MONITORING_PLAN_INFO_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_monitoring_plan_oss_import_task(self):
-        """监控方案OSS导入任务用例"""
-        try:
-            set_dict = {
-                "ossPath": "/test/monitoring_plan_import.xlsx",
-                "taskName": f"监控方案导入任务_{self.mock_data.get_timestamp()}"
-            }
-            response, _ = self.standard_api_call(
-                api_key="监控方案-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=["ossPath", "taskName"]
-            )
-            self.assert_util.assert_response_data(response)
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="监控方案任务管理",
@@ -615,35 +521,6 @@ class TestMonitoringManagement(GenMdBaseTest):
             raise
 
     # ================ 监控预警结果信息任务管理接口 ================
-    @case_decorator(
-        story="监控预警结果任务管理",
-        title="测试监控预警结果信息OSS导入任务",
-        description="验证监控预警结果信息-导入导出任务管理接口-通过OSS提交导入任务功能",
-        severity="normal",
-        file_level_order=17,
-        tags=["监控预警结果管理", "任务管理", "GEN_MONITORING_ALERT_RESULT_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_monitoring_alert_result_oss_import_task(self):
-        """监控预警结果信息OSS导入任务用例"""
-        try:
-            set_dict = {
-                "ossPath": "/test/monitoring_alert_result_import.xlsx",
-                "taskName": f"监控预警结果导入任务_{self.mock_data.get_timestamp()}"
-            }
-            response, _ = self.standard_api_call(
-                api_key="监控预警结果信息-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=["ossPath", "taskName"]
-            )
-            self.assert_util.assert_response_data(response)
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="监控预警结果任务管理",

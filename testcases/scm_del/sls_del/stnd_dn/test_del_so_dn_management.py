@@ -1,20 +1,17 @@
 """
 标准销售交货单测试
 """
-import allure
-import pytest
 import sys
 from pathlib import Path
-from datetime import datetime
+
+import allure
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent.parent
 sys.path.append(str(project_root))
-from testcases.scm_del.sls_del.stnd_dn import SlsDelBaseTest
-from utils.report_util import a, case_decorator
 from erp_data_factory.compat.del_po_dn_factory import DelPoDnFactory
+from testcases.scm_del.sls_del.stnd_dn import SlsDelBaseTest
 from utils.param_util import ParamUtil
-from utils.cache_util import CacheUtil
-from erp_data_factory.compat.base import DataFactory
+from utils.report_util import a, case_decorator
 
 
 @allure.epic("交货管理")
@@ -643,8 +640,6 @@ class TestDelSoDnManagement(SlsDelBaseTest):
                 self._ensure_save_inv_executed_task()
             
             # 调用ERP_WM模块的查询拣配任务API
-            api_path = "/api/trantor/service/engine/execute/ERP_WM$WM_QUERY_TASK_INFO_PAGE_EVENT_SERVICE"
-            url = f"{self.http.url}{api_path}?tmodule=ERP_WM"
             
             # 构造查询条件：taskType = "LOADING", delDnHeadCode = 交货单编号
             condition_group = {
@@ -700,13 +695,7 @@ class TestDelSoDnManagement(SlsDelBaseTest):
                 ]
             }
             
-            params = {
-                "sceneKey": "ERP_WM$WAREHOUSE_PICKING_TASK",
-                "viewKey": "ERP_WM$WAREHOUSE_PICKING_TASK:list",
-                "appId": 0,
-                "teamId": 22,
-                "serviceKey": "ERP_WM$WM_QUERY_TASK_INFO_PAGE_EVENT_SERVICE",
-                "params": {
+            params = {                "params": {
                     "request": {
                         "pageable": {
                             "pageNo": 1,
@@ -878,7 +867,7 @@ class TestDelSoDnManagement(SlsDelBaseTest):
                 mat_id = task.get("genMatMdId", {}).get("id") if isinstance(task.get("genMatMdId"), dict) else task.get("genMatMdId")
                 
                 # 检查物料是否带批次（通过任务字段或查询）
-                is_batch_control = task.get("isBatchControl", False)
+                task.get("isBatchControl", False)
                 
                 # 如果没有批次信息，尝试获取
                 if not task.get("wmSrcBinDetailList") and mat_id:
@@ -1025,16 +1014,8 @@ class TestDelSoDnManagement(SlsDelBaseTest):
         """
         try:
             # 使用系统查询数据详情服务查询批次详情
-            api_path = "/api/trantor/service/engine/execute/SCM_DEL$SYS_FindDataByIdService"
-            url = f"{self.http.url}{api_path}?tmodule=SCM_DEL&modelKey=SCM_INV%24inv_batch_md"
             
-            params = {
-                "sceneKey": "SCM_DEL$DEL_DN_SLS_NEW_VIEW",
-                "viewKey": "SCM_DEL$DEL_DN_SLS_NEW_VIEW:list",
-                "appId": 0,
-                "teamId": 22,
-                "serviceKey": "SCM_DEL$SYS_FindDataByIdService",
-                "params": {
+            params = {                "params": {
                     "request": {
                         "id": batch_id
                     },
@@ -1069,13 +1050,8 @@ class TestDelSoDnManagement(SlsDelBaseTest):
         """
         try:
             # 使用系统分页查询服务查询批次主数据
-            api_path = "/api/trantor/service/engine/execute/SCM_DEL$SYS_PagingDataService"
-            url = f"{self.http.url}{api_path}?tmodule=SCM_DEL&modelKey=SCM_INV%24inv_batch_md"
             
-            params = {
-                "sceneKey": "SCM_DEL$DEL_DN_SLS_NEW_VIEW",
-                "viewKey": "SCM_DEL$DEL_DN_SLS_NEW_VIEW:list",
-                "containerKey": "",
+            params = {                "containerKey": "",
                 "viewCondition": {
                     "conditionKey": "WrpF4x-Y61G0RYvUAF6UA",
                     "rightValues": {
@@ -1087,11 +1063,7 @@ class TestDelSoDnManagement(SlsDelBaseTest):
                             "id": "57PCGDDHkh31MxY7_WkH2"
                         }]
                     }
-                },
-                "appId": 0,
-                "teamId": 22,
-                "serviceKey": "SCM_DEL$SYS_PagingDataService",
-                "params": {
+                },                "params": {
                     "request": {
                         "pageable": {
                             "pageNo": 1,

@@ -4,10 +4,10 @@
 包含：财务域通用模块初始化表管理、应付初始化管理
 """
 
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
@@ -196,7 +196,7 @@ class TestApInitManagement(FinBaseTest):
             
             # 记录关键数据
             a.json(response, "启用响应数据")
-            a.text(f"✅ 启用成功", "启用结果")
+            a.text("✅ 启用成功", "启用结果")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -233,7 +233,7 @@ class TestApInitManagement(FinBaseTest):
             
             # 记录关键数据
             a.json(response, "反启用响应数据")
-            a.text(f"✅ 反启用成功", "反启用结果")
+            a.text("✅ 反启用成功", "反启用结果")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -431,7 +431,7 @@ class TestApInitManagement(FinBaseTest):
             
             # 记录关键数据
             a.json(response, "反初始化响应数据")
-            a.text(f"✅ 反初始化成功", "反初始化结果")
+            a.text("✅ 反初始化成功", "反初始化结果")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -571,7 +571,7 @@ class TestApInitManagement(FinBaseTest):
             
             # 记录关键数据
             a.json(response, "删除响应数据")
-            a.text(f"✅ 删除成功", "删除结果")
+            a.text("✅ 删除成功", "删除结果")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -605,7 +605,7 @@ class TestApInitManagement(FinBaseTest):
             
             # 记录关键数据
             a.json(response, "批量删除响应数据")
-            a.text(f"✅ 批量删除成功", "删除结果")
+            a.text("✅ 批量删除成功", "删除结果")
             
         except Exception as e:
             a.text(str(e), "失败原因")

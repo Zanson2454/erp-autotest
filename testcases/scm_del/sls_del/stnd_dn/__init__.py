@@ -3,8 +3,8 @@
 提供销售订单创建和交货单相关功能
 """
 
-import sys
 import random
+import sys
 from pathlib import Path
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent.parent
@@ -602,7 +602,7 @@ class SlsDelBaseTest(ScmDelBaseTest):
             dn_draft = self._extract_dn_draft(group_response)
             
             # 4. 调用保存并提交API
-            submit_response = self._save_submit_delivery_note(dn_draft, so_code)
+            self._save_submit_delivery_note(dn_draft, so_code)
             
             # 5. 查询交货单ID
             self._async_delay(1, "等待交货单创建完成")

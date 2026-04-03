@@ -1,13 +1,15 @@
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
 from testcases.scm_inv import ScmInvBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
+
 
 @allure.epic("库存管理")
 @allure.feature("ATP检查组管理")
@@ -190,7 +192,7 @@ class TestInvAtpGroupManagement(ScmInvBaseTest):
         """查询ATP检查组详情用例"""
         try:
             if not self.__class__.atp_group_id:
-                pytest.skip("没有可用的ATP组ID，跳过详情查询测试")
+                pytest.fail("没有可用的ATP组ID，跳过详情查询测试")
             
             api_path = self.get_api_path("(系统)查询数据详情服务")
             params, url = self.get_api_params(api_path)
@@ -319,7 +321,7 @@ class TestInvAtpGroupManagement(ScmInvBaseTest):
         """删除ATP检查组用例"""
         try:
             if not self.__class__.atp_group_id:
-                pytest.skip("没有可用的ATP组ID，跳过删除测试")
+                pytest.fail("没有可用的ATP组ID，跳过删除测试")
             
             api_path = self.get_api_path("(系统)删除数据服务")
             params, url = self.get_api_params(api_path)

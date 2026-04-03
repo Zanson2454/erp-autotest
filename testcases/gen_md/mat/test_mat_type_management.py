@@ -1,5 +1,6 @@
 import allure
 import pytest
+
 from testcases.gen_md import GenMdBaseTest
 from utils.report_util import a, case_decorator
 
@@ -360,41 +361,6 @@ class TestMatTypeManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
-    @case_decorator(
-        story="物料类型管理",
-        title="测试物料类型标准导入",
-        description="验证物料类型标准导入功能",
-        severity="normal",
-        file_level_order=8,
-        tags=["物料类型", "导入"]
-    )
-    def test_import_mat_type(self):
-        """
-        物料类型标准导入用例（需要文件上传）
-        """
-        try:
-            set_dict = {
-                "file": f"物料类型导入模板_{self.mock_util.get_timestamp()}.xlsx",
-                "importConfig": {
-                    "sheetName": "物料类型",
-                    "startRow": 2,
-                    "validateOnly": False
-                }
-            }
-            response, _ = self.standard_api_call(
-                api_key="物料类型标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["file", "importConfig"]
-            )
-            self.assert_util.assert_response_success(response)
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="物料类型管理",
@@ -480,46 +446,6 @@ class TestMatTypeManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
-    @case_decorator(
-        story="物料类型管理",
-        title="测试通过OSS提交物料类型导入任务",
-        description="验证通过OSS提交物料类型导入任务功能",
-        severity="normal",
-        file_level_order=10,
-        tags=["物料类型", "OSS导入"]
-    )
-    def test_submit_import_task_by_oss(self):
-        """
-        通过OSS提交物料类型导入任务用例（需要OSS配置）
-        """
-        try:
-            set_dict = {
-                "ossPath": f"mat_type_import_{self.mock_util.get_timestamp()}.xlsx",
-                "fileName": f"物料类型导入_{self.mock_util.get_timestamp()}.xlsx",
-                "importConfig": {
-                    "sheetName": "物料类型数据",
-                    "startRow": 2,
-                    "mapping": {
-                        "matTypeCode": "A",
-                        "matTypeName": "B",
-                        "remark": "C"
-                    }
-                }
-            }
-            response, _ = self.standard_api_call(
-                api_key="物料类型-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=["ossPath", "fileName", "importConfig"]
-            )
-            self.assert_util.assert_response_success(response)
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="物料类型管理",

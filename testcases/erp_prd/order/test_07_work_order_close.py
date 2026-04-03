@@ -3,18 +3,18 @@
 生产订单关闭测试用例
 包含生产订单关闭的完整业务流程测试，包括订单关联和取消关闭
 """
+
 import allure
-import pytest
+
 from testcases.erp_prd import PrdBaseTest
-from utils.report_util import a
-from utils.param_util import ParamUtil
+from utils.report_util import a, case_decorator
 
 
 @allure.epic("生产管理")
 @allure.feature("生产订单关闭")
 class TestWorkOrderClose(PrdBaseTest):
     """生产订单关闭测试用例
-    
+
     本测试用例验证生产订单关闭的完整业务流程，包括：
     1. 查询可关闭的生产订单列表
     2. 执行订单关闭操作
@@ -22,23 +22,38 @@ class TestWorkOrderClose(PrdBaseTest):
     4. 执行取消关闭操作
     5. 验证订单恢复状态
     """
-    
+
     # 保存测试过程中的数据
     close_info = {}
-    
+
     def init(self):
         """初始化测试数据"""
         self.logger.info("开始初始化生产订单关闭测试数据")
         pass
+
+    @case_decorator(
+        story="生产订单关闭",
+        title="查询可关闭的生产订单列表",
+        description="""
+    步骤：
+    1. 使用SQL直接查询可关闭的生产订单列表
+    2. 保存订单列表信息用于后续测试
     
-    @pytest.mark.run(order=29)
+    验证点：
+    - 能成功查询到订单列表
+    - 订单状态符合可关闭条件
+    - 订单数据结构完整
+    """,
+        severity="normal",
+        file_level_order=1,
+    )
     def test_query_closeable_orders(self):
         """查询可关闭的生产订单列表
-        
+
         步骤：
         1. 使用SQL直接查询可关闭的生产订单列表
         2. 保存订单列表信息用于后续测试
-        
+
         验证点：
         - 能成功查询到订单列表
         - 订单状态符合可关闭条件
@@ -63,33 +78,49 @@ class TestWorkOrderClose(PrdBaseTest):
                     ORDER BY p.id DESC
                     LIMIT 1
                 """
-                
+
                 # 执行查询
                 records = self.query_service.query(sql)
                 self.logger.info(f"查询到{len(records)}条可关闭的生产订单记录")
-                
+
                 # 保存查询结果
                 self.close_info["records"] = records
-                
+
                 # 验证查询结果
                 assert records, "未找到可关闭的生产订单记录"
-                
+
                 # 添加报告附件
                 a.json(records, "查询结果数据")
-                
+
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
+
+    @case_decorator(
+        story="生产订单关闭",
+        title="执行生产订单关闭操作",
+        description="""
+    步骤：
+    1. 获取关闭前的订单状态
+    2. 执行订单关闭操作
+    3. 验证关闭后的状态变更
     
-    @pytest.mark.run(order=30)
+    验证点：
+    - 接口调用成功
+    - 订单状态正确变更为已关闭
+    - 相关数据更新正确
+    """,
+        severity="blocker",
+        file_level_order=2,
+    )
     def test_execute_order_close(self):
         """执行生产订单关闭操作
-        
+
         步骤：
         1. 获取关闭前的订单状态
         2. 执行订单关闭操作
         3. 验证关闭后的状态变更
-        
+
         验证点：
         - 接口调用成功
         - 订单状态正确变更为已关闭
@@ -100,14 +131,14 @@ class TestWorkOrderClose(PrdBaseTest):
                 # 获取API配置
                 api_path = self.get_api_path("生产订单关闭服务")
                 params, url = self.get_api_params(api_path)
-                
+
                 # 获取需要关闭的订单ID
                 records = self.close_info.get("records", [])
                 assert records, "没有找到需要关闭的订单记录"
-                
+
                 order_id = records[0]["id"]
                 self.logger.info(f"准备关闭生产订单: {order_id}")
-                
+
                 # 获取关闭前的订单数据
                 pre_close_sql = f"""
                     SELECT 
@@ -117,28 +148,24 @@ class TestWorkOrderClose(PrdBaseTest):
                 """
                 pre_close_data = self.query_service.query(pre_close_sql)
                 assert pre_close_data, f"未找到订单记录，ID: {order_id}"
-                
+
                 # 设置请求参数
-                filtered_params = {
-                    "params": {
-                        "request": {
-                            "ids": [order_id]
-                        }
-                    }
-                }
-                
+                filtered_params = {"params": {"request": {"ids": [order_id]}}}
+
                 # 发送请求
                 result, _ = self.standard_api_call(
                     api_key="生产订单关闭服务",
-                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    set_dict=(
+                        filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params
+                    ),
                     store_id_as=None,
                     use_param_util=False,
-                    param_path=["params"]
+                    param_path=["params"],
                 )
-                
+
                 # 验证响应成功
                 self.assert_util.assert_response_success(result)
-                
+
                 # 获取关闭后的订单数据
                 post_close_sql = f"""
                     SELECT 
@@ -148,35 +175,49 @@ class TestWorkOrderClose(PrdBaseTest):
                 """
                 post_close_data = self.query_service.query(post_close_sql)
                 assert post_close_data, f"未找到订单记录，ID: {order_id}"
-                
+
                 # 验证状态变更
-                assert post_close_data[0]["status"] == "PRODUCTION_COMPLETED", \
-                    f"订单关闭后状态不正确，期望: PRODUCTION_COMPLETED，实际: {post_close_data[0]['status']}"
-                
+                assert (
+                    post_close_data[0]["status"] == "PRODUCTION_COMPLETED"
+                ), f"订单关闭后状态不正确，期望: PRODUCTION_COMPLETED，实际: {post_close_data[0]['status']}"
+
                 # 保存关闭后的数据
-                self.close_info["close_result"] = {
-                    "pre_close": pre_close_data[0],
-                    "post_close": post_close_data[0]
-                }
-                
+                self.close_info["close_result"] = {"pre_close": pre_close_data[0], "post_close": post_close_data[0]}
+
                 # 添加报告附件
                 a.json(filtered_params, "请求数据")
                 a.json(result, "响应结果数据")
                 a.json(self.close_info["close_result"], "关闭前后数据对比")
-                
+
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
+
+    @case_decorator(
+        story="生产订单关闭",
+        title="执行生产订单取消关闭操作",
+        description="""
+    步骤：
+    1. 获取取消关闭前的订单状态
+    2. 执行订单取消关闭操作
+    3. 验证取消关闭后的状态恢复
     
-    @pytest.mark.run(order=31)
+    验证点：
+    - 接口调用成功
+    - 订单状态正确恢复为未关闭
+    - 相关数据更新正确
+    """,
+        severity="blocker",
+        file_level_order=3,
+    )
     def test_execute_cancel_close(self):
         """执行生产订单取消关闭操作
-        
+
         步骤：
         1. 获取取消关闭前的订单状态
         2. 执行订单取消关闭操作
         3. 验证取消关闭后的状态恢复
-        
+
         验证点：
         - 接口调用成功
         - 订单状态正确恢复为未关闭
@@ -187,14 +228,14 @@ class TestWorkOrderClose(PrdBaseTest):
                 # 获取API配置
                 api_path = self.get_api_path("生产订单取消关闭服务")
                 params, url = self.get_api_params(api_path)
-                
+
                 # 获取需要取消关闭的订单ID
                 records = self.close_info.get("records", [])
                 assert records, "没有找到需要取消关闭的订单记录"
-                
+
                 order_id = records[0]["id"]
                 self.logger.info(f"准备取消关闭生产订单: {order_id}")
-                
+
                 # 获取取消关闭前的订单数据
                 pre_cancel_sql = f"""
                     SELECT 
@@ -204,28 +245,24 @@ class TestWorkOrderClose(PrdBaseTest):
                 """
                 pre_cancel_data = self.query_service.query(pre_cancel_sql)
                 assert pre_cancel_data, f"未找到订单记录，ID: {order_id}"
-                
+
                 # 设置请求参数
-                filtered_params = {
-                    "params": {
-                        "request": {
-                            "ids": [order_id]
-                        }
-                    }
-                }
-                
+                filtered_params = {"params": {"request": {"ids": [order_id]}}}
+
                 # 发送请求
                 result, _ = self.standard_api_call(
                     api_key="生产订单取消关闭服务",
-                    set_dict=(filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params),
+                    set_dict=(
+                        filtered_params.get("params", {}) if isinstance(filtered_params, dict) else filtered_params
+                    ),
                     store_id_as=None,
                     use_param_util=False,
-                    param_path=["params"]
+                    param_path=["params"],
                 )
-                
+
                 # 验证响应成功
                 self.assert_util.assert_response_success(result)
-                
+
                 # 获取取消关闭后的订单数据
                 post_cancel_sql = f"""
                     SELECT 
@@ -235,30 +272,32 @@ class TestWorkOrderClose(PrdBaseTest):
                 """
                 post_cancel_data = self.query_service.query(post_cancel_sql)
                 assert post_cancel_data, f"未找到订单记录，ID: {order_id}"
-                
+
                 # 验证状态恢复
-                assert post_cancel_data[0]["status"] == "SUBMITTED", \
-                    f"订单取消关闭后状态不正确，期望: SUBMITTED，实际: {post_cancel_data[0]['status']}"
-                
+                assert (
+                    post_cancel_data[0]["status"] == "SUBMITTED"
+                ), f"订单取消关闭后状态不正确，期望: SUBMITTED，实际: {post_cancel_data[0]['status']}"
+
                 # 保存取消关闭后的数据
                 self.close_info["cancel_result"] = {
                     "pre_cancel": pre_cancel_data[0],
-                    "post_cancel": post_cancel_data[0]
+                    "post_cancel": post_cancel_data[0],
                 }
-                
+
                 # 添加报告附件
                 a.json(filtered_params, "请求数据")
                 a.json(result, "响应结果数据")
                 a.json(self.close_info["cancel_result"], "取消关闭前后数据对比")
-                
+
         except Exception as e:
             a.text(str(e), "失败原因")
             raise
+
 
 if __name__ == "__main__":
     """本地调试入口"""
     test = TestWorkOrderClose()
     test.setup_class()
-    test.test_query_closeable_orders()     # 查询可关闭的生产订单列表
-    test.test_execute_order_close()        # 执行生产订单关闭操作
-    test.test_execute_cancel_close()       # 执行生产订单取消关闭操作 
+    test.test_query_closeable_orders()  # 查询可关闭的生产订单列表
+    test.test_execute_order_close()  # 执行生产订单关闭操作
+    test.test_execute_cancel_close()  # 执行生产订单取消关闭操作

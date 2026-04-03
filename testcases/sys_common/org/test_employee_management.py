@@ -2,10 +2,11 @@
 员工信息管理测试用例
 覆盖员工信息表的增删改查、启用禁用、导入导出等功能
 """
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
@@ -865,101 +866,8 @@ class TestEmployeeManagement(SysCommonBaseTest):
     
     # ==================== 导入导出测试 ====================
     
-    @pytest.mark.skip(reason="标准导入导出业务未引用，暂时跳过")
-    @case_decorator(
-        story="员工信息管理",
-        title="测试标准导入",
-        description="验证ORG_EMPLOYEE_MD_GEI_IMPORT_SERVICE功能",
-        severity="normal",
-        order=18,
-        tags=["sys_common", "employee", "导入"]
-    )
-    def test_gei_import(self):
-        """标准导入员工数据"""
-        try:
-            api_path = self.get_api_path("员工信息表标准导入服务")
-            params, url = self.get_api_params(api_path)
-            
-            response, _ = self.standard_api_call(
-                api_key="员工信息表标准导入服务",
-                set_dict=params.get("params", {}),
-                store_id_as=None,
-                use_param_util=False,
-                param_path=["params"]
-            )
-            self.assert_util.assert_response_data(response)
-            
-            a.json(params, "请求数据")
-            a.json(response, "响应数据")
-            self.logger.info("标准导入员工成功")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
     
-    @pytest.mark.skip(reason="标准导入导出业务未引用，暂时跳过")
-    @case_decorator(
-        story="员工信息管理",
-        title="测试标准导出",
-        description="验证ORG_EMPLOYEE_MD_GEI_EXPORT_SERVICE功能",
-        severity="normal",
-        order=19,
-        tags=["sys_common", "employee", "导出"]
-    )
-    def test_gei_export(self):
-        """标准导出员工数据"""
-        try:
-            api_path = self.get_api_path("员工信息表标准导出服务")
-            params, url = self.get_api_params(api_path)
-            
-            response, _ = self.standard_api_call(
-                api_key="员工信息表标准导出服务",
-                set_dict=params.get("params", {}),
-                store_id_as=None,
-                use_param_util=False,
-                param_path=["params"]
-            )
-            self.assert_util.assert_response_data(response)
-            
-            a.json(params, "请求数据")
-            a.json(response, "响应数据")
-            self.logger.info("标准导出员工成功")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
     
-    @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
-    @case_decorator(
-        story="员工信息管理",
-        title="测试通过OSS提交导入任务",
-        description="验证ORG_EMPLOYEE_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST功能",
-        severity="normal",
-        order=20,
-        tags=["sys_common", "employee", "导入"]
-    )
-    def test_import_by_oss(self):
-        """通过OSS提交导入任务"""
-        try:
-            api_path = self.get_api_path("员工信息表-导入导出任务管理接口-通过OSS提交导入任务")
-            params, url = self.get_api_params(api_path)
-            
-            response, _ = self.standard_api_call(
-                api_key="员工信息表-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=params.get("params", {}),
-                store_id_as=None,
-                use_param_util=False,
-                param_path=["params"]
-            )
-            self.assert_util.assert_response_data(response)
-            
-            a.json(params, "请求数据")
-            a.json(response, "响应数据")
-            self.logger.info("OSS导入任务提交成功")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
     
     @pytest.mark.skip(reason="导出任务需要具体配置，复杂度较高")
     @case_decorator(

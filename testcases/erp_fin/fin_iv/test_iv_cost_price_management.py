@@ -3,10 +3,11 @@
 存货成本价格测试用例
 """
 
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
@@ -62,7 +63,7 @@ class TestIvCostPriceManagement(IvBaseTest):
                 raise ValueError("mat_id 未初始化，请检查 md_cache_data")
             
             # 确保唯一，能新增成功
-            sql = self.db.delete(
+            self.db.delete(
                 table="fin_iv_price_md",
                 where="com_org_id = %s and mat_id =%s and  inv_org_id=%s",
                 params=(self.com_org_id, self.mat_id, self.inv_org_id)

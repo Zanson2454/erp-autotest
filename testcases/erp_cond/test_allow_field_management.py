@@ -1,14 +1,16 @@
+import sys
+from pathlib import Path
+
 import allure
 import pytest
-from pathlib import Path
-import sys
 
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
-from . import ErpCondBaseTest
-from utils.param_util import ParamUtil
-from utils.report_util import a, case_decorator
 from typing import Any
+
+from utils.report_util import a, case_decorator
+
+from . import ErpCondBaseTest
 
 
 @allure.epic("ERP条件模块")
@@ -295,101 +297,10 @@ class TestAllowFieldManagement(ErpCondBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @case_decorator(
-        story="允许字段管理",
-        title="测试标准导出",
-        description="验证GEN_ALLOW_FIELD_ITEM_CF_GEI_IMPORT_SERVICE (导出部分)",
-        severity="normal",
-        file_level_order=8,
-        tags=["允许字段", "导出", "GEN_ALLOW_FIELD_ITEM_CF_GEI_IMPORT_SERVICE"]
-    )
-    @pytest.mark.skip(reason="标准导入导出业务未引用，暂时跳过")
-    def test_standard_export(self):
-        """标准导出用例 - GEN_ALLOW_FIELD_ITEM_CF_GEI_IMPORT_SERVICE"""
-        try:
-            api_path = self.get_api_path("允许字段表标准导入服务")
-            params, url = self.get_api_params(api_path)
-            
-            filtered_params = ParamUtil.filter_post_body_fields(
-                params, ["selectFields"], ["params", "request"]
-            )
-            set_dict = {
-                "selectFields": [
-                    {"name": "code", "type": "TEXT"},
-                    {"name": "name", "type": "TEXT"},
-                    {"name": "fieldType", "type": "TEXT"}
-                ]
-            }
-            ParamUtil.set_request_params(filtered_params, set_dict)
-            
-            response, _ = self.standard_api_call(
-                api_key="允许字段表标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["selectFields"],
-                store_id_as=None
-            )
-            self.assert_util.assert_response_data(response)
-            
-            a.json(filtered_params, "请求数据")
-            a.json(response, "响应数据")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     # ================ 允许字段导入 (跳过) ================
-    @case_decorator(
-        story="允许字段管理",
-        title="测试标准导入",
-        description="验证GEN_ALLOW_FIELD_ITEM_CF_GEI_IMPORT_SERVICE功能",
-        severity="normal",
-        file_level_order=9,
-        tags=["允许字段", "导入", "GEN_ALLOW_FIELD_ITEM_CF_GEI_IMPORT_SERVICE"]
-    )
-    @pytest.mark.skip(reason="标准导入导出业务未引用，暂时跳过")
-    def test_standard_import(self):
-        """标准导入用例 - GEN_ALLOW_FIELD_ITEM_CF_GEI_IMPORT_SERVICE"""
-        try:
-            # 导入逻辑类似导出，但需要文件上传，跳过
-            a.text("标准导入需要文件上传，暂时跳过", "跳过说明")
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
-    @case_decorator(
-        story="允许字段管理",
-        title="测试OSS导入任务",
-        description="验证GEN_ALLOW_FIELD_ITEM_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST功能",
-        severity="normal",
-        file_level_order=10,
-        tags=["允许字段", "导入任务", "GEN_ALLOW_FIELD_ITEM_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
-    )
-    @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
-    def test_oss_import_task(self):
-        """OSS导入任务用例 - GEN_ALLOW_FIELD_ITEM_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
-        try:
-            # OSS导入复杂，跳过
-            a.text("OSS导入任务需要OSS配置，暂时跳过", "跳过说明")
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
-    @case_decorator(
-        story="允许字段管理",
-        title="测试导入任务管理",
-        description="验证导入相关服务",
-        severity="normal",
-        file_level_order=11,
-        tags=["允许字段", "导入"]
-    )
-    @pytest.mark.skip(reason="导入任务配置复杂，暂时跳过")
-    def test_import_task_management(self):
-        """导入任务管理用例"""
-        try:
-            a.text("导入任务配置复杂，暂时跳过", "跳过说明")
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     # ================ 允许字段删除 ================
     @case_decorator(

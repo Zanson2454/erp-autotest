@@ -1,16 +1,17 @@
 """
 手动标准销售交货单测试（不依赖销售订单）
 """
-import allure
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
+import allure
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent.parent
 sys.path.append(str(project_root))
 from testcases.scm_del import ScmDelBaseTest
-from utils.report_util import a, case_decorator
 from utils.param_util import ParamUtil
+from utils.report_util import a, case_decorator
 
 
 @allure.epic("交货管理")

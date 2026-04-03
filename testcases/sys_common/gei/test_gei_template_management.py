@@ -1,13 +1,15 @@
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
 
 from testcases.sys_common import SysCommonBaseTest
 from utils.report_util import a, case_decorator
+
 
 @allure.epic("系统通用模块")
 @allure.feature("导入导出模板管理")
@@ -133,22 +135,6 @@ class TestGeiTemplateManagement(SysCommonBaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @pytest.mark.skip(reason="标准导入导出业务未引用，暂时跳过")
-    @case_decorator(
-        story="导入导出模板管理",
-        title="测试导入模板",
-        description="验证API_GEI_TEMPLATE_IMPORT_POST功能 - 导入模板（跳过）",
-        severity="normal",
-        order=13,
-        tags=["sys_common", "gei", "template", "import"]
-    )
-    def test_template_import_post(self):
-        """测试导入模板 - API_GEI_TEMPLATE_IMPORT_POST (跳过)"""
-        try:
-            pass
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
     
     @case_decorator(
         story="导入导出模板管理",
@@ -284,64 +270,6 @@ class TestGeiTemplateManagement(SysCommonBaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @case_decorator(
-        story="导入导出模板管理",
-        title="测试导入模板查询",
-        description="验证API_TRANTOR_PORTAL_META_LIST_IMPORT_TEMPLATE_GET功能 - 导入模板列表查询",
-        severity="normal",
-        order=3,
-        tags=["sys_common", "gei", "template", "import_query"]
-    )
-    def test_import_template_query_list(self):
-        """测试导入模板查询 - API_TRANTOR_PORTAL_META_LIST_IMPORT_TEMPLATE_GET"""
-        try:
-            # 1. 准备测试数据
-            set_dict = {
-                "serviceKey": "ERP_GEN$API_TRANTOR_PORTAL_META_LIST_IMPORT_TEMPLATE_GET",
-                "params": {
-                    "request": {
-                        "pageNo": "1",
-                        "pageSize": "20"
-                    }
-                }
-            }
-            
-            # 2. 使用标准化API调用
-            response, _ = self.standard_api_call(
-                api_key="导入模版列表查询(/api/trantor/portal/meta/list/ImportTemplate#GET)",
-                set_dict=set_dict,
-                param_path=[] # 空路径，让 set_dict 直接作为顶层参数
-            )
-            
-            # 3. 验证响应数据
-            self.assert_util.assert_response_data(response)
-            
-            # 验证返回数据
-            data = response.get("data", {}).get("data", {})
-            self.assert_util.assert_by_operator(
-                data is not None,
-                "=",
-                True,
-                "返回数据不应为空"
-            )
-            
-            # 验证返回的数据列表
-            data_list = data.get("data", [])
-            self.assert_util.assert_by_operator(
-                isinstance(data_list, list),
-                "=",
-                True,
-                "返回数据应为列表类型"
-            )
-            
-            self.logger.info(f"导入模板查询成功，共查询到 {len(data_list)} 条记录")
-            
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
     
     @case_decorator(
         story="导入导出模板管理",

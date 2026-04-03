@@ -1,7 +1,7 @@
 import allure
 import pytest
+
 from testcases.gen_md import GenMdBaseTest
-from utils.mock_util import MockData
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
@@ -269,21 +269,6 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
-    @case_decorator(
-        story="物料单位转换管理",
-        title="测试物料单位转换标准导入",
-        description="验证物料单位转换标准导入功能",
-        severity="normal",
-        file_level_order=7,
-        tags=["物料单位转换管理", "导入"]
-    )
-    def test_import_mat_unit_conversion(self):
-        """
-        物料单位转换标准导入用例（需要文件上传）
-        """
-        pass
-
 
     @case_decorator(
         story="物料单位转换管理",
@@ -411,17 +396,4 @@ class TestMat_Unit_ConversionManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
-    @case_decorator(
-        story="物料单位转换管理",
-        title="测试通过OSS提交物料单位转换导入任务",
-        description="验证通过OSS提交物料单位转换导入任务功能",
-        severity="normal",
-        file_level_order=9,
-        tags=["物料单位转换管理", "OSS导入"]
-    )
-    def test_submit_import_task_by_oss(self):
-        """
-        通过OSS提交物料单位转换导入任务用例（需要OSS配置）
-        """
-        pass
+

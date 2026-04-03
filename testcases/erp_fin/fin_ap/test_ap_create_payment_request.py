@@ -1,12 +1,13 @@
 """
 应付单创建付款申请单测试用例
 """
-import allure
+from datetime import datetime
+from decimal import Decimal
+
 from testcases.erp_fin.fin_ap import ApBaseTest
 from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
-from datetime import datetime
-from decimal import Decimal
+
 
 class TestApCreatePaymentRequest(ApBaseTest):
     ap_pr_info = {}
@@ -953,7 +954,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
                                 "expected_base_amt": expected_base_amt
                             }
                             a.json(amount_details, "付款申请单金额状态详情")
-                            assert False, f"付款申请单已付款金额状态未达到预期，详情见附件"
+                            assert False, "付款申请单已付款金额状态未达到预期，详情见附件"
                     elif attempt < max_attempts - 1:
                         self._async_delay(interval, reason="等待付款申请单记录可查询")
                 
@@ -1253,7 +1254,7 @@ class TestApCreatePaymentRequest(ApBaseTest):
                                 "expected_base_amt": expected_base_amt
                             }
                             a.json(amount_details, "金额状态详情")
-                            assert False, f"应付单金额状态未达到预期，详情见附件"
+                            assert False, "应付单金额状态未达到预期，详情见附件"
                     elif attempt < max_attempts - 1:
                         self._async_delay(interval, reason="等待应付单记录可查询")
                 

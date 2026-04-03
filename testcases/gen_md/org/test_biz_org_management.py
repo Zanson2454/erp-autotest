@@ -1,10 +1,9 @@
+
 import allure
-import requests
-from testcases.gen_md import GenMdBaseTest
-from utils.mock_util import MockData
-from utils.report_util import a, case_decorator
 import pytest
-import time
+
+from testcases.gen_md import GenMdBaseTest
+from utils.report_util import a, case_decorator
 
 
 @allure.epic("组织管理")
@@ -479,7 +478,7 @@ class TestBizOrgManagement(GenMdBaseTest):
             self.assert_util.assert_response_data(response)
             
             # 4. 原有日志（保留）
-            self.logger.info(f"组织树查询完成")
+            self.logger.info("组织树查询完成")
             
         except Exception as e:
             a.text(str(e), "失败原因")
@@ -607,101 +606,7 @@ class TestBizOrgManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="暂时跳过，实际没有页面引用")
-    @case_decorator(
-        story="组织导入",
-        title="测试组织调整导入",
-        description="验证组织调整导入接口的功能性",
-        severity="normal",
-        file_level_order=7,
-        smoke=False,
-        tags=["组织", "组织导入", "调整导入"]
-    )
-    def test_org_struct_update_import(self):
-        """
-        组织调整导入用例
-        """
-        try:
-            # 设置导入参数（模拟数据）
-            set_dict = {
-                "sliceData": [
-                    {
-                        "id": "test_org_id",
-                        "orgCode": "TEST_ORG_001",
-                        "orgName": "测试组织001",
-                        "orgDimensionCode": "SCM_ORG_GRP",
-                        "orgStatus": "ENABLED"
-                    }
-                ],
-                "context": {
-                    "importMode": "UPDATE"
-                }
-            }
-            response, _ = self.standard_api_call(
-                api_key="ORG-组织架构-组织调整导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["sliceData", "context"]
-            )
-            self.logger.info(f"响应: {response}")
 
-            # 断言
-            self.assert_util.assert_response_data(response)
-            
-            # Allure 附件
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
-
-    @pytest.mark.skip(reason="暂时跳过，实际没有页面引用")
-    @case_decorator(
-        story="组织导入",
-        title="测试组织禁用导入",
-        description="验证组织禁用导入接口的功能性",
-        severity="normal",
-        file_level_order=8,
-        smoke=False,
-        tags=["组织", "组织导入", "禁用导入"]
-    )
-    def test_org_struct_disable_import(self):
-        """
-        组织禁用导入用例
-        """
-        try:
-            # 设置导入参数（模拟数据）
-            set_dict = {
-                "sliceData": [
-                    {
-                        "id": "test_org_id",
-                        "orgCode": "TEST_ORG_001",
-                        "orgName": "测试组织001",
-                        "orgDimensionCode": "SCM_ORG_GRP",
-                        "orgStatus": "DISABLED"
-                    }
-                ],
-                "context": {
-                    "importMode": "DISABLE"
-                }
-            }
-            response, _ = self.standard_api_call(
-                api_key="ORG-组织架构-组织禁用导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["sliceData", "context"]
-            )
-            self.logger.info(f"响应: {response}")
-
-            # 断言
-            self.assert_util.assert_response_data(response)
-            
-            # Allure 附件
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="组织详情",
@@ -978,89 +883,6 @@ class TestBizOrgManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @case_decorator(
-        story="组织导入",
-        title="测试获取组织导入模版",
-        description="验证获取组织导入模版接口的功能性",
-        severity="normal",
-        file_level_order=15,
-        smoke=False,
-        tags=["组织", "导入模版"]
-    )
-    @pytest.mark.skip(reason="需要准备模板，手工验证")
-    def test_get_org_import_template(self):
-        """
-        获取组织导入模版用例
-        """
-        try:
-            set_dict = {
-                "orgDimensionCode": "SCM_ORG_GRP",
-                "templateType": "ORG_CREATE"
-            }
-            response, _ = self.standard_api_call(
-                api_key="ORG-组织架构-获取组织导入的模版服务",
-                set_dict=set_dict,
-                fields_to_filter=["orgDimensionCode", "templateType"]
-            )
-            self.assert_util.assert_response_data(response)
-            template_data = response.get("data",{}).get("data",{})
-            # 验证返回的导入模版数据
-            self.assert_util.assert_by_operator(template_data.get("importHeaderContextList"),"not_empty")
-            
-            # Allure 附件
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
-    @pytest.mark.skip(reason="暂时跳过，实际没有页面引用")
-    @case_decorator(
-        story="组织导入",
-        title="测试组织新增导入",
-        description="验证组织新增导入接口的功能性",
-        severity="normal",
-        file_level_order=16,
-        smoke=False,
-        tags=["组织", "组织导入", "新增导入"]
-    )
-    def test_org_struct_create_import(self):
-        """
-        组织新增导入用例
-        """
-        try:
-            # 设置导入参数（模拟数据）
-            set_dict = {
-                "sliceData": [
-                    {
-                        "orgCode": "NEW_ORG_001",
-                        "orgName": "新增组织001",
-                        "orgDimensionCode": "SCM_ORG_GRP",
-                        "orgStatus": "ENABLED",
-                        "orgBusinessTypeIds": [self.comOrgTypeId]
-                    }
-                ],
-                "context": {
-                    "importMode": "CREATE"
-                }
-            }
-            response, _ = self.standard_api_call(
-                api_key="ORG-组织架构-组织新增导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["sliceData", "context"]
-            )
-            self.logger.info(f"响应: {response}")
-
-            # 断言
-            self.assert_util.assert_response_data(response)
-            
-            # Allure 附件
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     

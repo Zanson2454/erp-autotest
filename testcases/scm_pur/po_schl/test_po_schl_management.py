@@ -1,18 +1,19 @@
 """
 采购计划行管理测试
 """
+import sys
+from datetime import datetime
+from pathlib import Path
+
 import allure
 import pytest
-import sys
-from pathlib import Path
-from datetime import datetime
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
-from testcases.scm_pur import ScmPurBaseTest
-from utils.report_util import a, case_decorator
 from erp_data_factory.compat.pur_po_factory import PurPoFactory
+from testcases.scm_pur import ScmPurBaseTest
 from utils.param_util import ParamUtil
+from utils.report_util import a, case_decorator
 
 
 @allure.epic("采购管理")
@@ -215,7 +216,7 @@ class TestPoSchlManagement(ScmPurBaseTest):
             schl_1_un_close = schl_1.get("unCloseQty")
             
             assert schl_1_qty_ful == 0.0, f"计划行1累计收货数量应为0，实际={schl_1_qty_ful}"
-            assert schl_1_qty_del == schl_1_un_close, f"计划行1未清数量应等于计划数量"
+            assert schl_1_qty_del == schl_1_un_close, "计划行1未清数量应等于计划数量"
             
             # 验证第2条计划行数量字段
             schl_2_qty_del = schl_2.get("poSchlQtyDel")
@@ -223,7 +224,7 @@ class TestPoSchlManagement(ScmPurBaseTest):
             schl_2_un_close = schl_2.get("unCloseQty")
             
             assert schl_2_qty_ful == 0.0, f"计划行2累计收货数量应为0，实际={schl_2_qty_ful}"
-            assert schl_2_qty_del == schl_2_un_close, f"计划行2未清数量应等于计划数量"
+            assert schl_2_qty_del == schl_2_un_close, "计划行2未清数量应等于计划数量"
             
             a.text(
                 f"计划行1 - ID: {schl_1.get('id')}, 编号: {schl_1.get('poSchlCode')}, "
@@ -254,7 +255,7 @@ class TestPoSchlManagement(ScmPurBaseTest):
                 try:
                     self._ensure_query_po_schl_list()
                 except Exception as e:
-                    pytest.skip(f"依赖测试失败，跳过导出测试: {str(e)}")
+                    pytest.fail(f"依赖测试失败，跳过导出测试: {str(e)}")
             
             api_path = self.get_api_path("采购订单-SCHL-导入导出任务管理接口-提交导出任务")
             _, url = self.get_api_params(api_path)
@@ -367,12 +368,12 @@ class TestPoSchlManagement(ScmPurBaseTest):
                 try:
                     self._ensure_query_po_schl_list()
                 except Exception as e:
-                    pytest.skip(f"依赖测试失败，跳过合并测试: {str(e)}")
+                    pytest.fail(f"依赖测试失败，跳过合并测试: {str(e)}")
             if not hasattr(self.__class__, 'po_schl_id2') or not self.__class__.po_schl_id2:
                 try:
                     self._ensure_query_po_schl_list()
                 except Exception as e:
-                    pytest.skip(f"依赖测试失败，跳过合并测试: {str(e)}")
+                    pytest.fail(f"依赖测试失败，跳过合并测试: {str(e)}")
             
             api_path = self.get_api_path("采购计划行-合并")
             _, url = self.get_api_params(api_path)
@@ -435,7 +436,7 @@ class TestPoSchlManagement(ScmPurBaseTest):
                 try:
                     self._ensure_merge_po_schl()
                 except Exception as e:
-                    pytest.skip(f"依赖测试失败，跳过保存测试: {str(e)}")
+                    pytest.fail(f"依赖测试失败，跳过保存测试: {str(e)}")
             
             api_path = self.get_api_path("采购计划行-合并后保存")
             _, url = self.get_api_params(api_path)
@@ -522,7 +523,7 @@ class TestPoSchlManagement(ScmPurBaseTest):
                 raise ValueError(f"数据库未查询到ID为 {self.__class__.merged_po_schl_id} 的计划行")
             
             schl_record = db_result[0]
-            original_qty = schl_record.get("po_schl_qty_del")
+            schl_record.get("po_schl_qty_del")
             
             # 修改计划收货数量（从12改为3，实现拆分效果）
             new_qty = 3

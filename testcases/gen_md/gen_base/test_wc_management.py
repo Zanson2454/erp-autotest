@@ -1,6 +1,8 @@
+from typing import Any
+
 import allure
 import pytest
-from typing import Any
+
 from testcases.gen_md import GenMdBaseTest
 from utils.report_util import a, case_decorator
 
@@ -315,41 +317,6 @@ class TestWcManagement(GenMdBaseTest):
             raise
 
     # ================ 工作日日历导入导出管理 ================
-    @case_decorator(
-        story="工作日日历导入导出管理",
-        title="测试工作日日历标准导入",
-        description="验证工作日日历头表标准导入服务功能",
-        severity="normal",
-        file_level_order=8,
-        tags=["工作日日历", "导入", "GEN_WC_HEAD_CF_GEI_IMPORT_SERVICE"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_wc_import(self):
-        """工作日日历标准导入用例 - GEN_WC_HEAD_CF_GEI_IMPORT_SERVICE"""
-        try:
-            # 构建导入数据
-            import_data = [
-                {
-                    "code": self.mock_util.generate_unique_code(tag="IMPORT_WC"),
-                    "name": f"导入测试工作日日历_{self.mock_util.get_timestamp()}",
-                    "startDate": "2024-01-01",
-                    "endDate": "2024-12-31",
-                    "description": "导入的工作日日历描述"
-                }
-            ]
-
-            set_dict = {"data": import_data}
-            response, _ = self.standard_api_call(
-                api_key="工作日日历头表标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["data"]
-            )
-            self.assert_util.assert_response_success(response)
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="工作日日历导入导出管理",
@@ -384,34 +351,6 @@ class TestWcManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @case_decorator(
-        story="工作日日历任务管理",
-        title="测试工作日日历OSS导入任务",
-        description="验证工作日日历头表-导入导出任务管理接口-通过OSS提交导入任务功能",
-        severity="normal",
-        file_level_order=10,
-        tags=["工作日日历", "任务管理", "GEN_WC_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_wc_oss_import_task(self):
-        """工作日日历OSS导入任务用例 - GEN_WC_HEAD_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"""
-        try:
-            set_dict = {
-                "fileKey": "test_wc_import_file.xlsx",
-                "taskName": f"工作日日历导入任务_{self.mock_util.get_timestamp()}",
-                "templateId": 1
-            }
-            response, _ = self.standard_api_call(
-                api_key="工作日日历头表-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=["fileKey", "taskName", "templateId"]
-            )
-            self.assert_util.assert_response_success(response)
-            a.json(response, "响应数据")
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="工作日日历任务管理",

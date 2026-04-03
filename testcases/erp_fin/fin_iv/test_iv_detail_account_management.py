@@ -3,10 +3,11 @@
 存货价值明细账测试用例
 """
 
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
@@ -201,82 +202,6 @@ class TestIvDetailAccountManagement(IvBaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @pytest.mark.skip(reason="导入导出任务需要OSS配置，复杂度较高")
-    @case_decorator(
-        story="存货价值明细账",
-        title="测试导入导出任务提交",
-        description="验证存货价值明细账导入导出任务管理接口-提交导出任务功能",
-        severity="minor",
-        file_level_order=11,
-        tags=["iv", "detail", "account", "export", "task"]
-    )
-    def test_export_direct_post_detail(self):
-        """测试导入导出任务提交（跳过）"""
-        try:
-            timestamp = self.mock_util.get_timestamp()
-            task_name = f"IV_DETAIL_ACCOUNT_{timestamp}_EXPORT"
-            
-            # 复杂API参数，使用use_param_util=False
-            export_params = {
-                "serviceKey": "FIN_IV_ACC_DETAIL_TR_API_GEI_TASK_EXPORT_DIRECT_POST",
-                "teamId": 22,
-                "params": {
-                    "taskName": task_name,
-                    "multiSheetConfig": [
-                        {
-                            "modelKey": "ERP_FIN$fin_iv_acc_detail_tr",
-                            "modelName": "存货价值明细账",
-                            "sheetNo": 0,
-                            "sheetName": "明细账数据",
-                            "headerConfigList": [
-                                {"name": "明细编码", "type": "TEXT", "field": "code"},
-                                {"name": "金额", "type": "NUMBER", "field": "amount"},
-                                {"name": "日期", "type": "DATE", "field": "date"}
-                            ]
-                        }
-                    ],
-                    "queryData": {
-                        "containerKey": "ERP_FIN$fin_iv_acc_detail_tr",
-                        "viewKey": "ERP_FIN$fin_iv_acc_detail_tr:list",
-                        "sceneKey": "ERP_FIN$fin_iv_acc_detail_tr",
-                        "params": {
-                            "request": {
-                                "pageable": {
-                                    "sortOrders": []
-                                }
-                            },
-                            "selectFields": [
-                                {"field": "code"},
-                                {"field": "amount"},
-                                {"field": "date"}
-                            ],
-                            "modelKey": "ERP_FIN$fin_iv_acc_detail_tr"
-                        }
-                    },
-                    "processConfig": {
-                        "processType": "TRANTOR",
-                        "model": "ERP_FIN$fin_iv_acc_detail_tr",
-                        "modelName": "存货价值明细账",
-                        "containerKey": "ERP_FIN$fin_iv_acc_detail_tr",
-                        "viewKey": "ERP_FIN$fin_iv_acc_detail_tr:list",
-                        "sceneKey": "ERP_FIN$fin_iv_acc_detail_tr"
-                    }
-                }
-            }
-            
-            # 使用standard_api_call的use_param_util=False处理复杂参数
-            response, _ = self.standard_api_call(
-                api_key="存货价值明细账-导入导出任务管理接口-提交导出任务",
-                set_dict=export_params,
-                use_param_util=False  # 复杂参数，直接使用set_dict
-            )
-            
-            # 业务断言
-            self.assert_util.assert_response_success(response)
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
     
     @case_decorator(
         story="存货价值明细账",

@@ -3,8 +3,8 @@
 from repository.erp_fin.init_config_repository import FinApInitConfigRepository, FinIvInitConfigRepository
 from repository.erp_fin.iv_repository import FinIvRepository
 from repository.erp_fin.sb_repository import FinSbRepository
-from repository.erp_fin.settlement_repository import SettlementRepository
 from repository.erp_fin.sett_repository import FinSettRepository
+from repository.erp_fin.settlement_repository import SettlementRepository
 
 __all__ = [
     "FinApInitConfigRepository",

@@ -179,6 +179,62 @@ class LoginService:
             default=True,
         )
 
+    @staticmethod
+    def _resolve_auth_value(auth_config: Dict[str, Any], field: str, portal_key: str, tenant_key: str = "terp") -> str:
+        """解析认证字段：优先配置，其次环境变量（支持占位符回填）。"""
+        raw_value = auth_config.get(field, "")
+        value = raw_value.strip() if isinstance(raw_value, str) else raw_value
+        if isinstance(value, str) and value and not LoginService._is_unresolved_env_placeholder(value):
+            return value
+
+        normalized_portal = (portal_key or "").upper()
+        normalized_tenant = (tenant_key or "").upper()
+
+        field_env_suffix = {
+            "cookie": "COOKIE",
+            "username": "USERNAME",
+            "password": "PASSWORD",
+            "iam_url": "IAM_URL",
+            "iam_referer": "IAM_REFERER",
+            "portal_url": "URL",
+            "portal_referer": "REFERER",
+        }
+        suffix = field_env_suffix.get(field, field.upper())
+
+        candidates = []
+        if normalized_tenant and normalized_portal:
+            candidates.append(f"TEST_{normalized_tenant}_{normalized_portal}_{suffix}")
+        if normalized_portal:
+            candidates.append(f"TEST_{normalized_portal}_{suffix}")
+
+        alias_map = {
+            "TERP_PORTAL": {
+                "cookie": ["TEST_ADMIN_COOKIE"],
+                "username": ["TEST_ADMIN_USERNAME"],
+                "password": ["TEST_ADMIN_PASSWORD"],
+                "iam_url": ["TEST_ADMIN_IAM_URL"],
+                "portal_url": ["TEST_ADMIN_URL"],
+                "portal_referer": ["TEST_ADMIN_REFERER"],
+            },
+            "TERP_CUST_PC": {
+                "cookie": ["TEST_CUST_COOKIE"],
+                "username": ["TEST_CUST_USERNAME"],
+                "password": ["TEST_CUST_PASSWORD"],
+                "iam_url": ["TEST_CUST_IAM_URL"],
+                "portal_url": ["TEST_CUST_URL"],
+                "portal_referer": ["TEST_CUST_REFERER"],
+            },
+        }
+        for env_key in alias_map.get(normalized_portal, {}).get(field, []):
+            candidates.append(env_key)
+
+        for env_key in candidates:
+            env_val = os.getenv(env_key, "").strip()
+            if env_val:
+                return env_val
+
+        return value if isinstance(value, str) else ""
+
     def _configure_session_transport(self, auth_config: Dict[str, Any]) -> None:
         session = self.session_manager.get_session()
         verify = self._resolve_ssl_verify(auth_config)
@@ -203,7 +259,16 @@ class LoginService:
 
             self._configure_session_transport(auth_config)
 
-            cookie = auth_config.get("cookie", "")
+            cookie = self._resolve_auth_value(auth_config, "cookie", portal_key, tenant_key)
+            username = self._resolve_auth_value(auth_config, "username", portal_key, tenant_key)
+            password = self._resolve_auth_value(auth_config, "password", portal_key, tenant_key)
+            iam_url = self._resolve_auth_value(auth_config, "iam_url", portal_key, tenant_key)
+            iam_referer = self._resolve_auth_value(auth_config, "iam_referer", portal_key, tenant_key)
+            portal_url = self._resolve_auth_value(auth_config, "portal_url", portal_key, tenant_key)
+            portal_referer = self._resolve_auth_value(auth_config, "portal_referer", portal_key, tenant_key)
+
+            if not portal_url:
+                portal_url = iam_url
 
             if self._is_unresolved_env_placeholder(cookie):
                 cookie = ""
@@ -219,20 +284,28 @@ class LoginService:
                 Loggers.info(f"Cookie 前50个字符: {cookie[:50]}...")
                 self.session_manager.get_session().headers.update({"Cookie": cookie})
             else:
+                if not iam_url:
+                    return LoginResult(
+                        status=LoginStatus.FAILED,
+                        error_message=(
+                            f"{portal_key} 缺少 iam_url（且未配置有效 cookie），"
+                            "请检查 config/env 或 TEST_*_IAM_URL 环境变量"
+                        ),
+                    )
                 Loggers.info("未配置 cookie，使用账号密码登录")
-                login_url = f"{auth_config.get('iam_url', '').rstrip('/')}{self.LOGIN_ENDPOINT}"
+                login_url = f"{iam_url.rstrip('/')}{self.LOGIN_ENDPOINT}"
                 login_data = {
-                    "account": auth_config.get("username", ""),
-                    "password": auth_config.get("password", ""),
-                    "iam_url": auth_config.get("iam_url", ""),
-                    "iam_referer": auth_config.get("iam_referer", ""),
-                    "portal_url": auth_config.get("portal_url", ""),
-                    "portal_referer": auth_config.get("portal_referer", ""),
+                    "account": username,
+                    "password": password,
+                    "iam_url": iam_url,
+                    "iam_referer": iam_referer,
+                    "portal_url": portal_url,
+                    "portal_referer": portal_referer,
                     "description": auth_config.get("description", ""),
                 }
                 iam_headers = self.build_headers(
-                    origin=auth_config.get("iam_url", ""),
-                    referer=auth_config.get("iam_referer", ""),
+                    origin=iam_url,
+                    referer=iam_referer,
                 )
                 Loggers.info(f"登录URL: {login_url}")
                 Loggers.info(f"登录账号: {login_data['account']}")
@@ -264,16 +337,16 @@ class LoginService:
             return LoginResult(
                 status=LoginStatus.SUCCESS,
                 user_info=user_info,
-                portal_url=auth_config.get("portal_url", ""),
-                iam_url=auth_config.get("iam_url", ""),
+                portal_url=portal_url,
+                iam_url=iam_url,
                 portal_headers=self.build_headers(
-                    auth_config.get("portal_url", ""),
-                    auth_config.get("portal_referer", ""),
+                    portal_url,
+                    portal_referer,
                     cookie=cookie,
                 ),
                 iam_headers=self.build_headers(
-                    auth_config.get("iam_url", ""),
-                    auth_config.get("iam_referer", ""),
+                    iam_url,
+                    iam_referer,
                 ),
                 session=self.session_manager.get_session(),
             )

@@ -2,10 +2,11 @@
 组织关联关系管理测试用例
 覆盖员工组织关联、组织业务类型关联、组织维度业务类型关联等功能
 """
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
@@ -78,7 +79,7 @@ class TestOrgLinkManagement(SysCommonBaseTest):
                 self.__class__.dimension_id = row.get("id")
 
         if not self.org_struct_id or not self.biz_type_id or not self.dimension_id:
-            pytest.skip("缺少组织关联所需基础ID(org_struct/biz_type/dimension)，无法执行当前用例")
+            pytest.fail("缺少组织关联所需基础ID(org_struct/biz_type/dimension)，无法执行当前用例")
     
     @classmethod
     def teardown_class(cls):

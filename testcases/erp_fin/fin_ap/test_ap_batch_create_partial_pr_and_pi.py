@@ -2,10 +2,10 @@
 """
 应付单批量创建部分付款申请单和采购发票测试用例
 """
-import allure
-import time
 from datetime import datetime
 from decimal import Decimal
+
+import allure
 
 from testcases.erp_fin.fin_ap import ApBaseTest
 from utils.param_util import ParamUtil
@@ -58,7 +58,7 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
         smoke=True,
         tags=["ap", "create", "post", "foundation"]
     )
-    def test_01_create_and_post_ap_doc(self):
+    def test_create_and_post_ap_doc(self):
         try:
             with a.step("基于数据工厂创建应付单基础数据"):
                 # 生成唯一编码
@@ -267,7 +267,7 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
         smoke=True,
         tags=["ap", "batch", "pr", "create", "partial"]
     )
-    def test_02_batch_create_partial_pr_from_ap(self):
+    def test_batch_create_partial_pr_from_ap(self):
         try:
             # 等待应付单过账完成
             self._async_delay(5, reason="等待应付单过账完成")
@@ -298,13 +298,8 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
                 val_params, val_url = ParamUtil.get_api_params(self.api_params, val_api_path)
                 
                 # 使用应付单头ID作为第一个接口的入参
-                val_request = {
-                    "sceneKey": "ERP_FIN$FIN_APM_FROM_DS",
-                    "viewKey": "ERP_FIN$FIN_APM_FROM_DS:list",
-                    "appId": None,
-                    "teamId": base_data.get("team_id", 22),
-                    "serviceKey": "ERP_FIN$BATCH_AP_CONVERT_TO_PR_VAL_SERVICE",
-                    "params": {"request": {"apmApSchlIds": [ap_doc_id]}}  # 使用应付单头ID
+                val_request = {                    "appId": None,
+                    "teamId": base_data.get("team_id", 22),                    "params": {"request": {"apmApSchlIds": [ap_doc_id]}}  # 使用应付单头ID
                 }
                 
                 val_result, _ = self.standard_api_call(
@@ -324,16 +319,7 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
                 schl_val_params, schl_val_url = ParamUtil.get_api_params(self.api_params, schl_val_api_path)
                 
                 # 使用应付单计划行ID作为第二个接口的入参
-                schl_val_request = {
-                    "sceneKey": "ERP_FIN$FIN_APM_FROM_DS",
-                    "viewKey": "ERP_FIN$FIN_APM_FROM_DS:2iRU-pHS6DLHBHZp-JC4S",
-                    "viewTitle": "选择应付单计划行",
-                    "buttonKey": "ERP_FIN$FIN_APM_FROM_DS-84z52frNCSGsTQu6-h_sR",
-                    "buttonName": "生成付款申请单",
-                    "appId": 0,
-                    "teamId": base_data.get("team_id", 22),
-                    "serviceKey": "ERP_FIN$BATCH_AP_SCHL_CONVERT_TO_PR_VAL_SERVICE",
-                    "params": {"request": {"apmApSchlIds": ap_schl_ids}}  # 使用应付单计划行ID
+                schl_val_request = {                    "teamId": base_data.get("team_id", 22),                    "params": {"request": {"apmApSchlIds": ap_schl_ids}}  # 使用应付单计划行ID
                 }
                 
                 schl_val_result, _ = self.standard_api_call(
@@ -358,16 +344,7 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
                 # 使用数据工厂创建付款申请单请求数据
                 save_request_data = self.ap_factory.create_pr_request_data(ap_info, partial_amount)
                 
-                save_request = {
-                    "sceneKey": "ERP_FIN$FIN_APM_FROM_DS",
-                    "viewKey": "ERP_FIN$FIN_APM_FROM_DS:6yiz_P4fiRD9Ram4RAK-b",
-                    "viewTitle": "创建付款申请",
-                    "buttonKey": "ERP_FIN$FIN_APM_FROM_DS-TERP_MIGRATE$FIN_CM_PR-editView-footer-save",
-                    "buttonName": "保存",
-                    "appId": 0,
-                    "teamId": base_data.get("team_id", 22),
-                    "serviceKey": "ERP_FIN$PR_SAVE_SERVICE",
-                    "params": {"request": save_request_data}
+                save_request = {                    "teamId": base_data.get("team_id", 22),                    "params": {"request": save_request_data}
                 }
                 
                 save_result, _ = self.standard_api_call(
@@ -406,7 +383,7 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
         smoke=True,
         tags=["ap", "batch", "pi", "create", "invoice", "partial"]
     )
-    def test_03_batch_create_partial_pi_from_ap(self):
+    def test_batch_create_partial_pi_from_ap(self):
         try:
             # 获取前置数据
             ap_info = TestApBatchCreatePartialPrAndPi.ap_batch_info
@@ -435,13 +412,8 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
                 val_params, val_url = ParamUtil.get_api_params(self.api_params, val_api_path)
                 
                 # 使用应付单头ID作为第一个接口的入参
-                val_request = {
-                    "sceneKey": "ERP_FIN$FIN_APM_FROM_DS",
-                    "viewKey": "ERP_FIN$FIN_APM_FROM_DS:list",
-                    "appId": None,
-                    "teamId": base_data.get("team_id", 22),
-                    "serviceKey": "ERP_FIN$BATCH_AP_CONVERT_TO_PI_VAL_SERVICE",
-                    "params": {"request": {"apmApItemIds": [ap_doc_id]}}  # 使用应付单头ID
+                val_request = {                    "appId": None,
+                    "teamId": base_data.get("team_id", 22),                    "params": {"request": {"apmApItemIds": [ap_doc_id]}}  # 使用应付单头ID
                 }
                 
                 val_result, _ = self.standard_api_call(
@@ -461,16 +433,7 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
                 item_val_params, item_val_url = ParamUtil.get_api_params(self.api_params, item_val_api_path)
                 
                 # 使用应付单明细行ID作为第二个接口的入参
-                item_val_request = {
-                    "sceneKey": "ERP_FIN$FIN_APM_FROM_DS",
-                    "viewKey": "ERP_FIN$FIN_APM_FROM_DS:pkQqXyEVhkP0HpqdAMQC5",
-                    "viewTitle": "选择应付单行",
-                    "buttonKey": "ERP_FIN$FIN_APM_FROM_DS-KWlwdlZ4J_QWUjN_W147O",
-                    "buttonName": "生成采购发票",
-                    "appId": 0,
-                    "teamId": base_data.get("team_id", 22),
-                    "serviceKey": "ERP_FIN$BATCH_AP_ITEM_CONVERT_TO_PI_VAL_SERVICE",
-                    "params": {"request": {"apmApItemIds": ap_item_ids}}  # 使用应付单明细行ID
+                item_val_request = {                    "teamId": base_data.get("team_id", 22),                    "params": {"request": {"apmApItemIds": ap_item_ids}}  # 使用应付单明细行ID
                 }
                 
                 item_val_result, _ = self.standard_api_call(
@@ -557,7 +520,7 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
                     },
                     "验证结果": {
                         "部分开票金额正确": f"✓ {partial_invoice_amt} = {ap_gross_amt} × 50%",
-                        "数量比例一致": f"✓ 开票数量50 = 总数量100 × 50%",
+                        "数量比例一致": "✓ 开票数量50 = 总数量100 × 50%",
                         "金额计算正确": f"✓ 含税金额 = 不含税金额 + 税额 ({partial_net_doc_amt} + {partial_tax_doc_amt} = {partial_invoice_amt})"
                     },
                     "验证结论": "部分采购发票创建成功，开票金额、数量和税额计算均正确"
@@ -584,7 +547,7 @@ class TestApBatchCreatePartialPrAndPi(ApBaseTest):
         smoke=True,
         tags=["ap", "query", "page", "verify", "amount"]
     )
-    def test_04_query_ap_doc_and_verify_amounts(self):
+    def test_query_ap_doc_and_verify_amounts(self):
         """应付单分页查询并验证金额更新"""
         try:
             # 确保前面的用例已运行并获得数据

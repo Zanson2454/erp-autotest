@@ -3,10 +3,10 @@
 存货计价规则明细测试用例
 """
 
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
@@ -72,85 +72,6 @@ class TestIvRuleDetailManagement(IvBaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @pytest.mark.skip(reason="导入导出任务需要OSS配置，复杂度较高")
-    @case_decorator(
-        story="存货计价规则明细",
-        title="测试导入导出任务提交",
-        description="验证存货计价规则明细导入导出任务管理接口-提交导出任务功能",
-        severity="minor",
-        order=2,
-        tags=["iv", "rule", "detail", "export", "task"]
-    )
-    def test_export_task_direct_post_rule_detail(self):
-        """测试导入导出任务提交（跳过）"""
-        try:
-            timestamp = self.mock_util.get_timestamp()
-            task_name = f"IV_RULE_DETAIL_{timestamp}_EXPORT"
-            
-            export_params = {
-                "serviceKey": "FIN_IV_RULE_DETAIL_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
-                "teamId": 22,
-                "params": {
-                    "taskName": task_name,
-                    "multiSheetConfig": [
-                        {
-                            "modelKey": "ERP_FIN$fin_iv_rule_detail_cf",
-                            "modelName": "存货计价规则明细",
-                            "sheetNo": 0,
-                            "sheetName": "规则明细数据",
-                            "headerConfigList": [
-                                {"name": "明细编码", "type": "TEXT", "field": "code"},
-                                {"name": "规则参数", "type": "TEXT", "field": "param"}
-                            ]
-                        }
-                    ],
-                    "queryData": {
-                        "containerKey": "ERP_FIN$fin_iv_rule_detail_cf",
-                        "viewKey": "ERP_FIN$fin_iv_rule_detail_cf:list",
-                        "sceneKey": "ERP_FIN$fin_iv_rule_detail_cf",
-                        "params": {
-                            "request": {
-                                "pageable": {
-                                    "sortOrders": []
-                                }
-                            },
-                            "selectFields": [
-                                {"field": "code"},
-                                {"field": "param"}
-                            ],
-                            "modelKey": "ERP_FIN$fin_iv_rule_detail_cf"
-                        }
-                    },
-                    "processConfig": {
-                        "processType": "TRANTOR",
-                        "model": "ERP_FIN$fin_iv_rule_detail_cf",
-                        "modelName": "存货计价规则明细",
-                        "containerKey": "ERP_FIN$fin_iv_rule_detail_cf",
-                        "viewKey": "ERP_FIN$fin_iv_rule_detail_cf:list",
-                        "sceneKey": "ERP_FIN$fin_iv_rule_detail_cf"
-                    }
-                }
-            }
-            
-            api_path = self.get_api_path("FIN_IV_RULE_DETAIL_CF_API_GEI_TASK_EXPORT_DIRECT_POST")
-            params, url = self.get_api_params(api_path)
-            
-            filtered_params = export_params
-            response, _ = self.standard_api_call(
-                api_key="FIN_IV_RULE_DETAIL_CF_API_GEI_TASK_EXPORT_DIRECT_POST",
-                set_dict=filtered_params.get("params", {}),
-                store_id_as=None,
-                use_param_util=False,
-                param_path=["params"]
-            )
-            self.assert_util.assert_response_success(response)
-            
-            a.json(export_params, "导出任务请求")
-            a.json(response, "导出任务响应")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
     
     @case_decorator(
         story="存货计价规则明细",

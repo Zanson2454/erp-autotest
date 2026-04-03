@@ -1,16 +1,19 @@
-from fastapi import APIRouter, BackgroundTasks, Request
-from pydantic import BaseModel, Field
-from enum import Enum
-from fastapi.responses import JSONResponse
-import subprocess
-import os
-import uuid
-import shutil
-from utils.report_util import fix_report_title
-import threading
-from utils.dingtalk_util import send_dingtalk_msg
 import datetime
+import os
+import shutil
+import subprocess
+import threading
+import uuid
+from enum import Enum
 from typing import Optional
+
+from fastapi import APIRouter
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel, Field
+
+from utils.dingtalk_util import send_dingtalk_msg
+from utils.report_util import fix_report_title
+
 
 def get_dingtalk_webhook() -> str:
     """获取钉钉机器人 webhook（仅从环境变量读取，禁止硬编码）"""

@@ -1,8 +1,8 @@
+
 import allure
 import pytest
-from typing import Any
+
 from testcases.gen_md import GenMdBaseTest
-from utils.param_util import ParamUtil
 from utils.report_util import a, case_decorator
 
 
@@ -455,38 +455,6 @@ class TestCharacteristicManagement(GenMdBaseTest):
             raise
 
     # ================ 特征类定义表导入导出管理 ================
-    @case_decorator(
-        story="特征类定义表导入导出管理",
-        title="测试特征类定义表标准导入",
-        description="验证特征类定义表标准导入服务功能",
-        severity="normal",
-        file_level_order=13,
-        tags=["特征管理", "导入", "GEN_CHARA_CLASS_MD_GEI_IMPORT_SERVICE"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_characteristic_class_import(self):
-        """特征类定义表标准导入用例"""
-        try:
-            import_data = [
-                {
-                    "code": self.mock_util.generate_unique_code(tag="IMPORT_CHARA_CLASS"),
-                    "name": f"导入测试特征类_{self.mock_util.get_timestamp()}",
-                    "remark": "导入测试特征类描述"
-                }
-            ]
-
-            set_dict = {"data": import_data}
-            
-            response, _ = self.standard_api_call(
-                api_key="特征类定义表标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["data"],
-                store_id_as=None
-            )
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="特征类定义表导入导出管理",
@@ -519,33 +487,6 @@ class TestCharacteristicManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @case_decorator(
-        story="特征类定义表任务管理",
-        title="测试特征类定义表OSS导入任务",
-        description="验证特征类定义表-导入导出任务管理接口-通过OSS提交导入任务功能",
-        severity="normal",
-        file_level_order=15,
-        tags=["特征管理", "任务管理", "GEN_CHARA_CLASS_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST"]
-    )
-    @pytest.mark.skip(reason="业务用不上")
-    def test_characteristic_class_oss_import_task(self):
-        """特征类定义表OSS导入任务用例"""
-        try:
-            set_dict = {
-                "fileKey": "test_chara_class_import.xlsx",
-                "taskName": f"特征类定义表导入任务_{self.mock_util.get_timestamp()}"
-            }
-            
-            response, _ = self.standard_api_call(
-                api_key="特征类定义表-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=["fileKey", "taskName"],
-                store_id_as=None
-            )
-
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="特征类定义表任务管理",

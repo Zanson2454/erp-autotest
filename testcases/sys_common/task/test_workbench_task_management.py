@@ -1,4 +1,5 @@
 import allure
+
 from testcases.sys_common import SysCommonBaseTest
 from utils.report_util import a, case_decorator
 

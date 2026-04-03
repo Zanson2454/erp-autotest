@@ -1,8 +1,9 @@
 """移动凭证创建器测试用例 - 销售出库专项测试"""
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
@@ -60,7 +61,7 @@ class TestMobileVoucherSaleCreator(MobileVoucherCreator):
         """销售出库-系统自动分配仓位测试"""
         try:
             if not self.available_batch_id:
-                pytest.skip("没有可用批次，跳过销售出库测试")
+                pytest.fail("没有可用批次，跳过销售出库测试")
             
             # 创建销售出库移动凭证
             default_mat_id = self.md_cache_data["mat_info"]["mat_md"]["FINP"][0]["id"]
@@ -116,12 +117,12 @@ class TestMobileVoucherSaleCreator(MobileVoucherCreator):
             ])
             
             if not result:
-                pytest.skip("未找到具体仓位库存，跳过精确仓位测试")
+                pytest.fail("未找到具体仓位库存，跳过精确仓位测试")
             
             warehouse_info = result[0]
             available_qty = float(warehouse_info.get("stk_qty", 0))
             if available_qty < 1:
-                pytest.skip(f"仓位库存不足({available_qty})，跳过精确仓位测试")
+                pytest.fail(f"仓位库存不足({available_qty})，跳过精确仓位测试")
             
             # 创建销售出库移动凭证
             voucher_info = self.create_sale_voucher(
@@ -180,10 +181,10 @@ class TestMobileVoucherSaleCreator(MobileVoucherCreator):
             ])
             
             if not batch_result:
-                pytest.skip("未找到具体仓位库存，跳过多物料行测试")
+                pytest.fail("未找到具体仓位库存，跳过多物料行测试")
             
             if len(batch_result) < 2:
-                pytest.skip(f"只找到{len(batch_result)}个批次，无法进行多物料行测试")
+                pytest.fail(f"只找到{len(batch_result)}个批次，无法进行多物料行测试")
             
             # 准备多物料行数据
             mat_items = [

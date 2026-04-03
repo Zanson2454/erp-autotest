@@ -3,10 +3,10 @@
 账户参考配置表和物料类型与分类参考关联表测试用例 (合并)
 """
 
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
@@ -242,112 +242,7 @@ class TestIvAccRefConfigAndLinkManagement(IvBaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @pytest.mark.skip(reason="OSS导入任务需要OSS配置，复杂度较高")
-    @case_decorator(
-        story="账户参考配置表",
-        title="测试账户参考导出任务",
-        description="验证账户参考配置表导入导出任务提交功能",
-        severity="minor",
-        file_level_order=10,
-        tags=["iv", "acc", "ref", "export", "task"]
-    )
-    def test_acc_ref_export_direct_post(self):
-        """测试账户参考导出任务（跳过）"""
-        try:
-            timestamp = self.mock_util.get_timestamp()
-            task_name = f"IV_ACC_REF_{self.nickname}_{timestamp}_导出"
-            
-            # 复杂API参数，使用use_param_util=False
-            export_params = {
-                "serviceKey": "账户参考配置表-导入导出任务管理接口-提交导出任务",
-                "params": {
-                    "taskName": task_name,
-                    "multiSheetConfig": [
-                        {
-                            "modelKey": "ERP_FIN$fin_iv_acc_cate_type_cf",
-                            "modelName": "账户参考配置表",
-                            "sheetNo": 0,
-                            "sheetName": "账户参考数据",
-                            "headerConfigList": [
-                                {"name": "配置编码", "type": "TEXT", "field": "code"},
-                                {"name": "账户类别", "type": "TEXT", "field": "accCateType"}
-                            ]
-                        }
-                    ],
-                    "queryData": {
-                        "containerKey": "ERP_FIN$fin_iv_acc_cate_type_cf",
-                        "viewKey": "ERP_FIN$fin_iv_acc_cate_type_cf:list",
-                        "sceneKey": "ERP_FIN$fin_iv_acc_cate_type_cf",
-                        "params": {
-                            "request": {
-                                "pageable": {
-                                    "sortOrders": []
-                                }
-                            },
-                            "selectFields": [
-                                {"field": "code"},
-                                {"field": "accCateType"}
-                            ],
-                            "modelKey": "ERP_FIN$fin_iv_acc_cate_type_cf"
-                        }
-                    },
-                    "processConfig": {
-                        "processType": "TRANTOR",
-                        "model": "ERP_FIN$fin_iv_acc_cate_type_cf",
-                        "modelName": "账户参考配置表",
-                        "containerKey": "ERP_FIN$fin_iv_acc_cate_type_cf",
-                        "viewKey": "ERP_FIN$fin_iv_acc_cate_type_cf:list",
-                        "sceneKey": "ERP_FIN$fin_iv_acc_cate_type_cf"
-                    }
-                }
-            }
-            
-            # 使用standard_api_call的use_param_util=False处理复杂参数
-            response, _ = self.standard_api_call(
-                api_key="账户参考配置表-导入导出任务管理接口-提交导出任务",
-                set_dict=export_params,
-                use_param_util=False  # 复杂参数，直接使用set_dict
-            )
-            
-            # 业务断言
-            self.assert_util.assert_response_success(response)
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
     
-    @pytest.mark.skip(reason="标准导入需要文件上传，暂时跳过")
-    @case_decorator(
-        story="账户参考配置表",
-        title="测试账户参考标准导入",
-        description="验证账户参考配置表标准导入服务功能",
-        severity="minor",
-        file_level_order=13,
-        tags=["iv", "acc", "ref", "import"]
-    )
-    def test_acc_ref_gei_import(self):
-        """测试账户参考标准导入（跳过）"""
-        try:
-            # 导入参数示例 (实际需文件)
-            set_dict = {
-                "filePath": "test_acc_ref_import.xlsx",  # 假设文件
-                "importType": "EXCEL"
-            }
-            fields_to_filter = ["filePath", "importType"]
-            
-            response, _ = self.standard_api_call(
-                api_key="账户参考配置表标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=fields_to_filter,
-                store_id_as=None
-            )
-            
-            # 业务断言
-            self.assert_util.assert_response_success(response)
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
     
     @case_decorator(
         story="账户参考配置表",

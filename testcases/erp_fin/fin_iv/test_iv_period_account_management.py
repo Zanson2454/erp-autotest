@@ -3,10 +3,10 @@
 存货价值期间账测试用例
 """
 
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
@@ -190,89 +190,6 @@ class TestIvPeriodAccountManagement(IvBaseTest):
             a.text(str(e), "失败原因")
             raise
     
-    @pytest.mark.skip(reason="导入导出任务需要OSS配置，复杂度较高")
-    @case_decorator(
-        story="存货价值期间账",
-        title="测试导入导出任务提交",
-        description="验证存货价值期间账导入导出任务管理接口-提交导出任务功能",
-        severity="minor",
-        order=5,
-        tags=["iv", "period", "account", "export", "task"]
-    )
-    def test_export_direct_post_period(self):
-        """测试导入导出任务提交（跳过）"""
-        try:
-            timestamp = self.mock_util.get_timestamp()
-            task_name = f"IV_PERIOD_ACCOUNT_{timestamp}_EXPORT"
-            
-            # 复杂导出参数模板
-            export_params = {
-                "serviceKey": "FIN_IV_ACC_PERIOD_TR_API_GEI_TASK_EXPORT_DIRECT_POST",
-                "teamId": 22,
-                "params": {
-                    "taskName": task_name,
-                    "multiSheetConfig": [
-                        {
-                            "modelKey": "ERP_FIN$fin_iv_acc_period_tr",
-                            "modelName": "存货价值期间账",
-                            "sheetNo": 0,
-                            "sheetName": "期间账数据",
-                            "headerConfigList": [
-                                {"name": "期间编码", "type": "TEXT", "field": "code"},
-                                {"name": "期间名称", "type": "TEXT", "field": "name"},
-                                {"name": "开始日期", "type": "DATE", "field": "periodStart"}
-                            ]
-                        }
-                    ],
-                    "queryData": {
-                        "containerKey": "ERP_FIN$fin_iv_acc_period_tr",
-                        "viewKey": "ERP_FIN$fin_iv_acc_period_tr:list",
-                        "sceneKey": "ERP_FIN$fin_iv_acc_period_tr",
-                        "params": {
-                            "request": {
-                                "pageable": {
-                                    "sortOrders": []
-                                }
-                            },
-                            "selectFields": [
-                                {"field": "code"},
-                                {"field": "name"},
-                                {"field": "periodStart"}
-                            ],
-                            "modelKey": "ERP_FIN$fin_iv_acc_period_tr"
-                        }
-                    },
-                    "processConfig": {
-                        "processType": "TRANTOR",
-                        "model": "ERP_FIN$fin_iv_acc_period_tr",
-                        "modelName": "存货价值期间账",
-                        "containerKey": "ERP_FIN$fin_iv_acc_period_tr",
-                        "viewKey": "ERP_FIN$fin_iv_acc_period_tr:list",
-                        "sceneKey": "ERP_FIN$fin_iv_acc_period_tr"
-                    }
-                }
-            }
-            
-            api_path = self.get_api_path("FIN_IV_ACC_PERIOD_TR_API_GEI_TASK_EXPORT_DIRECT_POST")
-            params, url = self.get_api_params(api_path)
-            
-            filtered_params = export_params  # 直接使用复杂结构
-            response, _ = self.standard_api_call(
-                api_key="FIN_IV_ACC_PERIOD_TR_API_GEI_TASK_EXPORT_DIRECT_POST",
-                set_dict=filtered_params.get("params", {}),
-                store_id_as=None,
-                use_param_util=False,
-                param_path=["params"]
-            )
-            self.assert_util.assert_response_success(response)
-            
-            task_id = response.get("data", {}).get("taskId")
-            a.json(export_params, "导出任务请求")
-            a.json(response, "导出任务响应")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
     
     @case_decorator(
         story="存货价值期间账",

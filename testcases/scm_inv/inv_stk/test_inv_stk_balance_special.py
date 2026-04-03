@@ -8,10 +8,11 @@
     2. 创建特殊库存转移移动凭证
     3. 验证特殊库存转移后库存余额变化
 """
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
+import pytest
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
@@ -138,7 +139,7 @@ class TestInvStkBalanceSpecialManagement(MobileVoucherCreator):
         """创建特殊库存转移凭证"""
         try:
             if not self.available_batch_id:
-                pytest.skip("没有可用批次，跳过特殊库存转移测试")
+                pytest.fail("没有可用批次，跳过特殊库存转移测试")
             
             # 创建特殊库存转移凭证
             custom_to_batch = self.mock_util.generate_unique_code(prefix="SPECIAL_", tag="STK")

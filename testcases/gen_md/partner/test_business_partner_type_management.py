@@ -1,5 +1,6 @@
 import allure
 import pytest
+
 from testcases.gen_md import GenMdBaseTest
 from utils.report_util import a, case_decorator
 
@@ -309,38 +310,6 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="业务未引用，暂时跳过")
-    @case_decorator(
-        story="合作伙伴类型管理",
-        title="测试合作伙伴类型标准导入",
-        description="验证合作伙伴类型标准导入功能",
-        severity="normal",
-        file_level_order=9,
-        tags=["合作伙伴类型", "导入"]
-    )
-    def test_import_business_partner_type(self):
-        """合作伙伴类型标准导入用例"""
-        try:
-            set_dict = {
-                "importConfig": {
-                    "fileName": f"合作伙伴类型导入_{self.mock_util.get_timestamp()}",
-                    "fileType": "EXCEL",
-                    "sheetName": "合作伙伴类型"
-                }
-            }
-            response, _ = self.standard_api_call(
-                api_key="合作伙伴类型标准导入服务",
-                set_dict=set_dict,
-                fields_to_filter=["importConfig"]
-            )
-            self.assert_util.assert_response_success(response)
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise
 
     @case_decorator(
         story="合作伙伴类型管理",
@@ -505,39 +474,3 @@ class TestBusinessPartnerTypeManagement(GenMdBaseTest):
             a.text(str(e), "失败原因")
             raise
 
-    @pytest.mark.skip(reason="oss 导入依赖文件，暂时跳过")
-    @case_decorator(
-        story="合作伙伴类型管理",
-        title="测试通过OSS提交合作伙伴类型导入任务",
-        description="验证通过OSS提交合作伙伴类型导入任务功能",
-        severity="normal",
-        file_level_order=11,
-        tags=["合作伙伴类型", "OSS导入"]
-    )
-    def test_submit_business_partner_type_import_task_by_oss(self):
-        """通过OSS提交合作伙伴类型导入任务用例"""
-        try:
-            set_dict = {
-                "taskName": f"合作伙伴类型OSS导入任务_{self.mock_util.get_timestamp()}",
-                "ossConfig": {
-                    "bucketName": "test-bucket",
-                    "objectKey": f"partner_type_import_{self.mock_util.get_timestamp()}.xlsx"
-                },
-                "importConfig": {
-                    "fileType": "EXCEL",
-                    "sheetName": "合作伙伴类型"
-                }
-            }
-            response, _ = self.standard_api_call(
-                api_key="合作伙伴类型-导入导出任务管理接口-通过OSS提交导入任务",
-                set_dict=set_dict,
-                fields_to_filter=["taskName", "ossConfig", "importConfig"]
-            )
-            self.assert_util.assert_response_success(response)
-
-            a.json(set_dict, "请求数据")
-            a.json(response, "响应数据")
-            
-        except Exception as e:
-            a.text(str(e), "失败原因")
-            raise 

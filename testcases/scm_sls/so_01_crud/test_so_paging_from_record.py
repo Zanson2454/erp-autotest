@@ -1,5 +1,6 @@
 import allure
 import pytest
+
 from testcases.scm_sls import SlsBase
 from utils.report_util import a, case_decorator
 
@@ -168,7 +169,7 @@ class TestSoPagingFromRecord(SlsBase):
         try:
             so_item_id = self._get_one_so_item_id()
             if not so_item_id:
-                pytest.skip("未查询到可用于详情查询的销售订单行数据")
+                pytest.fail("未查询到可用于详情查询的销售订单行数据")
 
             response, _ = self.standard_api_call(
                 api_key="销售订单项目行表-根据ID查找数据服务",

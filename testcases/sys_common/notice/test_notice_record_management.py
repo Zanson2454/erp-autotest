@@ -2,10 +2,10 @@
 通知记录管理测试用例
 覆盖通知记录查询等功能
 """
-import allure
-import pytest
 import sys
 from pathlib import Path
+
+import allure
 
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.append(str(project_root))
