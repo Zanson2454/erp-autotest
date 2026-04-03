@@ -16,6 +16,7 @@ portal_config:
       cookie: "${TEST_TERP_PORTAL_COOKIE}"
       username: "${TEST_TERP_PORTAL_USERNAME}"
       password: "${TEST_TERP_PORTAL_PASSWORD}"
+      swagger_url: "${TEST_TERP_PORTAL_SWAGGER_URL}"
       iam_url: "${TEST_TERP_PORTAL_IAM_URL}"
       iam_referer: "${TEST_TERP_PORTAL_IAM_REFERER}"
       portal_url: "${TEST_TERP_PORTAL_URL}"

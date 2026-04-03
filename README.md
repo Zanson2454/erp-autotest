@@ -448,6 +448,42 @@ pytest -n 0 -p no:rerunfailures --log-cli-level=INFO <failed_case_path>
 
 可用 skill 索引见 `/.cursor/skills/README.md`，流程说明见 `/.cursor/workflows/erp_full_flow_playbook.md`。
 
+### Swagger API 配置生成（含 PLN）
+
+`script/swagger_parser.py` 用于从 Swagger 文档生成模块 API 配置：
+
+```bash
+# 查看当前维护的模块清单（来自 config/api/swagger_modules.yaml）
+python script/swagger_parser.py --list-modules
+
+# 常规生成
+python script/swagger_parser.py --module gen_md --team TERP --env test
+```
+
+PLN 示例：
+
+```bash
+# 1) 在 config/env/.env 配置 Swagger 域名（只需一次）
+TEST_TERP_PORTAL_SWAGGER_URL='https://t-erp-huoshan-console-test.app.duandian.com/'
+
+# 2) 执行 PLN 拉取（pln 会自动映射到 ERP_PLN）
+python script/swagger_parser.py --module pln --team TERP --env test
+
+# 安静模式（推荐日常）
+python script/swagger_parser.py --module pln --team TERP --env test --quiet
+
+# 详细调试模式（排障用）
+python script/swagger_parser.py --module pln --team TERP --env test --verbose
+```
+
+生成文件：
+- `config/api/erp_pln/pln_api_path.yaml`
+- `config/api/erp_pln/pln_api_params.yaml`
+
+补充说明：
+- `config/env/test.yaml` 中 `portal_config.terp.TERP_PORTAL.swagger_url` 会优先作为 Swagger base URL。
+- 自动登录模式下若已配置 `TERP_PORTAL.cookie`，脚本会优先使用 Cookie，跳过账号密码登录。
+
 ### 编写测试用例
 
 #### 1. 创建测试类

@@ -110,6 +110,7 @@ TEST_TERP_PORTAL_PASSWORD=''
 TEST_TERP_PORTAL_IAM_URL='https://your-iam-domain.example.com'
 TEST_TERP_PORTAL_IAM_REFERER='https://your-iam-domain.example.com/TERP_PORTAL-TERP'
 TEST_TERP_PORTAL_URL='https://your-portal-domain.example.com'
+TEST_TERP_PORTAL_SWAGGER_URL='https://your-swagger-domain.example.com'
 TEST_TERP_PORTAL_REFERER='https://your-portal-domain.example.com/TERP_PORTAL-TERP'
 
 # Cookie 登录（留空=账号密码登录）
@@ -136,6 +137,7 @@ YAML 文件只需维护结构，敏感值统一写在 `.env` 中：
 portal_config:
   terp:
     TERP_PORTAL:
+      swagger_url: ${TEST_TERP_PORTAL_SWAGGER_URL}
       iam_url: ${TEST_TERP_PORTAL_IAM_URL}
       iam_referer: ${TEST_TERP_PORTAL_IAM_REFERER}
       portal_url: ${TEST_TERP_PORTAL_URL}
@@ -317,6 +319,9 @@ cls.my_id = cls.mymod_cache_data.get("my_key", [{}])[0].get("id")
 ### 4.1 执行脚本自动生成
 
 ```bash
+# 查看当前维护的可用模块清单（来自 config/api/swagger_modules.yaml）
+python script/swagger_parser.py --list-modules
+
 # 最简用法（从 config/env/test.yaml 自动登录，team/module 对应 Swagger 文档分组）
 python script/swagger_parser.py --module gen_md --team TERP
 
@@ -334,6 +339,26 @@ python script/swagger_parser.py --module gen_md --team TERP --include-sys
 # 预览解析结果，不写文件
 python script/swagger_parser.py --module gen_md --team TERP --dry-run
 ```
+
+PLN 模块示例（推荐）：
+
+```bash
+# 1) 在 config/env/.env 配置 Swagger 域名（只需一次）
+TEST_TERP_PORTAL_SWAGGER_URL='https://t-erp-huoshan-console-test.app.duandian.com/'
+
+# 2) 拉取 ERP_PLN（支持别名 pln）
+python script/swagger_parser.py --module pln --team TERP --env test
+
+# 安静模式（推荐日常）
+python script/swagger_parser.py --module pln --team TERP --env test --quiet
+
+# 详细调试模式（排障用）
+python script/swagger_parser.py --module pln --team TERP --env test --verbose
+```
+
+说明：
+- 脚本会优先使用 `portal_config.terp.TERP_PORTAL.swagger_url` 作为 Swagger base URL。
+- 自动登录模式下若已配置 `TERP_PORTAL.cookie`，会优先用 Cookie，跳过账号登录。
 
 脚本自动输出到对应模块目录：
 

@@ -41,6 +41,8 @@ description: 将 `api_record/raw_curls/recorded_flow_*.md` 转为项目标准 py
    - 对对象参数做 ID 化（如 `{"id": xxx}`），禁止照搬冗余嵌套对象。
    - 严格按 YAML 参数骨架传参：先查 `*_api_params.yaml` 再确定 `param_path`，禁止默认都走 `["params", "request"]`。
    - 对 `paginate_*` 类接口，优先核对 `pageable` 在 `params` 还是 `params.request`（以 YAML 为准）。
+   - **强制校验 modelKey 一致性**：若 URL/query 中携带 `modelKey`，则请求体必须显式带 `params.modelKey` 且值完全一致（避免 `V0800`）。
+   - 对 `SYS_*` 通用服务（如 `SYS_SaveDataService` / `SYS_PagingDataService` / `SYS_FindDataByIdService`），优先检查 YAML 是否为 `params.request + params.modelKey` 结构；此类场景通常应使用 `use_param_util=False` + `param_path=["params"]`。
 
 4. **映射为标准调用**
    - 95% 场景使用 `self.standard_api_call(api_key=..., set_dict=...)`。
@@ -53,6 +55,7 @@ description: 将 `api_record/raw_curls/recorded_flow_*.md` 转为项目标准 py
    - `@case_decorator` + `file_level_order`（CRUD 顺序）。
    - 每个测试方法必须 `try-except` 并 `a.text(str(e), "失败原因")`。
    - 添加 3 层断言：响应成功、响应数据、业务结果（必要时 DB 校验）。
+   - 使用 `assert_by_operator` 时，运算符仅可用框架支持值（如 `=`, `!=`, `in`, `not_in`, `contain`, `empty`, `not_empty`），禁止使用 `equal` 等别名。
    - 增加 ID 字段强类型校验：详情/删除等后续步骤前，必须断言 ID 为数值或可转数值；禁止把 `dict/uuid/requestId` 当业务 ID 透传。
    - 状态敏感操作（指派/转办/转单/删除等）先查状态，不满足前置条件时 `pytest.skip`，不要直接硬断言失败。
 
@@ -87,6 +90,7 @@ description: 将 `api_record/raw_curls/recorded_flow_*.md` 转为项目标准 py
 - 不在 `testcases/**` 里重复造轮子：已有文件优先复用，已有方法优先更新。
 - 禁止用例互调（禁止 `self.test_xxx()`）；复用逻辑必须下沉为私有 helper。
 - 检查 `${ENV_VAR}` 占位符是否已替换，URL 必须包含 `https://` 或 `http://`。
+- 对带 `modelKey` 的接口，提交前必须检查“URL/query 的 modelKey”与“body.params.modelKey”一致，且与业务对象模型（如 `ERP_PLN$pln_process_tr`）一致。
 
 ## Quick Start
 

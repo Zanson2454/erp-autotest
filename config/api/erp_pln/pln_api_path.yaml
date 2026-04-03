@@ -1,0 +1,2067 @@
+version: '1.0'
+total_apis: 688
+apis:
+  (系统)批量新增数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_BatchCreateDataService
+    method: POST
+  (系统)根据条件批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_BatchDeleteDataByConditionService
+    method: POST
+  (系统)根据IDS批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_BatchDeleteDataByIdsService
+    method: POST
+  (系统)批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_BatchDeleteDataService
+    method: POST
+  (系统)批量保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_BatchSaveDataService
+    method: POST
+  (系统)根据条件批量更新数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_BatchUpdateDataByConditionService
+    method: POST
+  (系统)根据IDS批量更新数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_BatchUpdateDataByIdsService
+    method: POST
+  (系统)根据IDS复制并新增数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_CopyAndCreateDataByIdsService
+    method: POST
+  (系统)转换复制数据:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_CopyDataConverterService
+    method: POST
+  (系统)COUNT服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_COUNT_DATA_SERVICE
+    method: POST
+  (系统)新增数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_CreateDataService
+    method: POST
+  (系统)删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_DeleteDataByIdService
+    method: POST
+  (系统)通过字段 Like 查询分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_FindAllByFieldLikeService
+    method: POST
+  (系统)查询数据详情服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_FindDataByIdService
+    method: POST
+  (系统)根据IDS查询数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_FindDataByIdsService
+    method: POST
+  (系统)通过条件组查询数据列表:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_FindListDataService
+    method: POST
+  (系统)通过字段 Like 查询单条数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_FindOneByFieldLikeService
+    method: POST
+  (系统)查询单条数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_FindOneDataService
+    method: POST
+  (系统)根据条件查询单条数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_FindSingleDataByConditionService
+    method: POST
+  (系统)根据ID查询单条数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_FindSingleDataByIdService
+    method: POST
+  (系统)通过条件组查询树模型子数据列表:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_FindTreeChildrenDataService
+    method: POST
+  (系统)树查询数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_FindTreeDataService
+    method: POST
+  (系统)调用取号规则服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_InvokeCodeRuleService
+    method: POST
+  (系统)新增并启用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_MasterData_CreateAndEnableDataService
+    method: POST
+  (系统)新增主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_MasterData_CreateDataService
+    method: POST
+  (系统)删除主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_MasterData_DeleteDataService
+    method: POST
+  (系统)停用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_MasterData_DisableDataService
+    method: POST
+  (系统)启用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_MasterData_EnableDataService
+    method: POST
+  (系统)批量停用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_MasterData_MultiDisableDataService
+    method: POST
+  (系统)批量启用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_MasterData_MultiEnableDataService
+    method: POST
+  (系统)保存并启用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_MasterData_SaveAndEnableDataService
+    method: POST
+  (系统)保存主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_MasterData_SaveDataService
+    method: POST
+  (系统)更新主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_MasterData_UpdateDataService
+    method: POST
+  (系统)查询分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_PagingDataService
+    method: POST
+  (系统)查询统计服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_QueryStatisticsService
+    method: POST
+  (系统)反向构建树以及同步查询出所有同级服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_ReverseConstructTreeService
+    method: POST
+  (系统)保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_SaveDataService
+    method: POST
+  (系统)SUM服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_SUM_DATA_SERVICE
+    method: POST
+  (系统)树搜索:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_TreeSearchService
+    method: POST
+  (系统)更新数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SYS_UpdateDataByIdService
+    method: POST
+  批量查询销售订单行信息服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$BATCH_QUERY_SO_ORDER_INFO_EVENT_SERVICE
+    method: POST
+  预测需求计划 草稿->审核中（批量）服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$MRP_DF_DRAFT_TO_IN_REVIEW_BATCH_SERVICE
+    method: POST
+  预测需求计划 草稿->审核中服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$MRP_DF_DRAFT_TO_IN_REVIEW_SERVICE
+    method: POST
+  预测需求计划 ? -->草稿态（批量）服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$MRP_DF_TO_DRAFT_BATCH_SERVICE
+    method: POST
+  预测需求计划 ? -->草稿态服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$MRP_DF_TO_DRAFT_SERVICE
+    method: POST
+  输出单据-批量冻结服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$OUTPUT_BATCH_FROZE_SERVICE
+    method: POST
+  输出单据-批量解冻服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$OUTPUT_BATCH_UNFROZE_SERVICE
+    method: POST
+  PLN-SLS-输出单据-采购申请锁定服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$OUTPUT_PUR_PR_LOCK_EVENT_SERVICE
+    method: POST
+  PLN-SLS-输出单据-采购申提交服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$OUTPUT_PUR_PR_SUBMIT_EVENT_SERVICE
+    method: POST
+  PLN-SLS-输出单据-采购申请取消锁定服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$OUTPUT_PUR_PR_UN_LOCK_EVENT_SERVICE
+    method: POST
+  预测需求计划-历史查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_HISTORY_QUERY_EVENT_SERVICE
+    method: POST
+  预测需求计划-审核中->草稿服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_IN_REVIEW_TO_DRAFT_SERVICE
+    method: POST
+  预测需求计划-审核中—>生效服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_IN_REVIEW_TO_EFFECTIVE_SERVICE
+    method: POST
+  预测需求计划-查询非过期数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_QUERY_FOR_EDIT_EVENT_SERVICE
+    method: POST
+  预测需求计划-由销售计划生成服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_SAVE_BY_BKW_EVENT_SERVICE
+    method: POST
+  预测需求计划-保存服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_SAVE_EVENT_SERVICE
+    method: POST
+  预测需求计划-提交服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_SUBMIT_SERVICE
+    method: POST
+  预测需求计划-作废服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_VOID_SERVICE
+    method: POST
+  计划Job分页查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_JOB_PAGING_EVENT_SERVICE
+    method: POST
+  计划-物料mrp导入更新服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MAT_MRP_IMPORT_EVENT_SERVICE
+    method: POST
+  计划-MRP-MRP分析服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_ANALYSIS_EVENT_SERVICE
+    method: POST
+  计划-MRP-MRP区域保存服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_AREA_SAVE_EVENT_SERVICE
+    method: POST
+  计划-MRP-MRP模拟运算服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SIMULATE_RUN_EVENT_SERVICE
+    method: POST
+  计划-MRP-计划策略保存事件服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_STRATEGY_SAVE_EVENT_SERVICE
+    method: POST
+  计划-MRP-任务批量删除服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_TASK_BATCH_DELETE_EVENT_SERVICE
+    method: POST
+  计划-MRP-计算任务批量提交服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_TASK_BATCH_SUBMIT_EVENT_SERVICE
+    method: POST
+  计划-MRP运算定时执行服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_TASK_CRON_EXECUTE_EVENT_SERVICE
+    method: POST
+  计划-MRP-任务删除服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_TASK_DELETE_EVENT_SERVICE
+    method: POST
+  计划-MRP运算执行服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_TASK_EXECUTE_EVENT_SERVICE
+    method: POST
+  计划-MRP-MRP任务记录详情查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_TASK_RECORD_DETAIL_EVENT_SERVICE
+    method: POST
+  计划-MRP-任务保存服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_TASK_SAVE_EVENT_SERVICE
+    method: POST
+  计划-MRP运算任务提交服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_TASK_SUBMIT_EVENt_SERVICE
+    method: POST
+  计划订单自动转单服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_AUTO_TRANSFER_EVENT_SERVICE
+    method: POST
+  计划订单取消关闭服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_CANCEL_CLOSED_EVENT_SERVICE
+    method: POST
+  计划订单取消确认服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_CANCEL_CONFIRMED_EVENT_SERVICE
+    method: POST
+  计划订单关闭服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_CLOSE_EVENT_SERVICE
+    method: POST
+  计划订单确认服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_CONFIRM_EVENT_SERVICE
+    method: POST
+  计划订单删除服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_DELETE_EVENT_SERVICE
+    method: POST
+  计划订单详情服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_DETAIL_EVENT_SERVICE
+    method: POST
+  计划订单合并服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_MERGE_EVENT_SERVICE
+    method: POST
+  创建页面物料组件渲染服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_RENDER_CREATE_BOM_ITEMS_EVENT_SERVICE
+    method: POST
+  创建页面渲染服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_RENDER_CREATE_EVENT_SERVICE
+    method: POST
+  创建页面工艺路线渲染服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_RENDER_CREATE_ROUTING_ITEMS_EVENT_SERVICE
+    method: POST
+  计划订单保存服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_SAVE_EVENT_SERVICE
+    method: POST
+  计划订单拆分服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_SPLIT_EVENT_SERVICE
+    method: POST
+  转单配置初始化服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_TRANSFER_CONF_INIT_EVENT_SERVICE
+    method: POST
+  计划订单转单服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_TRANSFER_EVENT_SERVICE
+    method: POST
+  PLN-查询批注服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_REMARK_QUERY_EVENT_SERVICE
+    method: POST
+  PLN-保存批注服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_REMARK_SAVE_EVENT_SERVICE
+    method: POST
+  PLN-SLS-BKW-销售计划备库计划回退服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BKW_BACK_SUBMIT_EVENT_SERVICE
+    method: POST
+  PLN_备库计划供需平衡-批量服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BKW_BALANCE_BATCH_EVENT_SERVICE
+    method: POST
+  PLN_JOB提交-备库计划供需平衡-批量服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BKW_BALANCE_BATCH_JOB_CREATE_EVENT_SERVICE
+    method: POST
+  备库计划供需平衡服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BKW_BALANCE_EVENT_SERVICE
+    method: POST
+  PLN-SLS-BKW-销售计划备库按钮信息服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BKW_FRONT_BUTTON_INFO_EVENT_SERVICE
+    method: POST
+  PLN-SLS-BKW-销售备库计划打印多层级查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BKW_MULTI_PRINT_QUERY_EVENT_SERVICE
+    method: POST
+  PLN-SLS-输出单据-提交请求服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BKW_OUTPUT_SUBMIT_EVENT_SERVICE
+    method: POST
+  PLN-SLS-BKW-销售备库计划查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BKW_QUERY_EVENT_SERVICE
+    method: POST
+  PLN-SLS-BKW-销售计划备库计划按行取消提交服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BKW_ROW_CANAL_SUBMIT_EVENT_SERVICE
+    method: POST
+  PLN-SLS-BKW-销售计划备库计划按行提交服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BKW_ROW_SUBMIT_EVENT_SERVICE
+    method: POST
+  PLN-SLS-BKW-备库计划特殊查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BKW_SPECIAL_QUERY_EVENT_SERVICE
+    method: POST
+  PLN-SLS-BKW-销售计划备库计划提交服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BKW_SUMIT_EVENT_SERVICE
+    method: POST
+  PLN-SLS-BKW-销售计划备库计划暂存服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BKW_TEMPORARY_STORAGE_EVENT_SERVICE
+    method: POST
+  PLN-SLS-BKW-销售备库未确认行数量查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BKW_UNFIXED_ROWS_QUERY_EVENT_SERVICE
+    method: POST
+  PLN_检查供需平衡任务服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_CHECK_BALANCE_JOB_EVENT_SERVICE
+    method: POST
+  PLN-SLS-DISPLAY-展示层级查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_DISPLAY_HIERARCHY_QUERY_EVENT_SERVICE
+    method: POST
+  组织SO关系-保存服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_ORG_SO_ASS_SAVE_EVENT_SERVICE
+    method: POST
+  销量预测服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_EVENT_SERVICE
+    method: POST
+  PLN_查询供需平衡任务执行情况服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_QUERY_BALANCE_JOB_EVENT_SERVICE
+    method: POST
+  PLN-JOB-根据销售计划ID查询供需平衡任务执行情况服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_QUERY_VRS_BALANCE_JOB_EVENT_SERVICE
+    method: POST
+  PLN-SLS-RAW-销售计划提报取消确认服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_RAW_CANCEL_CONFIRM_EVENT_SERVICE
+    method: POST
+  PLN-SLS-RAW-销售计划提报确认服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_RAW_CONFIRM_EVENT_SERVICE
+    method: POST
+  PLN-SLS-RAW-销售计划提报查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_RAW_QUERY_EVENT_SERVICE
+    method: POST
+  PLN-SLS-RAW-销售计划提报提交服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_RAW_SUBMIT_EVENT_SERVICE
+    method: POST
+  PLN-SLS-RAW-销售计划提报未确认行数量查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_RAW_UNFIXED_ROWS_QUERY_EVENT_SERVICE
+    method: POST
+  PLN-SLS-RAW-销售计划提报暂存服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_RAW_UPDATE_EVENT_SERVICE
+    method: POST
+  销售计划方案保存服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SCENARIO_EVENT_SERVICE
+    method: POST
+  销售来源统计日常任务服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SOURCE_DAILY_JOB_EVENT_SERVICE
+    method: POST
+  计划-销售数据源-修改数据源信息服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SOURCE_EDIT_LINE_EVENT_SERVICE
+    method: POST
+  销售来源统计任务服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SOURCE_JOB_EXE_EVENT_SERVICE
+    method: POST
+  销售历史数据同步手动执行服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SOURCE_MANUAL_JOB_EVENT_SERVICE
+    method: POST
+  计划-销售数据源-选择时间段重新运行服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SOURCE_REPROCESS_JOB_EVENT_SERVICE
+    method: POST
+  PLN-SLS-SUM-销售计划汇总取消确认服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUM_CANCEL_CONFIRM_EVENT_SERVICE
+    method: POST
+  PLN-SLS-SUM-销售计划汇总确认  服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUM_CONFIRM_EVENT_SERVICE
+    method: POST
+  PLN-SLS-BKW-销售计划汇总按钮信息服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUM_FRONT_BUTTON_INFO_EVENT_SERVICE
+    method: POST
+  PLN-SLS-SUM-销售计划分析多层级查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUM_MULTI_PRINT_QUERY_EVENT_SERVICE
+    method: POST
+  PLN-SLS-SUM-已提交未执行供需平衡的组织查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUM_NOT_BALANCE_ORG_QUERY_EVENT_SERVICE
+    method: POST
+  PLN-SLS-SUM-销售提报分析查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUM_QUERY_EVENT_SERVICE
+    method: POST
+  PLN-SLS-SUM-销售计划汇总回退服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUM_ROLLBACK_EVENT_SERVICE
+    method: POST
+  PLN-SLS-SUM-销售计划汇总特殊查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUM_SPECIAL_QUERY_EVENT_SERVICE
+    method: POST
+  PLN-SLS-SUM-销售计划汇总提交服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUM_SUBMIT_EVENT_SERVICE
+    method: POST
+  PLN-SLS-SUM-销售计划分析数据提交服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUM_SUMIT_EVENT_SERVICE
+    method: POST
+  PLN-SLS-SUM-销售计划汇总未确认行数量查询 服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUM_UNFIXED_ROWS_QUERY_EVENT_SERVICE
+    method: POST
+  PLN-SLS-SUM-销售计划汇总暂存服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUM_UPDATE_EVENT_SERVICE
+    method: POST
+  销售目标期间信息查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_TGT_QUERY_PERIOD_INFO_EVENT_SERVICE
+    method: POST
+  PLN-SLS-VRS-销售计划版本编码查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_CODE_QUERY_EVENT_SERVICE
+    method: POST
+  PLN-SLS-VRS-计划-销售-销售计划版本复制服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_COPY_EVENT_SERVICE
+    method: POST
+  PLN-SLS-VRS-计划-销售-根据销售计划方案创建销售计划版本服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_CREATE_BY_SCENARIO_EVENT_SERVICE
+    method: POST
+  PLN-SLS-VRS-销售计划版本创建服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_CREATE_EVENT_SERVICE
+    method: POST
+  PLN-SLS-VRS-销售计划版本执行数据准备服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_DO_DATA_PREPARE_EVENT_SERVICE
+    method: POST
+  PLN-SLS-VRS-销售计划版本结束期间查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_END_PERIOD_QUERY_EVENT_SERVICE
+    method: POST
+  PLN-SLS-VRS-销售计划版本名称查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_NAME_QUERY_EVENT_SERVICE
+    method: POST
+  PLN-SLS-VRS-通过销售计划方案渲染计划版本服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_RENDER_BY_SCENARIO_EVENT_SERVICE
+    method: POST
+  PLN-SLS-VRS-通过销售计划方案渲染计划版本数据准备服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_RENDER_BY_SCENARIO_OUTPUT_LIST_ACTION_SERVICE
+    method: POST
+  计划-销售-重新渲染计划版本服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_RERENDER_EVENT_SERVICE
+    method: POST
+  PLN-SLS-VRS-销售计划版本保存服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_SAVE_EVENT_SERVICE
+    method: POST
+  PLN-SLS-VRS-销售计划版本开始期间查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_START_PERIOD_QUERY_EVENT_SERVICE
+    method: POST
+  PLN-SLS-预警组织查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$ALERT_CONFIG_ORGANIZATION_QUERY_SERVICE
+    method: POST
+  分析设备能力:
+    path: /api/trantor/service/engine/execute/ERP_PLN$ANALYZE_EQUIPMEN_CAPABILITY
+    method: POST
+  分析设备能力II:
+    path: /api/trantor/service/engine/execute/ERP_PLN$ANALYZE_EQUIPMEN_CAPABILITY_II
+    method: POST
+  分析最优方案:
+    path: /api/trantor/service/engine/execute/ERP_PLN$ANALYZE_OPTIMAL_PLAN
+    method: POST
+  自动触发采购:
+    path: /api/trantor/service/engine/execute/ERP_PLN$AUTO_TRIGGER_PURCHASE
+    method: POST
+  可用机台数据统计服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$AVAILABLE_MACHINE_STAT_SERVICE
+    method: POST
+  可用模具总数统计服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$AVAILABLE_MOLDS_STAT_SERVICE
+    method: POST
+  批量查询销售订单行信息用于规则匹配:
+    path: /api/trantor/service/engine/execute/ERP_PLN$batch_query_sales_order_line_info_for_rule_matchin
+    method: POST
+  产能利用率数据统计服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$CAPACITY_STAT_SERVICE
+    method: POST
+  检查模具库存:
+    path: /api/trantor/service/engine/execute/ERP_PLN$CHECK_MOLD_INVENTORY
+    method: POST
+  检查原材料状态:
+    path: /api/trantor/service/engine/execute/ERP_PLN$CHECK_RAW_MATERIAL_STATUS
+    method: POST
+  确认排产:
+    path: /api/trantor/service/engine/execute/ERP_PLN$CONFIRM_SCHEDULE
+    method: POST
+  检测产能冲突:
+    path: /api/trantor/service/engine/execute/ERP_PLN$DETECT_CAPACITY_CONFLICT
+    method: POST
+  检测产能冲突服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$DETECT_CAPACITY_CONFLICT_SERVICE
+    method: POST
+  执行排产计划:
+    path: /api/trantor/service/engine/execute/ERP_PLN$EXECUTE_SCHEDULING_PLAN
+    method: POST
+  查看排产结果:
+    path: /api/trantor/service/engine/execute/ERP_PLN$FIND_SCHEDULING_RESULTS_SERVICE
+    method: POST
+  地址库表-查找树子数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$gen_addr_type_cf_FIND_TREE_CHILDREN_DATA_SERVICE
+    method: POST
+  物料MRP视图-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$gen_mat_mrp_md_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  历史数据定时执行配置详情查询:
+    path: /api/trantor/service/engine/execute/ERP_PLN$historical_data_scheduled_execution_configuration_
+    method: POST
+  插入订单并重新排产:
+    path: /api/trantor/service/engine/execute/ERP_PLN$INSERT_ORDER_AND_RESCHEDULE
+    method: POST
+  库存计划参数维护批量导入:
+    path: /api/trantor/service/engine/execute/ERP_PLN$inventory_plan_parameter_maintenance_batch_import
+    method: POST
+  物料主数据根据id查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$material_master_data_query_service
+    method: POST
+  物料主数据分页服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$material_master_pagination_service
+    method: POST
+  物料MRP分页查询（带mrp区域信息）:
+    path: /api/trantor/service/engine/execute/ERP_PLN$material_mrp_paging_query_with_mrp_area_info
+    method: POST
+  物料mrp视图根据id查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$material_mrp_view_search_by_id_service
+    method: POST
+  换模次数数据统计服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$MOLD_CHANGE_STAT_SERVICE
+    method: POST
+  MRP运算任务记录明细表分页查询:
+    path: /api/trantor/service/engine/execute/ERP_PLN$mrp_calculation_task_record_detail_paging_query
+    method: POST
+  MRP具象化导入！！:
+    path: /api/trantor/service/engine/execute/ERP_PLN$mrp_concretization_import
+    method: POST
+  MRP运算执行记录根据id查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$mrp_execution_record_search_by_id_service
+    method: POST
+  多方案对比生成:
+    path: /api/trantor/service/engine/execute/ERP_PLN$MULTI_SCHEME_COMPARISON_GENERATION
+    method: POST
+  通知到 AI Chat:
+    path: /api/trantor/service/engine/execute/ERP_PLN$NOTIFY_AI_CHAT
+    method: POST
+  订单延期率数据统计服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$ORDER_DELAY_RATE_STAT_SERVICE
+    method: POST
+  生产订单数据统计服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$ORDER_STAT_SERVICE
+    method: POST
+  分页查询MRP运算任务记录:
+    path: /api/trantor/service/engine/execute/ERP_PLN$pagination_query_mrp_calc_task_record
+    method: POST
+  上一日合格率统计服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PASS_RATE_PREDAY_STAT_SERVICE_copy
+    method: POST
+  计划专项指标查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_AI_INDEX_QUERY_SERVICE
+    method: POST
+  计划数字字典-抬头表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_CODE_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  计划数字字典-抬头表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_CODE_TYPE_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  计划数字字典-抬头表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_CODE_TYPE_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  计划数字字典-抬头表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_CODE_TYPE_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  计划数字字典-抬头表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_CODE_TYPE_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  计划数字字典-抬头表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_CODE_TYPE_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  计划数字字典-抬头表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_CODE_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  计划数字字典-抬头表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_CODE_TYPE_CF_PAGING_DATA_SERVICE
+    method: POST
+  计划数字字典-抬头表-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_CODE_TYPE_CF_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  计划数字字典-抬头表-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_CODE_TYPE_CF_SAVE_DATA_SERVICE
+    method: POST
+  计划数字字典-项目内容表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_CODE_TYPE_ITEM_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  计划数字字典-项目内容表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_CODE_TYPE_ITEM_CF_PAGING_DATA_SERVICE
+    method: POST
+  计划数字字典-项目内容表-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_CODE_TYPE_ITEM_CF_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  计划数字字典-项目内容表-分页数据服务_BSzRwU2:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_CODE_TYPE_ITEM_CF_PAGING_DATA_SERVICE_BSzRwU2
+    method: POST
+  计划数字字典-项目内容表-分页数据服务_BSzRwU3:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_CODE_TYPE_ITEM_CF_PAGING_DATA_SERVICE_BSzRwU3
+    method: POST
+  计划数字字典-项目内容表-分页数据服务_BSzRwU4:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_CODE_TYPE_ITEM_CF_PAGING_DATA_SERVICE_BSzRwU4
+    method: POST
+  计划数字字典-项目内容表-分页数据服务_BSzRwU5:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_CODE_TYPE_ITEM_CF_PAGING_DATA_SERVICE_BSzRwU5
+    method: POST
+  计划数字字典-项目内容表-分页数据服务_BSzRwU6:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_CODE_TYPE_ITEM_CF_PAGING_DATA_SERVICE_BSzRwU6
+    method: POST
+  计划数字字典-项目内容表-分页数据服务_BSzRwU7:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_CODE_TYPE_ITEM_CF_PAGING_DATA_SERVICE_BSzRwU7
+    method: POST
+  预测需求计划抬头表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_HEAD_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  预测需求计划抬头表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_HEAD_TR_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  预测需求计划抬头表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_HEAD_TR_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  预测需求计划抬头表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_HEAD_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  预测需求计划抬头表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_HEAD_TR_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  预测需求计划抬头表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_HEAD_TR_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  预测需求计划抬头表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_HEAD_TR_GEI_EXPORT_SERVICE
+    method: POST
+  预测需求计划抬头表-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_HEAD_TR_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  行项目类型配置表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_ITEM_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  行项目类型配置表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_ITEM_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  行项目类型配置表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_ITEM_TYPE_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  行项目类型配置表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_ITEM_TYPE_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  行项目类型配置表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_ITEM_TYPE_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  行项目类型配置表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_ITEM_TYPE_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  行项目类型配置表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_ITEM_TYPE_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  行项目类型配置表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_ITEM_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  行项目类型配置表标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_ITEM_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  行项目类型配置表-保存主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_ITEM_TYPE_CF_MASTER_DATA_SAVE_DATA_SERVICE
+    method: POST
+  行项目类型配置表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_ITEM_TYPE_CF_PAGING_DATA_SERVICE
+    method: POST
+  行项目类型配置表-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_ITEM_TYPE_CF_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  预测需求类型配置表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  预测需求类型配置表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_TYPE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  预测需求类型配置表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_TYPE_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  预测需求类型配置表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_TYPE_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  预测需求类型配置表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_TYPE_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  预测需求类型配置表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_TYPE_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  预测需求类型配置表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_TYPE_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  预测需求类型配置表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  预测需求类型配置表标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_TYPE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  预测需求类型配置表-保存主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_TYPE_CF_MASTER_DATA_SAVE_DATA_SERVICE
+    method: POST
+  预测需求类型配置表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_TYPE_CF_PAGING_DATA_SERVICE
+    method: POST
+  预测需求类型配置表-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_TYPE_CF_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  预测需求类型配置表-分页数据服务_销售计划输出:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_DP_DEMAND_FORECAST_TYPE_CF_PAGING_DATA_SERVICE_BSzRwU2
+    method: POST
+  例外信息配置表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_FRP_SPECIAL_CASE_INFO_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  例外信息配置表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_FRP_SPECIAL_CASE_INFO_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  例外信息配置表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_FRP_SPECIAL_CASE_INFO_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  例外信息配置表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_FRP_SPECIAL_CASE_INFO_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  例外信息配置表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_FRP_SPECIAL_CASE_INFO_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  例外信息配置表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_FRP_SPECIAL_CASE_INFO_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  例外信息配置表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_FRP_SPECIAL_CASE_INFO_CF_GEI_EXPORT_SERVICE
+    method: POST
+  例外信息配置表标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_FRP_SPECIAL_CASE_INFO_CF_GEI_IMPORT_SERVICE
+    method: POST
+  例外信息配置表-禁用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_FRP_SPECIAL_CASE_INFO_CF_MASTER_DATA_DISABLE_DATA_SERVICE
+    method: POST
+  例外信息配置表-启用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_FRP_SPECIAL_CASE_INFO_CF_MASTER_DATA_ENABLE_DATA_SERVICE
+    method: POST
+  例外信息配置表-批量禁用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_FRP_SPECIAL_CASE_INFO_CF_MASTER_DATA_MULTI_DISABLE_DATA_SERVICE
+    method: POST
+  例外信息配置表-批量启用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_FRP_SPECIAL_CASE_INFO_CF_MASTER_DATA_MULTI_ENABLE_DATA_SERVICE
+    method: POST
+  例外信息配置表-保存主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_FRP_SPECIAL_CASE_INFO_CF_MASTER_DATA_SAVE_DATA_SERVICE
+    method: POST
+  例外信息配置表-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_FRP_SPECIAL_CASE_INFO_CF_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  计划JOB执行情况视图模型-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_JOB_INSTANCE_PAGING_DATA_SERVICE
+    method: POST
+  物料MRP视图-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MAT_MRP_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  物料MRP视图标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MAT_MRP_MD_GEI_IMPORT_SERVICE
+    method: POST
+  MRP区域表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_AREA_INFO_MD_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  MRP区域表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_AREA_INFO_MD_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  MRP区域表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_AREA_INFO_MD_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  MRP区域表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_AREA_INFO_MD_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  MRP区域表-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_AREA_INFO_MD_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  MRP区域表-查找单条数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_AREA_INFO_MD_FIND_ONE_DATA_SERVICE
+    method: POST
+  MRP区域表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_AREA_INFO_MD_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  MRP区域表标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_AREA_INFO_MD_GEI_IMPORT_SERVICE
+    method: POST
+  MRP区域表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_AREA_INFO_MD_PAGING_DATA_SERVICE
+    method: POST
+  MRP区域表-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_AREA_INFO_MD_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  mrp查询模型状态列表服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_AREA_STATUS_QUERY_EVENT_SERVICE
+    method: POST
+  mrp查询模型特定状态服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_AREA_STATUS_SPECIFIC_QUERY_EVENT_SERVICE
+    method: POST
+  批量类型设置-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_LOT_SIZE_TYPE_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  批量类型设置-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_LOT_SIZE_TYPE_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  批量类型设置-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_LOT_SIZE_TYPE_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  批量类型设置-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_LOT_SIZE_TYPE_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  批量类型设置-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_LOT_SIZE_TYPE_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  批量类型设置-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_LOT_SIZE_TYPE_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  批量类型设置-保存主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_LOT_SIZE_TYPE_CF_MASTER_DATA_SAVE_DATA_SERVICE
+    method: POST
+  批量类型设置-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_LOT_SIZE_TYPE_CF_PAGING_DATA_SERVICE
+    method: POST
+  批量类型设置-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_LOT_SIZE_TYPE_CF_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  计划组配置-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_PLANNING_GROUP_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  计划组配置-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_PLANNING_GROUP_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  计划组配置-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_PLANNING_GROUP_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  计划组配置-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_PLANNING_GROUP_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  计划组配置-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_PLANNING_GROUP_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  计划组配置-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_PLANNING_GROUP_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  计划组配置-保存主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_PLANNING_GROUP_CF_MASTER_DATA_SAVE_DATA_SERVICE
+    method: POST
+  计划组配置-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_PLANNING_GROUP_CF_PAGING_DATA_SERVICE
+    method: POST
+  计划组配置-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_PLANNING_GROUP_CF_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  计划策略配置-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_PLANNING_STRATEGY_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  计划策略配置-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_PLANNING_STRATEGY_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  计划策略配置-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_PLANNING_STRATEGY_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  计划策略配置-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_PLANNING_STRATEGY_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  计划策略配置-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_PLANNING_STRATEGY_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  计划策略配置-根据ID查找数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_PLANNING_STRATEGY_CF_FIND_DATA_BY_ID_SERVICE
+    method: POST
+  计划策略配置-查找单条数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_PLANNING_STRATEGY_CF_FIND_ONE_DATA_SERVICE
+    method: POST
+  计划策略配置-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_PLANNING_STRATEGY_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  计划策略配置标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_PLANNING_STRATEGY_CF_GEI_EXPORT_SERVICE
+    method: POST
+  计划策略配置-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_PLANNING_STRATEGY_CF_PAGING_DATA_SERVICE
+    method: POST
+  计划策略配置-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_PLANNING_STRATEGY_CF_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  MRP运算任务表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SCHEDULE_TASK_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  MRP运算任务表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SCHEDULE_TASK_MD_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  MRP运算任务表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SCHEDULE_TASK_MD_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  MRP运算任务表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SCHEDULE_TASK_MD_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  MRP运算任务表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SCHEDULE_TASK_MD_GEI_EXPORT_SERVICE
+    method: POST
+  MRP运算任务表-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SCHEDULE_TASK_MD_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  MRP运算任务记录明细表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SCHEDULE_TASK_RECORD_DETAIL_TR_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  MRP运算任务执行记录-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SCHEDULE_TASK_RECORD_TR_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  供需元素数据表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SUPPLY_DEMAND_ELEMENT_DATA_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  供需元素数据表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SUPPLY_DEMAND_ELEMENT_DATA_TR_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  供需元素数据表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SUPPLY_DEMAND_ELEMENT_DATA_TR_GEI_EXPORT_SERVICE
+    method: POST
+  供需元素数据表-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SUPPLY_DEMAND_ELEMENT_DATA_TR_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  MRP供需元素头配置-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SUPPLY_DEMAND_ELEMENT_HEAD_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  MRP供需元素头配置-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SUPPLY_DEMAND_ELEMENT_HEAD_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  MRP供需元素头配置-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SUPPLY_DEMAND_ELEMENT_HEAD_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  MRP供需元素头配置-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SUPPLY_DEMAND_ELEMENT_HEAD_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  MRP供需元素头配置-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SUPPLY_DEMAND_ELEMENT_HEAD_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  MRP供需元素头配置-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SUPPLY_DEMAND_ELEMENT_HEAD_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  MRP供需元素头配置标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SUPPLY_DEMAND_ELEMENT_HEAD_CF_GEI_EXPORT_SERVICE
+    method: POST
+  MRP供需元素头配置-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SUPPLY_DEMAND_ELEMENT_HEAD_CF_PAGING_DATA_SERVICE
+    method: POST
+  MRP供需元素头配置-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SUPPLY_DEMAND_ELEMENT_HEAD_CF_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  MRP供需元素头配置-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SUPPLY_DEMAND_ELEMENT_HEAD_CF_SAVE_DATA_SERVICE
+    method: POST
+  供需元素模型来源-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SUPPLY_DEMAND_ELEMENT_SOURCE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  供需元素模型来源-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SUPPLY_DEMAND_ELEMENT_SOURCE_CF_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  供需元素模型来源标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SUPPLY_DEMAND_ELEMENT_SOURCE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  供需元素模型来源标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SUPPLY_DEMAND_ELEMENT_SOURCE_CF_GEI_IMPORT_SERVICE
+    method: POST
+  PLN-MRP-供需元素来源查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_MRP_SUPPLY_DEMAND_QUERY_SERVICE
+    method: POST
+  关闭服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_CLOSE_ACTION_SERVICE
+    method: POST
+  生产订单头-获取详情数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_HEAD_FIND_DATA_SERVICE
+    method: POST
+  计划订单-基础表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_HEAD_TR_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  计划订单-基础表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_HEAD_TR_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  计划订单-基础表-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_HEAD_TR_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  计划订单-工艺路线表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_ROUTING_ITEM_TR_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  计划订单-工艺路线表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_ROUTING_ITEM_TR_PAGING_DATA_SERVICE
+    method: POST
+  计划订单单据类型-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  计划订单单据类型-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_TYPE_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  计划订单单据类型标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  计划订单单据类型-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_TYPE_CF_PAGING_DATA_SERVICE
+    method: POST
+  计划订单单据类型-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_TYPE_CF_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  计划订单单据类型-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORDER_TYPE_CF_SAVE_DATA_SERVICE
+    method: POST
+  计划组织与SO关联设置-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORG_SO_RULE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  计划组织与SO关联设置-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORG_SO_RULE_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  计划组织与SO关联设置-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORG_SO_RULE_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  计划组织与SO关联设置-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORG_SO_RULE_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  计划组织与SO关联设置-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORG_SO_RULE_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  计划组织与SO关联设置-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORG_SO_RULE_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  计划组织与SO关联设置标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORG_SO_RULE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  计划组织与SO关联设置-禁用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORG_SO_RULE_CF_MASTER_DATA_DISABLE_DATA_SERVICE
+    method: POST
+  计划组织与SO关联设置-启用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORG_SO_RULE_CF_MASTER_DATA_ENABLE_DATA_SERVICE
+    method: POST
+  计划组织与SO关联设置-批量禁用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORG_SO_RULE_CF_MASTER_DATA_MULTI_DISABLE_DATA_SERVICE
+    method: POST
+  计划组织与SO关联设置-批量启用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORG_SO_RULE_CF_MASTER_DATA_MULTI_ENABLE_DATA_SERVICE
+    method: POST
+  计划组织与SO关联设置-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORG_SO_RULE_CF_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  计划组织与SO关联设置-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_ORG_SO_RULE_CF_SAVE_DATA_SERVICE
+    method: POST
+  PLN_SERVICE_根据ID参数返回计划版本服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_QUERY_VRS_DETAIL_SERVICE
+    method: POST
+  批注-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_REMARK_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  批注标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_REMARK_TR_GEI_IMPORT_SERVICE
+    method: POST
+  销售计划供需平衡优先级设置-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BALANCE_PRIORITY_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  销售计划供需平衡优先级设置-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BALANCE_PRIORITY_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  销售计划供需平衡优先级设置-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BALANCE_PRIORITY_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  销售计划供需平衡优先级设置-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BALANCE_PRIORITY_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  销售计划供需平衡优先级设置-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BALANCE_PRIORITY_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  销售计划供需平衡优先级设置-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BALANCE_PRIORITY_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  销售计划供需平衡优先级设置标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BALANCE_PRIORITY_CF_GEI_EXPORT_SERVICE
+    method: POST
+  销售计划供需平衡优先级设置-分页数据服务_BSzRwU2:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BALANCE_PRIORITY_CF_PAGING_DATA_SERVICE_BSzRwU2
+    method: POST
+  销售计划供需平衡优先级设置-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BALANCE_PRIORITY_CF_SAVE_DATA_SERVICE
+    method: POST
+  销售备库计划-抬头表-分页数据服务_BSzRwU2:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BKW_HEADER_TR_PAGING_DATA_SERVICE_BSzRwU2
+    method: POST
+  PLN-SLS-BKW-提报进度查询:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BKW_PROGRESS_INQUIRY
+    method: POST
+  销售备库计划-明细表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BKW_TR_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  销售备库计划-明细表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BKW_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  销售备库计划-明细表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BKW_TR_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  销售备库计划-明细表-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_BKW_TR_SAVE_DATA_SERVICE
+    method: POST
+  显示层级设置-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_DISPLAY_HIERARCHY_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  显示层级设置-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_DISPLAY_HIERARCHY_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  显示层级设置-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_DISPLAY_HIERARCHY_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  显示层级设置-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_DISPLAY_HIERARCHY_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  显示层级设置-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_DISPLAY_HIERARCHY_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  显示层级设置-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_DISPLAY_HIERARCHY_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  显示层级设置标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_DISPLAY_HIERARCHY_CF_GEI_EXPORT_SERVICE
+    method: POST
+  显示层级设置-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_DISPLAY_HIERARCHY_CF_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  显示层级设置-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_DISPLAY_HIERARCHY_CF_SAVE_DATA_SERVICE
+    method: POST
+  显示层级类型编码设置-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_DISPLAY_HIERARCHY_CODE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  显示层级类型编码设置-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_DISPLAY_HIERARCHY_CODE_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  显示层级类型编码设置-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_DISPLAY_HIERARCHY_CODE_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  显示层级类型编码设置-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_DISPLAY_HIERARCHY_CODE_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  显示层级类型编码设置-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_DISPLAY_HIERARCHY_CODE_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  显示层级类型编码设置-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_DISPLAY_HIERARCHY_CODE_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  显示层级类型编码设置标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_DISPLAY_HIERARCHY_CODE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  显示层级类型编码设置-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_DISPLAY_HIERARCHY_CODE_CF_PAGING_DATA_SERVICE
+    method: POST
+  显示层级类型编码设置-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_DISPLAY_HIERARCHY_CODE_CF_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  显示层级类型编码设置-分页数据服务_BSzRwU2:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_DISPLAY_HIERARCHY_CODE_CF_PAGING_DATA_SERVICE_BSzRwU2
+    method: POST
+  显示层级类型编码设置-分页数据服务_BSzRwU3:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_DISPLAY_HIERARCHY_CODE_CF_PAGING_DATA_SERVICE_BSzRwU3
+    method: POST
+  显示层级类型编码设置-分页数据服务_BSzRwU4:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_DISPLAY_HIERARCHY_CODE_CF_PAGING_DATA_SERVICE_BSzRwU4
+    method: POST
+  显示层级类型编码设置-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_DISPLAY_HIERARCHY_CODE_CF_SAVE_DATA_SERVICE
+    method: POST
+  财务分析-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_FINANCIAL_ANALYSIS_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  财务分析-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_FINANCIAL_ANALYSIS_TR_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  财务分析-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_FINANCIAL_ANALYSIS_TR_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  财务分析-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_FINANCIAL_ANALYSIS_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  财务分析-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_FINANCIAL_ANALYSIS_TR_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  财务分析-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_FINANCIAL_ANALYSIS_TR_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  财务分析标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_FINANCIAL_ANALYSIS_TR_GEI_EXPORT_SERVICE
+    method: POST
+  财务分析-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_FINANCIAL_ANALYSIS_TR_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  财务分析-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_FINANCIAL_ANALYSIS_TR_SAVE_DATA_SERVICE
+    method: POST
+  历史销售数据分配异常监控表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_HIS_ALLOCATION_ERROR_TR_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  历史销售数据分配异常监控表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_HIS_ALLOCATION_ERROR_TR_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  历史销售数据分配异常监控表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_HIS_ALLOCATION_ERROR_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  历史销售数据分配异常监控表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_HIS_ALLOCATION_ERROR_TR_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  历史销售数据分配异常监控表-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_HIS_ALLOCATION_ERROR_TR_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  历史销售数据分配异常监控表-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_HIS_ALLOCATION_ERROR_TR_SAVE_DATA_SERVICE
+    method: POST
+  历史销售数据来源表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_HISCHG_DATA_SOURCE_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  历史销售数据来源表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_HISCHG_DATA_SOURCE_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  历史销售数据来源表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_HISCHG_DATA_SOURCE_TR_GEI_EXPORT_SERVICE
+    method: POST
+  历史销售数据来源表标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_HISCHG_DATA_SOURCE_TR_GEI_IMPORT_SERVICE
+    method: POST
+  历史销售数据来源表分页查询:
+    path: /api/trantor/service/engine/execute/ERP_PLN$pln_sls_hischg_data_source_tr_paging
+    method: POST
+  历史销售数量-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_HISCHG_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  历史销售数量-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_HISCHG_TR_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  历史销售数量-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_HISCHG_TR_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  历史销售数量-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_HISCHG_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  历史销售数量-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_HISCHG_TR_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  历史销售数量-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_HISCHG_TR_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  历史销售数量标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_HISCHG_TR_GEI_EXPORT_SERVICE
+    method: POST
+  历史销售数量-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_HISCHG_TR_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  历史销售数量-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_HISCHG_TR_SAVE_DATA_SERVICE
+    method: POST
+  库存优化分析-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_INV_OPTIMIZATION_ANALYZING_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  库存优化分析-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_INV_OPTIMIZATION_ANALYZING_TR_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  库存优化分析-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_INV_OPTIMIZATION_ANALYZING_TR_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  库存优化分析-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_INV_OPTIMIZATION_ANALYZING_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  库存优化分析-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_INV_OPTIMIZATION_ANALYZING_TR_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  库存优化分析-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_INV_OPTIMIZATION_ANALYZING_TR_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  库存优化分析标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_INV_OPTIMIZATION_ANALYZING_TR_GEI_EXPORT_SERVICE
+    method: POST
+  库存优化分析-分页数据服务_BSzRwU2:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_INV_OPTIMIZATION_ANALYZING_TR_PAGING_DATA_SERVICE_BSzRwU2
+    method: POST
+  库存优化分析-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_INV_OPTIMIZATION_ANALYZING_TR_SAVE_DATA_SERVICE
+    method: POST
+  库存优先规则维护-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_INV_REDUCE_COST_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  库存优先规则维护-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_INV_REDUCE_COST_MD_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  库存优先规则维护-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_INV_REDUCE_COST_MD_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  库存优先规则维护-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_INV_REDUCE_COST_MD_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  库存优先规则维护-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_INV_REDUCE_COST_MD_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  库存优先规则维护-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_INV_REDUCE_COST_MD_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  库存优先规则维护标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_INV_REDUCE_COST_MD_GEI_EXPORT_SERVICE
+    method: POST
+  库存优先规则维护-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_INV_REDUCE_COST_MD_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  库存优先规则维护-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_INV_REDUCE_COST_MD_SAVE_DATA_SERVICE
+    method: POST
+  计划期间类型-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PERIOD_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  计划期间类型-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PERIOD_TYPE_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  计划期间类型-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PERIOD_TYPE_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  计划期间类型-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PERIOD_TYPE_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  计划期间类型-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PERIOD_TYPE_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  计划期间类型-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PERIOD_TYPE_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  计划期间类型标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PERIOD_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  计划期间类型-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PERIOD_TYPE_CF_PAGING_DATA_SERVICE
+    method: POST
+  计划期间类型-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PERIOD_TYPE_CF_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  计划期间类型-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PERIOD_TYPE_CF_SAVE_DATA_SERVICE
+    method: POST
+  销售预测计算结果表-抬头表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_HEADER_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  销售预测计算结果表-抬头表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_HEADER_TR_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  销售预测计算结果表-抬头表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_HEADER_TR_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  销售预测计算结果表-抬头表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_HEADER_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  销售预测计算结果表-抬头表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_HEADER_TR_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  销售预测计算结果表-抬头表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_HEADER_TR_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  销售预测计算结果表-抬头表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_HEADER_TR_GEI_EXPORT_SERVICE
+    method: POST
+  销售预测计算结果表-抬头表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_HEADER_TR_PAGING_DATA_SERVICE
+    method: POST
+  销售预测计算结果表-抬头表-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_HEADER_TR_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  销售预测计算结果表-抬头表-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_HEADER_TR_SAVE_DATA_SERVICE
+    method: POST
+  预测模型定义-抬头表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_MODEL_HEADER_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  预测模型定义-抬头表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_MODEL_HEADER_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  预测模型定义-抬头表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_MODEL_HEADER_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  预测模型定义-抬头表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_MODEL_HEADER_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  预测模型定义-抬头表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_MODEL_HEADER_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  预测模型定义-抬头表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_MODEL_HEADER_CF_PAGING_DATA_SERVICE
+    method: POST
+  预测模型定义-抬头表-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_MODEL_HEADER_CF_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  预测模型定义-抬头表-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_MODEL_HEADER_CF_SAVE_DATA_SERVICE
+    method: POST
+  预测模式分类-类别配置表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_TYPE_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  预测模式分类-类别配置表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_TYPE_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  预测模式分类-类别配置表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_TYPE_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  预测模式分类-类别配置表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_TYPE_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  预测模式分类-类别配置表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_TYPE_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  预测模式分类-类别配置表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_TYPE_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  预测模式分类-类别配置表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_TYPE_CF_GEI_EXPORT_SERVICE
+    method: POST
+  预测模式分类-类别配置表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_TYPE_CF_PAGING_DATA_SERVICE
+    method: POST
+  预测模式分类-类别配置表-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_TYPE_CF_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  预测模式分类-类别配置表-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_TYPE_CF_SAVE_DATA_SERVICE
+    method: POST
+  预测模式分类维护表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_TYPE_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  预测模式分类维护表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_TYPE_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  预测模式分类维护表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_TYPE_MD_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  预测模式分类维护表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_TYPE_MD_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  预测模式分类维护表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_TYPE_MD_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  预测模式分类维护表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_TYPE_MD_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  预测模式分类维护表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_TYPE_MD_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  预测模式分类维护表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_TYPE_MD_GEI_EXPORT_SERVICE
+    method: POST
+  预测模式分类维护表标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_TYPE_MD_GEI_IMPORT_SERVICE
+    method: POST
+  预测模式分类维护表-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_TYPE_MD_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  预测模式分类维护表-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_PREDICT_TYPE_MD_SAVE_DATA_SERVICE
+    method: POST
+  销售计划数据表-销售提报抬头数据-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_RAW_HEADER_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  销售计划数据表-销售提报抬头数据-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_RAW_HEADER_TR_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  销售计划数据表-销售提报抬头数据-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_RAW_HEADER_TR_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  销售计划数据表-销售提报抬头数据-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_RAW_HEADER_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  销售计划数据表-销售提报抬头数据-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_RAW_HEADER_TR_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  销售计划数据表-销售提报抬头数据标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_RAW_HEADER_TR_GEI_EXPORT_SERVICE
+    method: POST
+  销售计划数据表-销售提报抬头数据-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_RAW_HEADER_TR_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  销售计划数据表-销售提报抬头数据-分页数据服务_BSzRwU2:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_RAW_HEADER_TR_PAGING_DATA_SERVICE_BSzRwU2
+    method: POST
+  销售计划数据表-销售提报抬头数据-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_RAW_HEADER_TR_SAVE_DATA_SERVICE
+    method: POST
+  销售计划方案维护表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SCENARIO_HEADER_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  销售计划方案维护表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SCENARIO_HEADER_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  销售计划方案维护表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SCENARIO_HEADER_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  销售计划方案维护表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SCENARIO_HEADER_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  销售计划方案维护表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SCENARIO_HEADER_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  销售计划方案维护表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SCENARIO_HEADER_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  销售计划方案维护表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SCENARIO_HEADER_CF_GEI_EXPORT_SERVICE
+    method: POST
+  销售计划方案维护表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SCENARIO_HEADER_CF_PAGING_DATA_SERVICE
+    method: POST
+  销售计划方案维护表-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SCENARIO_HEADER_CF_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  销售计划方案维护表-分页数据服务_BSzRwU2:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SCENARIO_HEADER_CF_PAGING_DATA_SERVICE_BSzRwU2
+    method: POST
+  销售计划方案维护-输出控制表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SCENARIO_OUTPUT_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  销售计划方案维护-输出控制表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SCENARIO_OUTPUT_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  销售计划方案维护-输出控制表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SCENARIO_OUTPUT_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  销售计划方案维护-输出控制表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SCENARIO_OUTPUT_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  销售计划方案维护-输出控制表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SCENARIO_OUTPUT_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  销售计划方案维护-输出控制表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SCENARIO_OUTPUT_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  销售计划方案维护-输出控制表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SCENARIO_OUTPUT_CF_GEI_EXPORT_SERVICE
+    method: POST
+  销售计划方案维护-输出控制表-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SCENARIO_OUTPUT_CF_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  销售计划方案维护-输出控制表-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SCENARIO_OUTPUT_CF_SAVE_DATA_SERVICE
+    method: POST
+  呆滞品分析-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SLOWMAT_ANALYZING_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  呆滞品分析-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SLOWMAT_ANALYZING_TR_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  呆滞品分析-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SLOWMAT_ANALYZING_TR_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  呆滞品分析-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SLOWMAT_ANALYZING_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  呆滞品分析-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SLOWMAT_ANALYZING_TR_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  呆滞品分析-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SLOWMAT_ANALYZING_TR_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  呆滞品分析标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SLOWMAT_ANALYZING_TR_GEI_EXPORT_SERVICE
+    method: POST
+  呆滞品分析-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SLOWMAT_ANALYZING_TR_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  呆滞品分析-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SLOWMAT_ANALYZING_TR_SAVE_DATA_SERVICE
+    method: POST
+  呆滞品计算方案维护-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SLOWMAT_PROGRAM_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  呆滞品计算方案维护-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SLOWMAT_PROGRAM_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  呆滞品计算方案维护-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SLOWMAT_PROGRAM_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  呆滞品计算方案维护-禁用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SLOWMAT_PROGRAM_CF_MASTER_DATA_DISABLE_DATA_SERVICE
+    method: POST
+  呆滞品计算方案维护-启用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SLOWMAT_PROGRAM_CF_MASTER_DATA_ENABLE_DATA_SERVICE
+    method: POST
+  呆滞品计算方案维护-批量禁用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SLOWMAT_PROGRAM_CF_MASTER_DATA_MULTI_DISABLE_DATA_SERVICE
+    method: POST
+  呆滞品计算方案维护-批量启用主数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SLOWMAT_PROGRAM_CF_MASTER_DATA_MULTI_ENABLE_DATA_SERVICE
+    method: POST
+  呆滞品计算方案维护-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SLOWMAT_PROGRAM_CF_PAGING_DATA_SERVICE
+    method: POST
+  呆滞品计算方案维护-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SLOWMAT_PROGRAM_CF_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  呆滞品计算方案维护-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SLOWMAT_PROGRAM_CF_SAVE_DATA_SERVICE
+    method: POST
+  库存调拨参数设置表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_STOCK_TRANSFER_PARA_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  库存调拨参数设置表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_STOCK_TRANSFER_PARA_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  库存调拨参数设置表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_STOCK_TRANSFER_PARA_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  库存调拨参数设置表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_STOCK_TRANSFER_PARA_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  库存调拨参数设置表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_STOCK_TRANSFER_PARA_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  库存调拨参数设置表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_STOCK_TRANSFER_PARA_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  库存调拨参数设置表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_STOCK_TRANSFER_PARA_CF_GEI_EXPORT_SERVICE
+    method: POST
+  库存调拨参数设置表-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_STOCK_TRANSFER_PARA_CF_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  库存调拨参数设置表-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_STOCK_TRANSFER_PARA_CF_SAVE_DATA_SERVICE
+    method: POST
+  销售计划数据表-汇总发布抬头表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUM_HEADER_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  销售计划数据表-汇总发布抬头表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUM_HEADER_TR_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  销售计划数据表-汇总发布抬头表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUM_HEADER_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  销售计划数据表-汇总发布抬头表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUM_HEADER_TR_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  销售计划数据表-汇总发布抬头表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUM_HEADER_TR_GEI_EXPORT_SERVICE
+    method: POST
+  销售计划数据表-汇总发布抬头表-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUM_HEADER_TR_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  销售计划数据表-汇总发布抬头表-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUM_HEADER_TR_SAVE_DATA_SERVICE
+    method: POST
+  PLN-SLS-SUM-提报进度查询:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUM_PROGRESS_INQUIRY
+    method: POST
+  外购供应能力维护-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLIER_CAPACITY_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  外购供应能力维护-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLIER_CAPACITY_MD_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  外购供应能力维护-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLIER_CAPACITY_MD_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  外购供应能力维护-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLIER_CAPACITY_MD_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  外购供应能力维护-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLIER_CAPACITY_MD_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  外购供应能力维护-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLIER_CAPACITY_MD_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  外购供应能力维护标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLIER_CAPACITY_MD_GEI_EXPORT_SERVICE
+    method: POST
+  外购供应能力维护-分页数据服务_BSzRwU3:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLIER_CAPACITY_MD_PAGING_DATA_SERVICE_BSzRwU3
+    method: POST
+  外购供应能力维护-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLIER_CAPACITY_MD_SAVE_DATA_SERVICE
+    method: POST
+  供应能力分析-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLY_ABILITY_ANALYZING_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  供应能力分析-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLY_ABILITY_ANALYZING_TR_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  供应能力分析-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLY_ABILITY_ANALYZING_TR_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  供应能力分析-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLY_ABILITY_ANALYZING_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  供应能力分析-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLY_ABILITY_ANALYZING_TR_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  供应能力分析-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLY_ABILITY_ANALYZING_TR_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  供应能力分析标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLY_ABILITY_ANALYZING_TR_GEI_EXPORT_SERVICE
+    method: POST
+  供应能力分析-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLY_ABILITY_ANALYZING_TR_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  供应能力分析-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLY_ABILITY_ANALYZING_TR_SAVE_DATA_SERVICE
+    method: POST
+  销售计划供应方式配置-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLY_METHOD_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  销售计划供应方式配置-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLY_METHOD_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  销售计划供应方式配置-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLY_METHOD_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  销售计划供应方式配置-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLY_METHOD_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  销售计划供应方式配置-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLY_METHOD_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  销售计划供应方式配置-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLY_METHOD_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  销售计划供应方式配置标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLY_METHOD_CF_GEI_EXPORT_SERVICE
+    method: POST
+  销售计划供应方式配置-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLY_METHOD_CF_PAGING_DATA_SERVICE
+    method: POST
+  销售计划供应方式配置-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLY_METHOD_CF_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  销售计划供应方式配置-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLY_METHOD_CF_SAVE_DATA_SERVICE
+    method: POST
+  PLN-SLS-销售计划供应方式分页查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_SUPPLY_METHOD_PAGING_SERVICE
+    method: POST
+  销售目标分析-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_TGT_ANALYZING_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  销售目标分析-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_TGT_ANALYZING_TR_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  销售目标分析-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_TGT_ANALYZING_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  销售目标分析-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_TGT_ANALYZING_TR_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  销售目标分析标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_TGT_ANALYZING_TR_GEI_EXPORT_SERVICE
+    method: POST
+  销售目标分析-分页数据服务_BSzRwU2:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_TGT_ANALYZING_TR_PAGING_DATA_SERVICE_BSzRwU2
+    method: POST
+  销售目标分析-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_TGT_ANALYZING_TR_SAVE_DATA_SERVICE
+    method: POST
+  销售目标维护数据表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_TGT_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  销售目标维护数据表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_TGT_TR_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  销售目标维护数据表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_TGT_TR_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  销售目标维护数据表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_TGT_TR_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  销售目标维护数据表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_TGT_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  销售目标维护数据表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_TGT_TR_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  销售目标维护数据表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_TGT_TR_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  销售目标维护数据表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_TGT_TR_GEI_EXPORT_SERVICE
+    method: POST
+  销售目标维护数据表标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_TGT_TR_GEI_IMPORT_SERVICE
+    method: POST
+  销售目标维护数据表-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_TGT_TR_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  销售目标维护数据表-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_TGT_TR_SAVE_DATA_SERVICE
+    method: POST
+  销售计划方案-版本瀑布分析服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_FALL_EVENT_SERVICE
+    method: POST
+  销售计划版本维护-输出控制表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_OUTPUT_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  销售计划版本维护-输出控制表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_OUTPUT_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  销售计划版本维护-输出控制表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_OUTPUT_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  销售计划版本维护-输出控制表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_OUTPUT_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  销售计划版本维护-输出控制表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_OUTPUT_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  销售计划版本维护-输出控制表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_OUTPUT_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  销售计划版本维护-输出控制表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_OUTPUT_CF_GEI_EXPORT_SERVICE
+    method: POST
+  销售计划版本维护-输出控制表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_OUTPUT_CF_PAGING_DATA_SERVICE
+    method: POST
+  销售计划版本维护-输出控制表-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_OUTPUT_CF_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  销售计划版本维护-输出控制表-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_OUTPUT_CF_SAVE_DATA_SERVICE
+    method: POST
+  销售计划输出单据-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_OUTPUT_TR_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  销售计划输出单据-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_OUTPUT_TR_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  销售计划输出单据-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_OUTPUT_TR_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  销售计划输出单据-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_OUTPUT_TR_SAVE_DATA_SERVICE
+    method: POST
+  销售计划版本表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_TR_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  销售计划版本表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_TR_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  销售计划版本表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_TR_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  销售计划版本表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_TR_GEI_EXPORT_SERVICE
+    method: POST
+  销售计划版本表-分页数据服务_with方案:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_TR_PAGING_DATA_FR_SERVICE
+    method: POST
+  销售计划版本表-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_TR_PAGING_DATA_SERVICE
+    method: POST
+  销售计划版本表-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_VRS_TR_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  计划预警设置分页查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_WARN_PAGING_SERVICE
+    method: POST
+  销售计划提报分析预警提醒设置-抬头表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_WARNING_MESSAGE_HEADER_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  销售计划提报分析预警提醒设置-抬头表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_WARNING_MESSAGE_HEADER_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  销售计划提报分析预警提醒设置-抬头表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_WARNING_MESSAGE_HEADER_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  销售计划提报分析预警提醒设置-抬头表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_WARNING_MESSAGE_HEADER_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  销售计划提报分析预警提醒设置-抬头表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_WARNING_MESSAGE_HEADER_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  销售计划提报分析预警提醒设置-抬头表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_WARNING_MESSAGE_HEADER_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  销售计划提报分析预警提醒设置-抬头表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_WARNING_MESSAGE_HEADER_CF_GEI_EXPORT_SERVICE
+    method: POST
+  销售计划提报分析预警提醒设置-抬头表-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SLS_WARNING_MESSAGE_HEADER_CF_SAVE_DATA_SERVICE
+    method: POST
+  区域约束表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_REGCONS_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  区域约束表-导入导出任务管理接口-通过OSS提交导入任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_REGCONS_MD_API_GEI_TASK_IMPORT_DIRECT_BY_OSS_POST
+    method: POST
+  区域约束表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_REGCONS_MD_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  区域约束表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_REGCONS_MD_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  区域约束表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_REGCONS_MD_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  区域约束表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_REGCONS_MD_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  区域约束表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_REGCONS_MD_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  区域约束表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_REGCONS_MD_GEI_EXPORT_SERVICE
+    method: POST
+  区域约束表标准导入服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_REGCONS_MD_GEI_IMPORT_SERVICE
+    method: POST
+  区域约束表-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_REGCONS_MD_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  区域约束表-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_REGCONS_MD_SAVE_DATA_SERVICE
+    method: POST
+  区域约束表优先级设置-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_REGCONS_PRIORITY_CF_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  区域约束表优先级设置-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_REGCONS_PRIORITY_CF_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  区域约束表优先级设置-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_REGCONS_PRIORITY_CF_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  区域约束表优先级设置-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_REGCONS_PRIORITY_CF_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  区域约束表优先级设置-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_REGCONS_PRIORITY_CF_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  区域约束表优先级设置-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_REGCONS_PRIORITY_CF_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  区域约束表优先级设置标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_REGCONS_PRIORITY_CF_GEI_EXPORT_SERVICE
+    method: POST
+  区域约束表优先级设置-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_REGCONS_PRIORITY_CF_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  区域约束表优先级设置-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_REGCONS_PRIORITY_CF_SAVE_DATA_SERVICE
+    method: POST
+  运输时效成本维护-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_TIME_COST_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  运输时效成本维护-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_TIME_COST_MD_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  运输时效成本维护-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_TIME_COST_MD_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  运输时效成本维护-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_TIME_COST_MD_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  运输时效成本维护-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_TIME_COST_MD_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  运输时效成本维护-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_TIME_COST_MD_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  运输时效成本维护标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_TIME_COST_MD_GEI_EXPORT_SERVICE
+    method: POST
+  运输时效成本维护-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_TIME_COST_MD_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  运输时效成本维护-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_TIME_COST_MD_SAVE_DATA_SERVICE
+    method: POST
+  运输基础费用表-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_TRANSPORTATION_COST_MD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  运输基础费用表-批量删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_TRANSPORTATION_COST_MD_BATCH_DELETE_DATA_SERVICE
+    method: POST
+  运输基础费用表-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_TRANSPORTATION_COST_MD_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  运输基础费用表-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_TRANSPORTATION_COST_MD_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  运输基础费用表-根据ID删除数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_TRANSPORTATION_COST_MD_DELETE_DATA_BY_ID_SERVICE
+    method: POST
+  运输基础费用表-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_TRANSPORTATION_COST_MD_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  运输基础费用表标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_TRANSPORTATION_COST_MD_GEI_EXPORT_SERVICE
+    method: POST
+  运输基础费用表-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_TRANSPORTATION_COST_MD_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  运输基础费用表-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_SOA_TRANSPORTATION_COST_MD_SAVE_DATA_SERVICE
+    method: POST
+  计划版本详情:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_VRS_DETAIL_SERVICE
+    method: POST
+  计划-工作台业务进度查询服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$pln_workbench_business_progress_query_service
+    method: POST
+  车间计划生产订单头-导入导出任务管理接口-提交导出任务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_WSP_WO_HEAD_API_GEI_TASK_EXPORT_DIRECT_POST
+    method: POST
+  车间计划生产订单头标准导出服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$PLN_WSP_WO_HEAD_GEI_EXPORT_SERVICE
+    method: POST
+  查询-按销售计划版本号查询计划汇总抬头表数据:
+    path: /api/trantor/service/engine/execute/ERP_PLN$plnsumreport
+    method: POST
+  预测需求行项目类型查询by-id:
+    path: /api/trantor/service/engine/execute/ERP_PLN$predict_demand_line_item_type_search_by_id
+    method: POST
+  预测需求类型查询by-id:
+    path: /api/trantor/service/engine/execute/ERP_PLN$predict_demand_type_query_by_id
+    method: POST
+  查询计划日历:
+    path: /api/trantor/service/engine/execute/ERP_PLN$QUERY_PLN_WC
+    method: POST
+  查询大区服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$query_region_service
+    method: POST
+  智能排产-查询今日订单服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$QUERY_TODAY_ORDER_SERVICE
+    method: POST
+  重新排产服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$RESCHEDULE_SERVICE_AI
+    method: POST
+  重新排产服务（页面）:
+    path: /api/trantor/service/engine/execute/ERP_PLN$RESCHEDULE_SERVICE_UI
+    method: POST
+  销售计划数据表-销售提报抬头数据-分页:
+    path: /api/trantor/service/engine/execute/ERP_PLN$sales_plan_data_sales_submission_header_data_page
+    method: POST
+  销售计划输出单据分页-带额外参数返回_非分页:
+    path: /api/trantor/service/engine/execute/ERP_PLN$sales_plan_output_nopa_with_extra_params
+    method: POST
+  销售计划输出单据分页-带额外参数返回:
+    path: /api/trantor/service/engine/execute/ERP_PLN$sales_plan_output_paging_with_extra_params
+    method: POST
+  销售提报进度页面分页:
+    path: /api/trantor/service/engine/execute/ERP_PLN$sales_submission_progress_paging
+    method: POST
+  保存排产数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SAVE_SCHEDULING_RESULTS_SERVICE
+    method: POST
+  待排产订单数据统计服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SCHE_ORDER_STAT_SERVICE
+    method: POST
+  排产优化:
+    path: /api/trantor/service/engine/execute/ERP_PLN$SCHEDULING_OPTIMIZATION
+    method: POST
+  计划策略-消耗控制行数查询:
+    path: /api/trantor/service/engine/execute/ERP_PLN$strategy_consume_line_query
+    method: POST
+  转单结果-复制数据转换服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$TRANSFER_RESULT_VIEW_COPY_DATA_CONVERTER_SERVICE
+    method: POST
+  转单结果-复制数据转换子服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$TRANSFER_RESULT_VIEW_COPY_DATA_CONVERTER_SERVICE_CHILD
+    method: POST
+  转单结果-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$TRANSFER_RESULT_VIEW_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  转单结果-分页数据服务_BSzRwU1:
+    path: /api/trantor/service/engine/execute/ERP_PLN$TRANSFER_RESULT_VIEW_PAGING_DATA_SERVICE_BSzRwU1
+    method: POST
+  转单结果-保存数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$TRANSFER_RESULT_VIEW_SAVE_DATA_SERVICE
+    method: POST
+  用户-根据ID查找单表数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$USER_FIND_SINGLE_DATA_BY_ID_SERVICE
+    method: POST
+  用户-分页数据服务:
+    path: /api/trantor/service/engine/execute/ERP_PLN$USER_PAGING_DATA_SERVICE
+    method: POST

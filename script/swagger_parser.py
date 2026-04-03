@@ -37,8 +37,15 @@ from loguru import logger
 class SwaggerParser:
     """Swagger文档解析工具类"""
 
-    def __init__(self, base_url: str, cookies: Optional[Dict[str, str]] = None,
-                 session: Optional[requests.Session] = None):
+    def __init__(
+        self,
+        base_url: str,
+        cookies: Optional[Dict[str, str]] = None,
+        session: Optional[requests.Session] = None,
+        *,
+        verbose: bool = False,
+        quiet: bool = False,
+    ):
         """
         初始化Swagger解析器
 
@@ -50,7 +57,14 @@ class SwaggerParser:
         self.base_url = base_url.rstrip('/')
         self.cookies = cookies or {}
         self._session = session
+        self.verbose = verbose
+        self.quiet = quiet
         self.swagger_data = None
+
+    def _detail_log(self, message: str) -> None:
+        """逐接口明细日志：默认开启，--quiet 时关闭。"""
+        if not self.quiet:
+            logger.info(message)
 
     def _get(self, url: str, **kwargs) -> requests.Response:
         """统一 GET，优先用已登录 session，否则传 cookies"""
@@ -172,7 +186,8 @@ class SwaggerParser:
             else:
                 raise ValueError("team和module必须同时提供或同时为None")
 
-            logger.debug(f"Swagger文档内容: {self.swagger_data}")
+            if self.verbose:
+                logger.debug(f"Swagger文档内容: {self.swagger_data}")
 
             paths = self.swagger_data.get('paths', {})
             for path, path_item in paths.items():
@@ -346,9 +361,9 @@ class SwaggerParser:
                 if "$SYS_" in path and not include_sys_services:
                     continue
                 for method, info in methods.items():
-                    logger.info(f"\n{'='*50}")
-                    logger.info(f"开始解析接口: {path} {method}")
-                    logger.info(f"接口信息: {info}")
+                    self._detail_log(f"\n{'='*50}")
+                    self._detail_log(f"开始解析接口: {path} {method}")
+                    self._detail_log(f"接口信息: {info}")
 
                     service_name = info.get('summary', '').strip()
                     if not service_name:
@@ -372,11 +387,11 @@ class SwaggerParser:
                     request_params: Any = {}
                     if 'requestBody' in info and info['requestBody']:
                         schema = info['requestBody'].get('schema', {})
-                        logger.info(f"请求体schema: {schema}")
+                        self._detail_log(f"请求体schema: {schema}")
                         if schema:
                             parsed_params = self._get_schema_value(schema)
                             request_params = parsed_params if isinstance(parsed_params, dict) else {}
-                            logger.info(f"解析后的请求参数: {request_params}")
+                            self._detail_log(f"解析后的请求参数: {request_params}")
 
                     for param in info.get('parameters', []):
                         if param.get('in') == 'query':
@@ -387,7 +402,7 @@ class SwaggerParser:
 
                     if isinstance(request_params, dict) and 'teamId' in request_params:
                         del request_params['teamId']
-                        logger.info("已过滤掉 teamId 字段")
+                        self._detail_log("已过滤掉 teamId 字段")
 
                     api_entry_data = request_params or {}
 
@@ -395,11 +410,11 @@ class SwaggerParser:
                         path_clean = path.rstrip('/')
                         service_key_value = path_clean.split('/')[-1]
                         api_entry_data['serviceKey'] = service_key_value
-                        logger.info(f"自动设置 serviceKey: {service_key_value} 对于路径 {path}")
+                        self._detail_log(f"自动设置 serviceKey: {service_key_value} 对于路径 {path}")
 
                     params_dict_for_yaml[path] = api_entry_data
-                    logger.info(f"最终生成的参数结构: {api_entry_data}")
-                    logger.info(f"{'='*50}\n")
+                    self._detail_log(f"最终生成的参数结构: {api_entry_data}")
+                    self._detail_log(f"{'='*50}\n")
 
             # 文件名前缀：gen_md → md，scm_pur → pur
             if module:
@@ -471,7 +486,7 @@ class SwaggerParser:
 
         if '$ref' in schema:
             ref_path = schema['$ref']
-            logger.info(f"发现$ref引用: {ref_path}")
+            logger.debug(f"发现$ref引用: {ref_path}")
             if ref_path.startswith('#/components/schemas/'):
                 ref_name = ref_path.split('/')[-1]
 
@@ -485,8 +500,8 @@ class SwaggerParser:
                     self.swagger_data.get('components', {}).get('schemas', {}).get(ref_name, {})
                     if self.swagger_data else {}
                 )
-                logger.info(f"解析$ref: {ref_path} => {ref_name}")
-                logger.info(f"引用schema内容: {ref_schema}")
+                logger.debug(f"解析$ref: {ref_path} => {ref_name}")
+                logger.debug(f"引用schema内容: {ref_schema}")
 
                 try:
                     result = self._get_schema_value(ref_schema, visited_refs)
@@ -499,12 +514,12 @@ class SwaggerParser:
 
         if 'properties' in schema:
             properties = schema['properties']
-            logger.info(f"发现对象类型，properties: {properties}")
+            logger.debug(f"发现对象类型，properties: {properties}")
             if not properties:
                 return {}
             result = {}
             for prop_name, prop_schema in properties.items():
-                logger.info(f"处理属性: {prop_name}, schema: {prop_schema}")
+                logger.debug(f"处理属性: {prop_name}, schema: {prop_schema}")
                 if prop_name == 'pageNo':
                     result[prop_name] = 1
                 elif prop_name == 'pageSize':
@@ -515,11 +530,11 @@ class SwaggerParser:
 
         if schema.get('type') == 'array':
             items = schema.get('items', {})
-            logger.info(f"处理数组类型，items: {items}")
+            logger.debug(f"处理数组类型，items: {items}")
             return [self._get_schema_value(items, visited_refs)] if items else [{}]
 
         schema_type = schema.get('type')
-        logger.info(f"处理类型: {schema_type}")
+        logger.debug(f"处理类型: {schema_type}")
 
         if schema_type == 'string':
             return None
@@ -627,6 +642,7 @@ class SwaggerParser:
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 LOGIN_ENDPOINT = "/iam/api/v1/user/login/account"
+SWAGGER_MODULES_CONFIG = PROJECT_ROOT / "config" / "api" / "swagger_modules.yaml"
 
 
 def _load_env_config(env: str, project: Optional[str]) -> Dict[str, Any]:
@@ -706,8 +722,17 @@ def _auto_login(env_config: Dict[str, Any],
         )
 
     iam_url = portal_cfg.get("iam_url", "").rstrip("/")
+    cookie = portal_cfg.get("cookie", "")
     username = portal_cfg.get("username", "")
     password = portal_cfg.get("password", "")
+
+    # 优先使用已配置 cookie（支持 config/env/*.yaml 的 ${TEST_XXX_COOKIE}）
+    # 与测试框架 LoginService 行为保持一致：有可用 cookie 时跳过账号登录。
+    if isinstance(cookie, str) and cookie and not (cookie.startswith("${") and cookie.endswith("}")):
+        session = requests.Session()
+        session.headers.update({"Cookie": cookie})
+        logger.info("检测到 portal cookie，已使用 cookie 模式初始化 Session（跳过账号登录）")
+        return session
 
     if not all([iam_url, username, password]):
         raise ValueError(
@@ -740,13 +765,17 @@ def _auto_login(env_config: Dict[str, Any],
 def _resolve_base_url(env_config: Dict[str, Any],
                       portal_key: str,
                       tenant_key: str = "terp") -> str:
-    """从 portal 配置推导 Swagger base URL"""
+    """从 portal 配置推导 Swagger base URL（优先 swagger_url）。"""
     portal_cfg = (
         env_config.get("portal_config", {})
                   .get(tenant_key, {})
                   .get(portal_key, {})
     )
-    return (portal_cfg.get("url") or portal_cfg.get("portal_url", "")).rstrip("/")
+    return (
+        portal_cfg.get("swagger_url")
+        or portal_cfg.get("url")
+        or portal_cfg.get("portal_url", "")
+    ).rstrip("/")
 
 
 def _module_prefix(module: str) -> str:
@@ -754,11 +783,86 @@ def _module_prefix(module: str) -> str:
     return module.split("_")[-1].lower() if "_" in module else module.lower()
 
 
+def _load_swagger_modules_config() -> Dict[str, Any]:
+    """加载 Swagger 模块配置（可选）。"""
+    if not SWAGGER_MODULES_CONFIG.exists():
+        return {}
+    try:
+        with open(SWAGGER_MODULES_CONFIG, encoding="utf-8") as f:
+            data = yaml.safe_load(f) or {}
+        if not isinstance(data, dict):
+            logger.warning(f"模块配置格式异常（应为字典）: {SWAGGER_MODULES_CONFIG}")
+            return {}
+        return data
+    except Exception as exc:
+        logger.warning(f"加载模块配置失败，已回退默认行为: {exc}")
+        return {}
+
+
+def _resolve_module_name(input_module: str, module_cfg: Dict[str, Any]) -> tuple[str, Dict[str, Any]]:
+    """按配置解析模块名（支持大小写和 aliases）。"""
+    normalized = (input_module or "").strip()
+    modules = module_cfg.get("modules", {}) if isinstance(module_cfg, dict) else {}
+    if not isinstance(modules, dict) or not modules:
+        return normalized, {}
+
+    if normalized in modules:
+        return normalized, modules.get(normalized) or {}
+
+    for module_name in modules.keys():
+        if str(module_name).lower() == normalized.lower():
+            return module_name, modules.get(module_name) or {}
+
+    for module_name, meta in modules.items():
+        aliases = (meta or {}).get("aliases", [])
+        for alias in aliases:
+            if str(alias).lower() == normalized.lower():
+                return module_name, meta or {}
+
+    return normalized, {}
+
+
+def _resolve_output_dir(
+    cli_output_dir: Optional[str], module_name: str, module_meta: Dict[str, Any]
+) -> Path:
+    """解析输出目录：命令行 > 配置文件 > 默认规则。"""
+    if cli_output_dir:
+        return Path(cli_output_dir)
+
+    configured_output = (module_meta or {}).get("output_dir")
+    if configured_output:
+        configured_path = Path(str(configured_output))
+        if configured_path.is_absolute():
+            return configured_path
+        return PROJECT_ROOT / configured_path
+
+    return PROJECT_ROOT / "config" / "api" / module_name.lower()
+
+
+def _print_available_modules(module_cfg: Dict[str, Any]) -> None:
+    """打印配置文件中维护的可用模块列表。"""
+    modules = module_cfg.get("modules", {}) if isinstance(module_cfg, dict) else {}
+    if not isinstance(modules, dict) or not modules:
+        logger.info(f"未配置模块清单，请维护文件: {SWAGGER_MODULES_CONFIG}")
+        return
+
+    logger.info("可用模块清单：")
+    for module_name, meta in modules.items():
+        aliases = (meta or {}).get("aliases", [])
+        output_dir = (meta or {}).get("output_dir", f"config/api/{module_name.lower()}")
+        alias_text = f" aliases={aliases}" if aliases else ""
+        logger.info(f"  - {module_name} -> {output_dir}{alias_text}")
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # CLI 入口
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _build_arg_parser() -> argparse.ArgumentParser:
+    module_cfg = _load_swagger_modules_config()
+    configured_modules = module_cfg.get("modules", {}) if isinstance(module_cfg, dict) else {}
+    module_hint = ", ".join(list(configured_modules.keys())[:10]) if configured_modules else "gen_md / scm_pur / erp_fin"
+
     p = argparse.ArgumentParser(
         prog="swagger_parser",
         description="从 Swagger 文档自动生成 {module}_api_path.yaml 和 {module}_api_params.yaml",
@@ -767,6 +871,7 @@ def _build_arg_parser() -> argparse.ArgumentParser:
 示例:
   # 最简用法（从 config/env/test.yaml 自动登录）
   python script/swagger_parser.py --module gen_md --team TERP
+  python script/swagger_parser.py --module ERP_PLN --team TERP --output-dir config/api/erp_pln
 
   # 指定环境 + 多项目模式
   python script/swagger_parser.py --module scm_pur --team TERP \\
@@ -786,13 +891,16 @@ def _build_arg_parser() -> argparse.ArgumentParser:
   # 自定义输出目录
   python script/swagger_parser.py --module gen_md --team TERP \\
       --output-dir /tmp/api_config
+
+  # 查看配置文件中维护的可用模块
+  python script/swagger_parser.py --list-modules
         """,
     )
 
     # 必填
-    p.add_argument("--module", required=True,
-                   help="模块名称，例如 gen_md / scm_pur / erp_fin")
-    p.add_argument("--team", required=True,
+    p.add_argument("--module", required=False,
+                   help=f"模块名称，例如 {module_hint}")
+    p.add_argument("--team", required=False,
                    help="Swagger 团队名称，例如 TERP")
 
     # 登录配置
@@ -818,12 +926,44 @@ def _build_arg_parser() -> argparse.ArgumentParser:
                    help="输出目录（默认: config/api/{module}/）")
     p.add_argument("--dry-run", action="store_true",
                    help="仅打印解析结果，不写入文件")
+    p.add_argument("--list-modules", action="store_true",
+                   help="显示 config/api/swagger_modules.yaml 中维护的可用模块并退出")
+    vgroup = p.add_mutually_exclusive_group()
+    vgroup.add_argument("--quiet", action="store_true",
+                        help="安静模式：仅输出关键进度与结果，不输出逐接口解析明细")
+    vgroup.add_argument("--verbose", action="store_true",
+                        help="详细模式：输出 DEBUG 日志（含 Swagger 原始文档调试信息）")
 
     return p
 
 
+def _configure_logger(*, verbose: bool = False, quiet: bool = False) -> None:
+    """统一日志级别：默认 INFO，--verbose 才开启 DEBUG。"""
+    logger.remove()
+    level = "DEBUG" if verbose else "INFO"
+    logger.add(sys.stderr, level=level)
+
+
 def main() -> None:
     args = _build_arg_parser().parse_args()
+    _configure_logger(verbose=args.verbose, quiet=args.quiet)
+    module_cfg = _load_swagger_modules_config()
+
+    if args.list_modules:
+        _print_available_modules(module_cfg)
+        return
+
+    if not args.module or not args.team:
+        logger.error("缺少必要参数：--module 和 --team（或使用 --list-modules 查看模块清单）")
+        sys.exit(2)
+
+    resolved_module, resolved_meta = _resolve_module_name(args.module, module_cfg)
+    if resolved_module != args.module:
+        logger.info(f"模块名已从 '{args.module}' 解析为 '{resolved_module}'")
+    elif module_cfg.get("modules") and resolved_module not in module_cfg.get("modules", {}):
+        logger.warning(
+            f"模块 '{args.module}' 未在 {SWAGGER_MODULES_CONFIG} 中声明，按原值继续执行"
+        )
 
     # ── 1. 确定 base_url 和 session ──────────────────────────────────────────
     session: Optional[requests.Session] = None
@@ -859,10 +999,16 @@ def main() -> None:
             sys.exit(1)
 
     # ── 2. 拉取并解析 Swagger 文档 ───────────────────────────────────────────
-    swagger = SwaggerParser(base_url=base_url, cookies=manual_cookies, session=session)
+    swagger = SwaggerParser(
+        base_url=base_url,
+        cookies=manual_cookies,
+        session=session,
+        verbose=args.verbose,
+        quiet=args.quiet,
+    )
 
-    logger.info(f"拉取 Swagger 文档: team={args.team}, module={args.module}")
-    swagger.fetch_swagger_doc(team=args.team, module=args.module)
+    logger.info(f"拉取 Swagger 文档: team={args.team}, module={resolved_module}")
+    swagger.fetch_swagger_doc(team=args.team, module=resolved_module)
 
     endpoints = swagger.parse_endpoints()
     logger.info(f"共解析到 {len(endpoints)} 个接口路径")
@@ -872,7 +1018,7 @@ def main() -> None:
         sys.exit(1)
 
     # ── 3. 输出 YAML 文件 ────────────────────────────────────────────────────
-    output_dir = Path(args.output_dir) if args.output_dir else PROJECT_ROOT / "config" / "api" / args.module
+    output_dir = _resolve_output_dir(args.output_dir, resolved_module, resolved_meta)
 
     if args.dry_run:
         logger.info("[dry-run] 解析结果预览（前 10 个接口）：")
@@ -881,13 +1027,13 @@ def main() -> None:
         return
 
     output_dir.mkdir(parents=True, exist_ok=True)
-    prefix = _module_prefix(args.module)
+    prefix = _module_prefix(resolved_module)
     path_yaml = str(output_dir / f"{prefix}_api_path.yaml")
 
     swagger.save_paths_to_yaml(
         endpoints,
         output_path=path_yaml,
-        module=args.module,
+        module=resolved_module,
         include_sys_services=args.include_sys,
     )
 

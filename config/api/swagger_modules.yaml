@@ -1,0 +1,86 @@
+version: 1
+description: Swagger 模块清单（用于 swagger_parser.py 展示、别名解析、默认输出目录）
+
+modules:
+  # ERP_ACC:
+  #   output_dir: config/api/erp_acc
+  #   aliases:
+  #     - erp_acc
+  #     - acc
+
+  # ERP_COND:
+  #   output_dir: config/api/erp_cond
+  #   aliases:
+  #     - erp_cond
+  #     - cond
+
+  # ERP_FI:
+  #   output_dir: config/api/erp_fi
+  #   aliases:
+  #     - erp_fi
+  #     - fi
+
+  # ERP_FIN:
+  #   output_dir: config/api/erp_fin
+  #   aliases:
+  #     - erp_fin
+  #     - fin
+
+  ERP_PLN:
+    output_dir: config/api/erp_pln
+    aliases:
+      - erp_pln
+      - pln
+
+  # GEN_MD:
+  #   output_dir: config/api/gen_md
+  #   aliases:
+  #     - gen_md
+  #     - md
+
+  # SCM_DEL:
+  #   output_dir: config/api/scm_del
+  #   aliases:
+  #     - scm_del
+  #     - del
+
+  # SCM_INV:
+  #   output_dir: config/api/scm_inv
+  #   aliases:
+  #     - scm_inv
+  #     - inv
+
+  # SCM_PRD:
+  #   output_dir: config/api/scm_prd
+  #   aliases:
+  #     - scm_prd
+  #     - prd
+
+  # SCM_PUR:
+  #   output_dir: config/api/scm_pur
+  #   aliases:
+  #     - scm_pur
+  #     - pur
+
+  # SCM_REB:
+  #   output_dir: config/api/scm_reb
+  #   aliases:
+  #     - scm_reb
+  #     - reb
+
+  # SCM_SLS:
+  #   output_dir: config/api/scm_sls
+  #   aliases:
+  #     - scm_sls
+  #     - sls
+
+  # SYS_COMMON:
+  #   output_dir: config/api/sys_common
+  #   aliases:
+  #     - sys_common
+  #     - common
+
+  # TRANTOR:
+  #   output_dir: config/api/trantor
+  #   aliases:
+  #     - trantor
