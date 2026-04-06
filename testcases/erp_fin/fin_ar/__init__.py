@@ -11,6 +11,7 @@ import allure
 
 from erp_data_factory.compat.fin_ar_factory import FinArFactory
 from testcases.comm.base_test import BaseTest
+from testcases.comm.utility_mixins import MockUtilMixin
 from utils.param_util import ParamUtil
 from utils.report_util import a
 
@@ -33,7 +34,7 @@ def convert_decimal_to_float(obj):
 
 @allure.epic("ERP通业财模块")
 @allure.feature("应收管理")
-class ArBaseTest(BaseTest):
+class ArBaseTest(MockUtilMixin, BaseTest):
     """应收单测试基类，提供通用功能"""
 
     @classmethod

@@ -1,9 +1,10 @@
-"""销售管理模块的测试初始化 — 命令式（多模块 API 合并 + context_builder）。"""
+"""销售管理模块的测试初始化 — 声明式配置 + 多 YAML API 合并。"""
 
 import time
 from pathlib import Path
 
 from testcases.comm.base_test import BaseTest
+from testcases.comm.utility_mixins import AsyncWaitMixin, MockUtilMixin
 from testcases.scm_sls.api_config_builder import merge_module_api_configs
 from testcases.scm_sls.context_builder import build_sls_context
 from utils.param_util import ParamUtil
@@ -12,90 +13,63 @@ from utils.report_util import a
 project_root = Path(__file__).resolve().parent.parent.parent
 
 
-class SlsBase(BaseTest):
-    """销售管理模块基础测试类 — 命令式注册，LOGIN_STRATEGY 消除双重登录。"""
+class SlsBase(AsyncWaitMixin, MockUtilMixin, BaseTest):
+    """销售管理模块基础测试类 — 声明式注册（兼容多模块 API 合并）。"""
 
+    MODULE_NAME = "SCM_SLS"
     LOGIN_STRATEGY = "admin_with_cust"
+    API_PATH_FILE = "config/api/scm_sls/sls_api_path.yaml"
+    API_PARAMS_FILE = "config/api/scm_sls/sls_api_params.yaml"
+    SQL_CACHES = [
+        {"path": "config/erp/md_init_sql.yaml", "key": "md_init_cache", "attr": "md_cache_data"},
+        {"path": "config/erp/sls_init_sql.yaml", "key": "sls_init_cache", "attr": "sls_cache_data"},
+    ]
     REQUIRED_CACHE_KEYS = ("curr_id", "cust_id", "mat_id")
-
     _PORTAL_TYPE_KEYS = {
         "admin": "TERP_PORTAL",
         "cust": "TERP_CUST_PC",
     }
-    
     @classmethod
-    def setup_class(cls):
-        """
-        测试类初始化 - 加载销售配置
-        1. 调用父类初始化方法 (包括登录、数据库连接等)
-        2. 多门户多用户登录，获取 session
-        3. 初始化销售配置文件路径
-        4. 加载API路径和参数配置
-        5. 初始化 http 工具，自动带上门户请求头
-        6. 加载销售缓存数据
-        """
-        super().setup_class()
-        cls.load_api_configs()
-        cls.load_cache_data()
-        cls.bind_context()
-
-    @classmethod
-    def load_api_configs(cls):
-        """加载销售模块及关联模块的 API 配置（登录已由 BaseTest._initialize_auth 完成）。"""
-        # 初始化配置文件路径
-        cls.sls_api_path = Path(project_root) / "config" / "api" / "scm_sls" / "sls_api_path.yaml"
-        cls.sls_api_params = Path(project_root) / "config" / "api" / "scm_sls" / "sls_api_params.yaml"
-        cls.reb_api_path = Path(project_root) / "config" / "api" / "scm_sls" / "reb_api_path.yaml"
-        cls.reb_api_params = Path(project_root) / "config" / "api" / "scm_sls" / "reb_api_params.yaml"
-        cls.common_api_path = Path(project_root) / "config" / "api" / "sys_common" / "common_api_path.yaml"
-        cls.common_api_params = Path(project_root) / "config" / "api" / "sys_common" / "common_api_params.yaml"
-        cls.acc_api_path = Path(project_root) / "config" / "api" / "scm_sls" / "acc_api_path.yaml"
-        cls.acc_api_params = Path(project_root) / "config" / "api" / "scm_sls" / "acc_api_params.yaml"
-        cls.price_api_path = Path(project_root) / "config" / "api" / "scm_sls" / "price_api_path.yaml"
-        cls.price_api_params = Path(project_root) / "config" / "api" / "scm_sls" / "price_api_params.yaml"
-        cls.cond_api_path = Path(project_root) / "config" / "api" / "scm_sls" / "cond_api_path.yaml"
-        cls.cond_api_params = Path(project_root) / "config" / "api" / "scm_sls" / "cond_api_params.yaml"
-        cls.del_api_path = Path(project_root) / "config" / "api" / "scm_del" / "del_api_path.yaml"
-        cls.del_api_params = Path(project_root) / "config" / "api" / "scm_del" / "del_api_params.yaml"
-        
+    def _load_module_apis(cls) -> None:
+        """声明式加载基础 API，并合并销售关联模块 API。"""
+        super()._load_module_apis()
+        extension_pairs = [
+            (
+                project_root / "config" / "api" / "scm_sls" / "reb_api_path.yaml",
+                project_root / "config" / "api" / "scm_sls" / "reb_api_params.yaml",
+            ),
+            (
+                project_root / "config" / "api" / "sys_common" / "common_api_path.yaml",
+                project_root / "config" / "api" / "sys_common" / "common_api_params.yaml",
+            ),
+            (
+                project_root / "config" / "api" / "scm_sls" / "acc_api_path.yaml",
+                project_root / "config" / "api" / "scm_sls" / "acc_api_params.yaml",
+            ),
+            (
+                project_root / "config" / "api" / "scm_sls" / "price_api_path.yaml",
+                project_root / "config" / "api" / "scm_sls" / "price_api_params.yaml",
+            ),
+            (
+                project_root / "config" / "api" / "scm_sls" / "cond_api_path.yaml",
+                project_root / "config" / "api" / "scm_sls" / "cond_api_params.yaml",
+            ),
+            (
+                project_root / "config" / "api" / "scm_del" / "del_api_path.yaml",
+                project_root / "config" / "api" / "scm_del" / "del_api_params.yaml",
+            ),
+        ]
         cls.apis, cls.api_params = merge_module_api_configs(
             load_yaml=cls.yaml_util.read_yaml,
-            base_api_path=cls.sls_api_path,
-            base_api_params=cls.sls_api_params,
-            extension_pairs=[
-                (cls.reb_api_path, cls.reb_api_params),
-                (cls.common_api_path, cls.common_api_params),
-                (cls.acc_api_path, cls.acc_api_params),
-                (cls.price_api_path, cls.price_api_params),
-                (cls.cond_api_path, cls.cond_api_params),
-                (cls.del_api_path, cls.del_api_params),
-            ],
+            base_api_path=project_root / cls.API_PATH_FILE,
+            base_api_params=project_root / cls.API_PARAMS_FILE,
+            extension_pairs=extension_pairs,
         )
 
     @classmethod
-    def load_cache_data(cls):
-        """加载销售模块运行所需缓存数据。"""
-        # sls_config → sls_cache_data 已在 test_data_context._SOURCE_REGISTRY 注册
-        # 加载缓存数据
-        cls.md_cache_data = cls.load_sql_cache(
-            sql_config_path=project_root / "config" / "erp" / "md_init_sql.yaml",
-            cache_key="md_init_cache",
-            db_config_name="erp_db",
-            cache_dir="testdata/cache",
-        )
-
-        cls.sls_cache_data = cls.load_sql_cache(
-            sql_config_path=project_root / "config" / "erp" / "sls_init_sql.yaml",
-            cache_key="sls_init_cache",
-            db_config_name="erp_db",
-            cache_dir="testdata/cache",
-        )
-
-    @classmethod
-    def bind_context(cls):
-        """绑定销售模块运行上下文和初始化默认字段。"""
-        cls.bind_cache_data()
-        cls.bind_module_user_context("SCM_SLS", strict=True)
+    def _bind_module_context(cls) -> None:
+        """在标准声明式绑定后补充销售域上下文。"""
+        super()._bind_module_context()
         context_data = build_sls_context(
             init_data=cls.init_data,
             md_cache_data=getattr(cls, "md_cache_data", None),
@@ -124,8 +98,23 @@ class SlsBase(BaseTest):
         cls.render_qty = 1
         cls.so_data_render = None
         cls.so_data_price = None
-        cls.priceIdempotent=None
+        cls.priceIdempotent = None
         cls.so_head_data = None
+
+    @classmethod
+    def load_api_configs(cls):
+        """向后兼容：旧测试类可继续手动调用。"""
+        cls._load_module_apis()
+
+    @classmethod
+    def load_cache_data(cls):
+        """向后兼容：旧测试类可继续手动调用。"""
+        cls._load_module_caches()
+
+    @classmethod
+    def bind_context(cls):
+        """向后兼容：旧测试类可继续手动调用。"""
+        cls._bind_module_context()
 
     # ==================== 销售订单相关方法 ====================
 
@@ -158,14 +147,33 @@ class SlsBase(BaseTest):
             # 4. 保存或提交
             if submit:
                 self._so_submit()
+                self._register_sales_order_cleanup(self.so_head_id_submit)
                 return self.so_head_id_submit  # 返回提交后的订单ID
             else:
                 self._so_save()
+                self._register_sales_order_cleanup(self.so_head_id_save)
                 return self.so_head_id_save  # 返回草稿订单ID
 
         except Exception as e:
             self.logger.error(f"创建订单失败: {str(e)}")
             raise
+
+    def _register_sales_order_cleanup(self, so_head_id):
+        """创建订单成功后，注册用例级动态清理动作（谁创建谁清理）。"""
+        if not so_head_id:
+            return
+
+        def _cleanup():
+            try:
+                self.db.delete(table="sls_so_item_tr", where="so_head_id = %s", params=[so_head_id])
+            except Exception as exc:
+                self.logger.warning(f"清理销售订单行失败[so_head_id={so_head_id}]: {exc}")
+            try:
+                self.db.delete(table="sls_so_head_tr", where="id = %s", params=[so_head_id])
+            except Exception as exc:
+                self.logger.warning(f"清理销售订单头失败[id={so_head_id}]: {exc}")
+
+        self.register_cleanup_action(name=f"sls_so_{so_head_id}", action=_cleanup, order=620)
     
    
     def _init_sales_order(self, order_type="STND"):

@@ -1,9 +1,10 @@
 """通用基础模块的测试初始化 — 声明式配置 + 自定义日历绑定。"""
 
 from testcases.comm.base_test import BaseTest
+from testcases.comm.utility_mixins import MockUtilMixin
 
 
-class GenMdBaseTest(BaseTest):
+class GenMdBaseTest(MockUtilMixin, BaseTest):
     """通用基础模块基础测试类 — 声明式注册，覆盖 _bind_module_context 添加日历绑定。"""
 
     MODULE_NAME = "GEN_MD"

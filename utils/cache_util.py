@@ -13,6 +13,7 @@ import os
 import sys
 import tempfile
 import time
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Union
 
@@ -21,7 +22,7 @@ from loguru import logger
 project_root = Path(__file__).parent.parent
 sys.path.append(str(project_root))
 
-from utils.response_util import DecimalEncoder
+from utils.response_util import DecimalEncoder  # noqa: E402
 
 
 class CacheUtil:
@@ -76,22 +77,33 @@ class CacheUtil:
         return cls._cache_dir / f".{key}.lock"
 
     @classmethod
+    @contextmanager
+    def _acquire_lock(cls, key: str, *, exclusive: bool):
+        """基于 key 的文件锁，覆盖读/写/删全流程并发控制。"""
+        lock_path = cls._lock_path(key)
+        fd = open(lock_path, "a+")
+        lock_type = fcntl.LOCK_EX if exclusive else fcntl.LOCK_SH
+        try:
+            fcntl.flock(fd, lock_type)
+            yield
+        finally:
+            fcntl.flock(fd, fcntl.LOCK_UN)
+            fd.close()
+
+    @classmethod
     def get(cls, key: str) -> Optional[Dict[str, Any]]:
         cache_file = cls._cache_dir / f"{key}.json"
         logger.info(f"读取缓存文件: {cache_file.absolute()}")
         try:
-            if not cache_file.exists():
-                logger.info(f"缓存文件不存在: {cache_file.absolute()}")
-                return None
-            if cls._is_expired(cache_file):
-                logger.info(f"缓存文件已过期: {cache_file.absolute()}")
-                return None
-            with open(cache_file, 'r', encoding='utf-8') as f:
-                fcntl.flock(f, fcntl.LOCK_SH)
-                try:
+            with cls._acquire_lock(key, exclusive=False):
+                if not cache_file.exists():
+                    logger.info(f"缓存文件不存在: {cache_file.absolute()}")
+                    return None
+                if cls._is_expired(cache_file):
+                    logger.info(f"缓存文件已过期: {cache_file.absolute()}")
+                    return None
+                with open(cache_file, 'r', encoding='utf-8') as f:
                     data = json.load(f)
-                finally:
-                    fcntl.flock(f, fcntl.LOCK_UN)
                 logger.info(f"成功读取缓存: {cache_file.name}")
                 return data
         except Exception as e:
@@ -102,15 +114,10 @@ class CacheUtil:
     def set(cls, key: str, data: Dict[str, Any]) -> None:
         """原子写入：先写临时文件，获取排他锁后原子重命名，避免 xdist 并发损坏。"""
         cache_file = cls._cache_dir / f"{key}.json"
-        lock_file = cls._lock_path(key)
         logger.info(f"写入缓存文件: {cache_file.absolute()}")
         try:
-            lock_fd = open(lock_file, 'w')
-            fcntl.flock(lock_fd, fcntl.LOCK_EX)
-            try:
-                fd, tmp_path = tempfile.mkstemp(
-                    dir=str(cls._cache_dir), suffix=".tmp", prefix=f".{key}_"
-                )
+            with cls._acquire_lock(key, exclusive=True):
+                fd, tmp_path = tempfile.mkstemp(dir=str(cls._cache_dir), suffix=".tmp", prefix=f".{key}_")
                 try:
                     with os.fdopen(fd, 'w', encoding='utf-8') as f:
                         json.dump(data, f, ensure_ascii=False, indent=2, cls=DecimalEncoder)
@@ -122,16 +129,17 @@ class CacheUtil:
                         pass
                     raise
                 logger.info(f"成功写入缓存: {cache_file.name}")
-            finally:
-                fcntl.flock(lock_fd, fcntl.LOCK_UN)
-                lock_fd.close()
         except Exception as e:
             logger.error(f"写入缓存失败: {str(e)}, 文件: {cache_file.absolute()}")
 
     @classmethod
     def exists(cls, key: str) -> bool:
         cache_file = cls._cache_dir / f"{key}.json"
-        return cache_file.exists() and not cls._is_expired(cache_file)
+        try:
+            with cls._acquire_lock(key, exclusive=False):
+                return cache_file.exists() and not cls._is_expired(cache_file)
+        except Exception:
+            return False
 
     @classmethod
     def _is_expired(cls, cache_file: Path) -> bool:
@@ -249,9 +257,15 @@ class CacheUtil:
             if not p.is_file():
                 continue
             if p.suffix == ".json" or p.suffix == ".tmp":
+                key = p.stem.lstrip(".")
                 try:
-                    p.unlink()
-                    n += 1
+                    removed = False
+                    with cls._acquire_lock(key, exclusive=True):
+                        if p.exists():
+                            p.unlink()
+                            removed = True
+                    if removed:
+                        n += 1
                 except OSError as e:
                     logger.warning(f"删除缓存文件失败: {p}, {e}")
             elif p.name.startswith(".") and ("source_hash" in p.name or p.suffix == ".lock"):

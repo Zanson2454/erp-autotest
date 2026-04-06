@@ -5,6 +5,7 @@ import os
 from erp_data_factory.compat.base import DataFactory
 from testcases.comm.base_test import BaseTest
 from testcases.comm.cleanup_registry import register_cleanup
+from testcases.comm.utility_mixins import MockUtilMixin
 from utils.mysql_util import DBManager
 
 
@@ -49,7 +50,7 @@ def _cleanup_scm_pur() -> None:
 register_cleanup("scm_pur_cleanup", _cleanup_scm_pur, order=230)
 
 
-class ScmPurBaseTest(BaseTest):
+class ScmPurBaseTest(MockUtilMixin, BaseTest):
     """采购模块基础测试类 — 声明式注册。"""
 
     MODULE_NAME = "SCM_PUR"

@@ -1,9 +1,10 @@
 """ERP 条件模块的测试初始化 — 声明式配置。"""
 
 from testcases.comm.base_test import BaseTest
+from testcases.comm.utility_mixins import MockUtilMixin
 
 
-class ErpCondBaseTest(BaseTest):
+class ErpCondBaseTest(MockUtilMixin, BaseTest):
     """ERP 条件模块基础测试类 — 声明式注册。"""
 
     MODULE_NAME = "ERP_COND"

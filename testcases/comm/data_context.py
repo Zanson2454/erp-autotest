@@ -1,6 +1,7 @@
-from contextvars import ContextVar
 from dataclasses import dataclass, field
 from typing import Any, ClassVar, Dict, Optional
+
+from testcases.comm.test_context import TestContext
 
 
 @dataclass
@@ -48,10 +49,6 @@ class TestDataContext:
         "ar_type_info": "fin_cache_data",
         "ap_type_info": "fin_cache_data",
     }
-    _RUNTIME_VALUES: ClassVar[ContextVar[Optional[Dict[str, Any]]]] = ContextVar(
-        "test_data_context_runtime_values", default=None
-    )
-
     # 运行时数据源字典：attr_name → data（由 from_class 填充）
     _sources: Dict[str, Any] = field(default_factory=dict)
 
@@ -92,23 +89,17 @@ class TestDataContext:
     @classmethod
     def clear_runtime_values(cls) -> None:
         """清空当前执行上下文中的运行时数据。"""
-        cls._RUNTIME_VALUES.set({})
+        TestContext.clear()
 
     @classmethod
     def set_runtime_value(cls, key: str, value: Any) -> None:
         """设置当前执行上下文中的运行时数据。"""
-        if not key:
-            return
-        data = cls._RUNTIME_VALUES.get() or {}
-        new_data = dict(data)
-        new_data[key] = value
-        cls._RUNTIME_VALUES.set(new_data)
+        TestContext.set(key, value)
 
     @classmethod
     def get_runtime_value(cls, key: str, default: Any = None) -> Any:
         """读取当前执行上下文中的运行时数据。"""
-        data = cls._RUNTIME_VALUES.get() or {}
-        return data.get(key, default)
+        return TestContext.get(key, default)
 
     def resolve_cache_path(self, path: str, logger: Any = None, *, strict: bool = False) -> Any:
         """解析点分路径，自动路由到对应数据源。

@@ -20,6 +20,7 @@ from testcases.comm.api_call_service import ApiCallService
 from testcases.comm.api_client_facade import ApiClientFacade
 from testcases.comm.auth_context import AuthContext
 from testcases.comm.base_test_initializer import BaseTestInitializer
+from testcases.comm.cleanup_registry import register_runtime_cleanup, reset_runtime_cleanups, run_runtime_cleanups
 from testcases.comm.config_manager import ConfigError, ConfigManager
 from testcases.comm.data_context import TestDataContext
 from testcases.comm.login_mixin import LoginMixin
@@ -31,12 +32,11 @@ from testcases.comm.login_service import (
     SessionManager,
 )
 from testcases.comm.query_service import QueryService
+from testcases.comm.test_context import TestContext
 from utils.assert_util import AssertHelper
-from utils.async_wait_util import AsyncWaitUtil, WaitStatus
 from utils.cache_util import CacheUtil
 from utils.exception_util import safe_api_call
 from utils.log_util import Loggers
-from utils.mock_util import MockData
 from utils.mysql_util import DBManager
 from utils.request_util import HttpUtil
 from utils.yaml_util import YamlUtil
@@ -91,6 +91,7 @@ class BaseTest(LoginMixin):
     API_PARAMS_OPTIONAL: bool = False
     SQL_CACHES: List[Dict[str, str]] = []
     STRICT_USER_CONTEXT: bool = True
+    TENANT_KEY: str = "terp"
 
     # ─── 缓存绑定映射 ───
     DEFAULT_CACHE_MAPPINGS: Dict[str, str] = {
@@ -121,7 +122,7 @@ class BaseTest(LoginMixin):
     http: HttpUtil
     db: DBManager
     iam_db: DBManager
-    mock_util: MockData
+    mock_util: Any
     cache: CacheUtil
     yaml_util: YamlUtil
     query_service: QueryService
@@ -267,16 +268,18 @@ class BaseTest(LoginMixin):
 
     @classmethod
     def _initialize_utilities(cls) -> None:
-        """工具类初始化 — 直接赋值，IDE 可跳转。"""
+        """工具类初始化 — 核心依赖内建，扩展依赖通过 mixin 注入。"""
         cls.logger = Loggers()
         cls.assert_util = AssertHelper()
-        cls.mock_util = MockData()
         cls.cache = CacheUtil()
         cls.yaml_util = YamlUtil()
-        cls.async_wait_util = AsyncWaitUtil
-        cls.wait_status = WaitStatus
         cls.safe_api_call = safe_api_call
         cls.query_service = QueryService(cls.db)
+        cls._initialize_optional_utilities()
+
+    @classmethod
+    def _initialize_optional_utilities(cls) -> None:
+        """按需工具注入扩展点（由 mixin 覆盖）。"""
 
     @classmethod
     def _initialize_auth(cls) -> None:
@@ -510,6 +513,14 @@ class BaseTest(LoginMixin):
     def setup_method(self, method: Optional[pytest.Function] = None) -> None:
         method_name = getattr(method, "__name__", "unknown_method")
         self.logger.info(f"开始测试方法: {method_name}")
+        current_test = os.getenv("PYTEST_CURRENT_TEST", "")
+        nodeid = current_test.split(" ", 1)[0] if current_test else None
+        if not nodeid:
+            nodeid = f"{self.__class__.__module__}::{self.__class__.__name__}::{method_name}"
+        tenant_key = getattr(self.__class__, "TENANT_KEY", "terp") or "terp"
+        os.environ["TEST_TENANT"] = tenant_key
+        TestContext.activate(nodeid=nodeid, tenant_key=tenant_key)
+        reset_runtime_cleanups()
         TestDataContext.clear_runtime_values()
         self.test_data = {}
         self.test_start_time = time.time()
@@ -520,11 +531,19 @@ class BaseTest(LoginMixin):
             method_name = getattr(method, "__name__", "unknown_method")
             self.logger.info(f"测试方法 {method_name} 执行完成，耗时: {duration:.3f}秒")
 
+        run_runtime_cleanups(self.logger)
+        TestDataContext.clear_runtime_values()
+
         if hasattr(self, "assert_util") and hasattr(self.assert_util, "clear_request_context"):
             self.assert_util.clear_request_context()
 
     def _async_delay(self, seconds: float, reason: str = "") -> None:
         """统一异步等待封装，替代测试代码中的固定 sleep。"""
+        if not hasattr(self, "async_wait_util") or not hasattr(self, "wait_status"):
+            raise RuntimeError(
+                f"{self.__class__.__name__} 未注入异步等待工具。"
+                "请继承 AsyncWaitMixin，或避免调用 _async_delay。"
+            )
         start = time.time()
 
         def check_func():
@@ -583,6 +602,10 @@ class BaseTest(LoginMixin):
             if value is not sentinel:
                 return value
         return default
+
+    def register_cleanup_action(self, name: str, action, order: int = 500) -> None:
+        """注册当前测试方法生命周期内的动态清理动作。"""
+        register_runtime_cleanup(name=name, func=action, order=order)
 
     def get_api_url(self, api_path, with_query_params=None):
         _, url = self.get_api_params(api_path, with_query_params=with_query_params)

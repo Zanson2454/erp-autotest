@@ -1,9 +1,10 @@
 """交货单模块的测试初始化 — 声明式配置。"""
 
 from testcases.comm.base_test import BaseTest
+from testcases.comm.utility_mixins import AsyncWaitMixin, MockUtilMixin
 
 
-class ScmDelBaseTest(BaseTest):
+class ScmDelBaseTest(AsyncWaitMixin, MockUtilMixin, BaseTest):
     """交货单模块基础测试类 — 声明式注册，无需覆盖 setup_class。"""
 
     MODULE_NAME = "SCM_DEL"

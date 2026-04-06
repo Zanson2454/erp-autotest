@@ -1,64 +1,32 @@
 # -*- coding: utf-8 -*-
-"""ERP 财务模块的测试初始化 — 命令式（自定义 context_builder）。"""
+"""ERP 财务模块的测试初始化 — 声明式配置 + 自定义 context_builder。"""
 
 import random
 import time
-from pathlib import Path
 
 from testcases.comm.base_test import BaseTest
+from testcases.comm.utility_mixins import AsyncWaitMixin, MockUtilMixin
 from testcases.erp_fin.context_builder import build_fin_context
 from utils.param_util import ParamUtil
 
-project_root = Path(__file__).resolve().parent.parent.parent
 
+class FinBaseTest(AsyncWaitMixin, MockUtilMixin, BaseTest):
+    """ERP 财务模块基础测试类 — 声明式注册。"""
 
-class FinBaseTest(BaseTest):
-    """ERP 财务模块基础测试类 — 命令式注册，LOGIN_STRATEGY 消除双重登录。"""
-
+    MODULE_NAME = "FIN"
     LOGIN_STRATEGY = "single"
+    API_PATH_FILE = "config/api/erp_fin/fin_api_path.yaml"
+    API_PARAMS_FILE = "config/api/erp_fin/fin_api_params.yaml"
+    SQL_CACHES = [
+        {"path": "config/erp/md_init_sql.yaml", "key": "md_init_cache", "attr": "md_cache_data"},
+        {"path": "config/erp/fin_init_sql.yaml", "key": "fin_init_cache", "attr": "fin_cache_data"},
+    ]
     REQUIRED_CACHE_KEYS = ("curr_id", "cust_id")
 
     @classmethod
-    def setup_class(cls):
-        super().setup_class()
-        cls.load_api_configs()
-        cls.load_cache_data()
-        cls.bind_context()
-
-    @classmethod
-    def load_api_configs(cls):
-        """加载 erp_fin 模块 API 配置（登录已由 BaseTest._initialize_auth 完成）。"""
-        cls.fin_api_path = Path(project_root) / "config" / "api" / "erp_fin" / "fin_api_path.yaml"
-        cls.fin_api_params = Path(project_root) / "config" / "api" / "erp_fin" / "fin_api_params.yaml"
-        cls.load_module_api_configs(cls.fin_api_path, cls.fin_api_params)
-
-    @classmethod
-    def load_cache_data(cls):
-        """加载 erp_fin 模块依赖缓存。"""
-        # 财务 SQL 根 key → fin_cache_data 已在 test_data_context._SOURCE_REGISTRY 注册
-        # MD cache reuse (for org_info, currency, etc. - shared with gen_md)
-        # 需要先初始化 md_init_cache，然后再获取
-        cls.md_cache_data = cls.load_sql_cache(
-            sql_config_path=project_root / "config" / "erp" / "md_init_sql.yaml",
-            cache_key="md_init_cache",
-            db_config_name="erp_db",
-            cache_dir="testdata/cache",
-        )
-        cls.logger.info(f"md_cache_data: {cls.md_cache_data is not None}")
-
-        # 缓存加载：财务主数据依赖 (use md_init_sql.yaml or fin specific like pur/sls_init_sql.yaml)
-        # Fallback to md cache for org/currency, etc.
-        cls.fin_cache_data = cls.load_sql_cache(
-            sql_config_path=project_root / "config" / "erp" / "fin_init_sql.yaml",
-            cache_key="fin_init_cache",
-            db_config_name="erp_db",
-            cache_dir="testdata/cache",
-        )
-
-    @classmethod
-    def bind_context(cls):
-        """绑定 erp_fin 模块上下文与初始化字段。"""
-        cls.bind_cache_data()
+    def _bind_module_context(cls) -> None:
+        """在标准声明式绑定后补充财务域上下文字段。"""
+        super()._bind_module_context()
         context_data = build_fin_context(
             init_data=getattr(cls, "init_data", None),
             md_cache_data=getattr(cls, "md_cache_data", None),
@@ -83,8 +51,21 @@ class FinBaseTest(BaseTest):
         else:
             cls.logger.warning("calender_item_info 中没有 period_type='MONTH' 的项，无法获取 calendar_item_id")
 
-        # 设置路径参数和用户信息
-        cls.bind_module_user_context("FIN", strict=True)
+    @classmethod
+    def load_api_configs(cls):
+        """向后兼容：旧测试类可继续手动调用。"""
+        cls._load_module_apis()
+
+    @classmethod
+    def load_cache_data(cls):
+        """向后兼容：旧测试类可继续手动调用。"""
+        cls._load_module_caches()
+        cls.logger.info(f"md_cache_data: {getattr(cls, 'md_cache_data', None) is not None}")
+
+    @classmethod
+    def bind_context(cls):
+        """向后兼容：旧测试类可继续手动调用。"""
+        cls._bind_module_context()
 
     def create_settlement_item(self, sett_item_type_code="E_SLS_GOODS", org=1):
         """

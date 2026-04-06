@@ -6,13 +6,14 @@
 from pathlib import Path
 
 from testcases.comm.base_test import BaseTest
+from testcases.comm.utility_mixins import AsyncWaitMixin
 from utils.mysql_util import DBManager
 
 # 获取项目根目录
 project_root = Path(__file__).resolve().parent.parent.parent.parent
 
 
-class PrdBaseTest(BaseTest):
+class PrdBaseTest(AsyncWaitMixin, BaseTest):
     """生产模块的基础测试类，负责加载通用配置和提供API访问方法"""
 
     # 保存基础配置信息的类变量

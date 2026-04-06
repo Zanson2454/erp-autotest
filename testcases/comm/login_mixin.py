@@ -21,6 +21,7 @@ class LoginMixin:
 
     # 子类覆盖以选择登录策略
     LOGIN_STRATEGY: str = "default"
+    TENANT_KEY: str = "terp"
     _PORTAL_TYPE_KEYS: Dict[str, str] = {"admin": "TERP_PORTAL"}
 
     # 由 _login_* 方法设置的属性（类型注解供 IDE）
@@ -141,13 +142,14 @@ class LoginMixin:
         """根据 LOGIN_STRATEGY + _PORTAL_TYPE_KEYS 执行唯一一次登录。"""
         strategy = cls.LOGIN_STRATEGY
         portal_keys = cls._PORTAL_TYPE_KEYS
+        tenant_key = getattr(cls, "TENANT_KEY", "terp") or "terp"
 
         if strategy == "multi":
-            cls._login_multi_portal(portal_keys)
+            cls._login_multi_portal(portal_keys, tenant_key=tenant_key)
         elif strategy == "admin_with_cust":
             admin_key = portal_keys.get("admin", "TERP_PORTAL")
             cust_key = portal_keys.get("cust", "TERP_CUST_PC")
-            cls._login_admin_with_cust_headers(admin_key, cust_key)
+            cls._login_admin_with_cust_headers(admin_key, cust_key, tenant_key=tenant_key)
         else:  # "default" / "single"
             admin_key = portal_keys.get("admin", "TERP_PORTAL")
-            cls._login_single_portal(admin_key)
+            cls._login_single_portal(admin_key, tenant_key=tenant_key)

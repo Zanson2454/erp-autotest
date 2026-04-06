@@ -12,6 +12,7 @@
 import allure
 
 from testcases.comm.base_test import BaseTest
+from testcases.comm.utility_mixins import MockUtilMixin
 from utils.param_util import ParamUtil
 from utils.report_util import a
 
@@ -20,7 +21,7 @@ from .init_config import PrdConfigInitializer
 
 @allure.epic("生产管理")
 @allure.feature("基础数据配置")
-class PrdBasicBaseTest(BaseTest):
+class PrdBasicBaseTest(MockUtilMixin, BaseTest):
     """生产管理基础测试类
     
     提供:

@@ -1,9 +1,10 @@
 """SCM 库存模块的测试初始化 — 声明式配置。"""
 
 from testcases.comm.base_test import BaseTest
+from testcases.comm.utility_mixins import AsyncWaitMixin, MockUtilMixin
 
 
-class ScmInvBaseTest(BaseTest):
+class ScmInvBaseTest(AsyncWaitMixin, MockUtilMixin, BaseTest):
     """SCM 库存模块基础测试类 — 声明式注册。"""
 
     MODULE_NAME = "SCM_INV"
