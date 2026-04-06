@@ -1,3 +1,4 @@
+import os
 import random
 import sys
 import threading
@@ -126,14 +127,21 @@ class MockData:
         return self.fake.address()
     
     def get_mock_phone_number(self) -> str:
-        """生成手机号
-        
-        Returns:
-            str: 基于时间戳生成的手机号
+        """生成国内 11 位手机号样式字符串（1[3-9] + 9 位数字）。
+
+        业务上手机号应全局唯一；旧实现 ``int(time.time()*10)`` 粒度约 0.1s，并行/多 worker
+        共用库时易撞号，导致「按手机号查询应唯一条」类断言失败。
         """
-        phone = int(time.time()*10)
- 
-        return str(phone)
+        with self._counter_lock:
+            MockData._counter += 1
+            seq = MockData._counter
+        worker = os.environ.get("PYTEST_XDIST_WORKER", "")
+        wh = (abs(hash(worker)) % 1000) if worker else (os.getpid() % 1000)
+        salt = uuid.uuid4().int % 1_000_000
+        tail_num = (time.time_ns() % 10**12) ^ (seq * 1_000_003) ^ (wh * 97_771) ^ salt
+        tail_num %= 10**9
+        second_digit = 3 + (tail_num % 7)
+        return f"1{second_digit}{tail_num:09d}"
     
     def get_mock_ssn(self) -> str:
         """生成身份证号

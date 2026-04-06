@@ -95,7 +95,12 @@ class TestOrg_SwitchManagement(GenMdBaseTest):
 
         model_id = None
         if response.get("success") is True:
-            model_id = extracted_id or self._parse_org_switch_model_id_from_response(response)
+            # standard_api_call 在 data.data 无顶层 id 时可能把整段 dict 当作 extracted_id，详情/删除会报 id.required
+            parsed_id = self._parse_org_switch_model_id_from_response(response)
+            if isinstance(extracted_id, (dict, list)):
+                model_id = parsed_id
+            else:
+                model_id = extracted_id or parsed_id
             model_id = model_id or self._lookup_org_switch_model_id_by_model_key(model_key)
         else:
             err_code = response.get("err", {}).get("code")
