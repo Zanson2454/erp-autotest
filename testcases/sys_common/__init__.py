@@ -1,10 +1,10 @@
 """系统公共模块的测试初始化 — 声明式配置。"""
 
 from testcases.comm.base_test import BaseTest
-from testcases.comm.utility_mixins import MockUtilMixin
+from testcases.comm.utility_mixins import MockUtilMixin, QueryServiceMixin, YamlUtilMixin
 
 
-class SysCommonBaseTest(MockUtilMixin, BaseTest):
+class SysCommonBaseTest(QueryServiceMixin, YamlUtilMixin, MockUtilMixin, BaseTest):
     """系统公共模块基础测试类 — 声明式注册（多门户，仅 admin）。"""
 
     MODULE_NAME = "SYS_COMMON"

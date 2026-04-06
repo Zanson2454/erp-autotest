@@ -1,10 +1,10 @@
 """ERP 计划模块的测试初始化 — 声明式配置。"""
 
 from testcases.comm.base_test import BaseTest
-from testcases.comm.utility_mixins import MockUtilMixin
+from testcases.comm.utility_mixins import MockUtilMixin, QueryServiceMixin, YamlUtilMixin
 
 
-class ErpPlnBaseTest(MockUtilMixin, BaseTest):
+class ErpPlnBaseTest(QueryServiceMixin, YamlUtilMixin, MockUtilMixin, BaseTest):
     """ERP 计划模块基础测试类。"""
 
     MODULE_NAME = "ERP_PLN"

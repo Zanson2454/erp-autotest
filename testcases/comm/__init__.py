@@ -10,6 +10,6 @@
 
 from .base_flow import BaseFlow
 from .base_test import BaseTest
-from .utility_mixins import AsyncWaitMixin, MockUtilMixin
+from .utility_mixins import AsyncWaitMixin, MockUtilMixin, QueryServiceMixin, YamlUtilMixin
 
-__all__ = ['BaseTest', 'BaseFlow', 'MockUtilMixin', 'AsyncWaitMixin']
+__all__ = ['BaseTest', 'BaseFlow', 'MockUtilMixin', 'AsyncWaitMixin', 'YamlUtilMixin', 'QueryServiceMixin']

@@ -31,7 +31,6 @@ from testcases.comm.login_service import (
     LoginStatus,
     SessionManager,
 )
-from testcases.comm.query_service import QueryService
 from testcases.comm.test_context import TestContext
 from utils.assert_util import AssertHelper
 from utils.cache_util import CacheUtil
@@ -39,7 +38,6 @@ from utils.exception_util import safe_api_call
 from utils.log_util import Loggers
 from utils.mysql_util import DBManager
 from utils.request_util import HttpUtil
-from utils.yaml_util import YamlUtil
 
 __all__ = [
     "BaseTest",
@@ -124,8 +122,8 @@ class BaseTest(LoginMixin):
     iam_db: DBManager
     mock_util: Any
     cache: CacheUtil
-    yaml_util: YamlUtil
-    query_service: QueryService
+    yaml_util: Any
+    query_service: Any
     auth_context: Optional[AuthContext]
     _base_teardown_called: bool = False
 
@@ -272,9 +270,7 @@ class BaseTest(LoginMixin):
         cls.logger = Loggers()
         cls.assert_util = AssertHelper()
         cls.cache = CacheUtil()
-        cls.yaml_util = YamlUtil()
         cls.safe_api_call = safe_api_call
-        cls.query_service = QueryService(cls.db)
         cls._initialize_optional_utilities()
 
     @classmethod
@@ -399,6 +395,11 @@ class BaseTest(LoginMixin):
         *,
         api_params_optional: bool = False,
     ) -> None:
+        if not hasattr(cls, "yaml_util"):
+            raise RuntimeError(
+                f"{cls.__name__} 未注入 yaml_util。"
+                "请继承 YamlUtilMixin 后再使用声明式 API 配置加载。"
+            )
         path_file = Path(api_path_file)
         params_file = Path(api_params_file)
         cls.apis = cls.yaml_util.read_yaml(path_file).get("apis", {})

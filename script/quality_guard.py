@@ -8,6 +8,7 @@
 4) gen_md/gen_base 中禁止裸 DB 调用（self.db.query/execute）。
 5) 测试层禁止直接 self.http.* 调用，要求走 standard_api_call。
 6) 测试层禁止 sys.path.append/insert 魔法导入。
+7) 直接继承 BaseTest 的类，若使用 mock/async/yaml/query 能力必须显式继承对应 Mixin。
 """
 
 from __future__ import annotations
@@ -255,6 +256,120 @@ def scan_sys_path_magic(path: Path) -> list[str]:
     return errors
 
 
+def _base_name(node: ast.expr) -> str:
+    if isinstance(node, ast.Name):
+        return node.id
+    if isinstance(node, ast.Attribute):
+        return node.attr
+    return ""
+
+
+def _class_uses_mock_util(cls_node: ast.ClassDef) -> bool:
+    for node in ast.walk(cls_node):
+        if not isinstance(node, ast.Attribute):
+            continue
+        if node.attr != "mock_util":
+            continue
+        if not isinstance(getattr(node, "ctx", None), ast.Load):
+            continue
+        if isinstance(node.value, ast.Name) and node.value.id in {"self", "cls"}:
+            return True
+    return False
+
+
+def _class_uses_async_wait(cls_node: ast.ClassDef) -> bool:
+    for node in ast.walk(cls_node):
+        if isinstance(node, ast.Attribute):
+            if node.attr in {"async_wait_util", "wait_status"} and isinstance(node.value, ast.Name):
+                if not isinstance(getattr(node, "ctx", None), ast.Load):
+                    continue
+                if node.value.id in {"self", "cls"}:
+                    return True
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            if node.func.attr == "_async_delay" and isinstance(node.func.value, ast.Name):
+                if node.func.value.id in {"self", "cls"}:
+                    return True
+    return False
+
+
+def _class_uses_yaml(cls_node: ast.ClassDef) -> bool:
+    for node in ast.walk(cls_node):
+        if isinstance(node, ast.Attribute):
+            if node.attr == "yaml_util" and isinstance(node.value, ast.Name):
+                if not isinstance(getattr(node, "ctx", None), ast.Load):
+                    continue
+                if node.value.id in {"self", "cls"}:
+                    return True
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            if node.func.attr == "load_module_api_configs" and isinstance(node.func.value, ast.Name):
+                if node.func.value.id in {"self", "cls"}:
+                    return True
+    return False
+
+
+def _class_uses_query_service(cls_node: ast.ClassDef) -> bool:
+    for node in ast.walk(cls_node):
+        if not isinstance(node, ast.Attribute):
+            continue
+        if node.attr != "query_service":
+            continue
+        if not isinstance(getattr(node, "ctx", None), ast.Load):
+            continue
+        if isinstance(node.value, ast.Name) and node.value.id in {"self", "cls"}:
+            return True
+    return False
+
+
+def scan_basetest_mixin_contract(path: Path) -> list[str]:
+    """约束：直接继承 BaseTest 的类，使用工具能力时必须显式继承对应 mixin。"""
+    if is_excluded(path) or path.suffix != ".py":
+        return []
+    rel = to_rel(path)
+    if not rel.startswith("testcases/"):
+        return []
+    text = path.read_text(encoding="utf-8")
+    try:
+        tree = ast.parse(text, filename=str(path))
+    except SyntaxError:
+        return []
+
+    errors = []
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.ClassDef):
+            continue
+        base_names = {_base_name(base) for base in node.bases}
+        if "BaseTest" not in base_names:
+            continue
+
+        has_mock_mixin = "MockUtilMixin" in base_names
+        has_async_mixin = "AsyncWaitMixin" in base_names
+        has_yaml_mixin = "YamlUtilMixin" in base_names
+        has_query_mixin = "QueryServiceMixin" in base_names
+        uses_mock = _class_uses_mock_util(node)
+        uses_async = _class_uses_async_wait(node)
+        uses_yaml = _class_uses_yaml(node)
+        uses_query = _class_uses_query_service(node)
+
+        if uses_mock and not has_mock_mixin:
+            errors.append(
+                f"{rel}:{node.lineno}: class {node.name} uses mock_util but misses MockUtilMixin"
+            )
+        if uses_async and not has_async_mixin:
+            errors.append(
+                f"{rel}:{node.lineno}: class {node.name} uses async wait but misses AsyncWaitMixin"
+            )
+        if uses_yaml and not has_yaml_mixin:
+            errors.append(
+                f"{rel}:{node.lineno}: class {node.name} uses yaml but misses YamlUtilMixin"
+            )
+        if uses_query and not has_query_mixin:
+            errors.append(
+                f"{rel}:{node.lineno}: class {node.name} uses query_service but misses QueryServiceMixin"
+            )
+
+    return errors
+
+
 def main() -> int:
     """主入口函数：解析参数、收集文件、执行扫描并输出结果。"""
     parser = argparse.ArgumentParser(description="ERP autotest 仓库质量守卫。")
@@ -272,6 +387,7 @@ def main() -> int:
         violations.extend(scan_raw_db_call(path))
         violations.extend(scan_direct_http_call(path))
         violations.extend(scan_sys_path_magic(path))
+        violations.extend(scan_basetest_mixin_contract(path))
 
     if violations:
         print("quality_guard: FAILED")

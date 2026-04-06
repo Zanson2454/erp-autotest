@@ -5,12 +5,12 @@ import random
 import time
 
 from testcases.comm.base_test import BaseTest
-from testcases.comm.utility_mixins import AsyncWaitMixin, MockUtilMixin
+from testcases.comm.utility_mixins import AsyncWaitMixin, MockUtilMixin, QueryServiceMixin, YamlUtilMixin
 from testcases.erp_fin.context_builder import build_fin_context
 from utils.param_util import ParamUtil
 
 
-class FinBaseTest(AsyncWaitMixin, MockUtilMixin, BaseTest):
+class FinBaseTest(AsyncWaitMixin, QueryServiceMixin, YamlUtilMixin, MockUtilMixin, BaseTest):
     """ERP 财务模块基础测试类 — 声明式注册。"""
 
     MODULE_NAME = "FIN"

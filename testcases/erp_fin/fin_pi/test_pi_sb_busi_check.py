@@ -6,13 +6,13 @@ project_root = Path(__file__).resolve().parent.parent.parent.parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-from testcases.comm.base_test import BaseTest
-from utils.param_util import ParamUtil
-from utils.report_util import a, case_decorator
-from utils.yaml_util import YamlUtil
+from testcases.comm.base_test import BaseTest  # noqa: E402
+from testcases.comm.utility_mixins import YamlUtilMixin  # noqa: E402
+from utils.param_util import ParamUtil  # noqa: E402
+from utils.report_util import a, case_decorator  # noqa: E402
 
 
-class TestPiSbBusiCheck(BaseTest):
+class TestPiSbBusiCheck(YamlUtilMixin, BaseTest):
     """发票管理业务测试用例"""
 
     @classmethod
@@ -26,7 +26,6 @@ class TestPiSbBusiCheck(BaseTest):
         super().bind_context()
         cls.base_api_path = Path(project_root) / "config" / "api" / "erp_fin" / "fin_api_path.yaml"
         cls.base_api_params = Path(project_root) / "config" / "api" / "erp_fin" / "fin_api_params.yaml"
-        cls.yaml_util = YamlUtil()
         cls.fin_path = cls.yaml_util.read_yaml(cls.base_api_path).get("apis", {})
         cls.fin_params = cls.yaml_util.read_yaml(cls.base_api_params).get("api_params", {})
         # 兼容 standard_api_call 读取 self.apis / self.api_params 的约定

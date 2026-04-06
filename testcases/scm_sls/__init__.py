@@ -4,7 +4,7 @@ import time
 from pathlib import Path
 
 from testcases.comm.base_test import BaseTest
-from testcases.comm.utility_mixins import AsyncWaitMixin, MockUtilMixin
+from testcases.comm.utility_mixins import AsyncWaitMixin, MockUtilMixin, QueryServiceMixin, YamlUtilMixin
 from testcases.scm_sls.api_config_builder import merge_module_api_configs
 from testcases.scm_sls.context_builder import build_sls_context
 from utils.param_util import ParamUtil
@@ -13,7 +13,7 @@ from utils.report_util import a
 project_root = Path(__file__).resolve().parent.parent.parent
 
 
-class SlsBase(AsyncWaitMixin, MockUtilMixin, BaseTest):
+class SlsBase(AsyncWaitMixin, QueryServiceMixin, YamlUtilMixin, MockUtilMixin, BaseTest):
     """销售管理模块基础测试类 — 声明式注册（兼容多模块 API 合并）。"""
 
     MODULE_NAME = "SCM_SLS"
